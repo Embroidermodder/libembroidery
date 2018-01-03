@@ -1,6 +1,6 @@
-#include "../libembroidery/emb-reader-writer.h"
-#include "../libembroidery/emb-logging.h"
-#include "../libembroidery/emb-format.h"
+#include "../emb-reader-writer.h"
+#include "../emb-logging.h"
+#include "../emb-format.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

@@ -18,28 +18,28 @@ static void expEncode(unsigned char* b, char dx, char dy, int flags)
         embLog_error("format-exp.c expEncode(), b argument is null\n");
         return;
     }
-    /* TODO: How to encode JUMP stitches? JUMP must be handled. Also check this for the KSM format since it appears to be similar */
-      if(flags == STOP)
+
+    if(flags == STOP)
     {
         b[0] = 0x80;
-        b[1] = 1;
+        b[1] = 0x01;
         b[2] = dx;
         b[3] = dy;
     }
-	else if (flags == END)
-	{
-		b[0] = 0x80;
-		b[1] = 0x10;
-		b[2] = 0;
-		b[3] = 0;
+    else if (flags == JUMP)
+    {
+        b[0] = 0x80;
+        b[1] = 0x04;
+        b[2] = dx;
+        b[3] = dy;
+    }
+    else if (flags == TRIM || flags == END)
+    {
+        b[0] = 0x80;
+        b[1] = 0x80;
+        b[2] = 0;
+        b[3] = 0;
 	}
-    else if(flags == TRIM || flags == JUMP)
-    {
-        b[0] = 0x80;
-        b[1] = 2;
-        b[2] = dx;
-        b[3] = dy;
-    }
     else
     {
         b[0] = dx;

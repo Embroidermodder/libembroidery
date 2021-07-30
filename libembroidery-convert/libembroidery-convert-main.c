@@ -7,8 +7,6 @@
 
 void usage(void)
 {
-    EmbFormatList* formatList = 0;
-    EmbFormatList* curFormat = 0;
     const char* extension = 0;
     const char* description = 0;
     char readerState;
@@ -47,24 +45,17 @@ void usage(void)
     printf("|________|_______|_______|____________________________________________________|\n");
     printf("|        |       |       |                                                    |\n");
 
-    formatList = embFormatList_create();
-    if(!formatList) { embLog_error("libembroidery-convert-main.c usage(), cannot allocate memory for formatList\n"); return; }
-    curFormat = formatList;
-    while(curFormat)
-    {
-        extension = embFormat_extension(curFormat);
-        description = embFormat_description(curFormat);
-        readerState = embFormat_readerState(curFormat);
-        writerState = embFormat_writerState(curFormat);
+    int i;
+    for (i=0; i<numberOfFormats; i++) {
+        extension = formatTable[i].extension;
+        description = formatTable[i].description;
+        readerState = formatTable[i].reader;
+        writerState = formatTable[i].writer;
 
         numReaders += readerState != ' '? 1 : 0;
         numWriters += writerState != ' '? 1 : 0;
         printf("|  %-4s  |   %c   |   %c   |  %-49s |\n", extension, readerState, writerState, description);
-
-        curFormat = curFormat->next;
     }
-    embFormatList_free(formatList);
-    formatList = 0;
 
     printf("|________|_______|_______|____________________________________________________|\n");
     printf("|        |       |       |                                                    |\n");

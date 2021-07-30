@@ -5,209 +5,124 @@
 #include <string.h>
 #include <ctype.h>
 
+/* TODO: This list needs reviewed in case some stitch formats also can contain object data (EMBFORMAT_STCHANDOBJ). */
+
+EmbFormatList formatTable[100] = {
+    {".10o", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY},
+    {".100", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY},
+    {".art", "Bernina Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".bmc", "Bitmap Cache Embroidery Format",     ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".bro", "Bits & Volts Embroidery Format",     'U', ' ', EMBFORMAT_STITCHONLY},
+    {".cnd", "Melco Embroidery Format",            ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".col", "Embroidery Thread Color Format",     'U', 'U', EMBFORMAT_STITCHONLY},
+    {".csd", "Singer Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY},
+    {".csv", "Comma Separated Values Format",      'U', 'U', EMBFORMAT_STITCHONLY},
+    {".dat", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".dem", "Melco Embroidery Format",            ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".dsb", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".dst", "Tajima Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
+    {".dsz", "ZSK USA Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".dxf", "Drawing Exchange Format",            ' ', ' ', EMBFORMAT_OBJECTONLY},
+    {".edr", "Embird Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
+    {".emd", "Elna Embroidery Format",             'U', ' ', EMBFORMAT_STITCHONLY},
+    {".exp", "Melco Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".exy", "Eltac Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".eys", "Sierra Expanded Embroidery Format",  ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".fxy", "Fortron Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".gc",  "Smoothie G-Code Format",             ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".gnc", "Great Notions Embroidery Format",    ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".gt",  "Gold Thread Embroidery Format",      'U', ' ', EMBFORMAT_STITCHONLY},
+    {".hus", "Husqvarna Viking Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY},
+    {".inb", "Inbro Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".inf", "Embroidery Color Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".jef", "Janome Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
+    {".ksm", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".max", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".mit", "Mitsubishi Embroidery Format",       'U', ' ', EMBFORMAT_STITCHONLY},
+    {".new", "Ameco Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".ofm", "Melco Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".pcd", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".pcm", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".pcq", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".pcs", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".pec", "Brother Embroidery Format",          'U', 'U', EMBFORMAT_STITCHONLY},
+    {".pel", "Brother Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".pem", "Brother Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".pes", "Brother Embroidery Format",          'U', 'U', EMBFORMAT_STITCHONLY},
+    {".phb", "Brother Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".phc", "Brother Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".plt", "AutoCAD Plot Drawing Format",        'U', 'U', EMBFORMAT_STITCHONLY},
+    {".rgb", "RGB Embroidery Format",              'U', 'U', EMBFORMAT_STITCHONLY},
+    {".sew", "Janome Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
+    {".shv", "Husqvarna Viking Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY},
+    {".sst", "Sunstar Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".stx", "Data Stitch Embroidery Format",      'U', ' ', EMBFORMAT_STITCHONLY},
+    {".svg", "Scalable Vector Graphics",           'U', 'U', EMBFORMAT_OBJECTONLY},
+    {".t01", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".t09", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".tap", "Happy Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".thr", "ThredWorks Embroidery Format",       'U', 'U', EMBFORMAT_STITCHONLY},
+    {".txt", "Text File",                          ' ', 'U', EMBFORMAT_STITCHONLY},
+    {".u00", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".u01", "Barudan Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".vip", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".vp3", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".xxx", "Singer Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
+    {".zsk", "ZSK USA Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {"END",  "END",                                ' ', ' ', 0,                  }
+};
+
+int numberOfFormats = 61;
+
 /**************************************************/
 /* EmbFormatList                                  */
 /**************************************************/
 
-EmbFormatList* embFormatList_create()
+int embFormat_getExtension(const char *fileName, char *ending)
 {
-    EmbFormatList* firstFormat = 0;
+    int i;
+    const char *offset;
 
-    /* TODO: This list needs reviewed in case some stitch formats also can contain object data (EMBFORMAT_STCHANDOBJ). */
-
-    EmbFormatList* heapFormatList = (EmbFormatList*)malloc(sizeof(EmbFormatList));
-    if(!heapFormatList) { embLog_error("emb-format.c embFormatList_create(), cannot allocate memory for heapFormatList\n"); return 0; }
-    heapFormatList->extension = ".10o";
-    heapFormatList->description = "Toyota Embroidery Format";
-    heapFormatList->reader = 'U';
-    heapFormatList->writer = ' ';
-    heapFormatList->type = EMBFORMAT_STITCHONLY;
-    heapFormatList->next = 0;
-
-    firstFormat = heapFormatList;
-
-    heapFormatList = embFormatList_add(heapFormatList, ".100", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".art", "Bernina Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".bmc", "Bitmap Cache Embroidery Format",     ' ', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".bro", "Bits & Volts Embroidery Format",     'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".cnd", "Melco Embroidery Format",            ' ', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".col", "Embroidery Thread Color Format",     'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".csd", "Singer Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".csv", "Comma Separated Values Format",      'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".dat", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".dem", "Melco Embroidery Format",            ' ', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".dsb", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".dst", "Tajima Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".dsz", "ZSK USA Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".dxf", "Drawing Exchange Format",            ' ', ' ', EMBFORMAT_OBJECTONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".edr", "Embird Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".emd", "Elna Embroidery Format",             'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".exp", "Melco Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".exy", "Eltac Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".eys", "Sierra Expanded Embroidery Format",  ' ', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".fxy", "Fortron Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".gc",  "Smoothie G-Code Format",             ' ', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".gnc", "Great Notions Embroidery Format",    ' ', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".gt",  "Gold Thread Embroidery Format",      'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".hus", "Husqvarna Viking Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".inb", "Inbro Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".inf", "Embroidery Color Format",            'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".jef", "Janome Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".ksm", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".max", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".mit", "Mitsubishi Embroidery Format",       'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".new", "Ameco Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".ofm", "Melco Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".pcd", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".pcm", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".pcq", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".pcs", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".pec", "Brother Embroidery Format",          'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".pel", "Brother Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".pem", "Brother Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".pes", "Brother Embroidery Format",          'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".phb", "Brother Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".phc", "Brother Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".plt", "AutoCAD Plot Drawing Format",        'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".rgb", "RGB Embroidery Format",              'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".sew", "Janome Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".shv", "Husqvarna Viking Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".sst", "Sunstar Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".stx", "Data Stitch Embroidery Format",      'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".svg", "Scalable Vector Graphics",           'U', 'U', EMBFORMAT_OBJECTONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".t01", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".t09", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".tap", "Happy Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".thr", "ThredWorks Embroidery Format",       'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".txt", "Text File",                          ' ', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".u00", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".u01", "Barudan Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".vip", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".vp3", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".xxx", "Singer Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY);
-    heapFormatList = embFormatList_add(heapFormatList, ".zsk", "ZSK USA Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY);
-
-    return firstFormat;
-}
-
-EmbFormatList* embFormatList_add(EmbFormatList* pointer, char* extension, char* description, char reader, char writer, int type)
-{
-    if(!pointer) { embLog_error("emb-format.c embFormatList_add(), pointer argument is null\n"); return 0; }
-    if(pointer->next) { embLog_error("emb-format.c embFormatList_add(), pointer->next should be null\n"); return 0; }
-    pointer->next = (EmbFormatList*)malloc(sizeof(EmbFormatList));
-    if(!pointer->next) { embLog_error("emb-format.c embFormatList_add(), cannot allocate memory for pointer->next\n"); return 0; }
-    pointer = pointer->next;
-    pointer->extension = extension;
-    pointer->description = description;
-    pointer->reader = reader;
-    pointer->writer = writer;
-    pointer->type = type;
-    pointer->next = 0;
-    return pointer;
-}
-
-int embFormatList_count(EmbFormatList* pointer)
-{
-    int i = 1;
-    if(!pointer) return 0;
-    while(pointer->next)
-    {
-        pointer = pointer->next;
-        i++;
+    if (!fileName) {
+        embLog_error("emb-format.c embFormat_getExtension(), fileName argument is null\n");
+        return 0;
     }
-    return i;
-}
 
-int embFormatList_empty(EmbFormatList* pointer)
-{
-    if(!pointer)
-        return 1;
-    return 0;
-}
-
-void embFormatList_free(EmbFormatList* pointer)
-{
-    EmbFormatList* tempPointer = pointer;
-    EmbFormatList* nextPointer = 0;
-    while(tempPointer)
-    {
-        nextPointer = tempPointer->next;
-        free(tempPointer);
-        tempPointer = nextPointer;
+    if (strlen(fileName) == 0) {
+        return 0;
     }
-    pointer = 0;
+    
+    offset = strrchr(fileName, '.');
+    if (offset==0) {
+        return 0;
+    }
+
+    i = 0;
+    while (offset[i] != '\0') {
+        ending[i] = (char)tolower(offset[i]);
+        ++i;
+    }
+    ending[i] = 0; /* terminate the string */
+
+    return 1;
 }
-
-
-const char* embFormat_extension(EmbFormatList* pointer)
-{
-    if(!pointer) { embLog_error("emb-format.c embFormat_extension(), pointer argument is null\n"); return 0; }
-    return pointer->extension;
-}
-
-const char* embFormat_description(EmbFormatList* pointer)
-{
-    if(!pointer) { embLog_error("emb-format.c embFormat_description(), pointer argument is null\n"); return 0; }
-    return pointer->description;
-}
-
-char embFormat_readerState(EmbFormatList* pointer)
-{
-    if(!pointer) { embLog_error("emb-format.c embFormat_readerState(), pointer argument is null\n"); return 0; }
-    return pointer->reader;
-}
-
-char embFormat_writerState(EmbFormatList* pointer)
-{
-    if(!pointer) { embLog_error("emb-format.c embFormat_writerState(), pointer argument is null\n"); return 0; }
-    return pointer->writer;
-}
-
-int embFormat_type(EmbFormatList* pointer)
-{
-    if(!pointer) { embLog_error("emb-format.c embFormat_type(), pointer argument is null\n"); return 0; }
-    return pointer->type;
-}
-
 
 const char* embFormat_extensionFromName(const char* fileName)
 {
     int i = 0;
     char ending[2 + EMBFORMAT_MAXEXT];
-    EmbFormatList* formatList = 0;
-    EmbFormatList* curFormat = 0;
     const char* extension = 0;
 
-    if(!fileName) { embLog_error("emb-format.c embFormat_extensionFromName(), fileName argument is null\n"); return 0; }
-
-    formatList = embFormatList_create();
-
-    if(strlen(fileName) == 0) return 0;
-    if(strrchr(fileName, '.'))
-        strcpy(ending, strrchr(fileName, '.'));
-    else
+    if (!embFormat_getExtension(fileName, ending)) {
         return 0;
-
-    while(ending[i] != '\0')
-    {
-        ending[i] = (char)tolower(ending[i]);
-        ++i;
     }
 
-    curFormat = formatList;
-    while(curFormat)
-    {
-        if(!strcmp(ending, curFormat->extension))
-        {
-            extension = curFormat->extension;
+    for (i=0; i<numberOfFormats; i++) {
+        if (!strcmp(ending, formatTable[i].extension)) {
+            extension = formatTable[i].extension;
             break;
         }
-
-        curFormat = curFormat->next;
     }
-
-    embFormatList_free(formatList);
-    formatList = 0;
 
     return extension;
 }
@@ -216,40 +131,18 @@ const char* embFormat_descriptionFromName(const char* fileName)
 {
     int i = 0;
     char ending[2 + EMBFORMAT_MAXEXT];
-    EmbFormatList* formatList = 0;
-    EmbFormatList* curFormat = 0;
     const char* description = 0;
 
-    if(!fileName) { embLog_error("emb-format.c embFormat_descriptionFromName(), fileName argument is null\n"); return 0; }
-
-    formatList = embFormatList_create();
-
-    if(strlen(fileName) == 0) return 0;
-    if(strrchr(fileName, '.'))
-        strcpy(ending, strrchr(fileName, '.'));
-    else
+    if (!embFormat_getExtension(fileName, ending)) {
         return 0;
-
-    while(ending[i] != '\0')
-    {
-        ending[i] = (char)tolower(ending[i]);
-        ++i;
     }
 
-    curFormat = formatList;
-    while(curFormat)
-    {
-        if(!strcmp(ending, curFormat->extension))
-        {
-            description = curFormat->description;
+    for (i=0; i<numberOfFormats; i++) {
+        if (!strcmp(ending, formatTable[i].extension)) {
+            description = formatTable[i].description;
             break;
         }
-
-        curFormat = curFormat->next;
     }
-
-    embFormatList_free(formatList);
-    formatList = 0;
 
     return description;
 }
@@ -258,40 +151,18 @@ char embFormat_readerStateFromName(const char* fileName)
 {
     int i = 0;
     char ending[2 + EMBFORMAT_MAXEXT];
-    EmbFormatList* formatList = 0;
-    EmbFormatList* curFormat = 0;
     char readerState = ' ';
 
-    if(!fileName) { embLog_error("emb-format.c embFormat_readerStateFromName(), fileName argument is null\n"); return 0; }
-
-    formatList = embFormatList_create();
-
-    if(strlen(fileName) == 0) return 0;
-    if(strrchr(fileName, '.'))
-        strcpy(ending, strrchr(fileName, '.'));
-    else
+    if (!embFormat_getExtension(fileName, ending)) {
         return 0;
-
-    while(ending[i] != '\0')
-    {
-        ending[i] = (char)tolower(ending[i]);
-        ++i;
     }
 
-    curFormat = formatList;
-    while(curFormat)
-    {
-        if(!strcmp(ending, curFormat->extension))
-        {
-            readerState = curFormat->reader;
+    for (i=0; i<numberOfFormats; i++) {
+        if (!strcmp(ending, formatTable[i].extension)) {
+            readerState = formatTable[i].reader;
             break;
         }
-
-        curFormat = curFormat->next;
     }
-
-    embFormatList_free(formatList);
-    formatList = 0;
 
     return readerState;
 }
@@ -300,40 +171,18 @@ char embFormat_writerStateFromName(const char* fileName)
 {
     int i = 0;
     char ending[2 + EMBFORMAT_MAXEXT];
-    EmbFormatList* formatList = 0;
-    EmbFormatList* curFormat = 0;
     char writerState = ' ';
 
-    if(!fileName) { embLog_error("emb-format.c embFormat_writerStateFromName(), fileName argument is null\n"); return 0; }
-
-    formatList = embFormatList_create();
-
-    if(strlen(fileName) == 0) return 0;
-    if(strrchr(fileName, '.'))
-        strcpy(ending, strrchr(fileName, '.'));
-    else
+    if (!embFormat_getExtension(fileName, ending)) {
         return 0;
-
-    while(ending[i] != '\0')
-    {
-        ending[i] = (char)tolower(ending[i]);
-        ++i;
     }
 
-    curFormat = formatList;
-    while(curFormat)
-    {
-        if(!strcmp(ending, curFormat->extension))
-        {
-            writerState = curFormat->writer;
+    for (i=0; i<numberOfFormats; i++) {
+        if (!strcmp(ending, formatTable[i].extension)) {
+            writerState = formatTable[i].writer;
             break;
         }
-
-        curFormat = curFormat->next;
     }
-
-    embFormatList_free(formatList);
-    formatList = 0;
 
     return writerState;
 }
@@ -342,42 +191,46 @@ int embFormat_typeFromName(const char* fileName)
 {
     int i = 0;
     char ending[2 + EMBFORMAT_MAXEXT];
-    EmbFormatList* formatList = 0;
-    EmbFormatList* curFormat = 0;
     int type = EMBFORMAT_UNSUPPORTED;
 
-    if(!fileName) { embLog_error("emb-format.c embFormat_typeFromName(), fileName argument is null\n"); return 0; }
-
-    formatList = embFormatList_create();
-
-    if(strlen(fileName) == 0) return 0;
-    if(strrchr(fileName, '.'))
-        strcpy(ending, strrchr(fileName, '.'));
-    else
+    if (!embFormat_getExtension(fileName, ending)) {
         return 0;
-
-    while(ending[i] != '\0')
-    {
-        ending[i] = (char)tolower(ending[i]);
-        ++i;
     }
 
-    curFormat = formatList;
-    while(curFormat)
-    {
-        if(!strcmp(ending, curFormat->extension))
-        {
-            type = curFormat->type;
+    for (i=0; i<numberOfFormats; i++) {
+        if (!strcmp(ending, formatTable[i].extension)) {
+            type = formatTable[i].type;
             break;
         }
-
-        curFormat = curFormat->next;
     }
-
-    embFormatList_free(formatList);
-    formatList = 0;
 
     return type;
 }
+
+
+/* gcc -DTEST_EMB_FORMAT -o emb-format emb-format.c emb-logging.c */
+#ifdef TEST_EMB_FORMAT
+
+int main(void)
+{
+    const char*  tName = "example.zsk";
+
+    printf("Filename   : %s\n"
+           "Extension  : %s\n"
+           "Description: %s\n"
+           "Reader     : %c\n"
+           "Writer     : %c\n"
+           "Type       : %d\n\n",
+            tName,
+            embFormat_extensionFromName(tName),   /* .zsk */
+            embFormat_descriptionFromName(tName), /* ZSK USA Embroidery Format */
+            embFormat_readerStateFromName(tName), /* 'U' */
+            embFormat_writerStateFromName(tName), /* ' ' */
+            embFormat_typeFromName(tName)         /* 1 (EMBFORMAT_STITCHONLY) */
+            );
+    return 0;
+}
+
+#endif
 
 /* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

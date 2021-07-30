@@ -44,11 +44,27 @@ extern EMB_PUBLIC int EMB_CALL embCircleObjectList_count(EmbCircleObjectList* po
 extern EMB_PUBLIC int EMB_CALL embCircleObjectList_empty(EmbCircleObjectList* pointer);
 extern EMB_PUBLIC void EMB_CALL embCircleObjectList_free(EmbCircleObjectList* pointer);
 
+extern EMB_PUBLIC int EMB_CALL getCircleCircleIntersections(
+    /* The circle */
+    EmbCircle c0, EmbCircle c1,
+    /* Intersection Point */
+    double* px3, double* py3,
+    /* Intersection Point */
+    double* px4, double* py4);
+
+extern EMB_PUBLIC int EMB_CALL getCircleTangentPoints(
+    /* The circle */
+    EmbCircle c,
+    /* Point to determine tangency */
+    double  px,  double  py,
+    /* Tangent Point 0 */
+    double* tx0, double* ty0,
+    /* Tangent Point 1 */
+    double* tx1, double* ty1);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 #include "api-stop.h"
 
 #endif /* EMB_CIRCLE_H */
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

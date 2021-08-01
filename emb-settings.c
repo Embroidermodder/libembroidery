@@ -21,4 +21,3 @@ void embSettings_setHome(EmbSettings* settings, EmbPoint point)
     settings->home = point;
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

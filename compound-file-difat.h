@@ -32,4 +32,3 @@ static const unsigned int NumberOfDifatEntriesInHeader = 109;
 
 #endif /* COMPOUND_FILE_DIFAT_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

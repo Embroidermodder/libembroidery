@@ -41,4 +41,3 @@ extern EMB_PUBLIC void EMB_CALL embPolygonObjectList_free(EmbPolygonObjectList* 
 
 #endif /* EMB_POLYGON_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

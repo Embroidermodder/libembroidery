@@ -51,4 +51,3 @@ extern EMB_PUBLIC void EMB_CALL embCircleObjectList_free(EmbCircleObjectList* po
 
 #endif /* EMB_CIRCLE_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

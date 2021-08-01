@@ -24,4 +24,3 @@ extern EMB_PUBLIC EmbReaderWriter* EMB_CALL embReaderWriter_getByFileName(const 
 
 #endif /* EMB_READER_WRITER_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

@@ -50,6 +50,12 @@ extern EMB_PUBLIC void EMB_CALL embLineObjectList_free(EmbLineObjectList* pointe
 extern EMB_PUBLIC void EMB_CALL embLine_normalVector(EmbVector vector1, EmbVector vector2, EmbVector* result, int clockwise);
 extern EMB_PUBLIC void EMB_CALL embLine_intersectionPoint(EmbVector v1, EmbVector v2, EmbVector v3, EmbVector v4, EmbVector* result);
 
+void getLineIntersection(double  lineAx1,    double  lineAy1,
+                         double  lineAx2,    double  lineAy2,
+                         double  lineBx1,    double  lineBy1,
+                         double  lineBx2,    double  lineBy2,
+                         double *intersectX, double *intersectY);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

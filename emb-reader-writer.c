@@ -1,4 +1,5 @@
 #include "emb-reader-writer.h"
+#include "emb-format.h"
 #include "emb-logging.h"
 #include "formats.h"
 #include <stdio.h>
@@ -86,16 +87,10 @@ EmbReaderWriter* embReaderWriter_getByFileName(const char* fileName)
     char ending[5];
     EmbReaderWriter* rw = 0;
 
-    if(!fileName) { embLog_error("emb-reader-writer.c embReaderWriter_getByFileName(), fileName argument is null\n"); return 0; }
-
-    if(strlen(fileName) == 0) return 0;
-    strcpy(ending, strrchr(fileName, '.'));
-
-    while(ending[i] != '\0')
-    {
-        ending[i] = (char)tolower(ending[i]);
-        ++i;
+    if (!embFormat_getExtension(fileName, ending)) {
+        return 0;
     }
+
     rw = (EmbReaderWriter*)malloc(sizeof(EmbReaderWriter));
     if(!rw) { embLog_error("emb-reader-writer.c embReaderWriter_getByFileName(), cannot allocate memory for rw\n"); return 0; }
 

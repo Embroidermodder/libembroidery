@@ -26,6 +26,7 @@ typedef struct EmbFormatList_
 extern EmbFormatList formatTable[100];
 extern int numberOfFormats;
 
+extern EMB_PUBLIC int EMB_CALL embFormat_getExtension(const char* fileName, char *ending);
 extern EMB_PUBLIC const char* EMB_CALL embFormat_extensionFromName(const char* fileName);
 extern EMB_PUBLIC const char* EMB_CALL embFormat_descriptionFromName(const char* fileName);
 extern EMB_PUBLIC char EMB_CALL embFormat_readerStateFromName(const char* fileName);

@@ -68,3 +68,4 @@ extern EMB_PUBLIC int EMB_CALL getCircleTangentPoints(
 #include "api-stop.h"
 
 #endif /* EMB_CIRCLE_H */
+

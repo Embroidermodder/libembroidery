@@ -34,4 +34,3 @@ char* emb_strdup(const char* src);
 
 #endif /* HELPERS_MISC_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

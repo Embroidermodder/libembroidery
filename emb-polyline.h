@@ -41,4 +41,3 @@ extern EMB_PUBLIC void EMB_CALL embPolylineObjectList_free(EmbPolylineObjectList
 
 #endif /* EMB_POLYLINE_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

@@ -21,4 +21,3 @@ extern EMB_PUBLIC void EMB_CALL embLog_error(const char* format, ...);
 
 #endif /* EMB_LOGGING_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

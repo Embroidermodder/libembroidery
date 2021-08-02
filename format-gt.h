@@ -19,4 +19,3 @@ extern EMB_PRIVATE int EMB_CALL writeGt(EmbPattern* pattern, const char* fileNam
 
 #endif /* FORMAT_GT_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

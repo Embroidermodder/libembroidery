@@ -132,4 +132,3 @@ static const char imageWithFrame[38][48] = {
 
 #endif /* FORMAT_PEC_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

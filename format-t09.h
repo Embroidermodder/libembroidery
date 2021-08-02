@@ -19,4 +19,3 @@ extern EMB_PRIVATE int EMB_CALL writeT09(EmbPattern* pattern, const char* fileNa
 
 #endif /* FORMAT_T09_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

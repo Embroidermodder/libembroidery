@@ -68,4 +68,3 @@ static const EmbThread shvThreads[] = {
 
 #endif /* FORMAT_SHV_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

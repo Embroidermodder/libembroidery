@@ -19,4 +19,3 @@ extern EMB_PRIVATE int EMB_CALL writeVp3(EmbPattern* pattern, const char* fileNa
 
 #endif /* FORMAT_VP3_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

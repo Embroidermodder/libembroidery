@@ -101,4 +101,3 @@ extern EMB_PUBLIC int EMB_CALL embPattern_write(EmbPattern* pattern, const char*
 
 #endif /* EMB_PATTERN_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

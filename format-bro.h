@@ -19,4 +19,3 @@ extern EMB_PRIVATE int EMB_CALL writeBro(EmbPattern* pattern, const char* fileNa
 
 #endif /* FORMAT_BRO_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

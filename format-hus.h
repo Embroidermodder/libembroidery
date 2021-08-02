@@ -58,4 +58,3 @@ static const EmbThread husThreads[] = {
 
 #endif /* FORMAT_HUS_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

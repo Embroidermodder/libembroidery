@@ -51,4 +51,3 @@ extern EMB_PUBLIC void EMB_CALL embArcObjectList_free(EmbArcObjectList* pointer)
 
 #endif /* EMB_ARC_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

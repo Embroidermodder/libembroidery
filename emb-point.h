@@ -62,4 +62,3 @@ extern EMB_PUBLIC void EMB_CALL embPointObjectList_free(EmbPointObjectList* poin
 
 #endif /* EMB_POINT_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

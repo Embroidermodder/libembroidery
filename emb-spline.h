@@ -48,4 +48,3 @@ extern EMB_PUBLIC int EMB_CALL embSplineObjectList_empty(EmbSplineObjectList* po
 
 #endif /* EMB_SPLINE_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

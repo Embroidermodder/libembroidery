@@ -20,4 +20,3 @@ extern EMB_PRIVATE int EMB_CALL writeGc(EmbPattern* pattern, const char* fileNam
 
 #endif /* FORMAT_GC_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

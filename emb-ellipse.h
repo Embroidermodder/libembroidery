@@ -58,4 +58,3 @@ extern EMB_PUBLIC void EMB_CALL embEllipseObjectList_free(EmbEllipseObjectList* 
 
 #endif /* EMB_ELLIPSE_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

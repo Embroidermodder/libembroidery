@@ -22,4 +22,3 @@ typedef struct EmbLayer_
 
 #endif /* EMB_LAYER_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

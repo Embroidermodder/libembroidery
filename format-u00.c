@@ -93,4 +93,3 @@ int writeU00(EmbPattern* pattern, const char* fileName)
     return 0; /*TODO: finish WriteU00 */
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

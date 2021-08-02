@@ -9,8 +9,8 @@
 /*****************************************
  * HUS Colors
  ****************************************/
-static const int husThreadCount = 29;
-static const EmbThread husThreads[] = {
+const int husThreadCount = 29;
+const EmbThread husThreads[] = {
 {{   0,   0,   0 }, "Black",        "TODO:HUS_CATALOG_NUMBER"},
 {{   0,   0, 255 }, "Blue",         "TODO:HUS_CATALOG_NUMBER"},
 {{   0, 255,   0 }, "Light Green",  "TODO:HUS_CATALOG_NUMBER"},

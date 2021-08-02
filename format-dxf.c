@@ -1,5 +1,6 @@
 #include "helpers-misc.h"
 #include "embroidery.h"
+#include "geom-arc.h"
 
 #include <stdio.h>
 #include <stdlib.h>

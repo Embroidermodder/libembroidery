@@ -5,7 +5,6 @@
 #include "emb-compress.h"
 #include "emb-thread.h"
 
-
 /*****************************************
  * HUS Expand/Compress Variables
  ****************************************/

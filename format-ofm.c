@@ -1,8 +1,6 @@
-#include "format-ofm.h"
-#include "compound-file.h"
-#include "emb-file.h"
-#include "emb-logging.h"
+#include "embroidery.h"
 #include "helpers-binary.h"
+#include "compound-file.h"
 #include <stdlib.h>
 #include <string.h>
 

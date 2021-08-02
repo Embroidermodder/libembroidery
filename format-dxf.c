@@ -1,8 +1,5 @@
-#include "format-dxf.h"
 #include "helpers-misc.h"
-#include "emb-hash.h"
-#include "emb-logging.h"
-#include "emb-arc.h"
+#include "embroidery.h"
 
 #include <stdio.h>
 #include <stdlib.h>

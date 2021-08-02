@@ -14,7 +14,7 @@
 #include "emb-layer.h"
 #include "emb-line.h"
 #include "emb-logging.h"
-#include "emb-outline.h"
+/* #include "emb-outline.h" */
 #include "emb-path.h"
 #include "emb-pattern.h"
 #include "emb-point.h"
@@ -29,9 +29,6 @@
 #include "emb-thread.h"
 #include "emb-time.h"
 #include "emb-vector.h"
-#include "geom-arc.h"
-#include "geom-circle.h"
-#include "geom-line.h"
 #include "thread-color.h"
 #include "formats.h"
 

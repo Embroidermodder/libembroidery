@@ -1,6 +1,4 @@
-#include "format-svg.h"
-#include "emb-file.h"
-#include "emb-logging.h"
+#include "embroidery.h"
 #include "helpers-misc.h"
 #include <ctype.h>
 #include <stdlib.h>

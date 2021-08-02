@@ -25,4 +25,3 @@ extern EMB_PUBLIC EmbColor EMB_CALL embColor_fromHexStr(char* val);
 
 #endif /* EMB_COLOR_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

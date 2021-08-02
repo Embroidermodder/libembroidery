@@ -38,4 +38,3 @@ extern EMB_PUBLIC int EMB_CALL embFile_printf(EmbFile* stream, const char* forma
 
 #endif /* EMB_FILE_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

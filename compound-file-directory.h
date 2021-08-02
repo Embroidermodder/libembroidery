@@ -49,4 +49,3 @@ extern EMB_PRIVATE void EMB_CALL bcf_directory_free(bcf_directory* dir);
 
 #endif /* COMPOUND_FILE_DIRECTORY_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

@@ -47,4 +47,3 @@ static const unsigned char vipDecodingTable[] = {
 
 #endif /* FORMAT_VIP_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

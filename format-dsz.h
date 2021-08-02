@@ -19,4 +19,3 @@ extern EMB_PRIVATE int EMB_CALL writeDsz(EmbPattern* pattern, const char* fileNa
 
 #endif /* FORMAT_DSZ_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

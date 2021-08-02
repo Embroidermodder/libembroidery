@@ -32,4 +32,3 @@ int writePel(EmbPattern* pattern, const char* fileName)
     return 0; /*TODO: finish writePel */
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

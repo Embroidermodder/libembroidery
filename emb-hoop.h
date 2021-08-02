@@ -23,4 +23,3 @@ extern EMB_PUBLIC double EMB_CALL embHoop_height(EmbHoop hoop);
 
 #endif /* EMB_HOOP_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

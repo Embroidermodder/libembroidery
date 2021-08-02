@@ -41,4 +41,3 @@ void binaryWriteFloat(EmbFile* file, float data);
 
 #endif /* HELPERS_BINARY_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

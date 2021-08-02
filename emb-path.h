@@ -56,4 +56,3 @@ extern EMB_PUBLIC void EMB_CALL embPathObjectList_free(EmbPathObjectList* pointe
 
 #endif /* EMB_PATH_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

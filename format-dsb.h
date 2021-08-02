@@ -19,4 +19,3 @@ extern EMB_PRIVATE int EMB_CALL writeDsb(EmbPattern* pattern, const char* fileNa
 
 #endif /* FORMAT_DSB_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

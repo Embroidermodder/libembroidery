@@ -1065,4 +1065,3 @@ void embPattern_addRectObjectAbs(EmbPattern* p, double x, double y, double w, do
     }
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

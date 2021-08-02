@@ -43,4 +43,3 @@ extern EMB_PUBLIC EmbStitch EMB_CALL embStitchList_getAt(EmbStitchList* pointer,
 
 #endif /* EMB_STITCH_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

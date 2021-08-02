@@ -126,4 +126,3 @@ void bcf_directory_free(bcf_directory* dir)
     }
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

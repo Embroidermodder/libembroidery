@@ -49,4 +49,3 @@ const char* threadColorName(unsigned int color, int brand);
 
 #endif /* THREAD_COLOR_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

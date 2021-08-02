@@ -40,4 +40,3 @@ extern EMB_PUBLIC int EMB_CALL embFormat_typeFromName(const char* fileName);
 
 #endif /* EMB_FORMAT_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

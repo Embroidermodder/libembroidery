@@ -1,10 +1,17 @@
-#include "format-svg.h"
-#include "emb-file.h"
-#include "emb-logging.h"
+#include "embroidery.h"
 #include "helpers-misc.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+
+int svgCreator;
+
+int svgExpect;
+int svgMultiValue;
+
+SvgElement* currentElement;
+char* currentAttribute;
+char* currentValue;
 
 EmbColor svgColorToEmbColor(char* colorString)
 {

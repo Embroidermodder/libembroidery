@@ -44,10 +44,31 @@ extern EMB_PUBLIC int EMB_CALL embArcObjectList_count(EmbArcObjectList* pointer)
 extern EMB_PUBLIC int EMB_CALL embArcObjectList_empty(EmbArcObjectList* pointer);
 extern EMB_PUBLIC void EMB_CALL embArcObjectList_free(EmbArcObjectList* pointer);
 
+char isArcClockwise(double startx, double starty,
+                    double midx,   double midy,
+                    double endx,   double endy);
+
+void getArcCenter(double  arcStartX,  double  arcStartY,
+                  double  arcMidX,    double  arcMidY,
+                  double  arcEndX,    double  arcEndY,
+                  /* returned data */
+                  double *arcCenterX, double *arcCenterY);
+
+char getArcDataFromBulge(double bulge,
+                         double arcStartX,          double arcStartY,
+                         double arcEndX,            double arcEndY,
+                         /* returned data */
+                         double* arcMidX,           double* arcMidY,
+                         double* arcCenterX,        double* arcCenterY,
+                         double* radius,            double* diameter,
+                         double* chord,
+                         double* chordMidX,         double* chordMidY,
+                         double* sagitta,           double* apothem,
+                         double* incAngleInDegrees, char*   clockwise);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 #include "api-stop.h"
 
 #endif /* EMB_ARC_H */
-

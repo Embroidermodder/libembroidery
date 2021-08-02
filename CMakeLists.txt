@@ -102,9 +102,6 @@ set(LIBRARY_SOURCE_FILES
     format-vp3.c
     format-xxx.c
     format-zsk.c
-    geom-arc.c
-    geom-circle.c
-    geom-line.c
     hashtable.c
     helpers-binary.c
     helpers-misc.c

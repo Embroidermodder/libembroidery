@@ -2,9 +2,7 @@
 #include "helpers-misc.h"
 #include "emb-hash.h"
 #include "emb-logging.h"
-
-#include "geom-arc.h"
-/*#include "geom-line.h" */
+#include "emb-arc.h"
 
 #include <stdio.h>
 #include <stdlib.h>

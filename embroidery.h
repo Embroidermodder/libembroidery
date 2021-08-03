@@ -29,9 +29,6 @@
 #include "emb-thread.h"
 #include "emb-time.h"
 #include "emb-vector.h"
-#include "geom-arc.h"
-#include "geom-circle.h"
-#include "geom-line.h"
 #include "thread-color.h"
 #include "formats.h"
 

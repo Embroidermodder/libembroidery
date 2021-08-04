@@ -2,8 +2,6 @@
 #ifndef EMB_THREAD_H
 #define EMB_THREAD_H
 
-/* TODO: what the heck is math.h doing here? This needs moved to the source file instead of being here. */
-#include <math.h>
 #include "emb-color.h"
 
 #include "api-start.h"

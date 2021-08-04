@@ -5,6 +5,7 @@
 #include "emb-logging.h"
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 static char xxxDecodeByte(unsigned char inputByte)
 {

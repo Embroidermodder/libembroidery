@@ -109,7 +109,7 @@ set(LIBRARY_SOURCE_FILES
 )
 
 add_library(embroidery_static STATIC
-    ${LIBRARY_SOURCE_FILES}    
+    ${LIBRARY_SOURCE_FILES}
 )
 add_library(embroidery SHARED
     ${LIBRARY_SOURCE_FILES}
@@ -118,7 +118,7 @@ add_library(embroidery SHARED
 target_include_directories(embroidery
     INTERFACE
         $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     PRIVATE
         include
 )
@@ -126,13 +126,17 @@ target_include_directories(embroidery
 target_include_directories(embroidery_static
     INTERFACE
         $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     PRIVATE
         include
 )
 
 add_executable(libembroidery_convert
     libembroidery-convert/libembroidery-convert-main.c
+)
+
+add_executable(libembroidery_test
+    libembroidery-test/libembroidery-test-main.c
 )
 
 target_include_directories(libembroidery_convert
@@ -143,13 +147,18 @@ target_include_directories(libembroidery_convert
         include
 )
 
-target_link_libraries(libembroidery_convert PRIVATE embroidery m)
+# These link against the static libraries
+# so we know that it is the current build that they're
+# linked against.
+target_link_libraries(libembroidery_convert PRIVATE embroidery_static m)
+target_link_libraries(libembroidery_test PRIVATE embroidery_static m)
 
 install(
     TARGETS
        embroidery
        embroidery_static
        libembroidery_convert
+       libembroidery_test
     LIBRARY DESTINATION /usr/lib
     ARCHIVE DESTINATION /usr/lib
     RUNTIME DESTINATION /usr/bin/env

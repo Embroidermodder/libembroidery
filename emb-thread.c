@@ -2,7 +2,20 @@
 #include "emb-logging.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
+/**
+ * Returns the closest color to the required color based on
+ * a list of available threads. The algorithm is a simple least
+ * squares search against the list. If the Euclidean 3-dimensional
+ * distance between the points in (red, green, blue) space is smaller
+ * then the index is saved and the remaining index is returned to the
+ * caller.
+ *
+ * @param color  The EmbColor color to match.
+ * @param colors The EmbThreadList pointer to start the search at.
+ * @return closestIndex The entry in the ThreadList that matches.
+ */
 int embThread_findNearestColor(EmbColor color, EmbThreadList* colors)
 {
     double currentClosestValue = 9999999;
@@ -38,6 +51,23 @@ int embThread_findNearestColor(EmbColor color, EmbThreadList* colors)
     return closestIndex;
 }
 
+/**
+ * Returns the closest color to the required color based on
+ * an array of available threads. The algorithm is a simple least
+ * squares search against the list. If the Euclidean 3-dimensional
+ * distance between the points in (red, green, blue) space is smaller
+ * then the index is saved and the remaining index is returned to the
+ * caller.
+ *
+ * This is potentially an unnecessary duplicate depending on which
+ * memory model is used in general. TODO: review for which function
+ * is more appropriate.
+ *
+ * @param color      The EmbColor color to match.
+ * @param colorArray The EmbThread pointer to start the search at.
+ * @param count      The length of the array as an integer.
+ * @return closestIndex The entry in the ThreadList that matches.
+ */
 int embThread_findNearestColorInArray(EmbColor color, EmbThread* colorArray, int count)
 {
     double currentClosestValue = 9999999;
@@ -69,6 +99,13 @@ int embThread_findNearestColorInArray(EmbColor color, EmbThread* colorArray, int
     return closestIndex;
 }
 
+/**
+ * Returns a random thread color, useful in filling in cases where the
+ * actual color of the thread doesn't matter but one needs to be declared
+ * to test or render a pattern.
+ *
+ * @return c The resulting color.
+ */
 EmbThread embThread_getRandom(void)
 {
     EmbThread c;
@@ -144,6 +181,6 @@ void embThreadList_free(EmbThreadList* pointer)
         free(tempPointer);
         tempPointer = nextPointer;
     }
-	pointer = 0;
+    pointer = 0;
 }
 

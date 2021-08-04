@@ -15,6 +15,54 @@ SvgElement* currentElement;
 char* currentAttribute;
 char* currentValue;
 
+const char *svg_element_tokens[] = {
+    "a", "animate", "animateColor", "animateMotion", "animateTransform", "animation",
+    "audio", "circle", "defs", "desc", "discard", "ellipse",
+    "font", "font-face", "font-face-src", "font-face-uri", "foreignObject",
+    "g", "glyph", "handler", "hkern", "image", "line", "linearGradient", "listener",
+    "metadata", "missing-glyph", "mpath", "path", "polygon", "polyline", "prefetch",
+    "radialGradient", "rect", "script", "set", "solidColor", "stop", "svg", "switch",
+    "tbreak", "text", "textArea", "title", "tspan", "use", "video", "END"
+    /* "altGlyph", "altGlyphDef", "altGlyphItem", "clipPath", "color-profile", "cursor",
+     * "feBlend", "feColorMatrix", "feComponentTransfer", "feComposite", "feConvolveMatrix",
+     * "feDiffuseLighting", "feDisplacementMap", "feDistantLight", "feFlood",
+     * "feFuncA", "feFuncB", "feFuncG", "feFuncR", "feGaussianBlur", "feImage",
+     * "feMerge", "feMergeNode", "feMorphology", "feOffset", "fePointLight",
+     * "feSpecularLighting", "feSpotLight", "feTile", "feTurbulence", "filter",
+     * "font-face-format", "font-face-name", "glyphRef", "marker", "mask",
+     * "pattern", "style", "symbol", "textPath", "tref", "view", "vkern"
+     * TODO: not implemented SVG Full 1.1 Spec Elements */
+};
+
+const char *svg_media_property_tokens[] = {
+    "audio-level", "buffered-rendering", "display", "image-rendering",
+    "pointer-events", "shape-rendering", "text-rendering", "viewport-fill",
+    "viewport-fill-opacity", "visibility", "END"
+};
+
+const char *svg_property_tokens[] = {
+    "audio-level", "buffered-rendering", "color", "color-rendering", "direction",
+    "display", "display-align", "fill", "fill-opacity", "fill-rule",
+    "font-family", "font-size", "font-style", "font-variant", "font-weight",
+    "image-rendering", "line-increment", "opacity", "pointer-events",
+    "shape-rendering", "solid-color", "solid-opacity", "stop-color",
+    "stop-opacity", "stroke", "stroke-dasharray", "stroke-linecap", "stroke-linejoin",
+    "stroke-miterlimit", "stroke-opacity", "stroke-width", "text-align",
+    "text-anchor", "text-rendering", "unicode-bidi", "vector-effect",
+    "viewport-fill", "viewport-fill-opacity", "visibility", "END"
+};
+
+char isStringInArray(const char* buff, const char **array)
+{
+    int i;
+    for (i=0; array[i][0]=='E'; i++) {
+        if (!strcmp(buff, array[i])) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 EmbColor svgColorToEmbColor(char* colorString)
 {
     unsigned char r = 0;
@@ -626,167 +674,26 @@ void svgAddToPattern(EmbPattern* p)
 
 int svgIsElement(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "?xml"))                { type = SVG_NULL; } /* TODO: Fix the xml version ? messing with svg version */
-    else if(!strcmp(buff, "a"))                   { type = SVG_ELEMENT; }
- /* else if(!strcmp(buff, "altGlyph"))            { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "altGlyphDef"))         { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "altGlyphItem"))        { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
-    else if(!strcmp(buff, "animate"))             { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "animateColor"))        { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "animateMotion"))       { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "animateTransform"))    { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "animation"))           { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "audio"))               { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "circle"))              { type = SVG_ELEMENT; }
- /* else if(!strcmp(buff, "clipPath"))            { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "color-profile"))       { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "cursor"))              { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
-    else if(!strcmp(buff, "defs"))                { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "desc"))                { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "discard"))             { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "ellipse"))             { type = SVG_ELEMENT; }
- /* else if(!strcmp(buff, "feBlend"))             { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feColorMatrix"))       { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feComponentTransfer")) { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feComposite"))         { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feConvolveMatrix"))    { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feDiffuseLighting"))   { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feDisplacementMap"))   { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feDistantLight"))      { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feFlood"))             { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feFuncA"))             { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feFuncB"))             { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feFuncG"))             { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feFuncR"))             { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feGaussianBlur"))      { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feImage"))             { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feMerge"))             { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feMergeNode"))         { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feMorphology"))        { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feOffset"))            { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "fePointLight"))        { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feSpecularLighting"))  { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feSpotLight"))         { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feTile"))              { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "feTurbulence"))        { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "filter"))              { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
-    else if(!strcmp(buff, "font"))                { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "font-face"))           { type = SVG_ELEMENT; }
- /* else if(!strcmp(buff, "font-face-format"))    { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "font-face-name"))      { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
-    else if(!strcmp(buff, "font-face-src"))       { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "font-face-uri"))       { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "foreignObject"))       { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "g"))                   { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "glyph"))               { type = SVG_ELEMENT; }
- /* else if(!strcmp(buff, "glyphRef"))            { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
-    else if(!strcmp(buff, "handler"))             { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "hkern"))               { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "image"))               { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "line"))                { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "linearGradient"))      { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "listener"))            { type = SVG_ELEMENT; }
- /* else if(!strcmp(buff, "marker"))              { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "mask"))                { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
-    else if(!strcmp(buff, "metadata"))            { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "missing-glyph"))       { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "mpath"))               { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "path"))                { type = SVG_ELEMENT; }
- /* else if(!strcmp(buff, "pattern"))             { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
-    else if(!strcmp(buff, "polygon"))             { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "polyline"))            { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "prefetch"))            { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "radialGradient"))      { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "rect"))                { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "script"))              { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "set"))                 { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "solidColor"))          { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "stop"))                { type = SVG_ELEMENT; }
- /* else if(!strcmp(buff, "style"))               { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
-    else if(!strcmp(buff, "svg"))                 { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "switch"))              { type = SVG_ELEMENT; }
- /* else if(!strcmp(buff, "symbol"))              { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
-    else if(!strcmp(buff, "tbreak"))              { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "text"))                { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "textArea"))            { type = SVG_ELEMENT; }
- /* else if(!strcmp(buff, "textPath"))            { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
-    else if(!strcmp(buff, "title"))               { type = SVG_ELEMENT; }
- /* else if(!strcmp(buff, "tref"))                { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
-    else if(!strcmp(buff, "tspan"))               { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "use"))                 { type = SVG_ELEMENT; }
-    else if(!strcmp(buff, "video"))               { type = SVG_ELEMENT; }
- /* else if(!strcmp(buff, "view"))                { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
- /* else if(!strcmp(buff, "vkern"))               { type = SVG_ELEMENT; } TODO: SVG Full 1.1 Spec Element */
+    if (isStringInArray(buff, svg_element_tokens)) { return SVG_ELEMENT; }
 
     /* Attempt to identify the program that created the SVG file. This should be in a comment at that occurs before the svg element. */
-    else if(!strcmp(buff, "Embroidermodder"))     { type = SVG_NULL; svgCreator = SVG_CREATOR_EMBROIDERMODDER; }
-    else if(!strcmp(buff, "Illustrator"))         { type = SVG_NULL; svgCreator = SVG_CREATOR_ILLUSTRATOR; }
-    else if(!strcmp(buff, "Inkscape"))            { type = SVG_NULL; svgCreator = SVG_CREATOR_INKSCAPE; }
+    else if (!strcmp(buff, "Embroidermodder"))     { svgCreator = SVG_CREATOR_EMBROIDERMODDER; }
+    else if (!strcmp(buff, "Illustrator"))         { svgCreator = SVG_CREATOR_ILLUSTRATOR; }
+    else if (!strcmp(buff, "Inkscape"))            { svgCreator = SVG_CREATOR_INKSCAPE; }
 
-    else                                          { type = SVG_NULL; }
-    return type;
+    return SVG_NULL;
 }
 
 int svgIsMediaProperty(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "audio-level"))           { type = SVG_MEDIA_PROPERTY; }
-    else if(!strcmp(buff, "buffered-rendering"))    { type = SVG_MEDIA_PROPERTY; }
-    else if(!strcmp(buff, "display"))               { type = SVG_MEDIA_PROPERTY; }
-    else if(!strcmp(buff, "image-rendering"))       { type = SVG_MEDIA_PROPERTY; }
-    else if(!strcmp(buff, "pointer-events"))        { type = SVG_MEDIA_PROPERTY; }
-    else if(!strcmp(buff, "shape-rendering"))       { type = SVG_MEDIA_PROPERTY; }
-    else if(!strcmp(buff, "text-rendering"))        { type = SVG_MEDIA_PROPERTY; }
-    else if(!strcmp(buff, "viewport-fill"))         { type = SVG_MEDIA_PROPERTY; }
-    else if(!strcmp(buff, "viewport-fill-opacity")) { type = SVG_MEDIA_PROPERTY; }
-    else if(!strcmp(buff, "visibility"))            { type = SVG_MEDIA_PROPERTY; }
-    return type;
+    if (isStringInArray(buff, svg_media_property_tokens)) { return SVG_MEDIA_PROPERTY; }
+    return SVG_NULL;
 }
 
 int svgIsProperty(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "audio-level"))           { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "buffered-rendering"))    { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "color"))                 { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "color-rendering"))       { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "direction"))             { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "display"))               { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "display-align"))         { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "fill"))                  { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "fill-opacity"))          { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "fill-rule"))             { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "font-family"))           { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "font-size"))             { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "font-style"))            { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "font-variant"))          { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "font-weight"))           { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "image-rendering"))       { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "line-increment"))        { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "opacity"))               { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "pointer-events"))        { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "shape-rendering"))       { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "solid-color"))           { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "solid-opacity"))         { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "stop-color"))            { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "stop-opacity"))          { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "stroke"))                { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "stroke-dasharray"))      { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "stroke-linecap"))        { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "stroke-linejoin"))       { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "stroke-miterlimit"))     { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "stroke-opacity"))        { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "stroke-width"))          { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "text-align"))            { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "text-anchor"))           { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "text-rendering"))        { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "unicode-bidi"))          { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "vector-effect"))         { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "viewport-fill"))         { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "viewport-fill-opacity")) { type = SVG_PROPERTY; }
-    else if(!strcmp(buff, "visibility"))            { type = SVG_PROPERTY; }
-    return type;
+    if (isStringInArray(buff, svg_property_tokens)) { return SVG_PROPERTY; }
+    return SVG_NULL;
 }
 
 int svgIsXmlAttribute(const char* buff)
@@ -3643,4 +3550,3 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
 
     return 1;
 }
-

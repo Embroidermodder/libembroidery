@@ -207,29 +207,3 @@ int embFormat_typeFromName(const char* fileName)
     return type;
 }
 
-
-/* gcc -DTEST_EMB_FORMAT -o emb-format emb-format.c emb-logging.c */
-#ifdef TEST_EMB_FORMAT
-
-int main(void)
-{
-    const char*  tName = "example.zsk";
-
-    printf("Filename   : %s\n"
-           "Extension  : %s\n"
-           "Description: %s\n"
-           "Reader     : %c\n"
-           "Writer     : %c\n"
-           "Type       : %d\n\n",
-            tName,
-            embFormat_extensionFromName(tName),   /* .zsk */
-            embFormat_descriptionFromName(tName), /* ZSK USA Embroidery Format */
-            embFormat_readerStateFromName(tName), /* 'U' */
-            embFormat_writerStateFromName(tName), /* ' ' */
-            embFormat_typeFromName(tName)         /* 1 (EMBFORMAT_STITCHONLY) */
-            );
-    return 0;
-}
-
-#endif
-

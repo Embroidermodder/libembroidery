@@ -15,3 +15,4 @@ make
 ./libembroidery_convert ../libembroidery-test/test02.csv test02.svg
 ./libembroidery_convert ../libembroidery-test/test01.csv test01.dst
 ./libembroidery_convert ../libembroidery-test/test02.csv test02.dst
+./libembroidery_test

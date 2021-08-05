@@ -158,7 +158,6 @@ install(
        embroidery
        embroidery_static
        libembroidery_convert
-       libembroidery_test
     LIBRARY DESTINATION /usr/lib
     ARCHIVE DESTINATION /usr/lib
     RUNTIME DESTINATION /usr/bin/env

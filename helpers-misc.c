@@ -5,6 +5,47 @@
 #include "helpers-misc.h"
 #include "emb-logging.h"
 
+/**
+ * Function is similar to the Unix utility tr.
+ *
+ * Character for character replacement in strings.
+ * Takes a string \a s and for every character in the
+ * \a from string replace with the corresponding character
+ * in the \a to string.
+ *
+ * For example: ("test", "tb", "..") -> ".es."
+ */
+void charReplace(char *s, const char *from, const char *to)
+{
+    int i;
+    for (; *s; s++) {
+        for (i=0; from[i]; i++) {
+            if (*s == from[i]) {
+                *s = to[i];
+            }
+        }
+    }
+}
+
+/**
+ * Tests for the presense of a string \a s in the supplied
+ * \a array.
+ *
+ * The end of the array is marked by an empty string.
+ *
+ * @return 0 if not present 1 if present.
+ */
+int stringInArray(const char *s, const char **array)
+{
+    int i;
+    for (i=0; strlen(array[i]); i++) {
+        if (!strcmp(s, array[i])) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 /*! Rounds a double (\a src) and returns it as an \c int. */
 int roundDouble(double src)
 {

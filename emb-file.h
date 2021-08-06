@@ -4,6 +4,8 @@
 
 #include <stdio.h>
 
+#include "emb-pattern.h"
+
 #include "api-start.h"
 #ifdef __cplusplus
 extern "C" {
@@ -17,6 +19,9 @@ typedef struct EmbFile_
     FILE* file;
 } EmbFile;
 #endif /* ARDUINO */
+
+int validateWritePattern(EmbPattern* pattern, const char* fileName, const char *function);
+int validateReadPattern(EmbPattern* pattern, const char* fileName, const char *function);
 
 extern EMB_PUBLIC EmbFile* EMB_CALL embFile_open(const char* fileName, const char* mode);
 extern EMB_PUBLIC int EMB_CALL embFile_close(EmbFile* stream);

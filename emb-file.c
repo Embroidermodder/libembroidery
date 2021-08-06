@@ -1,6 +1,46 @@
 #include "emb-file.h"
+#include "emb-logging.h"
 #include <stdarg.h>
 #include <stdlib.h>
+
+/**
+ * Argument validator and stitchList checker.
+ * Saves making these 3 checks seperately for every file type.
+ */
+int validateWritePattern(EmbPattern *pattern, const char* fileName, const char *function)
+{
+    if (!pattern) {
+        embLog_error("%s(), pattern argument is null\n", function);
+        return 0;
+    }
+    if (!fileName) {
+        embLog_error("%s(), fileName argument is null\n", function);
+        return 0;
+    }
+
+    if (!embStitchList_count(pattern->stitchList)) {
+        embLog_error("%s(), pattern contains no stitches\n", function);
+        return 0;
+    }
+
+    return 1;
+}
+
+/**
+ * Argument validator for reading patterns.
+ */
+int validateReadPattern(EmbPattern *pattern, const char* fileName, const char *function)
+{
+    if (!pattern) {
+        embLog_error("%s(), pattern argument is null\n", function);
+        return 0;
+    }
+    if (!fileName) {
+        embLog_error("%s(), fileName argument is null\n", function);
+        return 0;
+    }
+    return 1;
+}
 
 EmbFile* embFile_open(const char* fileName, const char* mode)
 {
@@ -9,12 +49,11 @@ EmbFile* embFile_open(const char* fileName, const char* mode)
 #else
     EmbFile* eFile = 0;
     FILE* oFile = fopen(fileName, mode);
-    if(!oFile)
+    if (!oFile)
         return 0;
 
     eFile = (EmbFile*)malloc(sizeof(EmbFile));
-    if(!eFile)
-    {
+    if (!eFile) {
         fclose(oFile);
         return 0;
     }
@@ -97,12 +136,11 @@ EmbFile* embFile_tmpfile(void)
 #else
     EmbFile* eFile = 0;
     FILE* tFile = tmpfile();
-    if(!tFile)
+    if (!tFile)
         return 0;
 
     eFile = (EmbFile*)malloc(sizeof(EmbFile));
-    if(!eFile)
-    {
+    if (!eFile) {
         fclose(tFile);
         return 0;
     }

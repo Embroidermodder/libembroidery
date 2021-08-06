@@ -3257,28 +3257,3 @@ const char* threadColorName(unsigned int color, int brand)
     return "COLOR NOT FOUND";
 }
 
-/* gcc -DTEST_THREAD_COLOR -o thread-color thread-color.c */
-#ifdef TEST_THREAD_COLOR
-
-#include <stdio.h>
-
-int main(void)
-{
-    unsigned int tColor = 0xFFD25F00;
-    int          tBrand = Sulky_Rayon;
-    int          tNum   = threadColorNum(tColor, tBrand);
-    const char*  tName  = threadColorName(tColor, tBrand);
-
-    printf("Color : 0x%X\n"
-           "Brand : %d\n"
-           "Num   : %d\n"
-           "Name  : %s\n\n",
-            tColor,
-            tBrand,
-            tNum, /* Solution: 1833 */
-            tName); /* Solution: Pumpkin Pie */
-    return 0;
-}
-
-#endif
-

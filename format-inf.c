@@ -61,8 +61,9 @@ int writeInf(EmbPattern* pattern, const char* fileName)
     int i = 1, bytesRemaining;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-inf.c writeInf(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-inf.c writeInf(), fileName argument is null\n"); return 0; }
+    if (!validateWritePattern(pattern, fileName, "writeInf")) {
+        return 0;
+    }
 
     file = embFile_open(fileName, "wb");
     if(!file)

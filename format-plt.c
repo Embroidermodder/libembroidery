@@ -67,13 +67,7 @@ int writePlt(EmbPattern* pattern, const char* fileName)
     char firstStitchOfBlock = 1;
     FILE* file = 0;
 
-    if(!pattern) { embLog_error("format-plt.c writePlt(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-plt.c writePlt(), fileName argument is null\n"); return 0; }
-
-    file = fopen(fileName, "wb");
-    if(!file)
-    {
-        embLog_error("format-plt.c writePlt(), cannot open %s for writing\n", fileName);
+    if (!validateWritePattern(pattern, fileName, "writePlt")) {
         return 0;
     }
 

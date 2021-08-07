@@ -172,15 +172,9 @@ int writeTap(EmbPattern* pattern, const char* fileName)
 	int ax, ay, mx, my;
 	EmbStitchList* pointer = 0;
 	
-	if (!embStitchList_count(pattern->stitchList))
-	{
-		embLog_error("format-tap.c writeDst(), pattern contains no stitches\n");
-		return 0;
-	}
-
-	/* Check for an END stitch and add one if it is not present */
-	if (pattern->lastStitch->stitch.flags != END)
-		embPattern_addStitchRel(pattern, 0, 0, END, 1);
+    if (!validateWritePattern(pattern, fileName, "writeTap")) {
+        return 0;
+    }
 
 	file = embFile_open(fileName, "wb");
 	if (!file)

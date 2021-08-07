@@ -241,22 +241,7 @@ int writeHus(EmbPattern* pattern, const char* fileName)
     unsigned char* attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-hus.c writeHus(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-hus.c writeHus(), fileName argument is null\n"); return 0; }
-
-    stitchCount = embStitchList_count(pattern->stitchList);
-    if(!stitchCount)
-    {
-        embLog_error("format-hus.c writeHus(), pattern contains no stitches\n");
-        return 0;
-    }
-
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-    {
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
-        stitchCount++;
-    }
+    if (!validateWritePattern(pattern, fileName, "write100")) return 0;
 
     file = embFile_open(fileName, "wb");
     if(!file)
@@ -265,6 +250,7 @@ int writeHus(EmbPattern* pattern, const char* fileName)
         return 0;
     }
 
+    stitchCount = embStitchList_count(pattern->stitchList);
     /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
     minColors = embThreadList_count(pattern->threadList);
     patternColor = minColors;

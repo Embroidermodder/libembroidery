@@ -45,10 +45,6 @@ int write100(EmbPattern* pattern, const char* fileName)
 {
     if (!validateWritePattern(pattern, fileName, "write100")) return 0;
 
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
-
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 
     return 0; /*TODO: finish write100 */

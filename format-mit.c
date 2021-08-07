@@ -63,20 +63,10 @@ int writeMit(EmbPattern* pattern, const char* fileName)
 	double xx = 0, yy = 0, dx = 0, dy = 0;
 	int flags = 0;
 
-    if(!pattern) { embLog_error("format-mit.c writeMit(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-mit.c writeMit(), fileName argument is null\n"); return 0; }
-
-    if(!embStitchList_count(pattern->stitchList))
-    {
-        embLog_error("format-mit.c writeMit(), pattern contains no stitches\n");
+    if (!validateWritePattern(pattern, fileName, "writeMit")) {
         return 0;
     }
 
-    /* Check for an END stitch and add one if it is not present */
-	if (pattern->lastStitch->stitch.flags != END)
-	{
-		embPattern_addStitchRel(pattern, 0, 0, END, 1);
-	}
 	file = embFile_open(fileName, "wb");
 	if (!file)
 	{

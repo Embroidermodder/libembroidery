@@ -1,7 +1,4 @@
-#include "emb-pattern.h"
-#include "emb-reader-writer.h"
-#include "emb-settings.h"
-#include "emb-logging.h"
+#include "embroidery.h"
 #include "helpers-misc.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +10,9 @@
 #include "utility/ino-event.h"
 #endif
 
-/*! Returns a pointer to an EmbPattern. It is created on the heap. The caller is responsible for freeing the allocated memory with embPattern_free(). */
+/*! Returns a pointer to an EmbPattern. It is created on the heap.
+ * The caller is responsible for freeing the allocated memory with
+ * embPattern_free(). */
 EmbPattern* embPattern_create(void)
 {
     EmbPattern* p = 0;
@@ -28,7 +27,7 @@ EmbPattern* embPattern_create(void)
     p->hoop.height = 0.0;
     p->hoop.width = 0.0;
     p->arcObjList = 0;
-    p->circleObjList = 0;
+    p->circles = 0;
     p->ellipseObjList = 0;
     p->lineObjList = 0;
     p->pathObjList = 0;
@@ -42,7 +41,6 @@ EmbPattern* embPattern_create(void)
     p->lastThread = 0;
 
     p->lastArcObj = 0;
-    p->lastCircleObj = 0;
     p->lastLineObj = 0;
     p->lastEllipseObj = 0;
     p->lastPathObj = 0;
@@ -400,8 +398,6 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     EmbStitch pt;
     EmbArcObjectList* aObjList = 0;
     EmbArc arc;
-    EmbCircleObjectList* cObjList = 0;
-    EmbCircle circle;
     EmbEllipseObjectList* eObjList = 0;
     EmbEllipse ellipse;
     EmbLineObjectList* liObjList = 0;
@@ -429,9 +425,9 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     /* Calculate the bounding rectangle.  It's needed for smart repainting. */
     /* TODO: Come back and optimize this mess so that after going thru all objects
             and stitches, if the rectangle isn't reasonable, then return a default rect */
-    if(embStitchList_empty(p->stitchList) &&
+    if (embStitchList_empty(p->stitchList) &&
     embArcObjectList_empty(p->arcObjList) &&
-    embCircleObjectList_empty(p->circleObjList) &&
+    !p->circles &&
     embEllipseObjectList_empty(p->ellipseObjList) &&
     embLineObjectList_empty(p->lineObjList) &&
     embPointObjectList_empty(p->pointObjList) &&
@@ -476,16 +472,15 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
         aObjList = aObjList->next;
     }
 
-    cObjList = p->circleObjList;
-    while(cObjList)
-    {
-        circle = cObjList->circleObj.circle;
-        boundingRect.left = (double)min(boundingRect.left, circle.centerX - circle.radius);
-        boundingRect.top = (double)min(boundingRect.top, circle.centerY - circle.radius);
-        boundingRect.right = (double)max(boundingRect.right, circle.centerX + circle.radius);
-        boundingRect.bottom = (double)max(boundingRect.bottom, circle.centerY + circle.radius);
-
-        cObjList = cObjList->next;
+    int i;
+    if (p->circles) {
+        for (i=0; i<p->circles->count; i++) {
+            EmbCircle circle = p->circles->circle[i];
+            boundingRect.left = (double)min(boundingRect.left, circle.centerX - circle.radius);
+            boundingRect.top = (double)min(boundingRect.top, circle.centerY - circle.radius);
+            boundingRect.right = (double)max(boundingRect.right, circle.centerX + circle.radius);
+            boundingRect.bottom = (double)max(boundingRect.bottom, circle.centerY + circle.radius);
+        }
     }
 
     eObjList = p->ellipseObjList;
@@ -582,9 +577,9 @@ void embPattern_flipVertical(EmbPattern* p)
  *  Flips the entire pattern (\a p) vertically about the y-axis if (\a vert) is true. */
 void embPattern_flip(EmbPattern* p, int horz, int vert)
 {
+    int i;
     EmbStitchList* stList = 0;
     EmbArcObjectList* aObjList = 0;
-    EmbCircleObjectList* cObjList = 0;
     EmbEllipseObjectList* eObjList = 0;
     EmbLineObjectList* liObjList = 0;
     EmbPathObjectList* paObjList = 0;
@@ -614,12 +609,11 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
         aObjList = aObjList->next;
     }
 
-    cObjList = p->circleObjList;
-    while(cObjList)
-    {
-        if(horz) { cObjList->circleObj.circle.centerX = -cObjList->circleObj.circle.centerX; }
-        if(vert) { cObjList->circleObj.circle.centerY = -cObjList->circleObj.circle.centerY; }
-        cObjList = cObjList->next;
+    if (p->circles) {
+        for (i=0; i<p->circles->count; i++) {
+            if (horz) { p->circles->circle[i].centerX *= -1.0; }
+            if (vert) { p->circles->circle[i].centerY *= -1.0; }
+        }
     }
 
     eObjList = p->ellipseObjList;
@@ -923,7 +917,10 @@ void embPattern_free(EmbPattern* p)
     embThreadList_free(p->threadList);              p->threadList = 0;      p->lastThread = 0;
 
     embArcObjectList_free(p->arcObjList);           p->arcObjList = 0;      p->lastArcObj = 0;
-    embCircleObjectList_free(p->circleObjList);     p->circleObjList = 0;   p->lastCircleObj = 0;
+    if (p->circles) {
+        embCircleArray_free(p->circles);
+        p->circles = 0;
+    }
     embEllipseObjectList_free(p->ellipseObjList);   p->ellipseObjList = 0;  p->lastEllipseObj = 0;
     embLineObjectList_free(p->lineObjList);         p->lineObjList = 0;     p->lastLineObj = 0;
     embPathObjectList_free(p->pathObjList);         p->pathObjList = 0;     p->lastPathObj = 0;
@@ -937,23 +934,24 @@ void embPattern_free(EmbPattern* p)
     p = 0;
 }
 
-/*! Adds a circle object to pattern (\a p) with its center at the absolute position (\a cx,\a cy) with a radius of (\a r). Positive y is up. Units are in millimeters. */
+/*! Adds a circle object to pattern (\a p) with its center at the absolute
+ * position (\a cx,\a cy) with a radius of (\a r). Positive y is up.
+ * Units are in millimeters. */
 void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r)
 {
-    EmbCircleObject circleObj = embCircleObject_make(cx, cy, r);
+    EmbCircle circle = {cx, cy, r};
+    EmbColor color = {0, 0, 0};
 
     if(!p) { embLog_error("emb-pattern.c embPattern_addCircleObjectAbs(), p argument is null\n"); return; }
-    if(embCircleObjectList_empty(p->circleObjList))
-    {
-        p->circleObjList = p->lastCircleObj = embCircleObjectList_create(circleObj);
+    if(p->circles == 0) {
+         embCircleArray_create(p->circles);
     }
-    else
-    {
-        p->lastCircleObj = embCircleObjectList_add(p->lastCircleObj, circleObj);
-    }
+    embCircleArray_add(p->circles, circle, 0, color);
 }
 
-/*! Adds an ellipse object to pattern (\a p) with its center at the absolute position (\a cx,\a cy) with radii of (\a rx,\a ry). Positive y is up. Units are in millimeters. */
+/*! Adds an ellipse object to pattern (\a p) with its center at the
+ * absolute position (\a cx,\a cy) with radii of (\a rx,\a ry). Positive y is up.
+ * Units are in millimeters. */
 void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy, double rx, double ry)
 {
     EmbEllipseObject ellipseObj = embEllipseObject_make(cx, cy, rx, ry);

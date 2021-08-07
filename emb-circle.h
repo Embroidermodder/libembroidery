@@ -9,6 +9,8 @@
 extern "C" {
 #endif
 
+#define CHUNK_SIZE 128
+
 typedef struct EmbCircle_
 {
     double centerX;
@@ -16,33 +18,19 @@ typedef struct EmbCircle_
     double radius;
 } EmbCircle;
 
-extern EMB_PUBLIC double EMB_CALL embCircle_centerX(EmbCircle circle);
-extern EMB_PUBLIC double EMB_CALL embCircle_centerY(EmbCircle circle);
-extern EMB_PUBLIC double EMB_CALL embCircle_radius(EmbCircle circle);
-
-typedef struct EmbCircleObject_
+typedef struct EmbCircleArray_
 {
-    EmbCircle circle;
+    EmbCircle *circle;
+    int *lineType;
+    EmbColor *color;
+    int count;
+    int length;
+} EmbCircleArray;
 
-    /* Properties */
-    int lineType;
-    EmbColor color;
-} EmbCircleObject;
-
-extern EMB_PUBLIC EmbCircleObject EMB_CALL embCircleObject_make(double cx, double cy, double r);
-extern EMB_PUBLIC EmbCircleObject* EMB_CALL embCircleObject_create(double cx, double cy, double r);
-
-typedef struct EmbCircleObjectList_
-{
-    EmbCircleObject circleObj;
-    struct EmbCircleObjectList_* next;
-} EmbCircleObjectList;
-
-extern EMB_PUBLIC EmbCircleObjectList* EMB_CALL embCircleObjectList_create(EmbCircleObject data);
-extern EMB_PUBLIC EmbCircleObjectList* EMB_CALL embCircleObjectList_add(EmbCircleObjectList* pointer, EmbCircleObject data);
-extern EMB_PUBLIC int EMB_CALL embCircleObjectList_count(EmbCircleObjectList* pointer);
-extern EMB_PUBLIC int EMB_CALL embCircleObjectList_empty(EmbCircleObjectList* pointer);
-extern EMB_PUBLIC void EMB_CALL embCircleObjectList_free(EmbCircleObjectList* pointer);
+extern EMB_PUBLIC EmbCircleArray* EMB_CALL embCircleArray_create();
+extern EMB_PUBLIC int EMB_CALL embCircleArray_add(
+    EmbCircleArray* pointer, EmbCircle circle, int linetype, EmbColor color);
+extern EMB_PUBLIC void EMB_CALL embCircleArray_free(EmbCircleArray* pointer);
 
 extern EMB_PUBLIC int EMB_CALL getCircleCircleIntersections(
     /* The circle */

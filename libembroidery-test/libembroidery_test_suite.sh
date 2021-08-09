@@ -7,12 +7,20 @@
 #
 # Then it outputs machine-compatable stitch files should the dev
 # wish to run those tests on a machine.
+
+function test_convert () {
+gdb --batch -ex=r \
+    --args ./libembroidery_convert ../libembroidery-test/$1 $2 >> test.log
+}
+
+rm -fr build
 mkdir build
 cd build
-cmake ..
-make
-./libembroidery_convert ../libembroidery-test/test01.csv test01.svg
-./libembroidery_convert ../libembroidery-test/test02.csv test02.svg
-./libembroidery_convert ../libembroidery-test/test01.csv test01.dst
-./libembroidery_convert ../libembroidery-test/test02.csv test02.dst
-./libembroidery_test
+cmake -DCMAKE_BUILD_TYPE=Debug .. > test.log
+make >> test.log
+
+test_convert test01.csv test01.svg
+test_convert test02.csv test02.svg
+test_convert test01.csv test01.dst
+test_convert test02.csv test02.dst
+gdb --batch -ex=r --args ./libembroidery_test >> test.log

@@ -15,18 +15,18 @@
     <ProjectGuid>{BD30C7BD-9230-4ED7-B581-11F14041909D}</ProjectGuid>
     <RootNamespace>libEmbroidery</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -90,11 +90,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\compound-file-difat.c" />
-    <ClCompile Include="..\..\compound-file-directory.c" />
-    <ClCompile Include="..\..\compound-file-fat.c" />
-    <ClCompile Include="..\..\compound-file-header.c" />
-    <ClCompile Include="..\..\compound-file.c" />
     <ClCompile Include="..\..\emb-arc.c" />
     <ClCompile Include="..\..\emb-circle.c" />
     <ClCompile Include="..\..\emb-color.c" />
@@ -102,6 +97,7 @@
     <ClCompile Include="..\..\emb-ellipse.c" />
     <ClCompile Include="..\..\emb-file.c" />
     <ClCompile Include="..\..\emb-flag.c" />
+    <ClCompile Include="..\..\emb-format.c" />
     <ClCompile Include="..\..\emb-hash.c" />
     <ClCompile Include="..\..\emb-hoop.c" />
     <ClCompile Include="..\..\emb-layer.c" />
@@ -186,17 +182,8 @@
     <ClCompile Include="..\..\helpers-binary.c" />
     <ClCompile Include="..\..\helpers-misc.c" />
     <ClCompile Include="..\..\thread-color.c" />
-    <ClCompile Include="..\..\geom-arc.c" />
-    <ClCompile Include="..\..\geom-circle.c" />
-    <ClCompile Include="..\..\geom-line.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\compound-file-common.h" />
-    <ClInclude Include="..\..\compound-file-difat.h" />
-    <ClInclude Include="..\..\compound-file-directory.h" />
-    <ClInclude Include="..\..\compound-file-fat.h" />
-    <ClInclude Include="..\..\compound-file-header.h" />
-    <ClInclude Include="..\..\compound-file.h" />
     <ClInclude Include="..\..\emb-arc.h" />
     <ClInclude Include="..\..\emb-circle.h" />
     <ClInclude Include="..\..\emb-color.h" />
@@ -204,6 +191,7 @@
     <ClInclude Include="..\..\emb-ellipse.h" />
     <ClInclude Include="..\..\emb-file.h" />
     <ClInclude Include="..\..\emb-flag.h" />
+    <ClInclude Include="..\..\emb-format.h" />
     <ClInclude Include="..\..\emb-hash.h" />
     <ClInclude Include="..\..\emb-hoop.h" />
     <ClInclude Include="..\..\emb-layer.h" />
@@ -287,11 +275,7 @@
     <ClInclude Include="..\..\hashtable.h" />
     <ClInclude Include="..\..\helpers-binary.h" />
     <ClInclude Include="..\..\helpers-misc.h" />
-    <ClInclude Include="..\..\helpers-unused.h" />
     <ClInclude Include="..\..\thread-color.h" />
-    <ClInclude Include="..\..\libgeometry\geom-arc.h" />
-    <ClInclude Include="..\..\libgeometry\geom-circle.h" />
-    <ClInclude Include="..\..\libgeometry\geom-line.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

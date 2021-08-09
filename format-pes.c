@@ -46,6 +46,300 @@ int readPes(EmbPattern* pattern, const char* fileName)
     return 1;
 }
 
+/* static void readPESHeader(EmbFile* file, EmbPattern* pattern) {
+       char* signature = readString(8);
+            if(strcmp(signature, "#PES0100") {
+                readPESHeaderV10();
+            } else if(strcmp(signature, "#PES0090") {
+                readPESHeaderV9();
+            } else if(strcmp(signature, "#PES0080") {
+                readPESHeaderV8();
+            } else if(strcmp(signature, "#PES0070") {
+                readPESHeaderV7();
+            } else if(strcmp(signature, "#PES0060") {
+                readPESHeaderV6();
+            } else if(strcmp(signature, "#PES0056"){
+                readPESHeaderV5();
+            } else if(strcmp(signature, "#PES0055") {
+               readPESHeaderV5();
+                 } else if(strcmp(signature, "#PES0050") {
+                readPESHeaderV5();
+                 } else if(strcmp(signature, "#PES0040") {
+                readPESHeaderV4();
+                 } else if(strcmp(signature, "#PES0030") {
+                readPESHeaderDefault();
+                 } else if(strcmp(signature, "#PES0022") {
+                readPESHeaderDefault();
+                 } else if(strcmp(signature, "#PES0020") {
+                readPESHeaderDefault();
+                 } else if(strcmp(signature, "#PES0001") {
+                readPESHeaderDefault();
+                 } else
+            if(strcmp(signature, "#PEC0001") {
+                //PEC needs to go straight to reading, no default.
+            } else {
+                readPESHeaderDefault();
+            }
+        }
+    }
+
+    static void readPESHeaderDefault()  {
+        int pecStart = readInt32LE();
+        skip(pecStart - readPosition);
+    }
+
+    static void readDescriptions()  {
+        int DesignStringLength = readInt8();
+        String DesignName = readString(DesignStringLength);
+        pattern.setName(DesignName);
+        int categoryStringLength = readInt8();
+        String Category = readString(categoryStringLength);
+        pattern.setCategory(Category);
+        int authorStringLength = readInt8();
+        String Author = readString(authorStringLength);
+        pattern.setAuthor(Author);
+        int keywordsStringLength = readInt8();
+        String keywords = readString(keywordsStringLength);
+        pattern.setKeywords(keywords);
+        int commentsStringLength = readInt8();
+        String Comments = readString(commentsStringLength);
+        pattern.setComments(Comments);
+    }
+
+    static void readPESHeaderV4()  {
+        int pecStart = readInt32LE();
+        skip(4);
+        readDescriptions();
+        skip(pecStart - readPosition);
+    }
+
+    static void readPESHeaderV5()  {
+        int pecStart = readInt32LE();
+        skip(4);
+        readDescriptions();
+        skip(24);//36 v6
+        int fromImageStringLength = readInt8();
+        skip(fromImageStringLength);
+        skip(24);
+        int numberOfProgrammableFillPatterns = readInt16LE();
+        if (numberOfProgrammableFillPatterns != 0) {
+            seek(pecStart);
+            return;
+        }
+        int numberOfMotifPatterns = readInt16LE();
+        if (numberOfMotifPatterns != 0) {
+            seek(pecStart);
+            return;
+        }
+        int featherPatternCount = readInt16LE();
+        if (featherPatternCount != 0) {
+            seek(pecStart);
+            return;
+        }
+        int numberOfColors = readInt16LE();
+        for (int i = 0; i < numberOfColors; i++) {
+            readThread();
+        }
+        seek(pecStart);
+    }
+
+    static void readPESHeaderV6()  {
+        int pecStart = readInt32LE();
+        skip(4);
+        readDescriptions();
+        skip(36);
+        int fromImageStringLength = readInt8();
+        String fromImageString = readString(fromImageStringLength);
+        if (fromImageString.length() != 0) {
+            pattern.setMetadata("image_file", fromImageString);
+        }
+        skip(24);
+        int numberOfProgrammableFillPatterns = readInt16LE();
+        if (numberOfProgrammableFillPatterns != 0) {
+            seek(pecStart);
+            return;
+        }
+        int numberOfMotifPatterns = readInt16LE();
+        if (numberOfMotifPatterns != 0) {
+            seek(pecStart);
+            return;
+        }
+        int featherPatternCount = readInt16LE();
+        if (featherPatternCount != 0) {
+            seek(pecStart);
+            return;
+        }
+        int numberOfColors = readInt16LE();
+        for (int i = 0; i < numberOfColors; i++) {
+            readThread();
+        }
+        seek(pecStart);
+    }
+    
+    static void readPESHeaderV7()  {
+        int pecStart = readInt32LE();
+        skip(4);
+        readDescriptions();
+        skip(36);
+        int fromImageStringLength = readInt8();
+        String fromImageString = readString(fromImageStringLength);
+        if (fromImageString.length() != 0) {
+            pattern.setMetadata("image_file", fromImageString);
+        }
+        skip(24);
+        int numberOfProgrammableFillPatterns = readInt16LE();
+        if (numberOfProgrammableFillPatterns != 0) {
+            seek(pecStart);
+            return;
+        }
+        int numberOfMotifPatterns = readInt16LE();
+        if (numberOfMotifPatterns != 0) {
+            seek(pecStart);
+            return;
+        }
+        int featherPatternCount = readInt16LE();
+        if (featherPatternCount != 0) {
+            seek(pecStart);
+            return;
+        }
+        int numberOfColors = readInt16LE();
+        for (int i = 0; i < numberOfColors; i++) {
+            readThread();
+        }
+        seek(pecStart);
+    }
+    
+    static void readPESHeaderV8()  {
+        int pecStart = readInt32LE();
+        skip(4);
+        readDescriptions();
+        skip(38);
+        int fromImageStringLength = readInt8();
+        String fromImageString = readString(fromImageStringLength);
+        if (fromImageString.length() != 0) {
+            pattern.setMetadata("image_file", fromImageString);
+        }
+        skip(26);
+        int numberOfProgrammableFillPatterns = readInt16LE();
+        if (numberOfProgrammableFillPatterns != 0) {
+            seek(pecStart);
+            return;
+        }
+        int numberOfMotifPatterns = readInt16LE();
+        if (numberOfMotifPatterns != 0) {
+            seek(pecStart);
+            return;
+        }
+        int featherPatternCount = readInt16LE();
+        if (featherPatternCount != 0) {
+            seek(pecStart);
+            return;
+        }
+        int numberOfColors = readInt16LE();
+        for (int i = 0; i < numberOfColors; i++) {
+            readThread();
+        }
+        seek(pecStart);
+    }
+
+    static void readPESHeaderV9()  {
+        int pecStart = readInt32LE();
+        skip(4);
+        readDescriptions();
+        skip(14);
+        int hoopNameStringLength = readInt8();
+        String hoopNameString = readString(hoopNameStringLength);
+        if (hoopNameString.length() != 0) {
+            pattern.setMetadata("hoop_name", hoopNameString);
+        }
+        skip(30);
+        int fromImageStringLength = readInt8();
+        String fromImageString = readString(fromImageStringLength);
+        if (fromImageString.length() != 0) {
+            pattern.setMetadata("image_file", fromImageString);
+        }
+        skip(34);
+        int numberOfProgrammableFillPatterns = readInt16LE();
+        if (numberOfProgrammableFillPatterns != 0) {
+            seek(pecStart);
+            return;
+        }
+        int numberOfMotifPatterns = readInt16LE();
+        if (numberOfMotifPatterns != 0) {
+            seek(pecStart);
+            return;
+        }
+        int featherPatternCount = readInt16LE();
+        if (featherPatternCount != 0) {
+            seek(pecStart);
+            return;
+        }
+        int numberOfColors = readInt16LE();
+        for (int i = 0; i < numberOfColors; i++) {
+            readThread();
+        }
+        seek(pecStart);
+    }
+
+    static void readPESHeaderV10()  {
+        int pecStart = readInt32LE();
+        skip(4);
+        readDescriptions();
+        skip(14);
+        int hoopNameStringLength = readInt8();
+        String hoopNameString = readString(hoopNameStringLength);
+        if (hoopNameString.length() != 0) {
+            pattern.setMetadata("hoop_name", hoopNameString);
+        }
+        skip(38);
+        int fromImageStringLength = readInt8();
+        String fromImageString = readString(fromImageStringLength);
+        if (fromImageString.length() != 0) {
+            pattern.setMetadata("image_file", fromImageString);
+        }
+        skip(34);
+        int numberOfProgrammableFillPatterns = readInt16LE();
+        if (numberOfProgrammableFillPatterns != 0) {
+            seek(pecStart);
+            return;
+        }
+        int numberOfMotifPatterns = readInt16LE();
+        if (numberOfMotifPatterns != 0) {
+            seek(pecStart);
+            return;
+        }
+        int featherPatternCount = readInt16LE();
+        if (featherPatternCount != 0) {
+            seek(pecStart);
+            return;
+        }
+        int numberOfColors = readInt16LE();
+        for (int i = 0; i < numberOfColors; i++) {
+            readThread();
+        }
+        seek(pecStart);
+    }
+    
+    static void readThread() {
+        int color_code_length = readInt8();
+        String color_code = readString(color_code_length);
+        int red = readInt8();
+        int green = readInt8();
+        int blue = readInt8();
+        skip(5);
+        int descriptionStringLength = readInt8();
+        String description = readString(descriptionStringLength);
+
+        int brandStringLength = readInt8();
+        String brand = readString(brandStringLength);
+
+        int threadChartStringLength = readInt8();
+        String threadChart = readString(threadChartStringLength);
+
+        int color = (red & 0xFF) << 16 | (green & 0xFF) << 8 | (blue & 0xFF);
+        pattern.add(new EmbThread(color, description, color_code, brand, threadChart));
+    }
+*/
 static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
 {
     /* TODO: pointer safety */

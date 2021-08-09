@@ -13,6 +13,7 @@ void usage(void)
     char writerState;
     int numReaders = 0;
     int numWriters = 0;
+    int i;
     printf(" _____________________________________________________________________________ \n");
     printf("|          _   _ ___  ___ _____ ___  ___   __  _ ___  ___ ___   _ _           |\n");
     printf("|         | | | | _ \\| __|     | _ \\| _ \\ /  \\| |   \\| __| _ \\ | | |          |\n");
@@ -45,7 +46,6 @@ void usage(void)
     printf("|________|_______|_______|____________________________________________________|\n");
     printf("|        |       |       |                                                    |\n");
 
-    int i;
     for (i=0; i<numberOfFormats; i++) {
         extension = formatTable[i].extension;
         description = formatTable[i].description;

@@ -6,7 +6,7 @@ QMAKE_CFLAGS += /Za #equivalent of -pedantic-errors
 
 !msvc {
 #Ensure anything that does not strictly adhere to C89 is treated as an error
-QMAKE_CFLAGS += -std=c89 -pedantic-errors
+QMAKE_CFLAGS += -std=c99 -pedantic-errors
 QMAKE_CFLAGS += -fvisibility=hidden #Check exported symbols using: nm -C -D libembroidery.so | grep ' T '
 
 #Ensure all implicit function declarations are errors rather than warnings
@@ -22,11 +22,6 @@ QMAKE_CFLAGS_WARN_ON += -Werror=implicit-function-declaration
 #QMAKE_CFLAGS_WARN_ON += -Wno-unused-variable
 
 SOURCES += \
-../libembroidery/compound-file.c \
-../libembroidery/compound-file-difat.c \
-../libembroidery/compound-file-directory.c \
-../libembroidery/compound-file-fat.c \
-../libembroidery/compound-file-header.c \
 ../libembroidery/emb-arc.c \
 ../libembroidery/emb-circle.c \
 ../libembroidery/emb-compress.c \
@@ -222,13 +217,5 @@ HEADERS += \
 ../libembroidery/format-vip.h \
 ../libembroidery/format-vp3.h \
 ../libembroidery/format-xxx.h \
-../libembroidery/format-zsk.h \
+../libembroidery/format-zsk.h 
 
-# TODO: merge the computational geometry code into libembroidery structs
-SOURCES += \
-../libembroidery/geom-arc.c \
-../libembroidery/geom-line.c \
-
-HEADERS += \
-../libembroidery/geom-arc.h \
-../libembroidery/geom-line.h \

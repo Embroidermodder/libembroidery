@@ -19,7 +19,6 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=Debug .. > test.log
 make >> test.log
 
-echo "run\n" > cmd.txt
 test_convert test01.csv test01.svg
 test_convert test02.csv test02.svg
 test_convert test01.csv test01.dst

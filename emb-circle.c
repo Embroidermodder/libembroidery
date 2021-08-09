@@ -143,7 +143,7 @@ int getCircleTangentPoints(EmbCircle c,
     double dx  = px-c.centerX;
     double dy  = py-c.centerY;
     double hyp = sqrt(dx*dx + dy*dy); /* Distance to center of circle */
-
+	EmbCircle p;
     /* Point is inside the circle */
     if (hyp < c.radius)
         return 0;
@@ -159,7 +159,9 @@ int getCircleTangentPoints(EmbCircle c,
      * we can use the Pythagorean theorem to solve for the missing side */
     pr = sqrt((hyp*hyp) - (c.radius*c.radius));
 
-    EmbCircle p = {px, py, pr};
+    p.centerX = px;
+    p.centerY = py;
+   	p.radius = pr;
     return getCircleCircleIntersections(c, p,
                                         tx0, ty0,
                                         tx1, ty1);

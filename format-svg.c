@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 int svgCreator;
 
@@ -65,9 +66,7 @@ char isStringInArray(const char* buff, const char **array)
 
 EmbColor svgColorToEmbColor(char* colorString)
 {
-    unsigned char r = 0;
-    unsigned char g = 0;
-    unsigned char b = 0;
+    EmbColor c;
     int i = 0;
     char* pEnd = 0;
     char* colorStr = copy_trim(colorString); /* Trim out any junk spaces */
@@ -76,14 +75,10 @@ EmbColor svgColorToEmbColor(char* colorString)
     /* SVGTiny1.2 Spec Section 11.13.1 syntax for color values */
     if(length == 7 && colorStr[0] == '#') /* Six digit hex — #rrggbb */
     {
-        EmbColor hexColor = embColor_fromHexStr(lTrim(colorStr, '#'));
-        r = hexColor.r;
-        g = hexColor.g;
-        b = hexColor.b;
+        c = embColor_fromHexStr(lTrim(colorStr, '#'));
     }
     else if(length == 4 && colorStr[0] == '#') /* Three digit hex — #rgb */
     {
-        EmbColor hexColor;
         /* Convert the 3 digit hex to a six digit hex */
         char hex[7];
         hex[0] = colorStr[1];
@@ -94,10 +89,7 @@ EmbColor svgColorToEmbColor(char* colorString)
         hex[5] = colorStr[3];
         hex[6] = 0;
 
-        hexColor = embColor_fromHexStr(hex);
-        r = hexColor.r;
-        g = hexColor.g;
-        b = hexColor.b;
+        c = embColor_fromHexStr(hex);
     }
     else if(strstr(colorStr, "%")) /* Float functional — rgb(R%, G%, B%) */
     {
@@ -111,9 +103,9 @@ EmbColor svgColorToEmbColor(char* colorString)
             if(colorStr[i] == ')') colorStr[i] = ' ';
             if(colorStr[i] == '%') colorStr[i] = ' ';
         }
-        r = (unsigned char)roundDouble(255.0/100.0 * strtod(colorStr, &pEnd));
-        g = (unsigned char)roundDouble(255.0/100.0 * strtod(pEnd,     &pEnd));
-        b = (unsigned char)roundDouble(255.0/100.0 * strtod(pEnd,     &pEnd));
+        c.r = (unsigned char)round(255.0/100.0 * strtod(colorStr, &pEnd));
+        c.g = (unsigned char)round(255.0/100.0 * strtod(pEnd,     &pEnd));
+        c.b = (unsigned char)round(255.0/100.0 * strtod(pEnd,     &pEnd));
     }
     else if(length > 3 && startsWith("rgb", colorStr)) /* Integer functional — rgb(rrr, ggg, bbb) */
     {
@@ -126,33 +118,33 @@ EmbColor svgColorToEmbColor(char* colorString)
             if(colorStr[i] == '(') colorStr[i] = ' ';
             if(colorStr[i] == ')') colorStr[i] = ' ';
         }
-        r = (unsigned char)strtol(colorStr, &pEnd, 10);
-        g = (unsigned char)strtol(pEnd,     &pEnd, 10);
-        b = (unsigned char)strtol(pEnd,     &pEnd, 10);
+        c.r = (unsigned char)strtol(colorStr, &pEnd, 10);
+        c.g = (unsigned char)strtol(pEnd,     &pEnd, 10);
+        c.b = (unsigned char)strtol(pEnd,     &pEnd, 10);
     }
     else /* Color keyword */
     {
-        if     (!strcmp(colorStr, "black"))   { r =   0; g =   0; b =   0; }
-        else if(!strcmp(colorStr, "silver"))  { r = 192; g = 192; b = 192; }
-        else if(!strcmp(colorStr, "gray"))    { r = 128; g = 128; b = 128; }
-        else if(!strcmp(colorStr, "white"))   { r = 255; g = 255; b = 255; }
-        else if(!strcmp(colorStr, "maroon"))  { r = 128; g =   0; b =   0; }
-        else if(!strcmp(colorStr, "red"))     { r = 255; g =   0; b =   0; }
-        else if(!strcmp(colorStr, "purple"))  { r = 128; g =   0; b = 128; }
-        else if(!strcmp(colorStr, "fuchsia")) { r = 255; g =   0; b = 255; }
-        else if(!strcmp(colorStr, "green"))   { r =   0; g = 128; b =   0; }
-        else if(!strcmp(colorStr, "lime"))    { r =   0; g = 255; b =   0; }
-        else if(!strcmp(colorStr, "olive"))   { r = 128; g = 128; b =   0; }
-        else if(!strcmp(colorStr, "yellow"))  { r = 255; g = 255; b =   0; }
-        else if(!strcmp(colorStr, "navy"))    { r =   0; g =   0; b = 128; }
-        else if(!strcmp(colorStr, "blue"))    { r =   0; g =   0; b = 255; }
-        else if(!strcmp(colorStr, "teal"))    { r =   0; g = 128; b = 128; }
-        else if(!strcmp(colorStr, "aqua"))    { r =   0; g = 255; b = 255; }
+        if     (!strcmp(colorStr, "black"))   { c.r =   0; c.g =   0; c.b =   0; }
+        else if(!strcmp(colorStr, "silver"))  { c.r = 192; c.g = 192; c.b = 192; }
+        else if(!strcmp(colorStr, "gray"))    { c.r = 128; c.g = 128; c.b = 128; }
+        else if(!strcmp(colorStr, "white"))   { c.r = 255; c.g = 255; c.b = 255; }
+        else if(!strcmp(colorStr, "maroon"))  { c.r = 128; c.g =   0; c.b =   0; }
+        else if(!strcmp(colorStr, "red"))     { c.r = 255; c.g =   0; c.b =   0; }
+        else if(!strcmp(colorStr, "purple"))  { c.r = 128; c.g =   0; c.b = 128; }
+        else if(!strcmp(colorStr, "fuchsia")) { c.r = 255; c.g =   0; c.b = 255; }
+        else if(!strcmp(colorStr, "green"))   { c.r =   0; c.g = 128; c.b =   0; }
+        else if(!strcmp(colorStr, "lime"))    { c.r =   0; c.g = 255; c.b =   0; }
+        else if(!strcmp(colorStr, "olive"))   { c.r = 128; c.g = 128; c.b =   0; }
+        else if(!strcmp(colorStr, "yellow"))  { c.r = 255; c.g = 255; c.b =   0; }
+        else if(!strcmp(colorStr, "navy"))    { c.r =   0; c.g =   0; c.b = 128; }
+        else if(!strcmp(colorStr, "blue"))    { c.r =   0; c.g =   0; c.b = 255; }
+        else if(!strcmp(colorStr, "teal"))    { c.r =   0; c.g = 128; c.b = 128; }
+        else if(!strcmp(colorStr, "aqua"))    { c.r =   0; c.g = 255; c.b = 255; }
     }
 
     free(colorStr);
     /* Returns black if all else fails */
-    return embColor_make(r, g, b);
+    return c;
 }
 
 EmbFlag svgPathCmdToEmbPathFlag(char cmd)

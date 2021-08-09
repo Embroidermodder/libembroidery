@@ -150,22 +150,11 @@ int writeThr(EmbPattern* pattern, const char* fileName)
     EmbThreadList* colorpointer = 0;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-thr.c writeThr(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-thr.c writeThr(), fileName argument is null\n"); return 0; }
-
-    stitchCount = embStitchList_count(pattern->stitchList);
-    if(!stitchCount)
-    {
-        embLog_error("format-thr.c writeThr(), pattern contains no stitches\n");
+    if (!validateWritePattern(pattern, fileName, "writeThr")) {
         return 0;
     }
 
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-    {
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
-        stitchCount++;
-    }
+    stitchCount = embStitchList_count(pattern->stitchList);
 
     file = embFile_open(fileName, "wb");
     if(!file)

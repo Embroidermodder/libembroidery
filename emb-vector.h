@@ -25,6 +25,10 @@ typedef struct EmbVectorList_
 extern EMB_PUBLIC void EMB_CALL embVector_normalize(EmbVector vector, EmbVector* result);
 extern EMB_PUBLIC void EMB_CALL embVector_multiply(EmbVector vector, double magnitude, EmbVector* result);
 extern EMB_PUBLIC void EMB_CALL embVector_add(EmbVector v1, EmbVector v2, EmbVector* result);
+extern EMB_PUBLIC void EMB_CALL embVector_average(EmbVector v1, EmbVector v2, EmbVector* result);
+extern EMB_PUBLIC void EMB_CALL embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result);
+extern EMB_PUBLIC double EMB_CALL embVector_dot(EmbVector v1, EmbVector v2);
+extern EMB_PUBLIC void EMB_CALL embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result);
 extern EMB_PUBLIC double EMB_CALL embVector_getLength(EmbVector vector);
 
 extern EMB_PUBLIC EmbVectorList* EMB_CALL embVectorList_create(EmbVector data);

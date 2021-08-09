@@ -113,8 +113,9 @@ int readPec(EmbPattern* pattern, const char* fileName)
     int i;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-pec.c readPec(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-pec.c readPec(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readPec")) {
+        return 0;
+    }
 
     file = embFile_open(fileName, "rb");
     if(!file)
@@ -393,15 +394,9 @@ int writePec(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
 
-    if(!embStitchList_count(pattern->stitchList))
-    {
-        embLog_error("format-pec.c writePec(), pattern contains no stitches\n");
+    if (!validateWritePattern(pattern, fileName, "writePec")) {
         return 0;
     }
-
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
 
     file = embFile_open(fileName, "wb");
     if(!file)

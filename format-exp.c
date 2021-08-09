@@ -143,18 +143,7 @@ return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
     int flags = 0;
     unsigned char b[4];
 
-    if(!pattern) { embLog_error("format-exp.c writeExp(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-exp.c writeExp(), fileName argument is null\n"); return 0; }
-
-    if(!embStitchList_count(pattern->stitchList))
-    {
-        embLog_error("format-exp.c writeExp(), pattern contains no stitches\n");
-        return 0;
-    }
-
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
+    if (!validateWritePattern(pattern, fileName, "writeExp")) return 0;
 
     file = embFile_open(fileName, "wb");
     if(!file)

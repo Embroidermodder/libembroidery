@@ -300,12 +300,7 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
 	EmbColor color = embColor_make(0xFE, 0xFE, 0xFE);
     EmbStitchList *mainPointer = 0, *pointer = 0;
 
-    if(!pattern) { embLog_error("format-vp3.c writeVp3(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-vp3.c writeVp3(), fileName argument is null\n"); return 0; }
-
-    if(!embStitchList_count(pattern->stitchList))
-    {
-        embLog_error("format-vp3.c writeVp3(), pattern contains no stitches\n");
+    if (!validateWritePattern(pattern, fileName, "writeVp3")) {
         return 0;
     }
 

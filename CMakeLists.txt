@@ -9,11 +9,6 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(LIBRARY_SOURCE_FILES
-    compound-file.c
-    compound-file-difat.c
-    compound-file-directory.c
-    compound-file-fat.c
-    compound-file-header.c
     emb-arc.c
     emb-circle.c
     emb-color.c
@@ -158,7 +153,6 @@ install(
        embroidery
        embroidery_static
        libembroidery_convert
-       libembroidery_test
     LIBRARY DESTINATION /usr/lib
     ARCHIVE DESTINATION /usr/lib
     RUNTIME DESTINATION /usr/bin/env

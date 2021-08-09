@@ -498,8 +498,9 @@ int writePes(EmbPattern* pattern, const char* fileName)
     int pecLocation;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-pes.c writePes(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-pes.c writePes(), fileName argument is null\n"); return 0; }
+    if (!validateWritePattern(pattern, fileName, "writePes")) {
+        return 0;
+    }
 
     file = embFile_open(fileName, "wb");
     if(!file)
@@ -507,16 +508,6 @@ int writePes(EmbPattern* pattern, const char* fileName)
         embLog_error("format-pes.c writePes(), cannot open %s for writing\n", fileName);
         return 0;
     }
-
-    if(!pattern->stitchList || embStitchList_count(pattern->stitchList) == 0) /* TODO: review this. seems like only embStitchList_count should be needed. */
-    {
-        embLog_error("format-pes.c writePes(), pattern contains no stitches\n");
-        return 0;
-    }
-
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
 
     embPattern_flipVertical(pattern);
     embPattern_scale(pattern, 10.0);

@@ -107,8 +107,8 @@ int readCsd(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     unsigned char colorOrder[14];
 
-    if(!pattern) { embLog_error("format-csd.c readCsd(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-csd.c readCsd(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readCsd"))
+        return 0;
 
     file = embFile_open(fileName, "rb");
     if(!file)
@@ -197,18 +197,8 @@ int readCsd(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeCsd(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { embLog_error("format-csd.c writeCsd(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-csd.c writeCsd(), fileName argument is null\n"); return 0; }
-
-    if(!embStitchList_count(pattern->stitchList))
-    {
-        embLog_error("format-csd.c writeCsd(), pattern contains no stitches\n");
+    if (!validateWritePattern(pattern, fileName, "writeCsd"))
         return 0;
-    }
-
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 

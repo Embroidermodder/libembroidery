@@ -404,18 +404,7 @@ int writeDst(EmbPattern* pattern, const char* fileName)
     char* pd = 0;
     EmbStitchList* pointer = 0;
 
-    if(!pattern) { embLog_error("format-dst.c writeDst(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-dst.c writeDst(), fileName argument is null\n"); return 0; }
-
-    if(!embStitchList_count(pattern->stitchList))
-    {
-        embLog_error("format-dst.c writeDst(), pattern contains no stitches\n");
-        return 0;
-    }
-
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
+    if (!validateWritePattern(pattern, fileName, "writeDst")) return 0;
 
     file = embFile_open(fileName, "wb");
     if(!file)

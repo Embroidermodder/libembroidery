@@ -13,11 +13,10 @@ int readBro(EmbPattern* pattern, const char* fileName)
     int stitchType;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-bro.c readBro(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-bro.c readBro(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readBro")) return 0;
 
     file = embFile_open(fileName, "rb");
-    if(!file)
+    if (!file)
     {
         embLog_error("format-bro.c readBro(), cannot open %s for reading\n", fileName);
         return 0;
@@ -76,18 +75,7 @@ int readBro(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeBro(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { embLog_error("format-bro.c writeBro(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-bro.c writeBro(), fileName argument is null\n"); return 0; }
-
-    if(!embStitchList_count(pattern->stitchList))
-    {
-        embLog_error("format-bro.c writeBro(), pattern contains no stitches\n");
-        return 0;
-    }
-
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
+    if (!validateWritePattern(pattern, fileName, "writeBro")) return 0;
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 

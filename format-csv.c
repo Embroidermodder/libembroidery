@@ -1,8 +1,23 @@
-#include "format-csv.h"
-#include "emb-file.h"
-#include "emb-logging.h"
+#include "embroidery.h"
 #include <stdlib.h>
 #include <string.h>
+
+typedef enum
+{
+    CSV_EXPECT_NULL,
+    CSV_EXPECT_QUOTE1,
+    CSV_EXPECT_QUOTE2,
+    CSV_EXPECT_COMMA
+} CSV_EXPECT;
+
+typedef enum
+{
+    CSV_MODE_NULL,
+    CSV_MODE_COMMENT,
+    CSV_MODE_VARIABLE,
+    CSV_MODE_THREAD,
+    CSV_MODE_STITCH
+} CSV_MODE;
 
 static char* csvStitchFlagToStr(int flags)
 {

@@ -58,9 +58,6 @@ typedef enum
     SVG_CATCH_ALL
 } SVG_TYPES;
 
-extern EMB_PRIVATE int EMB_CALL readSvg(EmbPattern* pattern, const char* fileName);
-extern EMB_PRIVATE int EMB_CALL writeSvg(EmbPattern* pattern, const char* fileName);
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

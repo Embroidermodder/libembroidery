@@ -9,9 +9,6 @@
 extern "C" {
 #endif
 
-extern EMB_PRIVATE int EMB_CALL readJef(EmbPattern* pattern, const char* fileName);
-extern EMB_PRIVATE int EMB_CALL writeJef(EmbPattern* pattern, const char* fileName);
-
 static const EmbThread jefThreads[] = {
     {{0, 0 ,0}, "Black", ""},
     {{0, 0, 0}, "Black", ""},

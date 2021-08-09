@@ -10,11 +10,6 @@
 extern "C" {
 #endif
 
-extern EMB_PRIVATE int EMB_CALL readPec(EmbPattern* pattern, const char* fileName);
-extern EMB_PRIVATE int EMB_CALL writePec(EmbPattern* pattern, const char* fileName);
-extern EMB_PRIVATE void EMB_CALL readPecStitches(EmbPattern* pattern, EmbFile* file);
-extern EMB_PRIVATE void EMB_CALL writePecStitches(EmbPattern* pattern, EmbFile* file, const char* filename);
-
 static const int pecThreadCount = 65;
 static const EmbThread pecThreads[] = {
 {{  0,   0,   0}, "Unknown",         ""}, /* Index  0 */

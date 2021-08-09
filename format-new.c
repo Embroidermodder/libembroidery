@@ -1,6 +1,4 @@
-#include "format-new.h"
-#include "emb-file.h"
-#include "emb-logging.h"
+#include "embroidery.h"
 #include "helpers-binary.h"
 
 static int decodeNewStitch(unsigned char value)

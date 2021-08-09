@@ -9,8 +9,6 @@
 extern "C" {
 #endif
 
-extern EMB_PRIVATE int EMB_CALL readShv(EmbPattern* pattern, const char* fileName);
-extern EMB_PRIVATE int EMB_CALL writeShv(EmbPattern* pattern, const char* fileName);
 /*****************************************
  * SHV Colors
  ****************************************/

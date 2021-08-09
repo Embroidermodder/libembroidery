@@ -1,8 +1,6 @@
-#include "format-stx.h"
 #include "helpers-binary.h"
 #include "helpers-misc.h"
-#include "emb-file.h"
-#include "emb-logging.h"
+#include "embroidery.h"
 #include <stdlib.h>
 #include <string.h>
 

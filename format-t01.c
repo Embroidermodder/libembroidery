@@ -1,6 +1,4 @@
-#include "format-t01.h"
-#include "emb-file.h"
-#include "emb-logging.h"
+#include "embroidery.h"
 #include "helpers-binary.h"
 #include "helpers-misc.h"
 #include <stdio.h>

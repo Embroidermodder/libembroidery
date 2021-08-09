@@ -5,7 +5,7 @@
 
 /**
  * Argument validator and stitchList checker.
- * Saves making these 3 checks seperately for every file type.
+ * Saves making these 4 checks seperately for every file type.
  */
 int validateWritePattern(EmbPattern *pattern, const char* fileName, const char *function)
 {
@@ -21,6 +21,11 @@ int validateWritePattern(EmbPattern *pattern, const char* fileName, const char *
     if (!embStitchList_count(pattern->stitchList)) {
         embLog_error("%s(), pattern contains no stitches\n", function);
         return 0;
+    }
+    
+    /* Check for an END stitch and add one if it is not present */
+    if (pattern->lastStitch->stitch.flags != END) {
+        embPattern_addStitchRel(pattern, 0, 0, END, 1);
     }
 
     return 1;

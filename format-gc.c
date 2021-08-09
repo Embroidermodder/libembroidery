@@ -1,13 +1,14 @@
 /* Smoothie G-Code */
-#include "format-gc.h"
-#include "emb-logging.h"
+#include "embroidery.h"
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
 int readGc(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { embLog_error("format-gc.c readGc(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-gc.c readGc(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readGc")) {
+        return 0;
+    }
+
     return 0; /*TODO: finish readGc */
 }
 
@@ -15,18 +16,9 @@ int readGc(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeGc(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { embLog_error("format-gc.c writeGc(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-gc.c writeGc(), fileName argument is null\n"); return 0; }
-
-    if(!embStitchList_count(pattern->stitchList))
-    {
-        embLog_error("format-gc.c writeGc(), pattern contains no stitches\n");
+    if (!validateWritePattern(pattern, fileName, "writeGc")) {
         return 0;
     }
-
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 

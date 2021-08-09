@@ -51,8 +51,7 @@ int writeEdr(EmbPattern* pattern, const char* fileName)
     EmbThreadList* pointer = 0;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-edr.c writeEdr(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-edr.c writeEdr(), fileName argument is null\n"); return 0; }
+    if (!validateWritePattern(pattern, fileName, "writeEdr")) return 0;
 
     file = embFile_open(fileName, "wb");
     if(!file)

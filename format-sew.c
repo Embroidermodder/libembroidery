@@ -25,8 +25,8 @@ int readSew(EmbPattern* pattern, const char* fileName)
     int numberOfColors;
     char thisStitchIsJump = 0;
 
-    if(!pattern) { embLog_error("format-sew.c readSew(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-sew.c readSew(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readSew"))
+        return 0;
 
     file = embFile_open(fileName, "rb");
     if(!file)
@@ -144,20 +144,10 @@ int writeSew(EmbPattern* pattern, const char* fileName)
     double xx = 0.0, yy = 0.0;
     int flags = 0;
     unsigned char b[4];
-    if(!pattern) { embLog_error("format-sew.c writeSew(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-sew.c writeSew(), fileName argument is null\n"); return 0; }
 
-    if(!embStitchList_count(pattern->stitchList))
-    {
-        embLog_error("format-sew.c writeSew(), pattern contains no stitches\n");
+    if (!validateWritePattern(pattern, fileName, "writeSew"))
         return 0;
-    }
 
-    /* Check for an END stitch and add one if it is not present */
-    if (pattern->lastStitch->stitch.flags != END)
-    {
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
-    }
     file = embFile_open(fileName, "wb");
     if(!file)
     {

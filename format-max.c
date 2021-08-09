@@ -100,18 +100,9 @@ int writeMax(EmbPattern* pattern, const char* fileName)
         0x01,0x38,0x09,0x31,0x33,0x30,0x2F,0x37,0x30,0x35,0x20,0x48,0xFA,0x00,0x00,0x00,
         0x00,0x00,0x00,0x00,0x00 };
 
-    if(!pattern) { embLog_error("format-max.c writeMax(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-max.c writeMax(), fileName argument is null\n"); return 0; }
-
-    if(!embStitchList_count(pattern->stitchList))
-    {
-        embLog_error("format-max.c writeMax(), pattern contains no stitches\n");
+    if (!validateWritePattern(pattern, fileName, "writeMax")) {
         return 0;
     }
-
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
 
     file = embFile_open(fileName, "wb");
     if(!file)

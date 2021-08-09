@@ -1,8 +1,5 @@
-#include "format-dxf.h"
 #include "helpers-misc.h"
-#include "emb-hash.h"
-#include "emb-logging.h"
-#include "emb-arc.h"
+#include "embroidery.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -302,10 +299,8 @@ char* readLine(FILE* file)
  *  Returns \c true if successful, otherwise returns \c false. */
 int readDxf(EmbPattern* pattern, const char* fileName)
 {
-
     FILE* file = 0;
     char* buff = "";
-
     char* dxfVersion = "";
     char* section = "";
     char* tableName = "";
@@ -321,8 +316,8 @@ int readDxf(EmbPattern* pattern, const char* fileName)
     int fileLength = 0;
     unsigned char colorNum = 0;
 
-    if(!pattern) { embLog_error("format-dxf.c readDxf(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-dxf.c readDxf(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readDxf"))
+        return 0;
 
     layerColorHash = embHash_create();
     if(!layerColorHash) { embLog_error("format-dxf.c readDxf(), unable to allocate memory for layerColorHash\n"); return 0; }
@@ -593,8 +588,9 @@ int readDxf(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeDxf(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { embLog_error("format-dxf.c writeDxf(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-dxf.c writeDxf(), fileName argument is null\n"); return 0; }
+    if (!validateWritePattern(pattern, fileName, "writeDxf"))
+        return 0;
+
     return 0; /*TODO: finish writeDxf */
 }
 

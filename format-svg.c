@@ -3152,7 +3152,7 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     int pos;
     int c = 0;
     EmbRectObjectList* rList = 0;
-    EmbCircleObjectList* cList = 0;
+    EmbCircleArray* cList = 0;
     EmbEllipseObjectList* eList = 0;
     EmbLineObjectList* liList = 0;
     EmbPointObjectList* poList = 0;
@@ -3235,12 +3235,12 @@ int readSvg(EmbPattern* pattern, const char* fileName)
 
     /*TODO: remove this summary after testing is complete */
     printf("OBJECT SUMMARY:\n");
-    cList = pattern->circleObjList;
-    while(cList)
-    {
-        EmbCircle c = cList->circleObj.circle;
-        printf("circle %f %f %f\n", c.centerX, c.centerY, c.radius);
-        cList = cList->next;
+    int i;
+    if (pattern->circles) {
+        for (i=0; i<pattern->circles->count; i++) {
+            EmbCircle c = pattern->circles->circle[i];
+            printf("circle %f %f %f\n", c.centerX, c.centerY, c.radius);
+        }
     }
     eList = pattern->ellipseObjList;
     while(eList)
@@ -3298,8 +3298,6 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     EmbRect boundingRect;
     EmbStitchList* stList;
-    EmbCircleObjectList* cObjList = 0;
-    EmbCircle circle;
     EmbEllipseObjectList* eObjList = 0;
     EmbEllipse ellipse;
     EmbLineObjectList* liObjList = 0;
@@ -3358,21 +3356,21 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
 
     /*TODO: Low Priority: Indent output properly. */
 
+    int i;
     /* write circles */
-    cObjList = pattern->circleObjList;
-    while(cObjList)
-    {
-        circle = cObjList->circleObj.circle;
-        color = cObjList->circleObj.color;
-        /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-        embFile_printf(file, "\n<circle stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" r=\"%f\" />",
+    if (pattern->circles) {
+        for (i=0; i<pattern->circles->count; i++) {
+            EmbCircle circle = pattern->circles->circle[i];
+            EmbColor color = pattern->circles->color[i];
+            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+            embFile_printf(file, "\n<circle stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" r=\"%f\" />",
                         color.r,
                         color.g,
                         color.b,
                         circle.centerX,
                         circle.centerY,
                         circle.radius);
-        cObjList = cObjList->next;
+        }
     }
 
     /* write ellipses */

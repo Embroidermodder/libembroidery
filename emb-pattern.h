@@ -30,7 +30,7 @@ typedef struct EmbPattern_
     EmbThreadList* threadList;
 
     EmbArcObjectList* arcObjList;
-    EmbCircleObjectList* circleObjList;
+    EmbCircleArray* circles;
     EmbEllipseObjectList* ellipseObjList;
     EmbLineObjectList* lineObjList;
     EmbPathObjectList* pathObjList;
@@ -44,7 +44,6 @@ typedef struct EmbPattern_
     EmbThreadList* lastThread;
 
     EmbArcObjectList* lastArcObj;
-    EmbCircleObjectList* lastCircleObj;
     EmbEllipseObjectList* lastEllipseObj;
     EmbLineObjectList* lastLineObj;
     EmbPathObjectList* lastPathObj;

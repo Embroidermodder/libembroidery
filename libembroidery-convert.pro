@@ -21,18 +21,17 @@ deploy {
     }
 }
 
-TARGET = libembroidery-convert
+TARGET = libembroideryconvert
 
 OBJECTS_DIR = .obj
 MOC_DIR = .moc
 
 INCLUDEPATH += \
-.. \
 $$PWD \
 
-SOURCES += libembroidery-convert-main.c
+SOURCES += libembroidery-convert/libembroidery-convert-main.c
 
-include( ../libembroidery.pri )
+include( libembroidery.pri )
 
 #Install Linux/Unix
 unix:!macx {

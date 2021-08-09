@@ -5,6 +5,8 @@ CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 libembroidery_convert
+libembroidery-convert/.qmake.stash
+libembroideryconvert
 
 # C++ objects and libs
 *.slo

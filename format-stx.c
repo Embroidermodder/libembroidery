@@ -1,5 +1,3 @@
-#include "helpers-binary.h"
-#include "helpers-misc.h"
 #include "embroidery.h"
 #include <stdlib.h>
 #include <string.h>

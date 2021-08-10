@@ -1,4 +1,3 @@
-#include "helpers-misc.h"
 #include "embroidery.h"
 
 #include <stdio.h>

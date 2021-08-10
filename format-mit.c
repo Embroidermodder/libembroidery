@@ -1,5 +1,4 @@
 #include "embroidery.h"
-#include "helpers-binary.h"
 
 static int mitDecodeStitch(unsigned char value)
 {

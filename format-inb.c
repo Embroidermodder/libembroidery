@@ -1,5 +1,4 @@
 #include "embroidery.h"
-#include "helpers-binary.h"
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */

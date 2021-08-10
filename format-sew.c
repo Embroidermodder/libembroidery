@@ -1,10 +1,4 @@
-#include "format-jef.h"
-#include "emb-file.h"
-#include "emb-logging.h"
-#include "emb-time.h"
-#include "helpers-binary.h"
-#include "helpers-misc.h"
-#include "emb-stitch.h"
+#include "embroidery.h"
 #include <stdio.h>
 #include <stdlib.h>
 

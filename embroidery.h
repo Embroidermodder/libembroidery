@@ -290,10 +290,20 @@ extern EMB_PRIVATE int EMB_CALL writeZsk(EmbPattern* pattern, const char* fileNa
 
 #endif /* ARDUINO TODO: This is temporary. Remove when complete. */
 
+extern const int pecThreadCount;
+extern const EmbThread pecThreads[];
+extern const char imageWithFrame[38][48];
+extern const EmbThread jefThreads[];
+extern const int shvThreadCount;
+extern const EmbThread shvThreads[];
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 #include "api-stop.h"
+
+#include "helpers-binary.h"
+#include "helpers-misc.h"
 
 #endif /* EMBROIDERY_H */
 

@@ -1,6 +1,4 @@
 #include "embroidery.h"
-#include "helpers-binary.h"
-#include "helpers-misc.h"
 #include <stdio.h>
 
 static char expDecode(unsigned char a1)

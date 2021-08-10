@@ -4,8 +4,6 @@
  */
 
 #include "embroidery.h"
-#include "helpers-binary.h"
-#include "helpers-misc.h"
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>

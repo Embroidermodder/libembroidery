@@ -24,13 +24,14 @@
 #define ThreadArt_Polyester     20
 #define ThreaDelight_Polyester  21
 #define Z102_Isacord_Polyester  22
+#define SVG_Colors              23
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef struct thread_color_ {
-    char name[50];
+    char name[20];
     unsigned int hex_code;
     int manufacturer_code;
 } thread_color;
@@ -40,6 +41,7 @@ typedef struct thread_color_ {
  * the alpha value always being FF, i.e. opaque
 */
 
+int threadColor(const char*, int brand);
 int threadColorNum(unsigned int color, int brand);
 const char* threadColorName(unsigned int color, int brand);
 

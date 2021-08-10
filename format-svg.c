@@ -1,6 +1,4 @@
-#include "format-svg.h"
-#include "emb-file.h"
-#include "emb-logging.h"
+#include "embroidery.h"
 #include "helpers-misc.h"
 #include <ctype.h>
 #include <stdlib.h>
@@ -93,53 +91,29 @@ EmbColor svgColorToEmbColor(char* colorString)
     }
     else if(strstr(colorStr, "%")) /* Float functional — rgb(R%, G%, B%) */
     {
-        for(i = 0; i < length; i++)
-        {
-            if(colorStr[i] == 'r') colorStr[i] = ' ';
-            if(colorStr[i] == 'g') colorStr[i] = ' ';
-            if(colorStr[i] == 'b') colorStr[i] = ' ';
-            if(colorStr[i] == ',') colorStr[i] = ' ';
-            if(colorStr[i] == '(') colorStr[i] = ' ';
-            if(colorStr[i] == ')') colorStr[i] = ' ';
-            if(colorStr[i] == '%') colorStr[i] = ' ';
-        }
+        charReplace(colorStr, "rgb,()%", "      ");
         c.r = (unsigned char)round(255.0/100.0 * strtod(colorStr, &pEnd));
         c.g = (unsigned char)round(255.0/100.0 * strtod(pEnd,     &pEnd));
         c.b = (unsigned char)round(255.0/100.0 * strtod(pEnd,     &pEnd));
     }
     else if(length > 3 && startsWith("rgb", colorStr)) /* Integer functional — rgb(rrr, ggg, bbb) */
     {
-        for(i = 0; i < length; i++)
-        {
-            if(colorStr[i] == 'r') colorStr[i] = ' ';
-            if(colorStr[i] == 'g') colorStr[i] = ' ';
-            if(colorStr[i] == 'b') colorStr[i] = ' ';
-            if(colorStr[i] == ',') colorStr[i] = ' ';
-            if(colorStr[i] == '(') colorStr[i] = ' ';
-            if(colorStr[i] == ')') colorStr[i] = ' ';
-        }
+        charReplace(colorStr, "rgb,()", "     ");
         c.r = (unsigned char)strtol(colorStr, &pEnd, 10);
         c.g = (unsigned char)strtol(pEnd,     &pEnd, 10);
         c.b = (unsigned char)strtol(pEnd,     &pEnd, 10);
     }
     else /* Color keyword */
     {
-        if     (!strcmp(colorStr, "black"))   { c.r =   0; c.g =   0; c.b =   0; }
-        else if(!strcmp(colorStr, "silver"))  { c.r = 192; c.g = 192; c.b = 192; }
-        else if(!strcmp(colorStr, "gray"))    { c.r = 128; c.g = 128; c.b = 128; }
-        else if(!strcmp(colorStr, "white"))   { c.r = 255; c.g = 255; c.b = 255; }
-        else if(!strcmp(colorStr, "maroon"))  { c.r = 128; c.g =   0; c.b =   0; }
-        else if(!strcmp(colorStr, "red"))     { c.r = 255; c.g =   0; c.b =   0; }
-        else if(!strcmp(colorStr, "purple"))  { c.r = 128; c.g =   0; c.b = 128; }
-        else if(!strcmp(colorStr, "fuchsia")) { c.r = 255; c.g =   0; c.b = 255; }
-        else if(!strcmp(colorStr, "green"))   { c.r =   0; c.g = 128; c.b =   0; }
-        else if(!strcmp(colorStr, "lime"))    { c.r =   0; c.g = 255; c.b =   0; }
-        else if(!strcmp(colorStr, "olive"))   { c.r = 128; c.g = 128; c.b =   0; }
-        else if(!strcmp(colorStr, "yellow"))  { c.r = 255; c.g = 255; c.b =   0; }
-        else if(!strcmp(colorStr, "navy"))    { c.r =   0; c.g =   0; c.b = 128; }
-        else if(!strcmp(colorStr, "blue"))    { c.r =   0; c.g =   0; c.b = 255; }
-        else if(!strcmp(colorStr, "teal"))    { c.r =   0; c.g = 128; c.b = 128; }
-        else if(!strcmp(colorStr, "aqua"))    { c.r =   0; c.g = 255; c.b = 255; }
+        int tableColor = threadColor(colorStr, SVG_Colors);
+        if (tableColor < 0) {
+            printf("SVG color string not found: %s.\n", colorStr);
+        }
+        else {
+            c.r = (tableColor/256)%16;
+            c.g = (tableColor/16)%16;
+            c.b = tableColor%16;
+        }
     }
 
     free(colorStr);
@@ -147,7 +121,7 @@ EmbColor svgColorToEmbColor(char* colorString)
     return c;
 }
 
-EmbFlag svgPathCmdToEmbPathFlag(char cmd)
+int svgPathCmdToEmbPathFlag(char cmd)
 {
     /* TODO: This function needs some work */
     /*
@@ -178,14 +152,7 @@ SvgAttribute svgAttribute_create(const char* name, const char* value)
     int i = 0;
 
     modValue = emb_strdup(value);
-    last = strlen(modValue);
-    for(i = 0; i < last; i++)
-    {
-        if(modValue[i] == '"') modValue[i] = ' ';
-        if(modValue[i] == '\'') modValue[i] = ' ';
-        if(modValue[i] == '/') modValue[i] = ' ';
-        if(modValue[i] == ',') modValue[i] = ' ';
-    }
+    charReplace(modValue, "\"'/,", "    ");
     attribute.name = emb_strdup(name);
     attribute.value = modValue;
     return attribute;
@@ -367,8 +334,8 @@ void svgAddToPattern(EmbPattern* p)
 
         EmbPointList* startOfPointList = 0;
         EmbPointList* pathObjPointList = 0;
-        EmbFlagList* startOfFlagList = 0;
-        EmbFlagList* pathObjFlagList = 0;
+        EmbFlagArray* startOfFlagArray = 0;
+        EmbFlagArray* pathObjFlagArray = 0;
 
         char* pathbuff = 0;
         pathbuff = (char*)malloc(size);
@@ -470,18 +437,15 @@ void svgAddToPattern(EmbPattern* p)
                             else if(cmd == 'Z') { xx = fx;          yy = fy; }
                             else if(cmd == 'z') { xx = fx;          yy = fy; }
 
-                            if(!pathObjPointList && !pathObjFlagList)
+                            if(!pathObjPointList && !pathObjFlagArray)
                             {
                                 pathObjPointList = embPointList_create(xx, yy);
                                 startOfPointList = pathObjPointList;
-                                pathObjFlagList = embFlagList_create(svgPathCmdToEmbPathFlag(cmd));
-                                startOfFlagList = pathObjFlagList;
+                                pathObjFlagArray = embFlagArray_create();
                             }
-                            else
-                            {
-                                pathObjPointList = embPointList_add(pathObjPointList, embPoint_make(xx, yy));
-                                pathObjFlagList = embFlagList_add(pathObjFlagList, svgPathCmdToEmbPathFlag(cmd));
-                            }
+
+                            pathObjPointList = embPointList_add(pathObjPointList, embPoint_make(xx, yy));
+                            embFlagArray_add(pathObjFlagArray, svgPathCmdToEmbPathFlag(cmd));
                             lx = xx; ly = yy;
 
                             pathbuff[0] = (char)cmd;                  /* set the command for compare */
@@ -555,7 +519,7 @@ void svgAddToPattern(EmbPattern* p)
 
         /* TODO: subdivide numMoves > 1 */
 
-        embPattern_addPathObjectAbs(p, embPathObject_create(startOfPointList, startOfFlagList, svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke")), 1));
+        embPattern_addPathObjectAbs(p, embPathObject_create(startOfPointList, pathObjFlagArray, svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke")), 1));
     }
     else if(!strcmp(buff, "polygon") ||
             !strcmp(buff, "polyline"))

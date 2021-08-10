@@ -1,4 +1,5 @@
 #include "thread-color.h"
+#include <string.h>
 
 /**
  * Converted from the table at:

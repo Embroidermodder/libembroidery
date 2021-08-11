@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+const unsigned int NumberOfDifatEntriesInHeader = 109;
 const unsigned int sizeOfFatEntry = sizeof(unsigned int);
 static const unsigned int sizeOfDifatEntry = 4;
 static const unsigned int sizeOfChainingEntryAtEndOfDifatSector = 4;

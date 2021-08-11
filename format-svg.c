@@ -1850,7 +1850,7 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     int pos;
     int c = 0;
     EmbRectObjectList* rList = 0;
-    EmbCircleArray* cList = 0;
+    EmbGeometryArray* cList = 0;
     EmbEllipseObjectList* eList = 0;
     EmbLineObjectList* liList = 0;
     EmbPointObjectList* poList = 0;
@@ -1936,7 +1936,7 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     int i;
     if (pattern->circles) {
         for (i=0; i<pattern->circles->count; i++) {
-            EmbCircle c = pattern->circles->circle[i];
+            EmbCircle c = pattern->circles->circle[i].circle;
             printf("circle %f %f %f\n", c.centerX, c.centerY, c.radius);
         }
     }
@@ -2058,8 +2058,8 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     /* write circles */
     if (pattern->circles) {
         for (i=0; i<pattern->circles->count; i++) {
-            EmbCircle circle = pattern->circles->circle[i];
-            EmbColor color = pattern->circles->color[i];
+            EmbCircle circle = pattern->circles->circle[i].circle;
+            EmbColor color = pattern->circles->circle[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_printf(file, "\n<circle stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" r=\"%f\" />",
                         color.r,

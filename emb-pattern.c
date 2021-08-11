@@ -474,7 +474,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     int i;
     if (p->circles) {
         for (i=0; i<p->circles->count; i++) {
-            EmbCircle circle = p->circles->circle[i];
+            EmbCircle circle = p->circles->circle[i].circle;
             boundingRect.left = (double)min(boundingRect.left, circle.centerX - circle.radius);
             boundingRect.top = (double)min(boundingRect.top, circle.centerY - circle.radius);
             boundingRect.right = (double)max(boundingRect.right, circle.centerX + circle.radius);
@@ -610,8 +610,8 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
 
     if (p->circles) {
         for (i=0; i<p->circles->count; i++) {
-            if (horz) { p->circles->circle[i].centerX *= -1.0; }
-            if (vert) { p->circles->circle[i].centerY *= -1.0; }
+            if (horz) { p->circles->circle[i].circle.centerX *= -1.0; }
+            if (vert) { p->circles->circle[i].circle.centerY *= -1.0; }
         }
     }
 
@@ -917,7 +917,7 @@ void embPattern_free(EmbPattern* p)
 
     embArcObjectList_free(p->arcObjList);           p->arcObjList = 0;      p->lastArcObj = 0;
     if (p->circles) {
-        embCircleArray_free(p->circles);
+        embGeometryArray_free(p->circles);
         p->circles = 0;
     }
     embEllipseObjectList_free(p->ellipseObjList);   p->ellipseObjList = 0;  p->lastEllipseObj = 0;
@@ -943,9 +943,9 @@ void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r
 
     if(!p) { embLog_error("emb-pattern.c embPattern_addCircleObjectAbs(), p argument is null\n"); return; }
     if(p->circles == 0) {
-         embCircleArray_create(p->circles);
+         embGeometryArray_create(p->circles, EMB_CIRCLE);
     }
-    embCircleArray_add(p->circles, circle, 0, color);
+    embGeometryArray_addCircle(p->circles, circle, 0, color);
 }
 
 /*! Adds an ellipse object to pattern (\a p) with its center at the

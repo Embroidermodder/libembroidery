@@ -2,39 +2,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-EmbCircleArray* embCircleArray_create()
-{
-    EmbCircleArray* list = (EmbCircleArray*)malloc(sizeof(EmbCircleArray));
-    list->circle = (EmbCircle*)malloc(CHUNK_SIZE*sizeof(EmbCircle));
-    list->lineType = (int*)malloc(CHUNK_SIZE*sizeof(int));
-    list->color = (EmbColor*)malloc(CHUNK_SIZE*sizeof(EmbColor));
-    list->length = CHUNK_SIZE;
-    list->count = 0;
-    return list;
-}
-
-int embCircleArray_add(EmbCircleArray* list, EmbCircle circle, int lineType, EmbColor color)
-{
-    if (list->count > list->length) {
-        list->length += CHUNK_SIZE;
-        if (!realloc(list->circle, list->length*sizeof(EmbCircle))) return 0;
-        if (!realloc(list->lineType, list->length*sizeof(int))) return 0;
-        if (!realloc(list->color, list->length*sizeof(EmbColor))) return 0;
-    }
-    list->circle[list->count] = circle;
-    list->lineType[list->count] = lineType;
-    list->color[list->count] = color;
-    list->count++;
-    return 1;
-}
-
-void embCircleArray_free(EmbCircleArray* pointer)
-{
-    free(pointer->circle);
-    free(pointer->lineType);
-    free(pointer->color);
-}
-
 /* Computational Geometry for Circles */
 
 /****************************************************************

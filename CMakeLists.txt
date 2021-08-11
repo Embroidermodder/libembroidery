@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(LIBRARY_SOURCE_FILES
     emb-arc.c
+    emb-array.c
     emb-circle.c
     emb-color.c
     emb-compress.c

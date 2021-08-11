@@ -5,6 +5,89 @@
 #include "embroidery.h"
 
 /*****************************************
+ * HUS Expand/Compress Constants
+ ****************************************/
+#define _132 (CHAR_BIT*sizeof(unsigned short))
+#define _133 (16)
+#define _135 (3)
+#define _136 (16384)
+#define _137 (14)
+#define _138 (10)
+#define _139 (8)
+#define _140 (256)
+#define byte_MAX (255)
+#define _141 (byte_MAX + 1 + _140 - _135 + 1 + 1)
+#define _142 (_137 + 1)
+#define _143 (9)
+#define _144 (_140 + 1)
+#define _145 (_133 + 3)
+#define _147 (5)
+#define _148 (4096)
+#define _149 (256)
+
+#define _152 (_145)
+#define _153 (4096)
+#define _154 (4)
+#define _155 (8192)
+#define _156 (512)
+#define _157 (-1)
+#define _158 (128)
+#define _159 (512)
+#define _540 (5)
+#define bufferSize (512)
+
+/*****************************************
+ * HUS Expand Functions
+ ****************************************/
+void husExpand_258(int _259, unsigned char* _260, int _261, unsigned short* _262, unsigned short _263);
+void husExpand_257(void);
+void husExpand_256(int _219);
+void husExpand_255(void);
+void husExpand_253(short _254, short _220, short _221);
+unsigned short husExpand_252(int _219);
+void husExpand_251(void);
+unsigned short husExpand_250(void);
+unsigned short husExpand_249(void);
+
+void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int _269);
+int husExpand_expand(void);
+void husExpand_cleanup(void);
+
+/*****************************************
+ * HUS Compress Functions
+ ****************************************/
+void husCompress_196(void);
+void husCompress_197(void);
+void husCompress_198(void);
+void husCompress_199(short _200, short _201);
+void husCompress_202(unsigned short _203, unsigned short _204);
+void husCompress_205(void);
+void husCompress_206(void);
+void husCompress_207(void);
+void husCompress_208(int _209, unsigned short _203);
+void husCompress_210(void);
+int husCompress_211(int _212, unsigned short* _213, unsigned char* _214, unsigned short* _215);
+void husCompress_216(unsigned short* _217);
+void husCompress_218(short _219, short _220, short _221);
+void husCompress_222(void);
+void husCompress_223(short _203);
+void husCompress_224(unsigned short _204);
+void husCompress_225(int _226, unsigned short* _187, short* _177, short _227);
+void husCompress_228(int _229);
+void husCompress_230(int _219, unsigned char* _209, unsigned short* _231);
+void husCompress_232(int _226);
+
+/* int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _267, int _269, int _235);
+int husCompress(unsigned char* _233, unsigned long _inputSize, unsigned char* _202, int _234, int _235);*/
+void husCompress_cleanup(void);
+int husCompress_compress(void);
+
+/*TODO: macros are nasty, bleh */
+#define husCompress_445(_200,_446)((short)((_446<<_154)^(_278[_200+2]))&(_153-1))
+#define husCompress_447(_200,_201){short _204;if((_204=_163[_201])!=_157)_164[_204]=_200;_164[_200]=_201;_163[_200]=_204;_163[_201]=_200;}
+#define husCompress_448(s){short _204;if((_204=_164[s])!=_157){_164[s]=_157;_163[_204]=_157;}}
+
+/*****************************************
  * HUS Expand/Compress Variables
  ****************************************/
 short* _163;

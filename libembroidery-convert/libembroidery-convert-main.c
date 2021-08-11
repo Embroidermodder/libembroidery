@@ -1,6 +1,4 @@
-#include "../emb-reader-writer.h"
-#include "../emb-logging.h"
-#include "../emb-format.h"
+#include "../embroidery.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

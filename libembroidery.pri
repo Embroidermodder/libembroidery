@@ -23,6 +23,7 @@ QMAKE_CFLAGS_WARN_ON += -Werror=implicit-function-declaration
 
 SOURCES += \
 ../libembroidery/emb-arc.c \
+../libembroidery/emb-array.c \
 ../libembroidery/emb-circle.c \
 ../libembroidery/emb-compress.c \
 ../libembroidery/emb-color.c \
@@ -116,37 +117,6 @@ SOURCES += \
 ../libembroidery/format-zsk.c \
 
 HEADERS += \
-../libembroidery/api-start.h \
-../libembroidery/api-stop.h \
-../libembroidery/emb-arc.h \
-../libembroidery/emb-circle.h \
-../libembroidery/emb-compress.h \
-../libembroidery/emb-color.h \
-../libembroidery/emb-ellipse.h \
-../libembroidery/emb-file.h \
-../libembroidery/emb-flag.h \
-../libembroidery/emb-format.h \
-../libembroidery/emb-hash.h \
-../libembroidery/emb-hoop.h \
-../libembroidery/emb-layer.h \
-../libembroidery/emb-line.h \
-../libembroidery/emb-logging.h \
-../libembroidery/emb-path.h \
-../libembroidery/emb-pattern.h \
-../libembroidery/emb-point.h \
-../libembroidery/emb-polygon.h \
-../libembroidery/emb-polyline.h \
-../libembroidery/emb-reader-writer.h \
-../libembroidery/emb-rect.h \
-../libembroidery/emb-satin-line.h \
-../libembroidery/emb-settings.h \
-../libembroidery/emb-spline.h \
-../libembroidery/emb-stitch.h \
-../libembroidery/emb-thread.h \
-../libembroidery/emb-time.h \
-../libembroidery/emb-vector.h \
-../libembroidery/hashtable.h \
-../libembroidery/helpers-binary.h \
-../libembroidery/helpers-misc.h \
-../libembroidery/thread-color.h
+../libembroidery/embroidery.h \
+../libembroidery/hashtable.h
 

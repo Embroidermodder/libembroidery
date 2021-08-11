@@ -1,6 +1,4 @@
 #include "embroidery.h"
-#include "helpers-binary.h"
-#include "helpers-misc.h"
 
 /* Pfaff MAX embroidery file format */
 

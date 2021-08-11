@@ -1,6 +1,4 @@
-#include "emb-file.h"
-#include "helpers-binary.h"
-#include "emb-logging.h"
+#include "embroidery.h"
 #include <stdarg.h>
 #include <math.h>
 #include <stdio.h>

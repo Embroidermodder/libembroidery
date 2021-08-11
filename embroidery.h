@@ -1,6 +1,65 @@
 #ifndef LIBEMBROIDERY_HEADER__
 #define LIBEMBROIDERY_HEADER__
 
+#include "api-start.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef struct SvgAttribute_     SvgAttribute;
+typedef struct SvgAttributeList_ SvgAttributeList;
+typedef struct SvgElement_       SvgElement;
+
+struct SvgAttribute_
+{
+    char* name;
+    char* value;
+};
+
+struct SvgAttributeList_
+{
+    SvgAttribute attribute;
+    SvgAttributeList* next;
+};
+
+struct SvgElement_
+{
+    char* name;
+    SvgAttributeList* attributeList;
+    SvgAttributeList* lastAttribute;
+};
+
+typedef enum
+{
+    SVG_CREATOR_NULL,
+    SVG_CREATOR_EMBROIDERMODDER,
+    SVG_CREATOR_ILLUSTRATOR,
+    SVG_CREATOR_INKSCAPE
+} SVG_CREATOR;
+
+typedef enum
+{
+    SVG_EXPECT_NULL,
+    SVG_EXPECT_ELEMENT,
+    SVG_EXPECT_ATTRIBUTE,
+    SVG_EXPECT_VALUE
+} SVG_EXPECT;
+
+typedef enum
+{
+    SVG_NULL,
+    SVG_ELEMENT,
+    SVG_PROPERTY,
+    SVG_MEDIA_PROPERTY,
+    SVG_ATTRIBUTE,
+    SVG_CATCH_ALL
+} SVG_TYPES;
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+#include "api-stop.h"
+
 #include "emb-arc.h"
 #include "emb-circle.h"
 #include "emb-color.h"
@@ -231,10 +290,20 @@ extern EMB_PRIVATE int EMB_CALL writeZsk(EmbPattern* pattern, const char* fileNa
 
 #endif /* ARDUINO TODO: This is temporary. Remove when complete. */
 
+extern const int pecThreadCount;
+extern const EmbThread pecThreads[];
+extern const char imageWithFrame[38][48];
+extern const EmbThread jefThreads[];
+extern const int shvThreadCount;
+extern const EmbThread shvThreads[];
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 #include "api-stop.h"
+
+#include "helpers-binary.h"
+#include "helpers-misc.h"
 
 #endif /* EMBROIDERY_H */
 

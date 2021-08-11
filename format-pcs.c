@@ -1,6 +1,4 @@
 #include "embroidery.h"
-#include "helpers-binary.h"
-#include "helpers-misc.h"
 
 static double pcsDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 {

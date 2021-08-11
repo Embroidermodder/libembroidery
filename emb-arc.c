@@ -1,6 +1,4 @@
-#include "emb-arc.h"
-#include "emb-logging.h"
-#include "emb-line.h"
+#include "embroidery.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979

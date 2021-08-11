@@ -1,7 +1,4 @@
-#include "format-svg.h"
-#include "emb-file.h"
-#include "emb-logging.h"
-#include "helpers-misc.h"
+#include "embroidery.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,7 +20,7 @@ const char *svg_element_tokens[] = {
     "g", "glyph", "handler", "hkern", "image", "line", "linearGradient", "listener",
     "metadata", "missing-glyph", "mpath", "path", "polygon", "polyline", "prefetch",
     "radialGradient", "rect", "script", "set", "solidColor", "stop", "svg", "switch",
-    "tbreak", "text", "textArea", "title", "tspan", "use", "video", "END"
+    "tbreak", "text", "textArea", "title", "tspan", "use", "video", "\0"
     /* "altGlyph", "altGlyphDef", "altGlyphItem", "clipPath", "color-profile", "cursor",
      * "feBlend", "feColorMatrix", "feComponentTransfer", "feComposite", "feConvolveMatrix",
      * "feDiffuseLighting", "feDisplacementMap", "feDistantLight", "feFlood",
@@ -38,7 +35,7 @@ const char *svg_element_tokens[] = {
 const char *svg_media_property_tokens[] = {
     "audio-level", "buffered-rendering", "display", "image-rendering",
     "pointer-events", "shape-rendering", "text-rendering", "viewport-fill",
-    "viewport-fill-opacity", "visibility", "END"
+    "viewport-fill-opacity", "visibility", "\0"
 };
 
 const char *svg_property_tokens[] = {
@@ -50,19 +47,8 @@ const char *svg_property_tokens[] = {
     "stop-opacity", "stroke", "stroke-dasharray", "stroke-linecap", "stroke-linejoin",
     "stroke-miterlimit", "stroke-opacity", "stroke-width", "text-align",
     "text-anchor", "text-rendering", "unicode-bidi", "vector-effect",
-    "viewport-fill", "viewport-fill-opacity", "visibility", "END"
+    "viewport-fill", "viewport-fill-opacity", "visibility", "\0"
 };
-
-char isStringInArray(const char* buff, const char **array)
-{
-    int i;
-    for (i=0; array[i][0]=='E'; i++) {
-        if (!strcmp(buff, array[i])) {
-            return 1;
-        }
-    }
-    return 0;
-}
 
 EmbColor svgColorToEmbColor(char* colorString)
 {
@@ -81,65 +67,36 @@ EmbColor svgColorToEmbColor(char* colorString)
     {
         /* Convert the 3 digit hex to a six digit hex */
         char hex[7];
-        hex[0] = colorStr[1];
-        hex[1] = colorStr[1];
-        hex[2] = colorStr[2];
-        hex[3] = colorStr[2];
-        hex[4] = colorStr[3];
-        hex[5] = colorStr[3];
-        hex[6] = 0;
+        sprintf(hex, "%c%c%c%c%c%c", colorStr[1], colorStr[1], colorStr[2],
+            colorStr[2], colorStr[3], colorStr[3]);
 
         c = embColor_fromHexStr(hex);
     }
     else if(strstr(colorStr, "%")) /* Float functional — rgb(R%, G%, B%) */
     {
-        for(i = 0; i < length; i++)
-        {
-            if(colorStr[i] == 'r') colorStr[i] = ' ';
-            if(colorStr[i] == 'g') colorStr[i] = ' ';
-            if(colorStr[i] == 'b') colorStr[i] = ' ';
-            if(colorStr[i] == ',') colorStr[i] = ' ';
-            if(colorStr[i] == '(') colorStr[i] = ' ';
-            if(colorStr[i] == ')') colorStr[i] = ' ';
-            if(colorStr[i] == '%') colorStr[i] = ' ';
-        }
+        charReplace(colorStr, "rgb,()%", "      ");
         c.r = (unsigned char)round(255.0/100.0 * strtod(colorStr, &pEnd));
         c.g = (unsigned char)round(255.0/100.0 * strtod(pEnd,     &pEnd));
         c.b = (unsigned char)round(255.0/100.0 * strtod(pEnd,     &pEnd));
     }
     else if(length > 3 && startsWith("rgb", colorStr)) /* Integer functional — rgb(rrr, ggg, bbb) */
     {
-        for(i = 0; i < length; i++)
-        {
-            if(colorStr[i] == 'r') colorStr[i] = ' ';
-            if(colorStr[i] == 'g') colorStr[i] = ' ';
-            if(colorStr[i] == 'b') colorStr[i] = ' ';
-            if(colorStr[i] == ',') colorStr[i] = ' ';
-            if(colorStr[i] == '(') colorStr[i] = ' ';
-            if(colorStr[i] == ')') colorStr[i] = ' ';
-        }
+        charReplace(colorStr, "rgb,()", "     ");
         c.r = (unsigned char)strtol(colorStr, &pEnd, 10);
         c.g = (unsigned char)strtol(pEnd,     &pEnd, 10);
         c.b = (unsigned char)strtol(pEnd,     &pEnd, 10);
     }
     else /* Color keyword */
     {
-        if     (!strcmp(colorStr, "black"))   { c.r =   0; c.g =   0; c.b =   0; }
-        else if(!strcmp(colorStr, "silver"))  { c.r = 192; c.g = 192; c.b = 192; }
-        else if(!strcmp(colorStr, "gray"))    { c.r = 128; c.g = 128; c.b = 128; }
-        else if(!strcmp(colorStr, "white"))   { c.r = 255; c.g = 255; c.b = 255; }
-        else if(!strcmp(colorStr, "maroon"))  { c.r = 128; c.g =   0; c.b =   0; }
-        else if(!strcmp(colorStr, "red"))     { c.r = 255; c.g =   0; c.b =   0; }
-        else if(!strcmp(colorStr, "purple"))  { c.r = 128; c.g =   0; c.b = 128; }
-        else if(!strcmp(colorStr, "fuchsia")) { c.r = 255; c.g =   0; c.b = 255; }
-        else if(!strcmp(colorStr, "green"))   { c.r =   0; c.g = 128; c.b =   0; }
-        else if(!strcmp(colorStr, "lime"))    { c.r =   0; c.g = 255; c.b =   0; }
-        else if(!strcmp(colorStr, "olive"))   { c.r = 128; c.g = 128; c.b =   0; }
-        else if(!strcmp(colorStr, "yellow"))  { c.r = 255; c.g = 255; c.b =   0; }
-        else if(!strcmp(colorStr, "navy"))    { c.r =   0; c.g =   0; c.b = 128; }
-        else if(!strcmp(colorStr, "blue"))    { c.r =   0; c.g =   0; c.b = 255; }
-        else if(!strcmp(colorStr, "teal"))    { c.r =   0; c.g = 128; c.b = 128; }
-        else if(!strcmp(colorStr, "aqua"))    { c.r =   0; c.g = 255; c.b = 255; }
+        int tableColor = threadColor(colorStr, SVG_Colors);
+        if (tableColor < 0) {
+            printf("SVG color string not found: %s.\n", colorStr);
+        }
+        else {
+            c.r = (tableColor/256)%16;
+            c.g = (tableColor/16)%16;
+            c.b = tableColor%16;
+        }
     }
 
     free(colorStr);
@@ -147,7 +104,7 @@ EmbColor svgColorToEmbColor(char* colorString)
     return c;
 }
 
-EmbFlag svgPathCmdToEmbPathFlag(char cmd)
+int svgPathCmdToEmbPathFlag(char cmd)
 {
     /* TODO: This function needs some work */
     /*
@@ -178,14 +135,7 @@ SvgAttribute svgAttribute_create(const char* name, const char* value)
     int i = 0;
 
     modValue = emb_strdup(value);
-    last = strlen(modValue);
-    for(i = 0; i < last; i++)
-    {
-        if(modValue[i] == '"') modValue[i] = ' ';
-        if(modValue[i] == '\'') modValue[i] = ' ';
-        if(modValue[i] == '/') modValue[i] = ' ';
-        if(modValue[i] == ',') modValue[i] = ' ';
-    }
+    charReplace(modValue, "\"'/,", "    ");
     attribute.name = emb_strdup(name);
     attribute.value = modValue;
     return attribute;
@@ -663,10 +613,9 @@ void svgAddToPattern(EmbPattern* p)
     currentElement = 0;
 }
 
-
 int svgIsElement(const char* buff)
 {
-    if (isStringInArray(buff, svg_element_tokens)) { return SVG_ELEMENT; }
+    if (stringInArray(buff, svg_element_tokens)) { return SVG_ELEMENT; }
 
     /* Attempt to identify the program that created the SVG file. This should be in a comment at that occurs before the svg element. */
     else if (!strcmp(buff, "Embroidermodder"))     { svgCreator = SVG_CREATOR_EMBROIDERMODDER; }
@@ -678,2167 +627,916 @@ int svgIsElement(const char* buff)
 
 int svgIsMediaProperty(const char* buff)
 {
-    if (isStringInArray(buff, svg_media_property_tokens)) { return SVG_MEDIA_PROPERTY; }
+    if (stringInArray(buff, svg_media_property_tokens)) { return SVG_MEDIA_PROPERTY; }
     return SVG_NULL;
 }
 
 int svgIsProperty(const char* buff)
 {
-    if (isStringInArray(buff, svg_property_tokens)) { return SVG_PROPERTY; }
+    if (stringInArray(buff, svg_property_tokens)) { return SVG_PROPERTY; }
     return SVG_NULL;
 }
 
 int svgIsXmlAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "encoding"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "standalone")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "version"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))          { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {"encoding", "standalone", "version", "/", "\0"};
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsXmlAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsXmlAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsLinkAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "target"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content",
+        "datatype", "externalResourcesRequired", "focusHighlight",
+        "focusable", "id", "nav-down", "nav-down-left",
+        "nav-down-right", "nav-left", "nav-next", "nav-prev",
+        "nav-right", "nav-up", "nav-up-left", "nav-up-right",
+        "property", "rel", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats",
+        "resource", "rev", "role", "systemLanguage", "target",
+        "transform", "typeof", "xlink:actuate", "xlink:arcrole",
+        "xlink:href", "xlink:role", "xlink:show", "xlink:title",
+        "xlink:type", "xml:base", "xml:id", "xml:lang",
+        "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsLinkAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsLinkAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsAnimateAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "accumulate"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "additive"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "attributeName"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "attributeType"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "begin"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "by"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "calcMode"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "dur"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "end"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "fill"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "from"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "keySplines"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "keyTimes"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "max"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "min"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatCount"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatDur"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "restart"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "to"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "values"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "accumulate", "additive", "attributeName", "attributeType",
+        "begin", "by", "calcMode", "class", "content", "datatype", "dur", "end",
+        "fill", "from", "id", "keySplines", "keyTimes", "max", "min", "property",
+        "rel", "repeatCount", "repeatDur", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
+        "restart", "rev", "role", "systemLanguage", "to", "typeof", "values",
+        "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
+        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsAnimateAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsAnimateAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsAnimateColorAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "accumulate"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "additive"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "attributeName"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "attributeType"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "begin"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "by"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "calcMode"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "dur"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "end"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "fill"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "from"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "keySplines"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "keyTimes"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "max"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "min"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatCount"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatDur"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "restart"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "to"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "values"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "accumulate", "additive", "attributeName", "attributeType",
+        "begin", "by", "calcMode", "class", "content", "datatype", "dur",
+        "end", "fill", "from", "id",
+        "keySplines", "keyTimes", "max", "min", "property", "rel",
+        "repeatCount", "repeatDur", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats",
+        "resource", "restart", "rev", "role", "systemLanguage",
+        "to", "typeof", "values", "xlink:actuate", "xlink:arcrole",
+        "xlink:href", "xlink:role", "xlink:show", "xlink:title",
+        "xlink:type", "xml:base", "xml:id", "xml:lang",
+        "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsAnimateColorAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsAnimateColorAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsAnimateMotionAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "accumulate"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "additive"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "begin"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "by"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "calcMode"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "dur"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "end"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "fill"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "from"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "keyPoints"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "keySplines"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "keyTimes"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "max"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "min"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "origin"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "path"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatCount"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatDur"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "restart"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rotate"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "to"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "values"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "accumulate", "additive", "begin", "by", "calcMode", "class",
+        "content", "datatype", "dur", "end", "fill", "from", "id", "keyPoints",
+        "keySplines", "keyTimes", "max", "min", "origin", "path", "property",
+        "rel", "repeatCount", "repeatDur", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
+        "restart", "rev", "role", "rotate", "systemLanguage", "to", "typeof",
+        "values", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
+        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsAnimateMotionAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsAnimateMotionAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsAnimateTransformAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "accumulate"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "additive"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "attributeName"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "attributeType"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "begin"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "by"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "calcMode"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "dur"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "end"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "fill"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "from"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "keySplines"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "keyTimes"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "max"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "min"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatCount"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatDur"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "restart"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "to"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "type"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "values"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "accumulate", "additive", "attributeName", "attributeType",
+        "begin", "by", "calcMode", "class", "content", "datatype", "dur", "end",
+        "fill", "from", "id", "keySplines", "keyTimes", "max", "min",
+        "property", "rel", "repeatCount", "repeatDur", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
+        "restart", "rev", "role", "systemLanguage", "to", "type", "typeof",
+        "values", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
+        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsAnimateTransformAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsAnimateTransformAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsAnimationAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "begin"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "dur"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "end"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "fill"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "height"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "initialVisibility"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "max"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "min"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "preserveAspectRatio"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatCount"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatDur"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "restart"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "syncBehavior"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "syncMaster"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "syncTolerance"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "width"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "x"))                         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "y"))                         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "begin", "class", "content", "datatype", "dur", "end",
+        "externalResourcesRequired", "fill", "focusHighlight", "focusable",
+        "height", "id", "initialVisibility", "max", "min", "nav-down",
+        "nav-down-left", "nav-down-right", "nav-left", "nav-next", "nav-prev",
+        "nav-right", "nav-up", "nav-up-left", "nav-up-right",
+        "preserveAspectRatio", "property", "rel", "repeatCount", "repeatDur",
+        "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "restart", "rev", "role", "syncBehavior",
+        "syncMaster", "syncTolerance", "systemLanguage", "transform", "typeof",
+        "width", "x", "xlink:actuate", "xlink:arcrole", "xlink:href",
+        "xlink:role", "xlink:show", "xlink:title", "xlink:type", "xml:base",
+        "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsAnimationAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsAnimationAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsAudioAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "begin"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "dur"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "end"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "fill"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "max"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "min"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatCount"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatDur"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "restart"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "syncBehavior"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "syncMaster"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "syncTolerance"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "type"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "begin", "class", "content", "datatype", "dur", "end",
+        "externalResourcesRequired", "fill", "id", "max", "min", "property",
+        "rel", "repeatCount", "repeatDur", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
+        "restart", "rev", "role", "syncBehavior", "syncMaster", "syncTolerance",
+        "systemLanguage", "type", "typeof", "xlink:actuate", "xlink:arcrole",
+        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
+        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsAudioAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsAudioAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsCircleAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "cx"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "cy"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "r"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "cx", "cy", "datatype", "focusHighlight",
+        "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
+        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
+        "nav-up-left", "nav-up-right", "property", "r", "rel",
+        "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "rev", "role", "systemLanguage",
+        "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
+        "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsCircleAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsCircleAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsDefsAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "id", "property", "rel",
+        "resource", "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang",
+        "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsDefsAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsDefsAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsDescAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "id", "property", "rel",
+        "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "rev", "role", "systemLanguage",
+        "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsDescAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsDescAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsDiscardAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "begin"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "begin", "class", "content", "datatype", "id", "property",
+        "rel", "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "rev", "role", "systemLanguage",
+        "typeof", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
+        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsDiscardAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsDiscardAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsEllipseAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "cx"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "cy"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rx"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "ry"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "cx", "cy", "datatype", "focusHighlight",
+        "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
+        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
+        "nav-up-left", "nav-up-right", "property", "rel", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
+        "rev", "role", "rx", "ry", "systemLanguage", "transform", "typeof",
+        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsEllipseAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsEllipseAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsFontAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "horiz-adv-x"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "horiz-origin-x"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "externalResourcesRequired",
+        "horiz-adv-x", "horiz-origin-x", "id", "property", "rel", "resource",
+        "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
+        "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsFontAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsFontAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsFontFaceAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "accent-height"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "alphabetic"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "ascent"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "bbox"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "cap-height"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "descent"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "font-family"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "font-stretch"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "font-style"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "font-variant"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "font-weight"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "hanging"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "ideographic"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "mathematical"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "overline-position"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "overline-thickness"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "panose-1"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "slope"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "stemh"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "stemv"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "strikethrough-position"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "strikethrough-thickness"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "underline-position"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "underline-thickness"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "unicode-range"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "units-per-em"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "widths"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "x-height"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "accent-height", "alphabetic", "ascent", "bbox", "cap-height",
+        "class", "content", "datatype", "descent", "externalResourcesRequired",
+        "font-family", "font-stretch", "font-style", "font-variant",
+        "font-weight", "hanging", "id", "ideographic", "mathematical",
+        "overline-position", "overline-thickness", "panose-1", "property",
+        "rel", "resource", "rev", "role", "slope", "stemh", "stemv",
+        "strikethrough-position", "strikethrough-thickness", "typeof",
+        "underline-position", "underline-thickness", "unicode-range",
+        "units-per-em", "widths", "x-height", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsFontFaceAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsFontFaceAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsFontFaceSrcAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "id", "property", "rel",
+        "resource", "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang",
+        "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsFontFaceSrcAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsFontFaceSrcAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsFontFaceUriAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "externalResourcesRequired",
+        "id", "property", "rel", "resource", "rev", "role",
+        "typeof", "xlink:actuate", "xlink:arcrole",
+        "xlink:href", "xlink:role", "xlink:show", "xlink:title",
+        "xlink:type", "xml:base", "xml:id", "xml:lang",
+        "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsFontFaceUriAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsFontFaceUriAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsForeignObjectAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "height"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "width"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "x"))                         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "y"))                         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "externalResourcesRequired",
+        "focusHighlight", "focusable", "height", "id", "nav-down",
+        "nav-down-left", "nav-down-right", "nav-left", "nav-next",
+        "nav-prev", "nav-right", "nav-up", "nav-up-left", "nav-up-right",
+        "property", "rel", "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "rev", "role", "systemLanguage",
+        "transform", "typeof", "width", "x", "xlink:actuate",
+        "xlink:arcrole", "xlink:href", "xlink:role", "xlink:show",
+        "xlink:title", "xlink:type", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "y", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsForeignObjectAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsForeignObjectAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsGroupAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "externalResourcesRequired",
+        "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
+        "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
+        "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
+        "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "rev", "role", "systemLanguage",
+        "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
+        "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsGroupAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsGroupAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsGlyphAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "arabic-form")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "d"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "glyph-name"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "horiz-adv-x")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "lang"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "unicode"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))           { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "arabic-form", "class", "content", "d", "datatype",
+        "glyph-name", "horiz-adv-x", "id", "lang", "property", "rel",
+        "resource", "rev", "role", "typeof", "unicode", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsGlyphAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsGlyphAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsHandlerAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "ev:event"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "type"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "ev:event",
+        "externalResourcesRequired", "id", "property", "rel", "resource",
+        "rev", "role", "type", "typeof", "xlink:actuate", "xlink:arcrole",
+        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
+        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsHandlerAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsHandlerAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsHKernAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "g1"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "g2"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "k"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "u1"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "u2"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))         { type = SVG_ATTRIBUTE; }
-
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsHKernAttribute(), unknown: %s\n", buff); }
-    return type;
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "g1", "g2", "id", "k",
+        "property", "rel", "resource", "rev", "role", "typeof", "u1", "u2",
+        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
+    
+    embLog_print("format-svg.c svgIsHKernAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsImageAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "height"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "opacity"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "preserveAspectRatio"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "type"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "width"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "x"))                         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "y"))                         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "externalResourcesRequired",
+        "focusHighlight", "focusable", "height", "id", "nav-down",
+        "nav-down-left", "nav-down-right", "nav-left", "nav-next", "nav-prev",
+        "nav-right", "nav-up", "nav-up-left", "nav-up-right", "opacity",
+        "preserveAspectRatio", "property", "rel", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
+        "rev", "role", "systemLanguage", "transform", "type", "typeof", "width",
+        "x", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
+        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "y", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsImageAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsImageAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsLineAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "x1"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "x2"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "y1"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "y2"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "focusHighlight", "focusable",
+        "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
+        "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
+        "nav-up-right", "property", "rel", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
+        "rev", "role", "systemLanguage", "transform", "typeof", "x1", "x2",
+        "xml:base", "xml:id", "xml:lang", "xml:space", "y1", "y2", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsLineAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsLineAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsLinearGradientAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "gradientUnits")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "x1"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "x2"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "y1"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "y2"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))             { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "gradientUnits", "id",
+        "property", "rel", "resource", "rev", "role", "typeof", "x1", "x2",
+        "xml:base", "xml:id", "xml:lang", "xml:space", "y1", "y2", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsLinearGradientAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsLinearGradientAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsListenerAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "defaultAction")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "event"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "handler"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "observer"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "phase"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "propagate"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "target"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))             { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "defaultAction", "event",
+        "handler", "id", "observer", "phase", "propagate", "property", "rel",
+        "resource", "rev", "role", "target", "typeof", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsListenerAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsListenerAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsMetadataAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "id", "property", "rel",
+        "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "rev", "role", "systemLanguage",
+        "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsMetadataAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsMetadataAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsMissingGlyphAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "d"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "horiz-adv-x")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))           { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "d", "datatype", "horiz-adv-x", "id",
+        "property", "rel", "resource", "rev", "role", "typeof", "xml:base",
+        "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsMissingGlyphAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsMissingGlyphAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsMPathAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))             { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "id", "property", "rel",
+        "resource", "rev", "role", "typeof", "xlink:actuate", "xlink:arcrole",
+        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
+        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsMPathAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsMPathAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsPathAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "d"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "pathLength"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "d", "datatype", "focusHighlight",
+        "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
+        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
+        "nav-up-left", "nav-up-right", "pathLength", "property", "rel",
+        "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "rev", "role", "systemLanguage",
+        "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
+        "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsPathAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsPathAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsPolygonAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "points"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "focusHighlight", "focusable",
+        "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
+        "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
+        "nav-up-right", "points", "property", "rel", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
+        "rev", "role", "systemLanguage", "transform", "typeof", "xml:base",
+        "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsPolygonAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsPolygonAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsPolylineAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "points"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "focusHighlight", "focusable",
+        "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
+        "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
+        "nav-up-right", "points", "property", "rel", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
+        "rev", "role", "systemLanguage", "transform", "typeof", "xml:base",
+        "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsPolylineAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsPolylineAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsPrefetchAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "bandwidth"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "mediaCharacterEncoding")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "mediaContentEncodings"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "mediaSize"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "mediaTime"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                      { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "bandwidth", "class", "content", "datatype", "id",
+        "mediaCharacterEncoding", "mediaContentEncodings", "mediaSize",
+        "mediaTime", "property", "rel", "resource", "rev", "role", "typeof",
+        "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
+        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsPrefetchAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsPrefetchAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsRadialGradientAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "cx"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "cy"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "gradientUnits")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "r"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))             { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "cx", "cy", "datatype", "gradientUnits",
+        "id", "property", "r", "rel", "resource", "rev", "role", "typeof",
+        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsRadialGradientAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsRadialGradientAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsRectAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "height"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rx"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "ry"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "width"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "x"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "y"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "focusHighlight", "focusable",
+        "height", "id", "nav-down", "nav-down-left", "nav-down-right",
+        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
+        "nav-up-left", "nav-up-right", "property", "rel", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
+        "rev", "role", "rx", "ry", "systemLanguage", "transform", "typeof",
+        "width", "x", "xml:base", "xml:id", "xml:lang", "xml:space", "y",
+        "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsRectAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsRectAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsScriptAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "type"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "externalResourcesRequired",
+        "id", "property", "rel", "resource", "rev", "role", "type", "typeof",
+        "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
+        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "/", "\0"
+    };   
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsScriptAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsScriptAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsSetAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "attributeName"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "attributeType"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "begin"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "dur"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "end"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "fill"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "max"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "min"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatCount"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatDur"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "to"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "attributeName", "attributeType", "begin", "class", "content",
+        "datatype", "dur", "end", "fill", "id", "max", "min", "property", "rel",
+        "repeatCount", "repeatDur", "requiredExtensions", "requiredFeatures",
+        "requiredFonts", "requiredFormats", "resource", "rev", "role",
+        "systemLanguage", "to", "typeof", "xlink:actuate", "xlink:arcrole",
+        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
+        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsSetAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsSetAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsSolidColorAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "id", "property", "rel",
+        "resource", "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang",
+        "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsSolidColorAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsSolidColorAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsStopAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "offset"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "id", "offset", "property",
+        "rel", "resource", "rev", "role", "typeof", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsStopAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsStopAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsSvgAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "baseProfile"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "contentScriptType"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "height"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "playbackOrder"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "preserveAspectRatio"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "snapshotTime"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "syncBehaviorDefault"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "syncToleranceDefault"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "timelineBegin"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "version"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "viewBox"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "width"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "zoomAndPan"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
-    else if(svgCreator == SVG_CREATOR_INKSCAPE)
-    {
-        if     (!strcmp(buff, "xmlns:dc"))              { type = SVG_ATTRIBUTE; }
-        else if(!strcmp(buff, "xmlns:cc"))              { type = SVG_ATTRIBUTE; }
-        else if(!strcmp(buff, "xmlns:rdf"))             { type = SVG_ATTRIBUTE; }
-        else if(!strcmp(buff, "xmlns:svg"))             { type = SVG_ATTRIBUTE; }
-        else if(!strcmp(buff, "xmlns"))                 { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "baseProfile", "class", "content", "contentScriptType",
+        "datatype", "externalResourcesRequired", "focusHighlight", "focusable",
+        "height", "id", "nav-down", "nav-down-left", "nav-down-right",
+        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
+        "nav-up-left", "nav-up-right", "playbackOrder", "preserveAspectRatio",
+        "property", "rel", "resource", "rev", "role", "snapshotTime",
+        "syncBehaviorDefault", "syncToleranceDefault", "timelineBegin",
+        "typeof", "version", "viewBox", "width", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "zoomAndPan", "/", "\0"
+    };
+    const char *inkscape_tokens[] = {
+        "xmlns:dc", "xmlns:cc", "xmlns:rdf", "xmlns:svg", "xmlns", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
+
+    if(svgCreator == SVG_CREATOR_INKSCAPE) {
+        if (stringInArray(buff, inkscape_tokens))
+            return SVG_ATTRIBUTE;
     }
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsSvgAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsSvgAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsSwitchAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "externalResourcesRequired",
+        "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
+        "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
+        "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
+        "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "rev", "role", "systemLanguage",
+        "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
+        "/", "\0"
+    };    
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsSwitchAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsSwitchAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsTBreakAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "id", "property", "rel",
+        "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "rev", "role", "systemLanguage",
+        "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsTBreakAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsTBreakAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsTextAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "editable"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rotate"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "x"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "y"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "editable", "focusHighlight",
+        "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
+        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
+        "nav-up-left", "nav-up-right", "property", "rel", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
+        "rev", "role", "rotate", "systemLanguage", "transform", "typeof", "x",
+        "xml:base", "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsTextAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsTextAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsTextAreaAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "editable"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "height"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "width"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "x"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "y"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "editable", "focusHighlight",
+        "focusable", "height", "id", "nav-down", "nav-down-left",
+        "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
+        "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
+        "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "rev", "role", "systemLanguage",
+        "transform", "typeof", "width", "x", "xml:base", "xml:id", "xml:lang",
+        "xml:space", "y", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsTextAreaAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsTextAreaAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsTitleAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "id", "property", "rel",
+        "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "rev", "role", "systemLanguage",
+        "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsTitleAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsTitleAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsTSpanAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                  { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "focusHighlight", "focusable",
+        "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
+        "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
+        "nav-up-right", "property", "rel", "requiredExtensions",
+        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
+        "rev", "role", "systemLanguage", "typeof", "xml:base", "xml:id",
+        "xml:lang", "xml:space", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsTSpanAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsTSpanAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsUseAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "x"))                         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "y"))                         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "class", "content", "datatype", "externalResourcesRequired",
+        "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
+        "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
+        "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
+        "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "rev", "role", "systemLanguage",
+        "transform", "typeof", "x", "xlink:actuate", "xlink:arcrole",
+        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
+        "xml:base", "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsUseAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsUseAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 int svgIsVideoAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    if     (!strcmp(buff, "about"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "begin"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "dur"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "end"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "fill"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusHighlight"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "focusable"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "height"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "initialVisibility"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "max"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "min"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-left"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-down-right"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-left"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-next"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-prev"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-right"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-left"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "nav-up-right"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "overlay"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "preserveAspectRatio"))       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatCount"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "repeatDur"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredExtensions"))        { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFeatures"))          { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFonts"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "requiredFormats"))           { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "restart"))                   { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "syncBehavior"))              { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "syncMaster"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "syncTolerance"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "systemLanguage"))            { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transform"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "transformBehavior"))         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "type"))                      { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "width"))                     { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "x"))                         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:actuate"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:arcrole"))             { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:href"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:role"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:show"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:title"))               { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xlink:type"))                { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "y"))                         { type = SVG_ATTRIBUTE; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_ATTRIBUTE; }
+    const char *tokens[] = {
+        "about", "begin", "class", "content", "datatype", "dur", "end",
+        "externalResourcesRequired", "fill", "focusHighlight", "focusable",
+        "height", "id", "initialVisibility", "max", "min", "nav-down",
+        "nav-down-left", "nav-down-right", "nav-left", "nav-next", "nav-prev",
+        "nav-right", "nav-up", "nav-up-left", "nav-up-right", "overlay",
+        "preserveAspectRatio", "property", "rel", "repeatCount", "repeatDur",
+        "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "restart", "rev", "role", "syncBehavior",
+        "syncMaster", "syncTolerance", "systemLanguage", "transform",
+        "transformBehavior", "type", "typeof", "width", "x", "xlink:actuate",
+        "xlink:arcrole", "xlink:href", "xlink:role", "xlink:show",
+        "xlink:title", "xlink:type", "xml:base", "xml:id", "xml:lang",
+        "xml:space", "y", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_ATTRIBUTE;
 
-    if(type == SVG_NULL) { embLog_print("format-svg.c svgIsVideoAttribute(), unknown: %s\n", buff); }
-    return type;
+    embLog_print("format-svg.c svgIsVideoAttribute(), unknown: %s\n", buff);
+    return SVG_NULL;
 }
 
 
 int svgIsCatchAllAttribute(const char* buff)
 {
-    int type = SVG_NULL;
-    /* Catch All Properties */
-    if     (!strcmp(buff, "audio-level"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "buffered-rendering"))        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "color"))                     { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "color-rendering"))           { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "direction"))                 { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "display"))                   { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "display-align"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "fill"))                      { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "fill-opacity"))              { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "fill-rule"))                 { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "font-family"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "font-size"))                 { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "font-style"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "font-variant"))              { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "font-weight"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "image-rendering"))           { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "line-increment"))            { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "opacity"))                   { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "pointer-events"))            { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "shape-rendering"))           { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "solid-color"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "solid-opacity"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "stop-color"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "stop-opacity"))              { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "stroke"))                    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "stroke-dasharray"))          { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "stroke-linecap"))            { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "stroke-linejoin"))           { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "stroke-miterlimit"))         { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "stroke-opacity"))            { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "stroke-width"))              { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "text-align"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "text-anchor"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "text-rendering"))            { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "unicode-bidi"))              { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "vector-effect"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "viewport-fill"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "viewport-fill-opacity"))     { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "visibility"))                { type = SVG_CATCH_ALL; }
-    /* Catch All Attributes */
-    else if(!strcmp(buff, "about"))                     { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "accent-height"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "accumulate"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "additive"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "alphabetic"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "arabic-form"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "ascent"))                    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "attributeName"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "attributeType"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "bandwidth"))                 { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "baseProfile"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "bbox"))                      { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "begin"))                     { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "by"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "calcMode"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "cap-height"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "class"))                     { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "content"))                   { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "contentScriptType"))         { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "cx"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "cy"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "d"))                         { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "datatype"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "defaultAction"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "descent"))                   { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "dur"))                       { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "editable"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "end"))                       { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "ev:event"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "event"))                     { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "externalResourcesRequired")) { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "focusHighlight"))            { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "focusable"))                 { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "font-family"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "font-stretch"))              { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "font-style"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "font-variant"))              { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "font-weight"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "from"))                      { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "g1"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "g2"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "glyph-name"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "gradientUnits"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "handler"))                   { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "hanging"))                   { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "height"))                    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "horiz-adv-x"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "horiz-origin-x"))            { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "id"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "ideographic"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "initialVisibility"))         { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "k"))                         { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "keyPoints"))                 { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "keySplines"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "keyTimes"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "lang"))                      { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "mathematical"))              { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "max"))                       { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "mediaCharacterEncoding"))    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "mediaContentEncodings"))     { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "mediaSize"))                 { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "mediaTime"))                 { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "min"))                       { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "nav-down"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "nav-down-left"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "nav-down-right"))            { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "nav-left"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "nav-next"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "nav-prev"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "nav-right"))                 { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "nav-up"))                    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "nav-up-left"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "nav-up-right"))              { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "observer"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "offset"))                    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "origin"))                    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "overlay"))                   { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "overline-position"))         { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "overline-thickness"))        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "panose-1"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "path"))                      { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "pathLength"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "phase"))                     { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "playbackOrder"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "points"))                    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "preserveAspectRatio"))       { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "propagate"))                 { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "property"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "r"))                         { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "rel"))                       { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "repeatCount"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "repeatDur"))                 { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "requiredExtensions"))        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "requiredFeatures"))          { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "requiredFonts"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "requiredFormats"))           { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "resource"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "restart"))                   { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "rev"))                       { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "role"))                      { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "rotate"))                    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "rx"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "ry"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "slope"))                     { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "snapshotTime"))              { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "stemh"))                     { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "stemv"))                     { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "strikethrough-position"))    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "strikethrough-thickness"))   { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "syncBehavior"))              { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "syncBehaviorDefault"))       { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "syncMaster"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "syncTolerance"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "syncToleranceDefault"))      { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "systemLanguage"))            { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "target"))                    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "timelineBegin"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "to"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "transform"))                 { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "transformBehavior"))         { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "type"))                      { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "typeof"))                    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "u1"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "u2"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "underline-position"))        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "underline-thickness"))       { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "unicode"))                   { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "unicode-range"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "units-per-em"))              { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "values"))                    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "version"))                   { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "viewBox"))                   { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "width"))                     { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "widths"))                    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "x"))                         { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "x-height"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "x1"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "x2"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "xlink:actuate"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "xlink:arcrole"))             { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "xlink:href"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "xlink:role"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "xlink:show"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "xlink:title"))               { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "xlink:type"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "xml:base"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "xml:id"))                    { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "xml:lang"))                  { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "xml:space"))                 { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "y"))                         { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "y1"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "y2"))                        { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "zoomAndPan"))                { type = SVG_CATCH_ALL; }
-    else if(!strcmp(buff, "/"))                         { type = SVG_CATCH_ALL; }
-    return type;
+    const char *tokens[] = {
+        /* Catch All Properties */
+        "audio-level", "buffered-rendering", "color", "color-rendering",
+        "direction", "display", "display-align", "fill",
+        "fill-opacity", "fill-rule", "font-family", "font-size", "font-style",
+        "font-variant", "font-weight", "image-rendering", "line-increment",
+        "opacity", "pointer-events", "shape-rendering", "solid-color",
+        "solid-opacity", "stop-color", "stop-opacity", "stroke",
+        "stroke-dasharray", "stroke-linecap", "stroke-linejoin",
+        "stroke-miterlimit", "stroke-opacity", "stroke-width",
+        "text-align", "text-anchor", "text-rendering", "unicode-bidi",
+        "vector-effect", "viewport-fill", "viewport-fill-opacity", "visibility",
+        /* Catch All Attributes */
+        "about", "accent-height", "accumulate", "additive",
+        "alphabetic", "arabic-form", "ascent", "attributeName", "attributeType",
+        "bandwidth", "baseProfile", "bbox", "begin", "by", "calcMode",
+        "cap-height", "class", "content", "contentScriptType", "cx", "cy",
+        "d", "datatype", "defaultAction", "descent", "dur", "editable",
+        "end", "ev:event", "event", "externalResourcesRequired",
+        "focusHighlight", "focusable", "font-family", "font-stretch",
+        "font-style", "font-variant", "font-weight", "from", "g1", "g2",
+        "glyph-name", "gradientUnits", "handler", "hanging", "height",
+        "horiz-adv-x", "horiz-origin-x", "id", "ideographic",
+        "initialVisibility", "k", "keyPoints", "keySplines", "keyTimes",
+        "lang", "mathematical", "max", "mediaCharacterEncoding",
+        "mediaContentEncodings", "mediaSize", "mediaTime", "min",
+        "nav-down", "nav-down-left", "nav-down-right", "nav-left", "nav-next",
+        "nav-prev", "nav-right", "nav-up", "nav-up-left", "nav-up-right",
+        "observer", "offset", "origin", "overlay", "overline-position",
+        "overline-thickness", "panose-1", "path", "pathLength", "phase",
+        "playbackOrder", "points", "preserveAspectRatio", "propagate",
+        "property", "r", "rel", "repeatCount", "repeatDur",
+        "requiredExtensions", "requiredFeatures", "requiredFonts",
+        "requiredFormats", "resource", "restart", "rev", "role", "rotate",
+        "rx", "ry", "slope", "snapshotTime", "stemh", "stemv",
+        "strikethrough-position", "strikethrough-thickness", "syncBehavior",
+        "syncBehaviorDefault", "syncMaster", "syncTolerance",
+        "syncToleranceDefault", "systemLanguage", "target", "timelineBegin",
+        "to", "transform", "transformBehavior", "type", "typeof", "u1", "u2",
+        "underline-position", "underline-thickness", "unicode", "unicode-range",
+        "units-per-em", "values", "version", "viewBox", "width", "widths",
+        "x", "x-height", "x1", "x2", "xlink:actuate", "xlink:arcrole",
+        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
+        "xml:base", "xml:id", "xml:lang", "xml:space", "y", "y1", "y2",
+        "zoomAndPan", "/", "\0"
+    };
+    if (stringInArray(buff, tokens))
+        return SVG_CATCH_ALL;
+
+    return SVG_NULL;
 }
 
 void svgProcess(int c, const char* buff)

@@ -1,6 +1,4 @@
 #include "embroidery.h"
-#include "helpers-binary.h"
-#include "helpers-misc.h"
 
 static const int pcmThreadCount = 65;
 static const EmbThread pcmThreads[] = {

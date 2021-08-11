@@ -1,5 +1,3 @@
-#include "helpers-binary.h"
-#include "helpers-misc.h"
 #include "embroidery.h"
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.

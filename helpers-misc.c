@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include "helpers-misc.h"
-#include "emb-logging.h"
+#include "embroidery.h"
 
 /**
  * Function is similar to the Unix utility tr.

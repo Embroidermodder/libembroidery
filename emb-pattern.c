@@ -1,5 +1,4 @@
 #include "embroidery.h"
-#include "helpers-misc.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

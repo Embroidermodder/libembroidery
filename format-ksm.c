@@ -1,5 +1,4 @@
 #include "embroidery.h"
-#include "helpers-binary.h"
 
 static void ksmEncode(unsigned char* b, char dx, char dy, int flags)
 {

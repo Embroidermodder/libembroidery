@@ -95,16 +95,6 @@ typedef struct EmbFile_
 
 #define PI 3.1415926535
 
-#ifndef MINMAX
-#define MINMAX
-#ifndef max
-    #define max(a,b) (((a) > (b)) ? (a) : (b))
-#endif
-#ifndef min
-    #define min(a,b) (((a) < (b)) ? (a) : (b))
-#endif
-#endif
-
 #define EMBFORMAT_UNSUPPORTED 0
 #define EMBFORMAT_STITCHONLY  1
 #define EMBFORMAT_OBJECTONLY  2
@@ -616,6 +606,12 @@ typedef struct EmbReaderWriter_ {
 
 /* Function Declarations
 *****************************************************************************/
+EMB_PUBLIC double embMinDouble(double, double);
+EMB_PUBLIC double embMaxDouble(double, double);
+
+EMB_PUBLIC int embMinInt(int, int);
+EMB_PUBLIC int embMaxInt(int, int);
+
 EMB_PUBLIC int embGeometryArray_create(EmbGeometryArray *g, int type);
 EMB_PUBLIC int embGeometryArray_resize(EmbGeometryArray *g);
 EMB_PUBLIC int embGeometryArray_addArc(EmbGeometryArray* g, EmbArc arc, int lineType, EmbColor color);

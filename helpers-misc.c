@@ -4,6 +4,30 @@
 #include <string.h>
 #include "embroidery.h"
 
+double embMinDouble(double a, double b)
+{
+    if (a<b) return a;
+    return b;
+}
+
+double embMaxDouble(double a, double b)
+{
+    if (a>b) return a;
+    return b;
+}
+
+int embMinInt(int a, int b)
+{
+    if (a<b) return a;
+    return b;
+}
+
+int embMaxInt(int a, int b)
+{
+    if (a>b) return a;
+    return b;
+}
+
 /**
  * Function is similar to the Unix utility tr.
  *

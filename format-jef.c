@@ -330,7 +330,7 @@ int writeJef(EmbPattern* pattern, const char* fileName)
     embPattern_correctForMaxStitchLength(pattern, 12.7, 12.7);
 
     colorlistSize = embThreadList_count(pattern->threadList);
-    minColors = max(colorlistSize, 6);
+    minColors = embMaxInt(colorlistSize, 6);
     binaryWriteInt(file, 0x74 + (minColors * 4));
     binaryWriteInt(file, 0x0A);
 
@@ -342,7 +342,7 @@ int writeJef(EmbPattern* pattern, const char* fileName)
     binaryWriteByte(file, 0x00);
     binaryWriteByte(file, 0x00);
     binaryWriteInt(file, embThreadList_count(pattern->threadList));
-    binaryWriteInt(file, embStitchList_count(pattern->stitchList) + max(0, (6 - colorlistSize) * 2) + 1);
+    binaryWriteInt(file, embStitchList_count(pattern->stitchList) + embMaxInt(0, (6 - colorlistSize) * 2) + 1);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
 
@@ -358,12 +358,12 @@ int writeJef(EmbPattern* pattern, const char* fileName)
     binaryWriteInt(file, (int) (designHeight / 2)); /* bottom */
 
     /* Distance from default 110 x 110 Hoop */
-    if(min(550 - designWidth / 2, 550 - designHeight / 2) >= 0)
+    if(embMinDouble(550 - designWidth / 2, 550 - designHeight / 2) >= 0)
     {
-        binaryWriteInt(file, (int) max(-1, 550 - designWidth / 2));  /* left */
-        binaryWriteInt(file, (int) max(-1, 550 - designHeight / 2)); /* top */
-        binaryWriteInt(file, (int) max(-1, 550 - designWidth / 2));  /* right */
-        binaryWriteInt(file, (int) max(-1, 550 - designHeight / 2)); /* bottom */
+        binaryWriteInt(file, embMaxInt(-1, 550 - designWidth / 2));  /* left */
+        binaryWriteInt(file, embMaxInt(-1, 550 - designHeight / 2)); /* top */
+        binaryWriteInt(file, embMaxInt(-1, 550 - designWidth / 2));  /* right */
+        binaryWriteInt(file, embMaxInt(-1, 550 - designHeight / 2)); /* bottom */
     }
     else
     {
@@ -374,12 +374,12 @@ int writeJef(EmbPattern* pattern, const char* fileName)
     }
 
     /* Distance from default 50 x 50 Hoop */
-    if(min(250 - designWidth / 2, 250 - designHeight / 2) >= 0)
+    if(embMinDouble(250 - designWidth / 2, 250 - designHeight / 2) >= 0)
     {
-        binaryWriteInt(file, (int) max(-1, 250 - designWidth / 2));  /* left */
-        binaryWriteInt(file, (int) max(-1, 250 - designHeight / 2)); /* top */
-        binaryWriteInt(file, (int) max(-1, 250 - designWidth / 2));  /* right */
-        binaryWriteInt(file, (int) max(-1, 250 - designHeight / 2)); /* bottom */
+        binaryWriteInt(file, (int) embMaxInt(-1, 250 - designWidth / 2));  /* left */
+        binaryWriteInt(file, (int) embMaxInt(-1, 250 - designHeight / 2)); /* top */
+        binaryWriteInt(file, (int) embMaxInt(-1, 250 - designWidth / 2));  /* right */
+        binaryWriteInt(file, (int) embMaxInt(-1, 250 - designHeight / 2)); /* bottom */
     }
     else
     {

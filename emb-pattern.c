@@ -25,7 +25,7 @@ EmbPattern* embPattern_create(void)
 
     p->hoop.height = 0.0;
     p->hoop.width = 0.0;
-    p->arcObjList = 0;
+    p->arcs = 0;
     p->circles = 0;
     p->ellipseObjList = 0;
     p->lineObjList = 0;
@@ -39,7 +39,6 @@ EmbPattern* embPattern_create(void)
     p->lastStitch = 0;
     p->lastThread = 0;
 
-    p->lastArcObj = 0;
     p->lastLineObj = 0;
     p->lastEllipseObj = 0;
     p->lastPathObj = 0;
@@ -395,8 +394,6 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     EmbStitchList* pointer = 0;
     EmbRect boundingRect;
     EmbStitch pt;
-    EmbArcObjectList* aObjList = 0;
-    EmbArc arc;
     EmbEllipseObjectList* eObjList = 0;
     EmbEllipse ellipse;
     EmbLineObjectList* liObjList = 0;
@@ -425,7 +422,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     /* TODO: Come back and optimize this mess so that after going thru all objects
             and stitches, if the rectangle isn't reasonable, then return a default rect */
     if (embStitchList_empty(p->stitchList) &&
-    embArcObjectList_empty(p->arcObjList) &&
+    !p->arcs &&
     !p->circles &&
     embEllipseObjectList_empty(p->ellipseObjList) &&
     embLineObjectList_empty(p->lineObjList) &&
@@ -462,16 +459,18 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
         pointer = pointer->next;
     }
 
-    aObjList = p->arcObjList;
-    while(aObjList)
-    {
-        arc = aObjList->arcObj.arc;
-        /* TODO: embPattern_calcBoundingBox for arcs */
-
-        aObjList = aObjList->next;
+    int i;
+    if (p->arcs) {
+        /* TODO: embPattern_calcBoundingBox for arcs, for now just checks the start point */
+        for (i=0; i<p->arcs->count; i++) {
+            EmbArc arc = p->arcs->arc[i].arc;
+            boundingRect.left = (double)min(boundingRect.left, arc.startX);
+            boundingRect.top = (double)min(boundingRect.top, arc.startY);
+            boundingRect.right = (double)max(boundingRect.right, arc.startX);
+            boundingRect.bottom = (double)max(boundingRect.bottom, arc.startY);
+        }
     }
 
-    int i;
     if (p->circles) {
         for (i=0; i<p->circles->count; i++) {
             EmbCircle circle = p->circles->circle[i].circle;
@@ -578,7 +577,6 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
 {
     int i;
     EmbStitchList* stList = 0;
-    EmbArcObjectList* aObjList = 0;
     EmbEllipseObjectList* eObjList = 0;
     EmbLineObjectList* liObjList = 0;
     EmbPathObjectList* paObjList = 0;
@@ -601,11 +599,19 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
         stList = stList->next;
     }
 
-    aObjList = p->arcObjList;
-    while(aObjList)
-    {
-        /* TODO: embPattern_flip for arcs */
-        aObjList = aObjList->next;
+    if (p->arcs) {
+        for (i=0; i<p->arcs->count; i++) {
+            if (horz) {
+                p->arcs->arc[i].arc.startX *= -1.0;
+                p->arcs->arc[i].arc.midX *= -1.0;
+                p->arcs->arc[i].arc.endX *= -1.0;
+            }
+            if (vert) {
+                p->arcs->arc[i].arc.startY *= -1.0;
+                p->arcs->arc[i].arc.midY *= -1.0;
+                p->arcs->arc[i].arc.endY *= -1.0;
+            }
+        }
     }
 
     if (p->circles) {
@@ -915,7 +921,10 @@ void embPattern_free(EmbPattern* p)
     embStitchList_free(p->stitchList);              p->stitchList = 0;      p->lastStitch = 0;
     embThreadList_free(p->threadList);              p->threadList = 0;      p->lastThread = 0;
 
-    embArcObjectList_free(p->arcObjList);           p->arcObjList = 0;      p->lastArcObj = 0;
+    if (p->arcs) {
+        embGeometryArray_free(p->arcs);
+        p->arcs = 0;
+    }
     if (p->circles) {
         embGeometryArray_free(p->circles);
         p->circles = 0;

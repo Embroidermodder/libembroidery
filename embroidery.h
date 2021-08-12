@@ -559,17 +559,15 @@ typedef struct EmbSplineObjectList_ {
 } EmbSplineObjectList; /* TODO: This struct/file needs reworked to work internally similar to polylines */
 
 typedef struct EmbGeometryArray_ {
-    union {
-        EmbArcObject *arc;
-        EmbCircleObject *circle;
-        EmbEllipseObject *ellipse;
-        EmbPointObject *point;
-        EmbLineObject *line;
-        EmbPolygonObject *polygon;
-        EmbPolylineObject *polyline;
-        EmbRectObject *rect;
-        EmbSplineObject *spline;
-    };
+    EmbArcObject *arc;
+    EmbCircleObject *circle;
+    EmbEllipseObject *ellipse;
+    EmbPointObject *point;
+    EmbLineObject *line;
+    EmbPolygonObject *polygon;
+    EmbPolylineObject *polyline;
+    EmbRectObject *rect;
+    EmbSplineObject *spline;
     int count;
     int length;
     int type;

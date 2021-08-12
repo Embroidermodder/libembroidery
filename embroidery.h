@@ -358,14 +358,6 @@ typedef struct EmbArc_
     double endY;
 } EmbArc;
 
-typedef struct EmbRect_
-{
-    double top;
-    double left;
-    double bottom;
-    double right;
-} EmbRect;
-
 typedef struct EmbArcObject_
 {
     EmbArc arc;
@@ -373,11 +365,13 @@ typedef struct EmbArcObject_
     EmbColor color;
 } EmbArcObject;
 
-typedef struct EmbArcObjectList_
+typedef struct EmbRect_
 {
-    EmbArcObject arcObj;
-    struct EmbArcObjectList_* next;
-} EmbArcObjectList;
+    double top;
+    double left;
+    double bottom;
+    double right;
+} EmbRect;
 
 typedef struct EmbCircle_
 {
@@ -582,7 +576,7 @@ typedef struct EmbPattern_
     EmbStitchList* stitchList;
     EmbThreadList* threadList;
 
-    EmbArcObjectList* arcObjList;
+    EmbGeometryArray* arcs;
     EmbGeometryArray* circles;
     EmbEllipseObjectList* ellipseObjList;
     EmbLineObjectList* lineObjList;
@@ -596,7 +590,6 @@ typedef struct EmbPattern_
     EmbStitchList* lastStitch;
     EmbThreadList* lastThread;
 
-    EmbArcObjectList* lastArcObj;
     EmbEllipseObjectList* lastEllipseObj;
     EmbLineObjectList* lastLineObj;
     EmbPathObjectList* lastPathObj;
@@ -760,11 +753,6 @@ int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _2
 
 EMB_PUBLIC EmbArcObject embArcObject_make(double sx, double sy, double mx, double my, double ex, double ey);
 EMB_PUBLIC EmbArcObject* embArcObject_create(double sx, double sy, double mx, double my, double ex, double ey);
-
-EMB_PUBLIC EmbArcObjectList* embArcObjectList_add(EmbArcObjectList* pointer, EmbArcObject data);
-EMB_PUBLIC int embArcObjectList_count(EmbArcObjectList* pointer);
-EMB_PUBLIC int embArcObjectList_empty(EmbArcObjectList* pointer);
-EMB_PUBLIC void embArcObjectList_free(EmbArcObjectList* pointer);
 
 char isArcClockwise(double startx, double starty,
       double midx,   double midy,

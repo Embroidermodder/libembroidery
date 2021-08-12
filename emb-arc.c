@@ -34,54 +34,15 @@ EmbArcObject* embArcObject_create(double sx, double sy, double mx, double my, do
     return heapArcObj;
 }
 
-EmbArcObjectList* embArcObjectList_add(EmbArcObjectList* pointer, EmbArcObject data)
+double radians(double degree)
 {
-    if(!pointer) { embLog_error("emb-arc.c embArcObjectList_add(), pointer argument is null\n"); return 0; }
-    if(pointer->next) { embLog_error("emb-arc.c embArcObjectList_add(), pointer->next should be null\n"); return 0; }
-    pointer->next = (EmbArcObjectList*)malloc(sizeof(EmbArcObjectList));
-    if(!pointer->next) { embLog_error("emb-arc.c embArcObjectList_add(), cannot allocate memory for pointer->next\n"); return 0; }
-    pointer = pointer->next;
-    pointer->arcObj = data;
-    pointer->next = 0;
-    return pointer;
+    return (double)(degree*M_PI/180.0);
 }
 
-int embArcObjectList_count(EmbArcObjectList* pointer)
+double degrees(double radian)
 {
-    int i = 1;
-    if(!pointer) return 0;
-    while(pointer->next)
-    {
-        pointer = pointer->next;
-        i++;
-    }
-    return i;
+    return (double)(radian*180.0/M_PI);
 }
-
-int embArcObjectList_empty(EmbArcObjectList* pointer)
-{
-    if(!pointer)
-        return 1;
-    return 0;
-}
-
-void embArcObjectList_free(EmbArcObjectList* pointer)
-{
-    EmbArcObjectList* tempPointer = pointer;
-    EmbArcObjectList* nextPointer = 0;
-    while(tempPointer)
-    {
-        nextPointer = tempPointer->next;
-        free(tempPointer);
-        tempPointer = nextPointer;
-    }
-    pointer = 0;
-}
-
-/* Computational Geometry for Arcs */
-
-double radians(double degree) { return (double)(degree*M_PI/180.0); }
-double degrees(double radian) { return (double)(radian*180.0/M_PI); }
 
 /* Calculus based approach at determining whether a polygon is clockwise or counterclockwise.
  * Returns true if arc is clockwise. */

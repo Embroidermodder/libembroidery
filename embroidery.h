@@ -181,6 +181,14 @@ typedef struct EmbColor_
     unsigned char b;
 } EmbColor;
 
+typedef struct EmbVector_
+{
+    double x;
+    double y; /* positive is up, units are in mm  */
+} EmbVector;
+
+typedef struct EmbVector_ EmbPoint;
+
 typedef struct EmbVectorList_
 {
     EmbVector vector;
@@ -201,14 +209,6 @@ typedef struct EmbFlagList_
     int flag;
     struct EmbFlagList_* next;
 } EmbFlagList;
-
-typedef struct EmbVector_
-{
-    double x;
-    double y; /* positive is up, units are in mm  */
-} EmbVector;
-
-typedef struct EmbVector EmbPoint;
 
 typedef struct EmbPointList_
 {

@@ -420,8 +420,8 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
         while(pointer && (flag == pointer->stitch.flags))
         {
             EmbStitch s = pointer->stitch;
-            binaryWriteShort(file, (short)(s.xx - bounds.left));
-            binaryWriteShort(file, (short)(s.yy + bounds.top));
+            binaryWriteShort(file, (short)(s.x - bounds.left));
+            binaryWriteShort(file, (short)(s.y + bounds.top));
             pointer = pointer->next;
         }
         if(pointer)

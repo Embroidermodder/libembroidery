@@ -426,15 +426,15 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
 		}
 
         s = pointer->stitch;
-        embLog_print("format-vp3.c DEBUG %d, %lf, %lf\n", s.flags, s.xx, s.yy);
-        binaryWriteIntBE(file, s.xx * 1000);
-        binaryWriteIntBE(file, -s.yy * 1000);
+        embLog_print("format-vp3.c DEBUG %d, %lf, %lf\n", s.flags, s.x, s.y);
+        binaryWriteIntBE(file, s.x * 1000);
+        binaryWriteIntBE(file, -s.y * 1000);
         pointer = pointer->next;
 
         first = 0;
 
-        lastX = s.xx;
-        lastY = s.yy;
+        lastX = s.x;
+        lastY = s.y;
         lastColor = s.color;
 
         binaryWriteByte(file, 1);
@@ -483,8 +483,8 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
 			{
 				break;
 			}
-            dx = (s.xx - lastX) * 10;
-            dy = (s.yy - lastY) * 10;
+            dx = (s.x - lastX) * 10;
+            dy = (s.y - lastY) * 10;
             lastX = lastX + dx / 10.0; /* output is in ints, ensure rounding errors do not sum up */
             lastY = lastY + dy / 10.0;
 

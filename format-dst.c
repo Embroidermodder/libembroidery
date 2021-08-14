@@ -51,8 +51,8 @@ static unsigned char setbit(int pos)
             if(needleDown && jumpCount >= jumpsPerTrim)
             {
                 EmbStitchList* removePointer = jumpListStart->next;
-                jumpListStart->stitch.xx = pointer->stitch.xx;
-                jumpListStart->stitch.yy = pointer->stitch.yy;
+                jumpListStart->stitch.x = pointer->stitch.x;
+                jumpListStart->stitch.y = pointer->stitch.y;
                 jumpListStart->stitch.flags |= TRIM;
                 jumpListStart->next = pointer;
 
@@ -473,10 +473,10 @@ int writeDst(EmbPattern* pattern, const char* fileName)
     while(pointer)
     {
         /* convert from mm to 0.1mm for file format */
-        dx = roundDouble(pointer->stitch.xx * 10.0) - xx;
-        dy = roundDouble(pointer->stitch.yy * 10.0) - yy;
-        xx = roundDouble(pointer->stitch.xx * 10.0);
-        yy = roundDouble(pointer->stitch.yy * 10.0);
+        dx = roundDouble(pointer->stitch.x * 10.0) - xx;
+        dy = roundDouble(pointer->stitch.y * 10.0) - yy;
+        xx = roundDouble(pointer->stitch.x * 10.0);
+        yy = roundDouble(pointer->stitch.y * 10.0);
         flags = pointer->stitch.flags;
         encode_record(file, dx, dy, flags);
         pointer = pointer->next;

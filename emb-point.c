@@ -7,20 +7,20 @@
 
 double embPoint_x(EmbPoint point)
 {
-    return point.xx;
+    return point.x;
 }
 
 double embPoint_y(EmbPoint point)
 {
-    return point.yy;
+    return point.y;
 }
 
 /* Returns an EmbPointObject. It is created on the stack. */
 EmbPoint embPoint_make(double x, double y)
 {
     EmbPoint stackPoint;
-    stackPoint.xx = x;
-    stackPoint.yy = y;
+    stackPoint.x = x;
+    stackPoint.y = y;
     return stackPoint;
 }
 
@@ -32,8 +32,8 @@ EmbPointList* embPointList_create(double x, double y)
 {
     EmbPointList* heapPointList = (EmbPointList*)malloc(sizeof(EmbPointList));
     if(!heapPointList) { embLog_error("emb-point.c embPointList_create(), cannot allocate memory for heapPointList\n"); return 0; }
-    heapPointList->point.xx = x;
-    heapPointList->point.yy = y;
+    heapPointList->point.x = x;
+    heapPointList->point.y = y;
     heapPointList->next = 0;
     return heapPointList;
 }
@@ -90,8 +90,8 @@ void embPointList_free(EmbPointList* pointer)
 EmbPointObject embPointObject_make(double x, double y)
 {
     EmbPointObject stackPointObj;
-    stackPointObj.point.xx = x;
-    stackPointObj.point.yy = y;
+    stackPointObj.point.x = x;
+    stackPointObj.point.y = y;
     return stackPointObj;
 }
 
@@ -100,8 +100,8 @@ EmbPointObject* embPointObject_create(double x, double y)
 {
     EmbPointObject* heapPointObj = (EmbPointObject*)malloc(sizeof(EmbPointObject));
     if(!heapPointObj) { embLog_error("emb-point.c embPointObject_create(), cannot allocate memory for heapPointObj\n"); return 0; }
-    heapPointObj->point.xx = x;
-    heapPointObj->point.yy = y;
+    heapPointObj->point.x = x;
+    heapPointObj->point.y = y;
     return heapPointObj;
 }
 

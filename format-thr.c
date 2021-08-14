@@ -203,8 +203,8 @@ int writeThr(EmbPattern* pattern, const char* fileName)
     pointer = pattern->stitchList;
     while(pointer)
     {
-        binaryWriteFloat(file, (float)(pointer->stitch.xx * 10.0));
-        binaryWriteFloat(file, (float)(pointer->stitch.yy * 10.0));
+        binaryWriteFloat(file, (float)(pointer->stitch.x * 10.0));
+        binaryWriteFloat(file, (float)(pointer->stitch.y * 10.0));
         binaryWriteUInt(file, NOTFRM | (pointer->stitch.color & 0x0F));
         pointer = pointer->next;
         i++;

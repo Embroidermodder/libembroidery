@@ -107,10 +107,10 @@ int writeKsm(EmbPattern* pattern, const char* fileName)
     pointer = pattern->stitchList;
     while(pointer)
     {
-        dx = pointer->stitch.xx - xx;
-        dy = pointer->stitch.yy - yy;
-        xx = pointer->stitch.xx;
-        yy = pointer->stitch.yy;
+        dx = pointer->stitch.x - xx;
+        dy = pointer->stitch.y - yy;
+        xx = pointer->stitch.x;
+        yy = pointer->stitch.y;
         flags = pointer->stitch.flags;
         ksmEncode(b, (char)(dx * 10.0), (char)(dy * 10.0), flags);
         embFile_printf(file, "%c%c", b[0], b[1]);

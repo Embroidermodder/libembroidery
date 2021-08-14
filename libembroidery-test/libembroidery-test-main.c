@@ -32,17 +32,17 @@ void testTangentPoints(EmbCircle c,
                px, py,
                tx0, ty0,
                tx1, ty1);
-        t0->xx = tx0;
-        t0->yy = ty0;
-        t1->xx = tx1;
-        t1->yy = ty1;
+        t0->x = tx0;
+        t0->y = ty0;
+        t1->x = tx1;
+        t1->y = ty1;
     }
 }
 
 double distance(EmbPoint p, EmbPoint q)
 {
-    double x2 = (p.xx-q.xx)*(p.xx-q.xx);
-    double y2 = (p.yy-q.yy)*(p.yy-q.yy);
+    double x2 = (p.x-q.x)*(p.x-q.x);
+    double y2 = (p.y-q.y)*(p.y-q.y);
     return sqrt(x2+y2);
 }
 

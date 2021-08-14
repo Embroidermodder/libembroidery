@@ -290,8 +290,8 @@ int writeVip(EmbPattern* pattern, const char* fileName)
         pointer = pattern->stitchList;
         while(pointer)
         {
-            xx = pointer->stitch.xx;
-            yy = pointer->stitch.yy;
+            xx = pointer->stitch.x;
+            yy = pointer->stitch.y;
             flags = pointer->stitch.flags;
             xValues[i] = vipEncodeByte((xx - previousX) * 10.0);
             previousX = xx;

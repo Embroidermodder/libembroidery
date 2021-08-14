@@ -289,8 +289,8 @@ static void pecEncode(EmbFile* file, EmbPattern* p)
         int deltaX, deltaY;
         EmbStitch s = list->stitch;
 
-        deltaX = roundDouble(s.xx - thisX);
-        deltaY = roundDouble(s.yy - thisY);
+        deltaX = roundDouble(s.x - thisX);
+        deltaY = roundDouble(s.y - thisY);
         thisX += (double)deltaX;
         thisY += (double)deltaY;
 
@@ -466,8 +466,8 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
     xFactor = 42.0 / width;
     while(tempStitches->next)
     {
-        int x = roundDouble((tempStitches->stitch.xx - bounds.left) * xFactor) + 3;
-        int y = roundDouble((tempStitches->stitch.yy - bounds.top) * yFactor) + 3;
+        int x = roundDouble((tempStitches->stitch.x - bounds.left) * xFactor) + 3;
+        int y = roundDouble((tempStitches->stitch.y - bounds.top) * yFactor) + 3;
         image[y][x] = 1;
         tempStitches = tempStitches->next;
     }
@@ -480,8 +480,8 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
         clearImage(image);
         while(tempStitches->next)
         {
-            int x = roundDouble((tempStitches->stitch.xx - bounds.left) * xFactor) + 3;
-            int y = roundDouble((tempStitches->stitch.yy - bounds.top) * yFactor) + 3;
+            int x = roundDouble((tempStitches->stitch.x - bounds.left) * xFactor) + 3;
+            int y = roundDouble((tempStitches->stitch.y - bounds.top) * yFactor) + 3;
             if(tempStitches->stitch.flags & STOP)
             {
                 tempStitches = tempStitches->next;

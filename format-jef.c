@@ -416,10 +416,10 @@ int writeJef(EmbPattern* pattern, const char* fileName)
       stitches = pattern->stitchList;
     while(stitches)
     {
-        dx = stitches->stitch.xx * 10.0 - xx;
-        dy = stitches->stitch.yy * 10.0 - yy;
-        xx = stitches->stitch.xx * 10.0;
-        yy = stitches->stitch.yy * 10.0;
+        dx = stitches->stitch.x * 10.0 - xx;
+        dy = stitches->stitch.y * 10.0 - yy;
+        xx = stitches->stitch.x * 10.0;
+        yy = stitches->stitch.y * 10.0;
         flags = stitches->stitch.flags;
         jefEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), flags);
         if((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10)))

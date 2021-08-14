@@ -164,7 +164,7 @@ int writePcq(EmbPattern* pattern, const char* fileName)
     pointer = pattern->stitchList;
     while(pointer)
     {
-        pcqEncode(file, roundDouble(pointer->stitch.xx * 10.0), roundDouble(pointer->stitch.yy * 10.0), pointer->stitch.flags);
+        pcqEncode(file, roundDouble(pointer->stitch.x * 10.0), roundDouble(pointer->stitch.y * 10.0), pointer->stitch.flags);
         pointer = pointer->next;
     }
     embFile_close(file);

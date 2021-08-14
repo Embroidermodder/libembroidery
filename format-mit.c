@@ -75,10 +75,10 @@ int writeMit(EmbPattern* pattern, const char* fileName)
 	pointer = pattern->stitchList;
 	while (pointer)
 	{
-		dx = pointer->stitch.xx - xx;
-		dy = pointer->stitch.yy - yy;
-		xx = pointer->stitch.xx;
-		yy = pointer->stitch.yy;
+		dx = pointer->stitch.x - xx;
+		dy = pointer->stitch.y - yy;
+		xx = pointer->stitch.x;
+		yy = pointer->stitch.y;
 		flags = pointer->stitch.flags;
 		embFile_putc(mitEncodeStitch(dx), file);
 		embFile_putc(mitEncodeStitch(dy), file);

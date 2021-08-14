@@ -48,9 +48,9 @@ typedef struct EmbFile_
 #define QUADTOEND        512
 
 /* Machine codes for stitch flags */
-#define NORMAL              0 /* stitch to (xx, yy) */
-#define JUMP                1 /* move to(xx, yy) */
-#define TRIM                2 /* trim + move to(xx, yy) */
+#define NORMAL              0 /* stitch to (x, y) */
+#define JUMP                1 /* move to (x, y) */
+#define TRIM                2 /* trim + move to (x, y) */
 #define STOP                4 /* pause machine for thread change */
 #define SEQUIN              8 /* sequin */
 #define END                 16 /* end of program */
@@ -181,20 +181,26 @@ typedef struct EmbColor_
     unsigned char b;
 } EmbColor;
 
-/* TODO: EmbVector should just be a typedef of EmbPoint since internally, they are the same.
-         In cases where it represents vector data, then the name can be used to avoid confusion.
-         */
 typedef struct EmbVector_
 {
-    double X;
-    double Y;
+    double x;
+    double y; /* positive is up, units are in mm  */
 } EmbVector;
+
+typedef struct EmbVector_ EmbPoint;
 
 typedef struct EmbVectorList_
 {
     EmbVector vector;
     struct EmbVectorList_* next;
 } EmbVectorList;
+
+typedef struct EmbVectorArray_
+{
+    EmbVector* vector;
+    int count;
+    int length;
+} EmbVectorArray;
 
 typedef int EmbFlag;
 
@@ -203,12 +209,6 @@ typedef struct EmbFlagList_
     int flag;
     struct EmbFlagList_* next;
 } EmbFlagList;
-
-typedef struct EmbPoint_
-{
-    double xx; /* absolute position (not relative) */
-    double yy; /* positive is up, units are in mm  */
-} EmbPoint;
 
 typedef struct EmbPointList_
 {
@@ -267,8 +267,8 @@ typedef struct EmbPathObjectList_
 typedef struct EmbStitch_
 {
     int flags; /* uses codes defined above */
-    double xx; /* absolute position (not relative) */
-    double yy; /* positive is up, units are in mm  */
+    double x; /* absolute position (not relative) */
+    double y; /* positive is up, units are in mm  */
     int color; /* color number for this stitch */ /* TODO: this should be called colorIndex since it is not an EmbColor */
 } EmbStitch;
 
@@ -413,7 +413,6 @@ typedef struct EmbSatinOutline_
     EmbVector* side1;
     EmbVector* side2;
 } EmbSatinOutline;
-
 
 typedef struct EmbEllipseObject_
 {

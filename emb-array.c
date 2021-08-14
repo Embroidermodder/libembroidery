@@ -63,13 +63,16 @@ int embGeometryArray_resize(EmbGeometryArray *p)
         if (realloc(p->polygon, p->length*sizeof(EmbPolygonObject))) return 1;
         break;
     case EMB_POLYLINE:
-        if (realloc(p->polyline, p->length*sizeof(EmbPolylineObject))) return 1;
+        p->polyline = realloc(p->polyline, p->length*sizeof(EmbPolylineObject));
+        if (!p->polyline) return 1;
         break;
     case EMB_RECT:
-        if (realloc(p->rect, p->length*sizeof(EmbRectObject))) return 1;
+        p->rect = realloc(p->rect, p->length*sizeof(EmbRectObject));
+        if (!p->rect) return 1;
         break;
     case EMB_SPLINE:
-        if (realloc(p->spline, p->length*sizeof(EmbSplineObject))) return 1;
+        p->spline = realloc(p->spline, p->length*sizeof(EmbSplineObject));
+        if (!p->spline) return 1;
     default:
         break;    
     }
@@ -95,6 +98,18 @@ int embGeometryArray_addCircle(EmbGeometryArray* p, EmbCircle circle, int lineTy
     p->circle[p->count].color = color;
     return 1;
 }
+
+/*
+int embGeometryArray_addCircle(EmbGeometryArray* p, EmbCircle circle, int lineType, EmbColor color)
+{
+    p->count++;
+    if (!embGeometryArray_resize(p)) return 0;
+    p->circle[p->count].circle = circle;
+    p->circle[p->count].lineType = lineType;
+    p->circle[p->count].color = color;
+    return 1;
+}
+*/
 
 void embGeometryArray_free(EmbGeometryArray* p)
 {
@@ -128,5 +143,33 @@ void embGeometryArray_free(EmbGeometryArray* p)
     default:
         break;    
     }
+}
+
+EmbVectorArray *embVectorArray_create()
+{
+    EmbVectorArray *p;
+    p->length = CHUNK_SIZE;
+    p->count = 0;
+    p->vector = (EmbVector*)malloc(CHUNK_SIZE*sizeof(EmbVector));
+    if (!p->vector) return 0;
+    return p;
+}
+
+int embVectorArray_add(EmbVectorArray *p, EmbVector v)
+{
+    p->count++;
+    if (p->count < p->length) {
+        p->length += CHUNK_SIZE;
+        p->vector = (EmbVector*)realloc(p->vector, p->length*sizeof(EmbVector));
+        if (!p->vector) return 0;
+    }
+    p->vector[p->count] = v;
+    return 1;
+
+}
+
+void embVectorArray_free(EmbVectorArray* p)
+{
+    free(p->vector);
 }
 

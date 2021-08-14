@@ -110,7 +110,7 @@ int writeMax(EmbPattern* pattern, const char* fileName)
     pointer = pattern->stitchList;
     while(pointer)
     {
-        maxEncode(file, roundDouble(pointer->stitch.xx * 10.0), roundDouble(pointer->stitch.yy * 10.0));
+        maxEncode(file, roundDouble(pointer->stitch.x * 10.0), roundDouble(pointer->stitch.y * 10.0));
         pointer = pointer->next;
     }
     embFile_close(file);

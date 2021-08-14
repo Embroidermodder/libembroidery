@@ -153,8 +153,8 @@ static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
 
     if(!embStitchList_empty(p->stitchList))
     {
-        thisX = (float)p->stitchList->stitch.xx;
-        thisY = (float)p->stitchList->stitch.yy;
+        thisX = (float)p->stitchList->stitch.x;
+        thisY = (float)p->stitchList->stitch.y;
     }
     stitches = p->stitchList;
     while(stitches)
@@ -163,8 +163,8 @@ static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
         double deltaX, deltaY;
         double previousX = thisX;
         double previousY = thisY;
-        thisX = s.xx;
-        thisY = s.yy;
+        thisX = s.x;
+        thisY = s.y;
         deltaX = thisX - previousX;
         deltaY = thisY - previousY;
         if(s.flags & STOP)

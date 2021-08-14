@@ -32,7 +32,7 @@ int writeTxt(EmbPattern* pattern, const char* fileName)
     while(pointer)
     {
         EmbStitch s = pointer->stitch;
-        embFile_printf(file, "%.1f,%.1f color:%i flags:%i\n", s.xx, s.yy, s.color, s.flags);
+        embFile_printf(file, "%.1f,%.1f color:%i flags:%i\n", s.x, s.y, s.color, s.flags);
         pointer = pointer->next;
     }
 

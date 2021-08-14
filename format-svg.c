@@ -2121,10 +2121,10 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
                         color.r,
                         color.g,
                         color.b,
-                        point.xx,
-                        point.yy,
-                        point.xx,
-                        point.yy);
+                        point.x,
+                        point.y,
+                        point.x,
+                        point.y);
         poObjList = poObjList->next;
     }
 
@@ -2141,12 +2141,12 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
                     color.r,
                     color.g,
                     color.b,
-                    emb_optOut(pogPointList->point.xx, tmpX),
-                    emb_optOut(pogPointList->point.yy, tmpY));
+                    emb_optOut(pogPointList->point.x, tmpX),
+                    emb_optOut(pogPointList->point.y, tmpY));
             pogPointList = pogPointList->next;
             while(pogPointList)
             {
-                embFile_printf(file, " %s,%s", emb_optOut(pogPointList->point.xx, tmpX), emb_optOut(pogPointList->point.yy, tmpY));
+                embFile_printf(file, " %s,%s", emb_optOut(pogPointList->point.x, tmpX), emb_optOut(pogPointList->point.y, tmpY));
                 pogPointList = pogPointList->next;
             }
             embFile_printf(file, "\"/>");
@@ -2167,12 +2167,12 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
                     color.r,
                     color.g,
                     color.b,
-                    emb_optOut(polPointList->point.xx, tmpX),
-                    emb_optOut(polPointList->point.yy, tmpY));
+                    emb_optOut(polPointList->point.x, tmpX),
+                    emb_optOut(polPointList->point.y, tmpY));
             polPointList = polPointList->next;
             while(polPointList)
             {
-                embFile_printf(file, " %s,%s", emb_optOut(polPointList->point.xx, tmpX), emb_optOut(polPointList->point.yy, tmpY));
+                embFile_printf(file, " %s,%s", emb_optOut(polPointList->point.x, tmpX), emb_optOut(polPointList->point.y, tmpY));
                 polPointList = polPointList->next;
             }
             embFile_printf(file, "\"/>");
@@ -2214,12 +2214,12 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
                                 color.r,
                                 color.g,
                                 color.b,
-                                emb_optOut(stList->stitch.xx, tmpX),
-                                emb_optOut(stList->stitch.yy, tmpY));
+                                emb_optOut(stList->stitch.x, tmpX),
+                                emb_optOut(stList->stitch.y, tmpY));
             }
             else if(stList->stitch.flags == NORMAL && isNormal)
             {
-                embFile_printf(file, " %s,%s", emb_optOut(stList->stitch.xx, tmpX), emb_optOut(stList->stitch.yy, tmpY));
+                embFile_printf(file, " %s,%s", emb_optOut(stList->stitch.x, tmpX), emb_optOut(stList->stitch.y, tmpY));
             }
             else if(stList->stitch.flags != NORMAL && isNormal)
             {

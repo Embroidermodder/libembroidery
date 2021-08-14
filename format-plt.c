@@ -81,7 +81,7 @@ int writePlt(EmbPattern* pattern, const char* fileName)
         }
         if(firstStitchOfBlock)
         {
-            fprintf(file, "PU%f,%f;", stitch.xx * scalingFactor, stitch.yy * scalingFactor);
+            fprintf(file, "PU%f,%f;", stitch.x * scalingFactor, stitch.y * scalingFactor);
             fprintf(file, "ST0.00,0.00;");
             fprintf(file, "SP0;");
             fprintf(file, "HT0;");
@@ -92,7 +92,7 @@ int writePlt(EmbPattern* pattern, const char* fileName)
         }
         else
         {
-            fprintf(file, "PD%f,%f;", stitch.xx * scalingFactor, stitch.yy * scalingFactor);
+            fprintf(file, "PD%f,%f;", stitch.x * scalingFactor, stitch.y * scalingFactor);
         }
 
         pointer = pointer->next;

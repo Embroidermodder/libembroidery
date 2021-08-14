@@ -13,8 +13,8 @@ void embVector_normalize(EmbVector vector, EmbVector* result)
         embLog_error("emb-vector.c embVector_normalize(), result argument is null\n");
         return;
     }
-    result->X = vector.X / length;
-    result->Y = vector.Y / length;
+    result->x = vector.x / length;
+    result->y = vector.y / length;
 }
 
 /**
@@ -27,8 +27,8 @@ void embVector_multiply(EmbVector vector, double magnitude, EmbVector* result)
         embLog_error("emb-vector.c embVector_multiply(), result argument is null\n");
         return;
     }
-    result->X = vector.X * magnitude;
-    result->Y = vector.Y * magnitude;
+    result->x = vector.x * magnitude;
+    result->y = vector.y * magnitude;
 }
 
 /**
@@ -40,8 +40,8 @@ void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result)
         embLog_error("emb-vector.c embVector_add(), result argument is null\n");
         return;
     }
-    result->X = v1.X + v2.X;
-    result->Y = v1.Y + v2.Y;
+    result->x = v1.x + v2.x;
+    result->y = v1.y + v2.y;
 }
 
 /**
@@ -53,8 +53,8 @@ void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result)
         embLog_error("emb-vector.c embVector_add(), result argument is null\n");
         return;
     }
-    result->X = (v1.X + v2.X) / 2.0;
-    result->Y = (v1.Y + v2.Y) / 2.0;
+    result->x = (v1.x + v2.x) / 2.0;
+    result->y = (v1.y + v2.y) / 2.0;
 }
 
 /**
@@ -66,8 +66,8 @@ void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result)
         embLog_error("emb-vector.c embVector_subtract(), result argument is null\n");
         return;
     }
-    result->X = v1.X - v2.X;
-    result->Y = v1.Y - v2.Y;
+    result->x = v1.x - v2.x;
+    result->y = v1.y - v2.y;
 }
 
 /**
@@ -79,7 +79,7 @@ void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result)
  */
 double embVector_dot(EmbVector v1, EmbVector v2)
 {
-    return v1.X * v2.X + v1.Y * v2.Y;
+    return v1.x * v2.x + v1.y * v2.y;
 }
 
 /**
@@ -97,8 +97,8 @@ void embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result)
         embLog_error("emb-vector.c embVector_transpose_product(), result argument is null\n");
         return;
     }
-    result->X = v1.X * v2.X;
-    result->Y = v1.Y * v2.Y;
+    result->x = v1.x * v2.x;
+    result->y = v1.y * v2.y;
 }
 
 /**
@@ -106,7 +106,7 @@ void embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result)
  */
 double embVector_getLength(EmbVector vector)
 {
-    return sqrt(vector.X * vector.X + vector.Y * vector.Y);
+    return sqrt(vector.x * vector.x + vector.y * vector.y);
 }
 
 EmbVectorList* embVectorList_create(EmbVector data)

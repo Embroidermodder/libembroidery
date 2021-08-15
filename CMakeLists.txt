@@ -118,7 +118,7 @@ target_include_directories(embroidery
     PRIVATE
         include
 )
-
+target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
 target_include_directories(embroidery_static
     INTERFACE
         $<INSTALL_INTERFACE:include>
@@ -146,8 +146,8 @@ target_include_directories(libembroidery_convert
 # These link against the static libraries
 # so we know that it is the current build that they're
 # linked against.
-target_link_libraries(libembroidery_convert PRIVATE embroidery_static m)
-target_link_libraries(libembroidery_test PRIVATE embroidery_static m)
+target_link_libraries(libembroidery_convert PRIVATE embroidery_static)
+target_link_libraries(libembroidery_test PRIVATE embroidery_static)
 
 install(
     TARGETS

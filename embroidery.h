@@ -15,7 +15,7 @@ extern "C" {
 #define EMB_PUBLIC
 #if defined(LIBEMBROIDERY_SHARED)
     #undef EMB_PUBLIC
-    #if defined(__WIN32__)
+    #if defined(__WIN32__) || defined(WIN32)
         #define EMB_PUBLIC __declspec(dllexport)
     #else
         #define EMB_PUBLIC __attribute__ ((visibility("default")))
@@ -731,8 +731,8 @@ EMB_PUBLIC int embHash_empty(const EmbHash* hash);
 EMB_PUBLIC long embHash_count(const EmbHash* hash);
 EMB_PUBLIC void embHash_rehash(EmbHash* hash, long numOfBuckets);
 
-extern EmbFormatList formatTable[100];
-extern int numberOfFormats;
+EMB_PUBLIC EmbFormatList formatTable[100];
+EMB_PUBLIC int numberOfFormats;
 
 EMB_PUBLIC int embFormat_getExtension(const char* fileName, char *ending);
 EMB_PUBLIC const char* embFormat_extensionFromName(const char* fileName);

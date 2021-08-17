@@ -19,8 +19,6 @@ set(LIBRARY_SOURCE_FILES
     emb-flag.c
     emb-format.c
     emb-hash.c
-    emb-hoop.c
-    emb-layer.c
     emb-line.c
     emb-logging.c
     emb-path.c
@@ -35,8 +33,8 @@ set(LIBRARY_SOURCE_FILES
     emb-spline.c
     emb-stitch.c
     emb-thread.c
-    emb-time.c
     emb-vector.c
+    emb-utility.c
     format-100.c
     format-10o.c
     format-art.c
@@ -99,8 +97,6 @@ set(LIBRARY_SOURCE_FILES
     format-xxx.c
     format-zsk.c
     hashtable.c
-    helpers-binary.c
-    helpers-misc.c
     thread-color.c
 )
 

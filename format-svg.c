@@ -317,8 +317,7 @@ void svgAddToPattern(EmbPattern* p)
 
         EmbPointList* startOfPointList = 0;
         EmbPointList* pathObjPointList = 0;
-        EmbFlagList* startOfFlagList = 0;
-        EmbFlagList* pathObjFlagList = 0;
+        EmbGeometryArray* flagList;
 
         char* pathbuff = 0;
         pathbuff = (char*)malloc(size);
@@ -420,18 +419,17 @@ void svgAddToPattern(EmbPattern* p)
                             else if(cmd == 'Z') { xx = fx;          yy = fy; }
                             else if(cmd == 'z') { xx = fx;          yy = fy; }
 
-                            if(!pathObjPointList && !pathObjFlagList)
+                            if(!pathObjPointList && !flagList)
                             {
                                 pathObjPointList = embPointList_create(xx, yy);
                                 startOfPointList = pathObjPointList;
-                                pathObjFlagList = embFlagList_create(svgPathCmdToEmbPathFlag(cmd));
-                                startOfFlagList = pathObjFlagList;
+                                embGeometryArray_create(flagList, EMB_FLAG);
                             }
                             else
                             {
                                 pathObjPointList = embPointList_add(pathObjPointList, embPoint_make(xx, yy));
-                                pathObjFlagList = embFlagList_add(pathObjFlagList, svgPathCmdToEmbPathFlag(cmd));
                             }
+                            embGeometryArray_addFlag(flagList, svgPathCmdToEmbPathFlag(cmd));
                             lx = xx; ly = yy;
 
                             pathbuff[0] = (char)cmd;                  /* set the command for compare */
@@ -505,7 +503,9 @@ void svgAddToPattern(EmbPattern* p)
 
         /* TODO: subdivide numMoves > 1 */
 
-        embPattern_addPathObjectAbs(p, embPathObject_create(startOfPointList, startOfFlagList, svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke")), 1));
+        EmbColor color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
+        EmbPathObject *path = embPathObject_create(startOfPointList, flagList, color, 1);
+        embPattern_addPathObjectAbs(p, path);
     }
     else if(!strcmp(buff, "polygon") ||
             !strcmp(buff, "polyline"))

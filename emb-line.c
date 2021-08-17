@@ -53,7 +53,7 @@ unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector*
 
     if (!result) {
         embLog_error("emb-line.c embLine_intersectionPoint(), result argument is null\n");
-        return;
+        return 0;
     }
     /*TODO: The code below needs revised since division by zero can still occur */
     if (fabs(det) < tolerence) {

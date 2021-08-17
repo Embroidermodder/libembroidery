@@ -5,7 +5,7 @@
 /* EmbPathObject                                  */
 /**************************************************/
 
-EmbPathObject* embPathObject_create(EmbPointList* pointList, EmbFlagList* flagList, EmbColor color, int lineType)
+EmbPathObject* embPathObject_create(EmbPointList* pointList, EmbGeometryArray* flagList, EmbColor color, int lineType)
 {
     EmbPathObject* heapPathObj = 0;
     if(!pointList) { embLog_error("emb-path.c embPathObject_create(), pointList argument is null\n"); return 0; }
@@ -24,8 +24,7 @@ void embPathObject_free(EmbPathObject* pointer)
 {
     embPointList_free(pointer->pointList);
     pointer->pointList = 0;
-    embFlagList_free(pointer->flagList);
-    pointer->flagList = 0;
+    embGeometryArray_free(pointer->flagList);
     free(pointer);
     pointer = 0;
 }

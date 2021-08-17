@@ -86,12 +86,13 @@ typedef struct EmbFile_
 #define EMB_ARC         0
 #define EMB_CIRCLE      1
 #define EMB_ELLIPSE     2
-#define EMB_LINE        3
-#define EMB_POINT       4
-#define EMB_POLYGON     5
-#define EMB_POLYLINE    6
-#define EMB_RECT        7
-#define EMB_SPLINE      8
+#define EMB_FLAG        3
+#define EMB_LINE        4
+#define EMB_POINT       5
+#define EMB_POLYGON     6
+#define EMB_POLYLINE    7
+#define EMB_RECT        8
+#define EMB_SPLINE      9
 
 #define EMBFORMAT_UNSUPPORTED 0
 #define EMBFORMAT_STITCHONLY  1
@@ -186,6 +187,7 @@ typedef struct EmbVector_
 } EmbVector;
 
 typedef struct EmbVector_ EmbPoint;
+typedef struct EmbGeometryArray_ EmbGeometryArray;
 
 typedef struct EmbVectorList_
 {
@@ -199,14 +201,6 @@ typedef struct EmbVectorArray_
     int count;
     int length;
 } EmbVectorArray;
-
-typedef int EmbFlag;
-
-typedef struct EmbFlagList_
-{
-    int flag;
-    struct EmbFlagList_* next;
-} EmbFlagList;
 
 typedef struct EmbPointList_
 {
@@ -251,7 +245,7 @@ typedef struct EmbLayer_
 typedef struct EmbPathObject_
 {
     EmbPointList* pointList;
-    EmbFlagList* flagList;
+    EmbGeometryArray* flagList;
     int lineType;
     EmbColor color;
 } EmbPathObject;
@@ -408,8 +402,8 @@ typedef struct EmbPolygonObjectList_
 typedef struct EmbSatinOutline_
 {
     int length;
-    EmbVector* side1;
-    EmbVector* side2;
+    EmbVectorArray* side1;
+    EmbVectorArray* side2;
 } EmbSatinOutline;
 
 typedef struct EmbEllipseObject_
@@ -539,10 +533,11 @@ typedef struct EmbSplineObjectList_ {
     struct EmbSplineObjectList_* next;
 } EmbSplineObjectList; /* TODO: This struct/file needs reworked to work internally similar to polylines */
 
-typedef struct EmbGeometryArray_ {
+struct EmbGeometryArray_ {
     EmbArcObject *arc;
     EmbCircleObject *circle;
     EmbEllipseObject *ellipse;
+    int *flag;
     EmbPointObject *point;
     EmbLineObject *line;
     EmbPolygonObject *polygon;
@@ -552,7 +547,7 @@ typedef struct EmbGeometryArray_ {
     int count;
     int length;
     int type;
-} EmbGeometryArray;
+};
 
 typedef struct EmbPattern_
 {
@@ -605,6 +600,7 @@ EMB_PUBLIC int embGeometryArray_create(EmbGeometryArray *g, int type);
 EMB_PUBLIC int embGeometryArray_resize(EmbGeometryArray *g);
 EMB_PUBLIC int embGeometryArray_addArc(EmbGeometryArray* g, EmbArc arc, int lineType, EmbColor color);
 EMB_PUBLIC int embGeometryArray_addCircle(EmbGeometryArray* g, EmbCircle circle, int lineType, EmbColor color);
+EMB_PUBLIC int embGeometryArray_addFlag(EmbGeometryArray* g, int flag);
 EMB_PUBLIC int embGeometryArray_addLine(EmbGeometryArray* g, EmbLineObject line);
 EMB_PUBLIC void embGeometryArray_free(EmbGeometryArray* p);
 
@@ -613,7 +609,7 @@ EMB_PUBLIC EmbLine embLine_make(double x1, double y1, double x2, double y2);
 EMB_PUBLIC void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise);
 EMB_PUBLIC unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector* result);
 
-EMB_PUBLIC EmbPathObject* embPathObject_create(EmbPointList* pointList, EmbFlagList* flagList, EmbColor color, int lineType);
+EMB_PUBLIC EmbPathObject* embPathObject_create(EmbPointList* pointList, EmbGeometryArray* flagList, EmbColor color, int lineType);
 EMB_PUBLIC void embPathObject_free(EmbPathObject* pointer);
 
 EMB_PUBLIC EmbPathObjectList* embPathObjectList_create(EmbPathObject* data);
@@ -649,11 +645,9 @@ EMB_PUBLIC double embVector_dot(EmbVector v1, EmbVector v2);
 EMB_PUBLIC void embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC double embVector_getLength(EmbVector vector);
 
-EMB_PUBLIC EmbVectorList* embVectorList_create(EmbVector data);
-EMB_PUBLIC EmbVectorList* embVectorList_add(EmbVectorList* pointer, EmbVector data);
-EMB_PUBLIC int embVectorList_count(EmbVectorList* pointer);
-EMB_PUBLIC int embVectorList_empty(EmbVectorList* pointer);
-EMB_PUBLIC void embVectorList_free(EmbVectorList* pointer);
+EMB_PUBLIC EmbVectorArray* embVectorArray_create();
+EMB_PUBLIC int embVectorArray_add(EmbVectorArray* pointer, EmbVector data);
+EMB_PUBLIC void embVectorArray_free(EmbVectorArray* pointer);
 
 char binaryReadByte(EmbFile* file);
 int binaryReadBytes(EmbFile* file, unsigned char* destination, int count);
@@ -822,12 +816,6 @@ int bcfFile_read(EmbFile* file, bcf_file* bcfFile);
 EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind);
 void bcf_file_free(bcf_file* bcfFile);
 
-EMB_PUBLIC EmbFlagList* embFlagList_create(EmbFlag data);
-EMB_PUBLIC EmbFlagList* embFlagList_add(EmbFlagList* pointer, EmbFlag data);
-EMB_PUBLIC int embFlagList_count(EmbFlagList* pointer);
-EMB_PUBLIC int embFlagList_empty(EmbFlagList* pointer);
-EMB_PUBLIC void embFlagList_free(EmbFlagList* pointer);
-
 EMB_PUBLIC void embLog_print(const char* format, ...);
 EMB_PUBLIC void embLog_error(const char* format, ...);
 
@@ -874,8 +862,8 @@ EMB_PUBLIC int embPolygonObjectList_count(EmbPolygonObjectList* pointer);
 EMB_PUBLIC int embPolygonObjectList_empty(EmbPolygonObjectList* pointer);
 EMB_PUBLIC void embPolygonObjectList_free(EmbPolygonObjectList* pointer);
 
-EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbVector lines[], int numberOfPoints, double thickness, EmbSatinOutline* result);
-EMB_PUBLIC EmbVectorList* embSatinOutline_renderStitches(EmbSatinOutline* result, double density);
+EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbVectorArray* lines, double thickness, EmbSatinOutline* result);
+EMB_PUBLIC EmbVectorArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density);
 
 EMB_PUBLIC EmbPolylineObject* embPolylineObject_create(EmbPointList* pointList, EmbColor color, int lineType);
 EMB_PUBLIC void embPolylineObject_free(EmbPolylineObject* pointer);

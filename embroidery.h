@@ -93,8 +93,6 @@ typedef struct EmbFile_
 #define EMB_RECT        7
 #define EMB_SPLINE      8
 
-#define PI 3.1415926535
-
 #define EMBFORMAT_UNSUPPORTED 0
 #define EMBFORMAT_STITCHONLY  1
 #define EMBFORMAT_OBJECTONLY  2
@@ -566,7 +564,7 @@ typedef struct EmbPattern_
     EmbGeometryArray* arcs;
     EmbGeometryArray* circles;
     EmbEllipseObjectList* ellipseObjList;
-    EmbLineObjectList* lineObjList;
+    EmbGeometryArray* lines;
     EmbPathObjectList* pathObjList;
     EmbPointObjectList* pointObjList;
     EmbPolygonObjectList* polygonObjList;
@@ -578,7 +576,6 @@ typedef struct EmbPattern_
     EmbThreadList* lastThread;
 
     EmbEllipseObjectList* lastEllipseObj;
-    EmbLineObjectList* lastLineObj;
     EmbPathObjectList* lastPathObj;
     EmbPointObjectList* lastPointObj;
     EmbPolygonObjectList* lastPolygonObj;
@@ -608,34 +605,16 @@ EMB_PUBLIC int embGeometryArray_create(EmbGeometryArray *g, int type);
 EMB_PUBLIC int embGeometryArray_resize(EmbGeometryArray *g);
 EMB_PUBLIC int embGeometryArray_addArc(EmbGeometryArray* g, EmbArc arc, int lineType, EmbColor color);
 EMB_PUBLIC int embGeometryArray_addCircle(EmbGeometryArray* g, EmbCircle circle, int lineType, EmbColor color);
+EMB_PUBLIC int embGeometryArray_addLine(EmbGeometryArray* g, EmbLineObject line);
 EMB_PUBLIC void embGeometryArray_free(EmbGeometryArray* p);
 
-EMB_PUBLIC double embLine_x1(EmbLine line);
-EMB_PUBLIC double embLine_y1(EmbLine line);
-EMB_PUBLIC double embLine_x2(EmbLine line);
-EMB_PUBLIC double embLine_y2(EmbLine line);
+EMB_PUBLIC EmbLine embLine_make(double x1, double y1, double x2, double y2);
 
-EMB_PUBLIC EmbLineObject embLineObject_make(double x1, double y1, double x2, double y2);
-EMB_PUBLIC EmbLineObject* embLineObject_create(double x1, double y1, double x2, double y2);
-
-EMB_PUBLIC EmbLineObjectList* embLineObjectList_create(EmbLineObject data);
-EMB_PUBLIC EmbLineObjectList* embLineObjectList_add(EmbLineObjectList* pointer, EmbLineObject data);
-EMB_PUBLIC int embLineObjectList_count(EmbLineObjectList* pointer);
-EMB_PUBLIC int embLineObjectList_empty(EmbLineObjectList* pointer);
-EMB_PUBLIC void embLineObjectList_free(EmbLineObjectList* pointer);
-
-EMB_PUBLIC void embLine_normalVector(EmbVector vector1, EmbVector vector2, EmbVector* result, int clockwise);
-EMB_PUBLIC void embLine_intersectionPoint(EmbVector v1, EmbVector v2, EmbVector v3, EmbVector v4, EmbVector* result);
-
-void getLineIntersection(double  lineAx1,    double  lineAy1,
-                         double  lineAx2,    double  lineAy2,
-                         double  lineBx1,    double  lineBy1,
-                         double  lineBx2,    double  lineBy2,
-                         double *intersectX, double *intersectY);
+EMB_PUBLIC void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise);
+EMB_PUBLIC unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector* result);
 
 EMB_PUBLIC EmbPathObject* embPathObject_create(EmbPointList* pointList, EmbFlagList* flagList, EmbColor color, int lineType);
 EMB_PUBLIC void embPathObject_free(EmbPathObject* pointer);
-
 
 EMB_PUBLIC EmbPathObjectList* embPathObjectList_create(EmbPathObject* data);
 EMB_PUBLIC EmbPathObjectList* embPathObjectList_add(EmbPathObjectList* pointer, EmbPathObject* data);
@@ -730,9 +709,6 @@ EMB_PUBLIC void embHash_clear(EmbHash* hash);
 EMB_PUBLIC int embHash_empty(const EmbHash* hash);
 EMB_PUBLIC long embHash_count(const EmbHash* hash);
 EMB_PUBLIC void embHash_rehash(EmbHash* hash, long numOfBuckets);
-
-EMB_PUBLIC EmbFormatList formatTable[100];
-EMB_PUBLIC int numberOfFormats;
 
 EMB_PUBLIC int embFormat_getExtension(const char* fileName, char *ending);
 EMB_PUBLIC const char* embFormat_extensionFromName(const char* fileName);
@@ -1049,9 +1025,11 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* filename);
 #undef READER_WRITER
 
 /* NON-MACRO CONSTANTS
-******************************************************************************/
+ ******************************************************************************/
 
 /*! Constant representing the number of Double Indirect FAT entries in a single header */
+EMB_PUBLIC extern EmbFormatList formatTable[];
+EMB_PUBLIC extern int numberOfFormats;
 extern const unsigned int NumberOfDifatEntriesInHeader;
 extern const int pecThreadCount;
 extern const EmbThread pecThreads[];
@@ -1059,6 +1037,7 @@ extern const char imageWithFrame[38][48];
 extern const EmbThread jefThreads[];
 extern const int shvThreadCount;
 extern const EmbThread shvThreads[];
+extern const double embConstantPi;
 
 #ifdef __cplusplus
 }

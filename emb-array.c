@@ -45,22 +45,28 @@ int embGeometryArray_resize(EmbGeometryArray *p)
     p->length += CHUNK_SIZE;
     switch (p->type) {
     case EMB_ARC:
-        if (realloc(p->arc, p->length*sizeof(EmbArcObject))) return 1;
+        p->arc = realloc(p->arc, p->length*sizeof(EmbArcObject));
+        if (!p->arc) return 1;
         break;
     case EMB_CIRCLE:
-        if (realloc(p->circle, p->length*sizeof(EmbCircleObject))) return 1;
+        p->circle = realloc(p->circle, p->length*sizeof(EmbCircleObject));
+        if (!p->circle) return 1;
         break;
     case EMB_ELLIPSE:
-        if (realloc(p->ellipse, p->length*sizeof(EmbEllipseObject))) return 1;
+        p->ellipse = realloc(p->ellipse, p->length*sizeof(EmbEllipseObject));
+        if (!p->ellipse) return 1;
         break;
     case EMB_POINT:
-        if (realloc(p->point, p->length*sizeof(EmbPointObject))) return 1;
+        p->point = realloc(p->point, p->length*sizeof(EmbPointObject));
+        if (!p->point) return 1;
         break;
     case EMB_LINE:
-        if (realloc(p->line, p->length*sizeof(EmbLineObject))) return 1;
+        p->line = realloc(p->line, p->length*sizeof(EmbLineObject));
+        if (!p->line) return 1;
         break;
     case EMB_POLYGON:
-        if (realloc(p->polygon, p->length*sizeof(EmbPolygonObject))) return 1;
+        p->polygon = realloc(p->polygon, p->length*sizeof(EmbPolygonObject));
+        if (!p->polygon) return 1;
         break;
     case EMB_POLYLINE:
         p->polyline = realloc(p->polyline, p->length*sizeof(EmbPolylineObject));
@@ -99,17 +105,13 @@ int embGeometryArray_addCircle(EmbGeometryArray* p, EmbCircle circle, int lineTy
     return 1;
 }
 
-/*
-int embGeometryArray_addCircle(EmbGeometryArray* p, EmbCircle circle, int lineType, EmbColor color)
+int embGeometryArray_addLine(EmbGeometryArray* p, EmbLineObject line)
 {
     p->count++;
     if (!embGeometryArray_resize(p)) return 0;
-    p->circle[p->count].circle = circle;
-    p->circle[p->count].lineType = lineType;
-    p->circle[p->count].color = color;
+    p->line[p->count] = line;
     return 1;
 }
-*/
 
 void embGeometryArray_free(EmbGeometryArray* p)
 {

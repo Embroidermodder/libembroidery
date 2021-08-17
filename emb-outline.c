@@ -78,7 +78,7 @@ StitchBlock * BreakIntoSeparateObjects(EmbStitchBlock* blocks)
             stitches.Add(block.Stitches[i].Clone());
             if (i > 0)
             {
-                if ((block.Stitches[i].Type == VectorStitchType.Contour) && Math.Abs(block.Stitches[i].Angle - previousAngle) > (20/180*Math.PI))
+                if ((block.Stitches[i].Type == VectorStitchType.Contour) && Math.Abs(block.Stitches[i].Angle - previousAngle) > (20/180*embConstantPi))
                 {
                     yield return
                         new StitchBlock

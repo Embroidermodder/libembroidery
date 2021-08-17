@@ -19,8 +19,6 @@ set(LIBRARY_SOURCE_FILES
     emb-flag.c
     emb-format.c
     emb-hash.c
-    emb-hoop.c
-    emb-layer.c
     emb-line.c
     emb-logging.c
     emb-path.c
@@ -35,8 +33,8 @@ set(LIBRARY_SOURCE_FILES
     emb-spline.c
     emb-stitch.c
     emb-thread.c
-    emb-time.c
     emb-vector.c
+    emb-utility.c
     format-100.c
     format-10o.c
     format-art.c
@@ -99,8 +97,6 @@ set(LIBRARY_SOURCE_FILES
     format-xxx.c
     format-zsk.c
     hashtable.c
-    helpers-binary.c
-    helpers-misc.c
     thread-color.c
 )
 
@@ -127,15 +123,15 @@ target_include_directories(embroidery_static
         include
 )
 
-add_executable(libembroidery_convert
-    libembroidery-convert/libembroidery-convert-main.c
+add_executable(embroider
+    embroider/embroider-main.c
 )
 
 add_executable(libembroidery_test
     libembroidery-test/libembroidery-test-main.c
 )
 
-target_include_directories(libembroidery_convert
+target_include_directories(embroider
     INTERFACE
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -146,14 +142,19 @@ target_include_directories(libembroidery_convert
 # These link against the static libraries
 # so we know that it is the current build that they're
 # linked against.
-target_link_libraries(libembroidery_convert PRIVATE embroidery_static)
+if(WIN32)
+target_link_libraries(embroider PRIVATE embroidery_static)
 target_link_libraries(libembroidery_test PRIVATE embroidery_static)
+else(WIN32)
+target_link_libraries(embroider PRIVATE embroidery_static m)
+target_link_libraries(libembroidery_test PRIVATE embroidery_static m)
+endif(WIN32)
 
 install(
     TARGETS
        embroidery
        embroidery_static
-       libembroidery_convert
+       embroider
     LIBRARY DESTINATION /usr/lib
     ARCHIVE DESTINATION /usr/lib
     RUNTIME DESTINATION /usr/bin/env

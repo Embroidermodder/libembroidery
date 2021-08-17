@@ -28,7 +28,7 @@ EmbPattern* embPattern_create(void)
     p->arcs = 0;
     p->circles = 0;
     p->ellipseObjList = 0;
-    p->lineObjList = 0;
+    p->lines = 0;
     p->pathObjList = 0;
     p->pointObjList = 0;
     p->polygonObjList = 0;
@@ -39,7 +39,6 @@ EmbPattern* embPattern_create(void)
     p->lastStitch = 0;
     p->lastThread = 0;
 
-    p->lastLineObj = 0;
     p->lastEllipseObj = 0;
     p->lastPathObj = 0;
     p->lastPointObj = 0;
@@ -396,8 +395,6 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     EmbStitch pt;
     EmbEllipseObjectList* eObjList = 0;
     EmbEllipse ellipse;
-    EmbLineObjectList* liObjList = 0;
-    EmbLine line;
     EmbPointObjectList* pObjList = 0;
     EmbPoint point;
     EmbPolygonObjectList* pogObjList = 0;
@@ -422,10 +419,9 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     /* TODO: Come back and optimize this mess so that after going thru all objects
             and stitches, if the rectangle isn't reasonable, then return a default rect */
     if (embStitchList_empty(p->stitchList) &&
-    !p->arcs &&
-    !p->circles &&
+    !p->arcs && !p->circles &&
     embEllipseObjectList_empty(p->ellipseObjList) &&
-    embLineObjectList_empty(p->lineObjList) &&
+    !p->lines &&
     embPointObjectList_empty(p->pointObjList) &&
     embPolygonObjectList_empty(p->polygonObjList) &&
     embPolylineObjectList_empty(p->polylineObjList) &&
@@ -490,13 +486,18 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
         eObjList = eObjList->next;
     }
 
-    liObjList = p->lineObjList;
-    while(liObjList)
-    {
-        line = liObjList->lineObj.line;
-        /* TODO: embPattern_calcBoundingBox for lines */
-
-        liObjList = liObjList->next;
+    if (p->lines) {
+        for (i=0; i<p->lines->count; i++) {
+            EmbLine line = p->lines->line[i].line;
+            boundingRect.left = embMinDouble(boundingRect.left, line.x1);
+            boundingRect.left = embMinDouble(boundingRect.left, line.x2);
+            boundingRect.top = embMinDouble(boundingRect.top, line.y1);
+            boundingRect.top = embMinDouble(boundingRect.top, line.y2);
+            boundingRect.right = embMaxDouble(boundingRect.right, line.x1);
+            boundingRect.right = embMaxDouble(boundingRect.right, line.x2);
+            boundingRect.bottom = embMaxDouble(boundingRect.bottom, line.y1);
+            boundingRect.bottom = embMaxDouble(boundingRect.bottom, line.y2);
+        }
     }
 
     pObjList = p->pointObjList;
@@ -578,7 +579,6 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     int i;
     EmbStitchList* stList = 0;
     EmbEllipseObjectList* eObjList = 0;
-    EmbLineObjectList* liObjList = 0;
     EmbPathObjectList* paObjList = 0;
     EmbPointList* paPointList = 0;
     EmbPointObjectList* pObjList = 0;
@@ -629,20 +629,17 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
         eObjList = eObjList->next;
     }
 
-    liObjList = p->lineObjList;
-    while(liObjList)
-    {
-        if(horz)
-        {
-            liObjList->lineObj.line.x1 = -liObjList->lineObj.line.x1;
-            liObjList->lineObj.line.x2 = -liObjList->lineObj.line.x2;
+    if (p->lines) {
+        for (i=0; i<p->lines->count; i++) {
+            if(horz) {
+                p->lines->line[i].line.x1 *= -1.0;
+                p->lines->line[i].line.x2 *= -1.0;
+            }
+            if (vert) {
+                p->lines->line[i].line.y1 *= -1.0;
+                p->lines->line[i].line.y2 *= -1.0;
+            }
         }
-        if(vert)
-        {
-            liObjList->lineObj.line.y1 = -liObjList->lineObj.line.y1;
-            liObjList->lineObj.line.y2 = -liObjList->lineObj.line.y2;
-        }
-        liObjList = liObjList->next;
     }
 
     paObjList = p->pathObjList;
@@ -930,7 +927,10 @@ void embPattern_free(EmbPattern* p)
         p->circles = 0;
     }
     embEllipseObjectList_free(p->ellipseObjList);   p->ellipseObjList = 0;  p->lastEllipseObj = 0;
-    embLineObjectList_free(p->lineObjList);         p->lineObjList = 0;     p->lastLineObj = 0;
+    if (p->lines) {
+        embGeometryArray_free(p->lines);
+        p->lines = 0;
+    }
     embPathObjectList_free(p->pathObjList);         p->pathObjList = 0;     p->lastPathObj = 0;
     embPointObjectList_free(p->pointObjList);       p->pointObjList = 0;    p->lastPointObj = 0;
     embPolygonObjectList_free(p->polygonObjList);   p->polygonObjList = 0;  p->lastPolygonObj = 0;
@@ -948,10 +948,10 @@ void embPattern_free(EmbPattern* p)
 void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r)
 {
     EmbCircle circle = {cx, cy, r};
-    EmbColor color = {0, 0, 0};
+    EmbColor color = embColor_make(0, 0, 0);
 
-    if(!p) { embLog_error("emb-pattern.c embPattern_addCircleObjectAbs(), p argument is null\n"); return; }
-    if(p->circles == 0) {
+    if (!p) { embLog_error("emb-pattern.c embPattern_addCircleObjectAbs(), p argument is null\n"); return; }
+    if (p->circles == 0) {
          embGeometryArray_create(p->circles, EMB_CIRCLE);
     }
     embGeometryArray_addCircle(p->circles, circle, 0, color);
@@ -964,31 +964,36 @@ void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy, double 
 {
     EmbEllipseObject ellipseObj = embEllipseObject_make(cx, cy, rx, ry);
 
-    if(!p) { embLog_error("emb-pattern.c embPattern_addEllipseObjectAbs(), p argument is null\n"); return; }
-    if(embEllipseObjectList_empty(p->ellipseObjList))
-    {
+    if (!p) {
+        embLog_error("emb-pattern.c embPattern_addEllipseObjectAbs(), p argument is null\n");
+        return;
+    }
+    if (embEllipseObjectList_empty(p->ellipseObjList)) {
         p->ellipseObjList = p->lastEllipseObj = embEllipseObjectList_create(ellipseObj);
     }
-    else
-    {
+    else {
         p->lastEllipseObj = embEllipseObjectList_add(p->lastEllipseObj, ellipseObj);
     }
 }
 
-/*! Adds a line object to pattern (\a p) starting at the absolute position (\a x1,\a y1) and ending at the absolute position (\a x2,\a y2). Positive y is up. Units are in millimeters. */
+/*! Adds a line object to pattern (\a p) starting at the absolute position
+ * (\a x1,\a y1) and ending at the absolute position (\a x2,\a y2).
+ * Positive y is up. Units are in millimeters.
+ */
 void embPattern_addLineObjectAbs(EmbPattern* p, double x1, double y1, double x2, double y2)
 {
-    EmbLineObject lineObj = embLineObject_make(x1, y1, x2, y2);
+    EmbLineObject lineObj;
+    lineObj.line = embLine_make(x1, y1, x2, y2);
+    lineObj.color = embColor_make(0, 0, 0);
 
-    if(!p) { embLog_error("emb-pattern.c embPattern_addLineObjectAbs(), p argument is null\n"); return; }
-    if(embLineObjectList_empty(p->lineObjList))
-    {
-        p->lineObjList = p->lastLineObj = embLineObjectList_create(lineObj);
+    if (!p) {
+        embLog_error("emb-pattern.c embPattern_addLineObjectAbs(), p argument is null\n");
+        return;
     }
-    else
-    {
-        p->lastLineObj = embLineObjectList_add(p->lastLineObj, lineObj);
+    if (p->circles == 0) {
+         embGeometryArray_create(p->lines, EMB_LINE);
     }
+    embGeometryArray_addLine(p->lines, lineObj);
 }
 
 void embPattern_addPathObjectAbs(EmbPattern* p, EmbPathObject* obj)

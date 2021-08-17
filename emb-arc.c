@@ -1,11 +1,9 @@
 #include "embroidery.h"
-
-#ifndef M_PI
-#define M_PI 3.14159265358979
-#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+
+const double embConstantPi = 3.1415926535;
 
 /* Returns an EmbArcObject. It is created on the stack. */
 EmbArcObject embArcObject_make(double sx, double sy, double mx, double my, double ex, double ey)
@@ -20,28 +18,14 @@ EmbArcObject embArcObject_make(double sx, double sy, double mx, double my, doubl
     return stackArcObj;
 }
 
-/* Returns a pointer to an EmbArcObject. It is created on the heap. The caller is responsible for freeing the allocated memory. */
-EmbArcObject* embArcObject_create(double sx, double sy, double mx, double my, double ex, double ey)
-{
-    EmbArcObject* heapArcObj = (EmbArcObject*)malloc(sizeof(EmbArcObject));
-    if(!heapArcObj) return 0;
-    heapArcObj->arc.startX = sx;
-    heapArcObj->arc.startY = sy;
-    heapArcObj->arc.midX   = mx;
-    heapArcObj->arc.midY   = my;
-    heapArcObj->arc.endX   = ex;
-    heapArcObj->arc.endY   = ey;
-    return heapArcObj;
-}
-
 double radians(double degree)
 {
-    return (double)(degree*M_PI/180.0);
+    return degree*embConstantPi/180.0;
 }
 
 double degrees(double radian)
 {
-    return (double)(radian*180.0/M_PI);
+    return radian*180.0/embConstantPi;
 }
 
 /* Calculus based approach at determining whether a polygon is clockwise or counterclockwise.
@@ -87,9 +71,14 @@ void getArcCenter(double  arcStartX,  double  arcStartY,
     double bPerpX = bMidX + pbx;
     double bPerpY = bMidY + pby;
 
-    getLineIntersection(aMidX, aMidY, aPerpX, aPerpY,
-                        bMidX, bMidY, bPerpX, bPerpY,
-                        arcCenterX, arcCenterY);
+    EmbLine line1;
+    EmbLine line2;
+    EmbVector vector;
+    line1 = embLine_make(aMidX, aMidY, aPerpX, aPerpY);
+    line2 = embLine_make(bMidX, bMidY, bPerpX, bPerpY);
+    embLine_intersectionPoint(line1, line2, &vector);
+    arcCenterX = &(vector.x);
+    arcCenterY = &(vector.y);
 }
 
 /* Calculates Arc Geometry from Bulge Data.

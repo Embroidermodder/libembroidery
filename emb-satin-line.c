@@ -19,7 +19,13 @@ void embSatinOutline_generateSatinOutline(EmbVector lines[], int numberOfPoints,
         EmbVector v1;
         EmbVector temp;
 
-        embLine_normalVector(lines[i - 1], lines[i], &v1, 1);
+        EmbLine line;
+        line.x1 = lines[i-1].x;
+        line.y1 = lines[i-1].y;
+        line.x2 = lines[i].x;
+        line.y2 = lines[i].y;
+
+        embLine_normalVector(line, &v1, 1);
 
         embVector_multiply(v1, halfThickness, &temp);
         embVector_add(temp, lines[i - 1], &outline.side1[j]);
@@ -39,14 +45,27 @@ void embSatinOutline_generateSatinOutline(EmbVector lines[], int numberOfPoints,
     result->side1[0] = outline.side1[0];
     result->side2[0] = outline.side2[0];
 
-    for(i = 3; i < intermediateOutlineCount; i += 2)
-    {
-        embLine_intersectionPoint(outline.side1[i - 3], outline.side1[i - 2], outline.side1[i - 1], outline.side1[i], &result->side1[(i - 1) / 2]);
-    }
+    EmbLine line1, line2;
+    for(i = 3; i < intermediateOutlineCount; i += 2) {
+        line1.x1 = outline.side1[i - 3].x;
+        line1.y1 = outline.side1[i - 3].y;
+        line1.x2 = outline.side1[i - 2].x;
+        line1.y2 = outline.side1[i - 2].y;
+        line2.x1 = outline.side1[i - 1].x;
+        line2.y1 = outline.side1[i - 1].y;
+        line2.x2 = outline.side1[i].x;
+        line2.y2 = outline.side1[i].y;
+        embLine_intersectionPoint(line1, line2, &result->side1[(i - 1) / 2]);
 
-    for(i = 3; i < intermediateOutlineCount; i += 2)
-    {
-        embLine_intersectionPoint(outline.side2[i - 3], outline.side2[i - 2], outline.side2[i - 1], outline.side2[i], &result->side2[(i - 1) / 2]);
+        line1.x1 = outline.side2[i - 3].x;
+        line1.y1 = outline.side2[i - 3].y;
+        line1.x2 = outline.side2[i - 2].x;
+        line1.y2 = outline.side2[i - 2].y;
+        line2.x1 = outline.side2[i - 1].x;
+        line2.y1 = outline.side2[i - 1].y;
+        line2.x2 = outline.side2[i].x;
+        line2.y2 = outline.side2[i].y;
+        embLine_intersectionPoint(line1, line2, &result->side2[(i - 1) / 2]);
     }
 
     result->side1[numberOfPoints - 1] = outline.side1[2 * numberOfPoints - 3];

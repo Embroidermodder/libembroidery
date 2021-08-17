@@ -1947,12 +1947,11 @@ int readSvg(EmbPattern* pattern, const char* fileName)
         printf("ellipse %f %f %f %f\n", embEllipse_centerX(e), embEllipse_centerY(e), embEllipse_radiusX(e), embEllipse_radiusY(e));
         eList = eList->next;
     }
-    liList = pattern->lineObjList;
-    while(liList)
-    {
-        EmbLine li = liList->lineObj.line;
-        printf("line %f %f %f %f\n", embLine_x1(li), embLine_y1(li), embLine_x2(li), embLine_y2(li));
-        liList = liList->next;
+    if (pattern->lines) {
+        for (i=0; i<pattern->lines->count; i++) {
+            EmbLine li = pattern->lines->line[i].line;
+            printf("line %f %f %f %f\n", li.x1, li.y1, li.x2, li.y2);
+        }
     }
     poList = pattern->pointObjList;
     while(poList)
@@ -2090,13 +2089,12 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     }
 
     /* write lines */
-    liObjList = pattern->lineObjList;
-    while(liObjList)
-    {
-        line = liObjList->lineObj.line;
-        color = liObjList->lineObj.color;
-        /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-        embFile_printf(file, "\n<line stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
+    if (pattern->lines) {
+        for (i=0; i<pattern->lines->count; i++) {
+            line = pattern->lines->line[i].line;
+            color = pattern->lines->line[i].color;
+            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+            embFile_printf(file, "\n<line stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
                         color.r,
                         color.g,
                         color.b,
@@ -2104,7 +2102,7 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
                         line.y1,
                         line.x2,
                         line.y2);
-        liObjList = liObjList->next;
+        }
     }
 
     /* write points */

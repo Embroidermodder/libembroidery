@@ -10,7 +10,7 @@
 
 function test_convert () {
 gdb --batch -ex=r \
-    --args ./libembroidery_convert ../libembroidery-test/$1 $2 &>> test.log
+    --args ./embroider ../libembroidery-test/$1 $2 &>> test.log
 }
 
 rm -fr build

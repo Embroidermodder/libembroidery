@@ -1,5 +1,4 @@
 name: Test Suite
-# eventually for all platforms
 
 on:
   push:
@@ -9,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Run test script.
+    - name: Run test script on Linux.
       run: |
         git clone https://github.com/Embroidermodder/libembroidery
         cd libembroidery
@@ -19,4 +18,31 @@ jobs:
         make
         ./libembroidery_test
         ./embroider
-        
+  test-macOS:
+    runs-on: macOS-latest
+    
+    steps:
+    - name: Run test script on macOS.
+      run: |
+        git clone https://github.com/Embroidermodder/libembroidery
+        cd libembroidery
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Debug ..
+        cmake --build .
+        ./libembroidery_test
+        ./embroider
+  test-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Run test script on macOS.
+      run: |
+        git clone https://github.com/Embroidermodder/libembroidery
+        cd libembroidery
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Debug ..
+        cmake --build .
+        ./libembroidery_test
+        ./embroider

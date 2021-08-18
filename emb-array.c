@@ -16,6 +16,9 @@ int embGeometryArray_create(EmbGeometryArray *p, int type)
     case EMB_ELLIPSE:
         p->ellipse = (EmbEllipseObject*)malloc(CHUNK_SIZE*sizeof(EmbEllipseObject));
         break;
+    case EMB_FLAG:
+        p->flag = (int*)malloc(CHUNK_SIZE*sizeof(int));
+        break;
     case EMB_POINT:
         p->point = (EmbPointObject*)malloc(CHUNK_SIZE*sizeof(EmbPointObject));
         break;
@@ -34,9 +37,8 @@ int embGeometryArray_create(EmbGeometryArray *p, int type)
     case EMB_SPLINE:
         p->spline = (EmbSplineObject*)malloc(CHUNK_SIZE*sizeof(EmbSplineObject));
     default:
-        break;    
+        break;
     }
-
 }
 
 int embGeometryArray_resize(EmbGeometryArray *p)
@@ -55,6 +57,10 @@ int embGeometryArray_resize(EmbGeometryArray *p)
     case EMB_ELLIPSE:
         p->ellipse = realloc(p->ellipse, p->length*sizeof(EmbEllipseObject));
         if (!p->ellipse) return 1;
+        break;
+    case EMB_FLAG:
+        p->flag = realloc(p->flag, p->length*sizeof(int));
+        if (!p->flag) return 1;
         break;
     case EMB_POINT:
         p->point = realloc(p->point, p->length*sizeof(EmbPointObject));
@@ -80,7 +86,7 @@ int embGeometryArray_resize(EmbGeometryArray *p)
         p->spline = realloc(p->spline, p->length*sizeof(EmbSplineObject));
         if (!p->spline) return 1;
     default:
-        break;    
+        break;
     }
     return 0;
 }
@@ -105,6 +111,14 @@ int embGeometryArray_addCircle(EmbGeometryArray* p, EmbCircle circle, int lineTy
     return 1;
 }
 
+int embGeometryArray_addFlag(EmbGeometryArray* p, int flag)
+{
+    p->count++;
+    if (!embGeometryArray_resize(p)) return 0;
+    p->flag[p->count] = flag;
+    return 1;
+}
+
 int embGeometryArray_addLine(EmbGeometryArray* p, EmbLineObject line)
 {
     p->count++;
@@ -125,6 +139,9 @@ void embGeometryArray_free(EmbGeometryArray* p)
     case EMB_ELLIPSE:
         free(p->ellipse);
         break;
+    case EMB_FLAG:
+        free(p->flag);
+        break;
     case EMB_POINT:
         free(p->point);
         break;
@@ -143,7 +160,7 @@ void embGeometryArray_free(EmbGeometryArray* p)
     case EMB_SPLINE:
         free(p->spline);
     default:
-        break;    
+        break;
     }
 }
 

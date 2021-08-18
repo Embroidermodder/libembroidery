@@ -16,7 +16,6 @@ set(LIBRARY_SOURCE_FILES
     emb-compress.c
     emb-ellipse.c
     emb-file.c
-    emb-flag.c
     emb-format.c
     emb-hash.c
     emb-line.c

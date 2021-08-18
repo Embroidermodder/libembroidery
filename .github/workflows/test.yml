@@ -1,0 +1,22 @@
+name: Test Suite
+# eventually for all platforms
+
+on:
+  push:
+
+jobs:
+  test-linux64:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Run test script.
+      run: |
+        git clone https://github.com/Embroidermodder/libembroidery
+        cd libembroidery
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Debug ..
+        make
+        ./libembroidery_test
+        ./embroider
+        

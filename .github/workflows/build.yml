@@ -6,7 +6,7 @@ on:
     types: [published, created, edited]
 
 jobs:
-  test-linux64:
+  build-linux64:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,3 +24,21 @@ jobs:
       with:
         name: my-artifact
         path: libembroidery/libembroidery-linux64.tar
+  build-macOS:
+    runs-on: macos-latest
+
+    steps:
+    - name: Build library and command-line program for distribution to macOS.
+      run: |
+        git clone https://github.com/Embroidermodder/libembroidery
+        cd libembroidery
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake --build .
+        cd ..
+        tar cf libembroidery-macOS.tar build
+    - uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: libembroidery/libembroidery-macOS.tar

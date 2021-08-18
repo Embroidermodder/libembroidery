@@ -140,7 +140,7 @@ void embGeometryArray_free(EmbGeometryArray* p)
         free(p->ellipse);
         break;
     case EMB_FLAG:
-        free(p->ellipse);
+        free(p->flag);
         break;
     case EMB_POINT:
         free(p->point);

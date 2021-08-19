@@ -39,8 +39,6 @@ SOURCES += \
 ../libembroidery/emb-path.c \
 ../libembroidery/emb-pattern.c \
 ../libembroidery/emb-point.c \
-../libembroidery/emb-polygon.c \
-../libembroidery/emb-polyline.c \
 ../libembroidery/emb-reader-writer.c \
 ../libembroidery/emb-rect.c \
 ../libembroidery/emb-satin-line.c \
@@ -48,7 +46,6 @@ SOURCES += \
 ../libembroidery/emb-spline.c \
 ../libembroidery/emb-stitch.c \
 ../libembroidery/emb-thread.c \
-../libembroidery/emb-time.c \
 ../libembroidery/emb-vector.c \
 ../libembroidery/hashtable.c \
 ../libembroidery/helpers-binary.c \

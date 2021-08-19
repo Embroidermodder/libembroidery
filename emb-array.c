@@ -26,10 +26,10 @@ int embGeometryArray_create(EmbGeometryArray *p, int type)
         p->line = (EmbLineObject*)malloc(CHUNK_SIZE*sizeof(EmbLineObject));
         break;
     case EMB_POLYGON:
-        p->polygon = (EmbPolygonObject*)malloc(CHUNK_SIZE*sizeof(EmbPolygonObject));
+        p->polygon = (EmbPolygonObject**)malloc(CHUNK_SIZE*sizeof(EmbPolygonObject*));
         break;
     case EMB_POLYLINE:
-        p->polyline = (EmbPolylineObject*)malloc(CHUNK_SIZE*sizeof(EmbPolylineObject));
+        p->polyline = (EmbPolylineObject**)malloc(CHUNK_SIZE*sizeof(EmbPolylineObject*));
         break;
     case EMB_RECT:
         p->rect = (EmbRectObject*)malloc(CHUNK_SIZE*sizeof(EmbRectObject));
@@ -71,11 +71,11 @@ int embGeometryArray_resize(EmbGeometryArray *p)
         if (!p->line) return 1;
         break;
     case EMB_POLYGON:
-        p->polygon = realloc(p->polygon, p->length*sizeof(EmbPolygonObject));
+        p->polygon = realloc(p->polygon, p->length*sizeof(EmbPolygonObject*));
         if (!p->polygon) return 1;
         break;
     case EMB_POLYLINE:
-        p->polyline = realloc(p->polyline, p->length*sizeof(EmbPolylineObject));
+        p->polyline = realloc(p->polyline, p->length*sizeof(EmbPolylineObject*));
         if (!p->polyline) return 1;
         break;
     case EMB_RECT:
@@ -95,9 +95,9 @@ int embGeometryArray_addArc(EmbGeometryArray* p, EmbArc arc, int lineType, EmbCo
 {
     p->count++;
     if (!embGeometryArray_resize(p)) return 0;
-    p->arc[p->count].arc = arc;
-    p->arc[p->count].lineType = lineType;
-    p->arc[p->count].color = color;
+    p->arc[p->count - 1].arc = arc;
+    p->arc[p->count - 1].lineType = lineType;
+    p->arc[p->count - 1].color = color;
     return 1;
 }
 
@@ -105,9 +105,21 @@ int embGeometryArray_addCircle(EmbGeometryArray* p, EmbCircle circle, int lineTy
 {
     p->count++;
     if (!embGeometryArray_resize(p)) return 0;
-    p->circle[p->count].circle = circle;
-    p->circle[p->count].lineType = lineType;
-    p->circle[p->count].color = color;
+    p->circle[p->count - 1].circle = circle;
+    p->circle[p->count - 1].lineType = lineType;
+    p->circle[p->count - 1].color = color;
+    return 1;
+}
+
+int embGeometryArray_addEllipse(EmbGeometryArray* p,
+    EmbEllipse ellipse, double rotation, int lineType, EmbColor color)
+{
+    p->count++;
+    if (!embGeometryArray_resize(p)) return 0;
+    p->ellipse[p->count - 1].ellipse = ellipse;
+    p->ellipse[p->count - 1].rotation = rotation;
+    p->ellipse[p->count - 1].lineType = lineType;
+    p->ellipse[p->count - 1].color = color;
     return 1;
 }
 
@@ -115,7 +127,7 @@ int embGeometryArray_addFlag(EmbGeometryArray* p, int flag)
 {
     p->count++;
     if (!embGeometryArray_resize(p)) return 0;
-    p->flag[p->count] = flag;
+    p->flag[p->count - 1] = flag;
     return 1;
 }
 
@@ -123,12 +135,50 @@ int embGeometryArray_addLine(EmbGeometryArray* p, EmbLineObject line)
 {
     p->count++;
     if (!embGeometryArray_resize(p)) return 0;
-    p->line[p->count] = line;
+    p->line[p->count - 1] = line;
+    return 1;
+}
+
+int embGeometryArray_addPolygon(EmbGeometryArray* p, EmbPolygonObject *polygon)
+{
+    p->count++;
+    if (!embGeometryArray_resize(p)) return 0;
+    p->polygon[p->count - 1] = (EmbPolygonObject*)malloc(sizeof(EmbPolygonObject));
+    if (!p->polygon[p->count - 1]) {
+        embLog_error("emb-polygon.c embGeometryArray_create(), cannot allocate memory for heapPolygonObj\n");
+        return 0;
+    }
+    p->polygon[p->count - 1] = polygon;
+    return 1;
+}
+
+int embGeometryArray_addPolyline(EmbGeometryArray* p, EmbPolylineObject *polyline)
+{
+    p->count++;
+    if (!embGeometryArray_resize(p)) return 0;
+    p->polyline[p->count - 1] = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
+    if (!p->polyline[p->count - 1]) {
+        embLog_error("emb-polyline.c embGeometryArray_create(), cannot allocate memory for heapPolylineObj\n");
+        return 0;
+    }
+    p->polyline[p->count - 1] = polyline;
+    return 1;
+}
+
+int embGeometryArray_addRect(EmbGeometryArray* p,
+    EmbRect rect, int lineType, EmbColor color)
+{
+    p->count++;
+    if (!embGeometryArray_resize(p)) return 0;
+    p->rect[p->count - 1].rect = rect;
+    p->rect[p->count - 1].lineType = lineType;
+    p->rect[p->count - 1].color = color;
     return 1;
 }
 
 void embGeometryArray_free(EmbGeometryArray* p)
 {
+    int i;
     switch (p->type) {
     case EMB_ARC:
         free(p->arc);
@@ -149,10 +199,16 @@ void embGeometryArray_free(EmbGeometryArray* p)
         free(p->line);
         break;
     case EMB_POLYGON:
+        for (i=0; i<p->count; i++) {
+            embPointList_free(p->polygon[i]->pointList);
+        }
         free(p->polygon);
         break;
     case EMB_POLYLINE:
-        free(p->polyline);
+        for (i=0; i<p->count; i++) {
+            embPointList_free(p->polyline[i]->pointList);
+        }
+        free(p->polygon);
         break;
     case EMB_RECT:
         free(p->rect);

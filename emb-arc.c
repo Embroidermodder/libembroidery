@@ -30,28 +30,25 @@ double degrees(double radian)
 
 /* Calculus based approach at determining whether a polygon is clockwise or counterclockwise.
  * Returns true if arc is clockwise. */
-char isArcClockwise(double startx, double starty, double midx, double midy, double endx, double endy)
+char isArcClockwise(EmbArc arc)
 {
-    double edge1 = (midx-startx)*(midy+starty);
-    double edge2 = (endx-midx)*(endy+midy);
-    double edge3 = (startx-endx)*(starty+endy);
-    if(edge1 + edge2 + edge3 >= 0.0)
+    double edge1 = (arc.midX-arc.startX)*(arc.midY+arc.startY);
+    double edge2 = (arc.endX-arc.midX)*(arc.endY+arc.midY);
+    double edge3 = (arc.startX-arc.endX)*(arc.startY+arc.endY);
+    if (edge1 + edge2 + edge3 >= 0.0) {
         return 1;
+    }
     return 0;
 }
 
 /* Calculates the CenterPoint of the Arc */
-void getArcCenter(double  arcStartX,  double  arcStartY,
-                  double  arcMidX,    double  arcMidY,
-                  double  arcEndX,    double  arcEndY,
-                  /* returned data */
-                  double* arcCenterX, double* arcCenterY)
+void getArcCenter(EmbArc arc, EmbVector* arcCenter)
 {
-    double ax = arcMidX - arcStartX;
-    double ay = arcMidY - arcStartY;
+    double ax = arc.midX - arc.startX;
+    double ay = arc.midY - arc.startY;
     double aAngleInRadians = atan2(ay, ax);
-    double aMidX = (arcMidX + arcStartX)/2.0;
-    double aMidY = (arcMidY + arcStartY)/2.0;
+    double aMidX = (arc.midX + arc.startX)/2.0;
+    double aMidY = (arc.midY + arc.startY)/2.0;
 
     double paAngleInRadians = aAngleInRadians + radians(90.0);
     double pax = cos(paAngleInRadians);
@@ -59,11 +56,11 @@ void getArcCenter(double  arcStartX,  double  arcStartY,
     double aPerpX = aMidX + pax;
     double aPerpY = aMidY + pay;
 
-    double bx = arcEndX - arcMidX;
-    double by = arcEndY - arcMidY;
+    double bx = arc.endX - arc.midX;
+    double by = arc.endY - arc.midY;
     double bAngleInRadians = atan2(by, bx);
-    double bMidX = (arcEndX + arcMidX)/2.0;
-    double bMidY = (arcEndY + arcMidY)/2.0;
+    double bMidX = (arc.endX + arc.midX)/2.0;
+    double bMidY = (arc.endY + arc.midY)/2.0;
 
     double pbAngleInRadians = bAngleInRadians + radians(90.0);
     double pbx = cos(pbAngleInRadians);
@@ -76,9 +73,7 @@ void getArcCenter(double  arcStartX,  double  arcStartY,
     EmbVector vector;
     line1 = embLine_make(aMidX, aMidY, aPerpX, aPerpY);
     line2 = embLine_make(bMidX, bMidY, bPerpX, bPerpY);
-    embLine_intersectionPoint(line1, line2, &vector);
-    arcCenterX = &(vector.x);
-    arcCenterY = &(vector.y);
+    embLine_intersectionPoint(line1, line2, arcCenter);
 }
 
 /* Calculates Arc Geometry from Bulge Data.
@@ -144,15 +139,23 @@ char getArcDataFromBulge(double bulge,
     *arcMidX = *chordMidX + fx;
     *arcMidY = *chordMidY + fy;
 
-    /* Calculate the Arc CenterPoint */
-    getArcCenter(arcStartX, arcStartY, *arcMidX, *arcMidY, arcEndX, arcEndY, arcCenterX, arcCenterY);
+    EmbArc arc;
+    EmbVector arcCenter;
+    arc.startX = arcStartX;
+    arc.startY = arcStartY;
+    arc.midX = *arcMidX;
+    arc.midY = *arcMidY;
+    arc.endX = arcEndX;
+    arc.endY = arcEndY;
+    getArcCenter(arc, &arcCenter);
+    *arcCenterX = arcCenter.x;
+    *arcCenterY = arcCenter.y;
 
     /* Convert the Included Angle from Radians to Degrees */
     *incAngleInDegrees = degrees(incAngleInRadians);
 
     /* Confirm the direction of the Arc, it should match the Bulge */
-    if(*clockwise != isArcClockwise(arcStartX, arcStartY, *arcMidX, *arcMidY, arcEndX, arcEndY))
-    {
+    if (*clockwise != isArcClockwise(arc)) {
         fprintf(stderr, "Arc and Bulge direction do not match.\n");
         return 0;
     }

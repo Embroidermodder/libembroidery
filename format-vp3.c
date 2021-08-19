@@ -254,10 +254,7 @@ int readVp3(EmbPattern* pattern, const char* fileName)
             embPattern_addStitchRel(pattern, 0, 0, STOP, 1);
     }
     embFile_close(file);
-
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
+    embPattern_end(pattern);
 
     embPattern_flipVertical(pattern);
 

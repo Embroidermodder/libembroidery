@@ -1,10 +1,6 @@
 #include "embroidery.h"
 #include <stdlib.h>
 
-/**************************************************/
-/* EmbRect                                        */
-/**************************************************/
-
 double embRect_x(EmbRect rect)
 {
     return rect.left;
@@ -65,10 +61,6 @@ void embRect_setRect(EmbRect* rect, double x, double y, double w, double h)
     rect->bottom = y + h;
 }
 
-/**************************************************/
-/* EmbRectObject                                  */
-/**************************************************/
-
 /* Returns an EmbRectObject. It is created on the stack. */
 EmbRectObject embRectObject_make(double x, double y, double w, double h)
 {
@@ -78,74 +70,5 @@ EmbRectObject embRectObject_make(double x, double y, double w, double h)
     stackRectObj.rect.right = x + w;
     stackRectObj.rect.bottom = y + h;
     return stackRectObj;
-}
-
-/* Returns a pointer to an EmbRectObject. It is created on the heap. The caller is responsible for freeing the allocated memory. */
-EmbRectObject* embRectObject_create(double x, double y, double w, double h)
-{
-    EmbRectObject* heapRectObj = (EmbRectObject*)malloc(sizeof(EmbRectObject));
-    if(!heapRectObj) { embLog_error("emb-rect.c embRectObject_create(), cannot allocate memory for heapRectObj\n"); return 0; }
-    heapRectObj->rect.left = x;
-    heapRectObj->rect.top = y;
-    heapRectObj->rect.right = x + w;
-    heapRectObj->rect.bottom = y + h;
-    return heapRectObj;
-}
-
-/**************************************************/
-/* EmbRectObjectList                              */
-/**************************************************/
-
-EmbRectObjectList* embRectObjectList_create(EmbRectObject data)
-{
-    EmbRectObjectList* heapRectObjList = (EmbRectObjectList*)malloc(sizeof(EmbRectObjectList));
-    if(!heapRectObjList) { embLog_error("emb-rect.c embRectObjectList_create(), cannot allocate memory for heapRectObjList\n"); return 0; }
-    heapRectObjList->rectObj = data;
-    heapRectObjList->next = 0;
-    return heapRectObjList;
-}
-
-EmbRectObjectList* embRectObjectList_add(EmbRectObjectList* pointer, EmbRectObject data)
-{
-    if(!pointer) { embLog_error("emb-rect.c embRectObjectList_add(), pointer argument is null\n"); return 0; }
-    if(pointer->next) { embLog_error("emb-rect.c embRectObjectList_add(), pointer->next should be null\n"); return 0; }
-    pointer->next = (EmbRectObjectList*)malloc(sizeof(EmbRectObjectList));
-    if(!pointer->next) { embLog_error("emb-rect.c embRectObjectList_add(), cannot allocate memory for pointer->next\n"); return 0; }
-    pointer = pointer->next;
-    pointer->rectObj = data;
-    pointer->next = 0;
-    return pointer;
-}
-
-int embRectObjectList_count(EmbRectObjectList* pointer)
-{
-    int i = 1;
-    if(!pointer) return 0;
-    while(pointer->next)
-    {
-        pointer = pointer->next;
-        i++;
-    }
-    return i;
-}
-
-int embRectObjectList_empty(EmbRectObjectList* pointer)
-{
-    if(!pointer)
-        return 1;
-    return 0;
-}
-
-void embRectObjectList_free(EmbRectObjectList* pointer)
-{
-    EmbRectObjectList* tempPointer = pointer;
-    EmbRectObjectList* nextPointer = 0;
-    while(tempPointer)
-    {
-        nextPointer = tempPointer->next;
-        free(tempPointer);
-        tempPointer = nextPointer;
-    }
-    pointer = 0;
 }
 

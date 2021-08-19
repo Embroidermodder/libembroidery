@@ -5,7 +5,8 @@ EmbSettings embSettings_init(void)
 {
     EmbSettings settings;
     settings.dstJumpsPerTrim = 6;
-    settings.home = embPoint_make(0.0, 0.0);
+    settings.home.x = 0.0;
+    settings.home.y = 0.0;
     return settings;
 }
 

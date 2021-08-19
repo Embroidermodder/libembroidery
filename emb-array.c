@@ -19,6 +19,9 @@ int embGeometryArray_create(EmbGeometryArray *p, int type)
     case EMB_FLAG:
         p->flag = (int*)malloc(CHUNK_SIZE*sizeof(int));
         break;
+    case EMB_PATH:
+        p->path = (EmbPathObject**)malloc(CHUNK_SIZE*sizeof(EmbPathObject));
+        break;
     case EMB_POINT:
         p->point = (EmbPointObject*)malloc(CHUNK_SIZE*sizeof(EmbPointObject));
         break;
@@ -61,6 +64,10 @@ int embGeometryArray_resize(EmbGeometryArray *p)
     case EMB_FLAG:
         p->flag = realloc(p->flag, p->length*sizeof(int));
         if (!p->flag) return 1;
+        break;
+    case EMB_PATH:
+        p->path = realloc(p->path, p->length*sizeof(EmbPathObject*));
+        if (!p->path) return 1;
         break;
     case EMB_POINT:
         p->point = realloc(p->point, p->length*sizeof(EmbPointObject));
@@ -139,6 +146,27 @@ int embGeometryArray_addLine(EmbGeometryArray* p, EmbLineObject line)
     return 1;
 }
 
+int embGeometryArray_addPath(EmbGeometryArray* p, EmbPathObject *path)
+{
+    p->count++;
+    if (!embGeometryArray_resize(p)) return 0;
+    p->path[p->count - 1] = (EmbPathObject*)malloc(sizeof(EmbPathObject));
+    if (!p->path[p->count - 1]) {
+        embLog_error("emb-polygon.c embGeometryArray_create(), cannot allocate memory for heapPolygonObj\n");
+        return 0;
+    }
+    p->path[p->count - 1] = path;
+    return 1;
+}
+
+int embGeometryArray_addPoint(EmbGeometryArray* p, EmbPointObject *point)
+{
+    p->count++;
+    if (!embGeometryArray_resize(p)) return 0;
+    p->point[p->count - 1] = *point;
+    return 1;
+}
+
 int embGeometryArray_addPolygon(EmbGeometryArray* p, EmbPolygonObject *polygon)
 {
     p->count++;
@@ -179,6 +207,8 @@ int embGeometryArray_addRect(EmbGeometryArray* p,
 void embGeometryArray_free(EmbGeometryArray* p)
 {
     int i;
+    if (!p) return;
+
     switch (p->type) {
     case EMB_ARC:
         free(p->arc);
@@ -192,21 +222,27 @@ void embGeometryArray_free(EmbGeometryArray* p)
     case EMB_FLAG:
         free(p->flag);
         break;
-    case EMB_POINT:
-        free(p->point);
-        break;
     case EMB_LINE:
         free(p->line);
         break;
+    case EMB_PATH:
+        for (i=0; i<p->count; i++) {
+            embGeometryArray_free(p->path[i]->pointList);
+        }
+        free(p->path);
+        break;
+    case EMB_POINT:
+        free(p->point);
+        break;
     case EMB_POLYGON:
         for (i=0; i<p->count; i++) {
-            embPointList_free(p->polygon[i]->pointList);
+            embGeometryArray_free(p->polygon[i]->pointList);
         }
         free(p->polygon);
         break;
     case EMB_POLYLINE:
         for (i=0; i<p->count; i++) {
-            embPointList_free(p->polyline[i]->pointList);
+            embGeometryArray_free(p->polyline[i]->pointList);
         }
         free(p->polygon);
         break;
@@ -218,6 +254,7 @@ void embGeometryArray_free(EmbGeometryArray* p)
     default:
         break;
     }
+    p = 0;
 }
 
 EmbVectorArray *embVectorArray_create()

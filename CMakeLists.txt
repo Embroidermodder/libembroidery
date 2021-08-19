@@ -23,7 +23,6 @@ set(LIBRARY_SOURCE_FILES
     emb-path.c
     emb-pattern.c
     emb-point.c
-    emb-polyline.c
     emb-reader-writer.c
     emb-rect.c
     emb-satin-line.c

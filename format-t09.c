@@ -37,10 +37,7 @@ int readT09(EmbPattern* pattern, const char* fileName)
         embPattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
     }
     embFile_close(file);
-
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
+    embPattern_end(pattern);
 
     return 1;
 }

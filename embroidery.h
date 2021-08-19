@@ -380,24 +380,12 @@ typedef struct EmbRectObject_
     EmbColor color;
 } EmbRectObject;
 
-typedef struct EmbRectObjectList_
-{
-    EmbRectObject rectObj;
-    struct EmbRectObjectList_* next;
-} EmbRectObjectList;
-
 typedef struct EmbPolygonObject_
 {
     EmbPointList* pointList;
     int lineType;
     EmbColor color;
 } EmbPolygonObject;
-
-typedef struct EmbPolygonObjectList_
-{
-    EmbPolygonObject* polygonObj;
-    struct EmbPolygonObjectList_* next;
-} EmbPolygonObjectList;
 
 typedef struct EmbSatinOutline_
 {
@@ -413,12 +401,6 @@ typedef struct EmbEllipseObject_
     int lineType;
     EmbColor color;
 } EmbEllipseObject;
-
-typedef struct EmbEllipseObjectList_
-{
-    EmbEllipseObject ellipseObj;
-    struct EmbEllipseObjectList_* next;
-} EmbEllipseObjectList;
 
 /* double-indirection file allocation table references */
 typedef struct _bcf_file_difat
@@ -499,11 +481,6 @@ typedef struct EmbPolylineObject_
     EmbColor color;
 } EmbPolylineObject;
 
-typedef struct EmbPolylineObjectList_ {
-    EmbPolylineObject* polylineObj;
-    struct EmbPolylineObjectList_* next;
-} EmbPolylineObjectList;
-
 typedef struct EmbSettings_ {
     unsigned int dstJumpsPerTrim;
     EmbPoint home;
@@ -540,8 +517,8 @@ struct EmbGeometryArray_ {
     int *flag;
     EmbPointObject *point;
     EmbLineObject *line;
-    EmbPolygonObject *polygon;
-    EmbPolylineObject *polyline;
+    EmbPolygonObject **polygon;
+    EmbPolylineObject **polyline;
     EmbRectObject *rect;
     EmbSplineObject *spline;
     int count;
@@ -558,24 +535,20 @@ typedef struct EmbPattern_
 
     EmbGeometryArray* arcs;
     EmbGeometryArray* circles;
-    EmbEllipseObjectList* ellipseObjList;
+    EmbGeometryArray* ellipses;
     EmbGeometryArray* lines;
     EmbPathObjectList* pathObjList;
     EmbPointObjectList* pointObjList;
-    EmbPolygonObjectList* polygonObjList;
-    EmbPolylineObjectList* polylineObjList;
-    EmbRectObjectList* rectObjList;
+    EmbGeometryArray* polygons;
+    EmbGeometryArray* polylines;
+    EmbGeometryArray* rects;
     EmbSplineObjectList* splineObjList;
 
     EmbStitchList* lastStitch;
     EmbThreadList* lastThread;
 
-    EmbEllipseObjectList* lastEllipseObj;
     EmbPathObjectList* lastPathObj;
     EmbPointObjectList* lastPointObj;
-    EmbPolygonObjectList* lastPolygonObj;
-    EmbPolylineObjectList* lastPolylineObj;
-    EmbRectObjectList* lastRectObj;
     EmbSplineObjectList* lastSplineObj;
 
     int currentColorIndex;
@@ -600,8 +573,12 @@ EMB_PUBLIC int embGeometryArray_create(EmbGeometryArray *g, int type);
 EMB_PUBLIC int embGeometryArray_resize(EmbGeometryArray *g);
 EMB_PUBLIC int embGeometryArray_addArc(EmbGeometryArray* g, EmbArc arc, int lineType, EmbColor color);
 EMB_PUBLIC int embGeometryArray_addCircle(EmbGeometryArray* g, EmbCircle circle, int lineType, EmbColor color);
+EMB_PUBLIC int embGeometryArray_addEllipse(EmbGeometryArray* g, EmbEllipse circle, double rotation, int lineType, EmbColor color);
 EMB_PUBLIC int embGeometryArray_addFlag(EmbGeometryArray* g, int flag);
 EMB_PUBLIC int embGeometryArray_addLine(EmbGeometryArray* g, EmbLineObject line);
+EMB_PUBLIC int embGeometryArray_addRect(EmbGeometryArray* g, EmbRect rect, int lineType, EmbColor color);
+EMB_PUBLIC int embGeometryArray_addPolygon(EmbGeometryArray* g, EmbPolygonObject *p);
+EMB_PUBLIC int embGeometryArray_addPolyline(EmbGeometryArray* g, EmbPolylineObject *p);
 EMB_PUBLIC void embGeometryArray_free(EmbGeometryArray* p);
 
 EMB_PUBLIC EmbLine embLine_make(double x1, double y1, double x2, double y2);
@@ -689,9 +666,6 @@ void inplace_trim(char *s);
 char* emb_optOut(double num, char* str);
 char* emb_strdup(const char* src);
 
-EMB_PUBLIC double embHoop_width(EmbHoop hoop);
-EMB_PUBLIC double embHoop_height(EmbHoop hoop);
-
 EMB_PUBLIC EmbHash* embHash_create(void);
 EMB_PUBLIC void embHash_free(EmbHash* hash);
 
@@ -717,16 +691,8 @@ int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _2
 EMB_PUBLIC EmbArcObject embArcObject_make(double sx, double sy, double mx, double my, double ex, double ey);
 EMB_PUBLIC EmbArcObject* embArcObject_create(double sx, double sy, double mx, double my, double ex, double ey);
 
-char isArcClockwise(double startx, double starty,
-      double midx,   double midy,
-      double endx,   double endy);
-
-void getArcCenter(double  arcStartX,  double  arcStartY,
-                  double  arcMidX,    double  arcMidY,
-                  double  arcEndX,    double  arcEndY,
-                  /* returned data */
-                  double *arcCenterX, double *arcCenterY);
-
+char isArcClockwise(EmbArc arc);
+void getArcCenter(EmbArc arc, EmbVector *arcCenter);
 char getArcDataFromBulge(double bulge,
                          double arcStartX,          double arcStartY,
                          double arcEndX,            double arcEndY,
@@ -740,15 +706,12 @@ char getArcDataFromBulge(double bulge,
                          double* incAngleInDegrees, char*   clockwise);
 
 EMB_PUBLIC int getCircleCircleIntersections(
-      /* The circle */
       EmbCircle c0, EmbCircle c1,
       /* Intersection Point */
       double* px3, double* py3,
       /* Intersection Point */
       double* px4, double* py4);
-
 EMB_PUBLIC int getCircleTangentPoints(
-     /* The circle */
      EmbCircle c,
      /* Point to determine tangency */
      double  px,  double  py,
@@ -761,23 +724,12 @@ EMB_PUBLIC EmbColor embColor_make(unsigned char r, unsigned char g, unsigned cha
 EMB_PUBLIC EmbColor* embColor_create(unsigned char r, unsigned char g, unsigned char b);
 EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
 
-EMB_PUBLIC double embEllipse_centerX(EmbEllipse ellipse);
-EMB_PUBLIC double embEllipse_centerY(EmbEllipse ellipse);
-EMB_PUBLIC double embEllipse_radiusX(EmbEllipse ellipse);
-EMB_PUBLIC double embEllipse_radiusY(EmbEllipse ellipse);
 EMB_PUBLIC double embEllipse_diameterX(EmbEllipse ellipse);
 EMB_PUBLIC double embEllipse_diameterY(EmbEllipse ellipse);
 EMB_PUBLIC double embEllipse_width(EmbEllipse ellipse);
 EMB_PUBLIC double embEllipse_height(EmbEllipse ellipse);
 
 EMB_PUBLIC EmbEllipseObject embEllipseObject_make(double cx, double cy, double rx, double ry);
-EMB_PUBLIC EmbEllipseObject* embEllipseObject_create(double cx, double cy, double rx, double ry);
-
-EMB_PUBLIC EmbEllipseObjectList* embEllipseObjectList_create(EmbEllipseObject data);
-EMB_PUBLIC EmbEllipseObjectList* embEllipseObjectList_add(EmbEllipseObjectList* pointer, EmbEllipseObject data);
-EMB_PUBLIC int embEllipseObjectList_count(EmbEllipseObjectList* pointer);
-EMB_PUBLIC int embEllipseObjectList_empty(EmbEllipseObjectList* pointer);
-EMB_PUBLIC void embEllipseObjectList_free(EmbEllipseObjectList* pointer);
 
 int validateWritePattern(EmbPattern* pattern, const char* fileName, const char *function);
 int validateReadPattern(EmbPattern* pattern, const char* fileName, const char *function);
@@ -855,24 +807,11 @@ EMB_PUBLIC void embSettings_setHome(EmbSettings* settings, EmbPoint point);
 
 EMB_PUBLIC EmbPolygonObject* embPolygonObject_create(EmbPointList* pointList, EmbColor color, int lineType);
 EMB_PUBLIC void embPolygonObject_free(EmbPolygonObject* pointer);
-
-EMB_PUBLIC EmbPolygonObjectList* embPolygonObjectList_create(EmbPolygonObject* data);
-EMB_PUBLIC EmbPolygonObjectList* embPolygonObjectList_add(EmbPolygonObjectList* pointer, EmbPolygonObject* data);
-EMB_PUBLIC int embPolygonObjectList_count(EmbPolygonObjectList* pointer);
-EMB_PUBLIC int embPolygonObjectList_empty(EmbPolygonObjectList* pointer);
-EMB_PUBLIC void embPolygonObjectList_free(EmbPolygonObjectList* pointer);
-
-EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbVectorArray* lines, double thickness, EmbSatinOutline* result);
-EMB_PUBLIC EmbVectorArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density);
-
 EMB_PUBLIC EmbPolylineObject* embPolylineObject_create(EmbPointList* pointList, EmbColor color, int lineType);
 EMB_PUBLIC void embPolylineObject_free(EmbPolylineObject* pointer);
 
-EMB_PUBLIC EmbPolylineObjectList* embPolylineObjectList_create(EmbPolylineObject* data);
-EMB_PUBLIC EmbPolylineObjectList* embPolylineObjectList_add(EmbPolylineObjectList* pointer, EmbPolylineObject* data);
-EMB_PUBLIC int embPolylineObjectList_count(EmbPolylineObjectList* pointer);
-EMB_PUBLIC int embPolylineObjectList_empty(EmbPolylineObjectList* pointer);
-EMB_PUBLIC void embPolylineObjectList_free(EmbPolylineObjectList* pointer);
+EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbVectorArray* lines, double thickness, EmbSatinOutline* result);
+EMB_PUBLIC EmbVectorArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density);
 
 EMB_PUBLIC double embRect_x(EmbRect rect);
 EMB_PUBLIC double embRect_y(EmbRect rect);
@@ -888,13 +827,6 @@ EMB_PUBLIC void embRect_setCoords(EmbRect* rect, double x1, double y1, double x2
 EMB_PUBLIC void embRect_setRect(EmbRect* rect, double x, double y, double w, double h);
 
 EMB_PUBLIC EmbRectObject embRectObject_make(double x, double y, double w, double h);
-EMB_PUBLIC EmbRectObject* embRectObject_create(double x, double y, double w, double h);
-
-EMB_PUBLIC EmbRectObjectList* embRectObjectList_create(EmbRectObject data);
-EMB_PUBLIC EmbRectObjectList* embRectObjectList_add(EmbRectObjectList* pointer, EmbRectObject data);
-EMB_PUBLIC int embRectObjectList_count(EmbRectObjectList* pointer);
-EMB_PUBLIC int embRectObjectList_empty(EmbRectObjectList* pointer);
-EMB_PUBLIC void embRectObjectList_free(EmbRectObjectList* pointer);
 
 EMB_PUBLIC EmbReaderWriter* embReaderWriter_getByFileName(const char* fileName);
 
@@ -915,6 +847,7 @@ EMB_PUBLIC void embPattern_combineJumpStitches(EmbPattern* p);
 EMB_PUBLIC void embPattern_correctForMaxStitchLength(EmbPattern* p, double maxStitchLength, double maxJumpLength);
 EMB_PUBLIC void embPattern_center(EmbPattern* p);
 EMB_PUBLIC void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName);
+EMB_PUBLIC void embPattern_end(EmbPattern* p);
 
 EMB_PUBLIC void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r);
 EMB_PUBLIC void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy, double rx, double ry); /* TODO: ellipse rotation */

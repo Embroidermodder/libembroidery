@@ -4,8 +4,10 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readBmc(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { embLog_error("format-bmc.c readBmc(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-bmc.c readBmc(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readBmc")) return 0;
+
+    embPattern_end(pattern);
+
     return 0; /*TODO: finish readBmc */
 }
 

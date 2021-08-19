@@ -577,12 +577,18 @@ void svgAddToPattern(EmbPattern* p)
 
         if(!strcmp(buff, "polygon"))
         {
-            EmbPolygonObject* polygonObj = embPolygonObject_create(startOfPointList, svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke")), 1); /* TODO: use lineType enum */
+            EmbPolygonObject* polygonObj;
+            polygonObj->pointList = startOfPointList;
+            polygonObj->color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
+            polygonObj->lineType = 1; /* TODO: use lineType enum */
             embPattern_addPolygonObjectAbs(p, polygonObj);
         }
         else /* polyline */
         {
-            EmbPolylineObject* polylineObj = embPolylineObject_create(startOfPointList, svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke")), 1); /* TODO: use lineType enum */
+            EmbPolylineObject* polylineObj;
+            polylineObj->pointList = startOfPointList;
+            polylineObj->color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
+            polylineObj->lineType = 1; /* TODO: use lineType enum */
             embPattern_addPolylineObjectAbs(p, polylineObj);
         }
     }
@@ -1849,13 +1855,9 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     int size = 1024;
     int pos;
     int c = 0;
-    EmbRectObjectList* rList = 0;
     EmbGeometryArray* cList = 0;
-    EmbEllipseObjectList* eList = 0;
     EmbLineObjectList* liList = 0;
     EmbPointObjectList* poList = 0;
-    EmbPolygonObjectList* pogList = 0;
-    EmbPolylineObjectList* polList = 0;
     char* buff = 0;
 
     if(!pattern) { embLog_error("format-svg.c readSvg(), pattern argument is null\n"); return 0; }
@@ -1940,12 +1942,11 @@ int readSvg(EmbPattern* pattern, const char* fileName)
             printf("circle %f %f %f\n", c.centerX, c.centerY, c.radius);
         }
     }
-    eList = pattern->ellipseObjList;
-    while(eList)
-    {
-        EmbEllipse e = eList->ellipseObj.ellipse;
-        printf("ellipse %f %f %f %f\n", embEllipse_centerX(e), embEllipse_centerY(e), embEllipse_radiusX(e), embEllipse_radiusY(e));
-        eList = eList->next;
+    if (pattern->ellipses) {
+        for (i=0; i<pattern->ellipses->count; i++) {
+            EmbEllipse e = pattern->ellipses->ellipse[i].ellipse;
+            printf("ellipse %f %f %f %f\n", e.centerX, e.centerY, e.radiusX, e.radiusY);
+        }
     }
     if (pattern->lines) {
         for (i=0; i<pattern->lines->count; i++) {
@@ -1960,26 +1961,23 @@ int readSvg(EmbPattern* pattern, const char* fileName)
         printf("point %f %f\n", embPoint_x(po), embPoint_y(po));
         poList = poList->next;
     }
-    pogList = pattern->polygonObjList;
-    while(pogList)
-    {
-        int vertices = embPointList_count(pogList->polygonObj->pointList);
-        printf("polygon %d\n", vertices);
-        pogList = pogList->next;
+    if (pattern->polygons) {
+        for(i=0; i<pattern->polylines->count; i++) {
+            int vertices = embPointList_count(pattern->polygons->polygon[i]->pointList);
+            printf("polygon %d\n", vertices);
+        }
     }
-    polList = pattern->polylineObjList;
-    while(polList)
-    {
-        int vertices = embPointList_count(polList->polylineObj->pointList);
-        printf("polyline %d\n", vertices);
-        polList = polList->next;
+    if (pattern->polylines) {
+        for(i=0; i<pattern->polylines->count; i++) {
+            int vertices = embPointList_count(pattern->polylines->polyline[i]->pointList);
+            printf("polyline %d\n", vertices);
+        }
     }
-    rList = pattern->rectObjList;
-    while(rList)
-    {
-        EmbRect r = rList->rectObj.rect;
-        printf("rect %f %f %f %f\n", embRect_x(r), embRect_y(r), embRect_width(r), embRect_height(r));
-        rList = rList->next;
+    if (pattern->rects) {
+        for (i=0; i<pattern->rects->count; i++) {
+            EmbRect r = pattern->rects->rect[i].rect;
+            printf("rect %f %f %f %f\n", embRect_x(r), embRect_y(r), embRect_width(r), embRect_height(r));
+        }
     }
 
     /* Flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
@@ -1995,17 +1993,10 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     EmbRect boundingRect;
     EmbStitchList* stList;
-    EmbEllipseObjectList* eObjList = 0;
-    EmbEllipse ellipse;
-    EmbLineObjectList* liObjList = 0;
-    EmbLine line;
     EmbPointObjectList* poObjList = 0;
     EmbPoint point;
-    EmbPolygonObjectList* pogObjList = 0;
     EmbPointList* pogPointList = 0;
-    EmbPolylineObjectList* polObjList = 0;
     EmbPointList* polPointList = 0;
-    EmbRectObjectList* rObjList = 0;
     EmbRect rect;
     EmbColor color;
 
@@ -2071,13 +2062,12 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     }
 
     /* write ellipses */
-    eObjList = pattern->ellipseObjList;
-    while(eObjList)
-    {
-        ellipse = eObjList->ellipseObj.ellipse;
-        color = eObjList->ellipseObj.color;
-        /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-        embFile_printf(file, "\n<ellipse stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" rx=\"%f\" ry=\"%f\" />",
+    if (pattern->ellipses) {
+        for (i=0; i<pattern->ellipses->count; i++) {
+            EmbEllipse ellipse = pattern->ellipses->ellipse[i].ellipse;
+            color = pattern->ellipses->ellipse[i].color;
+            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+            embFile_printf(file, "\n<ellipse stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" rx=\"%f\" ry=\"%f\" />",
                         color.r,
                         color.g,
                         color.b,
@@ -2085,23 +2075,19 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
                         ellipse.centerY,
                         ellipse.radiusX,
                         ellipse.radiusY);
-        eObjList = eObjList->next;
+        }
     }
 
     /* write lines */
     if (pattern->lines) {
         for (i=0; i<pattern->lines->count; i++) {
-            line = pattern->lines->line[i].line;
+            EmbLine line = pattern->lines->line[i].line;
             color = pattern->lines->line[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_printf(file, "\n<line stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
-                        color.r,
-                        color.g,
-                        color.b,
-                        line.x1,
-                        line.y1,
-                        line.x2,
-                        line.y2);
+            embFile_printf(file,
+                "\n<line stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
+                color.r, color.g, color.b,
+                line.x1, line.y1, line.x2, line.y2);
         }
     }
 
@@ -2127,13 +2113,12 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     }
 
     /* write polygons */
-    pogObjList = pattern->polygonObjList;
-    while(pogObjList)
-    {
-        pogPointList = pogObjList->polygonObj->pointList;
+    if (pattern->polygons) {
+        for (i=0; i<pattern->polygons->count; i++) {
+        pogPointList = pattern->polygons->polygon[i]->pointList;
         if(pogPointList)
         {
-            color = pogObjList->polygonObj->color;
+            color = pattern->polygons->polygon[i]->color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_printf(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
                     color.r,
@@ -2149,17 +2134,16 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
             }
             embFile_printf(file, "\"/>");
         }
-        pogObjList = pogObjList->next;
+        }
     }
 
     /* write polylines */
-    polObjList = pattern->polylineObjList;
-    while(polObjList)
-    {
-        polPointList = polObjList->polylineObj->pointList;
-        if(polPointList)
-        {
-            color = polObjList->polylineObj->color;
+    if (pattern->polylines) {
+        for (i=0; i<pattern->polylines->count; i++) {
+            polPointList = pattern->polylines->polyline[i]->pointList;
+            if (polPointList)
+            {
+            color = pattern->polylines->polyline[i]->color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_printf(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
                     color.r,
@@ -2174,18 +2158,17 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
                 polPointList = polPointList->next;
             }
             embFile_printf(file, "\"/>");
+            }
         }
-        polObjList = polObjList->next;
     }
 
     /* write rects */
-    rObjList = pattern->rectObjList;
-    while(rObjList)
-    {
-        rect = rObjList->rectObj.rect;
-        color = rObjList->rectObj.color;
-        /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-        embFile_printf(file, "\n<rect stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" />",
+    if (pattern->rects) {
+        for (i=0; i<pattern->rects->count; i++) {
+            rect = pattern->rects->rect[i].rect;
+            color = pattern->rects->rect[i].color;
+            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+            embFile_printf(file, "\n<rect stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" />",
                         color.r,
                         color.g,
                         color.b,
@@ -2193,7 +2176,7 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
                         embRect_y(rect),
                         embRect_width(rect),
                         embRect_height(rect));
-        rObjList = rObjList->next;
+        }
     }
 
     stList = pattern->stitchList;

@@ -9,6 +9,8 @@ int readGc(EmbPattern* pattern, const char* fileName)
         return 0;
     }
 
+    embPattern_end(pattern);
+
     return 0; /*TODO: finish readGc */
 }
 

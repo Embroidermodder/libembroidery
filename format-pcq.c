@@ -106,10 +106,7 @@ int readPcq(EmbPattern* pattern, const char* fileName)
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     embFile_close(file);
-
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
+    embPattern_end(pattern);
 
     return 1;
 }

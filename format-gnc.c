@@ -7,6 +7,9 @@ int readGnc(EmbPattern* pattern, const char* fileName)
     if (!validateReadPattern(pattern, fileName, "readGnc")) {
         return 0;
     }
+
+    embPattern_end(pattern);
+
     return 0; /*TODO: finish readGnc */
 }
 

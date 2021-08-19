@@ -379,9 +379,7 @@ int readDst(EmbPattern* pattern, const char* fileName)
     }
     embFile_close(file);
 
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
+    embPattern_end(pattern);
 
     /* combineJumpStitches(pattern, 5); */
     return 1;

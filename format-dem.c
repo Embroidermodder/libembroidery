@@ -7,6 +7,8 @@ int readDem(EmbPattern* pattern, const char* fileName)
     if (!validateReadPattern(pattern, fileName, "readDem"))
         return 0;
 
+    embPattern_end(pattern);
+
     return 0; /*TODO: finish readDem */
 }
 

@@ -5,6 +5,9 @@
 int readArt(EmbPattern* pattern, const char* fileName)
 {
     if (!validateReadPattern(pattern, fileName, "readArt")) return 0;
+
+    embPattern_end(pattern);
+
     return 0; /*TODO: finish readArt */
 }
 

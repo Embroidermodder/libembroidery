@@ -315,8 +315,7 @@ void svgAddToPattern(EmbPattern* p)
         int pendingTask = 0;
         int relative = 0;
 
-        EmbPointList* startOfPointList = 0;
-        EmbPointList* pathObjPointList = 0;
+        EmbGeometryArray* pointList = 0;
         EmbGeometryArray* flagList;
 
         char* pathbuff = 0;
@@ -419,16 +418,14 @@ void svgAddToPattern(EmbPattern* p)
                             else if(cmd == 'Z') { xx = fx;          yy = fy; }
                             else if(cmd == 'z') { xx = fx;          yy = fy; }
 
-                            if(!pathObjPointList && !flagList)
-                            {
-                                pathObjPointList = embPointList_create(xx, yy);
-                                startOfPointList = pathObjPointList;
+                            if (!pointList && !flagList) {
+                                embGeometryArray_create(pointList, EMB_POINT);
                                 embGeometryArray_create(flagList, EMB_FLAG);
                             }
-                            else
-                            {
-                                pathObjPointList = embPointList_add(pathObjPointList, embPoint_make(xx, yy));
-                            }
+                            EmbPointObject test;
+                            test.point.x = xx;
+                            test.point.y = yy;
+                            embGeometryArray_addPoint(pointList, &test);
                             embGeometryArray_addFlag(flagList, svgPathCmdToEmbPathFlag(cmd));
                             lx = xx; ly = yy;
 
@@ -504,7 +501,11 @@ void svgAddToPattern(EmbPattern* p)
         /* TODO: subdivide numMoves > 1 */
 
         EmbColor color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
-        EmbPathObject *path = embPathObject_create(startOfPointList, flagList, color, 1);
+        EmbPathObject *path;
+        path->pointList = pointList;
+        path->flagList = flagList;
+        path->color = color;
+        path->lineType = 1;
         embPattern_addPathObjectAbs(p, path);
     }
     else if(!strcmp(buff, "polygon") ||
@@ -520,8 +521,7 @@ void svgAddToPattern(EmbPattern* p)
         double xx = 0.0;
         double yy = 0.0;
 
-        EmbPointList* startOfPointList = 0;
-        EmbPointList* polyObjPointList = 0;
+        EmbGeometryArray* pointList = 0;
 
         char* polybuff = 0;
         polybuff = (char*)malloc(size);
@@ -548,15 +548,13 @@ void svgAddToPattern(EmbPattern* p)
                         odd = 1;
                         yy = atof(polybuff);
 
-                        if(!polyObjPointList)
-                        {
-                            polyObjPointList = embPointList_create(xx, yy);
-                            startOfPointList = polyObjPointList;
+                        if (!pointList) {
+                            embGeometryArray_create(pointList, EMB_POINT);
                         }
-                        else
-                        {
-                            polyObjPointList = embPointList_add(polyObjPointList, embPoint_make(xx, yy));
-                        }
+                        EmbPointObject a;
+                        a.point.x = xx;
+                        a.point.y = yy;
+                        embGeometryArray_addPoint(pointList, &a);
                     }
 
                     break;
@@ -578,7 +576,7 @@ void svgAddToPattern(EmbPattern* p)
         if(!strcmp(buff, "polygon"))
         {
             EmbPolygonObject* polygonObj;
-            polygonObj->pointList = startOfPointList;
+            polygonObj->pointList = pointList;
             polygonObj->color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
             polygonObj->lineType = 1; /* TODO: use lineType enum */
             embPattern_addPolygonObjectAbs(p, polygonObj);
@@ -586,7 +584,7 @@ void svgAddToPattern(EmbPattern* p)
         else /* polyline */
         {
             EmbPolylineObject* polylineObj;
-            polylineObj->pointList = startOfPointList;
+            polylineObj->pointList = pointList;
             polylineObj->color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
             polylineObj->lineType = 1; /* TODO: use lineType enum */
             embPattern_addPolylineObjectAbs(p, polylineObj);
@@ -1855,7 +1853,6 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     int size = 1024;
     int pos;
     int c = 0;
-    EmbGeometryArray* cList = 0;
     EmbLineObjectList* liList = 0;
     EmbPointObjectList* poList = 0;
     char* buff = 0;
@@ -1954,22 +1951,21 @@ int readSvg(EmbPattern* pattern, const char* fileName)
             printf("line %f %f %f %f\n", li.x1, li.y1, li.x2, li.y2);
         }
     }
-    poList = pattern->pointObjList;
-    while(poList)
-    {
-        EmbPoint po = poList->pointObj.point;
-        printf("point %f %f\n", embPoint_x(po), embPoint_y(po));
-        poList = poList->next;
+    if (pattern->points) {
+        for (i=0; i<pattern->points->count; i++) {
+            EmbPoint po = pattern->points->point[i].point;
+            printf("point %f %f\n", po.x, po.y);
+        }
     }
     if (pattern->polygons) {
         for(i=0; i<pattern->polylines->count; i++) {
-            int vertices = embPointList_count(pattern->polygons->polygon[i]->pointList);
+            int vertices = pattern->polygons->polygon[i]->pointList->count;
             printf("polygon %d\n", vertices);
         }
     }
     if (pattern->polylines) {
         for(i=0; i<pattern->polylines->count; i++) {
-            int vertices = embPointList_count(pattern->polylines->polyline[i]->pointList);
+            int vertices = pattern->polylines->polyline[i]->pointList->count;
             printf("polyline %d\n", vertices);
         }
     }
@@ -1993,10 +1989,7 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     EmbRect boundingRect;
     EmbStitchList* stList;
-    EmbPointObjectList* poObjList = 0;
     EmbPoint point;
-    EmbPointList* pogPointList = 0;
-    EmbPointList* polPointList = 0;
     EmbRect rect;
     EmbColor color;
 
@@ -2044,7 +2037,7 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
 
     /*TODO: Low Priority: Indent output properly. */
 
-    int i;
+    int i, j;
     /* write circles */
     if (pattern->circles) {
         for (i=0; i<pattern->circles->count; i++) {
@@ -2092,73 +2085,58 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     }
 
     /* write points */
-    poObjList = pattern->pointObjList;
-    while(poObjList)
-    {
-        point = poObjList->pointObj.point;
-        color = poObjList->pointObj.color;
-        /* See SVG Tiny 1.2 Spec:
-        * Section 9.5 The 'line' element
-        * Section C.6 'path' element implementation notes */
-        /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-        embFile_printf(file, "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
-                        color.r,
-                        color.g,
-                        color.b,
-                        point.x,
-                        point.y,
-                        point.x,
-                        point.y);
-        poObjList = poObjList->next;
+    if (pattern->points) {
+        for (i=0; i<pattern->points->count; i++) {
+            point = pattern->points->point[i].point;
+            color = pattern->points->point[i].color;
+            /* See SVG Tiny 1.2 Spec:
+             * Section 9.5 The 'line' element
+             * Section C.6 'path' element implementation notes */
+            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+            embFile_printf(file,
+                "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
+                color.r, color.g, color.b,
+                point.x, point.y, point.x, point.y);
+        }
     }
 
     /* write polygons */
     if (pattern->polygons) {
         for (i=0; i<pattern->polygons->count; i++) {
-        pogPointList = pattern->polygons->polygon[i]->pointList;
-        if(pogPointList)
-        {
+            EmbGeometryArray *pointList = pattern->polygons->polygon[i]->pointList;
             color = pattern->polygons->polygon[i]->color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_printf(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
-                    color.r,
-                    color.g,
-                    color.b,
-                    emb_optOut(pogPointList->point.x, tmpX),
-                    emb_optOut(pogPointList->point.y, tmpY));
-            pogPointList = pogPointList->next;
-            while(pogPointList)
-            {
-                embFile_printf(file, " %s,%s", emb_optOut(pogPointList->point.x, tmpX), emb_optOut(pogPointList->point.y, tmpY));
-                pogPointList = pogPointList->next;
+                embFile_printf(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
+                    color.r, color.g, color.b,
+                    emb_optOut(pointList->point[0].point.x, tmpX),
+                    emb_optOut(pointList->point[0].point.y, tmpY));
+            for (j=1; j<pointList->count; j++) {
+                embFile_printf(file, " %s,%s",
+                    emb_optOut(pointList->point[j].point.x, tmpX),
+                    emb_optOut(pointList->point[j].point.y, tmpY));
             }
             embFile_printf(file, "\"/>");
-        }
         }
     }
 
     /* write polylines */
     if (pattern->polylines) {
         for (i=0; i<pattern->polylines->count; i++) {
-            polPointList = pattern->polylines->polyline[i]->pointList;
-            if (polPointList)
-            {
+            EmbGeometryArray *pointList = pattern->polylines->polyline[i]->pointList;
             color = pattern->polylines->polyline[i]->color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_printf(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
                     color.r,
                     color.g,
                     color.b,
-                    emb_optOut(polPointList->point.x, tmpX),
-                    emb_optOut(polPointList->point.y, tmpY));
-            polPointList = polPointList->next;
-            while(polPointList)
-            {
-                embFile_printf(file, " %s,%s", emb_optOut(polPointList->point.x, tmpX), emb_optOut(polPointList->point.y, tmpY));
-                polPointList = polPointList->next;
+                    emb_optOut(pointList->point[0].point.x, tmpX),
+                    emb_optOut(pointList->point[0].point.y, tmpY));
+            for (j=1; j<pointList->count; j++) {
+                embFile_printf(file, " %s,%s",
+                    emb_optOut(pointList->point[j].point.x, tmpX),
+                    emb_optOut(pointList->point[j].point.y, tmpY));
             }
             embFile_printf(file, "\"/>");
-            }
         }
     }
 
@@ -2169,13 +2147,8 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
             color = pattern->rects->rect[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_printf(file, "\n<rect stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" />",
-                        color.r,
-                        color.g,
-                        color.b,
-                        embRect_x(rect),
-                        embRect_y(rect),
-                        embRect_width(rect),
-                        embRect_height(rect));
+                color.r, color.g, color.b,
+                embRect_x(rect), embRect_y(rect), embRect_width(rect), embRect_height(rect));
         }
     }
 

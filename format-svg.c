@@ -315,8 +315,8 @@ void svgAddToPattern(EmbPattern* p)
         int pendingTask = 0;
         int relative = 0;
 
-        EmbGeometryArray* pointList = 0;
-        EmbGeometryArray* flagList;
+        EmbArray* pointList = 0;
+        EmbArray* flagList;
 
         char* pathbuff = 0;
         pathbuff = (char*)malloc(size);
@@ -419,14 +419,14 @@ void svgAddToPattern(EmbPattern* p)
                             else if(cmd == 'z') { xx = fx;          yy = fy; }
 
                             if (!pointList && !flagList) {
-                                embGeometryArray_create(pointList, EMB_POINT);
-                                embGeometryArray_create(flagList, EMB_FLAG);
+                                embArray_create(pointList, EMB_POINT);
+                                embArray_create(flagList, EMB_FLAG);
                             }
                             EmbPointObject test;
                             test.point.x = xx;
                             test.point.y = yy;
-                            embGeometryArray_addPoint(pointList, &test);
-                            embGeometryArray_addFlag(flagList, svgPathCmdToEmbPathFlag(cmd));
+                            embArray_addPoint(pointList, &test);
+                            embArray_addFlag(flagList, svgPathCmdToEmbPathFlag(cmd));
                             lx = xx; ly = yy;
 
                             pathbuff[0] = (char)cmd;                  /* set the command for compare */
@@ -521,7 +521,7 @@ void svgAddToPattern(EmbPattern* p)
         double xx = 0.0;
         double yy = 0.0;
 
-        EmbGeometryArray* pointList = 0;
+        EmbArray* pointList = 0;
 
         char* polybuff = 0;
         polybuff = (char*)malloc(size);
@@ -549,12 +549,12 @@ void svgAddToPattern(EmbPattern* p)
                         yy = atof(polybuff);
 
                         if (!pointList) {
-                            embGeometryArray_create(pointList, EMB_POINT);
+                            embArray_create(pointList, EMB_POINT);
                         }
                         EmbPointObject a;
                         a.point.x = xx;
                         a.point.y = yy;
-                        embGeometryArray_addPoint(pointList, &a);
+                        embArray_addPoint(pointList, &a);
                     }
 
                     break;
@@ -1853,8 +1853,6 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     int size = 1024;
     int pos;
     int c = 0;
-    EmbLineObjectList* liList = 0;
-    EmbPointObjectList* poList = 0;
     char* buff = 0;
 
     if(!pattern) { embLog_error("format-svg.c readSvg(), pattern argument is null\n"); return 0; }
@@ -2103,7 +2101,7 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     /* write polygons */
     if (pattern->polygons) {
         for (i=0; i<pattern->polygons->count; i++) {
-            EmbGeometryArray *pointList = pattern->polygons->polygon[i]->pointList;
+            EmbArray *pointList = pattern->polygons->polygon[i]->pointList;
             color = pattern->polygons->polygon[i]->color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
                 embFile_printf(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
@@ -2122,7 +2120,7 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     /* write polylines */
     if (pattern->polylines) {
         for (i=0; i<pattern->polylines->count; i++) {
-            EmbGeometryArray *pointList = pattern->polylines->polyline[i]->pointList;
+            EmbArray *pointList = pattern->polylines->polyline[i]->pointList;
             color = pattern->polylines->polyline[i]->color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_printf(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",

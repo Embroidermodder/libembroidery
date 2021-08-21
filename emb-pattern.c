@@ -129,7 +129,7 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
     stList = p->stitchList;
     while(stList)
     {
-        EmbGeometryArray *pointList;
+        EmbArray *pointList;
         EmbColor color;
         while(stList)
         {
@@ -141,13 +141,13 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
             {
                 if (!pointList)
                 {
-                    embGeometryArray_create(pointList, EMB_POINT);
+                    embArray_create(pointList, EMB_POINT);
                     color = embThreadList_getAt(p->threadList, stList->stitch.color).color;
                 }
                 EmbPointObject point;
                 point.point.x = stList->stitch.x;
                 point.point.y = stList->stitch.y;
-                embGeometryArray_addPoint(pointList, &point);
+                embArray_addPoint(pointList, &point);
             }
             stList = stList->next;
         }
@@ -162,9 +162,9 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
             currentPolyline->lineType = 1; /* TODO: Determine what the correct value should be */
 
             if (!p->polylines) {
-                embGeometryArray_create(p->polylines, EMB_POLYLINE);
+                embArray_create(p->polylines, EMB_POLYLINE);
             }
-            embGeometryArray_addPolyline(p->polylines, currentPolyline);
+            embArray_addPolyline(p->polylines, currentPolyline);
         }
         if(stList)
         {
@@ -183,7 +183,7 @@ void embPattern_copyPolylinesToStitchList(EmbPattern* p)
     if (!p->polylines) { embLog_error("emb-pattern.c embPattern_copyPolylinesToStitchList(), p argument is null\n"); return; }
     for (i=0; i<p->polylines->count; i++) {
         EmbPolylineObject* currentPoly = 0;
-        EmbGeometryArray* currentPointList = 0;
+        EmbArray* currentPointList = 0;
         EmbThread thread;
 
         currentPoly = p->polylines->polyline[i];
@@ -229,7 +229,7 @@ void embPattern_movePolylinesToStitchList(EmbPattern* p)
 {
     if(!p) { embLog_error("emb-pattern.c embPattern_movePolylinesToStitchList(), p argument is null\n"); return; }
     embPattern_copyPolylinesToStitchList(p);
-    embGeometryArray_free(p->polylines);
+    embArray_free(p->polylines);
 }
 
 /*! Adds a stitch to the pattern (\a p) at the absolute position (\a x,\a y). Positive y is up. Units are in millimeters. */
@@ -474,7 +474,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->polygons) {
         for (i=0; i<p->polygons->count; i++) {
-            EmbGeometryArray *polygon;
+            EmbArray *polygon;
             polygon = p->polygons->polygon[i]->pointList;
             for (j=0; j<polygon->count; j++) {
                 /* TODO: embPattern_calcBoundingBox for polygons */
@@ -484,7 +484,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->polylines) {
         for (i=0; i<p->polylines->count; i++) {
-            EmbGeometryArray *polyline;
+            EmbArray *polyline;
             polyline = p->polylines->polyline[i]->pointList;
             for (j=0; j<polyline->count; j++) {
                 /* TODO: embPattern_calcBoundingBox for polylines */
@@ -585,7 +585,7 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
 
     if (p->paths) {
         for (i=0; i<p->paths->count; i++) {
-            EmbGeometryArray *path = p->paths->path[i]->pointList;
+            EmbArray *path = p->paths->path[i]->pointList;
             for (j=0; j<path->count; j++) {
                 if (horz) {
                     path->point[j].point.x *= -1.0;
@@ -610,7 +610,7 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
 
     if (p->polygons) {
         for (i=0; i<p->polygons->count; i++) {
-            EmbGeometryArray *polygon;
+            EmbArray *polygon;
             polygon = p->polygons->polygon[i]->pointList;
             for (j=0; j<polygon->count; j++) {
                 if (horz) { polygon->point[j].point.x *= -1.0; }
@@ -621,7 +621,7 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
 
     if (p->polylines) {
         for (i=0; i<p->polylines->count; i++) {
-            EmbGeometryArray *polyline;
+            EmbArray *polyline;
             polyline = p->polylines->polygon[i]->pointList;
             for (j=0; j<polyline->count; j++) {
                 if (horz) { polyline->point[j].point.x *= -1.0; }
@@ -855,16 +855,16 @@ void embPattern_free(EmbPattern* p)
     embStitchList_free(p->stitchList);              p->stitchList = 0;      p->lastStitch = 0;
     embThreadList_free(p->threadList);              p->threadList = 0;      p->lastThread = 0;
 
-    embGeometryArray_free(p->arcs);
-    embGeometryArray_free(p->circles);
-    embGeometryArray_free(p->ellipses);
-    embGeometryArray_free(p->lines);
-    embGeometryArray_free(p->paths);
-    embGeometryArray_free(p->points);
-    embGeometryArray_free(p->polygons);
-    embGeometryArray_free(p->polylines);
-    embGeometryArray_free(p->rects);
-    embGeometryArray_free(p->splines);
+    embArray_free(p->arcs);
+    embArray_free(p->circles);
+    embArray_free(p->ellipses);
+    embArray_free(p->lines);
+    embArray_free(p->paths);
+    embArray_free(p->points);
+    embArray_free(p->polygons);
+    embArray_free(p->polylines);
+    embArray_free(p->rects);
+    embArray_free(p->splines);
 
     free(p);
     p = 0;
@@ -879,9 +879,9 @@ void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r
 
     if (!p) { embLog_error("emb-pattern.c embPattern_addCircleObjectAbs(), p argument is null\n"); return; }
     if (p->circles == 0) {
-         embGeometryArray_create(p->circles, EMB_CIRCLE);
+         embArray_create(p->circles, EMB_CIRCLE);
     }
-    embGeometryArray_addCircle(p->circles, circle, 0, black);
+    embArray_addCircle(p->circles, circle, 0, black);
 }
 
 /*! Adds an ellipse object to pattern (\a p) with its center at the
@@ -900,9 +900,9 @@ void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy, double 
         return;
     }
     if (!p->ellipses) {
-        embGeometryArray_create(p->ellipses, EMB_ELLIPSE);
+        embArray_create(p->ellipses, EMB_ELLIPSE);
     }
-    embGeometryArray_addEllipse(p->ellipses, ellipse, 0.0, 0, black);
+    embArray_addEllipse(p->ellipses, ellipse, 0.0, 0, black);
 }
 
 /*! Adds a line object to pattern (\a p) starting at the absolute position
@@ -920,9 +920,9 @@ void embPattern_addLineObjectAbs(EmbPattern* p, double x1, double y1, double x2,
         return;
     }
     if (p->circles == 0) {
-         embGeometryArray_create(p->lines, EMB_LINE);
+         embArray_create(p->lines, EMB_LINE);
     }
-    embGeometryArray_addLine(p->lines, lineObj);
+    embArray_addLine(p->lines, lineObj);
 }
 
 void embPattern_addPathObjectAbs(EmbPattern* p, EmbPathObject* obj)
@@ -932,9 +932,9 @@ void embPattern_addPathObjectAbs(EmbPattern* p, EmbPathObject* obj)
     if(!obj->pointList) { embLog_error("emb-pattern.c embPattern_addPathObjectAbs(), obj->pointList is empty\n"); return; }
 
     if (!p->paths) {
-        embGeometryArray_create(p->paths, EMB_PATH);
+        embArray_create(p->paths, EMB_PATH);
     }
-    embGeometryArray_addPath(p->paths, obj);
+    embArray_addPath(p->paths, obj);
 }
 
 /*! Adds a point object to pattern (\a p) at the absolute position (\a x,\a y). Positive y is up. Units are in millimeters. */
@@ -949,9 +949,9 @@ void embPattern_addPointObjectAbs(EmbPattern* p, double x, double y)
         return;
     }
     if (!p->points) {
-        embGeometryArray_create(p->points, EMB_POINT);
+        embArray_create(p->points, EMB_POINT);
     }
-    embGeometryArray_addPoint(p->points, &pointObj);
+    embArray_addPoint(p->points, &pointObj);
 }
 
 void embPattern_addPolygonObjectAbs(EmbPattern* p, EmbPolygonObject* obj)
@@ -961,9 +961,9 @@ void embPattern_addPolygonObjectAbs(EmbPattern* p, EmbPolygonObject* obj)
     if(!obj->pointList) { embLog_error("emb-pattern.c embPattern_addPolygonObjectAbs(), obj->pointList is empty\n"); return; }
 
     if (!p->polygons) {
-        embGeometryArray_create(p->polygons, EMB_POLYGON);
+        embArray_create(p->polygons, EMB_POLYGON);
     }
-    embGeometryArray_addPolygon(p->polygons, obj);
+    embArray_addPolygon(p->polygons, obj);
 }
 
 void embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj)
@@ -975,9 +975,9 @@ void embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj)
     }
 
     if (!p->polylines) {
-        embGeometryArray_create(p->polylines, EMB_POLYLINE);
+        embArray_create(p->polylines, EMB_POLYLINE);
     }
-    embGeometryArray_addPolyline(p->polylines, obj);
+    embArray_addPolyline(p->polylines, obj);
 }
 
 /**
@@ -995,9 +995,9 @@ void embPattern_addRectObjectAbs(EmbPattern* p, double x, double y, double w, do
 
     if(!p) { embLog_error("emb-pattern.c embPattern_addRectObjectAbs(), p argument is null\n"); return; }
     if (p->rects) {
-        embGeometryArray_create(p->rects, EMB_RECT);
+        embArray_create(p->rects, EMB_RECT);
     }
-    embGeometryArray_addRect(p->rects, rect, 0, black);
+    embArray_addRect(p->rects, rect, 0, black);
 }
 
 void embPattern_end(EmbPattern *p)

@@ -6,16 +6,64 @@ developed by [Embroidermodder 2](http://embroidermodder.github.io).
 It handles over 45 different embroidery specific formats as well
 as several non-embroidery specific vector formats.
 
+Build
+-----
+
+You can use either use a CMake (for the library itself) or qmake build
+(as part of `Embroidermodder2`).
+
+So if you are building the project to use as a library we recommend:
+ 
+```
+git clone https://github.com/Embroidermodder/libembroidery
+cd libembroidery
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
+
+This builds both the static and shared versions of the library as well
+as the command line program `embroider` and the testing program
+`libembroidery_test`.
+
+License
+-------
+
+Libembroidery is distributed under the permissive zlib licence, see the LICENSE
+file.
+
 Documentation
 -------------
 
 Developer Documentation can be generated using [Doxygen](http://www.doxygen.org)
 
-- For clean docs that only includes documented items (most people):
 ```
 doxygen libembroidery.doxyfile
 ```
-- For verbose docs that includes undocumented items (core developers):
+
+Development
+-----------
+
+## To Do
+
+1. Combine geometry memory management tools into the EmbGeometryArray functions. Remove linked list code.
+1. Translate emb-outline to C90.
+1. Document struts, macros and functions. Then remove redundant libembroidery_undocumented.doxygen.
+1. A better command line tool.
+    1. Add more command line flags to control the specific algorithms used in coversion
+       and creation of patterns.
+    1. Make a texinfo/PDF user manual.
+1. Incorporate experimental code, improve support for language bindings.
+1. Better integrate the EmbVector, EmbCircle etc. structs into functions that work with them throughout.
+
+## Finding fixes
+
+Use:
+
 ```
-doxygen libembroidery-undocumented.doxyfile
+grep "TODO" *.c *.h */*.c */*.h
 ```
+
+to find jobs marked within the source code rather than the list above.
+

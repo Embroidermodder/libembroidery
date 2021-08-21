@@ -1,7 +1,7 @@
 #include "embroidery.h"
 #include <stdlib.h>
 
-int embGeometryArray_create(EmbGeometryArray *p, int type)
+int embArray_create(EmbArray *p, int type)
 {
     p->type = type;
     p->length = CHUNK_SIZE;
@@ -44,7 +44,7 @@ int embGeometryArray_create(EmbGeometryArray *p, int type)
     }
 }
 
-int embGeometryArray_resize(EmbGeometryArray *p)
+int embArray_resize(EmbArray *p)
 {
     if (p->count < p->length) return 1;
     p->length += CHUNK_SIZE;
@@ -98,31 +98,31 @@ int embGeometryArray_resize(EmbGeometryArray *p)
     return 0;
 }
 
-int embGeometryArray_addArc(EmbGeometryArray* p, EmbArc arc, int lineType, EmbColor color)
+int embArray_addArc(EmbArray* p, EmbArc arc, int lineType, EmbColor color)
 {
     p->count++;
-    if (!embGeometryArray_resize(p)) return 0;
+    if (!embArray_resize(p)) return 0;
     p->arc[p->count - 1].arc = arc;
     p->arc[p->count - 1].lineType = lineType;
     p->arc[p->count - 1].color = color;
     return 1;
 }
 
-int embGeometryArray_addCircle(EmbGeometryArray* p, EmbCircle circle, int lineType, EmbColor color)
+int embArray_addCircle(EmbArray* p, EmbCircle circle, int lineType, EmbColor color)
 {
     p->count++;
-    if (!embGeometryArray_resize(p)) return 0;
+    if (!embArray_resize(p)) return 0;
     p->circle[p->count - 1].circle = circle;
     p->circle[p->count - 1].lineType = lineType;
     p->circle[p->count - 1].color = color;
     return 1;
 }
 
-int embGeometryArray_addEllipse(EmbGeometryArray* p,
+int embArray_addEllipse(EmbArray* p,
     EmbEllipse ellipse, double rotation, int lineType, EmbColor color)
 {
     p->count++;
-    if (!embGeometryArray_resize(p)) return 0;
+    if (!embArray_resize(p)) return 0;
     p->ellipse[p->count - 1].ellipse = ellipse;
     p->ellipse[p->count - 1].rotation = rotation;
     p->ellipse[p->count - 1].lineType = lineType;
@@ -130,81 +130,81 @@ int embGeometryArray_addEllipse(EmbGeometryArray* p,
     return 1;
 }
 
-int embGeometryArray_addFlag(EmbGeometryArray* p, int flag)
+int embArray_addFlag(EmbArray* p, int flag)
 {
     p->count++;
-    if (!embGeometryArray_resize(p)) return 0;
+    if (!embArray_resize(p)) return 0;
     p->flag[p->count - 1] = flag;
     return 1;
 }
 
-int embGeometryArray_addLine(EmbGeometryArray* p, EmbLineObject line)
+int embArray_addLine(EmbArray* p, EmbLineObject line)
 {
     p->count++;
-    if (!embGeometryArray_resize(p)) return 0;
+    if (!embArray_resize(p)) return 0;
     p->line[p->count - 1] = line;
     return 1;
 }
 
-int embGeometryArray_addPath(EmbGeometryArray* p, EmbPathObject *path)
+int embArray_addPath(EmbArray* p, EmbPathObject *path)
 {
     p->count++;
-    if (!embGeometryArray_resize(p)) return 0;
+    if (!embArray_resize(p)) return 0;
     p->path[p->count - 1] = (EmbPathObject*)malloc(sizeof(EmbPathObject));
     if (!p->path[p->count - 1]) {
-        embLog_error("emb-polygon.c embGeometryArray_create(), cannot allocate memory for heapPolygonObj\n");
+        embLog_error("emb-polygon.c embArray_create(), cannot allocate memory for heapPolygonObj\n");
         return 0;
     }
     p->path[p->count - 1] = path;
     return 1;
 }
 
-int embGeometryArray_addPoint(EmbGeometryArray* p, EmbPointObject *point)
+int embArray_addPoint(EmbArray* p, EmbPointObject *point)
 {
     p->count++;
-    if (!embGeometryArray_resize(p)) return 0;
+    if (!embArray_resize(p)) return 0;
     p->point[p->count - 1] = *point;
     return 1;
 }
 
-int embGeometryArray_addPolygon(EmbGeometryArray* p, EmbPolygonObject *polygon)
+int embArray_addPolygon(EmbArray* p, EmbPolygonObject *polygon)
 {
     p->count++;
-    if (!embGeometryArray_resize(p)) return 0;
+    if (!embArray_resize(p)) return 0;
     p->polygon[p->count - 1] = (EmbPolygonObject*)malloc(sizeof(EmbPolygonObject));
     if (!p->polygon[p->count - 1]) {
-        embLog_error("emb-polygon.c embGeometryArray_create(), cannot allocate memory for heapPolygonObj\n");
+        embLog_error("emb-polygon.c embArray_create(), cannot allocate memory for heapPolygonObj\n");
         return 0;
     }
     p->polygon[p->count - 1] = polygon;
     return 1;
 }
 
-int embGeometryArray_addPolyline(EmbGeometryArray* p, EmbPolylineObject *polyline)
+int embArray_addPolyline(EmbArray* p, EmbPolylineObject *polyline)
 {
     p->count++;
-    if (!embGeometryArray_resize(p)) return 0;
+    if (!embArray_resize(p)) return 0;
     p->polyline[p->count - 1] = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
     if (!p->polyline[p->count - 1]) {
-        embLog_error("emb-polyline.c embGeometryArray_create(), cannot allocate memory for heapPolylineObj\n");
+        embLog_error("emb-polyline.c embArray_create(), cannot allocate memory for heapPolylineObj\n");
         return 0;
     }
     p->polyline[p->count - 1] = polyline;
     return 1;
 }
 
-int embGeometryArray_addRect(EmbGeometryArray* p,
+int embArray_addRect(EmbArray* p,
     EmbRect rect, int lineType, EmbColor color)
 {
     p->count++;
-    if (!embGeometryArray_resize(p)) return 0;
+    if (!embArray_resize(p)) return 0;
     p->rect[p->count - 1].rect = rect;
     p->rect[p->count - 1].lineType = lineType;
     p->rect[p->count - 1].color = color;
     return 1;
 }
 
-void embGeometryArray_free(EmbGeometryArray* p)
+void embArray_free(EmbArray* p)
 {
     int i;
     if (!p) return;
@@ -227,7 +227,7 @@ void embGeometryArray_free(EmbGeometryArray* p)
         break;
     case EMB_PATH:
         for (i=0; i<p->count; i++) {
-            embGeometryArray_free(p->path[i]->pointList);
+            embArray_free(p->path[i]->pointList);
         }
         free(p->path);
         break;
@@ -236,13 +236,13 @@ void embGeometryArray_free(EmbGeometryArray* p)
         break;
     case EMB_POLYGON:
         for (i=0; i<p->count; i++) {
-            embGeometryArray_free(p->polygon[i]->pointList);
+            embArray_free(p->polygon[i]->pointList);
         }
         free(p->polygon);
         break;
     case EMB_POLYLINE:
         for (i=0; i<p->count; i++) {
-            embGeometryArray_free(p->polyline[i]->pointList);
+            embArray_free(p->polyline[i]->pointList);
         }
         free(p->polygon);
         break;

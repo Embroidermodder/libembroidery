@@ -94,6 +94,8 @@ set(LIBRARY_SOURCE_FILES
     thread-color.c
 )
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")
+
 add_library(embroidery_static STATIC
     ${LIBRARY_SOURCE_FILES}
 )
@@ -121,10 +123,6 @@ add_executable(embroider
     embroider/embroider-main.c
 )
 
-add_executable(libembroidery_test
-    libembroidery-test/libembroidery-test-main.c
-)
-
 target_include_directories(embroider
     INTERFACE
         $<INSTALL_INTERFACE:include>
@@ -138,10 +136,8 @@ target_include_directories(embroider
 # linked against.
 if(WIN32)
 target_link_libraries(embroider PRIVATE embroidery_static)
-target_link_libraries(libembroidery_test PRIVATE embroidery_static)
 else(WIN32)
 target_link_libraries(embroider PRIVATE embroidery_static m)
-target_link_libraries(libembroidery_test PRIVATE embroidery_static m)
 endif(WIN32)
 
 install(

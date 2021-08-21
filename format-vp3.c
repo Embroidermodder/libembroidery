@@ -113,7 +113,8 @@ int readVp3(EmbPattern* pattern, const char* fileName)
     unsigned char magicString[5];
     unsigned char some;
     unsigned char* softwareVendorString = 0;
-    unsigned char v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18;
+    unsigned char v1;
+    /* unsigned char v2, ..., v18; */
     unsigned char* anotherSoftwareVendorString = 0;
     int numberOfColors;
     long colorSectionOffset;
@@ -152,24 +153,9 @@ int readVp3(EmbPattern* pattern, const char* fileName)
     anotherCommentString = vp3ReadString(file);
 
     /* TODO: review v1 thru v18 variables and use emb_unused() if needed */
-    v1 = binaryReadByte(file);
-    v2 = binaryReadByte(file);
-    v3 = binaryReadByte(file);
-    v4 = binaryReadByte(file);
-    v5 = binaryReadByte(file);
-    v6 = binaryReadByte(file);
-    v7 = binaryReadByte(file);
-    v8 = binaryReadByte(file);
-    v9 = binaryReadByte(file);
-    v10 = binaryReadByte(file);
-    v11 = binaryReadByte(file);
-    v12 = binaryReadByte(file);
-    v13 = binaryReadByte(file);
-    v14 = binaryReadByte(file);
-    v15 = binaryReadByte(file);
-    v16 = binaryReadByte(file);
-    v17 = binaryReadByte(file);
-    v18 = binaryReadByte(file);
+    for (i=0; i<18; i++) {
+        v1 = binaryReadByte(file);
+    }
 
     binaryReadBytes(file, magicCode, 6); /* 0x78 0x78 0x55 0x55 0x01 0x00 */ /* TODO: check return value */
 

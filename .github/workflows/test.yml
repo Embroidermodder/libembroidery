@@ -16,8 +16,7 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=Debug ..
         make
-        ./libembroidery_test
-        ./embroider
+        ./embroider -test
 
   test-macOS:
     runs-on: macOS-latest
@@ -31,20 +30,19 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=Debug ..
         cmake --build .
-        ./libembroidery_test
-        ./embroider
+        ./embroider -test
 
-#  test-windows:
-#    runs-on: windows-latest
-#
-#    steps:
-#    - name: Run test script on macOS.
-#      run: |
-#        git clone https://github.com/Embroidermodder/libembroidery
-#        cd libembroidery
-#        mkdir build
-#        cd build
-#        cmake -DCMAKE_BUILD_TYPE=Debug ..
-#        cmake --build .
-#        libembroidery_test.exe
-#        embroider.exe
+  test-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Run test script on macOS.
+      run: |
+        git clone https://github.com/Embroidermodder/libembroidery
+        cd libembroidery
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Debug ..
+        cmake --build .
+# Need to fix the executable name?
+#        embroider.exe -test

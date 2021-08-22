@@ -187,7 +187,6 @@ int writeXxx(EmbPattern* pattern, const char* fileName)
     int i;
     EmbRect rect;
     int endOfStitches;
-    EmbThreadList* colors = 0;
     int curColor = 0;
 
     if (!validateWritePattern(pattern, fileName, "writeXxx")) {
@@ -212,7 +211,7 @@ int writeXxx(EmbPattern* pattern, const char* fileName)
     {
         binaryWriteByte(file, 0x00);
     }
-    binaryWriteUShort(file, (unsigned short)embThreadList_count(pattern->threadList));
+    binaryWriteUShort(file, (unsigned short)pattern->threads->count);
     binaryWriteShort(file, 0x0000);
 
     rect = embPattern_calcBoundingBox(pattern);
@@ -245,15 +244,13 @@ int writeXxx(EmbPattern* pattern, const char* fileName)
     binaryWriteByte(file, 0x14);
     binaryWriteByte(file, 0x00);
     binaryWriteByte(file, 0x00);
-    colors = pattern->threadList;
-    while(colors)
-    {
+
+    for (i=0; i<pattern->threads->count; i++) {
         binaryWriteByte(file, 0x00);
-        binaryWriteByte(file, colors->thread.color.r);
-        binaryWriteByte(file, colors->thread.color.g);
-        binaryWriteByte(file, colors->thread.color.b);
+        binaryWriteByte(file, pattern->threads->thread[i].color.r);
+        binaryWriteByte(file, pattern->threads->thread[i].color.g);
+        binaryWriteByte(file, pattern->threads->thread[i].color.b);
         curColor++;
-        colors = colors->next;
     }
     for(i = 0; i < (22 - curColor); i++)
     {

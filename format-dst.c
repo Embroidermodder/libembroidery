@@ -410,8 +410,8 @@ int writeDst(EmbPattern* pattern, const char* fileName)
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
     xx = yy = 0;
-    co = 1;
-    co = embThreadList_count(pattern->threadList);
+    /* TODO: make sure this defaults to 1 in new patterns */
+    co = pattern->threads->count;
     st = 0;
     st = embStitchList_count(pattern->stitchList);
     flags = NORMAL;

@@ -241,8 +241,7 @@ int readCsv(EmbPattern* pattern, const char* fileName)
     }
 
     /* if not enough colors defined, fill in random colors */
-    while(embThreadList_count(pattern->threadList) < numColorChanges)
-    {
+    while (pattern->threads->count < numColorChanges) {
         embPattern_addThread(pattern, embThread_getRandom());
     }
 
@@ -258,7 +257,6 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
     EmbStitchList* sList = 0;
-    EmbThreadList* tList = 0;
     EmbRect boundingRect;
     int i = 0;
     int stitchCount = 0;
@@ -270,8 +268,7 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
     sList = pattern->stitchList;
     stitchCount = embStitchList_count(sList);
 
-    tList = pattern->threadList;
-    threadCount = embThreadList_count(tList);
+    threadCount = pattern->threads->count;
 
     boundingRect = embPattern_calcBoundingBox(pattern);
 
@@ -281,12 +278,7 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
         return 0;
     }
 
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-    {
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
-        stitchCount++;
-    }
+    embPattern_end(pattern);
 
     file = embFile_open(fileName, "w");
     if(!file)
@@ -330,17 +322,14 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
 
     /* write colors */
     embFile_printf(file, "\"#\",\"[THREAD_NUMBER]\",\"[RED]\",\"[GREEN]\",\"[BLUE]\",\"[DESCRIPTION]\",\"[CATALOG_NUMBER]\"\n");
-    i = 1;
-    while(tList)
-    {
-        embFile_printf(file, "\"$\",\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n", i, /* TODO: fix segfault that backtraces here when libembroidery-convert from dst to csv. */
-                (int)tList->thread.color.r,
-                (int)tList->thread.color.g,
-                (int)tList->thread.color.b,
-                tList->thread.description,
-                tList->thread.catalogNumber);
-        i++;
-        tList = tList->next;
+    for (i=0; i<threadCount; i++) {
+         /* TODO: fix segfault that backtraces here when libembroidery-convert from dst to csv. */
+        embFile_printf(file, "\"$\",\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n", i+1,
+                (int)pattern->threads->thread[i].color.r,
+                (int)pattern->threads->thread[i].color.g,
+                (int)pattern->threads->thread[i].color.b,
+                pattern->threads->thread[i].description,
+                pattern->threads->thread[i].catalogNumber);
     }
     embFile_printf(file, "\n");
 

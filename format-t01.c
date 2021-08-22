@@ -178,7 +178,7 @@ int writeT01(EmbPattern* pattern, const char* fileName)
 
 	xx = yy = 0;
 	co = 1;
-	co = embThreadList_count(pattern->threadList);
+	co = pattern->threads->count;
 	st = 0;
 	st = embStitchList_count(pattern->stitchList);
 	flags = NORMAL;

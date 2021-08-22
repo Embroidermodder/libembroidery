@@ -25,9 +25,8 @@ int readInf(EmbPattern* pattern, const char* fileName)
     binaryReadUInt32BE(file);
     numberOfColors = binaryReadUInt32BE(file);
 
-    embThreadList_free(pattern->threadList);
-    pattern->threadList = 0;
-    pattern->lastThread = 0;
+    embArray_free(pattern->threads);
+    embArray_create(pattern->threads, EMB_THREAD);
 
     for(i = 0; i < numberOfColors; i++)
     {
@@ -54,7 +53,6 @@ int readInf(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeInf(EmbPattern* pattern, const char* fileName)
 {
-    EmbThreadList* pointer = 0;
     int i = 1, bytesRemaining;
     EmbFile* file = 0;
 
@@ -72,14 +70,12 @@ int writeInf(EmbPattern* pattern, const char* fileName)
     binaryWriteUIntBE(file, 0x08);
     /* write place holder offset */
     binaryWriteUIntBE(file, 0x00);
-    binaryWriteUIntBE(file, embThreadList_count(pattern->threadList));
+    binaryWriteUIntBE(file, pattern->threads->count);
 
-    pointer = pattern->threadList;
-    while(pointer)
-    {
+    for (i=0; i<pattern->threads->count; i++) {
         char buffer[50];
         EmbColor c;
-        c = pointer->thread.color;
+        c = pattern->threads->thread[i].color;
         sprintf(buffer, "RGB(%d,%d,%d)", (int)c.r, (int)c.g, (int)c.b);
         binaryWriteUShortBE(file, (unsigned short)(14 + strlen(buffer))); /* record length */
         binaryWriteUShortBE(file, (unsigned short)i); /* record number */
@@ -90,8 +86,6 @@ int writeInf(EmbPattern* pattern, const char* fileName)
         binaryWriteBytes(file, "RGB\0", 4);
         embFile_printf(file, buffer);
         binaryWriteByte(file, 0);
-        pointer = pointer->next;
-        i++;
     }
     embFile_seek(file, -8, SEEK_END);
     bytesRemaining = embFile_tell(file);

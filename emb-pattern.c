@@ -23,8 +23,7 @@ EmbPattern* embPattern_create(void)
     p->settings = embSettings_init();
     p->currentColorIndex = 0;
     p->stitchList = 0;
-    p->threadList = 0;
-
+    p->threads = 0;
     p->hoop.height = 0.0;
     p->hoop.width = 0.0;
     p->arcs = 0;
@@ -39,7 +38,6 @@ EmbPattern* embPattern_create(void)
     p->splines = 0;
 
     p->lastStitch = 0;
-    p->lastThread = 0;
 
     p->lastX = 0.0;
     p->lastY = 0.0;
@@ -70,15 +68,14 @@ void embPattern_hideStitchesOverLength(EmbPattern* p, int length)
 
 int embPattern_addThread(EmbPattern* p, EmbThread thread)
 {
-    if(!p) { embLog_error("emb-pattern.c embPattern_addThread(), p argument is null\n"); return 0; }
-    if(embThreadList_empty(p->threadList))
-    {
-        p->threadList = p->lastThread = embThreadList_create(thread);
+    if (!p) {
+        embLog_error("emb-pattern.c embPattern_addThread(), p argument is null\n");
+        return 0;
     }
-    else
-    {
-        p->lastThread = embThreadList_add(p->lastThread, thread);
+    if (!p->threads) {
+        embArray_create(p->threads, EMB_THREAD);
     }
+    embArray_addThread(p->threads, thread);
     return 1;
 }
 
@@ -88,25 +85,20 @@ void embPattern_fixColorCount(EmbPattern* p)
     int maxColorIndex = 0;
     EmbStitchList* list = 0;
 
-    if(!p) { embLog_error("emb-pattern.c embPattern_fixColorCount(), p argument is null\n"); return; }
+    if (!p) {
+        embLog_error("emb-pattern.c embPattern_fixColorCount(), p argument is null\n");
+        return;
+    }
     list = p->stitchList;
-    while(list)
-    {
+    while (list) {
         maxColorIndex = embMaxInt(maxColorIndex, list->stitch.color);
         list = list->next;
     }
-#ifndef ARDUINO
-    /* ARDUINO TODO: The while loop below never ends because memory cannot be allocated in the addThread
-     *               function and thus the thread count is never incremented. Arduino or not, it's wrong.
-     */
-    while((int)embThreadList_count(p->threadList) <= maxColorIndex)
-    {
+    while (p->threads->count <= maxColorIndex) {
         embPattern_addThread(p, embThread_getRandom());
     }
-#endif
     /*
-    while(embThreadList_count(p->threadList) > (maxColorIndex + 1))
-    {
+    while (p->threadLists->count > (maxColorIndex + 1)) {
         TODO: erase last color    p->threadList.pop_back();
     }
     */
@@ -142,7 +134,7 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
                 if (!pointList)
                 {
                     embArray_create(pointList, EMB_POINT);
-                    color = embThreadList_getAt(p->threadList, stList->stitch.color).color;
+                    color = p->threads->thread[stList->stitch.color].color;
                 }
                 EmbPointObject point;
                 point.point.x = stList->stitch.x;
@@ -219,9 +211,7 @@ void embPattern_moveStitchListToPolylines(EmbPattern* p)
     embStitchList_free(p->stitchList);
     p->stitchList = 0;
     p->lastStitch = 0;
-    embThreadList_free(p->threadList);
-    p->threadList = 0;
-    p->lastThread = 0;
+    embArray_free(p->threads);
 }
 
 /*! Moves all of the EmbPolylineObjectList data to EmbStitchList data for pattern (\a p). */
@@ -851,10 +841,15 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
 /*! Frees all memory allocated in the pattern (\a p). */
 void embPattern_free(EmbPattern* p)
 {
-    if(!p) { embLog_error("emb-pattern.c embPattern_free(), p argument is null\n"); return; }
-    embStitchList_free(p->stitchList);              p->stitchList = 0;      p->lastStitch = 0;
-    embThreadList_free(p->threadList);              p->threadList = 0;      p->lastThread = 0;
+    if (!p) {
+        embLog_error("emb-pattern.c embPattern_free(), p argument is null\n");
+        return;
+    }
+    embStitchList_free(p->stitchList);
+    p->stitchList = 0;
+    p->lastStitch = 0;
 
+    embArray_free(p->threads);
     embArray_free(p->arcs);
     embArray_free(p->circles);
     embArray_free(p->ellipses);
@@ -993,8 +988,11 @@ void embPattern_addRectObjectAbs(EmbPattern* p, double x, double y, double w, do
     rect.right = x+w;
     rect.bottom = y+h;
 
-    if(!p) { embLog_error("emb-pattern.c embPattern_addRectObjectAbs(), p argument is null\n"); return; }
-    if (p->rects) {
+    if (!p) {
+        embLog_error("emb-pattern.c embPattern_addRectObjectAbs(), p argument is null\n");
+        return;
+    }
+    if (!p->rects) {
         embArray_create(p->rects, EMB_RECT);
     }
     embArray_addRect(p->rects, rect, 0, black);

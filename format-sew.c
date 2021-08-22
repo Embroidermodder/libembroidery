@@ -129,7 +129,6 @@ int writeSew(EmbPattern* pattern, const char* fileName)
 {
     int colorlistSize, minColors, i;
     EmbFile* file = 0;
-    EmbThreadList* threadPointer = 0;
     EmbStitchList* stitches = 0;
     double dx = 0.0, dy = 0.0;
     double xx = 0.0, yy = 0.0;
@@ -145,25 +144,27 @@ int writeSew(EmbPattern* pattern, const char* fileName)
         embLog_error("format-sew.c writeJef(), cannot open %s for writing\n", fileName);
         return 0;
     }
+    
+    colorlistSize = pattern->threads->count;
 
-    colorlistSize = embThreadList_count(pattern->threadList);
-    minColors = embMaxInt(colorlistSize, 6);
+    minColors = embMaxInt(pattern->threads->count, 6);
     binaryWriteInt(file, 0x74 + (minColors * 4));
     binaryWriteInt(file, 0x0A);
 
-    while(threadPointer)
-    {
-        binaryWriteInt(file, embThread_findNearestColorInArray(threadPointer->thread.color, (EmbThread*)jefThreads, 79));
-        threadPointer = threadPointer->next;
+    for (i=0; i<pattern->threads->count; i++) {
+        binaryWriteInt(file, embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, (EmbThread*)jefThreads, 79));
     }
+
     for(i = 0; i < (minColors - colorlistSize); i++)
     {
         binaryWriteInt(file, 0x0D);
     }
+
     for(i = 2; i < 7538; i++)
     {
         embFile_printf(file, " ");
     }
+
     stitches = pattern->stitchList;
     while(stitches)
     {

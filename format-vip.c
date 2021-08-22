@@ -241,7 +241,6 @@ int writeVip(EmbPattern* pattern, const char* fileName)
     int i = 0;
     unsigned char* attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0, *decodedColors = 0, *encodedColors = 0;
     unsigned char prevByte = 0;
-    EmbThreadList* colorPointer = 0;
     EmbFile* file = 0;
 
     if (!validateWritePattern(pattern, fileName, "writeVip"))
@@ -255,7 +254,7 @@ int writeVip(EmbPattern* pattern, const char* fileName)
     }
 
     stitchCount = embStitchList_count(pattern->stitchList);
-    minColors = embThreadList_count(pattern->threadList);
+    minColors = pattern->threads->count;
     decodedColors = (unsigned char*)malloc(minColors << 2);
     if(!decodedColors) return 0;
     encodedColors = (unsigned char*)malloc(minColors << 2);
@@ -268,7 +267,7 @@ int writeVip(EmbPattern* pattern, const char* fileName)
     /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
 
     patternColor = minColors;
-    if(minColors > 24) minColors = 24;
+    if (minColors > 24) minColors = 24;
 
     binaryWriteUInt(file, 0x0190FC5D);
     binaryWriteUInt(file, stitchCount);
@@ -313,17 +312,14 @@ int writeVip(EmbPattern* pattern, const char* fileName)
 
         binaryWriteInt(file, minColors << 2);
 
-        colorPointer = pattern->threadList;
-
         for(i = 0; i < minColors; i++)
         {
             int byteChunk = i << 2;
-            EmbColor currentColor = colorPointer->thread.color;
+            EmbColor currentColor = pattern->threads->thread[i].color;
             decodedColors[byteChunk] = currentColor.r;
             decodedColors[byteChunk + 1] = currentColor.g;
             decodedColors[byteChunk + 2] = currentColor.b;
             decodedColors[byteChunk + 3] = 0x01;
-            colorPointer = colorPointer->next;
         }
 
         for(i = 0; i < minColors << 2; ++i)

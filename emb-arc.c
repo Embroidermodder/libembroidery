@@ -70,7 +70,6 @@ void getArcCenter(EmbArc arc, EmbVector* arcCenter)
 
     EmbLine line1;
     EmbLine line2;
-    EmbVector vector;
     line1 = embLine_make(aMidX, aMidY, aPerpX, aPerpY);
     line2 = embLine_make(bMidX, bMidY, bPerpX, bPerpY);
     embLine_intersectionPoint(line1, line2, arcCenter);
@@ -93,8 +92,9 @@ char getArcDataFromBulge(double bulge,
     double incAngleInRadians;
     double chordAngleInRadians;
     double sagittaAngleInRadians;
-
     double w, h, fx ,fy, dx, dy;
+    EmbArc arc;
+    EmbVector arcCenter;
 
     /* Confirm the direction of the Bulge */
     if(bulge >= 0.0) { *clockwise = 0; }
@@ -139,8 +139,6 @@ char getArcDataFromBulge(double bulge,
     *arcMidX = *chordMidX + fx;
     *arcMidY = *chordMidY + fy;
 
-    EmbArc arc;
-    EmbVector arcCenter;
     arc.startX = arcStartX;
     arc.startY = arcStartY;
     arc.midX = *arcMidX;

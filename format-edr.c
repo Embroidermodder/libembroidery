@@ -22,9 +22,7 @@ int readEdr(EmbPattern* pattern, const char* fileName)
     numberOfColors = embFile_tell(file) / 4;
     embFile_seek(file, 0x00, SEEK_SET);
 
-    embThreadList_free(pattern->threadList);
-    pattern->threadList = 0;
-    pattern->lastThread = 0;
+    embArray_free(pattern->threads);
 
     for(i = 0; i < numberOfColors; i++)
     {
@@ -45,27 +43,23 @@ int readEdr(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeEdr(EmbPattern* pattern, const char* fileName)
 {
-    EmbThreadList* pointer = 0;
     EmbFile* file = 0;
+    int i;
 
     if (!validateWritePattern(pattern, fileName, "writeEdr")) return 0;
 
     file = embFile_open(fileName, "wb");
-    if(!file)
-    {
+    if (!file) {
         embLog_error("format-edr.c writeEdr(), cannot open %s for writing\n", fileName);
         return 0;
     }
-    pointer = pattern->threadList;
-    while(pointer)
-    {
+    for (i=0; i<pattern->threads->count; i++) {
         EmbColor c;
-        c = pointer->thread.color;
+        c = pattern->threads->thread[i].color;
         binaryWriteByte(file, c.r);
         binaryWriteByte(file, c.g);
         binaryWriteByte(file, c.b);
         binaryWriteByte(file, 0);
-        pointer = pointer->next;
     }
     embFile_close(file);
     return 1;

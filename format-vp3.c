@@ -324,7 +324,7 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
 
         pointer = mainPointer;
         flag = pointer->stitch.flags;
-        newColor = embThreadList_getAt(pattern->threadList, pointer->stitch.color).color;
+        newColor = pattern->threads->thread[pointer->stitch.color].color;
         if(newColor.r != color.r || newColor.g != color.g || newColor.b != color.b)
         {
             numberOfColors++;
@@ -401,7 +401,7 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
         binaryWriteInt(file, 0); /* placeholder */
 
         pointer = mainPointer;
-        color = embThreadList_getAt(pattern->threadList, pointer->stitch.color).color;
+        color = pattern->threads->thread[pointer->stitch.color].color;
 
 		if (first && pointer->stitch.flags & JUMP && pointer->next->stitch.flags & JUMP)
 		{

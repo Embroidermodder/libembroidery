@@ -2160,7 +2160,7 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
             if(stList->stitch.flags == NORMAL && !isNormal)
             {
                     isNormal = 1;
-                    color = embThreadList_getAt(pattern->threadList, stList->stitch.color).color;
+                    color = pattern->threads->thread[stList->stitch.color].color;
                     /* TODO: use proper thread width for stoke-width rather than just 0.2 */
                     embFile_printf(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
                                 color.r,

@@ -83,17 +83,20 @@ typedef struct EmbFile_
 #define Z102_Isacord_Polyester  22
 #define SVG_Colors              23
 
-#define EMB_ARC         0
-#define EMB_CIRCLE      1
-#define EMB_ELLIPSE     2
-#define EMB_FLAG        3
-#define EMB_LINE        4
-#define EMB_PATH        5
-#define EMB_POINT       6
-#define EMB_POLYGON     7
-#define EMB_POLYLINE    8
-#define EMB_RECT        9
-#define EMB_SPLINE      10
+#define EMB_ARC             0
+#define EMB_CIRCLE          1
+#define EMB_ELLIPSE         2
+#define EMB_FLAG            3
+#define EMB_LINE            4
+#define EMB_PATH            5
+#define EMB_POINT           6
+#define EMB_POLYGON         7
+#define EMB_POLYLINE        8
+#define EMB_RECT            9
+#define EMB_SPLINE          10
+#define EMB_STITCH          11
+#define EMB_THREAD          12
+#define EMB_VECTOR          13
 
 #define EMBFORMAT_UNSUPPORTED 0
 #define EMBFORMAT_STITCHONLY  1
@@ -199,16 +202,6 @@ typedef struct EmbVector_ EmbPoint;
 typedef struct EmbArray_ EmbArray;
 
 /**
- * To be combined with the generic array.
- */
-typedef struct EmbVectorArray_
-{
-    EmbVector* vector;
-    int count;
-    int length;
-} EmbVectorArray;
-
-/**
  * Does it make sense to have lineType for a point?
  */
 typedef struct EmbPointObject_
@@ -270,12 +263,6 @@ typedef struct EmbThread_
     const char* description;
     const char* catalogNumber;
 } EmbThread;
-
-typedef struct EmbThreadList_
-{
-    EmbThread thread;
-    struct EmbThreadList_* next;
-} EmbThreadList;
 
 typedef struct EmbHoop_
 {
@@ -378,8 +365,8 @@ typedef struct EmbPolygonObject_
 typedef struct EmbSatinOutline_
 {
     int length;
-    EmbVectorArray* side1;
-    EmbVectorArray* side2;
+    EmbArray* side1;
+    EmbArray* side2;
 } EmbSatinOutline;
 
 typedef struct EmbEllipseObject_
@@ -498,6 +485,7 @@ typedef struct EmbSplineObject_ {
 struct EmbArray_ {
     EmbArcObject *arc;
     EmbCircleObject *circle;
+    EmbColor *color;
     EmbEllipseObject *ellipse;
     int *flag;
     EmbPathObject **path;
@@ -509,6 +497,7 @@ struct EmbArray_ {
     EmbSplineObject *spline;
     EmbStitch *stitch;
     EmbThread *thread;
+    EmbVector *vector;
     int count;
     int length;
     int type;
@@ -519,8 +508,8 @@ typedef struct EmbPattern_
     EmbSettings settings;
     EmbHoop hoop;
     EmbStitchList* stitchList;
-    EmbThreadList* threadList;
 
+    EmbArray* threads;
     EmbArray* arcs;
     EmbArray* circles;
     EmbArray* ellipses;
@@ -533,7 +522,6 @@ typedef struct EmbPattern_
     EmbArray* splines;
 
     EmbStitchList* lastStitch;
-    EmbThreadList* lastThread;
 
     int currentColorIndex;
     double lastX;
@@ -566,8 +554,9 @@ EMB_PUBLIC int embArray_addPoint(EmbArray* g, EmbPointObject *p);
 EMB_PUBLIC int embArray_addPolygon(EmbArray* g, EmbPolygonObject *p);
 EMB_PUBLIC int embArray_addPolyline(EmbArray* g, EmbPolylineObject *p);
 EMB_PUBLIC int embArray_addSpline(EmbArray* g, EmbSplineObject *p);
-EMB_PUBLIC int embArray_addStitch(EmbArray* g, EmbStitch *p);
-EMB_PUBLIC int embArray_addThread(EmbArray* g, EmbThread *p);
+EMB_PUBLIC int embArray_addStitch(EmbArray* g, double x, double y, int, int);
+EMB_PUBLIC int embArray_addThread(EmbArray* g, EmbThread p);
+EMB_PUBLIC int embArray_addVector(EmbArray* g, EmbVector);
 EMB_PUBLIC void embArray_free(EmbArray* p);
 
 EMB_PUBLIC EmbLine embLine_make(double x1, double y1, double x2, double y2);
@@ -586,16 +575,9 @@ EMB_PUBLIC int embStitchList_empty(EmbStitchList* pointer);
 EMB_PUBLIC void embStitchList_free(EmbStitchList* pointer);
 EMB_PUBLIC EmbStitch embStitchList_getAt(EmbStitchList* pointer, int num);
 
-EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbThreadList* colors);
-EMB_PUBLIC int embThread_findNearestColorInArray(EmbColor color, EmbThread* colorArray, int count);
+EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbArray* colors, int mode);
+EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, EmbThread* colors, int length);
 EMB_PUBLIC EmbThread embThread_getRandom(void);
-
-EMB_PUBLIC EmbThreadList* embThreadList_create(EmbThread data);
-EMB_PUBLIC EmbThreadList* embThreadList_add(EmbThreadList* pointer, EmbThread data);
-EMB_PUBLIC int embThreadList_count(EmbThreadList* pointer);
-EMB_PUBLIC int embThreadList_empty(EmbThreadList* pointer);
-EMB_PUBLIC void embThreadList_free(EmbThreadList* pointer);
-EMB_PUBLIC EmbThread embThreadList_getAt(EmbThreadList* pointer, int num);
 
 EMB_PUBLIC void embVector_normalize(EmbVector vector, EmbVector* result);
 EMB_PUBLIC void embVector_multiply(EmbVector vector, double magnitude, EmbVector* result);
@@ -605,10 +587,6 @@ EMB_PUBLIC void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result
 EMB_PUBLIC double embVector_dot(EmbVector v1, EmbVector v2);
 EMB_PUBLIC void embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC double embVector_getLength(EmbVector vector);
-
-EMB_PUBLIC EmbVectorArray* embVectorArray_create();
-EMB_PUBLIC int embVectorArray_add(EmbVectorArray* pointer, EmbVector data);
-EMB_PUBLIC void embVectorArray_free(EmbVectorArray* pointer);
 
 char binaryReadByte(EmbFile* file);
 int binaryReadBytes(EmbFile* file, unsigned char* destination, int count);
@@ -779,8 +757,8 @@ EMB_PUBLIC EmbPolylineObject* embPolylineObject_create(
     EmbArray* pointList, EmbColor color, int lineType);
 EMB_PUBLIC void embPolylineObject_free(EmbPolylineObject* pointer);
 
-EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbVectorArray* lines, double thickness, EmbSatinOutline* result);
-EMB_PUBLIC EmbVectorArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density);
+EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbArray* lines, double thickness, EmbSatinOutline* result);
+EMB_PUBLIC EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density);
 
 EMB_PUBLIC double embRect_x(EmbRect rect);
 EMB_PUBLIC double embRect_y(EmbRect rect);
@@ -835,18 +813,20 @@ EMB_PUBLIC void embPattern_movePolylinesToStitchList(EmbPattern* pattern);
 EMB_PUBLIC int embPattern_read(EmbPattern* pattern, const char* fileName);
 EMB_PUBLIC int embPattern_write(EmbPattern* pattern, const char* fileName);
 
-#define READER_WRITER(type) \
-    int read##type(EmbPattern *pattern, const char *fileName); \
-    int write##type(EmbPattern *pattern, const char *fileName);
-
 #ifdef ARDUINO /* ARDUINO TODO: This is temporary. Remove when complete. */
 
-READER_WRITER(Exp)
+int readExp(EmbPattern *pattern, const char *fileName);
+int writeExp(EmbPattern *pattern, const char *fileName);
 
 #else /* ARDUINO TODO: This is temporary. Remove when complete. */
 
-READER_WRITER(100)
-READER_WRITER(10o)
+int read100(EmbPattern *pattern, const char *fileName);
+int write100(EmbPattern *pattern, const char *fileName);
+int read10o(EmbPattern *pattern, const char *fileName);
+int write10o(EmbPattern *pattern, const char *fileName);
+#define READER_WRITER(type) \
+    int read##type(EmbPattern *pattern, const char *fileName); \
+    int write##type(EmbPattern *pattern, const char *fileName);
 READER_WRITER(Art)
 READER_WRITER(Bmc)
 READER_WRITER(Bro)
@@ -906,13 +886,12 @@ READER_WRITER(Vip)
 READER_WRITER(Vp3)
 READER_WRITER(Xxx)
 READER_WRITER(Zsk)
+#undef READER_WRITER
 
 void readPecStitches(EmbPattern* pattern, EmbFile* file);
 void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* filename);
 
 #endif /* ARDUINO TODO: This is temporary. Remove when complete. */
-
-#undef READER_WRITER
 
 /* NON-MACRO CONSTANTS
  ******************************************************************************/

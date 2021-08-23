@@ -3,6 +3,9 @@
 
 int embArray_create(EmbArray *p, int type)
 {
+    if (!p) {
+        p = (EmbArray*)malloc(sizeof(EmbArray));
+    }
     p->type = type;
     p->length = CHUNK_SIZE;
     p->count = 0;
@@ -39,9 +42,20 @@ int embArray_create(EmbArray *p, int type)
         break;
     case EMB_SPLINE:
         p->spline = (EmbSplineObject*)malloc(CHUNK_SIZE*sizeof(EmbSplineObject));
+        break;
+    case EMB_STITCH:
+        p->stitch = (EmbStitch*)malloc(CHUNK_SIZE*sizeof(EmbStitch));
+        break;
+    case EMB_THREAD:
+        p->thread = (EmbThread*)malloc(CHUNK_SIZE*sizeof(EmbThread));
+        break;
+    case EMB_VECTOR:
+        p->vector = (EmbVector*)malloc(CHUNK_SIZE*sizeof(EmbVector));
+        break;
     default:
         break;
     }
+    return 1;
 }
 
 int embArray_resize(EmbArray *p)
@@ -92,6 +106,19 @@ int embArray_resize(EmbArray *p)
     case EMB_SPLINE:
         p->spline = realloc(p->spline, p->length*sizeof(EmbSplineObject));
         if (!p->spline) return 1;
+        break;
+    case EMB_STITCH:
+        p->stitch = realloc(p->stitch, CHUNK_SIZE*sizeof(EmbStitch));
+        if (!p->stitch) return 1;
+        break;
+    case EMB_THREAD:
+        p->thread = realloc(p->thread, CHUNK_SIZE*sizeof(EmbThread));
+        if (!p->thread) return 1;
+        break;
+    case EMB_VECTOR:
+        p->vector = realloc(p->vector, CHUNK_SIZE*sizeof(EmbVector));
+        if (!p->vector) return 1;
+        break;
     default:
         break;
     }
@@ -204,6 +231,34 @@ int embArray_addRect(EmbArray* p,
     return 1;
 }
 
+int embArray_addStitch(EmbArray* p,
+    double x, double y, int flag, int color)
+{
+    p->count++;
+    if (!embArray_resize(p)) return 0;
+    p->stitch[p->count - 1].x = x;
+    p->stitch[p->count - 1].y = y;
+    p->stitch[p->count - 1].flags = flag;
+    p->stitch[p->count - 1].color = color;
+    return 1;
+}
+
+int embArray_addThread(EmbArray* p, EmbThread thread)
+{
+    p->count++;
+    if (!embArray_resize(p)) return 0;
+    p->thread[p->count - 1] = thread;
+    return 1;
+}
+
+int embArray_addVector(EmbArray* p, EmbVector vector)
+{
+    p->count++;
+    if (!embArray_resize(p)) return 0;
+    p->vector[p->count - 1] = vector;
+    return 1;
+}
+
 void embArray_free(EmbArray* p)
 {
     int i;
@@ -251,37 +306,21 @@ void embArray_free(EmbArray* p)
         break;
     case EMB_SPLINE:
         free(p->spline);
+        break;
+    case EMB_STITCH:
+        free(p->stitch);
+        break;
+    case EMB_THREAD:
+        free(p->thread);
+        break;
+    case EMB_VECTOR:
+        free(p->vector);
+        break;
     default:
         break;
     }
+    free(p);
     p = 0;
 }
 
-EmbVectorArray *embVectorArray_create()
-{
-    EmbVectorArray *p;
-    p->length = CHUNK_SIZE;
-    p->count = 0;
-    p->vector = (EmbVector*)malloc(CHUNK_SIZE*sizeof(EmbVector));
-    if (!p->vector) return 0;
-    return p;
-}
-
-int embVectorArray_add(EmbVectorArray *p, EmbVector v)
-{
-    p->count++;
-    if (p->count < p->length) {
-        p->length += CHUNK_SIZE;
-        p->vector = (EmbVector*)realloc(p->vector, p->length*sizeof(EmbVector));
-        if (!p->vector) return 0;
-    }
-    p->vector[p->count] = v;
-    return 1;
-
-}
-
-void embVectorArray_free(EmbVectorArray* p)
-{
-    free(p->vector);
-}
 

@@ -406,12 +406,12 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
     {
         binaryWriteByte(file, (unsigned char)0x20);
     }
-    currentThreadCount = embThreadList_count(pattern->threadList);
+    currentThreadCount = pattern->threads->count;
     binaryWriteByte(file, (unsigned char)(currentThreadCount-1));
 
     for(i = 0; i < currentThreadCount; i++)
     {
-        binaryWriteByte(file, (unsigned char)embThread_findNearestColorInArray(embThreadList_getAt(pattern->threadList, i).color, (EmbThread*)pecThreads, pecThreadCount));
+        binaryWriteByte(file, (unsigned char)embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, (EmbThread*)pecThreads, pecThreadCount));
     }
     for(i = 0; i < (int)(0x1CF - currentThreadCount); i++)
     {

@@ -80,8 +80,8 @@ const EmbThread jefThreads[] = {
     {{107, 224, 0}, "Bright Green", ""},
     {{56, 108, 174}, "Ocean Blue", ""},
     {{227, 196, 180}, "Beige Grey", ""},
-    {{227, 172, 129}, "Bamboo", ""}};
-
+    {{227, 172, 129}, "Bamboo", ""}
+};
 
 #define HOOP_126X110 0
 #define	HOOP_110X110 1
@@ -305,7 +305,6 @@ int writeJef(EmbPattern* pattern, const char* fileName)
     EmbRect boundingRect;
     EmbFile* file = 0;
     EmbTime time;
-    EmbThreadList* threadPointer = 0;
     EmbStitchList* stitches = 0;
     double dx = 0.0, dy = 0.0;
     double xx = 0.0, yy = 0.0;
@@ -325,7 +324,7 @@ int writeJef(EmbPattern* pattern, const char* fileName)
 
     embPattern_correctForMaxStitchLength(pattern, 12.7, 12.7);
 
-    colorlistSize = embThreadList_count(pattern->threadList);
+    colorlistSize = pattern->threads->count;
     minColors = embMaxInt(colorlistSize, 6);
     binaryWriteInt(file, 0x74 + (minColors * 4));
     binaryWriteInt(file, 0x0A);
@@ -337,7 +336,7 @@ int writeJef(EmbPattern* pattern, const char* fileName)
             (int)(time.minute), (int)(time.second));
     binaryWriteByte(file, 0x00);
     binaryWriteByte(file, 0x00);
-    binaryWriteInt(file, embThreadList_count(pattern->threadList));
+    binaryWriteInt(file, pattern->threads->count);
     binaryWriteInt(file, embStitchList_count(pattern->stitchList) + embMaxInt(0, (6 - colorlistSize) * 2) + 1);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
@@ -398,12 +397,9 @@ int writeJef(EmbPattern* pattern, const char* fileName)
     binaryWriteInt(file, (int) (630 - designWidth / 2));  /* right */
     binaryWriteInt(file, (int) (550 - designHeight / 2)); /* bottom */
 
-    threadPointer = pattern->threadList;
-
-    while(threadPointer)
-    {
-        binaryWriteInt(file, embThread_findNearestColorInArray(threadPointer->thread.color, (EmbThread*)jefThreads, 79));
-        threadPointer = threadPointer->next;
+    for (i=0; i<pattern->threads->count; i++) {
+        int j = embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, jefThreads, 79);
+        binaryWriteInt(file, j);
     }
     for(i = 0; i < (minColors - colorlistSize); i++)
     {

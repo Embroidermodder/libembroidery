@@ -355,8 +355,8 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
     {
         pointer = mainPointer;
         flag = pointer->stitch.flags;
-        color = embThreadList_getAt(pattern->threadList, pointer->stitch.color).color;
-        newColorCode = embThread_findNearestColorInArray(color, (EmbThread*)pecThreads, pecThreadCount);
+        color = pattern->threads->thread[pointer->stitch.color].color;
+        newColorCode = embThread_findNearestColor_fromThread(color, (EmbThread*)pecThreads, pecThreadCount);
         if(newColorCode != colorCode)
         {
             colorCount++;
@@ -386,8 +386,8 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
     {
         pointer = mainPointer;
         flag = pointer->stitch.flags;
-        color = embThreadList_getAt(pattern->threadList, pointer->stitch.color).color;
-        newColorCode = embThread_findNearestColorInArray(color, (EmbThread*)pecThreads, pecThreadCount);
+        color = pattern->threads->thread[pointer->stitch.color].color;
+        newColorCode = embThread_findNearestColor_fromThread(color, (EmbThread*)pecThreads, pecThreadCount);
         if(newColorCode != colorCode)
         {
             colorInfo[colorInfoIndex++] = (short)blockCount;

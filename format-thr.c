@@ -141,7 +141,6 @@ int writeThr(EmbPattern* pattern, const char* fileName)
     ThredExtension extension;
     char bitmapName[16];
     EmbStitchList* pointer = 0;
-    EmbThreadList* colorpointer = 0;
     EmbFile* file = 0;
 
     if (!validateWritePattern(pattern, fileName, "writeThr")) {
@@ -214,16 +213,11 @@ int writeThr(EmbPattern* pattern, const char* fileName)
     binaryWriteByte(file, 0xFF); /* b */
     binaryWriteByte(file, 0x00);
 
-    i = 0;
-    colorpointer = pattern->threadList;
-    while(colorpointer)
-    {
-        binaryWriteByte(file, colorpointer->thread.color.r);
-        binaryWriteByte(file, colorpointer->thread.color.g);
-        binaryWriteByte(file, colorpointer->thread.color.b);
+    for (i=0; i<pattern->threads->count; i++) {
+        binaryWriteByte(file, pattern->threads->thread[i].color.r);
+        binaryWriteByte(file, pattern->threads->thread[i].color.g);
+        binaryWriteByte(file, pattern->threads->thread[i].color.b);
         binaryWriteByte(file, 0);
-        colorpointer = colorpointer->next;
-        i++;
         if(i >= 16) break;
     }
 
@@ -233,17 +227,13 @@ int writeThr(EmbPattern* pattern, const char* fileName)
         binaryWriteUInt(file, 0);
     }
 
+#if 0
     /* write custom colors */
-    i = 0;
-    colorpointer = pattern->threadList;
-    while(colorpointer)
-    {
-        binaryWriteByte(file, colorpointer->thread.color.r);
-        binaryWriteByte(file, colorpointer->thread.color.g);
-        binaryWriteByte(file, colorpointer->thread.color.b);
+    for (i=0; i<pattern->threads->count; i++) {
+        binaryWriteByte(file, pattern->threads->thread[i].color.r);
+        binaryWriteByte(file, pattern->threads->thread[i].color.g);
+        binaryWriteByte(file, pattern->threads->thread[i].color.b);
         binaryWriteByte(file, 0);
-        colorpointer = colorpointer->next;
-        i++;
         if(i >= 16) break;
     }
 
@@ -252,6 +242,7 @@ int writeThr(EmbPattern* pattern, const char* fileName)
     {
         binaryWriteUInt(file, 0);
     }
+#endif
 
     for(i = 0; i < 16; i++)
     {

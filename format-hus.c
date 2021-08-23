@@ -245,7 +245,7 @@ int writeHus(EmbPattern* pattern, const char* fileName)
 
     stitchCount = embStitchList_count(pattern->stitchList);
     /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
-    minColors = embThreadList_count(pattern->threadList);
+    minColors = pattern->threads->count;
     patternColor = minColors;
     if(minColors > 24) minColors = 24;
     binaryWriteUInt(file, 0x00C8AF5B);
@@ -294,7 +294,8 @@ int writeHus(EmbPattern* pattern, const char* fileName)
 
     for(i = 0; i < patternColor; i++)
     {
-        binaryWriteShort(file, (short)embThread_findNearestColorInArray(embThreadList_getAt(pattern->threadList, i).color, (EmbThread*)husThreads, husThreadCount));
+        short color_index = (short)embThread_findNearestColor(pattern->threads->thread[i].color, husThreads, 0);
+        binaryWriteShort(file, color_index);
     }
 
     binaryWriteBytes(file, (char*) attributeCompressed, attributeSize);

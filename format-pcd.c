@@ -116,7 +116,6 @@ int readPcd(EmbPattern* pattern, const char* fileName)
 int writePcd(EmbPattern* pattern, const char* fileName)
 {
     EmbStitchList* pointer = 0;
-    EmbThreadList* threadPointer = 0;
     EmbFile* file = 0;
     int i;
     unsigned char colorCount;
@@ -135,19 +134,14 @@ int writePcd(EmbPattern* pattern, const char* fileName)
 
     binaryWriteByte(file, (unsigned char)'2');
     binaryWriteByte(file, 3); /* TODO: select hoop size defaulting to Large PCS hoop */
-    colorCount = (unsigned char)embThreadList_count(pattern->threadList);
+    colorCount = (unsigned char)pattern->threads->count;
     binaryWriteUShort(file, (unsigned short)colorCount);
-    threadPointer = pattern->threadList;
-    i = 0;
-    while(threadPointer)
-    {
-        EmbColor color = threadPointer->thread.color;
+    for (i=0; i<pattern->threads->count; i++) {
+        EmbColor color = pattern->threads->thread[i].color;
         binaryWriteByte(file, color.r);
         binaryWriteByte(file, color.g);
         binaryWriteByte(file, color.b);
         binaryWriteByte(file, 0);
-        threadPointer = threadPointer->next;
-        i++;
     }
 
     for(; i < 16; i++)

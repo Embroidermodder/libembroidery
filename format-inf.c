@@ -6,19 +6,17 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readInf(EmbPattern* pattern, const char* fileName)
 {
-    int numberOfColors;
-    int i;
-    EmbFile* file = 0;
+    int numberOfColors, i;
+    EmbFile* file;
+    char colorType[50];
+    char colorDescription[50];
+    EmbThread t;
 
-    if(!pattern) { embLog_error("format-inf.c readInf(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-inf.c readInf(), fileName argument is null\n"); return 0; }
-
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        /* NOTE: The .inf format is an optional color file. Do not log an error if the file does not exist */
+    if (!validateReadPattern(pattern, fileName, "readInf"))
         return 0;
-    }
+
+    file = embFile_open(fileName, "rb", 1);
+    if (!file) return 0;
 
     binaryReadUInt32BE(file);
     binaryReadUInt32BE(file);
@@ -28,11 +26,7 @@ int readInf(EmbPattern* pattern, const char* fileName)
     embArray_free(pattern->threads);
     pattern->threads = embArray_create(EMB_THREAD);
 
-    for(i = 0; i < numberOfColors; i++)
-    {
-        char colorType[50];
-        char colorDescription[50];
-        EmbThread t;
+    for (i = 0; i < numberOfColors; i++) {
         binaryReadUInt16(file);
         binaryReadUInt16(file);
         t.color.r = binaryReadByte(file);
@@ -53,19 +47,15 @@ int readInf(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeInf(EmbPattern* pattern, const char* fileName)
 {
-    int i = 1, bytesRemaining;
-    EmbFile* file = 0;
+    int i, bytesRemaining;
+    EmbFile* file;
 
-    if (!validateWritePattern(pattern, fileName, "writeInf")) {
+    if (!validateWritePattern(pattern, fileName, "writeInf"))
         return 0;
-    }
 
-    file = embFile_open(fileName, "wb");
-    if(!file)
-    {
-        embLog_error("format-inf.c writeInf(), cannot open %s for writing\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "wb", 0);
+    if (!file) return 0;
+
     binaryWriteUIntBE(file, 0x01);
     binaryWriteUIntBE(file, 0x08);
     /* write place holder offset */

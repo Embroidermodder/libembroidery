@@ -110,12 +110,9 @@ int readStx(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-stx.c readStx(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-stx.c readStx(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
+    file = embFile_open(fileName, "rb", 0);
     if(!file)
-    {
-        embLog_error("format-stx.c readStx(), cannot open %s for reading\n", fileName);
         return 0;
-    }
 
     binaryReadBytes(file, headerBytes, 7); /* TODO: check return value */
     header = (char*)headerBytes;

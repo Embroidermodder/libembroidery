@@ -37,13 +37,11 @@ int readKsm(EmbPattern* pattern, const char* fileName)
     char b[3];
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-ksm.c readKsm(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-ksm.c readKsm(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readKsm"))
+        return 0;
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-ksm.c readKsm(), cannot open %s for reading\n", fileName);
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) {
         return 0;
     }
 
@@ -79,20 +77,17 @@ int readKsm(EmbPattern* pattern, const char* fileName)
 int writeKsm(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
-    EmbStitchList* pointer = 0;
+    EmbStitchList* stitches = 0;
     double xx = 0, yy = 0, dx = 0, dy = 0;
     int flags = 0;
     int i = 0;
     unsigned char b[4];
 
-    if (!validateWritePattern(pattern, fileName, "writeKsm")) {
+    if (!validateWritePattern(pattern, fileName, "writeKsm"))
         return 0;
-    }
 
-    file = embFile_open(fileName, "wb");
-    if(!file)
-    {
-        embLog_error("format-ksm.c writeKsm(), cannot open %s for writing\n", fileName);
+    file = embFile_open(fileName, "wb", 0);
+    if(!file) {
         return 0;
     }
     for(i = 0; i < 0x80; i++)
@@ -101,17 +96,17 @@ int writeKsm(EmbPattern* pattern, const char* fileName)
     }
     /* write stitches */
     xx = yy = 0;
-    pointer = pattern->stitchList;
-    while(pointer)
+    stitches = pattern->stitchList;
+    while(stitches)
     {
-        dx = pointer->stitch.x - xx;
-        dy = pointer->stitch.y - yy;
-        xx = pointer->stitch.x;
-        yy = pointer->stitch.y;
-        flags = pointer->stitch.flags;
+        dx = stitches->stitch.x - xx;
+        dy = stitches->stitch.y - yy;
+        xx = stitches->stitch.x;
+        yy = stitches->stitch.y;
+        flags = stitches->stitch.flags;
         ksmEncode(b, (char)(dx * 10.0), (char)(dy * 10.0), flags);
         embFile_printf(file, "%c%c", b[0], b[1]);
-        pointer = pointer->next;
+        stitches = stitches->next;
     }
     embFile_printf(file, "\x1a");
     embFile_close(file);

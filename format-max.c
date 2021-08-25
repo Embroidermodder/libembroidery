@@ -31,22 +31,15 @@ static void maxEncode(EmbFile* file, int x, int y)
  *  Returns \c true if successful, otherwise returns \c false. */
 int readMax(EmbPattern* pattern, const char* fileName)
 {
-    int i = 0;
     unsigned char b[8];
-    double dx = 0, dy = 0;
-    int flags = 0;
-    int stitchCount;
-    EmbFile* file = 0;
+    double dx, dy;
+    int i, flags, stitchCount;
+    EmbFile* file;
 
-    if(!pattern) { embLog_error("format-max.c readMax(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-max.c readMax(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readMax")) return 0;
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-max.c readMax(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     embFile_seek(file, 0xD5, SEEK_SET);
     stitchCount = binaryReadUInt32(file);
@@ -91,24 +84,22 @@ int writeMax(EmbPattern* pattern, const char* fileName)
         0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
         0x01,0x38,0x09,0x31,0x33,0x30,0x2F,0x37,0x30,0x35,0x20,0x48,0xFA,0x00,0x00,0x00,
         0x00,0x00,0x00,0x00,0x00 };
+    double x, y;
+    EmbStitch st;
 
-    if (!validateWritePattern(pattern, fileName, "writeMax")) {
+    if (!validateWritePattern(pattern, fileName, "writeMax"))
         return 0;
-    }
 
-    file = embFile_open(fileName, "wb");
-    if(!file)
-    {
-        embLog_error("format-max.c writeMax(), cannot open %s for writing\n", fileName);
+    file = embFile_open(fileName, "wb", 0);
+    if (!file)
         return 0;
-    }
 
     binaryWriteBytes(file, header, 0xD5);
-    pointer = pattern->stitchList;
-    while(pointer)
-    {
-        maxEncode(file, roundDouble(pointer->stitch.x * 10.0), roundDouble(pointer->stitch.y * 10.0));
-        pointer = pointer->next;
+    for (pointer=pattern->stitchList; pointer; pointer=pointer->next) {
+        st = pointer->stitch;
+        x = roundDouble(pointer->stitch.x * 10.0);
+        y = roundDouble(pointer->stitch.y * 10.0);
+        maxEncode(file, x, y);
     }
     embFile_close(file);
     return 1;

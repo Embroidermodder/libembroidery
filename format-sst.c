@@ -10,12 +10,9 @@ int readSst(EmbPattern* pattern, const char* fileName)
     if (!validateReadPattern(pattern, fileName, "readSst"))
         return 0;
 
-    file = embFile_open(fileName, "rb");
+    file = embFile_open(fileName, "rb", 0);
     if(!file)
-    {
-        embLog_error("format-sst.c readSst(), cannot open %s for reading\n", fileName);
         return 0;
-    }
 
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_seek(file, 0, SEEK_END);

@@ -4,17 +4,12 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int read10o(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file = 0;
+    EmbFile* file;
 
-    if(!pattern) { embLog_error("format-10o.c read10o(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-10o.c read10o(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "read10o")) return 0;
 
-    file = embFile_open(fileName,"rb");
-    if(!file)
-    {
-        embLog_error("format-10o.c read10o(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
@@ -59,10 +54,13 @@ int read10o(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int write10o(EmbPattern* pattern, const char* fileName)
 {
+    EmbFile *file;
     if (!validateWritePattern(pattern, fileName, "write10o")) return 0;
 
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
+    embFile_close(file);
     return 0; /*TODO: finish write10o */
 }
 

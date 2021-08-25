@@ -55,12 +55,9 @@ int readExp(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-exp.c readExp(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-exp.c readExp(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-exp.c readExp(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if(!file) return 0;
+
     embPattern_loadExternalColorFile(pattern, fileName);
 
     for(i = 0; !embFile_eof(file); i++)
@@ -128,32 +125,28 @@ int writeExp(EmbPattern* pattern, const char* fileName)
 #ifdef ARDUINO /* ARDUINO TODO: This is temporary. Remove when complete. */
 return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
 #else /* ARDUINO TODO: This is temporary. Remove when complete. */
-
     EmbFile* file = 0;
     EmbStitchList* stitches = 0;
     double dx = 0.0, dy = 0.0;
     double xx = 0.0, yy = 0.0;
     int flags = 0;
     unsigned char b[4];
+    EmbStitch st;
 
     if (!validateWritePattern(pattern, fileName, "writeExp")) return 0;
 
-    file = embFile_open(fileName, "wb");
-    if(!file)
-    {
-        embLog_error("format-exp.c writeExp(), cannot open %s for writing\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "wb", 0);
+    if (!file) return 0;
 
     /* write stitches */
     stitches = pattern->stitchList;
-    while(stitches)
-    {
-        dx = stitches->stitch.x * 10.0 - xx;
-        dy = stitches->stitch.y * 10.0 - yy;
-        xx = stitches->stitch.x * 10.0;
-        yy = stitches->stitch.y * 10.0;
-        flags = stitches->stitch.flags;
+    while (stitches) {
+        st = stitches->stitch;
+        dx = st.x * 10.0 - xx;
+        dy = st.y * 10.0 - yy;
+        xx = st.x * 10.0;
+        yy = st.y * 10.0;
+        flags = st.flags;
         expEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), flags);
         if((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10)))
         {

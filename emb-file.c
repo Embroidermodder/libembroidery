@@ -57,18 +57,26 @@ int validateReadPattern(EmbPattern *pattern, const char* fileName, const char *f
     return 1;
 }
 
-EmbFile* embFile_open(const char* fileName, const char* mode)
+EmbFile* embFile_open(const char* fileName, const char* mode, int optional)
 {
 #ifdef ARDUINO
     return inoFile_open(fileName, mode);
 #else
     EmbFile* eFile = 0;
     FILE* oFile = fopen(fileName, mode);
-    if (!oFile)
+    if (!oFile) {
+        if (!optional) {
+            embLog_error("Cannot open %s in mode %s.", fileName, mode);
+        }
         return 0;
+    }
 
     eFile = (EmbFile*)malloc(sizeof(EmbFile));
     if (!eFile) {
+        if (!optional) {
+            embLog_error("Cannot allocate memory for EmbFile with arguments (%s, %s, 0).",
+                fileName, mode);
+        }
         fclose(oFile);
         return 0;
     }
@@ -99,13 +107,39 @@ int embFile_eof(EmbFile* stream)
 #endif /* ARDUINO */
 }
 
-int embFile_getc(EmbFile* stream)
+char embFile_getc(EmbFile* stream)
 {
 #ifdef ARDUINO
     return inoFile_getc(stream);
 #else /* ARDUINO */
     return fgetc(stream->file);
 #endif /* ARDUINO */
+}
+
+void embFile_readline(EmbFile* stream, char *line, int maxLength)
+{
+    int state = 0, i;
+    char c;
+    for (i=0; i<maxLength-1; i++) {
+        c = embFile_getc(stream);
+        if (embFile_eof(stream)) {
+            break;
+        }
+        if (c == '\r') {
+            c = embFile_getc(stream);
+            if (c != '\n') {
+                embFile_seek(stream, -1L, SEEK_CUR);
+            }
+            break;
+        }
+        if (c == '\n') {
+            break;
+        }
+        *line = c;
+        line++;
+        c = embFile_getc(stream);
+    }
+    *line = 0;
 }
 
 size_t embFile_read(void* ptr, size_t size, size_t nmemb, EmbFile* stream)

@@ -190,12 +190,8 @@ int readOfm(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-ofm.c readOfm(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-ofm.c readOfm(), fileName argument is null\n"); return 0; }
 
-    fileCompound = embFile_open(fileName, "rb");
-    if(!fileCompound)
-    {
-        embLog_error("format-ofm.c readOfm(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    fileCompound = embFile_open(fileName, "rb", 0);
+    if(!fileCompound) return 0;
 
     bcfFile = (bcf_file*)malloc(sizeof(bcf_file));
     if(!bcfFile) { embLog_error("format-ofm.c readOfm(), unable to allocate memory for bcfFile\n"); return 0; }

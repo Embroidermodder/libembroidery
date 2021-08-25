@@ -100,18 +100,13 @@ int readCsd(EmbPattern* pattern, const char* fileName)
     int colorChange = -1;
     int flags;
     char endOfStream = 0;
-    EmbFile* file = 0;
+    EmbFile* file;
     unsigned char colorOrder[14];
 
-    if (!validateReadPattern(pattern, fileName, "readCsd"))
-        return 0;
+    if (!validateReadPattern(pattern, fileName, "readCsd")) return 0;
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-csd.c readCsd(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     binaryReadBytes(file, identifier, 8); /* TODO: check return value */
 

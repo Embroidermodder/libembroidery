@@ -11,11 +11,10 @@ int readU01(EmbPattern* pattern, const char* fileName)
     unsigned char data[3];
     EmbFile* file = 0;
 
-    file = embFile_open(fileName, "rb");
+    file = embFile_open(fileName, "rb", 0);
     if(!file)
-    {
         return 0;
-    }
+
     embFile_seek(file, 0, SEEK_END);
     fileLength = embFile_tell(file);
     embFile_seek(file, 0x100, SEEK_SET);

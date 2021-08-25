@@ -11,12 +11,9 @@ int read100(EmbPattern* pattern, const char* fileName)
 
     if (!validateReadPattern(pattern, fileName, "read100")) return 0;
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-100.c read100(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
+
     embPattern_loadExternalColorFile(pattern, fileName);
     while(embFile_read(b, 1, 4, file) == 4)
     {
@@ -39,10 +36,12 @@ int read100(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int write100(EmbPattern* pattern, const char* fileName)
 {
+    EmbFile *file;
     if (!validateWritePattern(pattern, fileName, "write100")) return 0;
 
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
+    file = embFile_open(fileName, "wb", 0);
 
+    embFile_close(file);
     return 0; /*TODO: finish write100 */
 }
 

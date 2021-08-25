@@ -5,19 +5,14 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readEdr(EmbPattern* pattern, const char* fileName)
 {
-    int numberOfColors;
-    int i;
-    EmbFile* file = 0;
+    int numberOfColors, i;
+    EmbFile* file;
+    EmbThread t;
 
-    if(!pattern) { embLog_error("format-edr.c readEdr(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-edr.c readEdr(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readEdr")) return 0;
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        /* NOTE: The .edr format is an optional color file. Do not log an error if the file does not exist */
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 1);
+
     embFile_seek(file, 0x00, SEEK_END);
     numberOfColors = embFile_tell(file) / 4;
     embFile_seek(file, 0x00, SEEK_SET);
@@ -26,7 +21,6 @@ int readEdr(EmbPattern* pattern, const char* fileName)
 
     for(i = 0; i < numberOfColors; i++)
     {
-        EmbThread t;
         t.color.r = binaryReadByte(file);
         t.color.g = binaryReadByte(file);
         t.color.b = binaryReadByte(file);
@@ -43,18 +37,16 @@ int readEdr(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeEdr(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file = 0;
+    EmbFile* file;
+    EmbColor c;
     int i;
 
     if (!validateWritePattern(pattern, fileName, "writeEdr")) return 0;
 
-    file = embFile_open(fileName, "wb");
-    if (!file) {
-        embLog_error("format-edr.c writeEdr(), cannot open %s for writing\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "wb", 0);
+    if (!file) return 0;
+
     for (i=0; i<pattern->threads->count; i++) {
-        EmbColor c;
         c = pattern->threads->thread[i].color;
         binaryWriteByte(file, c.r);
         binaryWriteByte(file, c.g);

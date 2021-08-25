@@ -131,12 +131,8 @@ int readVp3(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-vp3.c readVp3(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-vp3.c readVp3(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-vp3.c readVp3(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if(!file) return 0;
 
     binaryReadBytes(file, magicString, 5); /* %vsm% */ /* TODO: check return value */
 
@@ -286,12 +282,8 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
 
     bounds = embPattern_calcBoundingBox(pattern);
 
-    file = embFile_open(fileName, "wb");
-    if(!file)
-    {
-        embLog_error("format-vp3.c writeVp3(), cannot open %s for writing\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "wb", 0);
+    if(!file) return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 3200.0, 3200.0); /* VP3 can encode signed 16bit deltas */
 

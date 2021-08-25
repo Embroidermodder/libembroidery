@@ -8,16 +8,12 @@ int readBro(EmbPattern* pattern, const char* fileName)
     short unknown1, unknown2, unknown3, unknown4, moreBytesToEnd;
     char name[8];
     int stitchType;
-    EmbFile* file = 0;
+    EmbFile* file;
 
     if (!validateReadPattern(pattern, fileName, "readBro")) return 0;
 
-    file = embFile_open(fileName, "rb");
-    if (!file)
-    {
-        embLog_error("format-bro.c readBro(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 

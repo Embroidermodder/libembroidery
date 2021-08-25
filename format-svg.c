@@ -1873,7 +1873,7 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     /* Pre-flip incase of multiple reads on the same pattern */
     embPattern_flipVertical(pattern);
 
-    file = embFile_open(fileName, "r");
+    file = embFile_open(fileName, "r", 0);
     if(file)
     {
         pos = 0;
@@ -1997,12 +1997,9 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-svg.c writeSvg(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-svg.c writeSvg(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "w");
+    file = embFile_open(fileName, "w", 0);
     if(!file)
-    {
-        embLog_error("format-svg.c writeSvg(), cannot open %s for writing\n", fileName);
         return 0;
-    }
 
     /* Pre-flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
     embPattern_flipVertical(pattern);

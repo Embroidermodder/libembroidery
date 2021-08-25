@@ -12,12 +12,9 @@ int readPhb(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-phb.c readPhb(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-phb.c readPhb(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
+    file = embFile_open(fileName, "rb", 0);
     if(!file)
-    {
-        embLog_error("format-phb.c readPhb(), cannot open %s for reading\n", fileName);
         return 0;
-    }
 
     embFile_seek(file, 0x71, SEEK_SET);
     colorCount = binaryReadInt16(file);

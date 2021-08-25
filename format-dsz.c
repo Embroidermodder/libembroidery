@@ -6,15 +6,10 @@ int readDsz(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-dsz.c readDsz(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-dsz.c readDsz(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readDsz")) return 0;
 
-    file = embFile_open(fileName,"rb");
-    if(!file)
-    {
-        embLog_error("format-dsz.c readDsz(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 

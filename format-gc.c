@@ -5,9 +5,8 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readGc(EmbPattern* pattern, const char* fileName)
 {
-    if (!validateReadPattern(pattern, fileName, "readGc")) {
+    if (!validateReadPattern(pattern, fileName, "readGc"))
         return 0;
-    }
 
     embPattern_end(pattern);
 
@@ -18,9 +17,8 @@ int readGc(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeGc(EmbPattern* pattern, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeGc")) {
+    if (!validateWritePattern(pattern, fileName, "writeGc"))
         return 0;
-    }
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 

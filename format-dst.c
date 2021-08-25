@@ -280,15 +280,10 @@ int readDst(EmbPattern* pattern, const char* fileName)
     pattern->set_variable("file_name",filename);
     */
 
-    if(!pattern) { embLog_error("format-dst.c readDst(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-dst.c readDst(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readDst")) return 0;
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-dst.c readDst(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     /* READ 512 BYTE HEADER INTO header[] */
@@ -391,29 +386,20 @@ int writeDst(EmbPattern* pattern, const char* fileName)
 {
     EmbRect boundingRect;
     EmbFile* file = 0;
-    int xx, yy, dx, dy, flags;
-    int i;
-    int co = 1, st = 0;
-    int ax, ay, mx, my;
+    int xx, yy, dx, dy, flags, i, ax, ay, mx, my;
     char* pd = 0;
     EmbStitchList* pointer = 0;
+    EmbStitch st;
 
     if (!validateWritePattern(pattern, fileName, "writeDst")) return 0;
 
-    file = embFile_open(fileName, "wb");
-    if(!file)
-    {
-        embLog_error("format-dst.c writeDst(), cannot open %s for writing\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "wb", 0);
+    if (!file) return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
     xx = yy = 0;
-    /* TODO: make sure this defaults to 1 in new patterns */
-    co = pattern->threads->count;
-    st = 0;
-    st = embStitchList_count(pattern->stitchList);
+    /* TODO: make sure that pattern->threads->count defaults to 1 in new patterns */
     flags = NORMAL;
     boundingRect = embPattern_calcBoundingBox(pattern);
     /* TODO: review the code below
@@ -430,8 +416,8 @@ int writeDst(EmbPattern* pattern, const char* fileName)
     */
     embFile_printf(file, "LA:%-16s\x0d", "Untitled");
     /*} */
-    embFile_printf(file, "ST:%7d\x0d", st);
-    embFile_printf(file, "CO:%3d\x0d", co - 1); /* number of color changes, not number of colors! */
+    embFile_printf(file, "ST:%7d\x0d", embStitchList_count(pattern->stitchList));
+    embFile_printf(file, "CO:%3d\x0d", pattern->threads->count - 1); /* number of color changes, not number of colors! */
     embFile_printf(file, "+X:%5d\x0d", (int)(boundingRect.right * 10.0));
     embFile_printf(file, "-X:%5d\x0d", (int)(fabs(boundingRect.left) * 10.0));
     embFile_printf(file, "+Y:%5d\x0d", (int)(boundingRect.bottom * 10.0));
@@ -468,14 +454,14 @@ int writeDst(EmbPattern* pattern, const char* fileName)
     /* write stitches */
     xx = yy = 0;
     pointer = pattern->stitchList;
-    while(pointer)
-    {
+    while (pointer) {
+        st = pointer->stitch;
         /* convert from mm to 0.1mm for file format */
-        dx = roundDouble(pointer->stitch.x * 10.0) - xx;
-        dy = roundDouble(pointer->stitch.y * 10.0) - yy;
-        xx = roundDouble(pointer->stitch.x * 10.0);
-        yy = roundDouble(pointer->stitch.y * 10.0);
-        flags = pointer->stitch.flags;
+        dx = roundDouble(st.x * 10.0) - xx;
+        dy = roundDouble(st.y * 10.0) - yy;
+        xx = roundDouble(st.x * 10.0);
+        yy = roundDouble(st.y * 10.0);
+        flags = st.flags;
         encode_record(file, dx, dy, flags);
         pointer = pointer->next;
     }

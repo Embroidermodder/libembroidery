@@ -16,12 +16,9 @@ int readNew(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-new.c readNew(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-new.c readNew(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
+    file = embFile_open(fileName, "rb", 0);
     if(!file)
-    {
-        embLog_error("format-new.c readNew(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+		return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     stitchCount = binaryReadUInt16(file);

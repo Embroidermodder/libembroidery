@@ -53,12 +53,9 @@ int readThr(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-thr.c readThr(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-thr.c readThr(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
+    file = embFile_open(fileName, "rb", 0);
     if(!file)
-    {
-        embLog_error("format-thr.c readThr(), cannot open %s for reading\n", fileName);
         return 0;
-    }
 
     header.sigVersion  = binaryReadUInt32(file);
     header.length      = binaryReadUInt32(file);
@@ -149,12 +146,8 @@ int writeThr(EmbPattern* pattern, const char* fileName)
 
     stitchCount = embStitchList_count(pattern->stitchList);
 
-    file = embFile_open(fileName, "wb");
-    if(!file)
-    {
-        embLog_error("format-thr.c writeThr(), cannot open %s for writing\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "wb", 0);
+    if(!file) return 0;
 
     memset(&header, 0, sizeof(ThredHeader));
     header.sigVersion = 0x746872 | (version << 24);

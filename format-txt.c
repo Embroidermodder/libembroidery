@@ -20,12 +20,10 @@ int writeTxt(EmbPattern* pattern, const char* fileName)
         return 0;
     }
 
-    file = embFile_open(fileName, "w");
+    file = embFile_open(fileName, "w", 0);
     if(!file)
-    {
-        embLog_error("format-txt.c writeTxt(), cannot open %s for writing\n", fileName);
         return 0;
-    }
+
     pointer = pattern->stitchList;
     embFile_printf(file, "%u\n", (unsigned int) embStitchList_count(pointer));
 

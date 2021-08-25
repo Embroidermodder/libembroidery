@@ -1,11 +1,10 @@
 #include "embroidery.h"
 #include <stdlib.h>
 
-int embArray_create(EmbArray *p, int type)
+EmbArray* embArray_create(int type)
 {
-    if (!p) {
-        p = (EmbArray*)malloc(sizeof(EmbArray));
-    }
+    EmbArray *p;
+    p = (EmbArray*)malloc(sizeof(EmbArray));
     p->type = type;
     p->length = CHUNK_SIZE;
     p->count = 0;
@@ -55,7 +54,7 @@ int embArray_create(EmbArray *p, int type)
     default:
         break;
     }
-    return 1;
+    return p;
 }
 
 int embArray_resize(EmbArray *p)

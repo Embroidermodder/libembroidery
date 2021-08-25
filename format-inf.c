@@ -26,7 +26,7 @@ int readInf(EmbPattern* pattern, const char* fileName)
     numberOfColors = binaryReadUInt32BE(file);
 
     embArray_free(pattern->threads);
-    embArray_create(pattern->threads, EMB_THREAD);
+    pattern->threads = embArray_create(EMB_THREAD);
 
     for(i = 0; i < numberOfColors; i++)
     {

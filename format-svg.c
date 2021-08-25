@@ -419,8 +419,8 @@ void svgAddToPattern(EmbPattern* p)
                             else if(cmd == 'z') { xx = fx;          yy = fy; }
 
                             if (!pointList && !flagList) {
-                                embArray_create(pointList, EMB_POINT);
-                                embArray_create(flagList, EMB_FLAG);
+                                pointList = embArray_create(EMB_POINT);
+                                flagList = embArray_create(EMB_FLAG);
                             }
                             EmbPointObject test;
                             test.point.x = xx;
@@ -549,7 +549,7 @@ void svgAddToPattern(EmbPattern* p)
                         yy = atof(polybuff);
 
                         if (!pointList) {
-                            embArray_create(pointList, EMB_POINT);
+                            pointList = embArray_create(EMB_POINT);
                         }
                         EmbPointObject a;
                         a.point.x = xx;

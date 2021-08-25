@@ -19,7 +19,7 @@ int readCol(EmbPattern* pattern, const char* fileName)
     }
 
     embArray_free(pattern->threads);
-    embArray_create(pattern->threads, EMB_THREAD);
+    pattern->threads = embArray_create(EMB_THREAD);
 
     /* TODO: replace all scanf code */
     /* TODO: needs to work cross-platform - Win: \r\n Mac: \r Linux: \n */

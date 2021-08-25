@@ -21,7 +21,7 @@ int readRgb(EmbPattern* pattern, const char* fileName)
     numberOfColors = embFile_tell(file) / 4;
 
     embArray_free(pattern->threads);
-    embArray_create(pattern->threads, EMB_THREAD);
+    pattern->threads = embArray_create(EMB_THREAD);
 
     embFile_seek(file, 0x00, SEEK_SET);
     for (i = 0; i < numberOfColors; i++) {

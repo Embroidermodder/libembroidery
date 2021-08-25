@@ -8,12 +8,12 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
     EmbSatinOutline outline;
     double halfThickness = thickness / 2.0;
     int intermediateOutlineCount = 2 * lines->count - 2;
-    embArray_create(outline.side1, EMB_VECTOR);
+    outline.side1 = embArray_create(EMB_VECTOR);
     if (!outline.side1) {
         embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for outline->side1\n");
         return;
     }
-    embArray_create(outline.side2, EMB_VECTOR);
+    outline.side2 = embArray_create(EMB_VECTOR);
     if (!outline.side2) {
         embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for outline->side2\n");
         return;
@@ -49,12 +49,12 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
         embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), result argument is null\n");
         return;
     }
-    embArray_create(result->side1, EMB_VECTOR);
+    result->side1 = embArray_create(EMB_VECTOR);
     if (!result->side1) {
         embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side1\n");
         return;
     }
-    embArray_create(result->side2, EMB_VECTOR);
+    result->side2 = embArray_create(EMB_VECTOR);
     if (!result->side2) {
         embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side2\n");
         return;
@@ -125,7 +125,7 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density
 
             for (i = 0; i < numberOfSteps; i++) {
                 if (!stitches) {
-                    embArray_create(stitches, EMB_VECTOR);
+                    stitches = embArray_create(EMB_VECTOR);
                 }
                 embArray_addVector(stitches, currTop);
                 embArray_addVector(stitches, currBottom);

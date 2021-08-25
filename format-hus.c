@@ -138,15 +138,11 @@ int readHus(EmbPattern* pattern, const char* fileName)
     int unknown, i = 0;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-hus.c readHus(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-hus.c readHus(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readHus")) return 0;
 
-    file = embFile_open(fileName, "rb");
+    file = embFile_open(fileName, "rb", 0);
     if(!file)
-    {
-        embLog_error("format-hus.c readHus(), cannot open %s for reading\n", fileName);
         return 0;
-    }
 
     embFile_seek(file, 0x00, SEEK_END);
     fileLength = embFile_tell(file);
@@ -220,28 +216,19 @@ int writeHus(EmbPattern* pattern, const char* fileName)
 {
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor;
-    int attributeSize = 0;
-    int xCompressedSize = 0;
-    int yCompressedSize = 0;
-    double previousX = 0;
-    double previousY = 0;
+    int attributeSize, xCompressedSize, yCompressedSize, i;
+    double previousX, previousY;
     unsigned char* xValues = 0, *yValues = 0, *attributeValues = 0;
-    EmbStitchList* pointer = 0;
-    double xx = 0.0;
-    double yy = 0.0;
-    int flags = 0;
-    int i = 0;
     unsigned char* attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
-    EmbFile* file = 0;
+    EmbStitchList* pointer;
+    EmbStitch st;
+    EmbFile* file;
 
-    if (!validateWritePattern(pattern, fileName, "write100")) return 0;
+    if (!validateWritePattern(pattern, fileName, "writeHus")) return 0;
 
-    file = embFile_open(fileName, "wb");
+    file = embFile_open(fileName, "wb", 0);
     if(!file)
-    {
-        embLog_error("format-hus.c writeHus(), cannot open %s for writing\n", fileName);
         return 0;
-    }
 
     stitchCount = embStitchList_count(pattern->stitchList);
     /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
@@ -268,16 +255,15 @@ int writeHus(EmbPattern* pattern, const char* fileName)
     if(!attributeValues) { embLog_error("format-hus.c writeHus(), cannot allocate memory for attributeValues\n"); return 0; }
 
     pointer = pattern->stitchList;
-    while(pointer)
-    {
-        xx = pointer->stitch.x;
-        yy = pointer->stitch.y;
-        flags = pointer->stitch.flags;
-        xValues[i] = husEncodeByte((xx - previousX) * 10.0);
-        previousX = xx;
-        yValues[i] = husEncodeByte((yy - previousY) * 10.0);
-        previousY = yy;
-        attributeValues[i] = husEncodeStitchType(flags);
+    previousX = 0.0;
+    previousY = 0.0;
+    while (pointer) {
+        st = pointer->stitch;
+        xValues[i] = husEncodeByte((st.x - previousX) * 10.0);
+        previousX = st.x;
+        yValues[i] = husEncodeByte((st.y - previousY) * 10.0);
+        previousY = st.y;
+        attributeValues[i] = husEncodeStitchType(st.flags);
         pointer = pointer->next;
         i++;
     }
@@ -292,8 +278,7 @@ int writeHus(EmbPattern* pattern, const char* fileName)
     binaryWriteUInt(file, 0x00000000);
     binaryWriteUShort(file, 0x0000);
 
-    for(i = 0; i < patternColor; i++)
-    {
+    for (i = 0; i < patternColor; i++) {
         short color_index = (short)embThread_findNearestColor(pattern->threads->thread[i].color, husThreads, 0);
         binaryWriteShort(file, color_index);
     }
@@ -302,12 +287,12 @@ int writeHus(EmbPattern* pattern, const char* fileName)
     binaryWriteBytes(file, (char*) xCompressed, xCompressedSize);
     binaryWriteBytes(file, (char*) yCompressed, yCompressedSize);
 
-    free(xValues); xValues = 0;
-    free(xCompressed); xCompressed = 0;
-    free(yValues); yValues = 0;
-    free(yCompressed); yCompressed = 0;
-    free(attributeValues); attributeValues = 0;
-    free(attributeCompressed); attributeCompressed = 0;
+    free(xValues);
+    free(xCompressed);
+    free(yValues);
+    free(yCompressed);
+    free(attributeValues);
+    free(attributeCompressed);
 
     embFile_close(file);
     return 1;

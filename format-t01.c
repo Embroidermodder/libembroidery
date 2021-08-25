@@ -30,12 +30,8 @@ int readT01(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-t01.c readt01(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-t01.c readt01(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-t01.c readt01(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if(!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
@@ -167,12 +163,8 @@ int writeT01(EmbPattern* pattern, const char* fileName)
 	
     if (!validateWritePattern(pattern, fileName, "writeT01")) return 0;
 
-	file = embFile_open(fileName, "wb");
-	if (!file)
-	{
-		embLog_error("format-t01.c writet01(), cannot open %s for writing\n", fileName);
-		return 0;
-	}
+	file = embFile_open(fileName, "wb", 0);
+	if (!file) return 0;
 
 	embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 

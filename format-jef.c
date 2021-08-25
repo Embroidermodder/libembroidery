@@ -155,14 +155,12 @@ int readJef(EmbPattern* pattern, const char* fileName)
     char dx = 0, dy = 0;
     int flags = 0;
 
+    if (!validateReadPattern(pattern, fileName, "readJef")) {
+        return 0;
+    }
 
-    if(!pattern) { embLog_error("format-jef.c readJef(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-jef.c readJef(), fileName argument is null\n"); return 0; }
-
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-jef.c readJef(), cannot open %s for reading\n", fileName);
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) {
         return 0;
     }
 
@@ -201,8 +199,7 @@ int readJef(EmbPattern* pattern, const char* fileName)
     rect_from_custom.right = binaryReadInt32(file);
     rect_from_custom.bottom = binaryReadInt32(file);
 
-    for(i = 0; i < numberOfColors; i++)
-    {
+    for (i = 0; i < numberOfColors; i++) {
         embPattern_addThread(pattern, jefThreads[binaryReadInt32(file) % 79]);
     }
     embFile_seek(file, stitchOffset, SEEK_SET);
@@ -306,21 +303,16 @@ int writeJef(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     EmbTime time;
     EmbStitchList* stitches = 0;
-    double dx = 0.0, dy = 0.0;
-    double xx = 0.0, yy = 0.0;
-    int flags = 0;
+    EmbStitch st;
+    double dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
     unsigned char b[4];
 
     if (!validateWritePattern(pattern, fileName, "writeJef")) {
         return 0;
     }
 
-    file = embFile_open(fileName, "wb");
-    if(!file)
-    {
-        embLog_error("format-jef.c writeJef(), cannot open %s for writing\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "wb", 0);
+    if (!file) return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 12.7, 12.7);
 
@@ -401,28 +393,24 @@ int writeJef(EmbPattern* pattern, const char* fileName)
         int j = embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, jefThreads, 79);
         binaryWriteInt(file, j);
     }
-    for(i = 0; i < (minColors - colorlistSize); i++)
-    {
+
+    for (i = 0; i < (minColors - colorlistSize); i++) {
         binaryWriteInt(file, 0x0D);
     }
-      stitches = pattern->stitchList;
-    while(stitches)
-    {
-        dx = stitches->stitch.x * 10.0 - xx;
-        dy = stitches->stitch.y * 10.0 - yy;
-        xx = stitches->stitch.x * 10.0;
-        yy = stitches->stitch.y * 10.0;
-        flags = stitches->stitch.flags;
-        jefEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), flags);
-        if((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10)))
-        {
+
+    for (stitches=pattern->stitchList; stitches; stitches=stitches->next) {
+        st = stitches->stitch;
+        dx = st.x * 10.0 - xx;
+        dy = st.y * 10.0 - yy;
+        xx = st.x * 10.0;
+        yy = st.y * 10.0;
+        jefEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), st.flags);
+        if ((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10))) {
             embFile_printf(file, "%c%c%c%c", b[0], b[1], b[2], b[3]);
         }
-        else
-        {
+        else {
             embFile_printf(file, "%c%c", b[0], b[1]);
         }
-        stitches = stitches->next;
     }
     embFile_close(file);
     return 1;

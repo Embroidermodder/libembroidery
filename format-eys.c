@@ -4,8 +4,8 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readEys(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { embLog_error("format-eys.c readEys(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-eys.c readEys(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readEys")) return 0;
+
     return 0; /*TODO: finish readEys */
 }
 

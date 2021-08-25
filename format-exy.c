@@ -19,17 +19,12 @@ static int exyDecodeFlags(unsigned char b2)
 int readExy(EmbPattern* pattern, const char* fileName)
 {
     unsigned char b[3];
-    EmbFile* file = 0;
+    EmbFile* file;
 
-    if(!pattern) { embLog_error("format-exy.c readExy(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-exy.c readExy(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readExy")) return 0;
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-exy.c readExy(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 

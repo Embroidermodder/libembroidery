@@ -541,7 +541,7 @@ EMB_PUBLIC double embMaxDouble(double, double);
 EMB_PUBLIC int embMinInt(int, int);
 EMB_PUBLIC int embMaxInt(int, int);
 
-EMB_PUBLIC int embArray_create(EmbArray *g, int type);
+EMB_PUBLIC EmbArray* embArray_create(int type);
 EMB_PUBLIC int embArray_resize(EmbArray *g);
 EMB_PUBLIC int embArray_addArc(EmbArray* g, EmbArc arc, int lineType, EmbColor color);
 EMB_PUBLIC int embArray_addCircle(EmbArray* g, EmbCircle circle, int lineType, EmbColor color);
@@ -696,10 +696,11 @@ EMB_PUBLIC EmbEllipseObject embEllipseObject_make(double cx, double cy, double r
 int validateWritePattern(EmbPattern* pattern, const char* fileName, const char *function);
 int validateReadPattern(EmbPattern* pattern, const char* fileName, const char *function);
 
-EMB_PUBLIC EmbFile* embFile_open(const char* fileName, const char* mode);
+EMB_PUBLIC EmbFile* embFile_open(const char* fileName, const char* mode, int optional);
+EMB_PUBLIC void embFile_readline(EmbFile* stream, char *, int);
 EMB_PUBLIC int embFile_close(EmbFile* stream);
 EMB_PUBLIC int embFile_eof(EmbFile* stream);
-EMB_PUBLIC int embFile_getc(EmbFile* stream);
+EMB_PUBLIC char embFile_getc(EmbFile* stream);
 EMB_PUBLIC size_t embFile_read(void* ptr, size_t size, size_t nmemb, EmbFile* stream);
 EMB_PUBLIC size_t embFile_write(const void* ptr, size_t size, size_t nmemb, EmbFile* stream);
 EMB_PUBLIC int embFile_seek(EmbFile* stream, long offset, int origin);

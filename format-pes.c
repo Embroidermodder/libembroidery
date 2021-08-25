@@ -11,12 +11,9 @@ int readPes(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-pes.c readPes(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-pes.c readPes(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
+    file = embFile_open(fileName, "rb", 0);
     if(!file)
-    {
-        embLog_error("format-pes.c readPes(), cannot open %s for reading\n", fileName);
         return 0;
-    }
 
     embFile_seek(file, 8, SEEK_SET);
     pecstart = binaryReadInt32(file);
@@ -494,12 +491,9 @@ int writePes(EmbPattern* pattern, const char* fileName)
         return 0;
     }
 
-    file = embFile_open(fileName, "wb");
+    file = embFile_open(fileName, "wb", 0);
     if(!file)
-    {
-        embLog_error("format-pes.c writePes(), cannot open %s for writing\n", fileName);
         return 0;
-    }
 
     embPattern_flipVertical(pattern);
     embPattern_scale(pattern, 10.0);

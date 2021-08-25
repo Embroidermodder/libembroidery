@@ -29,12 +29,8 @@ int readXxx(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-xxx.c readXxx(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-xxx.c readXxx(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-xxx.c readXxx(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if(!file) return 0;
 
     embFile_seek(file, 0x27, SEEK_SET);
     numberOfColors = binaryReadInt16(file);
@@ -193,12 +189,8 @@ int writeXxx(EmbPattern* pattern, const char* fileName)
         return 0;
     }
 
-    file = embFile_open(fileName, "wb");
-    if(!file)
-    {
-        embLog_error("format-xxx.c writeXxx(), cannot open %s for writing\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "wb", 0);
+    if(!file) return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 124, 127);
 

@@ -11,17 +11,15 @@ int readRgb(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-rgb.c readRgb(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-rgb.c readRgb(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
+    file = embFile_open(fileName, "rb", 1);
     if(!file)
-    {
-        /* NOTE: The .rgb format is an optional color file. Do not log an error if the file does not exist */
         return 0;
-    }
+
     embFile_seek(file, 0x00, SEEK_END);
     numberOfColors = embFile_tell(file) / 4;
 
     embArray_free(pattern->threads);
-    embArray_create(pattern->threads, EMB_THREAD);
+    pattern->threads = embArray_create(EMB_THREAD);
 
     embFile_seek(file, 0x00, SEEK_SET);
     for (i = 0; i < numberOfColors; i++) {
@@ -48,12 +46,9 @@ int writeRgb(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-rgb.c writeRgb(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-rgb.c writeRgb(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "wb");
+    file = embFile_open(fileName, "wb", 0);
     if(!file)
-    {
-        embLog_error("format-rgb.c writeRgb(), cannot open %s for writing\n", fileName);
         return 0;
-    }
 
     for (i=0; i<pattern->threads->count; i++) {
         EmbColor c = pattern->threads->thread[i].color;

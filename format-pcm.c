@@ -43,12 +43,8 @@ int readPcm(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-pcm.c readPcm(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-pcm.c readPcm(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-pcm.c readPcm(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if(!file) return 0;
 
     embFile_seek(file, 4, SEEK_SET);
 

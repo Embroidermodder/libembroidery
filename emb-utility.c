@@ -1,4 +1,14 @@
 #include "embroidery.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+
+#ifdef ARDUINO
+/*TODO: arduino embTime includes */
+#else
+#include <time.h>
+#endif
 
 char binaryReadByte(EmbFile* file)
 {
@@ -200,12 +210,6 @@ void binaryWriteFloat(EmbFile* file, float data)
     embFile_putc((float_int_u.u32 >> 24) & 0xFF, file);
 }
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
-#include "embroidery.h"
-
 double embMinDouble(double a, double b)
 {
     if (a<b) return a;
@@ -393,14 +397,6 @@ char* emb_strdup(const char* src)
     else { strcpy(dest, src); }
     return dest;
 }
-
-#include "embroidery.h"
-
-#ifdef ARDUINO
-/*TODO: arduino embTime includes */
-#else
-#include <time.h>
-#endif
 
 void embTime_initNow(EmbTime* t)
 {

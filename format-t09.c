@@ -10,12 +10,9 @@ int readT09(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-t09.c readT09(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-t09.c readT09(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
+    file = embFile_open(fileName, "rb", 0);
     if(!file)
-    {
-        embLog_error("format-t09.c readT09(), cannot open %s for reading\n", fileName);
         return 0;
-    }
 
     embFile_seek(file, 0x0C, SEEK_SET);
 

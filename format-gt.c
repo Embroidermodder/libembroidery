@@ -4,17 +4,12 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readGt(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file = 0;
+    EmbFile* file;
 
-    if(!pattern) { embLog_error("format-gt.c readGt(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-gt.c readGt(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readGt")) return 0;
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-gt.c readGt(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_seek(file, 0x200, SEEK_SET); /* TODO: review for combining code. This line appears to be the only difference from the FXY format. */

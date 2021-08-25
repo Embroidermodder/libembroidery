@@ -13,12 +13,8 @@ int readPhc(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-phc.c readPhc(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-phc.c readPhc(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-phc.c readPhc(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if(!file) return 0;
 
     embFile_seek(file, 0x07, SEEK_SET);
     version = binaryReadByte(file) - 0x30; /* converting from ansi number */

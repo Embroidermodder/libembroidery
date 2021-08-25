@@ -4,8 +4,9 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readPem(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { embLog_error("format-pem.c readPem(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-pem.c readPem(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readPem")) {
+        return 0;
+    }
     return 0; /*TODO: finish ReadPem */
 }
 

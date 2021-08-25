@@ -13,12 +13,8 @@ int readU00(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-u00.c readU00(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-u00.c readU00(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-u00.c readU00(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     /* 16 3byte RGB's start @ 0x08 followed by 14 bytes between 0 and 15 with index of color for each color change */
     embFile_seek(file, 0x08, SEEK_SET);

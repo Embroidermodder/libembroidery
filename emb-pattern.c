@@ -73,7 +73,7 @@ int embPattern_addThread(EmbPattern* p, EmbThread thread)
         return 0;
     }
     if (!p->threads) {
-        embArray_create(p->threads, EMB_THREAD);
+        p->threads = embArray_create(EMB_THREAD);
     }
     embArray_addThread(p->threads, thread);
     return 1;
@@ -133,7 +133,7 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
             {
                 if (!pointList)
                 {
-                    embArray_create(pointList, EMB_POINT);
+                    pointList = embArray_create(EMB_POINT);
                     color = p->threads->thread[stList->stitch.color].color;
                 }
                 EmbPointObject point;
@@ -154,7 +154,7 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
             currentPolyline->lineType = 1; /* TODO: Determine what the correct value should be */
 
             if (!p->polylines) {
-                embArray_create(p->polylines, EMB_POLYLINE);
+                p->polylines = embArray_create(EMB_POLYLINE);
             }
             embArray_addPolyline(p->polylines, currentPolyline);
         }
@@ -874,7 +874,7 @@ void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r
 
     if (!p) { embLog_error("emb-pattern.c embPattern_addCircleObjectAbs(), p argument is null\n"); return; }
     if (p->circles == 0) {
-         embArray_create(p->circles, EMB_CIRCLE);
+         p->circles = embArray_create(EMB_CIRCLE);
     }
     embArray_addCircle(p->circles, circle, 0, black);
 }
@@ -895,7 +895,7 @@ void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy, double 
         return;
     }
     if (!p->ellipses) {
-        embArray_create(p->ellipses, EMB_ELLIPSE);
+        p->ellipses = embArray_create(EMB_ELLIPSE);
     }
     embArray_addEllipse(p->ellipses, ellipse, 0.0, 0, black);
 }
@@ -915,7 +915,7 @@ void embPattern_addLineObjectAbs(EmbPattern* p, double x1, double y1, double x2,
         return;
     }
     if (p->circles == 0) {
-         embArray_create(p->lines, EMB_LINE);
+         p->lines = embArray_create(EMB_LINE);
     }
     embArray_addLine(p->lines, lineObj);
 }
@@ -927,7 +927,7 @@ void embPattern_addPathObjectAbs(EmbPattern* p, EmbPathObject* obj)
     if(!obj->pointList) { embLog_error("emb-pattern.c embPattern_addPathObjectAbs(), obj->pointList is empty\n"); return; }
 
     if (!p->paths) {
-        embArray_create(p->paths, EMB_PATH);
+        p->paths = embArray_create(EMB_PATH);
     }
     embArray_addPath(p->paths, obj);
 }
@@ -944,7 +944,7 @@ void embPattern_addPointObjectAbs(EmbPattern* p, double x, double y)
         return;
     }
     if (!p->points) {
-        embArray_create(p->points, EMB_POINT);
+        p->points = embArray_create(EMB_POINT);
     }
     embArray_addPoint(p->points, &pointObj);
 }
@@ -956,7 +956,7 @@ void embPattern_addPolygonObjectAbs(EmbPattern* p, EmbPolygonObject* obj)
     if(!obj->pointList) { embLog_error("emb-pattern.c embPattern_addPolygonObjectAbs(), obj->pointList is empty\n"); return; }
 
     if (!p->polygons) {
-        embArray_create(p->polygons, EMB_POLYGON);
+        p->polygons = embArray_create(EMB_POLYGON);
     }
     embArray_addPolygon(p->polygons, obj);
 }
@@ -970,7 +970,7 @@ void embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj)
     }
 
     if (!p->polylines) {
-        embArray_create(p->polylines, EMB_POLYLINE);
+        p->polylines = embArray_create(EMB_POLYLINE);
     }
     embArray_addPolyline(p->polylines, obj);
 }
@@ -993,7 +993,7 @@ void embPattern_addRectObjectAbs(EmbPattern* p, double x, double y, double w, do
         return;
     }
     if (!p->rects) {
-        embArray_create(p->rects, EMB_RECT);
+        p->rects = embArray_create(EMB_RECT);
     }
     embArray_addRect(p->rects, rect, 0, black);
 }

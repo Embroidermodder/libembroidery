@@ -16,17 +16,12 @@ int readEmd(EmbPattern* pattern, const char* fileName)
     unsigned char jemd0[6]; /* TODO: more descriptive name */
     int width, height, colors;
     int i;
-    EmbFile* file = 0;
+    EmbFile* file;
 
-    if(!pattern) { embLog_error("format-emd.c readEmd(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-emd.c readEmd(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readEmd")) return 0;
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-emd.c readEmd(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
@@ -37,32 +32,26 @@ int readEmd(EmbPattern* pattern, const char* fileName)
 
     embFile_seek(file, 0x30, SEEK_SET);
 
-    for(i = 0; !endOfStream; i++)
-    {
+    for (i = 0; !endOfStream; i++) {
             flags = NORMAL;
             b0 = binaryReadUInt8(file);
             b1 = binaryReadUInt8(file);
 
-            if(b0 == 0x80)
-            {
-                if(b1 == 0x2A)
-                {
+            if(b0 == 0x80) {
+                if(b1 == 0x2A) {
                     embPattern_addStitchRel(pattern, 0, 0, STOP, 1);
                     continue;
                 }
-                else if(b1 == 0x80)
-                {
+                else if(b1 == 0x80) {
                     b0 = binaryReadUInt8(file);
                     b1 = binaryReadUInt8(file);
                     flags = TRIM;
                 }
-                else if(b1 == 0xFD)
-                {
+                else if(b1 == 0xFD) {
                     embPattern_addStitchRel(pattern, 0, 0, END, 1);
                     break;
                 }
-                else
-                {
+                else {
                     continue;
                 }
             }

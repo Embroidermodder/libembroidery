@@ -94,12 +94,8 @@ int readShv(EmbPattern* pattern, const char* fileName)
     if (!validateReadPattern(pattern, fileName, "readShv"))
         return 0;
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-shv.c readShv(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if(!file) return 0;
 
     embFile_seek(file, strlen(headerText), SEEK_SET);
     fileNameLength = binaryReadUInt8(file);

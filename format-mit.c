@@ -19,12 +19,9 @@ int readMit(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-mit.c readMit(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-mit.c readMit(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
+    file = embFile_open(fileName, "rb", 0);
     if(!file)
-    {
-        embLog_error("format-mit.c readMit(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+		return 0;
 
     /* embPattern_loadExternalColorFile(pattern, fileName); TODO: review this and uncomment or remove it */
 
@@ -61,12 +58,10 @@ int writeMit(EmbPattern* pattern, const char* fileName)
         return 0;
     }
 
-	file = embFile_open(fileName, "wb");
+	file = embFile_open(fileName, "wb", 0);
 	if (!file)
-	{
-		embLog_error("format-mit.c writeMit(), cannot open %s for writing\n", fileName);
 		return 0;
-	}
+
 	embPattern_correctForMaxStitchLength(pattern, 0x1F, 0x1F);
 	xx = yy = 0;
 	pointer = pattern->stitchList;

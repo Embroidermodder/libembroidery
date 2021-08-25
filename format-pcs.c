@@ -52,12 +52,10 @@ int readPcs(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-pcs.c readPcs(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-pcs.c readPcs(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
+    file = embFile_open(fileName, "rb", 0);
     if(!file)
-    {
-        embLog_error("format-pcs.c readPcs(), cannot open %s for reading\n", fileName);
         return 0;
-    }
+
     version = binaryReadByte(file);
     hoopSize = binaryReadByte(file);  /* 0 for PCD, 1 for PCQ (MAXI), 2 for PCS with small hoop(80x80), */
                                       /* and 3 for PCS with large hoop (115x120) */
@@ -137,12 +135,9 @@ int writePcs(EmbPattern* pattern, const char* fileName)
         return 0;
     }
 
-    file = embFile_open(fileName, "wb");
+    file = embFile_open(fileName, "wb", 0);
     if(!file)
-    {
-        embLog_error("format-pcs.c writePcs(), cannot open %s for writing\n", fileName);
         return 0;
-    }
 
     binaryWriteByte(file, (unsigned char)'2');
     binaryWriteByte(file, 3); /* TODO: select hoop size defaulting to Large PCS hoop */

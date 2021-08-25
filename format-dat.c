@@ -4,18 +4,14 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readDat(EmbPattern* pattern, const char* fileName)
 {
-    int fileLength, stitchesRemaining;
-    EmbFile* file = 0;
+    unsigned char b0;
+    int fileLength, stitchesRemaining, b1, b2, stitchType;
+    EmbFile* file;
 
-    if(!pattern) { embLog_error("format-dat.c readDat(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-dat.c readDat(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readDat")) return 0;
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-dat.c readDat(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_seek(file, 0x00, SEEK_END);
@@ -26,11 +22,11 @@ int readDat(EmbPattern* pattern, const char* fileName)
 
     while(embFile_tell(file) < fileLength)
     {
-        int b1 = (int)binaryReadUInt8(file);
-        int b2 = (int)binaryReadUInt8(file);
-        unsigned char b0 = binaryReadByte(file);
+        b1 = (int)binaryReadUInt8(file);
+        b2 = (int)binaryReadUInt8(file);
+        b0 = binaryReadByte(file);
 
-        int stitchType = NORMAL;
+        stitchType = NORMAL;
         stitchesRemaining--;
 
         if((b0 & 0x02) == 0) stitchType = TRIM;

@@ -8,15 +8,10 @@ int readDsb(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-dsb.c readDsb(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-dsb.c readDsb(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readDsb")) return 0;
 
-    file = embFile_open(fileName,"rb");
-    if(!file)
-    {
-        embLog_error("format-dsb.c readDsb(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     /*TODO: READ 512 BYTE HEADER INTO header[] */
@@ -63,10 +58,13 @@ int readDsb(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeDsb(EmbPattern* pattern, const char* fileName)
 {
+    EmbFile* file;
     if (!validateWritePattern(pattern, fileName, "writeDsb")) return 0;
 
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
+    file = embFile_open(fileName, "wb", 0);
+    if (!file) return 0;
 
+    embFile_close(file);
     return 0; /*TODO: finish writeDsb */
 }
 

@@ -223,12 +223,9 @@ int readPec(EmbPattern* pattern, const char* fileName)
         return 0;
     }
 
-    file = embFile_open(fileName, "rb");
+    file = embFile_open(fileName, "rb", 0);
     if(!file)
-    {
-        embLog_error("format-pec.c readPec(), cannot open %s for reading\n", fileName);
         return 0;
-    }
 
     embFile_seek(file, 0x38, SEEK_SET);
     colorChanges = (unsigned char)binaryReadByte(file);
@@ -501,12 +498,9 @@ int writePec(EmbPattern* pattern, const char* fileName)
         return 0;
     }
 
-    file = embFile_open(fileName, "wb");
+    file = embFile_open(fileName, "wb", 0);
     if(!file)
-    {
-        embLog_error("format-pec.c writePec(), cannot open %s for writing\n", fileName);
         return 0;
-    }
 
     embPattern_flipVertical(pattern); /* TODO: There needs to be a matching flipVertical() call after the write to ensure multiple writes from the same pattern work properly */
     embPattern_fixColorCount(pattern);

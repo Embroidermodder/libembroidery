@@ -4,37 +4,24 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readInb(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file = 0;
+    EmbFile* file;
     unsigned char fileDescription[8];
     unsigned char nullVal;
     int stitchCount;
-    short width;
-    short height;
+    short width, height;
     short colorCount;
-    short unknown3;
-    short unknown2;
-    short imageWidth;
-    short imageHeight;
+    short unknown3, unknown2;
+    short imageWidth, imageHeight;
     unsigned char bytesUnknown[300]; /* TODO: determine what this represents */
     short nullbyte;
-    short left;
-    short right;
-    short top;
-    short bottom;
-    int x = 0;
-    int y = 0;
-    int i;
-    int fileLength;
+    short left, right, top, bottom;
+    int x, y, i, fileLength;
 
-    if(!pattern) { embLog_error("format-inb.c readInb(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-inb.c readInb(), fileName argument is null\n"); return 0; }
-
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-inb.c readInb(), cannot open %s for reading\n", fileName);
+    if (!validateReadPattern(pattern, fileName, "readInb"))
         return 0;
-    }
+
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_seek(file, 0, SEEK_END);
@@ -59,8 +46,7 @@ int readInb(EmbPattern* pattern, const char* fileName)
     embFile_seek(file, 0x2000, SEEK_SET);
     /* Calculate stitch count since header has been seen to be blank */
     stitchCount = (int)((fileLength - 0x2000) / 3);
-    for(i = 0; i < stitchCount; i++)
-    {
+    for (i = 0; i < stitchCount; i++) {
         unsigned char type;
         int stitch = NORMAL;
         x = binaryReadByte(file);
@@ -88,9 +74,8 @@ int readInb(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeInb(EmbPattern* pattern, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeInb")) {
+    if (!validateWritePattern(pattern, fileName, "writeInb"))
         return 0;
-    }
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 

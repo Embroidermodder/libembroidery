@@ -17,11 +17,8 @@ int readZsk(EmbPattern* pattern, const char* fileName)
         return 0;
     }
 
-    file = embFile_open(fileName, "rb");
-    if (!file) {
-        embLog_error("format-zsk.c readZsk(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) return 0;
 
     embFile_seek(file, 0x230, SEEK_SET);
     colorNumber = binaryReadUInt8(file);

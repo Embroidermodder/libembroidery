@@ -97,12 +97,8 @@ int readVip(EmbPattern* pattern, const char* fileName)
     if(!pattern) { embLog_error("format-vip.c readVip(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-vip.c readVip(), fileName argument is null\n"); return 0; }
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-vip.c readVip(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "rb", 0);
+    if(!file) return 0;
 
     embFile_seek(file, 0x0, SEEK_END);
     fileLength = embFile_tell(file);
@@ -246,12 +242,8 @@ int writeVip(EmbPattern* pattern, const char* fileName)
     if (!validateWritePattern(pattern, fileName, "writeVip"))
         return 0;
 
-    file = embFile_open(fileName, "wb");
-    if(file == 0)
-    {
-        embLog_error("format-vip.c writeVip(), cannot open %s for writing\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "wb", 0);
+    if (!file) return 0;
 
     stitchCount = embStitchList_count(pattern->stitchList);
     minColors = pattern->threads->count;

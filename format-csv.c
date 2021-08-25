@@ -85,20 +85,14 @@ int readCsv(EmbPattern* pattern, const char* fileName)
     unsigned char r = 0, g = 0, b = 0;
     char* buff = 0;
 
-    if(!pattern) { embLog_error("format-csv.c readCsv(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-csv.c readCsv(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readCsv")) return 0;
 
     buff = (char*)malloc(size);
-    if(!buff) { embLog_error("format-csv.c readCsv(), unable to allocate memory for buff\n"); return 0; }
+    if (!buff) { embLog_error("format-csv.c readCsv(), unable to allocate memory for buff\n"); return 0; }
 
-    file = embFile_open(fileName,"r");
-    if(!file)
-    {
-        embLog_error("format-csv.c readCsv(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
-    else
-    {
+    file = embFile_open(fileName, "r", 0);
+    if (!file) return 0;
+
         pos = 0;
         do
         {
@@ -238,7 +232,6 @@ int readCsv(EmbPattern* pattern, const char* fileName)
         }
         while(c != EOF);
         embFile_close(file);
-    }
 
     /* if not enough colors defined, fill in random colors */
     while (pattern->threads->count < numColorChanges) {
@@ -246,7 +239,6 @@ int readCsv(EmbPattern* pattern, const char* fileName)
     }
 
     free(buff);
-    buff = 0;
 
     return 1;
 }
@@ -255,19 +247,18 @@ int readCsv(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeCsv(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file = 0;
-    EmbStitchList* sList = 0;
+    EmbFile* file;
+    EmbStitchList* sList;
     EmbRect boundingRect;
-    int i = 0;
+    EmbThread thr;
+    int i;
     int stitchCount = 0;
     int threadCount = 0;
 
-    if(!pattern) { embLog_error("format-csv.c writeCsv(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-csv.c writeCsv(), fileName argument is null\n"); return 0; }
+    if (validateReadPattern(pattern, fileName, "writeCsv")) return 0;
 
     sList = pattern->stitchList;
     stitchCount = embStitchList_count(sList);
-
     threadCount = pattern->threads->count;
 
     boundingRect = embPattern_calcBoundingBox(pattern);
@@ -280,12 +271,8 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
 
     embPattern_end(pattern);
 
-    file = embFile_open(fileName, "w");
-    if(!file)
-    {
-        embLog_error("format-csv.c writeCsv(), cannot open %s for writing\n", fileName);
-        return 0;
-    }
+    file = embFile_open(fileName, "w", 0);
+    if (!file) return 0;
 
     /* write header */
     embFile_printf(file, "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n");
@@ -323,13 +310,14 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
     /* write colors */
     embFile_printf(file, "\"#\",\"[THREAD_NUMBER]\",\"[RED]\",\"[GREEN]\",\"[BLUE]\",\"[DESCRIPTION]\",\"[CATALOG_NUMBER]\"\n");
     for (i=0; i<threadCount; i++) {
+        thr = pattern->threads->thread[i];
          /* TODO: fix segfault that backtraces here when libembroidery-convert from dst to csv. */
         embFile_printf(file, "\"$\",\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n", i+1,
-                (int)pattern->threads->thread[i].color.r,
-                (int)pattern->threads->thread[i].color.g,
-                (int)pattern->threads->thread[i].color.b,
-                pattern->threads->thread[i].description,
-                pattern->threads->thread[i].catalogNumber);
+                (int)thr.color.r,
+                (int)thr.color.g,
+                (int)thr.color.b,
+                thr.description,
+                thr.catalogNumber);
     }
     embFile_printf(file, "\n");
 

@@ -107,7 +107,8 @@ void embPattern_fixColorCount(EmbPattern* p)
 /*! Copies all of the EmbStitchList data to EmbPolylineObjectList data for pattern (\a p). */
 void embPattern_copyStitchListToPolylines(EmbPattern* p)
 {
-    EmbStitchList* stList = 0;
+    EmbStitchList* stList;
+    EmbPointObject* point;
     int breakAtFlags;
 
     if(!p) { embLog_error("emb-pattern.c embPattern_copyStitchListToPolylines(), p argument is null\n"); return; }
@@ -121,7 +122,7 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
     stList = p->stitchList;
     while(stList)
     {
-        EmbArray *pointList;
+        EmbArray *pointList = 0;
         EmbColor color;
         while(stList)
         {
@@ -136,10 +137,10 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
                     pointList = embArray_create(EMB_POINT);
                     color = p->threads->thread[stList->stitch.color].color;
                 }
-                EmbPointObject point;
-                point.point.x = stList->stitch.x;
-                point.point.y = stList->stitch.y;
-                embArray_addPoint(pointList, &point);
+                point = (EmbPointObject *) malloc(sizeof(EmbPointObject));
+                point->point.x = stList->stitch.x;
+                point->point.y = stList->stitch.y;
+                embArray_addPoint(pointList, point);
             }
             stList = stList->next;
         }
@@ -211,7 +212,7 @@ void embPattern_moveStitchListToPolylines(EmbPattern* p)
     embStitchList_free(p->stitchList);
     p->stitchList = 0;
     p->lastStitch = 0;
-    embArray_free(p->threads);
+    /*embArray_free(p->threads);*/
 }
 
 /*! Moves all of the EmbPolylineObjectList data to EmbStitchList data for pattern (\a p). */

@@ -17,7 +17,7 @@
 static int pointercmp(const void *pointer1, const void *pointer2);
 static unsigned long pointerHashFunction(const void *pointer);
 static int isProbablePrime(long number);
-static long calculateIdealNumOfBuckets(HashTable *hashTable);
+static long calculateIdealNumOfBuckets(EmbHashTable *hashTable);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -46,13 +46,13 @@ static long calculateIdealNumOfBuckets(HashTable *hashTable);
  *      HashTable    - a new Hashtable, or NULL on error
 \*--------------------------------------------------------------------------*/
 
-HashTable *HashTableCreate(long numOfBuckets) {
-    HashTable *hashTable;
+EmbHashTable *HashTableCreate(long numOfBuckets) {
+    EmbHashTable *hashTable;
     int i;
 
     assert(numOfBuckets > 0);
 
-    hashTable = (HashTable *) malloc(sizeof(HashTable));
+    hashTable = (EmbHashTable *) malloc(sizeof(EmbHashTable));
     if (hashTable == NULL)
         return NULL;
 
@@ -95,7 +95,7 @@ HashTable *HashTableCreate(long numOfBuckets) {
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableDestroy(HashTable *hashTable) {
+void HashTableDestroy(EmbHashTable *hashTable) {
     int i;
 
     for (i=0; i<hashTable->numOfBuckets; i++) {
@@ -132,7 +132,7 @@ void HashTableDestroy(HashTable *hashTable) {
  *                     specified key.
 \*--------------------------------------------------------------------------*/
 
-int HashTableContainsKey(const HashTable *hashTable, const void *key) {
+int HashTableContainsKey(const EmbHashTable *hashTable, const void *key) {
     return (HashTableGet(hashTable, key) != NULL);
 }
 
@@ -156,7 +156,7 @@ int HashTableContainsKey(const HashTable *hashTable, const void *key) {
  *                     specified value.
 \*--------------------------------------------------------------------------*/
 
-int HashTableContainsValue(const HashTable *hashTable, const void *value) {
+int HashTableContainsValue(const EmbHashTable *hashTable, const void *value) {
     int i;
 
     for (i=0; i<hashTable->numOfBuckets; i++) {
@@ -191,7 +191,7 @@ int HashTableContainsValue(const HashTable *hashTable, const void *value) {
  *      err          - 0 if successful, -1 if an error was encountered
 \*--------------------------------------------------------------------------*/
 
-int HashTablePut(HashTable *hashTable, const void *key, void *value) {
+int HashTablePut(EmbHashTable *hashTable, const void *key, void *value) {
     long hashValue;
     KeyValuePair *pair;
 
@@ -257,7 +257,7 @@ int HashTablePut(HashTable *hashTable, const void *key, void *value) {
  *                     doesn't exist in the HashTable
 \*--------------------------------------------------------------------------*/
 
-void *HashTableGet(const HashTable *hashTable, const void *key) {
+void *HashTableGet(const EmbHashTable *hashTable, const void *key) {
     long hashValue = hashTable->hashFunction(key) % hashTable->numOfBuckets;
     KeyValuePair *pair = hashTable->bucketArray[hashValue];
 
@@ -283,7 +283,7 @@ void *HashTableGet(const HashTable *hashTable, const void *key) {
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableRemove(HashTable *hashTable, const void *key) {
+void HashTableRemove(EmbHashTable *hashTable, const void *key) {
     long hashValue = hashTable->hashFunction(key) % hashTable->numOfBuckets;
     KeyValuePair *pair = hashTable->bucketArray[hashValue];
     KeyValuePair *previousPair = NULL;
@@ -328,7 +328,7 @@ void HashTableRemove(HashTable *hashTable, const void *key) {
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableRemoveAll(HashTable *hashTable) {
+void HashTableRemoveAll(EmbHashTable *hashTable) {
     int i;
 
     for (i=0; i<hashTable->numOfBuckets; i++) {
@@ -364,7 +364,7 @@ void HashTableRemoveAll(HashTable *hashTable) {
  *                     key/value pairs
 \*--------------------------------------------------------------------------*/
 
-int HashTableIsEmpty(const HashTable *hashTable) {
+int HashTableIsEmpty(const EmbHashTable *hashTable) {
     return (hashTable->numOfElements == 0);
 }
 
@@ -383,7 +383,7 @@ int HashTableIsEmpty(const HashTable *hashTable) {
  *                     the specified HashTable
 \*--------------------------------------------------------------------------*/
 
-long HashTableSize(const HashTable *hashTable) {
+long HashTableSize(const EmbHashTable *hashTable) {
     return hashTable->numOfElements;
 }
 
@@ -403,7 +403,7 @@ long HashTableSize(const HashTable *hashTable) {
  *                     HashTable
 \*--------------------------------------------------------------------------*/
 
-long HashTableGetNumBuckets(const HashTable *hashTable) {
+long HashTableGetNumBuckets(const EmbHashTable *hashTable) {
     return hashTable->numOfBuckets;
 }
 
@@ -426,7 +426,7 @@ long HashTableGetNumBuckets(const HashTable *hashTable) {
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableSetKeyComparisonFunction(HashTable *hashTable,
+void HashTableSetKeyComparisonFunction(EmbHashTable *hashTable,
         int (*keycmp)(const void *key1, const void *key2)) {
     assert(keycmp != NULL);
     hashTable->keycmp = keycmp;
@@ -451,7 +451,7 @@ void HashTableSetKeyComparisonFunction(HashTable *hashTable,
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableSetValueComparisonFunction(HashTable *hashTable,
+void HashTableSetValueComparisonFunction(EmbHashTable *hashTable,
         int (*valuecmp)(const void *value1, const void *value2)) {
     assert(valuecmp != NULL);
     hashTable->valuecmp = valuecmp;
@@ -478,7 +478,7 @@ void HashTableSetValueComparisonFunction(HashTable *hashTable,
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableSetHashFunction(HashTable *hashTable,
+void HashTableSetHashFunction(EmbHashTable *hashTable,
         unsigned long (*hashFunction)(const void *key))
 {
     assert(hashFunction != NULL);
@@ -511,7 +511,7 @@ void HashTableSetHashFunction(HashTable *hashTable,
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableRehash(HashTable *hashTable, long numOfBuckets) {
+void HashTableRehash(EmbHashTable *hashTable, long numOfBuckets) {
     KeyValuePair **newBucketArray;
     int i;
 
@@ -591,7 +591,7 @@ void HashTableRehash(HashTable *hashTable, long numOfBuckets) {
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableSetIdealRatio(HashTable *hashTable, float idealRatio,
+void HashTableSetIdealRatio(EmbHashTable *hashTable, float idealRatio,
         float lowerRehashThreshold, float upperRehashThreshold) {
     assert(idealRatio > 0.0);
     assert(lowerRehashThreshold < idealRatio);
@@ -630,7 +630,7 @@ void HashTableSetIdealRatio(HashTable *hashTable, float idealRatio,
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableSetDeallocationFunctions(HashTable *hashTable,
+void HashTableSetDeallocationFunctions(EmbHashTable *hashTable,
         void (*keyDeallocator)(void *key),
         void (*valueDeallocator)(void *value)) {
     hashTable->keyDeallocator = keyDeallocator;
@@ -688,7 +688,7 @@ static int isProbablePrime(long oddNumber) {
     return 1; /* maybe */
 }
 
-static long calculateIdealNumOfBuckets(HashTable *hashTable) {
+static long calculateIdealNumOfBuckets(EmbHashTable *hashTable) {
     long idealNumOfBuckets = (long)(hashTable->numOfElements / hashTable->idealRatio);
 	if (idealNumOfBuckets < 5)
 	{

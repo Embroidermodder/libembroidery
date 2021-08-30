@@ -9,8 +9,8 @@
  * $Id: hashtable.h,v 1.2 2000/08/02 19:01:25 pomakis Exp pomakis $
 \*--------------------------------------------------------------------------*/
 
-#ifndef _HASHTABLE_H
-#define _HASHTABLE_H
+#ifndef _EMBHASHTABLE_H
+#define _EMBHASHTABLE_H
 
 /* These structs should not be accessed directly from user code.
  * All access should be via the public functions declared below. */
@@ -31,7 +31,7 @@ typedef struct {
     unsigned long (*hashFunction)(const void *key);
     void (*keyDeallocator)(void *key);
     void (*valueDeallocator)(void *value);
-} HashTable;
+} EmbHashTable;
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -60,7 +60,7 @@ typedef struct {
  *      HashTable    - a new Hashtable, or NULL on error
 \*--------------------------------------------------------------------------*/
 
-HashTable *HashTableCreate(long numOfBuckets);
+EmbHashTable *HashTableCreate(long numOfBuckets);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -75,7 +75,7 @@ HashTable *HashTableCreate(long numOfBuckets);
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableDestroy(HashTable *hashTable);
+void HashTableDestroy(EmbHashTable *hashTable);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -94,7 +94,7 @@ void HashTableDestroy(HashTable *hashTable);
  *                     specified key.
 \*--------------------------------------------------------------------------*/
 
-int HashTableContainsKey(const HashTable *hashTable, const void *key);
+int HashTableContainsKey(const EmbHashTable *hashTable, const void *key);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -116,7 +116,7 @@ int HashTableContainsKey(const HashTable *hashTable, const void *key);
  *                     specified value.
 \*--------------------------------------------------------------------------*/
 
-int HashTableContainsValue(const HashTable *hashTable, const void *value);
+int HashTableContainsValue(const EmbHashTable *hashTable, const void *value);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -138,7 +138,7 @@ int HashTableContainsValue(const HashTable *hashTable, const void *value);
  *      err          - 0 if successful, -1 if an error was encountered
 \*--------------------------------------------------------------------------*/
 
-int HashTablePut(HashTable *hashTable, const void *key, void *value);
+int HashTablePut(EmbHashTable *hashTable, const void *key, void *value);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -157,7 +157,7 @@ int HashTablePut(HashTable *hashTable, const void *key, void *value);
  *                     doesn't exist in the HashTable
 \*--------------------------------------------------------------------------*/
 
-void *HashTableGet(const HashTable *hashTable, const void *key);
+void *HashTableGet(const EmbHashTable *hashTable, const void *key);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -175,7 +175,7 @@ void *HashTableGet(const HashTable *hashTable, const void *key);
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableRemove(HashTable *hashTable, const void *key);
+void HashTableRemove(EmbHashTable *hashTable, const void *key);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -191,7 +191,7 @@ void HashTableRemove(HashTable *hashTable, const void *key);
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableRemoveAll(HashTable *hashTable);
+void HashTableRemoveAll(EmbHashTable *hashTable);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -208,7 +208,7 @@ void HashTableRemoveAll(HashTable *hashTable);
  *                     key/value pairs
 \*--------------------------------------------------------------------------*/
 
-int HashTableIsEmpty(const HashTable *hashTable);
+int HashTableIsEmpty(const EmbHashTable *hashTable);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -225,7 +225,7 @@ int HashTableIsEmpty(const HashTable *hashTable);
  *                     the specified HashTable
 \*--------------------------------------------------------------------------*/
 
-long HashTableSize(const HashTable *hashTable);
+long HashTableSize(const EmbHashTable *hashTable);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -243,7 +243,7 @@ long HashTableSize(const HashTable *hashTable);
  *                     HashTable
 \*--------------------------------------------------------------------------*/
 
-long HashTableGetNumBuckets(const HashTable *hashTable);
+long HashTableGetNumBuckets(const EmbHashTable *hashTable);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -264,7 +264,7 @@ long HashTableGetNumBuckets(const HashTable *hashTable);
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableSetKeyComparisonFunction(HashTable *hashTable,
+void HashTableSetKeyComparisonFunction(EmbHashTable *hashTable,
                              int (*keycmp)(const void *key1, const void *key2));
 
 /*--------------------------------------------------------------------------*\
@@ -286,7 +286,7 @@ void HashTableSetKeyComparisonFunction(HashTable *hashTable,
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableSetValueComparisonFunction(HashTable *hashTable,
+void HashTableSetValueComparisonFunction(EmbHashTable *hashTable,
                        int (*valuecmp)(const void *value1, const void *value2));
 
 /*--------------------------------------------------------------------------*\
@@ -310,7 +310,7 @@ void HashTableSetValueComparisonFunction(HashTable *hashTable,
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableSetHashFunction(HashTable *hashTable,
+void HashTableSetHashFunction(EmbHashTable *hashTable,
                               unsigned long (*hashFunction)(const void *key));
 
 /*--------------------------------------------------------------------------*\
@@ -339,7 +339,7 @@ void HashTableSetHashFunction(HashTable *hashTable,
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableRehash(HashTable *hashTable, long numOfBuckets);
+void HashTableRehash(EmbHashTable *hashTable, long numOfBuckets);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -383,7 +383,7 @@ void HashTableRehash(HashTable *hashTable, long numOfBuckets);
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableSetIdealRatio(HashTable *hashTable, float idealRatio,
+void HashTableSetIdealRatio(EmbHashTable *hashTable, float idealRatio,
                             float lowerRehashThreshold,
                             float upperRehashThreshold);
 
@@ -415,7 +415,7 @@ void HashTableSetIdealRatio(HashTable *hashTable, float idealRatio,
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void HashTableSetDeallocationFunctions(HashTable *hashTable,
+void HashTableSetDeallocationFunctions(EmbHashTable *hashTable,
                                        void (*keyDeallocator)(void *key),
                                        void (*valueDeallocator)(void *value));
 

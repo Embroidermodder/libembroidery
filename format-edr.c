@@ -12,7 +12,9 @@ int readEdr(EmbPattern* pattern, const char* fileName)
     if (!validateReadPattern(pattern, fileName, "readEdr")) return 0;
 
     file = embFile_open(fileName, "rb", 1);
-
+    if (file == 0) {
+        return 1;
+    }
     embFile_seek(file, 0x00, SEEK_END);
     numberOfColors = embFile_tell(file) / 4;
     embFile_seek(file, 0x00, SEEK_SET);

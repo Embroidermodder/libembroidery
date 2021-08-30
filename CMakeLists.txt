@@ -120,7 +120,7 @@ target_include_directories(embroidery_static
 )
 
 add_executable(embroider
-    embroider/embroider-main.c
+    cmd/embroider/embroider-main.c
 )
 
 target_include_directories(embroider

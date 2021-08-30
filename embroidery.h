@@ -270,7 +270,7 @@ typedef struct EmbHoop_
     double height;
 } EmbHoop;
 
-typedef HashTable EmbHash;
+typedef EmbHashTable EmbHash;
 
 typedef struct EmbFormatList_
 {
@@ -576,7 +576,7 @@ EMB_PUBLIC void embStitchList_free(EmbStitchList* pointer);
 EMB_PUBLIC EmbStitch embStitchList_getAt(EmbStitchList* pointer, int num);
 
 EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbArray* colors, int mode);
-EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, EmbThread* colors, int length);
+EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, const EmbThread* colors, int length);
 EMB_PUBLIC EmbThread embThread_getRandom(void);
 
 EMB_PUBLIC void embVector_normalize(EmbVector vector, EmbVector* result);

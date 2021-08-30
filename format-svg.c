@@ -575,11 +575,11 @@ void svgAddToPattern(EmbPattern* p)
 
         if(!strcmp(buff, "polygon"))
         {
-            EmbPolygonObject* polygonObj;
-            polygonObj->pointList = pointList;
-            polygonObj->color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
-            polygonObj->lineType = 1; /* TODO: use lineType enum */
-            embPattern_addPolygonObjectAbs(p, polygonObj);
+            EmbPolygonObject polygonObj;
+            polygonObj.pointList = pointList;
+            polygonObj.color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
+            polygonObj.lineType = 1; /* TODO: use lineType enum */
+            embPattern_addPolygonObjectAbs(p, &polygonObj);
         }
         else /* polyline */
         {

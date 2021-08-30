@@ -22,7 +22,7 @@ EmbArray* embArray_create(int type)
         p->flag = (int*)malloc(CHUNK_SIZE*sizeof(int));
         break;
     case EMB_PATH:
-        p->path = (EmbPathObject**)malloc(CHUNK_SIZE*sizeof(EmbPathObject));
+        p->path = (EmbPathObject**)malloc(CHUNK_SIZE*sizeof(EmbPathObject*));
         break;
     case EMB_POINT:
         p->point = (EmbPointObject*)malloc(CHUNK_SIZE*sizeof(EmbPointObject));
@@ -298,7 +298,7 @@ void embArray_free(EmbArray* p)
         for (i=0; i<p->count; i++) {
             embArray_free(p->polyline[i]->pointList);
         }
-        free(p->polygon);
+        free(p->polyline);
         break;
     case EMB_RECT:
         free(p->rect);

@@ -44,7 +44,7 @@ int embThread_findNearestColor(EmbColor color, EmbArray* a, int mode)
     return closestIndex;
 }
 
-int embThread_findNearestColor_fromThread(EmbColor color, EmbThread* a, int length)
+int embThread_findNearestColor_fromThread(EmbColor color, const EmbThread* a, int length)
 {
     int currentClosestValue = 256*256*3;
     int closestIndex = -1, i;

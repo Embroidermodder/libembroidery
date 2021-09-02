@@ -38,10 +38,9 @@ int readPcm(EmbPattern* pattern, const char* fileName)
     unsigned char b[9];
     double dx = 0, dy = 0;
     int flags = 0, st = 0;
-    EmbFile* file = 0;
+    EmbFile* file;
 
-    if(!pattern) { embLog_error("format-pcm.c readPcm(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-pcm.c readPcm(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readPcm")) return 0;
 
     file = embFile_open(fileName, "rb", 0);
     if(!file) return 0;
@@ -89,12 +88,16 @@ int readPcm(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writePcm(EmbPattern* pattern, const char* fileName)
 {
+    EmbFile* file;
     if (!validateWritePattern(pattern, fileName, "writePcm")) {
         return 0;
     }
+    file = embFile_open(fileName, "rb", 0);
+    if(!file) return 0;
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 
+    embFile_close(file);
     return 0; /*TODO: finish writePcm */
 }
 

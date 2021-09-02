@@ -6,10 +6,10 @@
 int readRgb(EmbPattern* pattern, const char* fileName)
 {
     int i, numberOfColors;
-    EmbFile* file = 0;
+    EmbFile* file;
+    EmbThread t;
 
-    if(!pattern) { embLog_error("format-rgb.c readRgb(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-rgb.c readRgb(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readRgb")) return 0;
 
     file = embFile_open(fileName, "rb", 1);
     if(!file)
@@ -23,7 +23,6 @@ int readRgb(EmbPattern* pattern, const char* fileName)
 
     embFile_seek(file, 0x00, SEEK_SET);
     for (i = 0; i < numberOfColors; i++) {
-        EmbThread t;
         t.color.r = binaryReadByte(file);
         t.color.g = binaryReadByte(file);
         t.color.b = binaryReadByte(file);
@@ -42,16 +41,16 @@ int writeRgb(EmbPattern* pattern, const char* fileName)
 {
     int i;
     EmbFile* file = 0;
+    EmbColor c;
 
-    if(!pattern) { embLog_error("format-rgb.c writeRgb(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-rgb.c writeRgb(), fileName argument is null\n"); return 0; }
+    if (!validateWritePattern(pattern, fileName, "writeRgb")) return 0;
 
     file = embFile_open(fileName, "wb", 0);
     if(!file)
         return 0;
 
     for (i=0; i<pattern->threads->count; i++) {
-        EmbColor c = pattern->threads->thread[i].color;
+        c = pattern->threads->thread[i].color;
         binaryWriteByte(file, c.r);
         binaryWriteByte(file, c.g);
         binaryWriteByte(file, c.b);

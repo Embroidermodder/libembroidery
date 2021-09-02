@@ -4,7 +4,7 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int read100(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file = 0;
+    EmbFile* file;
     int x, y;
     int stitchType;
     unsigned char b[4];
@@ -40,6 +40,7 @@ int write100(EmbPattern* pattern, const char* fileName)
     if (!validateWritePattern(pattern, fileName, "write100")) return 0;
 
     file = embFile_open(fileName, "wb", 0);
+    if (!file) return 0;
 
     embFile_close(file);
     return 0; /*TODO: finish write100 */

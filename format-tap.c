@@ -27,8 +27,8 @@ int readTap(EmbPattern* pattern, const char* fileName)
     unsigned char b[3];
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-tap.c readTap(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-tap.c readTap(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readTap"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 0);
     if(!file) return 0;
@@ -155,11 +155,9 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
 int writeTap(EmbPattern* pattern, const char* fileName)
 {
 	EmbRect boundingRect;
-	EmbFile* file = 0;
-	int xx, yy, dx, dy, flags;
-	int co = 1, st = 0;
-	int ax, ay, mx, my;
-	EmbStitchList* pointer = 0;
+	EmbFile* file;
+	int xx, yy, dx, dy;
+	EmbStitchList* pointer;
 	
     if (!validateWritePattern(pattern, fileName, "writeTap")) {
         return 0;
@@ -170,25 +168,15 @@ int writeTap(EmbPattern* pattern, const char* fileName)
 
 	embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
-	xx = yy = 0;
-	co = pattern->threads->count;
-	st = 0;
-	st = embStitchList_count(pattern->stitchList);
-	flags = NORMAL;
 	boundingRect = embPattern_calcBoundingBox(pattern);
-	ax = ay = mx = my = 0;
 	xx = yy = 0;
-	pointer = pattern->stitchList;
-	while (pointer)
-	{
+	for (pointer=pattern->stitchList; pointer; pointer=pointer->next) {
 		/* convert from mm to 0.1mm for file format */
 		dx = roundDouble(pointer->stitch.x * 10.0) - xx;
 		dy = roundDouble(pointer->stitch.y * 10.0) - yy;
 		xx = roundDouble(pointer->stitch.x * 10.0);
 		yy = roundDouble(pointer->stitch.y * 10.0);
-		flags = pointer->stitch.flags;
-		encode_record(file, dx, dy, flags);
-		pointer = pointer->next;
+		encode_record(file, dx, dy, pointer->stitch.flags);
 	}
 	embFile_close(file);
 	return 1;

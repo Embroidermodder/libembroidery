@@ -11,8 +11,8 @@ int readPlt(EmbPattern* pattern, const char* fileName)
     char input[512];
     FILE* file = 0;
 
-    if(!pattern) { embLog_error("format-plt.c readPlt(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-plt.c readPlt(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readPlt"))
+        return 0;
 
     file = fopen(fileName, "rb");
     if(!file)
@@ -68,16 +68,12 @@ int writePlt(EmbPattern* pattern, const char* fileName)
     fprintf(file, "IN;");
     fprintf(file, "ND;");
 
-    pointer = pattern->stitchList;
-    while(pointer)
-    {
+    for (pointer=pattern->stitchList; pointer; pointer=pointer->next) {
         stitch = pointer->stitch;
-        if(stitch.flags & STOP)
-        {
+        if (stitch.flags & STOP) {
             firstStitchOfBlock = 1;
         }
-        if(firstStitchOfBlock)
-        {
+        if (firstStitchOfBlock) {
             fprintf(file, "PU%f,%f;", stitch.x * scalingFactor, stitch.y * scalingFactor);
             fprintf(file, "ST0.00,0.00;");
             fprintf(file, "SP0;");
@@ -87,12 +83,9 @@ int writePlt(EmbPattern* pattern, const char* fileName)
             fprintf(file, "TS0;");
             firstStitchOfBlock = 0;
         }
-        else
-        {
+        else {
             fprintf(file, "PD%f,%f;", stitch.x * scalingFactor, stitch.y * scalingFactor);
         }
-
-        pointer = pointer->next;
     }
     fprintf(file, "PU0.0,0.0;");
     fprintf(file, "PU0.0,0.0;");

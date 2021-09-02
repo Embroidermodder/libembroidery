@@ -22,10 +22,10 @@ make &>> test.log
 
 function test_suite () {
 build_debug
-gdb_wrap ./embroider ../embroider/test01.csv test01.svg
-gdb_wrap ./embroider ../embroider/test02.csv test02.svg
-gdb_wrap ./embroider ../embroider/test01.csv test01.dst
-gdb_wrap ./embroider ../embroider/test02.csv test02.dst
+gdb_wrap ./embroider ../cmd/embroider/test01.csv test01.svg
+gdb_wrap ./embroider ../cmd/embroider/test02.csv test02.svg
+gdb_wrap ./embroider ../cmd/embroider/test01.csv test01.dst
+gdb_wrap ./embroider ../cmd/embroider/test02.csv test02.dst
 gdb_wrap ./embroider -test
 }
 

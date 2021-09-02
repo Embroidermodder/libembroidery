@@ -17,14 +17,12 @@ int readXxx(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     unsigned char b0, b1;
     int dx = 0, dy = 0;
-    int flags;
+    int flags, numberOfColors, paletteOffset, i;
     char endOfStream = 0;
-    int numberOfColors;
-    int paletteOffset;
-    int i;
     char thisStitchJump = 0;
     EmbStitchList* lastStitch = 0;
     EmbStitchList* secondLast = 0;
+    EmbThread thread;
 
     if(!pattern) { embLog_error("format-xxx.c readXxx(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-xxx.c readXxx(), fileName argument is null\n"); return 0; }
@@ -38,9 +36,7 @@ int readXxx(EmbPattern* pattern, const char* fileName)
     paletteOffset = binaryReadInt32(file);
     embFile_seek(file, paletteOffset + 6, SEEK_SET);
 
-    for(i = 0; i < numberOfColors; i++)
-    {
-        EmbThread thread;
+    for (i = 0; i < numberOfColors; i++) {
         binaryReadByte(file);
         thread.color.r = binaryReadByte(file);
         thread.color.g = binaryReadByte(file);
@@ -142,36 +138,32 @@ static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
 {
     double thisX = 0.0f;
     double thisY = 0.0f;
+    double previousX, previousY;
     EmbStitchList* stitches = 0;
+    EmbStitch s;
+    double deltaX, deltaY;
 
-    if(!embStitchList_empty(p->stitchList))
-    {
+    if (!embStitchList_empty(p->stitchList)) {
         thisX = (float)p->stitchList->stitch.x;
         thisY = (float)p->stitchList->stitch.y;
     }
-    stitches = p->stitchList;
-    while(stitches)
-    {
-        EmbStitch s = stitches->stitch;
-        double deltaX, deltaY;
-        double previousX = thisX;
-        double previousY = thisY;
+
+    for (stitches=p->stitchList; stitches; stitches=stitches->next) {
+        s = stitches->stitch;
+        previousX = thisX;
+        previousY = thisY;
         thisX = s.x;
         thisY = s.y;
         deltaX = thisX - previousX;
         deltaY = thisY - previousY;
-        if(s.flags & STOP)
-        {
+        if (s.flags & STOP) {
             xxxEncodeStop(file, s);
         }
-        else if(s.flags & END)
-        {
+        else if(s.flags & END) {
         }
-        else
-        {
+        else {
             xxxEncodeStitch(file, deltaX * 10.0f, deltaY * 10.0f, s.flags);
         }
-        stitches = stitches->next;
     }
 }
 
@@ -182,8 +174,8 @@ int writeXxx(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     int i;
     EmbRect rect;
+    EmbColor c;
     int endOfStitches;
-    int curColor = 0;
 
     if (!validateWritePattern(pattern, fileName, "writeXxx")) {
         return 0;
@@ -237,17 +229,19 @@ int writeXxx(EmbPattern* pattern, const char* fileName)
     binaryWriteByte(file, 0x00);
     binaryWriteByte(file, 0x00);
 
-    for (i=0; i<pattern->threads->count; i++) {
-        binaryWriteByte(file, 0x00);
-        binaryWriteByte(file, pattern->threads->thread[i].color.r);
-        binaryWriteByte(file, pattern->threads->thread[i].color.g);
-        binaryWriteByte(file, pattern->threads->thread[i].color.b);
-        curColor++;
+    for (i=0; i<22; i++) {
+        if (i<pattern->threads->count) {
+            c = pattern->threads->thread[i].color;
+            binaryWriteByte(file, 0x00);
+            binaryWriteByte(file, c.r);
+            binaryWriteByte(file, c.g);
+            binaryWriteByte(file, c.b);
+        }
+        else {
+            binaryWriteUInt(file, 0x01000000);
+        }
     }
-    for(i = 0; i < (22 - curColor); i++)
-    {
-        binaryWriteUInt(file, 0x01000000);
-    }
+
     binaryWriteByte(file, 0x00);
     binaryWriteByte(file, 0x01);
     embFile_close(file);

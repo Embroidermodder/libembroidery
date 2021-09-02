@@ -7,11 +7,12 @@ int readPhc(EmbPattern* pattern, const char* fileName)
     int colorChanges, version, bytesInSection2;
     unsigned short pecOffset, bytesInSection, bytesInSection3;
     char pecAdd;
-    EmbFile* file = 0;
+    EmbFile* file;
+    EmbThread t;
     int i;
 
-    if(!pattern) { embLog_error("format-phc.c readPhc(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-phc.c readPhc(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readPhc"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 0);
     if(!file) return 0;
@@ -21,9 +22,8 @@ int readPhc(EmbPattern* pattern, const char* fileName)
     embFile_seek(file, 0x4D, SEEK_SET);
     colorChanges = binaryReadUInt16(file);
 
-    for(i = 0; i < colorChanges; i++)
-    {
-        EmbThread t = pecThreads[(int)binaryReadByte(file)];
+    for (i = 0; i < colorChanges; i++) {
+        t = pecThreads[(int)binaryReadByte(file)];
         embPattern_addThread(pattern, t);
     }
     embFile_seek(file, 0x2B, SEEK_SET);
@@ -50,12 +50,14 @@ int readPhc(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writePhc(EmbPattern* pattern, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writePhc")) {
+    EmbFile* file;
+    if (!validateWritePattern(pattern, fileName, "writePhc"))
         return 0;
-    }
 
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
+    file = embFile_open(fileName, "wb", 0);
+    if(!file) return 0;
 
+    embFile_close(file);
     return 0; /*TODO: finish writePhc */
 }
 

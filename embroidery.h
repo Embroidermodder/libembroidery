@@ -619,14 +619,14 @@ extern void charReplace(char *s, const char *from, const char *to);
 extern int stringInArray(const char *s, const char **array);
 
 int roundDouble(double src);
-char startsWith(const char* pre, const char* str);
+char startsWith(char* pre, char* str);
 
-char* rTrim(char* const str, char junk);
-char* lTrim(char* const str, char junk);
-char *copy_trim(char const *s);
+char* rTrim(char* str, char junk);
+char* lTrim(char* str, char junk);
+char *copy_trim(char *s);
 void inplace_trim(char *s);
 char* emb_optOut(double num, char* str);
-char* emb_strdup(const char* src);
+char* emb_strdup(char* src);
 
 EMB_PUBLIC EmbHash* embHash_create(void);
 EMB_PUBLIC void embHash_free(EmbHash* hash);

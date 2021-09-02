@@ -54,6 +54,7 @@ int writeCol(EmbPattern* pattern, const char* fileName)
     FILE* file = 0;
     int i;
     EmbColor c;
+    unsigned char buffer[30];
 
     if (!validateWritePattern(pattern, fileName, "writeCol")) return 0;
 
@@ -65,7 +66,8 @@ int writeCol(EmbPattern* pattern, const char* fileName)
     fprintf(file, "%d\r\n", pattern->threads->count);
     for (i=0; i<pattern->threads->count; i++) {
         c = pattern->threads->thread[i].color;
-        fprintf(file, "%d,%d,%d,%d\r\n", i, (int)c.r, (int)c.g, (int)c.b);
+        sprintf(buffer, "%d,%d,%d,%d\r\n", i, (int)c.r, (int)c.g, (int)c.b);
+        binaryWriteBytes(file, buffer, strlen(buffer));
     }
     fclose(file);
     return 1;

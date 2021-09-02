@@ -165,11 +165,10 @@ int writeSew(EmbPattern* pattern, const char* fileName)
         yy = st.y * 10.0;
         sewEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), st.flags);
         if((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10))) {
-            embFile_printf(file, "%c%c%c%c", b[0], b[1], b[2], b[3]);
+            embFile_write(b, 1, 4, file);
         }
         else {
-            binaryWriteByte(file, b[0]);
-            binaryWriteByte(file, b[1]);
+            embFile_write(b, 1, 2, file);
         }
     }
     embFile_close(file);

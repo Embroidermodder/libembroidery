@@ -11,14 +11,12 @@ int readNew(EmbPattern* pattern, const char* fileName)
 {
     unsigned int stitchCount;
     unsigned char data[3];
-    EmbFile* file = 0;
+    EmbFile* file;
 
-    if(!pattern) { embLog_error("format-new.c readNew(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-new.c readNew(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readNew")) return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if(!file)
-		return 0;
+    if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     stitchCount = binaryReadUInt16(file);
@@ -70,12 +68,14 @@ int readNew(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeNew(EmbPattern* pattern, const char* fileName)
 {
+    EmbFile* file;
     if (!validateWritePattern(pattern, fileName, "writeNew")) {
         return 0;
     }
+    file = embFile_open(fileName, "wb", 0);
+    if (!file) return 0;
 
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
-
+    embFile_close(file);
     return 0; /*TODO: finish writeNew */
 }
 

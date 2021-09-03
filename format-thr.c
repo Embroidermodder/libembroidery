@@ -46,9 +46,9 @@ int readThr(EmbPattern* pattern, const char* fileName)
 {
     ThredHeader header;
     unsigned char r, g, b;
-    int currentColor;
-    int i;
+    int currentColor, i;
     EmbFile* file = 0;
+    EmbThread thread;
 
     if(!pattern) { embLog_error("format-thr.c readThr(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-thr.c readThr(), fileName argument is null\n"); return 0; }
@@ -110,7 +110,6 @@ int readThr(EmbPattern* pattern, const char* fileName)
 
     for(i = 0; i < 16; i++)
     {
-        EmbThread thread;
         thread.description = NULL;
         thread.catalogNumber = NULL;
         thread.color.r = binaryReadByte(file);
@@ -139,6 +138,7 @@ int writeThr(EmbPattern* pattern, const char* fileName)
     char bitmapName[16];
     EmbStitchList* pointer = 0;
     EmbFile* file = 0;
+    EmbColor c;
 
     if (!validateWritePattern(pattern, fileName, "writeThr")) {
         return 0;
@@ -189,15 +189,12 @@ int writeThr(EmbPattern* pattern, const char* fileName)
 
     /* write stitches */
     i = 0;
-    pointer = pattern->stitchList;
-    while(pointer)
-    {
+    for (pointer=pattern->stitchList; pointer; pointer=pointer->next) {
         binaryWriteFloat(file, (float)(pointer->stitch.x * 10.0));
         binaryWriteFloat(file, (float)(pointer->stitch.y * 10.0));
         binaryWriteUInt(file, NOTFRM | (pointer->stitch.color & 0x0F));
-        pointer = pointer->next;
         i++;
-        if(i >= stitchCount) break;
+        if (i >= stitchCount) break;
     }
     binaryWriteBytes(file, bitmapName, 16);
     /* background color */
@@ -207,38 +204,37 @@ int writeThr(EmbPattern* pattern, const char* fileName)
     binaryWriteByte(file, 0x00);
 
     for (i=0; i<pattern->threads->count; i++) {
-        binaryWriteByte(file, pattern->threads->thread[i].color.r);
-        binaryWriteByte(file, pattern->threads->thread[i].color.g);
-        binaryWriteByte(file, pattern->threads->thread[i].color.b);
+        c = pattern->threads->thread[i].color;
+        binaryWriteByte(file, c.r);
+        binaryWriteByte(file, c.g);
+        binaryWriteByte(file, c.b);
         binaryWriteByte(file, 0);
-        if(i >= 16) break;
+        if (i >= 16) break;
     }
 
     /* write remaining colors if not yet 16 */
-    for(; i < 16; i++)
-    {
+    for (; i < 16; i++) {
         binaryWriteUInt(file, 0);
     }
 
 #if 0
     /* write custom colors */
     for (i=0; i<pattern->threads->count; i++) {
-        binaryWriteByte(file, pattern->threads->thread[i].color.r);
-        binaryWriteByte(file, pattern->threads->thread[i].color.g);
-        binaryWriteByte(file, pattern->threads->thread[i].color.b);
+        c = pattern->threads->thread[i].color;
+        binaryWriteByte(file, c.r);
+        binaryWriteByte(file, c.g);
+        binaryWriteByte(file, c.b);
         binaryWriteByte(file, 0);
-        if(i >= 16) break;
+        if (i >= 16) break;
     }
 
     /* write remaining colors if not yet 16 */
-    for(; i < 16; i++)
-    {
+    for (; i < 16; i++) {
         binaryWriteUInt(file, 0);
     }
 #endif
 
-    for(i = 0; i < 16; i++)
-    {
+    for (i = 0; i < 16; i++) {
         binaryWriteByte(file, '4');
     }
 

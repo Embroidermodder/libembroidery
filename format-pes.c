@@ -6,10 +6,9 @@
 int readPes(EmbPattern* pattern, const char* fileName)
 {
     int pecstart, numColors, x;
-    EmbFile* file = 0;
+    EmbFile* file;
 
-    if(!pattern) { embLog_error("format-pes.c readPes(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-pes.c readPes(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readPes")) return 0;
 
     file = embFile_open(fileName, "rb", 0);
     if(!file)
@@ -72,10 +71,10 @@ int readPes(EmbPattern* pattern, const char* fileName)
         }
     }
 
-    static void readPESHeaderDefault()  {
-        int pecStart = readInt32LE();
-        skip(pecStart - readPosition);
-    }
+static void readPESHeaderDefault()  {
+    int pecStart = readInt32LE();
+    skip(pecStart - readPosition);
+}
 
     static void readDescriptions()  {
         int DesignStringLength = readInt8();

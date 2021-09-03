@@ -361,10 +361,6 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
     const char* dotPos = strrchr(fileName, '.');
     const char* start = 0;
 
-    if(!pattern) { embLog_error("format-pec.c writePecStitches(), pattern argument is null\n"); return; }
-    if(!file) { embLog_error("format-pec.c writePecStitches(), file argument is null\n"); return; }
-    if(!fileName) { embLog_error("format-pec.c writePecStitches(), fileName argument is null\n"); return; }
-
     if(forwardSlashPos)
     {
         start = forwardSlashPos + 1;

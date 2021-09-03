@@ -8,10 +8,12 @@ int readU00(EmbPattern* pattern, const char* fileName)
     char dx = 0, dy = 0;
     int flags = NORMAL;
     char endOfStream = 0;
-    EmbFile* file = 0;
+    EmbFile* file;
+    EmbThread t;
+    unsigned char b[4];
 
-    if(!pattern) { embLog_error("format-u00.c readU00(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-u00.c readU00(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readU00"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 0);
     if (!file) return 0;
@@ -19,9 +21,7 @@ int readU00(EmbPattern* pattern, const char* fileName)
     /* 16 3byte RGB's start @ 0x08 followed by 14 bytes between 0 and 15 with index of color for each color change */
     embFile_seek(file, 0x08, SEEK_SET);
 
-    for(i = 0; i < 16; i++)
-    {
-        EmbThread t;
+    for (i = 0; i < 16; i++) {
         t.color.r = binaryReadUInt8(file);
         t.color.g = binaryReadUInt8(file);
         t.color.b = binaryReadUInt8(file);
@@ -29,8 +29,7 @@ int readU00(EmbPattern* pattern, const char* fileName)
     }
 
     embFile_seek(file, 0x100, SEEK_SET);
-    for(i = 0; !endOfStream; i++)
-    {
+    for (i = 0; !endOfStream; i++) {
         char negativeX , negativeY;
         unsigned char b0 = binaryReadUInt8(file);
         unsigned char b1 = binaryReadUInt8(file);
@@ -71,12 +70,14 @@ int readU00(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeU00(EmbPattern* pattern, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeU00")) {
+    EmbFile *file;
+    if (!validateWritePattern(pattern, fileName, "writeU00"))
         return 0;
-    }
 
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
+    file = embFile_open(fileName, "wb", 0);
+    if (!file) return 0;
 
+    embFile_close(file);
     return 0; /*TODO: finish WriteU00 */
 }
 

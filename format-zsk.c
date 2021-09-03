@@ -8,14 +8,9 @@ int readZsk(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     int stitchType;
     unsigned char colorNumber;
-    if (!pattern) {
-        embLog_error("format-zsk.c readZsk(), pattern argument is null\n");
+    EmbThread t;
+    if (!validateReadPattern(pattern, fileName, "readZsk"))
         return 0;
-    }
-    if (!fileName) {
-        embLog_error("format-zsk.c readZsk(), fileName argument is null\n");
-        return 0;
-    }
 
     file = embFile_open(fileName, "rb", 0);
     if (!file) return 0;
@@ -23,7 +18,6 @@ int readZsk(EmbPattern* pattern, const char* fileName)
     embFile_seek(file, 0x230, SEEK_SET);
     colorNumber = binaryReadUInt8(file);
     while (colorNumber != 0) {
-        EmbThread t;
         t.color.r = binaryReadUInt8(file);
         t.color.g = binaryReadUInt8(file);
         t.color.b = binaryReadUInt8(file);
@@ -73,12 +67,15 @@ int readZsk(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeZsk(EmbPattern* pattern, const char* fileName)
 {
+    EmbFile *file;
     if (!validateWritePattern(pattern, fileName, "writeZsk")) {
         return 0;
     }
 
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
+    file = embFile_open(fileName, "wb", 0);
+    if (!file) return 0;
 
+    embFile_close(file);
     return 0; /*TODO: finish writeZsk */
 }
 

@@ -284,25 +284,17 @@ int roundDouble(double src)
 }
 
 /*! Returns \c true if string (\a str) begins with substring (\a pre), otherwise returns \c false. */
-char startsWith(const char* pre, const char* str)
+char startsWith(char* pre, char* str)
 {
-    char result = 0;
-    size_t lenpre;
-    size_t lenstr;
-    if(!pre) { embLog_error("helpers-misc.c startsWith(), pre argument is null\n"); return 0; }
-    if(!str) { embLog_error("helpers-misc.c startsWith(), str argument is null\n"); return 0; }
-    lenpre = strlen(pre);
-    lenstr = strlen(str);
-    if(lenstr < lenpre)
-        return 0;
-    result = (char)strncmp(pre, str, lenpre);
-    if(result == 0)
-        return 1;
-    return 0;
+    for (; *pre; pre++, str++) {
+        if (!*str) return 0;
+        if (*pre != *str) return 0;
+    }
+    return 1;
 }
 
 /*! Removes all characters from the right end of the string (\a str) that match (\a junk), moving left until a mismatch occurs. */
-char* rTrim(char* const str, char junk)
+char* rTrim(char* str, char junk)
 {
     char* original = str + strlen(str);
     while(*--original == junk);
@@ -310,21 +302,13 @@ char* rTrim(char* const str, char junk)
     return str;
 }
 
-/*! Removes all characters from the left end of the string (\a str) that match (\a junk), moving right until a mismatch occurs. */
-char* lTrim(char* const str, char junk)
+/*! Removes all characters from the left end of the string
+ * (\a str) that match (\a junk), moving right until a mismatch occurs. */
+char* lTrim(char* str, char junk)
 {
-    char* original = str;
-    char* p = original;
-    int trimmed = 0;
-    do
-    {
-        if(*original != junk || trimmed)
-        {
-            trimmed = 1;
-            *p++ = *original;
-        }
+    while (*str==junk) {
+        str++;
     }
-    while(*original++ != '\0');
     return str;
 }
 
@@ -347,7 +331,7 @@ static void get_trim_bounds(char const *s,
 }
 
 /* TODO: description */
-char* copy_trim(char const *s)
+char* copy_trim(char *s)
 {
     char const *firstWord = 0, *trailingSpace = 0;
     char* result = 0;
@@ -387,8 +371,9 @@ char* emb_optOut(double num, char* str)
     return str;
 }
 
-/*! Duplicates the string (\a src) and returns it. It is created on the heap. The caller is responsible for freeing the allocated memory. */
-char* emb_strdup(const char* src)
+/*! Duplicates the string (\a src) and returns it. It is created on the heap.
+ * The caller is responsible for freeing the allocated memory. */
+char* emb_strdup(char* src)
 {
     char* dest = 0;
     if(!src) { embLog_error("helpers-misc.c emb_strdup(), src argument is null\n"); return 0; }
@@ -423,8 +408,9 @@ EmbTime embTime_time(EmbTime* t)
 /*TODO: arduino embTime_time */
 #else
 
-int divideByZero = 0;
-divideByZero = divideByZero/divideByZero; /*TODO: wrap time() from time.h and verify it works consistently */
+    int divideByZero = 0;
+    divideByZero = divideByZero/divideByZero;
+    /*TODO: wrap time() from time.h and verify it works consistently */
 
 #endif /* ARDUINO */
 }

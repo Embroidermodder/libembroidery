@@ -5,10 +5,10 @@
 int readT09(EmbPattern* pattern, const char* fileName)
 {
     unsigned char b[3];
-    EmbFile* file = 0;
+    EmbFile* file;
 
-    if(!pattern) { embLog_error("format-t09.c readT09(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-t09.c readT09(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readT09"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 0);
     if(!file)
@@ -43,12 +43,16 @@ int readT09(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeT09(EmbPattern* pattern, const char* fileName)
 {
+    EmbFile* file;
     if (!validateWritePattern(pattern, fileName, "writeT09")) {
         return 0;
     }
 
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
+    file = embFile_open(fileName, "wb", 0);
+    if (!file)
+        return 0;
 
+    embFile_close(file);
     return 0; /*TODO: finish writeT09 */
 }
 

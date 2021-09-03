@@ -53,11 +53,14 @@ int readSst(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeSst(EmbPattern* pattern, const char* fileName)
 {
+    EmbFile *file;
     if (!validateWritePattern(pattern, fileName, "writeSst"))
         return 0;
 
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
+    file = embFile_open(fileName, "wb", 0);
+    if (!file) return 0;
 
+    embFile_close(file);
     return 0; /*TODO: finish writeSst */
 }
 

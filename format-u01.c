@@ -48,7 +48,6 @@ int readU01(EmbPattern* pattern, const char* fileName)
     embFile_close(file);
     embPattern_end(pattern);
 
-
     return 1;
 }
 

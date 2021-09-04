@@ -45,21 +45,22 @@ float GetRelativeY(EmbVector a1, EmbVector a2, EmbVector a3)
     return ((a1.x - a2.x) * (a3.y - a2.y) - (a1.y - a2.y) * (a3.x - a2.x));
 }
 
-double GetAngle(VectorStitch vs, VectorStitch vs2)
+double GetAngle(EmbVector a, EmbVector b)
 {
-    return atan((vs2.Xy.X - vs.Xy.X)/(vs2.Xy.Y - vs.Xy.Y));
+    return atan2(a.x - b.x, a.y - b.y);
 }
 
-StitchBlock* BreakIntoColorBlocks(EmbPattern pattern)
+void embPattern_breakIntoColorBlocks(EmbPattern *pattern)
 {
     EmbColor color;
-    int oldColor;
+    int oldColor, i;
     VectorStitch vs;
     var sa2 = new StitchBlock();
     oldColor = pattern.StitchList[0].ColorIndex;
     color = pattern.ColorList[oldColor];
     sa2.Thread = new Thread(color.Red, color.Blue, color.Green);
-    foreach (Stitch s in pattern.stitchList) {
+    for (i=0; i<pattern->stitches->count; i++) {
+        s = pattern->stitches->stitch[i];
         if (s.ColorIndex != oldColor) {
             yield return sa2;
             sa2 = new StitchBlock();
@@ -73,12 +74,13 @@ StitchBlock* BreakIntoColorBlocks(EmbPattern pattern)
     yield return sa2;
 }
 
-StitchBlock * BreakIntoSeparateObjects(EmbStitchBlock* blocks)
+int embPolygon_breakIntoSeparateObjects(EmbStitchBlock* blocks)
 {
-    int i;
+    int i, j;
     double dx, dy, dy2, dy3;
     double previousAngle = 0.0;
-    foreach (var block in blocks) {
+    for (j=0; j<blocks->count; j++) {
+        block = blocks[j];
         var stitches = new List<VectorStitch>();
         block.Stitches[0].Type = VectorStitchType.Contour;
         block.Stitches[block.Stitches.Count - 1].Type = VectorStitchType.Contour;
@@ -103,7 +105,6 @@ StitchBlock * BreakIntoSeparateObjects(EmbStitchBlock* blocks)
         }
 
         /* step 1 */
-        /*
         for (i = 1; i < pattern->stitches->count - 3; i++) {
             if (pattern->stitches->stitch[i + 1].type == VectorStitchType.Contour) {
                 dy = GetRelativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
@@ -119,13 +120,13 @@ StitchBlock * BreakIntoSeparateObjects(EmbStitchBlock* blocks)
                 }
             }
         }
-        */
     }
 }
 
 StitchObject * FindOutline(EmbStitchBlock* stitchData)
 {
-    int currColorIndex = 0, oddEven;
+    int currColorIndex = 0, oddEven, i;
+    float dx, dy, dy2, dy3;
     var pOdd = new List<Point>();
     var pEven = new List<Point>();
     foreach (StitchBlock sa in stitchData)
@@ -135,19 +136,17 @@ StitchObject * FindOutline(EmbStitchBlock* stitchData)
             sa.Stitches[0].Type = VectorStitchType.Contour;
             sa.Stitches[sa.Stitches.Count - 1].Type = VectorStitchType.Contour;
             /* step 0 */
-            for (int i = 0; i < sa.Stitches.Count - 2; i++) {
-                float dx = (GetRelativeX(sa.Stitches[i].Xy, sa.Stitches[i + 1].Xy, sa.Stitches[i + 2].Xy));
+            for (i = 0; i < sa.Stitches.Count - 2; i++) {
+                dx = (GetRelativeX(sa.Stitches[i].Xy, sa.Stitches[i + 1].Xy, sa.Stitches[i + 2].Xy));
                 sa.Stitches[i + 1].Type = dx <= 0 ? VectorStitchType.Run : VectorStitchType.Contour;
                 sa.Stitches[i].Angle = GetAngle(sa.Stitches[i], sa.Stitches[i + 1]);
             }
             /* step 1 */
-            /*
-            for (int i = 1; i < sa.Stitches.Count - 3; i++) // step 1 {
-                if (sa.Stitches[i + 1].Type == VectorStitchType.Contour)
-                {
-                    //float dy = GetRelativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
-                    //float dy2 = GetRelativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
-                    //float dy3 = GetRelativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
+            for (i = 1; i < sa.Stitches.Count - 3; i++) {
+                if (sa.Stitches[i + 1].Type == VectorStitchType.Contour) {
+                    float dy = GetRelativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
+                    float dy2 = GetRelativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
+                    float dy3 = GetRelativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
                     //if(dy)
                     if (sa.Stitches[i - 1].Type == VectorStitchType.Run || sa.Stitches[i + 1].Type == VectorStitchType.Run)
                     {
@@ -158,7 +157,6 @@ StitchObject * FindOutline(EmbStitchBlock* stitchData)
                     }
                 }
             }
-            */
         }
 
 
@@ -202,8 +200,7 @@ EmbPattern DrawGraphics(EmbPattern p)
     outPattern.AddColor(new Thread(255, 0, 0, "none", "None"));
     int colorIndex = outPattern.ColorList.Count - 1;
     var r = new Random();
-    foreach (StitchObject stitchObject in objectsFound)
-    {
+    foreach (StitchObject stitchObject in objectsFound) {
         if (stitchObject.SideOne.Count > 1 && stitchObject.SideTwo.Count > 1)
         {
             outPattern.AddColor(new Thread((byte) (r.Next()%256), (byte) (r.Next()%256), (byte) (r.Next()%256),

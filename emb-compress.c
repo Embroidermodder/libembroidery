@@ -124,7 +124,7 @@ int currentPosition;
 int inputPosition;
 int outputPosition;
 
-short husCompress_445(short _200, short _446)
+short husCompress_445(short _200, short _446, unsigned char *_278)
 {
     return ((short)((_446 << MACRO_154) ^ (_278[_200 + 2])) & (MACRO_153 - 1));
 }
@@ -647,14 +647,14 @@ int husCompress_compress(void)
     short_169 = 0;
     short_168 = 0;
     _201 = (short)(((_278[_200] << MACRO_154) ^ (_278[_200 + 1])) & (MACRO_153 - 1));
-    _201 = (short)(husCompress_445(_200, _201) + _279);
+    _201 = (short)(husCompress_445(_200, _201, _278) + _279);
     while (_209 > MACRO_140 + 4 && !short_170) {
         husCompress_199(_200, _201);
         if (short_168 < (3)) {
             husCompress_202(_278[_200], 0);
             husCompress_447(_200, _201);
             _200++;
-            _201 = (short)(husCompress_445(_200, _201) + _279);
+            _201 = (short)(husCompress_445(_200, _201, _278) + _279);
             _209--;
         } else {
             _209 -= short_168;
@@ -662,7 +662,7 @@ int husCompress_compress(void)
             while (--short_168 >= 0) {
                 husCompress_447(_200, _201);
                 _200++;
-                _201 = (short)(husCompress_445(_200, _201) + _279);
+                _201 = (short)(husCompress_445(_200, _201, _278) + _279);
             }
         }
     }
@@ -700,12 +700,12 @@ int husCompress_compress(void)
             s = (short)((s + 1) & (_280));
             husCompress_447(_200, _201);
             _200 = (short)((_200 + 1) & (_280));
-            _201 = (short)(husCompress_445(_200, _201) + _279);
+            _201 = (short)(husCompress_445(_200, _201, _278) + _279);
         }
         while (short_168-- >= 0) {
             husCompress_447(_200, _201);
             _200 = (short)((_200 + 1) & _280);
-            _201 = (short)(husCompress_445(_200, _201) + _279);
+            _201 = (short)(husCompress_445(_200, _201, _278) + _279);
             _209--;
         }
         if (mStatus < 0)

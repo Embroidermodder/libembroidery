@@ -23,7 +23,7 @@
 int *_usePt;
 double _distanceTolerance;
 
-double LineLength(EmbPoint a1, EmbPoint a2)
+double LineLength(EmbVector a1, EmbVector a2)
 {
     return sqrt(pow(a2.x - a1.x, 2) + pow(a2.y - a1.y, 2));
 }
@@ -35,14 +35,14 @@ double embVector_distancePointPoint(EmbVector p, EmbVector2 p2)
     return sqrt(dx * dx + dy * dy);
 }
 
-float GetRelativeX(EmbVector a1, EmbPoint a2, EmbPoint a3)
+float GetRelativeX(EmbVector a1, EmbVector a2, EmbVector a3)
 {
     return ((a1.x - a2.x) * (a3.x - a2.x) + (a1.y - a2.y) * (a3.y - a2.y));
 }
 
-float GetRelativeY(EmbPoint a1, EmbPoint a2, EmbPoint a3)
+float GetRelativeY(EmbVector a1, EmbVector a2, EmbVector a3)
 {
-    return ((a1.X - a2.X) * (a3.Y - a2.Y) - (a1.Y - a2.Y) * (a3.X - a2.X));
+    return ((a1.x - a2.x) * (a3.y - a2.y) - (a1.y - a2.y) * (a3.x - a2.x));
 }
 
 double GetAngle(VectorStitch vs, VectorStitch vs2)
@@ -52,21 +52,22 @@ double GetAngle(VectorStitch vs, VectorStitch vs2)
 
 StitchBlock* BreakIntoColorBlocks(EmbPattern pattern)
 {
+    EmbColor color;
+    int oldColor;
+    VectorStitch vs;
     var sa2 = new StitchBlock();
-    int oldColor = pattern.StitchList[0].ColorIndex;
-    var color = pattern.ColorList[oldColor];
+    oldColor = pattern.StitchList[0].ColorIndex;
+    color = pattern.ColorList[oldColor];
     sa2.Thread = new Thread(color.Red, color.Blue, color.Green);
-    foreach (Stitch s in pattern.stitchList)
-    {
-        if (s.ColorIndex != oldColor)
-        {
+    foreach (Stitch s in pattern.stitchList) {
+        if (s.ColorIndex != oldColor) {
             yield return sa2;
             sa2 = new StitchBlock();
             color = pattern.ColorList[s.ColorIndex];
             sa2.Thread = new Thread(color.Red, color.Blue, color.Green);
             oldColor = s.ColorIndex;
         }
-        var vs = new VectorStitch { Xy = new Point(s.X, s.Y), Color = s.ColorIndex };
+        vs = new VectorStitch { Xy = new Point(s.X, s.Y), Color = s.ColorIndex };
         sa2.Stitches.Add(vs);
     }
     yield return sa2;
@@ -75,43 +76,39 @@ StitchBlock* BreakIntoColorBlocks(EmbPattern pattern)
 StitchBlock * BreakIntoSeparateObjects(EmbStitchBlock* blocks)
 {
     int i;
+    double dx, dy, dy2, dy3;
     double previousAngle = 0.0;
-    foreach (var block in blocks)
-    {
+    foreach (var block in blocks) {
         var stitches = new List<VectorStitch>();
         block.Stitches[0].Type = VectorStitchType.Contour;
         block.Stitches[block.Stitches.Count - 1].Type = VectorStitchType.Contour;
 
-        for (int i = 0; i < block.Stitches.Count - 2; i++) // step 0
-        {
-            double dx = (GetRelativeX(block.Stitches[i].Xy, block.Stitches[i + 1].Xy, block.Stitches[i + 2].Xy));
+        for (i = 0; i < block.Stitches.Count - 2; i++) { /* step 0 */
+            dx = (GetRelativeX(block.Stitches[i].Xy, block.Stitches[i + 1].Xy, block.Stitches[i + 2].Xy));
             block.Stitches[i + 1].Type = dx <= 0 ? VectorStitchType.Run : VectorStitchType.Contour;
             block.Stitches[i].Angle = GetAngle(block.Stitches[i], block.Stitches[i + 1]);
             stitches.Add(block.Stitches[i].Clone());
-            if (i > 0)
-            {
+            if (i > 0) {
                 if ((block.Stitches[i].Type == VectorStitchType.Contour) && Math.Abs(block.Stitches[i].Angle - previousAngle) > (20/180*embConstantPi))
                 {
                     yield return
-                        new StitchBlock
-                            {
+                        new StitchBlock {
                                 Stitches = stitches,
                                 Angle = stitches.Average(x => x.Angle),
                                 Thread = new Thread(block.Thread.Red, block.Thread.Blue, block.Thread.Green)
                             };
                     stitches = new List<VectorStitch>();
-
                 }
             }
         }
 
+        /* step 1 */
         /*
-        // step 1
         for (i = 1; i < pattern->stitches->count - 3; i++) {
             if (pattern->stitches->stitch[i + 1].type == VectorStitchType.Contour) {
-                //float dy = GetRelativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
-                //float dy2 = GetRelativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
-                //float dy3 = GetRelativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
+                dy = GetRelativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
+                dy2 = GetRelativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
+                dy3 = GetRelativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
                 //if(dy)
                 if (sa.Stitches[i - 1].Type == VectorStitchType.Run || sa.Stitches[i + 1].Type == VectorStitchType.Run)
                 {
@@ -128,7 +125,7 @@ StitchBlock * BreakIntoSeparateObjects(EmbStitchBlock* blocks)
 
 StitchObject * FindOutline(EmbStitchBlock* stitchData)
 {
-    int currColorIndex = 0;
+    int currColorIndex = 0, oddEven;
     var pOdd = new List<Point>();
     var pEven = new List<Point>();
     foreach (StitchBlock sa in stitchData)
@@ -137,21 +134,21 @@ StitchObject * FindOutline(EmbStitchBlock* stitchData)
         {
             sa.Stitches[0].Type = VectorStitchType.Contour;
             sa.Stitches[sa.Stitches.Count - 1].Type = VectorStitchType.Contour;
-            for (int i = 0; i < sa.Stitches.Count - 2; i++) // step 0
-            {
+            /* step 0 */
+            for (int i = 0; i < sa.Stitches.Count - 2; i++) {
                 float dx = (GetRelativeX(sa.Stitches[i].Xy, sa.Stitches[i + 1].Xy, sa.Stitches[i + 2].Xy));
                 sa.Stitches[i + 1].Type = dx <= 0 ? VectorStitchType.Run : VectorStitchType.Contour;
                 sa.Stitches[i].Angle = GetAngle(sa.Stitches[i], sa.Stitches[i + 1]);
             }
+            /* step 1 */
             /*
-            //for (int i = 1; i < sa.Stitches.Count - 3; i++) // step 1
-            //{
-            //    if (sa.Stitches[i + 1].Type == VectorStitchType.Contour)
-            //    {
-            //        //float dy = GetRelativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
-            //        //float dy2 = GetRelativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
-            //        //float dy3 = GetRelativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
-            //        //if(dy)
+            for (int i = 1; i < sa.Stitches.Count - 3; i++) // step 1 {
+                if (sa.Stitches[i + 1].Type == VectorStitchType.Contour)
+                {
+                    //float dy = GetRelativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
+                    //float dy2 = GetRelativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
+                    //float dy3 = GetRelativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
+                    //if(dy)
                     if (sa.Stitches[i - 1].Type == VectorStitchType.Run || sa.Stitches[i + 1].Type == VectorStitchType.Run)
                     {
                         sa.Stitches[i].Type = VectorStitchType.Tatami;
@@ -165,17 +162,13 @@ StitchObject * FindOutline(EmbStitchBlock* stitchData)
         }
 
 
-        int oddEven = 0;
-        foreach (VectorStitch t in sa.Stitches)
-        {
-            if ((t.Type == VectorStitchType.Contour) && (oddEven % 2) == 0)
-            {
+        oddEven = 0;
+        foreach (VectorStitch t in sa.Stitches) {
+            if ((t.Type == VectorStitchType.Contour) && (oddEven % 2) == 0) {
                 pEven.Add(t.Xy);
-
                 oddEven++;
             }
-            else if ((t.Type == VectorStitchType.Contour) && (oddEven % 2) == 1)
-            {
+            else if ((t.Type == VectorStitchType.Contour) && (oddEven % 2) == 1) {
                 pOdd.Add(t.Xy);
                 oddEven++;
             }
@@ -222,44 +215,40 @@ EmbPattern DrawGraphics(EmbPattern p)
             {
                 outPattern.AddStitchAbsolute(point.X, point.Y, StitchTypes.Normal);
             }
-            //break;
-            //StitchObject stitchObject = objectsFound[1];))
-            //////if (stitchObject.SideOne.Count > 0)
-            //////{
-            //////    outPattern.StitchList.Add(new Stitch(stitchObject.SideOne[0].X, stitchObject.SideOne[0].Y,
-            //////                                         StitchType.Jump, colorIndex));
-            //////}
-            //////foreach (Point t in stitchObject.SideOne)
-            //////{
-            //////    outPattern.StitchList.Add(new Stitch(t.X, t.Y,
-            //////                                         StitchType.Normal, colorIndex));
-            //////}
-            //////foreach (Point t in stitchObject.SideTwo)
-            //////{
-            //////    outPattern.StitchList.Add(new Stitch(t.X, t.Y,
-            //////                                         StitchType.Normal, colorIndex));
-            //////}
-            //break;
+            /*
+            break;
+            Point t;
+            StitchObject stitchObject = objectsFound[1];
+            if (stitchObject.SideOne.Count > 0) {
+                outPattern.StitchList.Add(new Stitch(stitchObject.SideOne[0].x, stitchObject.SideOne[0].y,
+                                                     StitchType.Jump, colorIndex));
+            }
+            foreach (t in stitchObject.SideOne) {
+                outPattern.StitchList.Add(new Stitch(t.x, t.y, StitchType.Normal, colorIndex));
+            }
+            foreach (t in stitchObject.SideTwo) {
+                outPattern.StitchList.Add(new Stitch(t.x, t.y, StitchType.Normal, colorIndex));
+            }
+            break;
+            */
         }
     }
     outPattern.AddStitchRelative(0, 0, StitchTypes.End);
     return outPattern;
-    //return (SimplifyOutline(outPattern));
+    /* return (SimplifyOutline(outPattern)); */
 }
 
-EmbPattern SimplifyOutline(EmbPattern pattern)
+void SimplifyOutline(EmbPattern pattern)
 {
     var v = new Vertices();
     v.AddRange(pattern.StitchList.Select(point => new Vector2(point.X, point.Y)));
     var output = SimplifyTools.DouglasPeuckerSimplify(v, 10);
     var patternOut = new Pattern();
-    foreach (var color in pattern.ColorList)
-    {
+    foreach (var color in pattern.ColorList) {
         patternOut.AddColor(color);
     }
 
-    foreach (var vertex in output)
-    {
+    foreach (var vertex in output) {
         patternOut.AddStitchAbsolute(vertex.X, vertex.Y, StitchTypes.Normal);
     }
     patternOut.AddStitchRelative(0, 0, StitchTypes.End);
@@ -267,91 +256,94 @@ EmbPattern SimplifyOutline(EmbPattern pattern)
 }
 
 /* Removes all collinear points on the polygon. */
-Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance)
+int embPolygon_collinearSimplify(EmbArray *vertices, float collinearityTolerance)
 {
+    int i, prevId, nextId;
+    EmbVector prev, current, next;
     /* We can't simplify polygons under 3 vertices */
-    if (vertices.Count < 3)
-        return vertices;
+    if (vertices->count < 3) {
+        return 0;
+    }
 
     var simplified = new Vertices();
 
-    for (int i = 0; i < vertices.Count; i++)
-    {
-        int prevId = vertices.PreviousIndex(i);
-        int nextId = vertices.NextIndex(i);
+    for (i = 0; i < vertices->count; i++) {
+        prevId = vertices.PreviousIndex(i);
+        nextId = vertices.NextIndex(i);
 
-        Vector2 prev = vertices[prevId];
-        Vector2 current = vertices[i];
-        Vector2 next = vertices[nextId];
+        prev = vertices[prevId];
+        current = vertices[i];
+        next = vertices[nextId];
 
         /* If they collinear, continue */
-        if (MathUtils.Collinear(ref prev, ref current, ref next, collinearityTolerance))
+        if (MathUtils.Collinear(&prev, &current, &next, collinearityTolerance)) {
             continue;
+        }
 
         simplified.Add(current);
     }
 
-    return simplified;
+    return 1;
 }
 
 /**
- * Removes all collinear points on the polygon.
- * Has a default bias of 0.
+ * Removes all collinear points on the polygon. Has a default bias of 0.
  *
  * @param vertices The polygon that needs simplification.
  * @returns A simplified polygon.
  */
-int CollinearSimplify(Vertices vertices)
+int CollinearSimplify(EmbArray *vertices)
 {
     return CollinearSimplify(vertices, 0);
 }
 
-/// Ramer-Douglas-Peucker polygon simplification algorithm. This is the general recursive version that does not use the
-/// speed-up technique by using the Melkman convex hull.
-/// If you pass in 0, it will remove all collinear points
-Vertices DouglasPeuckerSimplify(Vertices vertices, float distanceTolerance)
+/**
+ * Ramer-Douglas-Peucker polygon simplification algorithm. This is the general recursive version that does not use the
+ * speed-up technique by using the Melkman convex hull.
+ * If you pass in 0, it will remove all collinear points
+ */
+int embPolygon_DouglasPeuckerSimplify(EmbArray *vertices, float distanceTolerance)
 {
+    int i;
+    EmbArray *_usePt;
     _distanceTolerance = distanceTolerance;
 
-    _usePt = new bool[vertices.Count];
-    for (int i = 0; i < vertices.Count; i++)
-    {
-        _usePt[i] = true;
+    _usePt = embArray_create(EMB_FLAG);
+    for (i = 0; i < vertices->count; i++) {
+        _usePt[i] = 1;
     }
-    SimplifySection(vertices, 0, vertices.Count - 1);
+    embPolygon_simplifySection(vertices, 0, vertices.Count - 1);
     var result = new Vertices();
     result.AddRange(vertices.Where((t, i) => _usePt[i]));
-    return result;
+    return 1;
 }
 
-void SimplifySection(EmbArray vertices, int i, int j)
+void embPolygon_simplifySection(EmbArray *vertices, int i, int j)
 {
+    int k, maxIndex;
+    EmbArray a, b;
+    double maxDistance, distance;
     if ((i + 1) == j)
         return;
 
-    Vector2 a = vertices[i];
-    Vector2 b = vertices[j];
-    double maxDistance = -1.0;
-    int maxIndex = i;
-    for (int k = i + 1; k < j; k++)
-    {
-        double distance = DistancePointLine(vertices[k], a, b);
+    a = vertices[i];
+    b = vertices[j];
+    maxDistance = -1.0;
+    maxIndex = i;
+    for (k = i + 1; k < j; k++) {
+        distance = DistancePointLine(vertices[k], a, b);
 
-        if (distance > maxDistance)
-        {
+        if (distance > maxDistance) {
             maxDistance = distance;
             maxIndex = k;
         }
     }
-    if (maxDistance <= _distanceTolerance)
-    {
-        for (int k = i + 1; k < j; k++)
-        {
-            _usePt[k] = false;
+    if (maxDistance <= _distanceTolerance) {
+        for (k = i + 1; k < j; k++) {
+            _usePt[k] = 0;
         }
     }
-    else
-    {
+    else {
         SimplifySection(vertices, i, maxIndex);
         SimplifySection(vertices, maxIndex, j);
     }
@@ -408,27 +400,27 @@ double embVector_distancePointLine(EmbVector p, EmbVector a, EmbVector b)
 }
 
 /* From physics2d.net */
-public static Vertices ReduceByArea(Vertices vertices, float areaTolerance)
+int embPolygon_reduceByArea(EmbArray *vertices, float areaTolerance)
 {
-    float old1;
-    float old2;
-    float new1;
+    float old1, old2, new1;
     int index;
-    if (vertices.Count <= 3)
-        return vertices;
+    EmbVector v1, v2, v3;
+    EmbArray *result;
+    if (vertices->count <= 3) {
+        return 0;
+    }
 
     if (areaTolerance < 0) {
         throw new ArgumentOutOfRangeException("areaTolerance", "must be equal to or greater then zero.");
     }
 
-    var result = new Vertices();
-    Vector2 v3;
-    Vector2 v1 = vertices[vertices.Count - 2];
-    Vector2 v2 = vertices[vertices.Count - 1];
+    result = new Vertices();
+    v1 = vertices[vertices.Count - 2];
+    v2 = vertices[vertices.Count - 1];
     areaTolerance *= 2;
     for (index = 0; index < vertices.Count; ++index, v2 = v3) {
         if (index == vertices.Count - 1) {
-            if (result.Count == 0) {
+            if (result->count == 0) {
                 throw new ArgumentOutOfRangeException("areaTolerance", "The tolerance is too high!");
             }
             v3 = result[0];
@@ -436,11 +428,11 @@ public static Vertices ReduceByArea(Vertices vertices, float areaTolerance)
         else {
             v3 = vertices[index];
         }
-        MathUtils.Cross(ref v1, ref v2, out old1);
-        MathUtils.Cross(ref v2, ref v3, out old2);
-        MathUtils.Cross(ref v1, ref v3, out new1);
+        old1 = embVector_cross(v1, v2);
+        old2 = embVector_cross(v2, v3);
+        new1 = embVector_cross(v1, v3);
         if (fabs(new1 - (old1 + old2)) > areaTolerance) {
-            result.Add(v2);
+            embArray_addVector(result, v2);
             v1 = v2;
         }
     }
@@ -453,60 +445,59 @@ public static Vertices ReduceByArea(Vertices vertices, float areaTolerance)
  */
 void MergeParallelEdges(EmbArray *vertices, float tolerance)
 {
-    int lower, upper; 
-    float dx0, dx1, dy0, dy1, norm0, norm1;
-    if (vertices.Count <= 3)
+    int lower, upper, i, newNVertices, currIndex;
+    EmbVector d0, d1;
+    float norm0, norm1, cross, dot;
+    EmbArray *mergeMe;
+    if (vertices->count <= 3) {
         return; /* Can't do anything useful here to a triangle */
+    }
 
-    var mergeMe = new bool[vertices.Count];
-    int newNVertices = vertices.Count;
+    mergeMe = embVector_create(EMB_FLAG);
+    newNVertices = vertices->count;
 
     /* Gather points to process */
-    for (int i = 0; i < vertices.Count; ++i)
-    {
+    for (i = 0; i < vertices->count; ++i) {
         lower = (i+vertices->count-1) % vertices->count;
         upper = (i+1)% vertices->count;
 
-        dx0 = vertices[i].x - vertices[lower].x;
-        dy0 = vertices[middle].y - vertices[lower].y;
-        dx1 = vertices[upper].x - vertices[i].x;
-        dy1 = vertices[upper].y - vertices[i].y;
-        norm0 = sqrt(dx0 * dx0 + dy0 * dy0);
-        norm1 = sqrt(dx1 * dx1 + dy1 * dy1);
+        embVector_subtract(vertices[i], vertices[lower], &d0);
+        embVector_subtract(vertices[upper], vertices[i], &d1);
+        norm0 = embVector_getLength(d0);
+        norm1 = embVector_getLength(d1);
 
         if (!(norm0 > 0.0f && norm1 > 0.0f) && newNVertices > 3) {
             /* Merge identical points */
-            mergeMe[i] = true;
+            embArray_addFlag(mergeMe, 1);
             --newNVertices;
+            continue;
         }
 
-        dx0 /= norm0;
-        dy0 /= norm0;
-        dx1 /= norm1;
-        dy1 /= norm1;
-        float cross = dx0 * dy1 - dx1 * dy0;
-        float dot = dx0 * dx1 + dy0 * dy1;
+        embVector_multiply(d0, 1.0/norm0, &d0);
+        embVector_multiply(d1, 1.0/norm1, &d1);
+        cross = embVector_cross(d0, d1); /* dx0 * dy1 - dx1 * dy0; */
+        dot = embVector_dot(d0, d1);
 
-        if (Math.Abs(cross) < tolerance && dot > 0 && newNVertices > 3)
-        {
-            mergeMe[i] = true;
+        if (fabs(cross) < tolerance && dot > 0 && newNVertices > 3) {
+            embArray_addFlag(mergeMe, 1);
             --newNVertices;
         }
-        else
-            mergeMe[i] = false;
+        else {
+            embArray_addFlag(mergeMe, 0);
+        }
     }
 
-    if (newNVertices == vertices.Count || newNVertices == 0)
+    if (newNVertices == vertices->count || newNVertices == 0) {
         return;
+    }
 
-    int currIndex = 0;
+    currIndex = 0;
 
     /* Copy the vertices to a new list and clear the old */
     var oldVertices = new Vertices(vertices);
     vertices.Clear();
 
-    for (int i = 0; i < oldVertices.Count; ++i)
-    {
+    for (i = 0; i < oldVertices.Count; ++i) {
         if (mergeMe[i] || newNVertices == 0 || currIndex == newNVertices)
             continue;
 
@@ -518,24 +509,24 @@ void MergeParallelEdges(EmbArray *vertices, float tolerance)
 /* Reduces the polygon by distance. */
 int embPolygon_reduceByDistance(EmbArray *vertices, float distance)
 {
+    int i, nextId;
+    double vdist;
     /* We can't simplify polygons under 3 vertices */
     if (vertices->count < 3) return 0;
 
-    distance *= distance;
+    simplified = new Vertices();
 
-    var simplified = new Vertices();
+    for (i = 0; i < vertices->count; i++) {
+        nextId = vertices.NextIndex(i);
 
-    for (int i = 0; i < vertices->count; i++) {
-        int nextId = vertices.NextIndex(i);
-
-        Vector2 current = vertices[i];
-        Vector2 next = vertices[nextId];
+        vdist = embDistancePointPoint(vertices[i], vertices[nextId]);
 
         /* If they are closer than the distance, continue */
-        if ((next - current).LengthSquared() <= distance)
+        if (vdist < distance) {
             continue;
+        }
 
-        simplified.Add(current);
+        embArray_addVector(simplified, current);
     }
 
     return 1;

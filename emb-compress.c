@@ -4,38 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MACRO_132 (CHAR_BIT * sizeof(unsigned short))
-#define MACRO_138 (10)
-#define MACRO_139 (8)
-#define MACRO_140 (256)
-#define byte_MAX (255)
-#define MACRO_141 (byte_MAX + MACRO_140)
-#define MACRO_142 (15)
-#define MACRO_143 (9)
-#define MACRO_144 (MACRO_140 + 1)
-#define MACRO_145 (19)
-#define MACRO_147 (5)
-#define MACRO_148 (4096)
-#define MACRO_149 (256)
-
-#define MACRO_152 (MACRO_145)
-#define MACRO_153 (4096)
-#define MACRO_154 (4)
-#define MACRO_155 (8192)
-#define MACRO_156 (512)
-#define MACRO_157 (-1)
-#define MACRO_158 (128)
-#define MACRO_159 (512)
-#define MACRO_540 (5)
-#define bufferSize (512)
-
 void husExpand_258(int _259, unsigned char* _260, int _261, unsigned short* _262, unsigned short _263);
-void husExpand_257(void);
 void husExpand_256(int _219);
 void husExpand_255(void);
 void husExpand_253(short _254, short _220, short _221);
 unsigned short husExpand_252(int _219);
-void husExpand_251(void);
 unsigned short husExpand_250(void);
 unsigned short husExpand_249(void);
 
@@ -43,13 +16,10 @@ void husExpand(unsigned char* input, unsigned char* output, int compressedSize, 
 int husExpand_expand(void);
 void husExpand_cleanup(void);
 
-void husCompress_196(void);
 void husCompress_197(void);
 void husCompress_198(void);
 void husCompress_199(short _200, short _201);
 void husCompress_202(unsigned short _203, unsigned short _204);
-void husCompress_205(void);
-void husCompress_206(void);
 void husCompress_207(void);
 void husCompress_208(int _209, unsigned short _203);
 void husCompress_210(void);
@@ -59,7 +29,7 @@ void husCompress_218(short _219, short _220, short _221);
 void husCompress_222(void);
 void husCompress_223(short _203);
 void husCompress_224(unsigned short _204);
-void husCompress_225(int _226, unsigned short* _187, short* shortptr_177, short _227);
+void husCompress_225(int _226, unsigned short* ushortptr_187, short* shortptr_177, short _227);
 void husCompress_228(int _229);
 void husCompress_230(int _219, unsigned char* _209, unsigned short* _231);
 void husCompress_232(int _226);
@@ -93,16 +63,16 @@ unsigned short short_183;
 unsigned short short_184;
 unsigned short short_185;
 unsigned short short_186;
-unsigned short* _187;
-unsigned short* _188;
-unsigned short* _189;
-unsigned short* _190;
-unsigned short* _191;
-unsigned short* _192;
-unsigned short* _193;
-unsigned short* _194;
-unsigned short* _240;
-unsigned short* _241;
+unsigned short* ushortptr_187;
+unsigned short* ushortptr_188;
+unsigned short* ushortptr_189;
+unsigned short* ushortptr_190;
+unsigned short* ushortptr_191;
+unsigned short* ushortptr_192;
+unsigned short* ushortptr_193;
+unsigned short* ushortptr_194;
+unsigned short* ushortptr_240;
+unsigned short* ushortptr_241;
 short _243;
 unsigned short _244;
 unsigned char _245;
@@ -126,13 +96,14 @@ int outputPosition;
 
 short husCompress_445(short _200, short _446, unsigned char *_278)
 {
-    return ((short)((_446 << MACRO_154) ^ (_278[_200 + 2])) & (MACRO_153 - 1));
+    return (short)((_446 << 4) ^ (_278[_200 + 2])) & 4095;
 }
 
 void husCompress_447(short _200, short _201)
 {
     short _204;
-    if ((_204 = shortptr_163[_201]) != MACRO_157)
+    _204 = shortptr_163[_201];
+    if (_204 != -1)
         shortptr_164[_204] = _200;
     shortptr_164[_200] = _201;
     shortptr_163[_200] = _204;
@@ -143,25 +114,26 @@ void husCompress_448(short s)
 {
     short _204;
     _204 = shortptr_164[s];
-    if (_204 != MACRO_157) {
-        shortptr_164[s] = MACRO_157;
-        shortptr_163[_204] = MACRO_157;
+    if (_204 != -1) {
+        shortptr_164[s] = -1;
+        shortptr_163[_204] = -1;
     }
 }
 
 void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int _269)
 {
+    /* only ever called with _269 = 10, so short_175 = 1024 */
     currentPosition = 0;
     outputPosition = 0;
     currentIndex = 0;
-    inputBufferSize = bufferSize;
+    inputBufferSize = (512);
     mStatus = 0;
     outputArray = output;
     inputArray = input;
-    inputSize = bufferSize;
+    inputSize = (512);
 
     remainingBytes = compressedSize;
-    if (_269 > (14) || _269 < MACRO_138) {
+    if (_269 > 14 || _269 < 10) {
         mStatus = -1;
         short_175 = 2;
     } else {
@@ -175,29 +147,15 @@ void husExpand(unsigned char* input, unsigned char* output, int compressedSize, 
 
     short_176 = (short)(short_175 - 1);
 
-    ucharptr_166 = (unsigned char*)malloc(sizeof(unsigned char) * (short_175 + 2));
-    if (ucharptr_166)
-        memset(ucharptr_166, 0, (short_175 + 2) * sizeof(unsigned char));
-    _240 = (unsigned short*)malloc(sizeof(unsigned short) * (MACRO_148));
-    if (_240)
-        memset(_240, 0, (MACRO_148) * sizeof(unsigned short));
-    _241 = (unsigned short*)malloc(sizeof(unsigned short) * (MACRO_149));
-    if (_241)
-        memset(_241, 0, (MACRO_149) * sizeof(unsigned short));
-    _189 = (unsigned short*)malloc(sizeof(unsigned short) * (2 * MACRO_141 - 1));
-    if (_189)
-        memset(_189, 0, (2 * MACRO_141 - 1) * sizeof(unsigned short));
-    _190 = (unsigned short*)malloc(sizeof(unsigned short) * (2 * MACRO_141 - 1));
-    if (_190)
-        memset(_190, 0, (2 * MACRO_141 - 1) * sizeof(unsigned short));
-    ucharptr_180 = (unsigned char*)malloc(sizeof(unsigned char) * (MACRO_141));
-    if (ucharptr_180)
-        memset(ucharptr_180, 0, (MACRO_141) * sizeof(unsigned char));
-    ucharptr_181 = (unsigned char*)malloc(sizeof(unsigned char) * (MACRO_152));
-    if (ucharptr_181)
-        memset(ucharptr_181, 0, (MACRO_152) * sizeof(unsigned char));
+    ucharptr_166 = (unsigned char*)calloc(short_175 + 2, sizeof(unsigned char));
+    ushortptr_240 = (unsigned short*)calloc(4096, sizeof(unsigned short));
+    ushortptr_241 = (unsigned short*)calloc(256, sizeof(unsigned short));
+    ushortptr_189 = (unsigned short*)calloc(1021, sizeof(unsigned short));
+    ushortptr_190 = (unsigned short*)calloc(1021, sizeof(unsigned short));
+    ucharptr_180 = (unsigned char*)calloc(511, sizeof(unsigned char));
+    ucharptr_181 = (unsigned char*)calloc(19, sizeof(unsigned char));
 
-    if (ucharptr_166 == NULL || _189 == NULL || _190 == NULL || ucharptr_180 == NULL || ucharptr_181 == NULL || _240 == NULL || _241 == NULL || inputBuffer == NULL) {
+    if (ucharptr_166 == NULL || ushortptr_189 == NULL || ushortptr_190 == NULL || ucharptr_180 == NULL || ucharptr_181 == NULL || ushortptr_240 == NULL || ushortptr_241 == NULL || inputBuffer == NULL) {
         mStatus = -1;
     }
 
@@ -208,12 +166,12 @@ void husExpand(unsigned char* input, unsigned char* output, int compressedSize, 
 void husExpand_cleanup(void)
 {
     free(ucharptr_166);
-    free(_189);
-    free(_190);
+    free(ushortptr_189);
+    free(ushortptr_190);
     free(ucharptr_180);
     free(ucharptr_181);
-    free(_240);
-    free(_241);
+    free(ushortptr_240);
+    free(ushortptr_241);
 }
 
 void husExpand_253(short _254, short _220, short _221)
@@ -223,10 +181,9 @@ void husExpand_253(short _254, short _220, short _221)
     _219 = husExpand_252(_220);
     if (_219 == 0) {
         _203 = husExpand_252(_220);
-        for (_226 = 0; _226 < _254; _226++)
-            ucharptr_181[_226] = 0;
+        memset(ucharptr_181, 0, _254);
         for (_226 = 0; _226 < 256; _226++)
-            _241[_226] = _203;
+            ushortptr_241[_226] = _203;
     } else {
         _226 = 0;
         while (_226 < _219) {
@@ -248,7 +205,7 @@ void husExpand_253(short _254, short _220, short _221)
         }
         while (_226 < _254)
             ucharptr_181[_226++] = 0;
-        husExpand_258(_254, ucharptr_181, 8, _241, MACRO_149);
+        husExpand_258(_254, ucharptr_181, 8, ushortptr_241, (256));
     }
 }
 
@@ -259,11 +216,16 @@ int husExpand_expand(void)
     short _279 = short_175;
     short _280 = short_176;
     _243 = 0;
-    husExpand_251();
+    _244 = 0;
+    short_182 = 0;
+    _245 = 0;
+    short_172 = 0;
+    _246 = 0;
+    husExpand_256(16);
 
     while (_243 < 5) {
         short _203;
-        if ((_203 = (short)husExpand_249()) <= byte_MAX) {
+        if ((_203 = (short)husExpand_249()) <= (255)) {
             _278[_200] = (unsigned char)_203;
             if (++_200 >= _279) {
                 _200 = 0;
@@ -272,11 +234,11 @@ int husExpand_expand(void)
             }
         } else {
             short _226;
-            short _276 = (short)(_203 - (byte_MAX + 1 - (3)));
-            if (_276 == MACRO_144)
+            short _276 = (short)(_203 - ((255) + 1 - (3)));
+            if (_276 == (257))
                 break;
             _226 = (short)((_200 - husExpand_250() - 1) & _280);
-            if (_226 < _279 - MACRO_140 - 1 && _200 < _279 - MACRO_140 - 1) {
+            if (_226 < _279 - (256) - 1 && _200 < _279 - (256) - 1) {
                 while (--_276 >= 0)
                     _278[_200++] = _278[_226++];
             } else {
@@ -304,23 +266,23 @@ unsigned short husExpand_249(void)
     unsigned short _276, _283;
     if (_244 == 0) {
         _244 = husExpand_252(16);
-        husExpand_253(MACRO_145, MACRO_147, 3);
+        husExpand_253((19), (5), 3);
         husExpand_255();
-        husExpand_253(MACRO_142, MACRO_540, -1);
+        husExpand_253((15), (5), -1);
         if (mStatus < 0)
             return 0;
     }
     _244--;
-    _276 = _240[short_182 >> 4];
-    if (_276 >= MACRO_141) {
+    _276 = ushortptr_240[short_182 >> 4];
+    if (_276 >= (511)) {
         _283 = 1U << 3;
         do {
             if (short_182 & _283)
-                _276 = _190[_276];
+                _276 = ushortptr_190[_276];
             else
-                _276 = _189[_276];
+                _276 = ushortptr_189[_276];
             _283 >>= 1;
-        } while (_276 >= MACRO_141);
+        } while (_276 >= (511));
     }
     husExpand_256(ucharptr_180[_276]);
     return _276;
@@ -329,16 +291,16 @@ unsigned short husExpand_249(void)
 unsigned short husExpand_250(void)
 {
     unsigned short _276, _283;
-    _276 = _241[short_182 >> 8];
-    if (_276 >= MACRO_142) {
+    _276 = ushortptr_241[short_182 >> 8];
+    if (_276 >= (15)) {
         _283 = 1U << 7;
         do {
             if (short_182 & _283)
-                _276 = _190[_276];
+                _276 = ushortptr_190[_276];
             else
-                _276 = _189[_276];
+                _276 = ushortptr_189[_276];
             _283 >>= 1;
-        } while (_276 >= MACRO_142);
+        } while (_276 >= (15));
     }
     husExpand_256(ucharptr_181[_276]);
     if (_276 != 0) {
@@ -346,12 +308,6 @@ unsigned short husExpand_250(void)
         _276 = (short)((1U << _276) + husExpand_252(_276));
     }
     return _276;
-}
-
-void husExpand_251(void)
-{
-    _244 = 0;
-    husExpand_257();
 }
 
 unsigned short husExpand_252(int _219)
@@ -364,27 +320,27 @@ unsigned short husExpand_252(int _219)
 void husExpand_255(void)
 {
     short _226, _203;
-    short _219 = (short)husExpand_252(MACRO_143);
+    short _219 = (short)husExpand_252((9));
     if (_219 == 0) {
-        _203 = (short)husExpand_252(MACRO_143);
-        for (_226 = 0; _226 < MACRO_141; _226++)
-            ucharptr_180[_226] = 0;
-        for (_226 = 0; _226 < MACRO_148; _226++)
-            _240[_226] = (unsigned short)_203;
+        _203 = (short)husExpand_252((9));
+        memset(ucharptr_180, 0, 511);
+        for (_226 = 0; _226 < (4096); _226++) {
+            ushortptr_240[_226] = (unsigned short)_203;
+        }
     } else {
         _226 = 0;
         while (_226 < _219) {
-            _203 = (short)_241[short_182 >> 8];
-            if (_203 >= MACRO_145) {
+            _203 = (short)ushortptr_241[short_182 >> 8];
+            if (_203 >= (19)) {
                 unsigned short _283 = (unsigned short)1U << 7;
                 do {
                     if ((short_182 & _283) != 0) {
-                        _203 = (short)_190[_203];
+                        _203 = (short)ushortptr_190[_203];
                     } else {
-                        _203 = (short)_189[_203];
+                        _203 = (short)ushortptr_189[_203];
                     }
                     _283 >>= 1;
-                } while (_203 >= MACRO_145);
+                } while (_203 >= (19));
             }
             husExpand_256(ucharptr_181[_203]);
             if (_203 <= 2) {
@@ -394,7 +350,7 @@ void husExpand_255(void)
                     if (_203 == 1) {
                         _203 = (short)(husExpand_252(4) + 3);
                     } else {
-                        _203 = (short)(husExpand_252(MACRO_143) + 20);
+                        _203 = (short)(husExpand_252((9)) + 20);
                     }
                 }
                 while (--_203 >= 0) {
@@ -404,10 +360,10 @@ void husExpand_255(void)
                 ucharptr_180[_226++] = (unsigned char)(_203 - 2);
             }
         }
-        while (_226 < MACRO_141) {
+        while (_226 < (511)) {
             ucharptr_180[_226++] = 0;
         }
-        husExpand_258(MACRO_141, ucharptr_180, 12, _240, MACRO_148);
+        husExpand_258((511), ucharptr_180, 12, ushortptr_240, (4096));
     }
 }
 
@@ -419,7 +375,7 @@ void husExpand_256(int _219)
         if (_246 <= 0) {
             currentIndex = 0;
 
-            if (remainingBytes >= 0 && remainingBytes < bufferSize) {
+            if (remainingBytes >= 0 && remainingBytes < (512)) {
                 inputBuffer = &inputArray[currentPosition];
                 currentPosition += remainingBytes;
                 _246 = (short)remainingBytes;
@@ -427,8 +383,8 @@ void husExpand_256(int _219)
                 inputBufferSize = _246;
             } else {
                 inputBuffer = &inputArray[currentPosition];
-                currentPosition += bufferSize;
-                _246 = bufferSize;
+                currentPosition += (512);
+                _246 = (512);
                 inputBufferSize = _246;
             }
             if (_246 <= 0)
@@ -443,27 +399,17 @@ void husExpand_256(int _219)
     _245 <<= _219;
 }
 
-void husExpand_257(void)
-{
-    short_182 = 0;
-    _245 = 0;
-    short_172 = 0;
-    _246 = 0;
-    husExpand_256(16);
-}
-
 void husExpand_258(int _259, unsigned char* _260, int _261, unsigned short* _262, unsigned short _263)
 {
     unsigned short _277[17], _287[17], _288[18], *_204;
     unsigned int _226, _289, _209, _290, _291, _292, _293, _283;
-    _288[0] = 0;
-    _277[0] = 0;
     _287[0] = 0;
 
-    for (_226 = 1; _226 <= 16; _226++)
-        _277[_226] = 0;
+    memset(_277, 0, 17*sizeof(unsigned short));
     for (_226 = 0; (int)_226 < _259; _226++)
         _277[_260[_226]]++;
+
+    _288[0] = 0;
     _288[1] = 0;
     for (_226 = 1; _226 <= 16; _226++)
         _288[_226 + 1] = (unsigned short)(_288[_226] + (_277[_226] << (16 - _226)));
@@ -507,13 +453,13 @@ void husExpand_258(int _259, unsigned char* _260, int _261, unsigned short* _262
             _226 = _209 - _261;
             while (_226 != 0) {
                 if (*_204 == 0) {
-                    _190[_292] = _189[_292] = 0;
+                    ushortptr_190[_292] = ushortptr_189[_292] = 0;
                     *_204 = (unsigned short)_292++;
                 }
                 if (_289 & _283)
-                    _204 = &_190[*_204];
+                    _204 = &ushortptr_190[*_204];
                 else
-                    _204 = &_189[*_204];
+                    _204 = &ushortptr_189[*_204];
                 _289 <<= 1;
                 _226--;
             }
@@ -529,7 +475,7 @@ int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _2
     inputArray = _266;
     outputArray = _267;
     _531 = _235;
-    if (_269 > (14) || _269 < MACRO_138) {
+    if (_269 > (14) || _269 < (10)) {
         mStatus = -1;
         short_175 = 2;
     } else {
@@ -537,50 +483,22 @@ int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _2
     }
     short_176 = (short)(short_175 - 1);
 
-    ucharptr_166 = (unsigned char*)malloc(sizeof(unsigned char) * (short_175 + MACRO_140 + 2));
-    if (ucharptr_166)
-        memset(ucharptr_166, 0, (short_175 + MACRO_140 + 2) * sizeof(unsigned char));
-    shortptr_163 = (short*)malloc(sizeof(short) * (short_175 + MACRO_153));
-    if (shortptr_163)
-        memset(shortptr_163, 0, (short_175 + MACRO_153) * sizeof(short));
-    shortptr_164 = (short*)malloc(sizeof(short) * (short_175));
-    if (shortptr_164)
-        memset(shortptr_164, 0, (short_175) * sizeof(short));
-    ucharptr_165 = (unsigned char*)malloc(sizeof(unsigned char) * (MACRO_155));
-    if (ucharptr_165)
-        memset(ucharptr_165, 0, (MACRO_155) * sizeof(unsigned char));
-    ucharptr_179 = (unsigned char*)malloc(sizeof(unsigned char) * (MACRO_156));
-    if (ucharptr_179)
-        memset(ucharptr_179, 0, (MACRO_156) * sizeof(unsigned char));
-    _189 = (unsigned short*)malloc(sizeof(unsigned short) * (2 * MACRO_141 - 1));
-    if (_189)
-        memset(_189, 0, (2 * MACRO_141 - 1) * sizeof(unsigned short));
-    _190 = (unsigned short*)malloc(sizeof(unsigned short) * (2 * MACRO_141 - 1));
-    if (_190)
-        memset(_190, 0, (2 * MACRO_141 - 1) * sizeof(unsigned short));
-    shortptr_177 = (short*)malloc(sizeof(short) * (MACRO_141 + 1));
-    if (shortptr_177)
-        memset(shortptr_177, 0, (MACRO_141 + 1) * sizeof(short));
-    ucharptr_180 = (unsigned char*)malloc(sizeof(unsigned char) * (MACRO_141));
-    if (ucharptr_180)
-        memset(ucharptr_180, 0, (MACRO_141) * sizeof(unsigned char));
-    _191 = (unsigned short*)malloc(sizeof(unsigned short) * (2 * MACRO_141 - 1));
-    if (_191)
-        memset(_191, 0, (2 * MACRO_141 - 1) * sizeof(unsigned short));
-    _192 = (unsigned short*)malloc(sizeof(unsigned short) * (MACRO_141));
-    if (_192)
-        memset(_192, 0, (MACRO_141) * sizeof(unsigned short));
-    ucharptr_181 = (unsigned char*)malloc(sizeof(unsigned char) * (MACRO_152));
-    if (ucharptr_181)
-        memset(ucharptr_181, 0, (MACRO_152) * sizeof(unsigned char));
-    _193 = (unsigned short*)malloc(sizeof(unsigned short) * (2 * MACRO_142 - 1));
-    if (_193)
-        memset(_193, 0, (2 * MACRO_142 - 1) * sizeof(unsigned short));
-    _194 = (unsigned short*)malloc(sizeof(unsigned short) * (MACRO_152));
-    if (_194)
-        memset(_194, 0, (MACRO_152) * sizeof(unsigned short));
+    ucharptr_166 = (unsigned char*)calloc(short_175 + 258, sizeof(unsigned char));
+    shortptr_163 = (short*)calloc(short_175 + 4096, sizeof(short));
+    shortptr_164 = (short*)calloc(short_175, sizeof(short));
+    ucharptr_165 = (unsigned char*)calloc(8192, sizeof(unsigned char));
+    ucharptr_179 = (unsigned char*)calloc(512, sizeof(unsigned char));
+    ushortptr_189 = (unsigned short*)calloc(1021, sizeof(unsigned short));
+    ushortptr_190 = (unsigned short*)calloc(1021, sizeof(unsigned short));
+    shortptr_177 = (short*)calloc(512, sizeof(short));
+    ucharptr_180 = (unsigned char*)calloc(511, sizeof(unsigned char));
+    ushortptr_191 = (unsigned short*)calloc(1021, sizeof(unsigned short));
+    ushortptr_192 = (unsigned short*)calloc(511, sizeof(unsigned short));
+    ucharptr_181 = (unsigned char*)calloc(19, sizeof(unsigned char));
+    ushortptr_193 = (unsigned short*)calloc(29, sizeof(unsigned short));
+    ushortptr_194 = (unsigned short*)calloc(19, sizeof(unsigned short));
 
-    if (!ucharptr_166 || !shortptr_163 || !shortptr_164 || !ucharptr_165 || !ucharptr_179 || !_189 || !_190 || !shortptr_177 || !ucharptr_180 || !_191 || !_192 || !ucharptr_181 || !_193 || !_194) {
+    if (!ucharptr_166 || !shortptr_163 || !shortptr_164 || !ucharptr_165 || !ucharptr_179 || !ushortptr_189 || !ushortptr_190 || !shortptr_177 || !ucharptr_180 || !ushortptr_191 || !ushortptr_192 || !ucharptr_181 || !ushortptr_193 || !ushortptr_194) {
         mStatus = -1;
     }
     _533 = 0;
@@ -601,20 +519,20 @@ void husCompress_cleanup(void)
     free(shortptr_164);
     free(ucharptr_165);
     free(ucharptr_179);
-    free(_189);
-    free(_190);
+    free(ushortptr_189);
+    free(ushortptr_190);
     free(shortptr_177);
     free(ucharptr_180);
-    free(_191);
-    free(_192);
+    free(ushortptr_191);
+    free(ushortptr_192);
     free(ucharptr_181);
-    free(_193);
-    free(_194);
+    free(ushortptr_193);
+    free(ushortptr_194);
 }
 
 void husCompress_223(short _203)
 {
-    husCompress_208(ucharptr_180[_203], _192[_203]);
+    husCompress_208(ucharptr_180[_203], ushortptr_192[_203]);
 }
 
 int husCompress_compress(void)
@@ -631,7 +549,19 @@ int husCompress_compress(void)
     _280 = short_176;
     _279 = short_175;
     _231 = 0;
-    husCompress_196();
+    memset(ushortptr_191, 0, 511*sizeof(unsigned short));
+    memset(ushortptr_193, 0, 15*sizeof(unsigned short));
+    short_173 = 0;
+    short_172 = 0;
+    short_182 = 0;
+    short_171 = 0;
+    short_170 = 0;
+    short_185 = 1;
+    short_184 = 0;
+    short_186 = 0;
+    ucharptr_165[0] = 0;
+    short_183 = (8192);
+    short_183 -= (unsigned short)((3 * CHAR_BIT) + 6);
     husCompress_198();
     _200 = 0;
 
@@ -646,9 +576,9 @@ int husCompress_compress(void)
     s = (short)(_209 & _280);
     short_169 = 0;
     short_168 = 0;
-    _201 = (short)(((_278[_200] << MACRO_154) ^ (_278[_200 + 1])) & (MACRO_153 - 1));
+    _201 = (short)(((_278[_200] << (4)) ^ (_278[_200 + 1])) & ((4096) - 1));
     _201 = (short)(husCompress_445(_200, _201, _278) + _279);
-    while (_209 > MACRO_140 + 4 && !short_170) {
+    while (_209 > (256) + 4 && !short_170) {
         husCompress_199(_200, _201);
         if (short_168 < (3)) {
             husCompress_202(_278[_200], 0);
@@ -658,7 +588,7 @@ int husCompress_compress(void)
             _209--;
         } else {
             _209 -= short_168;
-            husCompress_202((unsigned short)(short_168 + (UCHAR_MAX + 1 - (3))), short_169);
+            husCompress_202((unsigned short)(short_168 + UCHAR_MAX - 2), short_169);
             while (--short_168 >= 0) {
                 husCompress_447(_200, _201);
                 _200++;
@@ -666,14 +596,14 @@ int husCompress_compress(void)
             }
         }
     }
-    for (; _209 < MACRO_140; _209++) {
+    for (; _209 < (256); _209++) {
         int _203;
         if (inputPosition >= inputLength)
             break;
         _203 = (int)(unsigned char)inputArray[inputPosition];
         inputPosition += 1;
         _278[s] = (unsigned char)_203;
-        if (s < MACRO_140 - 1)
+        if (s < (256) - 1)
             _278[s + _279] = _278[s];
         husCompress_448(s);
         s = (short)((s + 1) & (_280));
@@ -694,7 +624,7 @@ int husCompress_compress(void)
             _203 = (int)(unsigned char)inputArray[inputPosition];
             inputPosition += 1;
             _278[s] = (unsigned char)_203;
-            if (s < MACRO_140 - 1)
+            if (s < (256) - 1)
                 _278[s + _279] = _278[s];
             husCompress_448(s);
             s = (short)((s + 1) & (_280));
@@ -712,34 +642,23 @@ int husCompress_compress(void)
             return 1;
     }
     if (!short_170)
-        husCompress_202(MACRO_144 + (UCHAR_MAX + 1 - (3)), 0);
+        husCompress_202((257) + (UCHAR_MAX + 1 - (3)), 0);
     husCompress_197();
     return outputPosition;
 }
 
-void husCompress_196(void)
-{
-    int i;
-    for (i = 0; i < MACRO_141; i++)
-        _191[i] = 0;
-    for (i = 0; i < MACRO_142; i++)
-        _193[i] = 0;
-    short_173 = 0;
-    husCompress_205();
-    short_170 = 0;
-    short_185 = 1;
-    short_184 = 0;
-    short_186 = 0;
-    ucharptr_165[0] = 0;
-    short_183 = MACRO_155;
-    short_183 -= (unsigned short)((3 * CHAR_BIT) + 6);
-}
-
 void husCompress_197(void)
 {
-    if (!short_170)
+    if (!short_170) {
         husCompress_207();
-    husCompress_206();
+    }
+    if (!short_170) {
+        husCompress_208(CHAR_BIT - 1, 0);
+        if (short_171) {
+            husCompress_210();
+        }
+    }
+    short_171 = 0;
     short_183 = 0;
     short_184 = 0;
 }
@@ -750,11 +669,11 @@ void husCompress_198(void)
     short* _450;
     _450 = &shortptr_163[short_175];
 
-    for (i = MACRO_153; i > 0; i--)
-        *_450++ = MACRO_157;
+    for (i = (4096); i > 0; i--)
+        *_450++ = (-1);
     _450 = shortptr_164;
     for (i = short_175; i > 0; i--)
-        *_450++ = MACRO_157;
+        *_450++ = (-1);
 }
 
 void husCompress_199(short _200, short _201)
@@ -762,11 +681,11 @@ void husCompress_199(short _200, short _201)
     unsigned char* _451;
     unsigned char* _278;
     short _226, _452, _204, _453;
-    _452 = MACRO_158;
+    _452 = (128);
     short_168 = 0;
     _451 = &ucharptr_166[_200];
     _204 = _201;
-    while ((_204 = shortptr_163[_204]) != MACRO_157) {
+    while ((_204 = shortptr_163[_204]) != (-1)) {
         if (--_452 < 0)
             break;
         _278 = &ucharptr_166[_204];
@@ -778,7 +697,7 @@ void husCompress_199(short _200, short _201)
             continue;
         if (_451[2] != _278[2])
             continue;
-        for (_226 = 3; _226 < MACRO_140; _226++)
+        for (_226 = 3; _226 < (256); _226++)
             if (_451[_226] != _278[_226])
                 break;
         if (_226 > short_168) {
@@ -788,7 +707,7 @@ void husCompress_199(short _200, short _201)
             if (_453 >= short_175)
                 break;
             short_169 = _453;
-            if ((short_168 = _226) >= MACRO_140)
+            if ((short_168 = _226) >= (256))
                 break;
         }
     }
@@ -808,7 +727,7 @@ void husCompress_202(unsigned short _203, unsigned short _204)
         ucharptr_165[short_186] = 0;
     }
     ucharptr_165[short_184++] = (unsigned char)_203;
-    _191[_203]++;
+    ushortptr_191[_203]++;
     if (_203 >= (1U << CHAR_BIT)) {
         ucharptr_165[short_186] |= (unsigned char)short_185;
         ucharptr_165[short_184++] = (unsigned char)_204;
@@ -818,58 +737,40 @@ void husCompress_202(unsigned short _203, unsigned short _204)
             _203++;
             _204 >>= 1;
         }
-        _193[_203]++;
+        ushortptr_193[_203]++;
     }
-}
-
-void husCompress_205(void)
-{
-    short_172 = 0;
-    short_182 = 0;
-    short_171 = 0;
-}
-
-void husCompress_206(void)
-{
-    if (!short_170) {
-        husCompress_208(CHAR_BIT - 1, 0);
-        if (short_171) {
-            husCompress_210();
-        }
-    }
-    short_171 = 0;
 }
 
 void husCompress_207(void)
 {
     unsigned int _226, _289, _229, _454, _455;
     unsigned int _456 = 0;
-    unsigned short _217[2 * MACRO_145 - 1];
-    _229 = husCompress_211(MACRO_141, _191, ucharptr_180, _192);
-    _455 = _191[_229];
+    unsigned short _217[2 * (19) - 1];
+    _229 = husCompress_211((511), ushortptr_191, ucharptr_180, ushortptr_192);
+    _455 = ushortptr_191[_229];
     husCompress_208(16, (unsigned short)_455);
-    if (_229 >= MACRO_141) {
+    if (_229 >= (511)) {
         husCompress_216(_217);
-        _229 = husCompress_211(MACRO_145, _217, ucharptr_181, _194);
-        if (_229 >= MACRO_145) {
-            husCompress_218(MACRO_145, MACRO_147, 3);
+        _229 = husCompress_211((19), _217, ucharptr_181, ushortptr_194);
+        if (_229 >= (19)) {
+            husCompress_218((19), (5), 3);
         } else {
-            husCompress_208(MACRO_147, 0);
-            husCompress_208(MACRO_147, (unsigned short)_229);
+            husCompress_208((5), 0);
+            husCompress_208((5), (unsigned short)_229);
         }
         husCompress_222();
     } else {
-        husCompress_208(MACRO_147, 0);
-        husCompress_208(MACRO_147, 0);
-        husCompress_208(MACRO_143, 0);
-        husCompress_208(MACRO_143, (unsigned short)_229);
+        husCompress_208((5), 0);
+        husCompress_208((5), 0);
+        husCompress_208((9), 0);
+        husCompress_208((9), (unsigned short)_229);
     }
-    _229 = husCompress_211(MACRO_142, _193, ucharptr_181, _194);
-    if (_229 >= MACRO_142) {
-        husCompress_218(MACRO_142, MACRO_540, -1);
+    _229 = husCompress_211((15), ushortptr_193, ucharptr_181, ushortptr_194);
+    if (_229 >= (15)) {
+        husCompress_218((15), (5), -1);
     } else {
-        husCompress_208(MACRO_540, 0);
-        husCompress_208(MACRO_540, (unsigned short)_229);
+        husCompress_208((5), 0);
+        husCompress_208((5), (unsigned short)_229);
     }
     _454 = 0;
     for (_226 = 0; _226 < _455; _226++) {
@@ -887,10 +788,10 @@ void husCompress_207(void)
         if (short_170)
             return;
     }
-    for (_226 = 0; _226 < MACRO_141; _226++)
-        _191[_226] = 0;
-    for (_226 = 0; _226 < MACRO_142; _226++)
-        _193[_226] = 0;
+    for (_226 = 0; _226 < (511); _226++)
+        ushortptr_191[_226] = 0;
+    for (_226 = 0; _226 < (15); _226++)
+        ushortptr_193[_226] = 0;
 }
 
 void husCompress_208(int _209, unsigned short _203)
@@ -898,13 +799,13 @@ void husCompress_208(int _209, unsigned short _203)
     _203 <<= 16 - _209;
     short_182 |= (unsigned short)(_203 >> short_172);
     if ((short_172 += (short)_209) >= 8) {
-        if (short_171 >= MACRO_156)
+        if (short_171 >= (512))
             husCompress_210();
         ucharptr_179[short_171++] = (unsigned char)(short_182 >> CHAR_BIT);
         if ((short_172 = (unsigned short)(short_172 - CHAR_BIT)) < CHAR_BIT)
             short_182 <<= CHAR_BIT;
         else {
-            if (short_171 >= MACRO_156)
+            if (short_171 >= (512))
                 husCompress_210();
             ucharptr_179[short_171++] = (unsigned char)short_182;
             short_172 = (unsigned short)(short_172 - CHAR_BIT);
@@ -931,14 +832,14 @@ int husCompress_211(int _212, unsigned short* _213, unsigned char* _214, unsigne
     int _226, _276, _289, _292;
     short _227;
     short_174 = (short)_212;
-    _187 = _213;
+    ushortptr_187 = _213;
     ucharptr_178 = _214;
     _292 = short_174;
     _227 = 0;
     shortptr_177[1] = 0;
     for (_226 = 0; _226 < short_174; _226++) {
         ucharptr_178[_226] = 0;
-        if (_187[_226]) {
+        if (ushortptr_187[_226]) {
             shortptr_177[++_227] = (short)_226;
         }
     }
@@ -947,27 +848,27 @@ int husCompress_211(int _212, unsigned short* _213, unsigned char* _214, unsigne
         return shortptr_177[1];
     }
     for (_226 = _227 / 2; _226 >= 1; _226--) {
-        husCompress_225(_226, _187, shortptr_177, _227);
+        husCompress_225(_226, ushortptr_187, shortptr_177, _227);
     }
-    _188 = _215;
+    ushortptr_188 = _215;
     do {
         _226 = shortptr_177[1];
         if (_226 < short_174) {
-            *_188++ = (unsigned short)_226;
+            *ushortptr_188++ = (unsigned short)_226;
         }
         shortptr_177[1] = shortptr_177[_227--];
-        husCompress_225(1, _187, shortptr_177, _227);
+        husCompress_225(1, ushortptr_187, shortptr_177, _227);
         _276 = shortptr_177[1];
         if (_276 < short_174)
-            *_188++ = (unsigned short)_276;
+            *ushortptr_188++ = (unsigned short)_276;
         _289 = _292++;
-        _187[_289] = (unsigned short)(_187[_226] + _187[_276]);
+        ushortptr_187[_289] = (unsigned short)(ushortptr_187[_226] + ushortptr_187[_276]);
         shortptr_177[1] = (short)_289;
-        husCompress_225(1, _187, shortptr_177, _227);
-        _189[_289] = (unsigned short)_226;
-        _190[_289] = (unsigned short)_276;
+        husCompress_225(1, ushortptr_187, shortptr_177, _227);
+        ushortptr_189[_289] = (unsigned short)_226;
+        ushortptr_190[_289] = (unsigned short)_276;
     } while (_227 > 1);
-    _188 = _215;
+    ushortptr_188 = _215;
     husCompress_228(_289);
     husCompress_230(_212, _214, _215);
     return _289;
@@ -976,9 +877,8 @@ int husCompress_211(int _212, unsigned short* _213, unsigned char* _214, unsigne
 void husCompress_216(unsigned short* _217)
 {
     short _226, _289, _219, _277;
-    for (_226 = 0; _226 < MACRO_145; _226++)
-        _217[_226] = 0;
-    _219 = MACRO_141;
+    memset(_217, 0, 19*sizeof(unsigned short));
+    _219 = 511;
     while (_219 > 0 && ucharptr_180[_219 - 1] == 0)
         _219--;
     _226 = 0;
@@ -1029,10 +929,10 @@ void husCompress_218(short _219, short _220, short _221)
 void husCompress_222(void)
 {
     short _226, _289, _219, _277;
-    _219 = MACRO_141;
+    _219 = (511);
     while (_219 > 0 && ucharptr_180[_219 - 1] == 0)
         _219--;
-    husCompress_208(MACRO_143, _219);
+    husCompress_208((9), _219);
     _226 = 0;
     while (_226 < _219) {
         _289 = ucharptr_180[_226++];
@@ -1044,20 +944,20 @@ void husCompress_222(void)
             }
             if (_277 <= 2) {
                 for (_289 = 0; _289 < _277; _289++)
-                    husCompress_208(ucharptr_181[0], _194[0]);
+                    husCompress_208(ucharptr_181[0], ushortptr_194[0]);
             } else if (_277 <= 18) {
-                husCompress_208(ucharptr_181[1], _194[1]);
+                husCompress_208(ucharptr_181[1], ushortptr_194[1]);
                 husCompress_208(4, (unsigned short)(_277 - 3));
             } else if (_277 == 19) {
-                husCompress_208(ucharptr_181[0], _194[0]);
-                husCompress_208(ucharptr_181[1], _194[1]);
+                husCompress_208(ucharptr_181[0], ushortptr_194[0]);
+                husCompress_208(ucharptr_181[1], ushortptr_194[1]);
                 husCompress_208(4, 15);
             } else {
-                husCompress_208(ucharptr_181[2], _194[2]);
-                husCompress_208(MACRO_143, (unsigned short)(_277 - 20));
+                husCompress_208(ucharptr_181[2], ushortptr_194[2]);
+                husCompress_208((9), (unsigned short)(_277 - 20));
             }
         } else
-            husCompress_208(ucharptr_181[_289 + 2], _194[_289 + 2]);
+            husCompress_208(ucharptr_181[_289 + 2], ushortptr_194[_289 + 2]);
     }
 }
 
@@ -1070,19 +970,19 @@ void husCompress_224(unsigned short _204)
         _203++;
         _457 >>= 1;
     }
-    husCompress_208(ucharptr_181[_203], _194[_203]);
+    husCompress_208(ucharptr_181[_203], ushortptr_194[_203]);
     if (_203 > 1)
         husCompress_208(_203 - 1, _204);
 }
 
-void husCompress_225(int _226, unsigned short* _187, short* shortptr_177, short _227)
+void husCompress_225(int _226, unsigned short* ushortptr_187, short* shortptr_177, short _227)
 {
     int _276, _289;
     _289 = shortptr_177[_226];
     while ((_276 = 2 * _226) <= _227) {
-        if (_276 < _227 && _187[shortptr_177[_276]] > _187[shortptr_177[_276 + 1]])
+        if (_276 < _227 && ushortptr_187[shortptr_177[_276]] > ushortptr_187[shortptr_177[_276 + 1]])
             _276++;
-        if (_187[_289] <= _187[shortptr_177[_276]])
+        if (ushortptr_187[_289] <= ushortptr_187[shortptr_177[_276]])
             break;
         shortptr_177[_226] = shortptr_177[_276];
         _226 = _276;
@@ -1094,8 +994,7 @@ void husCompress_228(int _229)
 {
     int _226, _289;
     unsigned int _458;
-    for (_226 = 0; _226 <= 16; _226++)
-        ushortptr_167[_226] = 0;
+    memset(ushortptr_167, 0, 17*sizeof(unsigned short));
     husCompress_232(_229);
     _458 = 0;
     for (_226 = 16; _226 > 0; _226--)
@@ -1114,7 +1013,7 @@ void husCompress_228(int _229)
     for (_226 = 16; _226 > 0; _226--) {
         _289 = ushortptr_167[_226];
         while (--_289 >= 0)
-            ucharptr_178[*_188++] = (unsigned char)_226;
+            ucharptr_178[*ushortptr_188++] = (unsigned char)_226;
     }
 }
 
@@ -1135,8 +1034,8 @@ void husCompress_232(int _226)
         ushortptr_167[(short_173 < 16) ? short_173 : 16]++;
     else {
         short_173++;
-        husCompress_232(_189[_226]);
-        husCompress_232(_190[_226]);
+        husCompress_232(ushortptr_189[_226]);
+        husCompress_232(ushortptr_190[_226]);
         short_173--;
     }
 }

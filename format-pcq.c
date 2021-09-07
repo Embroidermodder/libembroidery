@@ -111,7 +111,7 @@ int readPcq(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writePcq(EmbPattern* pattern, const char* fileName)
 {
-    EmbStitchList* pointer = 0;
+    EmbStitch st;
     EmbFile* file = 0;
     int i;
     unsigned char colorCount;
@@ -141,14 +141,12 @@ int writePcq(EmbPattern* pattern, const char* fileName)
         binaryWriteUInt(file, 0); /* write remaining colors to reach 16 */
     }
 
-    binaryWriteUShort(file, (unsigned short)embStitchList_count(pattern->stitchList));
+    binaryWriteUShort(file, (unsigned short)pattern->stitchList->count);
     /* write stitches */
     xx = yy = 0;
-    pointer = pattern->stitchList;
-    while(pointer)
-    {
-        pcqEncode(file, roundDouble(pointer->stitch.x * 10.0), roundDouble(pointer->stitch.y * 10.0), pointer->stitch.flags);
-        pointer = pointer->next;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
+        pcqEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
     }
     embFile_close(file);
     return 1;

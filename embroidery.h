@@ -251,12 +251,6 @@ typedef struct EmbStitch_
     int color; /* color number for this stitch */ /* TODO: this should be called colorIndex since it is not an EmbColor */
 } EmbStitch;
 
-typedef struct EmbStitchList_
-{
-    struct EmbStitch_ stitch;
-    struct EmbStitchList_* next;
-} EmbStitchList;
-
 typedef struct EmbThread_
 {
     EmbColor color;
@@ -507,8 +501,8 @@ typedef struct EmbPattern_
 {
     EmbSettings settings;
     EmbHoop hoop;
-    EmbStitchList* stitchList;
 
+    EmbArray* stitchList;
     EmbArray* threads;
     EmbArray* arcs;
     EmbArray* circles;
@@ -520,8 +514,6 @@ typedef struct EmbPattern_
     EmbArray* polylines;
     EmbArray* rects;
     EmbArray* splines;
-
-    EmbStitchList* lastStitch;
 
     int currentColorIndex;
     double lastX;
@@ -567,13 +559,6 @@ EMB_PUBLIC unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2,
 EMB_PUBLIC EmbPathObject* embPathObject_create(
     EmbArray* pointList, EmbArray* flagList, EmbColor color, int lineType);
 EMB_PUBLIC void embPathObject_free(EmbPathObject* pointer);
-
-EMB_PUBLIC EmbStitchList* embStitchList_create(EmbStitch data);
-EMB_PUBLIC EmbStitchList* embStitchList_add(EmbStitchList* pointer, EmbStitch data);
-EMB_PUBLIC int embStitchList_count(EmbStitchList* pointer);
-EMB_PUBLIC int embStitchList_empty(EmbStitchList* pointer);
-EMB_PUBLIC void embStitchList_free(EmbStitchList* pointer);
-EMB_PUBLIC EmbStitch embStitchList_getAt(EmbStitchList* pointer, int num);
 
 EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbArray* colors, int mode);
 EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, const EmbThread* colors, int length);

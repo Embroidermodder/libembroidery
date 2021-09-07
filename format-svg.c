@@ -1852,8 +1852,9 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     int size = 1024;
     int pos;
-    int c = 0;
+    int c = 0, i;
     char* buff = 0;
+    EmbStitch st;
 
     if(!pattern) { embLog_error("format-svg.c readSvg(), pattern argument is null\n"); return 0; }
     if(!fileName) { embLog_error("format-svg.c readSvg(), fileName argument is null\n"); return 0; }
@@ -1930,7 +1931,6 @@ int readSvg(EmbPattern* pattern, const char* fileName)
 
     /*TODO: remove this summary after testing is complete */
     printf("OBJECT SUMMARY:\n");
-    int i;
     if (pattern->circles) {
         for (i=0; i<pattern->circles->count; i++) {
             EmbCircle c = pattern->circles->circle[i].circle;
@@ -1986,10 +1986,11 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
     EmbRect boundingRect;
-    EmbStitchList* stList;
+    EmbStitch st;
     EmbPoint point;
     EmbRect rect;
     EmbColor color;
+    int i, j;
 
     char tmpX[32];
     char tmpY[32];
@@ -1998,8 +1999,7 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     if(!fileName) { embLog_error("format-svg.c writeSvg(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "w", 0);
-    if(!file)
-        return 0;
+    if (!file) return 0;
 
     /* Pre-flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
     embPattern_flipVertical(pattern);
@@ -2032,7 +2032,6 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
 
     /*TODO: Low Priority: Indent output properly. */
 
-    int i, j;
     /* write circles */
     if (pattern->circles) {
         for (i=0; i<pattern->circles->count; i++) {
@@ -2147,36 +2146,31 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
         }
     }
 
-    stList = pattern->stitchList;
-    if(stList)
-    {
+    if (pattern->stitchList) {
         /*TODO: #ifdef SVG_DEBUG for Josh which outputs JUMPS/TRIMS instead of chopping them out */
         char isNormal = 0;
-        while(stList)
-        {
-            if(stList->stitch.flags == NORMAL && !isNormal)
-            {
+        for (i=0; i<pattern->stitchList->count; i++) {
+            st = pattern->stitchList->stitch[i];
+            if (st.flags == NORMAL && !isNormal) {
                     isNormal = 1;
-                    color = pattern->threads->thread[stList->stitch.color].color;
+                    color = pattern->threads->thread[st.color].color;
                     /* TODO: use proper thread width for stoke-width rather than just 0.2 */
                     embFile_printf(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
                                 color.r,
                                 color.g,
                                 color.b,
-                                emb_optOut(stList->stitch.x, tmpX),
-                                emb_optOut(stList->stitch.y, tmpY));
+                                emb_optOut(st.x, tmpX),
+                                emb_optOut(st.y, tmpY));
             }
-            else if(stList->stitch.flags == NORMAL && isNormal)
+            else if(st.flags == NORMAL && isNormal)
             {
-                embFile_printf(file, " %s,%s", emb_optOut(stList->stitch.x, tmpX), emb_optOut(stList->stitch.y, tmpY));
+                embFile_printf(file, " %s,%s", emb_optOut(st.x, tmpX), emb_optOut(st.y, tmpY));
             }
-            else if(stList->stitch.flags != NORMAL && isNormal)
+            else if(st.flags != NORMAL && isNormal)
             {
                 isNormal = 0;
                 embFile_printf(file, "\"/>");
             }
-
-            stList = stList->next;
         }
     }
     embFile_printf(file, "\n</svg>\n");

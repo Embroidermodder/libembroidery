@@ -57,7 +57,7 @@ int writePlt(EmbPattern* pattern, const char* fileName)
     /* TODO: pointer safety */
     double scalingFactor = 40;
     EmbStitch stitch;
-    EmbStitchList* pointer = 0;
+    int i;
     char firstStitchOfBlock = 1;
     FILE* file = 0;
 
@@ -68,8 +68,8 @@ int writePlt(EmbPattern* pattern, const char* fileName)
     fprintf(file, "IN;");
     fprintf(file, "ND;");
 
-    for (pointer=pattern->stitchList; pointer; pointer=pointer->next) {
-        stitch = pointer->stitch;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        stitch = pattern->stitchList->stitch[i];
         if (stitch.flags & STOP) {
             firstStitchOfBlock = 1;
         }

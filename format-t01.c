@@ -162,8 +162,8 @@ int writeT01(EmbPattern* pattern, const char* fileName)
 {
 	EmbRect boundingRect;
 	EmbFile* file;
-	int xx, yy, dx, dy;
-	EmbStitchList* pointer;
+	int xx, yy, dx, dy, i;
+	EmbStitch st;
 
     if (!validateWritePattern(pattern, fileName, "writeT01")) return 0;
 
@@ -175,13 +175,14 @@ int writeT01(EmbPattern* pattern, const char* fileName)
 	boundingRect = embPattern_calcBoundingBox(pattern);
 
 	xx = yy = 0;
-	for (pointer=pattern->stitchList; pointer; pointer=pointer->next) {
+	for (i=0; i<pattern->stitchList->count; i++) {
+		st = pattern->stitchList->stitch[i];
 		/* convert from mm to 0.1mm for file format */
-		dx = roundDouble(pointer->stitch.x * 10.0) - xx;
-		dy = roundDouble(pointer->stitch.y * 10.0) - yy;
-		xx = roundDouble(pointer->stitch.x * 10.0);
-		yy = roundDouble(pointer->stitch.y * 10.0);
-		encode_record(file, dx, dy, pointer->stitch.flags);
+		dx = roundDouble(st.x * 10.0) - xx;
+		dy = roundDouble(st.y * 10.0) - yy;
+		xx = roundDouble(st.x * 10.0);
+		yy = roundDouble(st.y * 10.0);
+		encode_record(file, dx, dy, st.flags);
 	}
 	embFile_close(file);
 	return 1;

@@ -220,7 +220,6 @@ int writeHus(EmbPattern* pattern, const char* fileName)
     double previousX, previousY;
     unsigned char* xValues = 0, *yValues = 0, *attributeValues = 0;
     unsigned char* attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
-    EmbStitchList* pointer;
     EmbStitch st;
     EmbFile* file;
 
@@ -230,7 +229,7 @@ int writeHus(EmbPattern* pattern, const char* fileName)
     if(!file)
         return 0;
 
-    stitchCount = embStitchList_count(pattern->stitchList);
+    stitchCount = pattern->stitchList->count;
     /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
     minColors = pattern->threads->count;
     patternColor = minColors;
@@ -254,18 +253,15 @@ int writeHus(EmbPattern* pattern, const char* fileName)
     attributeValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
     if(!attributeValues) { embLog_error("format-hus.c writeHus(), cannot allocate memory for attributeValues\n"); return 0; }
 
-    pointer = pattern->stitchList;
     previousX = 0.0;
     previousY = 0.0;
-    while (pointer) {
-        st = pointer->stitch;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
         xValues[i] = husEncodeByte((st.x - previousX) * 10.0);
         previousX = st.x;
         yValues[i] = husEncodeByte((st.y - previousY) * 10.0);
         previousY = st.y;
         attributeValues[i] = husEncodeStitchType(st.flags);
-        pointer = pointer->next;
-        i++;
     }
     attributeCompressed = husCompressData(attributeValues, stitchCount, &attributeSize);
     xCompressed = husCompressData(xValues, stitchCount, &xCompressedSize);

@@ -41,16 +41,15 @@ static void pcdEncode(EmbFile* file, int dx, int dy, int flags)
 int readPcd(EmbPattern* pattern, const char* fileName)
 {
     char allZeroColor = 1;
-    int i = 0;
+    int i;
     unsigned char b[9];
     double dx = 0, dy = 0;
     int flags = 0, st = 0;
     unsigned char version, hoopSize;
     unsigned short colorCount = 0;
-    EmbFile* file = 0;
+    EmbFile* file;
 
-    if(!pattern) { embLog_error("format-pcd.c readPcd(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-pcd.c readPcd(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readPcd")) return 0;
 
     file = embFile_open(fileName, "rb", 0);
     if(!file) return 0;
@@ -111,7 +110,7 @@ int readPcd(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writePcd(EmbPattern* pattern, const char* fileName)
 {
-    EmbStitchList* pointer = 0;
+    EmbStitch st;
     EmbFile* file = 0;
     int i;
     unsigned char colorCount;
@@ -141,14 +140,12 @@ int writePcd(EmbPattern* pattern, const char* fileName)
         binaryWriteUInt(file, 0); /* write remaining colors to reach 16 */
     }
 
-    binaryWriteUShort(file, (unsigned short)embStitchList_count(pattern->stitchList));
+    binaryWriteUShort(file, (unsigned short)pattern->stitchList->count);
     /* write stitches */
     xx = yy = 0;
-    pointer = pattern->stitchList;
-    while(pointer)
-    {
-        pcdEncode(file, roundDouble(pointer->stitch.x * 10.0), roundDouble(pointer->stitch.y * 10.0), pointer->stitch.flags);
-        pointer = pointer->next;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
+        pcdEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
     }
     embFile_close(file);
     return 1;

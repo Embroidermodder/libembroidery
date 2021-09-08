@@ -28,13 +28,18 @@ int validateWritePattern(EmbPattern *pattern, const char* fileName, const char *
         return 0;
     }
 
-    if (!embStitchList_count(pattern->stitchList)) {
+    if (!pattern->stitchList) {
         embLog_error("%s(), pattern contains no stitches\n", function);
         return 0;
     }
-    
+
+    if (!pattern->stitchList->count) {
+        embLog_error("%s(), pattern contains no stitches\n", function);
+        return 0;
+    }
+
     /* Check for an END stitch and add one if it is not present */
-    if (pattern->lastStitch->stitch.flags != END) {
+    if (pattern->stitchList->stitch[pattern->stitchList->count - 1].flags != END) {
         embPattern_addStitchRel(pattern, 0, 0, END, 1);
     }
 
@@ -137,7 +142,6 @@ void embFile_readline(EmbFile* stream, char *line, int maxLength)
         }
         *line = c;
         line++;
-        c = embFile_getc(stream);
     }
     *line = 0;
 }

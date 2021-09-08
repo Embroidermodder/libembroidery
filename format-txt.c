@@ -13,25 +13,22 @@ int readTxt(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeTxt(EmbPattern* pattern, const char* fileName)
 {
-    EmbStitchList* pointer = 0;
+    EmbStitch st;
     EmbFile* file = 0;
+    int i;
 
     if (!validateWritePattern(pattern, fileName, "writeTxt")) {
         return 0;
     }
 
     file = embFile_open(fileName, "w", 0);
-    if(!file)
-        return 0;
+    if (!file) return 0;
 
-    pointer = pattern->stitchList;
-    embFile_printf(file, "%u\n", (unsigned int) embStitchList_count(pointer));
+    embFile_printf(file, "%u\n", (unsigned int)pattern->stitchList->count);
 
-    while(pointer)
-    {
-        EmbStitch s = pointer->stitch;
-        embFile_printf(file, "%.1f,%.1f color:%i flags:%i\n", s.x, s.y, s.color, s.flags);
-        pointer = pointer->next;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
+        embFile_printf(file, "%.1f,%.1f color:%i flags:%i\n", st.x, st.y, st.color, st.flags);
     }
 
     embFile_close(file);

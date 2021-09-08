@@ -230,11 +230,11 @@ int writeVip(EmbPattern* pattern, const char* fileName)
     double previousX = 0;
     double previousY = 0;
     unsigned char* xValues = 0, *yValues = 0, *attributeValues = 0;
-    EmbStitchList* pointer = 0;
+    EmbStitch st;
     double xx = 0.0;
     double yy = 0.0;
     int flags = 0;
-    int i = 0;
+    int i;
     unsigned char* attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0, *decodedColors = 0, *encodedColors = 0;
     unsigned char prevByte = 0;
     EmbFile* file = 0;
@@ -245,7 +245,7 @@ int writeVip(EmbPattern* pattern, const char* fileName)
     file = embFile_open(fileName, "wb", 0);
     if (!file) return 0;
 
-    stitchCount = embStitchList_count(pattern->stitchList);
+    stitchCount = pattern->stitchList->count;
     minColors = pattern->threads->count;
     decodedColors = (unsigned char*)malloc(minColors << 2);
     if(!decodedColors) return 0;
@@ -276,21 +276,14 @@ int writeVip(EmbPattern* pattern, const char* fileName)
     xValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
     yValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
     attributeValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
-    if(xValues && yValues && attributeValues)
-    {
-        pointer = pattern->stitchList;
-        while(pointer)
-        {
-            xx = pointer->stitch.x;
-            yy = pointer->stitch.y;
-            flags = pointer->stitch.flags;
-            xValues[i] = vipEncodeByte((xx - previousX) * 10.0);
-            previousX = xx;
-            yValues[i] = vipEncodeByte((yy - previousY) * 10.0);
-            previousY = yy;
-            attributeValues[i] = vipEncodeStitchType(flags);
-            pointer = pointer->next;
-            i++;
+    if(xValues && yValues && attributeValues) {
+        for (i=0; i<pattern->stitchList->count; i++) {
+            st = pattern->stitchList->stitch[i];
+            xValues[i] = vipEncodeByte((st.x - previousX) * 10.0);
+            previousX = st.x;
+            yValues[i] = vipEncodeByte((st.y - previousY) * 10.0);
+            previousY = st.y;
+            attributeValues[i] = vipEncodeStitchType(st.flags);
         }
         attributeCompressed = vipCompressData(attributeValues, stitchCount, &attributeSize);
         xCompressed = vipCompressData(xValues, stitchCount, &xCompressedSize);

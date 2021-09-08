@@ -248,7 +248,7 @@ int readCsv(EmbPattern* pattern, const char* fileName)
 int writeCsv(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file;
-    EmbStitchList* sList;
+    EmbStitch st;
     EmbRect boundingRect;
     EmbThread thr;
     int i;
@@ -257,14 +257,12 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
 
     if (validateReadPattern(pattern, fileName, "writeCsv")) return 0;
 
-    sList = pattern->stitchList;
-    stitchCount = embStitchList_count(sList);
+    stitchCount = pattern->stitchList->count;
     threadCount = pattern->threads->count;
 
     boundingRect = embPattern_calcBoundingBox(pattern);
 
-    if(!stitchCount)
-    {
+    if (!stitchCount) {
         embLog_error("format-csv.c writeCsv(), pattern contains no stitches\n");
         return 0;
     }
@@ -323,11 +321,9 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
 
     /* write stitches */
     embFile_printf(file, "\"#\",\"[STITCH_TYPE]\",\"[X]\",\"[Y]\"\n");
-    while(sList)
-    {
-        EmbStitch s = sList->stitch;
-        embFile_printf(file, "\"*\",\"%s\",\"%f\",\"%f\"\n", csvStitchFlagToStr(s.flags), s.x, s.y);
-        sList = sList->next;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
+        embFile_printf(file, "\"*\",\"%s\",\"%f\",\"%f\"\n", csvStitchFlagToStr(st.flags), st.x, st.y);
     }
 
     embFile_close(file);

@@ -123,7 +123,6 @@ int writeSew(EmbPattern* pattern, const char* fileName)
 {
     int colorlistSize, minColors, i, thr;
     EmbFile* file;
-    EmbStitchList* stitches;
     EmbStitch st;
     EmbColor col;
     double dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
@@ -133,9 +132,7 @@ int writeSew(EmbPattern* pattern, const char* fileName)
         return 0;
 
     file = embFile_open(fileName, "wb", 0);
-    if (!file) {
-        return 0;
-    }
+    if (!file) return 0;
     
     colorlistSize = pattern->threads->count;
 
@@ -157,8 +154,8 @@ int writeSew(EmbPattern* pattern, const char* fileName)
         embFile_printf(file, " ");
     }
 
-    for (stitches=pattern->stitchList; stitches; stitches=stitches->next) {
-        st = stitches->stitch;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
         dx = st.x * 10.0 - xx;
         dy = st.y * 10.0 - yy;
         xx = st.x * 10.0;

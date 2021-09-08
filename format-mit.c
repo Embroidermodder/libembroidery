@@ -50,9 +50,9 @@ static unsigned char mitEncodeStitch(double value)
 int writeMit(EmbPattern* pattern, const char* fileName)
 {
 	EmbFile* file = 0;
-	EmbStitchList* pointer = 0;
+	EmbStitch st;
 	double xx = 0, yy = 0, dx = 0, dy = 0;
-	int flags = 0;
+	int flags = 0, i;
 
     if (!validateWritePattern(pattern, fileName, "writeMit")) {
         return 0;
@@ -64,17 +64,15 @@ int writeMit(EmbPattern* pattern, const char* fileName)
 
 	embPattern_correctForMaxStitchLength(pattern, 0x1F, 0x1F);
 	xx = yy = 0;
-	pointer = pattern->stitchList;
-	while (pointer)
-	{
-		dx = pointer->stitch.x - xx;
-		dy = pointer->stitch.y - yy;
-		xx = pointer->stitch.x;
-		yy = pointer->stitch.y;
-		flags = pointer->stitch.flags;
+	for (i=0; i<pattern->stitchList->count; i++) {
+		st = pattern->stitchList->stitch[i];
+		dx = st.x - xx;
+		dy = st.y - yy;
+		xx = st.x;
+		yy = st.y;
+		flags = st.flags;
 		embFile_putc(mitEncodeStitch(dx), file);
 		embFile_putc(mitEncodeStitch(dy), file);
-		pointer = pointer->next;
 	}
 	embFile_close(file);
     return 1;

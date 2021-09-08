@@ -61,7 +61,6 @@ Development
    3. Identify sources that break down the binary formats we currently don't understand.
    4. Better documentation of the structure of the headers for the formats we do understand.
 2. Code quality and user friendliness.
-   1. Combine stitch and thread memory management tools into the EmbArray functions. Remove linked list code.
    2. Document all structs, macros and functions (will contribute directly on the web version).
    3. Make a texinfo/PDF user manual for embroider.
    4. Incorporate experimental code, improve support for language bindings.

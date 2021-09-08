@@ -20,12 +20,10 @@ int readXxx(EmbPattern* pattern, const char* fileName)
     int flags, numberOfColors, paletteOffset, i;
     char endOfStream = 0;
     char thisStitchJump = 0;
-    EmbStitchList* lastStitch = 0;
-    EmbStitchList* secondLast = 0;
     EmbThread thread;
+    EmbStitch st;
 
-    if(!pattern) { embLog_error("format-xxx.c readXxx(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-xxx.c readXxx(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readXxx")) return 0;
 
     file = embFile_open(fileName, "rb", 0);
     if(!file) return 0;
@@ -89,11 +87,12 @@ int readXxx(EmbPattern* pattern, const char* fileName)
         }
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
+/*
     lastStitch = pattern->stitchList;
     secondLast = 0;
-    if(lastStitch)
-    {
-        while(lastStitch->next)
+    if (lastStitch)
+ {
+        while (lastStitch->next)
         {
             secondLast = lastStitch;
             lastStitch = lastStitch->next;
@@ -106,6 +105,9 @@ int readXxx(EmbPattern* pattern, const char* fileName)
             embPattern_changeColor(pattern, pattern->currentColorIndex - 1);
         }
     }
+    
+    Is this trimming the last stitch... and
+    */
     embFile_close(file);
     embPattern_end(pattern);
 
@@ -138,18 +140,20 @@ static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
 {
     double thisX = 0.0f;
     double thisY = 0.0f;
-    double previousX, previousY;
-    EmbStitchList* stitches = 0;
+    double previousX, previousY, deltaX, deltaY;
     EmbStitch s;
-    double deltaX, deltaY;
+    int i;
 
-    if (!embStitchList_empty(p->stitchList)) {
-        thisX = (float)p->stitchList->stitch.x;
-        thisY = (float)p->stitchList->stitch.y;
+    if (p->stitchList) {
+        thisX = (float)p->stitchList->stitch[0].x;
+        thisY = (float)p->stitchList->stitch[0].y;
+    }
+    else {
+        return;
     }
 
-    for (stitches=p->stitchList; stitches; stitches=stitches->next) {
-        s = stitches->stitch;
+    for (i=0; i<p->stitchList->count; i++) {
+        s = p->stitchList->stitch[i];
         previousX = thisX;
         previousY = thisY;
         thisX = s.x;
@@ -190,7 +194,7 @@ int writeXxx(EmbPattern* pattern, const char* fileName)
     {
         binaryWriteByte(file, 0x00);
     }
-    binaryWriteUInt(file, (unsigned int) embStitchList_count(pattern->stitchList));
+    binaryWriteUInt(file, (unsigned int)pattern->stitchList->count);
     for(i = 0; i < 0x0C; i++)
     {
         binaryWriteByte(file, 0x00);

@@ -272,16 +272,14 @@ static void pecEncode(EmbFile* file, EmbPattern* p)
     double thisX = 0.0;
     double thisY = 0.0;
     unsigned char stopCode = 2;
-    EmbStitchList* list = 0;
+    EmbStitch s;
+    int deltaX, deltaY, i;
 
     if(!file) { embLog_error("format-pec.c pecEncode(), file argument is null\n"); return; }
     if(!p) { embLog_error("format-pec.c pecEncode(), p argument is null\n"); return; }
 
-    list = p->stitchList;
-    while(list)
-    {
-        int deltaX, deltaY;
-        EmbStitch s = list->stitch;
+    for (i=0; i<p->stitchList->count; i++) {
+        s = p->stitchList->stitch[i];
 
         deltaX = roundDouble(s.x - thisX);
         deltaY = roundDouble(s.y - thisY);
@@ -315,7 +313,6 @@ static void pecEncode(EmbFile* file, EmbPattern* p)
             pecEncodeJump(file, deltaX, s.flags);
             pecEncodeJump(file, deltaY, s.flags);
         }
-        list = list->next;
     }
 }
 
@@ -351,7 +348,7 @@ static void writeImage(EmbFile* file, unsigned char image[][48])
 
 void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbStitchList* tempStitches = 0;
+    EmbStitch st;
     EmbRect bounds;
     unsigned char image[38][48];
     int i, flen, currentThreadCount, graphicsOffsetLocation, graphicsOffsetValue, height, width;
@@ -450,35 +447,29 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     /* Writing all colors */
     clearImage(image);
-    tempStitches = pattern->stitchList;
 
+    int x, y;
     yFactor = 32.0 / height;
     xFactor = 42.0 / width;
-    while(tempStitches->next)
-    {
-        int x = roundDouble((tempStitches->stitch.x - bounds.left) * xFactor) + 3;
-        int y = roundDouble((tempStitches->stitch.y - bounds.top) * yFactor) + 3;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
+        x = roundDouble((st.x - bounds.left) * xFactor) + 3;
+        y = roundDouble((st.y - bounds.top) * yFactor) + 3;
         image[y][x] = 1;
-        tempStitches = tempStitches->next;
     }
     writeImage(file, image);
 
     /* Writing each individual color */
-    tempStitches = pattern->stitchList;
-    for(i = 0; i < currentThreadCount; i++)
-    {
+    for(i = 0; i < currentThreadCount; i++) {
         clearImage(image);
-        while(tempStitches->next)
-        {
-            int x = roundDouble((tempStitches->stitch.x - bounds.left) * xFactor) + 3;
-            int y = roundDouble((tempStitches->stitch.y - bounds.top) * yFactor) + 3;
-            if(tempStitches->stitch.flags & STOP)
-            {
-                tempStitches = tempStitches->next;
+        for (i=0; i<pattern->stitchList->count; i++) {
+            st = pattern->stitchList->stitch[i];
+            x = roundDouble((st.x - bounds.left) * xFactor) + 3;
+            y = roundDouble((st.y - bounds.top) * yFactor) + 3;
+            if (st.flags & STOP) {
                 break;
             }
             image[y][x] = 1;
-            tempStitches = tempStitches->next;
         }
         writeImage(file, image);
     }
@@ -495,8 +486,7 @@ int writePec(EmbPattern* pattern, const char* fileName)
     }
 
     file = embFile_open(fileName, "wb", 0);
-    if(!file)
-        return 0;
+    if (!file) return 0;
 
     embPattern_flipVertical(pattern); /* TODO: There needs to be a matching flipVertical() call after the write to ensure multiple writes from the same pattern work properly */
     embPattern_fixColorCount(pattern);

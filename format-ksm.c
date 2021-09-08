@@ -77,7 +77,7 @@ int readKsm(EmbPattern* pattern, const char* fileName)
 int writeKsm(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file;
-    EmbStitchList* stitches;
+    EmbStitch st;
     double xx, yy, dx, dy;
     int i;
     unsigned char b[4];
@@ -95,12 +95,13 @@ int writeKsm(EmbPattern* pattern, const char* fileName)
     }
     /* write stitches */
     xx = yy = 0;
-    for(stitches=pattern->stitchList; stitches; stitches=stitches->next) {
-        dx = stitches->stitch.x - xx;
-        dy = stitches->stitch.y - yy;
-        xx = stitches->stitch.x;
-        yy = stitches->stitch.y;
-        ksmEncode(b, (char)(dx * 10.0), (char)(dy * 10.0), stitches->stitch.flags);
+    for(i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
+        dx = st.x - xx;
+        dy = st.y - yy;
+        xx = st.x;
+        yy = st.y;
+        ksmEncode(b, (char)(dx * 10.0), (char)(dy * 10.0), st.flags);
         embFile_write(b, 1, 2, file);
     }
     embFile_printf(file, "\x1a");

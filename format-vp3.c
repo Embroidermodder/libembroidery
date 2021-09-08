@@ -271,10 +271,10 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
     EmbRect bounds;
     int remainingBytesPos, remainingBytesPos2;
     int colorSectionStitchBytes;
-    int first = 1;
+    int first = 1, i;
     int numberOfColors = 0;
-	EmbColor color = embColor_make(0xFE, 0xFE, 0xFE);
-    EmbStitchList *mainPointer = 0, *pointer = 0;
+    EmbColor color = embColor_make(0xFE, 0xFE, 0xFE);
+    EmbStitch st;
 
     if (!validateWritePattern(pattern, fileName, "writeVp3")) {
         return 0;
@@ -308,15 +308,14 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
 
     numberOfColors = 0;
 
-    mainPointer = pattern->stitchList;
-    while(mainPointer)
-    {
-        int flag;
-        EmbColor newColor;
+    int flag;
+    EmbColor newColor;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
 
-        pointer = mainPointer;
-        flag = pointer->stitch.flags;
-        newColor = pattern->threads->thread[pointer->stitch.color].color;
+        /* pointer = mainPointer; */
+        flag = st.flags;
+        newColor = pattern->threads->thread[st.color].color;
         if(newColor.r != color.r || newColor.g != color.g || newColor.b != color.b)
         {
             numberOfColors++;
@@ -329,11 +328,10 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
             numberOfColors++;
         }
 
-        while(pointer && (flag == pointer->stitch.flags))
-        {
-            pointer = pointer->next;
+        while (flag == pattern->stitchList->stitch[i].flags) {
+            i++;
         }
-        mainPointer = pointer;
+        /* mainPointer = pointer; */
     }
 
     binaryWriteByte(file, numberOfColors);
@@ -372,19 +370,16 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
     vp3WriteString(file, "");
     binaryWriteShortBE(file, numberOfColors);
 
-    mainPointer = pattern->stitchList;
-    while(mainPointer)
-    {
+    for (i=0; i<pattern->stitchList->count; i++) {
         char colorName[8] = { 0 };
         double lastX, lastY;
         int colorSectionLengthPos;
         EmbStitch s;
         int lastColor;
 
-		if (!first)
-		{
-			binaryWriteByte(file, 0);
-		}
+        if (!first) {
+            binaryWriteByte(file, 0);
+	}
         binaryWriteByte(file, 0);
         binaryWriteByte(file, 5);
         binaryWriteByte(file, 0);
@@ -392,19 +387,18 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
         colorSectionLengthPos = embFile_tell(file);
         binaryWriteInt(file, 0); /* placeholder */
 
-        pointer = mainPointer;
-        color = pattern->threads->thread[pointer->stitch.color].color;
+        /* pointer = mainPointer; */
+        color = pattern->threads->thread[st.color].color;
 
-		if (first && pointer->stitch.flags & JUMP && pointer->next->stitch.flags & JUMP)
-		{
-			pointer = pointer->next;
-		}
+        if (first && (st.flags & JUMP) && pattern->stitchList->stitch[i+1].flags & JUMP) {
+            i++;
+        }
 
-        s = pointer->stitch;
+        s = pattern->stitchList->stitch[i];
         embLog_print("format-vp3.c DEBUG %d, %lf, %lf\n", s.flags, s.x, s.y);
         binaryWriteIntBE(file, s.x * 1000);
         binaryWriteIntBE(file, -s.y * 1000);
-        pointer = pointer->next;
+        /* pointer = pointer->next; */
 
         first = 0;
 
@@ -445,13 +439,11 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
         binaryWriteByte(file, 246);
         binaryWriteByte(file, 0);
 
-        while(pointer)
-        {
+        for (i=0; i<pattern->stitchList->count; i++) {
             int dx, dy;
 
-            EmbStitch s = pointer->stitch;
-			if (s.color != lastColor)
-			{
+            EmbStitch s = pattern->stitchList->stitch[i];
+            if (s.color != lastColor) {
 				break;
 			}
 			if (s.flags & END || s.flags & STOP)
@@ -463,8 +455,7 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
             lastX = lastX + dx / 10.0; /* output is in ints, ensure rounding errors do not sum up */
             lastY = lastY + dy / 10.0;
 
-            if(dx < -127 || dx > 127 || dy < -127 || dy > 127)
-            {
+            if(dx < -127 || dx > 127 || dy < -127 || dy > 127) {
                 binaryWriteByte(file, 128);
                 binaryWriteByte(file, 1);
                 binaryWriteShortBE(file, dx);
@@ -472,19 +463,15 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
                 binaryWriteByte(file, 128);
                 binaryWriteByte(file, 2);
             }
-            else
-            {
+            else {
                 binaryWriteByte(file, dx);
                 binaryWriteByte(file, dy);
             }
-
-            pointer = pointer->next;
         }
 
         vp3PatchByteCount(file, colorSectionStitchBytes, -4);
         vp3PatchByteCount(file, colorSectionLengthPos, -3);
-
-        mainPointer = pointer;
+        /* mainPointer = pointer; */
     }
 
     vp3PatchByteCount(file, remainingBytesPos2, -4);

@@ -52,8 +52,7 @@ int readExp(EmbPattern* pattern, const char* fileName)
     char dx = 0, dy = 0;
     int flags = 0;
 
-    if(!pattern) { embLog_error("format-exp.c readExp(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-exp.c readExp(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readExp")) return 0;
 
     file = embFile_open(fileName, "rb", 0);
     if(!file) return 0;
@@ -126,10 +125,9 @@ int writeExp(EmbPattern* pattern, const char* fileName)
 return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
 #else /* ARDUINO TODO: This is temporary. Remove when complete. */
     EmbFile* file = 0;
-    EmbStitchList* stitches = 0;
     double dx = 0.0, dy = 0.0;
     double xx = 0.0, yy = 0.0;
-    int flags = 0;
+    int flags = 0, i;
     unsigned char b[4];
     EmbStitch st;
 
@@ -139,9 +137,8 @@ return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
     if (!file) return 0;
 
     /* write stitches */
-    stitches = pattern->stitchList;
-    while (stitches) {
-        st = stitches->stitch;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
         dx = st.x * 10.0 - xx;
         dy = st.y * 10.0 - yy;
         xx = st.x * 10.0;
@@ -156,7 +153,6 @@ return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
         {
             embFile_printf(file, "%c%c", b[0], b[1]);
         }
-        stitches = stitches->next;
     }
     embFile_printf(file, "\x1a");
     embFile_close(file);

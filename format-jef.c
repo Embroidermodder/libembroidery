@@ -300,9 +300,8 @@ int writeJef(EmbPattern* pattern, const char* fileName)
 {
     int colorlistSize, minColors, designWidth, designHeight, i;
     EmbRect boundingRect;
-    EmbFile* file = 0;
+    EmbFile* file;
     EmbTime time;
-    EmbStitchList* stitches = 0;
     EmbStitch st;
     double dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
     unsigned char b[4];
@@ -329,7 +328,7 @@ int writeJef(EmbPattern* pattern, const char* fileName)
     binaryWriteByte(file, 0x00);
     binaryWriteByte(file, 0x00);
     binaryWriteInt(file, pattern->threads->count);
-    binaryWriteInt(file, embStitchList_count(pattern->stitchList) + embMaxInt(0, (6 - colorlistSize) * 2) + 1);
+    binaryWriteInt(file, pattern->stitchList->count + embMaxInt(0, (6 - colorlistSize) * 2) + 1);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
 
@@ -398,8 +397,8 @@ int writeJef(EmbPattern* pattern, const char* fileName)
         binaryWriteInt(file, 0x0D);
     }
 
-    for (stitches=pattern->stitchList; stitches; stitches=stitches->next) {
-        st = stitches->stitch;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
         dx = st.x * 10.0 - xx;
         dy = st.y * 10.0 - yy;
         xx = st.x * 10.0;

@@ -25,7 +25,6 @@ set(LIBRARY_SOURCE_FILES
     emb-rect.c
     emb-satin-line.c
     emb-settings.c
-    emb-stitch.c
     emb-thread.c
     emb-vector.c
     emb-utility.c

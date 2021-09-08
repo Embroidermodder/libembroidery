@@ -125,7 +125,7 @@ int readPcs(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writePcs(EmbPattern* pattern, const char* fileName)
 {
-    EmbStitchList* pointer = 0;
+    EmbStitch st;
     EmbFile* file = 0;
     int i = 0;
     unsigned char colorCount = 0;
@@ -136,8 +136,7 @@ int writePcs(EmbPattern* pattern, const char* fileName)
     }
 
     file = embFile_open(fileName, "wb", 0);
-    if(!file)
-        return 0;
+    if (!file) return 0;
 
     binaryWriteByte(file, (unsigned char)'2');
     binaryWriteByte(file, 3); /* TODO: select hoop size defaulting to Large PCS hoop */
@@ -156,14 +155,12 @@ int writePcs(EmbPattern* pattern, const char* fileName)
         binaryWriteUInt(file, 0); /* write remaining colors to reach 16 */
     }
 
-    binaryWriteUShort(file, (unsigned short)embStitchList_count(pattern->stitchList));
+    binaryWriteUShort(file, (unsigned short)pattern->stitchList->count);
     /* write stitches */
     xx = yy = 0;
-    pointer = pattern->stitchList;
-    while(pointer)
-    {
-        pcsEncode(file, roundDouble(pointer->stitch.x * 10.0), roundDouble(pointer->stitch.y * 10.0), pointer->stitch.flags);
-        pointer = pointer->next;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
+        pcsEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
     }
     embFile_close(file);
     return 1;

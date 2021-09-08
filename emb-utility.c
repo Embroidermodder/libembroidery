@@ -1,7 +1,8 @@
 #include "embroidery.h"
+#include <math.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 
 #ifdef ARDUINO
@@ -17,7 +18,7 @@ char binaryReadByte(EmbFile* file)
 
 int binaryReadBytes(EmbFile* file, unsigned char* destination, int count)
 {
-    return (int) embFile_read((char*) destination, 1, count, file);
+    return (int)embFile_read((char*)destination, 1, count, file);
 }
 
 short binaryReadInt16(EmbFile* file)
@@ -94,22 +95,20 @@ unsigned int binaryReadUInt32BE(EmbFile* file)
 void binaryReadString(EmbFile* file, char* buffer, int maxLength)
 {
     int i = 0;
-    while(i < maxLength)
-    {
+    while (i < maxLength) {
         buffer[i] = (char)embFile_getc(file);
-        if(buffer[i] == '\0') break;
+        if (buffer[i] == '\0')
+            break;
         i++;
     }
 }
 
-void binaryReadUnicodeString(EmbFile* file, char *buffer, const int stringLength)
+void binaryReadUnicodeString(EmbFile* file, char* buffer, const int stringLength)
 {
     int i = 0;
-    for(i = 0; i < stringLength * 2; i++)
-    {
+    for (i = 0; i < stringLength * 2; i++) {
         char input = (char)embFile_getc(file);
-        if(input != 0)
-        {
+        if (input != 0) {
             buffer[i] = input;
         }
     }
@@ -117,8 +116,7 @@ void binaryReadUnicodeString(EmbFile* file, char *buffer, const int stringLength
 
 float binaryReadFloat(EmbFile* file)
 {
-    union
-    {
+    union {
         float f32;
         unsigned int u32;
     } float_int_u;
@@ -197,8 +195,7 @@ void binaryWriteUIntBE(EmbFile* file, unsigned int data)
 
 void binaryWriteFloat(EmbFile* file, float data)
 {
-    union
-    {
+    union {
         float f32;
         unsigned int u32;
     } float_int_u;
@@ -212,25 +209,29 @@ void binaryWriteFloat(EmbFile* file, float data)
 
 double embMinDouble(double a, double b)
 {
-    if (a<b) return a;
+    if (a < b)
+        return a;
     return b;
 }
 
 double embMaxDouble(double a, double b)
 {
-    if (a>b) return a;
+    if (a > b)
+        return a;
     return b;
 }
 
 int embMinInt(int a, int b)
 {
-    if (a<b) return a;
+    if (a < b)
+        return a;
     return b;
 }
 
 int embMaxInt(int a, int b)
 {
-    if (a>b) return a;
+    if (a > b)
+        return a;
     return b;
 }
 
@@ -244,11 +245,11 @@ int embMaxInt(int a, int b)
  *
  * For example: ("test", "tb", "..") -> ".es."
  */
-void charReplace(char *s, const char *from, const char *to)
+void charReplace(char* s, const char* from, const char* to)
 {
     int i;
     for (; *s; s++) {
-        for (i=0; from[i]; i++) {
+        for (i = 0; from[i]; i++) {
             if (*s == from[i]) {
                 *s = to[i];
             }
@@ -264,10 +265,10 @@ void charReplace(char *s, const char *from, const char *to)
  *
  * @return 0 if not present 1 if present.
  */
-int stringInArray(const char *s, const char **array)
+int stringInArray(const char* s, const char** array)
 {
     int i;
-    for (i=0; strlen(array[i]); i++) {
+    for (i = 0; strlen(array[i]); i++) {
         if (!strcmp(s, array[i])) {
             return 1;
         }
@@ -278,17 +279,19 @@ int stringInArray(const char *s, const char **array)
 /*! Rounds a double (\a src) and returns it as an \c int. */
 int roundDouble(double src)
 {
-    if(src < 0.0)
-        return (int) ceil(src - 0.5);
-    return (int)floor(src+0.5);
+    if (src < 0.0)
+        return (int)ceil(src - 0.5);
+    return (int)floor(src + 0.5);
 }
 
 /*! Returns \c true if string (\a str) begins with substring (\a pre), otherwise returns \c false. */
 char startsWith(char* pre, char* str)
 {
     for (; *pre; pre++, str++) {
-        if (!*str) return 0;
-        if (*pre != *str) return 0;
+        if (!*str)
+            return 0;
+        if (*pre != *str)
+            return 0;
     }
     return 1;
 }
@@ -297,7 +300,8 @@ char startsWith(char* pre, char* str)
 char* rTrim(char* str, char junk)
 {
     char* original = str + strlen(str);
-    while(*--original == junk);
+    while (*--original == junk)
+        ;
     *(original + 1) = '\0';
     return str;
 }
@@ -306,7 +310,7 @@ char* rTrim(char* str, char junk)
  * (\a str) that match (\a junk), moving right until a mismatch occurs. */
 char* lTrim(char* str, char junk)
 {
-    while (*str==junk) {
+    while (*str == junk) {
         str++;
     }
     return str;
@@ -316,22 +320,20 @@ char* lTrim(char* str, char junk)
 static char const WHITESPACE[] = " \t\n\r";
 
 /* TODO: description */
-static void get_trim_bounds(char const *s,
-                            char const **firstWord,
-                            char const **trailingSpace)
+static void get_trim_bounds(char const* s,
+    char const** firstWord,
+    char const** trailingSpace)
 {
     char const* lastWord = 0;
     *firstWord = lastWord = s + strspn(s, WHITESPACE);
-    do
-    {
+    do {
         *trailingSpace = lastWord + strcspn(lastWord, WHITESPACE);
         lastWord = *trailingSpace + strspn(*trailingSpace, WHITESPACE);
-    }
-    while (*lastWord != '\0');
+    } while (*lastWord != '\0');
 }
 
 /* TODO: description */
-char* copy_trim(char *s)
+char* copy_trim(char* s)
 {
     char const *firstWord = 0, *trailingSpace = 0;
     char* result = 0;
@@ -376,10 +378,16 @@ char* emb_optOut(double num, char* str)
 char* emb_strdup(char* src)
 {
     char* dest = 0;
-    if(!src) { embLog_error("helpers-misc.c emb_strdup(), src argument is null\n"); return 0; }
+    if (!src) {
+        embLog_error("helpers-misc.c emb_strdup(), src argument is null\n");
+        return 0;
+    }
     dest = (char*)malloc(strlen(src) + 1);
-    if(!dest) { embLog_error("helpers-misc.c emb_strdup(), cannot allocate memory\n"); }
-    else { strcpy(dest, src); }
+    if (!dest) {
+        embLog_error("helpers-misc.c emb_strdup(), cannot allocate memory\n");
+    } else {
+        strcpy(dest, src);
+    }
     return dest;
 }
 
@@ -393,10 +401,10 @@ void embTime_initNow(EmbTime* t)
     time(&rawtime);
     timeinfo = localtime(&rawtime);
 
-    t->year   = timeinfo->tm_year;
-    t->month  = timeinfo->tm_mon;
-    t->day    = timeinfo->tm_mday;
-    t->hour   = timeinfo->tm_hour;
+    t->year = timeinfo->tm_year;
+    t->month = timeinfo->tm_mon;
+    t->day = timeinfo->tm_mday;
+    t->hour = timeinfo->tm_hour;
     t->minute = timeinfo->tm_min;
     t->second = timeinfo->tm_sec;
 #endif /* ARDUINO */
@@ -409,9 +417,118 @@ EmbTime embTime_time(EmbTime* t)
 #else
 
     int divideByZero = 0;
-    divideByZero = divideByZero/divideByZero;
+    divideByZero = divideByZero / divideByZero;
     /*TODO: wrap time() from time.h and verify it works consistently */
 
 #endif /* ARDUINO */
+}
+
+/* Converts a 6 digit hex string (I.E. "00FF00") into an
+ * EmbColor and returns it. */
+EmbColor embColor_fromHexStr(char* val)
+{
+    int i;
+    EmbColor color;
+    for (i = 0; i < 6; i++) {
+        if (val[i] >= 'A' && val[i] <= 'F') {
+            val[i] = '9' + val[i] - 'A' + 1;
+        }
+        val[i] -= '0';
+    }
+
+    color.r = val[0] * 16 + val[1];
+    color.g = val[2] * 16 + val[3];
+    color.b = val[4] * 16 + val[5];
+    return color;
+}
+
+/* printf() abstraction. Uses Serial.print() on ARDUINO */
+void embLog_print(const char* format, ...)
+{
+    /* TODO: log debug message in struct for later use */
+
+#ifdef ARDUINO /* ARDUINO */
+    char buff[256];
+    va_list args;
+    va_start(args, format);
+    vsprintf(buff, format, args);
+    va_end(args);
+    inoLog_serial(buff);
+#else /* ARDUINO */
+    va_list args;
+    va_start(args, format);
+    vprintf(format, args);
+    va_end(args);
+#endif /* ARDUINO */
+}
+
+/* serious errors */
+void embLog_error(const char* format, ...)
+{
+    /* TODO: log debug message in struct for later use */
+
+#ifdef ARDUINO /* ARDUINO */
+    char buff[256];
+    va_list args;
+    va_start(args, format);
+    vsprintf(buff, format, args);
+    va_end(args);
+    inoLog_serial(strcat("ERROR: ", buff));
+#else /* ARDUINO */
+    va_list args;
+    va_start(args, format);
+    printf("ERROR: ");
+    vprintf(format, args);
+    va_end(args);
+#endif /* ARDUINO */
+}
+
+/* Wrapper functions around Keith Pomakis' HashTable Library */
+
+EmbHash* embHash_create(void) { return HashTableCreate(1); }
+void embHash_free(EmbHash* hash)
+{
+    HashTableDestroy(hash);
+    hash = 0;
+}
+
+int embHash_contains(const EmbHash* hash, const void* key)
+{
+    return HashTableContainsKey(hash, key);
+}
+
+int embHash_insert(EmbHash* hash, const void* key, void* value)
+{
+    return HashTablePut(hash, key, value);
+}
+
+void* embHash_value(const EmbHash* hash, const void* key)
+{
+    return HashTableGet(hash, key);
+}
+
+void embHash_remove(EmbHash* hash, const void* key)
+{
+    HashTableRemove(hash, key);
+}
+
+void embHash_clear(EmbHash* hash)
+{
+    HashTableRemoveAll(hash);
+}
+
+int embHash_empty(const EmbHash* hash)
+{
+    return HashTableIsEmpty(hash);
+}
+
+long embHash_count(const EmbHash* hash)
+{
+    return HashTableSize(hash);
+}
+
+void embHash_rehash(EmbHash* hash, long numOfBuckets)
+{
+    HashTableRehash(hash, numOfBuckets);
 }
 

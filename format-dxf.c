@@ -430,10 +430,12 @@ int readDxf(EmbPattern* pattern, const char* fileName)
 /*
                     TODO: finish this
                     unsigned char colorNum = atoi(buff);
-                    EmbColor* co = embColor_create(_dxfColorTable[colorNum][0], _dxfColorTable[colorNum][1], _dxfColorTable[colorNum][2]);
-                    if(!co) { / TODO: error allocating memory for EmbColor  return 0; }
-                    printf("inserting:%s,%d,%d,%d\n", layerName, co->r, co->g, co->b);
-                    if(embHash_insert(layerColorHash, emb_strdup(layerName), co))
+                    EmbColor co;
+                    co.r = _dxfColorTable[colorNum][0];
+                    co.g = _dxfColorTable[colorNum][1];
+                    co.b = _dxfColorTable[colorNum][2];
+                    printf("inserting:%s,%d,%d,%d\n", layerName, co.r, co.g, co.b);
+                    if(embHash_insert(layerColorHash, emb_strdup(layerName), &co))
                     {
                          TODO: log error: failed inserting into layerColorHash
                     }

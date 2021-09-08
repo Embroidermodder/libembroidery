@@ -9,24 +9,13 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(LIBRARY_SOURCE_FILES
-    emb-arc.c
     emb-array.c
-    emb-circle.c
-    emb-color.c
     emb-compress.c
-    emb-ellipse.c
     emb-file.c
-    emb-format.c
-    emb-hash.c
-    emb-line.c
-    emb-logging.c
+    emb-geometry.c
     emb-pattern.c
-    emb-reader-writer.c
-    emb-rect.c
-    emb-satin-line.c
-    emb-settings.c
+    emb-stitch-fill.c
     emb-thread.c
-    emb-vector.c
     emb-utility.c
     format-100.c
     format-10o.c
@@ -90,7 +79,6 @@ set(LIBRARY_SOURCE_FILES
     format-xxx.c
     format-zsk.c
     hashtable.c
-    thread-color.c
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")
@@ -119,7 +107,7 @@ target_include_directories(embroidery_static
 )
 
 add_executable(embroider
-    cmd/embroider/embroider-main.c
+    embroider-main.c
 )
 
 target_include_directories(embroider

@@ -1,5 +1,7 @@
 #include "embroidery.h"
 #include <math.h>
+#include <stdlib.h>
+
 
 /* TODO: Add to CMakeLists.txt and libembroidery.pri when this is C89 complete.
  * This code isn't incorporated in the library or embroider currently.
@@ -14,7 +16,7 @@
  *     double Angle { get; set; }
  *     List<VectorStitch> Stitches { get; set; }
  * }
- * 
+ *
  * pass EmbPattern in its place.
  *
  * _usePt needs malloc/free, perhaps EmbArray flags?
@@ -23,33 +25,37 @@
 int *_usePt;
 double _distanceTolerance;
 
-double LineLength(EmbVector a1, EmbVector a2)
+double embVector_distancePointPoint(EmbVector p, EmbVector p2)
 {
-    return sqrt(pow(a2.x - a1.x, 2) + pow(a2.y - a1.y, 2));
+    EmbVector d;
+    embVector_subtract(p, p2, &d);
+    return embVector_getLength(d);
 }
 
-double embVector_distancePointPoint(EmbVector p, EmbVector2 p2)
+double GetRelativeX(EmbVector a1, EmbVector a2, EmbVector a3)
 {
-    double dx = p.x - p2.x;
-    double dy = p.y - p2.y;
-    return sqrt(dx * dx + dy * dy);
+    EmbVector c12, c32;
+    embVector_subtract(a1, a2, &c12);
+    embVector_subtract(a3, a2, &c32);
+    return embVector_dot(c12, c32);
 }
 
-float GetRelativeX(EmbVector a1, EmbVector a2, EmbVector a3)
+double GetRelativeY(EmbVector a1, EmbVector a2, EmbVector a3)
 {
-    return ((a1.x - a2.x) * (a3.x - a2.x) + (a1.y - a2.y) * (a3.y - a2.y));
-}
-
-float GetRelativeY(EmbVector a1, EmbVector a2, EmbVector a3)
-{
-    return ((a1.x - a2.x) * (a3.y - a2.y) - (a1.y - a2.y) * (a3.x - a2.x));
+    EmbVector c12, c32;
+    embVector_subtract(a1, a2, &c12);
+    embVector_subtract(a3, a2, &c32);
+    return c12.x * c32.y - c12.y * c32.x;
 }
 
 double GetAngle(EmbVector a, EmbVector b)
 {
-    return atan2(a.x - b.x, a.y - b.y);
+    EmbVector h;
+    embVector_subtract(a, b, &h);
+    return atan2(h.x, h.y);
 }
 
+#if 0
 void embPattern_breakIntoColorBlocks(EmbPattern *pattern)
 {
     EmbColor color;
@@ -412,8 +418,8 @@ int embPolygon_reduceByArea(EmbArray *vertices, float areaTolerance)
     }
 
     result = new Vertices();
-    v1 = vertices[vertices.Count - 2];
-    v2 = vertices[vertices.Count - 1];
+    v1 = vertices[vertices->count - 2];
+    v2 = vertices[vertices->count - 1];
     areaTolerance *= 2;
     for (index = 0; index < vertices.Count; ++index, v2 = v3) {
         if (index == vertices.Count - 1) {
@@ -528,6 +534,7 @@ int embPolygon_reduceByDistance(EmbArray *vertices, float distance)
 
     return 1;
 }
+#endif
 
 /* Reduces the polygon by removing the Nth vertex in the vertices list. */
 int embPolygon_reduceByNth(EmbArray *vertices, int nth)
@@ -551,3 +558,141 @@ int embPolygon_reduceByNth(EmbArray *vertices, int nth)
     /* success, trust the data in vertices */
     return 1;
 }
+
+void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, EmbSatinOutline* result)
+{
+    int i;
+    EmbSatinOutline outline;
+    double halfThickness = thickness / 2.0;
+    int intermediateOutlineCount = 2 * lines->count - 2;
+    outline.side1 = embArray_create(EMB_VECTOR);
+    if (!outline.side1) {
+        embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for outline->side1\n");
+        return;
+    }
+    outline.side2 = embArray_create(EMB_VECTOR);
+    if (!outline.side2) {
+        embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for outline->side2\n");
+        return;
+    }
+
+    for (i = 1; i < lines->count; i++) {
+        int j = (i - 1) * 2;
+        EmbVector v1;
+        EmbVector temp;
+
+        EmbLine line;
+        line.x1 = lines->vector[i - 1].x;
+        line.y1 = lines->vector[i - 1].y;
+        line.x2 = lines->vector[i].x;
+        line.y2 = lines->vector[i].y;
+
+        embLine_normalVector(line, &v1, 1);
+
+        embVector_multiply(v1, halfThickness, &temp);
+        embVector_add(temp, lines->vector[i - 1], &temp);
+        embArray_addVector(outline.side1, temp);
+        embVector_add(temp, lines->vector[i], &temp);
+        embArray_addVector(outline.side1, temp);
+
+        embVector_multiply(v1, -halfThickness, &temp);
+        embVector_add(temp, lines->vector[i - 1], &temp);
+        embArray_addVector(outline.side2, temp);
+        embVector_add(temp, lines->vector[i], &temp);
+        embArray_addVector(outline.side2, temp);
+    }
+
+    if (!result) {
+        embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), result argument is null\n");
+        return;
+    }
+    result->side1 = embArray_create(EMB_VECTOR);
+    if (!result->side1) {
+        embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side1\n");
+        return;
+    }
+    result->side2 = embArray_create(EMB_VECTOR);
+    if (!result->side2) {
+        embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side2\n");
+        return;
+    }
+
+    embArray_addVector(result->side1, outline.side1->vector[0]);
+    embArray_addVector(result->side2, outline.side2->vector[0]);
+
+    EmbLine line1, line2;
+    EmbVector out;
+    for (i = 3; i < intermediateOutlineCount; i += 2) {
+        line1.x1 = outline.side1->vector[i - 3].x;
+        line1.y1 = outline.side1->vector[i - 3].y;
+        line1.x2 = outline.side1->vector[i - 2].x;
+        line1.y2 = outline.side1->vector[i - 2].y;
+        line2.x1 = outline.side1->vector[i - 1].x;
+        line2.y1 = outline.side1->vector[i - 1].y;
+        line2.x2 = outline.side1->vector[i].x;
+        line2.y2 = outline.side1->vector[i].y;
+        embLine_intersectionPoint(line1, line2, &out);
+        embArray_addVector(result->side1, out);
+
+        line1.x1 = outline.side2->vector[i - 3].x;
+        line1.y1 = outline.side2->vector[i - 3].y;
+        line1.x2 = outline.side2->vector[i - 2].x;
+        line1.y2 = outline.side2->vector[i - 2].y;
+        line2.x1 = outline.side2->vector[i - 1].x;
+        line2.y1 = outline.side2->vector[i - 1].y;
+        line2.x2 = outline.side2->vector[i].x;
+        line2.y2 = outline.side2->vector[i].y;
+        embLine_intersectionPoint(line1, line2, &out);
+        embArray_addVector(result->side2, out);
+    }
+
+    embArray_addVector(result->side1, outline.side1->vector[2 * lines->count - 3]);
+    embArray_addVector(result->side2, outline.side2->vector[2 * lines->count - 3]);
+    result->length = lines->count;
+}
+
+EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density)
+{
+    int i, j;
+    EmbVector currTop, currBottom, topDiff, bottomDiff, midDiff;
+    EmbVector midLeft, midRight, topStep, bottomStep;
+    EmbArray* stitches = 0;
+
+    if (!result) {
+        embLog_error("emb-satin-line.c embSatinOutline_renderStitches(), result argument is null\n");
+        return 0;
+    }
+
+    if (result->length > 0) {
+        for (j = 0; j < result->length - 1; j++) {
+            embVector_subtract(result->side1->vector[j+1], result->side1->vector[j], &topDiff);
+            embVector_subtract(result->side2->vector[j+1], result->side2->vector[j], &bottomDiff);
+
+            embVector_average(result->side1->vector[j], result->side2->vector[j], &midLeft);
+            embVector_average(result->side1->vector[j+1], result->side2->vector[j+1], &midRight);
+
+            embVector_subtract(midLeft, midRight, &midDiff);
+            double midLength = embVector_getLength(midDiff);
+
+            int numberOfSteps = (int)(midLength * density / 200);
+            embVector_multiply(topDiff, 1.0/numberOfSteps, &topStep);
+            embVector_multiply(bottomDiff, 1.0/numberOfSteps, &bottomStep);
+            currTop = result->side1->vector[j];
+            currBottom = result->side2->vector[j];
+
+            for (i = 0; i < numberOfSteps; i++) {
+                if (!stitches) {
+                    stitches = embArray_create(EMB_VECTOR);
+                }
+                embArray_addVector(stitches, currTop);
+                embArray_addVector(stitches, currBottom);
+                embVector_add(currTop, topStep, &currTop);
+                embVector_add(currBottom, bottomStep, &currBottom);
+            }
+        }
+        embArray_addVector(stitches, currTop);
+        embArray_addVector(stitches, currBottom);
+    }
+    return stitches;
+}
+

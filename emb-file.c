@@ -290,7 +290,7 @@ void embFile_readline(EmbFile* stream, char *line, int maxLength)
  *
  * Note that fputs does not append a \n like puts does.
  */
-void embFile_puts(EmbFile* stream, char *buff)
+int embFile_puts(EmbFile* stream, char *buff)
 {
 #ifdef ARDUINO
     return inoFile_printf(stream, buff);

@@ -686,7 +686,7 @@ EMB_PUBLIC int embFile_seek(EmbFile* stream, long offset, int origin);
 EMB_PUBLIC long embFile_tell(EmbFile* stream);
 EMB_PUBLIC EmbFile* embFile_tmpfile(void);
 EMB_PUBLIC int embFile_putc(int ch, EmbFile* stream);
-EMB_PUBLIC void embFile_puts(EmbFile* stream, char *);
+EMB_PUBLIC int embFile_puts(EmbFile* stream, char *);
 
 EMB_PUBLIC int embFile_printf(EmbFile* stream, const char* format, ...);
 

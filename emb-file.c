@@ -4,7 +4,147 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
+typedef struct reader_writer_prototype {
+    char file_ext[10];
+    int (*reader)(EmbPattern*, const char*);
+    int (*writer)(EmbPattern*, const char*);
+} reader_writer_proto;
+
+reader_writer_proto file_type_list[] = {
+    {".10o", read10o, write10o},
+    {".100", read100, write100},
+    {".art", readArt, writeArt},
+    {".bmc", readBmc, writeBmc},
+    {".bro", readBro, writeBro},
+    {".cnd", readCnd, writeCnd},
+    {".col", readCol, writeCol},
+    {".csd", readCsd, writeCsd},
+    {".csv", readCsv, writeCsv},
+    {".dat", readDat, writeDat},
+    {".dem", readDem, writeDem},
+    {".dsb", readDsb, writeDsb},
+    {".dst", readDst, writeDst},
+    {".dsz", readDsz, writeDsz},
+    {".dxf", readDxf, writeDxf},
+    {".edr", readEdr, writeEdr},
+    {".emd", readEmd, writeEmd},
+    {".exp", readExp, writeExp},
+    {".exy", readExy, writeExy},
+    {".eys", readEys, writeEys},
+    {".fxy", readFxy, writeFxy},
+    {".gc", readGc, writeGc},
+    {".gnc", readGnc, writeGnc},
+    {".gt", readGt, writeGt},
+    {".hus", readHus, writeHus},
+    {".inb", readInb, writeInb},
+    {".inf", readInf, writeInf},
+    {".jef", readJef, writeJef},
+    {".ksm", readKsm, writeKsm},
+    {".max", readMax, writeMax},
+    {".mit", readMit, writeMit},
+    {".new", readNew, writeNew},
+    {".ofm", readOfm, writeOfm},
+    {".pcd", readPcd, writePcd},
+    {".pcm", readPcm, writePcm},
+    {".pcq", readPcq, writePcq},
+    {".pcs", readPcs, writePcs},
+    {".pec", readPec, writePec},
+    {".pel", readPel, writePel},
+    {".pem", readPem, writePem},
+    {".pes", readPes, writePes},
+    {".phb", readPhb, writePhb},
+    {".phc", readPhc, writePhc},
+    {".plt", readPlt, writePlt},
+    {".rgb", readRgb, writeRgb},
+    {".sew", readSew, writeSew},
+    {".shv", readShv, writeShv},
+    {".sst", readSst, writeSst},
+    {".stx", readStx, writeStx},
+    {".svg", readSvg, writeSvg},
+    {".t01", readT01, writeT01},
+    {".t09", readT09, writeT09},
+    {".tap", readTap, writeTap},
+    {".thr", readThr, writeThr},
+    {".txt", readTxt, writeTxt},
+    {".u00", readU00, writeU00},
+    {".u01", readU01, writeU01},
+    {".vip", readVip, writeVip},
+    {".vp3", readVp3, writeVp3},
+    {".xxx", readXxx, writeXxx},
+    {".zsk", readZsk, writeZsk},
+    {"END", 0, 0}
+};
+
+/* TODO: This list needs reviewed in case some stitch formats also can contain object data (EMBFORMAT_STCHANDOBJ). */
+
+EmbFormatList formatTable[100] = {
+    {".10o", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY},
+    {".100", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY},
+    {".art", "Bernina Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".bmc", "Bitmap Cache Embroidery Format",     ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".bro", "Bits & Volts Embroidery Format",     'U', ' ', EMBFORMAT_STITCHONLY},
+    {".cnd", "Melco Embroidery Format",            ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".col", "Embroidery Thread Color Format",     'U', 'U', EMBFORMAT_STITCHONLY},
+    {".csd", "Singer Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY},
+    {".csv", "Comma Separated Values Format",      'U', 'U', EMBFORMAT_STITCHONLY},
+    {".dat", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".dem", "Melco Embroidery Format",            ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".dsb", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".dst", "Tajima Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
+    {".dsz", "ZSK USA Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".dxf", "Drawing Exchange Format",            ' ', ' ', EMBFORMAT_OBJECTONLY},
+    {".edr", "Embird Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
+    {".emd", "Elna Embroidery Format",             'U', ' ', EMBFORMAT_STITCHONLY},
+    {".exp", "Melco Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".exy", "Eltac Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".eys", "Sierra Expanded Embroidery Format",  ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".fxy", "Fortron Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".gc",  "Smoothie G-Code Format",             ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".gnc", "Great Notions Embroidery Format",    ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".gt",  "Gold Thread Embroidery Format",      'U', ' ', EMBFORMAT_STITCHONLY},
+    {".hus", "Husqvarna Viking Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY},
+    {".inb", "Inbro Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".inf", "Embroidery Color Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".jef", "Janome Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
+    {".ksm", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".max", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".mit", "Mitsubishi Embroidery Format",       'U', ' ', EMBFORMAT_STITCHONLY},
+    {".new", "Ameco Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".ofm", "Melco Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".pcd", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".pcm", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".pcq", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".pcs", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".pec", "Brother Embroidery Format",          'U', 'U', EMBFORMAT_STITCHONLY},
+    {".pel", "Brother Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".pem", "Brother Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".pes", "Brother Embroidery Format",          'U', 'U', EMBFORMAT_STITCHONLY},
+    {".phb", "Brother Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".phc", "Brother Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".plt", "AutoCAD Plot Drawing Format",        'U', 'U', EMBFORMAT_STITCHONLY},
+    {".rgb", "RGB Embroidery Format",              'U', 'U', EMBFORMAT_STITCHONLY},
+    {".sew", "Janome Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
+    {".shv", "Husqvarna Viking Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY},
+    {".sst", "Sunstar Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".stx", "Data Stitch Embroidery Format",      'U', ' ', EMBFORMAT_STITCHONLY},
+    {".svg", "Scalable Vector Graphics",           'U', 'U', EMBFORMAT_OBJECTONLY},
+    {".t01", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".t09", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".tap", "Happy Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".thr", "ThredWorks Embroidery Format",       'U', 'U', EMBFORMAT_STITCHONLY},
+    {".txt", "Text File",                          ' ', 'U', EMBFORMAT_STITCHONLY},
+    {".u00", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {".u01", "Barudan Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY},
+    {".vip", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
+    {".vp3", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
+    {".xxx", "Singer Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
+    {".zsk", "ZSK USA Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
+    {"END",  "END",                                ' ', ' ', 0,                  }
+};
+
+int numberOfFormats = 61;
 const unsigned int NumberOfDifatEntriesInHeader = 109;
 const unsigned int sizeOfFatEntry = sizeof(unsigned int);
 static const unsigned int sizeOfDifatEntry = 4;
@@ -38,10 +178,7 @@ int validateWritePattern(EmbPattern *pattern, const char* fileName, const char *
         return 0;
     }
 
-    /* Check for an END stitch and add one if it is not present */
-    if (pattern->stitchList->stitch[pattern->stitchList->count - 1].flags != END) {
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
-    }
+    embPattern_end(pattern);
 
     return 1;
 }
@@ -146,10 +283,27 @@ void embFile_readline(EmbFile* stream, char *line, int maxLength)
     *line = 0;
 }
 
+/**
+ * In order to remove uses of printf (which use more memory and variable
+ * arguments which is bad for embedded systems) call this instead whenever
+ * possible.
+ *
+ * Note that fputs does not append a \n like puts does.
+ */
+void embFile_puts(EmbFile* stream, char *buff)
+{
+#ifdef ARDUINO
+    return inoFile_printf(stream, buff);
+#else /* ARDUINO */
+    return fputs(buff, stream->file);
+#endif /* ARDUINO */
+}
+
 size_t embFile_read(void* ptr, size_t size, size_t nmemb, EmbFile* stream)
 {
 #ifdef ARDUINO
-    return 0; /* ARDUINO TODO: SD File read() doesn't appear to return the same way as fread(). This will need work. */
+    /* ARDUINO TODO: SD File read() doesn't appear to return the same way as fread(). This will need work. */
+    return 0;
 #else /* ARDUINO */
     return fread(ptr, size, nmemb, stream->file);
 #endif /* ARDUINO */
@@ -590,5 +744,175 @@ int bcfFileHeader_isValid(bcf_file_header header)
         return 0;
     }
     return 1;
+}
+
+/**************************************************/
+/* EmbFormatList                                  */
+/**************************************************/
+
+int embFormat_getExtension(const char *fileName, char *ending)
+{
+    int i;
+    const char *offset;
+
+    if (!fileName) {
+        embLog_error("emb-format.c embFormat_getExtension(), fileName argument is null\n");
+        return 0;
+    }
+
+    if (strlen(fileName) == 0) {
+        return 0;
+    }
+    
+    offset = strrchr(fileName, '.');
+    if (offset==0) {
+        return 0;
+    }
+
+    i = 0;
+    while (offset[i] != '\0') {
+        ending[i] = (char)tolower(offset[i]);
+        ++i;
+    }
+    ending[i] = 0; /* terminate the string */
+
+    return 1;
+}
+
+const char* embFormat_extensionFromName(const char* fileName)
+{
+    int i = 0;
+    char ending[2 + EMBFORMAT_MAXEXT];
+    const char* extension = 0;
+
+    if (!embFormat_getExtension(fileName, ending)) {
+        return 0;
+    }
+
+    for (i=0; i<numberOfFormats; i++) {
+        if (!strcmp(ending, formatTable[i].extension)) {
+            extension = formatTable[i].extension;
+            break;
+        }
+    }
+
+    return extension;
+}
+
+const char* embFormat_descriptionFromName(const char* fileName)
+{
+    int i = 0;
+    char ending[2 + EMBFORMAT_MAXEXT];
+    const char* description = 0;
+
+    if (!embFormat_getExtension(fileName, ending)) {
+        return 0;
+    }
+
+    for (i=0; i<numberOfFormats; i++) {
+        if (!strcmp(ending, formatTable[i].extension)) {
+            description = formatTable[i].description;
+            break;
+        }
+    }
+
+    return description;
+}
+
+char embFormat_readerStateFromName(const char* fileName)
+{
+    int i = 0;
+    char ending[2 + EMBFORMAT_MAXEXT];
+    char readerState = ' ';
+
+    if (!embFormat_getExtension(fileName, ending)) {
+        return 0;
+    }
+
+    for (i=0; i<numberOfFormats; i++) {
+        if (!strcmp(ending, formatTable[i].extension)) {
+            readerState = formatTable[i].reader;
+            break;
+        }
+    }
+
+    return readerState;
+}
+
+char embFormat_writerStateFromName(const char* fileName)
+{
+    int i = 0;
+    char ending[2 + EMBFORMAT_MAXEXT];
+    char writerState = ' ';
+
+    if (!embFormat_getExtension(fileName, ending)) {
+        return 0;
+    }
+
+    for (i=0; i<numberOfFormats; i++) {
+        if (!strcmp(ending, formatTable[i].extension)) {
+            writerState = formatTable[i].writer;
+            break;
+        }
+    }
+
+    return writerState;
+}
+
+int embFormat_typeFromName(const char* fileName)
+{
+    int i = 0;
+    char ending[2 + EMBFORMAT_MAXEXT];
+    int type = EMBFORMAT_UNSUPPORTED;
+
+    if (!embFormat_getExtension(fileName, ending)) {
+        return 0;
+    }
+
+    for (i=0; i<numberOfFormats; i++) {
+        if (!strcmp(ending, formatTable[i].extension)) {
+            type = formatTable[i].type;
+            break;
+        }
+    }
+
+    return type;
+}
+
+/*! Returns a pointer to an EmbReaderWriter if the \a fileName is a supported file type. */
+EmbReaderWriter* embReaderWriter_getByFileName(const char* fileName)
+{
+    int i = 0;
+    char ending[5];
+    EmbReaderWriter* rw = 0;
+
+    if (!embFormat_getExtension(fileName, ending)) {
+        return 0;
+    }
+
+    rw = (EmbReaderWriter*)malloc(sizeof(EmbReaderWriter));
+    if(!rw) { embLog_error("emb-reader-writer.c embReaderWriter_getByFileName(), cannot allocate memory for rw\n"); return 0; }
+
+    #ifdef ARDUINO /* ARDUINO TODO: This is temporary. Remove when complete. */
+    if(!strcmp(ending, ".exp"))
+    {
+        rw->reader = readExp;
+        rw->writer = writeExp;
+        return rw;
+    }
+    #else /* ARDUINO TODO: This is temporary. Remove when complete. */        
+    /* checks the first character to see if it is the end symbol */
+    for (i=0; file_type_list[i].file_ext[0]!='E'; i++) {
+        if (!strcmp(ending, file_type_list[i].file_ext))
+        {
+            rw->reader = file_type_list[i].reader;
+            rw->writer = file_type_list[i].writer;
+            return rw;
+        }
+    }
+    #endif /* ARDUINO TODO: This is temporary. Remove when complete. */
+
+    embLog_error("emb-reader-writer.c embReaderWriter_getByFileName(), unsupported file type: %s\n", ending);
+    return 0;
 }
 

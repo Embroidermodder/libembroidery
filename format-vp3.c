@@ -273,7 +273,7 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
     int colorSectionStitchBytes;
     int first = 1, i;
     int numberOfColors = 0;
-    EmbColor color = embColor_make(0xFE, 0xFE, 0xFE);
+    EmbColor color = {0xFE, 0xFE, 0xFE};
     EmbStitch st;
 
     if (!validateWritePattern(pattern, fileName, "writeVp3")) {

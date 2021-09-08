@@ -955,7 +955,9 @@ void embPattern_addLineObjectAbs(EmbPattern* p, double x1, double y1, double x2,
 {
     EmbLineObject lineObj;
     lineObj.line = embLine_make(x1, y1, x2, y2);
-    lineObj.color = embColor_make(0, 0, 0);
+    lineObj.color.r = 0;
+    lineObj.color.g = 0;
+    lineObj.color.b = 0;
 
     if (!p) {
         embLog_error("emb-pattern.c embPattern_addLineObjectAbs(), p argument is null\n");
@@ -1076,5 +1078,29 @@ void embPattern_end(EmbPattern* p)
     if (p->stitchList->stitch[p->stitchList->count - 1].flags != END) {
         embPattern_addStitchRel(p, 0, 0, END, 1);
     }
+}
+
+#include "embroidery.h"
+
+/*! Initializes and returns an EmbSettings */
+EmbSettings embSettings_init(void)
+{
+    EmbSettings settings;
+    settings.dstJumpsPerTrim = 6;
+    settings.home.x = 0.0;
+    settings.home.y = 0.0;
+    return settings;
+}
+
+/*! Returns the home position stored in (\a settings) as an EmbPoint (\a point). */
+EmbPoint embSettings_home(EmbSettings* settings)
+{
+    return settings->home;
+}
+
+/*! Sets the home position stored in (\a settings) to EmbPoint (\a point). You will rarely ever need to use this. */
+void embSettings_setHome(EmbSettings* settings, EmbPoint point)
+{
+    settings->home = point;
 }
 

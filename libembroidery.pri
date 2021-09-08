@@ -22,28 +22,15 @@ QMAKE_CFLAGS_WARN_ON += -Werror=implicit-function-declaration
 #QMAKE_CFLAGS_WARN_ON += -Wno-unused-variable
 
 SOURCES += \
-../libembroidery/emb-arc.c \
 ../libembroidery/emb-array.c \
-../libembroidery/emb-circle.c \
 ../libembroidery/emb-compress.c \
-../libembroidery/emb-color.c \
-../libembroidery/emb-ellipse.c \
 ../libembroidery/emb-file.c \
-../libembroidery/emb-format.c \
-../libembroidery/emb-hash.c \
-../libembroidery/emb-line.c \
-../libembroidery/emb-logging.c \
+../libembroidery/emb-geometry.c \
 ../libembroidery/emb-pattern.c \
-../libembroidery/emb-reader-writer.c \
-../libembroidery/emb-rect.c \
-../libembroidery/emb-satin-line.c \
-../libembroidery/emb-settings.c \
-../libembroidery/emb-stitch.c \
+../libembroidery/emb-stitch-fill.c \
 ../libembroidery/emb-thread.c \
 ../libembroidery/emb-utility.c \
-../libembroidery/emb-vector.c \
 ../libembroidery/hashtable.c \
-../libembroidery/thread-color.c \
 ../libembroidery/format-10o.c \
 ../libembroidery/format-100.c \
 ../libembroidery/format-art.c \

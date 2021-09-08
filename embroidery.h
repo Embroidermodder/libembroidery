@@ -560,10 +560,6 @@ EMB_PUBLIC EmbPathObject* embPathObject_create(
     EmbArray* pointList, EmbArray* flagList, EmbColor color, int lineType);
 EMB_PUBLIC void embPathObject_free(EmbPathObject* pointer);
 
-EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbArray* colors, int mode);
-EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, const EmbThread* colors, int length);
-EMB_PUBLIC EmbThread embThread_getRandom(void);
-
 EMB_PUBLIC void embVector_normalize(EmbVector vector, EmbVector* result);
 EMB_PUBLIC void embVector_multiply(EmbVector vector, double magnitude, EmbVector* result);
 EMB_PUBLIC void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result);
@@ -643,7 +639,6 @@ void getArcCenter(EmbArc arc, EmbVector *arcCenter);
 char getArcDataFromBulge(double bulge,
                          double arcStartX,          double arcStartY,
                          double arcEndX,            double arcEndY,
-                         /* returned data */
                          double* arcMidX,           double* arcMidY,
                          double* arcCenterX,        double* arcCenterY,
                          double* radius,            double* diameter,
@@ -654,22 +649,21 @@ char getArcDataFromBulge(double bulge,
 
 EMB_PUBLIC int getCircleCircleIntersections(
       EmbCircle c0, EmbCircle c1,
-      /* Intersection Point */
       double* px3, double* py3,
-      /* Intersection Point */
       double* px4, double* py4);
 EMB_PUBLIC int getCircleTangentPoints(
      EmbCircle c,
-     /* Point to determine tangency */
      double  px,  double  py,
-     /* Tangent Point 0 */
      double* tx0, double* ty0,
-     /* Tangent Point 1 */
      double* tx1, double* ty1);
 
-EMB_PUBLIC EmbColor embColor_make(unsigned char r, unsigned char g, unsigned char b);
-EMB_PUBLIC EmbColor* embColor_create(unsigned char r, unsigned char g, unsigned char b);
 EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
+int threadColor(const char*, int brand);
+int threadColorNum(unsigned int color, int brand);
+const char* threadColorName(unsigned int color, int brand);
+EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbArray* colors, int mode);
+EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, const EmbThread* colors, int length);
+EMB_PUBLIC EmbThread embThread_getRandom(void);
 
 EMB_PUBLIC double embEllipse_diameterX(EmbEllipse ellipse);
 EMB_PUBLIC double embEllipse_diameterY(EmbEllipse ellipse);
@@ -692,6 +686,7 @@ EMB_PUBLIC int embFile_seek(EmbFile* stream, long offset, int origin);
 EMB_PUBLIC long embFile_tell(EmbFile* stream);
 EMB_PUBLIC EmbFile* embFile_tmpfile(void);
 EMB_PUBLIC int embFile_putc(int ch, EmbFile* stream);
+EMB_PUBLIC void embFile_puts(EmbFile* stream, char *);
 
 EMB_PUBLIC int embFile_printf(EmbFile* stream, const char* format, ...);
 
@@ -718,10 +713,6 @@ void bcf_file_free(bcf_file* bcfFile);
 
 EMB_PUBLIC void embLog_print(const char* format, ...);
 EMB_PUBLIC void embLog_error(const char* format, ...);
-
-int threadColor(const char*, int brand);
-int threadColorNum(unsigned int color, int brand);
-const char* threadColorName(unsigned int color, int brand);
 
 EMB_PUBLIC void embTime_initNow(EmbTime* t);
 EMB_PUBLIC EmbTime embTime_time(EmbTime* t);
@@ -799,29 +790,31 @@ EMB_PUBLIC void embPattern_movePolylinesToStitchList(EmbPattern* pattern);
 EMB_PUBLIC int embPattern_read(EmbPattern* pattern, const char* fileName);
 EMB_PUBLIC int embPattern_write(EmbPattern* pattern, const char* fileName);
 
-#ifdef ARDUINO /* ARDUINO TODO: This is temporary. Remove when complete. */
-
-int readExp(EmbPattern *pattern, const char *fileName);
-int writeExp(EmbPattern *pattern, const char *fileName);
-
-#else /* ARDUINO TODO: This is temporary. Remove when complete. */
-
 int read100(EmbPattern *pattern, const char *fileName);
 int write100(EmbPattern *pattern, const char *fileName);
 int read10o(EmbPattern *pattern, const char *fileName);
 int write10o(EmbPattern *pattern, const char *fileName);
+int readArt(EmbPattern *pattern, const char *fileName);
+int writeArt(EmbPattern *pattern, const char *fileName);
+int readBmc(EmbPattern *pattern, const char *fileName);
+int writeBmc(EmbPattern *pattern, const char *fileName);
+int readBro(EmbPattern *pattern, const char *fileName);
+int writeBro(EmbPattern *pattern, const char *fileName);
+int readCnd(EmbPattern *pattern, const char *fileName);
+int writeCnd(EmbPattern *pattern, const char *fileName);
+int readCol(EmbPattern *pattern, const char *fileName);
+int writeCol(EmbPattern *pattern, const char *fileName);
+int readCsd(EmbPattern *pattern, const char *fileName);
+int writeCsd(EmbPattern *pattern, const char *fileName);
+int readCsv(EmbPattern *pattern, const char *fileName);
+int writeCsv(EmbPattern *pattern, const char *fileName);
+int readDat(EmbPattern *pattern, const char *fileName);
+int writeDat(EmbPattern *pattern, const char *fileName);
+int readDem(EmbPattern *pattern, const char *fileName);
+int writeDem(EmbPattern *pattern, const char *fileName);
 #define READER_WRITER(type) \
     int read##type(EmbPattern *pattern, const char *fileName); \
     int write##type(EmbPattern *pattern, const char *fileName);
-READER_WRITER(Art)
-READER_WRITER(Bmc)
-READER_WRITER(Bro)
-READER_WRITER(Cnd)
-READER_WRITER(Col)
-READER_WRITER(Csd)
-READER_WRITER(Csv)
-READER_WRITER(Dat)
-READER_WRITER(Dem)
 READER_WRITER(Dsb)
 READER_WRITER(Dst)
 READER_WRITER(Dsz)
@@ -876,8 +869,6 @@ READER_WRITER(Zsk)
 
 void readPecStitches(EmbPattern* pattern, EmbFile* file);
 void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* filename);
-
-#endif /* ARDUINO TODO: This is temporary. Remove when complete. */
 
 /* NON-MACRO CONSTANTS
  ******************************************************************************/

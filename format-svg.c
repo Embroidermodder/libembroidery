@@ -4,6 +4,140 @@
 #include <string.h>
 #include <math.h>
 
+/* path flag codes */
+#define LINETO             0
+#define MOVETO             1
+#define BULGETOCONTROL     2
+#define BULGETOEND         4
+#define ELLIPSETORAD       8
+#define ELLIPSETOEND      16
+#define CUBICTOCONTROL1   32
+#define CUBICTOCONTROL2   64
+#define CUBICTOEND       128
+#define QUADTOCONTROL    256
+#define QUADTOEND        512
+
+/**
+ * EMBEDDED SYSTEMS OPTIMIZATION
+ *
+ * All tokens as unsigned char, that way we can store the subsets of strings
+ * in the smaller unsigned char array form.
+ */
+#define TOKEN_AUDIO_LEVEL              0
+#define TOKEN_BUFFERED_AUDIO_RENDERING 1
+#define TOKEN_COLOR                    2
+#define TOKEN_COLOR_RENDERING          3
+#define TOKEN_DIRECTION                4
+#define TOKEN_DISPLAY                  5
+#define TOKEN_DISPLAY_ALIGN            6
+#define TOKEN_FILL                     7
+#define TOKEN_FILL_OPACITY             8
+#define TOKEN_FILL_RULE                9
+#define TOKEN_FONT_FAMILY              11
+#define TOKEN_FONT_SIZE                12
+#define TOKEN_FONT_STYLE               13
+#define TOKEN_FONT_VARIANT             14
+#define TOKEN_FONT_WEIGHT              15
+#define TOKEN_IMAGE_RENDERING          16
+#define TOKEN_LINE_INCREMENT           17
+#define TOKEN_OPACITY                  18
+#define TOKEN_POINTER_EVENTS           19
+#define TOKEN_SHAPE_RENDERING          20
+#define TOKEN_SOLID_COLOR              21
+#define TOKEN_ZOOM_AND_PAN             21
+
+#define SVG_CREATOR_NULL               0
+#define SVG_CREATOR_EMBROIDERMODDER    1
+#define SVG_CREATOR_ILLUSTRATOR        2
+#define SVG_CREATOR_INKSCAPE           3
+
+#define SVG_EXPECT_NULL                0
+#define SVG_EXPECT_ELEMENT             1
+#define SVG_EXPECT_ATTRIBUTE           2
+#define SVG_EXPECT_VALUE               3
+
+/* SVG_TYPES */
+#define SVG_NULL                       0
+#define SVG_ELEMENT                    1
+#define SVG_PROPERTY                   2
+#define SVG_MEDIA_PROPERTY             3
+#define SVG_ATTRIBUTE                  4
+#define SVG_CATCH_ALL                  5
+
+static void writeDouble(EmbFile *file, double num);
+static void writeColor(EmbFile *file, EmbColor color);
+static void writeCircles(EmbPattern *pattern, EmbFile *file);
+static void writeEllipse(EmbPattern *pattern, EmbFile *file);
+static void writePoints(EmbPattern *pattern, EmbFile *file);
+static void writePolygons(EmbPattern *pattern, EmbFile *file);
+static void writePolylines(EmbPattern *pattern, EmbFile *file);
+static void writeStitchList(EmbPattern *pattern, EmbFile *file);
+
+static const char *svg_all_tokens[] = {
+    /* Catch All Properties */
+    "audio-level", "buffered-rendering", "color", "color-rendering",  "direction",
+    "display", "display-align", "fill", "fill-opacity", "fill-rule",
+    "font-family", "font-size", "font-style", "font-variant", "font-weight",
+    "image-rendering", "line-increment", "opacity", "pointer-events", "shape-rendering",
+    "solid-color", "solid-opacity", "stop-color", "stop-opacity", "stroke",
+    "stroke-dasharray", "stroke-linecap", "stroke-linejoin",
+    "stroke-miterlimit", "stroke-opacity", "stroke-width",
+    "text-align", "text-anchor", "text-rendering", "unicode-bidi",
+    "vector-effect", "viewport-fill", "viewport-fill-opacity", "visibility",
+    /* Catch All Attributes */
+    "about", "accent-height", "accumulate", "additive", "alphabetic",
+    "arabic-form", "ascent", "attributeName", "attributeType", "bandwidth",
+    "baseProfile", "bbox", "begin", "by", "calcMode",
+    "cap-height", "class", "content", "contentScriptType", "cx", "cy",
+    "d", "datatype", "defaultAction", "descent", "dur", "editable",
+    "end", "ev:event", "event", "externalResourcesRequired",
+    "focusHighlight", "focusable", "font-family", "font-stretch",
+    "font-style", "font-variant", "font-weight", "from", "g1", "g2",
+    "glyph-name", "gradientUnits", "handler", "hanging", "height",
+    "horiz-adv-x", "horiz-origin-x", "id", "ideographic",
+    "initialVisibility", "k", "keyPoints", "keySplines", "keyTimes",
+    "lang", "mathematical", "max", "mediaCharacterEncoding",
+    "mediaContentEncodings", "mediaSize", "mediaTime", "min",
+    "nav-down", "nav-down-left", "nav-down-right", "nav-left", "nav-next",
+    "nav-prev", "nav-right", "nav-up", "nav-up-left", "nav-up-right",
+    "observer", "offset", "origin", "overlay", "overline-position",
+    "overline-thickness", "panose-1", "path", "pathLength", "phase",
+    "playbackOrder", "points", "preserveAspectRatio", "propagate",
+    "property", "r", "rel", "repeatCount", "repeatDur",
+    "requiredExtensions", "requiredFeatures", "requiredFonts",
+    "requiredFormats", "resource", "restart", "rev", "role", "rotate",
+    "rx", "ry", "slope", "snapshotTime", "stemh", "stemv",
+    "strikethrough-position", "strikethrough-thickness", "syncBehavior",
+    "syncBehaviorDefault", "syncMaster", "syncTolerance",
+    "syncToleranceDefault", "systemLanguage", "target", "timelineBegin",
+    "to", "transform", "transformBehavior", "type", "typeof", "u1", "u2",
+    "underline-position", "underline-thickness", "unicode", "unicode-range",
+    "units-per-em", "values", "version", "viewBox", "width", "widths",
+    "x", "x-height", "x1", "x2", "xlink:actuate", "xlink:arcrole",
+    "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
+    "xml:base", "xml:id", "xml:lang", "xml:space", "y", "y1", "y2",
+    "zoomAndPan", "/", "\0"
+};
+
+typedef struct SvgAttribute_
+{
+    char* name;
+    char* value;
+} SvgAttribute;
+
+typedef struct SvgAttributeList_
+{
+    SvgAttribute attribute;
+    struct SvgAttributeList_* next;
+} SvgAttributeList;
+
+typedef struct SvgElement_
+{
+    char* name;
+    SvgAttributeList* attributeList;
+    SvgAttributeList* lastAttribute;
+} SvgElement;
+
 int svgCreator;
 
 int svgExpect;
@@ -29,7 +163,8 @@ const char *svg_element_tokens[] = {
      * "feSpecularLighting", "feSpotLight", "feTile", "feTurbulence", "filter",
      * "font-face-format", "font-face-name", "glyphRef", "marker", "mask",
      * "pattern", "style", "symbol", "textPath", "tref", "view", "vkern"
-     * TODO: not implemented SVG Full 1.1 Spec Elements */
+     * TODO: not implemented SVG Full 1.1 Spec Elements
+     */
 };
 
 const char *svg_media_property_tokens[] = {
@@ -53,7 +188,6 @@ const char *svg_property_tokens[] = {
 EmbColor svgColorToEmbColor(char* colorString)
 {
     EmbColor c;
-    int i = 0;
     char* pEnd = 0;
     char* colorStr = copy_trim(colorString); /* Trim out any junk spaces */
     int length = strlen(colorStr);
@@ -120,9 +254,9 @@ int svgPathCmdToEmbPathFlag(char cmd)
     else if(toUpper(cmd) == 'Z') return LINETO;
     */
 
-    /*else if(toUpper(cmd) == 'B') return BULGETOCONTROL; /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
-	/*else if(toUpper(cmd) == 'BB') return BULGETOEND;    /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
-    /*else { embLog_error("format-svg.c svgPathCmdToEmbPathFlag(), unknown command '%c'\n", cmd); return MOVETO; } */
+    /*else if(toUpper(cmd) == 'B') return BULGETOCONTROL; */ /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
+    /*else if(toUpper(cmd) == 'BB') return BULGETOEND; */   /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
+    /*else { embLog("ERROR: format-svg.c svgPathCmdToEmbPathFlag(), unknown command '%c'\n", cmd); return MOVETO; } */
 
     return LINETO;
 }
@@ -131,24 +265,25 @@ SvgAttribute svgAttribute_create(const char* name, const char* value)
 {
     SvgAttribute attribute;
     char* modValue = 0;
-    int last = 0;
-    int i = 0;
 
-    modValue = emb_strdup(value);
+    modValue = emb_strdup((char *)value);
     charReplace(modValue, "\"'/,", "    ");
-    attribute.name = emb_strdup(name);
+    attribute.name = emb_strdup((char *)name);
     attribute.value = modValue;
     return attribute;
 }
 
 void svgElement_addAttribute(SvgElement* element, SvgAttribute data)
 {
-    if(!element) { embLog_error("format-svg.c svgElement_addAttribute(), element argument is null\n"); return; }
+    if (!element) {
+        embLog("ERROR: format-svg.c svgElement_addAttribute(), element argument is null.");
+        return;
+    }
 
     if(!(element->attributeList))
     {
         element->attributeList = (SvgAttributeList*)malloc(sizeof(SvgAttributeList));
-        if(!(element->attributeList)) { embLog_error("format-svg.c svgElement_addAttribute(), cannot allocate memory for element->attributeList\n"); return; }
+        if(!(element->attributeList)) { embLog("ERROR: format-svg.c svgElement_addAttribute(), cannot allocate memory for element->attributeList."); return; }
         element->attributeList->attribute = data;
         element->attributeList->next = 0;
         element->lastAttribute = element->attributeList;
@@ -158,7 +293,7 @@ void svgElement_addAttribute(SvgElement* element, SvgAttribute data)
     {
         SvgAttributeList* pointerLast = element->lastAttribute;
         SvgAttributeList* list = (SvgAttributeList*)malloc(sizeof(SvgAttributeList));
-        if(!list) { embLog_error("format-svg.c svgElement_addAttribute(), cannot allocate memory for list\n"); return; }
+        if(!list) { embLog("ERROR: format-svg.c svgElement_addAttribute(), cannot allocate memory for list."); return; }
         list->attribute = data;
         list->next = 0;
         pointerLast->next = list;
@@ -182,15 +317,12 @@ void svgElement_free(SvgElement* element)
         list->attribute.value = 0;
         nextList = list->next;
         free(list);
-        list = 0;
         list = nextList;
     }
 
     element->lastAttribute = 0;
     free(element->name);
-    element->name = 0;
     free(element);
-    element = 0;
 }
 
 SvgElement* svgElement_create(const char* name)
@@ -198,9 +330,9 @@ SvgElement* svgElement_create(const char* name)
     SvgElement* element = 0;
 
     element = (SvgElement*)malloc(sizeof(SvgElement));
-    if(!element) { embLog_error("format-svg.c svgElement_create(), cannot allocate memory for element\n"); return 0; }
-    element->name = emb_strdup(name);
-    if(!element->name) { embLog_error("format-svg.c svgElement_create(), element->name is null\n"); return 0; }
+    if(!element) { embLog("ERROR: format-svg.c svgElement_create(), cannot allocate memory for element\n"); return 0; }
+    element->name = emb_strdup((char *)name);
+    if(!element->name) { embLog("ERROR: format-svg.c svgElement_create(), element->name is null\n"); return 0; }
     element->attributeList = 0;
     element->lastAttribute = 0;
     return element;
@@ -210,8 +342,8 @@ char* svgAttribute_getValue(SvgElement* element, const char* name)
 {
     SvgAttributeList* pointer = 0;
 
-    if(!element) { embLog_error("format-svg.c svgAttribute_getValue(), element argument is null\n"); return "none"; }
-    if(!name) { embLog_error("format-svg.c svgAttribute_getValue(), name argument is null\n"); return "none"; }
+    if(!element) { embLog("ERROR: format-svg.c svgAttribute_getValue(), element argument is null\n"); return "none"; }
+    if(!name) { embLog("ERROR: format-svg.c svgAttribute_getValue(), name argument is null\n"); return "none"; }
     if(!element->attributeList) { /* TODO: error */ return "none"; }
 
     pointer = element->attributeList;
@@ -227,8 +359,11 @@ char* svgAttribute_getValue(SvgElement* element, const char* name)
 void svgAddToPattern(EmbPattern* p)
 {
     const char* buff = 0;
+    EmbPointObject test;
+    EmbColor color;
+    EmbPathObject *path;
 
-    if(!p) { embLog_error("format-svg.c svgAddToPattern(), p argument is null\n"); return; }
+    if(!p) { embLog("ERROR: format-svg.c svgAddToPattern(), p argument is null\n"); return; }
     if(!currentElement) { return; }
 
     buff = currentElement->name;
@@ -320,7 +455,7 @@ void svgAddToPattern(EmbPattern* p)
 
         char* pathbuff = 0;
         pathbuff = (char*)malloc(size);
-        if(!pathbuff) { embLog_error("format-svg.c svgAddToPattern(), cannot allocate memory for pathbuff\n"); return; }
+        if(!pathbuff) { embLog("ERROR: format-svg.c svgAddToPattern(), cannot allocate memory for pathbuff\n"); return; }
 
         printf("stroke:%s\n", mystrok);
 
@@ -422,7 +557,6 @@ void svgAddToPattern(EmbPattern* p)
                                 pointList = embArray_create(EMB_POINT);
                                 flagList = embArray_create(EMB_FLAG);
                             }
-                            EmbPointObject test;
                             test.point.x = xx;
                             test.point.y = yy;
                             embArray_addPoint(pointList, &test);
@@ -473,7 +607,8 @@ void svgAddToPattern(EmbPattern* p)
                         else if(!strcmp(pathbuff, "Z")) { cmd = 'Z'; reset = 0; }
                         else if(!strcmp(pathbuff, "z")) { cmd = 'z'; reset = 0; }
                         else {
-                            embLog_error("format-svg.c svgAddToPattern(), %s is not a valid svg path command, skipping...\n", pathbuff);
+                            embLog("ERROR: format-svg.c svgAddToPattern(), %s is not a valid svg path command, skipping...");
+                            embLog(pathbuff);
                             trip = -1;
                             reset = -1;
                         }
@@ -492,7 +627,7 @@ void svgAddToPattern(EmbPattern* p)
                 /* increase pathbuff length - leave room for 0 */
                 size *= 2;
                 pathbuff = (char*)realloc(pathbuff, size);
-                if(!pathbuff) { embLog_error("format-svg.c svgAddToPattern(), cannot re-allocate memory for pathbuff\n"); return; }
+                if(!pathbuff) { embLog("ERROR: format-svg.c svgAddToPattern(), cannot re-allocate memory for pathbuff\n"); return; }
             }
         }
         free(pathbuff);
@@ -500,8 +635,7 @@ void svgAddToPattern(EmbPattern* p)
 
         /* TODO: subdivide numMoves > 1 */
 
-        EmbColor color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
-        EmbPathObject *path;
+        color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
         path->pointList = pointList;
         path->flagList = flagList;
         path->color = color;
@@ -525,7 +659,7 @@ void svgAddToPattern(EmbPattern* p)
 
         char* polybuff = 0;
         polybuff = (char*)malloc(size);
-        if(!polybuff) { embLog_error("format-svg.c svgAddToPattern(), cannot allocate memory for polybuff\n"); return; }
+        if(!polybuff) { embLog("ERROR: format-svg.c svgAddToPattern(), cannot allocate memory for polybuff\n"); return; }
 
         for(i = 0; i < last; i++)
         {
@@ -567,7 +701,7 @@ void svgAddToPattern(EmbPattern* p)
                 /* increase polybuff length - leave room for 0 */
                 size *= 2;
                 polybuff = (char*)realloc(polybuff, size);
-                if(!polybuff) { embLog_error("format-svg.c svgAddToPattern(), cannot re-allocate memory for polybuff\n"); return; }
+                if(!polybuff) { embLog("ERROR: format-svg.c svgAddToPattern(), cannot re-allocate memory for polybuff\n"); return; }
             }
         }
         free(polybuff);
@@ -1426,6 +1560,11 @@ int svgIsTitleAttribute(const char* buff)
     return SVG_NULL;
 }
 
+#define SVG_TITLE_ATTRIBUTE   7
+#define SVG_TSPAN_ATTRIBUTE   8
+#define SVG_USE_ATTRIBUTE     9
+#define SVG_VIDEO_ATTRIBUTE   10
+
 int svgIsTSpanAttribute(const char* buff)
 {
     const char *tokens[] = {
@@ -1491,53 +1630,7 @@ int svgIsVideoAttribute(const char* buff)
 
 int svgIsCatchAllAttribute(const char* buff)
 {
-    const char *tokens[] = {
-        /* Catch All Properties */
-        "audio-level", "buffered-rendering", "color", "color-rendering",
-        "direction", "display", "display-align", "fill",
-        "fill-opacity", "fill-rule", "font-family", "font-size", "font-style",
-        "font-variant", "font-weight", "image-rendering", "line-increment",
-        "opacity", "pointer-events", "shape-rendering", "solid-color",
-        "solid-opacity", "stop-color", "stop-opacity", "stroke",
-        "stroke-dasharray", "stroke-linecap", "stroke-linejoin",
-        "stroke-miterlimit", "stroke-opacity", "stroke-width",
-        "text-align", "text-anchor", "text-rendering", "unicode-bidi",
-        "vector-effect", "viewport-fill", "viewport-fill-opacity", "visibility",
-        /* Catch All Attributes */
-        "about", "accent-height", "accumulate", "additive",
-        "alphabetic", "arabic-form", "ascent", "attributeName", "attributeType",
-        "bandwidth", "baseProfile", "bbox", "begin", "by", "calcMode",
-        "cap-height", "class", "content", "contentScriptType", "cx", "cy",
-        "d", "datatype", "defaultAction", "descent", "dur", "editable",
-        "end", "ev:event", "event", "externalResourcesRequired",
-        "focusHighlight", "focusable", "font-family", "font-stretch",
-        "font-style", "font-variant", "font-weight", "from", "g1", "g2",
-        "glyph-name", "gradientUnits", "handler", "hanging", "height",
-        "horiz-adv-x", "horiz-origin-x", "id", "ideographic",
-        "initialVisibility", "k", "keyPoints", "keySplines", "keyTimes",
-        "lang", "mathematical", "max", "mediaCharacterEncoding",
-        "mediaContentEncodings", "mediaSize", "mediaTime", "min",
-        "nav-down", "nav-down-left", "nav-down-right", "nav-left", "nav-next",
-        "nav-prev", "nav-right", "nav-up", "nav-up-left", "nav-up-right",
-        "observer", "offset", "origin", "overlay", "overline-position",
-        "overline-thickness", "panose-1", "path", "pathLength", "phase",
-        "playbackOrder", "points", "preserveAspectRatio", "propagate",
-        "property", "r", "rel", "repeatCount", "repeatDur",
-        "requiredExtensions", "requiredFeatures", "requiredFonts",
-        "requiredFormats", "resource", "restart", "rev", "role", "rotate",
-        "rx", "ry", "slope", "snapshotTime", "stemh", "stemv",
-        "strikethrough-position", "strikethrough-thickness", "syncBehavior",
-        "syncBehaviorDefault", "syncMaster", "syncTolerance",
-        "syncToleranceDefault", "systemLanguage", "target", "timelineBegin",
-        "to", "transform", "transformBehavior", "type", "typeof", "u1", "u2",
-        "underline-position", "underline-thickness", "unicode", "unicode-range",
-        "units-per-em", "values", "version", "viewBox", "width", "widths",
-        "x", "x-height", "x1", "x2", "xlink:actuate", "xlink:arcrole",
-        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-        "xml:base", "xml:id", "xml:lang", "xml:space", "y", "y1", "y2",
-        "zoomAndPan", "/", "\0"
-    };
-    if (stringInArray(buff, tokens))
+    if (stringInArray(buff, svg_all_tokens))
         return SVG_CATCH_ALL;
 
     return SVG_NULL;
@@ -1818,7 +1911,7 @@ void svgProcess(int c, const char* buff)
                 free(currentValue);
                 currentValue = 0;
                 currentValue = (char*)malloc(strlen(buff) + strlen(tmp) + 2);
-                if(!currentValue) { embLog_error("format-svg.c svgProcess(), cannot allocate memory for currentValue\n"); return; }
+                if(!currentValue) { embLog("ERROR: format-svg.c svgProcess(), cannot allocate memory for currentValue\n"); return; }
                 if(currentValue) memset(currentValue, 0, strlen(buff) + strlen(tmp) + 2);
                 strcat(currentValue, tmp);
                 strcat(currentValue, " ");
@@ -1827,22 +1920,22 @@ void svgProcess(int c, const char* buff)
                 tmp = 0;
             }
 
-            if(buff[last] == '/' || buff[last] == '"' || buff[last] == '\'')
-            {
+            if(buff[last] == '/' || buff[last] == '"' || buff[last] == '\'') {
                 svgMultiValue = 0;
                 svgExpect = SVG_EXPECT_ATTRIBUTE;
                 svgElement_addAttribute(currentElement, svgAttribute_create(currentAttribute, currentValue));
                 free(currentValue);
-                currentValue = 0;
             }
         }
     }
 
-    if(svgExpect != SVG_EXPECT_NULL)
-        printf("%s\n", buff);
+    if (svgExpect != SVG_EXPECT_NULL) {
+        puts(buff);
+    }
 
-    if(c == '>')
+    if (c == '>') {
         svgExpect = SVG_EXPECT_NULL;
+    }
 }
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
@@ -1856,11 +1949,11 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     char* buff = 0;
     EmbStitch st;
 
-    if(!pattern) { embLog_error("format-svg.c readSvg(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-svg.c readSvg(), fileName argument is null\n"); return 0; }
+    if(!pattern) { embLog("ERROR: format-svg.c readSvg(), pattern argument is null\n"); return 0; }
+    if(!fileName) { embLog("ERROR: format-svg.c readSvg(), fileName argument is null\n"); return 0; }
 
     buff = (char*)malloc(size);
-    if(!buff) { embLog_error("format-svg.c readSvg(), cannot allocate memory for buff\n"); return 0; }
+    if(!buff) { embLog("ERROR: format-svg.c readSvg(), cannot allocate memory for buff\n"); return 0; }
 
     svgCreator = SVG_CREATOR_NULL;
 
@@ -1916,63 +2009,20 @@ int readSvg(EmbPattern* pattern, const char* fileName)
                 /* increase buff length - leave room for 0 */
                 size *= 2;
                 buff = (char*)realloc(buff, size);
-                if(!buff) { embLog_error("format-svg.c readSvg(), cannot re-allocate memory for buff\n"); return 0; }
+                if (!buff) {
+                    embLog("ERROR: format-svg.c readSvg(), cannot re-allocate memory for buff.");
+                    return 0;
+                }
             }
         }
         while(c != EOF);
         embFile_close(file);
     }
     free(buff);
-    buff = 0;
     free(currentAttribute);
-    currentAttribute = 0;
     free(currentValue);
-    currentValue = 0;
 
-    /*TODO: remove this summary after testing is complete */
-    printf("OBJECT SUMMARY:\n");
-    if (pattern->circles) {
-        for (i=0; i<pattern->circles->count; i++) {
-            EmbCircle c = pattern->circles->circle[i].circle;
-            printf("circle %f %f %f\n", c.centerX, c.centerY, c.radius);
-        }
-    }
-    if (pattern->ellipses) {
-        for (i=0; i<pattern->ellipses->count; i++) {
-            EmbEllipse e = pattern->ellipses->ellipse[i].ellipse;
-            printf("ellipse %f %f %f %f\n", e.centerX, e.centerY, e.radiusX, e.radiusY);
-        }
-    }
-    if (pattern->lines) {
-        for (i=0; i<pattern->lines->count; i++) {
-            EmbLine li = pattern->lines->line[i].line;
-            printf("line %f %f %f %f\n", li.x1, li.y1, li.x2, li.y2);
-        }
-    }
-    if (pattern->points) {
-        for (i=0; i<pattern->points->count; i++) {
-            EmbPoint po = pattern->points->point[i].point;
-            printf("point %f %f\n", po.x, po.y);
-        }
-    }
-    if (pattern->polygons) {
-        for(i=0; i<pattern->polylines->count; i++) {
-            int vertices = pattern->polygons->polygon[i]->pointList->count;
-            printf("polygon %d\n", vertices);
-        }
-    }
-    if (pattern->polylines) {
-        for(i=0; i<pattern->polylines->count; i++) {
-            int vertices = pattern->polylines->polyline[i]->pointList->count;
-            printf("polyline %d\n", vertices);
-        }
-    }
-    if (pattern->rects) {
-        for (i=0; i<pattern->rects->count; i++) {
-            EmbRect r = pattern->rects->rect[i].rect;
-            printf("rect %f %f %f %f\n", embRect_x(r), embRect_y(r), embRect_width(r), embRect_height(r));
-        }
-    }
+    writeSvg(pattern, "object_summary.svg");
 
     /* Flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
     embPattern_flipVertical(pattern);
@@ -1980,78 +2030,77 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     return 1; /*TODO: finish readSvg */
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-int writeSvg(EmbPattern* pattern, const char* fileName)
+/*! Optimizes the number (\a num) for output to a text file and writes
+ *  it to the EmbFile* \a file */
+static void writeDouble(EmbFile *file, double num)
 {
-    EmbFile* file = 0;
-    EmbRect boundingRect;
-    EmbStitch st;
-    EmbPoint point;
-    EmbRect rect;
+    char str[32];
+    sprintf(str, "%.10f", num);
+    rTrim(str, '0');
+    rTrim(str, '.');
+    embFile_puts(file, str);
+}
+
+/**
+ * Writes out a \a color to the EmbFile* \a file in hex format without using
+ * printf or varadic functions (for embedded systems).
+ */
+static void writeColor(EmbFile *file, EmbColor color)
+{
+    char str[8];
+    const char hex[] = "0123456789ABCDEF";
+    str[0] = '#';
+    str[1] = hex[color.r%16];
+    str[2] = hex[color.r/16];
+    str[3] = hex[color.g%16];
+    str[4] = hex[color.g/16];
+    str[5] = hex[color.b%16];
+    str[6] = hex[color.b/16];
+    str[7] = 0;
+    embFile_puts(file, str);
+}
+
+static void writePoint(EmbFile *file, double x, double y, int space)
+{
+    if (space) {
+        embFile_puts(file, " ");    
+    }
+    writeDouble(file, x);
+    embFile_puts(file, ",");
+    writeDouble(file, y);
+}
+
+
+static void writeCircles(EmbPattern *pattern, EmbFile *file)
+{
+    int i;
     EmbColor color;
-    int i, j;
-
-    char tmpX[32];
-    char tmpY[32];
-
-    if(!pattern) { embLog_error("format-svg.c writeSvg(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-svg.c writeSvg(), fileName argument is null\n"); return 0; }
-
-    file = embFile_open(fileName, "w", 0);
-    if (!file) return 0;
-
-    /* Pre-flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
-    embPattern_flipVertical(pattern);
-
-    boundingRect = embPattern_calcBoundingBox(pattern);
-    embFile_printf(file, "<?xml version=\"1.0\"?>\n");
-    embFile_printf(file, "<!-- Embroidermodder 2 SVG Embroidery File -->\n");
-    embFile_printf(file, "<!-- http://embroidermodder.github.io -->\n");
-    embFile_printf(file, "<svg ");
-
-    /* TODO: See the SVG Tiny Version 1.2 Specification Section 7.14.
-    *       Until all of the formats and API is stable, the width, height and viewBox attributes need to be left unspecified.
-    *       If the attribute values are incorrect, some applications wont open it at all.
-    embFile_printf(file, "viewBox=\"%f %f %f %f\" ",
-            boundingRect.left,
-            boundingRect.top,
-            embRect_width(boundingRect),
-            embRect_height(boundingRect)); */
-
-    embFile_printf(file, "xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\">");
-
-    /*TODO: Low Priority Optimization:
-    *      Using %g in embFile_printf just doesn't work good enough at trimming trailing zeroes.
-    *      It's precision refers to significant digits, not decimal places (which is what we want).
-    *      We need to roll our own function for trimming trailing zeroes to keep
-    *      the precision as high as possible if needed, but help reduce file size also. */
-
-    /*TODO: Low Priority Optimization:
-    *      Make sure that the line length that is output doesn't exceed 1000 characters. */
-
-    /*TODO: Low Priority: Indent output properly. */
-
-    /* write circles */
+    EmbCircle circle;
     if (pattern->circles) {
         for (i=0; i<pattern->circles->count; i++) {
-            EmbCircle circle = pattern->circles->circle[i].circle;
-            EmbColor color = pattern->circles->circle[i].color;
+            circle = pattern->circles->circle[i].circle;
+            color = pattern->circles->circle[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_printf(file, "\n<circle stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" r=\"%f\" />",
-                        color.r,
-                        color.g,
-                        color.b,
+            embFile_puts(file, "\n<circle stroke-width=\"0.2\" stroke=\"");
+            writeColor(file, color);
+            embFile_puts(file, "\" fill=\"none\" cx=\"");
+            embFile_printf(file, "%f\" cy=\"%f\" r=\"%f",
                         circle.centerX,
                         circle.centerY,
                         circle.radius);
+            embFile_puts(file, "\" />");
         }
     }
+}
 
-    /* write ellipses */
+static void writeEllipses(EmbPattern *pattern, EmbFile *file)
+{
+    int i;
+    EmbColor color;
+    EmbEllipse ellipse;
     if (pattern->ellipses) {
         for (i=0; i<pattern->ellipses->count; i++) {
-            EmbEllipse ellipse = pattern->ellipses->ellipse[i].ellipse;
+            ellipse = pattern->ellipses->ellipse[i].ellipse;
             color = pattern->ellipses->ellipse[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_printf(file, "\n<ellipse stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" rx=\"%f\" ry=\"%f\" />",
@@ -2064,8 +2113,13 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
                         ellipse.radiusY);
         }
     }
+}
 
-    /* write lines */
+static void writeLines(EmbPattern *pattern, EmbFile *file)
+{
+    int i;
+    EmbColor color;
+    EmbLine line;
     if (pattern->lines) {
         for (i=0; i<pattern->lines->count; i++) {
             EmbLine line = pattern->lines->line[i].line;
@@ -2077,8 +2131,13 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
                 line.x1, line.y1, line.x2, line.y2);
         }
     }
+}
 
-    /* write points */
+static void writePoints(EmbPattern *pattern, EmbFile *file)
+{
+    int i;
+    EmbColor color;
+    EmbPoint point;
     if (pattern->points) {
         for (i=0; i<pattern->points->count; i++) {
             point = pattern->points->point[i].point;
@@ -2087,93 +2146,168 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
              * Section 9.5 The 'line' element
              * Section C.6 'path' element implementation notes */
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_printf(file,
-                "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
-                color.r, color.g, color.b,
+            embFile_puts(file, "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
+            writeColor(file, color);
+            embFile_printf(file, "\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
                 point.x, point.y, point.x, point.y);
         }
     }
+}
 
-    /* write polygons */
+static void writePolygons(EmbPattern *pattern, EmbFile *file)
+{
+    int i, j;
+    EmbColor color;
+    EmbArray *pointList;
     if (pattern->polygons) {
         for (i=0; i<pattern->polygons->count; i++) {
-            EmbArray *pointList = pattern->polygons->polygon[i]->pointList;
+            pointList = pattern->polygons->polygon[i]->pointList;
             color = pattern->polygons->polygon[i]->color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-                embFile_printf(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
-                    color.r, color.g, color.b,
-                    emb_optOut(pointList->point[0].point.x, tmpX),
-                    emb_optOut(pointList->point[0].point.y, tmpY));
+                embFile_printf(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"",
+                    color.r, color.g, color.b);
+            writePoint(file, pointList->point[0].point.x, pointList->point[0].point.y, 0);
             for (j=1; j<pointList->count; j++) {
-                embFile_printf(file, " %s,%s",
-                    emb_optOut(pointList->point[j].point.x, tmpX),
-                    emb_optOut(pointList->point[j].point.y, tmpY));
+                writePoint(file, pointList->point[j].point.x, pointList->point[j].point.y, 1);
             }
-            embFile_printf(file, "\"/>");
+            embFile_puts(file, "\"/>");
         }
     }
+}
 
-    /* write polylines */
+static void writePolylines(EmbPattern *pattern, EmbFile *file)
+{
+    int i, j;
+    EmbArray *pointList;
+    EmbColor color;
     if (pattern->polylines) {
         for (i=0; i<pattern->polylines->count; i++) {
-            EmbArray *pointList = pattern->polylines->polyline[i]->pointList;
+            pointList = pattern->polylines->polyline[i]->pointList;
             color = pattern->polylines->polyline[i]->color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_printf(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
-                    color.r,
-                    color.g,
-                    color.b,
-                    emb_optOut(pointList->point[0].point.x, tmpX),
-                    emb_optOut(pointList->point[0].point.y, tmpY));
+            embFile_puts(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
+            writeColor(file, color);
+            embFile_puts(file, "\" fill=\"none\" points=\"");
+            writePoint(file, pointList->point[0].point.x, pointList->point[0].point.y, 0);
             for (j=1; j<pointList->count; j++) {
-                embFile_printf(file, " %s,%s",
-                    emb_optOut(pointList->point[j].point.x, tmpX),
-                    emb_optOut(pointList->point[j].point.y, tmpY));
+                writePoint(file, pointList->point[j].point.x, pointList->point[j].point.y, 1);
             }
-            embFile_printf(file, "\"/>");
+            embFile_puts(file, "\"/>");
         }
     }
+}
 
-    /* write rects */
+static void writeRects(EmbPattern *pattern, EmbFile *file)
+{
+    int i;
+    EmbRect rect;
+    EmbColor color;
     if (pattern->rects) {
         for (i=0; i<pattern->rects->count; i++) {
             rect = pattern->rects->rect[i].rect;
             color = pattern->rects->rect[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_printf(file, "\n<rect stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" />",
-                color.r, color.g, color.b,
-                embRect_x(rect), embRect_y(rect), embRect_width(rect), embRect_height(rect));
+            embFile_puts(file, "\n<rect stroke-width=\"0.2\" stroke=\"");
+            writeColor(file, color);
+            embFile_puts(file, "\" fill=\"none\" x=\"");
+            writeDouble(file, embRect_x(rect));
+            embFile_puts(file, "\" y=\"");
+            writeDouble(file, embRect_y(rect));
+            embFile_puts(file, "\" width=\"");
+            writeDouble(file, embRect_width(rect));
+            embFile_puts(file, "\" height=\"");
+            writeDouble(file, embRect_height(rect));
+            embFile_puts(file, "\" />");
         }
     }
+}
 
+static void writeStitchList(EmbPattern *pattern, EmbFile *file)
+{
+    /*TODO: Low Priority Optimization:
+     *      Make sure that the line length that is output doesn't exceed 1000 characters. */
+    int i;
+    char isNormal;
+    EmbColor color;
+    EmbStitch st;
     if (pattern->stitchList) {
         /*TODO: #ifdef SVG_DEBUG for Josh which outputs JUMPS/TRIMS instead of chopping them out */
-        char isNormal = 0;
+        isNormal = 0;
         for (i=0; i<pattern->stitchList->count; i++) {
             st = pattern->stitchList->stitch[i];
             if (st.flags == NORMAL && !isNormal) {
-                    isNormal = 1;
-                    color = pattern->threads->thread[st.color].color;
-                    /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-                    embFile_printf(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
-                                color.r,
-                                color.g,
-                                color.b,
-                                emb_optOut(st.x, tmpX),
-                                emb_optOut(st.y, tmpY));
+                isNormal = 1;
+                color = pattern->threads->thread[st.color].color;
+                /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+                embFile_puts(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
+                writeColor(file, color);
+                embFile_puts(file, "\" fill=\"none\" points=\"");
+                writePoint(file, st.x, st.y, 0);
             }
             else if(st.flags == NORMAL && isNormal)
             {
-                embFile_printf(file, " %s,%s", emb_optOut(st.x, tmpX), emb_optOut(st.y, tmpY));
+                writePoint(file, st.x, st.y, 1);
             }
             else if(st.flags != NORMAL && isNormal)
             {
                 isNormal = 0;
-                embFile_printf(file, "\"/>");
+                embFile_puts(file, "\"/>");
             }
         }
     }
-    embFile_printf(file, "\n</svg>\n");
+}
+ 
+/*! Writes the data from \a pattern to a file with the given \a fileName.
+ *  Returns \c true if successful, otherwise returns \c false. */
+int writeSvg(EmbPattern* pattern, const char* fileName)
+{
+    EmbFile* file;
+    EmbRect boundingRect;
+
+    if (!pattern) {
+        embLog("ERROR: format-svg.c writeSvg(), pattern argument is null.");
+        return 0;
+    }
+    if (!fileName) {
+        embLog("ERROR: format-svg.c writeSvg(), fileName argument is null.");
+        return 0;
+    }
+
+    file = embFile_open(fileName, "w", 0);
+    if (!file) return 0;
+
+    /* Pre-flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
+    embPattern_flipVertical(pattern);
+
+    boundingRect = embPattern_calcBoundingBox(pattern);
+    embFile_puts(file, "<?xml version=\"1.0\"?>\n");
+    embFile_puts(file, "<!-- Embroidermodder 2 SVG Embroidery File -->\n");
+    embFile_puts(file, "<!-- http://embroidermodder.github.io -->\n");
+    embFile_puts(file, "<svg ");
+
+    /* TODO: See the SVG Tiny Version 1.2 Specification Section 7.14.
+    *       Until all of the formats and API is stable, the width, height and viewBox attributes need to be left unspecified.
+    *       If the attribute values are incorrect, some applications wont open it at all.
+    embFile_printf(file, "viewBox=\"%f %f %f %f\" ",
+            boundingRect.left,
+            boundingRect.top,
+            embRect_width(boundingRect),
+            embRect_height(boundingRect)); */
+
+    embFile_puts(file, "xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\">");
+
+    /*TODO: Low Priority: Indent output properly. */
+
+    writeCircles(pattern, file);
+    writeEllipses(pattern, file);
+    writeLines(pattern, file);
+    writePoints(pattern, file);
+    writePolygons(pattern, file);
+    writePolylines(pattern, file);
+    writeRects(pattern, file);
+    writeStitchList(pattern, file);
+
+    embFile_puts(file, "\n</svg>\n");
     embFile_close(file);
 
     /* Reset the pattern so future writes(regardless of format) are not flipped */
@@ -2181,3 +2315,4 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
 
     return 1;
 }
+

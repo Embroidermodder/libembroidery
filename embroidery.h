@@ -34,19 +34,6 @@ typedef struct EmbFile_
 
 #include "hashtable.h"
 
-/* path flag codes */
-#define LINETO             0
-#define MOVETO             1
-#define BULGETOCONTROL     2
-#define BULGETOEND         4
-#define ELLIPSETORAD       8
-#define ELLIPSETOEND      16
-#define CUBICTOCONTROL1   32
-#define CUBICTOCONTROL2   64
-#define CUBICTOEND       128
-#define QUADTOCONTROL    256
-#define QUADTOEND        512
-
 /* Machine codes for stitch flags */
 #define NORMAL              0 /* stitch to (x, y) */
 #define JUMP                1 /* move to (x, y) */
@@ -106,76 +93,9 @@ typedef struct EmbFile_
 #define EMBFORMAT_MAXEXT 3  /* maximum length of extension without dot */
 #define EMBFORMAT_MAXDESC 50  /* the longest possible description string length */
 
-/**
-Type of sector
-*/
-#define CompoundFileSector_MaxRegSector 0xFFFFFFFA
-#define CompoundFileSector_DIFAT_Sector 0xFFFFFFFC
-#define CompoundFileSector_FAT_Sector   0xFFFFFFFD
-#define CompoundFileSector_EndOfChain   0xFFFFFFFE
-#define CompoundFileSector_FreeSector   0xFFFFFFFF
-
-/**
-Type of directory object
-*/
-#define ObjectTypeUnknown   0x00 /*!< Probably unallocated    */
-#define ObjectTypeStorage   0x01 /*!< a directory type object */
-#define ObjectTypeStream    0x02 /*!< a file type object      */
-#define ObjectTypeRootEntry 0x05 /*!< the root entry          */
-
-/**
-Special values for Stream Identifiers
-*/
-#define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /*!< All real stream Ids are less than this */
-#define CompoundFileStreamId_NoStream           0xFFFFFFFF /*!< There is no valid stream Id            */
 
 /* STRUCTS
 *****************************************************************************/
-
-typedef enum
-{
-    SVG_CREATOR_NULL,
-    SVG_CREATOR_EMBROIDERMODDER,
-    SVG_CREATOR_ILLUSTRATOR,
-    SVG_CREATOR_INKSCAPE
-} SVG_CREATOR;
-
-typedef enum
-{
-    SVG_EXPECT_NULL,
-    SVG_EXPECT_ELEMENT,
-    SVG_EXPECT_ATTRIBUTE,
-    SVG_EXPECT_VALUE
-} SVG_EXPECT;
-
-typedef enum
-{
-    SVG_NULL,
-    SVG_ELEMENT,
-    SVG_PROPERTY,
-    SVG_MEDIA_PROPERTY,
-    SVG_ATTRIBUTE,
-    SVG_CATCH_ALL
-} SVG_TYPES;
-
-typedef struct SvgAttribute_
-{
-    char* name;
-    char* value;
-} SvgAttribute;
-
-typedef struct SvgAttributeList_
-{
-    SvgAttribute attribute;
-    struct SvgAttributeList_* next;
-} SvgAttributeList;
-
-typedef struct SvgElement_
-{
-    char* name;
-    SvgAttributeList* attributeList;
-    SvgAttributeList* lastAttribute;
-} SvgElement;
 
 /**
  * EmbColor uses the light primaries: red, green, blue in that order.
@@ -690,27 +610,7 @@ EMB_PUBLIC int embFile_puts(EmbFile* stream, char *);
 
 EMB_PUBLIC int embFile_printf(EmbFile* stream, const char* format, ...);
 
-bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const unsigned int sectorSize);
-unsigned int readFullSector(EmbFile* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
-unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
-void bcf_file_difat_free(bcf_file_difat* difat);
-
-bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
-void loadFatFromSector(bcf_file_fat* fat, EmbFile* file);
-void bcf_file_fat_free(bcf_file_fat* fat);
-
-bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file);
-bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
-void readNextSector(EmbFile* file, bcf_directory* dir);
-void bcf_directory_free(bcf_directory* dir);
-
-bcf_file_header bcfFileHeader_read(EmbFile* file);
-int bcfFileHeader_isValid(bcf_file_header header);
-
-int bcfFile_read(EmbFile* file, bcf_file* bcfFile);
-EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind);
-void bcf_file_free(bcf_file* bcfFile);
-
+EMB_PUBLIC void embLog(const char* str);
 EMB_PUBLIC void embLog_print(const char* format, ...);
 EMB_PUBLIC void embLog_error(const char* format, ...);
 

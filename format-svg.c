@@ -2107,10 +2107,10 @@ static void writeEllipses(EmbPattern *pattern, EmbFile *file)
                         color.r,
                         color.g,
                         color.b,
-                        ellipse.centerX,
-                        ellipse.centerY,
-                        ellipse.radiusX,
-                        ellipse.radiusY);
+                        ellipse.center.x,
+                        ellipse.center.y,
+                        ellipse.radius.x,
+                        ellipse.radius.y);
         }
     }
 }
@@ -2128,7 +2128,7 @@ static void writeLines(EmbPattern *pattern, EmbFile *file)
             embFile_printf(file,
                 "\n<line stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
                 color.r, color.g, color.b,
-                line.x1, line.y1, line.x2, line.y2);
+                line.start.x, line.start.y, line.end.x, line.end.y);
         }
     }
 }

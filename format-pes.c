@@ -345,6 +345,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
     EmbColor color;
     EmbStitch st;
 
+    /* TODO: why is this repeated below? */
     /*
     for (i=0; i<pattern->stitchList->count; i++) {
         j = i;
@@ -355,7 +356,8 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
             colorCount++;
             colorCode = newColorCode;
         }
-        while (i<pattern->stitchList->count && (flag == pattern->stitchList->stitch[i].flags)) {
+        while (i<pattern->stitchList->count && (flag == st.flags)) {
+            st = pattern->stitchList->stitch[i];
             count++;
             i++;
         }
@@ -372,58 +374,41 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
     binaryWriteBytes(file, "CSewSeg", 7);
 
     colorInfo = (short *) calloc(colorCount * 2, sizeof(short));
-    /* mainPointer = pattern->stitchList; */
+
     colorCode = -1;
     blockCount = 0;
-    /*
     for (i=0; i<pattern->stitchList->count; i++) {
-        pointer = mainPointer;
-        flag = pointer->stitch.flags;
-        color = pattern->threads->thread[pointer->stitch.color].color;
+        st = pattern->stitchList->stitch[i];
+        flag = st.flags;
+        color = pattern->threads->thread[st.color].color;
         newColorCode = embThread_findNearestColor_fromThread(color, (EmbThread*)pecThreads, pecThreadCount);
-        if(newColorCode != colorCode)
-        {
+        if (newColorCode != colorCode) {
             colorInfo[colorInfoIndex++] = (short)blockCount;
             colorInfo[colorInfoIndex++] = (short)newColorCode;
             colorCode = newColorCode;
         }
-        count = 0;
-        while(pointer && (flag == pointer->stitch.flags))
-        {
-            count++;
-            pointer = pointer->next;
-        }
-        if(flag & JUMP)
-        {
-            stitchType = 1;
-        }
-        else
-        {
-            stitchType = 0;
+        /* TODO: check if this has an off-by-one error */
+        for (count=0; flag == st.flags; count++) {
+            st = pattern->stitchList->stitch[i+count];
         }
 
+        /* 1 for jump, 0 for normal */
+        stitchType = flag & JUMP;
         binaryWriteShort(file, (short)stitchType);
-        // 1 for jump, 0 for normal
+        /* color code */
         binaryWriteShort(file, (short)colorCode);
-        // color code
+        /* stitches in block */
         binaryWriteShort(file, (short)count);
-        // stitches in block
-        pointer = mainPointer;
-        while(pointer && (flag == pointer->stitch.flags))
-        {
-            EmbStitch s = pointer->stitch;
-            binaryWriteShort(file, (short)(s.x - bounds.left));
-            binaryWriteShort(file, (short)(s.y + bounds.top));
-            pointer = pointer->next;
+        for (; flag == st.flags && i < pattern->stitchList->count; i++) {
+            st = pattern->stitchList->stitch[i];
+            binaryWriteShort(file, (short)(st.x - bounds.left));
+            binaryWriteShort(file, (short)(st.y + bounds.top));
         }
-        if(pointer)
-        {
+        if (i < pattern->stitchList->count) {
             binaryWriteShort(file, 0x8003);
         }
         blockCount++;
-        mainPointer = pointer;
     }
-    */
     binaryWriteShort(file, (short)colorCount);
     for(i = 0; i < colorCount; i++)
     {

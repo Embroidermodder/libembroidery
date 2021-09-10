@@ -184,11 +184,9 @@ void bcf_directory_free(bcf_directory* dir);
 bcf_file_header bcfFileHeader_read(EmbFile* file);
 int bcfFileHeader_isValid(bcf_file_header header);
 
-int bcfFile_read(EmbFile* file, bcf_file* bcfFile);
-EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind);
-void bcf_file_free(bcf_file* bcfFile);
-
 int numberOfFormats = 61;
+
+/*! Constant representing the number of Double Indirect FAT entries in a single header */
 const unsigned int NumberOfDifatEntriesInHeader = 109;
 const unsigned int sizeOfFatEntry = sizeof(unsigned int);
 static const unsigned int sizeOfDifatEntry = 4;

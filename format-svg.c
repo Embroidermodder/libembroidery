@@ -2085,8 +2085,8 @@ static void writeCircles(EmbPattern *pattern, EmbFile *file)
             writeColor(file, color);
             embFile_puts(file, "\" fill=\"none\" cx=\"");
             embFile_printf(file, "%f\" cy=\"%f\" r=\"%f",
-                        circle.centerX,
-                        circle.centerY,
+                        circle.center.x,
+                        circle.center.y,
                         circle.radius);
             embFile_puts(file, "\" />");
         }
@@ -2137,7 +2137,7 @@ static void writePoints(EmbPattern *pattern, EmbFile *file)
 {
     int i;
     EmbColor color;
-    EmbPoint point;
+    EmbVector point;
     if (pattern->points) {
         for (i=0; i<pattern->points->count; i++) {
             point = pattern->points->point[i].point;

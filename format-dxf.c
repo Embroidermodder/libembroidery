@@ -520,7 +520,14 @@ int readDxf(EmbPattern* pattern, const char* fileName)
                     if(bulgeFlag)
                     {
                         bulgeFlag = 0;
-                        if(!getArcDataFromBulge(bulge, prevX, prevY, x, y, arcMidX, arcMidY, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+                        EmbArc arc;
+                        arc.start.x = prevX;
+                        arc.start.y = prevY;
+                        arc.end.x = x;
+                        arc.end.y = y;
+                        /* TODO: sort arcMidX etc. */
+                        EmbVector arcCenter;
+                        if(!getArcDataFromBulge(bulge, &arc, &arcCenter, 0, 0, 0, 0, 0, 0, 0, 0))
                         {
                             /*TODO: error */
                             return 0;
@@ -552,7 +559,13 @@ int readDxf(EmbPattern* pattern, const char* fileName)
                     if(bulgeFlag)
                     {
                         bulgeFlag = 0;
-                        if(!getArcDataFromBulge(bulge, prevX, prevY, firstX, firstY, arcMidX, arcMidY, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+                        EmbArc arc;
+                        arc.start.x = prevX;
+                        arc.start.y = prevY;
+                        arc.end.x = firstX;
+                        arc.end.y = firstY;
+                        EmbVector arcCenter;
+                        if(!getArcDataFromBulge(bulge, &arc, &arcCenter, 0, 0, 0, 0, 0, 0, 0, 0))
                         {
                             /*TODO: error */
                             return 0;

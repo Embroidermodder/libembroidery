@@ -198,7 +198,6 @@ typedef struct EmbVector_
     double y;
 } EmbVector;
 
-typedef struct EmbVector_ EmbPoint;
 typedef struct EmbArray_ EmbArray;
 
 /**
@@ -206,20 +205,15 @@ typedef struct EmbArray_ EmbArray;
  */
 typedef struct EmbPointObject_
 {
-    EmbPoint point;
+    EmbVector point;
     int lineType;
     EmbColor color;
 } EmbPointObject;
 
-/**
- * TODO: convert to EmbVector start, end;
- */
 typedef struct EmbLine_
 {
-    double x1;
-    double y1;
-    double x2;
-    double y2;
+    EmbVector start;
+    EmbVector end;
 } EmbLine;
 
 typedef struct EmbLineObject_
@@ -293,20 +287,15 @@ typedef struct EmbTime_
 
 typedef struct EmbEllipse_
 {
-    double centerX;
-    double centerY;
-    double radiusX;
-    double radiusY;
+    EmbVector center;
+    EmbVector radius;
 } EmbEllipse;
 
 typedef struct EmbArc_
 {
-    double startX;  /* absolute position (not relative) */
-    double startY;
-    double midX;    /* absolute position (not relative) */
-    double midY;
-    double endX;    /* absolute position (not relative) */
-    double endY;
+    EmbVector start;  /* absolute position (not relative) */
+    EmbVector mid;    /* absolute position (not relative) */
+    EmbVector end;    /* absolute position (not relative) */
 } EmbArc;
 
 typedef struct EmbArcObject_
@@ -326,8 +315,7 @@ typedef struct EmbRect_
 
 typedef struct EmbCircle_
 {
-    double centerX;
-    double centerY;
+    EmbVector center;
     double radius;
 } EmbCircle;
 
@@ -452,18 +440,14 @@ typedef struct EmbPolylineObject_
 
 typedef struct EmbSettings_ {
     unsigned int dstJumpsPerTrim;
-    EmbPoint home;
+    EmbVector home;
 } EmbSettings;
 
 typedef struct EmbBezier_ {
-    double startX;
-    double startY;
-    double control1X;
-    double control1Y;
-    double control2X;
-    double control2Y;
-    double endX;
-    double endY;
+    EmbVector start;
+    EmbVector control1;
+    EmbVector control2;
+    EmbVector end;
 } EmbBezier;
 
 typedef struct EmbSplineObject_ {
@@ -516,8 +500,7 @@ typedef struct EmbPattern_
     EmbArray* splines;
 
     int currentColorIndex;
-    double lastX;
-    double lastY;
+    EmbVector lastPosition;
 } EmbPattern;
 
 typedef struct EmbReaderWriter_ {
@@ -551,8 +534,7 @@ EMB_PUBLIC int embArray_addThread(EmbArray* g, EmbThread p);
 EMB_PUBLIC int embArray_addVector(EmbArray* g, EmbVector);
 EMB_PUBLIC void embArray_free(EmbArray* p);
 
-EMB_PUBLIC EmbLine embLine_make(double x1, double y1, double x2, double y2);
-
+EMB_PUBLIC EmbLine embLine_make(EmbVector start, EmbVector end);
 EMB_PUBLIC void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise);
 EMB_PUBLIC unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector* result);
 
@@ -565,8 +547,11 @@ EMB_PUBLIC void embVector_multiply(EmbVector vector, double magnitude, EmbVector
 EMB_PUBLIC void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result);
+EMB_PUBLIC double embVector_distance(EmbVector v1, EmbVector v2);
 EMB_PUBLIC double embVector_dot(EmbVector v1, EmbVector v2);
-EMB_PUBLIC void embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result);
+EMB_PUBLIC double embVector_cross(EmbVector a, EmbVector b);
+EMB_PUBLIC void embVector_normalVector(EmbVector a, EmbVector *b, int clockwise);
+EMB_PUBLIC void embVector_transposeProduct(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC double embVector_getLength(EmbVector vector);
 
 char binaryReadByte(EmbFile* file);
@@ -631,31 +616,17 @@ EMB_PUBLIC int embFormat_typeFromName(const char* fileName);
 void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int _269);
 int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _267, int _269, int _235);
 
-EMB_PUBLIC EmbArcObject embArcObject_make(double sx, double sy, double mx, double my, double ex, double ey);
-EMB_PUBLIC EmbArcObject* embArcObject_create(double sx, double sy, double mx, double my, double ex, double ey);
+EMB_PUBLIC EmbArcObject embArcObject_make(EmbVector s, EmbVector m, EmbVector e);
+EMB_PUBLIC EmbArcObject* embArcObject_create(EmbVector s, EmbVector m, EmbVector e);
 
 char isArcClockwise(EmbArc arc);
 void getArcCenter(EmbArc arc, EmbVector *arcCenter);
-char getArcDataFromBulge(double bulge,
-                         double arcStartX,          double arcStartY,
-                         double arcEndX,            double arcEndY,
-                         double* arcMidX,           double* arcMidY,
-                         double* arcCenterX,        double* arcCenterY,
-                         double* radius,            double* diameter,
-                         double* chord,
-                         double* chordMidX,         double* chordMidY,
-                         double* sagitta,           double* apothem,
-                         double* incAngleInDegrees, char*   clockwise);
+char getArcDataFromBulge(double bulge, EmbArc* arc, EmbVector* arcCenter,
+    double* radius, double* diameter, double* chord, EmbVector* chordMid,
+    double* sagitta, double* apothem, double* incAngleInDegrees, char* clockwise);
 
-EMB_PUBLIC int getCircleCircleIntersections(
-      EmbCircle c0, EmbCircle c1,
-      double* px3, double* py3,
-      double* px4, double* py4);
-EMB_PUBLIC int getCircleTangentPoints(
-     EmbCircle c,
-     double  px,  double  py,
-     double* tx0, double* ty0,
-     double* tx1, double* ty1);
+EMB_PUBLIC int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVector* p3, EmbVector* p4);
+EMB_PUBLIC int getCircleTangentPoints(EmbCircle c, EmbVector point, EmbVector* t0, EmbVector* t1);
 
 EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
 int threadColor(const char*, int brand);
@@ -670,7 +641,7 @@ EMB_PUBLIC double embEllipse_diameterY(EmbEllipse ellipse);
 EMB_PUBLIC double embEllipse_width(EmbEllipse ellipse);
 EMB_PUBLIC double embEllipse_height(EmbEllipse ellipse);
 
-EMB_PUBLIC EmbEllipseObject embEllipseObject_make(double cx, double cy, double rx, double ry);
+EMB_PUBLIC EmbEllipseObject embEllipseObject_make(EmbVector, EmbVector);
 
 int validateWritePattern(EmbPattern* pattern, const char* fileName, const char *function);
 int validateReadPattern(EmbPattern* pattern, const char* fileName, const char *function);
@@ -717,15 +688,13 @@ EMB_PUBLIC void embLog_error(const char* format, ...);
 EMB_PUBLIC void embTime_initNow(EmbTime* t);
 EMB_PUBLIC EmbTime embTime_time(EmbTime* t);
 
-EMB_PUBLIC EmbPoint embPoint_make(double x, double y);
-
 EMB_PUBLIC EmbPointObject embPointObject_make(double x, double y);
 EMB_PUBLIC EmbPointObject* embPointObject_create(double x, double y);
 
 EMB_PUBLIC EmbSettings embSettings_init(void);
 
-EMB_PUBLIC EmbPoint embSettings_home(EmbSettings* settings);
-EMB_PUBLIC void embSettings_setHome(EmbSettings* settings, EmbPoint point);
+EMB_PUBLIC EmbVector embSettings_home(EmbSettings* settings);
+EMB_PUBLIC void embSettings_setHome(EmbSettings* settings, EmbVector point);
 
 EMB_PUBLIC EmbPolygonObject* embPolygonObject_create(
     EmbArray* pointList, EmbColor color, int lineType);

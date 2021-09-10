@@ -582,23 +582,21 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
         EmbVector temp;
 
         EmbLine line;
-        line.x1 = lines->vector[i - 1].x;
-        line.y1 = lines->vector[i - 1].y;
-        line.x2 = lines->vector[i].x;
-        line.y2 = lines->vector[i].y;
+        line.start = lines->vector[j - 1];
+        line.end = lines->vector[j];
 
         embLine_normalVector(line, &v1, 1);
 
         embVector_multiply(v1, halfThickness, &temp);
-        embVector_add(temp, lines->vector[i - 1], &temp);
+        embVector_add(temp, lines->vector[j - 1], &temp);
         embArray_addVector(outline.side1, temp);
-        embVector_add(temp, lines->vector[i], &temp);
+        embVector_add(temp, lines->vector[j], &temp);
         embArray_addVector(outline.side1, temp);
 
         embVector_multiply(v1, -halfThickness, &temp);
-        embVector_add(temp, lines->vector[i - 1], &temp);
+        embVector_add(temp, lines->vector[j - 1], &temp);
         embArray_addVector(outline.side2, temp);
-        embVector_add(temp, lines->vector[i], &temp);
+        embVector_add(temp, lines->vector[j], &temp);
         embArray_addVector(outline.side2, temp);
     }
 
@@ -623,25 +621,17 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
     EmbLine line1, line2;
     EmbVector out;
     for (i = 3; i < intermediateOutlineCount; i += 2) {
-        line1.x1 = outline.side1->vector[i - 3].x;
-        line1.y1 = outline.side1->vector[i - 3].y;
-        line1.x2 = outline.side1->vector[i - 2].x;
-        line1.y2 = outline.side1->vector[i - 2].y;
-        line2.x1 = outline.side1->vector[i - 1].x;
-        line2.y1 = outline.side1->vector[i - 1].y;
-        line2.x2 = outline.side1->vector[i].x;
-        line2.y2 = outline.side1->vector[i].y;
+        line1.start = outline.side1->vector[i - 3];
+        line1.end = outline.side1->vector[i - 2];
+        line2.start = outline.side1->vector[i - 1];
+        line2.end = outline.side1->vector[i];
         embLine_intersectionPoint(line1, line2, &out);
         embArray_addVector(result->side1, out);
 
-        line1.x1 = outline.side2->vector[i - 3].x;
-        line1.y1 = outline.side2->vector[i - 3].y;
-        line1.x2 = outline.side2->vector[i - 2].x;
-        line1.y2 = outline.side2->vector[i - 2].y;
-        line2.x1 = outline.side2->vector[i - 1].x;
-        line2.y1 = outline.side2->vector[i - 1].y;
-        line2.x2 = outline.side2->vector[i].x;
-        line2.y2 = outline.side2->vector[i].y;
+        line1.start = outline.side2->vector[i - 3];
+        line1.end = outline.side2->vector[i - 2];
+        line2.start = outline.side2->vector[i - 1];
+        line2.end = outline.side2->vector[i];
         embLine_intersectionPoint(line1, line2, &out);
         embArray_addVector(result->side2, out);
     }

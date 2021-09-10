@@ -34,19 +34,6 @@ typedef struct EmbFile_
 
 #include "hashtable.h"
 
-/* path flag codes */
-#define LINETO             0
-#define MOVETO             1
-#define BULGETOCONTROL     2
-#define BULGETOEND         4
-#define ELLIPSETORAD       8
-#define ELLIPSETOEND      16
-#define CUBICTOCONTROL1   32
-#define CUBICTOCONTROL2   64
-#define CUBICTOEND       128
-#define QUADTOCONTROL    256
-#define QUADTOEND        512
-
 /* Machine codes for stitch flags */
 #define NORMAL              0 /* stitch to (x, y) */
 #define JUMP                1 /* move to (x, y) */
@@ -55,7 +42,7 @@ typedef struct EmbFile_
 #define SEQUIN              8 /* sequin */
 #define END                 16 /* end of program */
 
-#define CHUNK_SIZE 128
+#define CHUNK_SIZE          128
 
 /* Thread color */
 #define Arc_Polyester           0
@@ -106,76 +93,91 @@ typedef struct EmbFile_
 #define EMBFORMAT_MAXEXT 3  /* maximum length of extension without dot */
 #define EMBFORMAT_MAXDESC 50  /* the longest possible description string length */
 
-/**
-Type of sector
-*/
-#define CompoundFileSector_MaxRegSector 0xFFFFFFFA
-#define CompoundFileSector_DIFAT_Sector 0xFFFFFFFC
-#define CompoundFileSector_FAT_Sector   0xFFFFFFFD
-#define CompoundFileSector_EndOfChain   0xFFFFFFFE
-#define CompoundFileSector_FreeSector   0xFFFFFFFF
-
-/**
-Type of directory object
-*/
-#define ObjectTypeUnknown   0x00 /*!< Probably unallocated    */
-#define ObjectTypeStorage   0x01 /*!< a directory type object */
-#define ObjectTypeStream    0x02 /*!< a file type object      */
-#define ObjectTypeRootEntry 0x05 /*!< the root entry          */
-
-/**
-Special values for Stream Identifiers
-*/
-#define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /*!< All real stream Ids are less than this */
-#define CompoundFileStreamId_NoStream           0xFFFFFFFF /*!< There is no valid stream Id            */
 
 /* STRUCTS
-*****************************************************************************/
+ *****************************************************************************/
 
-typedef enum
+typedef struct EmbTime_
 {
-    SVG_CREATOR_NULL,
-    SVG_CREATOR_EMBROIDERMODDER,
-    SVG_CREATOR_ILLUSTRATOR,
-    SVG_CREATOR_INKSCAPE
-} SVG_CREATOR;
+    unsigned int year;
+    unsigned int month;
+    unsigned int day;
+    unsigned int hour;
+    unsigned int minute;
+    unsigned int second;
+} EmbTime;
 
-typedef enum
+/* double-indirection file allocation table references */
+typedef struct _bcf_file_difat
 {
-    SVG_EXPECT_NULL,
-    SVG_EXPECT_ELEMENT,
-    SVG_EXPECT_ATTRIBUTE,
-    SVG_EXPECT_VALUE
-} SVG_EXPECT;
+    unsigned int fatSectorCount;
+    unsigned int fatSectorEntries[109];
+    unsigned int sectorSize;
+} bcf_file_difat;
 
-typedef enum
+typedef struct _bcf_file_fat
 {
-    SVG_NULL,
-    SVG_ELEMENT,
-    SVG_PROPERTY,
-    SVG_MEDIA_PROPERTY,
-    SVG_ATTRIBUTE,
-    SVG_CATCH_ALL
-} SVG_TYPES;
+    int          fatEntryCount;
+    unsigned int fatEntries[255]; /* maybe make this dynamic */
+    unsigned int numberOfEntriesInFatSector;
+} bcf_file_fat;
 
-typedef struct SvgAttribute_
+typedef struct _bcf_directory_entry
 {
-    char* name;
-    char* value;
-} SvgAttribute;
+    char                         directoryEntryName[32];
+    unsigned short               directoryEntryNameLength;
+    unsigned char                objectType;
+    unsigned char                colorFlag;
+    unsigned int                 leftSiblingId;
+    unsigned int                 rightSiblingId;
+    unsigned int                 childId;
+    unsigned char                CLSID[16];
+    unsigned int                 stateBits;
+    EmbTime                      creationTime;
+    EmbTime                      modifiedTime;
+    unsigned int                 startingSectorLocation;
+    unsigned long                streamSize; /* should be long long but in our case we shouldn't need it, and hard to support on c89 cross platform */
+    unsigned int                 streamSizeHigh; /* store the high int of streamsize */
+    struct _bcf_directory_entry* next;
+} bcf_directory_entry;
 
-typedef struct SvgAttributeList_
+typedef struct _bcf_directory
 {
-    SvgAttribute attribute;
-    struct SvgAttributeList_* next;
-} SvgAttributeList;
+    bcf_directory_entry* dirEntries;
+    unsigned int         maxNumberOfDirectoryEntries;
+    /* TODO: possibly add a directory tree in the future */
 
-typedef struct SvgElement_
+} bcf_directory;
+
+typedef struct _bcf_file_header
 {
-    char* name;
-    SvgAttributeList* attributeList;
-    SvgAttributeList* lastAttribute;
-} SvgElement;
+    unsigned char  signature[8];
+    unsigned char  CLSID[16]; /* TODO: this should be a separate type */
+    unsigned short minorVersion;
+    unsigned short majorVersion;
+    unsigned short byteOrder;
+    unsigned short sectorShift;
+    unsigned short miniSectorShift;
+    unsigned short reserved1;
+    unsigned int   reserved2;
+    unsigned int   numberOfDirectorySectors;
+    unsigned int   numberOfFATSectors;
+    unsigned int   firstDirectorySectorLocation;
+    unsigned int   transactionSignatureNumber;
+    unsigned int   miniStreamCutoffSize;
+    unsigned int   firstMiniFATSectorLocation;
+    unsigned int   numberOfMiniFatSectors;
+    unsigned int   firstDifatSectorLocation;
+    unsigned int   numberOfDifatSectors;
+} bcf_file_header;
+
+typedef struct _bcf_file
+{
+    bcf_file_header header;   /*! The header for the CompoundFile */
+    bcf_file_difat* difat;    /*! The "Double Indirect FAT" for the CompoundFile */
+    bcf_file_fat* fat;        /*! The File Allocation Table for the Compound File */
+    bcf_directory* directory; /*! The directory for the CompoundFile */
+} bcf_file;
 
 /**
  * EmbColor uses the light primaries: red, green, blue in that order.
@@ -275,16 +277,6 @@ typedef struct thread_color_ {
     int manufacturer_code;
 } thread_color;
 
-typedef struct EmbTime_
-{
-    unsigned int year;
-    unsigned int month;
-    unsigned int day;
-    unsigned int hour;
-    unsigned int minute;
-    unsigned int second;
-} EmbTime;
-
 typedef struct EmbEllipse_
 {
     EmbVector center;
@@ -358,78 +350,6 @@ typedef struct EmbEllipseObject_
     int lineType;
     EmbColor color;
 } EmbEllipseObject;
-
-/* double-indirection file allocation table references */
-typedef struct _bcf_file_difat
-{
-    unsigned int fatSectorCount;
-    unsigned int fatSectorEntries[109];
-    unsigned int sectorSize;
-} bcf_file_difat;
-
-typedef struct _bcf_file_fat
-{
-    int          fatEntryCount;
-    unsigned int fatEntries[255]; /* maybe make this dynamic */
-    unsigned int numberOfEntriesInFatSector;
-} bcf_file_fat;
-
-typedef struct _bcf_directory_entry
-{
-    char                         directoryEntryName[32];
-    unsigned short               directoryEntryNameLength;
-    unsigned char                objectType;
-    unsigned char                colorFlag;
-    unsigned int                 leftSiblingId;
-    unsigned int                 rightSiblingId;
-    unsigned int                 childId;
-    unsigned char                CLSID[16];
-    unsigned int                 stateBits;
-    EmbTime                      creationTime;
-    EmbTime                      modifiedTime;
-    unsigned int                 startingSectorLocation;
-    unsigned long                streamSize; /* should be long long but in our case we shouldn't need it, and hard to support on c89 cross platform */
-    unsigned int                 streamSizeHigh; /* store the high int of streamsize */
-    struct _bcf_directory_entry* next;
-} bcf_directory_entry;
-
-typedef struct _bcf_directory
-{
-    bcf_directory_entry* dirEntries;
-    unsigned int         maxNumberOfDirectoryEntries;
-    /* TODO: possibly add a directory tree in the future */
-
-} bcf_directory;
-
-typedef struct _bcf_file_header
-{
-    unsigned char  signature[8];
-    unsigned char  CLSID[16]; /* TODO: this should be a separate type */
-    unsigned short minorVersion;
-    unsigned short majorVersion;
-    unsigned short byteOrder;
-    unsigned short sectorShift;
-    unsigned short miniSectorShift;
-    unsigned short reserved1;
-    unsigned int   reserved2;
-    unsigned int   numberOfDirectorySectors;
-    unsigned int   numberOfFATSectors;
-    unsigned int   firstDirectorySectorLocation;
-    unsigned int   transactionSignatureNumber;
-    unsigned int   miniStreamCutoffSize;
-    unsigned int   firstMiniFATSectorLocation;
-    unsigned int   numberOfMiniFatSectors;
-    unsigned int   firstDifatSectorLocation;
-    unsigned int   numberOfDifatSectors;
-} bcf_file_header;
-
-typedef struct _bcf_file
-{
-    bcf_file_header header;   /*! The header for the CompoundFile */
-    bcf_file_difat* difat;    /*! The "Double Indirect FAT" for the CompoundFile */
-    bcf_file_fat* fat;        /*! The File Allocation Table for the Compound File */
-    bcf_directory* directory; /*! The directory for the CompoundFile */
-} bcf_file;
 
 typedef struct EmbPolylineObject_
 {
@@ -658,30 +578,13 @@ EMB_PUBLIC long embFile_tell(EmbFile* stream);
 EMB_PUBLIC EmbFile* embFile_tmpfile(void);
 EMB_PUBLIC int embFile_putc(int ch, EmbFile* stream);
 EMB_PUBLIC int embFile_puts(EmbFile* stream, char *);
-
 EMB_PUBLIC int embFile_printf(EmbFile* stream, const char* format, ...);
-
-bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const unsigned int sectorSize);
-unsigned int readFullSector(EmbFile* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
-unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
-void bcf_file_difat_free(bcf_file_difat* difat);
-
-bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
-void loadFatFromSector(bcf_file_fat* fat, EmbFile* file);
-void bcf_file_fat_free(bcf_file_fat* fat);
-
-bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file);
-bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
-void readNextSector(EmbFile* file, bcf_directory* dir);
-void bcf_directory_free(bcf_directory* dir);
-
-bcf_file_header bcfFileHeader_read(EmbFile* file);
-int bcfFileHeader_isValid(bcf_file_header header);
 
 int bcfFile_read(EmbFile* file, bcf_file* bcfFile);
 EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind);
 void bcf_file_free(bcf_file* bcfFile);
 
+EMB_PUBLIC void embLog(const char* str);
 EMB_PUBLIC void embLog_print(const char* format, ...);
 EMB_PUBLIC void embLog_error(const char* format, ...);
 
@@ -781,60 +684,106 @@ int readDat(EmbPattern *pattern, const char *fileName);
 int writeDat(EmbPattern *pattern, const char *fileName);
 int readDem(EmbPattern *pattern, const char *fileName);
 int writeDem(EmbPattern *pattern, const char *fileName);
-#define READER_WRITER(type) \
-    int read##type(EmbPattern *pattern, const char *fileName); \
-    int write##type(EmbPattern *pattern, const char *fileName);
-READER_WRITER(Dsb)
-READER_WRITER(Dst)
-READER_WRITER(Dsz)
-READER_WRITER(Dxf)
-READER_WRITER(Edr)
-READER_WRITER(Emd)
-READER_WRITER(Exp)
-READER_WRITER(Exy)
-READER_WRITER(Eys)
-READER_WRITER(Fxy)
-READER_WRITER(Gc)
-READER_WRITER(Gnc)
-READER_WRITER(Gt)
-READER_WRITER(Hus)
-READER_WRITER(Inb)
-READER_WRITER(Inf)
-READER_WRITER(Jef)
-READER_WRITER(Ksm)
-READER_WRITER(Max)
-READER_WRITER(Mit)
-READER_WRITER(New)
-READER_WRITER(Ofm)
-READER_WRITER(Pcd)
-READER_WRITER(Pcm)
-READER_WRITER(Pcq)
-READER_WRITER(Pcs)
-READER_WRITER(Pec)
-READER_WRITER(Pel)
-READER_WRITER(Pem)
-READER_WRITER(Pes)
-READER_WRITER(Phb)
-READER_WRITER(Phc)
-READER_WRITER(Plt)
-READER_WRITER(Rgb)
-READER_WRITER(Sew)
-READER_WRITER(Shv)
-READER_WRITER(Sst)
-READER_WRITER(Stx)
-READER_WRITER(Svg)
-READER_WRITER(T01)
-READER_WRITER(T09)
-READER_WRITER(Tap)
-READER_WRITER(Thr)
-READER_WRITER(Txt)
-READER_WRITER(U00)
-READER_WRITER(U01)
-READER_WRITER(Vip)
-READER_WRITER(Vp3)
-READER_WRITER(Xxx)
-READER_WRITER(Zsk)
-#undef READER_WRITER
+int readDsb(EmbPattern *pattern, const char *fileName);
+int writeDsb(EmbPattern *pattern, const char *fileName);
+int readDst(EmbPattern *pattern, const char *fileName);
+int writeDst(EmbPattern *pattern, const char *fileName);
+int readDsz(EmbPattern *pattern, const char *fileName);
+int writeDsz(EmbPattern *pattern, const char *fileName);
+int readDxf(EmbPattern *pattern, const char *fileName);
+int writeDxf(EmbPattern *pattern, const char *fileName);
+int readEdr(EmbPattern *pattern, const char *fileName);
+int writeEdr(EmbPattern *pattern, const char *fileName);
+int readEmd(EmbPattern *pattern, const char *fileName);
+int writeEmd(EmbPattern *pattern, const char *fileName);
+int readExp(EmbPattern *pattern, const char *fileName);
+int writeExp(EmbPattern *pattern, const char *fileName);
+int readExy(EmbPattern *pattern, const char *fileName);
+int writeExy(EmbPattern *pattern, const char *fileName);
+int readEys(EmbPattern *pattern, const char *fileName);
+int writeEys(EmbPattern *pattern, const char *fileName);
+int readFxy(EmbPattern *pattern, const char *fileName);
+int writeFxy(EmbPattern *pattern, const char *fileName);
+int readGc(EmbPattern *pattern, const char *fileName);
+int writeGc(EmbPattern *pattern, const char *fileName);
+int readGnc(EmbPattern *pattern, const char *fileName);
+int writeGnc(EmbPattern *pattern, const char *fileName);
+int readGt(EmbPattern *pattern, const char *fileName);
+int writeGt(EmbPattern *pattern, const char *fileName);
+int readHus(EmbPattern *pattern, const char *fileName);
+int writeHus(EmbPattern *pattern, const char *fileName);
+int readInb(EmbPattern *pattern, const char *fileName);
+int writeInb(EmbPattern *pattern, const char *fileName);
+int readInf(EmbPattern *pattern, const char *fileName);
+int writeInf(EmbPattern *pattern, const char *fileName);
+int readJef(EmbPattern *pattern, const char *fileName);
+int writeJef(EmbPattern *pattern, const char *fileName);
+int readKsm(EmbPattern *pattern, const char *fileName);
+int writeKsm(EmbPattern *pattern, const char *fileName);
+int readMax(EmbPattern *pattern, const char *fileName);
+int writeMax(EmbPattern *pattern, const char *fileName);
+int readMit(EmbPattern *pattern, const char *fileName);
+int writeMit(EmbPattern *pattern, const char *fileName);
+int readNew(EmbPattern *pattern, const char *fileName);
+int writeNew(EmbPattern *pattern, const char *fileName);
+int readOfm(EmbPattern *pattern, const char *fileName);
+int writeOfm(EmbPattern *pattern, const char *fileName);
+int readPcd(EmbPattern *pattern, const char *fileName);
+int writePcd(EmbPattern *pattern, const char *fileName);
+int readPcm(EmbPattern *pattern, const char *fileName);
+int writePcm(EmbPattern *pattern, const char *fileName);
+int readPcq(EmbPattern *pattern, const char *fileName);
+int writePcq(EmbPattern *pattern, const char *fileName);
+int readPcs(EmbPattern *pattern, const char *fileName);
+int writePcs(EmbPattern *pattern, const char *fileName);
+int readPec(EmbPattern *pattern, const char *fileName);
+int writePec(EmbPattern *pattern, const char *fileName);
+int readPel(EmbPattern *pattern, const char *fileName);
+int writePel(EmbPattern *pattern, const char *fileName);
+int readPem(EmbPattern *pattern, const char *fileName);
+int writePem(EmbPattern *pattern, const char *fileName);
+int readPes(EmbPattern *pattern, const char *fileName);
+int writePes(EmbPattern *pattern, const char *fileName);
+int readPhb(EmbPattern *pattern, const char *fileName);
+int writePhb(EmbPattern *pattern, const char *fileName);
+int readPhc(EmbPattern *pattern, const char *fileName);
+int writePhc(EmbPattern *pattern, const char *fileName);
+int readPlt(EmbPattern *pattern, const char *fileName);
+int writePlt(EmbPattern *pattern, const char *fileName);
+int readRgb(EmbPattern *pattern, const char *fileName);
+int writeRgb(EmbPattern *pattern, const char *fileName);
+int readSew(EmbPattern *pattern, const char *fileName);
+int writeSew(EmbPattern *pattern, const char *fileName);
+int readShv(EmbPattern *pattern, const char *fileName);
+int writeShv(EmbPattern *pattern, const char *fileName);
+int readSst(EmbPattern *pattern, const char *fileName);
+int writeSst(EmbPattern *pattern, const char *fileName);
+int readStx(EmbPattern *pattern, const char *fileName);
+int writeStx(EmbPattern *pattern, const char *fileName);
+int readSvg(EmbPattern *pattern, const char *fileName);
+int writeSvg(EmbPattern *pattern, const char *fileName);
+int readT01(EmbPattern *pattern, const char *fileName);
+int writeT01(EmbPattern *pattern, const char *fileName);
+int readT09(EmbPattern *pattern, const char *fileName);
+int writeT09(EmbPattern *pattern, const char *fileName);
+int readTap(EmbPattern *pattern, const char *fileName);
+int writeTap(EmbPattern *pattern, const char *fileName);
+int readThr(EmbPattern *pattern, const char *fileName);
+int writeThr(EmbPattern *pattern, const char *fileName);
+int readTxt(EmbPattern *pattern, const char *fileName);
+int writeTxt(EmbPattern *pattern, const char *fileName);
+int readU00(EmbPattern *pattern, const char *fileName);
+int writeU00(EmbPattern *pattern, const char *fileName);
+int readU01(EmbPattern *pattern, const char *fileName);
+int writeU01(EmbPattern *pattern, const char *fileName);
+int readVip(EmbPattern *pattern, const char *fileName);
+int writeVip(EmbPattern *pattern, const char *fileName);
+int readVp3(EmbPattern *pattern, const char *fileName);
+int writeVp3(EmbPattern *pattern, const char *fileName);
+int readXxx(EmbPattern *pattern, const char *fileName);
+int writeXxx(EmbPattern *pattern, const char *fileName);
+int readZsk(EmbPattern *pattern, const char *fileName);
+int writeZsk(EmbPattern *pattern, const char *fileName);
 
 void readPecStitches(EmbPattern* pattern, EmbFile* file);
 void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* filename);
@@ -842,7 +791,6 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* filename);
 /* NON-MACRO CONSTANTS
  ******************************************************************************/
 
-/*! Constant representing the number of Double Indirect FAT entries in a single header */
 EMB_PUBLIC extern EmbFormatList formatTable[];
 EMB_PUBLIC extern int numberOfFormats;
 extern const unsigned int NumberOfDifatEntriesInHeader;

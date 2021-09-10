@@ -6,6 +6,29 @@
 #include <string.h>
 #include <ctype.h>
 
+/**
+Type of sector
+*/
+#define CompoundFileSector_MaxRegSector 0xFFFFFFFA
+#define CompoundFileSector_DIFAT_Sector 0xFFFFFFFC
+#define CompoundFileSector_FAT_Sector   0xFFFFFFFD
+#define CompoundFileSector_EndOfChain   0xFFFFFFFE
+#define CompoundFileSector_FreeSector   0xFFFFFFFF
+
+/**
+Type of directory object
+*/
+#define ObjectTypeUnknown   0x00 /*!< Probably unallocated    */
+#define ObjectTypeStorage   0x01 /*!< a directory type object */
+#define ObjectTypeStream    0x02 /*!< a file type object      */
+#define ObjectTypeRootEntry 0x05 /*!< the root entry          */
+
+/**
+Special values for Stream Identifiers
+*/
+#define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /*!< All real stream Ids are less than this */
+#define CompoundFileStreamId_NoStream           0xFFFFFFFF /*!< There is no valid stream Id            */
+
 typedef struct reader_writer_prototype {
     char file_ext[10];
     int (*reader)(EmbPattern*, const char*);
@@ -144,7 +167,26 @@ EmbFormatList formatTable[100] = {
     {"END",  "END",                                ' ', ' ', 0,                  }
 };
 
+bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const unsigned int sectorSize);
+unsigned int readFullSector(EmbFile* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
+unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
+void bcf_file_difat_free(bcf_file_difat* difat);
+
+bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
+void loadFatFromSector(bcf_file_fat* fat, EmbFile* file);
+void bcf_file_fat_free(bcf_file_fat* fat);
+
+bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file);
+bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
+void readNextSector(EmbFile* file, bcf_directory* dir);
+void bcf_directory_free(bcf_directory* dir);
+
+bcf_file_header bcfFileHeader_read(EmbFile* file);
+int bcfFileHeader_isValid(bcf_file_header header);
+
 int numberOfFormats = 61;
+
+/*! Constant representing the number of Double Indirect FAT entries in a single header */
 const unsigned int NumberOfDifatEntriesInHeader = 109;
 const unsigned int sizeOfFatEntry = sizeof(unsigned int);
 static const unsigned int sizeOfDifatEntry = 4;

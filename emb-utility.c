@@ -442,23 +442,30 @@ EmbColor embColor_fromHexStr(char* val)
     return color;
 }
 
+/* puts() abstraction. Uses Serial.print() on ARDUINO */
+void embLog(const char* str)
+{
+#ifdef ARDUINO
+    inoLog_serial(str);
+    inoLog_serial("\n");
+#else /* ARDUINO */
+    puts(str);
+#endif /* ARDUINO */
+}
+
 /* printf() abstraction. Uses Serial.print() on ARDUINO */
 void embLog_print(const char* format, ...)
 {
     /* TODO: log debug message in struct for later use */
-
-#ifdef ARDUINO /* ARDUINO */
     char buff[256];
     va_list args;
     va_start(args, format);
     vsprintf(buff, format, args);
     va_end(args);
+#ifdef ARDUINO
     inoLog_serial(buff);
 #else /* ARDUINO */
-    va_list args;
-    va_start(args, format);
-    vprintf(format, args);
-    va_end(args);
+    printf(buff);
 #endif /* ARDUINO */
 }
 
@@ -466,20 +473,16 @@ void embLog_print(const char* format, ...)
 void embLog_error(const char* format, ...)
 {
     /* TODO: log debug message in struct for later use */
-
-#ifdef ARDUINO /* ARDUINO */
     char buff[256];
     va_list args;
     va_start(args, format);
     vsprintf(buff, format, args);
     va_end(args);
-    inoLog_serial(strcat("ERROR: ", buff));
+#ifdef ARDUINO
+    inoLog_serial("ERROR: ");
+    inoLog_serial(buff);
 #else /* ARDUINO */
-    va_list args;
-    va_start(args, format);
-    printf("ERROR: ");
-    vprintf(format, args);
-    va_end(args);
+    fprintf("ERROR: %s", buff);
 #endif /* ARDUINO */
 }
 

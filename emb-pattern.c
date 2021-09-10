@@ -39,9 +39,8 @@ EmbPattern* embPattern_create(void)
     p->polylines = 0;
     p->rects = 0;
     p->splines = 0;
-
-    p->lastX = 0.0;
-    p->lastY = 0.0;
+    p->lastPosition.x = 0.0;
+    p->lastPosition.y = 0.0;
 
     return p;
 }
@@ -241,7 +240,8 @@ void embPattern_movePolylinesToStitchList(EmbPattern* p)
 /*! Adds a stitch to the pattern (\a p) at the absolute position (\a x,\a y). Positive y is up. Units are in millimeters. */
 void embPattern_addStitchAbs(EmbPattern* p, double x, double y, int flags, int isAutoColorIndex)
 {
-    EmbStitch s;
+    EmbStitch s, h;
+    EmbVector home;
 
     if (!p) {
         embLog_error("emb-pattern.c embPattern_addStitchAbs(), p argument is null\n");
@@ -249,8 +249,9 @@ void embPattern_addStitchAbs(EmbPattern* p, double x, double y, int flags, int i
     }
 
     if (flags & END) {
-        if (p->stitchList->count == 0)
+        if (p->stitchList->count == 0) {
             return;
+        }
         /* Prevent unnecessary multiple END stitches */
         if (p->stitchList->stitch[p->stitchList->count - 1].flags & END) {
             embLog_error("emb-pattern.c embPattern_addStitchAbs(), found multiple END stitches\n");
@@ -263,17 +264,18 @@ void embPattern_addStitchAbs(EmbPattern* p, double x, double y, int flags, int i
     }
 
     if (flags & STOP) {
-        if (p->stitchList->count == 0)
+        if (p->stitchList->count == 0) {
             return;
-        if (isAutoColorIndex)
+        }
+        if (isAutoColorIndex) {
             p->currentColorIndex++;
+        }
     }
 
     /* NOTE: If the stitchList is empty, we will create it before adding stitches to it. The first coordinate will be the HOME position. */
     if (!p->stitchList) {
         /* NOTE: Always HOME the machine before starting any stitching */
-        EmbPoint home = embSettings_home(&(p->settings));
-        EmbStitch h;
+        home = embSettings_home(&(p->settings));
         h.x = home.x;
         h.y = home.y;
         h.flags = JUMP;
@@ -291,13 +293,14 @@ void embPattern_addStitchAbs(EmbPattern* p, double x, double y, int flags, int i
 #else /* ARDUINO */
     embArray_addStitch(p->stitchList, s.x, s.y, s.flags, s.color);
 #endif /* ARDUINO */
-    p->lastX = s.x;
-    p->lastY = s.y;
+    p->lastPosition.x = s.x;
+    p->lastPosition.y = s.y;
 }
 
 /*! Adds a stitch to the pattern (\a p) at the relative position (\a dx,\a dy) to the previous stitch. Positive y is up. Units are in millimeters. */
 void embPattern_addStitchRel(EmbPattern* p, double dx, double dy, int flags, int isAutoColorIndex)
 {
+    EmbVector home;
     double x, y;
 
     if (!p) {
@@ -305,12 +308,12 @@ void embPattern_addStitchRel(EmbPattern* p, double dx, double dy, int flags, int
         return;
     }
     if (p->stitchList) {
-        x = p->lastX + dx;
-        y = p->lastY + dy;
+        x = p->lastPosition.x + dx;
+        y = p->lastPosition.y + dy;
     } else {
         /* NOTE: The stitchList is empty, so add it to the HOME position.
          * The embStitchList_create function will ensure the first coordinate is at the HOME position. */
-        EmbPoint home = embSettings_home(&(p->settings));
+        home = embSettings_home(&(p->settings));
         x = home.x + dx;
         y = home.y + dy;
     }
@@ -333,14 +336,7 @@ int embPattern_read(EmbPattern* pattern, const char* fileName) /* TODO: Write te
     EmbReaderWriter* reader = 0;
     int result = 0;
 
-    if (!pattern) {
-        embLog_error("emb-pattern.c embPattern_read(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        embLog_error("emb-pattern.c embPattern_read(), fileName argument is null\n");
-        return 0;
-    }
+    if (!validateReadPattern(pattern, fileName, "embPattern_read")) return 0;
 
     reader = embReaderWriter_getByFileName(fileName);
     if (!reader) {
@@ -349,7 +345,6 @@ int embPattern_read(EmbPattern* pattern, const char* fileName) /* TODO: Write te
     }
     result = reader->reader(pattern, fileName);
     free(reader);
-    reader = 0;
     return result;
 }
 
@@ -360,14 +355,7 @@ int embPattern_write(EmbPattern* pattern, const char* fileName) /* TODO: Write t
     EmbReaderWriter* writer = 0;
     int result = 0;
 
-    if (!pattern) {
-        embLog_error("emb-pattern.c embPattern_write(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        embLog_error("emb-pattern.c embPattern_write(), fileName argument is null\n");
-        return 0;
-    }
+    if (!validateWritePattern(pattern, fileName, "embPattern_write")) return 0;
 
     writer = embReaderWriter_getByFileName(fileName);
     if (!writer) {
@@ -376,7 +364,6 @@ int embPattern_write(EmbPattern* pattern, const char* fileName) /* TODO: Write t
     }
     result = writer->writer(pattern, fileName);
     free(writer);
-    writer = 0;
     return result;
 }
 
@@ -446,20 +433,20 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
         /* TODO: embPattern_calcBoundingBox for arcs, for now just checks the start point */
         for (i = 0; i < p->arcs->count; i++) {
             EmbArc arc = p->arcs->arc[i].arc;
-            boundingRect.left = embMinDouble(boundingRect.left, arc.startX);
-            boundingRect.top = embMinDouble(boundingRect.top, arc.startY);
-            boundingRect.right = embMaxDouble(boundingRect.right, arc.startX);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, arc.startY);
+            boundingRect.left = embMinDouble(boundingRect.left, arc.start.x);
+            boundingRect.top = embMinDouble(boundingRect.top, arc.start.y);
+            boundingRect.right = embMaxDouble(boundingRect.right, arc.start.x);
+            boundingRect.bottom = embMaxDouble(boundingRect.bottom, arc.start.y);
         }
     }
 
     if (p->circles) {
         for (i = 0; i < p->circles->count; i++) {
             EmbCircle circle = p->circles->circle[i].circle;
-            boundingRect.left = embMinDouble(boundingRect.left, circle.centerX - circle.radius);
-            boundingRect.top = embMinDouble(boundingRect.top, circle.centerY - circle.radius);
-            boundingRect.right = embMaxDouble(boundingRect.right, circle.centerX + circle.radius);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, circle.centerY + circle.radius);
+            boundingRect.left = embMinDouble(boundingRect.left, circle.center.x - circle.radius);
+            boundingRect.top = embMinDouble(boundingRect.top, circle.center.y - circle.radius);
+            boundingRect.right = embMaxDouble(boundingRect.right, circle.center.x + circle.radius);
+            boundingRect.bottom = embMaxDouble(boundingRect.bottom, circle.center.y + circle.radius);
         }
     }
 
@@ -467,30 +454,30 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
         for (i = 0; i < p->ellipses->count; i++) {
             /* TODO: account for rotation */
             EmbEllipse ellipse = p->ellipses->ellipse[i].ellipse;
-            boundingRect.left = embMinDouble(boundingRect.left, ellipse.centerX - ellipse.radiusX);
-            boundingRect.top = embMinDouble(boundingRect.top, ellipse.centerY - ellipse.radiusY);
-            boundingRect.right = embMaxDouble(boundingRect.right, ellipse.centerX + ellipse.radiusX);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, ellipse.centerY + ellipse.radiusY);
+            boundingRect.left = embMinDouble(boundingRect.left, ellipse.center.x - ellipse.radius.x);
+            boundingRect.top = embMinDouble(boundingRect.top, ellipse.center.y - ellipse.radius.y);
+            boundingRect.right = embMaxDouble(boundingRect.right, ellipse.center.x + ellipse.radius.x);
+            boundingRect.bottom = embMaxDouble(boundingRect.bottom, ellipse.center.y + ellipse.radius.y);
         }
     }
 
     if (p->lines) {
         for (i = 0; i < p->lines->count; i++) {
             EmbLine line = p->lines->line[i].line;
-            boundingRect.left = embMinDouble(boundingRect.left, line.x1);
-            boundingRect.left = embMinDouble(boundingRect.left, line.x2);
-            boundingRect.top = embMinDouble(boundingRect.top, line.y1);
-            boundingRect.top = embMinDouble(boundingRect.top, line.y2);
-            boundingRect.right = embMaxDouble(boundingRect.right, line.x1);
-            boundingRect.right = embMaxDouble(boundingRect.right, line.x2);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, line.y1);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, line.y2);
+            boundingRect.left = embMinDouble(boundingRect.left, line.start.x);
+            boundingRect.left = embMinDouble(boundingRect.left, line.end.x);
+            boundingRect.top = embMinDouble(boundingRect.top, line.start.y);
+            boundingRect.top = embMinDouble(boundingRect.top, line.end.y);
+            boundingRect.right = embMaxDouble(boundingRect.right, line.start.x);
+            boundingRect.right = embMaxDouble(boundingRect.right, line.end.x);
+            boundingRect.bottom = embMaxDouble(boundingRect.bottom, line.start.y);
+            boundingRect.bottom = embMaxDouble(boundingRect.bottom, line.end.y);
         }
     }
 
     if (p->points) {
         for (i = 0; i < p->points->count; i++) {
-            EmbPoint point = p->points->point[i].point;
+            EmbVector point = p->points->point[i].point;
             /* TODO: embPattern_calcBoundingBox for points */
         }
     }
@@ -577,14 +564,14 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     if (p->arcs) {
         for (i = 0; i < p->arcs->count; i++) {
             if (horz) {
-                p->arcs->arc[i].arc.startX *= -1.0;
-                p->arcs->arc[i].arc.midX *= -1.0;
-                p->arcs->arc[i].arc.endX *= -1.0;
+                p->arcs->arc[i].arc.start.x *= -1.0;
+                p->arcs->arc[i].arc.mid.x *= -1.0;
+                p->arcs->arc[i].arc.end.x *= -1.0;
             }
             if (vert) {
-                p->arcs->arc[i].arc.startY *= -1.0;
-                p->arcs->arc[i].arc.midY *= -1.0;
-                p->arcs->arc[i].arc.endY *= -1.0;
+                p->arcs->arc[i].arc.start.y *= -1.0;
+                p->arcs->arc[i].arc.mid.y *= -1.0;
+                p->arcs->arc[i].arc.end.y *= -1.0;
             }
         }
     }
@@ -592,10 +579,10 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     if (p->circles) {
         for (i = 0; i < p->circles->count; i++) {
             if (horz) {
-                p->circles->circle[i].circle.centerX *= -1.0;
+                p->circles->circle[i].circle.center.x *= -1.0;
             }
             if (vert) {
-                p->circles->circle[i].circle.centerY *= -1.0;
+                p->circles->circle[i].circle.center.y *= -1.0;
             }
         }
     }
@@ -603,10 +590,10 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     if (p->ellipses) {
         for (i = 0; i < p->ellipses->count; i++) {
             if (horz) {
-                p->ellipses->ellipse[i].ellipse.centerX *= -1.0;
+                p->ellipses->ellipse[i].ellipse.center.x *= -1.0;
             }
             if (vert) {
-                p->ellipses->ellipse[i].ellipse.centerY *= -1.0;
+                p->ellipses->ellipse[i].ellipse.center.y *= -1.0;
             }
         }
     }
@@ -614,12 +601,12 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     if (p->lines) {
         for (i = 0; i < p->lines->count; i++) {
             if (horz) {
-                p->lines->line[i].line.x1 *= -1.0;
-                p->lines->line[i].line.x2 *= -1.0;
+                p->lines->line[i].line.start.x *= -1.0;
+                p->lines->line[i].line.end.x *= -1.0;
             }
             if (vert) {
-                p->lines->line[i].line.y1 *= -1.0;
-                p->lines->line[i].line.y2 *= -1.0;
+                p->lines->line[i].line.start.y *= -1.0;
+                p->lines->line[i].line.end.y *= -1.0;
             }
         }
     }
@@ -932,10 +919,10 @@ void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r
 void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy, double rx, double ry)
 {
     EmbEllipse ellipse;
-    ellipse.centerX = cx;
-    ellipse.centerY = cy;
-    ellipse.radiusX = rx;
-    ellipse.radiusY = ry;
+    ellipse.center.x = cx;
+    ellipse.center.y = cy;
+    ellipse.radius.x = rx;
+    ellipse.radius.y = ry;
 
     if (!p) {
         embLog_error("emb-pattern.c embPattern_addEllipseObjectAbs(), p argument is null\n");
@@ -954,7 +941,10 @@ void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy, double 
 void embPattern_addLineObjectAbs(EmbPattern* p, double x1, double y1, double x2, double y2)
 {
     EmbLineObject lineObj;
-    lineObj.line = embLine_make(x1, y1, x2, y2);
+    lineObj.line.start.x = x1;
+    lineObj.line.start.y = y1;
+    lineObj.line.end.x = x2;
+    lineObj.line.end.y = y2;
     lineObj.color.r = 0;
     lineObj.color.g = 0;
     lineObj.color.b = 0;
@@ -1080,8 +1070,6 @@ void embPattern_end(EmbPattern* p)
     }
 }
 
-#include "embroidery.h"
-
 /*! Initializes and returns an EmbSettings */
 EmbSettings embSettings_init(void)
 {
@@ -1093,13 +1081,13 @@ EmbSettings embSettings_init(void)
 }
 
 /*! Returns the home position stored in (\a settings) as an EmbPoint (\a point). */
-EmbPoint embSettings_home(EmbSettings* settings)
+EmbVector embSettings_home(EmbSettings* settings)
 {
     return settings->home;
 }
 
 /*! Sets the home position stored in (\a settings) to EmbPoint (\a point). You will rarely ever need to use this. */
-void embSettings_setHome(EmbSettings* settings, EmbPoint point)
+void embSettings_setHome(EmbSettings* settings, EmbVector point)
 {
     settings->home = point;
 }

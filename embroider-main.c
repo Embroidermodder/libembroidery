@@ -11,7 +11,7 @@
 
 static void usage(void);
 static void formats(void);
-static void testTangentPoints(EmbCircle c, double  px, double  py, EmbPoint *, EmbPoint *);
+static void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *, EmbVector *);
 static int testEmbCircle(void);
 static int testThreadColor(void);
 static void report(int result, char *label);
@@ -194,14 +194,9 @@ int main(int argc, const char* argv[])
 }
 
 
-static void testTangentPoints(EmbCircle c,
-    double px, double py,
-    EmbPoint *t0, EmbPoint *t1)
+static void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
 {
-    double tx0 = 0.0, tx1 = 0.0, ty0 = 0.0, ty1 = 0.0;
-    if(!getCircleTangentPoints(c, px, py,
-                               &tx0, &ty0,
-                               &tx1, &ty1)) {
+    if(!getCircleTangentPoints(c, p, t0, t1)) {
         printf("Error calculating tangent points.\n");
     }
     else {
@@ -209,46 +204,37 @@ static void testTangentPoints(EmbCircle c,
                "Point  : px=%f, py=%f\n"
                "Tangent: tx0=%f, ty0=%f\n"
                "Tangent: tx1=%f, ty1=%f\n\n",
-               c.radius, c.centerX, c.centerY,
-               px, py,
-               tx0, ty0,
-               tx1, ty1);
-        t0->x = tx0;
-        t0->y = ty0;
-        t1->x = tx1;
-        t1->y = ty1;
+               c.radius, c.center.x, c.center.y,
+               p.x, p.y,
+               t0->x, t0->y,
+               t1->x, t1->y);
     }
-}
-
-double distance(EmbPoint p, EmbPoint q)
-{
-    double x2 = (p.x-q.x)*(p.x-q.x);
-    double y2 = (p.y-q.y)*(p.y-q.y);
-    return sqrt(x2+y2);
 }
 
 int testEmbCircle(void)
 {
     double epsilon = 1e-3;
-    EmbPoint p0, p1;
+    EmbVector p0, p1;
     /* Problem */
     EmbCircle c1 = {0.0, 0.0, 3.0};
     /* Solution */
-    EmbPoint t0 = {2.2500, 1.9843};
-    EmbPoint t1 = {2.2500, -1.9843};
+    EmbVector t0 = {2.2500, 1.9843};
+    EmbVector t1 = {2.2500, -1.9843};
     /* Test */
-    testTangentPoints(c1, 4.0, 0.0, &p0, &p1);
-    if (distance(p0, t0) + distance(p1, t1) > epsilon) {
+    EmbVector test0 = {4.0, 0.0};
+    testTangentPoints(c1, test0, &p0, &p1);
+    if (embVector_distance(p0, t0) + embVector_distance(p1, t1) > epsilon) {
         return 16;
     }
 
     EmbCircle c2 = {20.1762, 10.7170, 6.8221};
     /* Solution */
-    EmbPoint s0 = {19.0911, 17.4522};
-    EmbPoint s1 = {26.4428, 13.4133};
+    EmbVector s0 = {19.0911, 17.4522};
+    EmbVector s1 = {26.4428, 13.4133};
     /* Test */
-    testTangentPoints(c2, 24.3411, 18.2980, &p0, &p1);
-    double error = distance(p0, s0) + distance(p1, s1);
+    EmbVector test1 = {24.3411, 18.2980};
+    testTangentPoints(c2, test1, &p0, &p1);
+    double error = embVector_distance(p0, s0) + embVector_distance(p1, s1);
     if (error > epsilon) {
         printf("Error larger than tolerence, circle test 2: %f.\n\n", error);
         return 17;
@@ -257,16 +243,9 @@ int testEmbCircle(void)
     return 0;
 }
 
-static void printArcResults(double bulge,
-                     double startX,    double startY,
-                     double endX,      double endY,
-                     double midX,      double midY,
-                     double centerX,   double centerY,
-                     double radius,    double diameter,
-                     double chord,
-                     double chordMidX, double chordMidY,
-                     double sagitta,   double apothem,
-                     double incAngle,  char   clockwise)
+static void printArcResults(double bulge, EmbArc arc, EmbVector center,
+                     double radius, double diameter, double chord, EmbVector chordMid,
+                     double sagitta, double apothem, double incAngle, char clockwise)
 {
     fprintf(stdout, "bulge     = %f\n"
                     "startX    = %f\n"
@@ -288,19 +267,19 @@ static void printArcResults(double bulge,
                     "clockwise = %d\n"
                     "\n",
                     bulge,
-                    startX,
-                    startY,
-                    endX,
-                    endY,
-                    midX,
-                    midY,
-                    centerX,
-                    centerY,
+                    arc.start.x,
+                    arc.start.y,
+                    arc.end.x,
+                    arc.end.y,
+                    arc.mid.x,
+                    arc.mid.y,
+                    center.x,
+                    center.y,
                     radius,
                     diameter,
                     chord,
-                    chordMidX,
-                    chordMidY,
+                    chordMid.x,
+                    chordMid.y,
                     sagitta,
                     apothem,
                     incAngle,
@@ -309,76 +288,33 @@ static void printArcResults(double bulge,
 
 int testGeomArc(void)
 {
-    double bulge;
-    double startX;    double startY;
-    double endX;      double endY;
-    /* returned data */
-    double midX;      double midY;
-    double centerX;   double centerY;
-    double radius;    double diameter;
-    double chord;
-    double chordMidX; double chordMidY;
-    double sagitta;   double apothem;
-    double incAngle;  char   clockwise;
+    EmbArc arc;
+    EmbVector center, chordMid;
+    double bulge, radius, diameter, chord, sagitta, apothem, incAngle;
+    char clockwise;
 
     fprintf(stdout, "Clockwise Test:\n");
     bulge = -0.414213562373095;
-    startX = 1.0;
-    startY = 0.0;
-    endX   = 2.0;
-    endY   = 1.0;
-    if(getArcDataFromBulge(bulge,
-                           startX,     startY,
-                           endX,       endY,
-                           /* returned data */
-                           &midX,      &midY,
-                           &centerX,   &centerY,
-                           &radius,    &diameter,
-                           &chord,
-                           &chordMidX, &chordMidY,
-                           &sagitta,   &apothem,
-                           &incAngle,  &clockwise))
-    {
-        printArcResults(bulge,
-                        startX,    startY,
-                        endX,      endY,
-                        midX,      midY,
-                        centerX,   centerY,
-                        radius,    diameter,
-                        chord,
-                        chordMidX, chordMidY,
-                        sagitta,   apothem,
-                        incAngle,  clockwise);
+    arc.start.x = 1.0;
+    arc.start.y = 0.0;
+    arc.end.x   = 2.0;
+    arc.end.y   = 1.0;
+    if (getArcDataFromBulge(bulge, &arc, &center, &radius, &diameter, &chord,
+                           &chordMid, &sagitta, &apothem, &incAngle, &clockwise)) {
+        printArcResults(bulge, arc, center, radius, diameter,
+                        chord, chordMid, sagitta, apothem, incAngle, clockwise);
     }
 
     fprintf(stdout, "Counter-Clockwise Test:\n");
     bulge  = 2.414213562373095;
-    startX = 4.0;
-    startY = 0.0;
-    endX   = 5.0;
-    endY   = 1.0;
-    if(getArcDataFromBulge(bulge,
-                           startX,     startY,
-                           endX,       endY,
-                           /* returned data */
-                           &midX,      &midY,
-                           &centerX,   &centerY,
-                           &radius,    &diameter,
-                           &chord,
-                           &chordMidX, &chordMidY,
-                           &sagitta,   &apothem,
-                           &incAngle,  &clockwise))
-    {
-        printArcResults(bulge,
-                        startX,    startY,
-                        endX,      endY,
-                        midX,      midY,
-                        centerX,   centerY,
-                        radius,    diameter,
-                        chord,
-                        chordMidX, chordMidY,
-                        sagitta,   apothem,
-                        incAngle,  clockwise);
+    arc.start.x = 4.0;
+    arc.start.y = 0.0;
+    arc.end.x   = 5.0;
+    arc.end.y   = 1.0;
+    if (getArcDataFromBulge(bulge, &arc, &center, &radius, &diameter, &chord,
+                           &chordMid, &sagitta, &apothem, &incAngle, &clockwise)) {
+        printArcResults(bulge, arc, center, radius, diameter,
+                        chord, chordMid, sagitta, apothem, incAngle, clockwise);
     }
 
     return 0;

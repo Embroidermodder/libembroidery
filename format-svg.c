@@ -1934,24 +1934,24 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     if (pattern->circles) {
         for (i=0; i<pattern->circles->count; i++) {
             EmbCircle c = pattern->circles->circle[i].circle;
-            printf("circle %f %f %f\n", c.centerX, c.centerY, c.radius);
+            printf("circle %f %f %f\n", c.center.x, c.center.y, c.radius);
         }
     }
     if (pattern->ellipses) {
         for (i=0; i<pattern->ellipses->count; i++) {
             EmbEllipse e = pattern->ellipses->ellipse[i].ellipse;
-            printf("ellipse %f %f %f %f\n", e.centerX, e.centerY, e.radiusX, e.radiusY);
+            printf("ellipse %f %f %f %f\n", e.center.x, e.center.y, e.radius.x, e.radius.y);
         }
     }
     if (pattern->lines) {
         for (i=0; i<pattern->lines->count; i++) {
             EmbLine li = pattern->lines->line[i].line;
-            printf("line %f %f %f %f\n", li.x1, li.y1, li.x2, li.y2);
+            printf("line %f %f %f %f\n", li.start.x, li.end.y, li.start.x, li.end.y);
         }
     }
     if (pattern->points) {
         for (i=0; i<pattern->points->count; i++) {
-            EmbPoint po = pattern->points->point[i].point;
+            EmbVector po = pattern->points->point[i].point;
             printf("point %f %f\n", po.x, po.y);
         }
     }
@@ -1984,10 +1984,10 @@ int readSvg(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeSvg(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file = 0;
+    EmbFile* file;
     EmbRect boundingRect;
     EmbStitch st;
-    EmbPoint point;
+    EmbVector point;
     EmbRect rect;
     EmbColor color;
     int i, j;
@@ -1995,8 +1995,7 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     char tmpX[32];
     char tmpY[32];
 
-    if(!pattern) { embLog_error("format-svg.c writeSvg(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-svg.c writeSvg(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "writeSvg")) return 0;
 
     file = embFile_open(fileName, "w", 0);
     if (!file) return 0;
@@ -2042,8 +2041,8 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
                         color.r,
                         color.g,
                         color.b,
-                        circle.centerX,
-                        circle.centerY,
+                        circle.center.x,
+                        circle.center.y,
                         circle.radius);
         }
     }
@@ -2058,10 +2057,10 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
                         color.r,
                         color.g,
                         color.b,
-                        ellipse.centerX,
-                        ellipse.centerY,
-                        ellipse.radiusX,
-                        ellipse.radiusY);
+                        ellipse.center.x,
+                        ellipse.center.y,
+                        ellipse.radius.x,
+                        ellipse.radius.y);
         }
     }
 
@@ -2074,7 +2073,7 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
             embFile_printf(file,
                 "\n<line stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
                 color.r, color.g, color.b,
-                line.x1, line.y1, line.x2, line.y2);
+                line.start.x, line.start.y, line.end.x, line.end.y);
         }
     }
 

@@ -64,7 +64,7 @@ char getArcDataFromBulge(double bulge, EmbArc *arc, EmbVector* arcCenter,
                          double* sagitta, double* apothem,
                          double* incAngleInDegrees, char* clockwise)
 {
-    EmbVector chordVector, f, diff;
+    EmbVector chordVector, f;
     double incAngleInRadians;
     double chordAngleInRadians;
     double sagittaAngleInRadians;
@@ -79,7 +79,7 @@ char getArcDataFromBulge(double bulge, EmbArc *arc, EmbVector* arcCenter,
     /* Calculate the Included Angle in Radians */
     incAngleInRadians = atan(bulge)*4.0;
 
-    embVector_subtract(arc->end, arc->start, &diff);
+    embVector_subtract(arc->end, arc->start, &chordVector);
     *chord = embVector_getLength(diff);
 
     *radius = fabs(*chord / (2.0 * sin(incAngleInRadians / 2.0)));
@@ -89,7 +89,7 @@ char getArcDataFromBulge(double bulge, EmbArc *arc, EmbVector* arcCenter,
 
     embVector_average(arc->start, arc->end, chordMid);
 
-    chordAngleInRadians = atan2(diff.y, diff.x);
+    chordAngleInRadians = atan2(chordVector.y, chordVector.x);
 
     if (*clockwise) {
         sagittaAngleInRadians = chordAngleInRadians + radians(90.0);

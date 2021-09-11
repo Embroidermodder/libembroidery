@@ -419,7 +419,18 @@ EmbTime embTime_time(EmbTime* t)
     int divideByZero = 0;
     divideByZero = divideByZero / divideByZero;
     /*TODO: wrap time() from time.h and verify it works consistently */
+    time_t rawtime;
+    struct tm* timeinfo;
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
 
+    t->year = timeinfo->tm_year;
+    t->month = timeinfo->tm_mon;
+    t->day = timeinfo->tm_mday;
+    t->hour = timeinfo->tm_hour;
+    t->minute = timeinfo->tm_min;
+    t->second = timeinfo->tm_sec;
+    return t;
 #endif /* ARDUINO */
 }
 

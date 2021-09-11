@@ -80,9 +80,9 @@ static void formats(void)
     puts("    'U' = Yes, but may be unstable.");
     puts("    ' ' = No.");
     puts("");
-    printf("  Format   Read    Write   Description\n");
-    printf("|________|_______|_______|____________________________________________________|\n");
-    printf("|        |       |       |                                                    |\n");
+    puts("  Format   Read    Write   Description\n");
+    puts("|________|_______|_______|____________________________________________________|\n");
+    puts("|        |       |       |                                                    |\n");
 
     for (i=0; i<numberOfFormats; i++) {
         extension = formatTable[i].extension;
@@ -95,10 +95,10 @@ static void formats(void)
         printf("|  %-4s  |   %c   |   %c   |  %-49s |\n", extension, readerState, writerState, description);
     }
 
-    printf("|________|_______|_______|____________________________________________________|\n");
-    printf("|        |       |       |                                                    |\n");
+    puts("|________|_______|_______|____________________________________________________|\n");
+    puts("|        |       |       |                                                    |\n");
     printf("| Total: |  %3d  |  %3d  |                                                    |\n", numReaders, numWriters);
-    printf("|________|_______|_______|____________________________________________________|\n");
+    puts("|________|_______|_______|____________________________________________________|\n");
     puts("");
 }
 
@@ -108,19 +108,21 @@ static int convert(const char *inf, const char *outf)
     int formatType, reader, writer;
 
     p = embPattern_create();
-    if (!p) { 
-        embLog_error("convert(), cannot allocate memory for p\n");
+    if (!p) {
+        embLog("ERROR: convert(), cannot allocate memory for p\n");
         return 1;
     }
 
     reader = embReaderWriter_getByFileName(inf);
     if (reader < 0) {
-        embLog_error("convert(), unsupported read file type: %s\n", inf);
+        embLog("convert(), unsupported read file type:");
+        embLog(inf);
         embPattern_free(p);
         return 1;
     }
     if (!formatTable[reader].readerFunc(p, inf)) {
-        embLog_error("convert(), reading file was unsuccessful: %s\n", inf);
+        embLog("convert(), reading file was unsuccessful:");
+        embLog(inf);
         embPattern_free(p);
         return 1;
     }
@@ -135,12 +137,14 @@ static int convert(const char *inf, const char *outf)
 
     writer = embReaderWriter_getByFileName(outf);
     if (writer < 0) {
-        embLog_error("convert(), unsupported write file type: %s\n", outf);
+        embLog("convert(), unsupported write file type:");
+        embLog(outf);
         embPattern_free(p);
         return 1;
     }
-    if (!formatTable[writer].writerFunc(p, inf)) {
-        embLog_error("convert(), writing file %s was unsuccessful\n", outf);
+    if (!formatTable[writer].writerFunc(p, outf)) {
+        embLog("convert(), writing file was unsuccessful");
+        embLog(outf);
         embPattern_free(p);
         return 1;
     }

@@ -58,7 +58,7 @@ static unsigned char* vipDecompressData(unsigned char* input, int compressedInpu
     unsigned char* decompressedData = (unsigned char*)malloc(decompressedContentLength);
     if(!decompressedData)
     {
-        embLog_error("format-vip.c vipDecompressData(), cannot allocate memory for decompressedData\n");
+        embLog("ERROR: format-vip.c vipDecompressData(), cannot allocate memory for decompressedData\n");
         return 0;
     }
     husExpand((unsigned char*)input, decompressedData, compressedInputLength, 10);
@@ -94,8 +94,8 @@ int readVip(EmbPattern* pattern, const char* fileName)
     VipHeader header;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-vip.c readVip(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-vip.c readVip(), fileName argument is null\n"); return 0; }
+    if(!pattern) { embLog("ERROR: format-vip.c readVip(), pattern argument is null\n"); return 0; }
+    if(!fileName) { embLog("ERROR: format-vip.c readVip(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file) return 0;
@@ -117,7 +117,7 @@ int readVip(EmbPattern* pattern, const char* fileName)
     header.yOffset = binaryReadInt32(file);
 
     /*stringVal = (unsigned char*)malloc(sizeof(unsigned char)*8); TODO: review this and uncomment or remove
-        if(!stringVal) { embLog_error("format-vip.c readVip(), cannot allocate memory for stringVal\n"); return 0; }
+        if(!stringVal) { embLog("ERROR: format-vip.c readVip(), cannot allocate memory for stringVal\n"); return 0; }
      */
 
     binaryReadBytes(file, header.stringVal, 8); /* TODO: check return value */
@@ -126,7 +126,7 @@ int readVip(EmbPattern* pattern, const char* fileName)
 
     header.colorLength = binaryReadInt32(file);
     decodedColors = (unsigned char*)malloc(header.numberOfColors*4);
-    if(!decodedColors) { embLog_error("format-vip.c readVip(), cannot allocate memory for decodedColors\n"); return 0; }
+    if(!decodedColors) { embLog("ERROR: format-vip.c readVip(), cannot allocate memory for decodedColors\n"); return 0; }
     for(i = 0; i < header.numberOfColors*4; ++i)
     {
         unsigned char inputByte = binaryReadByte(file);
@@ -146,19 +146,19 @@ int readVip(EmbPattern* pattern, const char* fileName)
     }
     embFile_seek(file, header.attributeOffset, SEEK_SET);
     attributeData = (unsigned char*)malloc(header.xOffset - header.attributeOffset);
-    if(!attributeData) { embLog_error("format-vip.c readVip(), cannot allocate memory for attributeData\n"); return 0; }
+    if(!attributeData) { embLog("ERROR: format-vip.c readVip(), cannot allocate memory for attributeData\n"); return 0; }
     binaryReadBytes(file, attributeData, header.xOffset - header.attributeOffset); /* TODO: check return value */
     attributeDataDecompressed = vipDecompressData(attributeData, header.xOffset - header.attributeOffset, header.numberOfStitches);
 
     embFile_seek(file, header.xOffset, SEEK_SET);
     xData = (unsigned char*)malloc(header.yOffset - header.xOffset);
-    if(!xData) { embLog_error("format-vip.c readVip(), cannot allocate memory for xData\n"); return 0; }
+    if(!xData) { embLog("ERROR: format-vip.c readVip(), cannot allocate memory for xData\n"); return 0; }
     binaryReadBytes(file, xData, header.yOffset - header.xOffset); /* TODO: check return value */
     xDecompressed = vipDecompressData(xData, header.yOffset - header.xOffset, header.numberOfStitches);
 
     embFile_seek(file, header.yOffset, SEEK_SET);
     yData = (unsigned char*)malloc(fileLength - header.yOffset);
-    if(!yData) { embLog_error("format-vip.c readVip(), cannot allocate memory for yData\n"); return 0; }
+    if(!yData) { embLog("ERROR: format-vip.c readVip(), cannot allocate memory for yData\n"); return 0; }
     binaryReadBytes(file, yData, fileLength - header.yOffset); /* TODO: check return value */
     yDecompressed = vipDecompressData(yData, fileLength - header.yOffset, header.numberOfStitches);
 
@@ -188,7 +188,7 @@ static unsigned char* vipCompressData(unsigned char* input, int decompressedInpu
     unsigned char* compressedData = (unsigned char*)malloc(sizeof(unsigned char)*decompressedInputSize*2);
     if(!compressedData)
     {
-        embLog_error("format-vip.c vipCompressData(), cannot allocate memory for compressedData\n");
+        embLog("ERROR: format-vip.c vipCompressData(), cannot allocate memory for compressedData\n");
         return 0;
     }
     *compressedSize = husCompress(input, (unsigned long) decompressedInputSize, compressedData, 10, 0);

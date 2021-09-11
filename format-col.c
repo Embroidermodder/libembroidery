@@ -23,13 +23,13 @@ int readCol(EmbPattern* pattern, const char* fileName)
     embFile_readline(file, line, 30);
     numberOfColors = atoi(line);
     if (numberOfColors < 1) {
-        embLog_error("Number of colors is zero.");
+        embLog("ERROR: Number of colors is zero.");
         return 0;
     }
     for (i = 0; i < numberOfColors; i++) {
         embFile_readline(file, line, 30);
         if (strlen(line) < 1) {
-            embLog_error("Empty line in col file.");
+            embLog("ERROR: Empty line in col file.");
             return 0;
         }
         /* TODO: replace all scanf code */
@@ -60,7 +60,8 @@ int writeCol(EmbPattern* pattern, const char* fileName)
 
     file = fopen(fileName, "w");
     if (!file) {
-        embLog_error("format-col.c writeCol(), cannot open %s for writing\n", fileName);
+        embLog("ERROR: format-col.c writeCol(), cannot open %s for writing");
+        embLog(fileName);
         return 0;
     }
     fprintf(file, "%d\r\n", pattern->threads->count);

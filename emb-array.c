@@ -178,7 +178,7 @@ int embArray_addPath(EmbArray* p, EmbPathObject *path)
     if (!embArray_resize(p)) return 0;
     p->path[p->count - 1] = (EmbPathObject*)malloc(sizeof(EmbPathObject));
     if (!p->path[p->count - 1]) {
-        embLog_error("emb-polygon.c embArray_create(), cannot allocate memory for heapPolygonObj\n");
+        embLog("ERROR: emb-polygon.c embArray_create(), cannot allocate memory for heapPolygonObj\n");
         return 0;
     }
     p->path[p->count - 1] = path;
@@ -199,7 +199,7 @@ int embArray_addPolygon(EmbArray* p, EmbPolygonObject *polygon)
     if (!embArray_resize(p)) return 0;
     p->polygon[p->count - 1] = (EmbPolygonObject*)malloc(sizeof(EmbPolygonObject));
     if (!p->polygon[p->count - 1]) {
-        embLog_error("emb-polygon.c embArray_create(), cannot allocate memory for heapPolygonObj\n");
+        embLog("ERROR: emb-polygon.c embArray_create(), cannot allocate memory for heapPolygonObj\n");
         return 0;
     }
     p->polygon[p->count - 1] = polygon;
@@ -212,7 +212,7 @@ int embArray_addPolyline(EmbArray* p, EmbPolylineObject *polyline)
     if (!embArray_resize(p)) return 0;
     p->polyline[p->count - 1] = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
     if (!p->polyline[p->count - 1]) {
-        embLog_error("emb-polyline.c embArray_create(), cannot allocate memory for heapPolylineObj\n");
+        embLog("ERROR: emb-polyline.c embArray_create(), cannot allocate memory for heapPolylineObj\n");
         return 0;
     }
     p->polyline[p->count - 1] = polyline;

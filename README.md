@@ -64,15 +64,15 @@ Development
    1. Document all structs, macros and functions (will contribute directly on the web version).
    2. Make a texinfo/PDF user manual for embroider.
    3. Incorporate experimental code, improve support for language bindings.
-   4. Better integrate the EmbVector, EmbCircle etc. structs into functions that work with them throughout.
+   4. Make stitch x, y into an EmbVector.
 3. embroider CLI
    1. Incorporate convert tests into -test flag so we don't need emb-test.sh any more.
    2. Add building patterns using Imagemagick style filters and modifiers like -circle to add
       a circle to the current pattern.
    3. Make a list of flags that would be useful and describe their operation.
-      o -circle
-      o -rect
-      o -satin
+      * -circle
+      * -rect
+      * -satin
 4. Improve embedded compatibility.
    1. Remove reliance on slower, memory expensive parts of the C Standard Library that are in the main library,
       for example, not using printf, sprintf, fprintf etc. (Use embFile_puts.)

@@ -9,8 +9,8 @@ int readPhb(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     int i;
 
-    if(!pattern) { embLog_error("format-phb.c readPhb(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-phb.c readPhb(), fileName argument is null\n"); return 0; }
+    if(!pattern) { embLog("ERROR: format-phb.c readPhb(), pattern argument is null\n"); return 0; }
+    if(!fileName) { embLog("ERROR: format-phb.c readPhb(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file)

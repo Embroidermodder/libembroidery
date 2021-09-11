@@ -48,7 +48,7 @@ static int csvStrToStitchFlag(const char* str)
 {
     if(!str)
     {
-        embLog_error("format-csv.c csvStrToStitchFlag(), str argument is null\n");
+        embLog("ERROR: format-csv.c csvStrToStitchFlag(), str argument is null\n");
         return -1;
     }
     if(!strcmp(str, "STITCH"))
@@ -88,7 +88,7 @@ int readCsv(EmbPattern* pattern, const char* fileName)
     if (!validateReadPattern(pattern, fileName, "readCsv")) return 0;
 
     buff = (char*)malloc(size);
-    if (!buff) { embLog_error("format-csv.c readCsv(), unable to allocate memory for buff\n"); return 0; }
+    if (!buff) { embLog("ERROR: format-csv.c readCsv(), unable to allocate memory for buff\n"); return 0; }
 
     file = embFile_open(fileName, "r", 0);
     if (!file) return 0;
@@ -124,7 +124,7 @@ int readCsv(EmbPattern* pattern, const char* fileName)
                     }
                     else
                     {
-                        embLog_error("format-csv.c readCsv(), premature newline\n");
+                        embLog("ERROR: format-csv.c readCsv(), premature newline\n");
                         return 0;
                     }
                     break;
@@ -133,7 +133,7 @@ int readCsv(EmbPattern* pattern, const char* fileName)
             {
                 size *= 2;
                 buff = (char*)realloc(buff,size);
-                if(!buff) { embLog_error("format-csv.c readCsv(), cannot re-allocate memory for buff\n"); return 0; }
+                if(!buff) { embLog("ERROR: format-csv.c readCsv(), cannot re-allocate memory for buff\n"); return 0; }
             }
 
             if(process)
@@ -263,7 +263,7 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
     boundingRect = embPattern_calcBoundingBox(pattern);
 
     if (!stitchCount) {
-        embLog_error("format-csv.c writeCsv(), pattern contains no stitches\n");
+        embLog("ERROR: format-csv.c writeCsv(), pattern contains no stitches\n");
         return 0;
     }
 

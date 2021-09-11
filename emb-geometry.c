@@ -64,7 +64,7 @@ char getArcDataFromBulge(double bulge, EmbArc *arc, EmbVector* arcCenter,
                          double* sagitta, double* apothem,
                          double* incAngleInDegrees, char* clockwise)
 {
-    EmbVector chordVector, f, diff;
+    EmbVector f, diff;
     double incAngleInRadians;
     double chordAngleInRadians;
     double sagittaAngleInRadians;

@@ -104,31 +104,28 @@ static void formats(void)
 
 static int convert(const char *inf, const char *outf)
 {
-    EmbPattern* p = 0;
-    int formatType;
-    EmbReaderWriter* reader = 0, *writer = 0;
+    EmbPattern* p;
+    int formatType, reader, writer;
 
     p = embPattern_create();
-    if (!p) { 
+    if (!p) {
         embLog("ERROR: convert(), cannot allocate memory for p\n");
         return 1;
     }
 
     reader = embReaderWriter_getByFileName(inf);
-    if (!reader) {
-        embLog("ERROR: convert(), unsupported read file type:");
+    if (reader < 0) {
+        embLog("convert(), unsupported read file type:");
         embLog(inf);
         embPattern_free(p);
         return 1;
     }
-    if (!reader->reader(p, inf)) {
-        embLog("ERROR: convert(), reading file was unsuccessful:");
+    if (!formatTable[reader].readerFunc(p, inf)) {
+        embLog("convert(), reading file was unsuccessful:");
         embLog(inf);
-        free(reader);
         embPattern_free(p);
         return 1;
     }
-    free(reader);
 
     formatType = embFormat_typeFromName(inf);
     if (formatType == EMBFORMAT_OBJECTONLY) {
@@ -139,20 +136,18 @@ static int convert(const char *inf, const char *outf)
     }
 
     writer = embReaderWriter_getByFileName(outf);
-    if (!writer) {
-        embLog("ERROR: convert(), unsupported write file type:");
+    if (writer < 0) {
+        embLog("convert(), unsupported write file type:");
         embLog(outf);
         embPattern_free(p);
         return 1;
     }
-    if (!writer->writer(p, outf)) {
-        embLog("ERROR: convert(), writing file %s was unsuccessful");
+    if (!formatTable[writer].writerFunc(p, inf)) {
+        embLog("convert(), writing file was unsuccessful");
         embLog(outf);
-        free(writer);
         embPattern_free(p);
         return 1;
     }
-    free(writer);
     embPattern_free(p);
     return 0;
 }

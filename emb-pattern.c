@@ -333,19 +333,17 @@ void embPattern_changeColor(EmbPattern* p, int index)
  *  Returns \c true if successful, otherwise returns \c false. */
 int embPattern_read(EmbPattern* pattern, const char* fileName) /* TODO: Write test case using this convenience function. */
 {
-    EmbReaderWriter* reader = 0;
-    int result = 0;
+    int reader, result;
 
     if (!validateReadPattern(pattern, fileName, "embPattern_read")) return 0;
 
     reader = embReaderWriter_getByFileName(fileName);
-    if (!reader) {
-        embLog("ERROR: emb-pattern.c embPattern_read(), unsupported read file type:");
+    if (reader < 0) {
+        embLog("emb-pattern.c embPattern_read(), unsupported read file type:");
         embLog(fileName);
         return 0;
     }
-    result = reader->reader(pattern, fileName);
-    free(reader);
+    result = formatTable[reader].readerFunc(pattern, fileName);
     return result;
 }
 
@@ -353,19 +351,17 @@ int embPattern_read(EmbPattern* pattern, const char* fileName) /* TODO: Write te
  *  Returns \c true if successful, otherwise returns \c false. */
 int embPattern_write(EmbPattern* pattern, const char* fileName) /* TODO: Write test case using this convenience function. */
 {
-    EmbReaderWriter* writer = 0;
-    int result = 0;
+    int writer, result;
 
     if (!validateWritePattern(pattern, fileName, "embPattern_write")) return 0;
 
     writer = embReaderWriter_getByFileName(fileName);
-    if (!writer) {
+    if (writer < 0) {
         embLog("ERROR: emb-pattern.c embPattern_write(), unsupported write file type:");
         embLog(fileName);
         return 0;
     }
-    result = writer->writer(pattern, fileName);
-    free(writer);
+    result = formatTable[writer].writerFunc(pattern, fileName);
     return result;
 }
 
@@ -812,7 +808,7 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
 #endif /* ARDUINO */
 
     char hasRead = 0;
-    EmbReaderWriter* colorFile = 0;
+    int colorFile = 0;
     const char* dotPos = strrchr(fileName, '.');
     char* extractName = 0;
 
@@ -833,47 +829,26 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
     extractName = (char*)memcpy(extractName, fileName, dotPos - fileName);
     extractName[dotPos - fileName] = '\0';
     strcat(extractName, ".edr");
-    colorFile = embReaderWriter_getByFileName(extractName);
-    if (colorFile) {
-        hasRead = (char)colorFile->reader(p, extractName);
-    }
+    hasRead = (char)formatTable[EMB_FORMAT_EDR].readerFunc(p, extractName);
     if (!hasRead) {
-        free(colorFile);
-        colorFile = 0;
         extractName = (char*)memcpy(extractName, fileName, dotPos - fileName);
         extractName[dotPos - fileName] = '\0';
         strcat(extractName, ".rgb");
-        colorFile = embReaderWriter_getByFileName(extractName);
-        if (colorFile) {
-            hasRead = (char)colorFile->reader(p, extractName);
-        }
+        hasRead = (char)formatTable[EMB_FORMAT_RGB].readerFunc(p, extractName);
     }
     if (!hasRead) {
-        free(colorFile);
-        colorFile = 0;
         extractName = (char*)memcpy(extractName, fileName, dotPos - fileName);
         extractName[dotPos - fileName] = '\0';
         strcat(extractName, ".col");
-        colorFile = embReaderWriter_getByFileName(extractName);
-        if (colorFile) {
-            hasRead = (char)colorFile->reader(p, extractName);
-        }
+        hasRead = (char)formatTable[EMB_FORMAT_COL].readerFunc(p, extractName);
     }
     if (!hasRead) {
-        free(colorFile);
-        colorFile = 0;
         extractName = (char*)memcpy(extractName, fileName, dotPos - fileName);
         extractName[dotPos - fileName] = '\0';
         strcat(extractName, ".inf");
-        colorFile = embReaderWriter_getByFileName(extractName);
-        if (colorFile) {
-            hasRead = (char)colorFile->reader(p, extractName);
-        }
+        hasRead = (char)formatTable[EMB_FORMAT_INF].readerFunc(p, extractName);
     }
-    free(colorFile);
-    colorFile = 0;
     free(extractName);
-    extractName = 0;
 }
 
 /*! Frees all memory allocated in the pattern (\a p). */

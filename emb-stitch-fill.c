@@ -587,12 +587,12 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
     int intermediateOutlineCount = 2 * lines->count - 2;
     outline.side1 = embArray_create(EMB_VECTOR);
     if (!outline.side1) {
-        embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for outline->side1\n");
+        embLog("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for outline->side1\n");
         return;
     }
     outline.side2 = embArray_create(EMB_VECTOR);
     if (!outline.side2) {
-        embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for outline->side2\n");
+        embLog("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for outline->side2\n");
         return;
     }
 
@@ -621,17 +621,17 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
     }
 
     if (!result) {
-        embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), result argument is null\n");
+        embLog("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), result argument is null\n");
         return;
     }
     result->side1 = embArray_create(EMB_VECTOR);
     if (!result->side1) {
-        embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side1\n");
+        embLog("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side1\n");
         return;
     }
     result->side2 = embArray_create(EMB_VECTOR);
     if (!result->side2) {
-        embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side2\n");
+        embLog("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side2\n");
         return;
     }
 
@@ -669,7 +669,7 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density
     EmbArray* stitches = 0;
 
     if (!result) {
-        embLog_error("emb-satin-line.c embSatinOutline_renderStitches(), result argument is null\n");
+        embLog("ERROR: emb-satin-line.c embSatinOutline_renderStitches(), result argument is null\n");
         return 0;
     }
 

@@ -14,7 +14,7 @@ static void pcdEncode(EmbFile* file, int dx, int dy, int flags)
 {
     unsigned char flagsToWrite = 0;
 
-    if(!file) { embLog_error("format-pcd.c pcdEncode(), file argument is null\n"); return; }
+    if(!file) { embLog("ERROR: format-pcd.c pcdEncode(), file argument is null\n"); return; }
 
     binaryWriteByte(file, (unsigned char)0);
     binaryWriteByte(file, (unsigned char)(dx & 0xFF));

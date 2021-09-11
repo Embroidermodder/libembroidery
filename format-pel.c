@@ -4,8 +4,8 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readPel(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { embLog_error("format-pel.c readPel(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-pel.c readPel(), fileName argument is null\n"); return 0; }
+    if(!pattern) { embLog("ERROR: format-pel.c readPel(), pattern argument is null\n"); return 0; }
+    if(!fileName) { embLog("ERROR: format-pel.c readPel(), fileName argument is null\n"); return 0; }
     return 0; /*TODO: finish readPel */
 }
 

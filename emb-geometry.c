@@ -286,7 +286,7 @@ void embVector_normalVector(EmbVector dir, EmbVector* result, int clockwise)
 void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise)
 {
     if (!result) {
-        embLog_error("emb-line.c embLine_normalVector(), result argument is null\n");
+        embLog("ERROR: emb-line.c embLine_normalVector(), result argument is null\n");
         return;
     }
     embVector_subtract(line.end, line.end, result);
@@ -311,12 +311,12 @@ unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector*
     det = embVector_cross(D1, D2);
 
     if (!result) {
-        embLog_error("emb-line.c embLine_intersectionPoint(), result argument is null\n");
+        embLog("ERROR: emb-line.c embLine_intersectionPoint(), result argument is null\n");
         return 0;
     }
     /*TODO: The code below needs revised since division by zero can still occur */
     if (fabs(det) < tolerence) {
-        embLog_error("Intersecting lines cannot be parallel.\n");
+        embLog("ERROR: Intersecting lines cannot be parallel.\n");
         return 0;
     }
     result->x = D2.x * C.x - D1.x * C.y;
@@ -405,7 +405,7 @@ void embVector_normalize(EmbVector vector, EmbVector* result)
     length = embVector_getLength(vector);
 
     if (!result) {
-        embLog_error("emb-vector.c embVector_normalize(), result argument is null\n");
+        embLog("ERROR: emb-vector.c embVector_normalize(), result argument is null\n");
         return;
     }
     result->x = vector.x / length;
@@ -419,7 +419,7 @@ void embVector_normalize(EmbVector vector, EmbVector* result)
 void embVector_multiply(EmbVector vector, double magnitude, EmbVector* result)
 {
     if (!result) {
-        embLog_error("emb-vector.c embVector_multiply(), result argument is null\n");
+        embLog("ERROR: emb-vector.c embVector_multiply(), result argument is null\n");
         return;
     }
     result->x = vector.x * magnitude;
@@ -432,7 +432,7 @@ void embVector_multiply(EmbVector vector, double magnitude, EmbVector* result)
 void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog_error("emb-vector.c embVector_add(), result argument is null\n");
+        embLog("ERROR: emb-vector.c embVector_add(), result argument is null\n");
         return;
     }
     result->x = v1.x + v2.x;
@@ -445,7 +445,7 @@ void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result)
 void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog_error("emb-vector.c embVector_add(), result argument is null\n");
+        embLog("ERROR: emb-vector.c embVector_add(), result argument is null\n");
         return;
     }
     result->x = (v1.x + v2.x) / 2.0;
@@ -458,7 +458,7 @@ void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result)
 void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog_error("emb-vector.c embVector_subtract(), result argument is null\n");
+        embLog("ERROR: emb-vector.c embVector_subtract(), result argument is null\n");
         return;
     }
     result->x = v1.x - v2.x;
@@ -500,7 +500,7 @@ double embVector_distance(EmbVector v1, EmbVector v2)
 void embVector_transposeProduct(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog_error("emb-vector.c embVector_transpose_product(), result argument is null\n");
+        embLog("ERROR: emb-vector.c embVector_transpose_product(), result argument is null\n");
         return;
     }
     result->x = v1.x * v2.x;

@@ -17,7 +17,7 @@ int readPlt(EmbPattern* pattern, const char* fileName)
     file = fopen(fileName, "rb");
     if(!file)
     {
-        embLog_error("format-plt.c readPlt(), cannot open %s for reading\n", fileName);
+        embLog_print("ERROR: format-plt.c readPlt(), cannot open %s for reading\n", fileName);
         return 0;
     }
 
@@ -59,14 +59,17 @@ int writePlt(EmbPattern* pattern, const char* fileName)
     EmbStitch stitch;
     int i;
     char firstStitchOfBlock = 1;
-    FILE* file = 0;
+    EmbFile* file;
 
     if (!validateWritePattern(pattern, fileName, "writePlt")) {
         return 0;
     }
 
-    fprintf(file, "IN;");
-    fprintf(file, "ND;");
+    file = embFile_open(fileName, "wb", 0);
+    if (!file) return 0;
+
+    embFile_puts(file, "IN;");
+    embFile_puts(file, "ND;");
 
     for (i=0; i<pattern->stitchList->count; i++) {
         stitch = pattern->stitchList->stitch[i];
@@ -74,22 +77,22 @@ int writePlt(EmbPattern* pattern, const char* fileName)
             firstStitchOfBlock = 1;
         }
         if (firstStitchOfBlock) {
-            fprintf(file, "PU%f,%f;", stitch.x * scalingFactor, stitch.y * scalingFactor);
-            fprintf(file, "ST0.00,0.00;");
-            fprintf(file, "SP0;");
-            fprintf(file, "HT0;");
-            fprintf(file, "HS0;");
-            fprintf(file, "TT0;");
-            fprintf(file, "TS0;");
+            embFile_printf(file, "PU%f,%f;", stitch.x * scalingFactor, stitch.y * scalingFactor);
+            embFile_puts(file, "ST0.00,0.00;");
+            embFile_puts(file, "SP0;");
+            embFile_puts(file, "HT0;");
+            embFile_puts(file, "HS0;");
+            embFile_puts(file, "TT0;");
+            embFile_puts(file, "TS0;");
             firstStitchOfBlock = 0;
         }
         else {
             fprintf(file, "PD%f,%f;", stitch.x * scalingFactor, stitch.y * scalingFactor);
         }
     }
-    fprintf(file, "PU0.0,0.0;");
-    fprintf(file, "PU0.0,0.0;");
-    fclose(file);
+    embFile_puts(file, "PU0.0,0.0;");
+    embFile_puts(file, "PU0.0,0.0;");
+    embFile_close(file);
     return 1; /*TODO: finish WritePlt */
 }
 

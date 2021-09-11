@@ -142,7 +142,7 @@ static int convert(const char *inf, const char *outf)
         embPattern_free(p);
         return 1;
     }
-    if (!formatTable[writer].writerFunc(p, inf)) {
+    if (!formatTable[writer].writerFunc(p, outf)) {
         embLog("convert(), writing file was unsuccessful");
         embLog(outf);
         embPattern_free(p);

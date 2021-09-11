@@ -781,7 +781,8 @@ int svgIsXmlAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsXmlAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsXmlAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -804,7 +805,8 @@ int svgIsLinkAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsLinkAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsLinkAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -824,7 +826,8 @@ int svgIsAnimateAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsAnimateAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsAnimateAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -846,7 +849,8 @@ int svgIsAnimateColorAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsAnimateColorAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsAnimateColorAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -866,7 +870,8 @@ int svgIsAnimateMotionAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsAnimateMotionAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsAnimateMotionAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -886,7 +891,8 @@ int svgIsAnimateTransformAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsAnimateTransformAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsAnimateTransformAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -909,7 +915,8 @@ int svgIsAnimationAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsAnimationAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsAnimationAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -928,7 +935,8 @@ int svgIsAudioAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsAudioAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsAudioAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -947,7 +955,8 @@ int svgIsCircleAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsCircleAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsCircleAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -961,7 +970,8 @@ int svgIsDefsAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsDefsAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsDefsAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -976,7 +986,8 @@ int svgIsDescAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsDescAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsDescAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -993,7 +1004,8 @@ int svgIsDiscardAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsDiscardAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsDiscardAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1011,7 +1023,8 @@ int svgIsEllipseAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsEllipseAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsEllipseAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1026,7 +1039,8 @@ int svgIsFontAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsFontAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsFontAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1047,7 +1061,8 @@ int svgIsFontFaceAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsFontFaceAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsFontFaceAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1061,7 +1076,8 @@ int svgIsFontFaceSrcAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsFontFaceSrcAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsFontFaceSrcAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1078,7 +1094,8 @@ int svgIsFontFaceUriAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsFontFaceUriAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsFontFaceUriAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1099,7 +1116,8 @@ int svgIsForeignObjectAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsForeignObjectAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsForeignObjectAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1118,7 +1136,8 @@ int svgIsGroupAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsGroupAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsGroupAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1133,7 +1152,8 @@ int svgIsGlyphAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsGlyphAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsGlyphAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1149,7 +1169,8 @@ int svgIsHandlerAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsHandlerAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsHandlerAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1163,7 +1184,8 @@ int svgIsHKernAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
     
-    embLog_print("format-svg.c svgIsHKernAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsHKernAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1184,7 +1206,8 @@ int svgIsImageAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsImageAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsImageAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1202,7 +1225,8 @@ int svgIsLineAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsLineAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsLineAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1216,7 +1240,8 @@ int svgIsLinearGradientAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsLinearGradientAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsLinearGradientAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1231,7 +1256,8 @@ int svgIsListenerAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsListenerAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsListenerAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1246,7 +1272,8 @@ int svgIsMetadataAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsMetadataAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsMetadataAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1260,7 +1287,8 @@ int svgIsMissingGlyphAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsMissingGlyphAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsMissingGlyphAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1275,7 +1303,8 @@ int svgIsMPathAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsMPathAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsMPathAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1294,7 +1323,8 @@ int svgIsPathAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsPathAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsPathAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1312,7 +1342,8 @@ int svgIsPolygonAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsPolygonAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsPolygonAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1330,7 +1361,8 @@ int svgIsPolylineAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsPolylineAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsPolylineAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1347,7 +1379,8 @@ int svgIsPrefetchAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsPrefetchAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsPrefetchAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1361,7 +1394,8 @@ int svgIsRadialGradientAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsRadialGradientAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsRadialGradientAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1380,7 +1414,8 @@ int svgIsRectAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsRectAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsRectAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1396,7 +1431,8 @@ int svgIsScriptAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsScriptAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsScriptAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1414,9 +1450,22 @@ int svgIsSetAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsSetAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsSetAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
+
+#define SVG_SOLIDCOLOR_ATTRIBUTE  1
+#define SVG_STOP_ATTRIBUTE        2
+#define SVG_SVG_ATTRIBUTE        2
+#define SVG_SWITCH_ATTRIBUTE     3
+#define SVG_TBREAK_ATTRIBUTE     4
+#define SVG_TEXT_ATTRIBUTE       5
+#define SVG_TEXTAREA_ATTRIBUTE   6
+#define SVG_TITLE_ATTRIBUTE      7
+#define SVG_TSPAN_ATTRIBUTE      8
+#define SVG_USE_ATTRIBUTE        9
+#define SVG_VIDEO_ATTRIBUTE      10
 
 int svgIsSolidColorAttribute(const char* buff)
 {
@@ -1428,7 +1477,8 @@ int svgIsSolidColorAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsSolidColorAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsSolidColorAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1442,7 +1492,8 @@ int svgIsStopAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsStopAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsStopAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1470,7 +1521,8 @@ int svgIsSvgAttribute(const char* buff)
             return SVG_ATTRIBUTE;
     }
 
-    embLog_print("format-svg.c svgIsSvgAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsSvgAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1489,7 +1541,8 @@ int svgIsSwitchAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsSwitchAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsSwitchAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1504,7 +1557,8 @@ int svgIsTBreakAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsTBreakAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsTBreakAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1522,7 +1576,8 @@ int svgIsTextAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsTextAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsTextAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1541,7 +1596,8 @@ int svgIsTextAreaAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsTextAreaAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsTextAreaAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1556,14 +1612,10 @@ int svgIsTitleAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsTitleAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsTitleAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
-
-#define SVG_TITLE_ATTRIBUTE   7
-#define SVG_TSPAN_ATTRIBUTE   8
-#define SVG_USE_ATTRIBUTE     9
-#define SVG_VIDEO_ATTRIBUTE   10
 
 int svgIsTSpanAttribute(const char* buff)
 {
@@ -1579,7 +1631,8 @@ int svgIsTSpanAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsTSpanAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsTSpanAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1599,7 +1652,8 @@ int svgIsUseAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsUseAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsUseAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 
@@ -1623,7 +1677,8 @@ int svgIsVideoAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsVideoAttribute(), unknown: %s\n", buff);
+    embLog("format-svg.c svgIsVideoAttribute(), unknown:");
+    embLog(buff);
     return SVG_NULL;
 }
 

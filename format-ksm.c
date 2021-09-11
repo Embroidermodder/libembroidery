@@ -4,7 +4,7 @@ static void ksmEncode(unsigned char* b, char dx, char dy, int flags)
 {
     if(!b)
     {
-        embLog_error("format-ksm.c ksmEncode(), b argument is null\n");
+        embLog("ERROR: format-ksm.c ksmEncode(), b argument is null\n");
         return;
     }
     /* TODO: How to encode JUMP stitches? JUMP must be handled. Also check this for the EXP format since it appears to be similar */

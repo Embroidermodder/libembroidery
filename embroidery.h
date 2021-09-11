@@ -586,7 +586,6 @@ void bcf_file_free(bcf_file* bcfFile);
 
 EMB_PUBLIC void embLog(const char* str);
 EMB_PUBLIC void embLog_print(const char* format, ...);
-EMB_PUBLIC void embLog_error(const char* format, ...);
 
 EMB_PUBLIC void embTime_initNow(EmbTime* t);
 EMB_PUBLIC EmbTime embTime_time(EmbTime* t);

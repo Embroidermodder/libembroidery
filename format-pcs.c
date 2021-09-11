@@ -14,7 +14,7 @@ static void pcsEncode(EmbFile* file, int dx, int dy, int flags)
 {
     unsigned char flagsToWrite = 0;
 
-    if(!file) { embLog_error("format-pcs.c pcsEncode(), file argument is null\n"); return; }
+    if(!file) { embLog("ERROR: format-pcs.c pcsEncode(), file argument is null\n"); return; }
 
     binaryWriteByte(file, (unsigned char)0);
     binaryWriteByte(file, (unsigned char)(dx & 0xFF));
@@ -49,8 +49,8 @@ int readPcs(EmbPattern* pattern, const char* fileName)
     unsigned short colorCount;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-pcs.c readPcs(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-pcs.c readPcs(), fileName argument is null\n"); return 0; }
+    if(!pattern) { embLog("ERROR: format-pcs.c readPcs(), pattern argument is null\n"); return 0; }
+    if(!fileName) { embLog("ERROR: format-pcs.c readPcs(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file)

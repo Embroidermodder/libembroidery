@@ -379,12 +379,12 @@ char* emb_strdup(char* src)
 {
     char* dest = 0;
     if (!src) {
-        embLog_error("helpers-misc.c emb_strdup(), src argument is null\n");
+        embLog("ERROR: helpers-misc.c emb_strdup(), src argument is null\n");
         return 0;
     }
     dest = (char*)malloc(strlen(src) + 1);
     if (!dest) {
-        embLog_error("helpers-misc.c emb_strdup(), cannot allocate memory\n");
+        embLog("ERROR: helpers-misc.c emb_strdup(), cannot allocate memory\n");
     } else {
         strcpy(dest, src);
     }
@@ -466,23 +466,6 @@ void embLog_print(const char* format, ...)
     inoLog_serial(buff);
 #else /* ARDUINO */
     printf(buff);
-#endif /* ARDUINO */
-}
-
-/* serious errors */
-void embLog_error(const char* format, ...)
-{
-    /* TODO: log debug message in struct for later use */
-    char buff[256];
-    va_list args;
-    va_start(args, format);
-    vsprintf(buff, format, args);
-    va_end(args);
-#ifdef ARDUINO
-    inoLog_serial("ERROR: ");
-    inoLog_serial(buff);
-#else /* ARDUINO */
-    fprintf("ERROR: %s", buff);
 #endif /* ARDUINO */
 }
 

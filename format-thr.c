@@ -50,8 +50,8 @@ int readThr(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     EmbThread thread;
 
-    if(!pattern) { embLog_error("format-thr.c readThr(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-thr.c readThr(), fileName argument is null\n"); return 0; }
+    if(!pattern) { embLog("ERROR: format-thr.c readThr(), pattern argument is null\n"); return 0; }
+    if(!fileName) { embLog("ERROR: format-thr.c readThr(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file)

@@ -14,7 +14,7 @@ static double maxDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 
 static void maxEncode(EmbFile* file, int x, int y)
 {
-    if(!file) { embLog_error("format-max.c maxEncode(), file argument is null\n"); return; }
+    if(!file) { embLog("ERROR: format-max.c maxEncode(), file argument is null\n"); return; }
 
     binaryWriteByte(file, (unsigned char)0);
     binaryWriteByte(file, (unsigned char)(x & 0xFF));

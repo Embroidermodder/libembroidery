@@ -2086,7 +2086,10 @@ int readSvg(EmbPattern* pattern, const char* fileName)
 }
 
 /*! Optimizes the number (\a num) for output to a text file and writes
- *  it to the EmbFile* \a file */
+ *  it to the EmbFile* \a file
+ *
+ *  TODO: replace varadic function sprintf for embedded compatibility.
+ */
 static void writeDouble(EmbFile *file, double num)
 {
     char str[32];

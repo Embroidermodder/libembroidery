@@ -243,7 +243,7 @@ void embPattern_addStitchAbs(EmbPattern* p, double x, double y, int flags, int i
     EmbStitch s, h;
     EmbVector home;
 
-    if (!p) {
+    if (!p || !p->stitchList) {
         embLog("ERROR: emb-pattern.c embPattern_addStitchAbs(), p argument is null\n");
         return;
     }
@@ -395,7 +395,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     boundingRect.top = 0;
     boundingRect.bottom = 0;
 
-    if (!p) {
+    if (!p || !p->stitchList) {
         embLog("ERROR: emb-pattern.c embPattern_calcBoundingBox(), p argument is null\n");
         return boundingRect;
     }
@@ -476,7 +476,10 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     if (p->points) {
         for (i = 0; i < p->points->count; i++) {
             EmbVector point = p->points->point[i].point;
-            /* TODO: embPattern_calcBoundingBox for points */
+            boundingRect.left = embMinDouble(boundingRect.left, point.x);
+            boundingRect.top = embMinDouble(boundingRect.top, point.y);
+            boundingRect.right = embMaxDouble(boundingRect.right, point.x);
+            boundingRect.bottom = embMaxDouble(boundingRect.bottom, point.y);
         }
     }
 
@@ -878,7 +881,7 @@ void embPattern_free(EmbPattern* p)
  * Units are in millimeters. */
 void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r)
 {
-    EmbCircle circle = { cx, cy, r };
+    EmbCircle circle = { {cx, cy}, r };
 
     if (!p) {
         embLog("ERROR: emb-pattern.c embPattern_addCircleObjectAbs(), p argument is null\n");

@@ -80,7 +80,7 @@ char getArcDataFromBulge(double bulge, EmbArc *arc, EmbVector* arcCenter,
     incAngleInRadians = atan(bulge)*4.0;
 
     embVector_subtract(arc->end, arc->start, &chordVector);
-    *chord = embVector_getLength(diff);
+    *chord = embVector_getLength(chordVector);
 
     *radius = fabs(*chord / (2.0 * sin(incAngleInRadians / 2.0)));
     *diameter = *radius * 2.0;

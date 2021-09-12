@@ -31,7 +31,7 @@ Special values for Stream Identifiers
 
 /* TODO: This list needs reviewed in case some stitch formats also can contain object data (EMBFORMAT_STCHANDOBJ). */
 
-EmbFormatList formatTable[100] = {
+const EmbFormatList formatTable[100] = {
     {".10o", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY, read100, write100},
     {".100", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY, read10o, write10o},
     {".art", "Bernina Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY, readArt, writeArt},
@@ -121,8 +121,8 @@ const unsigned int sizeOfFatEntry = sizeof(unsigned int);
 static const unsigned int sizeOfDifatEntry = 4;
 static const unsigned int sizeOfChainingEntryAtEndOfDifatSector = 4;
 static const unsigned int sizeOfDirectoryEntry = 128;
-static const int supportedMinorVersion = 0x003E;
-static const int littleEndianByteOrderMark = 0xFFFE;
+/* static const int supportedMinorVersion = 0x003E;
+static const int littleEndianByteOrderMark = 0xFFFE; */
 
 /**
  * Argument validator and stitchList checker.
@@ -250,7 +250,7 @@ char embFile_getc(EmbFile* stream)
 
 void embFile_readline(EmbFile* stream, char *line, int maxLength)
 {
-    int state = 0, i;
+    int i;
     char c;
     for (i=0; i<maxLength-1; i++) {
         c = embFile_getc(stream);

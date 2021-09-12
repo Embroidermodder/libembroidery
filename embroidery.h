@@ -508,7 +508,6 @@ EMB_PUBLIC int embArray_addPath(EmbArray* g, EmbPathObject *p);
 EMB_PUBLIC int embArray_addPoint(EmbArray* g, EmbPointObject *p);
 EMB_PUBLIC int embArray_addPolygon(EmbArray* g, EmbPolygonObject *p);
 EMB_PUBLIC int embArray_addPolyline(EmbArray* g, EmbPolylineObject *p);
-EMB_PUBLIC int embArray_addSpline(EmbArray* g, EmbSplineObject *p);
 EMB_PUBLIC int embArray_addStitch(EmbArray* g, double x, double y, int, int);
 EMB_PUBLIC int embArray_addThread(EmbArray* g, EmbThread p);
 EMB_PUBLIC int embArray_addVector(EmbArray* g, EmbVector);
@@ -517,10 +516,6 @@ EMB_PUBLIC void embArray_free(EmbArray* p);
 EMB_PUBLIC EmbLine embLine_make(EmbVector start, EmbVector end);
 EMB_PUBLIC void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise);
 EMB_PUBLIC unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector* result);
-
-EMB_PUBLIC EmbPathObject* embPathObject_create(
-    EmbArray* pointList, EmbArray* flagList, EmbColor color, int lineType);
-EMB_PUBLIC void embPathObject_free(EmbPathObject* pointer);
 
 EMB_PUBLIC void embVector_normalize(EmbVector vector, EmbVector* result);
 EMB_PUBLIC void embVector_multiply(EmbVector vector, double magnitude, EmbVector* result);
@@ -597,7 +592,6 @@ void husExpand(unsigned char* input, unsigned char* output, int compressedSize, 
 int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _267, int _269, int _235);
 
 EMB_PUBLIC EmbArcObject embArcObject_make(EmbVector s, EmbVector m, EmbVector e);
-EMB_PUBLIC EmbArcObject* embArcObject_create(EmbVector s, EmbVector m, EmbVector e);
 
 char isArcClockwise(EmbArc arc);
 void getArcCenter(EmbArc arc, EmbVector *arcCenter);
@@ -650,20 +644,10 @@ EMB_PUBLIC void embLog_print(const char* format, ...);
 EMB_PUBLIC void embTime_initNow(EmbTime* t);
 EMB_PUBLIC EmbTime embTime_time(EmbTime* t);
 
-EMB_PUBLIC EmbPointObject embPointObject_make(double x, double y);
-EMB_PUBLIC EmbPointObject* embPointObject_create(double x, double y);
-
 EMB_PUBLIC EmbSettings embSettings_init(void);
 
 EMB_PUBLIC EmbVector embSettings_home(EmbSettings* settings);
 EMB_PUBLIC void embSettings_setHome(EmbSettings* settings, EmbVector point);
-
-EMB_PUBLIC EmbPolygonObject* embPolygonObject_create(
-    EmbArray* pointList, EmbColor color, int lineType);
-EMB_PUBLIC void embPolygonObject_free(EmbPolygonObject* pointer);
-EMB_PUBLIC EmbPolylineObject* embPolylineObject_create(
-    EmbArray* pointList, EmbColor color, int lineType);
-EMB_PUBLIC void embPolylineObject_free(EmbPolylineObject* pointer);
 
 EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbArray* lines, double thickness, EmbSatinOutline* result);
 EMB_PUBLIC EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density);
@@ -850,7 +834,7 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* filename);
 /* NON-MACRO CONSTANTS
  ******************************************************************************/
 
-EMB_PUBLIC extern EmbFormatList formatTable[];
+EMB_PUBLIC extern const EmbFormatList formatTable[];
 EMB_PUBLIC extern int numberOfFormats;
 extern const unsigned int NumberOfDifatEntriesInHeader;
 extern const int pecThreadCount;

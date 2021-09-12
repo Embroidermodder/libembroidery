@@ -430,7 +430,7 @@ EmbTime embTime_time(EmbTime* t)
     t->hour = timeinfo->tm_hour;
     t->minute = timeinfo->tm_min;
     t->second = timeinfo->tm_sec;
-    return t;
+    return *t;
 #endif /* ARDUINO */
 }
 

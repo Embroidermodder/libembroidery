@@ -2341,13 +2341,14 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     embFile_puts(file, "<svg ");
 
     /* TODO: See the SVG Tiny Version 1.2 Specification Section 7.14.
-    *       Until all of the formats and API is stable, the width, height and viewBox attributes need to be left unspecified.
-    *       If the attribute values are incorrect, some applications wont open it at all.
+     *       Until all of the formats and API is stable, the width, height and viewBox attributes need to be left unspecified.
+     *       If the attribute values are incorrect, some applications wont open it at all.
+     */
     embFile_printf(file, "viewBox=\"%f %f %f %f\" ",
             boundingRect.left,
             boundingRect.top,
             embRect_width(boundingRect),
-            embRect_height(boundingRect)); */
+            embRect_height(boundingRect));
 
     embFile_puts(file, "xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\">");
 

@@ -8,25 +8,13 @@
 # Then it outputs machine-compatable stitch files should the dev
 # wish to run those tests on a machine.
 
-function gdb_wrap () {
-gdb --batch -ex=r --args $@ &>> test.log
-}
-
 function build_debug () {
 rm -fr build
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Debug .. &> test.log
 make &>> test.log
-}
-
-function test_suite () {
-build_debug
-gdb_wrap ./embroider ../test01.csv test01.svg
-gdb_wrap ./embroider ../test02.csv test02.svg
-gdb_wrap ./embroider ../test01.csv test01.dst
-gdb_wrap ./embroider ../test02.csv test02.dst
-gdb_wrap ./embroider -test
+gdb --batch -ex=r --args ./embroider -test &>> test.log
 }
 
 function valgrind_report () {
@@ -56,4 +44,4 @@ cat ./_memleak.txt | ../valgrind-supp/./valgrind-create-suppressions.sh > _memle
 valgrind_report
 }
 
-test_suite
+build_debug

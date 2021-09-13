@@ -17,6 +17,8 @@ static int testThreadColor(void);
 static void report(int result, char *label);
 static void testMain(void);
 static int convert(const char *inf, const char *outf);
+static int create_test_file_1(const char *outf);
+static int create_test_file_2(const char *outf);
 
 static const char version_string[] = "embroider v0.1";
 
@@ -100,6 +102,73 @@ static void formats(void)
     printf("| Total: |  %3d  |  %3d  |                                                    |\n", numReaders, numWriters);
     puts("|________|_______|_______|____________________________________________________|\n");
     puts("");
+}
+
+static int create_test_file_1(const char *outf)
+{
+    int i;
+    EmbPattern* p;
+    EmbStitch st;
+
+    p = embPattern_create();
+    if (!p) {
+        embLog("ERROR: convert(), cannot allocate memory for p\n");
+        return 1;
+    }
+
+    /* 10mm circle */
+    for (i=0; i<100; i++) {
+        st.x = 10+10*sin(i*(0.5/embConstantPi));
+        st.y = 10+10*cos(i*(0.5/embConstantPi));
+        st.flags = NORMAL;
+        st.color = 0;
+        embArray_addStitch(p->stitchList, st);
+    }
+
+    EmbThread thr = {{0,0,0}, "Black", "Black"};
+    embArray_addThread(p->threads, thr);
+
+    if (!writeCsv(p, outf)) {
+        embPattern_free(p);
+        return 1;
+    }
+
+    embPattern_free(p);
+    return 0;
+}
+
+
+static int create_test_file_2(const char *outf)
+{
+    int i;
+    EmbPattern* p;
+    EmbStitch st;
+
+    p = embPattern_create();
+    if (!p) {
+        embLog("ERROR: convert(), cannot allocate memory for p\n");
+        return 1;
+    }
+
+    /* sin wave */
+    for (i=0; i<100; i++) {
+        st.x = 10+10*sin(i*(0.5/embConstantPi));
+        st.y = 10+i*0.1;
+        st.flags = NORMAL;
+        st.color = 0;
+        embArray_addStitch(p->stitchList, st);
+    }
+
+    EmbThread thr = {{0,0,0}, "Black", "Black"};
+    embArray_addThread(p->threads, thr);
+
+    if (!writeCsv(p, outf)) {
+        embPattern_free(p);
+        return 1;
+    }
+
+    embPattern_free(p);
+    return 0;
 }
 
 static int convert(const char *inf, const char *outf)
@@ -420,6 +489,12 @@ static void testMain(void)
     int threadResult = testThreadColor();
     int formatResult = testEmbFormat();
     int arcResult = testGeomArc();
+    int create1Result = create_test_file_1("test01.csv");
+    int create2Result = create_test_file_2("test02.csv");
+    int svg1Result = convert("test01.csv", "test01.svg");
+    int svg2Result = convert("test02.csv", "test02.svg");
+    int dst1Result = convert("test01.csv", "test01.dst");
+    int dst2Result = convert("test02.csv", "test02.dst");
 
     puts("SUMMARY OF RESULTS");
     puts("------------------");
@@ -428,5 +503,11 @@ static void testMain(void)
     report(threadResult, "Thread");
     report(formatResult, "Format");
     report(arcResult, "Arc");
+    report(create1Result, "Create CSV 1");
+    report(create2Result, "Create CSV 2");
+    report(svg1Result, "Convert CSV-SVG 1");
+    report(svg2Result, "Convert CSV-SVG 2");
+    report(dst1Result, "Convert CSV-DST 1");
+    report(dst2Result, "Convert CSV-DST 2");
 }
 

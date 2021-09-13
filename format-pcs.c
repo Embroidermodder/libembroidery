@@ -129,7 +129,6 @@ int writePcs(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     int i = 0;
     unsigned char colorCount = 0;
-    double xx = 0.0, yy = 0.0;
 
     if (!validateWritePattern(pattern, fileName, "writePcs")) {
         return 0;
@@ -157,7 +156,6 @@ int writePcs(EmbPattern* pattern, const char* fileName)
 
     binaryWriteUShort(file, (unsigned short)pattern->stitchList->count);
     /* write stitches */
-    xx = yy = 0;
     for (i=0; i<pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
         pcsEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);

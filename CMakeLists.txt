@@ -86,6 +86,10 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")
 add_library(embroidery_static STATIC
     ${LIBRARY_SOURCE_FILES}
 )
+
+#compile SWIG if requested
+add_subdirectory(experimental)
+
 add_library(embroidery SHARED
     ${LIBRARY_SOURCE_FILES}
 )

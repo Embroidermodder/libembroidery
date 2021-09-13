@@ -421,6 +421,7 @@ EmbTime embTime_time(EmbTime* t)
     /*TODO: wrap time() from time.h and verify it works consistently */
 
 #endif /* ARDUINO */
+    return *t;
 }
 
 /* Converts a 6 digit hex string (I.E. "00FF00") into an

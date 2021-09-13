@@ -116,7 +116,7 @@ int embPolygon_breakIntoSeparateObjects(EmbStitchBlock* blocks)
                 dy = GetRelativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
                 dy2 = GetRelativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
                 dy3 = GetRelativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
-                //if(dy)
+                /* if(dy) */
                 if (sa.Stitches[i - 1].Type == VectorStitchType.Run || sa.Stitches[i + 1].Type == VectorStitchType.Run)
                 {
                     sa.Stitches[i].Type = VectorStitchType.Tatami;
@@ -153,7 +153,7 @@ StitchObject * FindOutline(EmbStitchBlock* stitchData)
                     float dy = GetRelativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
                     float dy2 = GetRelativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
                     float dy3 = GetRelativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
-                    //if(dy)
+                    /* if(dy) */
                     if (sa.Stitches[i - 1].Type == VectorStitchType.Run || sa.Stitches[i + 1].Type == VectorStitchType.Run)
                     {
                         sa.Stitches[i].Type = VectorStitchType.Tatami;
@@ -182,7 +182,7 @@ StitchObject * FindOutline(EmbStitchBlock* stitchData)
         yield return so;
         pEven = new List<Point>();
         pOdd = new List<Point>();
-        //break;
+        /* break; */
     }
 }
 
@@ -200,7 +200,7 @@ EmbPattern DrawGraphics(EmbPattern p)
         }
     }
     */
-    //var xxxxx = outBlock;
+    /* var xxxxx = outBlock; */
     var objectsFound = FindOutline(stitchData);
     var outPattern = new Pattern();
     outPattern.AddColor(new Thread(255, 0, 0, "none", "None"));
@@ -561,8 +561,10 @@ int embPolygon_reduceByNth(EmbArray *vertices, int nth)
 
 void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, EmbSatinOutline* result)
 {
-    int i;
+    int i, j;
     EmbSatinOutline outline;
+    EmbVector v1, temp;
+    EmbLine line, line1, line2;
     double halfThickness = thickness / 2.0;
     int intermediateOutlineCount = 2 * lines->count - 2;
     outline.side1 = embArray_create(EMB_VECTOR);
@@ -577,11 +579,7 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
     }
 
     for (i = 1; i < lines->count; i++) {
-        int j = (i - 1) * 2;
-        EmbVector v1;
-        EmbVector temp;
-
-        EmbLine line;
+        j = (i - 1) * 2;
         line.start = lines->vector[j - 1];
         line.end = lines->vector[j];
 
@@ -618,22 +616,20 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
     embArray_addVector(result->side1, outline.side1->vector[0]);
     embArray_addVector(result->side2, outline.side2->vector[0]);
 
-    EmbLine line1, line2;
-    EmbVector out;
     for (i = 3; i < intermediateOutlineCount; i += 2) {
         line1.start = outline.side1->vector[i - 3];
         line1.end = outline.side1->vector[i - 2];
         line2.start = outline.side1->vector[i - 1];
         line2.end = outline.side1->vector[i];
-        embLine_intersectionPoint(line1, line2, &out);
-        embArray_addVector(result->side1, out);
+        embLine_intersectionPoint(line1, line2, &temp);
+        embArray_addVector(result->side1, temp);
 
         line1.start = outline.side2->vector[i - 3];
         line1.end = outline.side2->vector[i - 2];
         line2.start = outline.side2->vector[i - 1];
         line2.end = outline.side2->vector[i];
-        embLine_intersectionPoint(line1, line2, &out);
-        embArray_addVector(result->side2, out);
+        embLine_intersectionPoint(line1, line2, &temp);
+        embArray_addVector(result->side2, temp);
     }
 
     embArray_addVector(result->side1, outline.side1->vector[2 * lines->count - 3]);
@@ -643,10 +639,11 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
 
 EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density)
 {
-    int i, j;
+    int i, j, numberOfSteps;
     EmbVector currTop, currBottom, topDiff, bottomDiff, midDiff;
     EmbVector midLeft, midRight, topStep, bottomStep;
     EmbArray* stitches = 0;
+    double midLength;
 
     if (!result) {
         embLog("ERROR: emb-satin-line.c embSatinOutline_renderStitches(), result argument is null\n");
@@ -662,9 +659,9 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density
             embVector_average(result->side1->vector[j+1], result->side2->vector[j+1], &midRight);
 
             embVector_subtract(midLeft, midRight, &midDiff);
-            double midLength = embVector_getLength(midDiff);
+            midLength = embVector_getLength(midDiff);
 
-            int numberOfSteps = (int)(midLength * density / 200);
+            numberOfSteps = (int)(midLength * density / 200);
             embVector_multiply(topDiff, 1.0/numberOfSteps, &topStep);
             embVector_multiply(bottomDiff, 1.0/numberOfSteps, &bottomStep);
             currTop = result->side1->vector[j];

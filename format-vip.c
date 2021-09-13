@@ -223,20 +223,14 @@ static unsigned char vipEncodeStitchType(int st)
 int writeVip(EmbPattern* pattern, const char* fileName)
 {
     EmbRect boundingRect;
-    int stitchCount, minColors, patternColor;
-    int attributeSize = 0;
-    int xCompressedSize = 0;
-    int yCompressedSize = 0;
-    double previousX = 0;
-    double previousY = 0;
-    unsigned char* xValues = 0, *yValues = 0, *attributeValues = 0;
+    int stitchCount, minColors, patternColor, attributeSize = 0,
+        xCompressedSize = 0, yCompressedSize = 0;
+    EmbVector previous;
     EmbStitch st;
-    double xx = 0.0;
-    double yy = 0.0;
-    int flags = 0;
-    int i;
-    unsigned char* attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0, *decodedColors = 0, *encodedColors = 0;
-    unsigned char prevByte = 0;
+    int flags = 0, i;
+    unsigned char* xValues, *yValues, *attributeValues, *attributeCompressed = 0,
+        *xCompressed = 0, *yCompressed = 0, *decodedColors = 0, *encodedColors = 0,
+        prevByte = 0;
     EmbFile* file = 0;
 
     if (!validateWritePattern(pattern, fileName, "writeVip"))
@@ -277,12 +271,14 @@ int writeVip(EmbPattern* pattern, const char* fileName)
     yValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
     attributeValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
     if(xValues && yValues && attributeValues) {
+        previous.x = 0.0;
+        previous.y = 0.0;
         for (i=0; i<pattern->stitchList->count; i++) {
             st = pattern->stitchList->stitch[i];
-            xValues[i] = vipEncodeByte((st.x - previousX) * 10.0);
-            previousX = st.x;
-            yValues[i] = vipEncodeByte((st.y - previousY) * 10.0);
-            previousY = st.y;
+            xValues[i] = vipEncodeByte((st.x - previous.x) * 10.0);
+            yValues[i] = vipEncodeByte((st.y - previous.y) * 10.0);
+            previous.x = st.x;
+            previous.y = st.y;
             attributeValues[i] = vipEncodeStitchType(st.flags);
         }
         attributeCompressed = vipCompressData(attributeValues, stitchCount, &attributeSize);
@@ -324,16 +320,16 @@ int writeVip(EmbPattern* pattern, const char* fileName)
         binaryWriteBytes(file, (char*) yCompressed, yCompressedSize);
     }
 
-    if(attributeCompressed) { free(attributeCompressed); attributeCompressed = 0; }
-    if(xCompressed) { free(xCompressed); xCompressed = 0; }
-    if(yCompressed) { free(yCompressed); yCompressed = 0; }
+    if (attributeCompressed) free(attributeCompressed);
+    if (xCompressed) free(xCompressed);
+    if (yCompressed) free(yCompressed);
 
-    if(attributeValues) { free(attributeValues); attributeValues = 0; }
-    if(xValues) { free(xValues); xValues = 0; }
-    if(yValues) { free(yValues); yValues = 0; }
+    if (attributeValues) free(attributeValues);
+    if (xValues) free(xValues);
+    if (yValues) free(yValues);
 
-    if(decodedColors) { free(decodedColors); decodedColors = 0; }
-    if(encodedColors) { free(encodedColors); encodedColors = 0; }
+    if (decodedColors) free(decodedColors);
+    if (encodedColors) free(encodedColors);
 
     embFile_close(file);
     return 1;

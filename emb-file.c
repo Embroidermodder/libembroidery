@@ -601,11 +601,14 @@ bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntr
 EmbTime parseTime(EmbFile* file)
 {
     EmbTime returnVal;
+#if 0
     unsigned int ft_low, ft_high;
     /*embTime_time(&returnVal); TODO: use embTime_time() rather than time(). */
     ft_low = binaryReadInt32(file);
     ft_high = binaryReadInt32(file);
     /* TODO: translate to actual date time */
+#endif
+    returnVal.year = 1000; /* for testing */
     return returnVal;
 }
 

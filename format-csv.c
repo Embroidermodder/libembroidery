@@ -255,7 +255,7 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
     int stitchCount = 0;
     int threadCount = 0;
 
-    if (validateReadPattern(pattern, fileName, "writeCsv")) return 0;
+    if (!validateReadPattern(pattern, fileName, "writeCsv")) return 0;
 
     stitchCount = pattern->stitchList->count;
     threadCount = pattern->threads->count;

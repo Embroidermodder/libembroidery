@@ -508,7 +508,7 @@ EMB_PUBLIC int embArray_addPath(EmbArray* g, EmbPathObject *p);
 EMB_PUBLIC int embArray_addPoint(EmbArray* g, EmbPointObject *p);
 EMB_PUBLIC int embArray_addPolygon(EmbArray* g, EmbPolygonObject *p);
 EMB_PUBLIC int embArray_addPolyline(EmbArray* g, EmbPolylineObject *p);
-EMB_PUBLIC int embArray_addStitch(EmbArray* g, double x, double y, int, int);
+EMB_PUBLIC int embArray_addStitch(EmbArray* g, EmbStitch st);
 EMB_PUBLIC int embArray_addThread(EmbArray* g, EmbThread p);
 EMB_PUBLIC int embArray_addVector(EmbArray* g, EmbVector);
 EMB_PUBLIC void embArray_free(EmbArray* p);

@@ -222,6 +222,13 @@ int embArray_addPolyline(EmbArray* p, EmbPolylineObject *polyline)
 int embArray_addRect(EmbArray* p,
     EmbRect rect, int lineType, EmbColor color)
 {
+    if (!p) {
+        p = embArray_create(EMB_RECT);
+        if (!p) {
+            return 0;
+        }
+    }
+
     p->count++;
     if (!embArray_resize(p)) return 0;
     p->rect[p->count - 1].rect = rect;
@@ -230,15 +237,17 @@ int embArray_addRect(EmbArray* p,
     return 1;
 }
 
-int embArray_addStitch(EmbArray* p,
-    double x, double y, int flag, int color)
+int embArray_addStitch(EmbArray* p, EmbStitch st)
 {
+    if (!p) {
+        p = embArray_create(EMB_STITCH);
+        if (!p) {
+            return 0;
+        }
+    }
     p->count++;
     if (!embArray_resize(p)) return 0;
-    p->stitch[p->count - 1].x = x;
-    p->stitch[p->count - 1].y = y;
-    p->stitch[p->count - 1].flags = flag;
-    p->stitch[p->count - 1].color = color;
+    p->stitch[p->count - 1] = st;
     return 1;
 }
 
@@ -252,6 +261,12 @@ int embArray_addThread(EmbArray* p, EmbThread thread)
 
 int embArray_addVector(EmbArray* p, EmbVector vector)
 {
+    if (!p) {
+        p = embArray_create(EMB_VECTOR);
+        if (!p) {
+            return 0;
+        }
+    }
     p->count++;
     if (!embArray_resize(p)) return 0;
     p->vector[p->count - 1] = vector;

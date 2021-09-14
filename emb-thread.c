@@ -1,6 +1,7 @@
 #include "embroidery.h"
 #include <string.h>
 #include <math.h>
+#include <stdlib.h>
 
 /**
  * Returns the closest color to the required color based on

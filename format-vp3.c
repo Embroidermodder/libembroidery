@@ -158,7 +158,7 @@ int readVp3(EmbPattern* pattern, const char* fileName)
     anotherSoftwareVendorString = vp3ReadString(file);
 
     numberOfColors = binaryReadInt16BE(file);
-    embLog_print("ERROR: format-vp3.c Number of Colors: %d\n", numberOfColors);
+    embLog("ERROR: format-vp3.c Number of Colors: %d\n" /*, numberOfColors */);
     colorSectionOffset = (int)embFile_tell(file);
 
     for(i = 0; i < numberOfColors; i++)
@@ -170,9 +170,9 @@ int readVp3(EmbPattern* pattern, const char* fileName)
         int unknownThreadString, numberOfBytesInColor;
 
         embFile_seek(file, colorSectionOffset, SEEK_SET);
-        embLog_print("ERROR: format-vp3.c Color Check Byte #1: 0 == %d\n", binaryReadByte(file));
-        embLog_print("ERROR: format-vp3.c Color Check Byte #2: 5 == %d\n", binaryReadByte(file));
-        embLog_print("ERROR: format-vp3.c Color Check Byte #3: 0 == %d\n", binaryReadByte(file));
+        embLog("ERROR: format-vp3.c Color Check Byte #1: 0 == %d\n" /*, binaryReadByte(file)*/);
+        embLog("ERROR: format-vp3.c Color Check Byte #2: 5 == %d\n" /*, binaryReadByte(file)*/);
+        embLog("ERROR: format-vp3.c Color Check Byte #3: 0 == %d\n" /*, binaryReadByte(file)*/);
         colorSectionOffset = binaryReadInt32BE(file);
         colorSectionOffset += embFile_tell(file);
         startX = binaryReadInt32BE(file);
@@ -258,7 +258,7 @@ void vp3PatchByteCount(EmbFile* file, int offset, int adjustment)
 {
   int currentPos = embFile_tell(file);
   embFile_seek(file, offset, SEEK_SET);
-  embLog_print("Patching byte count: %d\n", currentPos - offset + adjustment);
+  embLog("Patching byte count: \n" /*, currentPos - offset + adjustment */);
   binaryWriteIntBE(file, currentPos - offset + adjustment);
   embFile_seek(file, currentPos, SEEK_SET);
 }
@@ -395,7 +395,7 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
         }
 
         s = pattern->stitchList->stitch[i];
-        embLog_print("format-vp3.c DEBUG %d, %lf, %lf\n", s.flags, s.x, s.y);
+        embLog("format-vp3.c DEBUG %d, %lf, %lf\n" /*, s.flags, s.x, s.y */);
         binaryWriteIntBE(file, s.x * 1000);
         binaryWriteIntBE(file, -s.y * 1000);
         /* pointer = pointer->next; */
@@ -409,7 +409,7 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
         binaryWriteByte(file, 1);
         binaryWriteByte(file, 0);
 
-        embLog_print("format-vp3.c writeVp3(), switching to color (%d, %d, %d)\n", color.r, color.g, color.b);
+        embLog("format-vp3.c writeVp3(), switching to color (%d, %d, %d)\n" /*, color.r, color.g, color.b */);
         binaryWriteByte(file, color.r);
         binaryWriteByte(file, color.g);
         binaryWriteByte(file, color.b);

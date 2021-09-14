@@ -153,9 +153,6 @@ typedef struct EmbFile_
 #define EMBFORMAT_OBJECTONLY    2
 #define EMBFORMAT_STCHANDOBJ    3 /* binary operation: 1+2=3 */
 
-#define EMBFORMAT_MAXEXT        3  /* maximum length of extension without dot */
-#define EMBFORMAT_MAXDESC       50  /* the longest possible description string length */
-
 
 /* STRUCTS
  *****************************************************************************/
@@ -268,6 +265,11 @@ typedef struct EmbArray_ EmbArray;
 /**
  * Does it make sense to have lineType for a point?
  */
+/**
+ * The "Object" typedefs are remarkably similar throughout,
+ * could we have a single GeometryObject type that mimics the
+ * .
+ */
 typedef struct EmbPointObject_
 {
     EmbVector point;
@@ -275,12 +277,18 @@ typedef struct EmbPointObject_
     EmbColor color;
 } EmbPointObject;
 
+/**
+ * TODO: documentation.
+ */
 typedef struct EmbLine_
 {
     EmbVector start;
     EmbVector end;
 } EmbLine;
 
+/**
+ * TODO: documentation.
+ */
 typedef struct EmbLineObject_
 {
     EmbLine line;
@@ -288,12 +296,18 @@ typedef struct EmbLineObject_
     EmbColor color;
 } EmbLineObject;
 
+/**
+ * Is this used anywhere?
+ */
 typedef struct EmbLayer_
 {
     EmbColor color;
     const char* name;
 } EmbLayer;
 
+/**
+ * 
+ */
 typedef struct EmbPathObject_
 {
     EmbArray* pointList;
@@ -310,12 +324,39 @@ typedef struct EmbStitch_
     int color; /* color number for this stitch */ /* TODO: this should be called colorIndex since it is not an EmbColor */
 } EmbStitch;
 
+/**
+ * Improving the size of the stored data for embedded systems.
+ * 
+ * Store thread colors as:
+ *     "\xFF\xFF\xFF" "1001" "Pure White"
+ *
+ * Since the color is always three characters, it doesn't need to be
+ * stored with a spacing character. No manufacturer code takes more than
+ * 4 chars in the current set, so we can pad them all to 4 char.
+ *
+ * Then zero termination sorts out the variable length of the string.
+ *
+ * That means that we have a single string for each data.
+ *
+ * This requires reworking the embThread functions.
+ *
+ * It also removes the need for either struct.
+ */
 typedef struct EmbThread_
 {
     EmbColor color;
     const char* description;
     const char* catalogNumber;
 } EmbThread;
+
+/**
+ * TODO: this should be merged with the EmbThread.
+ */
+typedef struct thread_color_ {
+    const char *name;
+    unsigned int hex_code;
+    int manufacturer_code;
+} thread_color;
 
 typedef struct EmbHoop_
 {
@@ -324,12 +365,6 @@ typedef struct EmbHoop_
 } EmbHoop;
 
 typedef EmbHashTable EmbHash;
-
-typedef struct thread_color_ {
-    char name[20];
-    unsigned int hex_code;
-    int manufacturer_code;
-} thread_color;
 
 typedef struct EmbEllipse_
 {
@@ -479,8 +514,8 @@ typedef struct EmbPattern_
 
 typedef struct EmbFormatList_
 {
-    char extension[2 + EMBFORMAT_MAXEXT];
-    char description[EMBFORMAT_MAXDESC];
+    char *extension;
+    char *description;
     char reader;
     char writer;
     int type;
@@ -561,13 +596,18 @@ extern int stringInArray(const char *s, const char **array);
 
 int roundDouble(double src);
 char startsWith(char* pre, char* str);
-
+void writeInt(EmbFile *, int, int);
+void writeFloat(EmbFile *, float);
 char* rTrim(char* str, char junk);
 char* lTrim(char* str, char junk);
 char *copy_trim(char *s);
 void inplace_trim(char *s);
 char* emb_optOut(double num, char* str);
 char* emb_strdup(char* src);
+
+void embPointerToArray(char *buffer, void* pointer, int maxDigits);
+void embIntToArray(char *buffer, int number, int maxDigits);
+void embFloatToArray(char *buffer, float number, float tolerence, int before, int after);
 
 EMB_PUBLIC EmbHash* embHash_create(void);
 EMB_PUBLIC void embHash_free(EmbHash* hash);
@@ -632,14 +672,13 @@ EMB_PUBLIC long embFile_tell(EmbFile* stream);
 EMB_PUBLIC EmbFile* embFile_tmpfile(void);
 EMB_PUBLIC int embFile_putc(int ch, EmbFile* stream);
 EMB_PUBLIC int embFile_puts(EmbFile* stream, char *);
-EMB_PUBLIC int embFile_printf(EmbFile* stream, const char* format, ...);
+EMB_PUBLIC void embFile_print(EmbFile* stream, const char*);
 
 int bcfFile_read(EmbFile* file, bcf_file* bcfFile);
 EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind);
 void bcf_file_free(bcf_file* bcfFile);
 
 EMB_PUBLIC void embLog(const char* str);
-EMB_PUBLIC void embLog_print(const char* format, ...);
 
 EMB_PUBLIC void embTime_initNow(EmbTime* t);
 EMB_PUBLIC EmbTime embTime_time(EmbTime* t);

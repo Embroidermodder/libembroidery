@@ -64,7 +64,7 @@
 #define SVG_ATTRIBUTE                  4
 #define SVG_CATCH_ALL                  5
 
-static void writeDouble(EmbFile *file, double num);
+static void writePoint(EmbFile *file, double x, double y, int space);
 static void writeColor(EmbFile *file, EmbColor color);
 static void writeCircles(EmbPattern *pattern, EmbFile *file);
 static void writeEllipse(EmbPattern *pattern, EmbFile *file);
@@ -2085,17 +2085,6 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     return 1; /*TODO: finish readSvg */
 }
 
-/*! Optimizes the number (\a num) for output to a text file and writes
- *  it to the EmbFile* \a file */
-static void writeDouble(EmbFile *file, double num)
-{
-    char str[32];
-    sprintf(str, "%.10f", num);
-    rTrim(str, '0');
-    rTrim(str, '.');
-    embFile_puts(file, str);
-}
-
 /**
  * Writes out a \a color to the EmbFile* \a file in hex format without using
  * printf or varadic functions (for embedded systems).
@@ -2112,19 +2101,28 @@ static void writeColor(EmbFile *file, EmbColor color)
     str[5] = hex[color.b%16];
     str[6] = hex[color.b/16];
     str[7] = 0;
-    embFile_puts(file, str);
+    embFile_print(file, str);
 }
 
 static void writePoint(EmbFile *file, double x, double y, int space)
 {
+    char buffer[30];
     if (space) {
-        embFile_puts(file, " ");    
+        embFile_print(file, " ");    
     }
-    writeDouble(file, x);
-    embFile_puts(file, ",");
-    writeDouble(file, y);
+    writeFloat(file, x);
+    embFile_print(file, ",");
+    writeFloat(file, y);
 }
 
+void writeFloat(EmbFile *file, float number)
+{
+    /* TODO: fix bugs in embFloatToArray */
+/*    char buffer[30];
+    embFloatToArray(buffer, number, 1.0e-7, 3, 5);
+    embFile_print(file, buffer);*/
+    fprintf(file, "%f", number);
+}
 
 static void writeCircles(EmbPattern *pattern, EmbFile *file)
 {
@@ -2136,14 +2134,15 @@ static void writeCircles(EmbPattern *pattern, EmbFile *file)
             circle = pattern->circles->circle[i].circle;
             color = pattern->circles->circle[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_puts(file, "\n<circle stroke-width=\"0.2\" stroke=\"");
+            embFile_print(file, "\n<circle stroke-width=\"0.2\" stroke=\"");
             writeColor(file, color);
-            embFile_puts(file, "\" fill=\"none\" cx=\"");
-            embFile_printf(file, "%f\" cy=\"%f\" r=\"%f",
-                        circle.center.x,
-                        circle.center.y,
-                        circle.radius);
-            embFile_puts(file, "\" />");
+            embFile_print(file, "\" fill=\"none\" cx=\"");
+            writeFloat(file, circle.center.x);
+            embFile_print(file, "\" cy=\"");
+            writeFloat(file, circle.center.y);
+            embFile_print(file, "\" r=\"");
+            writeFloat(file, circle.radius);
+            embFile_print(file, "\" />");
         }
     }
 }
@@ -2158,14 +2157,17 @@ static void writeEllipses(EmbPattern *pattern, EmbFile *file)
             ellipse = pattern->ellipses->ellipse[i].ellipse;
             color = pattern->ellipses->ellipse[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_printf(file, "\n<ellipse stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" rx=\"%f\" ry=\"%f\" />",
-                        color.r,
-                        color.g,
-                        color.b,
-                        ellipse.center.x,
-                        ellipse.center.y,
-                        ellipse.radius.x,
-                        ellipse.radius.y);
+            embFile_print(file, "\n<ellipse stroke-width=\"0.2\" stroke=\"");
+            writeColor(file, color);
+            embFile_print(file, "\" fill=\"none\" cx=\"");
+            writeFloat(file, ellipse.center.x);
+            embFile_print(file, "\" cy=\"");
+            writeFloat(file, ellipse.center.y);
+            embFile_print(file, "\" rx=\"");
+            writeFloat(file, ellipse.radius.x);
+            embFile_print(file, "\" ry=\"");
+            writeFloat(file, ellipse.radius.y);
+            embFile_print(file, "\" />");
         }
     }
 }
@@ -2180,10 +2182,17 @@ static void writeLines(EmbPattern *pattern, EmbFile *file)
             EmbLine line = pattern->lines->line[i].line;
             color = pattern->lines->line[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_printf(file,
-                "\n<line stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
-                color.r, color.g, color.b,
-                line.start.x, line.start.y, line.end.x, line.end.y);
+            embFile_print(file, "\n<line stroke-width=\"0.2\" stroke=\"");
+            writeColor(file, color);
+            embFile_print(file, "\" fill=\"none\" x1=\"");
+            writeFloat(file, line.start.x);
+            embFile_print(file, "\" y1=\"");
+            writeFloat(file, line.start.y);
+            embFile_print(file, "\" x2=\"");
+            writeFloat(file, line.end.x);
+            embFile_print(file, "\" y2=\"");
+            writeFloat(file, line.end.y);
+            embFile_print(file, "\" />");
         }
     }
 }
@@ -2201,10 +2210,17 @@ static void writePoints(EmbPattern *pattern, EmbFile *file)
              * Section 9.5 The 'line' element
              * Section C.6 'path' element implementation notes */
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_puts(file, "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
+            embFile_print(file, "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
             writeColor(file, color);
-            embFile_printf(file, "\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
-                point.x, point.y, point.x, point.y);
+            embFile_print(file, "\" fill=\"none\" x1=\"");
+            writeFloat(file, point.x);
+            embFile_print(file, "\" y1=\"");
+            writeFloat(file, point.y);
+            embFile_print(file, "\" x2=\"");
+            writeFloat(file, point.x);
+            embFile_print(file, "\" y2=\"");
+            writeFloat(file, point.y);
+            embFile_print(file, "\" />");
         }
     }
 }
@@ -2219,13 +2235,14 @@ static void writePolygons(EmbPattern *pattern, EmbFile *file)
             pointList = pattern->polygons->polygon[i]->pointList;
             color = pattern->polygons->polygon[i]->color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-                embFile_printf(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"",
-                    color.r, color.g, color.b);
+            embFile_print(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
+            writeColor(file, color);
+            embFile_print(file, "\" fill=\"none\" points=\"");
             writePoint(file, pointList->point[0].point.x, pointList->point[0].point.y, 0);
             for (j=1; j<pointList->count; j++) {
                 writePoint(file, pointList->point[j].point.x, pointList->point[j].point.y, 1);
             }
-            embFile_puts(file, "\"/>");
+            embFile_print(file, "\"/>");
         }
     }
 }
@@ -2240,14 +2257,14 @@ static void writePolylines(EmbPattern *pattern, EmbFile *file)
             pointList = pattern->polylines->polyline[i]->pointList;
             color = pattern->polylines->polyline[i]->color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_puts(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
+            embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
             writeColor(file, color);
-            embFile_puts(file, "\" fill=\"none\" points=\"");
+            embFile_print(file, "\" fill=\"none\" points=\"");
             writePoint(file, pointList->point[0].point.x, pointList->point[0].point.y, 0);
             for (j=1; j<pointList->count; j++) {
                 writePoint(file, pointList->point[j].point.x, pointList->point[j].point.y, 1);
             }
-            embFile_puts(file, "\"/>");
+            embFile_print(file, "\"/>");
         }
     }
 }
@@ -2262,17 +2279,17 @@ static void writeRects(EmbPattern *pattern, EmbFile *file)
             rect = pattern->rects->rect[i].rect;
             color = pattern->rects->rect[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_puts(file, "\n<rect stroke-width=\"0.2\" stroke=\"");
+            embFile_print(file, "\n<rect stroke-width=\"0.2\" stroke=\"");
             writeColor(file, color);
-            embFile_puts(file, "\" fill=\"none\" x=\"");
-            writeDouble(file, embRect_x(rect));
-            embFile_puts(file, "\" y=\"");
-            writeDouble(file, embRect_y(rect));
-            embFile_puts(file, "\" width=\"");
-            writeDouble(file, embRect_width(rect));
-            embFile_puts(file, "\" height=\"");
-            writeDouble(file, embRect_height(rect));
-            embFile_puts(file, "\" />");
+            embFile_print(file, "\" fill=\"none\" x=\"");
+            writeFloat(file, embRect_x(rect));
+            embFile_print(file, "\" y=\"");
+            writeFloat(file, embRect_y(rect));
+            embFile_print(file, "\" width=\"");
+            writeFloat(file, embRect_width(rect));
+            embFile_print(file, "\" height=\"");
+            writeFloat(file, embRect_height(rect));
+            embFile_print(file, "\" />");
         }
     }
 }
@@ -2294,9 +2311,9 @@ static void writeStitchList(EmbPattern *pattern, EmbFile *file)
                 isNormal = 1;
                 color = pattern->threads->thread[st.color].color;
                 /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-                embFile_puts(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
+                embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
                 writeColor(file, color);
-                embFile_puts(file, "\" fill=\"none\" points=\"");
+                embFile_print(file, "\" fill=\"none\" points=\"");
                 writePoint(file, st.x, st.y, 0);
             }
             else if(st.flags == NORMAL && isNormal)
@@ -2306,7 +2323,7 @@ static void writeStitchList(EmbPattern *pattern, EmbFile *file)
             else if(st.flags != NORMAL && isNormal)
             {
                 isNormal = 0;
-                embFile_puts(file, "\"/>");
+                embFile_print(file, "\"/>");
             }
         }
     }
@@ -2318,6 +2335,7 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file;
     EmbRect boundingRect;
+    char buffer[30];
 
     if (!pattern) {
         embLog("ERROR: format-svg.c writeSvg(), pattern argument is null.");
@@ -2335,22 +2353,24 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     embPattern_flipVertical(pattern);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
-    embFile_puts(file, "<?xml version=\"1.0\"?>\n");
-    embFile_puts(file, "<!-- Embroidermodder 2 SVG Embroidery File -->\n");
-    embFile_puts(file, "<!-- http://embroidermodder.github.io -->\n");
-    embFile_puts(file, "<svg ");
+    embFile_print(file, "<?xml version=\"1.0\"?>\n");
+    embFile_print(file, "<!-- Embroidermodder 2 SVG Embroidery File -->\n");
+    embFile_print(file, "<!-- http://embroidermodder.github.io -->\n");
+    embFile_print(file, "<svg ");
 
     /* TODO: See the SVG Tiny Version 1.2 Specification Section 7.14.
      *       Until all of the formats and API is stable, the width, height and viewBox attributes need to be left unspecified.
      *       If the attribute values are incorrect, some applications wont open it at all.
      */
-    embFile_printf(file, "viewBox=\"%f %f %f %f\" ",
-            boundingRect.left,
-            boundingRect.top,
-            embRect_width(boundingRect),
-            embRect_height(boundingRect));
-
-    embFile_puts(file, "xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\">");
+    embFile_print(file, "viewBox=\"");
+    writeFloat(file, boundingRect.left);
+    embFile_print(file, " ");
+    writeFloat(file, boundingRect.top);
+    embFile_print(file, " ");
+    writeFloat(file, embRect_width(boundingRect));
+    embFile_print(file, " ");
+    writeFloat(file, embRect_height(boundingRect));
+    embFile_print(file, "\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\">");
 
     /*TODO: Low Priority: Indent output properly. */
 
@@ -2363,7 +2383,7 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     writeRects(pattern, file);
     writeStitchList(pattern, file);
 
-    embFile_puts(file, "\n</svg>\n");
+    embFile_print(file, "\n</svg>\n");
     embFile_close(file);
 
     /* Reset the pattern so future writes(regardless of format) are not flipped */

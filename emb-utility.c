@@ -443,6 +443,109 @@ EmbColor embColor_fromHexStr(char* val)
     return color;
 }
 
+/* Replacing the %d in *printf functionality.
+ */
+void embPointerToArray(char *buffer, void* pointer, int maxDigits)
+{
+    unsigned int i, value;
+    value = (unsigned int)pointer;
+    for (i=0; i<maxDigits-1; i++) {
+        buffer[i] = ' ';
+    }
+    buffer[maxDigits-1] = 0;
+    for (; i>=0; i--) {
+        buffer[i] = (value % 16) - '0';
+        if (buffer[i]>'9') buffer[i] += 'A' - '9';
+        value /= 16;
+        if (value == 0) break;
+    }
+    buffer += i;
+}
+
+/* Replacing the %d in *printf functionality.
+ *
+ * Accounts for the sign of the 
+ */
+void embIntToArray(char *buffer, int number, int maxDigits)
+{
+    int i, j, sign;
+    unsigned int unumber;
+    sign = 0;
+    unumber = number;
+    if (number < 0.0) {
+        unumber = -number;
+        sign = 1;
+    }
+    for (i=0; i<maxDigits-2; i++) {
+        buffer[i] = ' ';
+    }
+    buffer[maxDigits-1] = 0;
+    for (i=maxDigits-2; i>=0; i--) {
+        printf("%s %d %d\n", buffer, i, number);
+        buffer[i] = (char)(number % 10) + '0';
+        number = number / 10;
+        if (number == 0) break;
+    }
+    if (sign) {
+        buffer[i] = '-';
+    }
+    /* left shift to the front of the buffer so the buffer doesn't change
+     * size in later use
+     */
+    for (j=0; j<maxDigits-i; j++) {
+        buffer[j] = buffer[i+j];
+    }
+}
+
+void writeInt(EmbFile *file, int n, int m)
+{
+    char buffer[30];
+    embIntToArray(buffer, n, m);
+    embFile_print(file, buffer);
+}
+
+/* Replacing the %f in *printf functionality.
+ */
+void embFloatToArray(char *buffer, float number, float tolerence, int before, int after)
+{
+    int i, maxDigits, j, empty;
+    float t;
+    float afterPos[] = {1.0e-1, 1.0e-2, 1.0e-3, 1.0e-4, 1.0e-5, 1.0e-6, 1.0e-7, 1.0e-8};
+    float beforePos[] = {1.0, 1.0e1, 1.0e2, 1.0e3, 1.0e4, 1.0e5, 1.0e6, 1.0e7, 1.0e8};
+    maxDigits = before + after + 1;
+    for (i=0; i<maxDigits-1; i++) {
+        buffer[i] = ' ';
+    }
+    buffer[maxDigits-1] = 0;
+    for (i=before-1; i>=0; i--) {
+        t = 0.0;
+        for (j=0; j<9; j++) {
+            t += beforePos[i];
+            printf("%s %d %d %f %f\n", buffer, i, j, t, number);
+            if ((number-tolerence>t)&&(t+beforePos[i]>number+tolerence)) {
+                buffer[before-1-i] = j + '1';
+                number -= (j+1)*beforePos[i];
+                break;
+            }
+        }
+    }
+    buffer[before] = '.';
+    for (i=0; i<after; i++) {
+        t = 0.0;
+        for (j=0; j<9; j++) {
+            t += afterPos[i];
+            printf("%s %d %d %f %f\n", buffer, i, j, t, number);
+            if ((number-tolerence>t)&&(t+afterPos[i]>number+tolerence)) {
+                buffer[before+1+i] = j + '1';
+                number -= (j+1)*afterPos[i];
+                break;
+            }
+        }
+    }
+    buffer[before+1+after] = 0;
+    lTrim(buffer, ' ');
+}
+
 /* puts() abstraction. Uses Serial.print() on ARDUINO */
 void embLog(const char* str)
 {
@@ -451,22 +554,6 @@ void embLog(const char* str)
     inoLog_serial("\n");
 #else /* ARDUINO */
     puts(str);
-#endif /* ARDUINO */
-}
-
-/* printf() abstraction. Uses Serial.print() on ARDUINO */
-void embLog_print(const char* format, ...)
-{
-    /* TODO: log debug message in struct for later use */
-    char buff[256];
-    va_list args;
-    va_start(args, format);
-    vsprintf(buff, format, args);
-    va_end(args);
-#ifdef ARDUINO
-    inoLog_serial(buff);
-#else /* ARDUINO */
-    printf(buff);
 #endif /* ARDUINO */
 }
 

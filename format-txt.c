@@ -24,11 +24,20 @@ int writeTxt(EmbPattern* pattern, const char* fileName)
     file = embFile_open(fileName, "w", 0);
     if (!file) return 0;
 
-    embFile_printf(file, "%u\n", (unsigned int)pattern->stitchList->count);
+    writeInt(file, pattern->stitchList->count, 6);
+    embFile_print(file, "\n");
 
     for (i=0; i<pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
-        embFile_printf(file, "%.1f,%.1f color:%i flags:%i\n", st.x, st.y, st.color, st.flags);
+        /* embFile_print(file, "%.1f,%.1f color:%i flags:%i\n", st.x, st.y, st.color, st.flags); */
+        writeFloat(file, st.x);
+        embFile_print(file, ",");
+        writeFloat(file, st.y);
+        embFile_print(file, " color:");
+        writeInt(file, st.color, 6);
+        embFile_print(file, " flags:");
+        writeInt(file, st.flags, 6);
+        embFile_print(file, "\n");
     }
 
     embFile_close(file);

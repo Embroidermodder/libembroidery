@@ -104,7 +104,7 @@ int writeKsm(EmbPattern* pattern, const char* fileName)
         ksmEncode(b, (char)(dx * 10.0), (char)(dy * 10.0), st.flags);
         embFile_write(b, 1, 2, file);
     }
-    embFile_printf(file, "\x1a");
+    embFile_print(file, "\x1a");
     embFile_close(file);
     return 1;
 }

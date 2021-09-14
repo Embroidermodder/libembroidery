@@ -72,7 +72,7 @@ int writeInf(EmbPattern* pattern, const char* fileName)
         binaryWriteByte(file, c.b);
         binaryWriteUShortBE(file, (unsigned short)i); /* needle number */
         binaryWriteBytes(file, "RGB\0", 4);
-        embFile_printf(file, buffer);
+        embFile_print(file, buffer);
         binaryWriteByte(file, 0);
     }
     embFile_seek(file, -8, SEEK_END);

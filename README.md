@@ -66,10 +66,9 @@ Development
    3. Incorporate experimental code, improve support for language bindings.
    4. Make stitch x, y into an EmbVector.
 3. embroider CLI
-   1. Incorporate convert tests into -test flag so we don't need emb-test.sh any more.
-   2. Add building patterns using Imagemagick style filters and modifiers like -circle to add
-      a circle to the current pattern.
-   3. Make a list of flags that would be useful and describe their operation.
+   1. Add building patterns using Imagemagick style filters and modifiers like -circle to add
+      a circle to the current pattern. (see embroider-main.c, needs a new file)
+   2. Make a list of flags that would be useful and describe their operation.
       * -circle
       * -rect
       * -satin

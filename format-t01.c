@@ -110,11 +110,11 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
 	/* cannot encode values > +121 or < -121. */
 	if (x > 121 || x < -121) {
 	    embLog("ERROR: format-t01.c encode_record(), x is not in valid range [-121,121] , x =");
-	    embLog_print("%d\n", x);
+	    /* embLog_print("%d\n", x); */
 	}
 	if (y > 121 || y < -121) {
 	    embLog("ERROR: format-t01.c encode_record(), y is not in valid range [-121,121] , y =");
-	    embLog_print("%d\n", y);
+	    /* embLog_print("%d\n", y); */
 	}
 
 	if (x >= +41) { b2 += setbit(2); x -= 81; }
@@ -127,7 +127,7 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
 	if (x <= -2) { b1 += setbit(1); x += 3; }
 	if (x >= +1) { b0 += setbit(0); x -= 1; }
 	if (x <= -1) { b0 += setbit(1); x += 1; }
-	if (x != 0) { embLog_print("ERROR: format-dst.c encode_record(), x should be zero yet x = %d\n", x); }
+	if (x != 0) { embLog("ERROR: format-dst.c encode_record(), x should be zero yet x = %d\n"); }
 	if (y >= +41) { b2 += setbit(5); y -= 81; }
 	if (y <= -41) { b2 += setbit(4); y += 81; }
 	if (y >= +14) { b1 += setbit(5); y -= 27; }
@@ -138,7 +138,7 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
 	if (y <= -2) { b1 += setbit(6); y += 3; }
 	if (y >= +1) { b0 += setbit(7); y -= 1; }
 	if (y <= -1) { b0 += setbit(6); y += 1; }
-	if (y != 0) { embLog_print("ERROR: format-dst.c encode_record(), y should be zero yet y = %d\n", y); }
+	if (y != 0) { embLog("ERROR: format-dst.c encode_record(), y should be zero yet y = %d\n"); }
 
 	b2 |= (char)3;
 

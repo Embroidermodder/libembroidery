@@ -4,7 +4,8 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readArt(EmbPattern* pattern, const char* fileName)
 {
-    if (!validateReadPattern(pattern, fileName, "readArt")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readArt"))
+        return 0;
 
     embPattern_end(pattern);
 
@@ -15,7 +16,8 @@ int readArt(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeArt(EmbPattern* pattern, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeArt")) return 0;
+    if (!validateWritePattern(pattern, fileName, "writeArt"))
+        return 0;
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 

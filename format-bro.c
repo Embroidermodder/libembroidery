@@ -10,10 +10,12 @@ int readBro(EmbPattern* pattern, const char* fileName)
     int stitchType;
     EmbFile* file;
 
-    if (!validateReadPattern(pattern, fileName, "readBro")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readBro"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
@@ -28,27 +30,20 @@ int readBro(EmbPattern* pattern, const char* fileName)
 
     embFile_seek(file, 0x100, SEEK_SET);
 
-    while(1)
-    {
+    while (1) {
         short b1, b2;
         stitchType = NORMAL;
         b1 = binaryReadByte(file);
         b2 = binaryReadByte(file);
-        if(b1 == -128)
-        {
+        if (b1 == -128) {
             unsigned char bCode = binaryReadByte(file);
             b1 = binaryReadInt16(file);
             b2 = binaryReadInt16(file);
-            if(bCode == 2)
-            {
+            if (bCode == 2) {
                 stitchType = STOP;
-            }
-            else if(bCode == 3)
-            {
+            } else if (bCode == 3) {
                 stitchType = TRIM;
-            }
-            else if(bCode == 0x7E)
-            {
+            } else if (bCode == 0x7E) {
                 embPattern_addStitchRel(pattern, 0, 0, END, 1);
                 break;
             }
@@ -66,7 +61,8 @@ int readBro(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeBro(EmbPattern* pattern, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeBro")) return 0;
+    if (!validateWritePattern(pattern, fileName, "writeBro"))
+        return 0;
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 

@@ -8,10 +8,11 @@ int readPes(EmbPattern* pattern, const char* fileName)
     int pecstart, numColors, x;
     EmbFile* file;
 
-    if (!validateReadPattern(pattern, fileName, "readPes")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readPes"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if(!file)
+    if (!file)
         return 0;
 
     embFile_seek(file, 8, SEEK_SET);
@@ -19,9 +20,8 @@ int readPes(EmbPattern* pattern, const char* fileName)
 
     embFile_seek(file, pecstart + 48, SEEK_SET);
     numColors = embFile_getc(file) + 1;
-    for(x = 0; x < numColors; x++)
-    {
-        embPattern_addThread(pattern, pecThreads[(unsigned char) embFile_getc(file)]);
+    for (x = 0; x < numColors; x++) {
+        embPattern_addThread(pattern, pecThreads[(unsigned char)embFile_getc(file)]);
     }
 
     embFile_seek(file, pecstart + 532, SEEK_SET);
@@ -373,11 +373,11 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
     binaryWriteShort(file, 0x07); /* string length */
     binaryWriteBytes(file, "CSewSeg", 7);
 
-    colorInfo = (short *) calloc(colorCount * 2, sizeof(short));
+    colorInfo = (short*)calloc(colorCount * 2, sizeof(short));
 
     colorCode = -1;
     blockCount = 0;
-    for (i=0; i<pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
         flag = st.flags;
         color = pattern->threads->thread[st.color].color;
@@ -388,8 +388,8 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
             colorCode = newColorCode;
         }
         /* TODO: check if this has an off-by-one error */
-        for (count=0; flag == st.flags; count++) {
-            st = pattern->stitchList->stitch[i+count];
+        for (count = 0; flag == st.flags; count++) {
+            st = pattern->stitchList->stitch[i + count];
         }
 
         /* 1 for jump, 0 for normal */
@@ -410,14 +410,12 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
         blockCount++;
     }
     binaryWriteShort(file, (short)colorCount);
-    for(i = 0; i < colorCount; i++)
-    {
+    for (i = 0; i < colorCount; i++) {
         binaryWriteShort(file, colorInfo[i * 2]);
         binaryWriteShort(file, colorInfo[i * 2 + 1]);
     }
     binaryWriteInt(file, 0);
-    if(colorInfo)
-    {
+    if (colorInfo) {
         free(colorInfo);
         colorInfo = 0;
     }
@@ -457,8 +455,7 @@ static void pesWriteEmbOneSection(EmbPattern* pattern, EmbFile* file)
     binaryWriteShort(file, (short)embRect_width(bounds));
     binaryWriteShort(file, (short)embRect_height(bounds));
 
-    for(i = 0; i < 8; i++)
-    {
+    for (i = 0; i < 8; i++) {
         binaryWriteByte(file, 0);
     }
 
@@ -477,7 +474,8 @@ int writePes(EmbPattern* pattern, const char* fileName)
     }
 
     file = embFile_open(fileName, "wb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embPattern_flipVertical(pattern);
     embPattern_scale(pattern, 10.0);

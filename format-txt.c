@@ -4,8 +4,14 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readTxt(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { embLog("ERROR: format-txt.c readTxt(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog("ERROR: format-txt.c readTxt(), fileName argument is null\n"); return 0; }
+    if (!pattern) {
+        embLog("ERROR: format-txt.c readTxt(), pattern argument is null\n");
+        return 0;
+    }
+    if (!fileName) {
+        embLog("ERROR: format-txt.c readTxt(), fileName argument is null\n");
+        return 0;
+    }
     return 0; /*TODO: finish readTxt */
 }
 
@@ -22,12 +28,13 @@ int writeTxt(EmbPattern* pattern, const char* fileName)
     }
 
     file = embFile_open(fileName, "w", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     writeInt(file, pattern->stitchList->count, 6);
     embFile_print(file, "\n");
 
-    for (i=0; i<pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
         /* embFile_print(file, "%.1f,%.1f color:%i flags:%i\n", st.x, st.y, st.color, st.flags); */
         writeFloat(file, st.x);

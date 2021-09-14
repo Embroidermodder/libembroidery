@@ -11,34 +11,32 @@ int readSst(EmbPattern* pattern, const char* fileName)
         return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if(!file)
+    if (!file)
         return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_seek(file, 0, SEEK_END);
     fileLength = embFile_tell(file);
     embFile_seek(file, 0xA0, SEEK_SET); /* skip the all zero header */
-    while(embFile_tell(file) < fileLength)
-    {
+    while (embFile_tell(file) < fileLength) {
         int stitchType = NORMAL;
 
-        int b1 = (int) binaryReadByte(file);
-        int b2 = (int) binaryReadByte(file);
+        int b1 = (int)binaryReadByte(file);
+        int b2 = (int)binaryReadByte(file);
         unsigned char commandByte = binaryReadByte(file);
 
-        if(commandByte == 0x04)
-        {
+        if (commandByte == 0x04) {
             embPattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
 
-        if((commandByte & 0x01) == 0x01)
+        if ((commandByte & 0x01) == 0x01)
             stitchType = STOP;
-        if((commandByte & 0x02) == 0x02)
+        if ((commandByte & 0x02) == 0x02)
             stitchType = JUMP;
-        if((commandByte & 0x10) != 0x10)
+        if ((commandByte & 0x10) != 0x10)
             b2 = -b2;
-        if((commandByte & 0x40) == 0x40)
+        if ((commandByte & 0x40) == 0x40)
             b1 = -b1;
         embPattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
     }
@@ -53,12 +51,13 @@ int readSst(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeSst(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile *file;
+    EmbFile* file;
     if (!validateWritePattern(pattern, fileName, "writeSst"))
         return 0;
 
     file = embFile_open(fileName, "wb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embFile_close(file);
     return 0; /*TODO: finish writeSst */

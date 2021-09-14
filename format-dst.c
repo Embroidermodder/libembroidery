@@ -5,22 +5,19 @@
 
 #include "embroidery.h"
 #include <math.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 static int decode_record_flags(unsigned char b2)
 {
     int returnCode = 0;
-    if(b2 == 0xF3)
-    {
+    if (b2 == 0xF3) {
         return END;
     }
-    if(b2 & 0x80)
-    {
+    if (b2 & 0x80) {
         returnCode |= JUMP;
     }
-    if(b2 & 0x40)
-    {
+    if (b2 & 0x40) {
         returnCode |= STOP;
     }
     return returnCode;
@@ -88,38 +85,103 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
     b0 = b1 = b2 = 0;
 
     /* cannot encode values > +121 or < -121. */
-    if(x > 121 || x < -121) embLog("ERROR: format-dst.c encode_record(), x is not in valid range [-121,121] , x =\n"); /* , x); */
-    if(y > 121 || y < -121) embLog("ERROR: format-dst.c encode_record(), y is not in valid range [-121,121] , y = \n"); /* , y); */
+    if (x > 121 || x < -121)
+        embLog("ERROR: format-dst.c encode_record(), x is not in valid range [-121,121] , x =\n"); /* , x); */
+    if (y > 121 || y < -121)
+        embLog("ERROR: format-dst.c encode_record(), y is not in valid range [-121,121] , y = \n"); /* , y); */
 
-    if(x >= +41) { b2 += setbit(2); x -= 81; }
-    if(x <= -41) { b2 += setbit(3); x += 81; }
-    if(x >= +14) { b1 += setbit(2); x -= 27; }
-    if(x <= -14) { b1 += setbit(3); x += 27; }
-    if(x >=  +5) { b0 += setbit(2); x -= 9; }
-    if(x <=  -5) { b0 += setbit(3); x += 9; }
-    if(x >=  +2) { b1 += setbit(0); x -= 3; }
-    if(x <=  -2) { b1 += setbit(1); x += 3; }
-    if(x >=  +1) { b0 += setbit(0); x -= 1; }
-    if(x <=  -1) { b0 += setbit(1); x += 1; }
-    if(x !=   0) { embLog("ERROR: format-dst.c encode_record(), x should be zero yet x = \n"); /*, x); */ }
-    if(y >= +41) { b2 += setbit(5); y -= 81; }
-    if(y <= -41) { b2 += setbit(4); y += 81; }
-    if(y >= +14) { b1 += setbit(5); y -= 27; }
-    if(y <= -14) { b1 += setbit(4); y += 27; }
-    if(y >=  +5) { b0 += setbit(5); y -= 9; }
-    if(y <=  -5) { b0 += setbit(4); y += 9; }
-    if(y >=  +2) { b1 += setbit(7); y -= 3; }
-    if(y <=  -2) { b1 += setbit(6); y += 3; }
-    if(y >=  +1) { b0 += setbit(7); y -= 1; }
-    if(y <=  -1) { b0 += setbit(6); y += 1; }
-    if(y !=   0) { embLog("ERROR: format-dst.c encode_record(), y should be zero yet y = \n"); /* , y); */ }
+    if (x >= +41) {
+        b2 += setbit(2);
+        x -= 81;
+    }
+    if (x <= -41) {
+        b2 += setbit(3);
+        x += 81;
+    }
+    if (x >= +14) {
+        b1 += setbit(2);
+        x -= 27;
+    }
+    if (x <= -14) {
+        b1 += setbit(3);
+        x += 27;
+    }
+    if (x >= +5) {
+        b0 += setbit(2);
+        x -= 9;
+    }
+    if (x <= -5) {
+        b0 += setbit(3);
+        x += 9;
+    }
+    if (x >= +2) {
+        b1 += setbit(0);
+        x -= 3;
+    }
+    if (x <= -2) {
+        b1 += setbit(1);
+        x += 3;
+    }
+    if (x >= +1) {
+        b0 += setbit(0);
+        x -= 1;
+    }
+    if (x <= -1) {
+        b0 += setbit(1);
+        x += 1;
+    }
+    if (x != 0) {
+        embLog("ERROR: format-dst.c encode_record(), x should be zero yet x = \n"); /*, x); */
+    }
+    if (y >= +41) {
+        b2 += setbit(5);
+        y -= 81;
+    }
+    if (y <= -41) {
+        b2 += setbit(4);
+        y += 81;
+    }
+    if (y >= +14) {
+        b1 += setbit(5);
+        y -= 27;
+    }
+    if (y <= -14) {
+        b1 += setbit(4);
+        y += 27;
+    }
+    if (y >= +5) {
+        b0 += setbit(5);
+        y -= 9;
+    }
+    if (y <= -5) {
+        b0 += setbit(4);
+        y += 9;
+    }
+    if (y >= +2) {
+        b1 += setbit(7);
+        y -= 3;
+    }
+    if (y <= -2) {
+        b1 += setbit(6);
+        y += 3;
+    }
+    if (y >= +1) {
+        b0 += setbit(7);
+        y -= 1;
+    }
+    if (y <= -1) {
+        b0 += setbit(6);
+        y += 1;
+    }
+    if (y != 0) {
+        embLog("ERROR: format-dst.c encode_record(), y should be zero yet y = \n"); /* , y); */
+    }
 
-    b2 |= (char) 3;
+    b2 |= (char)3;
 
-    if(flags & END)
-    {
-        b2 = (char) -13;
-        b0 = b1 = (char) 0;
+    if (flags & END) {
+        b2 = (char)-13;
+        b0 = b1 = (char)0;
     }
 
     /* if(flags & TRIM)
@@ -133,13 +195,11 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
         encode_record(file, x - (dx * (v - 1)), y - (dy * (v - 1)), JUMP);
         return;
     } */
-    if(flags & (JUMP | TRIM))
-    {
-        b2 = (char) (b2 | 0x83);
+    if (flags & (JUMP | TRIM)) {
+        b2 = (char)(b2 | 0x83);
     }
-    if(flags & STOP)
-    {
-        b2 = (char) (b2 | 0xC3);
+    if (flags & STOP) {
+        b2 = (char)(b2 | 0xC3);
     }
 
     binaryWriteByte(file, (unsigned char)b0);
@@ -149,57 +209,53 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
 
 /*convert 2 characters into 1 int for case statement */
 /*#define cci(s) (s[0]*256+s[1]) */
-#define cci(c1,c2) (c1*256+c2)
+#define cci(c1, c2) (c1 * 256 + c2)
 
 static void set_dst_variable(EmbPattern* pattern, char* var, char* val)
 {
     unsigned int i;
     EmbThread t;
 
-    for(i = 0; i <= (unsigned int)strlen(var); i++)
-    {
+    for (i = 0; i <= (unsigned int)strlen(var); i++) {
         /* uppercase the var */
-        if(var[i] >= 'a' && var[i] <= 'z')
-        {
+        if (var[i] >= 'a' && var[i] <= 'z') {
             var[i] += 'A' - 'a';
         }
     }
 
     /* macro converts 2 characters to 1 int, allows case statement... */
-    switch(cci(var[0],var[1]))
-    {
-    case cci('L','A'): /* Design Name (LA) */
+    switch (cci(var[0], var[1])) {
+    case cci('L', 'A'): /* Design Name (LA) */
         /*pattern->set_variable("Design_Name",val); TODO: review this line. */
         break;
-    case cci('S','T'): /* Stitch count, 7 digits padded by leading 0's */
-    case cci('C','O'): /* Color change count, 3 digits padded by leading 0's */
-    case cci('+','X'): /* Design extents (+/-X,+/-Y), 5 digits padded by leading 0's */
-    case cci('-','X'):
-    case cci('+','Y'):
-    case cci('-','Y'):
+    case cci('S', 'T'): /* Stitch count, 7 digits padded by leading 0's */
+    case cci('C', 'O'): /* Color change count, 3 digits padded by leading 0's */
+    case cci('+', 'X'): /* Design extents (+/-X,+/-Y), 5 digits padded by leading 0's */
+    case cci('-', 'X'):
+    case cci('+', 'Y'):
+    case cci('-', 'Y'):
         /* don't store these variables, they are recalculated at save */
         break;
-    case cci('A','X'): /* Relative coordinates of last point, 6 digits, padded with leading spaces, first char may be +/- */
-    case cci('A','Y'):
-    case cci('M','X'): /* Coordinates of last point in previous file of multi-volume design, 6 digits, padded with leading spaces, first char may be +/- */
-    case cci('M','Y'):
+    case cci('A', 'X'): /* Relative coordinates of last point, 6 digits, padded with leading spaces, first char may be +/- */
+    case cci('A', 'Y'):
+    case cci('M', 'X'): /* Coordinates of last point in previous file of multi-volume design, 6 digits, padded with leading spaces, first char may be +/- */
+    case cci('M', 'Y'):
         /* store these variables as-is, they will be converted to numbers and back at save; */
         /*pattern->set_variable(var,val); TODO: review this line. */
         break;
-    case cci('P','D'):
+    case cci('P', 'D'):
         /* store this string as-is, it will be saved as-is, 6 characters */
-        if(strlen(val) != 6)
-        {
+        if (strlen(val) != 6) {
             /*pattern->messages.add("Warning: in DST file read, PD is not 6 characters, but ",(int)strlen(val)); */
         }
         /*pattern->set_variable(var,val);*/
         break;
         /* Begin extended fields section */
-    case cci('A','U'): /* Author string, arbitrary length */
-    case cci('C','P'): /* Copyright string, arbitrary length */
+    case cci('A', 'U'): /* Author string, arbitrary length */
+    case cci('C', 'P'): /* Copyright string, arbitrary length */
         /*pattern->set_variable(var,val); TODO: review this line. */
         break;
-    case cci('T','C'): /*Thread Color: #RRGGBB,Description,Catalog Number (1st field RGB hex values, 2nd&3rd fields optional arbitrary length) */
+    case cci('T', 'C'): /*Thread Color: #RRGGBB,Description,Catalog Number (1st field RGB hex values, 2nd&3rd fields optional arbitrary length) */
         /* TODO: review these lines below.
         description=split_cell_str(val,2);
         catalog_number=split_cell_str(val,3);
@@ -220,7 +276,7 @@ static void set_dst_variable(EmbPattern* pattern, char* var, char* val)
  *  Returns \c true if successful, otherwise returns \c false. */
 int readDst(EmbPattern* pattern, const char* fileName)
 {
-    char var[3];   /* temporary storage variable name */
+    char var[3]; /* temporary storage variable name */
     char val[512]; /* temporary storage variable value */
     int valpos;
     unsigned char b[3];
@@ -280,35 +336,33 @@ int readDst(EmbPattern* pattern, const char* fileName)
     pattern->set_variable("file_name",filename);
     */
 
-    if (!validateReadPattern(pattern, fileName, "readDst")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readDst"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     /* READ 512 BYTE HEADER INTO header[] */
-    for(i = 0; i < 512; i++)
-    {
+    for (i = 0; i < 512; i++) {
         header[i] = (char)embFile_getc(file);
     }
 
     /*TODO:It would probably be a good idea to validate file before accepting it. */
 
     /* fill variables from header fields */
-    for(i = 0; i < 512; i++)
-    {
-        if(header[i] == ':' && i > 1)
-        {
+    for (i = 0; i < 512; i++) {
+        if (header[i] == ':' && i > 1) {
             var[0] = header[i - 2];
             var[1] = header[i - 1];
             var[2] = '\0';
             valpos = i + 1;
-            for(i++; i < 512; i++)
-            {
+            for (i++; i < 512; i++) {
                 /* don't accept : without CR because there's a bug below: i-valpos must be > 0 which is not the case if the : is before the third character. */
-                if(header[i] == 13/*||header[i]==':'*/) /* 0x0d = carriage return */
+                if (header[i] == 13 /*||header[i]==':'*/) /* 0x0d = carriage return */
                 {
-                    if(header[i] == ':') /* : indicates another variable, CR was missing! */
+                    if (header[i] == ':') /* : indicates another variable, CR was missing! */
                     {
                         i -= 2;
                     }
@@ -321,53 +375,51 @@ int readDst(EmbPattern* pattern, const char* fileName)
         }
     }
 
-    while(embFile_read(b, 1, 3, file) == 3)
-    {
+    while (embFile_read(b, 1, 3, file) == 3) {
         int x = 0;
         int y = 0;
-        if(b[0] & 0x01)
+        if (b[0] & 0x01)
             x += 1;
-        if(b[0] & 0x02)
+        if (b[0] & 0x02)
             x -= 1;
-        if(b[0] & 0x04)
+        if (b[0] & 0x04)
             x += 9;
-        if(b[0] & 0x08)
+        if (b[0] & 0x08)
             x -= 9;
-        if(b[0] & 0x80)
+        if (b[0] & 0x80)
             y += 1;
-        if(b[0] & 0x40)
+        if (b[0] & 0x40)
             y -= 1;
-        if(b[0] & 0x20)
+        if (b[0] & 0x20)
             y += 9;
-        if(b[0] & 0x10)
+        if (b[0] & 0x10)
             y -= 9;
-        if(b[1] & 0x01)
+        if (b[1] & 0x01)
             x += 3;
-        if(b[1] & 0x02)
+        if (b[1] & 0x02)
             x -= 3;
-        if(b[1] & 0x04)
+        if (b[1] & 0x04)
             x += 27;
-        if(b[1] & 0x08)
+        if (b[1] & 0x08)
             x -= 27;
-        if(b[1] & 0x80)
+        if (b[1] & 0x80)
             y += 3;
-        if(b[1] & 0x40)
+        if (b[1] & 0x40)
             y -= 3;
-        if(b[1] & 0x20)
+        if (b[1] & 0x20)
             y += 27;
-        if(b[1] & 0x10)
+        if (b[1] & 0x10)
             y -= 27;
-        if(b[2] & 0x04)
+        if (b[2] & 0x04)
             x += 81;
-        if(b[2] & 0x08)
+        if (b[2] & 0x08)
             x -= 81;
-        if(b[2] & 0x20)
+        if (b[2] & 0x20)
             y += 81;
-        if(b[2] & 0x10)
+        if (b[2] & 0x10)
             y -= 81;
         flags = decode_record_flags(b[2]);
-        if(flags == END)
-        {
+        if (flags == END) {
             break;
         }
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
@@ -390,10 +442,12 @@ int writeDst(EmbPattern* pattern, const char* fileName)
     char* pd = 0;
     EmbStitch st;
 
-    if (!validateWritePattern(pattern, fileName, "writeDst")) return 0;
+    if (!validateWritePattern(pattern, fileName, "writeDst"))
+        return 0;
 
     file = embFile_open(fileName, "wb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
@@ -429,7 +483,6 @@ int writeDst(EmbPattern* pattern, const char* fileName)
     writeInt(file, (int)(fabs(boundingRect.top) * 10.0), 6);
     embFile_print(file, "\x0d");
 
-
     ax = ay = mx = my = 0;
     /* TODO: review the code below */
     /*ax=pattern->get_variable_int("ax"); */ /* will return 0 if not defined */
@@ -439,8 +492,7 @@ int writeDst(EmbPattern* pattern, const char* fileName)
 
     /*pd=pattern->get_variable("pd");*/ /* will return null pointer if not defined */
     pd = 0;
-    if(pd == 0 || strlen(pd) != 6)
-    {
+    if (pd == 0 || strlen(pd) != 6) {
         /* pd is not valid, so fill in a default consisting of "******" */
         pd = "******";
     }
@@ -458,14 +510,13 @@ int writeDst(EmbPattern* pattern, const char* fileName)
     binaryWriteByte(file, 0x1a); /* 0x1a is the code for end of section. */
 
     /* pad out header to proper length */
-    for(i = 125; i < 512; i++)
-    {
+    for (i = 125; i < 512; i++) {
         embFile_print(file, " ");
     }
 
     /* write stitches */
     xx = yy = 0;
-    for (i=0; i<pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
         /* convert from mm to 0.1mm for file format */
         dx = roundDouble(st.x * 10.0) - xx;

@@ -1,8 +1,8 @@
 #include "embroidery.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define RED_TERM_COLOR "\e[0;31m"
 #define GREEN_TERM_COLOR "\e[0;32m"
@@ -11,14 +11,14 @@
 
 static void usage(void);
 static void formats(void);
-static void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *, EmbVector *);
+static void testTangentPoints(EmbCircle c, EmbVector p, EmbVector*, EmbVector*);
 static int testEmbCircle(void);
 static int testThreadColor(void);
-static void report(int result, char *label);
+static void report(int result, char* label);
 static void testMain(void);
-static int convert(const char *inf, const char *outf);
-static int create_test_file_1(const char *outf);
-static int create_test_file_2(const char *outf);
+static int convert(const char* inf, const char* outf);
+static int create_test_file_1(const char* outf);
+static int create_test_file_2(const char* outf);
 
 static const char version_string[] = "embroider v0.1";
 
@@ -86,14 +86,14 @@ static void formats(void)
     puts("|________|_______|_______|____________________________________________________|\n");
     puts("|        |       |       |                                                    |\n");
 
-    for (i=0; i<numberOfFormats; i++) {
+    for (i = 0; i < numberOfFormats; i++) {
         extension = formatTable[i].extension;
         description = formatTable[i].description;
         readerState = formatTable[i].reader;
         writerState = formatTable[i].writer;
 
-        numReaders += readerState != ' '? 1 : 0;
-        numWriters += writerState != ' '? 1 : 0;
+        numReaders += readerState != ' ' ? 1 : 0;
+        numWriters += writerState != ' ' ? 1 : 0;
         printf("|  %-4s  |   %c   |   %c   |  %-49s |\n", extension, readerState, writerState, description);
     }
 
@@ -104,7 +104,7 @@ static void formats(void)
     puts("");
 }
 
-static int create_test_file_1(const char *outf)
+static int create_test_file_1(const char* outf)
 {
     int i;
     EmbPattern* p;
@@ -117,15 +117,15 @@ static int create_test_file_1(const char *outf)
     }
 
     /* 10mm circle */
-    for (i=0; i<100; i++) {
-        st.x = 10+10*sin(i*(0.5/embConstantPi));
-        st.y = 10+10*cos(i*(0.5/embConstantPi));
+    for (i = 0; i < 100; i++) {
+        st.x = 10 + 10 * sin(i * (0.5 / embConstantPi));
+        st.y = 10 + 10 * cos(i * (0.5 / embConstantPi));
         st.flags = NORMAL;
         st.color = 0;
         embArray_addStitch(p->stitchList, st);
     }
 
-    EmbThread thr = {{0,0,0}, "Black", "Black"};
+    EmbThread thr = { { 0, 0, 0 }, "Black", "Black" };
     embArray_addThread(p->threads, thr);
 
     if (!writeCsv(p, outf)) {
@@ -137,8 +137,7 @@ static int create_test_file_1(const char *outf)
     return 0;
 }
 
-
-static int create_test_file_2(const char *outf)
+static int create_test_file_2(const char* outf)
 {
     int i;
     EmbPattern* p;
@@ -151,15 +150,15 @@ static int create_test_file_2(const char *outf)
     }
 
     /* sin wave */
-    for (i=0; i<100; i++) {
-        st.x = 10+10*sin(i*(0.5/embConstantPi));
-        st.y = 10+i*0.1;
+    for (i = 0; i < 100; i++) {
+        st.x = 10 + 10 * sin(i * (0.5 / embConstantPi));
+        st.y = 10 + i * 0.1;
         st.flags = NORMAL;
         st.color = 0;
         embArray_addStitch(p->stitchList, st);
     }
 
-    EmbThread thr = {{0,0,0}, "Black", "Black"};
+    EmbThread thr = { { 0, 0, 0 }, "Black", "Black" };
     embArray_addThread(p->threads, thr);
 
     if (!writeCsv(p, outf)) {
@@ -171,7 +170,7 @@ static int create_test_file_2(const char *outf)
     return 0;
 }
 
-static int convert(const char *inf, const char *outf)
+static int convert(const char* inf, const char* outf)
 {
     EmbPattern* p;
     int formatType, reader, writer;
@@ -231,8 +230,8 @@ int main(int argc, const char* argv[])
         return 0;
     }
 
-    flags = argc-1;
-    for (i=1; i<argc; i++) {
+    flags = argc - 1;
+    for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-help") || !strcmp(argv[i], "-h")) {
             usage();
             continue;
@@ -258,24 +257,21 @@ int main(int argc, const char* argv[])
     }
 
     return 0;
-
 }
 
-
-static void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
+static void testTangentPoints(EmbCircle c, EmbVector p, EmbVector* t0, EmbVector* t1)
 {
-    if(!getCircleTangentPoints(c, p, t0, t1)) {
+    if (!getCircleTangentPoints(c, p, t0, t1)) {
         printf("Error calculating tangent points.\n");
-    }
-    else {
+    } else {
         printf("Circle : cr=%f, cx=%f, cy=%f\n"
                "Point  : px=%f, py=%f\n"
                "Tangent: tx0=%f, ty0=%f\n"
                "Tangent: tx1=%f, ty1=%f\n\n",
-               c.radius, c.center.x, c.center.y,
-               p.x, p.y,
-               t0->x, t0->y,
-               t1->x, t1->y);
+            c.radius, c.center.x, c.center.y,
+            p.x, p.y,
+            t0->x, t0->y,
+            t1->x, t1->y);
     }
 }
 
@@ -284,23 +280,23 @@ int testEmbCircle(void)
     double epsilon = 1e-3;
     EmbVector p0, p1;
     /* Problem */
-    EmbCircle c1 = {{0.0, 0.0}, 3.0};
+    EmbCircle c1 = { { 0.0, 0.0 }, 3.0 };
     /* Solution */
-    EmbVector t0 = {2.2500, 1.9843};
-    EmbVector t1 = {2.2500, -1.9843};
+    EmbVector t0 = { 2.2500, 1.9843 };
+    EmbVector t1 = { 2.2500, -1.9843 };
     /* Test */
-    EmbVector test0 = {4.0, 0.0};
+    EmbVector test0 = { 4.0, 0.0 };
     testTangentPoints(c1, test0, &p0, &p1);
     if (embVector_distance(p0, t0) + embVector_distance(p1, t1) > epsilon) {
         return 16;
     }
 
-    EmbCircle c2 = {{20.1762, 10.7170}, 6.8221};
+    EmbCircle c2 = { { 20.1762, 10.7170 }, 6.8221 };
     /* Solution */
-    EmbVector s0 = {19.0911, 17.4522};
-    EmbVector s1 = {26.4428, 13.4133};
+    EmbVector s0 = { 19.0911, 17.4522 };
+    EmbVector s1 = { 26.4428, 13.4133 };
     /* Test */
-    EmbVector test1 = {24.3411, 18.2980};
+    EmbVector test1 = { 24.3411, 18.2980 };
     testTangentPoints(c2, test1, &p0, &p1);
     double error = embVector_distance(p0, s0) + embVector_distance(p1, s1);
     if (error > epsilon) {
@@ -312,8 +308,8 @@ int testEmbCircle(void)
 }
 
 static void printArcResults(double bulge, EmbArc arc, EmbVector center,
-                     double radius, double diameter, double chord, EmbVector chordMid,
-                     double sagitta, double apothem, double incAngle, char clockwise)
+    double radius, double diameter, double chord, EmbVector chordMid,
+    double sagitta, double apothem, double incAngle, char clockwise)
 {
     fprintf(stdout, "bulge     = %f\n"
                     "startX    = %f\n"
@@ -334,24 +330,24 @@ static void printArcResults(double bulge, EmbArc arc, EmbVector center,
                     "incAngle  = %f\n"
                     "clockwise = %d\n"
                     "\n",
-                    bulge,
-                    arc.start.x,
-                    arc.start.y,
-                    arc.end.x,
-                    arc.end.y,
-                    arc.mid.x,
-                    arc.mid.y,
-                    center.x,
-                    center.y,
-                    radius,
-                    diameter,
-                    chord,
-                    chordMid.x,
-                    chordMid.y,
-                    sagitta,
-                    apothem,
-                    incAngle,
-                    clockwise);
+        bulge,
+        arc.start.x,
+        arc.start.y,
+        arc.end.x,
+        arc.end.y,
+        arc.mid.x,
+        arc.mid.y,
+        center.x,
+        center.y,
+        radius,
+        diameter,
+        chord,
+        chordMid.x,
+        chordMid.y,
+        sagitta,
+        apothem,
+        incAngle,
+        clockwise);
 }
 
 int testGeomArc(void)
@@ -365,24 +361,24 @@ int testGeomArc(void)
     bulge = -0.414213562373095;
     arc.start.x = 1.0;
     arc.start.y = 0.0;
-    arc.end.x   = 2.0;
-    arc.end.y   = 1.0;
+    arc.end.x = 2.0;
+    arc.end.y = 1.0;
     if (getArcDataFromBulge(bulge, &arc, &center, &radius, &diameter, &chord,
-                           &chordMid, &sagitta, &apothem, &incAngle, &clockwise)) {
+            &chordMid, &sagitta, &apothem, &incAngle, &clockwise)) {
         printArcResults(bulge, arc, center, radius, diameter,
-                        chord, chordMid, sagitta, apothem, incAngle, clockwise);
+            chord, chordMid, sagitta, apothem, incAngle, clockwise);
     }
 
     fprintf(stdout, "Counter-Clockwise Test:\n");
-    bulge  = 2.414213562373095;
+    bulge = 2.414213562373095;
     arc.start.x = 4.0;
     arc.start.y = 0.0;
-    arc.end.x   = 5.0;
-    arc.end.y   = 1.0;
+    arc.end.x = 5.0;
+    arc.end.y = 1.0;
     if (getArcDataFromBulge(bulge, &arc, &center, &radius, &diameter, &chord,
-                           &chordMid, &sagitta, &apothem, &incAngle, &clockwise)) {
+            &chordMid, &sagitta, &apothem, &incAngle, &clockwise)) {
         printArcResults(bulge, arc, center, radius, diameter,
-                        chord, chordMid, sagitta, apothem, incAngle, clockwise);
+            chord, chordMid, sagitta, apothem, incAngle, clockwise);
     }
 
     return 0;
@@ -391,26 +387,26 @@ int testGeomArc(void)
 static int testThreadColor(void)
 {
     unsigned int tColor = 0xFFD25F00;
-    int          tBrand = Sulky_Rayon;
-    int          tNum   = threadColorNum(tColor, tBrand);
-    const char*  tName  = threadColorName(tColor, tBrand);
+    int tBrand = Sulky_Rayon;
+    int tNum = threadColorNum(tColor, tBrand);
+    const char* tName = threadColorName(tColor, tBrand);
 
     printf("Color : 0x%X\n"
            "Brand : %d\n"
            "Num   : %d\n"
            "Name  : %s\n\n",
-            tColor,
-            tBrand,
-            tNum, /* Solution: 1833 */
-            tName); /* Solution: Pumpkin Pie */
+        tColor,
+        tBrand,
+        tNum, /* Solution: 1833 */
+        tName); /* Solution: Pumpkin Pie */
     return 0;
 }
 
 static int testEmbFormat(void)
 {
-    const char*  tName = "example.zsk";
-    const char *extension = embFormat_extensionFromName(tName);
-    const char *description = embFormat_descriptionFromName(tName);
+    const char* tName = "example.zsk";
+    const char* extension = embFormat_extensionFromName(tName);
+    const char* description = embFormat_descriptionFromName(tName);
     char reader = embFormat_readerStateFromName(tName);
     char writer = embFormat_writerStateFromName(tName);
     int type = embFormat_typeFromName(tName);
@@ -421,18 +417,23 @@ static int testEmbFormat(void)
            "Reader     : %c\n"
            "Writer     : %c\n"
            "Type       : %d\n\n",
-            tName,
-            extension,
-            description,
-            reader,
-            writer,
-            type);
+        tName,
+        extension,
+        description,
+        reader,
+        writer,
+        type);
 
-    if (strcmp(extension, ".zsk")) return 20;
-    if (strcmp(description, "ZSK USA Embroidery Format")) return 21;
-    if (reader != 'U') return 22;
-    if (writer != ' ') return 23;
-    if (type != 1) return 24;
+    if (strcmp(extension, ".zsk"))
+        return 20;
+    if (strcmp(description, "ZSK USA Embroidery Format"))
+        return 21;
+    if (reader != 'U')
+        return 22;
+    if (writer != ' ')
+        return 23;
+    if (type != 1)
+        return 24;
     return 0;
 }
 
@@ -440,44 +441,58 @@ static int testHash(void)
 {
     EmbHash* hash = 0;
     hash = embHash_create();
-    if(!hash) return 1;
-    if(!embHash_empty(hash)) return 2;
-    if(embHash_count(hash) != 0) return 3;
+    if (!hash)
+        return 1;
+    if (!embHash_empty(hash))
+        return 2;
+    if (embHash_count(hash) != 0)
+        return 3;
 
     /* insert */
-    if(embHash_insert(hash, "four", (void*)4)) return 4;
-    if(embHash_insert(hash, "five", (void*)5)) return 5;
-    if(embHash_insert(hash, "six",  (void*)6)) return 6;
-    if(embHash_count(hash) != 3) return 7;
+    if (embHash_insert(hash, "four", (void*)4))
+        return 4;
+    if (embHash_insert(hash, "five", (void*)5))
+        return 5;
+    if (embHash_insert(hash, "six", (void*)6))
+        return 6;
+    if (embHash_count(hash) != 3)
+        return 7;
 
     /* replace */
-    if(embHash_insert(hash, "four",  (void*)8)) return 8;
-    if(embHash_insert(hash, "five", (void*)10)) return 9;
-    if(embHash_insert(hash, "six",  (void*)12)) return 10;
-    if(embHash_count(hash) != 3) return 11;
+    if (embHash_insert(hash, "four", (void*)8))
+        return 8;
+    if (embHash_insert(hash, "five", (void*)10))
+        return 9;
+    if (embHash_insert(hash, "six", (void*)12))
+        return 10;
+    if (embHash_count(hash) != 3)
+        return 11;
 
     /* contains */
-    if(!embHash_contains(hash, "four")) return 12;
-    if(embHash_contains(hash, "empty")) return 13;
+    if (!embHash_contains(hash, "four"))
+        return 12;
+    if (embHash_contains(hash, "empty"))
+        return 13;
 
     /* remove */
     embHash_remove(hash, "four");
-    if(embHash_count(hash) != 2) return 14;
+    if (embHash_count(hash) != 2)
+        return 14;
     embHash_clear(hash);
-    if(embHash_count(hash) != 0) return 15;
+    if (embHash_count(hash) != 0)
+        return 15;
 
     embHash_free(hash);
     return 0;
 }
 
 static void
-report(int result, char *label)
+report(int result, char* label)
 {
-    printf("%s Test...%*c", label, (int)(20-strlen(label)), ' ');
+    printf("%s Test...%*c", label, (int)(20 - strlen(label)), ' ');
     if (result) {
         printf(RED_TERM_COLOR "[FAIL] [CODE=%d]\n" RESET_TERM_COLOR, result);
-    }
-    else {
+    } else {
         printf(GREEN_TERM_COLOR "[PASS]\n" RESET_TERM_COLOR);
     }
 }

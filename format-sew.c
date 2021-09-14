@@ -5,7 +5,7 @@
 static char sewDecode(unsigned char inputByte)
 {
     /* TODO: fix return statement */
-    return (inputByte >= 0x80) ? (char) (-~(inputByte - 1)) : (char) inputByte;
+    return (inputByte >= 0x80) ? (char)(-~(inputByte - 1)) : (char)inputByte;
 }
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
@@ -35,41 +35,32 @@ int readSew(EmbPattern* pattern, const char* fileName)
     }
     embFile_seek(file, 0x1D78, SEEK_SET);
 
-    for(i = 0; embFile_tell(file) < fileLength; i++)
-    {
+    for (i = 0; embFile_tell(file) < fileLength; i++) {
         unsigned char b0 = binaryReadByte(file);
         unsigned char b1 = binaryReadByte(file);
 
         flags = NORMAL;
-        if(thisStitchIsJump)
-        {
+        if (thisStitchIsJump) {
             flags = TRIM;
             thisStitchIsJump = 0;
         }
-        if(b0 == 0x80)
-        {
-            if(b1 == 1)
-            {
+        if (b0 == 0x80) {
+            if (b1 == 1) {
                 b0 = binaryReadByte(file);
                 b1 = binaryReadByte(file);
                 flags = STOP;
-            }
-            else if((b1 == 0x02) || (b1 == 0x04))
-            {
+            } else if ((b1 == 0x02) || (b1 == 0x04)) {
                 thisStitchIsJump = 1;
                 b0 = binaryReadByte(file);
                 b1 = binaryReadByte(file);
                 flags = TRIM;
-            }
-            else if(b1 == 0x10)
-            {
-               break;
+            } else if (b1 == 0x10) {
+                break;
             }
         }
         dx = sewDecode(b0);
         dy = sewDecode(b1);
-        if(abs(dx) == 127 || abs(dy) == 127)
-        {
+        if (abs(dx) == 127 || abs(dy) == 127) {
             thisStitchIsJump = 1;
             flags = TRIM;
         }
@@ -85,34 +76,26 @@ int readSew(EmbPattern* pattern, const char* fileName)
 
 static void sewEncode(unsigned char* b, char dx, char dy, int flags)
 {
-    if(!b)
-    {
+    if (!b) {
         embLog("ERROR: format-exp.c expEncode(), b argument is null\n");
         return;
     }
-    if(flags == STOP)
-    {
+    if (flags == STOP) {
         b[0] = 0x80;
         b[1] = 1;
         b[2] = dx;
         b[3] = dy;
-    }
-	else if (flags == END)
-	{
-		b[0] = 0x80;
-		b[1] = 0x10;
-		b[2] = 0;
-		b[3] = 0;
-	}
-    else if(flags == TRIM || flags == JUMP)
-    {
+    } else if (flags == END) {
+        b[0] = 0x80;
+        b[1] = 0x10;
+        b[2] = 0;
+        b[3] = 0;
+    } else if (flags == TRIM || flags == JUMP) {
         b[0] = 0x80;
         b[1] = 2;
         b[2] = dx;
         b[3] = dy;
-    }
-    else
-    {
+    } else {
         b[0] = dx;
         b[1] = dy;
     }
@@ -132,15 +115,16 @@ int writeSew(EmbPattern* pattern, const char* fileName)
         return 0;
 
     file = embFile_open(fileName, "wb", 0);
-    if (!file) return 0;
-    
+    if (!file)
+        return 0;
+
     colorlistSize = pattern->threads->count;
 
     minColors = embMaxInt(pattern->threads->count, 6);
     binaryWriteInt(file, 0x74 + (minColors * 4));
     binaryWriteInt(file, 0x0A);
 
-    for (i=0; i<pattern->threads->count; i++) {
+    for (i = 0; i < pattern->threads->count; i++) {
         col = pattern->threads->thread[i].color;
         thr = embThread_findNearestColor_fromThread(col, jefThreads, 79);
         binaryWriteInt(file, thr);
@@ -154,17 +138,16 @@ int writeSew(EmbPattern* pattern, const char* fileName)
         embFile_print(file, " ");
     }
 
-    for (i=0; i<pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
         dx = st.x * 10.0 - xx;
         dy = st.y * 10.0 - yy;
         xx = st.x * 10.0;
         yy = st.y * 10.0;
         sewEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), st.flags);
-        if((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10))) {
+        if ((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10))) {
             embFile_write(b, 1, 4, file);
-        }
-        else {
+        } else {
             embFile_write(b, 1, 2, file);
         }
     }

@@ -2,7 +2,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-
 /* TODO: Add to CMakeLists.txt and libembroidery.pri when this is C89 complete.
  * This code isn't incorporated in the library or embroider currently.
  *
@@ -22,7 +21,7 @@
  * _usePt needs malloc/free, perhaps EmbArray flags?
  */
 
-int *_usePt;
+int* _usePt;
 double _distanceTolerance;
 
 double embVector_distancePointPoint(EmbVector p, EmbVector p2)
@@ -537,21 +536,24 @@ int embPolygon_reduceByDistance(EmbArray *vertices, float distance)
 #endif
 
 /* Reduces the polygon by removing the Nth vertex in the vertices list. */
-int embPolygon_reduceByNth(EmbArray *vertices, int nth)
+int embPolygon_reduceByNth(EmbArray* vertices, int nth)
 {
     int i;
     /* We can't simplify polygons under 3 vertices */
-    if (vertices->count < 3) return 0;
+    if (vertices->count < 3)
+        return 0;
 
     /* Vertex is not present */
-    if (nth >= vertices->count) return 0;
+    if (nth >= vertices->count)
+        return 0;
 
     /* This isn't an array of vectors. */
-    if (vertices->type != EMB_VECTOR) return 0;
+    if (vertices->type != EMB_VECTOR)
+        return 0;
 
     /* Shift everything left one place then reduce the count. */
-    for (i=nth; i<vertices->count - 1; i++) {
-        vertices->vector[i] = vertices->vector[i+1];
+    for (i = nth; i < vertices->count - 1; i++) {
+        vertices->vector[i] = vertices->vector[i + 1];
     }
     vertices->count--;
 
@@ -559,7 +561,7 @@ int embPolygon_reduceByNth(EmbArray *vertices, int nth)
     return 1;
 }
 
-void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, EmbSatinOutline* result)
+void embSatinOutline_generateSatinOutline(EmbArray* lines, double thickness, EmbSatinOutline* result)
 {
     int i, j;
     EmbSatinOutline outline;
@@ -652,18 +654,18 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density
 
     if (result->length > 0) {
         for (j = 0; j < result->length - 1; j++) {
-            embVector_subtract(result->side1->vector[j+1], result->side1->vector[j], &topDiff);
-            embVector_subtract(result->side2->vector[j+1], result->side2->vector[j], &bottomDiff);
+            embVector_subtract(result->side1->vector[j + 1], result->side1->vector[j], &topDiff);
+            embVector_subtract(result->side2->vector[j + 1], result->side2->vector[j], &bottomDiff);
 
             embVector_average(result->side1->vector[j], result->side2->vector[j], &midLeft);
-            embVector_average(result->side1->vector[j+1], result->side2->vector[j+1], &midRight);
+            embVector_average(result->side1->vector[j + 1], result->side2->vector[j + 1], &midRight);
 
             embVector_subtract(midLeft, midRight, &midDiff);
             midLength = embVector_getLength(midDiff);
 
             numberOfSteps = (int)(midLength * density / 200);
-            embVector_multiply(topDiff, 1.0/numberOfSteps, &topStep);
-            embVector_multiply(bottomDiff, 1.0/numberOfSteps, &bottomStep);
+            embVector_multiply(topDiff, 1.0 / numberOfSteps, &topStep);
+            embVector_multiply(bottomDiff, 1.0 / numberOfSteps, &bottomStep);
             currTop = result->side1->vector[j];
             currBottom = result->side2->vector[j];
 

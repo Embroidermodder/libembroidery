@@ -15,7 +15,8 @@ int readPhc(EmbPattern* pattern, const char* fileName)
         return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if(!file) return 0;
+    if (!file)
+        return 0;
 
     embFile_seek(file, 0x07, SEEK_SET);
     version = binaryReadByte(file) - 0x30; /* converting from ansi number */
@@ -55,7 +56,8 @@ int writePhc(EmbPattern* pattern, const char* fileName)
         return 0;
 
     file = embFile_open(fileName, "wb", 0);
-    if(!file) return 0;
+    if (!file)
+        return 0;
 
     embFile_close(file);
     return 0; /*TODO: finish writePhc */

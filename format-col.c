@@ -12,10 +12,12 @@ int readCol(EmbPattern* pattern, const char* fileName)
     EmbThread t;
     char line[30];
 
-    if (!validateReadPattern(pattern, fileName, "readCol")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readCol"))
+        return 0;
 
     file = embFile_open(fileName, "r", 1);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embArray_free(pattern->threads);
     pattern->threads = embArray_create(EMB_THREAD);
@@ -33,7 +35,7 @@ int readCol(EmbPattern* pattern, const char* fileName)
             return 0;
         }
         /* TODO: replace all scanf code */
-        if(sscanf(line,"%d,%d,%d,%d", &num, &blue, &green, &red) != 4) {
+        if (sscanf(line, "%d,%d,%d,%d", &num, &blue, &green, &red) != 4) {
             break;
         }
         t.color.r = (unsigned char)red;
@@ -56,7 +58,8 @@ int writeCol(EmbPattern* pattern, const char* fileName)
     EmbColor c;
     unsigned char buffer[30];
 
-    if (!validateWritePattern(pattern, fileName, "writeCol")) return 0;
+    if (!validateWritePattern(pattern, fileName, "writeCol"))
+        return 0;
 
     file = fopen(fileName, "w");
     if (!file) {
@@ -65,7 +68,7 @@ int writeCol(EmbPattern* pattern, const char* fileName)
         return 0;
     }
     fprintf(file, "%d\r\n", pattern->threads->count);
-    for (i=0; i<pattern->threads->count; i++) {
+    for (i = 0; i < pattern->threads->count; i++) {
         c = pattern->threads->thread[i].color;
         sprintf(buffer, "%d,%d,%d,%d\r\n", i, (int)c.r, (int)c.g, (int)c.b);
         binaryWriteBytes(file, buffer, strlen(buffer));

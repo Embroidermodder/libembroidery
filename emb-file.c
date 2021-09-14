@@ -127,6 +127,18 @@ static const int littleEndianByteOrderMark = 0xFFFE; */
 /**
  * Argument validator and stitchList checker.
  * Saves making these 4 checks seperately for every file type.
+ *
+ * If we change over all the read/write functions to work on
+ *     int readPes(EmbPattern *pattern, EmbFile *file);
+ * instead, then there will be no need for using this all over the source.
+ *
+ * Instead of the user specifying the reading mode as:
+ *     readPes(pattern, fileName);
+ * the user could call:
+ *     readPattern(pattern, file, EMB_FORMAT_PES);
+ *
+ * This could save on the need for a function for each format, instead having
+ * a giant jump table in a file emb-format
  */
 int validateWritePattern(EmbPattern *pattern, const char* fileName, const char *function)
 {
@@ -182,6 +194,9 @@ int validateReadPattern(EmbPattern *pattern, const char* fileName, const char *f
     return 1;
 }
 
+/**
+ * TODO: documentation.
+ */
 EmbFile* embFile_open(const char* fileName, const char* mode, int optional)
 {
 #ifdef ARDUINO
@@ -218,6 +233,9 @@ EmbFile* embFile_open(const char* fileName, const char* mode, int optional)
 #endif
 }
 
+/**
+ * TODO: documentation.
+ */
 int embFile_close(EmbFile* stream)
 {
 #ifdef ARDUINO
@@ -225,11 +243,13 @@ int embFile_close(EmbFile* stream)
 #else /* ARDUINO */
     int retVal = fclose(stream->file);
     free(stream);
-    stream = 0;
     return retVal;
 #endif /* ARDUINO */
 }
 
+/**
+ * TODO: documentation.
+ */
 int embFile_eof(EmbFile* stream)
 {
 #ifdef ARDUINO
@@ -239,6 +259,9 @@ int embFile_eof(EmbFile* stream)
 #endif /* ARDUINO */
 }
 
+/**
+ * TODO: documentation.
+ */
 char embFile_getc(EmbFile* stream)
 {
 #ifdef ARDUINO
@@ -248,6 +271,9 @@ char embFile_getc(EmbFile* stream)
 #endif /* ARDUINO */
 }
 
+/**
+ * TODO: documentation.
+ */
 void embFile_readline(EmbFile* stream, char *line, int maxLength)
 {
     int i;
@@ -289,6 +315,9 @@ int embFile_puts(EmbFile* stream, char *buff)
 #endif /* ARDUINO */
 }
 
+/**
+ * TODO: documentation.
+ */
 size_t embFile_read(void* ptr, size_t size, size_t nmemb, EmbFile* stream)
 {
 #ifdef ARDUINO
@@ -299,6 +328,9 @@ size_t embFile_read(void* ptr, size_t size, size_t nmemb, EmbFile* stream)
 #endif /* ARDUINO */
 }
 
+/**
+ * TODO: documentation.
+ */
 size_t embFile_write(const void* ptr, size_t size, size_t nmemb, EmbFile* stream)
 {
 #ifdef ARDUINO
@@ -308,6 +340,9 @@ size_t embFile_write(const void* ptr, size_t size, size_t nmemb, EmbFile* stream
 #endif /* ARDUINO */
 }
 
+/**
+ * TODO: documentation.
+ */
 int embFile_seek(EmbFile* stream, long offset, int origin)
 {
 #ifdef ARDUINO
@@ -317,6 +352,9 @@ int embFile_seek(EmbFile* stream, long offset, int origin)
 #endif /* ARDUINO */
 }
 
+/**
+ * TODO: documentation.
+ */
 long embFile_tell(EmbFile* stream)
 {
 #ifdef ARDUINO
@@ -326,6 +364,9 @@ long embFile_tell(EmbFile* stream)
 #endif /* ARDUINO */
 }
 
+/**
+ * TODO: documentation.
+ */
 EmbFile* embFile_tmpfile(void)
 {
 #ifdef ARDUINO
@@ -347,6 +388,9 @@ EmbFile* embFile_tmpfile(void)
 #endif
 }
 
+/**
+ * TODO: documentation.
+ */
 int embFile_putc(int ch, EmbFile* stream)
 {
 #ifdef ARDUINO
@@ -356,25 +400,17 @@ int embFile_putc(int ch, EmbFile* stream)
 #endif /* ARDUINO */
 }
 
-int embFile_printf(EmbFile* stream, const char* format, ...)
+/**
+ * TODO: documentation.
+ */
+void embFile_print(EmbFile* stream, const char* str)
 {
-#ifdef ARDUINO /* ARDUINO */
-    char buff[256];
-    va_list args;
-    va_start(args, format);
-    vsprintf(buff, format, args);
-    va_end(args);
-    return inoFile_printf(stream, buff);
-#else /* ARDUINO */
-    int retVal;
-    va_list args;
-    va_start(args, format);
-    retVal = vfprintf(stream->file, format, args);
-    va_end(args);
-    return retVal;
-#endif /* ARDUINO */
+    embFile_write(str, 1, strlen(str), stream);
 }
 
+/**
+ * TODO: documentation.
+ */
 static unsigned int sectorSize(bcf_file* bcfFile)
 {
     /* version 3 uses 512 byte */
@@ -386,22 +422,34 @@ static unsigned int sectorSize(bcf_file* bcfFile)
     return 4096;
 }
 
+/**
+ * TODO: documentation.
+ */
 static int haveExtraDIFATSectors(bcf_file* file)
 {
     return (int)(numberOfEntriesInDifatSector(file->difat) > 0);
 }
 
+/**
+ * TODO: documentation.
+ */
 static int seekToOffset(EmbFile* file, const unsigned int offset)
 {
     return embFile_seek(file, offset, SEEK_SET);
 }
 
+/**
+ * TODO: documentation.
+ */
 static int seekToSector(bcf_file* bcfFile, EmbFile* file, const unsigned int sector)
 {
     unsigned int offset = sector * sectorSize(bcfFile) + sectorSize(bcfFile);
     return seekToOffset(file, offset);
 }
 
+/**
+ * TODO: documentation.
+ */
 static void parseDIFATSectors(EmbFile* file, bcf_file* bcfFile)
 {
     unsigned int numberOfDifatEntriesStillToRead = bcfFile->header.numberOfFATSectors - NumberOfDifatEntriesInHeader;
@@ -412,6 +460,9 @@ static void parseDIFATSectors(EmbFile* file, bcf_file* bcfFile)
     }
 }
 
+/**
+ * TODO: documentation.
+ */
 int bcfFile_read(EmbFile* file, bcf_file* bcfFile)
 {
     unsigned int i, numberOfDirectoryEntriesPerSector, directorySectorToReadFrom;
@@ -446,6 +497,9 @@ int bcfFile_read(EmbFile* file, bcf_file* bcfFile)
     return 1;
 }
 
+/**
+ * TODO: documentation.
+ */
 EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind)
 {
     int filesize, sectorSize, currentSector, sizeToWrite, currentSize, totalSectors, i;
@@ -482,6 +536,9 @@ EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind)
     return fileOut;
 }
 
+/**
+ * TODO: documentation.
+ */
 void bcf_file_free(bcf_file* bcfFile)
 {
     bcf_file_difat_free(bcfFile->difat);
@@ -494,6 +551,9 @@ void bcf_file_free(bcf_file* bcfFile)
     bcfFile = 0;
 }
 
+/**
+ * TODO: documentation.
+ */
 bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const unsigned int sectorSize)
 {
     unsigned int i;
@@ -518,17 +578,24 @@ bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const u
     for (i = fatSectors; i < NumberOfDifatEntriesInHeader; ++i) {
         sectorRef = binaryReadUInt32(file);
         if (sectorRef != CompoundFileSector_FreeSector) {
-            embLog_print("ERROR: compound-file-difat.c bcf_difat_create(), Unexpected sector value %x at DIFAT[%d]\n", sectorRef, i);
+            embLog("ERROR: compound-file-difat.c bcf_difat_create(), Unexpected sector value\n");
+            /* TODO " %x at DIFAT[%d]\n", sectorRef, i); */
         }
     }
     return difat;
 }
 
+/**
+ * TODO: documentation.
+ */
 unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat)
 {
     return (fat->sectorSize - sizeOfChainingEntryAtEndOfDifatSector) / sizeOfDifatEntry;
 }
 
+/**
+ * TODO: documentation.
+ */
 unsigned int readFullSector(EmbFile* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead)
 {
     unsigned int i;
@@ -551,19 +618,25 @@ unsigned int readFullSector(EmbFile* file, bcf_file_difat* bcfFile, unsigned int
     for (i = entriesToReadInThisSector; i < numberOfEntriesInDifatSector(bcfFile); ++i) {
         sectorRef = binaryReadUInt32(file);
         if (sectorRef != CompoundFileSector_FreeSector) {
-            embLog_print("ERROR: compound-file-difat.c readFullSector(), Unexpected sector value %x at DIFAT[%d]]\n", sectorRef, i);
+            embLog("ERROR: compound-file-difat.c readFullSector(), Unexpected sector value");
+            /* TODO: end of message: %x at DIFAT[%d]]\n", sectorRef, i); */
         }
     }
     nextDifatSectorInChain = binaryReadUInt32(file);
     return nextDifatSectorInChain;
 }
 
+/**
+ * TODO: documentation.
+ */
 void bcf_file_difat_free(bcf_file_difat* difat)
 {
     free(difat);
-    difat = 0;
 }
 
+/**
+ * TODO: documentation.
+ */
 static void parseDirectoryEntryName(EmbFile* file, bcf_directory_entry* dir)
 {
     int i;
@@ -576,6 +649,9 @@ static void parseDirectoryEntryName(EmbFile* file, bcf_directory_entry* dir)
     }
 }
 
+/**
+ * TODO: documentation.
+ */
 static void readCLSID(EmbFile* file, bcf_directory_entry* dir)
 {
     int i;
@@ -587,6 +663,9 @@ static void readCLSID(EmbFile* file, bcf_directory_entry* dir)
     }
 }
 
+/**
+ * TODO: documentation.
+ */
 bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries)
 {
     bcf_directory* dir = (bcf_directory*)malloc(sizeof(bcf_directory));
@@ -598,6 +677,9 @@ bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntr
     return dir;
 }
 
+/**
+ * TODO: documentation.
+ */
 EmbTime parseTime(EmbFile* file)
 {
     EmbTime returnVal;
@@ -612,6 +694,9 @@ EmbTime parseTime(EmbFile* file)
     return returnVal;
 }
 
+/**
+ * TODO: documentation.
+ */
 bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file)
 {
     bcf_directory_entry* dir = (bcf_directory_entry*)malloc(sizeof(bcf_directory_entry));
@@ -624,7 +709,8 @@ bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file)
     dir->directoryEntryNameLength = binaryReadUInt16(file);
     dir->objectType = (unsigned char)binaryReadByte(file);
     if ((dir->objectType != ObjectTypeStorage) && (dir->objectType != ObjectTypeStream) && (dir->objectType != ObjectTypeRootEntry)) {
-        embLog_print("ERROR: compound-file-directory.c CompoundFileDirectoryEntry(), unexpected object type: %d\n", dir->objectType);
+        embLog("ERROR: compound-file-directory.c CompoundFileDirectoryEntry(), unexpected object type:\n");
+        /* TODO: "%d\n", dir->objectType); */
         return 0;
     }
     dir->colorFlag = (unsigned char)binaryReadByte(file);
@@ -641,6 +727,9 @@ bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file)
     return dir;
 }
 
+/**
+ * TODO: documentation.
+ */
 void readNextSector(EmbFile* file, bcf_directory* dir)
 {
     unsigned int i;
@@ -661,6 +750,9 @@ void readNextSector(EmbFile* file, bcf_directory* dir)
     }
 }
 
+/**
+ * TODO: documentation.
+ */
 void bcf_directory_free(bcf_directory* dir)
 {
     bcf_directory_entry* pointer = dir->dirEntries;
@@ -669,14 +761,15 @@ void bcf_directory_free(bcf_directory* dir)
         entryToFree = pointer;
         pointer = pointer->next;
         free(entryToFree);
-        entryToFree = 0;
     }
     if (dir) {
         free(dir);
-        dir = 0;
     }
 }
 
+/**
+ * TODO: documentation.
+ */
 bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize)
 {
     bcf_file_fat* fat = (bcf_file_fat*)malloc(sizeof(bcf_file_fat));
@@ -688,6 +781,9 @@ bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize)
     return fat;
 }
 
+/**
+ * TODO: documentation.
+ */
 void loadFatFromSector(bcf_file_fat* fat, EmbFile* file)
 {
     unsigned int i;
@@ -700,12 +796,18 @@ void loadFatFromSector(bcf_file_fat* fat, EmbFile* file)
     fat->fatEntryCount = newSize;
 }
 
+/**
+ * TODO: documentation.
+ */
 void bcf_file_fat_free(bcf_file_fat* fat)
 {
     free(fat);
     fat = 0;
 }
 
+/**
+ * TODO: documentation.
+ */
 bcf_file_header bcfFileHeader_read(EmbFile* file)
 {
     bcf_file_header header;
@@ -730,6 +832,9 @@ bcf_file_header bcfFileHeader_read(EmbFile* file)
     return header;
 }
 
+/**
+ * TODO: documentation.
+ */
 int bcfFileHeader_isValid(bcf_file_header header)
 {
     if (memcmp(header.signature, "\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1", 8) != 0) {
@@ -739,10 +844,9 @@ int bcfFileHeader_isValid(bcf_file_header header)
     return 1;
 }
 
-/**************************************************/
-/* EmbFormatList                                  */
-/**************************************************/
-
+/**
+ * TODO: documentation.
+ */
 int embFormat_getExtension(const char *fileName, char *ending)
 {
     int i;
@@ -772,10 +876,13 @@ int embFormat_getExtension(const char *fileName, char *ending)
     return 1;
 }
 
+/**
+ * TODO: documentation.
+ */
 const char* embFormat_extensionFromName(const char* fileName)
 {
     int i = 0;
-    char ending[2 + EMBFORMAT_MAXEXT];
+    char ending[10];
     const char* extension = 0;
 
     if (!embFormat_getExtension(fileName, ending)) {
@@ -792,10 +899,13 @@ const char* embFormat_extensionFromName(const char* fileName)
     return extension;
 }
 
+/**
+ * TODO: documentation.
+ */
 const char* embFormat_descriptionFromName(const char* fileName)
 {
     int i = 0;
-    char ending[2 + EMBFORMAT_MAXEXT];
+    char ending[10];
     const char* description = 0;
 
     if (!embFormat_getExtension(fileName, ending)) {
@@ -812,10 +922,13 @@ const char* embFormat_descriptionFromName(const char* fileName)
     return description;
 }
 
+/**
+ * TODO: documentation.
+ */
 char embFormat_readerStateFromName(const char* fileName)
 {
     int i = 0;
-    char ending[2 + EMBFORMAT_MAXEXT];
+    char ending[10];
     char readerState = ' ';
 
     if (!embFormat_getExtension(fileName, ending)) {
@@ -832,10 +945,13 @@ char embFormat_readerStateFromName(const char* fileName)
     return readerState;
 }
 
+/**
+ * TODO: documentation.
+ */
 char embFormat_writerStateFromName(const char* fileName)
 {
     int i = 0;
-    char ending[2 + EMBFORMAT_MAXEXT];
+    char ending[10];
     char writerState = ' ';
 
     if (!embFormat_getExtension(fileName, ending)) {
@@ -852,10 +968,13 @@ char embFormat_writerStateFromName(const char* fileName)
     return writerState;
 }
 
+/**
+ * TODO: documentation.
+ */
 int embFormat_typeFromName(const char* fileName)
 {
     int i = 0;
-    char ending[2 + EMBFORMAT_MAXEXT];
+    char ending[10];
     int type = EMBFORMAT_UNSUPPORTED;
 
     if (!embFormat_getExtension(fileName, ending)) {
@@ -872,28 +991,24 @@ int embFormat_typeFromName(const char* fileName)
     return type;
 }
 
-/*! Returns a pointer to an EmbReaderWriter if the \a fileName is a supported file type. */
+/**
+ * Returns a pointer to an EmbReaderWriter if the \a fileName is a supported file type.
+ */
 int embReaderWriter_getByFileName(const char* fileName)
 {
     int i;
-    char ending[5];
+    char ending[10];
 
     if (!embFormat_getExtension(fileName, ending)) {
         return -1;
     }
 
-    #ifdef ARDUINO /* ARDUINO TODO: This is temporary. Remove when complete. */
-    if (!strcmp(ending, ".exp")) {
-        return EMB_FORMAT_EXP;
-    }
-    #else /* ARDUINO TODO: This is temporary. Remove when complete. */    
     /* checks the first character to see if it is the end symbol */
     for (i=0; formatTable[i].extension[0]!='E'; i++) {
         if (!strcmp(ending, formatTable[i].extension)) {
             return i;
         }
     }
-    #endif /* ARDUINO TODO: This is temporary. Remove when complete. */
 
     embLog("ERROR: emb-reader-writer.c embReaderWriter_getByFileName(), unsupported file type:");
     embLog(ending);

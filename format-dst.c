@@ -34,7 +34,7 @@ static unsigned char setbit(int pos)
 /* TODO: review this then remove since emb-pattern.c has a similar function */
 /* void combineJumpStitches(EmbPattern* p, int jumpsPerTrim)
 {
-    if(!p) { embLog_print("ERROR: format-dst.c combineJumpStitches(), p argument is null\n"); return; }
+    if(!p) { embLog("ERROR: format-dst.c combineJumpStitches(), p argument is null\n"); return; }
     EmbStitchList* pointer = p->stitchList;
     int jumpCount = 0;
     EmbStitchList* jumpListStart = 0;
@@ -88,8 +88,8 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
     b0 = b1 = b2 = 0;
 
     /* cannot encode values > +121 or < -121. */
-    if(x > 121 || x < -121) embLog_print("ERROR: format-dst.c encode_record(), x is not in valid range [-121,121] , x = %d\n", x);
-    if(y > 121 || y < -121) embLog_print("ERROR: format-dst.c encode_record(), y is not in valid range [-121,121] , y = %d\n", y);
+    if(x > 121 || x < -121) embLog("ERROR: format-dst.c encode_record(), x is not in valid range [-121,121] , x =\n"); /* , x); */
+    if(y > 121 || y < -121) embLog("ERROR: format-dst.c encode_record(), y is not in valid range [-121,121] , y = \n"); /* , y); */
 
     if(x >= +41) { b2 += setbit(2); x -= 81; }
     if(x <= -41) { b2 += setbit(3); x += 81; }
@@ -101,7 +101,7 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
     if(x <=  -2) { b1 += setbit(1); x += 3; }
     if(x >=  +1) { b0 += setbit(0); x -= 1; }
     if(x <=  -1) { b0 += setbit(1); x += 1; }
-    if(x !=   0) { embLog_print("ERROR: format-dst.c encode_record(), x should be zero yet x = %d\n", x); }
+    if(x !=   0) { embLog("ERROR: format-dst.c encode_record(), x should be zero yet x = \n"); /*, x); */ }
     if(y >= +41) { b2 += setbit(5); y -= 81; }
     if(y <= -41) { b2 += setbit(4); y += 81; }
     if(y >= +14) { b1 += setbit(5); y -= 27; }
@@ -112,7 +112,7 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
     if(y <=  -2) { b1 += setbit(6); y += 3; }
     if(y >=  +1) { b0 += setbit(7); y -= 1; }
     if(y <=  -1) { b0 += setbit(6); y += 1; }
-    if(y !=   0) { embLog_print("ERROR: format-dst.c encode_record(), y should be zero yet y = %d\n", y); }
+    if(y !=   0) { embLog("ERROR: format-dst.c encode_record(), y should be zero yet y = \n"); /* , y); */ }
 
     b2 |= (char) 3;
 
@@ -397,7 +397,6 @@ int writeDst(EmbPattern* pattern, const char* fileName)
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
-    xx = yy = 0;
     /* TODO: make sure that pattern->threads->count defaults to 1 in new patterns */
     flags = NORMAL;
     boundingRect = embPattern_calcBoundingBox(pattern);
@@ -407,20 +406,28 @@ int writeDst(EmbPattern* pattern, const char* fileName)
     char *la = stralloccopy(pattern->get_variable("design_name"));
     if(strlen(la)>16) la[16]='\0';
 
-    embFile_printf(file,"LA:%-16s\x0d",la);
+    embFile_print(file,"LA:%-16s\x0d",la);
     free(la);
     }
     else
     {
     */
-    embFile_printf(file, "LA:%-16s\x0d", "Untitled");
+    /* pad to 16 char */
+    embFile_print(file, "LA:Untitled        \x0d");
     /*} */
-    embFile_printf(file, "ST:%7d\x0d", pattern->stitchList->count);
-    embFile_printf(file, "CO:%3d\x0d", pattern->threads->count - 1); /* number of color changes, not number of colors! */
-    embFile_printf(file, "+X:%5d\x0d", (int)(boundingRect.right * 10.0));
-    embFile_printf(file, "-X:%5d\x0d", (int)(fabs(boundingRect.left) * 10.0));
-    embFile_printf(file, "+Y:%5d\x0d", (int)(boundingRect.bottom * 10.0));
-    embFile_printf(file, "-Y:%5d\x0d", (int)(fabs(boundingRect.top) * 10.0));
+    embFile_print(file, "ST:");
+    writeInt(file, pattern->stitchList->count, 6);
+    embFile_print(file, "\x0dCO:");
+    writeInt(file, pattern->threads->count - 1, 6); /* number of color changes, not number of colors! */
+    embFile_print(file, "\x0d+X:");
+    writeInt(file, (int)(boundingRect.right * 10.0), 6);
+    embFile_print(file, "\x0d-X:");
+    writeInt(file, (int)(fabs(boundingRect.left) * 10.0), 6);
+    embFile_print(file, "\x0d+Y:");
+    writeInt(file, (int)(boundingRect.bottom * 10.0), 6);
+    embFile_print(file, "\x0d-Y:");
+    writeInt(file, (int)(fabs(boundingRect.top) * 10.0), 6);
+    embFile_print(file, "\x0d");
 
 
     ax = ay = mx = my = 0;
@@ -437,17 +444,23 @@ int writeDst(EmbPattern* pattern, const char* fileName)
         /* pd is not valid, so fill in a default consisting of "******" */
         pd = "******";
     }
-    embFile_printf(file, "AX:+%5d\x0d", ax);
-    embFile_printf(file, "AY:+%5d\x0d", ay);
-    embFile_printf(file, "MX:+%5d\x0d", mx);
-    embFile_printf(file, "MY:+%5d\x0d", my);
-    embFile_printf(file, "PD:%6s\x0d", pd);
+    embFile_print(file, "AX:+");
+    writeInt(file, ax, 6);
+    embFile_print(file, "\x0dAY:+");
+    writeInt(file, ay, 6);
+    embFile_print(file, "\x0dMX:+");
+    writeInt(file, mx, 6);
+    embFile_print(file, "\x0dMY:+");
+    writeInt(file, my, 6);
+    embFile_print(file, "\x0dPD:");
+    embFile_print(file, pd); /* 6 char, swap for embFile_write */
+    embFile_print(file, "\x0d");
     binaryWriteByte(file, 0x1a); /* 0x1a is the code for end of section. */
 
     /* pad out header to proper length */
     for(i = 125; i < 512; i++)
     {
-        embFile_printf(file, " ");
+        embFile_print(file, " ");
     }
 
     /* write stitches */

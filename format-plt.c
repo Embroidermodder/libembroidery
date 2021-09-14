@@ -17,7 +17,9 @@ int readPlt(EmbPattern* pattern, const char* fileName)
     file = fopen(fileName, "rb");
     if(!file)
     {
-        embLog_print("ERROR: format-plt.c readPlt(), cannot open %s for reading\n", fileName);
+        embLog("ERROR: format-plt.c readPlt(), cannot open");
+        embLog(fileName);
+        embLog(" for reading\n");
         return 0;
     }
 
@@ -68,8 +70,8 @@ int writePlt(EmbPattern* pattern, const char* fileName)
     file = embFile_open(fileName, "wb", 0);
     if (!file) return 0;
 
-    embFile_puts(file, "IN;");
-    embFile_puts(file, "ND;");
+    embFile_print(file, "IN;");
+    embFile_print(file, "ND;");
 
     for (i=0; i<pattern->stitchList->count; i++) {
         stitch = pattern->stitchList->stitch[i];
@@ -77,21 +79,28 @@ int writePlt(EmbPattern* pattern, const char* fileName)
             firstStitchOfBlock = 1;
         }
         if (firstStitchOfBlock) {
-            embFile_printf(file, "PU%f,%f;", stitch.x * scalingFactor, stitch.y * scalingFactor);
-            embFile_puts(file, "ST0.00,0.00;");
-            embFile_puts(file, "SP0;");
-            embFile_puts(file, "HT0;");
-            embFile_puts(file, "HS0;");
-            embFile_puts(file, "TT0;");
-            embFile_puts(file, "TS0;");
+            embFile_print(file, "PU");
+            writeFloat(file, stitch.x * scalingFactor);
+            embFile_print(file, ",");
+            writeFloat(file, stitch.y * scalingFactor);
+            embFile_print(file, ";ST0.00,0.00;");
+            embFile_print(file, "SP0;");
+            embFile_print(file, "HT0;");
+            embFile_print(file, "HS0;");
+            embFile_print(file, "TT0;");
+            embFile_print(file, "TS0;");
             firstStitchOfBlock = 0;
         }
         else {
-            fprintf(file, "PD%f,%f;", stitch.x * scalingFactor, stitch.y * scalingFactor);
+            embFile_print(file, "PD");
+            writeFloat(file, stitch.x * scalingFactor);
+            embFile_print(file, ",");
+            writeFloat(file, stitch.y * scalingFactor);
+            embFile_print(file, ";");
         }
     }
-    embFile_puts(file, "PU0.0,0.0;");
-    embFile_puts(file, "PU0.0,0.0;");
+    embFile_print(file, "PU0.0,0.0;");
+    embFile_print(file, "PU0.0,0.0;");
     embFile_close(file);
     return 1; /*TODO: finish WritePlt */
 }

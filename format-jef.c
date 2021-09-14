@@ -322,9 +322,12 @@ int writeJef(EmbPattern* pattern, const char* fileName)
 
     embTime_initNow(&time);
 
-    embFile_printf(file, "%04d%02d%02d%02d%02d%02d", (int)(time.year + 1900),
-            (int)(time.month + 1), (int)(time.day), (int)(time.hour),
-            (int)(time.minute), (int)(time.second));
+    writeInt(file, (int)(time.year + 1900), 4);
+    writeInt(file, (int)(time.month + 1), 2); /* TODO: pad with zeros all date/time entries */
+    writeInt(file, (int)(time.day), 2);
+    writeInt(file, (int)(time.hour), 2);
+    writeInt(file, (int)(time.minute), 2);
+    writeInt(file, (int)(time.second), 2);
     binaryWriteByte(file, 0x00);
     binaryWriteByte(file, 0x00);
     binaryWriteInt(file, pattern->threads->count);

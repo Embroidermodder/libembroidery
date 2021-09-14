@@ -151,7 +151,7 @@ int writeSew(EmbPattern* pattern, const char* fileName)
     }
 
     for (i = 2; i < 7538; i++) {
-        embFile_printf(file, " ");
+        embFile_print(file, " ");
     }
 
     for (i=0; i<pattern->stitchList->count; i++) {

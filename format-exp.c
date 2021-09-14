@@ -147,14 +147,14 @@ return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
         expEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), flags);
         if((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10)))
         {
-            embFile_printf(file, "%c%c%c%c", b[0], b[1], b[2], b[3]);
+            embFile_write(b, 1, 4, file);
         }
         else
         {
-            embFile_printf(file, "%c%c", b[0], b[1]);
+            embFile_write(b, 1, 2, file);
         }
     }
-    embFile_printf(file, "\x1a");
+    embFile_print(file, "\x1a");
     embFile_close(file);
     return 1;
 #endif /* ARDUINO TODO: This is temporary. Remove when complete. */

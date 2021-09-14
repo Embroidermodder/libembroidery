@@ -482,6 +482,32 @@ report(int result, char *label)
     }
 }
 
+/**
+ * Note that we can use printf here because this file isn't compiled into
+ * libembroidery.so.
+ */
+static int embeddedFunctionsResult(void)
+{
+    char buffer[30];
+    int dnumber;
+    float fnumber;
+    dnumber = 2031;
+    fnumber = 12.4123;
+    /* embPointerToArray(buffer, (void *)buffer, 10);
+    printf("%s %p\n", buffer, (void *)buffer); */
+    embIntToArray(buffer, dnumber, 10);
+    printf("%s %d\n", buffer, dnumber);
+    if (strcmp(buffer, "2031")) {
+        return 1;
+    }
+    embFloatToArray(buffer, fnumber, 1.0e-7, 3, 3);
+    printf("%s %f\n", buffer, fnumber);
+    if (strcmp(buffer, "12.412")) {
+        return 1;
+    }
+    return 0;
+}
+
 static void testMain(void)
 {
     int hashResult = testHash();
@@ -495,6 +521,7 @@ static void testMain(void)
     int svg2Result = convert("test02.csv", "test02.svg");
     int dst1Result = convert("test01.csv", "test01.dst");
     int dst2Result = convert("test02.csv", "test02.dst");
+    int embeddedResult = embeddedFunctionsResult();
 
     puts("SUMMARY OF RESULTS");
     puts("------------------");
@@ -509,5 +536,6 @@ static void testMain(void)
     report(svg2Result, "Convert CSV-SVG 2");
     report(dst1Result, "Convert CSV-DST 1");
     report(dst2Result, "Convert CSV-DST 2");
+    report(embeddedResult, "Embedded Functions");
 }
 

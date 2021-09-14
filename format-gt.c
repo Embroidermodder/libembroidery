@@ -6,33 +6,33 @@ int readGt(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file;
 
-    if (!validateReadPattern(pattern, fileName, "readGt")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readGt"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_seek(file, 0x200, SEEK_SET); /* TODO: review for combining code. This line appears to be the only difference from the FXY format. */
 
-    while(1)
-    {
+    while (1) {
         int stitchType = NORMAL;
         int b1 = (int)binaryReadByte(file);
         int b2 = (int)binaryReadByte(file);
         unsigned char commandByte = binaryReadByte(file);
 
-        if(commandByte == 0x91)
-        {
+        if (commandByte == 0x91) {
             embPattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
-        if((commandByte & 0x01) == 0x01)
+        if ((commandByte & 0x01) == 0x01)
             stitchType = TRIM;
-        if((commandByte & 0x02) == 0x02)
+        if ((commandByte & 0x02) == 0x02)
             stitchType = STOP;
-        if((commandByte & 0x20) == 0x20)
+        if ((commandByte & 0x20) == 0x20)
             b1 = -b1;
-        if((commandByte & 0x40) == 0x40)
+        if ((commandByte & 0x40) == 0x40)
             b2 = -b2;
         embPattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
     }
@@ -48,10 +48,12 @@ int readGt(EmbPattern* pattern, const char* fileName)
 int writeGt(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file;
-    if (!validateWritePattern(pattern, fileName, "writeGt")) return 0;
+    if (!validateWritePattern(pattern, fileName, "writeGt"))
+        return 0;
 
     file = embFile_open(fileName, "wb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embFile_close(file);
     return 0; /*TODO: finish writeGt */

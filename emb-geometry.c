@@ -1,7 +1,7 @@
 #include "embroidery.h"
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 const double embConstantPi = 3.1415926535;
 
@@ -17,21 +17,21 @@ EmbArcObject embArcObject_make(EmbVector s, EmbVector m, EmbVector e)
 
 double radians(double degree)
 {
-    return degree*embConstantPi/180.0;
+    return degree * embConstantPi / 180.0;
 }
 
 double degrees(double radian)
 {
-    return radian*180.0/embConstantPi;
+    return radian * 180.0 / embConstantPi;
 }
 
 /* Calculus based approach at determining whether a polygon is clockwise or counterclockwise.
  * Returns true if arc is clockwise. */
 char isArcClockwise(EmbArc arc)
 {
-    double edge1 = (arc.mid.x-arc.start.x)*(arc.mid.y+arc.start.y);
-    double edge2 = (arc.end.x-arc.mid.x)*(arc.end.y+arc.mid.y);
-    double edge3 = (arc.start.x-arc.end.x)*(arc.start.y+arc.end.y);
+    double edge1 = (arc.mid.x - arc.start.x) * (arc.mid.y + arc.start.y);
+    double edge2 = (arc.end.x - arc.mid.x) * (arc.end.y + arc.mid.y);
+    double edge3 = (arc.start.x - arc.end.x) * (arc.start.y + arc.end.y);
     if (edge1 + edge2 + edge3 >= 0.0) {
         return 1;
     }
@@ -58,11 +58,11 @@ void getArcCenter(EmbArc arc, EmbVector* arcCenter)
 
 /* Calculates Arc Geometry from Bulge Data.
  * Returns false if there was an error calculating the data. */
-char getArcDataFromBulge(double bulge, EmbArc *arc, EmbVector* arcCenter,
-                         double* radius, double* diameter, double* chord,
-                         EmbVector* chordMid,
-                         double* sagitta, double* apothem,
-                         double* incAngleInDegrees, char* clockwise)
+char getArcDataFromBulge(double bulge, EmbArc* arc, EmbVector* arcCenter,
+    double* radius, double* diameter, double* chord,
+    EmbVector* chordMid,
+    double* sagitta, double* apothem,
+    double* incAngleInDegrees, char* clockwise)
 {
     EmbVector f, diff;
     double incAngleInRadians;
@@ -71,13 +71,12 @@ char getArcDataFromBulge(double bulge, EmbArc *arc, EmbVector* arcCenter,
 
     if (bulge >= 0.0) {
         *clockwise = 0;
-    }
-    else {
+    } else {
         *clockwise = 1;
     }
 
     /* Calculate the Included Angle in Radians */
-    incAngleInRadians = atan(bulge)*4.0;
+    incAngleInRadians = atan(bulge) * 4.0;
 
     embVector_subtract(arc->end, arc->start, &diff);
     *chord = embVector_getLength(diff);
@@ -93,8 +92,7 @@ char getArcDataFromBulge(double bulge, EmbArc *arc, EmbVector* arcCenter,
 
     if (*clockwise) {
         sagittaAngleInRadians = chordAngleInRadians + radians(90.0);
-    }
-    else {
+    } else {
         sagittaAngleInRadians = chordAngleInRadians - radians(90.0);
     }
 
@@ -135,11 +133,11 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVector* p3, EmbV
         return 0;
     }
     /* Circles do not touch each other */
-    else if(d > (c0.radius + c1.radius)) {
+    else if (d > (c0.radius + c1.radius)) {
         return 0;
     }
     /* One circle is contained within the other */
-    else if(d < (c0.radius - c1.radius)) {
+    else if (d < (c0.radius - c1.radius)) {
         return 0;
     }
 
@@ -169,13 +167,13 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVector* p3, EmbV
      * END PROOF
      */
 
-    a = ((c0.radius*c0.radius) - (c1.radius*c1.radius) + (d*d)) / (2.0 * d);
+    a = ((c0.radius * c0.radius) - (c1.radius * c1.radius) + (d * d)) / (2.0 * d);
     /* Solve for h by substituting a into a^2 + h^2 = r0^2 */
-    h = sqrt((c0.radius*c0.radius) - (a*a));
+    h = sqrt((c0.radius * c0.radius) - (a * a));
 
     /*Find point p2 by adding the a offset in relation to line d to point p0 */
 
-    embVector_multiply(diff, a/d, &p2);
+    embVector_multiply(diff, a / d, &p2);
     embVector_add(c0.center, p2, &p2);
 
     /* Tangent circles have only one intersection
@@ -191,8 +189,8 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVector* p3, EmbV
 
     /* Get the perpendicular slope by multiplying by the negative reciprocal
      * Then multiply by the h offset in relation to d to get the actual offsets */
-    m.x = -(diff.y * h/d);
-    m.y =  (diff.x * h/d);
+    m.x = -(diff.y * h / d);
+    m.y = (diff.x * h / d);
 
     /* Add the offsets to point p2 to obtain the intersection points */
     embVector_add(p2, m, p3);
@@ -226,7 +224,7 @@ int getCircleTangentPoints(EmbCircle c, EmbVector point, EmbVector* t0, EmbVecto
 
     /* Since the tangent lines are always perpendicular to the radius, so
      * we can use the Pythagorean theorem to solve for the missing side */
-    p.radius = sqrt((hyp*hyp) - (c.radius*c.radius));
+    p.radius = sqrt((hyp * hyp) - (c.radius * c.radius));
     p.center = point;
     return getCircleCircleIntersections(c, p, t0, t1);
 }
@@ -321,7 +319,7 @@ unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector*
     }
     result->x = D2.x * C.x - D1.x * C.y;
     result->y = D2.y * C.x - D1.y * C.y;
-    embVector_multiply(*result, 1.0/det, result);
+    embVector_multiply(*result, 1.0 / det, result);
     return 1;
 }
 
@@ -486,7 +484,6 @@ double embVector_distance(EmbVector v1, EmbVector v2)
     embVector_subtract(v1, v2, &v3);
     return sqrt(embVector_dot(v3, v3));
 }
-
 
 /**
  * Since we aren't using full vector algebra here, all vectors are "vertical".

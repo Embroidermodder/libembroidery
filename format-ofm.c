@@ -9,12 +9,18 @@ static char* ofmReadLibrary(EmbFile* file)
     /* FF FE FF */
     unsigned char leadIn[3];
 
-    if(!file) { embLog("ERROR: format-ofm.c ofmReadLibrary(), file argument is null\n"); return 0; }
+    if (!file) {
+        embLog("ERROR: format-ofm.c ofmReadLibrary(), file argument is null\n");
+        return 0;
+    }
 
     binaryReadBytes(file, leadIn, 3); /* TODO: check return value */
     stringLength = binaryReadByte(file);
     libraryName = (char*)malloc(sizeof(char) * stringLength * 2);
-    if(!libraryName) { embLog("ERROR: format-ofm.c ofmReadLibrary(), unable to allocate memory for libraryName\n"); return 0; }
+    if (!libraryName) {
+        embLog("ERROR: format-ofm.c ofmReadLibrary(), unable to allocate memory for libraryName\n");
+        return 0;
+    }
     binaryReadBytes(file, (unsigned char*)libraryName, stringLength * 2); /* TODO: check return value */
     return libraryName;
 }
@@ -24,19 +30,25 @@ static int ofmReadClass(EmbFile* file)
     int len;
     char* s = 0;
 
-    if(!file) { embLog("ERROR: format-ofm.c ofmReadClass(), file argument is null\n"); return 0; }
+    if (!file) {
+        embLog("ERROR: format-ofm.c ofmReadClass(), file argument is null\n");
+        return 0;
+    }
 
     binaryReadInt16(file);
     len = binaryReadInt16(file);
 
     s = (char*)malloc(sizeof(char) * len + 1);
-    if(!s) { embLog("ERROR: format-ofm.c ofmReadClass(), unable to allocate memory for s\n"); return 0; }
+    if (!s) {
+        embLog("ERROR: format-ofm.c ofmReadClass(), unable to allocate memory for s\n");
+        return 0;
+    }
     binaryReadBytes(file, (unsigned char*)s, len); /* TODO: check return value */
     s[len] = '\0';
-    if(strcmp(s, "CExpStitch") == 0)
-            return 0x809C;
-    if(strcmp(s, "CColorChange") == 0)
-            return 0xFFFF;
+    if (strcmp(s, "CExpStitch") == 0)
+        return 0x809C;
+    if (strcmp(s, "CColorChange") == 0)
+        return 0xFFFF;
     return 0;
 }
 
@@ -48,9 +60,12 @@ static void ofmReadBlockHeader(EmbFile* file)
     unsigned short short1;
     short unknown1 = 0; /* TODO: determine what this represents */
     short unknown2 = 0; /* TODO: determine what this represents */
-    int unknown3 = 0;   /* TODO: determine what this represents */
+    int unknown3 = 0; /* TODO: determine what this represents */
 
-    if(!file) { embLog("ERROR: format-ofm.c ofmReadBlockHeader(), file argument is null\n"); return; }
+    if (!file) {
+        embLog("ERROR: format-ofm.c ofmReadBlockHeader(), file argument is null\n");
+        return;
+    }
 
     unknown1 = binaryReadInt16(file);
     unknown2 = (short)binaryReadInt32(file);
@@ -61,25 +76,34 @@ static void ofmReadBlockHeader(EmbFile* file)
     binaryReadByte(file);
     len = binaryReadByte(file);
     s = (char*)malloc(2 * len);
-    if(!s) { embLog("ERROR: format-ofm.c ofmReadBlockHeader(), unable to allocate memory for s\n"); return; }
-    binaryReadBytes(file, (unsigned char *)s, 2 * len); /* TODO: check return value */
-    val1 = binaryReadInt32(file);   /*  0 */
-    val2 = binaryReadInt32(file);   /*  0 */
-    val3 = binaryReadInt32(file);   /*  0 */
-    val4 = binaryReadInt32(file);   /*  0 */
-    val5 = binaryReadInt32(file);   /*  1 */
-    val6 = binaryReadInt32(file);   /*  1 */
-    val7 = binaryReadInt32(file);   /*  1 */
-    val8 = binaryReadInt32(file);   /*  0 */
-    val9 = binaryReadInt32(file);   /* 64 */
-    val10 = binaryReadInt32(file);  /* 64 */
+    if (!s) {
+        embLog("ERROR: format-ofm.c ofmReadBlockHeader(), unable to allocate memory for s\n");
+        return;
+    }
+    binaryReadBytes(file, (unsigned char*)s, 2 * len); /* TODO: check return value */
+    val1 = binaryReadInt32(file); /*  0 */
+    val2 = binaryReadInt32(file); /*  0 */
+    val3 = binaryReadInt32(file); /*  0 */
+    val4 = binaryReadInt32(file); /*  0 */
+    val5 = binaryReadInt32(file); /*  1 */
+    val6 = binaryReadInt32(file); /*  1 */
+    val7 = binaryReadInt32(file); /*  1 */
+    val8 = binaryReadInt32(file); /*  0 */
+    val9 = binaryReadInt32(file); /* 64 */
+    val10 = binaryReadInt32(file); /* 64 */
     short1 = binaryReadInt16(file); /*  0 */
 }
 
 static void ofmReadColorChange(EmbFile* file, EmbPattern* pattern)
 {
-    if(!file) { embLog("ERROR: format-ofm.c ofmReadColorChange(), file argument is null\n"); return; }
-    if(!pattern) { embLog("ERROR: format-ofm.c ofmReadColorChange(), pattern argument is null\n"); return; }
+    if (!file) {
+        embLog("ERROR: format-ofm.c ofmReadColorChange(), file argument is null\n");
+        return;
+    }
+    if (!pattern) {
+        embLog("ERROR: format-ofm.c ofmReadColorChange(), pattern argument is null\n");
+        return;
+    }
 
     ofmReadBlockHeader(file);
     embPattern_addStitchRel(pattern, 0.0, 0.0, STOP, 1);
@@ -91,8 +115,14 @@ static void ofmReadThreads(EmbFile* file, EmbPattern* p)
     char* primaryLibraryName = 0;
     char* expandedString = 0;
 
-    if(!file) { embLog("ERROR: format-ofm.c ofmReadThreads(), file argument is null\n"); return; }
-    if(!p) { embLog("ERROR: format-ofm.c ofmReadThreads(), p argument is null\n"); return; }
+    if (!file) {
+        embLog("ERROR: format-ofm.c ofmReadThreads(), file argument is null\n");
+        return;
+    }
+    if (!p) {
+        embLog("ERROR: format-ofm.c ofmReadThreads(), p argument is null\n");
+        return;
+    }
 
     /* FF FE FF 00 */
     binaryReadInt32(file);
@@ -103,10 +133,12 @@ static void ofmReadThreads(EmbFile* file, EmbPattern* p)
     binaryReadInt16(file);
     stringLen = binaryReadInt16(file);
     expandedString = (char*)malloc(stringLen);
-    if(!expandedString) { embLog("ERROR: format-ofm.c ofmReadThreads(), unable to allocate memory for expandedString\n"); return; }
+    if (!expandedString) {
+        embLog("ERROR: format-ofm.c ofmReadThreads(), unable to allocate memory for expandedString\n");
+        return;
+    }
     binaryReadBytes(file, (unsigned char*)expandedString, stringLen); /* TODO: check return value */
-    for(i = 0; i < numberOfColors; i++)
-    {
+    for (i = 0; i < numberOfColors; i++) {
         EmbThread thread;
         char colorNumberText[10];
         int threadLibrary = 0, colorNameLength, colorNumber;
@@ -122,10 +154,13 @@ static void ofmReadThreads(EmbFile* file, EmbPattern* p)
         binaryReadInt16(file);
         colorNameLength = binaryReadByte(file);
         colorName = (char*)malloc(colorNameLength * 2);
-        if(!colorName) { embLog("ERROR: format-ofm.c ofmReadThreads(), unable to allocate memory for colorName\n"); return; }
-        binaryReadBytes(file, (unsigned char*)colorName, colorNameLength*2); /* TODO: check return value */
+        if (!colorName) {
+            embLog("ERROR: format-ofm.c ofmReadThreads(), unable to allocate memory for colorName\n");
+            return;
+        }
+        binaryReadBytes(file, (unsigned char*)colorName, colorNameLength * 2); /* TODO: check return value */
         binaryReadInt16(file);
-     /* itoa(colorNumber, colorNumberText, 10); TODO: never use itoa, it's non-standard, use sprintf: http://stackoverflow.com/questions/5242524/converting-int-to-string-in-c */
+        /* itoa(colorNumber, colorNumberText, 10); TODO: never use itoa, it's non-standard, use sprintf: http://stackoverflow.com/questions/5242524/converting-int-to-string-in-c */
         thread.color.r = (unsigned char)r;
         thread.color.g = (unsigned char)g;
         thread.color.b = (unsigned char)b;
@@ -136,8 +171,7 @@ static void ofmReadThreads(EmbFile* file, EmbPattern* p)
     binaryReadInt16(file);
     primaryLibraryName = ofmReadLibrary(file);
     numberOfLibraries = binaryReadInt16(file);
-    for(i = 0; i < numberOfLibraries; i++)
-    {
+    for (i = 0; i < numberOfLibraries; i++) {
         /*libraries.Add( TODO: review */
         char* libName = ofmReadLibrary(file);
         free(libName);
@@ -155,22 +189,24 @@ static void ofmReadExpanded(EmbFile* file, EmbPattern* p)
 {
     int i, numberOfStitches = 0;
 
-    if(!file) { embLog("ERROR: format-ofm.c ofmReadExpanded(), file argument is null\n"); return; }
-    if(!p) { embLog("ERROR: format-ofm.c ofmReadExpanded(), p argument is null\n"); return; }
+    if (!file) {
+        embLog("ERROR: format-ofm.c ofmReadExpanded(), file argument is null\n");
+        return;
+    }
+    if (!p) {
+        embLog("ERROR: format-ofm.c ofmReadExpanded(), p argument is null\n");
+        return;
+    }
 
     ofmReadBlockHeader(file);
     numberOfStitches = binaryReadInt32(file);
 
-    for(i = 0; i < numberOfStitches; i++)
-    {
+    for (i = 0; i < numberOfStitches; i++) {
         unsigned char stitch[5];
         binaryReadBytes(file, stitch, 5); /* TODO: check return value */
-        if(stitch[0] == 0)
-        {
+        if (stitch[0] == 0) {
             embPattern_addStitchAbs(p, ofmDecode(stitch[1], stitch[2]) / 10.0, ofmDecode(stitch[3], stitch[4]) / 10.0, i == 0 ? JUMP : NORMAL, 1);
-        }
-        else if(stitch[0] == 32)
-        {
+        } else if (stitch[0] == 32) {
             embPattern_addStitchAbs(p, ofmDecode(stitch[1], stitch[2]) / 10.0, ofmDecode(stitch[3], stitch[4]) / 10.0, i == 0 ? TRIM : NORMAL, 1);
         }
     }
@@ -187,14 +223,24 @@ int readOfm(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     bcf_file* bcfFile = 0;
 
-    if(!pattern) { embLog("ERROR: format-ofm.c readOfm(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog("ERROR: format-ofm.c readOfm(), fileName argument is null\n"); return 0; }
+    if (!pattern) {
+        embLog("ERROR: format-ofm.c readOfm(), pattern argument is null\n");
+        return 0;
+    }
+    if (!fileName) {
+        embLog("ERROR: format-ofm.c readOfm(), fileName argument is null\n");
+        return 0;
+    }
 
     fileCompound = embFile_open(fileName, "rb", 0);
-    if(!fileCompound) return 0;
+    if (!fileCompound)
+        return 0;
 
     bcfFile = (bcf_file*)malloc(sizeof(bcf_file));
-    if(!bcfFile) { embLog("ERROR: format-ofm.c readOfm(), unable to allocate memory for bcfFile\n"); return 0; }
+    if (!bcfFile) {
+        embLog("ERROR: format-ofm.c readOfm(), unable to allocate memory for bcfFile\n");
+        return 0;
+    }
     bcfFile_read(fileCompound, bcfFile);
     file = GetFile(bcfFile, fileCompound, "EdsIV Object");
     bcf_file_free(bcfFile);
@@ -205,29 +251,26 @@ int readOfm(EmbPattern* pattern, const char* fileName)
     binaryReadInt32(file);
     classNameLength = binaryReadInt16(file);
     s = (char*)malloc(sizeof(char) * classNameLength);
-    if(!s) { embLog("ERROR: format-ofm.c readOfm(), unable to allocate memory for s\n"); return 0; }
+    if (!s) {
+        embLog("ERROR: format-ofm.c readOfm(), unable to allocate memory for s\n");
+        return 0;
+    }
     binaryReadBytes(file, (unsigned char*)s, classNameLength); /* TODO: check return value */
     unknownCount = binaryReadInt16(file); /* TODO: determine what unknown count represents */
 
     binaryReadInt16(file);
     key = ofmReadClass(file);
-    while(1)
-    {
-        if(key == 0xFEFF)
-        {
+    while (1) {
+        if (key == 0xFEFF) {
             break;
         }
-        if(key == 0x809C)
-        {
+        if (key == 0x809C) {
             ofmReadExpanded(file, pattern);
-        }
-        else
-        {
+        } else {
             ofmReadColorChange(file, pattern);
         }
         key = binaryReadUInt16(file);
-        if(key == 0xFFFF)
-        {
+        if (key == 0xFFFF) {
             ofmReadClass(file);
         }
     }

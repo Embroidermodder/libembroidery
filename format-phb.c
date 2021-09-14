@@ -9,18 +9,23 @@ int readPhb(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     int i;
 
-    if(!pattern) { embLog("ERROR: format-phb.c readPhb(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog("ERROR: format-phb.c readPhb(), fileName argument is null\n"); return 0; }
+    if (!pattern) {
+        embLog("ERROR: format-phb.c readPhb(), pattern argument is null\n");
+        return 0;
+    }
+    if (!fileName) {
+        embLog("ERROR: format-phb.c readPhb(), fileName argument is null\n");
+        return 0;
+    }
 
     file = embFile_open(fileName, "rb", 0);
-    if(!file)
+    if (!file)
         return 0;
 
     embFile_seek(file, 0x71, SEEK_SET);
     colorCount = binaryReadInt16(file);
 
-    for(i = 0; i < colorCount; i++)
-    {
+    for (i = 0; i < colorCount; i++) {
         EmbThread t = pecThreads[(int)binaryReadByte(file)];
         embPattern_addThread(pattern, t);
     }
@@ -39,8 +44,7 @@ int readPhb(EmbPattern* pattern, const char* fileName)
     embFile_seek(file, fileOffset + 14, SEEK_SET); /* 28 */
 
     colorCount = (short)binaryReadByte(file);
-    for(i = 0; i< colorCount; i++)
-    {
+    for (i = 0; i < colorCount; i++) {
         binaryReadByte(file);
     }
     binaryReadInt32(file); /* bytes to end of file */

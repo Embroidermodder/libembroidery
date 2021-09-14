@@ -9,10 +9,11 @@ int readRgb(EmbPattern* pattern, const char* fileName)
     EmbFile* file;
     EmbThread t;
 
-    if (!validateReadPattern(pattern, fileName, "readRgb")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readRgb"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 1);
-    if(!file)
+    if (!file)
         return 0;
 
     embFile_seek(file, 0x00, SEEK_END);
@@ -43,13 +44,14 @@ int writeRgb(EmbPattern* pattern, const char* fileName)
     EmbFile* file = 0;
     EmbColor c;
 
-    if (!validateWritePattern(pattern, fileName, "writeRgb")) return 0;
-
-    file = embFile_open(fileName, "wb", 0);
-    if(!file)
+    if (!validateWritePattern(pattern, fileName, "writeRgb"))
         return 0;
 
-    for (i=0; i<pattern->threads->count; i++) {
+    file = embFile_open(fileName, "wb", 0);
+    if (!file)
+        return 0;
+
+    for (i = 0; i < pattern->threads->count; i++) {
         c = pattern->threads->thread[i].color;
         binaryWriteByte(file, c.r);
         binaryWriteByte(file, c.g);

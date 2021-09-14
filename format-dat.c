@@ -8,10 +8,12 @@ int readDat(EmbPattern* pattern, const char* fileName)
     int fileLength, stitchesRemaining, b1, b2, stitchType;
     EmbFile* file;
 
-    if (!validateReadPattern(pattern, fileName, "readDat")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readDat"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_seek(file, 0x00, SEEK_END);
@@ -20,8 +22,7 @@ int readDat(EmbPattern* pattern, const char* fileName)
     stitchesRemaining = binaryReadUInt16(file);
     embFile_seek(file, 0x100, SEEK_SET);
 
-    while(embFile_tell(file) < fileLength)
-    {
+    while (embFile_tell(file) < fileLength) {
         b1 = (int)binaryReadUInt8(file);
         b2 = (int)binaryReadUInt8(file);
         b0 = binaryReadByte(file);
@@ -29,22 +30,19 @@ int readDat(EmbPattern* pattern, const char* fileName)
         stitchType = NORMAL;
         stitchesRemaining--;
 
-        if((b0 & 0x02) == 0) stitchType = TRIM;
+        if ((b0 & 0x02) == 0)
+            stitchType = TRIM;
 
-        if(b0 == 0x87)
-        {
+        if (b0 == 0x87) {
             stitchType = STOP;
         }
-        if(b0 == 0xF8)
-        {
+        if (b0 == 0xF8) {
             break;
         }
-        if(b1 >= 0x80)
-        {
+        if (b1 >= 0x80) {
             b1 = -(b1 & 0x7F);
         }
-        if(b2 >= 0x80)
-        {
+        if (b2 >= 0x80) {
             b2 = -(b2 & 0x7F);
         }
         embPattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
@@ -60,7 +58,8 @@ int readDat(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeDat(EmbPattern* pattern, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeDat")) return 0;
+    if (!validateWritePattern(pattern, fileName, "writeDat"))
+        return 0;
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 

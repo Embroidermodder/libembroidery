@@ -2,16 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum
-{
+typedef enum {
     CSV_EXPECT_NULL,
     CSV_EXPECT_QUOTE1,
     CSV_EXPECT_QUOTE2,
     CSV_EXPECT_COMMA
 } CSV_EXPECT;
 
-typedef enum
-{
+typedef enum {
     CSV_MODE_NULL,
     CSV_MODE_COMMENT,
     CSV_MODE_VARIABLE,
@@ -21,8 +19,7 @@ typedef enum
 
 static char* csvStitchFlagToStr(int flags)
 {
-    switch(flags)
-    {
+    switch (flags) {
     case NORMAL:
         return "STITCH";
         break;
@@ -46,22 +43,21 @@ static char* csvStitchFlagToStr(int flags)
 
 static int csvStrToStitchFlag(const char* str)
 {
-    if(!str)
-    {
+    if (!str) {
         embLog("ERROR: format-csv.c csvStrToStitchFlag(), str argument is null\n");
         return -1;
     }
-    if(!strcmp(str, "STITCH"))
+    if (!strcmp(str, "STITCH"))
         return NORMAL;
-    else if(!strcmp(str, "JUMP"))
+    else if (!strcmp(str, "JUMP"))
         return JUMP;
-    else if(!strcmp(str, "TRIM"))
+    else if (!strcmp(str, "TRIM"))
         return TRIM;
-    else if(!strcmp(str, "COLOR"))
+    else if (!strcmp(str, "COLOR"))
         return STOP;
-    else if(!strcmp(str, "END"))
+    else if (!strcmp(str, "END"))
         return END;
-    else if(!strcmp(str, "UNKNOWN"))
+    else if (!strcmp(str, "UNKNOWN"))
         return -1;
     return -1;
 }
@@ -85,153 +81,130 @@ int readCsv(EmbPattern* pattern, const char* fileName)
     unsigned char r = 0, g = 0, b = 0;
     char* buff = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readCsv")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readCsv"))
+        return 0;
 
     buff = (char*)malloc(size);
-    if (!buff) { embLog("ERROR: format-csv.c readCsv(), unable to allocate memory for buff\n"); return 0; }
+    if (!buff) {
+        embLog("ERROR: format-csv.c readCsv(), unable to allocate memory for buff\n");
+        return 0;
+    }
 
     file = embFile_open(fileName, "r", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
-        pos = 0;
-        do
-        {
-            c = embFile_getc(file);
-            switch(c)
-            {
-                case '"':
-                    if(expect == CSV_EXPECT_QUOTE1)
-                    {
-                        expect = CSV_EXPECT_QUOTE2;
-                    }
-                    else if(expect == CSV_EXPECT_QUOTE2)
-                        expect = CSV_EXPECT_COMMA;
-                    break;
-                case ',':
-                    if(expect == CSV_EXPECT_COMMA)
-                    {
-                        process = 1;
-                    }
-                    break;
-                case '\n':
-                    if(expect == CSV_EXPECT_COMMA)
-                    {
-                        process = 1;
-                    }
-                    else if(expect == CSV_EXPECT_QUOTE1)
-                    {
-                        /* Do Nothing. We encountered a blank line. */
-                    }
-                    else
-                    {
-                        embLog("ERROR: format-csv.c readCsv(), premature newline\n");
-                        return 0;
-                    }
-                    break;
+    pos = 0;
+    do {
+        c = embFile_getc(file);
+        switch (c) {
+        case '"':
+            if (expect == CSV_EXPECT_QUOTE1) {
+                expect = CSV_EXPECT_QUOTE2;
+            } else if (expect == CSV_EXPECT_QUOTE2)
+                expect = CSV_EXPECT_COMMA;
+            break;
+        case ',':
+            if (expect == CSV_EXPECT_COMMA) {
+                process = 1;
             }
-            if(pos >= size - 1)
-            {
-                size *= 2;
-                buff = (char*)realloc(buff,size);
-                if(!buff) { embLog("ERROR: format-csv.c readCsv(), cannot re-allocate memory for buff\n"); return 0; }
+            break;
+        case '\n':
+            if (expect == CSV_EXPECT_COMMA) {
+                process = 1;
+            } else if (expect == CSV_EXPECT_QUOTE1) {
+                /* Do Nothing. We encountered a blank line. */
+            } else {
+                embLog("ERROR: format-csv.c readCsv(), premature newline\n");
+                return 0;
             }
-
-            if(process)
-            {
-                buff[pos] = 0;
-                pos = 0;
-                process = 0;
-                cellNum++;
-                expect = CSV_EXPECT_QUOTE1;
-                if(csvMode == CSV_MODE_NULL)
-                {
-                    if     (!strcmp(buff, "#")) { csvMode = CSV_MODE_COMMENT; }
-                    else if(!strcmp(buff, ">")) { csvMode = CSV_MODE_VARIABLE; }
-                    else if(!strcmp(buff, "$")) { csvMode = CSV_MODE_THREAD; }
-                    else if(!strcmp(buff, "*")) { csvMode = CSV_MODE_STITCH; }
-                    else { /* TODO: error */ return 0; }
-                }
-                else if(csvMode == CSV_MODE_COMMENT)
-                {
-                    /* Do Nothing */
-                }
-                else if(csvMode == CSV_MODE_VARIABLE)
-                {
-                    /* Do Nothing */
-                }
-                else if(csvMode == CSV_MODE_THREAD)
-                {
-                    if(cellNum == 2)
-                    {
-                        /* Do Nothing. Ignore Thread Number */
-                    }
-                    else if(cellNum == 3)
-                        r = (unsigned char)atoi(buff);
-                    else if(cellNum == 4)
-                        g = (unsigned char)atoi(buff);
-                    else if(cellNum == 5)
-                        b = (unsigned char)atoi(buff);
-                    else if(cellNum == 6)
-                    {
-                        /* TODO: Thread Description */
-                    }
-                    else if(cellNum == 7)
-                    {
-                        /* TODO: Thread Catalog Number */
-                        EmbThread t;
-                        t.color.r = r;
-                        t.color.g = g;
-                        t.color.b = b;
-                        t.description = "TODO:DESCRIPTION";
-                        t.catalogNumber = "TODO:CATALOG_NUMBER";
-                        embPattern_addThread(pattern, t);
-                        csvMode = CSV_MODE_NULL;
-                        cellNum = 0;
-                    }
-                    else
-                    {
-                        /* TODO: error */
-                        return 0;
-                    }
-                }
-                else if(csvMode == CSV_MODE_STITCH)
-                {
-                    if(cellNum == 2)
-                    {
-                        flags = csvStrToStitchFlag(buff);
-                        if(flags == STOP)
-                            numColorChanges++;
-                    }
-                    else if(cellNum == 3)
-                        xx = atof(buff);
-                    else if(cellNum == 4)
-                    {
-                        yy = atof(buff);
-                        embPattern_addStitchAbs(pattern, xx, yy, flags, 1);
-                        csvMode = CSV_MODE_NULL;
-                        cellNum = 0;
-                    }
-                    else
-                    {
-                        /* TODO: error */
-                        return 0;
-                    }
-                }
-
-                if(c == '\n')
-                {
-                    csvMode = CSV_MODE_NULL;
-                    cellNum = 0;
-                }
-            }
-            else
-            {
-                if(expect == CSV_EXPECT_QUOTE2 && c != '"')
-                    buff[pos++] = (char)c;
+            break;
+        }
+        if (pos >= size - 1) {
+            size *= 2;
+            buff = (char*)realloc(buff, size);
+            if (!buff) {
+                embLog("ERROR: format-csv.c readCsv(), cannot re-allocate memory for buff\n");
+                return 0;
             }
         }
-        while(c != EOF);
-        embFile_close(file);
+
+        if (process) {
+            buff[pos] = 0;
+            pos = 0;
+            process = 0;
+            cellNum++;
+            expect = CSV_EXPECT_QUOTE1;
+            if (csvMode == CSV_MODE_NULL) {
+                if (!strcmp(buff, "#")) {
+                    csvMode = CSV_MODE_COMMENT;
+                } else if (!strcmp(buff, ">")) {
+                    csvMode = CSV_MODE_VARIABLE;
+                } else if (!strcmp(buff, "$")) {
+                    csvMode = CSV_MODE_THREAD;
+                } else if (!strcmp(buff, "*")) {
+                    csvMode = CSV_MODE_STITCH;
+                } else { /* TODO: error */
+                    return 0;
+                }
+            } else if (csvMode == CSV_MODE_COMMENT) {
+                /* Do Nothing */
+            } else if (csvMode == CSV_MODE_VARIABLE) {
+                /* Do Nothing */
+            } else if (csvMode == CSV_MODE_THREAD) {
+                if (cellNum == 2) {
+                    /* Do Nothing. Ignore Thread Number */
+                } else if (cellNum == 3)
+                    r = (unsigned char)atoi(buff);
+                else if (cellNum == 4)
+                    g = (unsigned char)atoi(buff);
+                else if (cellNum == 5)
+                    b = (unsigned char)atoi(buff);
+                else if (cellNum == 6) {
+                    /* TODO: Thread Description */
+                } else if (cellNum == 7) {
+                    /* TODO: Thread Catalog Number */
+                    EmbThread t;
+                    t.color.r = r;
+                    t.color.g = g;
+                    t.color.b = b;
+                    t.description = "TODO:DESCRIPTION";
+                    t.catalogNumber = "TODO:CATALOG_NUMBER";
+                    embPattern_addThread(pattern, t);
+                    csvMode = CSV_MODE_NULL;
+                    cellNum = 0;
+                } else {
+                    /* TODO: error */
+                    return 0;
+                }
+            } else if (csvMode == CSV_MODE_STITCH) {
+                if (cellNum == 2) {
+                    flags = csvStrToStitchFlag(buff);
+                    if (flags == STOP)
+                        numColorChanges++;
+                } else if (cellNum == 3)
+                    xx = atof(buff);
+                else if (cellNum == 4) {
+                    yy = atof(buff);
+                    embPattern_addStitchAbs(pattern, xx, yy, flags, 1);
+                    csvMode = CSV_MODE_NULL;
+                    cellNum = 0;
+                } else {
+                    /* TODO: error */
+                    return 0;
+                }
+            }
+
+            if (c == '\n') {
+                csvMode = CSV_MODE_NULL;
+                cellNum = 0;
+            }
+        } else {
+            if (expect == CSV_EXPECT_QUOTE2 && c != '"')
+                buff[pos++] = (char)c;
+        }
+    } while (c != EOF);
+    embFile_close(file);
 
     /* if not enough colors defined, fill in random colors */
     while (pattern->threads->count < numColorChanges) {
@@ -255,7 +228,8 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
     int stitchCount = 0;
     int threadCount = 0;
 
-    if (!validateReadPattern(pattern, fileName, "writeCsv")) return 0;
+    if (!validateReadPattern(pattern, fileName, "writeCsv"))
+        return 0;
 
     stitchCount = pattern->stitchList->count;
     threadCount = pattern->threads->count;
@@ -270,7 +244,8 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
     embPattern_end(pattern);
 
     file = embFile_open(fileName, "w", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     /* write header */
     embFile_print(file, "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n");
@@ -294,7 +269,7 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
     embFile_print(file, "\n");
 
     /* write variables */
-    embFile_print(file,"\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");
+    embFile_print(file, "\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");
     embFile_print(file, "\">\",\"STITCH_COUNT:\",\"");
     writeInt(file, stitchCount, 6);
     embFile_print(file, "\"\n");
@@ -322,11 +297,11 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
 
     /* write colors */
     embFile_print(file, "\"#\",\"[THREAD_NUMBER]\",\"[RED]\",\"[GREEN]\",\"[BLUE]\",\"[DESCRIPTION]\",\"[CATALOG_NUMBER]\"\n");
-    for (i=0; i<threadCount; i++) {
+    for (i = 0; i < threadCount; i++) {
         thr = pattern->threads->thread[i];
-         /* TODO: fix segfault that backtraces here when libembroidery-convert from dst to csv. */
+        /* TODO: fix segfault that backtraces here when libembroidery-convert from dst to csv. */
         embFile_print(file, "\"$\",\"");
-        writeInt(file, i+1, 3);
+        writeInt(file, i + 1, 3);
         embFile_print(file, "\",\"");
         writeInt(file, (int)thr.color.r, 4);
         embFile_print(file, "\",\"");
@@ -343,10 +318,10 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
 
     /* write stitches */
     embFile_print(file, "\"#\",\"[STITCH_TYPE]\",\"[X]\",\"[Y]\"\n");
-    for (i=0; i<pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
         embFile_print(file, "\"*\",\"");
-        embFile_print(file,  csvStitchFlagToStr(st.flags));
+        embFile_print(file, csvStitchFlagToStr(st.flags));
         embFile_print(file, "\",\"");
         writeFloat(file, st.x);
         embFile_print(file, "\",\"");

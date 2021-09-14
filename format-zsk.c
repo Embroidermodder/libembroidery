@@ -13,7 +13,8 @@ int readZsk(EmbPattern* pattern, const char* fileName)
         return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embFile_seek(file, 0x230, SEEK_SET);
     colorNumber = binaryReadUInt8(file);
@@ -67,13 +68,14 @@ int readZsk(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeZsk(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile *file;
+    EmbFile* file;
     if (!validateWritePattern(pattern, fileName, "writeZsk")) {
         return 0;
     }
 
     file = embFile_open(fileName, "wb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embFile_close(file);
     return 0; /*TODO: finish writeZsk */

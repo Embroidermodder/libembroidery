@@ -15,8 +15,7 @@ int readPlt(EmbPattern* pattern, const char* fileName)
         return 0;
 
     file = fopen(fileName, "rb");
-    if(!file)
-    {
+    if (!file) {
         embLog("ERROR: format-plt.c readPlt(), cannot open");
         embLog(fileName);
         embLog(" for reading\n");
@@ -25,22 +24,16 @@ int readPlt(EmbPattern* pattern, const char* fileName)
 
     embPattern_loadExternalColorFile(pattern, fileName);
     /* TODO: replace all scanf code */
-    while(fscanf(file, "%s", input) >= 0)
-    {
-        if(startsWith("PD", input))
-        {
+    while (fscanf(file, "%s", input) >= 0) {
+        if (startsWith("PD", input)) {
             /* TODO: replace all scanf code */
-            if(sscanf(input, "PD%lf,%lf;", &x, &y) < 2)
-            {
+            if (sscanf(input, "PD%lf,%lf;", &x, &y) < 2) {
                 break;
             }
             embPattern_addStitchAbs(pattern, x / scalingFactor, y / scalingFactor, NORMAL, 1);
-        }
-        else if(startsWith("PU", input))
-        {
+        } else if (startsWith("PU", input)) {
             /* TODO: replace all scanf code */
-            if(sscanf(input, "PU%lf,%lf;", &x, &y) < 2)
-            {
+            if (sscanf(input, "PU%lf,%lf;", &x, &y) < 2) {
                 break;
             }
             embPattern_addStitchAbs(pattern, x / scalingFactor, y / scalingFactor, STOP, 1);
@@ -68,12 +61,13 @@ int writePlt(EmbPattern* pattern, const char* fileName)
     }
 
     file = embFile_open(fileName, "wb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embFile_print(file, "IN;");
     embFile_print(file, "ND;");
 
-    for (i=0; i<pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitchList->count; i++) {
         stitch = pattern->stitchList->stitch[i];
         if (stitch.flags & STOP) {
             firstStitchOfBlock = 1;
@@ -90,8 +84,7 @@ int writePlt(EmbPattern* pattern, const char* fileName)
             embFile_print(file, "TT0;");
             embFile_print(file, "TS0;");
             firstStitchOfBlock = 0;
-        }
-        else {
+        } else {
             embFile_print(file, "PD");
             writeFloat(file, stitch.x * scalingFactor);
             embFile_print(file, ",");
@@ -104,5 +97,4 @@ int writePlt(EmbPattern* pattern, const char* fileName)
     embFile_close(file);
     return 1; /*TODO: finish WritePlt */
 }
-
 

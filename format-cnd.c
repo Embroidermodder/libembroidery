@@ -4,8 +4,14 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readCnd(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { embLog("ERROR: format-cnd.c readCnd(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog("ERROR: format-cnd.c readCnd(), fileName argument is null\n"); return 0; }
+    if (!pattern) {
+        embLog("ERROR: format-cnd.c readCnd(), pattern argument is null\n");
+        return 0;
+    }
+    if (!fileName) {
+        embLog("ERROR: format-cnd.c readCnd(), fileName argument is null\n");
+        return 0;
+    }
     return 0; /*TODO: finish readCnd */
 }
 
@@ -13,7 +19,8 @@ int readCnd(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeCnd(EmbPattern* pattern, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeCnd")) return 0;
+    if (!validateWritePattern(pattern, fileName, "writeCnd"))
+        return 0;
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 

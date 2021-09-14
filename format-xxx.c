@@ -1,13 +1,13 @@
 #include "embroidery.h"
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 static char xxxDecodeByte(unsigned char inputByte)
 {
-    if(inputByte >= 0x80)
-        return (char) ((-~inputByte) - 1);
-    return ((char) inputByte);
+    if (inputByte >= 0x80)
+        return (char)((-~inputByte) - 1);
+    return ((char)inputByte);
 }
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
@@ -23,10 +23,12 @@ int readXxx(EmbPattern* pattern, const char* fileName)
     EmbThread thread;
     EmbStitch st;
 
-    if (!validateReadPattern(pattern, fileName, "readXxx")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readXxx"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if(!file) return 0;
+    if (!file)
+        return 0;
 
     embFile_seek(file, 0x27, SEEK_SET);
     numberOfColors = binaryReadInt16(file);
@@ -43,51 +45,43 @@ int readXxx(EmbPattern* pattern, const char* fileName)
     }
     embFile_seek(file, 0x100, SEEK_SET);
 
-    for(i = 0; !endOfStream && embFile_tell(file) < paletteOffset; i++)
-    {
+    for (i = 0; !endOfStream && embFile_tell(file) < paletteOffset; i++) {
         flags = NORMAL;
-        if(thisStitchJump) flags = TRIM;
+        if (thisStitchJump)
+            flags = TRIM;
         thisStitchJump = 0;
         b0 = binaryReadByte(file);
         b1 = binaryReadByte(file);
 
-        if(b0 == 0x7E || b0 == 0x7D) /* TODO: ARE THERE OTHER BIG JUMP CODES? */
+        if (b0 == 0x7E || b0 == 0x7D) /* TODO: ARE THERE OTHER BIG JUMP CODES? */
         {
             dx = b1 + (binaryReadByte(file) << 8);
-            dx = ((short) dx);
+            dx = ((short)dx);
             dy = binaryReadInt16(file);
             flags = TRIM;
-        }
-        else if(b0 == 0x7F)
-        {
-            if(b1 != 0x17 && b1 != 0x46 && b1 >= 8) /* TODO: LOOKS LIKE THESE CODES ARE IN THE HEADER */
+        } else if (b0 == 0x7F) {
+            if (b1 != 0x17 && b1 != 0x46 && b1 >= 8) /* TODO: LOOKS LIKE THESE CODES ARE IN THE HEADER */
             {
                 b0 = 0;
                 b1 = 0;
                 thisStitchJump = 1;
                 flags = STOP;
-            }
-            else if(b1 == 1)
-            {
+            } else if (b1 == 1) {
                 flags = TRIM;
                 b0 = binaryReadByte(file);
                 b1 = binaryReadByte(file);
-            }
-            else
-            {
+            } else {
                 continue;
             }
             dx = xxxDecodeByte(b0);
             dy = xxxDecodeByte(b1);
-        }
-        else
-        {
+        } else {
             dx = xxxDecodeByte(b0);
             dy = xxxDecodeByte(b1);
         }
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-/*
+    /*
     lastStitch = pattern->stitchList;
     secondLast = 0;
     if (lastStitch)
@@ -122,14 +116,11 @@ static void xxxEncodeStop(EmbFile* file, EmbStitch s)
 
 static void xxxEncodeStitch(EmbFile* file, double deltaX, double deltaY, int flags)
 {
-    if((flags & (JUMP | TRIM)) && (fabs(deltaX) > 124 || fabs(deltaY) > 124))
-    {
+    if ((flags & (JUMP | TRIM)) && (fabs(deltaX) > 124 || fabs(deltaY) > 124)) {
         binaryWriteByte(file, 0x7E);
         binaryWriteShort(file, (short)deltaX);
         binaryWriteShort(file, (short)deltaY);
-    }
-    else
-    {
+    } else {
         /* TODO: Verify this works after changing this to unsigned char */
         binaryWriteByte(file, (unsigned char)roundDouble(deltaX));
         binaryWriteByte(file, (unsigned char)roundDouble(deltaY));
@@ -147,12 +138,11 @@ static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
     if (p->stitchList) {
         thisX = (float)p->stitchList->stitch[0].x;
         thisY = (float)p->stitchList->stitch[0].y;
-    }
-    else {
+    } else {
         return;
     }
 
-    for (i=0; i<p->stitchList->count; i++) {
+    for (i = 0; i < p->stitchList->count; i++) {
         s = p->stitchList->stitch[i];
         previousX = thisX;
         previousY = thisY;
@@ -162,10 +152,8 @@ static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
         deltaY = thisY - previousY;
         if (s.flags & STOP) {
             xxxEncodeStop(file, s);
-        }
-        else if(s.flags & END) {
-        }
-        else {
+        } else if (s.flags & END) {
+        } else {
             xxxEncodeStitch(file, deltaX * 10.0f, deltaY * 10.0f, s.flags);
         }
     }
@@ -186,17 +174,16 @@ int writeXxx(EmbPattern* pattern, const char* fileName)
     }
 
     file = embFile_open(fileName, "wb", 0);
-    if(!file) return 0;
+    if (!file)
+        return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 124, 127);
 
-    for(i = 0; i < 0x17; i++)
-    {
+    for (i = 0; i < 0x17; i++) {
         binaryWriteByte(file, 0x00);
     }
     binaryWriteUInt(file, (unsigned int)pattern->stitchList->count);
-    for(i = 0; i < 0x0C; i++)
-    {
+    for (i = 0; i < 0x0C; i++) {
         binaryWriteByte(file, 0x00);
     }
     binaryWriteUShort(file, (unsigned short)pattern->threads->count);
@@ -206,12 +193,11 @@ int writeXxx(EmbPattern* pattern, const char* fileName)
     binaryWriteShort(file, (short)(embRect_width(rect) * 10.0));
     binaryWriteShort(file, (short)(embRect_height(rect) * 10.0));
 
-    binaryWriteShort(file, (short)(embRect_width(rect) / 2.0 * 10));  /*TODO: xEnd from start point x=0 */
+    binaryWriteShort(file, (short)(embRect_width(rect) / 2.0 * 10)); /*TODO: xEnd from start point x=0 */
     binaryWriteShort(file, (short)(embRect_height(rect) / 2.0 * 10)); /*TODO: yEnd from start point y=0 */
-    binaryWriteShort(file, (short)(embRect_width(rect)/2.0 * 10));    /*TODO: left from start x = 0     */
-    binaryWriteShort(file, (short)(embRect_height(rect)/2.0 * 10));   /*TODO: bottom from start y = 0   */
-    for(i = 0; i < 0xC5; i++)
-    {
+    binaryWriteShort(file, (short)(embRect_width(rect) / 2.0 * 10)); /*TODO: left from start x = 0     */
+    binaryWriteShort(file, (short)(embRect_height(rect) / 2.0 * 10)); /*TODO: bottom from start y = 0   */
+    for (i = 0; i < 0xC5; i++) {
         binaryWriteByte(file, 0x00);
     }
     binaryWriteInt(file, 0x0000); /* place holder for end of stitches */
@@ -233,15 +219,14 @@ int writeXxx(EmbPattern* pattern, const char* fileName)
     binaryWriteByte(file, 0x00);
     binaryWriteByte(file, 0x00);
 
-    for (i=0; i<22; i++) {
-        if (i<pattern->threads->count) {
+    for (i = 0; i < 22; i++) {
+        if (i < pattern->threads->count) {
             c = pattern->threads->thread[i].color;
             binaryWriteByte(file, 0x00);
             binaryWriteByte(file, c.r);
             binaryWriteByte(file, c.g);
             binaryWriteByte(file, c.b);
-        }
-        else {
+        } else {
             binaryWriteUInt(file, 0x01000000);
         }
     }

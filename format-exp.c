@@ -8,35 +8,27 @@ static char expDecode(unsigned char a1)
 
 static void expEncode(unsigned char* b, char dx, char dy, int flags)
 {
-    if(!b)
-    {
+    if (!b) {
         embLog("ERROR: format-exp.c expEncode(), b argument is null\n");
         return;
     }
 
-    if(flags == STOP)
-    {
+    if (flags == STOP) {
         b[0] = 0x80;
         b[1] = 0x01;
         b[2] = dx;
         b[3] = dy;
-    }
-    else if (flags == JUMP)
-    {
+    } else if (flags == JUMP) {
         b[0] = 0x80;
         b[1] = 0x04;
         b[2] = dx;
         b[3] = dy;
-    }
-    else if (flags == TRIM || flags == END)
-    {
+    } else if (flags == TRIM || flags == END) {
         b[0] = 0x80;
         b[1] = 0x80;
         b[2] = 0;
         b[3] = 0;
-	}
-    else
-    {
+    } else {
         b[0] = dx;
         b[1] = dy;
     }
@@ -52,52 +44,48 @@ int readExp(EmbPattern* pattern, const char* fileName)
     char dx = 0, dy = 0;
     int flags = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readExp")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readExp"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if(!file) return 0;
+    if (!file)
+        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
-    for(i = 0; !embFile_eof(file); i++)
-    {
+    for (i = 0; !embFile_eof(file); i++) {
         flags = NORMAL;
         b0 = (unsigned char)embFile_getc(file);
-        if(embFile_eof(file))
+        if (embFile_eof(file))
             break;
         b1 = (unsigned char)embFile_getc(file);
-        if(embFile_eof(file))
+        if (embFile_eof(file))
             break;
-        if(b0 == 0x80)
-        {
-            if(b1 & 1)
-            {
+        if (b0 == 0x80) {
+            if (b1 & 1) {
                 b0 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if (embFile_eof(file))
                     break;
                 b1 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if (embFile_eof(file))
                     break;
                 flags = STOP;
-            }
-            else if((b1 == 2) || (b1 == 4) || b1 == 6)
-            {
+            } else if ((b1 == 2) || (b1 == 4) || b1 == 6) {
                 flags = TRIM;
-                if(b1 == 2) flags = NORMAL;
+                if (b1 == 2)
+                    flags = NORMAL;
                 b0 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if (embFile_eof(file))
                     break;
                 b1 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if (embFile_eof(file))
                     break;
-            }
-            else if(b1 == 0x80)
-            {
+            } else if (b1 == 0x80) {
                 b0 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if (embFile_eof(file))
                     break;
                 b1 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if (embFile_eof(file))
                     break;
                 /* Seems to be b0=0x07 and b1=0x00
                  * Maybe used as extension functions */
@@ -122,7 +110,7 @@ int readExp(EmbPattern* pattern, const char* fileName)
 int writeExp(EmbPattern* pattern, const char* fileName)
 {
 #ifdef ARDUINO /* ARDUINO TODO: This is temporary. Remove when complete. */
-return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
+    return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
 #else /* ARDUINO TODO: This is temporary. Remove when complete. */
     EmbFile* file = 0;
     double dx = 0.0, dy = 0.0;
@@ -131,13 +119,15 @@ return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
     unsigned char b[4];
     EmbStitch st;
 
-    if (!validateWritePattern(pattern, fileName, "writeExp")) return 0;
+    if (!validateWritePattern(pattern, fileName, "writeExp"))
+        return 0;
 
     file = embFile_open(fileName, "wb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     /* write stitches */
-    for (i=0; i<pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
         dx = st.x * 10.0 - xx;
         dy = st.y * 10.0 - yy;
@@ -145,12 +135,9 @@ return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
         yy = st.y * 10.0;
         flags = st.flags;
         expEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), flags);
-        if((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10)))
-        {
+        if ((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10))) {
             embFile_write(b, 1, 4, file);
-        }
-        else
-        {
+        } else {
             embFile_write(b, 1, 2, file);
         }
     }

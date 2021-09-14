@@ -13,37 +13,33 @@ int readNew(EmbPattern* pattern, const char* fileName)
     unsigned char data[3];
     EmbFile* file;
 
-    if (!validateReadPattern(pattern, fileName, "readNew")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readNew"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     stitchCount = binaryReadUInt16(file);
-    while(binaryReadBytes(file, data, 3) == 3)
-    {
+    while (binaryReadBytes(file, data, 3) == 3) {
         int x = decodeNewStitch(data[0]);
         int y = decodeNewStitch(data[1]);
         int flag = NORMAL;
         char val = data[2];
-        if(data[2] & 0x40)
-        {
+        if (data[2] & 0x40) {
             x = -x;
         }
-        if(data[2] & 0x20)
-        {
+        if (data[2] & 0x20) {
             y = -y;
         }
-        if(data[2] & 0x10)
-        {
+        if (data[2] & 0x10) {
             flag = TRIM;
         }
-        if(data[2] & 0x01)
-        {
+        if (data[2] & 0x01) {
             flag = JUMP;
         }
-        if((val & 0x1E) == 0x02)
-        {
+        if ((val & 0x1E) == 0x02) {
             flag = STOP;
         }
         /* Unknown values, possibly TRIM
@@ -73,7 +69,8 @@ int writeNew(EmbPattern* pattern, const char* fileName)
         return 0;
     }
     file = embFile_open(fileName, "wb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embFile_close(file);
     return 0; /*TODO: finish writeNew */

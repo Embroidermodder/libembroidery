@@ -16,7 +16,8 @@ int readU00(EmbPattern* pattern, const char* fileName)
         return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     /* 16 3byte RGB's start @ 0x08 followed by 14 bytes between 0 and 15 with index of color for each color change */
     embFile_seek(file, 0x08, SEEK_SET);
@@ -30,34 +31,30 @@ int readU00(EmbPattern* pattern, const char* fileName)
 
     embFile_seek(file, 0x100, SEEK_SET);
     for (i = 0; !endOfStream; i++) {
-        char negativeX , negativeY;
+        char negativeX, negativeY;
         unsigned char b0 = binaryReadUInt8(file);
         unsigned char b1 = binaryReadUInt8(file);
         unsigned char b2 = binaryReadUInt8(file);
 
-        if(b0 == 0xF8 || b0 == 0x87 || b0 == 0x91)
-        {
+        if (b0 == 0xF8 || b0 == 0x87 || b0 == 0x91) {
             break;
         }
-        if((b0 & 0x0F) == 0)
-        {
+        if ((b0 & 0x0F) == 0) {
             flags = NORMAL;
-        }
-        else if((b0 & 0x1f) == 1)
-        {
+        } else if ((b0 & 0x1f) == 1) {
             flags = JUMP;
-        }
-        else if((b0 & 0x0F) > 0)
-        {
+        } else if ((b0 & 0x0F) > 0) {
             flags = STOP;
         }
         negativeX = ((b0 & 0x20) > 0);
         negativeY = ((b0 & 0x40) > 0);
 
-        dx = (char) b2;
-        dy = (char) b1;
-        if(negativeX) dx = (char) -dx;
-        if(negativeY) dy = (char) -dy;
+        dx = (char)b2;
+        dy = (char)b1;
+        if (negativeX)
+            dx = (char)-dx;
+        if (negativeY)
+            dy = (char)-dy;
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     embFile_close(file);
@@ -70,12 +67,13 @@ int readU00(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeU00(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile *file;
+    EmbFile* file;
     if (!validateWritePattern(pattern, fileName, "writeU00"))
         return 0;
 
     file = embFile_open(fileName, "wb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embFile_close(file);
     return 0; /*TODO: finish WriteU00 */

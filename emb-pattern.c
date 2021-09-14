@@ -126,7 +126,7 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
         EmbArray* pointList;
         EmbColor color;
         pointList = 0;
-        for (i=0; i<p->stitchList->count; i++) {
+        for (i = 0; i < p->stitchList->count; i++) {
             st = p->stitchList->stitch[i];
             if (st.flags & breakAtFlags) {
                 break;
@@ -332,7 +332,8 @@ int embPattern_read(EmbPattern* pattern, const char* fileName) /* TODO: Write te
 {
     int reader, result;
 
-    if (!validateReadPattern(pattern, fileName, "embPattern_read")) return 0;
+    if (!validateReadPattern(pattern, fileName, "embPattern_read"))
+        return 0;
 
     reader = embReaderWriter_getByFileName(fileName);
     if (reader < 0) {
@@ -350,7 +351,8 @@ int embPattern_write(EmbPattern* pattern, const char* fileName) /* TODO: Write t
 {
     int writer, result;
 
-    if (!validateWritePattern(pattern, fileName, "embPattern_write")) return 0;
+    if (!validateWritePattern(pattern, fileName, "embPattern_write"))
+        return 0;
 
     writer = embReaderWriter_getByFileName(fileName);
     if (writer < 0) {
@@ -562,7 +564,7 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
         embLog("ERROR: emb-pattern.c embPattern_flip(), p argument is null\n");
         return;
     }
-    
+
     /*
     flip.x = 1.0;
     flip.y = 1.0;
@@ -746,7 +748,7 @@ void embPattern_correctForMaxStitchLength(EmbPattern* p, double maxStitchLength,
     int j = 0, splits, i;
     double maxXY, maxLen;
     EmbVector st, diff, add;
-    EmbArray *newList;
+    EmbArray* newList;
 
     if (!p) {
         embLog("ERROR: emb-pattern.c embPattern_correctForMaxStitchLength(), p argument is null\n");
@@ -755,24 +757,26 @@ void embPattern_correctForMaxStitchLength(EmbPattern* p, double maxStitchLength,
     if (p->stitchList->count > 1) {
         newList = embArray_create(EMB_STITCH);
         embArray_addStitch(newList, p->stitchList->stitch[0]);
-        for (i=1; i<p->stitchList->count; i++) {
-            st.x = p->stitchList->stitch[i-1].x;
-            st.y = p->stitchList->stitch[i-1].y;
+        for (i = 1; i < p->stitchList->count; i++) {
+            st.x = p->stitchList->stitch[i - 1].x;
+            st.y = p->stitchList->stitch[i - 1].y;
             diff.x = p->stitchList->stitch[i].x - st.x;
             diff.y = p->stitchList->stitch[i].y - st.y;
             maxXY = embVector_getLength(diff);
             if (maxXY > maxStitchLength) {
-                if (p->stitchList->stitch[i].flags & (JUMP | TRIM)) maxLen = maxJumpLength;
-                else maxLen = maxStitchLength;
+                if (p->stitchList->stitch[i].flags & (JUMP | TRIM))
+                    maxLen = maxJumpLength;
+                else
+                    maxLen = maxStitchLength;
 
                 splits = (int)ceil((double)maxXY / maxLen);
 
                 if (splits > 1) {
-                    embVector_multiply(diff, (double)(1.0/splits), &add);
+                    embVector_multiply(diff, (double)(1.0 / splits), &add);
 
                     for (j = 1; j < splits; j++) {
                         EmbStitch s;
-                        s = p->stitchList->stitch[i-1];
+                        s = p->stitchList->stitch[i - 1];
                         s.x += add.x * j;
                         s.y += add.y * j;
                         embArray_addStitch(newList, s);
@@ -829,7 +833,7 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
         embLog("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), cannot allocate memory for extractName\n");
         return;
     }
-    
+
     hasRead = 0;
     strcpy(extractName, fileName);
     dotPos = strrchr(fileName, '.');

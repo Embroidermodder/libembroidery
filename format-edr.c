@@ -9,7 +9,8 @@ int readEdr(EmbPattern* pattern, const char* fileName)
     EmbFile* file;
     EmbThread t;
 
-    if (!validateReadPattern(pattern, fileName, "readEdr")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readEdr"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 1);
     if (file == 0) {
@@ -21,8 +22,7 @@ int readEdr(EmbPattern* pattern, const char* fileName)
 
     embArray_free(pattern->threads);
 
-    for(i = 0; i < numberOfColors; i++)
-    {
+    for (i = 0; i < numberOfColors; i++) {
         t.color.r = binaryReadByte(file);
         t.color.g = binaryReadByte(file);
         t.color.b = binaryReadByte(file);
@@ -43,12 +43,14 @@ int writeEdr(EmbPattern* pattern, const char* fileName)
     EmbColor c;
     int i;
 
-    if (!validateWritePattern(pattern, fileName, "writeEdr")) return 0;
+    if (!validateWritePattern(pattern, fileName, "writeEdr"))
+        return 0;
 
     file = embFile_open(fileName, "wb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
-    for (i=0; i<pattern->threads->count; i++) {
+    for (i = 0; i < pattern->threads->count; i++) {
         c = pattern->threads->thread[i].color;
         binaryWriteByte(file, c.r);
         binaryWriteByte(file, c.g);

@@ -21,7 +21,8 @@ int readInb(EmbPattern* pattern, const char* fileName)
         return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_seek(file, 0, SEEK_END);
@@ -52,13 +53,13 @@ int readInb(EmbPattern* pattern, const char* fileName)
         x = binaryReadByte(file);
         y = binaryReadByte(file);
         type = binaryReadByte(file);
-        if((type & 0x40) > 0)
+        if ((type & 0x40) > 0)
             x = -x;
-        if((type & 0x10) > 0)
+        if ((type & 0x10) > 0)
             y = -y;
-        if((type & 1) > 0)
+        if ((type & 1) > 0)
             stitch = STOP;
-        if((type & 2) > 0)
+        if ((type & 2) > 0)
             stitch = TRIM;
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitch, 1);
     }

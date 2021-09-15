@@ -1864,7 +1864,7 @@ void writeFloat(EmbFile* file, float number)
     /*    char buffer[30];
     embFloatToArray(buffer, number, 1.0e-7, 3, 5);
     embFile_print(file, buffer);*/
-    fprintf(file, "%f", number);
+    fprintf(file->file, "%f", number);
 }
 
 static void writeCircles(EmbPattern* pattern, EmbFile* file)

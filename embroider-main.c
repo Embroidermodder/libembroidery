@@ -405,11 +405,12 @@ static int testThreadColor(void)
 static int testEmbFormat(void)
 {
     const char* tName = "example.zsk";
-    const char* extension = embFormat_extensionFromName(tName);
+    char extension[10];
     const char* description = embFormat_descriptionFromName(tName);
     char reader = embFormat_readerStateFromName(tName);
     char writer = embFormat_writerStateFromName(tName);
     int type = embFormat_typeFromName(tName);
+    embFormat_getExtension(tName, extension);
 
     printf("Filename   : %s\n"
            "Extension  : %s\n"

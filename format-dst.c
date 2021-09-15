@@ -8,25 +8,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int decode_record_flags(unsigned char b2)
-{
-    int returnCode = 0;
-    if (b2 == 0xF3) {
-        return END;
-    }
-    if (b2 & 0x80) {
-        returnCode |= JUMP;
-    }
-    if (b2 & 0x40) {
-        returnCode |= STOP;
-    }
-    return returnCode;
-}
+/* returns the value of the n-th bit in a */
+#define BIT(a, n) \
+    ((a & (1 << n)) >> n)
 
-static unsigned char setbit(int pos)
-{
-    return (unsigned char)(1 << pos);
-}
+/* returns the value of the n-th bit in a */
+#define SETBIT(a, n) \
+    a |= (1 << n)
 
 /* TODO: review this then remove since emb-pattern.c has a similar function */
 /* void combineJumpStitches(EmbPattern* p, int jumpsPerTrim)
@@ -81,8 +69,8 @@ static unsigned char setbit(int pos)
 
 static void encode_record(EmbFile* file, int x, int y, int flags)
 {
-    char b0, b1, b2;
-    b0 = b1 = b2 = 0;
+    char b[4];
+    b[0] = b[1] = b[2] = 0;
 
     /* cannot encode values > +121 or < -121. */
     if (x > 121 || x < -121)
@@ -91,97 +79,97 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
         embLog("ERROR: format-dst.c encode_record(), y is not in valid range [-121,121] , y = \n"); /* , y); */
 
     if (x >= +41) {
-        b2 += setbit(2);
+        SETBIT(b[2], 2);
         x -= 81;
     }
     if (x <= -41) {
-        b2 += setbit(3);
+        SETBIT(b[2], 3);
         x += 81;
     }
     if (x >= +14) {
-        b1 += setbit(2);
+        SETBIT(b[1], 2);
         x -= 27;
     }
     if (x <= -14) {
-        b1 += setbit(3);
+        SETBIT(b[1], 3);
         x += 27;
     }
     if (x >= +5) {
-        b0 += setbit(2);
+        SETBIT(b[0], 2);
         x -= 9;
     }
     if (x <= -5) {
-        b0 += setbit(3);
+        b[0] += 1 << 3;
         x += 9;
     }
     if (x >= +2) {
-        b1 += setbit(0);
+        b[1] += 1 << 0;
         x -= 3;
     }
     if (x <= -2) {
-        b1 += setbit(1);
+        b[1] += 1 << 1;
         x += 3;
     }
     if (x >= +1) {
-        b0 += setbit(0);
+        b[0] += 1 << 0;
         x -= 1;
     }
     if (x <= -1) {
-        b0 += setbit(1);
+        b[0] += 1 << 1;
         x += 1;
     }
     if (x != 0) {
         embLog("ERROR: format-dst.c encode_record(), x should be zero yet x = \n"); /*, x); */
     }
     if (y >= +41) {
-        b2 += setbit(5);
+        b[2] += 1 << 5;
         y -= 81;
     }
     if (y <= -41) {
-        b2 += setbit(4);
+        b[2] += 1 << 4;
         y += 81;
     }
     if (y >= +14) {
-        b1 += setbit(5);
+        b[1] += 1 << 5;
         y -= 27;
     }
     if (y <= -14) {
-        b1 += setbit(4);
+        b[1] += 1 << 4;
         y += 27;
     }
     if (y >= +5) {
-        b0 += setbit(5);
+        b[0] += 1 << 5;
         y -= 9;
     }
     if (y <= -5) {
-        b0 += setbit(4);
+        b[0] += 1 << 4;
         y += 9;
     }
     if (y >= +2) {
-        b1 += setbit(7);
+        b[1] += 1 << 7;
         y -= 3;
     }
     if (y <= -2) {
-        b1 += setbit(6);
+        b[1] += 1 << 6;
         y += 3;
     }
     if (y >= +1) {
-        b0 += setbit(7);
+        b[0] += 1 << 7;
         y -= 1;
     }
     if (y <= -1) {
-        b0 += setbit(6);
+        b[0] += 1 << 6;
         y += 1;
     }
     if (y != 0) {
         embLog("ERROR: format-dst.c encode_record(), y should be zero yet y = \n"); /* , y); */
     }
 
-    b2 |= (char)3;
+    b[2] |= (char)3;
 
     if (flags & END) {
-        b2 = (char)-13;
-        b0 = b1 = (char)0;
+        b[2] = (char)-13;
+        b[0] = b[1] = (char)0;
     }
 
     /* if(flags & TRIM)
@@ -196,15 +184,13 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
         return;
     } */
     if (flags & (JUMP | TRIM)) {
-        b2 = (char)(b2 | 0x83);
+        b[2] = (char)(b[2] | 0x83);
     }
     if (flags & STOP) {
-        b2 = (char)(b2 | 0xC3);
+        b[2] = (char)(b[2] | 0xC3);
     }
 
-    binaryWriteByte(file, (unsigned char)b0);
-    binaryWriteByte(file, (unsigned char)b1);
-    binaryWriteByte(file, (unsigned char)b2);
+    embFile_write(b, 1, 3, file);
 }
 
 /*convert 2 characters into 1 int for case statement */
@@ -376,52 +362,27 @@ int readDst(EmbPattern* pattern, const char* fileName)
     }
 
     while (embFile_read(b, 1, 3, file) == 3) {
-        int x = 0;
-        int y = 0;
-        if (b[0] & 0x01)
-            x += 1;
-        if (b[0] & 0x02)
-            x -= 1;
-        if (b[0] & 0x04)
-            x += 9;
-        if (b[0] & 0x08)
-            x -= 9;
-        if (b[0] & 0x80)
-            y += 1;
-        if (b[0] & 0x40)
-            y -= 1;
-        if (b[0] & 0x20)
-            y += 9;
-        if (b[0] & 0x10)
-            y -= 9;
-        if (b[1] & 0x01)
-            x += 3;
-        if (b[1] & 0x02)
-            x -= 3;
-        if (b[1] & 0x04)
-            x += 27;
-        if (b[1] & 0x08)
-            x -= 27;
-        if (b[1] & 0x80)
-            y += 3;
-        if (b[1] & 0x40)
-            y -= 3;
-        if (b[1] & 0x20)
-            y += 27;
-        if (b[1] & 0x10)
-            y -= 27;
-        if (b[2] & 0x04)
-            x += 81;
-        if (b[2] & 0x08)
-            x -= 81;
-        if (b[2] & 0x20)
-            y += 81;
-        if (b[2] & 0x10)
-            y -= 81;
-        flags = decode_record_flags(b[2]);
-        if (flags == END) {
+        int x;
+        int y;
+        /* A version of the stitch decoding with less branching,
+         * the BIT macro returns either 0 or 1 based on the value
+         * of that bit and then is multiplied by what value that represents.
+         */
+        if (b[2] == 0xF3) {
             break;
         }
+        x  =     BIT(b[0], 1) - BIT(b[0], 2);
+        x +=  9*(BIT(b[0], 3) - BIT(b[0], 4));
+        y  =     BIT(b[0], 8) - BIT(b[0], 7);
+        y +=  9*(BIT(b[0], 6) - BIT(b[0], 5));
+        x +=  3*(BIT(b[1], 1) - BIT(b[1], 2));
+        x += 27*(BIT(b[1], 3) - BIT(b[1], 4));
+        y +=  3*(BIT(b[1], 8) - BIT(b[1], 7));
+        y += 27*(BIT(b[1], 6) - BIT(b[1], 5));
+        x += 81*(BIT(b[2], 3) - BIT(b[2], 4));
+        y += 81*(BIT(b[2], 6) - BIT(b[2], 5));
+
+        flags = (BIT(b[2], 8) * JUMP) | (BIT(b[2], 7) * STOP);
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
     }
     embFile_close(file);
@@ -469,6 +430,8 @@ int writeDst(EmbPattern* pattern, const char* fileName)
     /* pad to 16 char */
     embFile_print(file, "LA:Untitled        \x0d");
     /*} */
+    /* TODO: check that the number of characters adds to 125, or pad
+    correctly. */
     embFile_print(file, "ST:");
     writeInt(file, pattern->stitchList->count, 6);
     embFile_print(file, "\x0dCO:");
@@ -506,13 +469,9 @@ int writeDst(EmbPattern* pattern, const char* fileName)
     writeInt(file, my, 6);
     embFile_print(file, "\x0dPD:");
     embFile_print(file, pd); /* 6 char, swap for embFile_write */
-    embFile_print(file, "\x0d");
-    binaryWriteByte(file, 0x1a); /* 0x1a is the code for end of section. */
+    embFile_print(file, "\x0d\x1a"); /* 0x1a is the code for end of section. */
 
-    /* pad out header to proper length */
-    for (i = 125; i < 512; i++) {
-        embFile_print(file, " ");
-    }
+    embFile_pad(file, ' ', 512-125);
 
     /* write stitches */
     xx = yy = 0;
@@ -523,11 +482,10 @@ int writeDst(EmbPattern* pattern, const char* fileName)
         dy = roundDouble(st.y * 10.0) - yy;
         xx = roundDouble(st.x * 10.0);
         yy = roundDouble(st.y * 10.0);
-        flags = st.flags;
-        encode_record(file, dx, dy, flags);
+        encode_record(file, dx, dy, st.flags);
     }
-    binaryWriteByte(file, 0xA1); /* finish file with a terminator character */
-    binaryWriteShort(file, 0);
+    /* finish file with a terminator character */
+    embFile_write("\xA1\0\0", 1, 3, file);
     embFile_close(file);
     return 1;
 }

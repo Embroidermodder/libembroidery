@@ -2,20 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum {
-    CSV_EXPECT_NULL,
-    CSV_EXPECT_QUOTE1,
-    CSV_EXPECT_QUOTE2,
-    CSV_EXPECT_COMMA
-} CSV_EXPECT;
+#define CSV_EXPECT_NULL   0
+#define CSV_EXPECT_QUOTE1 1
+#define CSV_EXPECT_QUOTE2 2
+#define CSV_EXPECT_COMMA  3
 
-typedef enum {
-    CSV_MODE_NULL,
-    CSV_MODE_COMMENT,
-    CSV_MODE_VARIABLE,
-    CSV_MODE_THREAD,
-    CSV_MODE_STITCH
-} CSV_MODE;
+#define CSV_MODE_NULL     0
+#define CSV_MODE_COMMENT  1
+#define CSV_MODE_VARIABLE 2
+#define CSV_MODE_THREAD   3
+#define CSV_MODE_STITCH   4
 
 static char* csvStitchFlagToStr(int flags)
 {

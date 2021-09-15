@@ -343,6 +343,17 @@ size_t embFile_write(const void* ptr, size_t size, size_t nmemb, EmbFile* stream
 /**
  * TODO: documentation.
  */
+void embFile_pad(EmbFile* stream, char c, int n)
+{
+    int i;
+    for (i=0; i<n; i++) {
+        embFile_write(&c, 1, 1, stream);
+    }
+}
+
+/**
+ * TODO: documentation.
+ */
 int embFile_seek(EmbFile* stream, long offset, int origin)
 {
 #ifdef ARDUINO
@@ -879,47 +890,14 @@ int embFormat_getExtension(const char* fileName, char* ending)
 /**
  * TODO: documentation.
  */
-const char* embFormat_extensionFromName(const char* fileName)
-{
-    int i = 0;
-    char ending[10];
-    const char* extension = 0;
-
-    if (!embFormat_getExtension(fileName, ending)) {
-        return 0;
-    }
-
-    for (i = 0; i < numberOfFormats; i++) {
-        if (!strcmp(ending, formatTable[i].extension)) {
-            extension = formatTable[i].extension;
-            break;
-        }
-    }
-
-    return extension;
-}
-
-/**
- * TODO: documentation.
- */
 const char* embFormat_descriptionFromName(const char* fileName)
 {
-    int i = 0;
-    char ending[10];
-    const char* description = 0;
-
-    if (!embFormat_getExtension(fileName, ending)) {
+    int format;
+    format = embReaderWriter_getByFileName(fileName);
+    if (format < 0) {
         return 0;
     }
-
-    for (i = 0; i < numberOfFormats; i++) {
-        if (!strcmp(ending, formatTable[i].extension)) {
-            description = formatTable[i].description;
-            break;
-        }
-    }
-
-    return description;
+    return formatTable[format].description;
 }
 
 /**
@@ -927,22 +905,12 @@ const char* embFormat_descriptionFromName(const char* fileName)
  */
 char embFormat_readerStateFromName(const char* fileName)
 {
-    int i = 0;
-    char ending[10];
-    char readerState = ' ';
-
-    if (!embFormat_getExtension(fileName, ending)) {
+    int format;
+    format = embReaderWriter_getByFileName(fileName);
+    if (format < 0) {
         return 0;
     }
-
-    for (i = 0; i < numberOfFormats; i++) {
-        if (!strcmp(ending, formatTable[i].extension)) {
-            readerState = formatTable[i].reader;
-            break;
-        }
-    }
-
-    return readerState;
+    return formatTable[format].reader;
 }
 
 /**
@@ -950,22 +918,12 @@ char embFormat_readerStateFromName(const char* fileName)
  */
 char embFormat_writerStateFromName(const char* fileName)
 {
-    int i = 0;
-    char ending[10];
-    char writerState = ' ';
-
-    if (!embFormat_getExtension(fileName, ending)) {
+    int format;
+    format = embReaderWriter_getByFileName(fileName);
+    if (format < 0) {
         return 0;
     }
-
-    for (i = 0; i < numberOfFormats; i++) {
-        if (!strcmp(ending, formatTable[i].extension)) {
-            writerState = formatTable[i].writer;
-            break;
-        }
-    }
-
-    return writerState;
+    return formatTable[format].writer;
 }
 
 /**
@@ -973,22 +931,12 @@ char embFormat_writerStateFromName(const char* fileName)
  */
 int embFormat_typeFromName(const char* fileName)
 {
-    int i = 0;
-    char ending[10];
-    int type = EMBFORMAT_UNSUPPORTED;
-
-    if (!embFormat_getExtension(fileName, ending)) {
-        return 0;
+    int format;
+    format = embReaderWriter_getByFileName(fileName);
+    if (format < 0) {
+        return EMBFORMAT_UNSUPPORTED;
     }
-
-    for (i = 0; i < numberOfFormats; i++) {
-        if (!strcmp(ending, formatTable[i].extension)) {
-            type = formatTable[i].type;
-            break;
-        }
-    }
-
-    return type;
+    return formatTable[format].type;
 }
 
 /**

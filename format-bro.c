@@ -44,7 +44,6 @@ int readBro(EmbPattern* pattern, const char* fileName)
             } else if (bCode == 3) {
                 stitchType = TRIM;
             } else if (bCode == 0x7E) {
-                embPattern_addStitchRel(pattern, 0, 0, END, 1);
                 break;
             }
         }

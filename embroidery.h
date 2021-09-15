@@ -605,6 +605,8 @@ void inplace_trim(char *s);
 char* emb_optOut(double num, char* str);
 char* emb_strdup(char* src);
 
+void embFile_pad(EmbFile *f, char, int);
+
 void embPointerToArray(char *buffer, void* pointer, int maxDigits);
 void embIntToArray(char *buffer, int number, int maxDigits);
 void embFloatToArray(char *buffer, float number, float tolerence, int before, int after);

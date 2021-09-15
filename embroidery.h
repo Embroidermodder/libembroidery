@@ -354,8 +354,10 @@ typedef struct EmbThread_
  */
 typedef struct thread_color_ {
     const char *name;
-    unsigned int hex_code;
-    int manufacturer_code;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    short manufacturer_code;
 } thread_color;
 
 typedef struct EmbHoop_
@@ -645,9 +647,9 @@ EMB_PUBLIC int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVecto
 EMB_PUBLIC int getCircleTangentPoints(EmbCircle c, EmbVector point, EmbVector* t0, EmbVector* t1);
 
 EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
-int threadColor(const char*, int brand);
-int threadColorNum(unsigned int color, int brand);
-const char* threadColorName(unsigned int color, int brand);
+int threadColor(EmbColor *c, const char*, int brand);
+int threadColorNum(EmbColor color, int brand);
+const char* threadColorName(EmbColor color, int brand);
 EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbArray* colors, int mode);
 EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, const EmbThread* colors, int length);
 EMB_PUBLIC EmbThread embThread_getRandom(void);

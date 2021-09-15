@@ -387,9 +387,13 @@ int testGeomArc(void)
 static int testThreadColor(void)
 {
     unsigned int tColor = 0xFFD25F00;
+    EmbColor c;
+    c.r = 0xD2;
+    c.g = 0x5F;
+    c.b = 0x00;
     int tBrand = Sulky_Rayon;
-    int tNum = threadColorNum(tColor, tBrand);
-    const char* tName = threadColorName(tColor, tBrand);
+    int tNum = threadColorNum(c, tBrand);
+    const char* tName = threadColorName(c, tBrand);
 
     printf("Color : 0x%X\n"
            "Brand : %d\n"

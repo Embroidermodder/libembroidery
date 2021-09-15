@@ -215,13 +215,9 @@ EmbColor svgColorToEmbColor(char* colorString)
         c.b = (unsigned char)strtol(pEnd, &pEnd, 10);
     } else /* Color keyword */
     {
-        int tableColor = threadColor(colorStr, SVG_Colors);
-        if (tableColor < 0) {
+        int tableColor = threadColor(&c, colorStr, SVG_Colors);
+        if (!tableColor) {
             printf("SVG color string not found: %s.\n", colorStr);
-        } else {
-            c.r = (tableColor / 256) % 16;
-            c.g = (tableColor / 16) % 16;
-            c.b = tableColor % 16;
         }
     }
 

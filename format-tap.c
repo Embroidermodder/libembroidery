@@ -89,11 +89,6 @@ int readTap(EmbPattern* pattern, const char* fileName)
     return 1;
 }
 
-static unsigned char setbit(int pos)
-{
-    return (unsigned char)(1 << pos);
-}
-
 static void encode_record(EmbFile* file, int x, int y, int flags)
 {
     char b0, b1, b2;
@@ -106,86 +101,86 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
         embLog("ERROR: format-tap.c encode_record(), y is not in valid range [-121,121] , y =\n");
 
     if (x >= +41) {
-        b2 += setbit(2);
+        b2 += 1 << 2;
         x -= 81;
     }
     if (x <= -41) {
-        b2 += setbit(3);
+        b2 += 1 << 3;
         x += 81;
     }
     if (x >= +14) {
-        b1 += setbit(2);
+        b1 += 1 << 2;
         x -= 27;
     }
     if (x <= -14) {
-        b1 += setbit(3);
+        b1 += 1 << 3;
         x += 27;
     }
     if (x >= +5) {
-        b0 += setbit(2);
+        b0 += 1 << 2;
         x -= 9;
     }
     if (x <= -5) {
-        b0 += setbit(3);
+        b0 += 1 << 3;
         x += 9;
     }
     if (x >= +2) {
-        b1 += setbit(0);
+        b1 += 1 << 0;
         x -= 3;
     }
     if (x <= -2) {
-        b1 += setbit(1);
+        b1 += 1 << 1;
         x += 3;
     }
     if (x >= +1) {
-        b0 += setbit(0);
+        b0 += 1 << 0;
         x -= 1;
     }
     if (x <= -1) {
-        b0 += setbit(1);
+        b0 += 1 << 1;
         x += 1;
     }
     if (x != 0) {
         embLog("ERROR: format-tap.c encode_record(), x should be zero yet x =\n");
     }
     if (y >= +41) {
-        b2 += setbit(5);
+        b2 += 1 << 5;
         y -= 81;
     }
     if (y <= -41) {
-        b2 += setbit(4);
+        b2 += 1 << 4;
         y += 81;
     }
     if (y >= +14) {
-        b1 += setbit(5);
+        b1 += 1 << 5;
         y -= 27;
     }
     if (y <= -14) {
-        b1 += setbit(4);
+        b1 += 1 << 4;
         y += 27;
     }
     if (y >= +5) {
-        b0 += setbit(5);
+        b0 += 1 << 5;
         y -= 9;
     }
     if (y <= -5) {
-        b0 += setbit(4);
+        b0 += 1 << 4;
         y += 9;
     }
     if (y >= +2) {
-        b1 += setbit(7);
+        b1 += 1 << 7;
         y -= 3;
     }
     if (y <= -2) {
-        b1 += setbit(6);
+        b1 += 1 << 6;
         y += 3;
     }
     if (y >= +1) {
-        b0 += setbit(7);
+        b0 += 1 << 7;
         y -= 1;
     }
     if (y <= -1) {
-        b0 += setbit(6);
+        b0 += 1 << 6;
         y += 1;
     }
     if (y != 0) {

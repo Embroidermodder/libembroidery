@@ -95,15 +95,10 @@ int readT01(EmbPattern* pattern, const char* fileName)
     return 1;
 }
 
-static unsigned char setbit(int pos)
-{
-    return (unsigned char)(1 << pos);
-}
-
 static void encode_record(EmbFile* file, int x, int y, int flags)
 {
-    char b0, b1, b2;
-    b0 = b1 = b2 = 0;
+    char b[4];
+    b[0] = b[1] = b[2] = 0;
 
     /* cannot encode values > +121 or < -121. */
     if (x > 121 || x < -121) {
@@ -116,109 +111,107 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
     }
 
     if (x >= +41) {
-        b2 += setbit(2);
+        b[2] += 1 << 2;
         x -= 81;
     }
     if (x <= -41) {
-        b2 += setbit(3);
+        b[2] += 1 << 3;
         x += 81;
     }
     if (x >= +14) {
-        b1 += setbit(2);
+        b[1] += 1 << 2;
         x -= 27;
     }
     if (x <= -14) {
-        b1 += setbit(3);
+        b[1] += 1 << 3;
         x += 27;
     }
     if (x >= +5) {
-        b0 += setbit(2);
+        b[0] += 1 << 2;
         x -= 9;
     }
     if (x <= -5) {
-        b0 += setbit(3);
+        b[0] += 1 << 3;
         x += 9;
     }
     if (x >= +2) {
-        b1 += setbit(0);
+        b[1] += 1 << 0;
         x -= 3;
     }
     if (x <= -2) {
-        b1 += setbit(1);
+        b[1] += 1 << 1;
         x += 3;
     }
     if (x >= +1) {
-        b0 += setbit(0);
+        b[0] += 1 << 0;
         x -= 1;
     }
     if (x <= -1) {
-        b0 += setbit(1);
+        b[0] += 1 << 1;
         x += 1;
     }
     if (x != 0) {
         embLog("ERROR: format-dst.c encode_record(), x should be zero yet x = %d\n");
     }
     if (y >= +41) {
-        b2 += setbit(5);
+        b[2] += 1 << 5;
         y -= 81;
     }
     if (y <= -41) {
-        b2 += setbit(4);
+        b[2] += 1 << 4;
         y += 81;
     }
     if (y >= +14) {
-        b1 += setbit(5);
+        b[1] += 1 << 5;
         y -= 27;
     }
     if (y <= -14) {
-        b1 += setbit(4);
+        b[1] += 1 << 4;
         y += 27;
     }
     if (y >= +5) {
-        b0 += setbit(5);
+        b[0] += 1 << 5;
         y -= 9;
     }
     if (y <= -5) {
-        b0 += setbit(4);
+        b[0] += 1 << 4;
         y += 9;
     }
     if (y >= +2) {
-        b1 += setbit(7);
+        b[1] += 1 << 7;
         y -= 3;
     }
     if (y <= -2) {
-        b1 += setbit(6);
+        b[1] += 1 << 6;
         y += 3;
     }
     if (y >= +1) {
-        b0 += setbit(7);
+        b[0] += 1 << 7;
         y -= 1;
     }
     if (y <= -1) {
-        b0 += setbit(6);
+        b[0] += 1 << 6;
         y += 1;
     }
     if (y != 0) {
         embLog("ERROR: format-dst.c encode_record(), y should be zero yet y = %d\n");
     }
 
-    b2 |= (char)3;
+    b[2] |= (char)3;
 
     if (flags & END) {
-        b0 = 0;
-        b1 = 0;
-        b2 = 0xF3;
+        b[0] = 0;
+        b[1] = 0;
+        b[2] = 0xF3;
     }
     if (flags & (JUMP | TRIM)) {
-        b2 = (char)(b2 | 0x83);
+        b[2] = (char)(b[2] | 0x83);
     }
     if (flags & STOP) {
-        b2 = (char)(b2 | 0xC3);
+        b[2] = (char)(b[2] | 0xC3);
     }
 
-    binaryWriteByte(file, (unsigned char)b0);
-    binaryWriteByte(file, (unsigned char)b1);
-    binaryWriteByte(file, (unsigned char)b2);
+    embFile_write(b, 1, 3, file);
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.

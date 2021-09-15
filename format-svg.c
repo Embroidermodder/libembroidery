@@ -5,17 +5,17 @@
 #include <string.h>
 
 /* path flag codes */
-#define LINETO 0
-#define MOVETO 1
-#define BULGETOCONTROL 2
-#define BULGETOEND 4
-#define ELLIPSETORAD 8
-#define ELLIPSETOEND 16
-#define CUBICTOCONTROL1 32
-#define CUBICTOCONTROL2 64
-#define CUBICTOEND 128
-#define QUADTOCONTROL 256
-#define QUADTOEND 512
+#define LINETO                         0
+#define MOVETO                         1
+#define BULGETOCONTROL                 2
+#define BULGETOEND                     4
+#define ELLIPSETORAD                   8
+#define ELLIPSETOEND                   16
+#define CUBICTOCONTROL1                32
+#define CUBICTOCONTROL2                64
+#define CUBICTOEND                     128
+#define QUADTOCONTROL                  256
+#define QUADTOEND                      512
 
 /**
  * EMBEDDED SYSTEMS OPTIMIZATION
@@ -23,46 +23,46 @@
  * All tokens as unsigned char, that way we can store the subsets of strings
  * in the smaller unsigned char array form.
  */
-#define TOKEN_AUDIO_LEVEL 0
+#define TOKEN_AUDIO_LEVEL              0
 #define TOKEN_BUFFERED_AUDIO_RENDERING 1
-#define TOKEN_COLOR 2
-#define TOKEN_COLOR_RENDERING 3
-#define TOKEN_DIRECTION 4
-#define TOKEN_DISPLAY 5
-#define TOKEN_DISPLAY_ALIGN 6
-#define TOKEN_FILL 7
-#define TOKEN_FILL_OPACITY 8
-#define TOKEN_FILL_RULE 9
-#define TOKEN_FONT_FAMILY 11
-#define TOKEN_FONT_SIZE 12
-#define TOKEN_FONT_STYLE 13
-#define TOKEN_FONT_VARIANT 14
-#define TOKEN_FONT_WEIGHT 15
-#define TOKEN_IMAGE_RENDERING 16
-#define TOKEN_LINE_INCREMENT 17
-#define TOKEN_OPACITY 18
-#define TOKEN_POINTER_EVENTS 19
-#define TOKEN_SHAPE_RENDERING 20
-#define TOKEN_SOLID_COLOR 21
-#define TOKEN_ZOOM_AND_PAN 21
+#define TOKEN_COLOR                    2
+#define TOKEN_COLOR_RENDERING          3
+#define TOKEN_DIRECTION                4
+#define TOKEN_DISPLAY                  5
+#define TOKEN_DISPLAY_ALIGN            6
+#define TOKEN_FILL                     7
+#define TOKEN_FILL_OPACITY             8
+#define TOKEN_FILL_RULE                9
+#define TOKEN_FONT_FAMILY              11
+#define TOKEN_FONT_SIZE                12
+#define TOKEN_FONT_STYLE               13
+#define TOKEN_FONT_VARIANT             14
+#define TOKEN_FONT_WEIGHT              15
+#define TOKEN_IMAGE_RENDERING          16
+#define TOKEN_LINE_INCREMENT           17
+#define TOKEN_OPACITY                  18
+#define TOKEN_POINTER_EVENTS           19
+#define TOKEN_SHAPE_RENDERING          20
+#define TOKEN_SOLID_COLOR              21
+#define TOKEN_ZOOM_AND_PAN             21
 
-#define SVG_CREATOR_NULL 0
-#define SVG_CREATOR_EMBROIDERMODDER 1
-#define SVG_CREATOR_ILLUSTRATOR 2
-#define SVG_CREATOR_INKSCAPE 3
+#define SVG_CREATOR_NULL               0
+#define SVG_CREATOR_EMBROIDERMODDER    1
+#define SVG_CREATOR_ILLUSTRATOR        2
+#define SVG_CREATOR_INKSCAPE           3
 
-#define SVG_EXPECT_NULL 0
-#define SVG_EXPECT_ELEMENT 1
-#define SVG_EXPECT_ATTRIBUTE 2
-#define SVG_EXPECT_VALUE 3
+#define SVG_EXPECT_NULL                0
+#define SVG_EXPECT_ELEMENT             1
+#define SVG_EXPECT_ATTRIBUTE           2
+#define SVG_EXPECT_VALUE               3
 
 /* SVG_TYPES */
-#define SVG_NULL 0
-#define SVG_ELEMENT 1
-#define SVG_PROPERTY 2
-#define SVG_MEDIA_PROPERTY 3
-#define SVG_ATTRIBUTE 4
-#define SVG_CATCH_ALL 5
+#define SVG_NULL                       0
+#define SVG_ELEMENT                    1
+#define SVG_PROPERTY                   2
+#define SVG_MEDIA_PROPERTY             3
+#define SVG_ATTRIBUTE                  4
+#define SVG_CATCH_ALL                  5
 
 static void writePoint(EmbFile* file, double x, double y, int space);
 static void writeColor(EmbFile* file, EmbColor color);
@@ -135,16 +135,16 @@ typedef struct SvgElement_ {
     SvgAttributeList* lastAttribute;
 } SvgElement;
 
-int svgCreator;
+static int svgCreator;
 
-int svgExpect;
-int svgMultiValue;
+static int svgExpect;
+static int svgMultiValue;
 
-SvgElement* currentElement;
-char* currentAttribute;
-char* currentValue;
+static SvgElement* currentElement;
+static char* currentAttribute;
+static char* currentValue;
 
-const char* svg_element_tokens[] = {
+static const char* svg_element_tokens[] = {
     "a", "animate", "animateColor", "animateMotion", "animateTransform", "animation",
     "audio", "circle", "defs", "desc", "discard", "ellipse",
     "font", "font-face", "font-face-src", "font-face-uri", "foreignObject",
@@ -164,13 +164,13 @@ const char* svg_element_tokens[] = {
      */
 };
 
-const char* svg_media_property_tokens[] = {
+static const char* svg_media_property_tokens[] = {
     "audio-level", "buffered-rendering", "display", "image-rendering",
     "pointer-events", "shape-rendering", "text-rendering", "viewport-fill",
     "viewport-fill-opacity", "visibility", "\0"
 };
 
-const char* svg_property_tokens[] = {
+static const char* svg_property_tokens[] = {
     "audio-level", "buffered-rendering", "color", "color-rendering", "direction",
     "display", "display-align", "fill", "fill-opacity", "fill-rule",
     "font-family", "font-size", "font-style", "font-variant", "font-weight",
@@ -230,7 +230,7 @@ EmbColor svgColorToEmbColor(char* colorString)
     return c;
 }
 
-int svgPathCmdToEmbPathFlag(char cmd)
+static int svgPathCmdToEmbPathFlag(char cmd)
 {
     /* TODO: This function needs some work */
     /*
@@ -839,7 +839,7 @@ void svgAddToPattern(EmbPattern* p)
     currentElement = 0;
 }
 
-int svgIsElement(const char* buff)
+static int svgIsElement(const char* buff)
 {
     if (stringInArray(buff, svg_element_tokens)) {
         return SVG_ELEMENT;
@@ -857,7 +857,7 @@ int svgIsElement(const char* buff)
     return SVG_NULL;
 }
 
-int svgIsMediaProperty(const char* buff)
+static char svgIsMediaProperty(const char* buff)
 {
     if (stringInArray(buff, svg_media_property_tokens)) {
         return SVG_MEDIA_PROPERTY;
@@ -865,7 +865,7 @@ int svgIsMediaProperty(const char* buff)
     return SVG_NULL;
 }
 
-int svgIsProperty(const char* buff)
+static char svgIsProperty(const char* buff)
 {
     if (stringInArray(buff, svg_property_tokens)) {
         return SVG_PROPERTY;
@@ -873,20 +873,11 @@ int svgIsProperty(const char* buff)
     return SVG_NULL;
 }
 
-int svgIsXmlAttribute(const char* buff)
-{
-    const char* tokens[] = { "encoding", "standalone", "version", "/", "\0" };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
+/* attribute tokens */
 
-    embLog("format-svg.c svgIsXmlAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
+static const char* xmlTokens[] = { "encoding", "standalone", "version", "/", "\0" };
 
-int svgIsLinkAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* linkTokens[] = {
         "about", "class", "content",
         "datatype", "externalResourcesRequired", "focusHighlight",
         "focusable", "id", "nav-down", "nav-down-left",
@@ -900,17 +891,8 @@ int svgIsLinkAttribute(const char* buff)
         "xlink:type", "xml:base", "xml:id", "xml:lang",
         "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsLinkAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsAnimateAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* animateTokens[] = {
         "about", "accumulate", "additive", "attributeName", "attributeType",
         "begin", "by", "calcMode", "class", "content", "datatype", "dur", "end",
         "fill", "from", "id", "keySplines", "keyTimes", "max", "min", "property",
@@ -921,17 +903,8 @@ int svgIsAnimateAttribute(const char* buff)
         "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
         "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsAnimateAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsAnimateColorAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* animateColorTokens[] = {
         "about", "accumulate", "additive", "attributeName", "attributeType",
         "begin", "by", "calcMode", "class", "content", "datatype", "dur",
         "end", "fill", "from", "id",
@@ -944,17 +917,8 @@ int svgIsAnimateColorAttribute(const char* buff)
         "xlink:type", "xml:base", "xml:id", "xml:lang",
         "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsAnimateColorAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsAnimateMotionAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* animateMotionTokens[] = {
         "about", "accumulate", "additive", "begin", "by", "calcMode", "class",
         "content", "datatype", "dur", "end", "fill", "from", "id", "keyPoints",
         "keySplines", "keyTimes", "max", "min", "origin", "path", "property",
@@ -965,17 +929,8 @@ int svgIsAnimateMotionAttribute(const char* buff)
         "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
         "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsAnimateMotionAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsAnimateTransformAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* animateTransformTokens[] = {
         "about", "accumulate", "additive", "attributeName", "attributeType",
         "begin", "by", "calcMode", "class", "content", "datatype", "dur", "end",
         "fill", "from", "id", "keySplines", "keyTimes", "max", "min",
@@ -986,17 +941,8 @@ int svgIsAnimateTransformAttribute(const char* buff)
         "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
         "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsAnimateTransformAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsAnimationAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* animationTokens[] = {
         "about", "begin", "class", "content", "datatype", "dur", "end",
         "externalResourcesRequired", "fill", "focusHighlight", "focusable",
         "height", "id", "initialVisibility", "max", "min", "nav-down",
@@ -1010,17 +956,8 @@ int svgIsAnimationAttribute(const char* buff)
         "xlink:role", "xlink:show", "xlink:title", "xlink:type", "xml:base",
         "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsAnimationAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsAudioAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* audioTokens[] = {
         "about", "begin", "class", "content", "datatype", "dur", "end",
         "externalResourcesRequired", "fill", "id", "max", "min", "property",
         "rel", "repeatCount", "repeatDur", "requiredExtensions",
@@ -1030,17 +967,8 @@ int svgIsAudioAttribute(const char* buff)
         "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
         "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsAudioAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsCircleAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* circleTokens[] = {
         "about", "class", "content", "cx", "cy", "datatype", "focusHighlight",
         "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
         "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
@@ -1050,48 +978,21 @@ int svgIsCircleAttribute(const char* buff)
         "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
         "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsCircleAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsDefsAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* defsTokens[] = {
         "about", "class", "content", "datatype", "id", "property", "rel",
         "resource", "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang",
         "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsDefsAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsDescAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* descTokens[] = {
         "about", "class", "content", "datatype", "id", "property", "rel",
         "requiredExtensions", "requiredFeatures", "requiredFonts",
         "requiredFormats", "resource", "rev", "role", "systemLanguage",
         "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsDescAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsDiscardAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* discardTokens[] = {
         "about", "begin", "class", "content", "datatype", "id", "property",
         "rel", "requiredExtensions", "requiredFeatures", "requiredFonts",
         "requiredFormats", "resource", "rev", "role", "systemLanguage",
@@ -1099,17 +1000,8 @@ int svgIsDiscardAttribute(const char* buff)
         "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
         "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsDiscardAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsEllipseAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* ellipseTokens[] = {
         "about", "class", "content", "cx", "cy", "datatype", "focusHighlight",
         "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
         "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
@@ -1118,33 +1010,15 @@ int svgIsEllipseAttribute(const char* buff)
         "rev", "role", "rx", "ry", "systemLanguage", "transform", "typeof",
         "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsEllipseAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsFontAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* fontTokens[] = {
         "about", "class", "content", "datatype", "externalResourcesRequired",
         "horiz-adv-x", "horiz-origin-x", "id", "property", "rel", "resource",
         "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
         "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsFontAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsFontFaceAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* fontFaceTokens[] = {
         "about", "accent-height", "alphabetic", "ascent", "bbox", "cap-height",
         "class", "content", "datatype", "descent", "externalResourcesRequired",
         "font-family", "font-stretch", "font-style", "font-variant",
@@ -1156,32 +1030,14 @@ int svgIsFontFaceAttribute(const char* buff)
         "units-per-em", "widths", "x-height", "xml:base", "xml:id",
         "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsFontFaceAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsFontFaceSrcAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* fontFaceSrcTokens[] = {
         "about", "class", "content", "datatype", "id", "property", "rel",
         "resource", "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang",
         "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsFontFaceSrcAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsFontFaceUriAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* fontFaceUriTokens[] = {
         "about", "class", "content", "datatype", "externalResourcesRequired",
         "id", "property", "rel", "resource", "rev", "role",
         "typeof", "xlink:actuate", "xlink:arcrole",
@@ -1189,17 +1045,8 @@ int svgIsFontFaceUriAttribute(const char* buff)
         "xlink:type", "xml:base", "xml:id", "xml:lang",
         "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsFontFaceUriAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsForeignObjectAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* foreignObjectTokens[] = {
         "about", "class", "content", "datatype", "externalResourcesRequired",
         "focusHighlight", "focusable", "height", "id", "nav-down",
         "nav-down-left", "nav-down-right", "nav-left", "nav-next",
@@ -1211,17 +1058,8 @@ int svgIsForeignObjectAttribute(const char* buff)
         "xlink:title", "xlink:type", "xml:base", "xml:id",
         "xml:lang", "xml:space", "y", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsForeignObjectAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsGroupAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* groupTokens[] = {
         "about", "class", "content", "datatype", "externalResourcesRequired",
         "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
         "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
@@ -1231,65 +1069,29 @@ int svgIsGroupAttribute(const char* buff)
         "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
         "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsGroupAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsGlyphAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* glyphTokens[] = {
         "about", "arabic-form", "class", "content", "d", "datatype",
         "glyph-name", "horiz-adv-x", "id", "lang", "property", "rel",
         "resource", "rev", "role", "typeof", "unicode", "xml:base", "xml:id",
         "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsGlyphAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsHandlerAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* handlerTokens[] = {
         "about", "class", "content", "datatype", "ev:event",
         "externalResourcesRequired", "id", "property", "rel", "resource",
         "rev", "role", "type", "typeof", "xlink:actuate", "xlink:arcrole",
         "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
         "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsHandlerAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsHKernAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* hkernTokens[] = {
         "about", "class", "content", "datatype", "g1", "g2", "id", "k",
         "property", "rel", "resource", "rev", "role", "typeof", "u1", "u2",
         "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsHKernAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsImageAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* imageTokens[] = {
         "about", "class", "content", "datatype", "externalResourcesRequired",
         "focusHighlight", "focusable", "height", "id", "nav-down",
         "nav-down-left", "nav-down-right", "nav-left", "nav-next", "nav-prev",
@@ -1301,17 +1103,8 @@ int svgIsImageAttribute(const char* buff)
         "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
         "xml:lang", "xml:space", "y", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsImageAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsLineAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* lineTokens[] = {
         "about", "class", "content", "datatype", "focusHighlight", "focusable",
         "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
         "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
@@ -1320,95 +1113,41 @@ int svgIsLineAttribute(const char* buff)
         "rev", "role", "systemLanguage", "transform", "typeof", "x1", "x2",
         "xml:base", "xml:id", "xml:lang", "xml:space", "y1", "y2", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsLineAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsLinearGradientAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* linearGradientTokens[] = {
         "about", "class", "content", "datatype", "gradientUnits", "id",
         "property", "rel", "resource", "rev", "role", "typeof", "x1", "x2",
         "xml:base", "xml:id", "xml:lang", "xml:space", "y1", "y2", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsLinearGradientAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsListenerAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* listenerTokens[] = {
         "about", "class", "content", "datatype", "defaultAction", "event",
         "handler", "id", "observer", "phase", "propagate", "property", "rel",
         "resource", "rev", "role", "target", "typeof", "xml:base", "xml:id",
         "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsListenerAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsMetadataAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* metadataTokens[] = {
         "about", "class", "content", "datatype", "id", "property", "rel",
         "requiredExtensions", "requiredFeatures", "requiredFonts",
         "requiredFormats", "resource", "rev", "role", "systemLanguage",
         "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsMetadataAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsMissingGlyphAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* missingGlyphTokens[] = {
         "about", "class", "content", "d", "datatype", "horiz-adv-x", "id",
         "property", "rel", "resource", "rev", "role", "typeof", "xml:base",
         "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsMissingGlyphAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsMPathAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* mpathTokens[] = {
         "about", "class", "content", "datatype", "id", "property", "rel",
         "resource", "rev", "role", "typeof", "xlink:actuate", "xlink:arcrole",
         "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
         "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsMPathAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsPathAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* pathTokens[] = {
         "about", "class", "content", "d", "datatype", "focusHighlight",
         "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
         "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
@@ -1418,17 +1157,8 @@ int svgIsPathAttribute(const char* buff)
         "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
         "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsPathAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsPolygonAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* polygonTokens[] = {
         "about", "class", "content", "datatype", "focusHighlight", "focusable",
         "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
         "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
@@ -1437,17 +1167,8 @@ int svgIsPolygonAttribute(const char* buff)
         "rev", "role", "systemLanguage", "transform", "typeof", "xml:base",
         "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsPolygonAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsPolylineAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* polylineTokens[] = {
         "about", "class", "content", "datatype", "focusHighlight", "focusable",
         "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
         "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
@@ -1456,17 +1177,8 @@ int svgIsPolylineAttribute(const char* buff)
         "rev", "role", "systemLanguage", "transform", "typeof", "xml:base",
         "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsPolylineAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsPrefetchAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* prefetchTokens[] = {
         "about", "bandwidth", "class", "content", "datatype", "id",
         "mediaCharacterEncoding", "mediaContentEncodings", "mediaSize",
         "mediaTime", "property", "rel", "resource", "rev", "role", "typeof",
@@ -1474,32 +1186,14 @@ int svgIsPrefetchAttribute(const char* buff)
         "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
         "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsPrefetchAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsRadialGradientAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* radialGradientTokens[] = {
         "about", "class", "content", "cx", "cy", "datatype", "gradientUnits",
         "id", "property", "r", "rel", "resource", "rev", "role", "typeof",
         "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsRadialGradientAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsRectAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* rectTokens[] = {
         "about", "class", "content", "datatype", "focusHighlight", "focusable",
         "height", "id", "nav-down", "nav-down-left", "nav-down-right",
         "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
@@ -1509,34 +1203,16 @@ int svgIsRectAttribute(const char* buff)
         "width", "x", "xml:base", "xml:id", "xml:lang", "xml:space", "y",
         "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsRectAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsScriptAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* scriptTokens[] = {
         "about", "class", "content", "datatype", "externalResourcesRequired",
         "id", "property", "rel", "resource", "rev", "role", "type", "typeof",
         "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
         "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
         "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsScriptAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsSetAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* setTokens[] = {
         "about", "attributeName", "attributeType", "begin", "class", "content",
         "datatype", "dur", "end", "fill", "id", "max", "min", "property", "rel",
         "repeatCount", "repeatDur", "requiredExtensions", "requiredFeatures",
@@ -1545,57 +1221,32 @@ int svgIsSetAttribute(const char* buff)
         "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
         "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsSetAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
+#define SOLIDCOLOR_ATTR        1
+#define STOP_ATTR              2
+#define SVG_ATTR               2
+#define SWITCH_ATTR            3
+#define TBREAK_ATTR            4
+#define TEXT_ATTR              5
+#define TEXTAREA_ATTR          6
+#define TITLE_ATTR             7
+#define TSPAN_ATTR             8
+#define USE_ATTR               9
+#define VIDEO_ATTR             10
 
-#define SVG_SOLIDCOLOR_ATTRIBUTE 1
-#define SVG_STOP_ATTRIBUTE 2
-#define SVG_SVG_ATTRIBUTE 2
-#define SVG_SWITCH_ATTRIBUTE 3
-#define SVG_TBREAK_ATTRIBUTE 4
-#define SVG_TEXT_ATTRIBUTE 5
-#define SVG_TEXTAREA_ATTRIBUTE 6
-#define SVG_TITLE_ATTRIBUTE 7
-#define SVG_TSPAN_ATTRIBUTE 8
-#define SVG_USE_ATTRIBUTE 9
-#define SVG_VIDEO_ATTRIBUTE 10
-
-int svgIsSolidColorAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* solidColorTokens[] = {
         "about", "class", "content", "datatype", "id", "property", "rel",
         "resource", "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang",
         "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsSolidColorAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsStopAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* stopTokens[] = {
         "about", "class", "content", "datatype", "id", "offset", "property",
         "rel", "resource", "rev", "role", "typeof", "xml:base", "xml:id",
         "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsStopAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsSvgAttribute(const char* buff)
+static char svgIsSvgAttribute(const char* buff)
 {
     const char* tokens[] = {
         "about", "baseProfile", "class", "content", "contentScriptType",
@@ -1624,9 +1275,7 @@ int svgIsSvgAttribute(const char* buff)
     return SVG_NULL;
 }
 
-int svgIsSwitchAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* switchTokens[] = {
         "about", "class", "content", "datatype", "externalResourcesRequired",
         "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
         "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
@@ -1636,33 +1285,15 @@ int svgIsSwitchAttribute(const char* buff)
         "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
         "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsSwitchAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsTBreakAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* tbreakTokens[] = {
         "about", "class", "content", "datatype", "id", "property", "rel",
         "requiredExtensions", "requiredFeatures", "requiredFonts",
         "requiredFormats", "resource", "rev", "role", "systemLanguage",
         "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsTBreakAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsTextAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* textTokens[] = {
         "about", "class", "content", "datatype", "editable", "focusHighlight",
         "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
         "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
@@ -1671,17 +1302,8 @@ int svgIsTextAttribute(const char* buff)
         "rev", "role", "rotate", "systemLanguage", "transform", "typeof", "x",
         "xml:base", "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsTextAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsTextAreaAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* textAreaTokens[] = {
         "about", "class", "content", "datatype", "editable", "focusHighlight",
         "focusable", "height", "id", "nav-down", "nav-down-left",
         "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
@@ -1691,33 +1313,15 @@ int svgIsTextAreaAttribute(const char* buff)
         "transform", "typeof", "width", "x", "xml:base", "xml:id", "xml:lang",
         "xml:space", "y", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsTextAreaAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsTitleAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* titleTokens[] = {
         "about", "class", "content", "datatype", "id", "property", "rel",
         "requiredExtensions", "requiredFeatures", "requiredFonts",
         "requiredFormats", "resource", "rev", "role", "systemLanguage",
         "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsTitleAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsTSpanAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* tspanTokens[] = {
         "about", "class", "content", "datatype", "focusHighlight", "focusable",
         "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
         "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
@@ -1726,17 +1330,8 @@ int svgIsTSpanAttribute(const char* buff)
         "rev", "role", "systemLanguage", "typeof", "xml:base", "xml:id",
         "xml:lang", "xml:space", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsTSpanAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsUseAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* useTokens[] = {
         "about", "class", "content", "datatype", "externalResourcesRequired",
         "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
         "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
@@ -1747,17 +1342,8 @@ int svgIsUseAttribute(const char* buff)
         "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
         "xml:base", "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsUseAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsVideoAttribute(const char* buff)
-{
-    const char* tokens[] = {
+static const char* videoTokens[] = {
         "about", "begin", "class", "content", "datatype", "dur", "end",
         "externalResourcesRequired", "fill", "focusHighlight", "focusable",
         "height", "id", "initialVisibility", "max", "min", "nav-down",
@@ -1772,18 +1358,26 @@ int svgIsVideoAttribute(const char* buff)
         "xlink:title", "xlink:type", "xml:base", "xml:id", "xml:lang",
         "xml:space", "y", "/", "\0"
     };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
 
-    embLog("format-svg.c svgIsVideoAttribute(), unknown:");
-    embLog(buff);
-    return SVG_NULL;
-}
-
-int svgIsCatchAllAttribute(const char* buff)
+static int svgIsCatchAllAttribute(const char* buff)
 {
     if (stringInArray(buff, svg_all_tokens))
         return SVG_CATCH_ALL;
+
+    return SVG_NULL;
+}
+
+static char svgHasAttribute(const char *buff, const char *tokens[], const char *errormsg)
+{
+    if (stringInArray(buff, tokens)) {
+        return SVG_ATTRIBUTE;
+    }
+    else {
+        embLog("format-svg.c ");
+        embLog(errormsg);
+        embLog("attribute unknown:");
+        embLog(buff);
+    }
 
     return SVG_NULL;
 }
@@ -1815,279 +1409,279 @@ void svgProcess(int c, const char* buff)
 
         if (!strcmp(name, "?xml")) {
             if (!advance) {
-                advance = (char)svgIsXmlAttribute(buff);
+                advance = svgHasAttribute(buff, xmlTokens, "xml:");
             }
         } else if (!strcmp(name, "a")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsLinkAttribute(buff);
+                advance = svgHasAttribute(buff, linkTokens, "a");
             }
         } else if (!strcmp(name, "animate")) {
             if (!advance) {
-                advance = (char)svgIsAnimateAttribute(buff);
+                advance = svgHasAttribute(buff, animateTokens, "animate");
             }
         } else if (!strcmp(name, "animateColor")) {
             if (!advance) {
-                advance = (char)svgIsAnimateColorAttribute(buff);
+                advance = svgHasAttribute(buff, animateColorTokens, "animateColor");
             }
         } else if (!strcmp(name, "animateMotion")) {
             if (!advance) {
-                advance = (char)svgIsAnimateMotionAttribute(buff);
+                advance = svgHasAttribute(buff, animateMotionTokens, "animateMotion");
             }
         } else if (!strcmp(name, "animateTransform")) {
             if (!advance) {
-                advance = (char)svgIsAnimateTransformAttribute(buff);
+                advance = svgHasAttribute(buff, animateTransformTokens, "animateTransform");
             }
         } else if (!strcmp(name, "animation")) {
             if (!advance) {
-                advance = (char)svgIsMediaProperty(buff);
+                advance = svgIsMediaProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsAnimationAttribute(buff);
+                advance = svgHasAttribute(buff, animationTokens, "animation");
             }
         } else if (!strcmp(name, "audio")) {
             if (!advance) {
-                advance = (char)svgIsMediaProperty(buff);
+                advance = svgIsMediaProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsAudioAttribute(buff);
+                advance = svgHasAttribute(buff, audioTokens, "audio");
             }
         } else if (!strcmp(name, "circle")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsCircleAttribute(buff);
+                advance = svgHasAttribute(buff, circleTokens, "circle");
             }
         } else if (!strcmp(name, "defs")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsDefsAttribute(buff);
+                advance = svgHasAttribute(buff, defsTokens, "defs");
             }
         } else if (!strcmp(name, "desc")) {
             if (!advance) {
-                advance = (char)svgIsMediaProperty(buff);
+                advance = svgIsMediaProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsDescAttribute(buff);
+                advance = svgHasAttribute(buff, descTokens, "desc");
             }
         } else if (!strcmp(name, "discard")) {
             if (!advance) {
-                advance = (char)svgIsDiscardAttribute(buff);
+                advance = svgHasAttribute(buff, discardTokens, "discard");
             }
         } else if (!strcmp(name, "ellipse")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsEllipseAttribute(buff);
+                advance = svgHasAttribute(buff, ellipseTokens, "ellipse");
             }
         } else if (!strcmp(name, "font")) {
             if (!advance) {
-                advance = (char)svgIsFontAttribute(buff);
+                advance = svgHasAttribute(buff, fontTokens, "font");
             }
         } else if (!strcmp(name, "font-face")) {
             if (!advance) {
-                advance = (char)svgIsFontFaceAttribute(buff);
+                advance = svgHasAttribute(buff, fontFaceTokens, "font-face");
             }
         } else if (!strcmp(name, "font-face-src")) {
             if (!advance) {
-                advance = (char)svgIsFontFaceSrcAttribute(buff);
+                advance = svgHasAttribute(buff, fontFaceSrcTokens, "font-face-src");
             }
         } else if (!strcmp(name, "font-face-uri")) {
             if (!advance) {
-                advance = (char)svgIsFontFaceUriAttribute(buff);
+                advance = svgHasAttribute(buff, fontFaceUriTokens, "font-face-uri");
             }
         } else if (!strcmp(name, "foreignObject")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsForeignObjectAttribute(buff);
+                advance = svgHasAttribute(buff, foreignObjectTokens, "foreignObject");
             }
         } else if (!strcmp(name, "g")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsGroupAttribute(buff);
+                advance = svgHasAttribute(buff, groupTokens, "g");
             }
         } else if (!strcmp(name, "glyph")) {
             if (!advance) {
-                advance = (char)svgIsGlyphAttribute(buff);
+                advance = svgHasAttribute(buff, glyphTokens, "glyph");
             }
         } else if (!strcmp(name, "handler")) {
             if (!advance) {
-                advance = (char)svgIsHandlerAttribute(buff);
+                advance = svgHasAttribute(buff, handlerTokens, "handler");
             }
         } else if (!strcmp(name, "hkern")) {
             if (!advance) {
-                advance = (char)svgIsHKernAttribute(buff);
+                advance = svgHasAttribute(buff, hkernTokens, "hkern");
             }
         } else if (!strcmp(name, "image")) {
             if (!advance) {
-                advance = (char)svgIsMediaProperty(buff);
+                advance = svgIsMediaProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsImageAttribute(buff);
+                advance = svgHasAttribute(buff, imageTokens, "image");
             }
         } else if (!strcmp(name, "line")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsLineAttribute(buff);
+                advance = svgHasAttribute(buff, lineTokens, "line");
             }
         } else if (!strcmp(name, "linearGradient")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsLinearGradientAttribute(buff);
+                advance = svgHasAttribute(buff, linearGradientTokens, "linearGradient");
             }
         } else if (!strcmp(name, "listener")) {
             if (!advance) {
-                advance = (char)svgIsListenerAttribute(buff);
+                advance = svgHasAttribute(buff, listenerTokens, "listener");
             }
         } else if (!strcmp(name, "metadata")) {
             if (!advance) {
-                advance = (char)svgIsMediaProperty(buff);
+                advance = svgIsMediaProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsMetadataAttribute(buff);
+                advance = svgHasAttribute(buff, metadataTokens, "metadata");
             }
         } else if (!strcmp(name, "missing-glyph")) {
             if (!advance) {
-                advance = (char)svgIsMissingGlyphAttribute(buff);
+                advance = svgHasAttribute(buff, missingGlyphTokens, "font-face-src");
             }
         } else if (!strcmp(name, "mpath")) {
             if (!advance) {
-                advance = (char)svgIsMPathAttribute(buff);
+                advance = svgHasAttribute(buff, mpathTokens, "font-face-src");
             }
         } else if (!strcmp(name, "path")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsPathAttribute(buff);
+                advance = svgHasAttribute(buff, pathTokens, "font-face-src");
             }
         } else if (!strcmp(name, "polygon")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsPolygonAttribute(buff);
+                advance = svgHasAttribute(buff, polygonTokens, "font-face-src");
             }
         } else if (!strcmp(name, "polyline")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsPolylineAttribute(buff);
+                advance = svgHasAttribute(buff, polylineTokens, "font-face-src");
             }
         } else if (!strcmp(name, "prefetch")) {
             if (!advance) {
-                advance = (char)svgIsPrefetchAttribute(buff);
+                advance = svgHasAttribute(buff, prefetchTokens, "prefetch");
             }
         } else if (!strcmp(name, "radialGradient")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsRadialGradientAttribute(buff);
+                advance = svgHasAttribute(buff, radialGradientTokens, "radialGradient");
             }
         } else if (!strcmp(name, "rect")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsRectAttribute(buff);
+                advance = svgHasAttribute(buff, rectTokens, "rect");
             }
         } else if (!strcmp(name, "script")) {
             if (!advance) {
-                advance = (char)svgIsScriptAttribute(buff);
+                advance = svgHasAttribute(buff, scriptTokens, "script");
             }
         } else if (!strcmp(name, "set")) {
             if (!advance) {
-                advance = (char)svgIsSetAttribute(buff);
+                advance = svgHasAttribute(buff, setTokens, "set");
             }
         } else if (!strcmp(name, "solidColor")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsSolidColorAttribute(buff);
+                advance = svgHasAttribute(buff, solidColorTokens, "font-face-src");
             }
         } else if (!strcmp(name, "stop")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsStopAttribute(buff);
+                advance = svgHasAttribute(buff, stopTokens, "stop");
             }
         } else if (!strcmp(name, "svg")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsSvgAttribute(buff);
+                advance = svgIsSvgAttribute(buff);
             }
         } else if (!strcmp(name, "switch")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsSwitchAttribute(buff);
+                advance = svgHasAttribute(buff, switchTokens, "switch");
             }
         } else if (!strcmp(name, "tbreak")) {
             if (!advance) {
-                advance = (char)svgIsTBreakAttribute(buff);
+                advance = svgHasAttribute(buff, tbreakTokens, "tbreak");
             }
         } else if (!strcmp(name, "text")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsTextAttribute(buff);
+                advance = svgHasAttribute(buff, textTokens, "text");
             }
         } else if (!strcmp(name, "textArea")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsTextAreaAttribute(buff);
+                advance = svgHasAttribute(buff, textAreaTokens, "textArea");
             }
         } else if (!strcmp(name, "title")) {
             if (!advance) {
-                advance = (char)svgIsMediaProperty(buff);
+                advance = svgIsMediaProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsTitleAttribute(buff);
+                advance = svgHasAttribute(buff, titleTokens, "title");
             }
         } else if (!strcmp(name, "tspan")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsTSpanAttribute(buff);
+                advance = svgHasAttribute(buff, tspanTokens, "tspan");
             }
         } else if (!strcmp(name, "use")) {
             if (!advance) {
-                advance = (char)svgIsProperty(buff);
+                advance = svgIsProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsUseAttribute(buff);
+                advance = svgHasAttribute(buff, useTokens, "use");
             }
         } else if (!strcmp(name, "video")) {
             if (!advance) {
-                advance = (char)svgIsMediaProperty(buff);
+                advance = svgIsMediaProperty(buff);
             }
             if (!advance) {
-                advance = (char)svgIsVideoAttribute(buff);
+                advance = svgHasAttribute(buff, videoTokens, "video");
             }
         }
 
@@ -2162,14 +1756,7 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     char* buff = 0;
     EmbStitch st;
 
-    if (!pattern) {
-        embLog("ERROR: format-svg.c readSvg(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        embLog("ERROR: format-svg.c readSvg(), fileName argument is null\n");
-        return 0;
-    }
+    if (!validateReadPattern(pattern, fileName, "readSvg")) return 0;
 
     buff = (char*)malloc(size);
     if (!buff) {
@@ -2267,7 +1854,6 @@ static void writeColor(EmbFile* file, EmbColor color)
 
 static void writePoint(EmbFile* file, double x, double y, int space)
 {
-    char buffer[30];
     if (space) {
         embFile_print(file, " ");
     }
@@ -2492,16 +2078,8 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file;
     EmbRect boundingRect;
-    char buffer[30];
 
-    if (!pattern) {
-        embLog("ERROR: format-svg.c writeSvg(), pattern argument is null.");
-        return 0;
-    }
-    if (!fileName) {
-        embLog("ERROR: format-svg.c writeSvg(), fileName argument is null.");
-        return 0;
-    }
+    if (!validateReadPattern(pattern, fileName, "writeSvg")) return 0;
 
     file = embFile_open(fileName, "w", 0);
     if (!file)

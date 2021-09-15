@@ -9,10 +9,8 @@ as several non-embroidery specific vector formats.
 Build
 -----
 
-You can use either use a CMake (for the library itself) or qmake build
-(as part of `Embroidermodder2`).
-
-So if you are building the project to use as a library we recommend:
+libembroidery and EmbroiderModder 2 use CMake builds
+so if you are building the project to use as a library we recommend:
  
 ```
 git clone https://github.com/Embroidermodder/libembroidery
@@ -43,12 +41,6 @@ For users, we recommend you build as above then run:
 
 which will print out advice on how to use these tools without digging straight into the source
 code.
-
-Developer Documentation can be generated using [Doxygen](http://www.doxygen.org)
-
-```
-doxygen libembroidery.doxyfile
-```
 
 Development
 -----------

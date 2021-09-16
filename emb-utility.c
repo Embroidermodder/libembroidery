@@ -233,75 +233,12 @@ int embMaxInt(int a, int b)
     return b;
 }
 
-/**
- * Function is similar to the Unix utility tr.
- *
- * Character for character replacement in strings.
- * Takes a string \a s and for every character in the
- * \a from string replace with the corresponding character
- * in the \a to string.
- *
- * For example: ("test", "tb", "..") -> ".es."
- */
-void charReplace(char* s, const char* from, const char* to)
-{
-    int i;
-    for (; *s; s++) {
-        for (i = 0; from[i]; i++) {
-            if (*s == from[i]) {
-                *s = to[i];
-            }
-        }
-    }
-}
-
-/**
- * Tests for the presense of a string \a s in the supplied
- * \a array.
- *
- * The end of the array is marked by an empty string.
- *
- * @return 0 if not present 1 if present.
- */
-int stringInArray(const char* s, const char** array)
-{
-    int i;
-    for (i = 0; strlen(array[i]); i++) {
-        if (!strcmp(s, array[i])) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
 /*! Rounds a double (\a src) and returns it as an \c int. */
 int roundDouble(double src)
 {
     if (src < 0.0)
         return (int)ceil(src - 0.5);
     return (int)floor(src + 0.5);
-}
-
-/*! Returns \c true if string (\a str) begins with substring (\a pre), otherwise returns \c false. */
-char startsWith(char* pre, char* str)
-{
-    for (; *pre; pre++, str++) {
-        if (!*str)
-            return 0;
-        if (*pre != *str)
-            return 0;
-    }
-    return 1;
-}
-
-/*! Removes all characters from the right end of the string (\a str) that match (\a junk), moving left until a mismatch occurs. */
-char* rTrim(char* str, char junk)
-{
-    char* original = str + strlen(str);
-    while (*--original == junk)
-        ;
-    *(original + 1) = '\0';
-    return str;
 }
 
 /*! Removes all characters from the left end of the string
@@ -314,60 +251,20 @@ char* lTrim(char* str, char junk)
     return str;
 }
 
-/* TODO: trimming function should handle any character, not just whitespace */
-static char const WHITESPACE[] = " \t\n\r";
-
-/* TODO: description */
-static void get_trim_bounds(char const* s,
-    char const** firstWord,
-    char const** trailingSpace)
-{
-    char const* lastWord = 0;
-    *firstWord = lastWord = s + strspn(s, WHITESPACE);
-    do {
-        *trailingSpace = lastWord + strcspn(lastWord, WHITESPACE);
-        lastWord = *trailingSpace + strspn(*trailingSpace, WHITESPACE);
-    } while (*lastWord != '\0');
-}
-
-/* TODO: description */
-char* copy_trim(char* s)
-{
-    char const *firstWord = 0, *trailingSpace = 0;
-    char* result = 0;
-    size_t newLength;
-
-    get_trim_bounds(s, &firstWord, &trailingSpace);
-    newLength = trailingSpace - firstWord;
-
-    result = (char*)malloc(newLength + 1);
-    memcpy(result, firstWord, newLength);
-    result[newLength] = '\0';
-    return result;
-}
-
-/* TODO: description */
-void inplace_trim(char* s)
-{
-    char const *firstWord = 0, *trailingSpace = 0;
-    size_t newLength;
-
-    get_trim_bounds(s, &firstWord, &trailingSpace);
-    newLength = trailingSpace - firstWord;
-
-    memmove(s, firstWord, newLength);
-    s[newLength] = '\0';
-}
-
 /*! Optimizes the number (\a num) for output to a text file and returns it as a string (\a str). */
 char* emb_optOut(double num, char* str)
 {
+    char *str2;
     /* Convert the number to a string */
     sprintf(str, "%.10f", num);
     /* Remove trailing zeroes */
-    rTrim(str, '0');
+    str2 = str + strlen(str);
+    while (*--str2 == 0);
+    *(str2+1) = 0;
     /* Remove the decimal point if it happens to be an integer */
-    rTrim(str, '.');
+    if (str[strlen(str)-1] == '.') {
+        str[strlen(str)-1] = 0;
+    }
     return str;
 }
 

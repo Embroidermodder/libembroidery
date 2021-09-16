@@ -593,21 +593,12 @@ void binaryWriteUInt(EmbFile* file, unsigned int data);
 void binaryWriteUIntBE(EmbFile* file, unsigned int data);
 void binaryWriteFloat(EmbFile* file, float data);
 
-extern void charReplace(char *s, const char *from, const char *to);
-extern int stringInArray(const char *s, const char **array);
-
 int roundDouble(double src);
-char startsWith(char* pre, char* str);
 void writeInt(EmbFile *, int, int);
 void writeFloat(EmbFile *, float);
-char* rTrim(char* str, char junk);
 char* lTrim(char* str, char junk);
-char *copy_trim(char *s);
-void inplace_trim(char *s);
 char* emb_optOut(double num, char* str);
 char* emb_strdup(char* src);
-
-void embFile_pad(EmbFile *f, char, int);
 
 void embPointerToArray(char *buffer, void* pointer, int maxDigits);
 void embIntToArray(char *buffer, int number, int maxDigits);
@@ -677,6 +668,7 @@ EMB_PUBLIC EmbFile* embFile_tmpfile(void);
 EMB_PUBLIC int embFile_putc(int ch, EmbFile* stream);
 EMB_PUBLIC int embFile_puts(EmbFile* stream, char *);
 EMB_PUBLIC void embFile_print(EmbFile* stream, const char*);
+EMB_PUBLIC void embFile_pad(EmbFile *f, char, int);
 
 int bcfFile_read(EmbFile* file, bcf_file* bcfFile);
 EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind);

@@ -25,13 +25,13 @@ int readPlt(EmbPattern* pattern, const char* fileName)
     embPattern_loadExternalColorFile(pattern, fileName);
     /* TODO: replace all scanf code */
     while (fscanf(file, "%s", input) >= 0) {
-        if (startsWith("PD", input)) {
+        if (input[0] == 'P' && input[1] == 'D') {
             /* TODO: replace all scanf code */
             if (sscanf(input, "PD%lf,%lf;", &x, &y) < 2) {
                 break;
             }
             embPattern_addStitchAbs(pattern, x / scalingFactor, y / scalingFactor, NORMAL, 1);
-        } else if (startsWith("PU", input)) {
+        } else if (input[0] == 'P' && input[1] == 'U') {
             /* TODO: replace all scanf code */
             if (sscanf(input, "PU%lf,%lf;", &x, &y) < 2) {
                 break;
@@ -64,8 +64,7 @@ int writePlt(EmbPattern* pattern, const char* fileName)
     if (!file)
         return 0;
 
-    embFile_print(file, "IN;");
-    embFile_print(file, "ND;");
+    embFile_print(file, "IN;ND;");
 
     for (i = 0; i < pattern->stitchList->count; i++) {
         stitch = pattern->stitchList->stitch[i];
@@ -77,12 +76,7 @@ int writePlt(EmbPattern* pattern, const char* fileName)
             writeFloat(file, stitch.x * scalingFactor);
             embFile_print(file, ",");
             writeFloat(file, stitch.y * scalingFactor);
-            embFile_print(file, ";ST0.00,0.00;");
-            embFile_print(file, "SP0;");
-            embFile_print(file, "HT0;");
-            embFile_print(file, "HS0;");
-            embFile_print(file, "TT0;");
-            embFile_print(file, "TS0;");
+            embFile_print(file, ";ST0.00,0.00;SP0;HT0;HS0;TT0;TS0;");
             firstStitchOfBlock = 0;
         } else {
             embFile_print(file, "PD");
@@ -92,8 +86,7 @@ int writePlt(EmbPattern* pattern, const char* fileName)
             embFile_print(file, ";");
         }
     }
-    embFile_print(file, "PU0.0,0.0;");
-    embFile_print(file, "PU0.0,0.0;");
+    embFile_print(file, "PU0.0,0.0;PU0.0,0.0;");
     embFile_close(file);
     return 1; /*TODO: finish WritePlt */
 }

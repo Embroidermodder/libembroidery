@@ -286,7 +286,7 @@ static const unsigned char _dxfColorTable[][3] = {
     { 0, 0, 0 } /* '256' (BYLAYER) */
 };
 
-char* readLine(FILE* file)
+char* readline(FILE* file)
 {
     char str[255];
     /* TODO: replace all scanf code */
@@ -296,10 +296,9 @@ char* readLine(FILE* file)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readDxf(EmbPattern* pattern, const char* fileName)
+int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    FILE* file = 0;
-    char* buff = "";
+    char buff[1024];
     char* dxfVersion = "";
     char* section = "";
     char* tableName = "";
@@ -315,30 +314,19 @@ int readDxf(EmbPattern* pattern, const char* fileName)
     int fileLength = 0;
     unsigned char colorNum = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readDxf"))
-        return 0;
-
     layerColorHash = embHash_create();
     if (!layerColorHash) {
         embLog("ERROR: format-dxf.c readDxf(), unable to allocate memory for layerColorHash\n");
         return 0;
     }
 
-    file = fopen(fileName, "r");
-    if (!file) {
-        embLog("ERROR: format-dxf.c readDxf(), cannot open ");
-        embLog(fileName);
-        embLog(" for reading.");
-        return 0;
-    }
+    embFile_seek(file, 0L, SEEK_END);
 
-    fseek(file, 0L, SEEK_END);
+    fileLength = embFile_tell(file);
+    embFile_seek(file, 0L, SEEK_SET);
 
-    fileLength = ftell(file);
-    fseek(file, 0L, SEEK_SET);
-
-    while (ftell(file) < fileLength) {
-        buff = readLine(file);
+    while (embFile_tell(file) < fileLength) {
+        embFile_readline(file, buff, 1000);
         /*printf("%s\n", buff);*/
         if ((!strcmp(buff, "HEADER")) || (!strcmp(buff, "CLASSES")) || (!strcmp(buff, "TABLES")) || (!strcmp(buff, "BLOCKS")) || (!strcmp(buff, "ENTITIES")) || (!strcmp(buff, "OBJECTS")) || (!strcmp(buff, "THUMBNAILIMAGE"))) {
             section = buff;
@@ -357,8 +345,8 @@ int readDxf(EmbPattern* pattern, const char* fileName)
 
         if (!strcmp(section, "HEADER")) {
             if (!strcmp(buff, "$ACADVER")) {
-                buff = readLine(file);
-                dxfVersion = readLine(file);
+                embFile_readline(file, buff, 1000);
+                embFile_readline(file, dxfVersion, 1000);
                 /* TODO: Allow these versions when POLYLINE is handled. */
                 if ((!strcmp(dxfVersion, DXF_VERSION_R10))
                     || (!strcmp(dxfVersion, DXF_VERSION_R11))
@@ -374,34 +362,34 @@ int readDxf(EmbPattern* pattern, const char* fileName)
             if (tableName == NULL) {
                 if (!strcmp(buff, "2")) /* Table Name */
                 {
-                    tableName = readLine(file);
+                    embFile_readline(file, tableName, 1000);
                 }
             } else if (!strcmp(tableName, "LAYER")) {
                 /* Common Group Codes for Tables */
                 if (!strcmp(buff, "5")) /* Handle */
                 {
-                    buff = readLine(file);
+                    embFile_readline(file, buff, 1000);
                     continue;
                 } else if (!strcmp(buff, "330")) /* Soft Pointer */
                 {
-                    buff = readLine(file);
+                    embFile_readline(file, buff, 1000);
                     continue;
                 } else if (!strcmp(buff, "100")) /* Subclass Marker */
                 {
-                    buff = readLine(file);
+                    embFile_readline(file, buff, 1000);
                     continue;
                 } else if (!strcmp(buff, "70")) /* Number of Entries in Table */
                 {
-                    buff = readLine(file);
+                    embFile_readline(file, buff, 1000);
                     continue;
                 }
                 /* The meaty stuff */
                 else if (!strcmp(buff, "2")) /* Layer Name */
                 {
-                    layerName = readLine(file);
+                    embFile_readline(file, layerName, 1000);
                 } else if (!strcmp(buff, "62")) /* Color Number */
                 {
-                    buff = readLine(file);
+                    embFile_readline(file, buff, 1000);
                     colorNum = atoi(buff);
                     /*
                     TODO: finish this
@@ -423,19 +411,19 @@ int readDxf(EmbPattern* pattern, const char* fileName)
             /* Common Group Codes for Entities */
             if (!strcmp(buff, "5")) /* Handle */
             {
-                buff = readLine(file);
+                embFile_readline(file, buff, 1000);
                 continue;
             } else if (!strcmp(buff, "330")) /* Soft Pointer */
             {
-                buff = readLine(file);
+                embFile_readline(file, buff, 1000);
                 continue;
             } else if (!strcmp(buff, "100")) /* Subclass Marker */
             {
-                buff = readLine(file);
+                embFile_readline(file, buff, 1000);
                 continue;
             } else if (!strcmp(buff, "8")) /* Layer Name */
             {
-                buff = readLine(file);
+                embFile_readline(file, buff, 1000);
                 /* embPattern_changeColor(pattern, colorIndexMap[buff]); TODO: port to C */
                 continue;
             }
@@ -446,40 +434,40 @@ int readDxf(EmbPattern* pattern, const char* fileName)
                 /* The not so important group codes */
                 if (!strcmp(buff, "90")) /* Vertices */
                 {
-                    buff = readLine(file);
+                    embFile_readline(file, buff, 1000);
                     continue;
                 } else if (!strcmp(buff, "70")) /* Polyline Flag */
                 {
-                    buff = readLine(file);
+                    embFile_readline(file, buff, 1000);
                     continue;
                 }
                 /* TODO: Try to use the widths at some point */
                 else if (!strcmp(buff, "40")) /* Starting Width */
                 {
-                    buff = readLine(file);
+                    embFile_readline(file, buff, 1000);
                     continue;
                 } else if (!strcmp(buff, "41")) /* Ending Width */
                 {
-                    buff = readLine(file);
+                    embFile_readline(file, buff, 1000);
                     continue;
                 } else if (!strcmp(buff, "43")) /* Constant Width */
                 {
-                    buff = readLine(file);
+                    embFile_readline(file, buff, 1000);
                     continue;
                 }
                 /* The meaty stuff */
                 else if (!strcmp(buff, "42")) /* Bulge */
                 {
-                    buff = readLine(file);
+                    embFile_readline(file, buff, 1000);
                     bulge = atof(buff);
                     bulgeFlag = 1;
                 } else if (!strcmp(buff, "10")) /* X */
                 {
-                    buff = readLine(file);
+                    embFile_readline(file, buff, 1000);
                     x = atof(buff);
                 } else if (!strcmp(buff, "20")) /* Y */
                 {
-                    buff = readLine(file);
+                    embFile_readline(file, buff, 1000);
                     y = atof(buff);
 
                     if (bulgeFlag) {
@@ -534,8 +522,6 @@ int readDxf(EmbPattern* pattern, const char* fileName)
         } /* end ENTITIES section */
     } /* end while loop */
 
-    fclose(file);
-
     /*
     EmbColor* testColor = 0;
     testColor = embHash_value(layerColorHash, "OMEGA");
@@ -552,11 +538,8 @@ int readDxf(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeDxf(EmbPattern* pattern, const char* fileName)
+int writeDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeDxf"))
-        return 0;
-
     return 0; /*TODO: finish writeDxf */
 }
 

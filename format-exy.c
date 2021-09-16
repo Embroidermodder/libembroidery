@@ -16,17 +16,9 @@ static int exyDecodeFlags(unsigned char b2)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readExy(EmbPattern* pattern, const char* fileName)
+int readExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[3];
-    EmbFile* file;
-
-    if (!validateReadPattern(pattern, fileName, "readExy"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
@@ -83,7 +75,6 @@ int readExy(EmbPattern* pattern, const char* fileName)
         }
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
     }
-    embFile_close(file);
 
     embPattern_end(pattern);
 
@@ -92,13 +83,8 @@ int readExy(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeExy(EmbPattern* pattern, const char* fileName)
+int writeExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeExy"))
-        return 0;
-
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writeExy */
 }
 

@@ -42,26 +42,12 @@ bit definitions for attributes of stitch
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readThr(EmbPattern* pattern, const char* fileName)
+int readThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     ThredHeader header;
     unsigned char r, g, b;
     int currentColor, i;
-    EmbFile* file = 0;
     EmbThread thread;
-
-    if (!pattern) {
-        embLog("ERROR: format-thr.c readThr(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        embLog("ERROR: format-thr.c readThr(), fileName argument is null\n");
-        return 0;
-    }
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     header.sigVersion = binaryReadUInt32(file);
     header.length = binaryReadUInt32(file);
@@ -122,15 +108,12 @@ int readThr(EmbPattern* pattern, const char* fileName)
     /*  64 bytes of rgbx(4 bytes) colors (16 custom colors) */
     /*  16 bytes of thread size (ascii representation ie. '4') */
 
-    embFile_close(file);
-    embPattern_end(pattern);
-
     return 1;
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeThr(EmbPattern* pattern, const char* fileName)
+int writeThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i, stitchCount;
     unsigned char version = 0;
@@ -138,18 +121,9 @@ int writeThr(EmbPattern* pattern, const char* fileName)
     ThredExtension extension;
     char bitmapName[16];
     EmbStitch st;
-    EmbFile* file = 0;
     EmbColor c;
 
-    if (!validateWritePattern(pattern, fileName, "writeThr")) {
-        return 0;
-    }
-
     stitchCount = pattern->stitchList->count;
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
 
     memset(&header, 0, sizeof(ThredHeader));
     header.sigVersion = 0x746872 | (version << 24);
@@ -237,7 +211,6 @@ int writeThr(EmbPattern* pattern, const char* fileName)
         binaryWriteByte(file, '4');
     }
 
-    embFile_close(file);
     return 1;
 }
 

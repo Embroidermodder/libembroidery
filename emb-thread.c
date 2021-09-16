@@ -3,8 +3,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-#define EMBEDDED 0
-
 /* This list is the index of the names list, allowing us to 
  * interpret that list without storing a pointer (8 bytes)
  * instead an unsigned short (2 bytes).
@@ -105,7 +103,7 @@ static const char blue[] = "blue";
  * aren't an error.
  */
 static thread_color svg_color_codes[] = {
-#if EMBEDDED
+#if !ARDUINO
     { "aliceblue", 0xf0, 0xf8, 0xff, 0 },
     { "antiquewhite", 0xfa, 0xeb, 0xd7, 1 },
     { "aqua", 0x00, 0xff, 0xff, 2 },
@@ -282,7 +280,7 @@ static thread_color Fufu_Rayon_codes[] = {
 };
 
 static thread_color Hemingworth_Polyester_codes[] = {
-#if EMBEDDED
+#if !ARDUINO
     { "Pure White", 0xFF, 0xFF, 0xFF, 1001 },
     { "Lemon Ice", 0xDD, 0xE0, 0x0F, 1271 },
     { "Neon Green", 0xC9, 0xDD, 0x03, 1272 },
@@ -570,7 +568,7 @@ static thread_color Hemingworth_Polyester_codes[] = {
 };
 
 static thread_color Isacord_Polyester_codes[] = {
-#if EMBEDDED
+#if !ARDUINO
     { "?", 0xFF, 0xFF, 0xFF, 10 },
     { "?", 0xFF, 0xFF, 0xFF, 15 },
     { "?", 0xFF, 0xFF, 0xFF, 17 },
@@ -894,7 +892,7 @@ static thread_color Isacord_Polyester_codes[] = {
 };
 
 static thread_color Isafil_Rayon_codes[] = {
-#if EMBEDDED
+#if !ARDUINO
     { "?", 0xFF, 0xFF, 0xFF, 10 },
     { "?", 0xFF, 0xFF, 0xFF, 15 },
     { "?", 0xFF, 0xFF, 0xFF, 17 },
@@ -1361,7 +1359,7 @@ static thread_color Metro_Polyester_codes[] = {
 };
 
 static thread_color Pantone_codes[] = {
-#if EMBEDDED
+#if !ARDUINO
     { "?", 0xFF, 0xFF, 0x7D, 100 },
     { "?", 0xFF, 0xFF, 0x36, 101 },
     { "?", 0xFF, 0xFC, 0x0D, 102 },
@@ -2422,7 +2420,7 @@ static thread_color RobisonAnton_Polyester_codes[] = {
 };
 
 static thread_color RobisonAnton_Rayon_codes[] = {
-#if EMBEDDED
+#if !ARDUINO
     { "Light Pink", 0xEF, 0xCC, 0xCE, 2243 },
     { "Pink", 0xFC, 0xBF, 0xC9, 2223 },
     { "Pink Bazaar", 0xEF, 0xC6, 0xD3, 2599 },
@@ -2848,7 +2846,7 @@ static thread_color RobisonAnton_Rayon_codes[] = {
 };
 
 static thread_color Sigma_Polyester_codes[] = {
-#if EMBEDDED
+#if !ARDUINO
     { "White", 0xFF, 0xFF, 0xFF, 10 },
     { "Black", 0x00, 0x00, 0x00, 20 },
     { "Light Neon Green", 0xED, 0xFF, 0x50, 21 },
@@ -3004,7 +3002,7 @@ static thread_color Sigma_Polyester_codes[] = {
 };
 
 static thread_color Sulky_Rayon_codes[] = {
-#if EMBEDDED
+#if !ARDUINO
     { "Cornsilk", 0xEF, 0xC8, 0x10, 502 },
     { "Deep Arctic Sky", 0x0C, 0x08, 0x2D, 505 },
     { "Nutmeg", 0xB2, 0x6C, 0x29, 521 },
@@ -3355,7 +3353,7 @@ static thread_color ThreaDelight_Polyester_codes[] = {
 };
 
 static thread_color Z102_Isacord_Polyester_codes[] = {
-#if EMBEDDED
+#if !ARDUINO
     { "?", 0xF8, 0xFF, 0xFF, 17 },
     { "?", 0x00, 0x00, 0x00, 20 },
     { "?", 0xB7, 0xBA, 0xBA, 105 },

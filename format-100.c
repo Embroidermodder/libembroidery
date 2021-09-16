@@ -2,19 +2,11 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int read100(EmbPattern* pattern, const char* fileName)
+int read100(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
     int x, y;
     int stitchType;
     unsigned char b[4];
-
-    if (!validateReadPattern(pattern, fileName, "read100"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     while (embFile_read(b, 1, 4, file) == 4) {
@@ -28,26 +20,14 @@ int read100(EmbPattern* pattern, const char* fileName)
             stitchType = END;
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
     }
-    embFile_close(file);
-
-    embPattern_end(pattern);
 
     return 1;
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int write100(EmbPattern* pattern, const char* fileName)
+int write100(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
-    if (!validateWritePattern(pattern, fileName, "write100"))
-        return 0;
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
-
-    embFile_close(file);
     return 0; /*TODO: finish write100 */
 }
 

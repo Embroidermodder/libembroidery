@@ -148,28 +148,16 @@ struct hoop_padding {
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readJef(EmbPattern* pattern, const char* fileName)
+int readJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int stitchOffset, formatFlags, numberOfColors, numberOfStitchs;
     int hoopSize, i;
     struct hoop_padding bounds, rectFrom110x110, rectFrom50x50, rectFrom200x140, rect_from_custom;
     int stitchCount;
     char date[8], time[8];
-
-    EmbFile* file = 0;
-
     unsigned char b0 = 0, b1 = 0;
     char dx = 0, dy = 0;
     int flags = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readJef")) {
-        return 0;
-    }
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file) {
-        return 0;
-    }
 
     stitchOffset = binaryReadInt32(file);
     formatFlags = binaryReadInt32(file); /* TODO: find out what this means */
@@ -249,9 +237,6 @@ int readJef(EmbPattern* pattern, const char* fileName)
         dy = jefDecode(b1);
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    embFile_close(file);
-
-    embPattern_end(pattern);
     return 1;
 }
 
@@ -284,23 +269,14 @@ static void jefEncode(unsigned char* b, char dx, char dy, int flags)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeJef(EmbPattern* pattern, const char* fileName)
+int writeJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int colorlistSize, minColors, designWidth, designHeight, i;
     EmbRect boundingRect;
-    EmbFile* file;
     EmbTime time;
     EmbStitch st;
     double dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
     unsigned char b[4];
-
-    if (!validateWritePattern(pattern, fileName, "writeJef")) {
-        return 0;
-    }
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 12.7, 12.7);
 
@@ -396,7 +372,6 @@ int writeJef(EmbPattern* pattern, const char* fileName)
             embFile_write(b, 1, 2, file);
         }
     }
-    embFile_close(file);
     return 1;
 }
 

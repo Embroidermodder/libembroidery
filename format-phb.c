@@ -2,25 +2,11 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPhb(EmbPattern* pattern, const char* fileName)
+int readPhb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned int fileOffset;
     short colorCount;
-    EmbFile* file = 0;
     int i;
-
-    if (!pattern) {
-        embLog("ERROR: format-phb.c readPhb(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        embLog("ERROR: format-phb.c readPhb(), fileName argument is null\n");
-        return 0;
-    }
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embFile_seek(file, 0x71, SEEK_SET);
     colorCount = binaryReadInt16(file);
@@ -57,24 +43,16 @@ int readPhb(EmbPattern* pattern, const char* fileName)
     binaryReadInt16(file);
     binaryReadInt16(file);
     binaryReadInt16(file);
-    readPecStitches(pattern, file);
-    embFile_close(file);
+    readPecStitches(pattern, file, fileName);
 
-    embPattern_end(pattern);
     embPattern_flipVertical(pattern);
     return 1; /*TODO: finish ReadPhb */
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePhb(EmbPattern* pattern, const char* fileName)
+int writePhb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writePhb")) {
-        return 0;
-    }
-
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writePhb */
 }
 

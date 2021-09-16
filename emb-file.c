@@ -29,6 +29,129 @@ Special values for Stream Identifiers
 #define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /*!< All real stream Ids are less than this */
 #define CompoundFileStreamId_NoStream 0xFFFFFFFF /*!< There is no valid stream Id            */
 
+int read100(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int write100(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int read10o(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int write10o(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readArt(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeArt(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readBmc(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeBmc(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readBro(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeBro(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readCnd(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeCnd(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readCol(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeCol(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readCsd(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeCsd(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readCsv(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeCsv(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readDat(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeDat(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readDem(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeDem(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readDsb(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeDsb(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readDst(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeDst(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readDsz(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeDsz(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readDxf(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeDxf(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readEdr(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeEdr(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readEmd(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeEmd(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readExp(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeExp(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readExy(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeExy(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readEys(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeEys(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readFxy(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeFxy(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readGc(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeGc(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readGnc(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeGnc(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readGt(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeGt(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readHus(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeHus(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readInb(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeInb(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readInf(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeInf(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readJef(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeJef(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readKsm(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeKsm(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readMax(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeMax(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readMit(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeMit(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readNew(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeNew(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readOfm(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeOfm(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readPcd(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writePcd(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readPcm(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writePcm(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readPcq(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writePcq(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readPcs(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writePcs(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readPec(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writePec(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readPel(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writePel(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readPem(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writePem(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readPes(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writePes(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readPhb(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writePhb(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readPhc(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writePhc(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readPlt(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writePlt(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readRgb(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeRgb(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readSew(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeSew(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readShv(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeShv(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readSst(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeSst(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readStx(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeStx(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readSvg(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeSvg(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readT01(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeT01(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readT09(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeT09(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readTap(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeTap(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readThr(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeThr(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readTxt(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeTxt(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readU00(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeU00(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readU01(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeU01(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readVip(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeVip(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readVp3(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeVp3(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readXxx(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeXxx(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int readZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
+int writeZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
+
 /* TODO: This list needs reviewed in case some stitch formats also can contain object data (EMBFORMAT_STCHANDOBJ). */
 
 const EmbFormatList formatTable[100] = {
@@ -124,73 +247,78 @@ static const unsigned int sizeOfDirectoryEntry = 128;
 /* static const int supportedMinorVersion = 0x003E;
 static const int littleEndianByteOrderMark = 0xFFFE; */
 
-/**
- * Argument validator and stitchList checker.
- * Saves making these 4 checks seperately for every file type.
- *
- * If we change over all the read/write functions to work on
- *     int readPes(EmbPattern *pattern, EmbFile *file);
- * instead, then there will be no need for using this all over the source.
- *
- * Instead of the user specifying the reading mode as:
- *     readPes(pattern, fileName);
- * the user could call:
- *     readPattern(pattern, file, EMB_FORMAT_PES);
- *
- * This could save on the need for a function for each format, instead having
- * a giant jump table in a file emb-format
- */
-int validateWritePattern(EmbPattern* pattern, const char* fileName, const char* function)
+int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
 {
-    if (!pattern) {
-        embLog("ERROR: ");
-        embLog(function);
-        embLog("(), pattern argument is null\n");
-        return 0;
-    }
+    EmbFile *file;
+    int r;
+
     if (!fileName) {
         embLog("ERROR: ");
-        embLog(function);
+        embLog(fileName);
         embLog("(), fileName argument is null\n");
         return 0;
     }
 
     if (!pattern->stitchList) {
-        embLog("ERROR: ");
-        embLog(function);
-        embLog("(), pattern contains no stitches\n");
+        embLog("ERROR: embPattern_write(), pattern contains no stitches\n");
         return 0;
     }
 
     if (!pattern->stitchList->count) {
-        embLog("ERROR: ");
-        embLog(function);
-        embLog("(), pattern contains no stitches\n");
+        embLog("ERROR: embPattern_write(), pattern contains no stitches\n");
         return 0;
     }
 
     embPattern_end(pattern);
 
-    return 1;
+    file = embFile_open(fileName, "wb", 0);
+    if (!file) {
+        embLog("ERROR: embPattern_write(), failed to open file\n");
+        return 0;    
+    }
+
+    r = formatTable[format].writerFunc(pattern, file, fileName);
+    
+    if (!r) {
+        return r;
+    }
+    
+    embFile_close(file);
+    return 0;
 }
 
 /**
  * Argument validator for reading patterns.
  */
-int validateReadPattern(EmbPattern* pattern, const char* fileName, const char* function)
+int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
 {
+    EmbFile *file;
+    int r;
+    
     if (!pattern) {
-        embLog("ERROR: ");
-        embLog(function);
-        embLog("(), pattern argument is null\n");
+        embLog("ERROR: embPattern_read(), pattern argument is null\n");
         return 0;
     }
     if (!fileName) {
-        embLog("ERROR: ");
-        embLog(function);
-        embLog("(), fileName argument is null\n");
+        embLog("ERROR: embPattern_read(), fileName argument is null\n");
         return 0;
     }
+
+    file = embFile_open(fileName, "rb", 0);
+    if (!file) {
+        embLog("ERROR: embPattern_write(), failed to open file\n");
+        return 0;    
+    }
+
+    r = formatTable[format].readerFunc(pattern, file, fileName);
+    
+    if (!r) {
+        return r;
+    }
+    
+    embFile_close(file);
+    embPattern_end(pattern);
+
     return 1;
 }
 

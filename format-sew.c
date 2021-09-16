@@ -10,19 +10,10 @@ static char sewDecode(unsigned char inputByte)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readSew(EmbPattern* pattern, const char* fileName)
+int readSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
     int i, flags, numberOfColors, fileLength;
     char dx, dy, thisStitchIsJump = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readSew"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file) {
-        return 0;
-    }
 
     embFile_seek(file, 0x00, SEEK_END);
     fileLength = embFile_tell(file);
@@ -68,8 +59,6 @@ int readSew(EmbPattern* pattern, const char* fileName)
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     printf("current position: %ld\n", embFile_tell(file));
-    embFile_close(file);
-    embPattern_end(pattern);
 
     return 1;
 }
@@ -102,21 +91,13 @@ static void sewEncode(unsigned char* b, char dx, char dy, int flags)
 }
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeSew(EmbPattern* pattern, const char* fileName)
+int writeSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int colorlistSize, minColors, i, thr;
-    EmbFile* file;
     EmbStitch st;
     EmbColor col;
     double dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
     unsigned char b[4];
-
-    if (!validateWritePattern(pattern, fileName, "writeSew"))
-        return 0;
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
 
     colorlistSize = pattern->threads->count;
 
@@ -151,7 +132,6 @@ int writeSew(EmbPattern* pattern, const char* fileName)
             embFile_write(b, 1, 2, file);
         }
     }
-    embFile_close(file);
     return 1;
 }
 

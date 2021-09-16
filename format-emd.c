@@ -7,7 +7,7 @@ static char emdDecode(unsigned char inputByte)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readEmd(EmbPattern* pattern, const char* fileName)
+int readEmd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b0 = 0, b1 = 0;
     char dx = 0, dy = 0;
@@ -16,14 +16,6 @@ int readEmd(EmbPattern* pattern, const char* fileName)
     unsigned char jemd0[6]; /* TODO: more descriptive name */
     int width, height, colors;
     int i;
-    EmbFile* file;
-
-    if (!validateReadPattern(pattern, fileName, "readEmd"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
@@ -58,8 +50,6 @@ int readEmd(EmbPattern* pattern, const char* fileName)
         dy = emdDecode(b1);
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    embFile_close(file);
-
     embPattern_end(pattern);
 
     return 1;
@@ -67,13 +57,8 @@ int readEmd(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeEmd(EmbPattern* pattern, const char* fileName)
+int writeEmd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeEmd"))
-        return 0;
-
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writeEmd */
 }
 

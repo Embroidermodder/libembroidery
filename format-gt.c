@@ -2,17 +2,8 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readGt(EmbPattern* pattern, const char* fileName)
+int readGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
-
-    if (!validateReadPattern(pattern, fileName, "readGt"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
-
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_seek(file, 0x200, SEEK_SET); /* TODO: review for combining code. This line appears to be the only difference from the FXY format. */
 
@@ -36,7 +27,6 @@ int readGt(EmbPattern* pattern, const char* fileName)
             b2 = -b2;
         embPattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
     }
-    embFile_close(file);
 
     embPattern_end(pattern);
 
@@ -45,17 +35,8 @@ int readGt(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeGt(EmbPattern* pattern, const char* fileName)
+int writeGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
-    if (!validateWritePattern(pattern, fileName, "writeGt"))
-        return 0;
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
-
-    embFile_close(file);
     return 0; /*TODO: finish writeGt */
 }
 

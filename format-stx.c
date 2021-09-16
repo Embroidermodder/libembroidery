@@ -112,7 +112,7 @@ static int stxReadThread(StxThread* thread, EmbFile* file)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readStx(EmbPattern* pattern, const char* fileName)
+int readStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i, threadCount;
     unsigned char* gif = 0;
@@ -126,20 +126,6 @@ int readStx(EmbPattern* pattern, const char* fileName)
 
     int vala1, vala2, vala3, vala4, vala5, vala6;
     int bottom, top;
-    EmbFile* file = 0;
-
-    if (!pattern) {
-        embLog("ERROR: format-stx.c readStx(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        embLog("ERROR: format-stx.c readStx(), fileName argument is null\n");
-        return 0;
-    }
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     binaryReadBytes(file, headerBytes, 7); /* TODO: check return value */
     header = (char*)headerBytes;
@@ -246,22 +232,15 @@ int readStx(EmbPattern* pattern, const char* fileName)
             i++;
         }
     }
-    embFile_close(file);
-    embPattern_end(pattern);
+
     embPattern_flipVertical(pattern);
     return 1;
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeStx(EmbPattern* pattern, const char* fileName)
+int writeStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeStx")) {
-        return 0;
-    }
-
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writeStx */
 }
 

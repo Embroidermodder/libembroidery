@@ -25,19 +25,10 @@ static void ksmEncode(unsigned char* b, char dx, char dy, int flags)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readKsm(EmbPattern* pattern, const char* fileName)
+int readKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int prevStitchType = NORMAL;
     char b[3];
-    EmbFile* file = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readKsm"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file) {
-        return 0;
-    }
 
     embFile_seek(file, 0x200, SEEK_SET);
 
@@ -56,29 +47,18 @@ int readKsm(EmbPattern* pattern, const char* fileName)
             b[0] = -b[0];
         embPattern_addStitchRel(pattern, b[1] / 10.0, b[0] / 10.0, flags, 1);
     }
-    embFile_close(file);
-
-    embPattern_end(pattern);
     return 1;
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeKsm(EmbPattern* pattern, const char* fileName)
+int writeKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
     EmbStitch st;
     double xx, yy, dx, dy;
     int i;
     unsigned char b[4];
 
-    if (!validateWritePattern(pattern, fileName, "writeKsm"))
-        return 0;
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file) {
-        return 0;
-    }
     for (i = 0; i < 0x80; i++) {
         binaryWriteInt(file, 0);
     }
@@ -94,7 +74,6 @@ int writeKsm(EmbPattern* pattern, const char* fileName)
         embFile_write(b, 1, 2, file);
     }
     embFile_print(file, "\x1a");
-    embFile_close(file);
     return 1;
 }
 

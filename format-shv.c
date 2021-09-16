@@ -69,9 +69,8 @@ static short shvDecodeShort(unsigned short inputByte)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readShv(EmbPattern* pattern, const char* fileName)
+int readShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file = 0;
     int i;
     char inJump = 0;
     unsigned char fileNameLength, designWidth, designHeight;
@@ -87,13 +86,6 @@ int readShv(EmbPattern* pattern, const char* fileName)
     int stitchesSinceChange = 0;
     int currColorIndex = 0;
     unsigned short sx, sy;
-
-    if (!validateReadPattern(pattern, fileName, "readShv"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embFile_seek(file, strlen(headerText), SEEK_SET);
     fileNameLength = binaryReadUInt8(file);
@@ -181,17 +173,8 @@ int readShv(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeShv(EmbPattern* pattern, const char* fileName)
+int writeShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
-    if (!validateWritePattern(pattern, fileName, "writeShv"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
-
-    embFile_close(file);
     return 0; /*TODO: finish writeShv */
 }
 

@@ -112,7 +112,7 @@ const char imageWithFrame[38][48] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-void readPecStitches(EmbPattern* pattern, EmbFile* file)
+void readPecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int stitchNumber = 0;
 
@@ -214,20 +214,11 @@ static void pecEncodeStop(EmbFile* file, unsigned char val)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPec(EmbPattern* pattern, const char* fileName)
+int readPec(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned int graphicsOffset;
     unsigned char colorChanges;
     int i;
-    EmbFile* file = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readPec")) {
-        return 0;
-    }
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embFile_seek(file, 0x38, SEEK_SET);
     colorChanges = (unsigned char)binaryReadByte(file);
@@ -258,10 +249,7 @@ int readPec(EmbPattern* pattern, const char* fileName)
     /* Begin Stitch Data */
     /* 0x21C */
     /*unsigned int end = graphicsOffset + 0x208; */
-    readPecStitches(pattern, file);
-
-    embFile_close(file);
-    embPattern_end(pattern);
+    readPecStitches(pattern, file, fileName);
 
     embPattern_flipVertical(pattern);
 
@@ -275,15 +263,6 @@ static void pecEncode(EmbFile* file, EmbPattern* p)
     unsigned char stopCode = 2;
     EmbStitch s;
     int deltaX, deltaY, i;
-
-    if (!file) {
-        embLog("ERROR: format-pec.c pecEncode(), file argument is null\n");
-        return;
-    }
-    if (!p) {
-        embLog("ERROR: format-pec.c pecEncode(), p argument is null\n");
-        return;
-    }
 
     for (i = 0; i < p->stitchList->count; i++) {
         s = p->stitchList->stitch[i];
@@ -466,18 +445,8 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePec(EmbPattern* pattern, const char* fileName)
+int writePec(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file = 0;
-
-    if (!validateWritePattern(pattern, fileName, "writePec")) {
-        return 0;
-    }
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
-
     embPattern_flipVertical(pattern); /* TODO: There needs to be a matching flipVertical() call after the write to ensure multiple writes from the same pattern work properly */
     embPattern_fixColorCount(pattern);
     embPattern_correctForMaxStitchLength(pattern, 12.7, 204.7);
@@ -487,7 +456,6 @@ int writePec(EmbPattern* pattern, const char* fileName)
 
     writePecStitches(pattern, file, fileName);
 
-    embFile_close(file);
     return 1;
 }
 

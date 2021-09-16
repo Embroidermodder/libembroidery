@@ -36,20 +36,12 @@ static void expEncode(unsigned char* b, char dx, char dy, int flags)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readExp(EmbPattern* pattern, const char* fileName)
+int readExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file = 0;
     int i = 0;
     unsigned char b0 = 0, b1 = 0;
     char dx = 0, dy = 0;
     int flags = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readExp"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
@@ -107,24 +99,16 @@ int readExp(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeExp(EmbPattern* pattern, const char* fileName)
+int writeExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
 #ifdef ARDUINO /* ARDUINO TODO: This is temporary. Remove when complete. */
     return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
 #else /* ARDUINO TODO: This is temporary. Remove when complete. */
-    EmbFile* file = 0;
     double dx = 0.0, dy = 0.0;
     double xx = 0.0, yy = 0.0;
     int flags = 0, i;
     unsigned char b[4];
     EmbStitch st;
-
-    if (!validateWritePattern(pattern, fileName, "writeExp"))
-        return 0;
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
 
     /* write stitches */
     for (i = 0; i < pattern->stitchList->count; i++) {
@@ -142,7 +126,6 @@ int writeExp(EmbPattern* pattern, const char* fileName)
         }
     }
     embFile_print(file, "\x1a");
-    embFile_close(file);
     return 1;
 #endif /* ARDUINO TODO: This is temporary. Remove when complete. */
 }

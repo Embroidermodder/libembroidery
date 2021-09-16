@@ -81,7 +81,7 @@ typedef struct VipHeader_ {
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readVip(EmbPattern* pattern, const char* fileName)
+int readVip(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int fileLength;
     int i;
@@ -89,20 +89,6 @@ int readVip(EmbPattern* pattern, const char* fileName)
     unsigned char *attributeData = 0, *decodedColors = 0, *attributeDataDecompressed = 0;
     unsigned char *xData = 0, *xDecompressed = 0, *yData = 0, *yDecompressed = 0;
     VipHeader header;
-    EmbFile* file = 0;
-
-    if (!pattern) {
-        embLog("ERROR: format-vip.c readVip(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        embLog("ERROR: format-vip.c readVip(), fileName argument is null\n");
-        return 0;
-    }
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embFile_seek(file, 0x0, SEEK_END);
     fileLength = embFile_tell(file);
@@ -184,20 +170,12 @@ int readVip(EmbPattern* pattern, const char* fileName)
     }
     embPattern_addStitchRel(pattern, 0, 0, END, 1);
 
-    embFile_close(file);
-
     free(attributeData);
-    attributeData = 0;
     free(xData);
-    xData = 0;
     free(yData);
-    yData = 0;
     free(attributeDataDecompressed);
-    attributeDataDecompressed = 0;
     free(xDecompressed);
-    xDecompressed = 0;
     free(yDecompressed);
-    yDecompressed = 0;
 
     return 1;
 }
@@ -237,7 +215,7 @@ static unsigned char vipEncodeStitchType(int st)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeVip(EmbPattern* pattern, const char* fileName)
+int writeVip(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor, attributeSize = 0,
@@ -248,14 +226,6 @@ int writeVip(EmbPattern* pattern, const char* fileName)
     unsigned char *xValues, *yValues, *attributeValues, *attributeCompressed = 0,
                                                         *xCompressed = 0, *yCompressed = 0, *decodedColors = 0, *encodedColors = 0,
                                                         prevByte = 0;
-    EmbFile* file = 0;
-
-    if (!validateWritePattern(pattern, fileName, "writeVip"))
-        return 0;
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
 
     stitchCount = pattern->stitchList->count;
     minColors = pattern->threads->count;
@@ -356,7 +326,6 @@ int writeVip(EmbPattern* pattern, const char* fileName)
     if (encodedColors)
         free(encodedColors);
 
-    embFile_close(file);
     return 1;
 }
 

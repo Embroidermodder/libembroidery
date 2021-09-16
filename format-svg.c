@@ -73,6 +73,47 @@ static void writePolygons(EmbPattern* pattern, EmbFile* file);
 static void writePolylines(EmbPattern* pattern, EmbFile* file);
 static void writeStitchList(EmbPattern* pattern, EmbFile* file);
 
+/**
+ * Tests for the presense of a string \a s in the supplied
+ * \a array.
+ *
+ * The end of the array is marked by an empty string.
+ *
+ * @return 0 if not present 1 if present.
+ */
+static int stringInArray(const char* s, const char** array)
+{
+    int i;
+    for (i = 0; array[i][0]; i++) {
+        if (!strcmp(s, array[i])) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/**
+ * Function is similar to the Unix utility tr.
+ *
+ * Character for character replacement in strings.
+ * Takes a string \a s and for every character in the
+ * \a from string replace with the corresponding character
+ * in the \a to string.
+ *
+ * For example: ("test", "tb", "..") -> ".es."
+ */
+static void charReplace(char* s, const char* from, const char* to)
+{
+    int i;
+    for (; *s; s++) {
+        for (i = 0; from[i]; i++) {
+            if (*s == from[i]) {
+                *s = to[i];
+            }
+        }
+    }
+}
+
 static const char* svg_all_tokens[] = {
     /* Catch All Properties */
     "audio-level", "buffered-rendering", "color", "color-rendering", "direction",
@@ -182,39 +223,57 @@ static const char* svg_property_tokens[] = {
     "viewport-fill", "viewport-fill-opacity", "visibility", "\0"
 };
 
-EmbColor svgColorToEmbColor(char* colorString)
+EmbColor svgColorToEmbColor(char* colorStr)
 {
     EmbColor c;
     char* pEnd = 0;
-    char* colorStr = copy_trim(colorString); /* Trim out any junk spaces */
-    int length = strlen(colorStr);
+    int i, length, percent;
+
+    /* Trim out any junk spaces */
+    length = 0;
+    for (i=0; colorStr[i]; i++) {
+        if (colorStr[i] == ' ' || colorStr[i] == '\t') continue;
+        if (colorStr[i] == '\n' || colorStr[i] == '\r') continue;
+        if (colorStr[i] == '%') percent = 1;
+        colorStr[length] = colorStr[i];
+        length++;
+    }
+    colorStr[length] = 0;
 
     /* SVGTiny1.2 Spec Section 11.13.1 syntax for color values */
-    if (length == 7 && colorStr[0] == '#') /* Six digit hex — #rrggbb */
-    {
-        c = embColor_fromHexStr(lTrim(colorStr, '#'));
-    } else if (length == 4 && colorStr[0] == '#') /* Three digit hex — #rgb */
-    {
-        /* Convert the 3 digit hex to a six digit hex */
-        char hex[7];
-        sprintf(hex, "%c%c%c%c%c%c", colorStr[1], colorStr[1], colorStr[2],
-            colorStr[2], colorStr[3], colorStr[3]);
+    if (colorStr[0] == '#') {
+        if (length == 7) {
+            /* Six digit hex — #rrggbb */
+            c = embColor_fromHexStr(colorStr+1);
+        }
+        else {
+            /* Three digit hex — #rgb */
+           /* Convert the 3 digit hex to a six digit hex */
+            char hex[7];
+            hex[0] = colorStr[1];
+            hex[1] = colorStr[1];
+            hex[2] = colorStr[2];
+            hex[3] = colorStr[2];
+            hex[4] = colorStr[3];
+            hex[5] = colorStr[3];
+            hex[6] = 0;
 
-        c = embColor_fromHexStr(hex);
-    } else if (strstr(colorStr, "%")) /* Float functional — rgb(R%, G%, B%) */
-    {
+            c = embColor_fromHexStr(hex);
+        }
+    } else if (percent) {
+        /* Float functional — rgb(R%, G%, B%) */
         charReplace(colorStr, "rgb,()%", "      ");
         c.r = (unsigned char)round(255.0 / 100.0 * strtod(colorStr, &pEnd));
         c.g = (unsigned char)round(255.0 / 100.0 * strtod(pEnd, &pEnd));
         c.b = (unsigned char)round(255.0 / 100.0 * strtod(pEnd, &pEnd));
-    } else if (length > 3 && startsWith("rgb", colorStr)) /* Integer functional — rgb(rrr, ggg, bbb) */
-    {
+    } else if (length > 3 && colorStr[0] == 'r' && colorStr[1] == 'g' && colorStr[2] == 'b') {
+        /* Integer functional — rgb(rrr, ggg, bbb) */
         charReplace(colorStr, "rgb,()", "     ");
         c.r = (unsigned char)strtol(colorStr, &pEnd, 10);
         c.g = (unsigned char)strtol(pEnd, &pEnd, 10);
         c.b = (unsigned char)strtol(pEnd, &pEnd, 10);
-    } else /* Color keyword */
-    {
+    } else {
+        /* Color keyword */
         int tableColor = threadColor(&c, colorStr, SVG_Colors);
         if (!tableColor) {
             printf("SVG color string not found: %s.\n", colorStr);
@@ -1242,9 +1301,8 @@ static const char* stopTokens[] = {
         "xml:lang", "xml:space", "/", "\0"
     };
 
-static char svgIsSvgAttribute(const char* buff)
-{
-    const char* tokens[] = {
+
+static const char* svgTokens[] = {
         "about", "baseProfile", "class", "content", "contentScriptType",
         "datatype", "externalResourcesRequired", "focusHighlight", "focusable",
         "height", "id", "nav-down", "nav-down-left", "nav-down-right",
@@ -1255,10 +1313,14 @@ static char svgIsSvgAttribute(const char* buff)
         "typeof", "version", "viewBox", "width", "xml:base", "xml:id",
         "xml:lang", "xml:space", "zoomAndPan", "/", "\0"
     };
-    const char* inkscape_tokens[] = {
+
+static const char* inkscape_tokens[] = {
         "xmlns:dc", "xmlns:cc", "xmlns:rdf", "xmlns:svg", "xmlns", "\0"
     };
-    if (stringInArray(buff, tokens))
+
+static char svgIsSvgAttribute(const char* buff)
+{
+    if (stringInArray(buff, svgTokens))
         return SVG_ATTRIBUTE;
 
     if (svgCreator == SVG_CREATOR_INKSCAPE) {

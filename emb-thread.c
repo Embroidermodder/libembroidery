@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+#define EMBEDDED 0
+
 /* This list is the index of the names list, allowing us to 
  * interpret that list without storing a pointer (8 bytes)
  * instead an unsigned short (2 bytes).
@@ -103,6 +105,7 @@ static const char blue[] = "blue";
  * aren't an error.
  */
 static thread_color svg_color_codes[] = {
+#if EMBEDDED
     { "aliceblue", 0xf0, 0xf8, 0xff, 0 },
     { "antiquewhite", 0xfa, 0xeb, 0xd7, 1 },
     { "aqua", 0x00, 0xff, 0xff, 2 },
@@ -250,34 +253,36 @@ static thread_color svg_color_codes[] = {
     { "whitesmoke", 0xf5, 0xf5, 0xf5, 145 },
     { "yellow", 0xff, 0xff, 0x00, 146 },
     { "yellowgreen", 0x9a, 0xcd, 0x0e, 147 },
-    { "END", 0, -1 }
+#endif
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Arc_Polyester_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Arc_Rayon_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color CoatsAndClark_Rayon_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Exquisite_Polyester_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Fufu_Polyester_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Fufu_Rayon_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Hemingworth_Polyester_codes[] = {
+#if EMBEDDED
     { "Pure White", 0xFF, 0xFF, 0xFF, 1001 },
     { "Lemon Ice", 0xDD, 0xE0, 0x0F, 1271 },
     { "Neon Green", 0xC9, 0xDD, 0x03, 1272 },
@@ -560,10 +565,12 @@ static thread_color Hemingworth_Polyester_codes[] = {
     { "Dark Mauve", 0x89, 0x68, 0x7C, 1153 },
     { "Wild Plum", 0x64, 0x44, 0x59, 1154 },
     { "Huckleberry", 0x4B, 0x30, 0x6A, 1212 },
-    { "END", 0, -1 }
+#endif
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Isacord_Polyester_codes[] = {
+#if EMBEDDED
     { "?", 0xFF, 0xFF, 0xFF, 10 },
     { "?", 0xFF, 0xFF, 0xFF, 15 },
     { "?", 0xFF, 0xFF, 0xFF, 17 },
@@ -882,10 +889,12 @@ static thread_color Isacord_Polyester_codes[] = {
     { "?", 0xBE, 0xD7, 0x82, 6051 },
     { "?", 0x91, 0x96, 0x00, 6133 },
     { "?", 0x48, 0x46, 0x01, 6156 },
-    { "END", 0, -1 }
+#endif
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Isafil_Rayon_codes[] = {
+#if EMBEDDED
     { "?", 0xFF, 0xFF, 0xFF, 10 },
     { "?", 0xFF, 0xFF, 0xFF, 15 },
     { "?", 0xFF, 0xFF, 0xFF, 17 },
@@ -1327,30 +1336,32 @@ static thread_color Isafil_Rayon_codes[] = {
     { "?", 0xDC, 0xDD, 0xD1, 6071 },
     { "?", 0x91, 0x96, 0x00, 6133 },
     { "?", 0x48, 0x46, 0x01, 6156 },
-    { "END", 0, -1 }
+#endif
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Marathon_Polyester_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Marathon_Rayon_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Madeira_Polyester_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Madeira_Rayon_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Metro_Polyester_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Pantone_codes[] = {
+#if EMBEDDED
     { "?", 0xFF, 0xFF, 0x7D, 100 },
     { "?", 0xFF, 0xFF, 0x36, 101 },
     { "?", 0xFF, 0xFC, 0x0D, 102 },
@@ -2395,7 +2406,8 @@ static thread_color Pantone_codes[] = {
     { "?", 0x49, 0x5C, 0x5E, 7545 },
     { "?", 0x30, 0x45, 0x47, 7546 },
     { "?", 0x0A, 0x0F, 0x0F, 7547 },
-    { "END", 0, -1 }
+#endif
+    { "END", 0, 0, 0, -1 }
 };
 
 /* Based on the manufacturer table at 
@@ -2406,10 +2418,11 @@ static thread_color RobisonAnton_Polyester_codes[] = {
     { "Black", 0x00, 0x00, 0x00, 5596 },
     { "White", 0xFF, 0xFF, 0xFF, 5597 },
     /* unfinished */
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color RobisonAnton_Rayon_codes[] = {
+#if EMBEDDED
     { "Light Pink", 0xEF, 0xCC, 0xCE, 2243 },
     { "Pink", 0xFC, 0xBF, 0xC9, 2223 },
     { "Pink Bazaar", 0xEF, 0xC6, 0xD3, 2599 },
@@ -2830,10 +2843,12 @@ static thread_color RobisonAnton_Rayon_codes[] = {
     { "Natural White", 0xF5, 0xED, 0xDE, 2342 },
     { "Eggshell", 0xF0, 0xE8, 0xD6, 2343 },
     { "Jet Black", 0x1C, 0x26, 0x30, 2632 },
-    { "END", 0, -1 }
+#endif
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Sigma_Polyester_codes[] = {
+#if EMBEDDED
     { "White", 0xFF, 0xFF, 0xFF, 10 },
     { "Black", 0x00, 0x00, 0x00, 20 },
     { "Light Neon Green", 0xED, 0xFF, 0x50, 21 },
@@ -2984,10 +2999,12 @@ static thread_color Sigma_Polyester_codes[] = {
     { "Powder Blue", 0x91, 0xB9, 0xE2, 5554 },
     { "Froggy Green", 0x42, 0x96, 0x48, 5557 },
     { "Stone Grey", 0x87, 0x8C, 0x8C, 8010 },
-    { "END", 0, -1 }
+#endif
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Sulky_Rayon_codes[] = {
+#if EMBEDDED
     { "Cornsilk", 0xEF, 0xC8, 0x10, 502 },
     { "Deep Arctic Sky", 0x0C, 0x08, 0x2D, 505 },
     { "Nutmeg", 0xB2, 0x6C, 0x29, 521 },
@@ -3321,22 +3338,24 @@ static thread_color Sulky_Rayon_codes[] = {
     { "Dark Forest", 0x36, 0x36, 0x1F, 1273 },
     { "Watermelon", 0xFA, 0x5F, 0x7F, 1303 },
     { "Caribbean Mist", 0xA3, 0xC2, 0xD7, 1644 },
-    { "END", 0, -1 }
+#endif
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color ThreadArt_Rayon_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color ThreadArt_Polyester_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color ThreaDelight_Polyester_codes[] = {
-    { "END", 0, -1 }
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color Z102_Isacord_Polyester_codes[] = {
+#if EMBEDDED
     { "?", 0xF8, 0xFF, 0xFF, 17 },
     { "?", 0x00, 0x00, 0x00, 20 },
     { "?", 0xB7, 0xBA, 0xBA, 105 },
@@ -3457,7 +3476,8 @@ static thread_color Z102_Isacord_Polyester_codes[] = {
     { "?", 0xBC, 0xD6, 0x33, 6011 },
     { "?", 0xBB, 0xCD, 0x91, 6051 },
     { "?", 0x97, 0x8B, 0x3C, 6133 },
-    { "END", 0, -1 }
+#endif
+    { "END", 0, 0, 0, -1 }
 };
 
 static thread_color* brand_codes[] = {

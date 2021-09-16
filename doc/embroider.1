@@ -1,0 +1,93 @@
+.TH EMBROIDER 1
+.DD September 16, 2021
+.OS
+.SH NAME
+embroider \- convert between and create embroidery files
+.SH SYNOPSIS
+.B embroider
+[\fIOPTIONS\fR]
+.IR FILES...
+.SH DESCRIPTION
+.B embroider
+converts between standard embroidery formats and create embroidery files
+using imagemagick-style filters.
+
+A command line program for machine embroidery.
+
+Copyright 2013-2021 The Embroidermodder Team
+
+Licensed under the terms of the zlib license.
+
+    https://github.com/Embroidermodder/libembroidery
+
+    https://embroidermodder.org
+.SH OPTIONS
+Conversion:
+.TP
+.BR \-t ", " \-to
+Convert all files given to the format specified
+by the arguments to the flag, for example:
+
+    $ embroider -t dst input.pes")
+
+would convert \"input.pes\" to \"input.dst\"
+in the same directory the program runs in.
+
+The accepted input formats are (TO BE DETERMINED).
+
+The accepted output formats are (TO BE DETERMINED).
+.NR
+.BR Output:
+.TP
+.BR \-h ", " \-help
+Print the basic help message.
+.TP
+.BR \-f ", " \-format
+Print help on the formats that embroider can deal with.
+.TP
+.BR \-q ", " \-quiet
+Only print fatal errors.
+.TP
+.BR \-V ", " \-verbose
+Print everything that has reporting.
+.TP
+.BR \-v ", " \-version
+Print the version string.
+.NR
+Graphics:
+.TP
+.BR \-c ", " \-circle =\fICENTERX,CENTERY,RADIUS\fR
+Add a circle defined by the arguments given to the current pattern.
+.TP
+.BR \-e ", " \-ellipse =\fICENTERX,CENTERY,RADIUSX,RADIUSY\fR
+Add a circle defined by the arguments given to the current pattern.
+.TP
+.BR \-l ", " \-line
+Add a line defined by the arguments given to the current pattern.
+.TP
+.BR \-P ", " \-polyline
+Add a polyline.
+.TP
+.BR \-p ", " \-polygon
+Add a polygon.
+.TP
+.BR \-s ", " \-satin
+Fill the current geometry with satin stitches according
+to the defined algorithm.
+.TP
+.BR \-S ", " \-stitch
+Add a stitch defined by the arguments given to the current pattern.
+.NA
+Quality Assurance:
+.TP
+.BR \-test
+Run the test suite.
+.SH EXIT STATUS
+.SH ERRORS
+.SH ENVIRONMENT
+.SH FILES
+.SH NOTES
+.SH BUGS
+.SH EXAMPLE
+.SH SEE ALSO
+imagemagick convert mogrify

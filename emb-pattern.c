@@ -328,12 +328,9 @@ void embPattern_changeColor(EmbPattern* p, int index)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int embPattern_read(EmbPattern* pattern, const char* fileName) /* TODO: Write test case using this convenience function. */
+int embPattern_readAuto(EmbPattern* pattern, const char* fileName) /* TODO: Write test case using this convenience function. */
 {
-    int reader, result;
-
-    if (!validateReadPattern(pattern, fileName, "embPattern_read"))
-        return 0;
+    int reader;
 
     reader = embReaderWriter_getByFileName(fileName);
     if (reader < 0) {
@@ -341,18 +338,15 @@ int embPattern_read(EmbPattern* pattern, const char* fileName) /* TODO: Write te
         embLog(fileName);
         return 0;
     }
-    result = formatTable[reader].readerFunc(pattern, fileName);
-    return result;
+
+    return embPattern_read(pattern, fileName, reader);
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int embPattern_write(EmbPattern* pattern, const char* fileName) /* TODO: Write test case using this convenience function. */
+int embPattern_writeAuto(EmbPattern* pattern, const char* fileName) /* TODO: Write test case using this convenience function. */
 {
-    int writer, result;
-
-    if (!validateWritePattern(pattern, fileName, "embPattern_write"))
-        return 0;
+    int writer;
 
     writer = embReaderWriter_getByFileName(fileName);
     if (writer < 0) {
@@ -360,8 +354,8 @@ int embPattern_write(EmbPattern* pattern, const char* fileName) /* TODO: Write t
         embLog(fileName);
         return 0;
     }
-    result = formatTable[writer].writerFunc(pattern, fileName);
-    return result;
+
+    return embPattern_write(pattern, fileName, writer);
 }
 
 /* Very simple scaling of the x and y axis for every point.
@@ -818,6 +812,7 @@ void embPattern_center(EmbPattern* p)
 void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
 {
     char hasRead, *dotPos, *extractName;
+    EmbFile *file;
 
     if (!p) {
         embLog("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), p argument is null\n");
@@ -839,26 +834,39 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
     dotPos = strrchr(fileName, '.');
     *dotPos = 0;
     strcat(extractName, ".edr");
-    hasRead = (char)formatTable[EMB_FORMAT_EDR].readerFunc(p, extractName);
-    if (!hasRead) {
+    file = embFile_open(file, "rb", 1);
+    if (file) {
+        hasRead = (char)formatTable[EMB_FORMAT_EDR].readerFunc(p, file, extractName);
+    }
+    else {
         strcpy(extractName, fileName);
         *dotPos = 0;
         strcat(extractName, ".rgb");
-        hasRead = (char)formatTable[EMB_FORMAT_RGB].readerFunc(p, extractName);
-    }
-    if (!hasRead) {
-        strcpy(extractName, fileName);
-        *dotPos = 0;
-        strcat(extractName, ".col");
-        hasRead = (char)formatTable[EMB_FORMAT_COL].readerFunc(p, extractName);
-    }
-    if (!hasRead) {
-        strcpy(extractName, fileName);
-        *dotPos = 0;
-        strcat(extractName, ".inf");
-        hasRead = (char)formatTable[EMB_FORMAT_INF].readerFunc(p, extractName);
+        file = embFile_open(fileName, "rb", 1);
+        if (file) {
+            hasRead = (char)formatTable[EMB_FORMAT_RGB].readerFunc(p, file, extractName);
+        }
+        else {
+            strcpy(extractName, fileName);
+            *dotPos = 0;
+            strcat(extractName, ".col");
+            file = embFile_open(extractName, "rb", 1);
+            if (file) {
+                hasRead = (char)formatTable[EMB_FORMAT_COL].readerFunc(p, file, extractName);
+            }
+            else {
+                strcpy(extractName, fileName);
+                *dotPos = 0;
+                strcat(extractName, ".inf");
+                file = embFile_open(extractName, "rb", 1);
+                if (file) {
+                    hasRead = (char)formatTable[EMB_FORMAT_INF].readerFunc(p, file, extractName);
+                }
+            }
+        }
     }
     free(extractName);
+    embFile_close(file);
 }
 
 /*! Frees all memory allocated in the pattern (\a p). */

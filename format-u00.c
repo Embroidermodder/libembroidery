@@ -2,22 +2,14 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readU00(EmbPattern* pattern, const char* fileName)
+int readU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i;
     char dx = 0, dy = 0;
     int flags = NORMAL;
     char endOfStream = 0;
-    EmbFile* file;
     EmbThread t;
     unsigned char b[4];
-
-    if (!validateReadPattern(pattern, fileName, "readU00"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     /* 16 3byte RGB's start @ 0x08 followed by 14 bytes between 0 and 15 with index of color for each color change */
     embFile_seek(file, 0x08, SEEK_SET);
@@ -57,25 +49,14 @@ int readU00(EmbPattern* pattern, const char* fileName)
             dy = (char)-dy;
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    embFile_close(file);
-    embPattern_end(pattern);
 
     return 1;
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeU00(EmbPattern* pattern, const char* fileName)
+int writeU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
-    if (!validateWritePattern(pattern, fileName, "writeU00"))
-        return 0;
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
-
-    embFile_close(file);
     return 0; /*TODO: finish WriteU00 */
 }
 

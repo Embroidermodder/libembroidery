@@ -4,20 +4,12 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readInf(EmbPattern* pattern, const char* fileName)
+int readInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int numberOfColors, i;
-    EmbFile* file;
     char colorType[50];
     char colorDescription[50];
     EmbThread t;
-
-    if (!validateReadPattern(pattern, fileName, "readInf"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 1);
-    if (!file)
-        return 0;
 
     embFile_seek(file, 12L, SEEK_SET);
     numberOfColors = binaryReadUInt32BE(file);
@@ -38,25 +30,16 @@ int readInf(EmbPattern* pattern, const char* fileName)
         binaryReadString(file, colorType, 50);
         binaryReadString(file, colorDescription, 50);
     }
-    embFile_close(file);
     return 1;
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeInf(EmbPattern* pattern, const char* fileName)
+int writeInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i, bytesRemaining;
-    EmbFile* file;
     char buffer[50];
     EmbColor c;
-
-    if (!validateWritePattern(pattern, fileName, "writeInf"))
-        return 0;
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
 
     binaryWriteUIntBE(file, 0x01);
     binaryWriteUIntBE(file, 0x08);
@@ -81,7 +64,6 @@ int writeInf(EmbPattern* pattern, const char* fileName)
     bytesRemaining = embFile_tell(file);
     embFile_seek(file, 8, SEEK_SET);
     binaryWriteUIntBE(file, bytesRemaining);
-    embFile_close(file);
     return 1;
 }
 

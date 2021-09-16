@@ -20,17 +20,9 @@ static int decodeRecordFlags(unsigned char b2)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readTap(EmbPattern* pattern, const char* fileName)
+int readTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[3];
-    EmbFile* file = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readTap"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
@@ -83,8 +75,6 @@ int readTap(EmbPattern* pattern, const char* fileName)
         if (flags == END)
             break;
     }
-    embFile_close(file);
-    embPattern_end(pattern);
 
     return 1;
 }
@@ -208,20 +198,11 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeTap(EmbPattern* pattern, const char* fileName)
+int writeTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbRect boundingRect;
-    EmbFile* file;
     int xx, yy, dx, dy, i;
     EmbStitch st;
-
-    if (!validateWritePattern(pattern, fileName, "writeTap")) {
-        return 0;
-    }
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
@@ -236,7 +217,6 @@ int writeTap(EmbPattern* pattern, const char* fileName)
         yy = roundDouble(st.y * 10.0);
         encode_record(file, dx, dy, st.flags);
     }
-    embFile_close(file);
     return 1;
 }
 

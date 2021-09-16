@@ -2,16 +2,9 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int read10o(EmbPattern* pattern, const char* fileName)
+int read10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
-
-    if (!validateReadPattern(pattern, fileName, "read10o"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
+    /* file = embFile_open(fileName, "rb", 0); */
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
@@ -42,7 +35,6 @@ int read10o(EmbPattern* pattern, const char* fileName)
         }
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
     }
-    embFile_close(file);
 
     embPattern_end(pattern);
 
@@ -51,17 +43,10 @@ int read10o(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int write10o(EmbPattern* pattern, const char* fileName)
+int write10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
-    if (!validateWritePattern(pattern, fileName, "write10o"))
-        return 0;
+    /* file = embFile_open(fileName, "rb", 0); */
 
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
-
-    embFile_close(file);
     return 0; /*TODO: finish write10o */
 }
 

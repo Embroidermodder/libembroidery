@@ -214,23 +214,13 @@ static void ofmReadExpanded(EmbFile* file, EmbPattern* p)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readOfm(EmbPattern* pattern, const char* fileName)
+int readOfm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int unknownCount = 0;
     int key = 0, classNameLength;
     char* s = 0;
     EmbFile* fileCompound = 0;
-    EmbFile* file = 0;
     bcf_file* bcfFile = 0;
-
-    if (!pattern) {
-        embLog("ERROR: format-ofm.c readOfm(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        embLog("ERROR: format-ofm.c readOfm(), fileName argument is null\n");
-        return 0;
-    }
 
     fileCompound = embFile_open(fileName, "rb", 0);
     if (!fileCompound)
@@ -276,9 +266,7 @@ int readOfm(EmbPattern* pattern, const char* fileName)
     }
 
     embFile_close(fileCompound);
-    embFile_close(file);
 
-    embPattern_end(pattern);
     embPattern_flip(pattern, 1, 1);
 
     return 1;
@@ -286,14 +274,8 @@ int readOfm(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeOfm(EmbPattern* pattern, const char* fileName)
+int writeOfm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeOfm")) {
-        return 0;
-    }
-
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writeOfm */
 }
 

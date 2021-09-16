@@ -31,20 +31,12 @@ static double pcmDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPcm(EmbPattern* pattern, const char* fileName)
+int readPcm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i = 0;
     unsigned char b[9];
     double dx = 0, dy = 0;
     int flags = 0, st = 0;
-    EmbFile* file;
-
-    if (!validateReadPattern(pattern, fileName, "readPcm"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embFile_seek(file, 4, SEEK_SET);
 
@@ -72,27 +64,14 @@ int readPcm(EmbPattern* pattern, const char* fileName)
         dy = pcmDecode(b[6], b[5], b[4]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    embFile_close(file);
-    embPattern_end(pattern);
 
     return 1;
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePcm(EmbPattern* pattern, const char* fileName)
+int writePcm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
-    if (!validateWritePattern(pattern, fileName, "writePcm")) {
-        return 0;
-    }
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
-
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
-
-    embFile_close(file);
     return 0; /*TODO: finish writePcm */
 }
 

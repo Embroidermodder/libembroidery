@@ -4,16 +4,11 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readU01(EmbPattern* pattern, const char* fileName)
+int readU01(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int fileLength, negativeX = 0, negativeY = 0, flags = NORMAL;
     char dx, dy;
     unsigned char data[3];
-    EmbFile* file = 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embFile_seek(file, 0, SEEK_END);
     fileLength = embFile_tell(file);
@@ -40,22 +35,13 @@ int readU01(EmbPattern* pattern, const char* fileName)
             dy = (char)-dy;
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    embFile_close(file);
-    embPattern_end(pattern);
-
     return 1;
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeU01(EmbPattern* pattern, const char* fileName)
+int writeU01(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeU01")) {
-        return 0;
-    }
-
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writeU01 */
 }
 

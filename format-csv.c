@@ -60,9 +60,8 @@ static int csvStrToStitchFlag(const char* str)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readCsv(EmbPattern* pattern, const char* fileName)
+int readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file = 0;
     int numColorChanges = 0;
     int size = 1024;
     int pos = 0;
@@ -77,18 +76,11 @@ int readCsv(EmbPattern* pattern, const char* fileName)
     unsigned char r = 0, g = 0, b = 0;
     char* buff = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readCsv"))
-        return 0;
-
     buff = (char*)malloc(size);
     if (!buff) {
         embLog("ERROR: format-csv.c readCsv(), unable to allocate memory for buff\n");
         return 0;
     }
-
-    file = embFile_open(fileName, "r", 0);
-    if (!file)
-        return 0;
 
     pos = 0;
     do {
@@ -200,7 +192,6 @@ int readCsv(EmbPattern* pattern, const char* fileName)
                 buff[pos++] = (char)c;
         }
     } while (c != EOF);
-    embFile_close(file);
 
     /* if not enough colors defined, fill in random colors */
     while (pattern->threads->count < numColorChanges) {
@@ -214,18 +205,14 @@ int readCsv(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeCsv(EmbPattern* pattern, const char* fileName)
+int writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
     EmbStitch st;
     EmbRect boundingRect;
     EmbThread thr;
     int i;
     int stitchCount = 0;
     int threadCount = 0;
-
-    if (!validateReadPattern(pattern, fileName, "writeCsv"))
-        return 0;
 
     stitchCount = pattern->stitchList->count;
     threadCount = pattern->threads->count;
@@ -238,10 +225,6 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
     }
 
     embPattern_end(pattern);
-
-    file = embFile_open(fileName, "w", 0);
-    if (!file)
-        return 0;
 
     /* write header */
     embFile_print(file, "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n");
@@ -325,7 +308,6 @@ int writeCsv(EmbPattern* pattern, const char* fileName)
         embFile_print(file, "\"\n");
     }
 
-    embFile_close(file);
     return 1;
 }
 

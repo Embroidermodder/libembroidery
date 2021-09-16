@@ -3,17 +3,9 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPes(EmbPattern* pattern, const char* fileName)
+int readPes(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int pecstart, numColors, x;
-    EmbFile* file;
-
-    if (!validateReadPattern(pattern, fileName, "readPes"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embFile_seek(file, 8, SEEK_SET);
     pecstart = binaryReadInt32(file);
@@ -25,10 +17,8 @@ int readPes(EmbPattern* pattern, const char* fileName)
     }
 
     embFile_seek(file, pecstart + 532, SEEK_SET);
-    readPecStitches(pattern, file);
+    readPecStitches(pattern, file, fileName);
 
-    embFile_close(file);
-    embPattern_end(pattern);
     embPattern_flipVertical(pattern);
 
     return 1;
@@ -328,7 +318,7 @@ static void readPESHeaderDefault()  {
         pattern.add(new EmbThread(color, description, color_code, brand, threadChart));
     }
 */
-static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
+static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     /* TODO: pointer safety */
     short* colorInfo = 0;
@@ -421,7 +411,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
     }
 }
 
-static void pesWriteEmbOneSection(EmbPattern* pattern, EmbFile* file)
+static void pesWriteEmbOneSection(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     /* TODO: pointer safety */
     int i;
@@ -464,18 +454,9 @@ static void pesWriteEmbOneSection(EmbPattern* pattern, EmbFile* file)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePes(EmbPattern* pattern, const char* fileName)
+int writePes(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int pecLocation;
-    EmbFile* file = 0;
-
-    if (!validateWritePattern(pattern, fileName, "writePes")) {
-        return 0;
-    }
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
 
     embPattern_flipVertical(pattern);
     embPattern_scale(pattern, 10.0);
@@ -491,8 +472,8 @@ int writePes(EmbPattern* pattern, const char* fileName)
     binaryWriteShort(file, 0xFFFF); /* command */
     binaryWriteShort(file, 0x00); /* unknown */
 
-    pesWriteEmbOneSection(pattern, file);
-    pesWriteSewSegSection(pattern, file);
+    pesWriteEmbOneSection(pattern, file, fileName);
+    pesWriteSewSegSection(pattern, file, fileName);
 
     pecLocation = embFile_tell(file);
     embFile_seek(file, 0x08, SEEK_SET);
@@ -501,7 +482,6 @@ int writePes(EmbPattern* pattern, const char* fileName)
     binaryWriteByte(file, (unsigned char)(pecLocation >> 16) & 0xFF);
     embFile_seek(file, 0x00, SEEK_END);
     writePecStitches(pattern, file, fileName);
-    embFile_close(file);
     return 1;
 }
 

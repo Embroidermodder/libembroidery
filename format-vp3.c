@@ -110,7 +110,7 @@ static vp3Hoop vp3ReadHoopSection(EmbFile* file)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readVp3(EmbPattern* pattern, const char* fileName)
+int readVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char magicString[5];
     unsigned char some;
@@ -128,20 +128,6 @@ int readVp3(EmbPattern* pattern, const char* fileName)
     int hoopConfigurationOffset;
     unsigned char* anotherCommentString = 0;
     int i;
-    EmbFile* file = 0;
-
-    if (!pattern) {
-        embLog("ERROR: format-vp3.c readVp3(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        embLog("ERROR: format-vp3.c readVp3(), fileName argument is null\n");
-        return 0;
-    }
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     binaryReadBytes(file, magicString, 5); /* %vsm% */ /* TODO: check return value */
 
@@ -237,8 +223,6 @@ int readVp3(EmbPattern* pattern, const char* fileName)
         if (i + 1 < numberOfColors)
             embPattern_addStitchRel(pattern, 0, 0, STOP, 1);
     }
-    embFile_close(file);
-    embPattern_end(pattern);
 
     embPattern_flipVertical(pattern);
 
@@ -267,9 +251,8 @@ void vp3PatchByteCount(EmbFile* file, int offset, int adjustment)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeVp3(EmbPattern* pattern, const char* fileName)
+int writeVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file = 0;
     EmbRect bounds;
     int remainingBytesPos, remainingBytesPos2;
     int colorSectionStitchBytes;
@@ -278,15 +261,7 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
     EmbColor color = { 0xFE, 0xFE, 0xFE };
     EmbStitch st;
 
-    if (!validateWritePattern(pattern, fileName, "writeVp3")) {
-        return 0;
-    }
-
     bounds = embPattern_calcBoundingBox(pattern);
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 3200.0, 3200.0); /* VP3 can encode signed 16bit deltas */
 
@@ -474,8 +449,6 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
 
     vp3PatchByteCount(file, remainingBytesPos2, -4);
     vp3PatchByteCount(file, remainingBytesPos, -4);
-
-    embFile_close(file);
 
     embPattern_flipVertical(pattern);
 

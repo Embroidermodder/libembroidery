@@ -12,9 +12,8 @@ static char xxxDecodeByte(unsigned char inputByte)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readXxx(EmbPattern* pattern, const char* fileName)
+int readXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file = 0;
     unsigned char b0, b1;
     int dx = 0, dy = 0;
     int flags, numberOfColors, paletteOffset, i;
@@ -22,13 +21,6 @@ int readXxx(EmbPattern* pattern, const char* fileName)
     char thisStitchJump = 0;
     EmbThread thread;
     EmbStitch st;
-
-    if (!validateReadPattern(pattern, fileName, "readXxx"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embFile_seek(file, 0x27, SEEK_SET);
     numberOfColors = binaryReadInt16(file);
@@ -100,10 +92,8 @@ int readXxx(EmbPattern* pattern, const char* fileName)
         }
     }
     
-    Is this trimming the last stitch... and
+    Is this trimming the last stitch... and?
     */
-    embFile_close(file);
-    embPattern_end(pattern);
 
     return 1;
 }
@@ -161,21 +151,12 @@ static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeXxx(EmbPattern* pattern, const char* fileName)
+int writeXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file = 0;
     int i;
     EmbRect rect;
     EmbColor c;
     int endOfStitches;
-
-    if (!validateWritePattern(pattern, fileName, "writeXxx")) {
-        return 0;
-    }
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 124, 127);
 
@@ -233,7 +214,6 @@ int writeXxx(EmbPattern* pattern, const char* fileName)
 
     binaryWriteByte(file, 0x00);
     binaryWriteByte(file, 0x01);
-    embFile_close(file);
     return 1;
 }
 

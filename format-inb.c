@@ -2,9 +2,8 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readInb(EmbPattern* pattern, const char* fileName)
+int readInb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
     unsigned char fileDescription[8];
     unsigned char nullVal;
     int stitchCount;
@@ -16,13 +15,6 @@ int readInb(EmbPattern* pattern, const char* fileName)
     short nullbyte;
     short left, right, top, bottom;
     int x, y, i, fileLength;
-
-    if (!validateReadPattern(pattern, fileName, "readInb"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_seek(file, 0, SEEK_END);
@@ -63,9 +55,7 @@ int readInb(EmbPattern* pattern, const char* fileName)
             stitch = TRIM;
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitch, 1);
     }
-    embFile_close(file);
 
-    embPattern_end(pattern);
     embPattern_flipVertical(pattern);
 
     return 1;
@@ -73,13 +63,8 @@ int readInb(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeInb(EmbPattern* pattern, const char* fileName)
+int writeInb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeInb"))
-        return 0;
-
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writeInb */
 }
 

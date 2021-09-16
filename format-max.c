@@ -31,19 +31,11 @@ static void maxEncode(EmbFile* file, int x, int y)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readMax(EmbPattern* pattern, const char* fileName)
+int readMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[8];
     double dx, dy;
     int i, flags, stitchCount;
-    EmbFile* file;
-
-    if (!validateReadPattern(pattern, fileName, "readMax"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embFile_seek(file, 0xD5, SEEK_SET);
     stitchCount = binaryReadUInt32(file);
@@ -58,9 +50,7 @@ int readMax(EmbPattern* pattern, const char* fileName)
         dy = maxDecode(b[4], b[5], b[6]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    embFile_close(file);
 
-    embPattern_end(pattern);
     embPattern_flipVertical(pattern);
 
     return 1;
@@ -68,9 +58,8 @@ int readMax(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeMax(EmbPattern* pattern, const char* fileName)
+int writeMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file = 0;
     char header[] = {
         0x56, 0x43, 0x53, 0x4D, 0xFC, 0x03, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
         0xF6, 0x25, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -91,13 +80,6 @@ int writeMax(EmbPattern* pattern, const char* fileName)
     EmbStitch st;
     int i;
 
-    if (!validateWritePattern(pattern, fileName, "writeMax"))
-        return 0;
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
-
     binaryWriteBytes(file, header, 0xD5);
     for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
@@ -105,7 +87,6 @@ int writeMax(EmbPattern* pattern, const char* fileName)
         y = roundDouble(st.y * 10.0);
         maxEncode(file, x, y);
     }
-    embFile_close(file);
     return 1;
 }
 

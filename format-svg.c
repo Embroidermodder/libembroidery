@@ -1805,16 +1805,13 @@ void svgProcess(int c, const char* buff)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readSvg(EmbPattern* pattern, const char* fileName)
+int readSvg(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file = 0;
     int size = 1024;
     int pos;
     int c = 0, i;
     char* buff = 0;
     EmbStitch st;
-
-    if (!validateReadPattern(pattern, fileName, "readSvg")) return 0;
 
     buff = (char*)malloc(size);
     if (!buff) {
@@ -1834,8 +1831,6 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     /* Pre-flip incase of multiple reads on the same pattern */
     embPattern_flipVertical(pattern);
 
-    file = embFile_open(fileName, "r", 0);
-    if (file) {
         pos = 0;
         do {
             c = embFile_getc(file);
@@ -1877,8 +1872,7 @@ int readSvg(EmbPattern* pattern, const char* fileName)
                 }
             }
         } while (c != EOF);
-        embFile_close(file);
-    }
+
     free(buff);
     free(currentAttribute);
     free(currentValue);
@@ -2132,16 +2126,9 @@ static void writeStitchList(EmbPattern* pattern, EmbFile* file)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeSvg(EmbPattern* pattern, const char* fileName)
+int writeSvg(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
     EmbRect boundingRect;
-
-    if (!validateReadPattern(pattern, fileName, "writeSvg")) return 0;
-
-    file = embFile_open(fileName, "w", 0);
-    if (!file)
-        return 0;
 
     /* Pre-flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
     embPattern_flipVertical(pattern);
@@ -2178,7 +2165,6 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     writeStitchList(pattern, file);
 
     embFile_print(file, "\n</svg>\n");
-    embFile_close(file);
 
     /* Reset the pattern so future writes(regardless of format) are not flipped */
     embPattern_flipVertical(pattern);

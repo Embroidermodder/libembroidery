@@ -38,7 +38,7 @@ static void pcsEncode(EmbFile* file, int dx, int dy, int flags)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPcs(EmbPattern* pattern, const char* fileName)
+int readPcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     char allZeroColor = 1;
     int i = 0;
@@ -47,20 +47,6 @@ int readPcs(EmbPattern* pattern, const char* fileName)
     int flags = 0, st = 0;
     unsigned char version, hoopSize;
     unsigned short colorCount;
-    EmbFile* file = 0;
-
-    if (!pattern) {
-        embLog("ERROR: format-pcs.c readPcs(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        embLog("ERROR: format-pcs.c readPcs(), fileName argument is null\n");
-        return 0;
-    }
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     version = binaryReadByte(file);
     hoopSize = binaryReadByte(file); /* 0 for PCD, 1 for PCQ (MAXI), 2 for PCS with small hoop(80x80), */
@@ -112,28 +98,17 @@ int readPcs(EmbPattern* pattern, const char* fileName)
         dy = pcsDecode(b[5], b[6], b[7]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    embFile_close(file);
-    embPattern_end(pattern);
 
     return 1;
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePcs(EmbPattern* pattern, const char* fileName)
+int writePcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
-    EmbFile* file = 0;
     int i = 0;
     unsigned char colorCount = 0;
-
-    if (!validateWritePattern(pattern, fileName, "writePcs")) {
-        return 0;
-    }
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
 
     binaryWriteByte(file, (unsigned char)'2');
     binaryWriteByte(file, 3); /* TODO: select hoop size defaulting to Large PCS hoop */
@@ -157,7 +132,6 @@ int writePcs(EmbPattern* pattern, const char* fileName)
         st = pattern->stitchList->stitch[i];
         pcsEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
     }
-    embFile_close(file);
     return 1;
 }
 

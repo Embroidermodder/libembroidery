@@ -4,17 +4,8 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readDsb(EmbPattern* pattern, const char* fileName)
+int readDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readDsb"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
-
     embPattern_loadExternalColorFile(pattern, fileName);
     /*TODO: READ 512 BYTE HEADER INTO header[] */
     /*
@@ -55,23 +46,13 @@ int readDsb(EmbPattern* pattern, const char* fileName)
         }
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
     }
-    embFile_close(file);
     return 1;
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeDsb(EmbPattern* pattern, const char* fileName)
+int writeDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
-    if (!validateWritePattern(pattern, fileName, "writeDsb"))
-        return 0;
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
-
-    embFile_close(file);
     return 0; /*TODO: finish writeDsb */
 }
 

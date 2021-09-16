@@ -106,7 +106,7 @@ static void formats(void)
 
 static int create_test_file_1(const char* outf)
 {
-    int i;
+    int i, result;
     EmbPattern* p;
     EmbStitch st;
 
@@ -128,10 +128,7 @@ static int create_test_file_1(const char* outf)
     EmbThread thr = { { 0, 0, 0 }, "Black", "Black" };
     embArray_addThread(p->threads, thr);
 
-    if (!writeCsv(p, outf)) {
-        embPattern_free(p);
-        return 1;
-    }
+    result = embPattern_write(p, outf, EMB_FORMAT_CSV);
 
     embPattern_free(p);
     return 0;
@@ -139,7 +136,7 @@ static int create_test_file_1(const char* outf)
 
 static int create_test_file_2(const char* outf)
 {
-    int i;
+    int i, result;
     EmbPattern* p;
     EmbStitch st;
 
@@ -161,10 +158,7 @@ static int create_test_file_2(const char* outf)
     EmbThread thr = { { 0, 0, 0 }, "Black", "Black" };
     embArray_addThread(p->threads, thr);
 
-    if (!writeCsv(p, outf)) {
-        embPattern_free(p);
-        return 1;
-    }
+    result = embPattern_write(p, outf, EMB_FORMAT_CSV);
 
     embPattern_free(p);
     return 0;
@@ -172,8 +166,9 @@ static int create_test_file_2(const char* outf)
 
 static int convert(const char* inf, const char* outf)
 {
+    EmbFile *file;
     EmbPattern* p;
-    int formatType, reader, writer;
+    int reader, writer, formatType;
 
     p = embPattern_create();
     if (!p) {
@@ -188,12 +183,7 @@ static int convert(const char* inf, const char* outf)
         embPattern_free(p);
         return 1;
     }
-    if (!formatTable[reader].readerFunc(p, inf)) {
-        embLog("convert(), reading file was unsuccessful:");
-        embLog(inf);
-        embPattern_free(p);
-        return 1;
-    }
+    embPattern_read(p, inf, reader);
 
     formatType = embFormat_typeFromName(inf);
     if (formatType == EMBFORMAT_OBJECTONLY) {
@@ -210,12 +200,8 @@ static int convert(const char* inf, const char* outf)
         embPattern_free(p);
         return 1;
     }
-    if (!formatTable[writer].writerFunc(p, outf)) {
-        embLog("convert(), writing file was unsuccessful");
-        embLog(outf);
-        embPattern_free(p);
-        return 1;
-    }
+    embPattern_write(p, outf, writer);
+
     embPattern_free(p);
     return 0;
 }

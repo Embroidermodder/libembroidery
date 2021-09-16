@@ -62,7 +62,7 @@ static unsigned char DecodeCsdByte(long fileOffset, unsigned char val, int type)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readCsd(EmbPattern* pattern, const char* fileName)
+int readCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i, type = 0;
     unsigned char identifier[8];
@@ -71,15 +71,7 @@ int readCsd(EmbPattern* pattern, const char* fileName)
     int colorChange = -1;
     int flags;
     char endOfStream = 0;
-    EmbFile* file;
     unsigned char colorOrder[14];
-
-    if (!validateReadPattern(pattern, fileName, "readCsd"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     binaryReadBytes(file, identifier, 8); /* TODO: check return value */
 
@@ -144,7 +136,6 @@ int readCsd(EmbPattern* pattern, const char* fileName)
         else
             embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    embFile_close(file);
 
     embPattern_end(pattern);
     return 1;
@@ -152,13 +143,8 @@ int readCsd(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeCsd(EmbPattern* pattern, const char* fileName)
+int writeCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    if (!validateWritePattern(pattern, fileName, "writeCsd"))
-        return 0;
-
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writeCsd */
 }
 

@@ -2,19 +2,12 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readZsk(EmbPattern* pattern, const char* fileName)
+int readZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     char b[3];
-    EmbFile* file = 0;
     int stitchType;
     unsigned char colorNumber;
     EmbThread t;
-    if (!validateReadPattern(pattern, fileName, "readZsk"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embFile_seek(file, 0x230, SEEK_SET);
     colorNumber = binaryReadUInt8(file);
@@ -58,26 +51,14 @@ int readZsk(EmbPattern* pattern, const char* fileName)
         }
         embPattern_addStitchRel(pattern, b[1] / 10.0, b[2] / 10.0, stitchType, 0);
     }
-    embFile_close(file);
-    embPattern_end(pattern);
 
     return 1;
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeZsk(EmbPattern* pattern, const char* fileName)
+int writeZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbFile* file;
-    if (!validateWritePattern(pattern, fileName, "writeZsk")) {
-        return 0;
-    }
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
-
-    embFile_close(file);
     return 0; /*TODO: finish writeZsk */
 }
 

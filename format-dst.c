@@ -260,14 +260,13 @@ static void set_dst_variable(EmbPattern* pattern, char* var, char* val)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readDst(EmbPattern* pattern, const char* fileName)
+int readDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     char var[3]; /* temporary storage variable name */
     char val[512]; /* temporary storage variable value */
     int valpos;
     unsigned char b[3];
     char header[512 + 1];
-    EmbFile* file = 0;
     int i = 0;
     int flags; /* for converting stitches from file encoding */
 
@@ -321,13 +320,6 @@ int readDst(EmbPattern* pattern, const char* fileName)
     pattern->clear();
     pattern->set_variable("file_name",filename);
     */
-
-    if (!validateReadPattern(pattern, fileName, "readDst"))
-        return 0;
-
-    file = embFile_open(fileName, "rb", 0);
-    if (!file)
-        return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     /* READ 512 BYTE HEADER INTO header[] */
@@ -385,7 +377,6 @@ int readDst(EmbPattern* pattern, const char* fileName)
         flags = (BIT(b[2], 8) * JUMP) | (BIT(b[2], 7) * STOP);
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
     }
-    embFile_close(file);
 
     embPattern_end(pattern);
 
@@ -395,20 +386,12 @@ int readDst(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeDst(EmbPattern* pattern, const char* fileName)
+int writeDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbRect boundingRect;
-    EmbFile* file = 0;
     int xx, yy, dx, dy, flags, i, ax, ay, mx, my;
     char* pd = 0;
     EmbStitch st;
-
-    if (!validateWritePattern(pattern, fileName, "writeDst"))
-        return 0;
-
-    file = embFile_open(fileName, "wb", 0);
-    if (!file)
-        return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
@@ -486,7 +469,6 @@ int writeDst(EmbPattern* pattern, const char* fileName)
     }
     /* finish file with a terminator character */
     embFile_write("\xA1\0\0", 1, 3, file);
-    embFile_close(file);
     return 1;
 }
 

@@ -1,6 +1,7 @@
 #include "embroidery.h"
 #include <stdlib.h>
 #include <string.h>
+#include "emb-macro.h"
 
 static char* ofmReadLibrary(EmbFile* file)
 {

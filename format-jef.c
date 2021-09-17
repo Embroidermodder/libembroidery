@@ -1,5 +1,6 @@
 #include "embroidery.h"
 #include <stdio.h>
+#include "emb-macro.h"
 
 const EmbThread jefThreads[] = {
     { { 0, 0, 0 }, "Black", "" },
@@ -281,7 +282,7 @@ int writeJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
     embPattern_correctForMaxStitchLength(pattern, 12.7, 12.7);
 
     colorlistSize = pattern->threads->count;
-    minColors = embMaxInt(colorlistSize, 6);
+    minColors = EMB_MAX_2(colorlistSize, 6);
     binaryWriteInt(file, 0x74 + (minColors * 4));
     binaryWriteInt(file, 0x0A);
 
@@ -296,7 +297,7 @@ int writeJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryWriteByte(file, 0x00);
     binaryWriteByte(file, 0x00);
     binaryWriteInt(file, pattern->threads->count);
-    binaryWriteInt(file, pattern->stitchList->count + embMaxInt(0, (6 - colorlistSize) * 2) + 1);
+    binaryWriteInt(file, pattern->stitchList->count + EMB_MAX_2(0, (6 - colorlistSize) * 2) + 1);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
 
@@ -312,11 +313,11 @@ int writeJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryWriteInt(file, (int)(designHeight / 2)); /* bottom */
 
     /* Distance from default 110 x 110 Hoop */
-    if (embMinDouble(550 - designWidth / 2, 550 - designHeight / 2) >= 0) {
-        binaryWriteInt(file, embMaxInt(-1, 550 - designWidth / 2)); /* left */
-        binaryWriteInt(file, embMaxInt(-1, 550 - designHeight / 2)); /* top */
-        binaryWriteInt(file, embMaxInt(-1, 550 - designWidth / 2)); /* right */
-        binaryWriteInt(file, embMaxInt(-1, 550 - designHeight / 2)); /* bottom */
+    if (EMB_MIN_2(550 - designWidth / 2, 550 - designHeight / 2) >= 0) {
+        binaryWriteInt(file, EMB_MAX_2(-1, 550 - designWidth / 2)); /* left */
+        binaryWriteInt(file, EMB_MAX_2(-1, 550 - designHeight / 2)); /* top */
+        binaryWriteInt(file, EMB_MAX_2(-1, 550 - designWidth / 2)); /* right */
+        binaryWriteInt(file, EMB_MAX_2(-1, 550 - designHeight / 2)); /* bottom */
     } else {
         binaryWriteInt(file, -1);
         binaryWriteInt(file, -1);
@@ -325,11 +326,11 @@ int writeJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
     }
 
     /* Distance from default 50 x 50 Hoop */
-    if (embMinDouble(250 - designWidth / 2, 250 - designHeight / 2) >= 0) {
-        binaryWriteInt(file, (int)embMaxInt(-1, 250 - designWidth / 2)); /* left */
-        binaryWriteInt(file, (int)embMaxInt(-1, 250 - designHeight / 2)); /* top */
-        binaryWriteInt(file, (int)embMaxInt(-1, 250 - designWidth / 2)); /* right */
-        binaryWriteInt(file, (int)embMaxInt(-1, 250 - designHeight / 2)); /* bottom */
+    if (EMB_MIN_2(250 - designWidth / 2, 250 - designHeight / 2) >= 0) {
+        binaryWriteInt(file, (int)EMB_MAX_2(-1, 250 - designWidth / 2)); /* left */
+        binaryWriteInt(file, (int)EMB_MAX_2(-1, 250 - designHeight / 2)); /* top */
+        binaryWriteInt(file, (int)EMB_MAX_2(-1, 250 - designWidth / 2)); /* right */
+        binaryWriteInt(file, (int)EMB_MAX_2(-1, 250 - designHeight / 2)); /* bottom */
     } else {
         binaryWriteInt(file, -1);
         binaryWriteInt(file, -1);

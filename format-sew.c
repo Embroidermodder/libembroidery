@@ -1,6 +1,7 @@
 #include "embroidery.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "emb-macro.h"
 
 static char sewDecode(unsigned char inputByte)
 {
@@ -101,7 +102,7 @@ int writeSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     colorlistSize = pattern->threads->count;
 
-    minColors = embMaxInt(pattern->threads->count, 6);
+    minColors = EMB_MAX_2(pattern->threads->count, 6);
     binaryWriteInt(file, 0x74 + (minColors * 4));
     binaryWriteInt(file, 0x0A);
 

@@ -113,10 +113,7 @@ float binaryReadFloat(EmbFile* file)
         float f32;
         unsigned int u32;
     } float_int_u;
-    float_int_u.u32 = embFile_getc(file);
-    float_int_u.u32 |= embFile_getc(file) << 8;
-    float_int_u.u32 |= embFile_getc(file) << 16;
-    float_int_u.u32 |= embFile_getc(file) << 24;
+    float_int_u.u32 = binaryReadInt32(file);
     return float_int_u.f32;
 }
 
@@ -194,38 +191,7 @@ void binaryWriteFloat(EmbFile* file, float data)
     } float_int_u;
     float_int_u.f32 = data;
 
-    embFile_putc(float_int_u.u32 & 0xFF, file);
-    embFile_putc((float_int_u.u32 >> 8) & 0xFF, file);
-    embFile_putc((float_int_u.u32 >> 16) & 0xFF, file);
-    embFile_putc((float_int_u.u32 >> 24) & 0xFF, file);
-}
-
-double embMinDouble(double a, double b)
-{
-    if (a < b)
-        return a;
-    return b;
-}
-
-double embMaxDouble(double a, double b)
-{
-    if (a > b)
-        return a;
-    return b;
-}
-
-int embMinInt(int a, int b)
-{
-    if (a < b)
-        return a;
-    return b;
-}
-
-int embMaxInt(int a, int b)
-{
-    if (a > b)
-        return a;
-    return b;
+    binaryWriteUInt(file, float_int_u.u32);
 }
 
 /*! Rounds a double (\a src) and returns it as an \c int. */
@@ -242,23 +208,6 @@ char* lTrim(char* str, char junk)
 {
     while (*str == junk) {
         str++;
-    }
-    return str;
-}
-
-/*! Optimizes the number (\a num) for output to a text file and returns it as a string (\a str). */
-char* emb_optOut(double num, char* str)
-{
-    char *str2;
-    /* Convert the number to a string */
-    sprintf(str, "%.10f", num);
-    /* Remove trailing zeroes */
-    str2 = str + strlen(str);
-    while (*--str2 == 0);
-    *(str2+1) = 0;
-    /* Remove the decimal point if it happens to be an integer */
-    if (str[strlen(str)-1] == '.') {
-        str[strlen(str)-1] = 0;
     }
     return str;
 }

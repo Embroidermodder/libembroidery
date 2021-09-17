@@ -1,6 +1,7 @@
 #include "embroidery.h"
 #include <stdlib.h>
 #include <string.h>
+#include "emb-macro.h"
 
 static char* ofmReadLibrary(EmbFile* file)
 {
@@ -56,42 +57,39 @@ static void ofmReadBlockHeader(EmbFile* file)
 {
     int val1, val2, val3, val4, val5, val6, val7, val8, val9, val10; /* TODO: determine what these represent */
     unsigned char len;
-    char* s = 0;
     unsigned short short1;
-    short unknown1 = 0; /* TODO: determine what this represents */
-    short unknown2 = 0; /* TODO: determine what this represents */
-    int unknown3 = 0; /* TODO: determine what this represents */
+    char header[512];
+    /* TODO: determine what these 3 variables represent */
+    short unknown1 = 0;
+    short unknown2 = 0;
+    int unknown3 = 0;
 
     if (!file) {
         embLog("ERROR: format-ofm.c ofmReadBlockHeader(), file argument is null\n");
         return;
     }
 
-    unknown1 = binaryReadInt16(file);
-    unknown2 = (short)binaryReadInt32(file);
-    unknown3 = binaryReadInt32(file);
+    embFile_read(header, 1, 14, file);
+    unknown1 = EMB_GET_SHORT(header);
+    unknown2 = (short)EMB_GET_INT(header+2);
+    unknown3 = EMB_GET_INT(header+6);
 
     /* int v = binaryReadBytes(3); TODO: review */
-    binaryReadInt16(file);
-    binaryReadByte(file);
-    len = binaryReadByte(file);
-    s = (char*)malloc(2 * len);
-    if (!s) {
-        embLog("ERROR: format-ofm.c ofmReadBlockHeader(), unable to allocate memory for s\n");
-        return;
-    }
-    binaryReadBytes(file, (unsigned char*)s, 2 * len); /* TODO: check return value */
-    val1 = binaryReadInt32(file); /*  0 */
-    val2 = binaryReadInt32(file); /*  0 */
-    val3 = binaryReadInt32(file); /*  0 */
-    val4 = binaryReadInt32(file); /*  0 */
-    val5 = binaryReadInt32(file); /*  1 */
-    val6 = binaryReadInt32(file); /*  1 */
-    val7 = binaryReadInt32(file); /*  1 */
-    val8 = binaryReadInt32(file); /*  0 */
-    val9 = binaryReadInt32(file); /* 64 */
-    val10 = binaryReadInt32(file); /* 64 */
-    short1 = binaryReadInt16(file); /*  0 */
+    len = (unsigned char)(header+13);
+    embFile_read(header, 1, 2*len, file);
+    /* TODO: check return value here */
+    embFile_read(header, 1, 42, file);
+    val1 = EMB_GET_INT(header+0); /*  0 */
+    val2 = EMB_GET_INT(header+4); /*  0 */
+    val3 = EMB_GET_INT(header+8); /*  0 */
+    val4 = EMB_GET_INT(header+12); /*  0 */
+    val5 = EMB_GET_INT(header+16); /*  1 */
+    val6 = EMB_GET_INT(header+20); /*  1 */
+    val7 = EMB_GET_INT(header+24); /*  1 */
+    val8 = EMB_GET_INT(header+28); /*  0 */
+    val9 = EMB_GET_INT(header+32); /* 64 */
+    val10 = EMB_GET_INT(header+36); /* 64 */
+    short1 = EMB_GET_SHORT(header+40); /*  0 */
 }
 
 static void ofmReadColorChange(EmbFile* file, EmbPattern* pattern)

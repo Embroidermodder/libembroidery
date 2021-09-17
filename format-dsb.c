@@ -6,14 +6,10 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
+    unsigned char header[512];
     embPattern_loadExternalColorFile(pattern, fileName);
-    /*TODO: READ 512 BYTE HEADER INTO header[] */
-    /*
-    for(i = 0; i < 512; i++)
-    {
-        header[i] = embFile_getc(file);
-    }
-    */
+    embFile_read(header, 1, 512, file);
+
     embFile_seek(file, 0x200, SEEK_SET);
     while (1) {
         int x, y;
@@ -41,7 +37,7 @@ int readDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
             stitchType = STOP;
         }
         if (ctrl == 0xF8 || ctrl == 0x91 || ctrl == 0x87) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
+            embPattern_end(pattern);
             break;
         }
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);

@@ -527,12 +527,6 @@ typedef struct EmbFormatList_
 
 /* Function Declarations
 *****************************************************************************/
-EMB_PUBLIC double embMinDouble(double, double);
-EMB_PUBLIC double embMaxDouble(double, double);
-
-EMB_PUBLIC int embMinInt(int, int);
-EMB_PUBLIC int embMaxInt(int, int);
-
 EMB_PUBLIC EmbArray* embArray_create(int type);
 EMB_PUBLIC int embArray_resize(EmbArray *g);
 EMB_PUBLIC int embArray_addArc(EmbArray* g, EmbArc arc, int lineType, EmbColor color);
@@ -597,7 +591,6 @@ int roundDouble(double src);
 void writeInt(EmbFile *, int, int);
 void writeFloat(EmbFile *, float);
 char* lTrim(char* str, char junk);
-char* emb_optOut(double num, char* str);
 char* emb_strdup(char* src);
 
 void embPointerToArray(char *buffer, void* pointer, int maxDigits);

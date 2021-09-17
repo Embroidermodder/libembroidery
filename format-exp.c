@@ -90,9 +90,6 @@ int readExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
         dy = expDecode(b1);
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    embFile_close(file);
-
-    embPattern_end(pattern);
 
     return 1;
 }
@@ -101,16 +98,13 @@ int readExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-#ifdef ARDUINO /* ARDUINO TODO: This is temporary. Remove when complete. */
-    return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
-#else /* ARDUINO TODO: This is temporary. Remove when complete. */
-    double dx = 0.0, dy = 0.0;
-    double xx = 0.0, yy = 0.0;
+    double dx, dy, xx, yy;
     int flags = 0, i;
     unsigned char b[4];
     EmbStitch st;
 
     /* write stitches */
+    xx = yy = 0.0;
     for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
         dx = st.x * 10.0 - xx;
@@ -127,6 +121,5 @@ int writeExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
     }
     embFile_print(file, "\x1a");
     return 1;
-#endif /* ARDUINO TODO: This is temporary. Remove when complete. */
 }
 

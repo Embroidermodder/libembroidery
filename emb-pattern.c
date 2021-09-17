@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "emb-macro.h"
 
 #ifdef ARDUINO
 #include "utility/ino-event.h"
@@ -92,7 +93,7 @@ void embPattern_fixColorCount(EmbPattern* p)
         return;
     }
     for (i = 0; i < p->stitchList->count; i++) {
-        maxColorIndex = embMaxInt(maxColorIndex, p->stitchList->stitch[i].color);
+        maxColorIndex = EMB_MAX_2(maxColorIndex, p->stitchList->stitch[i].color);
     }
     while (p->threads->count <= maxColorIndex) {
         embPattern_addThread(p, embThread_getRandom());
@@ -413,10 +414,10 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
         * rectangle, then inflate the bounding rect to include it. */
         pt = p->stitchList->stitch[i];
         if (!(pt.flags & TRIM)) {
-            boundingRect.left = embMinDouble(boundingRect.left, pt.x);
-            boundingRect.top = embMinDouble(boundingRect.top, pt.y);
-            boundingRect.right = embMaxDouble(boundingRect.right, pt.x);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, pt.y);
+            boundingRect.left = EMB_MIN_2(boundingRect.left, pt.x);
+            boundingRect.top = EMB_MIN_2(boundingRect.top, pt.y);
+            boundingRect.right = EMB_MAX_2(boundingRect.right, pt.x);
+            boundingRect.bottom = EMB_MAX_2(boundingRect.bottom, pt.y);
         }
     }
 
@@ -424,20 +425,20 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
         /* TODO: embPattern_calcBoundingBox for arcs, for now just checks the start point */
         for (i = 0; i < p->arcs->count; i++) {
             EmbArc arc = p->arcs->arc[i].arc;
-            boundingRect.left = embMinDouble(boundingRect.left, arc.start.x);
-            boundingRect.top = embMinDouble(boundingRect.top, arc.start.y);
-            boundingRect.right = embMaxDouble(boundingRect.right, arc.start.x);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, arc.start.y);
+            boundingRect.left = EMB_MIN_2(boundingRect.left, arc.start.x);
+            boundingRect.top = EMB_MIN_2(boundingRect.top, arc.start.y);
+            boundingRect.right = EMB_MAX_2(boundingRect.right, arc.start.x);
+            boundingRect.bottom = EMB_MAX_2(boundingRect.bottom, arc.start.y);
         }
     }
 
     if (p->circles) {
         for (i = 0; i < p->circles->count; i++) {
             EmbCircle circle = p->circles->circle[i].circle;
-            boundingRect.left = embMinDouble(boundingRect.left, circle.center.x - circle.radius);
-            boundingRect.top = embMinDouble(boundingRect.top, circle.center.y - circle.radius);
-            boundingRect.right = embMaxDouble(boundingRect.right, circle.center.x + circle.radius);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, circle.center.y + circle.radius);
+            boundingRect.left = EMB_MIN_2(boundingRect.left, circle.center.x - circle.radius);
+            boundingRect.top = EMB_MIN_2(boundingRect.top, circle.center.y - circle.radius);
+            boundingRect.right = EMB_MAX_2(boundingRect.right, circle.center.x + circle.radius);
+            boundingRect.bottom = EMB_MAX_2(boundingRect.bottom, circle.center.y + circle.radius);
         }
     }
 
@@ -445,34 +446,30 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
         for (i = 0; i < p->ellipses->count; i++) {
             /* TODO: account for rotation */
             EmbEllipse ellipse = p->ellipses->ellipse[i].ellipse;
-            boundingRect.left = embMinDouble(boundingRect.left, ellipse.center.x - ellipse.radius.x);
-            boundingRect.top = embMinDouble(boundingRect.top, ellipse.center.y - ellipse.radius.y);
-            boundingRect.right = embMaxDouble(boundingRect.right, ellipse.center.x + ellipse.radius.x);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, ellipse.center.y + ellipse.radius.y);
+            boundingRect.left = EMB_MIN_2(boundingRect.left, ellipse.center.x - ellipse.radius.x);
+            boundingRect.top = EMB_MIN_2(boundingRect.top, ellipse.center.y - ellipse.radius.y);
+            boundingRect.right = EMB_MAX_2(boundingRect.right, ellipse.center.x + ellipse.radius.x);
+            boundingRect.bottom = EMB_MAX_2(boundingRect.bottom, ellipse.center.y + ellipse.radius.y);
         }
     }
 
     if (p->lines) {
         for (i = 0; i < p->lines->count; i++) {
             EmbLine line = p->lines->line[i].line;
-            boundingRect.left = embMinDouble(boundingRect.left, line.start.x);
-            boundingRect.left = embMinDouble(boundingRect.left, line.end.x);
-            boundingRect.top = embMinDouble(boundingRect.top, line.start.y);
-            boundingRect.top = embMinDouble(boundingRect.top, line.end.y);
-            boundingRect.right = embMaxDouble(boundingRect.right, line.start.x);
-            boundingRect.right = embMaxDouble(boundingRect.right, line.end.x);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, line.start.y);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, line.end.y);
+            boundingRect.left = EMB_MIN_3(boundingRect.left, line.start.x, line.end.x);
+            boundingRect.top = EMB_MIN_3(boundingRect.top, line.start.y, line.end.y);
+            boundingRect.right = EMB_MAX_3(boundingRect.right, line.start.x, line.end.x);
+            boundingRect.bottom = EMB_MAX_3(boundingRect.bottom, line.start.y, line.end.y);
         }
     }
 
     if (p->points) {
         for (i = 0; i < p->points->count; i++) {
             EmbVector point = p->points->point[i].point;
-            boundingRect.left = embMinDouble(boundingRect.left, point.x);
-            boundingRect.top = embMinDouble(boundingRect.top, point.y);
-            boundingRect.right = embMaxDouble(boundingRect.right, point.x);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, point.y);
+            boundingRect.left = EMB_MIN_2(boundingRect.left, point.x);
+            boundingRect.top = EMB_MIN_2(boundingRect.top, point.y);
+            boundingRect.right = EMB_MAX_2(boundingRect.right, point.x);
+            boundingRect.bottom = EMB_MAX_2(boundingRect.bottom, point.y);
         }
     }
 
@@ -481,10 +478,10 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
             EmbArray* polygon;
             polygon = p->polygons->polygon[i]->pointList;
             for (j = 0; j < polygon->count; j++) {
-                boundingRect.left = embMinDouble(boundingRect.left, polygon[i].vector[j].x);
-                boundingRect.top = embMinDouble(boundingRect.top, polygon[i].vector[j].y);
-                boundingRect.right = embMaxDouble(boundingRect.right, polygon[i].vector[j].x);
-                boundingRect.bottom = embMaxDouble(boundingRect.bottom, polygon[i].vector[j].y);
+                boundingRect.left = EMB_MIN_2(boundingRect.left, polygon[i].vector[j].x);
+                boundingRect.top = EMB_MIN_2(boundingRect.top, polygon[i].vector[j].y);
+                boundingRect.right = EMB_MAX_2(boundingRect.right, polygon[i].vector[j].x);
+                boundingRect.bottom = EMB_MAX_2(boundingRect.bottom, polygon[i].vector[j].y);
             }
         }
     }
@@ -494,10 +491,10 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
             EmbArray* polyline;
             polyline = p->polylines->polyline[i]->pointList;
             for (j = 0; j < polyline->count; j++) {
-                boundingRect.left = embMinDouble(boundingRect.left, polyline[i].vector[j].x);
-                boundingRect.top = embMinDouble(boundingRect.top, polyline[i].vector[j].y);
-                boundingRect.right = embMaxDouble(boundingRect.right, polyline[i].vector[j].x);
-                boundingRect.bottom = embMaxDouble(boundingRect.bottom, polyline[i].vector[j].y);
+                boundingRect.left = EMB_MIN_2(boundingRect.left, polyline[i].vector[j].x);
+                boundingRect.top = EMB_MIN_2(boundingRect.top, polyline[i].vector[j].y);
+                boundingRect.right = EMB_MAX_2(boundingRect.right, polyline[i].vector[j].x);
+                boundingRect.bottom = EMB_MAX_2(boundingRect.bottom, polyline[i].vector[j].y);
             }
         }
     }
@@ -506,10 +503,10 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
         for (i = 0; i < p->rects->count; i++) {
             EmbRect rect = p->rects->rect[i].rect;
             /* TODO: other points */
-            boundingRect.left = embMinDouble(boundingRect.left, rect.left);
-            boundingRect.top = embMinDouble(boundingRect.top, rect.left);
-            boundingRect.right = embMaxDouble(boundingRect.right, rect.left);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, rect.left);
+            boundingRect.left = EMB_MIN_2(boundingRect.left, rect.left);
+            boundingRect.top = EMB_MIN_2(boundingRect.top, rect.left);
+            boundingRect.right = EMB_MAX_2(boundingRect.right, rect.left);
+            boundingRect.bottom = EMB_MAX_2(boundingRect.bottom, rect.left);
         }
     }
 
@@ -517,10 +514,10 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
         for (i = 0; i < p->splines->count; i++) {
             bezier = p->splines->spline[i].bezier;
             /* TODO: other points */
-            boundingRect.left = embMinDouble(boundingRect.left, bezier.start.x);
-            boundingRect.top = embMinDouble(boundingRect.top, bezier.start.y);
-            boundingRect.right = embMaxDouble(boundingRect.right, bezier.start.x);
-            boundingRect.bottom = embMaxDouble(boundingRect.bottom, bezier.start.y);
+            boundingRect.left = EMB_MIN_2(boundingRect.left, bezier.start.x);
+            boundingRect.top = EMB_MIN_2(boundingRect.top, bezier.start.y);
+            boundingRect.right = EMB_MAX_2(boundingRect.right, bezier.start.x);
+            boundingRect.bottom = EMB_MAX_2(boundingRect.bottom, bezier.start.y);
         }
     }
 
@@ -834,7 +831,7 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
     dotPos = strrchr(fileName, '.');
     *dotPos = 0;
     strcat(extractName, ".edr");
-    file = embFile_open(file, "rb", 1);
+    file = embFile_open(extractName, "rb", 1);
     if (file) {
         hasRead = (char)formatTable[EMB_FORMAT_EDR].readerFunc(p, file, extractName);
     }
@@ -842,7 +839,7 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
         strcpy(extractName, fileName);
         *dotPos = 0;
         strcat(extractName, ".rgb");
-        file = embFile_open(fileName, "rb", 1);
+        file = embFile_open(extractName, "rb", 1);
         if (file) {
             hasRead = (char)formatTable[EMB_FORMAT_RGB].readerFunc(p, file, extractName);
         }

@@ -45,8 +45,6 @@ int read10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int write10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    /* file = embFile_open(fileName, "rb", 0); */
-
     return 0; /*TODO: finish write10o */
 }
 

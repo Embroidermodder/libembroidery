@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include "emb-macro.h"
 
 #ifdef ARDUINO
 /*TODO: arduino embTime includes */
@@ -21,18 +22,16 @@ int binaryReadBytes(EmbFile* file, unsigned char* destination, int count)
 
 short binaryReadInt16(EmbFile* file)
 {
-    int x = embFile_getc(file);
-    x = x | embFile_getc(file) << 8;
-    return (short)x;
+    char a[2];
+    embFile_read(a, 1, 2, file);
+    return EMB_GET_SHORT(a);
 }
 
 int binaryReadInt32(EmbFile* file)
 {
-    int x = embFile_getc(file);
-    x = x | embFile_getc(file) << 8;
-    x = x | embFile_getc(file) << 16;
-    x = x | embFile_getc(file) << 24;
-    return x;
+    char a[4];
+    embFile_read(a, 1, 4, file);
+    return EMB_GET_INT(a);
 }
 
 unsigned char binaryReadUInt8(EmbFile* file)
@@ -42,52 +41,48 @@ unsigned char binaryReadUInt8(EmbFile* file)
 
 unsigned short binaryReadUInt16(EmbFile* file)
 {
-    return (unsigned short)(embFile_getc(file) | embFile_getc(file) << 8);
+    char a[2];
+    embFile_read(a, 1, 2, file);
+    return EMB_GET_SHORT(a);
 }
 
 unsigned int binaryReadUInt32(EmbFile* file)
 {
-    unsigned int x = embFile_getc(file);
-    x = x | embFile_getc(file) << 8;
-    x = x | embFile_getc(file) << 16;
-    x = x | embFile_getc(file) << 24;
-    return x;
+    char a[4];
+    embFile_read(a, 1, 4, file);
+    return EMB_GET_INT(a);
 }
 
 /* Big endian version */
 short binaryReadInt16BE(EmbFile* file)
 {
-    short returnValue = (short)(embFile_getc(file) << 8);
-    returnValue |= embFile_getc(file);
-    return returnValue;
+    char a[2];
+    embFile_read(a, 1, 2, file);
+    return EMB_GET_SHORT_BE(a);
 }
 
 /* Big endian version */
 unsigned short binaryReadUInt16BE(EmbFile* file)
 {
-    unsigned short returnValue = (unsigned short)(embFile_getc(file) << 8);
-    returnValue |= embFile_getc(file);
-    return returnValue;
+    char a[2];
+    embFile_read(a, 1, 2, file);
+    return EMB_GET_SHORT_BE(a);
 }
 
 /* Big endian version */
 int binaryReadInt32BE(EmbFile* file)
 {
-    int returnValue = embFile_getc(file) << 24;
-    returnValue |= embFile_getc(file) << 16;
-    returnValue |= embFile_getc(file) << 8;
-    returnValue |= embFile_getc(file);
-    return (returnValue);
+    char a[4];
+    embFile_read(a, 1, 4, file);
+    return EMB_GET_INT_BE(a);
 }
 
 /* Big endian version */
 unsigned int binaryReadUInt32BE(EmbFile* file)
 {
-    unsigned int returnValue = embFile_getc(file) << 24;
-    returnValue |= embFile_getc(file) << 16;
-    returnValue |= embFile_getc(file) << 8;
-    returnValue |= embFile_getc(file);
-    return returnValue;
+    char a[4];
+    embFile_read(a, 1, 4, file);
+    return EMB_GET_INT_BE(a);
 }
 
 void binaryReadString(EmbFile* file, char* buffer, int maxLength)
@@ -118,10 +113,7 @@ float binaryReadFloat(EmbFile* file)
         float f32;
         unsigned int u32;
     } float_int_u;
-    float_int_u.u32 = embFile_getc(file);
-    float_int_u.u32 |= embFile_getc(file) << 8;
-    float_int_u.u32 |= embFile_getc(file) << 16;
-    float_int_u.u32 |= embFile_getc(file) << 24;
+    float_int_u.u32 = binaryReadInt32(file);
     return float_int_u.f32;
 }
 
@@ -137,58 +129,58 @@ void binaryWriteBytes(EmbFile* file, const char* data, int size)
 
 void binaryWriteShort(EmbFile* file, short data)
 {
-    embFile_putc(data & 0xFF, file);
-    embFile_putc((data >> 8) & 0xFF, file);
+    char a[2];
+    EMB_WRITE_SHORT(a, data);
+    embFile_write(a, 1, 2, file);
 }
 
 void binaryWriteShortBE(EmbFile* file, short data)
 {
-    embFile_putc((data >> 8) & 0xFF, file);
-    embFile_putc(data & 0xFF, file);
+    char a[2];
+    EMB_WRITE_SHORT_BE(a, data);
+    embFile_write(a, 1, 2, file);
 }
 
 void binaryWriteUShort(EmbFile* file, unsigned short data)
 {
-    embFile_putc(data & 0xFF, file);
-    embFile_putc((data >> 8) & 0xFF, file);
+    char a[2];
+    EMB_WRITE_SHORT(a, data);
+    embFile_write(a, 1, 2, file);
 }
 
 void binaryWriteUShortBE(EmbFile* file, unsigned short data)
 {
-    embFile_putc((data >> 8) & 0xFF, file);
-    embFile_putc(data & 0xFF, file);
+    char a[2];
+    EMB_WRITE_SHORT_BE(a, data);
+    embFile_write(a, 1, 2, file);
 }
 
 void binaryWriteInt(EmbFile* file, int data)
 {
-    embFile_putc(data & 0xFF, file);
-    embFile_putc((data >> 8) & 0xFF, file);
-    embFile_putc((data >> 16) & 0xFF, file);
-    embFile_putc((data >> 24) & 0xFF, file);
+    char a[4];
+    EMB_WRITE_INT(a, data);
+    embFile_write(a, 1, 4, file);
 }
 
 void binaryWriteIntBE(EmbFile* file, int data)
 {
-    embFile_putc((data >> 24) & 0xFF, file);
-    embFile_putc((data >> 16) & 0xFF, file);
-    embFile_putc((data >> 8) & 0xFF, file);
-    embFile_putc(data & 0xFF, file);
+    char a[4];
+    EMB_WRITE_INT_BE(a, data);
+    embFile_write(a, 1, 4, file);
 }
 
 void binaryWriteUInt(EmbFile* file, unsigned int data)
 {
-    embFile_putc(data & 0xFF, file);
-    embFile_putc((data >> 8) & 0xFF, file);
-    embFile_putc((data >> 16) & 0xFF, file);
-    embFile_putc((data >> 24) & 0xFF, file);
+    char a[4];
+    EMB_WRITE_INT(a, data);
+    embFile_write(a, 1, 4, file);
 }
 
 void binaryWriteUIntBE(EmbFile* file, unsigned int data)
 {
-    embFile_putc((data >> 24) & 0xFF, file);
-    embFile_putc((data >> 16) & 0xFF, file);
-    embFile_putc((data >> 8) & 0xFF, file);
-    embFile_putc(data & 0xFF, file);
+    char a[4];
+    EMB_WRITE_INT_BE(a, data);
+    embFile_write(a, 1, 4, file);
 }
 
 void binaryWriteFloat(EmbFile* file, float data)
@@ -199,38 +191,7 @@ void binaryWriteFloat(EmbFile* file, float data)
     } float_int_u;
     float_int_u.f32 = data;
 
-    embFile_putc(float_int_u.u32 & 0xFF, file);
-    embFile_putc((float_int_u.u32 >> 8) & 0xFF, file);
-    embFile_putc((float_int_u.u32 >> 16) & 0xFF, file);
-    embFile_putc((float_int_u.u32 >> 24) & 0xFF, file);
-}
-
-double embMinDouble(double a, double b)
-{
-    if (a < b)
-        return a;
-    return b;
-}
-
-double embMaxDouble(double a, double b)
-{
-    if (a > b)
-        return a;
-    return b;
-}
-
-int embMinInt(int a, int b)
-{
-    if (a < b)
-        return a;
-    return b;
-}
-
-int embMaxInt(int a, int b)
-{
-    if (a > b)
-        return a;
-    return b;
+    binaryWriteUInt(file, float_int_u.u32);
 }
 
 /*! Rounds a double (\a src) and returns it as an \c int. */
@@ -247,23 +208,6 @@ char* lTrim(char* str, char junk)
 {
     while (*str == junk) {
         str++;
-    }
-    return str;
-}
-
-/*! Optimizes the number (\a num) for output to a text file and returns it as a string (\a str). */
-char* emb_optOut(double num, char* str)
-{
-    char *str2;
-    /* Convert the number to a string */
-    sprintf(str, "%.10f", num);
-    /* Remove trailing zeroes */
-    str2 = str + strlen(str);
-    while (*--str2 == 0);
-    *(str2+1) = 0;
-    /* Remove the decimal point if it happens to be an integer */
-    if (str[strlen(str)-1] == '.') {
-        str[strlen(str)-1] = 0;
     }
     return str;
 }

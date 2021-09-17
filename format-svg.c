@@ -1877,7 +1877,7 @@ int readSvg(EmbPattern* pattern, EmbFile* file, const char* fileName)
     free(currentAttribute);
     free(currentValue);
 
-    writeSvg(pattern, "object_summary.svg");
+    embPattern_writeAuto(pattern, "object_summary.svg");
 
     /* Flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
     embPattern_flipVertical(pattern);

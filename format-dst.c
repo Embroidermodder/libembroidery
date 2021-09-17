@@ -322,10 +322,7 @@ int readDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
     */
 
     embPattern_loadExternalColorFile(pattern, fileName);
-    /* READ 512 BYTE HEADER INTO header[] */
-    for (i = 0; i < 512; i++) {
-        header[i] = (char)embFile_getc(file);
-    }
+    embFile_read(header, 1, 512, file);
 
     /*TODO:It would probably be a good idea to validate file before accepting it. */
 

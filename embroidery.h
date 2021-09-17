@@ -46,7 +46,7 @@ typedef struct EmbFile_
 
 /* Format identifiers */
 #define EMB_FORMAT_100          0
-#define EMB_FORMAT_10o          1
+#define EMB_FORMAT_10O          1
 #define EMB_FORMAT_ART          2
 #define EMB_FORMAT_BMC          3
 #define EMB_FORMAT_BRO          4
@@ -521,8 +521,6 @@ typedef struct EmbFormatList_
     char reader;
     char writer;
     int type;
-    int (*readerFunc)(EmbPattern*, EmbFile *, const char*);
-    int (*writerFunc)(EmbPattern*, EmbFile *, const char*);
 } EmbFormatList;
 
 /* Function Declarations

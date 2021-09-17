@@ -62,7 +62,7 @@ static unsigned char DecodeCsdByte(long fileOffset, unsigned char val, int type)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i, type = 0;
     unsigned char identifier[8];
@@ -143,7 +143,7 @@ int readCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeCsd */
 }

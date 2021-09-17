@@ -42,7 +42,7 @@ bit definitions for attributes of stitch
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     ThredHeader header;
     unsigned char r, g, b;
@@ -113,7 +113,7 @@ int readThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i, stitchCount;
     unsigned char version = 0;

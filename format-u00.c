@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i;
     char dx = 0, dy = 0;
@@ -55,7 +55,7 @@ int readU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish WriteU00 */
 }

@@ -60,7 +60,7 @@ static int csvStrToStitchFlag(const char* str)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int numColorChanges = 0;
     int size = 1024;
@@ -205,7 +205,7 @@ int readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
     EmbRect boundingRect;

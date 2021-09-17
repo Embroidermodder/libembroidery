@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+#define ARDUINO 1
+
 /* This list is the index of the names list, allowing us to 
  * interpret that list without storing a pointer (8 bytes)
  * instead an unsigned short (2 bytes).

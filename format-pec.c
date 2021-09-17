@@ -214,7 +214,7 @@ static void pecEncodeStop(EmbFile* file, unsigned char val)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPec(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readPec(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned int graphicsOffset;
     unsigned char colorChanges;
@@ -445,7 +445,7 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePec(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writePec(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     embPattern_flipVertical(pattern); /* TODO: There needs to be a matching flipVertical() call after the write to ensure multiple writes from the same pattern work properly */
     embPattern_fixColorCount(pattern);

@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_seek(file, 0x200, SEEK_SET); /* TODO: review for combining code. This line appears to be the only difference from the FXY format. */
@@ -35,7 +35,7 @@ int readGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeGt */
 }

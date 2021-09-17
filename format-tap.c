@@ -1,7 +1,7 @@
 #include "embroidery.h"
 #include <stdio.h>
 
-static int decodeRecordFlags(unsigned char b2)
+static int decodeTapRecordFlags(unsigned char b2)
 {
     if (b2 == 0xF3) {
         return END;
@@ -20,7 +20,7 @@ static int decodeRecordFlags(unsigned char b2)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[3];
 
@@ -70,7 +70,7 @@ int readTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
             y += 81;
         if (b[2] & 0x10)
             y -= 81;
-        flags = decodeRecordFlags(b[2]);
+        flags = decodeTapRecordFlags(b[2]);
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
         if (flags == END)
             break;
@@ -79,16 +79,16 @@ int readTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static void encode_record(EmbFile* file, int x, int y, int flags)
+static void encode_tap_record(EmbFile* file, int x, int y, int flags)
 {
     char b0, b1, b2;
     b0 = b1 = b2 = 0;
 
     /* cannot encode values > +121 or < -121. */
     if (x > 121 || x < -121)
-        embLog("ERROR: format-tap.c encode_record(), x is not in valid range [-121,121] , x =\n");
+        embLog("ERROR: format-tap.c encode_tap_record(), x is not in valid range [-121,121] , x =\n");
     if (y > 121 || y < -121)
-        embLog("ERROR: format-tap.c encode_record(), y is not in valid range [-121,121] , y =\n");
+        embLog("ERROR: format-tap.c encode_tap_record(), y is not in valid range [-121,121] , y =\n");
 
     if (x >= +41) {
         b2 += 1 << 2;
@@ -131,7 +131,7 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
         x += 1;
     }
     if (x != 0) {
-        embLog("ERROR: format-tap.c encode_record(), x should be zero yet x =\n");
+        embLog("ERROR: format-tap.c encode_tap_record(), x should be zero yet x =\n");
     }
     if (y >= +41) {
         b2 += 1 << 5;
@@ -174,7 +174,7 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
         y += 1;
     }
     if (y != 0) {
-        embLog("ERROR: format-tap.c encode_record(), y should be zero yet y =\n");
+        embLog("ERROR: format-tap.c encode_tap_record(), y should be zero yet y =\n");
     }
 
     b2 |= (char)3;
@@ -198,7 +198,7 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbRect boundingRect;
     int xx, yy, dx, dy, i;
@@ -215,7 +215,7 @@ int writeTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
         dy = roundDouble(st.y * 10.0) - yy;
         xx = roundDouble(st.x * 10.0);
         yy = roundDouble(st.y * 10.0);
-        encode_record(file, dx, dy, st.flags);
+        encode_tap_record(file, dx, dy, st.flags);
     }
     return 1;
 }

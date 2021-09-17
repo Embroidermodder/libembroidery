@@ -808,8 +808,8 @@ void embPattern_center(EmbPattern* p)
 /* TODO: Description needed. */
 void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
 {
-    char hasRead, *dotPos, *extractName;
-    EmbFile *file;
+    char *dotPos, *extractName;
+    char hasRead;
 
     if (!p) {
         embLog("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), p argument is null\n");
@@ -831,39 +831,26 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
     dotPos = strrchr(fileName, '.');
     *dotPos = 0;
     strcat(extractName, ".edr");
-    file = embFile_open(extractName, "rb", 1);
-    if (file) {
-        hasRead = (char)formatTable[EMB_FORMAT_EDR].readerFunc(p, file, extractName);
-    }
-    else {
+    hasRead = embPattern_readAuto(p, extractName);
+    if (!hasRead) {
         strcpy(extractName, fileName);
         *dotPos = 0;
         strcat(extractName, ".rgb");
-        file = embFile_open(extractName, "rb", 1);
-        if (file) {
-            hasRead = (char)formatTable[EMB_FORMAT_RGB].readerFunc(p, file, extractName);
-        }
-        else {
-            strcpy(extractName, fileName);
-            *dotPos = 0;
-            strcat(extractName, ".col");
-            file = embFile_open(extractName, "rb", 1);
-            if (file) {
-                hasRead = (char)formatTable[EMB_FORMAT_COL].readerFunc(p, file, extractName);
-            }
-            else {
-                strcpy(extractName, fileName);
-                *dotPos = 0;
-                strcat(extractName, ".inf");
-                file = embFile_open(extractName, "rb", 1);
-                if (file) {
-                    hasRead = (char)formatTable[EMB_FORMAT_INF].readerFunc(p, file, extractName);
-                }
-            }
-        }
+        hasRead = embPattern_readAuto(p, extractName);
+    }
+    if (!hasRead) {
+        strcpy(extractName, fileName);
+        *dotPos = 0;
+        strcat(extractName, ".col");
+        hasRead = embPattern_readAuto(p, extractName);
+    }
+    if (!hasRead) {
+        strcpy(extractName, fileName);
+        *dotPos = 0;
+        strcat(extractName, ".inf");
+        hasRead = embPattern_readAuto(p, extractName);
     }
     free(extractName);
-    embFile_close(file);
 }
 
 /*! Frees all memory allocated in the pattern (\a p). */

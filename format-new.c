@@ -7,7 +7,7 @@ static int decodeNewStitch(unsigned char value)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readNew(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readNew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned int stitchCount;
     unsigned char data[3];
@@ -51,7 +51,7 @@ int readNew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeNew(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeNew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeNew */
 }

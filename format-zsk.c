@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     char b[3];
     int stitchType;
@@ -57,7 +57,7 @@ int readZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeZsk */
 }

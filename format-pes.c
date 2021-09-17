@@ -3,7 +3,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPes(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readPes(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int pecstart, numColors, x;
 
@@ -330,7 +330,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file, const char
     int colorCount = 0;
     int newColorCode = 0;
     int colorInfoIndex = 0;
-    int i, j;
+    int i;
     EmbRect bounds = embPattern_calcBoundingBox(pattern);
     EmbColor color;
     EmbStitch st;
@@ -395,7 +395,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file, const char
             binaryWriteShort(file, (short)(st.y + bounds.top));
         }
         if (i < pattern->stitchList->count) {
-            binaryWriteShort(file, 0x8003);
+            binaryWriteUShort(file, 0x8003);
         }
         blockCount++;
     }
@@ -454,7 +454,7 @@ static void pesWriteEmbOneSection(EmbPattern* pattern, EmbFile* file, const char
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePes(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writePes(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int pecLocation;
 
@@ -468,9 +468,9 @@ int writePes(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryWriteShort(file, 0x01);
 
     /* Write object count */
-    binaryWriteShort(file, 0x01);
-    binaryWriteShort(file, 0xFFFF); /* command */
-    binaryWriteShort(file, 0x00); /* unknown */
+    binaryWriteUShort(file, 0x01);
+    binaryWriteUShort(file, 0xFFFF); /* command */
+    binaryWriteUShort(file, 0x00); /* unknown */
 
     pesWriteEmbOneSection(pattern, file, fileName);
     pesWriteSewSegSection(pattern, file, fileName);

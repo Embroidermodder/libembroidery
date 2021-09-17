@@ -185,8 +185,58 @@ static SvgElement* currentElement;
 static char* currentAttribute;
 static char* currentValue;
 
+#define ELEMENT_XML               0
+#define ELEMENT_A                 1
+#define ELEMENT_ANIMATE           2
+#define ELEMENT_ANIMATE_COLOR     3
+#define ELEMENT_ANIMATE_MOTION    4
+#define ELEMENT_ANIMATE_TRANSFORM 5
+#define ELEMENT_ANIMATION         6
+#define ELEMENT_AUDIO             7
+#define ELEMENT_CIRCLE            8
+#define ELEMENT_DEFS              9
+#define ELEMENT_DESC              10
+#define ELEMENT_DISCARD           11
+#define ELEMENT_ELLIPSE           12
+#define ELEMENT_FONT              13
+#define ELEMENT_FONT_FACE         14
+#define ELEMENT_FONT_FACE_SRC     15
+#define ELEMENT_FONT_FACE_URI     16
+#define ELEMENT_FOREIGN_OBJECT    17
+#define ELEMENT_G                 18
+#define ELEMENT_GLYPH             19
+#define ELEMENT_HANDLER           20
+#define ELEMENT_HKERN             21
+#define ELEMENT_IMAGE             22
+#define ELEMENT_LINE              23
+#define ELEMENT_LINEAR_GRADIENT   24
+#define ELEMENT_LISTENER          25
+#define ELEMENT_METADATA          26
+#define ELEMENT_MISSING_GLYPH     27
+#define ELEMENT_MPATH             28
+#define ELEMENT_PATH              29
+#define ELEMENT_POLYGON           30
+#define ELEMENT_POLYLINE          31
+#define ELEMENT_PREFETCH          32
+#define ELEMENT_RADIAL_GRADIENT   33
+#define ELEMENT_RECT              34
+#define ELEMENT_SCRIPT            35
+#define ELEMENT_SET               36
+#define ELEMENT_SOLID_COLOR       37
+#define ELEMENT_STOP              38
+#define ELEMENT_SVG               39
+#define ELEMENT_SWITCH            40
+#define ELEMENT_TBREAK            41
+#define ELEMENT_TEXT              42
+#define ELEMENT_TEXT_AREA         43
+#define ELEMENT_TITLE             44
+#define ELEMENT_TSPAN             45
+#define ELEMENT_USE               46
+#define ELEMENT_VIDEO             47
+#define ELEMENT_UNKNOWN           48
+
 static const char* svg_element_tokens[] = {
-    "a", "animate", "animateColor", "animateMotion", "animateTransform", "animation",
+    "?xml", "a", "animate", "animateColor", "animateMotion", "animateTransform", "animation",
     "audio", "circle", "defs", "desc", "discard", "ellipse",
     "font", "font-face", "font-face-src", "font-face-uri", "foreignObject",
     "g", "glyph", "handler", "hkern", "image", "line", "linearGradient", "listener",
@@ -693,73 +743,25 @@ void svgAddToPattern(EmbPattern* p)
                         pathbuff[1] = 0;
 
                         printf("cmd:%s\n", pathbuff);
-                        if (!strcmp(pathbuff, "M")) {
-                            cmd = 'M';
-                            reset = 2;
-                            numMoves++;
-                        } else if (!strcmp(pathbuff, "m")) {
-                            cmd = 'm';
-                            reset = 2;
-                            numMoves++;
-                        } else if (!strcmp(pathbuff, "L")) {
-                            cmd = 'L';
-                            reset = 2;
-                        } else if (!strcmp(pathbuff, "l")) {
-                            cmd = 'l';
-                            reset = 2;
-                        } else if (!strcmp(pathbuff, "C")) {
-                            cmd = 'C';
-                            reset = 6;
-                        } else if (!strcmp(pathbuff, "c")) {
-                            cmd = 'c';
-                            reset = 6;
-                        } else if (!strcmp(pathbuff, "H")) {
-                            cmd = 'H';
-                            reset = 1;
-                        } else if (!strcmp(pathbuff, "h")) {
-                            cmd = 'h';
-                            reset = 1;
-                        } else if (!strcmp(pathbuff, "V")) {
-                            cmd = 'V';
-                            reset = 1;
-                        } else if (!strcmp(pathbuff, "v")) {
-                            cmd = 'v';
-                            reset = 1;
-                        } else if (!strcmp(pathbuff, "S")) {
-                            cmd = 'S';
-                            reset = 4;
-                        } else if (!strcmp(pathbuff, "s")) {
-                            cmd = 's';
-                            reset = 4;
-                        } else if (!strcmp(pathbuff, "Q")) {
-                            cmd = 'Q';
-                            reset = 4;
-                        } else if (!strcmp(pathbuff, "q")) {
-                            cmd = 'q';
-                            reset = 4;
-                        } else if (!strcmp(pathbuff, "T")) {
-                            cmd = 'T';
-                            reset = 2;
-                        } else if (!strcmp(pathbuff, "t")) {
-                            cmd = 't';
-                            reset = 2;
-                        } else if (!strcmp(pathbuff, "A")) {
-                            cmd = 'A';
-                            reset = 7;
-                        } else if (!strcmp(pathbuff, "a")) {
-                            cmd = 'a';
-                            reset = 7;
-                        } else if (!strcmp(pathbuff, "Z")) {
-                            cmd = 'Z';
-                            reset = 0;
-                        } else if (!strcmp(pathbuff, "z")) {
-                            cmd = 'z';
-                            reset = 0;
-                        } else {
+                        cmd = c;
+                        if (c>='A' && c<='Z') {
+                            c += 'a' - 'A';
+                        }
+                        int resetValues[] = {
+                          /*a  b  c  d  e  f  g  h  i  j  k  l  m */
+                            7,-1, 6,-1,-1,-1,-1, 1,-1,-1,-1, 2, 2,
+                          /*n  o  p  q  r  s  t  u  v  w  x  y  z */
+                           -1,-1,-1, 4,-1, 4, 2,-1, 1,-1,-1,-1, 0
+                        };
+                        if (c>='a' && c<='z') {
+                            reset = resetValues[c-'a'];
+                            if (c=='m') numMoves++;
+                        }
+                        if (reset < 0) {
                             embLog("ERROR: format-svg.c svgAddToPattern(), %s is not a valid svg path command, skipping...");
                             embLog(pathbuff);
                             trip = -1;
-                            reset = -1;
+                            break;
                         }
                     }
                     /* avoid loosing 'z' command that maybe never accomodated. */
@@ -781,7 +783,6 @@ void svgAddToPattern(EmbPattern* p)
             }
         }
         free(pathbuff);
-        pathbuff = 0;
 
         /* TODO: subdivide numMoves > 1 */
 
@@ -1440,6 +1441,34 @@ static char svgHasAttribute(const char *buff, const char *tokens[], const char *
     return SVG_NULL;
 }
 
+static char identify_element(const char *token)
+{
+    char id;
+    for (id=0; id < ELEMENT_UNKNOWN; id++) {
+        if (!strcmp(svg_element_tokens[id], token)) {
+            break;
+        }
+    }
+    return id;
+}
+
+/* Triple pointer: this could be confusing to a new programmer to the project.
+ *
+ * This could be a 0-1 matrix of element against attribute.
+ */
+const char **token_lists[] = {
+    xmlTokens, linkTokens, animateTokens, animateColorTokens, animateMotionTokens,
+    animateTransformTokens, animationTokens, audioTokens, circleTokens, defsTokens,
+    descTokens, discardTokens, ellipseTokens, fontTokens, fontFaceTokens,
+    fontFaceSrcTokens, fontFaceUriTokens, foreignObjectTokens, groupTokens,
+    glyphTokens, handlerTokens, hkernTokens, imageTokens, lineTokens,
+    linearGradientTokens, listenerTokens, metadataTokens, missingGlyphTokens,
+    mpathTokens, pathTokens, polygonTokens, polylineTokens, prefetchTokens,
+    radialGradientTokens, rectTokens, scriptTokens, setTokens, solidColorTokens,
+    stopTokens, svgTokens, switchTokens, tbreakTokens, textTokens, textAreaTokens,
+    titleTokens, tspanTokens, useTokens, videoTokens
+};
+
 void svgProcess(int c, const char* buff)
 {
     if (svgExpect == SVG_EXPECT_ELEMENT) {
@@ -1459,287 +1488,57 @@ void svgProcess(int c, const char* buff)
         }
     } else if (svgExpect == SVG_EXPECT_ATTRIBUTE) {
         char advance = 0;
-        const char* name = 0;
-        if (!currentElement) { /* TODO: error */
+        if (!currentElement) {
+            embLog("There is no current element but the parser expects one.");
             return;
         }
-        name = currentElement->name;
+        char token = identify_element(currentElement->name);
+        
+        switch (token) {
+        case ELEMENT_A:
+        case ELEMENT_CIRCLE:
+        case ELEMENT_DEFS:
+        case ELEMENT_ELLIPSE:
+        case ELEMENT_FOREIGN_OBJECT:
+        case ELEMENT_G:
+        case ELEMENT_LINE:
+        case ELEMENT_LINEAR_GRADIENT:
+        case ELEMENT_PATH:
+        case ELEMENT_POLYGON:
+        case ELEMENT_POLYLINE:
+        case ELEMENT_RADIAL_GRADIENT:
+        case ELEMENT_RECT:
+        case ELEMENT_SOLID_COLOR:
+        case ELEMENT_STOP:
+        case ELEMENT_SVG:
+        case ELEMENT_SWITCH:
+        case ELEMENT_TEXT:
+        case ELEMENT_TEXT_AREA:
+        case ELEMENT_TSPAN:
+        case ELEMENT_USE:
+            advance = svgIsProperty(buff);
+            break;        
+        case ELEMENT_ANIMATION:
+        case ELEMENT_AUDIO:
+        case ELEMENT_IMAGE:
+        case ELEMENT_METADATA:
+        case ELEMENT_TITLE:
+        case ELEMENT_VIDEO:
+            advance = svgIsMediaProperty(buff);
+            break;
+        default:
+            break;
+        }
 
-        if (!strcmp(name, "?xml")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, xmlTokens, "xml:");
+        if (!advance) {
+            if (token == ELEMENT_XML) {
+                advance = svgHasAttribute(buff, xmlTokens, "?xml");
             }
-        } else if (!strcmp(name, "a")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, linkTokens, "a");
-            }
-        } else if (!strcmp(name, "animate")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, animateTokens, "animate");
-            }
-        } else if (!strcmp(name, "animateColor")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, animateColorTokens, "animateColor");
-            }
-        } else if (!strcmp(name, "animateMotion")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, animateMotionTokens, "animateMotion");
-            }
-        } else if (!strcmp(name, "animateTransform")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, animateTransformTokens, "animateTransform");
-            }
-        } else if (!strcmp(name, "animation")) {
-            if (!advance) {
-                advance = svgIsMediaProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, animationTokens, "animation");
-            }
-        } else if (!strcmp(name, "audio")) {
-            if (!advance) {
-                advance = svgIsMediaProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, audioTokens, "audio");
-            }
-        } else if (!strcmp(name, "circle")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, circleTokens, "circle");
-            }
-        } else if (!strcmp(name, "defs")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, defsTokens, "defs");
-            }
-        } else if (!strcmp(name, "desc")) {
-            if (!advance) {
-                advance = svgIsMediaProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, descTokens, "desc");
-            }
-        } else if (!strcmp(name, "discard")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, discardTokens, "discard");
-            }
-        } else if (!strcmp(name, "ellipse")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, ellipseTokens, "ellipse");
-            }
-        } else if (!strcmp(name, "font")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, fontTokens, "font");
-            }
-        } else if (!strcmp(name, "font-face")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, fontFaceTokens, "font-face");
-            }
-        } else if (!strcmp(name, "font-face-src")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, fontFaceSrcTokens, "font-face-src");
-            }
-        } else if (!strcmp(name, "font-face-uri")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, fontFaceUriTokens, "font-face-uri");
-            }
-        } else if (!strcmp(name, "foreignObject")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, foreignObjectTokens, "foreignObject");
-            }
-        } else if (!strcmp(name, "g")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, groupTokens, "g");
-            }
-        } else if (!strcmp(name, "glyph")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, glyphTokens, "glyph");
-            }
-        } else if (!strcmp(name, "handler")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, handlerTokens, "handler");
-            }
-        } else if (!strcmp(name, "hkern")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, hkernTokens, "hkern");
-            }
-        } else if (!strcmp(name, "image")) {
-            if (!advance) {
-                advance = svgIsMediaProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, imageTokens, "image");
-            }
-        } else if (!strcmp(name, "line")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, lineTokens, "line");
-            }
-        } else if (!strcmp(name, "linearGradient")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, linearGradientTokens, "linearGradient");
-            }
-        } else if (!strcmp(name, "listener")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, listenerTokens, "listener");
-            }
-        } else if (!strcmp(name, "metadata")) {
-            if (!advance) {
-                advance = svgIsMediaProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, metadataTokens, "metadata");
-            }
-        } else if (!strcmp(name, "missing-glyph")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, missingGlyphTokens, "font-face-src");
-            }
-        } else if (!strcmp(name, "mpath")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, mpathTokens, "font-face-src");
-            }
-        } else if (!strcmp(name, "path")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, pathTokens, "font-face-src");
-            }
-        } else if (!strcmp(name, "polygon")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, polygonTokens, "font-face-src");
-            }
-        } else if (!strcmp(name, "polyline")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, polylineTokens, "font-face-src");
-            }
-        } else if (!strcmp(name, "prefetch")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, prefetchTokens, "prefetch");
-            }
-        } else if (!strcmp(name, "radialGradient")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, radialGradientTokens, "radialGradient");
-            }
-        } else if (!strcmp(name, "rect")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, rectTokens, "rect");
-            }
-        } else if (!strcmp(name, "script")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, scriptTokens, "script");
-            }
-        } else if (!strcmp(name, "set")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, setTokens, "set");
-            }
-        } else if (!strcmp(name, "solidColor")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, solidColorTokens, "font-face-src");
-            }
-        } else if (!strcmp(name, "stop")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, stopTokens, "stop");
-            }
-        } else if (!strcmp(name, "svg")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
+            else if (token == ELEMENT_SVG) {
                 advance = svgIsSvgAttribute(buff);
             }
-        } else if (!strcmp(name, "switch")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, switchTokens, "switch");
-            }
-        } else if (!strcmp(name, "tbreak")) {
-            if (!advance) {
-                advance = svgHasAttribute(buff, tbreakTokens, "tbreak");
-            }
-        } else if (!strcmp(name, "text")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, textTokens, "text");
-            }
-        } else if (!strcmp(name, "textArea")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, textAreaTokens, "textArea");
-            }
-        } else if (!strcmp(name, "title")) {
-            if (!advance) {
-                advance = svgIsMediaProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, titleTokens, "title");
-            }
-        } else if (!strcmp(name, "tspan")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, tspanTokens, "tspan");
-            }
-        } else if (!strcmp(name, "use")) {
-            if (!advance) {
-                advance = svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, useTokens, "use");
-            }
-        } else if (!strcmp(name, "video")) {
-            if (!advance) {
-                advance = svgIsMediaProperty(buff);
-            }
-            if (!advance) {
-                advance = svgHasAttribute(buff, videoTokens, "video");
+            else if (token != ELEMENT_UNKNOWN) {
+                advance = svgHasAttribute(buff, token_lists[token], svg_element_tokens[token]);
             }
         }
 
@@ -1747,7 +1546,6 @@ void svgProcess(int c, const char* buff)
             printf("ATTRIBUTE:\n");
             svgExpect = SVG_EXPECT_VALUE;
             free(currentAttribute);
-            currentAttribute = 0;
             currentAttribute = emb_strdup(buff);
         }
     } else if (svgExpect == SVG_EXPECT_VALUE) {

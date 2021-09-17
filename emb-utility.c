@@ -287,7 +287,7 @@ EmbColor embColor_fromHexStr(char* val)
 void embPointerToArray(char* buffer, void* pointer, int maxDigits)
 {
     unsigned int i, value;
-    value = (unsigned int)pointer;
+    value = (unsigned long int)pointer;
     for (i = 0; i < maxDigits - 1; i++) {
         buffer[i] = ' ';
     }
@@ -322,10 +322,10 @@ void embIntToArray(char* buffer, int number, int maxDigits)
     }
     buffer[maxDigits - 1] = 0;
     for (i = maxDigits - 2; i >= 0; i--) {
-        printf("%s %d %d\n", buffer, i, number);
-        buffer[i] = (char)(number % 10) + '0';
-        number = number / 10;
-        if (number == 0)
+        printf("%s %d %d\n", buffer, i, unumber);
+        buffer[i] = (char)(unumber % 10) + '0';
+        unumber = unumber / 10;
+        if (unumber == 0)
             break;
     }
     if (sign) {
@@ -350,7 +350,7 @@ void writeInt(EmbFile* file, int n, int m)
  */
 void embFloatToArray(char* buffer, float number, float tolerence, int before, int after)
 {
-    int i, maxDigits, j, empty;
+    int i, maxDigits, j;
     float t;
     float afterPos[] = { 1.0e-1, 1.0e-2, 1.0e-3, 1.0e-4, 1.0e-5, 1.0e-6, 1.0e-7, 1.0e-8 };
     float beforePos[] = { 1.0, 1.0e1, 1.0e2, 1.0e3, 1.0e4, 1.0e5, 1.0e6, 1.0e7, 1.0e8 };

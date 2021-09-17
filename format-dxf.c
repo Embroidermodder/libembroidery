@@ -296,7 +296,7 @@ char* readline(FILE* file)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     char buff[1024];
     char* dxfVersion = "";
@@ -312,7 +312,6 @@ int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
     char firstStitch = 1;
     char bulgeFlag = 0;
     int fileLength = 0;
-    unsigned char colorNum = 0;
 
     layerColorHash = embHash_create();
     if (!layerColorHash) {
@@ -390,7 +389,6 @@ int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
                 } else if (!strcmp(buff, "62")) /* Color Number */
                 {
                     embFile_readline(file, buff, 1000);
-                    colorNum = atoi(buff);
                     /*
                     TODO: finish this
                     unsigned char colorNum = atoi(buff);
@@ -399,11 +397,10 @@ int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
                     co.g = _dxfColorTable[colorNum][1];
                     co.b = _dxfColorTable[colorNum][2];
                     printf("inserting:%s,%d,%d,%d\n", layerName, co.r, co.g, co.b);
-                    if(embHash_insert(layerColorHash, emb_strdup(layerName), &co))
-                    {
+                    if (embHash_insert(layerColorHash, emb_strdup(layerName), &co)) {
                          TODO: log error: failed inserting into layerColorHash
                     }
-*/
+                    */
                     layerName = NULL;
                 }
             }
@@ -429,8 +426,6 @@ int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
             }
 
             if (!strcmp(entityType, "LWPOLYLINE")) {
-                double* arcMidX = 0;
-                double* arcMidY = 0;
                 /* The not so important group codes */
                 if (!strcmp(buff, "90")) /* Vertices */
                 {
@@ -471,14 +466,14 @@ int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
                     y = atof(buff);
 
                     if (bulgeFlag) {
-                        bulgeFlag = 0;
                         EmbArc arc;
+                        EmbVector arcCenter;
+                        bulgeFlag = 0;
                         arc.start.x = prevX;
                         arc.start.y = prevY;
                         arc.end.x = x;
                         arc.end.y = y;
                         /* TODO: sort arcMidX etc. */
-                        EmbVector arcCenter;
                         if (!getArcDataFromBulge(bulge, &arc, &arcCenter, 0, 0, 0, 0, 0, 0, 0, 0)) {
                             /*TODO: error */
                             return 0;
@@ -502,13 +497,13 @@ int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
                     entityType = NULL;
                     firstStitch = 1;
                     if (bulgeFlag) {
-                        bulgeFlag = 0;
                         EmbArc arc;
+                        EmbVector arcCenter;
+                        bulgeFlag = 0;
                         arc.start.x = prevX;
                         arc.start.y = prevY;
                         arc.end.x = firstX;
                         arc.end.y = firstY;
-                        EmbVector arcCenter;
                         if (!getArcDataFromBulge(bulge, &arc, &arcCenter, 0, 0, 0, 0, 0, 0, 0, 0)) {
                             /*TODO: error */
                             return 0;
@@ -538,7 +533,7 @@ int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeDxf */
 }

@@ -123,13 +123,10 @@ static unsigned char husEncodeStitchType(int st)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    int fileLength;
-    int magicCode, numberOfStitches, numberOfColors;
-    int postitiveXHoopSize, postitiveYHoopSize, negativeXHoopSize, negativeYHoopSize;
-
-    int attributeOffset, xOffset, yOffset;
+    int fileLength, i, magicCode, numberOfStitches, numberOfColors;
+    int postitiveXHoopSize, postitiveYHoopSize, negativeXHoopSize, negativeYHoopSize, attributeOffset, xOffset, yOffset;
     unsigned char* attributeData = 0;
     unsigned char* attributeDataDecompressed = 0;
 
@@ -139,7 +136,6 @@ int readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
     unsigned char* yData = 0;
     unsigned char* yDecompressed = 0;
     unsigned char* stringVal = 0;
-    int unknown, i = 0;
 
     embFile_seek(file, 0x00, SEEK_END);
     fileLength = embFile_tell(file);
@@ -165,7 +161,7 @@ int readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
     }
     binaryReadBytes(file, stringVal, 8); /* TODO: check return value */
 
-    unknown = binaryReadInt16(file);
+    binaryReadInt16(file);
     for (i = 0; i < numberOfColors; i++) {
         int pos = binaryReadInt16(file);
         embPattern_addThread(pattern, husThreads[pos]);
@@ -238,7 +234,7 @@ int readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor;

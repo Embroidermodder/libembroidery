@@ -38,7 +38,7 @@ static void pcqEncode(EmbFile* file, int dx, int dy, int flags)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readPcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     char allZeroColor = 1;
     int i = 0;
@@ -92,7 +92,7 @@ int readPcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writePcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
     int i;

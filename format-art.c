@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readArt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readArt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     embPattern_end(pattern);
 
@@ -11,7 +11,7 @@ int readArt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeArt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeArt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
 
     return 0; /*TODO: finish writeArt */

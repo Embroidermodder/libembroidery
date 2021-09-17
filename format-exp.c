@@ -36,7 +36,7 @@ static void expEncode(unsigned char* b, char dx, char dy, int flags)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i = 0;
     unsigned char b0 = 0, b1 = 0;
@@ -96,7 +96,7 @@ int readExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     double dx, dy, xx, yy;
     int flags = 0, i;

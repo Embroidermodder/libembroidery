@@ -4,16 +4,17 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readPlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     double x, y;
     double scalingFactor = 40;
     char input[512];
 
-#if 0
     embPattern_loadExternalColorFile(pattern, fileName);
     /* TODO: replace all scanf code */
-    while (fscanf(file, "%s", input) >= 0) {
+    /* readline needs not to stop at \n, check the file format definition */
+    while (!embFile_eof(file)) {
+        embFile_readline(file, input, 511);
         if (input[0] == 'P' && input[1] == 'D') {
             /* TODO: replace all scanf code */
             if (sscanf(input, "PD%lf,%lf;", &x, &y) < 2) {
@@ -28,13 +29,12 @@ int readPlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
             embPattern_addStitchAbs(pattern, x / scalingFactor, y / scalingFactor, STOP, 1);
         }
     }
-#endif
     return 1;
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writePlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     /* TODO: pointer safety */
     double scalingFactor = 40;

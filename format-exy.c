@@ -16,7 +16,7 @@ static int exyDecodeFlags(unsigned char b2)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[3];
 
@@ -83,7 +83,7 @@ int readExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeExy */
 }

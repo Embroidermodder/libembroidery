@@ -4,7 +4,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int numberOfColors, i;
     char colorType[50];
@@ -35,7 +35,7 @@ int readInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i, bytesRemaining;
     char buffer[50];

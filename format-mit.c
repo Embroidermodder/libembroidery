@@ -10,7 +10,7 @@ static int mitDecodeStitch(unsigned char value)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char data[2];
 
@@ -33,7 +33,7 @@ static unsigned char mitEncodeStitch(double value)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
     double xx = 0, yy = 0, dx = 0, dy = 0;

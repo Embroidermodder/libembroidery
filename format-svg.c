@@ -1805,7 +1805,7 @@ void svgProcess(int c, const char* buff)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readSvg(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readSvg(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int size = 1024;
     int pos;
@@ -1877,7 +1877,7 @@ int readSvg(EmbPattern* pattern, EmbFile* file, const char* fileName)
     free(currentAttribute);
     free(currentValue);
 
-    writeSvg(pattern, "object_summary.svg");
+    embPattern_writeAuto(pattern, "object_summary.svg");
 
     /* Flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
     embPattern_flipVertical(pattern);
@@ -2126,7 +2126,7 @@ static void writeStitchList(EmbPattern* pattern, EmbFile* file)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeSvg(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeSvg(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbRect boundingRect;
 

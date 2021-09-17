@@ -149,7 +149,7 @@ struct hoop_padding {
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int stitchOffset, formatFlags, numberOfColors, numberOfStitchs;
     int hoopSize, i;
@@ -270,7 +270,7 @@ static void jefEncode(unsigned char* b, char dx, char dy, int flags)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int colorlistSize, minColors, designWidth, designHeight, i;
     EmbRect boundingRect;

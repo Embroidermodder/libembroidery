@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "emb-format.h"
 
 /**
 Type of sector
@@ -29,194 +30,71 @@ Special values for Stream Identifiers
 #define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /*!< All real stream Ids are less than this */
 #define CompoundFileStreamId_NoStream 0xFFFFFFFF /*!< There is no valid stream Id            */
 
-int read100(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int write100(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int read10o(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int write10o(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readArt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeArt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readBmc(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeBmc(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readBro(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeBro(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readCnd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeCnd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readCol(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeCol(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readCsd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeCsd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readCsv(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeCsv(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readDat(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeDat(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readDem(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeDem(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readDsb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeDsb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readDst(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeDst(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readDsz(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeDsz(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readDxf(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeDxf(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readEdr(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeEdr(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readEmd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeEmd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readExp(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeExp(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readExy(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeExy(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readEys(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeEys(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readFxy(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeFxy(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readGc(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeGc(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readGnc(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeGnc(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readGt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeGt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readHus(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeHus(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readInb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeInb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readInf(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeInf(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readJef(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeJef(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readKsm(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeKsm(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readMax(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeMax(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readMit(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeMit(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readNew(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeNew(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readOfm(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeOfm(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readPcd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writePcd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readPcm(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writePcm(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readPcq(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writePcq(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readPcs(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writePcs(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readPec(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writePec(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readPel(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writePel(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readPem(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writePem(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readPes(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writePes(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readPhb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writePhb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readPhc(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writePhc(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readPlt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writePlt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readRgb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeRgb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readSew(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeSew(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readShv(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeShv(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readSst(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeSst(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readStx(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeStx(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readSvg(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeSvg(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readT01(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeT01(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readT09(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeT09(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readTap(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeTap(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readThr(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeThr(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readTxt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeTxt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readU00(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeU00(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readU01(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeU01(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readVip(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeVip(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readVp3(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeVp3(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readXxx(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeXxx(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int readZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
-int writeZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
-
 /* TODO: This list needs reviewed in case some stitch formats also can contain object data (EMBFORMAT_STCHANDOBJ). */
 
 const EmbFormatList formatTable[100] = {
-    { ".10o", "Toyota Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, read100, write100 },
-    { ".100", "Toyota Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, read10o, write10o },
-    { ".art", "Bernina Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY, readArt, writeArt },
-    { ".bmc", "Bitmap Cache Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY, readBmc, writeBmc },
-    { ".bro", "Bits & Volts Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readBro, writeBro },
-    { ".cnd", "Melco Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY, readCnd, writeCnd },
-    { ".col", "Embroidery Thread Color Format", 'U', 'U', EMBFORMAT_STITCHONLY, readCol, writeCol },
-    { ".csd", "Singer Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readCsd, writeCsd },
-    { ".csv", "Comma Separated Values Format", 'U', 'U', EMBFORMAT_STITCHONLY, readCsv, writeCsv },
-    { ".dat", "Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readDat, writeDat },
-    { ".dem", "Melco Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY, readDem, writeDem },
-    { ".dsb", "Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readDsb, writeDsb },
-    { ".dst", "Tajima Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readDst, writeDst },
-    { ".dsz", "ZSK USA Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readDsz, writeDsz },
-    { ".dxf", "Drawing Exchange Format", ' ', ' ', EMBFORMAT_OBJECTONLY, readDxf, writeDxf },
-    { ".edr", "Embird Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readEdr, writeEdr },
-    { ".emd", "Elna Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readEmd, writeEmd },
-    { ".exp", "Melco Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readExp, writeExp },
-    { ".exy", "Eltac Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readExy, writeExy },
-    { ".eys", "Sierra Expanded Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY, readEys, writeEys },
-    { ".fxy", "Fortron Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readFxy, writeFxy },
-    { ".gc", "Smoothie G-Code Format", ' ', ' ', EMBFORMAT_STITCHONLY, readGc, writeGc },
-    { ".gnc", "Great Notions Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY, readGnc, writeGnc },
-    { ".gt", "Gold Thread Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readGt, writeGt },
-    { ".hus", "Husqvarna Viking Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readHus, writeHus },
-    { ".inb", "Inbro Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readInb, writeInb },
-    { ".inf", "Embroidery Color Format", 'U', 'U', EMBFORMAT_STITCHONLY, readInf, writeInf },
-    { ".jef", "Janome Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readJef, writeJef },
-    { ".ksm", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readKsm, writeKsm },
-    { ".max", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readMax, writeMax },
-    { ".mit", "Mitsubishi Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readMit, writeMit },
-    { ".new", "Ameco Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readNew, writeNew },
-    { ".ofm", "Melco Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readOfm, writeOfm },
-    { ".pcd", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readPcd, writePcd },
-    { ".pcm", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readPcm, writePcm },
-    { ".pcq", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readPcq, writePcq },
-    { ".pcs", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readPcs, writePcs },
-    { ".pec", "Brother Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readPec, writePec },
-    { ".pel", "Brother Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY, readPel, writePel },
-    { ".pem", "Brother Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY, readPem, writePem },
-    { ".pes", "Brother Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readPes, writePes },
-    { ".phb", "Brother Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readPhb, writePhb },
-    { ".phc", "Brother Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readPhc, writePhc },
-    { ".plt", "AutoCAD Plot Drawing Format", 'U', 'U', EMBFORMAT_STITCHONLY, readPlt, writePlt },
-    { ".rgb", "RGB Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readRgb, writeRgb },
-    { ".sew", "Janome Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readSew, writeSew },
-    { ".shv", "Husqvarna Viking Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readShv, writeShv },
-    { ".sst", "Sunstar Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readSst, writeSst },
-    { ".stx", "Data Stitch Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readStx, writeStx },
-    { ".svg", "Scalable Vector Graphics", 'U', 'U', EMBFORMAT_OBJECTONLY, readSvg, writeSvg },
-    { ".t01", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readT01, writeT01 },
-    { ".t09", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readT09, writeT09 },
-    { ".tap", "Happy Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readTap, writeTap },
-    { ".thr", "ThredWorks Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readThr, writeThr },
-    { ".txt", "Text File", ' ', 'U', EMBFORMAT_STITCHONLY, readTxt, writeTxt },
-    { ".u00", "Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readU00, writeU00 },
-    { ".u01", "Barudan Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY, readU01, writeU01 },
-    { ".vip", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readVip, writeVip },
-    { ".vp3", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readVp3, writeVp3 },
-    { ".xxx", "Singer Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readXxx, writeXxx },
-    { ".zsk", "ZSK USA Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readZsk, writeZsk },
-    { "END", "END", ' ', ' ', 0, 0, 0 }
+    { ".10o", "Toyota Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".100", "Toyota Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".art", "Bernina Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
+    { ".bmc", "Bitmap Cache Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
+    { ".bro", "Bits & Volts Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".cnd", "Melco Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
+    { ".col", "Embroidery Thread Color Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".csd", "Singer Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".csv", "Comma Separated Values Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".dat", "Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".dem", "Melco Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
+    { ".dsb", "Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".dst", "Tajima Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".dsz", "ZSK USA Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".dxf", "Drawing Exchange Format", ' ', ' ', EMBFORMAT_OBJECTONLY },
+    { ".edr", "Embird Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".emd", "Elna Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".exp", "Melco Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".exy", "Eltac Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".eys", "Sierra Expanded Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
+    { ".fxy", "Fortron Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".gc", "Smoothie G-Code Format", ' ', ' ', EMBFORMAT_STITCHONLY },
+    { ".gnc", "Great Notions Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
+    { ".gt", "Gold Thread Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".hus", "Husqvarna Viking Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".inb", "Inbro Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".inf", "Embroidery Color Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".jef", "Janome Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".ksm", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".max", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".mit", "Mitsubishi Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".new", "Ameco Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".ofm", "Melco Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".pcd", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".pcm", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".pcq", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".pcs", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".pec", "Brother Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".pel", "Brother Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
+    { ".pem", "Brother Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
+    { ".pes", "Brother Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".phb", "Brother Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".phc", "Brother Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".plt", "AutoCAD Plot Drawing Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".rgb", "RGB Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".sew", "Janome Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".shv", "Husqvarna Viking Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".sst", "Sunstar Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".stx", "Data Stitch Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".svg", "Scalable Vector Graphics", 'U', 'U', EMBFORMAT_OBJECTONLY },
+    { ".t01", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".t09", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".tap", "Happy Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".thr", "ThredWorks Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".txt", "Text File", ' ', 'U', EMBFORMAT_STITCHONLY },
+    { ".u00", "Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".u01", "Barudan Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
+    { ".vip", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { ".vp3", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".xxx", "Singer Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
+    { ".zsk", "ZSK USA Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
+    { "END", "END", ' ', ' ', 0 }
 };
 
 bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const unsigned int sectorSize);
@@ -277,8 +155,196 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         return 0;    
     }
 
-    r = formatTable[format].writerFunc(pattern, file, fileName);
-    
+    r = 0;
+    switch (format) {
+    case EMB_FORMAT_100:
+        r = write100(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_10O:
+        r = write10o(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_ART:
+        r = writeArt(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_BMC:
+        r = writeBmc(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_BRO:
+        r = writeBro(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_CND:
+        r = writeCnd(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_COL:
+        r = writeCol(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_CSD:
+        r = writeCsd(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_CSV:
+        r = writeCsv(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_DAT:
+        r = writeDat(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_DEM:
+        r = writeArt(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_DSB:
+        r = writeDsb(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_DST:
+        r = writeDst(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_DSZ:
+        r = writeDsz(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_DXF:
+        r = writeDxf(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_EDR:
+        r = writeEdr(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_EMD:
+        r = writeEmd(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_EXP:
+        r = writeExp(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_EXY:
+        r = writeExy(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_EYS:
+        r = writeEys(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_FXY:
+        r = writeFxy(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_GC: 
+        r = writeGc(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_GNC:
+        r = writeGnc(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_GT: 
+        r = writeGt(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_HUS:
+        r = writeHus(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_INB:
+        r = writeInb(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_INF:
+        r = writeInf(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_JEF:
+        r = writeJef(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_KSM:
+        r = writeKsm(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_MAX:
+        r = writeMax(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_MIT:
+        r = writeMit(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_NEW:
+        r = writeNew(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_OFM:
+        r = writeOfm(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PCD:
+        r = writePcd(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PCM:
+        r = writePcm(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PCQ:
+        r = writePcq(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PCS:
+        r = writePcs(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PEC:
+        r = writePec(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PEL:
+        r = writePel(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PEM:
+        r = writePem(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PES:
+        r = writePes(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PHB:
+        r = writePhb(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PHC:
+        r = writePhc(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PLT:
+        r = writePlt(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_RGB:
+        r = writeRgb(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_SEW:
+        r = writeSew(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_SHV:
+        r = writeShv(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_SST:
+        r = writeSst(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_STX:
+        r = writeStx(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_SVG:
+        r = writeSvg(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_T01:
+        r = writeT01(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_T09:
+        r = writeT09(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_TAP:
+        r = writeTap(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_THR:
+        r = writeThr(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_TXT:
+        r = writeTxt(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_U00:
+        r = writeU00(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_U01:
+        r = writeU01(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_VIP:
+        r = writeVip(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_VP3:
+        r = writeVp3(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_XXX:
+        r = writeXxx(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_ZSK:
+        r = writeZsk(pattern, file, fileName);
+        break;
+    default:
+        embLog("Emb format not recognised.");
+        break;
+    }
+
     if (!r) {
         return r;
     }
@@ -310,7 +376,195 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
         return 0;    
     }
 
-    r = formatTable[format].readerFunc(pattern, file, fileName);
+    r = 0;
+    switch (format) {
+    case EMB_FORMAT_100:
+        r = read100(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_10O:
+        r = read10o(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_ART:
+        r = readArt(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_BMC:
+        r = readBmc(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_BRO:
+        r = readBro(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_CND:
+        r = readCnd(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_COL:
+        r = readCol(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_CSD:
+        r = readCsd(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_CSV:
+        r = readCsv(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_DAT:
+        r = readDat(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_DEM:
+        r = readArt(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_DSB:
+        r = readDsb(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_DST:
+        r = readDst(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_DSZ:
+        r = readDsz(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_DXF:
+        r = readDxf(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_EDR:
+        r = readEdr(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_EMD:
+        r = readEmd(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_EXP:
+        r = readExp(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_EXY:
+        r = readExy(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_EYS:
+        r = readEys(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_FXY:
+        r = readFxy(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_GC: 
+        r = readGc(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_GNC:
+        r = readGnc(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_GT: 
+        r = readGt(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_HUS:
+        r = readHus(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_INB:
+        r = readInb(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_INF:
+        r = readInf(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_JEF:
+        r = readJef(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_KSM:
+        r = readKsm(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_MAX:
+        r = readMax(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_MIT:
+        r = readMit(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_NEW:
+        r = readNew(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_OFM:
+        r = readOfm(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PCD:
+        r = readPcd(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PCM:
+        r = readPcm(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PCQ:
+        r = readPcq(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PCS:
+        r = readPcs(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PEC:
+        r = readPec(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PEL:
+        r = readPel(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PEM:
+        r = readPem(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PES:
+        r = readPes(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PHB:
+        r = readPhb(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PHC:
+        r = readPhc(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_PLT:
+        r = readPlt(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_RGB:
+        r = readRgb(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_SEW:
+        r = readSew(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_SHV:
+        r = readShv(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_SST:
+        r = readSst(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_STX:
+        r = readStx(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_SVG:
+        r = readSvg(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_T01:
+        r = readT01(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_T09:
+        r = readT09(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_TAP:
+        r = readTap(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_THR:
+        r = readThr(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_TXT:
+        r = readTxt(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_U00:
+        r = readU00(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_U01:
+        r = readU01(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_VIP:
+        r = readVip(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_VP3:
+        r = readVp3(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_XXX:
+        r = readXxx(pattern, file, fileName);
+        break;
+    case EMB_FORMAT_ZSK:
+        r = readZsk(pattern, file, fileName);
+        break;
+    default:
+        embLog("Emb format not recognised.");
+        break;
+    }
     
     if (!r) {
         return r;

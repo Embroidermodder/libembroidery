@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b0;
     int fileLength, stitchesRemaining, b1, b2, stitchType;
@@ -47,7 +47,7 @@ int readDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeDat */
 }

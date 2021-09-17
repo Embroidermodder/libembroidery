@@ -1,7 +1,7 @@
 #include "embroidery.h"
 #include <stdio.h>
 
-static int decodeRecordFlags(unsigned char b2)
+static int decodeT01RecordFlags(unsigned char b2)
 {
     if (b2 == 0xF3) {
         return END;
@@ -20,7 +20,7 @@ static int decodeRecordFlags(unsigned char b2)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int readT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[3];
 
@@ -70,7 +70,7 @@ int readT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
             y += 81;
         if (b[2] & 0x10)
             y -= 81;
-        flags = decodeRecordFlags(b[2]);
+        flags = decodeT01RecordFlags(b[2]);
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
         if (flags == END)
             break;
@@ -79,18 +79,18 @@ int readT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static void encode_record(EmbFile* file, int x, int y, int flags)
+static void encode_t01_record(EmbFile* file, int x, int y, int flags)
 {
     char b[4];
     b[0] = b[1] = b[2] = 0;
 
     /* cannot encode values > +121 or < -121. */
     if (x > 121 || x < -121) {
-        embLog("ERROR: format-t01.c encode_record(), x is not in valid range [-121,121] , x =");
+        embLog("ERROR: format-t01.c encode_t01_record(), x is not in valid range [-121,121] , x =");
         /* embLog_print("%d\n", x); */
     }
     if (y > 121 || y < -121) {
-        embLog("ERROR: format-t01.c encode_record(), y is not in valid range [-121,121] , y =");
+        embLog("ERROR: format-t01.c encode_t01_record(), y is not in valid range [-121,121] , y =");
         /* embLog_print("%d\n", y); */
     }
 
@@ -135,7 +135,7 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
         x += 1;
     }
     if (x != 0) {
-        embLog("ERROR: format-dst.c encode_record(), x should be zero yet x = %d\n");
+        embLog("ERROR: format-dst.c encode_t01_record(), x should be zero yet x = %d\n");
     }
     if (y >= +41) {
         b[2] += 1 << 5;
@@ -178,7 +178,7 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
         y += 1;
     }
     if (y != 0) {
-        embLog("ERROR: format-dst.c encode_record(), y should be zero yet y = %d\n");
+        embLog("ERROR: format-dst.c encode_t01_record(), y should be zero yet y = %d\n");
     }
 
     b[2] |= (char)3;
@@ -200,7 +200,7 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static int writeT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbRect boundingRect;
     int xx, yy, dx, dy, i;
@@ -218,7 +218,7 @@ int writeT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
         dy = roundDouble(st.y * 10.0) - yy;
         xx = roundDouble(st.x * 10.0);
         yy = roundDouble(st.y * 10.0);
-        encode_record(file, dx, dy, st.flags);
+        encode_t01_record(file, dx, dy, st.flags);
     }
     return 1;
 }

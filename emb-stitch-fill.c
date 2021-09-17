@@ -142,8 +142,8 @@ int embPolygon_breakIntoSeparateObjects(EmbArray *blocks)
             }
         }
     }
-    return 1;
 #endif
+    return 1;
 }
 
 int FindOutline(EmbArray *stitchData, EmbArray *result)
@@ -255,9 +255,9 @@ int DrawGraphics(EmbPattern p)
         }
     }
     outPattern.AddStitchRelative(0, 0, StitchTypes.End);
-    return 0;
     /* return (SimplifyOutline(outPattern)); */
 #endif
+    return 0;
 }
 
 int SimplifyOutline(EmbPattern *pattern, EmbPattern *patternOut)

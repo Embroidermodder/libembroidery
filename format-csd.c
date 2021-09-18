@@ -1,6 +1,3 @@
-#include "embroidery.h"
-#include <stdlib.h>
-
 #define CsdSubMaskSize 479
 #define CsdXorMaskSize 501
 

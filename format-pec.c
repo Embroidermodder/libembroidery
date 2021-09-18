@@ -1,9 +1,5 @@
-#include "embroidery.h"
-#include <stdlib.h>
-#include <string.h>
-
-const int pecThreadCount = 65;
-const EmbThread pecThreads[] = {
+static const int pecThreadCount = 65;
+static const EmbThread pecThreads[] = {
     { { 0, 0, 0 }, "Unknown", "" }, /* Index  0 */
     { { 14, 31, 124 }, "Prussian Blue", "" }, /* Index  1 */
     { { 10, 85, 163 }, "Blue", "" }, /* Index  2 */
@@ -71,7 +67,7 @@ const EmbThread pecThreads[] = {
     { { 255, 200, 200 }, "Applique", "" } /* Index 64 */
 };
 
-const char imageWithFrame[38][48] = {
+static const char imageWithFrame[38][48] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 },
     { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },

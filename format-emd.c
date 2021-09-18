@@ -1,5 +1,3 @@
-#include "embroidery.h"
-
 static char emdDecode(unsigned char inputByte)
 {
     return (inputByte >= 0x80) ? ((-~inputByte) - 1) : inputByte; /* TODO: eliminate ternary return statement */

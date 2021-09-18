@@ -1,8 +1,4 @@
-#include "embroidery.h"
-#include <stdio.h>
-#include "emb-macro.h"
-
-const EmbThread jefThreads[] = {
+static const EmbThread jefThreads[] = {
     { { 0, 0, 0 }, "Black", "" },
     { { 0, 0, 0 }, "Black", "" },
     { { 255, 255, 255 }, "White", "" },

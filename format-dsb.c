@@ -1,7 +1,3 @@
-#include "embroidery.h"
-#include <math.h>
-#include <stdlib.h>
-
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
 static int readDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)

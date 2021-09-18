@@ -1,6 +1,3 @@
-#include "embroidery.h"
-#include <stdio.h>
-
 static int decodeTapRecordFlags(unsigned char b2)
 {
     if (b2 == 0xF3) {

@@ -112,14 +112,14 @@ static int create_test_file_1(const char* outf)
 
     p = embPattern_create();
     if (!p) {
-        embLog("ERROR: convert(), cannot allocate memory for p\n");
+        puts("ERROR: convert(), cannot allocate memory for p\n");
         return 1;
     }
 
     /* 10mm circle */
     for (i = 0; i < 100; i++) {
-        st.x = 10 + 10 * sin(i * (0.5 / embConstantPi));
-        st.y = 10 + 10 * cos(i * (0.5 / embConstantPi));
+        st.x = 10 + 10 * sin(i * (0.5 / 3.141592));
+        st.y = 10 + 10 * cos(i * (0.5 / 3.141592));
         st.flags = NORMAL;
         st.color = 0;
         embArray_addStitch(p->stitchList, st);
@@ -142,13 +142,13 @@ static int create_test_file_2(const char* outf)
 
     p = embPattern_create();
     if (!p) {
-        embLog("ERROR: convert(), cannot allocate memory for p\n");
+        puts("ERROR: convert(), cannot allocate memory for p\n");
         return 1;
     }
 
     /* sin wave */
     for (i = 0; i < 100; i++) {
-        st.x = 10 + 10 * sin(i * (0.5 / embConstantPi));
+        st.x = 10 + 10 * sin(i * (0.5 / 3.141592));
         st.y = 10 + i * 0.1;
         st.flags = NORMAL;
         st.color = 0;
@@ -172,14 +172,14 @@ static int convert(const char* inf, const char* outf)
 
     p = embPattern_create();
     if (!p) {
-        embLog("ERROR: convert(), cannot allocate memory for p\n");
+        puts("ERROR: convert(), cannot allocate memory for p\n");
         return 1;
     }
 
     reader = embReaderWriter_getByFileName(inf);
     if (reader < 0) {
-        embLog("convert(), unsupported read file type:");
-        embLog(inf);
+        puts("convert(), unsupported read file type:");
+        puts(inf);
         embPattern_free(p);
         return 1;
     }
@@ -195,8 +195,8 @@ static int convert(const char* inf, const char* outf)
 
     writer = embReaderWriter_getByFileName(outf);
     if (writer < 0) {
-        embLog("convert(), unsupported write file type:");
-        embLog(outf);
+        puts("convert(), unsupported write file type:");
+        puts(outf);
         embPattern_free(p);
         return 1;
     }
@@ -428,6 +428,7 @@ static int testEmbFormat(void)
     return 0;
 }
 
+#if 0
 static int testHash(void)
 {
     EmbHash* hash = 0;
@@ -476,6 +477,7 @@ static int testHash(void)
     embHash_free(hash);
     return 0;
 }
+#endif
 
 static void
 report(int result, char* label)
@@ -492,6 +494,7 @@ report(int result, char* label)
  * Note that we can use printf here because this file isn't compiled into
  * libembroidery.so.
  */
+#if 0
 static int embeddedFunctionsResult(void)
 {
     char buffer[30];
@@ -513,10 +516,11 @@ static int embeddedFunctionsResult(void)
     }
     return 0;
 }
+#endif
 
 static void testMain(void)
 {
-    int hashResult = testHash();
+    /* int hashResult = testHash(); */
     int circleResult = testEmbCircle();
     int threadResult = testThreadColor();
     int formatResult = testEmbFormat();
@@ -527,11 +531,11 @@ static void testMain(void)
     int svg2Result = convert("test02.csv", "test02.svg");
     int dst1Result = convert("test01.csv", "test01.dst");
     int dst2Result = convert("test02.csv", "test02.dst");
-    int embeddedResult = embeddedFunctionsResult();
+    /* int embeddedResult = embeddedFunctionsResult(); */
 
     puts("SUMMARY OF RESULTS");
     puts("------------------");
-    report(hashResult, "Hash");
+    /* report(hashResult, "Hash"); */
     report(circleResult, "Tangent Point");
     report(threadResult, "Thread");
     report(formatResult, "Format");
@@ -542,6 +546,6 @@ static void testMain(void)
     report(svg2Result, "Convert CSV-SVG 2");
     report(dst1Result, "Convert CSV-DST 1");
     report(dst2Result, "Convert CSV-DST 2");
-    report(embeddedResult, "Embedded Functions");
+    /* report(embeddedResult, "Embedded Functions"); */
 }
 

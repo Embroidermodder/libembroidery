@@ -558,55 +558,6 @@ EMB_PUBLIC void embVector_normalVector(EmbVector a, EmbVector *b, int clockwise)
 EMB_PUBLIC void embVector_transposeProduct(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC double embVector_getLength(EmbVector vector);
 
-char binaryReadByte(EmbFile* file);
-int binaryReadBytes(EmbFile* file, unsigned char* destination, int count);
-short binaryReadInt16(EmbFile* file);
-int binaryReadInt32(EmbFile* file);
-unsigned char binaryReadUInt8(EmbFile* file);
-unsigned short binaryReadUInt16(EmbFile* file);
-unsigned int binaryReadUInt32(EmbFile* file);
-short binaryReadInt16BE(EmbFile* file); /* Big endian version */
-unsigned short binaryReadUInt16BE(EmbFile* file); /* Big endian version */
-int binaryReadInt32BE(EmbFile* file);   /* Big endian version */
-unsigned int binaryReadUInt32BE(EmbFile* file);
-float binaryReadFloat(EmbFile* file);
-void binaryReadString(EmbFile* file, char *buffer, int maxLength);
-void binaryReadUnicodeString(EmbFile* file, char *buffer, const int stringLength);
-
-void binaryWriteByte(EmbFile* file, unsigned char data);
-void binaryWriteBytes(EmbFile* file, const char* data, int size);
-void binaryWriteShort(EmbFile* file, short data);
-void binaryWriteShortBE(EmbFile* file, short data);
-void binaryWriteUShort(EmbFile* file, unsigned short data);
-void binaryWriteUShortBE(EmbFile* file, unsigned short data);
-void binaryWriteInt(EmbFile* file, int data);
-void binaryWriteIntBE(EmbFile* file, int data);
-void binaryWriteUInt(EmbFile* file, unsigned int data);
-void binaryWriteUIntBE(EmbFile* file, unsigned int data);
-void binaryWriteFloat(EmbFile* file, float data);
-
-int roundDouble(double src);
-void writeInt(EmbFile *, int, int);
-void writeFloat(EmbFile *, float);
-char* lTrim(char* str, char junk);
-char* emb_strdup(char* src);
-
-void embPointerToArray(char *buffer, void* pointer, int maxDigits);
-void embIntToArray(char *buffer, int number, int maxDigits);
-void embFloatToArray(char *buffer, float number, float tolerence, int before, int after);
-
-EMB_PUBLIC EmbHash* embHash_create(void);
-EMB_PUBLIC void embHash_free(EmbHash* hash);
-
-EMB_PUBLIC int embHash_contains(const EmbHash* hash, const void* key);
-EMB_PUBLIC int embHash_insert(EmbHash* hash, const void* key, void* value);
-EMB_PUBLIC void* embHash_value(const EmbHash* hash, const void* key);
-EMB_PUBLIC void embHash_remove(EmbHash* hash, const void *key);
-EMB_PUBLIC void embHash_clear(EmbHash* hash);
-EMB_PUBLIC int embHash_empty(const EmbHash* hash);
-EMB_PUBLIC long embHash_count(const EmbHash* hash);
-EMB_PUBLIC void embHash_rehash(EmbHash* hash, long numOfBuckets);
-
 EMB_PUBLIC int embFormat_getExtension(const char* fileName, char *ending);
 EMB_PUBLIC const char* embFormat_extensionFromName(const char* fileName);
 EMB_PUBLIC const char* embFormat_descriptionFromName(const char* fileName);
@@ -614,14 +565,11 @@ EMB_PUBLIC char embFormat_readerStateFromName(const char* fileName);
 EMB_PUBLIC char embFormat_writerStateFromName(const char* fileName);
 EMB_PUBLIC int embFormat_typeFromName(const char* fileName);
 
-void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int _269);
-int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _267, int _269, int _235);
-
 EMB_PUBLIC EmbArcObject embArcObject_make(EmbVector s, EmbVector m, EmbVector e);
 
-char isArcClockwise(EmbArc arc);
-void getArcCenter(EmbArc arc, EmbVector *arcCenter);
-char getArcDataFromBulge(double bulge, EmbArc* arc, EmbVector* arcCenter,
+EMB_PUBLIC char isArcClockwise(EmbArc arc);
+EMB_PUBLIC void getArcCenter(EmbArc arc, EmbVector *arcCenter);
+EMB_PUBLIC char getArcDataFromBulge(double bulge, EmbArc* arc, EmbVector* arcCenter,
     double* radius, double* diameter, double* chord, EmbVector* chordMid,
     double* sagitta, double* apothem, double* incAngleInDegrees, char* clockwise);
 
@@ -629,9 +577,9 @@ EMB_PUBLIC int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVecto
 EMB_PUBLIC int getCircleTangentPoints(EmbCircle c, EmbVector point, EmbVector* t0, EmbVector* t1);
 
 EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
-int threadColor(EmbColor *c, const char*, int brand);
-int threadColorNum(EmbColor color, int brand);
-const char* threadColorName(EmbColor color, int brand);
+EMB_PUBLIC int threadColor(EmbColor *c, const char*, int brand);
+EMB_PUBLIC int threadColorNum(EmbColor color, int brand);
+EMB_PUBLIC const char* threadColorName(EmbColor color, int brand);
 EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbArray* colors, int mode);
 EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, const EmbThread* colors, int length);
 EMB_PUBLIC EmbThread embThread_getRandom(void);
@@ -658,14 +606,9 @@ EMB_PUBLIC int embFile_puts(EmbFile* stream, char *);
 EMB_PUBLIC void embFile_print(EmbFile* stream, const char*);
 EMB_PUBLIC void embFile_pad(EmbFile *f, char, int);
 
-int bcfFile_read(EmbFile* file, bcf_file* bcfFile);
-EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind);
-void bcf_file_free(bcf_file* bcfFile);
-
-EMB_PUBLIC void embLog(const char* str);
-
-EMB_PUBLIC void embTime_initNow(EmbTime* t);
-EMB_PUBLIC EmbTime embTime_time(EmbTime* t);
+EMB_PUBLIC int bcfFile_read(EmbFile* file, bcf_file* bcfFile);
+EMB_PUBLIC EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind);
+EMB_PUBLIC void bcf_file_free(bcf_file* bcfFile);
 
 EMB_PUBLIC EmbSettings embSettings_init(void);
 
@@ -729,22 +672,11 @@ EMB_PUBLIC void embPattern_copyPolylinesToStitchList(EmbPattern* pattern);
 EMB_PUBLIC void embPattern_moveStitchListToPolylines(EmbPattern* pattern);
 EMB_PUBLIC void embPattern_movePolylinesToStitchList(EmbPattern* pattern);
 
-void readPecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName);
-void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* filename);
-
 /* NON-MACRO CONSTANTS
  ******************************************************************************/
 
 EMB_PUBLIC extern const EmbFormatList formatTable[];
 EMB_PUBLIC extern int numberOfFormats;
-extern const unsigned int NumberOfDifatEntriesInHeader;
-extern const int pecThreadCount;
-extern const EmbThread pecThreads[];
-extern const char imageWithFrame[38][48];
-extern const EmbThread jefThreads[];
-extern const int shvThreadCount;
-extern const EmbThread shvThreads[];
-extern const double embConstantPi;
 
 #ifdef __cplusplus
 }

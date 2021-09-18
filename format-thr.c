@@ -1,6 +1,3 @@
-#include "embroidery.h"
-#include <string.h>
-
 #define NOTFRM 0x00080000
 
 typedef struct ThredHeader_ /* thred file header */

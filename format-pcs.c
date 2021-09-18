@@ -1,5 +1,3 @@
-#include "embroidery.h"
-
 static double pcsDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 {
     int res = a1 + (a2 << 8) + (a3 << 16);

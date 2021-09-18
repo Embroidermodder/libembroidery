@@ -1,9 +1,4 @@
-#include "embroidery.h"
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-const double embConstantPi = 3.1415926535;
+static const double embConstantPi = 3.1415926535;
 
 /* Returns an EmbArcObject. It is created on the stack. */
 EmbArcObject embArcObject_make(EmbVector s, EmbVector m, EmbVector e)

@@ -1,5 +1,3 @@
-#include "embroidery.h"
-
 /* TODO: AFAIK this is a duplicate of U00. Review for differences and merge files and handle accordingly. */
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.

@@ -1,7 +1,3 @@
-#include "embroidery.h"
-#include <stdlib.h>
-#include <string.h>
-
 typedef struct SubDescriptor_ {
     int someNum; /* TODO: better variable naming */
     int someInt; /* TODO: better variable naming */

@@ -1,6 +1,3 @@
-#include "embroidery.h"
-#include <stdlib.h>
-
 void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int compressionType)
 {
     /* TODO: find and analyse some HUS encoded files and DST equivalents */

@@ -1,7 +1,3 @@
-#include "embroidery.h"
-#include <stdlib.h>
-#include <string.h>
-
 #define CSV_EXPECT_NULL   0
 #define CSV_EXPECT_QUOTE1 1
 #define CSV_EXPECT_QUOTE2 2

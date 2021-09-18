@@ -1,9 +1,56 @@
-#include "embroidery.h"
-#include <ctype.h>
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
+#define ARDUINO 1
 
+/**
+ * Writes out a \a color to the EmbFile* \a file in hex format without using
+ * printf or varadic functions (for embedded systems).
+ */
+static void writeColor(EmbFile* file, EmbColor color)
+{
+    char str[8];
+    const char hex[] = "0123456789ABCDEF";
+    str[0] = '#';
+    str[1] = hex[color.r % 16];
+    str[2] = hex[color.r / 16];
+    str[3] = hex[color.g % 16];
+    str[4] = hex[color.g / 16];
+    str[5] = hex[color.b % 16];
+    str[6] = hex[color.b / 16];
+    str[7] = 0;
+    embFile_print(file, str);
+}
+
+static void writePoint(EmbFile* file, double x, double y, int space)
+{
+    if (space) {
+        embFile_print(file, " ");
+    }
+    writeFloat(file, x);
+    embFile_print(file, ",");
+    writeFloat(file, y);
+}
+
+void writeFloat(EmbFile* file, float number)
+{
+    /* TODO: fix bugs in embFloatToArray */
+    /*    char buffer[30];
+    embFloatToArray(buffer, number, 1.0e-7, 3, 5);
+    embFile_print(file, buffer);*/
+    fprintf(file->file, "%f", number);
+}
+
+#if ARDUINO
+int readSvg(EmbPattern *pattern, EmbFile *file, const char *fileName)
+{
+    return 0;
+}
+
+
+int writeSvg(EmbPattern *pattern, EmbFile *file, const char *fileName)
+{
+    return 0;
+}
+
+#else
 /* path flag codes */
 #define LINETO                         0
 #define MOVETO                         1
@@ -1683,44 +1730,6 @@ static int readSvg(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1; /*TODO: finish readSvg */
 }
 
-/**
- * Writes out a \a color to the EmbFile* \a file in hex format without using
- * printf or varadic functions (for embedded systems).
- */
-static void writeColor(EmbFile* file, EmbColor color)
-{
-    char str[8];
-    const char hex[] = "0123456789ABCDEF";
-    str[0] = '#';
-    str[1] = hex[color.r % 16];
-    str[2] = hex[color.r / 16];
-    str[3] = hex[color.g % 16];
-    str[4] = hex[color.g / 16];
-    str[5] = hex[color.b % 16];
-    str[6] = hex[color.b / 16];
-    str[7] = 0;
-    embFile_print(file, str);
-}
-
-static void writePoint(EmbFile* file, double x, double y, int space)
-{
-    if (space) {
-        embFile_print(file, " ");
-    }
-    writeFloat(file, x);
-    embFile_print(file, ",");
-    writeFloat(file, y);
-}
-
-void writeFloat(EmbFile* file, float number)
-{
-    /* TODO: fix bugs in embFloatToArray */
-    /*    char buffer[30];
-    embFloatToArray(buffer, number, 1.0e-7, 3, 5);
-    embFile_print(file, buffer);*/
-    fprintf(file->file, "%f", number);
-}
-
 static void writeCircles(EmbPattern* pattern, EmbFile* file)
 {
     int i;
@@ -1970,3 +1979,6 @@ static int writeSvg(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
+#endif
+
+#undef ARDUINO

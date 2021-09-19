@@ -8,17 +8,7 @@ set(CMAKE_C_STANDARD 90)
 set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(LIBRARY_SOURCE_FILES
-    emb-array.c
-    emb-compress.c
-    emb-file.c
-    emb-geometry.c
-    emb-pattern.c
-    emb-stitch-fill.c
-    emb-thread.c
-    emb-utility.c
-    hashtable.c
-)
+set(LIBRARY_SOURCE_FILES libembroidery.c)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")
 

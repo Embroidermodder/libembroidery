@@ -1,7 +1,3 @@
-#include "embroidery.h"
-#include <math.h>
-#include <stdlib.h>
-
 /* TODO:
  * 1. Add tests for functions to embroider_main.c.
  * 2. Incorporate the last 4 functions #if 0'ed out.

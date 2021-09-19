@@ -1,8 +1,3 @@
-#include "embroidery.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include "emb-macro.h"
-
 static char sewDecode(unsigned char inputByte)
 {
     /* TODO: fix return statement */

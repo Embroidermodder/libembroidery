@@ -10,9 +10,9 @@ function build_libembroidery () {
 rm -fr build
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE=Debug .. &> test.log
-make &>> test.log
-gdb --batch -ex=r --args ./embroider -test &>> test.log
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+make
+gdb --batch -ex=r --args ./embroider -test
 cd -
 }
 
@@ -21,20 +21,23 @@ man -Tpdf ./doc/embroider.1 >./doc/embroider.pdf
 }
 
 function embedded_compatibility_report () {
-echo "SYMBOL USAGE" > symbols.txt
+echo "SYMBOL USAGE" > embedded.txt
 for s in `nm -j build/embroider`
 do
-echo $s >> symbols.txt
-grep $s *.c *.h | wc >> symbols.txt
+echo $s >> embedded.txt
+grep $s *.c *.h | wc >> embedded.txt
 done
 
-echo "SPACE USAGE" > space_use.txt
+echo "SPACE PER SYMBOL" >> embedded.txt
+nm -S --size-sort build/libembroidery_static.a >> embedded.txt
+
+echo "TOTAL SPACE USAGE" >> embedded.txt
 strip build/libembroidery.so
 strip build/libembroidery_static.a
 strip build/embroider
-du -h build/libembroidery.so >> space_use.txt
-du -h build/libembroidery_static.a >> space_use.txt
-du -h build/embroider >> space_use.txt
+du -h build/libembroidery.so >> embedded.txt
+du -h build/libembroidery_static.a >> embedded.txt
+du -h build/embroider >> embedded.txt
 }
 
 build_libembroidery

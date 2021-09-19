@@ -1,5 +1,3 @@
-#include "embroidery.h"
-
 static void ksmEncode(unsigned char* b, char dx, char dy, int flags)
 {
     if (!b) {

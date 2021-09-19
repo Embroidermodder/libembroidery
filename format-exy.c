@@ -1,5 +1,3 @@
-#include "embroidery.h"
-
 static int exyDecodeFlags(unsigned char b2)
 {
     int returnCode = 0;

@@ -1,6 +1,3 @@
-#include "embroidery.h"
-#include <stdlib.h>
-
 EmbArray* embArray_create(int type)
 {
     EmbArray* p;

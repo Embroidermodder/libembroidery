@@ -3,11 +3,6 @@
  * notes appeared at http://www.wotsit.org under Tajima Format.
  */
 
-#include "embroidery.h"
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
-
 /* returns the value of the n-th bit in a */
 #define BIT(a, n) \
     ((a & (1 << n)) >> n)

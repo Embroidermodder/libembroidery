@@ -1,52 +1,46 @@
-#include "embroidery.h"
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
-#include "emb-macro.h"
-
-#ifdef ARDUINO
+#if ARDUINO
 /*TODO: arduino embTime includes */
 #else
 #include <time.h>
 #endif
 
-char binaryReadByte(EmbFile* file)
+static char binaryReadByte(EmbFile* file)
 {
     return (char)embFile_getc(file);
 }
 
-int binaryReadBytes(EmbFile* file, unsigned char* destination, int count)
+static int binaryReadBytes(EmbFile* file, unsigned char* destination, int count)
 {
     return (int)embFile_read((char*)destination, 1, count, file);
 }
 
-short binaryReadInt16(EmbFile* file)
+static short binaryReadInt16(EmbFile* file)
 {
     char a[2];
     embFile_read(a, 1, 2, file);
     return EMB_GET_SHORT(a);
 }
 
-int binaryReadInt32(EmbFile* file)
+static int binaryReadInt32(EmbFile* file)
 {
     char a[4];
     embFile_read(a, 1, 4, file);
     return EMB_GET_INT(a);
 }
 
-unsigned char binaryReadUInt8(EmbFile* file)
+static unsigned char binaryReadUInt8(EmbFile* file)
 {
     return (unsigned char)embFile_getc(file);
 }
 
-unsigned short binaryReadUInt16(EmbFile* file)
+static unsigned short binaryReadUInt16(EmbFile* file)
 {
     char a[2];
     embFile_read(a, 1, 2, file);
     return EMB_GET_SHORT(a);
 }
 
-unsigned int binaryReadUInt32(EmbFile* file)
+static unsigned int binaryReadUInt32(EmbFile* file)
 {
     char a[4];
     embFile_read(a, 1, 4, file);
@@ -54,7 +48,7 @@ unsigned int binaryReadUInt32(EmbFile* file)
 }
 
 /* Big endian version */
-short binaryReadInt16BE(EmbFile* file)
+static short binaryReadInt16BE(EmbFile* file)
 {
     char a[2];
     embFile_read(a, 1, 2, file);
@@ -62,7 +56,7 @@ short binaryReadInt16BE(EmbFile* file)
 }
 
 /* Big endian version */
-unsigned short binaryReadUInt16BE(EmbFile* file)
+static unsigned short binaryReadUInt16BE(EmbFile* file)
 {
     char a[2];
     embFile_read(a, 1, 2, file);
@@ -70,7 +64,7 @@ unsigned short binaryReadUInt16BE(EmbFile* file)
 }
 
 /* Big endian version */
-int binaryReadInt32BE(EmbFile* file)
+static int binaryReadInt32BE(EmbFile* file)
 {
     char a[4];
     embFile_read(a, 1, 4, file);
@@ -78,14 +72,14 @@ int binaryReadInt32BE(EmbFile* file)
 }
 
 /* Big endian version */
-unsigned int binaryReadUInt32BE(EmbFile* file)
+static unsigned int binaryReadUInt32BE(EmbFile* file)
 {
     char a[4];
     embFile_read(a, 1, 4, file);
     return EMB_GET_INT_BE(a);
 }
 
-void binaryReadString(EmbFile* file, char* buffer, int maxLength)
+static void binaryReadString(EmbFile* file, char* buffer, int maxLength)
 {
     int i = 0;
     while (i < maxLength) {
@@ -96,7 +90,7 @@ void binaryReadString(EmbFile* file, char* buffer, int maxLength)
     }
 }
 
-void binaryReadUnicodeString(EmbFile* file, char* buffer, const int stringLength)
+static void binaryReadUnicodeString(EmbFile* file, char* buffer, const int stringLength)
 {
     int i = 0;
     for (i = 0; i < stringLength * 2; i++) {
@@ -107,7 +101,7 @@ void binaryReadUnicodeString(EmbFile* file, char* buffer, const int stringLength
     }
 }
 
-float binaryReadFloat(EmbFile* file)
+static float binaryReadFloat(EmbFile* file)
 {
     union {
         float f32;
@@ -117,73 +111,73 @@ float binaryReadFloat(EmbFile* file)
     return float_int_u.f32;
 }
 
-void binaryWriteByte(EmbFile* file, unsigned char data)
+static void binaryWriteByte(EmbFile* file, unsigned char data)
 {
     embFile_putc(data, file);
 }
 
-void binaryWriteBytes(EmbFile* file, const char* data, int size)
+static void binaryWriteBytes(EmbFile* file, const char* data, int size)
 {
     embFile_write((char*)data, 1, size, file);
 }
 
-void binaryWriteShort(EmbFile* file, short data)
+static void binaryWriteShort(EmbFile* file, short data)
 {
     char a[2];
     EMB_WRITE_SHORT(a, data);
     embFile_write(a, 1, 2, file);
 }
 
-void binaryWriteShortBE(EmbFile* file, short data)
+static void binaryWriteShortBE(EmbFile* file, short data)
 {
     char a[2];
     EMB_WRITE_SHORT_BE(a, data);
     embFile_write(a, 1, 2, file);
 }
 
-void binaryWriteUShort(EmbFile* file, unsigned short data)
+static void binaryWriteUShort(EmbFile* file, unsigned short data)
 {
     char a[2];
     EMB_WRITE_SHORT(a, data);
     embFile_write(a, 1, 2, file);
 }
 
-void binaryWriteUShortBE(EmbFile* file, unsigned short data)
+static void binaryWriteUShortBE(EmbFile* file, unsigned short data)
 {
     char a[2];
     EMB_WRITE_SHORT_BE(a, data);
     embFile_write(a, 1, 2, file);
 }
 
-void binaryWriteInt(EmbFile* file, int data)
+static void binaryWriteInt(EmbFile* file, int data)
 {
     char a[4];
     EMB_WRITE_INT(a, data);
     embFile_write(a, 1, 4, file);
 }
 
-void binaryWriteIntBE(EmbFile* file, int data)
+static void binaryWriteIntBE(EmbFile* file, int data)
 {
     char a[4];
     EMB_WRITE_INT_BE(a, data);
     embFile_write(a, 1, 4, file);
 }
 
-void binaryWriteUInt(EmbFile* file, unsigned int data)
+static void binaryWriteUInt(EmbFile* file, unsigned int data)
 {
     char a[4];
     EMB_WRITE_INT(a, data);
     embFile_write(a, 1, 4, file);
 }
 
-void binaryWriteUIntBE(EmbFile* file, unsigned int data)
+static void binaryWriteUIntBE(EmbFile* file, unsigned int data)
 {
     char a[4];
     EMB_WRITE_INT_BE(a, data);
     embFile_write(a, 1, 4, file);
 }
 
-void binaryWriteFloat(EmbFile* file, float data)
+static void binaryWriteFloat(EmbFile* file, float data)
 {
     union {
         float f32;
@@ -195,7 +189,7 @@ void binaryWriteFloat(EmbFile* file, float data)
 }
 
 /*! Rounds a double (\a src) and returns it as an \c int. */
-int roundDouble(double src)
+static int roundDouble(double src)
 {
     if (src < 0.0)
         return (int)ceil(src - 0.5);
@@ -204,7 +198,7 @@ int roundDouble(double src)
 
 /*! Removes all characters from the left end of the string
  * (\a str) that match (\a junk), moving right until a mismatch occurs. */
-char* lTrim(char* str, char junk)
+static char* lTrim(char* str, char junk)
 {
     while (*str == junk) {
         str++;
@@ -214,7 +208,7 @@ char* lTrim(char* str, char junk)
 
 /*! Duplicates the string (\a src) and returns it. It is created on the heap.
  * The caller is responsible for freeing the allocated memory. */
-char* emb_strdup(char* src)
+static char* emb_strdup(char* src)
 {
     char* dest = 0;
     if (!src) {
@@ -230,9 +224,9 @@ char* emb_strdup(char* src)
     return dest;
 }
 
-void embTime_initNow(EmbTime* t)
+static void embTime_initNow(EmbTime* t)
 {
-#ifdef ARDUINO
+#if ARDUINO
 /*TODO: arduino embTime_initNow */
 #else
     time_t rawtime;
@@ -249,9 +243,9 @@ void embTime_initNow(EmbTime* t)
 #endif /* ARDUINO */
 }
 
-EmbTime embTime_time(EmbTime* t)
+static EmbTime embTime_time(EmbTime* t)
 {
-#ifdef ARDUINO
+#if ARDUINO
 /*TODO: arduino embTime_time */
 #else
 
@@ -284,7 +278,7 @@ EmbColor embColor_fromHexStr(char* val)
 
 /* Replacing the %d in *printf functionality.
  */
-void embPointerToArray(char* buffer, void* pointer, int maxDigits)
+static void embPointerToArray(char* buffer, void* pointer, int maxDigits)
 {
     unsigned int i, value;
     value = (unsigned long int)pointer;
@@ -307,7 +301,7 @@ void embPointerToArray(char* buffer, void* pointer, int maxDigits)
  *
  * Accounts for the sign of the 
  */
-void embIntToArray(char* buffer, int number, int maxDigits)
+static void embIntToArray(char* buffer, int number, int maxDigits)
 {
     int i, j, sign;
     unsigned int unumber;
@@ -339,7 +333,7 @@ void embIntToArray(char* buffer, int number, int maxDigits)
     }
 }
 
-void writeInt(EmbFile* file, int n, int m)
+static void writeInt(EmbFile* file, int n, int m)
 {
     char buffer[30];
     embIntToArray(buffer, n, m);
@@ -348,7 +342,7 @@ void writeInt(EmbFile* file, int n, int m)
 
 /* Replacing the %f in *printf functionality.
  */
-void embFloatToArray(char* buffer, float number, float tolerence, int before, int after)
+static void embFloatToArray(char* buffer, float number, float tolerence, int before, int after)
 {
     int i, maxDigits, j;
     float t;
@@ -389,61 +383,66 @@ void embFloatToArray(char* buffer, float number, float tolerence, int before, in
 }
 
 /* puts() abstraction. Uses Serial.print() on ARDUINO */
-void embLog(const char* str)
+static void embLog(const char* str)
 {
-#ifdef ARDUINO
+/* testing embedded mode on Linux */
+/* #if ARDUINO
     inoLog_serial(str);
     inoLog_serial("\n");
-#else /* ARDUINO */
+#else */
     puts(str);
-#endif /* ARDUINO */
+/* #endif ARDUINO */
 }
 
 /* Wrapper functions around Keith Pomakis' HashTable Library */
 
-EmbHash* embHash_create(void) { return HashTableCreate(1); }
-void embHash_free(EmbHash* hash)
+static EmbHash* embHash_create(void)
+{
+    return HashTableCreate(1);
+}
+
+static void embHash_free(EmbHash* hash)
 {
     HashTableDestroy(hash);
     hash = 0;
 }
 
-int embHash_contains(const EmbHash* hash, const void* key)
+static int embHash_contains(const EmbHash* hash, const void* key)
 {
     return HashTableContainsKey(hash, key);
 }
 
-int embHash_insert(EmbHash* hash, const void* key, void* value)
+static int embHash_insert(EmbHash* hash, const void* key, void* value)
 {
     return HashTablePut(hash, key, value);
 }
 
-void* embHash_value(const EmbHash* hash, const void* key)
+static void* embHash_value(const EmbHash* hash, const void* key)
 {
     return HashTableGet(hash, key);
 }
 
-void embHash_remove(EmbHash* hash, const void* key)
+static void embHash_remove(EmbHash* hash, const void* key)
 {
     HashTableRemove(hash, key);
 }
 
-void embHash_clear(EmbHash* hash)
+static void embHash_clear(EmbHash* hash)
 {
     HashTableRemoveAll(hash);
 }
 
-int embHash_empty(const EmbHash* hash)
+static int embHash_empty(const EmbHash* hash)
 {
     return HashTableIsEmpty(hash);
 }
 
-long embHash_count(const EmbHash* hash)
+static long embHash_count(const EmbHash* hash)
 {
     return HashTableSize(hash);
 }
 
-void embHash_rehash(EmbHash* hash, long numOfBuckets)
+static void embHash_rehash(EmbHash* hash, long numOfBuckets)
 {
     HashTableRehash(hash, numOfBuckets);
 }

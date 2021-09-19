@@ -1,11 +1,8 @@
-#include "embroidery.h"
-#include <string.h>
-
 /*****************************************
  * SHV Colors
  ****************************************/
-const int shvThreadCount = 42;
-const EmbThread shvThreads[] = {
+static const int shvThreadCount = 42;
+static const EmbThread shvThreads[] = {
     { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
     { { 0, 0, 255 }, "Blue", "TODO:CATALOG_NUMBER" },
     { { 51, 204, 102 }, "Green", "TODO:CATALOG_NUMBER" },

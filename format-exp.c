@@ -1,6 +1,3 @@
-#include "embroidery.h"
-#include <stdio.h>
-
 static char expDecode(unsigned char a1)
 {
     return (a1 > 0x80) ? ((-~a1) - 1) : a1;

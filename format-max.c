@@ -1,5 +1,3 @@
-#include "embroidery.h"
-
 /* Pfaff MAX embroidery file format */
 
 static double maxDecode(unsigned char a1, unsigned char a2, unsigned char a3)

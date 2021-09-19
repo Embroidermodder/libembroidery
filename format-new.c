@@ -1,5 +1,3 @@
-#include "embroidery.h"
-
 static int decodeNewStitch(unsigned char value)
 {
     return (int)value;

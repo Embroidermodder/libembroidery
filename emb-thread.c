@@ -1,8 +1,3 @@
-#include "embroidery.h"
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
-
 #define ARDUINO 1
 
 /* This list is the index of the names list, allowing us to 

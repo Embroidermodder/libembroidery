@@ -1,11 +1,3 @@
-#include "embroidery.h"
-#include <ctype.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "emb-macro.h"
-
 #ifdef ARDUINO
 #include "utility/ino-event.h"
 #endif

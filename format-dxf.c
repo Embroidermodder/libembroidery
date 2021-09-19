@@ -1,9 +1,3 @@
-#include "embroidery.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 /* DXF Version Identifiers */
 #define DXF_VERSION_R10 "AC1006"
 #define DXF_VERSION_R11 "AC1009"

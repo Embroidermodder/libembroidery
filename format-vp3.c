@@ -1,7 +1,3 @@
-#include "embroidery.h"
-#include <stdlib.h>
-#include <string.h>
-
 static unsigned char* vp3ReadString(EmbFile* file)
 {
     int stringLength = 0;

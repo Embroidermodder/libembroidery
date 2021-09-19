@@ -1,8 +1,3 @@
-#include "embroidery.h"
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
-
 static char xxxDecodeByte(unsigned char inputByte)
 {
     if (inputByte >= 0x80)

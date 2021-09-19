@@ -1,5 +1,3 @@
-#include "embroidery.h"
-
 static int mitDecodeStitch(unsigned char value)
 {
     if (value & 0x80) {

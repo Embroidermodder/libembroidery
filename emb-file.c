@@ -1,12 +1,3 @@
-#include "embroidery.h"
-#include <ctype.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "emb-format.h"
-
 /**
 Type of sector
 */
@@ -97,28 +88,28 @@ const EmbFormatList formatTable[100] = {
     { "END", "END", ' ', ' ', 0 }
 };
 
-bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const unsigned int sectorSize);
-unsigned int readFullSector(EmbFile* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
-unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
-void bcf_file_difat_free(bcf_file_difat* difat);
+static bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const unsigned int sectorSize);
+static unsigned int readFullSector(EmbFile* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
+static unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
+static void bcf_file_difat_free(bcf_file_difat* difat);
 
-bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
-void loadFatFromSector(bcf_file_fat* fat, EmbFile* file);
-void bcf_file_fat_free(bcf_file_fat* fat);
+static bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
+static void loadFatFromSector(bcf_file_fat* fat, EmbFile* file);
+static void bcf_file_fat_free(bcf_file_fat* fat);
 
-bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file);
-bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
-void readNextSector(EmbFile* file, bcf_directory* dir);
-void bcf_directory_free(bcf_directory* dir);
+static bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file);
+static bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
+static void readNextSector(EmbFile* file, bcf_directory* dir);
+static void bcf_directory_free(bcf_directory* dir);
 
-bcf_file_header bcfFileHeader_read(EmbFile* file);
-int bcfFileHeader_isValid(bcf_file_header header);
+static bcf_file_header bcfFileHeader_read(EmbFile* file);
+static int bcfFileHeader_isValid(bcf_file_header header);
 
 int numberOfFormats = 61;
 
 /*! Constant representing the number of Double Indirect FAT entries in a single header */
-const unsigned int NumberOfDifatEntriesInHeader = 109;
-const unsigned int sizeOfFatEntry = sizeof(unsigned int);
+static const unsigned int NumberOfDifatEntriesInHeader = 109;
+static const unsigned int sizeOfFatEntry = sizeof(unsigned int);
 static const unsigned int sizeOfDifatEntry = 4;
 static const unsigned int sizeOfChainingEntryAtEndOfDifatSector = 4;
 static const unsigned int sizeOfDirectoryEntry = 128;

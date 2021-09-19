@@ -3,14 +3,6 @@
  * notes appeared at http://www.wotsit.org under Tajima Format.
  */
 
-/* returns the value of the n-th bit in a */
-#define BIT(a, n) \
-    ((a & (1 << n)) >> n)
-
-/* returns the value of the n-th bit in a */
-#define SETBIT(a, n) \
-    a |= (1 << n)
-
 /* TODO: review this then remove since emb-pattern.c has a similar function */
 /* void combineJumpStitches(EmbPattern* p, int jumpsPerTrim)
 {
@@ -369,8 +361,6 @@ static int readDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
         flags = (BIT(b[2], 8) * JUMP) | (BIT(b[2], 7) * STOP);
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
     }
-
-    embPattern_end(pattern);
 
     /* combineJumpStitches(pattern, 5); */
     return 1;

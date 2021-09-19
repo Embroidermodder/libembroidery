@@ -1,4 +1,18 @@
-#define ARDUINO 1
+static EmbColor embColor_fromStr(unsigned char *b)
+{
+    EmbColor c;
+    c.r = b[0];
+    c.g = b[1];
+    c.b = b[2];
+    return c;
+}
+
+static void embColor_toStr(EmbColor c, unsigned char *b)
+{
+    b[0] = c.r;
+    b[1] = c.g;
+    b[2] = c.b;
+}
 
 /**
  * Writes out a \a color to the EmbFile* \a file in hex format without using

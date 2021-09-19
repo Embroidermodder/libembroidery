@@ -32,15 +32,7 @@ static int readPhb(EmbPattern* pattern, EmbFile* file, const char* fileName)
         binaryReadByte(file);
     }
     binaryReadInt32(file); /* bytes to end of file */
-    binaryReadInt32(file);
-    binaryReadByte(file);
-
-    binaryReadInt16(file);
-    binaryReadInt16(file);
-    binaryReadInt16(file);
-    binaryReadInt16(file);
-    binaryReadInt16(file);
-    binaryReadInt16(file);
+    embFile_seek(file, 17, SEEK_CUR);
     readPecStitches(pattern, file, fileName);
 
     embPattern_flipVertical(pattern);

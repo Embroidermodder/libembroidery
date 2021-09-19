@@ -4,6 +4,8 @@
 #include <string.h>
 #include <math.h>
 
+#define ARDUINO 1
+
 /* MACRO LIBRARY
  *
  * These macros aren't intended for users of the library.
@@ -62,6 +64,14 @@
 #define EMB_WRITE_SHORT_BE(buff, a) \
     *(buff+1) = (unsigned int)a & 0x00FF; \
     *(buff+0) = ((unsigned int)a & 0xFF00)>>8;
+
+/* returns the value of the n-th bit in a */
+#define BIT(a, n) \
+    ((a & (1 << n)) >> n)
+
+/* returns the value of the n-th bit in a */
+#define SETBIT(a, n) \
+    a |= (1 << n)
 
 /* MATHS MACROS
  *

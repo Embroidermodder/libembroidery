@@ -45,24 +45,23 @@ static int readPcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
     int flags = 0, st = 0;
     unsigned char version, hoopSize;
     unsigned short colorCount;
+    EmbThread t;
 
     version = binaryReadByte(file);
-    hoopSize = binaryReadByte(file); /* 0 for PCD, 1 for PCQ (MAXI), 2 for PCS with small hoop(80x80), */
+    hoopSize = binaryReadByte(file);
+    /* 0 for PCD, 1 for PCQ (MAXI), 2 for PCS with small hoop(80x80), */
     /* and 3 for PCS with large hoop (115x120) */
     colorCount = binaryReadUInt16(file);
 
     for (i = 0; i < colorCount; i++) {
-        EmbThread t;
-        t.color.r = (unsigned char)embFile_getc(file);
-        t.color.g = (unsigned char)embFile_getc(file);
-        t.color.b = (unsigned char)embFile_getc(file);
+        embFile_read(b, 1, 4, file);
+        t.color = embColor_fromStr(b);
         t.catalogNumber = "";
         t.description = "";
         if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
         embPattern_addThread(pattern, t);
-        embFile_getc(file);
     }
     if (allZeroColor)
         embPattern_loadExternalColorFile(pattern, fileName);
@@ -93,29 +92,25 @@ static int readPcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
 static int writePcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
-    int i;
-    unsigned char colorCount;
-    double xx = 0.0, yy = 0.0;
+    unsigned char colorCount, b[4], i;
 
     binaryWriteByte(file, (unsigned char)'2');
-    binaryWriteByte(file, 3); /* TODO: select hoop size defaulting to Large PCS hoop */
+    binaryWriteByte(file, 3);
+    /* TODO: select hoop size defaulting to Large PCS hoop */
     colorCount = (unsigned char)pattern->threads->count;
     binaryWriteUShort(file, (unsigned short)colorCount);
-    for (i = 0; i < pattern->threads->count; i++) {
-        EmbColor color = pattern->threads->thread[i].color;
-        binaryWriteByte(file, color.r);
-        binaryWriteByte(file, color.g);
-        binaryWriteByte(file, color.b);
-        binaryWriteByte(file, 0);
-    }
-
-    for (; i < 16; i++) {
-        binaryWriteUInt(file, 0); /* write remaining colors to reach 16 */
+    b[3] = 0;
+    for (i = 0; i < 16; i++) {
+        /* If there are threads remaining, write them,
+         * else, repeat the last color to 16. */
+        if (i < pattern->threads->count) {
+            embColor_toStr(pattern->threads->thread[i].color, b);
+        }
+        embFile_write(b, 1, 4, file);
     }
 
     binaryWriteUShort(file, (unsigned short)pattern->stitchList->count);
     /* write stitches */
-    xx = yy = 0;
     for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
         pcqEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);

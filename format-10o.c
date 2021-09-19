@@ -2,36 +2,30 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 static int read10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
+    unsigned char b[3];
     /* file = embFile_open(fileName, "rb", 0); */
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
-    while (1) {
-        int x, y;
-        int stitchType = NORMAL;
-        unsigned char ctrl = (unsigned char)embFile_getc(file);
-        if (embFile_eof(file))
-            break;
-        y = embFile_getc(file);
-        if (embFile_eof(file))
-            break;
-        x = embFile_getc(file);
-        if (embFile_eof(file))
-            break;
-        if (ctrl & 0x20)
-            x = -x;
-        if (ctrl & 0x40)
-            y = -y;
-        if (ctrl & 0x01)
-            stitchType = TRIM;
-        if ((ctrl & 0x5) == 5) {
-            stitchType = STOP;
+    while (embFile_read(b, 1, 3, file) == 3) {
+        EmbStitch st;
+        st.flags = NORMAL;
+        st.y = b[1] / 10.0;
+        st.x = b[2] / 10.0;
+        if (b[0] & 0x20)
+            st.x *= 1.0;
+        if (b[0] & 0x40)
+            st.y *= 1.0;
+        if (b[0] & 0x01)
+            st.flags = TRIM;
+        if ((b[0] & 0x5) == 5) {
+            st.flags = STOP;
         }
-        if (ctrl == 0xF8 || ctrl == 0x91 || ctrl == 0x87) {
+        if (b[0] == 0xF8 || b[0] == 0x91 || b[0] == 0x87) {
             embPattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
+        embPattern_addStitchRel(pattern, st.x, st.y, st.flags, 1);
     }
 
     embPattern_end(pattern);

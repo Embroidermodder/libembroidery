@@ -1,29 +1,28 @@
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
 static int read100(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    int x, y;
-    int stitchType;
     unsigned char b[4];
+    EmbStitch st;
 
     embPattern_loadExternalColorFile(pattern, fileName);
     while (embFile_read(b, 1, 4, file) == 4) {
-        stitchType = NORMAL;
-        x = (b[2] > 0x80) ? -(b[2] - 0x80) : b[2];
-        y = (b[3] > 0x80) ? -(b[3] - 0x80) : b[3];
-        /*if(!(b[0] & 0xFC)) stitchType = JUMP; TODO: review & fix */
+        /* What does byte b[1] do? Is it the color index? */
+        st.flags = NORMAL;
+        st.x = (b[2] > 0x80) ? -(b[2] - 0x80) : b[2];
+        st.y = (b[3] > 0x80) ? -(b[3] - 0x80) : b[3];
+        /*if(!(b[0] & 0xFC)) st.flags = JUMP; TODO: review & fix */
         if (!(b[0] & 0x01))
-            stitchType = STOP;
+            st.flags = STOP;
         if (b[0] == 0x1F)
-            stitchType = END;
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
+            st.flags = END;
+        st.color = 1;
+        st.x /= 10.0;
+        st.y /= 10.0;
+        embPattern_addStitchRel(pattern, st.x, st.y, st.flags, st.color);
     }
 
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
 static int write100(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish write100 */

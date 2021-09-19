@@ -1994,5 +1994,3 @@ static int writeSvg(EmbPattern* pattern, EmbFile* file, const char* fileName)
 }
 
 #endif
-
-#undef ARDUINO

@@ -1,7 +1,3 @@
-#ifdef ARDUINO
-#include "utility/ino-event.h"
-#endif
-
 static EmbColor black = { 0, 0, 0 };
 
 /*! Returns a pointer to an EmbPattern. It is created on the heap.

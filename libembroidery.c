@@ -4,8 +4,6 @@
 #include <string.h>
 #include <math.h>
 
-#define ARDUINO 1
-
 /* MACRO LIBRARY
  *
  * These macros aren't intended for users of the library.
@@ -152,29 +150,6 @@ static void embLog(const char* str);
 static void embTime_initNow(EmbTime* t);
 static EmbTime embTime_time(EmbTime* t);
 
-static EmbHash* embHash_create(void);
-static void embHash_free(EmbHash* hash);
-
-static int embHash_contains(const EmbHash* hash, const void* key);
-static int embHash_insert(EmbHash* hash, const void* key, void* value);
-static void* embHash_value(const EmbHash* hash, const void* key);
-static void embHash_remove(EmbHash* hash, const void *key);
-static void embHash_clear(EmbHash* hash);
-static int embHash_empty(const EmbHash* hash);
-static long embHash_count(const EmbHash* hash);
-static void embHash_rehash(EmbHash* hash, long numOfBuckets);
-
-/*
-static const unsigned int NumberOfDifatEntriesInHeader;
-static const int pecThreadCount;
-static const EmbThread pecThreads[];
-static const char imageWithFrame[38][48];
-static const EmbThread jefThreads[];
-static const int shvThreadCount;
-static const EmbThread shvThreads[];
-static const double embConstantPi;
-*/
-
 static int read100(EmbPattern *pattern, EmbFile* file, const char* fileName);
 static int write100(EmbPattern *pattern, EmbFile* file, const char* fileName);
 static int read10o(EmbPattern *pattern, EmbFile* file, const char* fileName);
@@ -308,6 +283,4 @@ static int writeZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
 #include "emb-stitch-fill.c"
 #include "emb-thread.c"
 #include "emb-utility.c"
-
-#include "hashtable.c"
 

@@ -22,22 +22,31 @@ extern "C" {
     #endif
 #endif
 
-/*
 #ifdef ARDUINO
-#include "utility/ino-logging.h"
-#include "utility/ino-file.h"
-#include "utility/ino-event.h"
+typedef EmbPattern InoPattern;
+typedef struct InoFile_ InoFile;
+typedef InoFile EmbFile;
+
+void inoEvent_addStitchAbs(InoPattern* p, double x, double y, int flags, int isAutoColorIndex);
+
+InoFile* inoFile_open(const char* fileName, const char* mode);
+int inoFile_close(InoFile* stream);
+int inoFile_eof(InoFile* stream);
+int inoFile_getc(InoFile* stream);
+int inoFile_seek(InoFile* stream, long offset, int origin);
+long inoFile_tell(InoFile* stream);
+InoFile* inoFile_tmpfile(void);
+int inoFile_putc(int ch, InoFile* stream);
+
+int inoFile_printf(InoFile* stream, const char* msg);
+
+void inoLog_serial(const char* msg);
 #else
-*/
 typedef struct EmbFile_
 {
     FILE* file;
 } EmbFile;
-/*
 #endif
-*/
-
-#include "hashtable.h"
 
 /* Machine codes for stitch flags */
 #define NORMAL                  0 /* stitch to (x, y) */
@@ -370,8 +379,6 @@ typedef struct EmbHoop_
     double width;
     double height;
 } EmbHoop;
-
-typedef EmbHashTable EmbHash;
 
 typedef struct EmbEllipse_
 {

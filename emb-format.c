@@ -1596,6 +1596,8 @@ char* readline(FILE* file)
     return lTrim(str, ' ');
 }
 
+#define MAX_LAYERS 16
+#define MAX_LAYER_NAME_LENGTH 30
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
 static int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
@@ -1606,7 +1608,8 @@ static int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
     char* tableName = "";
     char* layerName = "";
     char* entityType = "";
-    EmbHash* layerColorHash = 0; /* hash <layerName, EmbColor> */
+    /* layer_names uses the same indexing as the EmbColor array, no need for hash table */
+    char layer_names[MAX_LAYERS][MAX_LAYER_NAME_LENGTH];
 
     int eof = 0; /* End Of File */
 
@@ -1614,12 +1617,6 @@ static int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
     char firstStitch = 1;
     char bulgeFlag = 0;
     int fileLength = 0;
-
-    layerColorHash = embHash_create();
-    if (!layerColorHash) {
-        embLog("ERROR: format-dxf.c readDxf(), unable to allocate memory for layerColorHash\n");
-        return 0;
-    }
 
     embFile_seek(file, 0L, SEEK_END);
 
@@ -1699,7 +1696,7 @@ static int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
                     co.g = _dxfColorTable[colorNum][1];
                     co.b = _dxfColorTable[colorNum][2];
                     printf("inserting:%s,%d,%d,%d\n", layerName, co.r, co.g, co.b);
-                    if (embHash_insert(layerColorHash, emb_strdup(layerName), &co)) {
+                    if (embHash_insert(layer_names[i], emb_strdup(layerName), &co)) {
                          TODO: log error: failed inserting into layerColorHash
                     }
                     */

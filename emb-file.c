@@ -567,9 +567,6 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
     return 1;
 }
 
-/* Hack to deal with testing on Linux */
-#undef ARDUINO
-
 /**
  * TODO: documentation.
  */
@@ -786,9 +783,6 @@ int embFile_putc(int ch, EmbFile* stream)
     return fputc(ch, stream->file);
 #endif /* ARDUINO */
 }
-
-/* end of HACK */
-#define ARDUINO 1
 
 /**
  * TODO: documentation.

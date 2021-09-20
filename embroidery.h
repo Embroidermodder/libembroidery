@@ -22,15 +22,20 @@ extern "C" {
     #endif
 #endif
 
+/*
 #ifdef ARDUINO
 #include "utility/ino-logging.h"
 #include "utility/ino-file.h"
+#include "utility/ino-event.h"
 #else
+*/
 typedef struct EmbFile_
 {
     FILE* file;
 } EmbFile;
-#endif /* ARDUINO */
+/*
+#endif
+*/
 
 #include "hashtable.h"
 

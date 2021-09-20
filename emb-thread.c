@@ -1,5 +1,3 @@
-#define ARDUINO 1
-
 /* This list is the index of the names list, allowing us to 
  * interpret that list without storing a pointer (8 bytes)
  * instead an unsigned short (2 bytes).
@@ -91,8 +89,6 @@ EmbThread embThread_getRandom(void)
     return c;
 }
 
-static const char blue[] = "blue";
-
 /**
  * Converted from the table at:
  *     https://www.w3.org/TR/SVGb/types.html#ColorKeywords
@@ -110,7 +106,7 @@ static thread_color svg_color_codes[] = {
     { "bisque", 0xff, 0xe4, 0xc4, 6 },
     { "black", 0x00, 0x00, 0x00, 7 },
     { "blanchedalmond", 0xff, 0xeb, 0xcd, 8 },
-    { blue, 0x00, 0x00, 0xff, 9 },
+    { "blue", 0x00, 0x00, 0xff, 9 },
     { "blueviolet", 0x8a, 0x2b, 0xe2, 10 },
     { "brown", 0xa5, 0x2a, 0x2a, 11 },
     { "burlywood", 0xde, 0xb8, 0x1b, 12 },
@@ -2560,7 +2556,7 @@ static thread_color RobisonAnton_Rayon_codes[] = {
     { "Oriental Blue", 0x7F, 0x8C, 0xBF, 2301 },
     { "Copen", 0x6D, 0x87, 0xA8, 2245 },
     { "Jay Blue", 0x5B, 0x77, 0xCC, 2384 },
-    { blue, 0x2D, 0x33, 0x8E, 2220 },
+    { "Blue", 0x2D, 0x33, 0x8E, 2220 },
     { "Sapphire", 0x2D, 0x33, 0x8E, 2280 },
     { "Pro Royal", 0x00, 0x33, 0x7F, 2627 },
     { "Fire Blue", 0x00, 0x38, 0x93, 2436 },
@@ -3150,7 +3146,7 @@ static thread_color Sulky_Rayon_codes[] = {
     { "Lavender", 0xE6, 0xAF, 0xD2, 1193 },
     { "Lt Purple", 0xD2, 0x74, 0xD7, 1194 },
     { "Dk Purple", 0x37, 0x01, 0x50, 1195 },
-    { blue, 0x96, 0xC3, 0xE1, 1196 },
+    { "Blue", 0x96, 0xC3, 0xE1, 1196 },
     { "Med Navy", 0x22, 0x0F, 0x34, 1197 },
     { "Dusty Navy", 0x3C, 0x50, 0x75, 1198 },
     { "Admiral Navy Blue", 0x2A, 0x14, 0x3F, 1199 },

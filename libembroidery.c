@@ -4,6 +4,8 @@
 #include <string.h>
 #include <math.h>
 
+#define ARDUINO 1
+
 /* MACRO LIBRARY
  *
  * These macros aren't intended for users of the library.
@@ -62,6 +64,14 @@
 #define EMB_WRITE_SHORT_BE(buff, a) \
     *(buff+1) = (unsigned int)a & 0x00FF; \
     *(buff+0) = ((unsigned int)a & 0xFF00)>>8;
+
+/* returns the value of the n-th bit in a */
+#define BIT(a, n) \
+    ((a & (1 << n)) >> n)
+
+/* returns the value of the n-th bit in a */
+#define SETBIT(a, n) \
+    a |= (1 << n)
 
 /* MATHS MACROS
  *
@@ -288,68 +298,8 @@ static int writeXxx(EmbPattern *pattern, EmbFile* file, const char* fileName);
 static int readZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
 static int writeZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
 
-#include "format-100.c"
-#include "format-10o.c"
-#include "format-art.c"
-#include "format-bmc.c"
-#include "format-bro.c"
-#include "format-cnd.c"
-#include "format-col.c"
-#include "format-csd.c"
-#include "format-csv.c"
-#include "format-dat.c"
-#include "format-dem.c"
-#include "format-dsb.c"
-#include "format-dst.c"
-#include "format-dsz.c"
-#include "format-dxf.c"
-#include "format-edr.c"
-#include "format-emd.c"
-#include "format-exp.c"
-#include "format-exy.c"
-#include "format-eys.c"
-#include "format-fxy.c"
-#include "format-gc.c"
-#include "format-gnc.c"
-#include "format-gt.c"
-#include "format-hus.c"
-#include "format-inb.c"
-#include "format-inf.c"
-#include "format-jef.c"
-#include "format-ksm.c"
-#include "format-max.c"
-#include "format-mit.c"
-#include "format-new.c"
-#include "format-ofm.c"
-#include "format-pcd.c"
-#include "format-pcm.c"
-#include "format-pcq.c"
-#include "format-pcs.c"
-#include "format-pec.c"
-#include "format-pel.c"
-#include "format-pem.c"
-#include "format-pes.c"
-#include "format-phb.c"
-#include "format-phc.c"
-#include "format-plt.c"
-#include "format-rgb.c"
-#include "format-sew.c"
-#include "format-shv.c"
-#include "format-sst.c"
-#include "format-stx.c"
-#include "format-svg.c"
-#include "format-t01.c"
-#include "format-t09.c"
-#include "format-tap.c"
-#include "format-thr.c"
-#include "format-txt.c"
-#include "format-u00.c"
-#include "format-u01.c"
-#include "format-vip.c"
-#include "format-vp3.c"
-#include "format-xxx.c"
-#include "format-zsk.c"
-
+#include "emb-parse-svg.c"
+#include "emb-format.c"
 #include "emb-array.c"
 #include "emb-compress.c"
 #include "emb-file.c"

@@ -179,7 +179,7 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         r = writeDat(pattern, file, fileName);
         break;
     case EMB_FORMAT_DEM:
-        r = writeArt(pattern, file, fileName);
+        r = writeDem(pattern, file, fileName);
         break;
     case EMB_FORMAT_DSB:
         r = writeDsb(pattern, file, fileName);
@@ -211,7 +211,7 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
     case EMB_FORMAT_FXY:
         r = writeFxy(pattern, file, fileName);
         break;
-    case EMB_FORMAT_GC: 
+    case EMB_FORMAT_GC:
         r = writeGc(pattern, file, fileName);
         break;
     case EMB_FORMAT_GNC:
@@ -400,7 +400,7 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
         r = readDat(pattern, file, fileName);
         break;
     case EMB_FORMAT_DEM:
-        r = readArt(pattern, file, fileName);
+        r = readDem(pattern, file, fileName);
         break;
     case EMB_FORMAT_DSB:
         r = readDsb(pattern, file, fileName);
@@ -566,6 +566,9 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
 
     return 1;
 }
+
+/* Hack to deal with testing on Linux */
+#undef ARDUINO
 
 /**
  * TODO: documentation.
@@ -783,6 +786,9 @@ int embFile_putc(int ch, EmbFile* stream)
     return fputc(ch, stream->file);
 #endif /* ARDUINO */
 }
+
+/* end of HACK */
+#define ARDUINO 1
 
 /**
  * TODO: documentation.

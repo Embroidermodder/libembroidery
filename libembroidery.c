@@ -4,8 +4,6 @@
 #include <string.h>
 #include <math.h>
 
-#define ARDUINO 1
-
 /* MACRO LIBRARY
  *
  * These macros aren't intended for users of the library.

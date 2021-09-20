@@ -39,8 +39,11 @@ For users, we recommend you build as above then run:
 ./embroider
 ```
 
-which will print out advice on how to use these tools without digging straight into the source
-code.
+which will print out advice on how to use these tools without digging
+straight into the source code.
+
+In the future there will be deeper documentation read the contents
+of doc/ (currently not written).
 
 Development
 -----------
@@ -58,23 +61,16 @@ Development
    3. Incorporate experimental code, improve support for language bindings.
    4. Make stitch x, y into an EmbVector.
 3. embroider CLI
-   1. Add building patterns using Imagemagick style filters and modifiers like -circle to add
-      a circle to the current pattern. (see embroider-main.c, needs a new file)
-   2. Make a list of flags that would be useful and describe their operation.
-      * -circle
-      * -rect
-      * -satin
+   1. Make -circle flag to add a circle to the current pattern.
+   2. Make -rect flag to add a rectangle to the current pattern.
+   3. Make -fill flag to set the current satin fill algorithm for the current geometry. (for example "-fill crosses -circle 11,13,10" fills a circle with center 11mm, 13mm with radius 10mm with crosses).
+   4. Make -ellipse flag to add to ellipse to the current pattern.
+   5. Make -bezier flag to add a bezier curve to the current pattern.
 4. Improve embedded compatibility.
-   1. Remove reliance on slower, memory expensive parts of the C Standard Library that are in the main library,
-      for example, not using printf, sprintf, fprintf etc. (Use embFile_puts.)
-   2. Make a list of all functions used by the source that aren't implimented here.
-   3. Share heavy memory usage between functions, for example use embBuffer for buffering headers rather
-      than having a seperate `char header[]` variables.
-   4. Reduce calls to malloc when we know the total usage as dynamic memory may not be present and we may
-      need to get rid of malloc entirely.
-   5. Consider using an alternative C standard library for the remaining functions like uclibc.
-   6. Testing framework for the total size of the library under different versions of the code to
-      run AB tests on variants.
+   1. Remove reliance on slower, memory expensive parts of the C Standard Library that are in the main library, for example, not using printf, sprintf, fprintf etc. (Use embFile_puts.)
+   2. Share heavy memory usage between functions, for example use embBuffer for buffering headers rather than having a seperate `char header[]` variables.
+   3. Reduce calls to malloc when we know the total usage as dynamic memory may not be present and we may need to get rid of malloc entirely.
+   4. Consider using an alternative C standard library for the remaining functions like uclibc.
 
 ### Finding fixes
 
@@ -86,16 +82,12 @@ grep "TODO" *.c *.h
 
 ### Testing
 
-To get an idea of what does and does not work we plan to expand the testing
-suite to cover uses of the library we wish to support, to see this in action
-try:
+Build `embroider` then run:
 
 ```
-./emb-test.sh
+./embroider -test &> report.txt
 ```
 
-Long term everything this script does would be covered by:
-
-```
-./embroider -test
-
+If any of the tests return a fail in the summary (see `tail report.txt`)
+then it would help the project to send us an issue attatching the file to
+your message along with a description of the system you ran the program on.

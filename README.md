@@ -137,7 +137,7 @@ Special Notes
 Due to historical reasons and to remain compatible with the
 Arduino 1.0 IDE, this folder must be called "utility".
 Refer to the arduino build process for more info:
-https://code.google.com/p/arduino/wiki/BuildProcess
+https://arduino.github.io/arduino-cli/0.19/sketch-build-process/
 
 libembroidery relies on the Arduino SD library for reading files.
 See the ino-file source and header files for more information.
@@ -170,4 +170,3 @@ An example for building for use in C#
 ```
 swig -csharp -o ./csharp/binding/swig_wrap.c -I../ swig.i
 ```
->>>>>>> 84d02207e19cede84d460a06c73634fda544c49a

@@ -43,7 +43,7 @@ Special Notes
 Due to historical reasons and to remain compatible with the
 Arduino 1.0 IDE, this folder must be called "utility".
 Refer to the arduino build process for more info:
-https://code.google.com/p/arduino/wiki/BuildProcess
+https://arduino.github.io/arduino-cli/0.19/sketch-build-process/
 
 libembroidery relies on the Arduino SD library for reading files.
 See the ino-file source and header files for more information.

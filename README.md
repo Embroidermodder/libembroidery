@@ -98,6 +98,7 @@ Long term everything this script does would be covered by:
 
 ```
 ./embroider -test
+```
 
 libembroidery on Arduino
 ------------------------
@@ -148,3 +149,32 @@ https://code.google.com/p/arduino/wiki/BuildProcess
 
 libembroidery relies on the Arduino SD library for reading files.
 See the ino-file source and header files for more information.
+
+Experimental Projects
+---------------------
+
+Anything contained within the experimental/ folder is unstable and 
+unsupported. Items in here may eventually be moved elsewhere or may not. 
+If you have an interesting concept or prototype that you would like us 
+to add, contact us and we may add it here.
+
+Dependencies
+------------
+
+To build additional language bindings for libembroidery from source you 
+will need at least:
+
+Ubuntu repository packages:
+```
+sudo apt-get install swig python-dev
+```
+
+Mac
+```
+brew install swig
+```
+
+An example for building for use in C# 
+```
+swig -csharp -o ./csharp/binding/swig_wrap.c -I../ swig.i
+```

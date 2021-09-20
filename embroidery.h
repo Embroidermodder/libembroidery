@@ -48,8 +48,6 @@ typedef struct EmbFile_
 } EmbFile;
 #endif
 
-#include "hashtable.h"
-
 /* Machine codes for stitch flags */
 #define NORMAL                  0 /* stitch to (x, y) */
 #define JUMP                    1 /* move to (x, y) */
@@ -381,8 +379,6 @@ typedef struct EmbHoop_
     double width;
     double height;
 } EmbHoop;
-
-typedef EmbHashTable EmbHash;
 
 typedef struct EmbEllipse_
 {

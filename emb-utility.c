@@ -385,65 +385,12 @@ static void embFloatToArray(char* buffer, float number, float tolerence, int bef
 /* puts() abstraction. Uses Serial.print() on ARDUINO */
 static void embLog(const char* str)
 {
-/* testing embedded mode on Linux */
-/* #if ARDUINO
+#if ARDUINO
     inoLog_serial(str);
     inoLog_serial("\n");
-#else */
+#else
     puts(str);
-/* #endif ARDUINO */
+#endif ARDUINO
 }
 
-/* Wrapper functions around Keith Pomakis' HashTable Library */
-
-static EmbHash* embHash_create(void)
-{
-    return HashTableCreate(1);
-}
-
-static void embHash_free(EmbHash* hash)
-{
-    HashTableDestroy(hash);
-    hash = 0;
-}
-
-static int embHash_contains(const EmbHash* hash, const void* key)
-{
-    return HashTableContainsKey(hash, key);
-}
-
-static int embHash_insert(EmbHash* hash, const void* key, void* value)
-{
-    return HashTablePut(hash, key, value);
-}
-
-static void* embHash_value(const EmbHash* hash, const void* key)
-{
-    return HashTableGet(hash, key);
-}
-
-static void embHash_remove(EmbHash* hash, const void* key)
-{
-    HashTableRemove(hash, key);
-}
-
-static void embHash_clear(EmbHash* hash)
-{
-    HashTableRemoveAll(hash);
-}
-
-static int embHash_empty(const EmbHash* hash)
-{
-    return HashTableIsEmpty(hash);
-}
-
-static long embHash_count(const EmbHash* hash)
-{
-    return HashTableSize(hash);
-}
-
-static void embHash_rehash(EmbHash* hash, long numOfBuckets)
-{
-    HashTableRehash(hash, numOfBuckets);
-}
 

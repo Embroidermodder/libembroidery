@@ -188,8 +188,8 @@ static void binaryWriteFloat(EmbFile* file, float data)
     binaryWriteUInt(file, float_int_u.u32);
 }
 
-/*! Rounds a double (\a src) and returns it as an \c int. */
-static int roundDouble(double src)
+/*! Rounds a float (\a src) and returns it as an \c int. */
+static int roundDouble(float src)
 {
     if (src < 0.0)
         return (int)ceil(src - 0.5);

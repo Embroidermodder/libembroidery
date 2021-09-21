@@ -5,15 +5,15 @@
  */
 
 void embArray_resample(EmbArray *a, EmbArray *usePt);
-double GetRelativeX(EmbVector a1, EmbVector a2, EmbVector a3);
-double GetRelativeY(EmbVector a1, EmbVector a2, EmbVector a3);
-double GetAngle(EmbVector a, EmbVector b);
+float GetRelativeX(EmbVector a1, EmbVector a2, EmbVector a3);
+float GetRelativeY(EmbVector a1, EmbVector a2, EmbVector a3);
+float GetAngle(EmbVector a, EmbVector b);
 void embPattern_breakIntoColorBlocks(EmbPattern *pattern);
 int embPolygon_breakIntoSeparateObjects(EmbArray *blocks);
 int FindOutline(EmbArray *stitchData, EmbArray *result);
-void embPolygon_simplifySection(EmbArray *vertices, EmbArray *_usePt, int i, int j, double distanceTolerance);
-double embVector_distancePointLine(EmbVector p, EmbVector a, EmbVector b);
-int embVector_collinear(EmbVector a1, EmbVector a2, EmbVector a3, double collinearity_tolerance);
+void embPolygon_simplifySection(EmbArray *vertices, EmbArray *_usePt, int i, int j, float distanceTolerance);
+float embVector_distancePointLine(EmbVector p, EmbVector a, EmbVector b);
+int embVector_collinear(EmbVector a1, EmbVector a2, EmbVector a3, float collinearity_tolerance);
 
 void embArray_resample(EmbArray *a, EmbArray *usePt)
 {
@@ -30,10 +30,10 @@ void embArray_resample(EmbArray *a, EmbArray *usePt)
     a = b;
 }
 
-int embVector_collinear(EmbVector a1, EmbVector a2, EmbVector a3, double collinearity_tolerance)
+int embVector_collinear(EmbVector a1, EmbVector a2, EmbVector a3, float collinearity_tolerance)
 {
     EmbVector c21, c31;
-    double angle;
+    float angle;
 
     embVector_subtract(a2, a1, &c21);
     embVector_subtract(a3, a1, &c31);
@@ -41,7 +41,7 @@ int embVector_collinear(EmbVector a1, EmbVector a2, EmbVector a3, double colline
     return angle < collinearity_tolerance;
 }
 
-double GetRelativeX(EmbVector a1, EmbVector a2, EmbVector a3)
+float GetRelativeX(EmbVector a1, EmbVector a2, EmbVector a3)
 {
     EmbVector c12, c32;
     embVector_subtract(a1, a2, &c12);
@@ -49,7 +49,7 @@ double GetRelativeX(EmbVector a1, EmbVector a2, EmbVector a3)
     return embVector_dot(c12, c32);
 }
 
-double GetRelativeY(EmbVector a1, EmbVector a2, EmbVector a3)
+float GetRelativeY(EmbVector a1, EmbVector a2, EmbVector a3)
 {
     EmbVector c12, c32;
     embVector_subtract(a1, a2, &c12);
@@ -57,7 +57,7 @@ double GetRelativeY(EmbVector a1, EmbVector a2, EmbVector a3)
     return embVector_cross(c12, c32);
 }
 
-double GetAngle(EmbVector a, EmbVector b)
+float GetAngle(EmbVector a, EmbVector b)
 {
     EmbVector h;
     embVector_subtract(a, b, &h);
@@ -94,8 +94,8 @@ int embPolygon_breakIntoSeparateObjects(EmbArray *blocks)
 {
 #if 0
     int i, j;
-    double dx, dy, dy2, dy3;
-    double previousAngle = 0.0;
+    float dx, dy, dy2, dy3;
+    float previousAngle = 0.0;
     for (j=0; j<blocks->count; j++) {
         block = blocks[j];
         EmbArray *stitches = new List<VectorStitch>();
@@ -339,11 +339,11 @@ int embPolygon_DouglasPeuckerSimplify(EmbArray *vertices, float distanceToleranc
     return 1;
 }
 
-void embPolygon_simplifySection(EmbArray *vertices, EmbArray *_usePt, int i, int j, double distanceTolerance)
+void embPolygon_simplifySection(EmbArray *vertices, EmbArray *_usePt, int i, int j, float distanceTolerance)
 {
     int k, maxIndex;
     EmbVector a, b;
-    double maxDistance, distance;
+    float maxDistance, distance;
     if ((i + 1) == j)
         return;
 
@@ -375,9 +375,9 @@ void embPolygon_simplifySection(EmbArray *vertices, EmbArray *_usePt, int i, int
  * finding the length of the normal from ab (extended to an infinte line)
  * to p.
  */
-double embVector_distancePointLine(EmbVector p, EmbVector a, EmbVector b)
+float embVector_distancePointLine(EmbVector p, EmbVector a, EmbVector b)
 {
-    double r, curve2, s, tolerence;
+    float r, curve2, s, tolerence;
     EmbVector pa, ba;
 
     tolerence = 0.00001;
@@ -522,7 +522,7 @@ void MergeParallelEdges(EmbArray *vertices, float tolerance)
 int embPolygon_reduceByDistance(EmbArray *vertices, float distance)
 {
     int i, nextId;
-    double vdist;
+    float vdist;
     EmbArray *usePoints;
     /* We can't simplify polygons under 3 vertices */
     if (vertices->count < 3) return 0;
@@ -574,13 +574,13 @@ int embPolygon_reduceByNth(EmbArray* vertices, int nth)
     return 1;
 }
 
-void embSatinOutline_generateSatinOutline(EmbArray* lines, double thickness, EmbSatinOutline* result)
+void embSatinOutline_generateSatinOutline(EmbArray* lines, float thickness, EmbSatinOutline* result)
 {
     int i, j;
     EmbSatinOutline outline;
     EmbVector v1, temp;
     EmbLine line, line1, line2;
-    double halfThickness = thickness / 2.0;
+    float halfThickness = thickness / 2.0;
     int intermediateOutlineCount = 2 * lines->count - 2;
     outline.side1 = embArray_create(EMB_VECTOR);
     if (!outline.side1) {
@@ -652,13 +652,13 @@ void embSatinOutline_generateSatinOutline(EmbArray* lines, double thickness, Emb
     result->length = lines->count;
 }
 
-EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density)
+EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, float density)
 {
     int i, j, numberOfSteps;
     EmbVector currTop, currBottom, topDiff, bottomDiff, midDiff;
     EmbVector midLeft, midRight, topStep, bottomStep;
     EmbArray* stitches = 0;
-    double midLength;
+    float midLength;
 
     if (!result) {
         embLog("ERROR: emb-satin-line.c embSatinOutline_renderStitches(), result argument is null\n");

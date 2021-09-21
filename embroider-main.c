@@ -263,7 +263,7 @@ static void testTangentPoints(EmbCircle c, EmbVector p, EmbVector* t0, EmbVector
 
 int testEmbCircle(void)
 {
-    double epsilon = 1e-3;
+    float epsilon = 1e-3;
     EmbVector p0, p1;
     /* Problem */
     EmbCircle c1 = { { 0.0, 0.0 }, 3.0 };
@@ -284,7 +284,7 @@ int testEmbCircle(void)
     /* Test */
     EmbVector test1 = { 24.3411, 18.2980 };
     testTangentPoints(c2, test1, &p0, &p1);
-    double error = embVector_distance(p0, s0) + embVector_distance(p1, s1);
+    float error = embVector_distance(p0, s0) + embVector_distance(p1, s1);
     if (error > epsilon) {
         printf("Error larger than tolerence, circle test 2: %f.\n\n", error);
         return 17;
@@ -293,9 +293,9 @@ int testEmbCircle(void)
     return 0;
 }
 
-static void printArcResults(double bulge, EmbArc arc, EmbVector center,
-    double radius, double diameter, double chord, EmbVector chordMid,
-    double sagitta, double apothem, double incAngle, char clockwise)
+static void printArcResults(float bulge, EmbArc arc, EmbVector center,
+    float radius, float diameter, float chord, EmbVector chordMid,
+    float sagitta, float apothem, float incAngle, char clockwise)
 {
     fprintf(stdout, "bulge     = %f\n"
                     "startX    = %f\n"
@@ -340,7 +340,7 @@ int testGeomArc(void)
 {
     EmbArc arc;
     EmbVector center, chordMid;
-    double bulge, radius, diameter, chord, sagitta, apothem, incAngle;
+    float bulge, radius, diameter, chord, sagitta, apothem, incAngle;
     char clockwise;
 
     fprintf(stdout, "Clockwise Test:\n");

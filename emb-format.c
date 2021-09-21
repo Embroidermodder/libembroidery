@@ -443,8 +443,8 @@ static int readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     int csvMode = CSV_MODE_NULL;
     int expect = CSV_EXPECT_QUOTE1;
     int flags = 0;
-    double xx = 0.0;
-    double yy = 0.0;
+    float xx = 0.0;
+    float yy = 0.0;
     unsigned char r = 0, g = 0, b = 0;
     char* buff = 0;
 
@@ -1613,7 +1613,7 @@ static int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     int eof = 0; /* End Of File */
 
-    double bulge = 0.0, firstX = 0.0, firstY = 0.0, x = 0.0, y, prevX = 0.0, prevY = 0.0;
+    float bulge = 0.0, firstX = 0.0, firstY = 0.0, x = 0.0, y, prevX = 0.0, prevY = 0.0;
     char firstStitch = 1;
     char bulgeFlag = 0;
     int fileLength = 0;
@@ -2038,7 +2038,7 @@ static int readExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 static int writeExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    double dx, dy, xx, yy;
+    float dx, dy, xx, yy;
     int flags = 0, i;
     unsigned char b[4];
     EmbStitch st;
@@ -2368,7 +2368,7 @@ static int husDecodeByte(unsigned char b)
     return (char)b;
 }
 
-static unsigned char husEncodeByte(double f)
+static unsigned char husEncodeByte(float f)
 {
     return (unsigned char)(int)roundDouble(f);
 }
@@ -2508,7 +2508,7 @@ static int writeHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor;
     int attributeSize, xCompressedSize, yCompressedSize, i;
-    double previousX, previousY;
+    float previousX, previousY;
     unsigned char *xValues = 0, *yValues = 0, *attributeValues = 0;
     unsigned char *attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
     EmbStitch st;
@@ -2993,7 +2993,7 @@ static int writeJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
     EmbRect boundingRect;
     EmbTime time;
     EmbStitch st;
-    double dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
+    float dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
     unsigned char b[4];
 
     embPattern_correctForMaxStitchLength(pattern, 12.7, 12.7);
@@ -3148,7 +3148,7 @@ static int readKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 static int writeKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
-    double xx, yy, dx, dy;
+    float xx, yy, dx, dy;
     int i;
     unsigned char b[4];
 
@@ -3172,7 +3172,7 @@ static int writeKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /* Pfaff MAX embroidery file format */
 
-static double maxDecode(unsigned char a1, unsigned char a2, unsigned char a3)
+static float maxDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 {
     int res = a1 + (a2 << 8) + (a3 << 16);
     if (res > 0x7FFFFF) {
@@ -3204,7 +3204,7 @@ static void maxEncode(EmbFile* file, int x, int y)
 static int readMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[8];
-    double dx, dy;
+    float dx, dy;
     int i, flags, stitchCount;
 
     embFile_seek(file, 0xD5, SEEK_SET);
@@ -3246,7 +3246,7 @@ static int writeMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
         0x01, 0x38, 0x09, 0x31, 0x33, 0x30, 0x2F, 0x37, 0x30, 0x35, 0x20, 0x48, 0xFA, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00
     };
-    double x, y;
+    float x, y;
     EmbStitch st;
     int i;
 
@@ -3283,7 +3283,7 @@ static int readMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static unsigned char mitEncodeStitch(double value)
+static unsigned char mitEncodeStitch(float value)
 {
     if (value < 0) {
         return 0x80 | (unsigned char)(-value);
@@ -3296,7 +3296,7 @@ static unsigned char mitEncodeStitch(double value)
 static int writeMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
-    double xx = 0, yy = 0, dx = 0, dy = 0;
+    float xx = 0, yy = 0, dx = 0, dy = 0;
     int flags = 0, i;
 
     embPattern_correctForMaxStitchLength(pattern, 0x1F, 0x1F);
@@ -3544,9 +3544,9 @@ static void ofmReadThreads(EmbFile* file, EmbPattern* p)
     }
 }
 
-static double ofmDecode(unsigned char b1, unsigned char b2)
+static float ofmDecode(unsigned char b1, unsigned char b2)
 {
-    double val = (double)(short)(b1 << 8 | b2);
+    float val = (float)(short)(b1 << 8 | b2);
     return val;
 }
 
@@ -3644,7 +3644,7 @@ static int writeOfm(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 0; /*TODO: finish writeOfm */
 }
 
-static double pcdDecode(unsigned char a1, unsigned char a2, unsigned char a3)
+static float pcdDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 {
     int res = a1 + (a2 << 8) + (a3 << 16);
     if (res > 0x7FFFFF) {
@@ -3687,7 +3687,7 @@ static int readPcd(EmbPattern* pattern, EmbFile* file, const char* fileName)
     char allZeroColor = 1;
     int i;
     unsigned char b[9];
-    double dx = 0, dy = 0;
+    float dx = 0, dy = 0;
     int flags = 0, st = 0;
     unsigned char version, hoopSize;
     unsigned short colorCount = 0;
@@ -3741,7 +3741,7 @@ static int writePcd(EmbPattern* pattern, EmbFile* file, const char* fileName)
     EmbStitch st;
     int i;
     unsigned char colorCount;
-    double xx = 0.0, yy = 0.0;
+    float xx = 0.0, yy = 0.0;
 
     binaryWriteByte(file, (unsigned char)'2');
     binaryWriteByte(file, 3); /* TODO: select hoop size defaulting to Large PCS hoop */
@@ -3789,7 +3789,7 @@ static const EmbThread pcmThreads[] = {
     { { 0xFF, 0xFF, 0xFF }, "PCM Color 16", "" }
 };
 
-static double pcmDecode(unsigned char a1, unsigned char a2, unsigned char a3)
+static float pcmDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 {
     int res = a1 + (a2 << 8) + (a3 << 16);
     if (res > 0x7FFFFF) {
@@ -3804,7 +3804,7 @@ static int readPcm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i = 0;
     unsigned char b[9];
-    double dx = 0, dy = 0;
+    float dx = 0, dy = 0;
     int flags = 0, st = 0;
 
     embFile_seek(file, 4, SEEK_SET);
@@ -3844,7 +3844,7 @@ static int writePcm(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 0; /*TODO: finish writePcm */
 }
 
-static double pcqDecode(unsigned char a1, unsigned char a2, unsigned char a3)
+static float pcqDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 {
     int res = a1 + (a2 << 8) + (a3 << 16);
     if (res > 0x7FFFFF) {
@@ -3887,7 +3887,7 @@ static int readPcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
     char allZeroColor = 1;
     int i = 0;
     unsigned char b[9];
-    double dx = 0, dy = 0;
+    float dx = 0, dy = 0;
     int flags = 0, st = 0;
     unsigned char version, hoopSize;
     unsigned short colorCount;
@@ -3964,7 +3964,7 @@ static int writePcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static double pcsDecode(unsigned char a1, unsigned char a2, unsigned char a3)
+static float pcsDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 {
     int res = a1 + (a2 << 8) + (a3 << 16);
     if (res > 0x7FFFFF) {
@@ -4007,7 +4007,7 @@ static int readPcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
     char allZeroColor = 1;
     int i = 0;
     unsigned char b[9];
-    double dx = 0, dy = 0;
+    float dx = 0, dy = 0;
     int flags = 0, st = 0;
     unsigned char version, hoopSize;
     unsigned short colorCount;
@@ -4355,8 +4355,8 @@ static int readPec(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static void pecEncode(EmbFile* file, EmbPattern* p)
 {
-    double thisX = 0.0;
-    double thisY = 0.0;
+    float thisX = 0.0;
+    float thisY = 0.0;
     unsigned char stopCode = 2;
     EmbStitch s;
     int deltaX, deltaY, i;
@@ -4366,8 +4366,8 @@ static void pecEncode(EmbFile* file, EmbPattern* p)
 
         deltaX = roundDouble(s.x - thisX);
         deltaY = roundDouble(s.y - thisY);
-        thisX += (double)deltaX;
-        thisY += (double)deltaY;
+        thisX += (float)deltaX;
+        thisY += (float)deltaY;
 
         if (s.flags & STOP) {
             pecEncodeStop(file, stopCode);
@@ -4426,7 +4426,7 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
     EmbRect bounds;
     unsigned char image[38][48];
     int i, flen, currentThreadCount, graphicsOffsetLocation, graphicsOffsetValue, height, width;
-    double xFactor, yFactor;
+    float xFactor, yFactor;
     const char* forwardSlashPos = strrchr(fileName, '/');
     const char* backSlashPos = strrchr(fileName, '\\');
     const char* dotPos = strrchr(fileName, '.');
@@ -5164,8 +5164,8 @@ static int writePhc(EmbPattern* pattern, EmbFile* file, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 static int readPlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    double x, y;
-    double scalingFactor = 40;
+    float x, y;
+    float scalingFactor = 40;
     char input[512];
 
     embPattern_loadExternalColorFile(pattern, fileName);
@@ -5195,7 +5195,7 @@ static int readPlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 static int writePlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     /* TODO: pointer safety */
-    double scalingFactor = 40;
+    float scalingFactor = 40;
     EmbStitch stitch;
     int i;
     char firstStitchOfBlock = 1;
@@ -5364,7 +5364,7 @@ static int writeSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
     int colorlistSize, minColors, i, thr;
     EmbStitch st;
     EmbColor col;
-    double dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
+    float dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
     unsigned char b[4];
 
     colorlistSize = pattern->threads->count;
@@ -6910,7 +6910,7 @@ static unsigned char* vipCompressData(unsigned char* input, int decompressedInpu
     return compressedData;
 }
 
-static unsigned char vipEncodeByte(double f)
+static unsigned char vipEncodeByte(float f)
 {
     return (unsigned char)(int)roundDouble(f);
 }
@@ -7393,7 +7393,7 @@ static int writeVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     for (i = 0; i < pattern->stitchList->count; i++) {
         char colorName[8] = { 0 };
-        double lastX, lastY;
+        float lastX, lastY;
         int colorSectionLengthPos;
         EmbStitch s;
         int lastColor;
@@ -7602,7 +7602,7 @@ static void xxxEncodeStop(EmbFile* file, EmbStitch s)
     binaryWriteByte(file, (unsigned char)(s.color + 8));
 }
 
-static void xxxEncodeStitch(EmbFile* file, double deltaX, double deltaY, int flags)
+static void xxxEncodeStitch(EmbFile* file, float deltaX, float deltaY, int flags)
 {
     if ((flags & (JUMP | TRIM)) && (fabs(deltaX) > 124 || fabs(deltaY) > 124)) {
         binaryWriteByte(file, 0x7E);
@@ -7617,9 +7617,9 @@ static void xxxEncodeStitch(EmbFile* file, double deltaX, double deltaY, int fla
 
 static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
 {
-    double thisX = 0.0f;
-    double thisY = 0.0f;
-    double previousX, previousY, deltaX, deltaY;
+    float thisX = 0.0f;
+    float thisY = 0.0f;
+    float previousX, previousY, deltaX, deltaY;
     EmbStitch s;
     int i;
 

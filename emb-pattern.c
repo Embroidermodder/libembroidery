@@ -36,7 +36,7 @@ EmbPattern* embPattern_create(void)
 
 void embPattern_hideStitchesOverLength(EmbPattern* p, int length)
 {
-    double prevX, prevY;
+    float prevX, prevY;
     int i;
     EmbStitch st;
 
@@ -227,7 +227,7 @@ void embPattern_movePolylinesToStitchList(EmbPattern* p)
 }
 
 /*! Adds a stitch to the pattern (\a p) at the absolute position (\a x,\a y). Positive y is up. Units are in millimeters. */
-void embPattern_addStitchAbs(EmbPattern* p, double x, double y, int flags, int isAutoColorIndex)
+void embPattern_addStitchAbs(EmbPattern* p, float x, float y, int flags, int isAutoColorIndex)
 {
     EmbStitch s;
     EmbVector home;
@@ -284,10 +284,10 @@ void embPattern_addStitchAbs(EmbPattern* p, double x, double y, int flags, int i
 }
 
 /*! Adds a stitch to the pattern (\a p) at the relative position (\a dx,\a dy) to the previous stitch. Positive y is up. Units are in millimeters. */
-void embPattern_addStitchRel(EmbPattern* p, double dx, double dy, int flags, int isAutoColorIndex)
+void embPattern_addStitchRel(EmbPattern* p, float dx, float dy, int flags, int isAutoColorIndex)
 {
     EmbVector home;
-    double x, y;
+    float x, y;
 
     if (!p) {
         embLog("ERROR: emb-pattern.c embPattern_addStitchRel(), p argument is null\n");
@@ -349,7 +349,7 @@ int embPattern_writeAuto(EmbPattern* pattern, const char* fileName) /* TODO: Wri
 
 /* Very simple scaling of the x and y axis for every point.
 * Doesn't insert or delete stitches to preserve density. */
-void embPattern_scale(EmbPattern* p, double scale)
+void embPattern_scale(EmbPattern* p, float scale)
 {
     int i;
 
@@ -722,10 +722,10 @@ void embPattern_combineJumpStitches(EmbPattern* p)
 
 /* TODO: The params determine the max XY movement rather than the length.
  * They need renamed or clarified further. */
-void embPattern_correctForMaxStitchLength(EmbPattern* p, double maxStitchLength, double maxJumpLength)
+void embPattern_correctForMaxStitchLength(EmbPattern* p, float maxStitchLength, float maxJumpLength)
 {
     int j = 0, splits, i;
-    double maxXY, maxLen;
+    float maxXY, maxLen;
     EmbVector st, diff, add;
     EmbArray* newList;
 
@@ -748,10 +748,10 @@ void embPattern_correctForMaxStitchLength(EmbPattern* p, double maxStitchLength,
                 else
                     maxLen = maxStitchLength;
 
-                splits = (int)ceil((double)maxXY / maxLen);
+                splits = (int)ceil((float)maxXY / maxLen);
 
                 if (splits > 1) {
-                    embVector_multiply(diff, (double)(1.0 / splits), &add);
+                    embVector_multiply(diff, (float)(1.0 / splits), &add);
 
                     for (j = 1; j < splits; j++) {
                         EmbStitch s;
@@ -866,7 +866,7 @@ void embPattern_free(EmbPattern* p)
 /*! Adds a circle object to pattern (\a p) with its center at the absolute
  * position (\a cx,\a cy) with a radius of (\a r). Positive y is up.
  * Units are in millimeters. */
-void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r)
+void embPattern_addCircleObjectAbs(EmbPattern* p, float cx, float cy, float r)
 {
     EmbCircle circle;
     circle.center.x = cx;
@@ -886,7 +886,7 @@ void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r
 /*! Adds an ellipse object to pattern (\a p) with its center at the
  * absolute position (\a cx,\a cy) with radii of (\a rx,\a ry). Positive y is up.
  * Units are in millimeters. */
-void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy, double rx, double ry)
+void embPattern_addEllipseObjectAbs(EmbPattern* p, float cx, float cy, float rx, float ry)
 {
     EmbEllipse ellipse;
     ellipse.center.x = cx;
@@ -908,7 +908,7 @@ void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy, double 
  * (\a x1,\a y1) and ending at the absolute position (\a x2,\a y2).
  * Positive y is up. Units are in millimeters.
  */
-void embPattern_addLineObjectAbs(EmbPattern* p, double x1, double y1, double x2, double y2)
+void embPattern_addLineObjectAbs(EmbPattern* p, float x1, float y1, float x2, float y2)
 {
     EmbLineObject lineObj;
     lineObj.line.start.x = x1;
@@ -951,7 +951,7 @@ void embPattern_addPathObjectAbs(EmbPattern* p, EmbPathObject* obj)
 }
 
 /*! Adds a point object to pattern (\a p) at the absolute position (\a x,\a y). Positive y is up. Units are in millimeters. */
-void embPattern_addPointObjectAbs(EmbPattern* p, double x, double y)
+void embPattern_addPointObjectAbs(EmbPattern* p, float x, float y)
 {
     EmbPointObject pointObj;
     pointObj.point.x = x;
@@ -1014,7 +1014,7 @@ void embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj)
  * (\a x,\a y) with a width of (\a w) and a height of (\a h).
  * Positive y is up. Units are in millimeters.
  */
-void embPattern_addRectObjectAbs(EmbPattern* p, double x, double y, double w, double h)
+void embPattern_addRectObjectAbs(EmbPattern* p, float x, float y, float w, float h)
 {
     EmbRect rect;
     rect.left = x;

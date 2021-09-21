@@ -141,7 +141,15 @@ We don't know much about this format. TODO: Find a source.
 * [ ] Well Tested Read
 * [ ] Well Tested Write
 
-### Embroidery Thread Color Format (.dat)
+### (.dat)
+
+* Stitch Only Format.
+* [x] Basic Read Support
+* [ ] Basic Write Support
+* [ ] Well Tested Read
+* [ ] Well Tested Write
+
+###  (.dem)
 
 * Stitch Only Format.
 * [ ] Basic Read Support
@@ -149,27 +157,19 @@ We don't know much about this format. TODO: Find a source.
 * [ ] Well Tested Read
 * [ ] Well Tested Write
 
-### Embroidery Thread Color Format (.dat)
+### (.dsb)
+
+* Stitch Only Format.
+* [x] Basic Read Support
+* [ ] Basic Write Support
+* [ ] Well Tested Read
+* [ ] Well Tested Write
+
+### Tajima (.dst)
 
 * Stitch Only Format.
 * [x] Basic Read Support
 * [x] Basic Write Support
-* [ ] Well Tested Read
-* [ ] Well Tested Write
-
-### Embroidery Thread Color Format (.dat)
-
-* Stitch Only Format.
-* [ ] Basic Read Support
-* [ ] Basic Write Support
-* [ ] Well Tested Read
-* [ ] Well Tested Write
-
-### Embroidery Thread Color Format (.dat)
-
-* Stitch Only Format.
-* [ ] Basic Read Support
-* [ ] Basic Write Support
 * [ ] Well Tested Read
 * [ ] Well Tested Write
 

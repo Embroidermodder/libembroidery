@@ -155,16 +155,16 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         r = write10o(pattern, file, fileName);
         break;
     case EMB_FORMAT_ART:
-        r = writeArt(pattern, file, fileName);
+        embLog("ERROR: This format is not implimented.");
         break;
     case EMB_FORMAT_BMC:
-        r = writeBmc(pattern, file, fileName);
+        embLog("ERROR: This format is not implimented.");
         break;
     case EMB_FORMAT_BRO:
         r = writeBro(pattern, file, fileName);
         break;
     case EMB_FORMAT_CND:
-        r = writeCnd(pattern, file, fileName);
+        embLog("ERROR: This format is not implimented.");
         break;
     case EMB_FORMAT_COL:
         r = writeCol(pattern, file, fileName);
@@ -206,16 +206,17 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         r = writeExy(pattern, file, fileName);
         break;
     case EMB_FORMAT_EYS:
-        r = writeEys(pattern, file, fileName);
+        embLog("ERROR: This format is not implimented.");
         break;
     case EMB_FORMAT_FXY:
         r = writeFxy(pattern, file, fileName);
         break;
     case EMB_FORMAT_GC:
-        r = writeGc(pattern, file, fileName);
+        /* Smoothie G-Code */
+        embLog("ERROR: This format is not implimented.");
         break;
     case EMB_FORMAT_GNC:
-        r = writeGnc(pattern, file, fileName);
+        embLog("ERROR: This format is not implimented.");
         break;
     case EMB_FORMAT_GT: 
         r = writeGt(pattern, file, fileName);
@@ -339,19 +340,16 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
     if (!r) {
         return r;
     }
-    
+
     embFile_close(file);
     return 0;
 }
 
-/**
- * Argument validator for reading patterns.
- */
 int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
 {
     EmbFile *file;
     int r;
-    
+
     if (!pattern) {
         embLog("ERROR: embPattern_read(), pattern argument is null\n");
         return 0;
@@ -364,7 +362,7 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
     file = embFile_open(fileName, "rb", 0);
     if (!file) {
         embLog("ERROR: embPattern_write(), failed to open file\n");
-        return 0;    
+        return 0;
     }
 
     r = 0;
@@ -376,16 +374,16 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
         r = read10o(pattern, file, fileName);
         break;
     case EMB_FORMAT_ART:
-        r = readArt(pattern, file, fileName);
+        embLog("ERROR: This format is not implimented.");
         break;
     case EMB_FORMAT_BMC:
-        r = readBmc(pattern, file, fileName);
+        embLog("ERROR: This format is not implimented.");
         break;
     case EMB_FORMAT_BRO:
         r = readBro(pattern, file, fileName);
         break;
     case EMB_FORMAT_CND:
-        r = readCnd(pattern, file, fileName);
+        embLog("ERROR: This format is not implimented.");
         break;
     case EMB_FORMAT_COL:
         r = readCol(pattern, file, fileName);
@@ -427,18 +425,19 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
         r = readExy(pattern, file, fileName);
         break;
     case EMB_FORMAT_EYS:
-        r = readEys(pattern, file, fileName);
+        embLog("ERROR: This format is not implimented.");
         break;
     case EMB_FORMAT_FXY:
         r = readFxy(pattern, file, fileName);
         break;
-    case EMB_FORMAT_GC: 
-        r = readGc(pattern, file, fileName);
+    case EMB_FORMAT_GC:
+        /* Smoothie G-Code */
+        embLog("ERROR: This format is not implimented.");
         break;
     case EMB_FORMAT_GNC:
-        r = readGnc(pattern, file, fileName);
+        embLog("ERROR: This format is not implimented.");
         break;
-    case EMB_FORMAT_GT: 
+    case EMB_FORMAT_GT:
         r = readGt(pattern, file, fileName);
         break;
     case EMB_FORMAT_HUS:
@@ -556,11 +555,11 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
         embLog("Emb format not recognised.");
         break;
     }
-    
+
     if (!r) {
         return r;
     }
-    
+
     embFile_close(file);
     embPattern_end(pattern);
 
@@ -579,11 +578,9 @@ EmbFile* embFile_open(const char* fileName, const char* mode, int optional)
     FILE* oFile = fopen(fileName, mode);
     if (!oFile) {
         if (!optional) {
-            embLog("ERROR: Cannot open ");
+            embLog("ERROR: Cannot open the fileName in the given mode.");
             embLog(fileName);
-            embLog(" in mode ");
             embLog(mode);
-            embLog(".");
         }
         return 0;
     }
@@ -591,11 +588,9 @@ EmbFile* embFile_open(const char* fileName, const char* mode, int optional)
     eFile = (EmbFile*)malloc(sizeof(EmbFile));
     if (!eFile) {
         if (!optional) {
-            embLog("ERROR: Cannot allocate memory for EmbFile with arguments (");
+            embLog("ERROR: Cannot allocate memory for EmbFile with arguments:");
             embLog(fileName);
-            embLog(", ");
             embLog(mode);
-            embLog(", 0).");
         }
         fclose(oFile);
         return 0;
@@ -673,22 +668,6 @@ void embFile_readline(EmbFile* stream, char* line, int maxLength)
 }
 
 /**
- * In order to remove uses of printf (which use more memory and variable
- * arguments which is bad for embedded systems) call this instead whenever
- * possible.
- *
- * Note that fputs does not append a \n like puts does.
- */
-int embFile_puts(EmbFile* stream, char* buff)
-{
-#ifdef ARDUINO
-    return inoFile_printf(stream, buff);
-#else /* ARDUINO */
-    return fputs(buff, stream->file);
-#endif /* ARDUINO */
-}
-
-/**
  * TODO: documentation.
  */
 size_t embFile_read(void* ptr, size_t size, size_t nmemb, EmbFile* stream)
@@ -696,9 +675,9 @@ size_t embFile_read(void* ptr, size_t size, size_t nmemb, EmbFile* stream)
 #ifdef ARDUINO
     /* ARDUINO TODO: SD File read() doesn't appear to return the same way as fread(). This will need work. */
     return 0;
-#else /* ARDUINO */
+#else
     return fread(ptr, size, nmemb, stream->file);
-#endif /* ARDUINO */
+#endif
 }
 
 /**
@@ -1250,10 +1229,11 @@ int embFormat_getExtension(const char* fileName, char* ending)
         return 0;
     }
 
-    i = 0;
-    while (offset[i] != '\0') {
-        ending[i] = (char)tolower(offset[i]);
-        ++i;
+    for (i=0; offset[i]; i++) {
+        ending[i] = offset[i];
+        if (offset[i] >= 'A' && offset[i] <= 'Z') {
+            ending[i] -= 'A' + 'a';
+        }
     }
     ending[i] = 0; /* terminate the string */
 

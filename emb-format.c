@@ -1,4 +1,4 @@
-static int read100(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char read100(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[4];
     EmbStitch st;
@@ -23,17 +23,14 @@ static int read100(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static int write100(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char write100(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish write100 */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int read10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char read10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[3];
-    /* file = embFile_open(fileName, "rb", 0); */
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
@@ -63,49 +60,12 @@ static int read10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int write10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char write10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish write10o */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readArt(EmbPattern* pattern, EmbFile* file, const char* fileName)
-{
-    embPattern_end(pattern);
-
-    return 0; /*TODO: finish readArt */
-}
-
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeArt(EmbPattern* pattern, EmbFile* file, const char* fileName)
-{
-
-    return 0; /*TODO: finish writeArt */
-}
-
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readBmc(EmbPattern* pattern, EmbFile* file, const char* fileName)
-{
-
-    return 0; /*TODO: finish readBmc */
-}
-
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeBmc(EmbPattern* pattern, EmbFile* file, const char* fileName)
-{
-
-    return 0; /*TODO: finish writeBmc */
-}
-
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readBro(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readBro(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char x55;
     short unknown1, unknown2, unknown3, unknown4, moreBytesToEnd;
@@ -150,30 +110,12 @@ static int readBro(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeBro(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeBro(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeBro */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readCnd(EmbPattern* pattern, EmbFile* file, const char* fileName)
-{
-    return 0; /*TODO: finish readCnd */
-}
-
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeCnd(EmbPattern* pattern, EmbFile* file, const char* fileName)
-{
-    return 0; /*TODO: finish writeCnd */
-}
-
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readCol(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readCol(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int numberOfColors, i;
     int num, blue, green, red;
@@ -209,9 +151,7 @@ static int readCol(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeCol(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeCol(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i;
     EmbColor c;
@@ -286,9 +226,7 @@ static unsigned char DecodeCsdByte(long fileOffset, unsigned char val, int type)
     return ((unsigned char)((unsigned char)(val ^ _xorMask[newOffset % CsdXorMaskSize]) - _subMask[newOffset % CsdSubMaskSize]));
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i, type = 0;
     unsigned char identifier[8];
@@ -367,9 +305,7 @@ static int readCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeCsd */
 }
@@ -409,7 +345,7 @@ static char* csvStitchFlagToStr(int flags)
     }
 }
 
-static int csvStrToStitchFlag(const char* str)
+static char csvStrToStitchFlag(const char* str)
 {
     if (!str) {
         embLog("ERROR: format-csv.c csvStrToStitchFlag(), str argument is null\n");
@@ -430,9 +366,7 @@ static int csvStrToStitchFlag(const char* str)
     return -1;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int numColorChanges = 0;
     int size = 1024;
@@ -575,9 +509,7 @@ static int readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
     EmbRect boundingRect;
@@ -683,9 +615,7 @@ static int writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b0;
     int fileLength, stitchesRemaining, b1, b2, stitchType;
@@ -728,50 +658,38 @@ static int readDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeDat */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readDem(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readDem(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish readDem */
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeDem(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeDem(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeDem */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
+    unsigned char b[4];
     unsigned char header[512];
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_read(header, 1, 512, file);
 
     embFile_seek(file, 0x200, SEEK_SET);
-    while (1) {
+    while (embFile_read(b, 1, 3, file) == 3) {
         int x, y;
         unsigned char ctrl;
         int stitchType = NORMAL;
 
-        ctrl = (unsigned char)embFile_getc(file);
-        if (embFile_eof(file))
-            break;
-        y = embFile_getc(file);
-        if (embFile_eof(file))
-            break;
-        x = embFile_getc(file);
-        if (embFile_eof(file))
-            break;
+        ctrl = b[0];
+        y = b[1];
+        x = b[2];
+
         if (ctrl & 0x01)
             stitchType = TRIM;
         if (ctrl & 0x20)
@@ -784,7 +702,6 @@ static int readDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
             stitchType = STOP;
         }
         if (ctrl == 0xF8 || ctrl == 0x91 || ctrl == 0x87) {
-            embPattern_end(pattern);
             break;
         }
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
@@ -792,9 +709,7 @@ static int readDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeDsb */
 }
@@ -1046,9 +961,7 @@ static void set_dst_variable(EmbPattern* pattern, char* var, char* val)
     }
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     char var[3]; /* temporary storage variable name */
     char val[512]; /* temporary storage variable value */
@@ -1112,7 +1025,7 @@ static int readDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_read(header, 1, 512, file);
 
-    /*TODO:It would probably be a good idea to validate file before accepting it. */
+    /* TODO: It would probably be a good idea to validate file before accepting it. */
 
     /* fill variables from header fields */
     for (i = 0; i < 512; i++) {
@@ -1167,9 +1080,7 @@ static int readDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbRect boundingRect;
     int xx, yy, dx, dy, flags, i, ax, ay, mx, my;
@@ -1255,9 +1166,7 @@ static int writeDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readDsz(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readDsz(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     embPattern_loadExternalColorFile(pattern, fileName);
 
@@ -1299,9 +1208,7 @@ static int readDsz(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeDsz(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeDsz(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeDsz */
 }
@@ -1598,9 +1505,7 @@ char* readline(FILE* file)
 
 #define MAX_LAYERS 16
 #define MAX_LAYER_NAME_LENGTH 30
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     char buff[1024];
     char* dxfVersion = "";
@@ -1830,16 +1735,12 @@ static int readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return eof;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeDxf */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readEdr(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readEdr(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int numberOfColors, i;
     EmbThread t;
@@ -1862,9 +1763,7 @@ static int readEdr(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeEdr(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeEdr(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbColor c;
     int i;
@@ -1884,9 +1783,7 @@ static char emdDecode(unsigned char inputByte)
     return (inputByte >= 0x80) ? ((-~inputByte) - 1) : inputByte; /* TODO: eliminate ternary return statement */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readEmd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readEmd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b0 = 0, b1 = 0;
     char dx = 0, dy = 0;
@@ -1934,9 +1831,7 @@ static int readEmd(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeEmd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeEmd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeEmd */
 }
@@ -1974,9 +1869,7 @@ static void expEncode(unsigned char* b, char dx, char dy, int flags)
     }
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i = 0;
     unsigned char b0 = 0, b1 = 0;
@@ -2034,9 +1927,7 @@ static int readExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     float dx, dy, xx, yy;
     int flags = 0, i;
@@ -2063,7 +1954,7 @@ static int writeExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static int exyDecodeFlags(unsigned char b2)
+static char exyDecodeFlags(unsigned char b2)
 {
     int returnCode = 0;
     if (b2 == 0xF3)
@@ -2077,9 +1968,7 @@ static int exyDecodeFlags(unsigned char b2)
     return returnCode;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[3];
 
@@ -2144,30 +2033,12 @@ static int readExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeExy */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readEys(EmbPattern* pattern, EmbFile* file, const char* fileName)
-{
-    return 0; /*TODO: finish readEys */
-}
-
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeEys(EmbPattern* pattern, EmbFile* file, const char* fileName)
-{
-    return 0; /*TODO: finish writeEys */
-}
-
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readFxy(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readFxy(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_seek(file, 0x100, SEEK_SET); /* TODO: review for combining code. This line appears to be the only difference from the GT format. */
@@ -2197,45 +2068,12 @@ static int readFxy(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeFxy(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeFxy(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeFxy */
 }
 
-/* Smoothie G-Code */
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readGc(EmbPattern* pattern, EmbFile* file, const char* fileName)
-{
-    return 0; /*TODO: finish readGc */
-}
-
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeGc(EmbPattern* pattern, EmbFile* file, const char* fileName)
-{
-    return 0; /*TODO: finish writeGc */
-}
-
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readGnc(EmbPattern* pattern, EmbFile* file, const char* fileName)
-{
-    return 0; /*TODO: finish readGnc */
-}
-
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeGnc(EmbPattern* pattern, EmbFile* file, const char* fileName)
-{
-    return 0; /*TODO: finish writeGnc */
-}
-
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     embPattern_loadExternalColorFile(pattern, fileName);
     embFile_seek(file, 0x200, SEEK_SET); /* TODO: review for combining code. This line appears to be the only difference from the FXY format. */
@@ -2266,9 +2104,7 @@ static int readGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeGt */
 }
@@ -2309,23 +2145,16 @@ static const EmbThread husThreads[] = {
     { { 175, 90, 10 }, "Light Brown", "TODO:HUS_CATALOG_NUMBER" }
 };
 
-/*TODO: 'husDecode' is defined but not used. Either remove it or use it. */
-/*
 static short husDecode(unsigned char a1, unsigned char a2)
 {
     unsigned short res = (a2 << 8) + a1;
-    if(res >= 0x8000)
-    {
+    if (res >= 0x8000) {
         return ((-~res) - 1);
     }
-    else
-    {
-        return (res);
-	}
+    return res;
 }
-*/
 
-static int husDecodeStitchType(unsigned char b)
+static char husDecodeStitchType(unsigned char b)
 {
     switch (b) {
     case 0x80:
@@ -2363,7 +2192,7 @@ static unsigned char* husCompressData(unsigned char* input, int decompressedInpu
     return compressedData;
 }
 
-static int husDecodeByte(unsigned char b)
+static char husDecodeByte(unsigned char b)
 {
     return (char)b;
 }
@@ -2390,9 +2219,7 @@ static unsigned char husEncodeStitchType(int st)
     }
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int fileLength, i, magicCode, numberOfStitches, numberOfColors;
     int postitiveXHoopSize, postitiveYHoopSize, negativeXHoopSize, negativeYHoopSize, attributeOffset, xOffset, yOffset;
@@ -2501,9 +2328,7 @@ static int readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor;
@@ -2586,9 +2411,7 @@ static int writeHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readInb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readInb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char fileDescription[8];
     unsigned char nullVal;
@@ -2647,16 +2470,12 @@ static int readInb(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeInb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeInb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeInb */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int numberOfColors, i;
     char colorType[50];
@@ -2685,9 +2504,7 @@ static int readInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i, bytesRemaining;
     char buffer[50];
@@ -2807,7 +2624,7 @@ static const EmbThread jefThreads[] = {
 #define HOOP_140X200 3
 #define HOOP_230X200 4
 
-static int jefGetHoopSize(int width, int height)
+static char jefGetHoopSize(int width, int height)
 {
     if (width < 50 && height < 50) {
         return HOOP_50X50;
@@ -2864,16 +2681,14 @@ struct hoop_padding {
     int bottom;
 };
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int stitchOffset, formatFlags, numberOfColors, numberOfStitchs;
     int hoopSize, i;
     struct hoop_padding bounds, rectFrom110x110, rectFrom50x50, rectFrom200x140, rect_from_custom;
     int stitchCount;
     char date[8], time[8];
-    unsigned char b0 = 0, b1 = 0;
+    unsigned char b[2];
     char dx = 0, dy = 0;
     int flags = 0;
 
@@ -2919,40 +2734,27 @@ static int readJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
     stitchCount = 0;
     while (stitchCount < numberOfStitchs + 100) {
         flags = NORMAL;
-        b0 = (unsigned char)embFile_getc(file);
-        if (embFile_eof(file)) {
+        if (!embFile_read(b, 1, 2, file)) {
             break;
         }
-        b1 = (unsigned char)embFile_getc(file);
-        if (embFile_eof(file)) {
-            break;
-        }
-        if (b0 == 0x80) {
-            if (b1 & 1) {
-                b0 = (unsigned char)embFile_getc(file);
-                if (embFile_eof(file))
+        if (b[0] == 0x80) {
+            if (b[1] & 1) {
+                if (!embFile_read(b, 1, 2, file)) {
                     break;
-                b1 = (unsigned char)embFile_getc(file);
-                if (embFile_eof(file))
-                    break;
+                }
                 flags = STOP;
-            } else if ((b1 == 2) || (b1 == 4) || b1 == 6) {
+            } else if ((b[1] == 2) || (b[1] == 4) || b[1] == 6) {
                 flags = TRIM;
-                b0 = (unsigned char)embFile_getc(file);
-                if (embFile_eof(file)) {
+                if (!embFile_read(b, 1, 2, file)) {
                     break;
                 }
-                b1 = (unsigned char)embFile_getc(file);
-                if (embFile_eof(file)) {
-                    break;
-                }
-            } else if (b1 == 0x10) {
-                embPattern_addStitchRel(pattern, 0.0, 0.0, END, 1);
+            } else if (b[1] == 0x10) {
+                embPattern_end(pattern);
                 break;
             }
         }
-        dx = jefDecode(b0);
-        dy = jefDecode(b1);
+        dx = jefDecode(b[0]);
+        dy = jefDecode(b[1]);
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     return 1;
@@ -2985,9 +2787,7 @@ static void jefEncode(unsigned char* b, char dx, char dy, int flags)
     }
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int colorlistSize, minColors, designWidth, designHeight, i;
     EmbRect boundingRect;
@@ -3116,9 +2916,7 @@ static void ksmEncode(unsigned char* b, char dx, char dy, int flags)
     }
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int prevStitchType = NORMAL;
     char b[3];
@@ -3143,9 +2941,7 @@ static int readKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
     float xx, yy, dx, dy;
@@ -3199,9 +2995,7 @@ static void maxEncode(EmbFile* file, int x, int y)
     binaryWriteByte(file, (unsigned char)((y >> 16) & 0xFF));
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[8];
     float dx, dy;
@@ -3226,9 +3020,7 @@ static int readMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     char header[] = {
         0x56, 0x43, 0x53, 0x4D, 0xFC, 0x03, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
@@ -3260,7 +3052,7 @@ static int writeMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static int mitDecodeStitch(unsigned char value)
+static char mitDecodeStitch(unsigned char value)
 {
     if (value & 0x80) {
         return -(value & 0x1F);
@@ -3268,9 +3060,7 @@ static int mitDecodeStitch(unsigned char value)
     return value;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char data[2];
 
@@ -3291,9 +3081,7 @@ static unsigned char mitEncodeStitch(float value)
     return (unsigned char)value;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
     float xx = 0, yy = 0, dx = 0, dy = 0;
@@ -3314,14 +3102,12 @@ static int writeMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static int decodeNewStitch(unsigned char value)
+static char decodeNewStitch(unsigned char value)
 {
     return (int)value;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readNew(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readNew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned int stitchCount;
     unsigned char data[3];
@@ -3363,9 +3149,7 @@ static int readNew(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeNew(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeNew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeNew */
 }
@@ -3398,11 +3182,6 @@ static int ofmReadClass(EmbFile* file)
     int len;
     char* s = 0;
 
-    if (!file) {
-        embLog("ERROR: format-ofm.c ofmReadClass(), file argument is null\n");
-        return 0;
-    }
-
     binaryReadInt16(file);
     len = binaryReadInt16(file);
 
@@ -3431,11 +3210,6 @@ static void ofmReadBlockHeader(EmbFile* file)
     short unknown2 = 0;
     int unknown3 = 0;
 
-    if (!file) {
-        embLog("ERROR: format-ofm.c ofmReadBlockHeader(), file argument is null\n");
-        return;
-    }
-
     embFile_read(header, 1, 14, file);
     unknown1 = EMB_GET_SHORT(header);
     unknown2 = (short)EMB_GET_INT(header+2);
@@ -3461,15 +3235,6 @@ static void ofmReadBlockHeader(EmbFile* file)
 
 static void ofmReadColorChange(EmbFile* file, EmbPattern* pattern)
 {
-    if (!file) {
-        embLog("ERROR: format-ofm.c ofmReadColorChange(), file argument is null\n");
-        return;
-    }
-    if (!pattern) {
-        embLog("ERROR: format-ofm.c ofmReadColorChange(), pattern argument is null\n");
-        return;
-    }
-
     ofmReadBlockHeader(file);
     embPattern_addStitchRel(pattern, 0.0, 0.0, STOP, 1);
 }
@@ -3479,15 +3244,6 @@ static void ofmReadThreads(EmbFile* file, EmbPattern* p)
     int i, numberOfColors, stringLen, numberOfLibraries;
     char* primaryLibraryName = 0;
     char* expandedString = 0;
-
-    if (!file) {
-        embLog("ERROR: format-ofm.c ofmReadThreads(), file argument is null\n");
-        return;
-    }
-    if (!p) {
-        embLog("ERROR: format-ofm.c ofmReadThreads(), p argument is null\n");
-        return;
-    }
 
     /* FF FE FF 00 */
     binaryReadInt32(file);
@@ -3554,15 +3310,6 @@ static void ofmReadExpanded(EmbFile* file, EmbPattern* p)
 {
     int i, numberOfStitches = 0;
 
-    if (!file) {
-        embLog("ERROR: format-ofm.c ofmReadExpanded(), file argument is null\n");
-        return;
-    }
-    if (!p) {
-        embLog("ERROR: format-ofm.c ofmReadExpanded(), p argument is null\n");
-        return;
-    }
-
     ofmReadBlockHeader(file);
     numberOfStitches = binaryReadInt32(file);
 
@@ -3577,9 +3324,7 @@ static void ofmReadExpanded(EmbFile* file, EmbPattern* p)
     }
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readOfm(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readOfm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int unknownCount = 0;
     int key = 0, classNameLength;
@@ -3637,9 +3382,7 @@ static int readOfm(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeOfm(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeOfm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeOfm */
 }
@@ -3680,9 +3423,7 @@ static void pcdEncode(EmbFile* file, int dx, int dy, int flags)
     binaryWriteByte(file, flagsToWrite);
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readPcd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPcd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     char allZeroColor = 1;
     int i;
@@ -3734,9 +3475,7 @@ static int readPcd(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writePcd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePcd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
     int i;
@@ -3798,9 +3537,7 @@ static float pcmDecode(unsigned char a1, unsigned char a2, unsigned char a3)
     return res;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readPcm(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPcm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i = 0;
     unsigned char b[9];
@@ -3837,9 +3574,7 @@ static int readPcm(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writePcm(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePcm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writePcm */
 }
@@ -3880,9 +3615,7 @@ static void pcqEncode(EmbFile* file, int dx, int dy, int flags)
     binaryWriteByte(file, flagsToWrite);
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readPcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     char allZeroColor = 1;
     int i = 0;
@@ -3933,9 +3666,7 @@ static int readPcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writePcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
     unsigned char colorCount, b[4], i;
@@ -4000,9 +3731,7 @@ static void pcsEncode(EmbFile* file, int dx, int dy, int flags)
     binaryWriteByte(file, flagsToWrite);
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readPcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     char allZeroColor = 1;
     int i = 0;
@@ -4066,9 +3795,7 @@ static int readPcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writePcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
     int i = 0;
@@ -4213,15 +3940,6 @@ void readPecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int stitchNumber = 0;
 
-    if (!pattern) {
-        embLog("ERROR: format-pec.c readPecStitches(), pattern argument is null\n");
-        return;
-    }
-    if (!file) {
-        embLog("ERROR: format-pec.c readPecStitches(), file argument is null\n");
-        return;
-    }
-
     while (!embFile_eof(file)) {
         int val1 = (int)binaryReadUInt8(file);
         int val2 = (int)binaryReadUInt8(file);
@@ -4300,18 +4018,11 @@ static void pecEncodeJump(EmbFile* file, int x, int types)
 
 static void pecEncodeStop(EmbFile* file, unsigned char val)
 {
-    if (!file) {
-        embLog("ERROR: format-pec.c pecEncodeStop(), file argument is null\n");
-        return;
-    }
-    binaryWriteByte(file, 0xFE);
-    binaryWriteByte(file, 0xB0);
-    binaryWriteByte(file, val);
+    embFile_write("\xFE\xB0", 1, 2, file);
+    embFile_write(&val, 1, 1, file);
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readPec(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPec(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned int graphicsOffset;
     unsigned char colorChanges;
@@ -4540,9 +4251,7 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
     }
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writePec(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePec(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     embPattern_flipVertical(pattern); /* TODO: There needs to be a matching flipVertical() call after the write to ensure multiple writes from the same pattern work properly */
     embPattern_fixColorCount(pattern);
@@ -4556,37 +4265,27 @@ static int writePec(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readPel(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPel(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish readPel */
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writePel(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePel(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writePel */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readPem(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPem(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish ReadPem */
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writePem(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePem(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writePem */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readPes(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPes(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int pecstart, numColors, x;
 
@@ -5035,9 +4734,7 @@ static void pesWriteEmbOneSection(EmbPattern* pattern, EmbFile* file, const char
     /*WriteSubObjects(br, pes, SubBlocks); */
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writePes(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePes(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int pecLocation;
 
@@ -5068,9 +4765,7 @@ static int writePes(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readPhb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPhb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned int fileOffset;
     short colorCount;
@@ -5109,16 +4804,12 @@ static int readPhb(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1; /*TODO: finish ReadPhb */
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writePhb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePhb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writePhb */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readPhc(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPhc(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int colorChanges, version, bytesInSection2;
     unsigned short pecOffset, bytesInSection, bytesInSection3;
@@ -5153,16 +4844,12 @@ static int readPhc(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1; /*TODO: finish ReadPhc */
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writePhc(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePhc(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writePhc */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readPlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     float x, y;
     float scalingFactor = 40;
@@ -5190,9 +4877,7 @@ static int readPlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writePlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     /* TODO: pointer safety */
     float scalingFactor = 40;
@@ -5227,9 +4912,7 @@ static int writePlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1; /*TODO: finish WritePlt */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readRgb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readRgb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i, numberOfColors;
     EmbThread t;
@@ -5253,9 +4936,7 @@ static int readRgb(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeRgb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeRgb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i;
     EmbColor c;
@@ -5265,7 +4946,7 @@ static int writeRgb(EmbPattern* pattern, EmbFile* file, const char* fileName)
         binaryWriteByte(file, c.r);
         binaryWriteByte(file, c.g);
         binaryWriteByte(file, c.b);
-        binaryWriteByte(file, 0);
+        embFile_write("\0", 1, 1, file);
     }
     return 1;
 }
@@ -5276,9 +4957,7 @@ static char sewDecode(unsigned char inputByte)
     return (inputByte >= 0x80) ? (char)(-~(inputByte - 1)) : (char)inputByte;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i, flags, numberOfColors, fileLength;
     char dx, dy, thisStitchIsJump = 0;
@@ -5357,9 +5036,7 @@ static void sewEncode(unsigned char* b, char dx, char dy, int flags)
         b[1] = dy;
     }
 }
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int colorlistSize, minColors, i, thr;
     EmbStitch st;
@@ -5469,9 +5146,7 @@ static short shvDecodeShort(unsigned short inputByte)
     return ((short)inputByte);
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i;
     char inJump = 0;
@@ -5573,16 +5248,12 @@ static int readShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeShv */
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readSst(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readSst(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int fileLength;
 
@@ -5616,9 +5287,7 @@ static int readSst(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1; /*TODO: finish readSst */
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeSst(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeSst(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeSst */
 }
@@ -5639,7 +5308,7 @@ typedef struct StxThread_ {
     EmbColor stxColor;
 } StxThread;
 
-static int stxReadThread(StxThread* thread, EmbFile* file)
+static char stxReadThread(StxThread* thread, EmbFile* file)
 {
     int j, colorNameLength, sectionNameLength;
     int somethingSomething, somethingSomething2, somethingElse, numberOfOtherDescriptors; /* TODO: determine what these represent */
@@ -5731,9 +5400,7 @@ static int stxReadThread(StxThread* thread, EmbFile* file)
     return 1;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i, threadCount;
     unsigned char* gif = 0;
@@ -5858,14 +5525,12 @@ static int readStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeStx */
 }
 
-static int decodeT01RecordFlags(unsigned char b2)
+static char decodeT01RecordFlags(unsigned char b2)
 {
     if (b2 == 0xF3) {
         return END;
@@ -5882,9 +5547,7 @@ static int decodeT01RecordFlags(unsigned char b2)
     }
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[3];
 
@@ -6062,9 +5725,7 @@ static void encode_t01_record(EmbFile* file, int x, int y, int flags)
     embFile_write(b, 1, 3, file);
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbRect boundingRect;
     int xx, yy, dx, dy, i;
@@ -6087,9 +5748,7 @@ static int writeT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readT09(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readT09(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[3];
 
@@ -6117,14 +5776,12 @@ static int readT09(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeT09(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeT09(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeT09 */
 }
 
-static int decodeTapRecordFlags(unsigned char b2)
+static char decodeTapRecordFlags(unsigned char b2)
 {
     if (b2 == 0xF3) {
         return END;
@@ -6141,9 +5798,7 @@ static int decodeTapRecordFlags(unsigned char b2)
     }
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[3];
 
@@ -6319,9 +5974,7 @@ static void encode_tap_record(EmbFile* file, int x, int y, int flags)
     binaryWriteByte(file, (unsigned char)b2);
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbRect boundingRect;
     int xx, yy, dx, dy, i;
@@ -6382,9 +6035,7 @@ bit definitions for attributes of stitch
 31      set for user edited stitches
 */
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     ThredHeader header;
     unsigned char r, g, b;
@@ -6453,9 +6104,7 @@ static int readThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i, stitchCount;
     unsigned char version = 0;
@@ -6556,9 +6205,7 @@ static int writeThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readTxt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readTxt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     if (!pattern) {
         embLog("ERROR: format-txt.c readTxt(), pattern argument is null\n");
@@ -6571,9 +6218,7 @@ static int readTxt(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 0; /*TODO: finish readTxt */
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeTxt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeTxt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
     int i;
@@ -6654,9 +6299,7 @@ static EmbStitch decode_u00_stitch(unsigned char *data)
     return st;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbThread t;
     EmbStitch st;
@@ -6683,9 +6326,7 @@ static int readU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char b[4], i;
 
@@ -6706,16 +6347,12 @@ static int writeU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readU01(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readU01(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return readU00(pattern, file, fileName);
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeU01(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeU01(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return writeU00(pattern, file, fileName);
 }
@@ -6748,14 +6385,14 @@ static const unsigned char vipDecodingTable[] = {
     0x40, 0x26, 0xA0, 0x88, 0xD1, 0x62, 0x6A, 0xB3, 0x50, 0x12, 0xB9, 0x9B, 0xB5, 0x83, 0x9B, 0x37
 };
 
-static int vipDecodeByte(unsigned char b)
+static char vipDecodeByte(unsigned char b)
 {
     if (b >= 0x80)
         return (-(unsigned char)(~b + 1));
     return b;
 }
 
-static int vipDecodeStitchType(unsigned char b)
+static char vipDecodeStitchType(unsigned char b)
 {
     switch (b) {
     case 0x80:
@@ -6798,9 +6435,7 @@ typedef struct VipHeader_ {
     int colorLength;
 } VipHeader;
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readVip(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readVip(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int fileLength;
     int i;
@@ -6932,9 +6567,7 @@ static unsigned char vipEncodeStitchType(int st)
     }
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeVip(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeVip(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor, attributeSize = 0,
@@ -7066,7 +6699,7 @@ static unsigned char* vp3ReadString(EmbFile* file)
     return charString;
 }
 
-static int vp3Decode(unsigned char inputByte)
+static char vp3Decode(unsigned char inputByte)
 {
     if (inputByte > 0x80) {
         return (int)-((unsigned char)((~inputByte) + 1));
@@ -7154,9 +6787,7 @@ static vp3Hoop vp3ReadHoopSection(EmbFile* file)
     return hoop;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char magicString[5];
     unsigned char some;
@@ -7295,9 +6926,7 @@ void vp3PatchByteCount(EmbFile* file, int offset, int adjustment)
     embFile_seek(file, currentPos, SEEK_SET);
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbRect bounds;
     int remainingBytesPos, remainingBytesPos2;
@@ -7508,10 +7137,9 @@ static char xxxDecodeByte(unsigned char inputByte)
     return ((char)inputByte);
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
+    unsigned char b[4];
     unsigned char b0, b1;
     int dx = 0, dy = 0;
     int flags, numberOfColors, paletteOffset, i;
@@ -7527,10 +7155,8 @@ static int readXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
     embFile_seek(file, paletteOffset + 6, SEEK_SET);
 
     for (i = 0; i < numberOfColors; i++) {
-        binaryReadByte(file);
-        thread.color.r = binaryReadByte(file);
-        thread.color.g = binaryReadByte(file);
-        thread.color.b = binaryReadByte(file);
+        embFile_read(b, 1, 4, file);
+        thread.color = embColor_fromStr(b);
         embPattern_addThread(pattern, thread);
     }
     embFile_seek(file, 0x100, SEEK_SET);
@@ -7647,26 +7273,21 @@ static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
     }
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    int i;
+    char i;
     EmbRect rect;
     EmbColor c;
     int endOfStitches;
+    unsigned char b[4];
 
     embPattern_correctForMaxStitchLength(pattern, 124, 127);
 
-    for (i = 0; i < 0x17; i++) {
-        binaryWriteByte(file, 0x00);
-    }
+    embFile_pad(file, 0, 0x17);
     binaryWriteUInt(file, (unsigned int)pattern->stitchList->count);
-    for (i = 0; i < 0x0C; i++) {
-        binaryWriteByte(file, 0x00);
-    }
+    embFile_pad(file, 0, 0x0C);
     binaryWriteUShort(file, (unsigned short)pattern->threads->count);
-    binaryWriteShort(file, 0x0000);
+    embFile_pad(file, 0, 2);
 
     rect = embPattern_calcBoundingBox(pattern);
     binaryWriteShort(file, (short)(embRect_width(rect) * 10.0));
@@ -7676,9 +7297,7 @@ static int writeXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryWriteShort(file, (short)(embRect_height(rect) / 2.0 * 10)); /*TODO: yEnd from start point y=0 */
     binaryWriteShort(file, (short)(embRect_width(rect) / 2.0 * 10)); /*TODO: left from start x = 0     */
     binaryWriteShort(file, (short)(embRect_height(rect) / 2.0 * 10)); /*TODO: bottom from start y = 0   */
-    for (i = 0; i < 0xC5; i++) {
-        binaryWriteByte(file, 0x00);
-    }
+    embFile_pad(file, 0, 0xC5);
     binaryWriteInt(file, 0x0000); /* place holder for end of stitches */
 
     xxxEncodeDesign(file, pattern);
@@ -7691,33 +7310,24 @@ static int writeXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     embFile_seek(file, 0, SEEK_END);
 
-    binaryWriteByte(file, 0x7F); /* is this really correct? */
-    binaryWriteByte(file, 0x7F);
-    binaryWriteByte(file, 0x03);
-    binaryWriteByte(file, 0x14);
-    binaryWriteByte(file, 0x00);
-    binaryWriteByte(file, 0x00);
+    /* Is this really correct? */
+    embFile_write("\x7F\x7F\x03\x14\x00\x00", 1, 6, file);
 
     for (i = 0; i < 22; i++) {
         if (i < pattern->threads->count) {
-            c = pattern->threads->thread[i].color;
-            binaryWriteByte(file, 0x00);
-            binaryWriteByte(file, c.r);
-            binaryWriteByte(file, c.g);
-            binaryWriteByte(file, c.b);
+            b[0] = 0;
+            embColor_toStr(pattern->threads->thread[i].color, b+1);
+            embFile_write(b, 1, 4, file);
         } else {
             binaryWriteUInt(file, 0x01000000);
         }
     }
 
-    binaryWriteByte(file, 0x00);
-    binaryWriteByte(file, 0x01);
+    embFile_write("\x00\x01", 1, 2, file);
     return 1;
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int readZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     char b[3];
     int stitchType;
@@ -7727,14 +7337,13 @@ static int readZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
     embFile_seek(file, 0x230, SEEK_SET);
     colorNumber = binaryReadUInt8(file);
     while (colorNumber != 0) {
-        t.color.r = binaryReadUInt8(file);
-        t.color.g = binaryReadUInt8(file);
-        t.color.b = binaryReadUInt8(file);
+        embFile_read(b, 1, 3, file);
+        t.color = embColor_fromStr(b);
         t.catalogNumber = "";
         t.description = "";
         embPattern_addThread(pattern, t);
         embFile_seek(file, 0x48, SEEK_CUR);
-        colorNumber = binaryReadUInt8(file);
+        embFile_read(&colorNumber, 1, 1, file);
     }
     embFile_seek(file, 0x2E, SEEK_CUR);
 
@@ -7770,9 +7379,7 @@ static int readZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-/*! Writes the data from \a pattern to a file with the given \a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-static int writeZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     return 0; /*TODO: finish writeZsk */
 }

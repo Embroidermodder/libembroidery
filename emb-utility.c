@@ -390,7 +390,7 @@ static void embLog(const char* str)
     inoLog_serial("\n");
 #else
     puts(str);
-#endif ARDUINO
+#endif
 }
 
 

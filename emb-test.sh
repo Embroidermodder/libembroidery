@@ -32,12 +32,8 @@ echo "SPACE PER SYMBOL" >> embedded.txt
 nm -S --size-sort build/libembroidery_static.a >> embedded.txt
 
 echo "TOTAL SPACE USAGE" >> embedded.txt
-strip build/libembroidery.so
 strip build/libembroidery_static.a
-strip build/embroider
-du -h build/libembroidery.so >> embedded.txt
 du -h build/libembroidery_static.a >> embedded.txt
-du -h build/embroider >> embedded.txt
 }
 
 build_libembroidery

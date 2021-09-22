@@ -1,15 +1,5 @@
 static const float embConstantPi = 3.1415926535;
 
-/* Returns an EmbArcObject. It is created on the stack. */
-EmbArcObject embArcObject_make(EmbVector s, EmbVector m, EmbVector e)
-{
-    EmbArcObject stackArcObj;
-    stackArcObj.arc.start = s;
-    stackArcObj.arc.mid = m;
-    stackArcObj.arc.end = e;
-    return stackArcObj;
-}
-
 float radians(float degree)
 {
     return degree * embConstantPi / 180.0;
@@ -244,24 +234,6 @@ float embEllipse_height(EmbEllipse ellipse)
     return ellipse.radius.y * 2.0;
 }
 
-/* Returns an EmbEllipseObject. It is created on the stack. */
-EmbEllipseObject embEllipseObject_make(EmbVector c, EmbVector r)
-{
-    EmbEllipseObject stackEllipseObj;
-    stackEllipseObj.ellipse.center = c;
-    stackEllipseObj.ellipse.radius = r;
-    return stackEllipseObj;
-}
-
-/* Returns an EmbLine. It is created on the stack. */
-EmbLine embLine_make(EmbVector start, EmbVector end)
-{
-    EmbLine line;
-    line.start = start;
-    line.end = end;
-    return line;
-}
-
 void embVector_normalVector(EmbVector dir, EmbVector* result, int clockwise)
 {
     float temp;
@@ -376,17 +348,6 @@ void embRect_setRect(EmbRect* rect, float x, float y, float w, float h)
     rect->top = y;
     rect->right = x + w;
     rect->bottom = y + h;
-}
-
-/* Returns an EmbRectObject. It is created on the stack. */
-EmbRectObject embRectObject_make(float x, float y, float w, float h)
-{
-    EmbRectObject stackRectObj;
-    stackRectObj.rect.left = x;
-    stackRectObj.rect.top = y;
-    stackRectObj.rect.right = x + w;
-    stackRectObj.rect.bottom = y + h;
-    return stackRectObj;
 }
 
 /**

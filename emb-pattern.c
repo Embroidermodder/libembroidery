@@ -1,5 +1,3 @@
-static EmbColor black = { 0, 0, 0 };
-
 /*! Returns a pointer to an EmbPattern. It is created on the heap.
  * The caller is responsible for freeing the allocated memory with
  * embPattern_free(). */
@@ -96,7 +94,7 @@ void embPattern_fixColorCount(EmbPattern* p)
 /*! Copies all of the EmbStitchList data to EmbPolylineObjectList data for pattern (\a p). */
 void embPattern_copyStitchListToPolylines(EmbPattern* p)
 {
-    EmbPointObject* point;
+    EmbVector point;
     int breakAtFlags, i;
     EmbStitch st;
 
@@ -125,10 +123,9 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
                     pointList = embArray_create(EMB_POINT);
                     color = p->threads->thread[st.color].color;
                 }
-                point = (EmbPointObject*)malloc(sizeof(EmbPointObject));
-                point->point.x = st.x;
-                point->point.y = st.y;
-                embArray_addPoint(pointList, point);
+                point.x = st.x;
+                point.y = st.y;
+                embArray_addPoint(pointList, point, 0, color);
             }
         }
 
@@ -189,17 +186,17 @@ void embPattern_copyPolylinesToStitchList(EmbPattern* p)
         embPattern_addThread(p, thread);
 
         if (!firstObject) {
-            embPattern_addStitchAbs(p, currentPointList->point[0].point.x, currentPointList->point[0].point.y, TRIM, 1);
+            embPattern_addStitchAbs(p, currentPointList->point[0].x, currentPointList->point[0].y, TRIM, 1);
             embPattern_addStitchRel(p, 0.0, 0.0, STOP, 1);
         }
 
-        embPattern_addStitchAbs(p, currentPointList->point[0].point.x, currentPointList->point[0].point.y, JUMP, 1);
+        embPattern_addStitchAbs(p, currentPointList->point[0].x, currentPointList->point[0].y, JUMP, 1);
         for (j = 1; j < currentPointList->count; j++) {
-            embPattern_addStitchAbs(p, currentPointList->point[j].point.x, currentPointList->point[j].point.y, NORMAL, 1);
+            embPattern_addStitchAbs(p, currentPointList->point[j].x, currentPointList->point[j].y, NORMAL, 1);
         }
         firstObject = 0;
     }
-    embPattern_addStitchRel(p, 0.0, 0.0, END, 1);
+    embPattern_end(p);
 }
 
 /*! Moves all of the EmbStitchList data to EmbPolylineObjectList data for pattern (\a p). */
@@ -412,7 +409,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     if (p->arcs) {
         /* TODO: embPattern_calcBoundingBox for arcs, for now just checks the start point */
         for (i = 0; i < p->arcs->count; i++) {
-            EmbArc arc = p->arcs->arc[i].arc;
+            EmbArc arc = p->arcs->arc[i];
             boundingRect.left = EMB_MIN_2(boundingRect.left, arc.start.x);
             boundingRect.top = EMB_MIN_2(boundingRect.top, arc.start.y);
             boundingRect.right = EMB_MAX_2(boundingRect.right, arc.start.x);
@@ -422,7 +419,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->circles) {
         for (i = 0; i < p->circles->count; i++) {
-            EmbCircle circle = p->circles->circle[i].circle;
+            EmbCircle circle = p->circles->circle[i];
             boundingRect.left = EMB_MIN_2(boundingRect.left, circle.center.x - circle.radius);
             boundingRect.top = EMB_MIN_2(boundingRect.top, circle.center.y - circle.radius);
             boundingRect.right = EMB_MAX_2(boundingRect.right, circle.center.x + circle.radius);
@@ -433,7 +430,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     if (p->ellipses) {
         for (i = 0; i < p->ellipses->count; i++) {
             /* TODO: account for rotation */
-            EmbEllipse ellipse = p->ellipses->ellipse[i].ellipse;
+            EmbEllipse ellipse = p->ellipses->ellipse[i];
             boundingRect.left = EMB_MIN_2(boundingRect.left, ellipse.center.x - ellipse.radius.x);
             boundingRect.top = EMB_MIN_2(boundingRect.top, ellipse.center.y - ellipse.radius.y);
             boundingRect.right = EMB_MAX_2(boundingRect.right, ellipse.center.x + ellipse.radius.x);
@@ -443,7 +440,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->lines) {
         for (i = 0; i < p->lines->count; i++) {
-            EmbLine line = p->lines->line[i].line;
+            EmbLine line = p->lines->line[i];
             boundingRect.left = EMB_MIN_3(boundingRect.left, line.start.x, line.end.x);
             boundingRect.top = EMB_MIN_3(boundingRect.top, line.start.y, line.end.y);
             boundingRect.right = EMB_MAX_3(boundingRect.right, line.start.x, line.end.x);
@@ -453,7 +450,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->points) {
         for (i = 0; i < p->points->count; i++) {
-            EmbVector point = p->points->point[i].point;
+            EmbVector point = p->points->point[i];
             boundingRect.left = EMB_MIN_2(boundingRect.left, point.x);
             boundingRect.top = EMB_MIN_2(boundingRect.top, point.y);
             boundingRect.right = EMB_MAX_2(boundingRect.right, point.x);
@@ -489,7 +486,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->rects) {
         for (i = 0; i < p->rects->count; i++) {
-            EmbRect rect = p->rects->rect[i].rect;
+            EmbRect rect = p->rects->rect[i];
             /* TODO: other points */
             boundingRect.left = EMB_MIN_2(boundingRect.left, rect.left);
             boundingRect.top = EMB_MIN_2(boundingRect.top, rect.left);
@@ -571,14 +568,14 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     if (p->arcs) {
         for (i = 0; i < p->arcs->count; i++) {
             if (horz) {
-                p->arcs->arc[i].arc.start.x *= -1.0;
-                p->arcs->arc[i].arc.mid.x *= -1.0;
-                p->arcs->arc[i].arc.end.x *= -1.0;
+                p->arcs->arc[i].start.x *= -1.0;
+                p->arcs->arc[i].mid.x *= -1.0;
+                p->arcs->arc[i].end.x *= -1.0;
             }
             if (vert) {
-                p->arcs->arc[i].arc.start.y *= -1.0;
-                p->arcs->arc[i].arc.mid.y *= -1.0;
-                p->arcs->arc[i].arc.end.y *= -1.0;
+                p->arcs->arc[i].start.y *= -1.0;
+                p->arcs->arc[i].mid.y *= -1.0;
+                p->arcs->arc[i].end.y *= -1.0;
             }
         }
     }
@@ -586,10 +583,10 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     if (p->circles) {
         for (i = 0; i < p->circles->count; i++) {
             if (horz) {
-                p->circles->circle[i].circle.center.x *= -1.0;
+                p->circles->circle[i].center.x *= -1.0;
             }
             if (vert) {
-                p->circles->circle[i].circle.center.y *= -1.0;
+                p->circles->circle[i].center.y *= -1.0;
             }
         }
     }
@@ -597,10 +594,10 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     if (p->ellipses) {
         for (i = 0; i < p->ellipses->count; i++) {
             if (horz) {
-                p->ellipses->ellipse[i].ellipse.center.x *= -1.0;
+                p->ellipses->ellipse[i].center.x *= -1.0;
             }
             if (vert) {
-                p->ellipses->ellipse[i].ellipse.center.y *= -1.0;
+                p->ellipses->ellipse[i].center.y *= -1.0;
             }
         }
     }
@@ -608,12 +605,12 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     if (p->lines) {
         for (i = 0; i < p->lines->count; i++) {
             if (horz) {
-                p->lines->line[i].line.start.x *= -1.0;
-                p->lines->line[i].line.end.x *= -1.0;
+                p->lines->line[i].start.x *= -1.0;
+                p->lines->line[i].end.x *= -1.0;
             }
             if (vert) {
-                p->lines->line[i].line.start.y *= -1.0;
-                p->lines->line[i].line.end.y *= -1.0;
+                p->lines->line[i].start.y *= -1.0;
+                p->lines->line[i].end.y *= -1.0;
             }
         }
     }
@@ -623,10 +620,10 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
             EmbArray* path = p->paths->path[i]->pointList;
             for (j = 0; j < path->count; j++) {
                 if (horz) {
-                    path->point[j].point.x *= -1.0;
+                    path->point[j].x *= -1.0;
                 }
                 if (vert) {
-                    path->point[j].point.y *= -1.0;
+                    path->point[j].y *= -1.0;
                 }
             }
         }
@@ -635,10 +632,10 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     if (p->points) {
         for (i = 0; i < p->points->count; i++) {
             if (horz) {
-                p->points->point[i].point.x *= -1.0;
+                p->points->point[i].x *= -1.0;
             }
             if (vert) {
-                p->points->point[i].point.y *= -1.0;
+                p->points->point[i].y *= -1.0;
             }
         }
     }
@@ -649,10 +646,10 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
             polygon = p->polygons->polygon[i]->pointList;
             for (j = 0; j < polygon->count; j++) {
                 if (horz) {
-                    polygon->point[j].point.x *= -1.0;
+                    polygon->point[j].x *= -1.0;
                 }
                 if (vert) {
-                    polygon->point[j].point.y *= -1.0;
+                    polygon->point[j].y *= -1.0;
                 }
             }
         }
@@ -664,10 +661,10 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
             polyline = p->polylines->polygon[i]->pointList;
             for (j = 0; j < polyline->count; j++) {
                 if (horz) {
-                    polyline->point[j].point.x *= -1.0;
+                    polyline->point[j].x *= -1.0;
                 }
                 if (vert) {
-                    polyline->point[j].point.y *= -1.0;
+                    polyline->point[j].y *= -1.0;
                 }
             }
         }
@@ -676,12 +673,12 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     if (p->rects) {
         for (i = 0; i < p->rects->count; i++) {
             if (horz) {
-                p->rects->rect[i].rect.left *= -1.0;
-                p->rects->rect[i].rect.right *= -1.0;
+                p->rects->rect[i].left *= -1.0;
+                p->rects->rect[i].right *= -1.0;
             }
             if (vert) {
-                p->rects->rect[i].rect.top *= -1.0;
-                p->rects->rect[i].rect.bottom *= -1.0;
+                p->rects->rect[i].top *= -1.0;
+                p->rects->rect[i].bottom *= -1.0;
             }
         }
     }
@@ -799,15 +796,6 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
     char *dotPos, *extractName;
     char hasRead;
 
-    if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), p argument is null\n");
-        return;
-    }
-    if (!fileName) {
-        embLog("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), fileName argument is null\n");
-        return;
-    }
-
     extractName = (char*)malloc(strlen(fileName) + 5);
     if (!extractName) {
         embLog("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), cannot allocate memory for extractName\n");
@@ -910,23 +898,20 @@ void embPattern_addEllipseObjectAbs(EmbPattern* p, float cx, float cy, float rx,
  */
 void embPattern_addLineObjectAbs(EmbPattern* p, float x1, float y1, float x2, float y2)
 {
-    EmbLineObject lineObj;
-    lineObj.line.start.x = x1;
-    lineObj.line.start.y = y1;
-    lineObj.line.end.x = x2;
-    lineObj.line.end.y = y2;
-    lineObj.color.r = 0;
-    lineObj.color.g = 0;
-    lineObj.color.b = 0;
+    EmbLine line;
+    line.start.x = x1;
+    line.start.y = y1;
+    line.end.x = x2;
+    line.end.y = y2;
 
     if (!p) {
         embLog("ERROR: emb-pattern.c embPattern_addLineObjectAbs(), p argument is null\n");
         return;
     }
-    if (p->circles == 0) {
+    if (!p->lines) {
         p->lines = embArray_create(EMB_LINE);
     }
-    embArray_addLine(p->lines, lineObj);
+    embArray_addLine(p->lines, line, 0, black);
 }
 
 void embPattern_addPathObjectAbs(EmbPattern* p, EmbPathObject* obj)
@@ -953,9 +938,9 @@ void embPattern_addPathObjectAbs(EmbPattern* p, EmbPathObject* obj)
 /*! Adds a point object to pattern (\a p) at the absolute position (\a x,\a y). Positive y is up. Units are in millimeters. */
 void embPattern_addPointObjectAbs(EmbPattern* p, float x, float y)
 {
-    EmbPointObject pointObj;
-    pointObj.point.x = x;
-    pointObj.point.y = y;
+    EmbVector point;
+    point.x = x;
+    point.y = y;
 
     if (!p) {
         embLog("ERROR: emb-pattern.c embPattern_addPointObjectAbs(), p argument is null\n");
@@ -964,7 +949,7 @@ void embPattern_addPointObjectAbs(EmbPattern* p, float x, float y)
     if (!p->points) {
         p->points = embArray_create(EMB_POINT);
     }
-    embArray_addPoint(p->points, &pointObj);
+    embArray_addPoint(p->points, point, 0, black);
 }
 
 void embPattern_addPolygonObjectAbs(EmbPattern* p, EmbPolygonObject* obj)
@@ -1040,7 +1025,7 @@ void embPattern_end(EmbPattern* p)
     }
 }
 
-/*! Initializes and returns an EmbSettings */
+/* Initializes and returns an EmbSettings */
 EmbSettings embSettings_init(void)
 {
     EmbSettings settings;
@@ -1050,13 +1035,14 @@ EmbSettings embSettings_init(void)
     return settings;
 }
 
-/*! Returns the home position stored in (\a settings) as an EmbPoint (\a point). */
+/* Returns the home position stored in settings as an EmbVector. */
 EmbVector embSettings_home(EmbSettings* settings)
 {
     return settings->home;
 }
 
-/*! Sets the home position stored in (\a settings) to EmbPoint (\a point). You will rarely ever need to use this. */
+/* Sets the home position stored in settings to an EmbPoint point.
+ * You will rarely ever need to use this. */
 void embSettings_setHome(EmbSettings* settings, EmbVector point)
 {
     settings->home = point;

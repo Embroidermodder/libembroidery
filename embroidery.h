@@ -253,6 +253,8 @@ typedef struct _bcf_file
     bcf_directory* directory; /*! The directory for the CompoundFile */
 } bcf_file;
 
+typedef struct EmbArray_ EmbArray;
+
 /**
  * EmbColor uses the light primaries: red, green, blue in that order.
  */
@@ -274,23 +276,6 @@ typedef struct EmbVector_
     float y;
 } EmbVector;
 
-typedef struct EmbArray_ EmbArray;
-
-/**
- * Does it make sense to have lineType for a point?
- */
-/**
- * The "Object" typedefs are remarkably similar throughout,
- * could we have a single GeometryObject type that mimics the
- * .
- */
-typedef struct EmbPointObject_
-{
-    EmbVector point;
-    int lineType;
-    EmbColor color;
-} EmbPointObject;
-
 /**
  * TODO: documentation.
  */
@@ -299,16 +284,6 @@ typedef struct EmbLine_
     EmbVector start;
     EmbVector end;
 } EmbLine;
-
-/**
- * TODO: documentation.
- */
-typedef struct EmbLineObject_
-{
-    EmbLine line;
-    int lineType;
-    EmbColor color;
-} EmbLineObject;
 
 /**
  * Is this used anywhere?
@@ -332,10 +307,10 @@ typedef struct EmbPathObject_
 
 typedef struct EmbStitch_
 {
-    int flags; /* uses codes defined above */
+    char flags; /* uses codes defined above */
     float x; /* absolute position (not relative) */
     float y; /* positive is up, units are in mm  */
-    int color; /* color number for this stitch */ /* TODO: this should be called colorIndex since it is not an EmbColor */
+    unsigned char color; /* color number for this stitch */ /* TODO: this should be called colorIndex since it is not an EmbColor */
 } EmbStitch;
 
 /**
@@ -393,13 +368,6 @@ typedef struct EmbArc_
     EmbVector end;    /* absolute position (not relative) */
 } EmbArc;
 
-typedef struct EmbArcObject_
-{
-    EmbArc arc;
-    int lineType;
-    EmbColor color;
-} EmbArcObject;
-
 typedef struct EmbRect_
 {
     float top;
@@ -414,24 +382,6 @@ typedef struct EmbCircle_
     float radius;
 } EmbCircle;
 
-typedef struct EmbCircleObject_
-{
-    EmbCircle circle;
-    int lineType;
-    EmbColor color;
-    int count;
-    int length;
-} EmbCircleObject;
-
-typedef struct EmbRectObject_
-{
-    EmbRect rect;
-    float rotation;
-    float radius;
-    int lineType;
-    EmbColor color;
-} EmbRectObject;
-
 typedef struct EmbPolygonObject_
 {
     EmbArray* pointList;
@@ -445,14 +395,6 @@ typedef struct EmbSatinOutline_
     EmbArray* side1;
     EmbArray* side2;
 } EmbSatinOutline;
-
-typedef struct EmbEllipseObject_
-{
-    EmbEllipse ellipse;
-    float rotation;
-    int lineType;
-    EmbColor color;
-} EmbEllipseObject;
 
 typedef struct EmbPolylineObject_
 {
@@ -481,20 +423,21 @@ typedef struct EmbSplineObject_ {
 } EmbSplineObject;
 
 /**
- * Only one of the pointers is used at a time so this should be a union.
+ * Instead of supporting object types use multiple pointers at once.
  */
 struct EmbArray_ {
-    EmbArcObject *arc;
-    EmbCircleObject *circle;
+    EmbArc *arc;
+    EmbCircle *circle;
     EmbColor *color;
-    EmbEllipseObject *ellipse;
+    EmbEllipse *ellipse;
     int *flag;
+    float *floats;
     EmbPathObject **path;
-    EmbPointObject *point;
-    EmbLineObject *line;
+    EmbVector *point;
+    EmbLine *line;
     EmbPolygonObject **polygon;
     EmbPolylineObject **polyline;
-    EmbRectObject *rect;
+    EmbRect *rect;
     EmbSplineObject *spline;
     EmbStitch *stitch;
     EmbThread *thread;
@@ -543,10 +486,10 @@ EMB_PUBLIC int embArray_addArc(EmbArray* g, EmbArc arc, int lineType, EmbColor c
 EMB_PUBLIC int embArray_addCircle(EmbArray* g, EmbCircle circle, int lineType, EmbColor color);
 EMB_PUBLIC int embArray_addEllipse(EmbArray* g, EmbEllipse circle, float rotation, int lineType, EmbColor color);
 EMB_PUBLIC int embArray_addFlag(EmbArray* g, int flag);
-EMB_PUBLIC int embArray_addLine(EmbArray* g, EmbLineObject line);
+EMB_PUBLIC int embArray_addLine(EmbArray* g, EmbLine line, int lineType, EmbColor color);
 EMB_PUBLIC int embArray_addRect(EmbArray* g, EmbRect rect, int lineType, EmbColor color);
 EMB_PUBLIC int embArray_addPath(EmbArray* g, EmbPathObject *p);
-EMB_PUBLIC int embArray_addPoint(EmbArray* g, EmbPointObject *p);
+EMB_PUBLIC int embArray_addPoint(EmbArray* g, EmbVector p, int lineType, EmbColor color);
 EMB_PUBLIC int embArray_addPolygon(EmbArray* g, EmbPolygonObject *p);
 EMB_PUBLIC int embArray_addPolyline(EmbArray* g, EmbPolylineObject *p);
 EMB_PUBLIC int embArray_addStitch(EmbArray* g, EmbStitch st);
@@ -554,7 +497,6 @@ EMB_PUBLIC int embArray_addThread(EmbArray* g, EmbThread p);
 EMB_PUBLIC int embArray_addVector(EmbArray* g, EmbVector);
 EMB_PUBLIC void embArray_free(EmbArray* p);
 
-EMB_PUBLIC EmbLine embLine_make(EmbVector start, EmbVector end);
 EMB_PUBLIC void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise);
 EMB_PUBLIC unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector* result);
 
@@ -577,8 +519,6 @@ EMB_PUBLIC char embFormat_readerStateFromName(const char* fileName);
 EMB_PUBLIC char embFormat_writerStateFromName(const char* fileName);
 EMB_PUBLIC int embFormat_typeFromName(const char* fileName);
 
-EMB_PUBLIC EmbArcObject embArcObject_make(EmbVector s, EmbVector m, EmbVector e);
-
 EMB_PUBLIC char isArcClockwise(EmbArc arc);
 EMB_PUBLIC void getArcCenter(EmbArc arc, EmbVector *arcCenter);
 EMB_PUBLIC char getArcDataFromBulge(float bulge, EmbArc* arc, EmbVector* arcCenter,
@@ -600,8 +540,6 @@ EMB_PUBLIC float embEllipse_diameterX(EmbEllipse ellipse);
 EMB_PUBLIC float embEllipse_diameterY(EmbEllipse ellipse);
 EMB_PUBLIC float embEllipse_width(EmbEllipse ellipse);
 EMB_PUBLIC float embEllipse_height(EmbEllipse ellipse);
-
-EMB_PUBLIC EmbEllipseObject embEllipseObject_make(EmbVector, EmbVector);
 
 EMB_PUBLIC EmbFile* embFile_open(const char* fileName, const char* mode, int optional);
 EMB_PUBLIC void embFile_readline(EmbFile* stream, char *, int);
@@ -642,8 +580,6 @@ EMB_PUBLIC void embRect_setHeight(EmbRect* rect, float h);
 
 EMB_PUBLIC void embRect_setCoords(EmbRect* rect, float x1, float y1, float x2, float y2);
 EMB_PUBLIC void embRect_setRect(EmbRect* rect, float x, float y, float w, float h);
-
-EMB_PUBLIC EmbRectObject embRectObject_make(float x, float y, float w, float h);
 
 EMB_PUBLIC int embReaderWriter_getByFileName(const char* fileName);
 

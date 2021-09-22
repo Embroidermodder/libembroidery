@@ -7,13 +7,13 @@ EmbArray* embArray_create(int type)
     p->count = 0;
     switch (p->type) {
     case EMB_ARC:
-        p->arc = (EmbArcObject*)malloc(CHUNK_SIZE * sizeof(EmbArcObject));
+        p->arc = (EmbArc*)malloc(CHUNK_SIZE * sizeof(EmbArc));
         break;
     case EMB_CIRCLE:
-        p->circle = (EmbCircleObject*)malloc(CHUNK_SIZE * sizeof(EmbCircleObject));
+        p->circle = (EmbCircle*)malloc(CHUNK_SIZE * sizeof(EmbCircle));
         break;
     case EMB_ELLIPSE:
-        p->ellipse = (EmbEllipseObject*)malloc(CHUNK_SIZE * sizeof(EmbEllipseObject));
+        p->ellipse = (EmbEllipse*)malloc(CHUNK_SIZE * sizeof(EmbEllipse));
         break;
     case EMB_FLAG:
         p->flag = (int*)malloc(CHUNK_SIZE * sizeof(int));
@@ -22,10 +22,10 @@ EmbArray* embArray_create(int type)
         p->path = (EmbPathObject**)malloc(CHUNK_SIZE * sizeof(EmbPathObject*));
         break;
     case EMB_POINT:
-        p->point = (EmbPointObject*)malloc(CHUNK_SIZE * sizeof(EmbPointObject));
+        p->point = (EmbVector*)malloc(CHUNK_SIZE * sizeof(EmbVector));
         break;
     case EMB_LINE:
-        p->line = (EmbLineObject*)malloc(CHUNK_SIZE * sizeof(EmbLineObject));
+        p->line = (EmbLine*)malloc(CHUNK_SIZE * sizeof(EmbLine));
         break;
     case EMB_POLYGON:
         p->polygon = (EmbPolygonObject**)malloc(CHUNK_SIZE * sizeof(EmbPolygonObject*));
@@ -34,7 +34,7 @@ EmbArray* embArray_create(int type)
         p->polyline = (EmbPolylineObject**)malloc(CHUNK_SIZE * sizeof(EmbPolylineObject*));
         break;
     case EMB_RECT:
-        p->rect = (EmbRectObject*)malloc(CHUNK_SIZE * sizeof(EmbRectObject));
+        p->rect = (EmbRect*)malloc(CHUNK_SIZE * sizeof(EmbRect));
         break;
     case EMB_SPLINE:
         p->spline = (EmbSplineObject*)malloc(CHUNK_SIZE * sizeof(EmbSplineObject));
@@ -51,6 +51,33 @@ EmbArray* embArray_create(int type)
     default:
         break;
     }
+    switch (p->type) {
+    case EMB_ARC:
+    case EMB_CIRCLE:
+    case EMB_POINT:
+    case EMB_LINE:
+    case EMB_RECT:
+        p->color = (EmbColor*)malloc(CHUNK_SIZE * sizeof(EmbColor));
+        if (!p->color)
+            return 0;
+        p->flag = (int*)malloc(CHUNK_SIZE * sizeof(int));
+        if (!p->flag)
+            return 0;
+        break;
+    case EMB_ELLIPSE:
+        p->color = (EmbColor*)malloc(CHUNK_SIZE * sizeof(EmbColor));
+        if (!p->color)
+            return 0;
+        p->flag = (int*)malloc(CHUNK_SIZE * sizeof(int));
+        if (!p->flag)
+            return 0;
+        p->floats = (float*)malloc(CHUNK_SIZE * sizeof(float));
+        if (!p->floats)
+            return 0;
+        break;
+    default:
+        break;
+    }
     return p;
 }
 
@@ -61,17 +88,17 @@ int embArray_resize(EmbArray* p)
     p->length += CHUNK_SIZE;
     switch (p->type) {
     case EMB_ARC:
-        p->arc = realloc(p->arc, p->length * sizeof(EmbArcObject));
+        p->arc = realloc(p->arc, p->length * sizeof(EmbArc));
         if (!p->arc)
             return 1;
         break;
     case EMB_CIRCLE:
-        p->circle = realloc(p->circle, p->length * sizeof(EmbCircleObject));
+        p->circle = realloc(p->circle, p->length * sizeof(EmbCircle));
         if (!p->circle)
             return 1;
         break;
     case EMB_ELLIPSE:
-        p->ellipse = realloc(p->ellipse, p->length * sizeof(EmbEllipseObject));
+        p->ellipse = realloc(p->ellipse, p->length * sizeof(EmbEllipse));
         if (!p->ellipse)
             return 1;
         break;
@@ -86,12 +113,12 @@ int embArray_resize(EmbArray* p)
             return 1;
         break;
     case EMB_POINT:
-        p->point = realloc(p->point, p->length * sizeof(EmbPointObject));
+        p->point = realloc(p->point, p->length * sizeof(EmbVector));
         if (!p->point)
             return 1;
         break;
     case EMB_LINE:
-        p->line = realloc(p->line, p->length * sizeof(EmbLineObject));
+        p->line = realloc(p->line, p->length * sizeof(EmbLine));
         if (!p->line)
             return 1;
         break;
@@ -106,7 +133,7 @@ int embArray_resize(EmbArray* p)
             return 1;
         break;
     case EMB_RECT:
-        p->rect = realloc(p->rect, p->length * sizeof(EmbRectObject));
+        p->rect = realloc(p->rect, p->length * sizeof(EmbRect));
         if (!p->rect)
             return 1;
         break;
@@ -133,6 +160,33 @@ int embArray_resize(EmbArray* p)
     default:
         break;
     }
+    switch (p->type) {
+    case EMB_ARC:
+    case EMB_CIRCLE:
+    case EMB_POINT:
+    case EMB_LINE:
+    case EMB_RECT:
+        p->color = realloc(p->color, p->length * sizeof(EmbColor));
+        if (!p->color)
+            return 1;
+        p->flag = realloc(p->flag, p->length * sizeof(int));
+        if (!p->flag)
+            return 1;
+        break;
+    case EMB_ELLIPSE:
+        p->color = realloc(p->color, p->length * sizeof(EmbColor));
+        if (!p->color)
+            return 1;
+        p->flag = realloc(p->flag, p->length * sizeof(int));
+        if (!p->flag)
+            return 1;
+        p->floats = realloc(p->floats, p->length * sizeof(float));
+        if (!p->floats)
+            return 1;
+        break;
+    default:
+        break;
+    }
     return 0;
 }
 
@@ -141,9 +195,9 @@ int embArray_addArc(EmbArray* p, EmbArc arc, int lineType, EmbColor color)
     p->count++;
     if (!embArray_resize(p))
         return 0;
-    p->arc[p->count - 1].arc = arc;
-    p->arc[p->count - 1].lineType = lineType;
-    p->arc[p->count - 1].color = color;
+    p->arc[p->count - 1] = arc;
+    p->flag[p->count - 1] = lineType;
+    p->color[p->count - 1] = color;
     return 1;
 }
 
@@ -152,9 +206,9 @@ int embArray_addCircle(EmbArray* p, EmbCircle circle, int lineType, EmbColor col
     p->count++;
     if (!embArray_resize(p))
         return 0;
-    p->circle[p->count - 1].circle = circle;
-    p->circle[p->count - 1].lineType = lineType;
-    p->circle[p->count - 1].color = color;
+    p->circle[p->count - 1] = circle;
+    p->flag[p->count - 1] = lineType;
+    p->color[p->count - 1] = color;
     return 1;
 }
 
@@ -164,10 +218,10 @@ int embArray_addEllipse(EmbArray* p,
     p->count++;
     if (!embArray_resize(p))
         return 0;
-    p->ellipse[p->count - 1].ellipse = ellipse;
-    p->ellipse[p->count - 1].rotation = rotation;
-    p->ellipse[p->count - 1].lineType = lineType;
-    p->ellipse[p->count - 1].color = color;
+    p->ellipse[p->count - 1] = ellipse;
+    p->floats[p->count - 1] = rotation;
+    p->flag[p->count - 1] = lineType;
+    p->color[p->count - 1] = color;
     return 1;
 }
 
@@ -180,12 +234,14 @@ int embArray_addFlag(EmbArray* p, int flag)
     return 1;
 }
 
-int embArray_addLine(EmbArray* p, EmbLineObject line)
+int embArray_addLine(EmbArray* p, EmbLine line, int lineType, EmbColor color)
 {
     p->count++;
     if (!embArray_resize(p))
         return 0;
     p->line[p->count - 1] = line;
+    p->flag[p->count - 1] = lineType;
+    p->color[p->count - 1] = color;
     return 1;
 }
 
@@ -203,12 +259,14 @@ int embArray_addPath(EmbArray* p, EmbPathObject* path)
     return 1;
 }
 
-int embArray_addPoint(EmbArray* p, EmbPointObject* point)
+int embArray_addPoint(EmbArray* p, EmbVector point, int lineType, EmbColor color)
 {
     p->count++;
     if (!embArray_resize(p))
         return 0;
-    p->point[p->count - 1] = *point;
+    p->point[p->count - 1] = point;
+    p->flag[p->count - 1] = lineType;
+    p->color[p->count - 1] = color;
     return 1;
 }
 
@@ -253,9 +311,9 @@ int embArray_addRect(EmbArray* p,
     p->count++;
     if (!embArray_resize(p))
         return 0;
-    p->rect[p->count - 1].rect = rect;
-    p->rect[p->count - 1].lineType = lineType;
-    p->rect[p->count - 1].color = color;
+    p->rect[p->count - 1] = rect;
+    p->flag[p->count - 1] = lineType;
+    p->color[p->count - 1] = color;
     return 1;
 }
 
@@ -359,7 +417,22 @@ void embArray_free(EmbArray* p)
     default:
         break;
     }
+    switch (p->type) {
+    case EMB_ARC:
+    case EMB_CIRCLE:
+    case EMB_POINT:
+    case EMB_LINE:
+    case EMB_RECT:
+        free(p->color);
+        free(p->flag);
+        break;
+    case EMB_ELLIPSE:
+        free(p->color);
+        free(p->flag);
+        free(p->floats);
+    default:
+        break;
+    }
     free(p);
-    p = 0;
 }
 

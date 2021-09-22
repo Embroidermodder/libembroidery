@@ -77,7 +77,7 @@
  * us to stack the variables up, this is particularly useful for bounding box
  * calculations.
  *
- * This also saves having int, float, double, etc. versions.
+ * This also saves having int, float, float, etc. versions.
  */
 #define EMB_MAX_2(a, b) \
     ((a > b) ? a : b)
@@ -130,7 +130,7 @@ static void binaryWriteUInt(EmbFile* file, unsigned int data);
 static void binaryWriteUIntBE(EmbFile* file, unsigned int data);
 static void binaryWriteFloat(EmbFile* file, float data);
 
-static int roundDouble(double src);
+static int roundDouble(float src);
 static void writeInt(EmbFile *, int, int);
 static void writeFloat(EmbFile *, float);
 static char* lTrim(char* str, char junk);

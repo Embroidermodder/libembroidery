@@ -159,7 +159,7 @@ int embArray_addCircle(EmbArray* p, EmbCircle circle, int lineType, EmbColor col
 }
 
 int embArray_addEllipse(EmbArray* p,
-    EmbEllipse ellipse, double rotation, int lineType, EmbColor color)
+    EmbEllipse ellipse, float rotation, int lineType, EmbColor color)
 {
     p->count++;
     if (!embArray_resize(p))

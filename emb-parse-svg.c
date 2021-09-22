@@ -33,7 +33,7 @@ static void writeColor(EmbFile* file, EmbColor color)
     embFile_print(file, str);
 }
 
-static void writePoint(EmbFile* file, double x, double y, int space)
+static void writePoint(EmbFile* file, float x, float y, int space)
 {
     if (space) {
         embFile_print(file, " ");
@@ -125,7 +125,7 @@ int writeSvg(EmbPattern *pattern, EmbFile *file, const char *fileName)
 #define SVG_ATTRIBUTE                  4
 #define SVG_CATCH_ALL                  5
 
-static void writePoint(EmbFile* file, double x, double y, int space);
+static void writePoint(EmbFile* file, float x, float y, int space);
 static void writeColor(EmbFile* file, EmbColor color);
 static void writeCircles(EmbPattern* pattern, EmbFile* file);
 static void writeEllipse(EmbPattern* pattern, EmbFile* file);
@@ -612,16 +612,16 @@ void svgAddToPattern(EmbPattern* p)
         /* An odometer aka 'tripometer' used for stepping thru the pathData */
         int trip = -1; /* count of float[] that has been filled. 0=first item of array, -1=not filled = empty array */
         int reset = -1;
-        double xx = 0.0;
-        double yy = 0.0;
-        double fx = 0.0;
-        double fy = 0.0;
-        double lx = 0.0;
-        double ly = 0.0;
-        double cx1 = 0.0, cx2 = 0.0;
-        double cy1 = 0.0, cy2 = 0.0;
+        float xx = 0.0;
+        float yy = 0.0;
+        float fx = 0.0;
+        float fy = 0.0;
+        float lx = 0.0;
+        float ly = 0.0;
+        float cx1 = 0.0, cx2 = 0.0;
+        float cy1 = 0.0, cy2 = 0.0;
         int cmd = 0;
-        double pathData[7];
+        float pathData[7];
         unsigned int numMoves = 0;
         int pendingTask = 0;
         int relative = 0;
@@ -861,8 +861,8 @@ void svgAddToPattern(EmbPattern* p)
         int c = 0;
         int pos = 0;
         unsigned char odd = 1;
-        double xx = 0.0;
-        double yy = 0.0;
+        float xx = 0.0;
+        float yy = 0.0;
 
         EmbArray* pointList = 0;
 

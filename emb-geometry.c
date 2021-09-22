@@ -1,4 +1,4 @@
-static const double embConstantPi = 3.1415926535;
+static const float embConstantPi = 3.1415926535;
 
 /* Returns an EmbArcObject. It is created on the stack. */
 EmbArcObject embArcObject_make(EmbVector s, EmbVector m, EmbVector e)
@@ -10,12 +10,12 @@ EmbArcObject embArcObject_make(EmbVector s, EmbVector m, EmbVector e)
     return stackArcObj;
 }
 
-double radians(double degree)
+float radians(float degree)
 {
     return degree * embConstantPi / 180.0;
 }
 
-double degrees(double radian)
+float degrees(float radian)
 {
     return radian * 180.0 / embConstantPi;
 }
@@ -24,9 +24,9 @@ double degrees(double radian)
  * Returns true if arc is clockwise. */
 char isArcClockwise(EmbArc arc)
 {
-    double edge1 = (arc.mid.x - arc.start.x) * (arc.mid.y + arc.start.y);
-    double edge2 = (arc.end.x - arc.mid.x) * (arc.end.y + arc.mid.y);
-    double edge3 = (arc.start.x - arc.end.x) * (arc.start.y + arc.end.y);
+    float edge1 = (arc.mid.x - arc.start.x) * (arc.mid.y + arc.start.y);
+    float edge2 = (arc.end.x - arc.mid.x) * (arc.end.y + arc.mid.y);
+    float edge3 = (arc.start.x - arc.end.x) * (arc.start.y + arc.end.y);
     if (edge1 + edge2 + edge3 >= 0.0) {
         return 1;
     }
@@ -53,16 +53,16 @@ void getArcCenter(EmbArc arc, EmbVector* arcCenter)
 
 /* Calculates Arc Geometry from Bulge Data.
  * Returns false if there was an error calculating the data. */
-char getArcDataFromBulge(double bulge, EmbArc* arc, EmbVector* arcCenter,
-    double* radius, double* diameter, double* chord,
+char getArcDataFromBulge(float bulge, EmbArc* arc, EmbVector* arcCenter,
+    float* radius, float* diameter, float* chord,
     EmbVector* chordMid,
-    double* sagitta, double* apothem,
-    double* incAngleInDegrees, char* clockwise)
+    float* sagitta, float* apothem,
+    float* incAngleInDegrees, char* clockwise)
 {
     EmbVector f, diff;
-    double incAngleInRadians;
-    double chordAngleInRadians;
-    double sagittaAngleInRadians;
+    float incAngleInRadians;
+    float chordAngleInRadians;
+    float sagittaAngleInRadians;
 
     if (bulge >= 0.0) {
         *clockwise = 0;
@@ -118,7 +118,7 @@ char getArcDataFromBulge(double bulge, EmbArc* arc, EmbVector* arcCenter,
 int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVector* p3, EmbVector* p4)
 {
     EmbVector diff, p2, m;
-    double a, h, d;
+    float a, h, d;
     embVector_subtract(c1.center, c0.center, &diff);
     d = embVector_getLength(diff); /* Distance between centers */
 
@@ -175,7 +175,7 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVector* p3, EmbV
 
        TODO: using == in floating point arithmetic
        doesn't account for the machine accuracy, having
-       a stated (double) tolerence value would help.
+       a stated (float) tolerence value would help.
     */
     if (d == (c0.radius + c1.radius)) {
         *p3 = *p4 = p2;
@@ -203,7 +203,7 @@ int getCircleTangentPoints(EmbCircle c, EmbVector point, EmbVector* t0, EmbVecto
 {
     EmbCircle p;
     EmbVector diff;
-    double hyp;
+    float hyp;
     embVector_subtract(point, c.center, &diff);
     hyp = embVector_getLength(diff); /* Distance to center of circle */
 
@@ -224,22 +224,22 @@ int getCircleTangentPoints(EmbCircle c, EmbVector point, EmbVector* t0, EmbVecto
     return getCircleCircleIntersections(c, p, t0, t1);
 }
 
-double embEllipse_diameterX(EmbEllipse ellipse)
+float embEllipse_diameterX(EmbEllipse ellipse)
 {
     return ellipse.radius.x * 2.0;
 }
 
-double embEllipse_diameterY(EmbEllipse ellipse)
+float embEllipse_diameterY(EmbEllipse ellipse)
 {
     return ellipse.radius.y * 2.0;
 }
 
-double embEllipse_width(EmbEllipse ellipse)
+float embEllipse_width(EmbEllipse ellipse)
 {
     return ellipse.radius.x * 2.0;
 }
 
-double embEllipse_height(EmbEllipse ellipse)
+float embEllipse_height(EmbEllipse ellipse)
 {
     return ellipse.radius.y * 2.0;
 }
@@ -264,7 +264,7 @@ EmbLine embLine_make(EmbVector start, EmbVector end)
 
 void embVector_normalVector(EmbVector dir, EmbVector* result, int clockwise)
 {
-    double temp;
+    float temp;
     embVector_normalize(dir, result);
     temp = result->x;
     result->x = result->y;
@@ -293,7 +293,7 @@ void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise)
 unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector* result)
 {
     EmbVector D1, D2, C;
-    double tolerence, det;
+    float tolerence, det;
     tolerence = 1e-10;
     embVector_subtract(line1.end, line1.start, &D2);
     C.y = embVector_cross(line1.start, D2);
@@ -318,51 +318,51 @@ unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector*
     return 1;
 }
 
-double embRect_x(EmbRect rect)
+float embRect_x(EmbRect rect)
 {
     return rect.left;
 }
 
-double embRect_y(EmbRect rect)
+float embRect_y(EmbRect rect)
 {
     return rect.top;
 }
 
-double embRect_width(EmbRect rect)
+float embRect_width(EmbRect rect)
 {
     return rect.right - rect.left;
 }
 
-double embRect_height(EmbRect rect)
+float embRect_height(EmbRect rect)
 {
     return rect.bottom - rect.top;
 }
 
 /* Sets the left edge of the rect to x. The right edge is not modified. */
-void embRect_setX(EmbRect* rect, double x)
+void embRect_setX(EmbRect* rect, float x)
 {
     rect->left = x;
 }
 
 /* Sets the top edge of the rect to y. The bottom edge is not modified. */
-void embRect_setY(EmbRect* rect, double y)
+void embRect_setY(EmbRect* rect, float y)
 {
     rect->top = y;
 }
 
 /* Sets the width of the rect to w. The right edge is modified. The left edge is not modified. */
-void embRect_setWidth(EmbRect* rect, double w)
+void embRect_setWidth(EmbRect* rect, float w)
 {
     rect->right = rect->left + w;
 }
 
 /* Sets the height of the rect to h. The bottom edge is modified. The top edge is not modified. */
-void embRect_setHeight(EmbRect* rect, double h)
+void embRect_setHeight(EmbRect* rect, float h)
 {
     rect->bottom = rect->top + h;
 }
 
-void embRect_setCoords(EmbRect* rect, double x1, double y1, double x2, double y2)
+void embRect_setCoords(EmbRect* rect, float x1, float y1, float x2, float y2)
 {
     rect->left = x1;
     rect->top = y1;
@@ -370,7 +370,7 @@ void embRect_setCoords(EmbRect* rect, double x1, double y1, double x2, double y2
     rect->bottom = y2;
 }
 
-void embRect_setRect(EmbRect* rect, double x, double y, double w, double h)
+void embRect_setRect(EmbRect* rect, float x, float y, float w, float h)
 {
     rect->left = x;
     rect->top = y;
@@ -379,7 +379,7 @@ void embRect_setRect(EmbRect* rect, double x, double y, double w, double h)
 }
 
 /* Returns an EmbRectObject. It is created on the stack. */
-EmbRectObject embRectObject_make(double x, double y, double w, double h)
+EmbRectObject embRectObject_make(float x, float y, float w, float h)
 {
     EmbRectObject stackRectObj;
     stackRectObj.rect.left = x;
@@ -394,7 +394,7 @@ EmbRectObject embRectObject_make(double x, double y, double w, double h)
  */
 void embVector_normalize(EmbVector vector, EmbVector* result)
 {
-    double length;
+    float length;
     length = embVector_getLength(vector);
 
     if (!result) {
@@ -409,7 +409,7 @@ void embVector_normalize(EmbVector vector, EmbVector* result)
  * The scalar multiple \a magnatude of a vector \a vector. Returned as
  * \a result.
  */
-void embVector_multiply(EmbVector vector, double magnitude, EmbVector* result)
+void embVector_multiply(EmbVector vector, float magnitude, EmbVector* result)
 {
     if (!result) {
         embLog("ERROR: emb-vector.c embVector_multiply(), result argument is null\n");
@@ -459,13 +459,13 @@ void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result)
 }
 
 /**
- * The dot product as vectors \a v1 and \a v2 returned as a double.
+ * The dot product as vectors \a v1 and \a v2 returned as a float.
  *
  * That is
  * (x)   (a) = xa+yb
  * (y) . (b)
  */
-double embVector_dot(EmbVector v1, EmbVector v2)
+float embVector_dot(EmbVector v1, EmbVector v2)
 {
     return v1.x * v2.x + v1.y * v2.y;
 }
@@ -473,7 +473,7 @@ double embVector_dot(EmbVector v1, EmbVector v2)
 /**
  * The Euclidean distance between points v1 and v2, aka |v2-v1|.
  */
-double embVector_distance(EmbVector v1, EmbVector v2)
+float embVector_distance(EmbVector v1, EmbVector v2)
 {
     EmbVector v3;
     embVector_subtract(v1, v2, &v3);
@@ -502,7 +502,7 @@ void embVector_transposeProduct(EmbVector v1, EmbVector v2, EmbVector* result)
 /**
  * The length or absolute value of the vector \a vector. 
  */
-double embVector_getLength(EmbVector vector)
+float embVector_getLength(EmbVector vector)
 {
     return sqrt(vector.x * vector.x + vector.y * vector.y);
 }
@@ -510,7 +510,7 @@ double embVector_getLength(EmbVector vector)
 /**
  * The length or absolute value of the vector \a vector. 
  */
-double embVector_cross(EmbVector a, EmbVector b)
+float embVector_cross(EmbVector a, EmbVector b)
 {
     return a.x * b.y - a.y * b.x;
 }

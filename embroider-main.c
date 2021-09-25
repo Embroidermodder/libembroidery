@@ -183,15 +183,6 @@ static int convert(const char* inf, const char* outf)
         embPattern_free(p);
         return 1;
     }
-    embPattern_read(p, inf, reader);
-
-    formatType = embFormat_typeFromName(inf);
-    if (formatType == EMBFORMAT_OBJECTONLY) {
-        formatType = embFormat_typeFromName(outf);
-        if (formatType == EMBFORMAT_STITCHONLY) {
-            embPattern_movePolylinesToStitchList(p);
-        }
-    }
 
     writer = embReaderWriter_getByFileName(outf);
     if (writer < 0) {
@@ -200,6 +191,15 @@ static int convert(const char* inf, const char* outf)
         embPattern_free(p);
         return 1;
     }
+
+    embPattern_read(p, inf, reader);
+
+    if (formatTable[reader].type == EMBFORMAT_OBJECTONLY) {
+        if (formatTable[writer].type == EMBFORMAT_STITCHONLY) {
+            embPattern_movePolylinesToStitchList(p);
+        }
+    }
+
     embPattern_write(p, outf, writer);
 
     embPattern_free(p);
@@ -395,12 +395,12 @@ static int testThreadColor(void)
 static int testEmbFormat(void)
 {
     const char* tName = "example.zsk";
-    char extension[10];
-    const char* description = embFormat_descriptionFromName(tName);
-    char reader = embFormat_readerStateFromName(tName);
-    char writer = embFormat_writerStateFromName(tName);
-    int type = embFormat_typeFromName(tName);
-    embFormat_getExtension(tName, extension);
+    int code = embReaderWriter_getByFileName(tName);
+    const char* description = formatTable[code].description;
+    const char *extension = formatTable[code].extension;
+    char reader = formatTable[code].reader;
+    char writer = formatTable[code].writer;
+    int type = formatTable[code].type;
 
     printf("Filename   : %s\n"
            "Extension  : %s\n"
@@ -427,57 +427,6 @@ static int testEmbFormat(void)
         return 24;
     return 0;
 }
-
-#if 0
-static int testHash(void)
-{
-    EmbHash* hash = 0;
-    hash = embHash_create();
-    if (!hash)
-        return 1;
-    if (!embHash_empty(hash))
-        return 2;
-    if (embHash_count(hash) != 0)
-        return 3;
-
-    /* insert */
-    if (embHash_insert(hash, "four", (void*)4))
-        return 4;
-    if (embHash_insert(hash, "five", (void*)5))
-        return 5;
-    if (embHash_insert(hash, "six", (void*)6))
-        return 6;
-    if (embHash_count(hash) != 3)
-        return 7;
-
-    /* replace */
-    if (embHash_insert(hash, "four", (void*)8))
-        return 8;
-    if (embHash_insert(hash, "five", (void*)10))
-        return 9;
-    if (embHash_insert(hash, "six", (void*)12))
-        return 10;
-    if (embHash_count(hash) != 3)
-        return 11;
-
-    /* contains */
-    if (!embHash_contains(hash, "four"))
-        return 12;
-    if (embHash_contains(hash, "empty"))
-        return 13;
-
-    /* remove */
-    embHash_remove(hash, "four");
-    if (embHash_count(hash) != 2)
-        return 14;
-    embHash_clear(hash);
-    if (embHash_count(hash) != 0)
-        return 15;
-
-    embHash_free(hash);
-    return 0;
-}
-#endif
 
 static void
 report(int result, char* label)
@@ -520,7 +469,6 @@ static int embeddedFunctionsResult(void)
 
 static void testMain(void)
 {
-    /* int hashResult = testHash(); */
     int circleResult = testEmbCircle();
     int threadResult = testThreadColor();
     int formatResult = testEmbFormat();
@@ -535,7 +483,6 @@ static void testMain(void)
 
     puts("SUMMARY OF RESULTS");
     puts("------------------");
-    /* report(hashResult, "Hash"); */
     report(circleResult, "Tangent Point");
     report(threadResult, "Thread");
     report(formatResult, "Format");

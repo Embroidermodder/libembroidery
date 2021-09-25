@@ -268,15 +268,11 @@ static char writeZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
 static EmbFile* embFile_open(const char* fileName, const char* mode, int optional);
 static int embFile_readline(EmbFile* stream, char *, int);
 static int embFile_close(EmbFile* stream);
-static int embFile_eof(EmbFile* stream);
-static char embFile_getc(EmbFile* stream);
 static size_t embFile_read(void* ptr, size_t size, size_t nmemb, EmbFile* stream);
 static size_t embFile_write(const void* ptr, size_t size, size_t nmemb, EmbFile* stream);
 static int embFile_seek(EmbFile* stream, long offset, int origin);
 static long embFile_tell(EmbFile* stream);
 static EmbFile* embFile_tmpfile(void);
-static int embFile_putc(int ch, EmbFile* stream);
-static int embFile_puts(EmbFile* stream, char *);
 static void embFile_print(EmbFile* stream, const char*);
 static void embFile_pad(EmbFile *f, char, int);
 
@@ -1825,7 +1821,6 @@ void embPattern_copyPolylinesToStitchList(EmbPattern* p)
         }
         firstObject = 0;
     }
-    embPattern_end(p);
 }
 
 /*! Moves all of the EmbStitchList data to EmbPolylineObjectList data for pattern (\a p). */
@@ -2393,7 +2388,6 @@ void embPattern_correctForMaxStitchLength(EmbPattern* p, float maxStitchLength, 
         embArray_free(p->stitchList);
         p->stitchList = newList;
     }
-    embPattern_end(p);
 }
 
 void embPattern_center(EmbPattern* p)
@@ -2644,14 +2638,6 @@ void embPattern_addRectObjectAbs(EmbPattern* p, float x, float y, float w, float
         p->rects = embArray_create(EMB_RECT);
     }
     embArray_addRect(p->rects, rect, 0, black);
-}
-
-void embPattern_end(EmbPattern* p)
-{
-    /* Check for an END stitch and add one if it is not present */
-    if (p->stitchList->stitch[p->stitchList->count - 1].flags != END) {
-        embPattern_addStitchRel(p, 0, 0, END, 1);
-    }
 }
 
 /* Initializes and returns an EmbSettings */
@@ -2940,7 +2926,6 @@ int SimplifyOutline(EmbPattern *pattern, EmbPattern *patternOut)
     foreach (var vertex in output) {
         patternOut.AddStitchAbsolute(vertex.X, vertex.Y, StitchTypes.Normal);
     }
-    embPattern_end(patternOut);
 #endif
     return 1;
 }
@@ -3416,7 +3401,10 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         return 0;
     }
 
-    embPattern_end(pattern);
+    /* Check for an END stitch and add one if it is not present */
+    if (pattern->stitchList->stitch[pattern->stitchList->count - 1].flags != END) {
+        embPattern_addStitchRel(pattern, 0, 0, END, 1);
+    }
 
     file = embFile_open(fileName, "wb", 0);
     if (!file) {
@@ -3839,7 +3827,11 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
     }
 
     embFile_close(file);
-    embPattern_end(pattern);
+
+    /* Check for an END stitch and add one if it is not present */
+    if (pattern->stitchList->stitch[pattern->stitchList->count - 1].flags != END) {
+        embPattern_addStitchRel(pattern, 0, 0, END, 1);
+    }
 
     return 1;
 }
@@ -3890,18 +3882,6 @@ int embFile_close(EmbFile* stream)
     int retVal = fclose(stream->file);
     free(stream);
     return retVal;
-#endif /* ARDUINO */
-}
-
-/**
- * TODO: documentation.
- */
-int embFile_eof(EmbFile* stream)
-{
-#ifdef ARDUINO
-    return inoFile_eof(stream);
-#else /* ARDUINO */
-    return feof(stream->file);
 #endif /* ARDUINO */
 }
 
@@ -4275,20 +4255,6 @@ static void parseDirectoryEntryName(EmbFile* file, bcf_directory_entry* dir)
 /**
  * TODO: documentation.
  */
-static void readCLSID(EmbFile* file, bcf_directory_entry* dir)
-{
-    int i;
-    unsigned char scratch;
-    const int guidSize = 16;
-    for (i = 0; i < guidSize; ++i) {
-        scratch = binaryReadByte(file);
-        dir->CLSID[i] = scratch;
-    }
-}
-
-/**
- * TODO: documentation.
- */
 bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries)
 {
     bcf_directory* dir = (bcf_directory*)malloc(sizeof(bcf_directory));
@@ -4340,7 +4306,8 @@ bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file)
     dir->leftSiblingId = binaryReadUInt32(file);
     dir->rightSiblingId = binaryReadUInt32(file);
     dir->childId = binaryReadUInt32(file);
-    readCLSID(file, dir);
+    /* guidSize = 16 */
+    embFile_read(dir->CLSID, 1, 16, file);
     dir->stateBits = binaryReadUInt32(file);
     dir->creationTime = parseTime(file);
     dir->modifiedTime = parseTime(file);
@@ -4434,8 +4401,8 @@ void bcf_file_fat_free(bcf_file_fat* fat)
 bcf_file_header bcfFileHeader_read(EmbFile* file)
 {
     bcf_file_header header;
-    binaryReadBytes(file, header.signature, 8);
-    binaryReadBytes(file, header.CLSID, 16);
+    embFile_read(header.signature, 1, 8, file);
+    embFile_read(header.CLSID, 1, 16, file);
     header.minorVersion = binaryReadUInt16(file);
     header.majorVersion = binaryReadUInt16(file);
     header.byteOrder = binaryReadUInt16(file);
@@ -4581,8 +4548,6 @@ static char read10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
         embPattern_addStitchRel(pattern, st.x, st.y, st.flags, 1);
     }
 
-    embPattern_end(pattern);
-
     return 1;
 }
 
@@ -4594,20 +4559,20 @@ static char write10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
 static char readBro(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     unsigned char x55;
-    short unknown1, unknown2, unknown3, unknown4, moreBytesToEnd;
+    short unknown[5];
     char name[8];
     int stitchType;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
     x55 = binaryReadByte(file);
-    unknown1 = binaryReadInt16(file); /* TODO: determine what this unknown data is */
+    unknown[0] = binaryReadInt16(file); /* TODO: determine what this unknown data is */
 
     embFile_read(name, 1, 8, file);
-    unknown2 = binaryReadInt16(file); /* TODO: determine what this unknown data is */
-    unknown3 = binaryReadInt16(file); /* TODO: determine what this unknown data is */
-    unknown4 = binaryReadInt16(file); /* TODO: determine what this unknown data is */
-    moreBytesToEnd = binaryReadInt16(file);
+    unknown[1] = binaryReadInt16(file); /* TODO: determine what this unknown data is */
+    unknown[2] = binaryReadInt16(file); /* TODO: determine what this unknown data is */
+    unknown[3] = binaryReadInt16(file); /* TODO: determine what this unknown data is */
+    unknown[4] = binaryReadInt16(file);
 
     embFile_seek(file, 0x100, SEEK_SET);
 
@@ -4630,8 +4595,6 @@ static char readBro(EmbPattern* pattern, EmbFile* file, const char* fileName)
         }
         embPattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
     }
-
-    embPattern_end(pattern);
 
     return 1;
 }
@@ -4773,27 +4736,29 @@ static char readCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
     } else {
         BuildDecryptionTable(identifier[0]);
     }
-    embFile_seek(file, 8, SEEK_SET);
+    /* save embFile function calls by loading in a chunk */
+    embFile_read(embBuffer, 1, 16*4, file);
     for (i = 0; i < 16; i++) {
         EmbThread thread;
-        thread.color.r = DecodeCsdByte(embFile_tell(file), binaryReadByte(file), type);
-        thread.color.g = DecodeCsdByte(embFile_tell(file), binaryReadByte(file), type);
-        thread.color.b = DecodeCsdByte(embFile_tell(file), binaryReadByte(file), type);
+        thread.color.r = DecodeCsdByte(embFile_tell(file), embBuffer[3*i+0], type);
+        thread.color.g = DecodeCsdByte(embFile_tell(file), embBuffer[3*i+1], type);
+        thread.color.b = DecodeCsdByte(embFile_tell(file), embBuffer[3*i+2], type);
         thread.catalogNumber = "";
         thread.description = "";
         embPattern_addThread(pattern, thread);
     }
-    unknown1 = DecodeCsdByte(embFile_tell(file), binaryReadByte(file), type);
-    unknown2 = DecodeCsdByte(embFile_tell(file), binaryReadByte(file), type);
+    unknown1 = DecodeCsdByte(embFile_tell(file), embBuffer[3*16+0], type);
+    unknown2 = DecodeCsdByte(embFile_tell(file), embBuffer[3*16+1], type);
 
     for (i = 0; i < 14; i++) {
-        colorOrder[i] = (unsigned char)DecodeCsdByte(embFile_tell(file), binaryReadByte(file), type);
+        colorOrder[i] = (unsigned char)DecodeCsdByte(embFile_tell(file), embBuffer[3*16+2+i], type);
     }
     for (i = 0; !endOfStream; i++) {
         char negativeX, negativeY;
-        unsigned char b0 = DecodeCsdByte(embFile_tell(file), binaryReadByte(file), type);
-        unsigned char b1 = DecodeCsdByte(embFile_tell(file), binaryReadByte(file), type);
-        unsigned char b2 = DecodeCsdByte(embFile_tell(file), binaryReadByte(file), type);
+        embFile_read(embBuffer, 1, 3, file);
+        unsigned char b0 = DecodeCsdByte(embFile_tell(file), embBuffer[0], type);
+        unsigned char b1 = DecodeCsdByte(embFile_tell(file), embBuffer[1], type);
+        unsigned char b2 = DecodeCsdByte(embFile_tell(file), embBuffer[2], type);
 
         if (b0 == 0xF8 || b0 == 0x87 || b0 == 0x91) {
             break;
@@ -4827,7 +4792,6 @@ static char readCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
             embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
 
-    embPattern_end(pattern);
     return 1;
 }
 
@@ -4840,22 +4804,22 @@ static char* csvStitchFlagToStr(int flags)
 {
     switch (flags) {
     case NORMAL:
-        return "STITCH";
+        return stitchTypeLabels[0];
         break;
     case JUMP:
-        return "JUMP";
+        return stitchTypeLabels[1];
         break;
     case TRIM:
-        return "TRIM";
+        return stitchTypeLabels[2];
         break;
     case STOP:
-        return "COLOR";
+        return stitchTypeLabels[3];
         break;
     case END:
-        return "END";
+        return stitchTypeLabels[4];
         break;
     default:
-        return "UNKNOWN";
+        return stitchTypeLabels[5];
         break;
     }
 }
@@ -4866,17 +4830,17 @@ static char csvStrToStitchFlag(const char* str)
         embLog("ERROR: format-csv.c csvStrToStitchFlag(), str argument is null\n");
         return -1;
     }
-    if (!strcmp(str, "STITCH"))
+    if (!strcmp(str, stitchTypeLabels[0]))
         return NORMAL;
-    else if (!strcmp(str, "JUMP"))
+    else if (!strcmp(str, stitchTypeLabels[1]))
         return JUMP;
-    else if (!strcmp(str, "TRIM"))
+    else if (!strcmp(str, stitchTypeLabels[2]))
         return TRIM;
-    else if (!strcmp(str, "COLOR"))
+    else if (!strcmp(str, stitchTypeLabels[3]))
         return STOP;
-    else if (!strcmp(str, "END"))
+    else if (!strcmp(str, stitchTypeLabels[4]))
         return END;
-    else if (!strcmp(str, "UNKNOWN"))
+    else if (!strcmp(str, stitchTypeLabels[5]))
         return -1;
     return -1;
 }
@@ -5042,28 +5006,9 @@ static char writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
         return 0;
     }
 
-    embPattern_end(pattern);
-
     /* write header */
-    embFile_print(file, "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n");
-    embFile_print(file, "\"#\",\"http://embroidermodder.github.io\"\n");
-    embFile_print(file, "\n");
-    embFile_print(file, "\"#\",\"General Notes:\"\n");
-    embFile_print(file, "\"#\",\"This file can be read by Excel or LibreOffice as CSV (Comma Separated Value) or with a text editor.\"\n");
-    embFile_print(file, "\"#\",\"Lines beginning with # are comments.\"\n");
-    embFile_print(file, "\"#\",\"Lines beginning with > are variables: [VAR_NAME], [VAR_VALUE]\"\n");
-    embFile_print(file, "\"#\",\"Lines beginning with $ are threads: [THREAD_NUMBER], [RED], [GREEN], [BLUE], [DESCRIPTION], [CATALOG_NUMBER]\"\n");
-    embFile_print(file, "\"#\",\"Lines beginning with * are stitch entries: [STITCH_TYPE], [X], [Y]\"\n");
-    embFile_print(file, "\n");
-    embFile_print(file, "\"#\",\"Stitch Entry Notes:\"\n");
-    embFile_print(file, "\"#\",\"STITCH instructs the machine to move to the position [X][Y] and then make a stitch.\"\n");
-    embFile_print(file, "\"#\",\"JUMP instructs the machine to move to the position [X][Y] without making a stitch.\"\n");
-    embFile_print(file, "\"#\",\"TRIM instructs the machine to cut the thread before moving to the position [X][Y] without making a stitch.\"\n");
-    embFile_print(file, "\"#\",\"COLOR instructs the machine to stop temporarily so that the user can change to a different color thread before resuming.\"\n");
-    embFile_print(file, "\"#\",\"END instructs the machine that the design is completed and there are no further instructions.\"\n");
-    embFile_print(file, "\"#\",\"UNKNOWN encompasses instructions that may not be supported currently.\"\n");
-    embFile_print(file, "\"#\",\"[X] and [Y] are absolute coordinates in millimeters (mm).\"\n");
-    embFile_print(file, "\n");
+    embFile_print(file, csvHeader);
+    embFile_print(file, csvHeader2);
 
     /* write variables */
     embFile_print(file, "\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");
@@ -5167,8 +5112,6 @@ static char readDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
         embPattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
     }
 
-    embPattern_end(pattern);
-
     return 1;
 }
 
@@ -5223,8 +5166,9 @@ static char writeDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
  * notes appeared at http://www.wotsit.org under Tajima Format.
  */
 
-/* TODO: review this then remove since emb-pattern.c has a similar function */
-/* void combineJumpStitches(EmbPattern* p, int jumpsPerTrim)
+/* TODO: review this then remove since there is a similar function */
+/*
+void combineJumpStitches(EmbPattern* p, int jumpsPerTrim)
 {
     if(!p) { embLog("ERROR: format-dst.c combineJumpStitches(), p argument is null\n"); return; }
     EmbStitchList* pointer = p->stitchList;
@@ -5280,10 +5224,12 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
     b[0] = b[1] = b[2] = 0;
 
     /* cannot encode values > +121 or < -121. */
-    if (x > 121 || x < -121)
+    if (x > 121 || x < -121) {
         embLog("ERROR: format-dst.c encode_record(), x is not in valid range [-121,121] , x =\n"); /* , x); */
-    if (y > 121 || y < -121)
+    }
+    if (y > 121 || y < -121) {
         embLog("ERROR: format-dst.c encode_record(), y is not in valid range [-121,121] , y = \n"); /* , y); */
+    }
 
     if (x >= +41) {
         SETBIT(b[2], 2);
@@ -5696,13 +5642,10 @@ static char readDsz(EmbPattern* pattern, EmbFile* file, const char* fileName)
             stitchType = STOP;
         }
         if (ctrl & 0x10) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
     }
-
-    embPattern_end(pattern);
 
     return 1;
 }
@@ -6033,7 +5976,6 @@ static char readEmd(EmbPattern* pattern, EmbFile* file, const char* fileName)
         dy = emdDecode(b1);
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    embPattern_end(pattern);
 
     return 1;
 }
@@ -6206,13 +6148,10 @@ static char readExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
             y -= 81;
         flags = exyDecodeFlags(b[2]);
         if ((flags & END) == END) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
     }
-
-    embPattern_end(pattern);
 
     return 1;
 }
@@ -6247,7 +6186,6 @@ static char readFxy(EmbPattern* pattern, EmbFile* file, const char* fileName)
             b2 = -b2;
         embPattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
     }
-    embPattern_end(pattern);
 
     return 1;
 }
@@ -6282,8 +6220,6 @@ static char readGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
             b2 = -b2;
         embPattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
     }
-
-    embPattern_end(pattern);
 
     return 1;
 }
@@ -6442,36 +6378,19 @@ static char readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
             husDecodeStitchType(attributeDataDecompressed[i]), 1);
     }
 
-    if (stringVal) {
-        free(stringVal);
-        stringVal = 0;
-    }
-    if (xData) {
-        free(xData);
-        xData = 0;
-    }
+    free(stringVal);
+    free(xData);
+    free(yData);
+    free(attributeData);
     if (xDecompressed) {
         free(xDecompressed);
-        xDecompressed = 0;
-    }
-    if (yData) {
-        free(yData);
-        yData = 0;
     }
     if (yDecompressed) {
         free(yDecompressed);
-        yDecompressed = 0;
-    }
-    if (attributeData) {
-        free(attributeData);
-        attributeData = 0;
     }
     if (attributeDataDecompressed) {
         free(attributeDataDecompressed);
-        attributeDataDecompressed = 0;
     }
-
-    embPattern_end(pattern);
 
     return 1;
 }
@@ -6809,7 +6728,6 @@ static char readJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
                     break;
                 }
             } else if (b[1] == 0x10) {
-                embPattern_end(pattern);
                 break;
             }
         }
@@ -7261,7 +7179,7 @@ static int ofmReadClass(EmbFile* file)
 
 static void ofmReadBlockHeader(EmbFile* file)
 {
-    int val1, val2, val3, val4, val5, val6, val7, val8, val9, val10; /* TODO: determine what these represent */
+    int val[10]; /* TODO: determine what these represent */
     unsigned char len;
     unsigned short short1;
     char header[512];
@@ -7280,16 +7198,16 @@ static void ofmReadBlockHeader(EmbFile* file)
     embFile_read(header, 1, 2*len, file);
     /* TODO: check return value here */
     embFile_read(header, 1, 42, file);
-    val1 = EMB_GET_INT(header+0); /*  0 */
-    val2 = EMB_GET_INT(header+4); /*  0 */
-    val3 = EMB_GET_INT(header+8); /*  0 */
-    val4 = EMB_GET_INT(header+12); /*  0 */
-    val5 = EMB_GET_INT(header+16); /*  1 */
-    val6 = EMB_GET_INT(header+20); /*  1 */
-    val7 = EMB_GET_INT(header+24); /*  1 */
-    val8 = EMB_GET_INT(header+28); /*  0 */
-    val9 = EMB_GET_INT(header+32); /* 64 */
-    val10 = EMB_GET_INT(header+36); /* 64 */
+    val[0] = EMB_GET_INT(header+0); /*  0 */
+    val[1] = EMB_GET_INT(header+4); /*  0 */
+    val[2] = EMB_GET_INT(header+8); /*  0 */
+    val[3] = EMB_GET_INT(header+12); /*  0 */
+    val[4] = EMB_GET_INT(header+16); /*  1 */
+    val[5] = EMB_GET_INT(header+20); /*  1 */
+    val[6] = EMB_GET_INT(header+24); /*  1 */
+    val[7] = EMB_GET_INT(header+28); /*  0 */
+    val[8] = EMB_GET_INT(header+32); /* 64 */
+    val[9] = EMB_GET_INT(header+36); /* 64 */
     short1 = EMB_GET_SHORT(header+40); /*  0 */
 }
 
@@ -7867,7 +7785,6 @@ void readPecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
         int stitchType = NORMAL;
         if (val1 == 0xFF && val2 == 0x00) {
-            embPattern_addStitchRel(pattern, 0.0, 0.0, END, 1);
             break;
         }
         if (val1 == 0xFE && val2 == 0xB0) {
@@ -8748,13 +8665,13 @@ static char readPlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
     while (!embFile_readline(file, input, 511)) {
         if (input[0] == 'P' && input[1] == 'D') {
             /* TODO: replace all scanf code */
-            if (sscanf(input, "PD%lf,%lf;", &x, &y) < 2) {
+            if (sscanf(input, "PD%f,%f;", &x, &y) < 2) {
                 break;
             }
             embPattern_addStitchAbs(pattern, x / scalingFactor, y / scalingFactor, NORMAL, 1);
         } else if (input[0] == 'P' && input[1] == 'U') {
             /* TODO: replace all scanf code */
-            if (sscanf(input, "PU%lf,%lf;", &x, &y) < 2) {
+            if (sscanf(input, "PU%f,%f;", &x, &y) < 2) {
                 break;
             }
             embPattern_addStitchAbs(pattern, x / scalingFactor, y / scalingFactor, STOP, 1);
@@ -9038,7 +8955,7 @@ static char readShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     embFile_seek(file, -2, SEEK_CUR);
 
-    for (i = 0; !embFile_eof(file); i++) {
+    while (1) {
         unsigned char b0, b1;
         int flags;
         if (inJump) {
@@ -9046,8 +8963,9 @@ static char readShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
         } else {
             flags = NORMAL;
         }
-        b0 = binaryReadUInt8(file);
-        b1 = binaryReadUInt8(file);
+        if (embFile_read(embBuffer, 1, 2, file) != 2) break;
+        b0 = embBuffer[0];
+        b1 = embBuffer[1];
         if (stitchesSinceChange >= stitchesPerColor[currColorIndex]) {
             embPattern_addStitchRel(pattern, 0, 0, STOP, 1);
             currColorIndex++;
@@ -9077,8 +8995,7 @@ static char readShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
         stitchesSinceChange++;
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    embFile_close(file);
-    embPattern_end(pattern);
+
     embPattern_flipVertical(pattern);
 
     return 1;
@@ -9105,7 +9022,6 @@ static char readSst(EmbPattern* pattern, EmbFile* file, const char* fileName)
         unsigned char commandByte = binaryReadByte(file);
 
         if (commandByte == 0x04) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
 
@@ -9596,7 +9512,6 @@ static char readT09(EmbPattern* pattern, EmbFile* file, const char* fileName)
         int b2 = b[1];
         unsigned char commandByte = b[2];
         if (commandByte == 0x00) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
         if (commandByte & 0x10)
@@ -10358,7 +10273,6 @@ static char readVip(EmbPattern* pattern, EmbFile* file, const char* fileName)
             vipDecodeByte(yDecompressed[i]) / 10.0,
             vipDecodeStitchType(attributeDataDecompressed[i]), 1);
     }
-    embPattern_addStitchRel(pattern, 0, 0, END, 1);
 
     free(attributeData);
     free(xData);
@@ -12192,9 +12106,8 @@ static char readSvg(EmbPattern* p, EmbFile* file, const char* fileName)
 {
     int size = 1024;
     int pos;
-    int c = 0, i;
+    int c = 0;
     char* buff = 0;
-    EmbStitch st;
 
     buff = (char*)malloc(size);
     if (!buff) {
@@ -12290,10 +12203,10 @@ static void writeCircles(EmbPattern* p, EmbFile* file)
 
 static void writeEllipses(EmbPattern* p, EmbFile* file)
 {
-    int i;
-    EmbEllipse ellipse;
     if (p->ellipses) {
+        int i;
         for (i = 0; i < p->ellipses->count; i++) {
+            EmbEllipse ellipse;
             ellipse = p->ellipses->ellipse[i];
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_print(file, "\n<ellipse stroke-width=\"0.2\" stroke=\"");
@@ -12313,9 +12226,8 @@ static void writeEllipses(EmbPattern* p, EmbFile* file)
 
 static void writeLines(EmbPattern* p, EmbFile* file)
 {
-    int i;
-    EmbLine line;
     if (p->lines) {
+        int i;
         for (i = 0; i < p->lines->count; i++) {
             EmbLine line = p->lines->line[i];
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
@@ -12363,7 +12275,6 @@ static void writePoints(EmbPattern* p, EmbFile* file)
 static void writePolygons(EmbPattern* p, EmbFile* file)
 {
     int i, j;
-    EmbColor color;
     EmbArray* pointList;
     if (p->polygons) {
         for (i = 0; i < p->polygons->count; i++) {
@@ -12465,16 +12376,16 @@ static char writeSvg(EmbPattern* p, EmbFile* file, const char* fileName)
     embPattern_flipVertical(p);
 
     boundingRect = embPattern_calcBoundingBox(p);
-    embFile_print(file, "<?xml version=\"1.0\"?>\n");
-    embFile_print(file, "<!-- Embroidermodder 2 SVG Embroidery File -->\n");
-    embFile_print(file, "<!-- http://embroidermodder.github.io -->\n");
-    embFile_print(file, "<svg ");
+    embFile_print(file,
+        "<?xml version=\"1.0\"?>\n" \
+        "<!-- Embroidermodder 2 SVG Embroidery File -->\n" \
+        "<!-- http://embroidermodder.github.io -->\n" \
+        "<svg viewBox=\"");
 
     /* TODO: See the SVG Tiny Version 1.2 Specification Section 7.14.
      *       Until all of the formats and API is stable, the width, height and viewBox attributes need to be left unspecified.
      *       If the attribute values are incorrect, some applications wont open it at all.
      */
-    embFile_print(file, "viewBox=\"");
     writeFloat(file, boundingRect.left);
     embFile_print(file, " ");
     writeFloat(file, boundingRect.top);
@@ -12503,6 +12414,15 @@ static char writeSvg(EmbPattern* p, EmbFile* file, const char* fileName)
     return 1;
 }
 
+static int embColor_distance(EmbColor a, EmbColor b)
+{
+    int d;
+    d = (a.r - b.r) * (a.r - b.r);
+    d += (a.g - b.g) * (a.g - b.g);
+    d += (a.b - b.b) * (a.b - b.b);
+    return d;
+}
+
 /**
  * Returns the closest color to the required color based on
  * a list of available threads. The algorithm is a simple least
@@ -12518,22 +12438,17 @@ static char writeSvg(EmbPattern* p, EmbFile* file, const char* fileName)
  */
 int embThread_findNearestColor(EmbColor color, EmbArray* a, int mode)
 {
-    int currentClosestValue = 256 * 256 * 3;
-    int closestIndex = -1, i;
-    int deltaRed, deltaBlue, deltaGreen, delta;
-    EmbColor c;
+    int currentClosestValue, closestIndex, i, delta;
 
+    currentClosestValue = 256 * 256 * 3;
+    closestIndex = -1;
     for (i = 0; i < a->count; i++) {
         if (mode == 0) { /* thread mode */
-            c = a->thread[i].color;
-        } else { /* color array mode */
-            c = a->color[i];
+            delta = embColor_distance(color, a->thread[i].color);
         }
-
-        deltaRed = color.r - c.r;
-        deltaBlue = color.g - c.g;
-        deltaGreen = color.b - c.b;
-        delta = deltaRed * deltaRed + deltaBlue * deltaBlue + deltaGreen * deltaGreen;
+        else { /* color array mode */
+            delta = embColor_distance(color, a->color[i]);
+        }
 
         if (delta <= currentClosestValue) {
             currentClosestValue = delta;
@@ -12545,18 +12460,12 @@ int embThread_findNearestColor(EmbColor color, EmbArray* a, int mode)
 
 int embThread_findNearestColor_fromThread(EmbColor color, const EmbThread* a, int length)
 {
-    int currentClosestValue = 256 * 256 * 3;
-    int closestIndex = -1, i;
-    int deltaRed, deltaBlue, deltaGreen, delta;
-    EmbColor c;
+    int currentClosestValue, closestIndex, i, delta;
 
+    currentClosestValue = 256 * 256 * 3;
+    closestIndex = -1;
     for (i = 0; i < length; i++) {
-        c = a[i].color;
-
-        deltaRed = color.r - c.r;
-        deltaBlue = color.g - c.g;
-        deltaGreen = color.b - c.b;
-        delta = deltaRed * deltaRed + deltaBlue * deltaBlue + deltaGreen * deltaGreen;
+        delta = embColor_distance(color, a[i].color);
 
         if (delta <= currentClosestValue) {
             currentClosestValue = delta;

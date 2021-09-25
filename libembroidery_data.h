@@ -4807,3 +4807,29 @@ static const char **token_lists[] = {
     titleTokens, tspanTokens, useTokens, videoTokens
 };
 
+static const char *stitchTypeLabels[] = {
+    "STITCH", "JUMP", "TRIM", "COLOR", "END", "UNKNOWN"
+};
+
+static const char csvHeader[] = \
+    "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n" \
+    "\"#\",\"http://embroidermodder.github.io\"\n" \
+    "\n" \
+    "\"#\",\"General Notes:\"\n" \
+    "\"#\",\"This file can be read by Excel or LibreOffice as CSV (Comma Separated Value) or with a text editor.\"\n" \
+    "\"#\",\"Lines beginning with # are comments.\"\n" \
+    "\"#\",\"Lines beginning with > are variables: [VAR_NAME], [VAR_VALUE]\"\n" \
+    "\"#\",\"Lines beginning with $ are threads: [THREAD_NUMBER], [RED], [GREEN], [BLUE], [DESCRIPTION], [CATALOG_NUMBER]\"\n" \
+    "\"#\",\"Lines beginning with * are stitch entries: [STITCH_TYPE], [X], [Y]\"\n" \
+    "\n";
+static const char csvHeader2[] = \
+    "\"#\",\"Stitch Entry Notes:\"\n" \
+    "\"#\",\"STITCH instructs the machine to move to the position [X][Y] and then make a stitch.\"\n" \
+    "\"#\",\"JUMP instructs the machine to move to the position [X][Y] without making a stitch.\"\n" \
+    "\"#\",\"TRIM instructs the machine to cut the thread before moving to the position [X][Y] without making a stitch.\"\n" \
+    "\"#\",\"COLOR instructs the machine to stop temporarily so that the user can change to a different color thread before resuming.\"\n" \
+    "\"#\",\"END instructs the machine that the design is completed and there are no further instructions.\"\n" \
+    "\"#\",\"UNKNOWN encompasses instructions that may not be supported currently.\"\n" \
+    "\"#\",\"[X] and [Y] are absolute coordinates in millimeters (mm).\"\n" \
+    "\n";
+

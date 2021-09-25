@@ -512,13 +512,6 @@ EMB_PUBLIC void embVector_normalVector(EmbVector a, EmbVector *b, int clockwise)
 EMB_PUBLIC void embVector_transposeProduct(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC float embVector_getLength(EmbVector vector);
 
-EMB_PUBLIC int embFormat_getExtension(const char* fileName, char *ending);
-EMB_PUBLIC const char* embFormat_extensionFromName(const char* fileName);
-EMB_PUBLIC const char* embFormat_descriptionFromName(const char* fileName);
-EMB_PUBLIC char embFormat_readerStateFromName(const char* fileName);
-EMB_PUBLIC char embFormat_writerStateFromName(const char* fileName);
-EMB_PUBLIC int embFormat_typeFromName(const char* fileName);
-
 EMB_PUBLIC char isArcClockwise(EmbArc arc);
 EMB_PUBLIC void getArcCenter(EmbArc arc, EmbVector *arcCenter);
 EMB_PUBLIC char getArcDataFromBulge(float bulge, EmbArc* arc, EmbVector* arcCenter,
@@ -540,25 +533,6 @@ EMB_PUBLIC float embEllipse_diameterX(EmbEllipse ellipse);
 EMB_PUBLIC float embEllipse_diameterY(EmbEllipse ellipse);
 EMB_PUBLIC float embEllipse_width(EmbEllipse ellipse);
 EMB_PUBLIC float embEllipse_height(EmbEllipse ellipse);
-
-EMB_PUBLIC EmbFile* embFile_open(const char* fileName, const char* mode, int optional);
-EMB_PUBLIC void embFile_readline(EmbFile* stream, char *, int);
-EMB_PUBLIC int embFile_close(EmbFile* stream);
-EMB_PUBLIC int embFile_eof(EmbFile* stream);
-EMB_PUBLIC char embFile_getc(EmbFile* stream);
-EMB_PUBLIC size_t embFile_read(void* ptr, size_t size, size_t nmemb, EmbFile* stream);
-EMB_PUBLIC size_t embFile_write(const void* ptr, size_t size, size_t nmemb, EmbFile* stream);
-EMB_PUBLIC int embFile_seek(EmbFile* stream, long offset, int origin);
-EMB_PUBLIC long embFile_tell(EmbFile* stream);
-EMB_PUBLIC EmbFile* embFile_tmpfile(void);
-EMB_PUBLIC int embFile_putc(int ch, EmbFile* stream);
-EMB_PUBLIC int embFile_puts(EmbFile* stream, char *);
-EMB_PUBLIC void embFile_print(EmbFile* stream, const char*);
-EMB_PUBLIC void embFile_pad(EmbFile *f, char, int);
-
-EMB_PUBLIC int bcfFile_read(EmbFile* file, bcf_file* bcfFile);
-EMB_PUBLIC EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind);
-EMB_PUBLIC void bcf_file_free(bcf_file* bcfFile);
 
 EMB_PUBLIC EmbSettings embSettings_init(void);
 

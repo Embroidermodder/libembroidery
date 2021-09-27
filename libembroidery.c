@@ -2590,7 +2590,7 @@ void embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj)
 
 static void embPattern_colorBlock16(EmbPattern *pattern, EmbFile *file)
 {
-    unsigned char i;
+    int i;
 
     /* write remaining colors to reach 16 */
     memset(embBuffer, 0, 16*4);
@@ -7529,7 +7529,7 @@ static char readPcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static char writePcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    unsigned char i;
+    int i;
 
     embFile_write("2\x03", 1, 2, file);
     /* TODO: select hoop size defaulting to Large PCS hoop */

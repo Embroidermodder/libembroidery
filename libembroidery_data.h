@@ -4815,7 +4815,7 @@ static const char csvByLine[] = \
     "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n" \
     "\"#\",\"http://embroidermodder.github.io\"\n" \
     "\n";
-static const char csvNotes[] = \  
+static const char csvNotes[] = \
     "\"#\",\"General Notes:\"\n" \
     "\"#\",\"This file can be read by Excel or LibreOffice as CSV (Comma Separated Value) or with a text editor.\"\n" \
     "\"#\",\"Lines beginning with # are comments.\"\n" \

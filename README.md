@@ -1,10 +1,14 @@
 What is libembroidery ?
 -----------------------
 
-libembroidery is the underlying library that is used and
-developed by [Embroidermodder 2](http://embroidermodder.github.io).
+libembroidery is the underlying library that is used by [Embroidermodder 2](http://embroidermodder.github.io)
+and is developed by the Embroidermodder team.
 It handles over 45 different embroidery specific formats as well
 as several non-embroidery specific vector formats.
+
+It also includes a CLI called `embroider` that allows for better automation of
+changes to embroidery files and will be more up-to date than
+the Embroidermodder 2 GUI.
 
 Build
 -----
@@ -58,4 +62,4 @@ Development
 
 All the documentation for the development of the library and CLI is also
 in [the manual](https://github.com/Embroidermodder/libembroidery/blob/master/doc/libembroidery_v0.1_manual.pdf).
-if you want to find a simple fix to contribute see the *To Do* section. 
+If you want to find a simple fix to contribute see the *To Do* section. 

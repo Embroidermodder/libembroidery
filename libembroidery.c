@@ -10936,11 +10936,11 @@ EmbColor svgColorToEmbColor(char* colorStr)
     /* SVGTiny1.2 Spec Section 11.13.1 syntax for color values */
     if (colorStr[0] == '#') {
         if (length == 7) {
-            /* Six digit hex — #rrggbb */
+            /* Six digit hex - #rrggbb */
             c = embColor_fromHexStr(colorStr+1);
         }
         else {
-            /* Three digit hex — #rgb */
+            /* Three digit hex - #rgb */
            /* Convert the 3 digit hex to a six digit hex */
             char hex[7];
             hex[0] = colorStr[1];
@@ -10954,13 +10954,13 @@ EmbColor svgColorToEmbColor(char* colorStr)
             c = embColor_fromHexStr(hex);
         }
     } else if (percent) {
-        /* Float functional — rgb(R%, G%, B%) */
+        /* Float functional - rgb(R%, G%, B%) */
         charReplace(colorStr, "rgb,()%", "      ");
         c.r = (unsigned char)round(255.0 / 100.0 * strtod(colorStr, &pEnd));
         c.g = (unsigned char)round(255.0 / 100.0 * strtod(pEnd, &pEnd));
         c.b = (unsigned char)round(255.0 / 100.0 * strtod(pEnd, &pEnd));
     } else if (length > 3 && colorStr[0] == 'r' && colorStr[1] == 'g' && colorStr[2] == 'b') {
-        /* Integer functional — rgb(rrr, ggg, bbb) */
+        /* Integer functional - rgb(rrr, ggg, bbb) */
         charReplace(colorStr, "rgb,()", "     ");
         c.r = (unsigned char)strtol(colorStr, &pEnd, 10);
         c.g = (unsigned char)strtol(pEnd, &pEnd, 10);

@@ -574,7 +574,6 @@ EMB_PUBLIC void embPattern_combineJumpStitches(EmbPattern* p);
 EMB_PUBLIC void embPattern_correctForMaxStitchLength(EmbPattern* p, float maxStitchLength, float maxJumpLength);
 EMB_PUBLIC void embPattern_center(EmbPattern* p);
 EMB_PUBLIC void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName);
-EMB_PUBLIC void embPattern_end(EmbPattern* p);
 EMB_PUBLIC int embPattern_write(EmbPattern* pattern, const char *function, int);
 EMB_PUBLIC int embPattern_read(EmbPattern* pattern, const char *function, int);
 EMB_PUBLIC int embPattern_writeAuto(EmbPattern* pattern, const char *function);

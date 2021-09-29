@@ -33,13 +33,29 @@ file.
 Documentation
 -------------
 
-For users, we recommend you build as above then run:
+For basic use, we recommend you build as above then run:
 
 ```
 ./embroider
 ```
 
 which will print out advice on how to use these tools without digging
-straight into the source code.
+straight into the full manual. Beyond this the full documentation is in
+[doc/libembroidery_v0.1_manual.pdf](https://github.com/Embroidermodder/libembroidery/blob/master/doc/libembroidery_v0.1_manual.pdf).
 
-Beyond this the full documentation is in libembroidery_v0.1_manual.md.
+If for some reason this is out of date then you can use
+
+```
+cd doc
+make
+make clean
+```
+
+to build the manual.
+
+Development
+-----------
+
+All the documentation for the development of the library and CLI is also
+in [the manual](https://github.com/Embroidermodder/libembroidery/blob/master/doc/libembroidery_v0.1_manual.pdf).
+if you want to find a simple fix to contribute see the *To Do* section. 

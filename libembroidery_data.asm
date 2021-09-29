@@ -33,9 +33,22 @@ svg_property_tokens:
 	dd	buffered_rendering_token
 	dd	color_token
 	dd	color_rendering_token
+	dd	direction_token
+	dd	display_token
+	dd	display_align_token
+	dd	fill_token
+	dd	fill_opacity_token
+	dd	fill_rule_token
+	dd	font_family_token
+	dd	font_size_token
+	dd	font_style_token
+	dd	font_variant_token
+	dd	font_weight_token
 svg_attribute_tokens:
+	dd	about_token
 	dd	0
 
+; svg properties
 audio_level_token:
 	db	"audio-level", 0
 buffered_rendering_token:
@@ -46,55 +59,272 @@ color_rendering_token:
 	db	"color-rendering", 0
 direction_token:
 	db	"direction", 0
+display_token:
+	db	"display", 0
+display_align_token:
+	db	"display-align", 0
+fill_token:
+	db	"fill", 0
+fill_opacity_token:
+	db	"fill-opacity", 0
+fill_rule_token:
+	db	"fill-rule", 0
+font_family_token:
+	db	"font-family", 0
+font_size_token:
+	db	"font-size", 0
+font_style_token:
+	db	"font-style", 0
+font_variant_token:
+	db	"font-variant", 0
+font_weight_token:
+	db	"font-weight", 0
+image_rendering_token:
+	db	"image-rendering", 0
+line_increment_token:
+	db	"line-increment", 0
+opacity_token:
+	db	"opacity", 0
+pointer_events_token:
+	db	"pointer-events", 0
+shape_rendering_token:
+	db	"shape-rendering", 0
+solid_color_token:
+	db	"solid-color", 0
+solid_opacity_token:
+	db	"solid-opacity", 0
+stop_color_token:
+	db	"stop-color", 0
+stop_opacity_token:
+	db	"stop-opacity", 0
+	db	"stroke", 0
+	db	"stroke-dasharray", 0
+	db	"stroke-linecap", 0
+	db	"stroke-linejoin", 0
+	db	"stroke-miterlimit", 0
+	db	"stroke-opacity", 0
+	db	"stroke-width", 0
+	db	"text-align", 0
+	db	"text-anchor", 0
+	db	"text-rendering", 0
+	db	"unicode-bidi", 0
+	db	"vector-effect", 0
+	db	"viewport-fill", 0
+	db	"viewport-fill-opacity", 0
+	db	"visibility", 0
 
-;static const char* svg_all_tokens[] = {
-;    /* Catch All Properties */
-;    "audio-level", "buffered-rendering", "color", "color-rendering", "direction",
-;    "display", "display-align", "fill", "fill-opacity", "fill-rule",
-;    "font-family", "font-size", "font-style", "font-variant", "font-weight",
-;    "image-rendering", "line-increment", "opacity", "pointer-events", "shape-rendering",
-;    "solid-color", "solid-opacity", "stop-color", "stop-opacity", "stroke",
-;    "stroke-dasharray", "stroke-linecap", "stroke-linejoin",
-;    "stroke-miterlimit", "stroke-opacity", "stroke-width",
-;    "text-align", "text-anchor", "text-rendering", "unicode-bidi",
-;    "vector-effect", "viewport-fill", "viewport-fill-opacity", "visibility",
-;    /* Catch All Attributes */
-;    "about", "accent-height", "accumulate", "additive", "alphabetic",
-;    "arabic-form", "ascent", "attributeName", "attributeType", "bandwidth",
-;    "baseProfile", "bbox", "begin", "by", "calcMode",
-;    "cap-height", "class", "content", "contentScriptType", "cx", "cy",
-;    "d", "datatype", "defaultAction", "descent", "dur", "editable",
-;    "end", "ev:event", "event", "externalResourcesRequired",
-;    "focusHighlight", "focusable", "font-family", "font-stretch",
-;    "font-style", "font-variant", "font-weight", "from", "g1", "g2",
-;    "glyph-name", "gradientUnits", "handler", "hanging", "height",
-;    "horiz-adv-x", "horiz-origin-x", "id", "ideographic",
-;    "initialVisibility", "k", "keyPoints", "keySplines", "keyTimes",
-;    "lang", "mathematical", "max", "mediaCharacterEncoding",
-;    "mediaContentEncodings", "mediaSize", "mediaTime", "min",
-;    "nav-down", "nav-down-left", "nav-down-right", "nav-left", "nav-next",
-;    "nav-prev", "nav-right", "nav-up", "nav-up-left", "nav-up-right",
-;    "observer", "offset", "origin", "overlay", "overline-position",
-;    "overline-thickness", "panose-1", "path", "pathLength", "phase",
-;    "playbackOrder", "points", "preserveAspectRatio", "propagate",
-;    "property", "r", "rel", "repeatCount", "repeatDur",
-;    "requiredExtensions", "requiredFeatures", "requiredFonts",
-;    "requiredFormats", "resource", "restart", "rev", "role", "rotate",
-;    "rx", "ry", "slope", "snapshotTime", "stemh", "stemv",
-;    "strikethrough-position", "strikethrough-thickness", "syncBehavior",
-;    "syncBehaviorDefault", "syncMaster", "syncTolerance",
-;    "syncToleranceDefault", "systemLanguage", "target", "timelineBegin",
-;    "to", "transform", "transformBehavior", "type", "typeof", "u1", "u2",
-;    "underline-position", "underline-thickness", "unicode", "unicode-range",
-;    "units-per-em", "values", "version", "viewBox", "width", "widths",
-;    "x", "x-height", "x1", "x2", "xlink:actuate", "xlink:arcrole",
-;    "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-;    "xml:base", "xml:id", "xml:lang", "xml:space", "y", "y1", "y2",
-;    "zoomAndPan", "/", "\0"
-;};
+; svg attributes
+about_token:
+	db	"about", 0
+accent_height_token:
+	db	"accent-height", 0
+accumulate_token:
+	db	"accumulate", 0
+additive_token:
+	db	"additive", 0
+alphabetic_token:
+	db	"alphabetic", 0
+arabic_form_token:
+	db	"arabic-form", 0
+ascent_token:
+	db	"ascent", 0
+attribute_name_token:
+	db	"attributeName", 0
+attribute_type_token:
+	db	"attributeType", 0
+	db	"bandwidth", 0
+	db	"baseProfile", 0
+	db	"bbox", 0
+	db	"begin", 0
+	db	"by", 0
+	db	"calcMode", 0
+	db	"cap-height", 0
+	db	"class", 0
+	db	"content", 0
+	db	"contentScriptType", 0
+	db	"cx", 0
+	db	"cy", 0
+	db	"d", 0
+	db	"datatype", 0
+	db	"defaultAction", 0
+	db	"descent", 0
+	db	"dur", 0
+	db	"editable", 0
+	db	"end", 0
+	db	"ev:event", 0
+	db	"event", 0
+	db	"externalResourcesRequired", 0
+	db	"focusHighlight", 0
+	db	"focusable", 0
+	db	"font-family", 0
+	db	"font-stretch", 0
+	db	"font-style", 0
+	db	"font-variant", 0
+	db	"font-weight", 0
+	db	"from", 0
+	db	"g1", 0
+	db	"g2", 0
+	db	"glyph-name", 0
+	db	"gradientUnits", 0
+	db	"handler", 0
+	db	"hanging", 0
+	db	"height", 0
+	db	"horiz-adv-x", 0
+	db	"horiz-origin-x", 0
+	db	"id", 0
+	db	"ideographic", 0
+	db	"initialVisibility", 0
+	db	"k", 0
+	db	"keyPoints", 0
+	db	"keySplines", 0
+	db	"keyTimes", 0
+	db	"lang", 0
+	db	"mathematical", 0
+	db	"max", 0
+	db	"mediaCharacterEncoding", 0
+	db	"mediaContentEncodings", 0
+	db	"mediaSize", 0
+	db	"mediaTime", 0
+	db	"min", 0
+	db	"nav-down", 0
+	db	"nav-down-left", 0
+	db	"nav-down-right", 0
+	db	"nav-left", 0
+	db	"nav-next", 0
+	db	"nav-prev", 0
+	db	"nav-right", 0
+	db	"nav-up", 0
+	db	"nav-up-left", 0
+	db	"nav-up-right", 0
+	db	"observer", 0
+	db	"offset", 0
+	db	"origin", 0
+	db	"overlay", 0
+	db	"overline-position", 0
+	db	"overline-thickness", 0
+	db	"panose-1", 0
+	db	"path", 0
+	db	"pathLength", 0
+	db	"phase", 0
+	db	"playbackOrder", 0
+	db	"points", 0
+	db	"preserveAspectRatio", 0
+	db	"propagate", 0
+	db	"property", 0
+	db	"r", 0
+	db	"rel", 0
+	db	"repeatCount", 0
+	db	"repeatDur", 0
+	db	"requiredExtensions", 0
+	db	"requiredFeatures", 0
+	db	"requiredFonts", 0
+	db	"requiredFormats", 0
+	db	"resource", 0
+	db	"restart", 0
+	db	"rev", 0
+	db	"role", 0
+	db	"rotate", 0
+	db	"rx", 0
+	db	"ry", 0
+	db	"slope", 0
+	db	"snapshotTime", 0
+	db	"stemh", 0
+	db	"stemv", 0
+	db	"strikethrough-position", 0
+	db	"strikethrough-thickness", 0
+	db	"syncBehavior", 0
+sync_behavior_default_token:
+	db	"syncBehaviorDefault", 0
+sync_master_token:
+	db	"syncMaster", 0
+sync_tolerence_token:
+	db	"syncTolerance", 0
+sync_tolerence_default_token:
+	db	"syncToleranceDefault", 0
+system_language_token:
+	db	"systemLanguage", 0
+target_token:
+	db	"target", 0
+timeline_begin_token:
+	db	"timelineBegin", 0
+to_token:
+	db	"to", 0
+transform_token:
+	db	"transform", 0
+transform_behavior_token:
+	db	"transformBehavior", 0
+type_token:
+	db	"type", 0
+typeof_token:
+	db	"typeof", 0
+u1_token:
+	db	"u1", 0
+u2_token:
+	db	"u2", 0
+underline_position_token:
+	db	"underline-position", 0
+underline_thickness_token:
+	db	"underline-thickness", 0
+unicode_token:
+	db	"unicode", 0
+unicode_range_token:
+	db	"unicode-range", 0
+units_per_em_token:
+	db	"units-per-em", 0
+values_token:
+	db	"values", 0
+version_token:
+	db	"version", 0
+viewbox_token:
+	db	"viewBox", 0
+width_token:
+	db	"width", 0
+widths_token:
+	db	"widths", 0
+x_token:
+	db	"x", 0
+x_height_token:
+	db	"x-height", 0
+x1_token:
+	db	"x1", 0
+x2_token:
+	db	"x2", 0
+xlink_actuate_token:
+	db	"xlink:actuate", 0
+xlink_arcrole_token:
+	db	"xlink:arcrole",
+xlink_href_token:
+	db	"xlink:href", 0
+xlink_role_token:
+	db	"xlink:role", 0
+xlink_show_token:
+	db	"xlink:show", 0
+xlink_title_token:
+	db	"xlink:title", 0
+xlink_type_token:
+	db	"xlink:type",
+xml_base_token:
+	db	"xml:base", 0
+xml_id_token:
+	db	"xml:id", 0
+xml_lang_token:
+	db	"xml:lang", 0
+xml_space_token:
+	db	"xml:space", 0
+y_token:
+	db	"y", 0
+y1_token:
+	db	"y1", 0
+y2_token:
+	db	"y2", 0
+zoom_and_pan_token:
+	dd	"zoomAndPan", 0
+slash_token:
+	dd	"/", 0
+
 
 solid_color_token_table:
-;	dd	about_token
+	dd	about_token
 ;	dd	class_token
 ;	dd	content_token
 ;	dd	datatype_token
@@ -104,13 +334,13 @@ solid_color_token_table:
 ;	dd	resource_token
 ;	dd	rev_token
 ;	dd	role_token
-;	dd	typeof_token
-;	dd	xml_base_token
-;	dd	xml_id_token
-;	dd	xml_lang_token
-;	dd	xml_space_token
-;	dd	slash_token
-;	dd	0
+	dd	typeof_token
+	dd	xml_base_token
+	dd	xml_id_token
+	dd	xml_lang_token
+	dd	xml_space_token
+	dd	slash_token
+	dd	0
 
 stop_token_table:
 ;	dd	about_token
@@ -125,34 +355,73 @@ stop_token_table:
 ;	dd	rev_token
 ;	dd	role_token
 ;	dd	typeof_token
-;	dd	xml_base_token
-;	dd	xml_id_token
-;	dd	xml_lang_token
-;	dd	xml_space_token
-;	dd	slash_token
-;	dd	0
-;
-;static const char* svgTokens[] = {
-;        "about", "baseProfile", "class", "content", "contentScriptType",
-;        "datatype", "externalResourcesRequired", "focusHighlight", "focusable",
-;        "height", "id", "nav-down", "nav-down-left", "nav-down-right",
-;        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-;        "nav-up-left", "nav-up-right", "playbackOrder", "preserveAspectRatio",
-;        "property", "rel", "resource", "rev", "role", "snapshotTime",
-;        "syncBehaviorDefault", "syncToleranceDefault", "timelineBegin",
-;        "typeof", "version", "viewBox", "width", "xml:base", "xml:id",
-;        "xml:lang", "xml:space", "zoomAndPan", "/", "\0"
-;    };
-;
+	dd	xml_base_token
+	dd	xml_id_token
+	dd	xml_lang_token
+	dd	xml_space_token
+	dd	slash_token
+	dd	0
+
+svg_tokens:
+;	dd	about_token
+;	dd	baseProfile_token
+;	dd	class_token
+;	dd	"content_token
+;	dd	"contentScriptType",
+;	dd	"datatype_token
+;	dd	"externalResourcesRequired_token
+;	dd	"focusHighlight_token
+;	dd	"focusable",
+;	db	"height_token
+;	db	"id_token
+;	db	"nav-down_token
+;	db	"nav-down-left_token
+;	db	"nav-down-right",
+;	db	"nav-left_token
+;	db	"nav-next_token
+;	db	"nav-prev_token
+;	db	"nav-right_token
+;	db	"nav-up",
+;	db	"nav-up-left_token
+;	db	"nav-up-right_token
+;	db	"playbackOrder_token
+;	db	"preserveAspectRatio",
+;	db	"property_token
+;	db	"rel_token
+;	db	"resource_token
+;	db	"rev_token
+;	db	"role_token
+;	db	"snapshotTime",
+;	db	"syncBehaviorDefault_token
+;	db	"syncToleranceDefault_token
+;	db	"timelineBegin",
+;	db	"typeof_token
+;	db	"version_token
+;	db	"viewBox_token
+;	db	"width_token
+;	db	"xml:base_token
+;	db	"xml:id",
+;	db	"xml:lang_token
+;	db	"xml:space_token
+;	db	zoomAndPan_token
+;	db	slash_token
+;	db	0
+
+
 ;static const char* inkscape_tokens[] = {
-;        "xmlns:dc", "xmlns:cc", "xmlns:rdf", "xmlns:svg", "xmlns", "\0"
-;    };
-;
+;	db	"xmlns:dc_token
+;	db	"xmlns:cc_token
+;	db	"xmlns:rdf_token
+;	db	"xmlns:svg_token
+;	db	"xmlns_token
+;	db	"\0"
+
+
 ;static EmbColor black = { 0, 0, 0 };
-;
-;
+
+
 ; Converted from the table at:
-;     https://www.w3.org/TR/SVGb/types.html#ColorKeywords
+;	 https://www.w3.org/TR/SVGb/types.html#ColorKeywords
 ; NOTE: This supports both UK and US English names, so the repeated values
 ; aren't an error.
 
@@ -3510,119 +3779,183 @@ z102_isacord_polyester_codes:
 brand_codes:
 	dd	arc_polyester_codes	; 0
 	dd	arc_rayon_codes		; 1
-;    CoatsAndClark_Rayon_codes, /* 2 */
-;    Exquisite_Polyester_codes, /* 3 */
-;    Fufu_Polyester_codes, /* 4 */
-;    Fufu_Rayon_codes, /* 5 */
-;    Hemingworth_Polyester_codes, /* 6 */
-;    Isacord_Polyester_codes, /* 7 */
-;    Isafil_Rayon_codes, /* 8 */
-;    Marathon_Polyester_codes, /* 9 */
-;    Marathon_Rayon_codes, /* 10 */
-;    Madeira_Polyester_codes, /* 11 */
-;    Madeira_Rayon_codes, /* 12 */
-;    Metro_Polyester_codes, /* 13 */
-;    Pantone_codes, /* 14 */
-;    RobisonAnton_Polyester_codes, /* 15 */
-;    RobisonAnton_Rayon_codes, /* 16 */
-;    Sigma_Polyester_codes, /* 17 */
-;    Sulky_Rayon_codes, /* 18 */
-;    ThreadArt_Rayon_codes, /* 19 */
-;    ThreadArt_Polyester_codes, /* 20 */
-;    ThreaDelight_Polyester_codes, /* 21 */
-;    Z102_Isacord_Polyester_codes, /* 22 */
-;    svg_color_codes /* 23 */
+;	coats_and_clark_rayon_codes	; 2
+;	Exquisite_Polyester_codes	; 3
+;	Fufu_Polyester_codes	; 4
+;	Fufu_Rayon_codes	; 5
+;	Hemingworth_Polyester_codes ; 6
+;	Isacord_Polyester_codes	; 7
+;	Isafil_Rayon_codes	; 8
+;	Marathon_Polyester_codes	; 9
+;	Marathon_Rayon_codes	; 10
+;	Madeira_Polyester_codes	; 11
+;	Madeira_Rayon_codes, /* 12 */
+;	Metro_Polyester_codes, /* 13 */
+;	Pantone_codes, /* 14 */
+;	RobisonAnton_Polyester_codes, /* 15 */
+;	RobisonAnton_Rayon_codes, /* 16 */
+;	Sigma_Polyester_codes, /* 17 */
+;	Sulky_Rayon_codes, /* 18 */
+;	ThreadArt_Rayon_codes, /* 19 */
+;	ThreadArt_Polyester_codes, /* 20 */
+;	ThreaDelight_Polyester_codes, /* 21 */
+;	Z102_Isacord_Polyester_codes, /* 22 */
+;	svg_color_codes /* 23 */
 
 
 ; TODO: This list needs reviewed in case some stitch formats
 ; also can contain object data (EMBFORMAT_STCHANDOBJ).
 
-%define EMBFORMAT_STITCHONLY	1
-%define EMBFORMAT_OBJECTONLY	2
-%define EMBFORMAT_STCHANDOBJ	2
+%define STITCHONLY	1
+%define OBJECTONLY	2
+%define STCHANDOBJ	2
+
+%macro	format_entry	5
+
+	str30	%1
+	str30	%2
+	db	%3, %4, %5
+
+%endmacro
 
 formatTable:
-	str30	".10o"
-	str30	"Toyota Embroidery Format"
-	db	'U', ' ', EMBFORMAT_STITCHONLY
-	str30	".100"
-	str30	"Toyota Embroidery Format"
-	db	'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".art", "Bernina Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
-;	thread	".bmc", "Bitmap Cache Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
-;	thread	".bro", "Bits & Volts Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".cnd", "Melco Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
-;	thread	".col", "Embroidery Thread Color Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".csd", "Singer Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".csv", "Comma Separated Values Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".dat", "Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".dem", "Melco Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
-;	thread	".dsb", "Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".dst", "Tajima Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".dsz", "ZSK USA Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".dxf", "Drawing Exchange Format", ' ', ' ', EMBFORMAT_OBJECTONLY
-;	thread	".edr", "Embird Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".emd", "Elna Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".exp", "Melco Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".exy", "Eltac Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".eys", "Sierra Expanded Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
-;	thread	".fxy", "Fortron Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".gc", "Smoothie G-Code Format", ' ', ' ', EMBFORMAT_STITCHONLY
-;	thread	".gnc", "Great Notions Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
-;	thread	".gt", "Gold Thread Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".hus", "Husqvarna Viking Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".inb", "Inbro Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".inf", "Embroidery Color Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".jef", "Janome Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".ksm", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".max", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".mit", "Mitsubishi Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".new", "Ameco Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".ofm", "Melco Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".pcd", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".pcm", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".pcq", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".pcs", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".pec", "Brother Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".pel", "Brother Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
-;	thread	".pem", "Brother Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
-;	thread	".pes", "Brother Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".phb", "Brother Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".phc", "Brother Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".plt", "AutoCAD Plot Drawing Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".rgb", "RGB Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".sew", "Janome Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".shv", "Husqvarna Viking Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".sst", "Sunstar Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".stx", "Data Stitch Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".svg", "Scalable Vector Graphics", 'U', 'U', EMBFORMAT_OBJECTONLY
-;	thread	".t01", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".t09", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".tap", "Happy Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".thr", "ThredWorks Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".txt", "Text File", ' ', 'U', EMBFORMAT_STITCHONLY
-;	thread	".u00", "Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".u01", "Barudan Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
-;	thread	".vip", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	".vp3", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".xxx", "Singer Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
-;	thread	".zsk", "ZSK USA Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
-;	thread	"END", "END", ' ', ' ', 0
+	format_entry	".10o", "Toyota Embroidery Format", 'U', ' ', STITCHONLY
+	format_entry	".100", "Toyota Embroidery Format", 'U', ' ', STITCHONLY
+;	str30	".art"
+;	str30	"Bernina Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
+;	str30	".bmc"
+;	db	"Bitmap Cache Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
+;	thread	".bro", 0
+;	db	"Bits & Volts Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".cnd", 0
+;	db	"Melco Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
+;	thread	".col", 0
+;	db	"Embroidery Thread Color Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".csd", 0
+;	db	"Singer Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".csv", 0
+;	db	"Comma Separated Values Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".dat", 0
+;	db	"Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".dem", 0
+;	db	"Melco Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
+;	thread	".dsb", 0
+;	db	"Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".dst", 0
+;	db	"Tajima Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".dsz", 0
+;	db	"ZSK USA Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".dxf", 0
+;	db	"Drawing Exchange Format", ' ', ' ', EMBFORMAT_OBJECTONLY
+;	thread	".edr", 0
+;	db	"Embird Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".emd", 0
+;	db	"Elna Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".exp", 0
+;	db	"Melco Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".exy", 0
+;	db	"Eltac Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".eys", 0
+;	db	"Sierra Expanded Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
+;	thread	".fxy", 0
+;	db	"Fortron Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".gc", 0
+;	db	"Smoothie G-Code Format", ' ', ' ', EMBFORMAT_STITCHONLY
+;	thread	".gnc", 0
+;	db	"Great Notions Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
+;	thread	".gt", 0
+;	db	"Gold Thread Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".hus", 0
+;	db	"Husqvarna Viking Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".inb", 0
+;	db	"Inbro Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".inf", 0
+;	db	"Embroidery Color Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".jef", 0
+;	db	"Janome Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".ksm", 0
+;	db	"Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".max", 0
+;	db	"Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".mit", 0
+;	db	"Mitsubishi Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".new", 0
+;	db	"Ameco Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".ofm", 0
+;	db	"Melco Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".pcd", 0
+;	db	"Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".pcm", 0
+;	db	"Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".pcq", 0
+;	db	"Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".pcs", 0
+;	db	"Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".pec", 0
+;	db	"Brother Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".pel", 0
+;	db	"Brother Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
+;	thread	".pem", 0
+;	db	"Brother Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
+;	thread	".pes", 0
+;	db	"Brother Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".phb", 0
+;	db	"Brother Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".phc", 0
+;	db	"Brother Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".plt", 0
+;	db	"AutoCAD Plot Drawing Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".rgb", 0
+;	db	"RGB Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".sew", 0
+;	db	"Janome Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".shv", 0
+;	db	"Husqvarna Viking Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".sst", 0
+;	db	"Sunstar Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".stx", 0
+;	db	"Data Stitch Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".svg", 0
+;	db	"Scalable Vector Graphics", 'U', 'U', EMBFORMAT_OBJECTONLY
+;	thread	".t01", 0
+;	db	"Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".t09", 0
+;	db	"Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".tap", 0
+;	db	"Happy Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".thr", 0
+;	db	"ThredWorks Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".txt", 0
+;	db	"Text File", ' ', 'U', EMBFORMAT_STITCHONLY
+;	thread	".u00", 0
+;	db	"Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".u01", 0
+;	db	"Barudan Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY
+;	thread	".vip", 0
+;	db	"Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	".vp3", 0
+;	db	"Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".xxx", 0
+;	db	"Singer Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY
+;	thread	".zsk", 0
+;	db	"ZSK USA Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY
+;	thread	"END", 0
+;	db	"END", ' ', ' ', 0
 
 ; Based on the DraftSight color table
 dxf_color_table:
 	db	0, 0, 0		; BYBLOCK
 	db	255, 0, 0	; red
-;	thread	255, 255, 0 }, /*   '2' (yellow)     */
-;	thread	0, 255, 0 }, /*   '3' (green)      */
-;	thread	0, 255, 255 }, /*   '4' (cyan)       */
-;	thread	0, 0, 255 }, /*   '5' (blue)       */
-;	thread	255, 0, 255 }, /*   '6' (magenta)    */
-;	thread	255, 255, 255 }, /*   '7' (white)      */
-;	thread	128, 128, 128 }, /*   '8' (dark gray)  */
-;	thread	192, 192, 192 }, /*   '9' (light gray) */
-;	thread	255, 0, 0 }, /*  '10' */
-;	thread	255, 127, 127 }, /*  '11' */
+	db	255, 255, 0	; yellow
+	db	0, 255, 0	; green
+	db	0, 255, 255	; cyan
+	db	0, 0, 255	; blue
+	db	255, 0, 255	; magenta
+	db	255, 255, 255	; white
+	db	128, 128, 128	; dark gray
+	db	192, 192, 192	; light gray
+	db	255, 0, 0
+	db	255, 127, 127
 ;	thread	204, 0, 0 }, /*  '12' */
 ;	thread	204, 102, 102 }, /*  '13' */
 ;	thread	153, 0, 0 }, /*  '14' */
@@ -3872,207 +4205,396 @@ dxf_color_table:
 husThreadCount:	db	29
 
 hus_thread_table:
-;	thread2	{ 0, 0, 0 }, "Black", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 0, 0, 255 }, "Blue", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 0, 255, 0 }, "Light Green", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 255, 0, 0 }, "Red", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 255, 0, 255 }, "Purple", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 255, 255, 0 }, "Yellow", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 127, 127, 127 }, "Gray", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 51, 154, 255 }, "Light Blue", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 51, 204, 102 }, "Green", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 255, 127, 0 }, "Orange", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 255, 160, 180 }, "Pink", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 153, 75, 0 }, "Brown", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 255, 255, 255 }, "White", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 0, 0, 127 }, "Dark Blue", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 0, 127, 0 }, "Dark Green", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 127, 0, 0 }, "Dark Red", "TODO:HUS_CATALOG_NUMBER"
-;	thread2	{ 255, 127, 127 }, "Light Red", "TODO:HUS_CATALOG_NUMBER"
-;	thread	{ 127, 0, 127 }, "Dark Purple", "TODO:HUS_CATALOG_NUMBER"
-;	thread	{ 255, 127, 255 }, "Light Purple", "TODO:HUS_CATALOG_NUMBER"
-;	thread	{ 200, 200, 0 }, "Dark Yellow", "TODO:HUS_CATALOG_NUMBER"
-;	thread	{ 255, 255, 153 }, "Light Yellow", "TODO:HUS_CATALOG_NUMBER"
-;	thread	{ 60, 60, 60 }, "Dark Gray", "TODO:HUS_CATALOG_NUMBER"
-;	thread	{ 192, 192, 192 }, "Light Gray", "TODO:HUS_CATALOG_NUMBER"
-;	thread	{ 232, 63, 0 }, "Dark Orange", "TODO:HUS_CATALOG_NUMBER"
-;	thread	{ 255, 165, 65 }, "Light Orange", "TODO:HUS_CATALOG_NUMBER"
-;	thread	{ 255, 102, 122 }, "Dark Pink", "TODO:HUS_CATALOG_NUMBER"
-;	thread	{ 255, 204, 204 }, "Light Pink", "TODO:HUS_CATALOG_NUMBER"
-;	thread	{ 115, 40, 0 }, "Dark Brown", "TODO:HUS_CATALOG_NUMBER"
-;	thread	{ 175, 90, 10 }, "Light Brown", "TODO:HUS_CATALOG_NUMBER" }
-;};
+;	thread2	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 0, 0, 255 }, "Blue", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 0, 255, 0 }, "Light Green", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 255, 0, 0 }, "Red", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 255, 0, 255 }, "Purple", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 255, 255, 0 }, "Yellow", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 127, 127, 127 }, "Gray", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 51, 154, 255 }, "Light Blue", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 51, 204, 102 }, "Green", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 255, 127, 0 }, "Orange", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 255, 160, 180 }, "Pink", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 153, 75, 0 }, "Brown", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 255, 255, 255 }, "White", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 0, 0, 127 }, "Dark Blue", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 0, 127, 0 }, "Dark Green", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 127, 0, 0 }, "Dark Red", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread2	{ 255, 127, 127 }, "Light Red", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread	{ 127, 0, 127 }, "Dark Purple", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread	{ 255, 127, 255 }, "Light Purple", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread	{ 200, 200, 0 }, "Dark Yellow", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread	{ 255, 255, 153 }, "Light Yellow", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread	{ 60, 60, 60 }, "Dark Gray", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread	{ 192, 192, 192 }, "Light Gray", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread	{ 232, 63, 0 }, "Dark Orange", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread	{ 255, 165, 65 }, "Light Orange", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread	{ 255, 102, 122 }, "Dark Pink", 0
+;	db	"TODO:HUS_CATALOG_NUMBER"
+;	thread	{ 255, 204, 204 }
+;	str30	"Light Pink"
+	str30	"TODO:HUS_CATALOG_NUMBER"
+	db	115, 40, 0
+	str30	"Dark Brown"
+	str30	"TODO:HUS_CATALOG_NUMBER"
+	db	175, 90, 10
+	str30	"Light Brown"
+	str30	"TODO:HUS_CATALOG_NUMBER"
+
 
 jef_thread_table:
 	thread	"Black", 0, 0, 0, 0
 	thread	"Black", 0, 0, 0, 1
-;	thread	{ 255, 255, 255 }, "White", ""
-;	thread	{ 255, 255, 23 }, "Yellow", ""
-;	thread	{ 250, 160, 96 }, "Orange", ""
-;	thread	{ 92, 118, 73 }, "Olive Green", ""
-;	thread	{ 64, 192, 48 }, "Green", ""
-;;	thread	{ 101, 194, 200 }, "Sky", ""
-;	thread	{ 172, 128, 190 }, "Purple", ""
-;	thread	{ 245, 188, 203 }, "Pink", ""
-;	thread	{ 255, 0, 0 }, "Red", ""
-;	thread	{ 192, 128, 0 }, "Brown", ""
-;	thread	{ 0, 0, 240 }, "Blue", ""
-;	thread	{ 228, 195, 93 }, "Gold", ""
-;	thread	{ 165, 42, 42 }, "Dark Brown", ""
-;	thread	{ 213, 176, 212 }, "Pale Violet", ""
-;	thread	{ 252, 242, 148 }, "Pale Yellow", ""
-;	thread	{ 240, 208, 192 }, "Pale Pink", ""
-;	thread	{ 255, 192, 0 }, "Peach", ""
-;;	thread	{ 201, 164, 128 }, "Beige", ""
-;	thread	{ 155, 61, 75 }, "Wine Red", ""
-;	thread	{ 160, 184, 204 }, "Pale Sky", ""
-;	thread	{ 127, 194, 28 }, "Yellow Green", ""
-;	thread	{ 185, 185, 185 }, "Silver Grey", ""
-;	thread	{ 160, 160, 160 }, "Grey", ""
-;	thread	{ 152, 214, 189 }, "Pale Aqua", ""
-;	thread	{ 184, 240, 240 }, "Baby Blue", ""
-;	thread	{ 54, 139, 160 }, "Powder Blue", ""
-;	thread	{ 79, 131, 171 }, "Bright Blue", ""
-;	thread	{ 56, 106, 145 }, "Slate Blue", ""
-;	thread	{ 0, 32, 107 }, "Nave Blue", ""
-;	thread	{ 229, 197, 202 }, "Salmon Pink", ""
-;	thread	{ 249, 103, 107 }, "Coral", ""
-;	thread	{ 227, 49, 31 }, "Burnt Orange", ""
-;	thread	{ 226, 161, 136 }, "Cinnamon", ""
-;	thread	{ 181, 148, 116 }, "Umber", ""
-;	thread	{ 228, 207, 153 }, "Blonde", ""
-;	thread	{ 225, 203, 0 }, "Sunflower", ""
-;	thread	{ 225, 173, 212 }, "Orchid Pink", ""
-;	thread	{ 195, 0, 126 }, "Peony Purple", ""
-;	thread	{ 128, 0, 75 }, "Burgundy", ""
-;	thread	{ 160, 96, 176 }, "Royal Purple", ""
-;;	thread	{ 192, 64, 32 }, "Cardinal Red", ""
-;	thread	{ 202, 224, 192 }, "Opal Green", ""
-;	thread	{ 137, 152, 86 }, "Moss Green", ""
-;	thread	{ 0, 170, 0 }, "Meadow Green", ""
-;	thread	{ 33, 138, 33 }, "Dark Green", ""
-;	thread	{ 93, 174, 148 }, "Aquamarine", ""
-;	thread	{ 76, 191, 143 }, "Emerald Green", ""
-;	thread	{ 0, 119, 114 }, "Peacock Green", ""
-;	thread	{ 112, 112, 112 }, "Dark Grey", ""
-;	thread	{ 242, 255, 255 }, "Ivory White", ""
-;	thread	{ 177, 88, 24 }, "Hazel", ""
-;	thread	{ 203, 138, 7 }, "Toast", ""
-;;	thread	{ 247, 146, 123 }, "Salmon", ""
-;	thread	{ 152, 105, 45 }, "Cocoa Brown", ""
-;	thread	{ 162, 113, 72 }, "Sienna", ""
-;	thread	{ 123, 85, 74 }, "Sepia", ""
-;	thread	{ 79, 57, 70 }, "Dark Sepia", ""
-;	thread	{ 82, 58, 151 }, "Violet Blue", ""
-;	thread	{ 0, 0, 160 }, "Blue Ink", ""
-;	thread	{ 0, 150, 222 }, "Solar Blue", ""
-;	thread	{ 178, 221, 83 }, "Green Dust", ""
-;	thread	{ 250, 143, 187 }, "Crimson", ""
-;	thread	{ 222, 100, 158 }, "Floral Pink", ""
-;	thread	{ 181, 80, 102 }, "Wine", ""
-;	thread	{ 94, 87, 71 }, "Olive Drab", ""
-;	thread	{ 76, 136, 31 }, "Meadow", ""
-;	thread	{ 228, 220, 121 }, "Mustard", ""
-;	thread	{ 203, 138, 26 }, "Yellow Ochre", ""
-;	thread	{ 198, 170, 66 }, "Old Gold", ""
-;	thread	{ 236, 176, 44 }, "Honeydew", ""
-;	thread	{ 248, 128, 64 }, "Tangerine", ""
-;	thread	{ 255, 229, 5 }, "Canary Yellow", ""
-;	thread	{ 250, 122, 122 }, "Vermillion", ""
-;	thread	{ 107, 224, 0 }, "Bright Green", ""
-;	thread	{ 56, 108, 174 }, "Ocean Blue", ""
-;	thread	{ 227, 196, 180 }, "Beige Grey", ""
-;	thread	{ 227, 172, 129 }, "Bamboo", "" }
+	thread	"White", 255, 255, 255, 2
+	thread	"Yellow", 255, 255, 23, 3
+;	db	""
+;	thread	{ 250, 160, 96 }, "Orange", 0
+;	db	""
+;	thread	{ 92, 118, 73 }, "Olive Green", 0
+;	db	""
+;	thread	{ 64, 192, 48 }, "Green", 0
+;	db	""
+;;	thread	{ 101, 194, 200 }, "Sky", 0
+;	db	""
+;	thread	{ 172, 128, 190 }, "Purple", 0
+;	db	""
+;	thread	{ 245, 188, 203 }, "Pink", 0
+;	db	""
+;	thread	{ 255, 0, 0 }, "Red", 0
+;	db	""
+;	thread	{ 192, 128, 0 }, "Brown", 0
+;	db	""
+;	thread	{ 0, 0, 240 }, "Blue", 0
+;	db	""
+;	thread	{ 228, 195, 93 }, "Gold", 0
+;	db	""
+;	thread	{ 165, 42, 42 }, "Dark Brown", 0
+;	db	""
+;	thread	{ 213, 176, 212 }, "Pale Violet", 0
+;	db	""
+;	thread	{ 252, 242, 148 }, "Pale Yellow", 0
+;	db	""
+;	thread	{ 240, 208, 192 }, "Pale Pink", 0
+;	db	""
+;	thread	{ 255, 192, 0 }, "Peach", 0
+;	db	""
+;;	thread	{ 201, 164, 128 }, "Beige", 0
+;	db	""
+;	thread	{ 155, 61, 75 }, "Wine Red", 0
+;	db	""
+;	thread	{ 160, 184, 204 }, "Pale Sky", 0
+;	db	""
+;	thread	{ 127, 194, 28 }, "Yellow Green", 0
+;	db	""
+;	thread	{ 185, 185, 185 }, "Silver Grey", 0
+;	db	""
+;	thread	{ 160, 160, 160 }, "Grey", 0
+;	db	""
+;	thread	{ 152, 214, 189 }, "Pale Aqua", 0
+;	db	""
+;	thread	{ 184, 240, 240 }, "Baby Blue", 0
+;	db	""
+;	thread	{ 54, 139, 160 }, "Powder Blue", 0
+;	db	""
+;	thread	{ 79, 131, 171 }, "Bright Blue", 0
+;	db	""
+;	thread	{ 56, 106, 145 }, "Slate Blue", 0
+;	db	""
+;	thread	{ 0, 32, 107 }, "Nave Blue", 0
+;	db	""
+;	thread	{ 229, 197, 202 }, "Salmon Pink", 0
+;	db	""
+;	thread	{ 249, 103, 107 }, "Coral", 0
+;	db	""
+;	thread	{ 227, 49, 31 }, "Burnt Orange", 0
+;	db	""
+;	thread	{ 226, 161, 136 }, "Cinnamon", 0
+;	db	""
+;	thread	{ 181, 148, 116 }, "Umber", 0
+;	db	""
+;	thread	{ 228, 207, 153 }, "Blonde", 0
+;	db	""
+;	thread	{ 225, 203, 0 }, "Sunflower", 0
+;	db	""
+;	thread	{ 225, 173, 212 }, "Orchid Pink", 0
+;	db	""
+;	thread	{ 195, 0, 126 }, "Peony Purple", 0
+;	db	""
+;	thread	{ 128, 0, 75 }, "Burgundy", 0
+;	db	""
+;	thread	{ 160, 96, 176 }, "Royal Purple", 0
+;	db	""
+;;	thread	{ 192, 64, 32 }, "Cardinal Red", 0
+;	db	""
+;	thread	{ 202, 224, 192 }, "Opal Green", 0
+;	db	""
+;	thread	{ 137, 152, 86 }, "Moss Green", 0
+;	db	""
+;	thread	{ 0, 170, 0 }, "Meadow Green", 0
+;	db	""
+;	thread	{ 33, 138, 33 }, "Dark Green", 0
+;	db	""
+;	thread	{ 93, 174, 148 }, "Aquamarine", 0
+;	db	""
+;	thread	{ 76, 191, 143 }, "Emerald Green", 0
+;	db	""
+;	thread	{ 0, 119, 114 }, "Peacock Green", 0
+;	db	""
+;	thread	{ 112, 112, 112 }, "Dark Grey", 0
+;	db	""
+;	thread	{ 242, 255, 255 }, "Ivory White", 0
+;	db	""
+;	thread	{ 177, 88, 24 }, "Hazel", 0
+;	db	""
+;	thread	{ 203, 138, 7 }, "Toast", 0
+;	db	""
+;;	thread	{ 247, 146, 123 }, "Salmon", 0
+;	db	""
+;	thread	{ 152, 105, 45 }, "Cocoa Brown", 0
+;	db	""
+;	thread	{ 162, 113, 72 }, "Sienna", 0
+;	db	""
+;	thread	{ 123, 85, 74 }, "Sepia", 0
+;	db	""
+;	thread	{ 79, 57, 70 }, "Dark Sepia", 0
+;	db	""
+;	thread	{ 82, 58, 151 }, "Violet Blue", 0
+;	db	""
+;	thread	{ 0, 0, 160 }, "Blue Ink", 0
+;	db	""
+;	thread	{ 0, 150, 222 }, "Solar Blue", 0
+;	db	""
+;	thread	{ 178, 221, 83 }, "Green Dust", 0
+;	db	""
+;	thread	{ 250, 143, 187 }, "Crimson", 0
+;	db	""
+;	thread	{ 222, 100, 158 }, "Floral Pink", 0
+;	db	""
+;	thread	{ 181, 80, 102 }, "Wine", 0
+;	db	""
+;	thread	{ 94, 87, 71 }, "Olive Drab", 0
+;	db	""
+;	thread	{ 76, 136, 31 }, "Meadow", 0
+;	db	""
+;	thread	{ 228, 220, 121 }, "Mustard", 0
+;	db	""
+;	thread	{ 203, 138, 26 }, "Yellow Ochre", 0
+;	db	""
+;	thread	{ 198, 170, 66 }, "Old Gold", 0
+;	db	""
+;	thread	{ 236, 176, 44 }, "Honeydew", 0
+;	db	""
+;	thread	{ 248, 128, 64 }, "Tangerine", 0
+;	db	""
+;	thread	{ 255, 229, 5 }, "Canary Yellow", 0
+;	db	""
+;	thread	{ 250, 122, 122 }, "Vermillion", 0
+;	db	""
+;	thread	{ 107, 224, 0 }, "Bright Green", 0
+;	db	""
+;	thread	{ 56, 108, 174 }, "Ocean Blue", 0
+;	db	""
+;	thread	{ 227, 196, 180 }, "Beige Grey", 0
+;	db	""
+;	thread	{ 227, 172, 129 }, "Bamboo", 0
+;	db	"" }
 ;};
 ;
 ;static const int pcmThreadCount = 65;
 ;static const EmbThread pcmThreads[] = {
-;	thread	{ 0x00, 0x00, 0x00 }, "PCM Color 1", ""
-;	thread	{ 0x00, 0x00, 0x80 }, "PCM Color 2", ""
-;	thread	{ 0x00, 0x00, 0xFF }, "PCM Color 3", ""
-;	thread	{ 0x00, 0x80, 0x80 }, "PCM Color 4", ""
-;	thread	{ 0x00, 0xFF, 0xFF }, "PCM Color 5", ""
-;	thread	{ 0x80, 0x00, 0x80 }, "PCM Color 6", ""
-;	thread	{ 0xFF, 0x00, 0xFF }, "PCM Color 7", ""
-;	thread	{ 0x80, 0x00, 0x00 }, "PCM Color 8", ""
-;;	thread	{ 0xFF, 0x00, 0x00 }, "PCM Color 9", ""
-;	thread	{ 0x00, 0x80, 0x00 }, "PCM Color 10", ""
-;	thread	{ 0x00, 0xFF, 0x00 }, "PCM Color 11", ""
-;	thread	{ 0x80, 0x80, 0x00 }, "PCM Color 12", ""
-;	thread	{ 0xFF, 0xFF, 0x00 }, "PCM Color 13", ""
-;	thread	{ 0x80, 0x80, 0x80 }, "PCM Color 14", ""
-;	thread	{ 0xC0, 0xC0, 0xC0 }, "PCM Color 15", ""
-;	thread	{ 0xFF, 0xFF, 0xFF }, "PCM Color 16", "" }
+;	thread	{ 0x00, 0x00, 0x00 }, "PCM Color 1", 0
+;	db	""
+;	thread	{ 0x00, 0x00, 0x80 }, "PCM Color 2", 0
+;	db	""
+;	thread	{ 0x00, 0x00, 0xFF }, "PCM Color 3", 0
+;	db	""
+;	thread	{ 0x00, 0x80, 0x80 }, "PCM Color 4", 0
+;	db	""
+;	thread	{ 0x00, 0xFF, 0xFF }, "PCM Color 5", 0
+;	db	""
+;	thread	{ 0x80, 0x00, 0x80 }, "PCM Color 6", 0
+;	db	""
+;	thread	{ 0xFF, 0x00, 0xFF }, "PCM Color 7", 0
+;	db	""
+;	thread	{ 0x80, 0x00, 0x00 }, "PCM Color 8", 0
+;	db	""
+;;	thread	{ 0xFF, 0x00, 0x00 }, "PCM Color 9", 0
+;	db	""
+;	thread	{ 0x00, 0x80, 0x00 }, "PCM Color 10", 0
+;	db	""
+;	thread	{ 0x00, 0xFF, 0x00 }, "PCM Color 11", 0
+;	db	""
+;	thread	{ 0x80, 0x80, 0x00 }, "PCM Color 12", 0
+;	db	""
+;	thread	{ 0xFF, 0xFF, 0x00 }, "PCM Color 13", 0
+;	db	""
+;	thread	{ 0x80, 0x80, 0x80 }, "PCM Color 14", 0
+;	db	""
+;	thread	{ 0xC0, 0xC0, 0xC0 }, "PCM Color 15", 0
+;	db	""
+;	thread	{ 0xFF, 0xFF, 0xFF }, "PCM Color 16", 0
+;	db	"" }
 ;};
 ;
 ;
 ;static const int pecThreadCount = 65;
 ;;static const EmbThread pecThreads[] = {
-;	thread	{ 0, 0, 0 }, "Unknown", "" }, /* Index  0 */
-;	thread	{ 14, 31, 124 }, "Prussian Blue", "" }, /* Index  1 */
-;	thread	{ 10, 85, 163 }, "Blue", "" }, /* Index  2 */
-;	thread	{ 0, 135, 119 }, "Teal Green", "" }, /* Index  3 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 75, 107, 175 }, "Cornflower Blue", "" }, /* Index  4 */
-;	thread	{ 237, 23, 31 }, "Red", "" }, /* Index  5 */
-;	thread	{ 209, 92, 0 }, "Reddish Brown", "" }, /* Index  6 */
-;	thread	{ 145, 54, 151 }, "Magenta", "" }, /* Index  7 */
-;	thread	{ 228, 154, 203 }, "Light Lilac", "" }, /* Index  8 */
-;	thread	{ 145, 95, 172 }, "Lilac", "" }, /* Index  9 */
-;	thread	{ 158, 214, 125 }, "Mint Green", "" }, /* Index 10 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 232, 169, 0 }, "Deep Gold", "" }, /* Index 11 */
-;	thread	{ 254, 186, 53 }, "Orange", "" }, /* Index 12 */
-;	thread	{ 255, 255, 0 }, "Yellow", "" }, /* Index 13 */
-;	thread	{ 112, 188, 31 }, "Lime Green", "" }, /* Index 14 */
-;	thread	{ 186, 152, 0 }, "Brass", "" }, /* Index 15 */
-;	thread	{ 168, 168, 168 }, "Silver", "" }, /* Index 16 */
-;	thread	{ 125, 111, 0 }, "Russet Brown", "" }, /* Index 17 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 255, 255, 179 }, "Cream Brown", "" }, /* Index 18 */
-;	thread	{ 79, 85, 86 }, "Pewter", "" }, /* Index 19 */
-;	thread	{ 0, 0, 0 }, "Black", "" }, /* Index 20 */
-;	thread	{ 11, 61, 145 }, "Ultramarine", "" }, /* Index 21 */
-;	thread	{ 119, 1, 118 }, "Royal Purple", "" }, /* Index 22 */
-;	thread	{ 41, 49, 51 }, "Dark Gray", "" }, /* Index 23 */
-;	thread	{ 42, 19, 1 }, "Dark Brown", "" }, /* Index 24 */
-;	thread	{ 246, 74, 138 }, "Deep Rose", "" }, /* Index 25 */
-;	thread	{ 178, 118, 36 }, "Light Brown", "" }, /* Index 26 */
-;	thread	{ 252, 187, 197 }, "Salmon Pink", "" }, /* Index 27 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 254, 55, 15 }, "Vermillion", "" }, /* Index 28 */
-;	thread	{ 240, 240, 240 }, "White", "" }, /* Index 29 */
-;	thread	{ 106, 28, 138 }, "Violet", "" }, /* Index 30 */
-;	thread	{ 168, 221, 196 }, "Seacrest", "" }, /* Index 31 */
-;	thread	{ 37, 132, 187 }, "Sky Blue", "" }, /* Index 32 */
-;	thread	{ 254, 179, 67 }, "Pumpkin", "" }, /* Index 33 */
-;	thread	{ 255, 243, 107 }, "Cream Yellow", "" }, /* Index 34 */
-;	thread	{ 208, 166, 96 }, "Khaki", "" }, /* Index 35 */
-;	thread	{ 209, 84, 0 }, "Clay Brown", "" }, /* Index 36 */
-;	thread	{ 102, 186, 73 }, "Leaf Green", "" }, /* Index 37 */
-;	thread	{ 19, 74, 70 }, "Peacock Blue", "" }, /* Index 38 */
-;	thread	{ 135, 135, 135 }, "Gray", "" }, /* Index 39 */
-;	thread	{ 216, 204, 198 }, "Warm Gray", "" }, /* Index 40 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 67, 86, 7 }, "Dark Olive", "" }, /* Index 41 */
-;	thread	{ 253, 217, 222 }, "Flesh Pink", "" }, /* Index 42 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 249, 147, 188 }, "Pink", "" }, /* Index 43 */
-;	thread	{ 0, 56, 34 }, "Deep Green", "" }, /* Index 44 */
-;	thread	{ 178, 175, 212 }, "Lavender", "" }, /* Index 45 */
-;	thread	{ 104, 106, 176 }, "Wisteria Violet", "" }, /* Index 46 */
-;	thread	{ 239, 227, 185 }, "Beige", "" }, /* Index 47 */
-;	thread	{ 247, 56, 102 }, "Carmine", "" }, /* Index 48 */
-;	thread	{ 181, 75, 100 }, "Amber Red", "" }, /* Index 49 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 19, 43, 26 }, "Olive Green", "" }, /* Index 50 */
-;	thread	{ 199, 1, 86 }, "Dark Fuschia", "" }, /* Index 51 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 254, 158, 50 }, "Tangerine", "" }, /* Index 52 */
-;	thread	{ 168, 222, 235 }, "Light Blue", "" }, /* Index 53 */
-;	thread	{ 0, 103, 62 }, "Emerald Green", "" }, /* Index 54 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 78, 41, 144 }, "Purple", "" }, /* Index 55 */
-;	thread	{ 47, 126, 32 }, "Moss Green", "" }, /* Index 56 */
-;	thread	{ 255, 204, 204 }, "Flesh Pink", "" }, /* Index 57 */ /* TODO: Verify RGB value is correct */ /* TODO: Flesh Pink is Index 42, is this Index incorrect? */
-;	thread	{ 255, 217, 17 }, "Harvest Gold", "" }, /* Index 58 */
-;	thread	{ 9, 91, 166 }, "Electric Blue", "" }, /* Index 59 */
-;	thread	{ 240, 249, 112 }, "Lemon Yellow", "" }, /* Index 60 */
-;	thread	{ 227, 243, 91 }, "Fresh Green", "" }, /* Index 61 */
-;	thread	{ 255, 153, 0 }, "Orange", "" }, /* Index 62 */ /* TODO: Verify RGB value is correct */ /* TODO: Orange is Index 12, is this Index incorrect? */
-;	thread	{ 255, 240, 141 }, "Cream Yellow", "" }, /* Index 63 */ /* TODO: Verify RGB value is correct */ /* TODO: Cream Yellow is Index 34, is this Index incorrect? */
-;	thread	{ 255, 200, 200 }, "Applique", "" } /* Index 64 */
+;	thread	{ 0, 0, 0 }, "Unknown", 0
+;	db	"" }, /* Index  0 */
+;	thread	{ 14, 31, 124 }, "Prussian Blue", 0
+;	db	"" }, /* Index  1 */
+;	thread	{ 10, 85, 163 }, "Blue", 0
+;	db	"" }, /* Index  2 */
+;	thread	{ 0, 135, 119 }, "Teal Green", 0
+;	db	"" }, /* Index  3 */ /* TODO: Verify RGB value is correct */
+;	thread	{ 75, 107, 175 }, "Cornflower Blue", 0
+;	db	"" }, /* Index  4 */
+;	thread	{ 237, 23, 31 }, "Red", 0
+;	db	"" }, /* Index  5 */
+;	thread	{ 209, 92, 0 }, "Reddish Brown", 0
+;	db	"" }, /* Index  6 */
+;	thread	{ 145, 54, 151 }, "Magenta", 0
+;	db	"" }, /* Index  7 */
+;	thread	{ 228, 154, 203 }, "Light Lilac", 0
+;	db	"" }, /* Index  8 */
+;	thread	{ 145, 95, 172 }, "Lilac", 0
+;	db	"" }, /* Index  9 */
+;	thread	{ 158, 214, 125 }, "Mint Green", 0
+;	db	"" }, /* Index 10 */ /* TODO: Verify RGB value is correct */
+;	thread	{ 232, 169, 0 }, "Deep Gold", 0
+;	db	"" }, /* Index 11 */
+;	thread	{ 254, 186, 53 }, "Orange", 0
+;	db	"" }, /* Index 12 */
+;	thread	{ 255, 255, 0 }, "Yellow", 0
+;	db	"" }, /* Index 13 */
+;	thread	{ 112, 188, 31 }, "Lime Green", 0
+;	db	"" }, /* Index 14 */
+;	thread	{ 186, 152, 0 }, "Brass", 0
+;	db	"" }, /* Index 15 */
+;	thread	{ 168, 168, 168 }, "Silver", 0
+;	db	"" }, /* Index 16 */
+;	thread	{ 125, 111, 0 }, "Russet Brown", 0
+;	db	"" }, /* Index 17 */ /* TODO: Verify RGB value is correct */
+;	thread	{ 255, 255, 179 }, "Cream Brown", 0
+;	db	"" }, /* Index 18 */
+;	thread	{ 79, 85, 86 }, "Pewter", 0
+;	db	"" }, /* Index 19 */
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"" }, /* Index 20 */
+;	thread	{ 11, 61, 145 }, "Ultramarine", 0
+;	db	"" }, /* Index 21 */
+;	thread	{ 119, 1, 118 }, "Royal Purple", 0
+;	db	"" }, /* Index 22 */
+;	thread	{ 41, 49, 51 }, "Dark Gray", 0
+;	db	"" }, /* Index 23 */
+;	thread	{ 42, 19, 1 }, "Dark Brown", 0
+;	db	"" }, /* Index 24 */
+;	thread	{ 246, 74, 138 }, "Deep Rose", 0
+;	db	"" }, /* Index 25 */
+;	thread	{ 178, 118, 36 }, "Light Brown", 0
+;	db	"" }, /* Index 26 */
+;	thread	{ 252, 187, 197 }, "Salmon Pink", 0
+;	db	"" }, /* Index 27 */ /* TODO: Verify RGB value is correct */
+;	thread	{ 254, 55, 15 }, "Vermillion", 0
+;	db	"" }, /* Index 28 */
+;	thread	{ 240, 240, 240 }, "White", 0
+;	db	"" }, /* Index 29 */
+;	thread	{ 106, 28, 138 }, "Violet", 0
+;	db	"" }, /* Index 30 */
+;	thread	{ 168, 221, 196 }, "Seacrest", 0
+;	db	"" }, /* Index 31 */
+;	thread	{ 37, 132, 187 }, "Sky Blue", 0
+;	db	"" }, /* Index 32 */
+;	thread	{ 254, 179, 67 }, "Pumpkin", 0
+;	db	"" }, /* Index 33 */
+;	thread	{ 255, 243, 107 }, "Cream Yellow", 0
+;	db	"" }, /* Index 34 */
+;	thread	{ 208, 166, 96 }, "Khaki", 0
+;	db	"" }, /* Index 35 */
+;	thread	{ 209, 84, 0 }, "Clay Brown", 0
+;	db	"" }, /* Index 36 */
+;	thread	{ 102, 186, 73 }, "Leaf Green", 0
+;	db	"" }, /* Index 37 */
+;	thread	{ 19, 74, 70 }, "Peacock Blue", 0
+;	db	"" }, /* Index 38 */
+;	thread	{ 135, 135, 135 }, "Gray", 0
+;	db	"" }, /* Index 39 */
+;	thread	{ 216, 204, 198 }, "Warm Gray", 0
+;	db	"" }, /* Index 40 */ /* TODO: Verify RGB value is correct */
+;	thread	{ 67, 86, 7 }, "Dark Olive", 0
+;	db	"" }, /* Index 41 */
+;	thread	{ 253, 217, 222 }, "Flesh Pink", 0
+;	db	"" }, /* Index 42 */ /* TODO: Verify RGB value is correct */
+;	thread	{ 249, 147, 188 }, "Pink", 0
+;	db	"" }, /* Index 43 */
+;	thread	{ 0, 56, 34 }, "Deep Green", 0
+;	db	"" }, /* Index 44 */
+;	thread	{ 178, 175, 212 }, "Lavender", 0
+;	db	"" }, /* Index 45 */
+;	thread	{ 104, 106, 176 }, "Wisteria Violet", 0
+;	db	"" }, /* Index 46 */
+;	thread	{ 239, 227, 185 }, "Beige", 0
+;	db	"" }, /* Index 47 */
+;	thread	{ 247, 56, 102 }, "Carmine", 0
+;	db	"" }, /* Index 48 */
+;	thread	{ 181, 75, 100 }, "Amber Red", 0
+;	db	"" }, /* Index 49 */ /* TODO: Verify RGB value is correct */
+;	thread	{ 19, 43, 26 }, "Olive Green", 0
+;	db	"" }, /* Index 50 */
+;	thread	{ 199, 1, 86 }, "Dark Fuschia", 0
+;	db	"" }, /* Index 51 */ /* TODO: Verify RGB value is correct */
+;	thread	{ 254, 158, 50 }, "Tangerine", 0
+;	db	"" }, /* Index 52 */
+;	thread	{ 168, 222, 235 }, "Light Blue", 0
+;	db	"" }, /* Index 53 */
+;	thread	{ 0, 103, 62 }, "Emerald Green", 0
+;	db	"" }, /* Index 54 */ /* TODO: Verify RGB value is correct */
+;	thread	{ 78, 41, 144 }, "Purple", 0
+;	db	"" }, /* Index 55 */
+;	thread	{ 47, 126, 32 }, "Moss Green", 0
+;	db	"" }, /* Index 56 */
+;	thread	{ 255, 204, 204 }, "Flesh Pink", 0
+;	db	"" }, /* Index 57 */ /* TODO: Verify RGB value is correct */ /* TODO: Flesh Pink is Index 42, is this Index incorrect? */
+;	thread	{ 255, 217, 17 }, "Harvest Gold", 0
+;	db	"" }, /* Index 58 */
+;	thread	{ 9, 91, 166 }, "Electric Blue", 0
+;	db	"" }, /* Index 59 */
+;	thread	{ 240, 249, 112 }, "Lemon Yellow", 0
+;	db	"" }, /* Index 60 */
+;	thread	{ 227, 243, 91 }, "Fresh Green", 0
+;	db	"" }, /* Index 61 */
+;	thread	{ 255, 153, 0 }, "Orange", 0
+;	db	"" }, /* Index 62 */ /* TODO: Verify RGB value is correct */ /* TODO: Orange is Index 12, is this Index incorrect? */
+;	thread	{ 255, 240, 141 }, "Cream Yellow", 0
+;	db	"" }, /* Index 63 */ /* TODO: Verify RGB value is correct */ /* TODO: Cream Yellow is Index 34, is this Index incorrect? */
+;	thread	{ 255, 200, 200 }, "Applique", 0
+;	db	"" } /* Index 64 */
 ;};
 
 imageWithFrame:
@@ -4122,93 +4644,256 @@ imageWithFrame:
 ; ****************************************/
 ;static const int shvThreadCount = 42;
 ;static const EmbThread shvThreads[] = {
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 255 }, "Blue", "TODO:CATALOG_NUMBER"
-;	thread	{ 51, 204, 102 }, "Green", "TODO:CATALOG_NUMBER"
-;	thread	{ 255, 0, 0 }, "Red", "TODO:CATALOG_NUMBER"
-;	thread	{ 255, 0, 255 }, "Purple", "TODO:CATALOG_NUMBER"
-;;	thread	{ 255, 255, 0 }, "Yellow", "TODO:CATALOG_NUMBER"
-;	thread	{ 127, 127, 127 }, "Grey", "TODO:CATALOG_NUMBER"
-;	thread	{ 51, 154, 255 }, "Light Blue", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 255, 0 }, "Light Green", "TODO:CATALOG_NUMBER"
-;	thread	{ 255, 127, 0 }, "Orange", "TODO:CATALOG_NUMBER"
-;	thread	{ 255, 160, 180 }, "Pink", "TODO:CATALOG_NUMBER"
-;	thread	{ 153, 75, 0 }, "Brown", "TODO:CATALOG_NUMBER"
-;	thread	{ 255, 255, 255 }, "White", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 255, 127, 127 }, "Light Red", "TODO:CATALOG_NUMBER"
-;	thread	{ 255, 127, 255 }, "Light Purple", "TODO:CATALOG_NUMBER"
-;	thread	{ 255, 255, 153 }, "Light Yellow", "TODO:CATALOG_NUMBER"
-;	thread	{ 192, 192, 192 }, "Light Grey", "TODO:CATALOG_NUMBER"
-;;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 255, 165, 65 }, "Light Orange", "TODO:CATALOG_NUMBER"
-;	thread	{ 255, 204, 204 }, "Light Pink", "TODO:CATALOG_NUMBER"
-;	thread	{ 175, 90, 10 }, "Light Brown", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 127 }, "Dark Blue", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 127, 0 }, "Dark Green", "TODO:CATALOG_NUMBER"
-;	thread	{ 127, 0, 0 }, "Dark Red", "TODO:CATALOG_NUMBER"
-;	thread	{ 127, 0, 127 }, "Dark Purple", "TODO:CATALOG_NUMBER"
-;	thread	{ 200, 200, 0 }, "Dark Yellow", "TODO:CATALOG_NUMBER"
-;	thread	{ 60, 60, 60 }, "Dark Gray", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER"
-;	thread	{ 232, 63, 0 }, "Dark Orange", "TODO:CATALOG_NUMBER"
-;	thread	{ 255, 102, 122 }, "Dark Pink", "TODO:CATALOG_NUMBER" }
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 255 }, "Blue", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 51, 204, 102 }, "Green", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 255, 0, 0 }, "Red", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 255, 0, 255 }, "Purple", 0
+;	db	"TODO:CATALOG_NUMBER"
+;;	thread	{ 255, 255, 0 }, "Yellow", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 127, 127, 127 }, "Grey", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 51, 154, 255 }, "Light Blue", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 255, 0 }, "Light Green", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 255, 127, 0 }, "Orange", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 255, 160, 180 }, "Pink", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 153, 75, 0 }, "Brown", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 255, 255, 255 }, "White", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 255, 127, 127 }, "Light Red", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 255, 127, 255 }, "Light Purple", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 255, 255, 153 }, "Light Yellow", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 192, 192, 192 }, "Light Grey", 0
+;	db	"TODO:CATALOG_NUMBER"
+;;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 255, 165, 65 }, "Light Orange", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 255, 204, 204 }, "Light Pink", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 175, 90, 10 }, "Light Brown", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 127 }, "Dark Blue", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 127, 0 }, "Dark Green", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 127, 0, 0 }, "Dark Red", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 127, 0, 127 }, "Dark Purple", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 200, 200, 0 }, "Dark Yellow", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 60, 60, 60 }, "Dark Gray", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 0, 0, 0 }, "Black", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 232, 63, 0 }, "Dark Orange", 0
+;	db	"TODO:CATALOG_NUMBER"
+;	thread	{ 255, 102, 122 }, "Dark Pink", 0
+;	db	"TODO:CATALOG_NUMBER" }
 ;};
 ;
 ;static const char* svg_element_tokens[] = {
-;    "?xml", "a", "animate", "animateColor", "animateMotion", "animateTransform", "animation",
-;    "audio", "circle", "defs", "desc", "discard", "ellipse",
-;    "font", "font-face", "font-face-src", "font-face-uri", "foreignObject",
-;    "g", "glyph", "handler", "hkern", "image", "line", "linearGradient", "listener",
-;    "metadata", "missing-glyph", "mpath", "path", "polygon", "polyline", "prefetch",
-;    "radialGradient", "rect", "script", "set", "solidColor", "stop", "svg", "switch",
-;    "tbreak", "text", "textArea", "title", "tspan", "use", "video", "\0"
-;    /* "altGlyph", "altGlyphDef", "altGlyphItem", "clipPath", "color-profile", "cursor",
-;     * "feBlend", "feColorMatrix", "feComponentTransfer", "feComposite", "feConvolveMatrix",
-;     * "feDiffuseLighting", "feDisplacementMap", "feDistantLight", "feFlood",
-;     * "feFuncA", "feFuncB", "feFuncG", "feFuncR", "feGaussianBlur", "feImage",
-;     * "feMerge", "feMergeNode", "feMorphology", "feOffset", "fePointLight",
-;     * "feSpecularLighting", "feSpotLight", "feTile", "feTurbulence", "filter",
-;     * "font-face-format", "font-face-name", "glyphRef", "marker", "mask",
-;     * "pattern", "style", "symbol", "textPath", "tref", "view", "vkern"
-;     * TODO: not implemented SVG Full 1.1 Spec Elements
-;     */
+;	db	"?xml", 0
+;	db	"a", 0
+;	db	"animate", 0
+;	db	"animateColor", 0
+;	db	"animateMotion", 0
+;	db	"animateTransform", 0
+;	db	"animation",
+;	db	"audio", 0
+;	db	"circle", 0
+;	db	"defs", 0
+;	db	"desc", 0
+;	db	"discard", 0
+;	db	"ellipse",
+;	db	"font", 0
+;	db	"font-face", 0
+;	db	"font-face-src", 0
+;	db	"font-face-uri", 0
+;	db	"foreignObject",
+;	db	"g", 0
+;	db	"glyph", 0
+;	db	"handler", 0
+;	db	"hkern", 0
+;	db	"image", 0
+;	db	"line", 0
+;	db	"linearGradient", 0
+;	db	"listener",
+;	db	"metadata", 0
+;	db	"missing-glyph", 0
+;	db	"mpath", 0
+;	db	"path", 0
+;	db	"polygon", 0
+;	db	"polyline", 0
+;	db	"prefetch",
+;	db	"radialGradient", 0
+;	db	"rect", 0
+;	db	"script", 0
+;	db	"set", 0
+;	db	"solidColor", 0
+;	db	"stop", 0
+;	db	"svg", 0
+;	db	"switch",
+;	db	"tbreak", 0
+;	db	"text", 0
+;	db	"textArea", 0
+;	db	"title", 0
+;	db	"tspan", 0
+;	db	"use", 0
+;	db	"video", 0
+;	db	"\0"
+;	/* "altGlyph", 0
+;	db	"altGlyphDef", 0
+;	db	"altGlyphItem", 0
+;	db	"clipPath", 0
+;	db	"color-profile", 0
+;	db	"cursor",
+;	 * "feBlend", 0
+;	db	"feColorMatrix", 0
+;	db	"feComponentTransfer", 0
+;	db	"feComposite", 0
+;	db	"feConvolveMatrix",
+;	 * "feDiffuseLighting", 0
+;	db	"feDisplacementMap", 0
+;	db	"feDistantLight", 0
+;	db	"feFlood",
+;	 * "feFuncA", 0
+;	db	"feFuncB", 0
+;	db	"feFuncG", 0
+;	db	"feFuncR", 0
+;	db	"feGaussianBlur", 0
+;	db	"feImage",
+;	 * "feMerge", 0
+;	db	"feMergeNode", 0
+;	db	"feMorphology", 0
+;	db	"feOffset", 0
+;	db	"fePointLight",
+;	 * "feSpecularLighting", 0
+;	db	"feSpotLight", 0
+;	db	"feTile", 0
+;	db	"feTurbulence", 0
+;	db	"filter",
+;	 * "font-face-format", 0
+;	db	"font-face-name", 0
+;	db	"glyphRef", 0
+;	db	"marker", 0
+;	db	"mask",
+;	 * "pattern", 0
+;	db	"style", 0
+;	db	"symbol", 0
+;	db	"textPath", 0
+;	db	"tref", 0
+;	db	"view", 0
+;	db	"vkern"
+;	 * TODO: not implemented SVG Full 1.1 Spec Elements
+;	 */
 ;};
 ;
 ;static const char* svg_media_property_tokens[] = {
-;    "audio-level", "buffered-rendering", "display", "image-rendering",
-;    "pointer-events", "shape-rendering", "text-rendering", "viewport-fill",
-;    "viewport-fill-opacity", "visibility", "\0"
+;	db	"audio-level", 0
+;	db	"buffered-rendering", 0
+;	db	"display", 0
+;	db	"image-rendering",
+;	db	"pointer-events", 0
+;	db	"shape-rendering", 0
+;	db	"text-rendering", 0
+;	db	"viewport-fill",
+;	db	"viewport-fill-opacity", 0
+;	db	"visibility", 0
+;	db	"\0"
 ;};
 ;
 ;static const char* svg_property_tokens[] = {
-;    "audio-level", "buffered-rendering", "color", "color-rendering", "direction",
-;    "display", "display-align", "fill", "fill-opacity", "fill-rule",
-;    "font-family", "font-size", "font-style", "font-variant", "font-weight",
-;    "image-rendering", "line-increment", "opacity", "pointer-events",
-;    "shape-rendering", "solid-color", "solid-opacity", "stop-color",
-;    "stop-opacity", "stroke", "stroke-dasharray", "stroke-linecap", "stroke-linejoin",
-;    "stroke-miterlimit", "stroke-opacity", "stroke-width", "text-align",
-;    "text-anchor", "text-rendering", "unicode-bidi", "vector-effect",
-;    "viewport-fill", "viewport-fill-opacity", "visibility", "\0"
+;	db	"audio-level", 0
+;	db	"buffered-rendering", 0
+;	db	"color", 0
+;	db	"color-rendering", 0
+;	db	"direction",
+;	db	"display", 0
+;	db	"display-align", 0
+;	db	"fill", 0
+;	db	"fill-opacity", 0
+;	db	"fill-rule",
+;	db	"font-family", 0
+;	db	"font-size", 0
+;	db	"font-style", 0
+;	db	"font-variant", 0
+;	db	"font-weight",
+;	db	"image-rendering", 0
+;	db	"line-increment", 0
+;	db	"opacity", 0
+;	db	"pointer-events",
+;	db	"shape-rendering", 0
+;	db	"solid-color", 0
+;	db	"solid-opacity", 0
+;	db	"stop-color",
+;	db	"stop-opacity", 0
+;	db	"stroke", 0
+;	db	"stroke-dasharray", 0
+;	db	"stroke-linecap", 0
+;	db	"stroke-linejoin",
+;	db	"stroke-miterlimit", 0
+;	db	"stroke-opacity", 0
+;	db	"stroke-width", 0
+;	db	"text-align",
+;	db	"text-anchor", 0
+;	db	"text-rendering", 0
+;	db	"unicode-bidi", 0
+;	db	"vector-effect",
+;	db	"viewport-fill", 0
+;	db	"viewport-fill-opacity", 0
+;	db	"visibility", 0
+;	db	"\0"
 ;};
 ;
 ;
 ;/* attribute tokens */
 ;
-;static const char* xmlTokens[] = { "encoding", "standalone", "version", "/", "\0" };
+;static const char* xmlTokens[] = { "encoding", 0
+;	db	"standalone", 0
+;	db	"version", 0
+;	db	"/", 0
+;	db	"\0" };
 ;
 
 link_token_table:
@@ -4217,351 +4902,1336 @@ link_token_table:
 ;	dd	content_token
 ;	dd	datatype_token
 ;static const char* linkTokens[] = {
-;        "about", "class", "content",
-;        "datatype", "externalResourcesRequired", "focusHighlight",
-;        "focusable", "id", "nav-down", "nav-down-left",
-;        "nav-down-right", "nav-left", "nav-next", "nav-prev",
-;        "nav-right", "nav-up", "nav-up-left", "nav-up-right",
-;        "property", "rel", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats",
-;        "resource", "rev", "role", "systemLanguage", "target",
-;        "transform", "typeof", "xlink:actuate", "xlink:arcrole",
-;        "xlink:href", "xlink:role", "xlink:show", "xlink:title",
-;        "xlink:type", "xml:base", "xml:id", "xml:lang",
-;        "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content",
+;	db	"datatype", 0
+;	db	"externalResourcesRequired", 0
+;	db	"focusHighlight",
+;	db	"focusable", 0
+;	db	"id", 0
+;	db	"nav-down", 0
+;	db	"nav-down-left",
+;	db	"nav-down-right", 0
+;	db	"nav-left", 0
+;	db	"nav-next", 0
+;	db	"nav-prev",
+;	db	"nav-right", 0
+;	db	"nav-up", 0
+;	db	"nav-up-left", 0
+;	db	"nav-up-right",
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"requiredExtensions",
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts", 0
+;	db	"requiredFormats",
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage", 0
+;	db	"target",
+;	db	"transform", 0
+;	db	"typeof", 0
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole",
+;	db	"xlink:href", 0
+;	db	"xlink:role", 0
+;	db	"xlink:show", 0
+;	db	"xlink:title",
+;	db	"xlink:type", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang",
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 
 animate_token_table:
 ;static const char* animateTokens[] = {
-;        "about", "accumulate", "additive", "attributeName", "attributeType",
-;        "begin", "by", "calcMode", "class", "content", "datatype", "dur", "end",
-;        "fill", "from", "id", "keySplines", "keyTimes", "max", "min", "property",
-;        "rel", "repeatCount", "repeatDur", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-;        "restart", "rev", "role", "systemLanguage", "to", "typeof", "values",
-;        "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-;        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-;        "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"accumulate", 0
+;	db	"additive", 0
+;	db	"attributeName", 0
+;	db	"attributeType",
+;	db	"begin", 0
+;	db	"by", 0
+;	db	"calcMode", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"dur", 0
+;	db	"end",
+;	db	"fill", 0
+;	db	"from", 0
+;	db	"id", 0
+;	db	"keySplines", 0
+;	db	"keyTimes", 0
+;	db	"max", 0
+;	db	"min", 0
+;	db	"property",
+;	db	"rel", 0
+;	db	"repeatCount", 0
+;	db	"repeatDur", 0
+;	db	"requiredExtensions",
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts", 0
+;	db	"requiredFormats", 0
+;	db	"resource",
+;	db	"restart", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage", 0
+;	db	"to", 0
+;	db	"typeof", 0
+;	db	"values",
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole", 0
+;	db	"xlink:href", 0
+;	db	"xlink:role",
+;	db	"xlink:show", 0
+;	db	"xlink:title", 0
+;	db	"xlink:type", 0
+;	db	"xml:base", 0
+;	db	"xml:id",
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 
 animate_color_token_table:
 ;static const char* animateColorTokens[] = {
-;        "about", "accumulate", "additive", "attributeName", "attributeType",
-;        "begin", "by", "calcMode", "class", "content", "datatype", "dur",
-;        "end", "fill", "from", "id",
-;        "keySplines", "keyTimes", "max", "min", "property", "rel",
-;        "repeatCount", "repeatDur", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats",
-;        "resource", "restart", "rev", "role", "systemLanguage",
-;        "to", "typeof", "values", "xlink:actuate", "xlink:arcrole",
-;        "xlink:href", "xlink:role", "xlink:show", "xlink:title",
-;        "xlink:type", "xml:base", "xml:id", "xml:lang",
-;        "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"accumulate", 0
+;	db	"additive", 0
+;	db	"attributeName", 0
+;	db	"attributeType",
+;	db	"begin", 0
+;	db	"by", 0
+;	db	"calcMode", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"dur",
+;	db	"end", 0
+;	db	"fill", 0
+;	db	"from", 0
+;	db	"id",
+;	db	"keySplines", 0
+;	db	"keyTimes", 0
+;	db	"max", 0
+;	db	"min", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"repeatCount", 0
+;	db	"repeatDur", 0
+;	db	"requiredExtensions",
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts", 0
+;	db	"requiredFormats",
+;	db	"resource", 0
+;	db	"restart", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage",
+;	db	"to", 0
+;	db	"typeof", 0
+;	db	"values", 0
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole",
+;	db	"xlink:href", 0
+;	db	"xlink:role", 0
+;	db	"xlink:show", 0
+;	db	"xlink:title",
+;	db	"xlink:type", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang",
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* animateMotionTokens[] = {
-;        "about", "accumulate", "additive", "begin", "by", "calcMode", "class",
-;        "content", "datatype", "dur", "end", "fill", "from", "id", "keyPoints",
-;        "keySplines", "keyTimes", "max", "min", "origin", "path", "property",
-;        "rel", "repeatCount", "repeatDur", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-;        "restart", "rev", "role", "rotate", "systemLanguage", "to", "typeof",
-;        "values", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-;        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-;        "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"accumulate", 0
+;	db	"additive", 0
+;	db	"begin", 0
+;	db	"by", 0
+;	db	"calcMode", 0
+;	db	"class",
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"dur", 0
+;	db	"end", 0
+;	db	"fill", 0
+;	db	"from", 0
+;	db	"id", 0
+;	db	"keyPoints",
+;	db	"keySplines", 0
+;	db	"keyTimes", 0
+;	db	"max", 0
+;	db	"min", 0
+;	db	"origin", 0
+;	db	"path", 0
+;	db	"property",
+;	db	"rel", 0
+;	db	"repeatCount", 0
+;	db	"repeatDur", 0
+;	db	"requiredExtensions",
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts", 0
+;	db	"requiredFormats", 0
+;	db	"resource",
+;	db	"restart", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"rotate", 0
+;	db	"systemLanguage", 0
+;	db	"to", 0
+;	db	"typeof",
+;	db	"values", 0
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole", 0
+;	db	"xlink:href", 0
+;	db	"xlink:role",
+;	db	"xlink:show", 0
+;	db	"xlink:title", 0
+;	db	"xlink:type", 0
+;	db	"xml:base", 0
+;	db	"xml:id",
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* animateTransformTokens[] = {
-;        "about", "accumulate", "additive", "attributeName", "attributeType",
-;        "begin", "by", "calcMode", "class", "content", "datatype", "dur", "end",
-;        "fill", "from", "id", "keySplines", "keyTimes", "max", "min",
-;        "property", "rel", "repeatCount", "repeatDur", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-;        "restart", "rev", "role", "systemLanguage", "to", "type", "typeof",
-;        "values", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-;        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-;        "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"accumulate", 0
+;	db	"additive", 0
+;	db	"attributeName", 0
+;	db	"attributeType",
+;	db	"begin", 0
+;	db	"by", 0
+;	db	"calcMode", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"dur", 0
+;	db	"end",
+;	db	"fill", 0
+;	db	"from", 0
+;	db	"id", 0
+;	db	"keySplines", 0
+;	db	"keyTimes", 0
+;	db	"max", 0
+;	db	"min",
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"repeatCount", 0
+;	db	"repeatDur", 0
+;	db	"requiredExtensions",
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts", 0
+;	db	"requiredFormats", 0
+;	db	"resource",
+;	db	"restart", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage", 0
+;	db	"to", 0
+;	db	"type", 0
+;	db	"typeof",
+;	db	"values", 0
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole", 0
+;	db	"xlink:href", 0
+;	db	"xlink:role",
+;	db	"xlink:show", 0
+;	db	"xlink:title", 0
+;	db	"xlink:type", 0
+;	db	"xml:base", 0
+;	db	"xml:id",
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* animationTokens[] = {
-;        "about", "begin", "class", "content", "datatype", "dur", "end",
-;        "externalResourcesRequired", "fill", "focusHighlight", "focusable",
-;        "height", "id", "initialVisibility", "max", "min", "nav-down",
-;        "nav-down-left", "nav-down-right", "nav-left", "nav-next", "nav-prev",
-;        "nav-right", "nav-up", "nav-up-left", "nav-up-right",
-;        "preserveAspectRatio", "property", "rel", "repeatCount", "repeatDur",
-;        "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "restart", "rev", "role", "syncBehavior",
-;        "syncMaster", "syncTolerance", "systemLanguage", "transform", "typeof",
-;        "width", "x", "xlink:actuate", "xlink:arcrole", "xlink:href",
-;        "xlink:role", "xlink:show", "xlink:title", "xlink:type", "xml:base",
-;        "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"begin", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"dur", 0
+;	db	"end",
+;	db	"externalResourcesRequired", 0
+;	db	"fill", 0
+;	db	"focusHighlight", 0
+;	db	"focusable",
+;	db	"height", 0
+;	db	"id", 0
+;	db	"initialVisibility", 0
+;	db	"max", 0
+;	db	"min", 0
+;	db	"nav-down",
+;	db	"nav-down-left", 0
+;	db	"nav-down-right", 0
+;	db	"nav-left", 0
+;	db	"nav-next", 0
+;	db	"nav-prev",
+;	db	"nav-right", 0
+;	db	"nav-up", 0
+;	db	"nav-up-left", 0
+;	db	"nav-up-right",
+;	db	"preserveAspectRatio", 0
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"repeatCount", 0
+;	db	"repeatDur",
+;	db	"requiredExtensions", 0
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts",
+;	db	"requiredFormats", 0
+;	db	"resource", 0
+;	db	"restart", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"syncBehavior",
+;	db	"syncMaster", 0
+;	db	"syncTolerance", 0
+;	db	"systemLanguage", 0
+;	db	"transform", 0
+;	db	"typeof",
+;	db	"width", 0
+;	db	"x", 0
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole", 0
+;	db	"xlink:href",
+;	db	"xlink:role", 0
+;	db	"xlink:show", 0
+;	db	"xlink:title", 0
+;	db	"xlink:type", 0
+;	db	"xml:base",
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"y", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* audioTokens[] = {
-;        "about", "begin", "class", "content", "datatype", "dur", "end",
-;        "externalResourcesRequired", "fill", "id", "max", "min", "property",
-;        "rel", "repeatCount", "repeatDur", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-;        "restart", "rev", "role", "syncBehavior", "syncMaster", "syncTolerance",
-;        "systemLanguage", "type", "typeof", "xlink:actuate", "xlink:arcrole",
-;        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-;        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"begin", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"dur", 0
+;	db	"end",
+;	db	"externalResourcesRequired", 0
+;	db	"fill", 0
+;	db	"id", 0
+;	db	"max", 0
+;	db	"min", 0
+;	db	"property",
+;	db	"rel", 0
+;	db	"repeatCount", 0
+;	db	"repeatDur", 0
+;	db	"requiredExtensions",
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts", 0
+;	db	"requiredFormats", 0
+;	db	"resource",
+;	db	"restart", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"syncBehavior", 0
+;	db	"syncMaster", 0
+;	db	"syncTolerance",
+;	db	"systemLanguage", 0
+;	db	"type", 0
+;	db	"typeof", 0
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole",
+;	db	"xlink:href", 0
+;	db	"xlink:role", 0
+;	db	"xlink:show", 0
+;	db	"xlink:title", 0
+;	db	"xlink:type",
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* circleTokens[] = {
-;        "about", "class", "content", "cx", "cy", "datatype", "focusHighlight",
-;        "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
-;        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-;        "nav-up-left", "nav-up-right", "property", "r", "rel",
-;        "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-;        "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
-;        "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"cx", 0
+;	db	"cy", 0
+;	db	"datatype", 0
+;	db	"focusHighlight",
+;	db	"focusable", 0
+;	db	"id", 0
+;	db	"nav-down", 0
+;	db	"nav-down-left", 0
+;	db	"nav-down-right",
+;	db	"nav-left", 0
+;	db	"nav-next", 0
+;	db	"nav-prev", 0
+;	db	"nav-right", 0
+;	db	"nav-up",
+;	db	"nav-up-left", 0
+;	db	"nav-up-right", 0
+;	db	"property", 0
+;	db	"r", 0
+;	db	"rel",
+;	db	"requiredExtensions", 0
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts",
+;	db	"requiredFormats", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage",
+;	db	"transform", 0
+;	db	"typeof", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space",
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* defsTokens[] = {
-;        "about", "class", "content", "datatype", "id", "property", "rel",
-;        "resource", "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang",
-;        "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"id", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"typeof", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang",
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* descTokens[] = {
-;        "about", "class", "content", "datatype", "id", "property", "rel",
-;        "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-;        "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"id", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"requiredExtensions", 0
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts",
+;	db	"requiredFormats", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage",
+;	db	"typeof", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* discardTokens[] = {
-;        "about", "begin", "class", "content", "datatype", "id", "property",
-;        "rel", "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-;        "typeof", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-;        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-;        "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"begin", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"id", 0
+;	db	"property",
+;	db	"rel", 0
+;	db	"requiredExtensions", 0
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts",
+;	db	"requiredFormats", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage",
+;	db	"typeof", 0
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole", 0
+;	db	"xlink:href", 0
+;	db	"xlink:role",
+;	db	"xlink:show", 0
+;	db	"xlink:title", 0
+;	db	"xlink:type", 0
+;	db	"xml:base", 0
+;	db	"xml:id",
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* ellipseTokens[] = {
-;        "about", "class", "content", "cx", "cy", "datatype", "focusHighlight",
-;        "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
-;        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-;        "nav-up-left", "nav-up-right", "property", "rel", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-;        "rev", "role", "rx", "ry", "systemLanguage", "transform", "typeof",
-;        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"cx", 0
+;	db	"cy", 0
+;	db	"datatype", 0
+;	db	"focusHighlight",
+;	db	"focusable", 0
+;	db	"id", 0
+;	db	"nav-down", 0
+;	db	"nav-down-left", 0
+;	db	"nav-down-right",
+;	db	"nav-left", 0
+;	db	"nav-next", 0
+;	db	"nav-prev", 0
+;	db	"nav-right", 0
+;	db	"nav-up",
+;	db	"nav-up-left", 0
+;	db	"nav-up-right", 0
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"requiredExtensions",
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts", 0
+;	db	"requiredFormats", 0
+;	db	"resource",
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"rx", 0
+;	db	"ry", 0
+;	db	"systemLanguage", 0
+;	db	"transform", 0
+;	db	"typeof",
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* fontTokens[] = {
-;        "about", "class", "content", "datatype", "externalResourcesRequired",
-;        "horiz-adv-x", "horiz-origin-x", "id", "property", "rel", "resource",
-;        "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
-;        "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"externalResourcesRequired",
+;	db	"horiz-adv-x", 0
+;	db	"horiz-origin-x", 0
+;	db	"id", 0
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"resource",
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"typeof", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space",
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* fontFaceTokens[] = {
-;        "about", "accent-height", "alphabetic", "ascent", "bbox", "cap-height",
-;        "class", "content", "datatype", "descent", "externalResourcesRequired",
-;        "font-family", "font-stretch", "font-style", "font-variant",
-;        "font-weight", "hanging", "id", "ideographic", "mathematical",
-;        "overline-position", "overline-thickness", "panose-1", "property",
-;        "rel", "resource", "rev", "role", "slope", "stemh", "stemv",
-;        "strikethrough-position", "strikethrough-thickness", "typeof",
-;        "underline-position", "underline-thickness", "unicode-range",
-;        "units-per-em", "widths", "x-height", "xml:base", "xml:id",
-;        "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"accent-height", 0
+;	db	"alphabetic", 0
+;	db	"ascent", 0
+;	db	"bbox", 0
+;	db	"cap-height",
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"descent", 0
+;	db	"externalResourcesRequired",
+;	db	"font-family", 0
+;	db	"font-stretch", 0
+;	db	"font-style", 0
+;	db	"font-variant",
+;	db	"font-weight", 0
+;	db	"hanging", 0
+;	db	"id", 0
+;	db	"ideographic", 0
+;	db	"mathematical",
+;	db	"overline-position", 0
+;	db	"overline-thickness", 0
+;	db	"panose-1", 0
+;	db	"property",
+;	db	"rel", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"slope", 0
+;	db	"stemh", 0
+;	db	"stemv",
+;	db	"strikethrough-position", 0
+;	db	"strikethrough-thickness", 0
+;	db	"typeof",
+;	db	"underline-position", 0
+;	db	"underline-thickness", 0
+;	db	"unicode-range",
+;	db	"units-per-em", 0
+;	db	"widths", 0
+;	db	"x-height", 0
+;	db	"xml:base", 0
+;	db	"xml:id",
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* fontFaceSrcTokens[] = {
-;        "about", "class", "content", "datatype", "id", "property", "rel",
-;        "resource", "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang",
-;        "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"id", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"typeof", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang",
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* fontFaceUriTokens[] = {
-;        "about", "class", "content", "datatype", "externalResourcesRequired",
-;        "id", "property", "rel", "resource", "rev", "role",
-;        "typeof", "xlink:actuate", "xlink:arcrole",
-;        "xlink:href", "xlink:role", "xlink:show", "xlink:title",
-;        "xlink:type", "xml:base", "xml:id", "xml:lang",
-;        "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"externalResourcesRequired",
+;	db	"id", 0
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role",
+;	db	"typeof", 0
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole",
+;	db	"xlink:href", 0
+;	db	"xlink:role", 0
+;	db	"xlink:show", 0
+;	db	"xlink:title",
+;	db	"xlink:type", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang",
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* foreignObjectTokens[] = {
-;        "about", "class", "content", "datatype", "externalResourcesRequired",
-;        "focusHighlight", "focusable", "height", "id", "nav-down",
-;        "nav-down-left", "nav-down-right", "nav-left", "nav-next",
-;        "nav-prev", "nav-right", "nav-up", "nav-up-left", "nav-up-right",
-;        "property", "rel", "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-;        "transform", "typeof", "width", "x", "xlink:actuate",
-;        "xlink:arcrole", "xlink:href", "xlink:role", "xlink:show",
-;        "xlink:title", "xlink:type", "xml:base", "xml:id",
-;        "xml:lang", "xml:space", "y", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"externalResourcesRequired",
+;	db	"focusHighlight", 0
+;	db	"focusable", 0
+;	db	"height", 0
+;	db	"id", 0
+;	db	"nav-down",
+;	db	"nav-down-left", 0
+;	db	"nav-down-right", 0
+;	db	"nav-left", 0
+;	db	"nav-next",
+;	db	"nav-prev", 0
+;	db	"nav-right", 0
+;	db	"nav-up", 0
+;	db	"nav-up-left", 0
+;	db	"nav-up-right",
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"requiredExtensions", 0
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts",
+;	db	"requiredFormats", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage",
+;	db	"transform", 0
+;	db	"typeof", 0
+;	db	"width", 0
+;	db	"x", 0
+;	db	"xlink:actuate",
+;	db	"xlink:arcrole", 0
+;	db	"xlink:href", 0
+;	db	"xlink:role", 0
+;	db	"xlink:show",
+;	db	"xlink:title", 0
+;	db	"xlink:type", 0
+;	db	"xml:base", 0
+;	db	"xml:id",
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"y", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* groupTokens[] = {
-;        "about", "class", "content", "datatype", "externalResourcesRequired",
-;        "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
-;        "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
-;        "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
-;        "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-;        "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
-;        "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"externalResourcesRequired",
+;	db	"focusHighlight", 0
+;	db	"focusable", 0
+;	db	"id", 0
+;	db	"nav-down", 0
+;	db	"nav-down-left",
+;	db	"nav-down-right", 0
+;	db	"nav-left", 0
+;	db	"nav-next", 0
+;	db	"nav-prev", 0
+;	db	"nav-right",
+;	db	"nav-up", 0
+;	db	"nav-up-left", 0
+;	db	"nav-up-right", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"requiredExtensions", 0
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts",
+;	db	"requiredFormats", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage",
+;	db	"transform", 0
+;	db	"typeof", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space",
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* glyphTokens[] = {
-;        "about", "arabic-form", "class", "content", "d", "datatype",
-;        "glyph-name", "horiz-adv-x", "id", "lang", "property", "rel",
-;        "resource", "rev", "role", "typeof", "unicode", "xml:base", "xml:id",
-;        "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"arabic-form", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"d", 0
+;	db	"datatype",
+;	db	"glyph-name", 0
+;	db	"horiz-adv-x", 0
+;	db	"id", 0
+;	db	"lang", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"typeof", 0
+;	db	"unicode", 0
+;	db	"xml:base", 0
+;	db	"xml:id",
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* handlerTokens[] = {
-;        "about", "class", "content", "datatype", "ev:event",
-;        "externalResourcesRequired", "id", "property", "rel", "resource",
-;        "rev", "role", "type", "typeof", "xlink:actuate", "xlink:arcrole",
-;        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-;        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"ev:event",
+;	db	"externalResourcesRequired", 0
+;	db	"id", 0
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"resource",
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"type", 0
+;	db	"typeof", 0
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole",
+;	db	"xlink:href", 0
+;	db	"xlink:role", 0
+;	db	"xlink:show", 0
+;	db	"xlink:title", 0
+;	db	"xlink:type",
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* hkernTokens[] = {
-;        "about", "class", "content", "datatype", "g1", "g2", "id", "k",
-;        "property", "rel", "resource", "rev", "role", "typeof", "u1", "u2",
-;        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"g1", 0
+;	db	"g2", 0
+;	db	"id", 0
+;	db	"k",
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"typeof", 0
+;	db	"u1", 0
+;	db	"u2",
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* imageTokens[] = {
-;        "about", "class", "content", "datatype", "externalResourcesRequired",
-;        "focusHighlight", "focusable", "height", "id", "nav-down",
-;        "nav-down-left", "nav-down-right", "nav-left", "nav-next", "nav-prev",
-;        "nav-right", "nav-up", "nav-up-left", "nav-up-right", "opacity",
-;        "preserveAspectRatio", "property", "rel", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-;        "rev", "role", "systemLanguage", "transform", "type", "typeof", "width",
-;        "x", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-;        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-;        "xml:lang", "xml:space", "y", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"externalResourcesRequired",
+;	db	"focusHighlight", 0
+;	db	"focusable", 0
+;	db	"height", 0
+;	db	"id", 0
+;	db	"nav-down",
+;	db	"nav-down-left", 0
+;	db	"nav-down-right", 0
+;	db	"nav-left", 0
+;	db	"nav-next", 0
+;	db	"nav-prev",
+;	db	"nav-right", 0
+;	db	"nav-up", 0
+;	db	"nav-up-left", 0
+;	db	"nav-up-right", 0
+;	db	"opacity",
+;	db	"preserveAspectRatio", 0
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"requiredExtensions",
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts", 0
+;	db	"requiredFormats", 0
+;	db	"resource",
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage", 0
+;	db	"transform", 0
+;	db	"type", 0
+;	db	"typeof", 0
+;	db	"width",
+;	db	"x", 0
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole", 0
+;	db	"xlink:href", 0
+;	db	"xlink:role",
+;	db	"xlink:show", 0
+;	db	"xlink:title", 0
+;	db	"xlink:type", 0
+;	db	"xml:base", 0
+;	db	"xml:id",
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"y", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* lineTokens[] = {
-;        "about", "class", "content", "datatype", "focusHighlight", "focusable",
-;        "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
-;        "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
-;        "nav-up-right", "property", "rel", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-;        "rev", "role", "systemLanguage", "transform", "typeof", "x1", "x2",
-;        "xml:base", "xml:id", "xml:lang", "xml:space", "y1", "y2", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"focusHighlight", 0
+;	db	"focusable",
+;	db	"id", 0
+;	db	"nav-down", 0
+;	db	"nav-down-left", 0
+;	db	"nav-down-right", 0
+;	db	"nav-left",
+;	db	"nav-next", 0
+;	db	"nav-prev", 0
+;	db	"nav-right", 0
+;	db	"nav-up", 0
+;	db	"nav-up-left",
+;	db	"nav-up-right", 0
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"requiredExtensions",
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts", 0
+;	db	"requiredFormats", 0
+;	db	"resource",
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage", 0
+;	db	"transform", 0
+;	db	"typeof", 0
+;	db	"x1", 0
+;	db	"x2",
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"y1", 0
+;	db	"y2", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* linearGradientTokens[] = {
-;        "about", "class", "content", "datatype", "gradientUnits", "id",
-;        "property", "rel", "resource", "rev", "role", "typeof", "x1", "x2",
-;        "xml:base", "xml:id", "xml:lang", "xml:space", "y1", "y2", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"gradientUnits", 0
+;	db	"id",
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"typeof", 0
+;	db	"x1", 0
+;	db	"x2",
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"y1", 0
+;	db	"y2", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* listenerTokens[] = {
-;        "about", "class", "content", "datatype", "defaultAction", "event",
-;        "handler", "id", "observer", "phase", "propagate", "property", "rel",
-;        "resource", "rev", "role", "target", "typeof", "xml:base", "xml:id",
-;        "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"defaultAction", 0
+;	db	"event",
+;	db	"handler", 0
+;	db	"id", 0
+;	db	"observer", 0
+;	db	"phase", 0
+;	db	"propagate", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"target", 0
+;	db	"typeof", 0
+;	db	"xml:base", 0
+;	db	"xml:id",
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* metadataTokens[] = {
-;        "about", "class", "content", "datatype", "id", "property", "rel",
-;        "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-;        "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"id", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"requiredExtensions", 0
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts",
+;	db	"requiredFormats", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage",
+;	db	"typeof", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* missingGlyphTokens[] = {
-;        "about", "class", "content", "d", "datatype", "horiz-adv-x", "id",
-;        "property", "rel", "resource", "rev", "role", "typeof", "xml:base",
-;        "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"d", 0
+;	db	"datatype", 0
+;	db	"horiz-adv-x", 0
+;	db	"id",
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"typeof", 0
+;	db	"xml:base",
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* mpathTokens[] = {
-;        "about", "class", "content", "datatype", "id", "property", "rel",
-;        "resource", "rev", "role", "typeof", "xlink:actuate", "xlink:arcrole",
-;        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-;        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"id", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"typeof", 0
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole",
+;	db	"xlink:href", 0
+;	db	"xlink:role", 0
+;	db	"xlink:show", 0
+;	db	"xlink:title", 0
+;	db	"xlink:type",
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* pathTokens[] = {
-;        "about", "class", "content", "d", "datatype", "focusHighlight",
-;        "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
-;        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-;        "nav-up-left", "nav-up-right", "pathLength", "property", "rel",
-;        "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-;        "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
-;        "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"d", 0
+;	db	"datatype", 0
+;	db	"focusHighlight",
+;	db	"focusable", 0
+;	db	"id", 0
+;	db	"nav-down", 0
+;	db	"nav-down-left", 0
+;	db	"nav-down-right",
+;	db	"nav-left", 0
+;	db	"nav-next", 0
+;	db	"nav-prev", 0
+;	db	"nav-right", 0
+;	db	"nav-up",
+;	db	"nav-up-left", 0
+;	db	"nav-up-right", 0
+;	db	"pathLength", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"requiredExtensions", 0
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts",
+;	db	"requiredFormats", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage",
+;	db	"transform", 0
+;	db	"typeof", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space",
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* polygonTokens[] = {
-;        "about", "class", "content", "datatype", "focusHighlight", "focusable",
-;        "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
-;        "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
-;        "nav-up-right", "points", "property", "rel", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-;        "rev", "role", "systemLanguage", "transform", "typeof", "xml:base",
-;        "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"focusHighlight", 0
+;	db	"focusable",
+;	db	"id", 0
+;	db	"nav-down", 0
+;	db	"nav-down-left", 0
+;	db	"nav-down-right", 0
+;	db	"nav-left",
+;	db	"nav-next", 0
+;	db	"nav-prev", 0
+;	db	"nav-right", 0
+;	db	"nav-up", 0
+;	db	"nav-up-left",
+;	db	"nav-up-right", 0
+;	db	"points", 0
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"requiredExtensions",
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts", 0
+;	db	"requiredFormats", 0
+;	db	"resource",
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage", 0
+;	db	"transform", 0
+;	db	"typeof", 0
+;	db	"xml:base",
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* polylineTokens[] = {
-;        "about", "class", "content", "datatype", "focusHighlight", "focusable",
-;        "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
-;        "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
-;        "nav-up-right", "points", "property", "rel", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-;        "rev", "role", "systemLanguage", "transform", "typeof", "xml:base",
-;        "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"focusHighlight", 0
+;	db	"focusable",
+;	db	"id", 0
+;	db	"nav-down", 0
+;	db	"nav-down-left", 0
+;	db	"nav-down-right", 0
+;	db	"nav-left",
+;	db	"nav-next", 0
+;	db	"nav-prev", 0
+;	db	"nav-right", 0
+;	db	"nav-up", 0
+;	db	"nav-up-left",
+;	db	"nav-up-right", 0
+;	db	"points", 0
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"requiredExtensions",
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts", 0
+;	db	"requiredFormats", 0
+;	db	"resource",
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage", 0
+;	db	"transform", 0
+;	db	"typeof", 0
+;	db	"xml:base",
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* prefetchTokens[] = {
-;        "about", "bandwidth", "class", "content", "datatype", "id",
-;        "mediaCharacterEncoding", "mediaContentEncodings", "mediaSize",
-;        "mediaTime", "property", "rel", "resource", "rev", "role", "typeof",
-;        "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-;        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-;        "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"bandwidth", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"id",
+;	db	"mediaCharacterEncoding", 0
+;	db	"mediaContentEncodings", 0
+;	db	"mediaSize",
+;	db	"mediaTime", 0
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"typeof",
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole", 0
+;	db	"xlink:href", 0
+;	db	"xlink:role",
+;	db	"xlink:show", 0
+;	db	"xlink:title", 0
+;	db	"xlink:type", 0
+;	db	"xml:base", 0
+;	db	"xml:id",
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* radialGradientTokens[] = {
-;        "about", "class", "content", "cx", "cy", "datatype", "gradientUnits",
-;        "id", "property", "r", "rel", "resource", "rev", "role", "typeof",
-;        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"cx", 0
+;	db	"cy", 0
+;	db	"datatype", 0
+;	db	"gradientUnits",
+;	db	"id", 0
+;	db	"property", 0
+;	db	"r", 0
+;	db	"rel", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"typeof",
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* rectTokens[] = {
-;        "about", "class", "content", "datatype", "focusHighlight", "focusable",
-;        "height", "id", "nav-down", "nav-down-left", "nav-down-right",
-;        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-;        "nav-up-left", "nav-up-right", "property", "rel", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-;        "rev", "role", "rx", "ry", "systemLanguage", "transform", "typeof",
-;        "width", "x", "xml:base", "xml:id", "xml:lang", "xml:space", "y",
-;        "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"focusHighlight", 0
+;	db	"focusable",
+;	db	"height", 0
+;	db	"id", 0
+;	db	"nav-down", 0
+;	db	"nav-down-left", 0
+;	db	"nav-down-right",
+;	db	"nav-left", 0
+;	db	"nav-next", 0
+;	db	"nav-prev", 0
+;	db	"nav-right", 0
+;	db	"nav-up",
+;	db	"nav-up-left", 0
+;	db	"nav-up-right", 0
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"requiredExtensions",
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts", 0
+;	db	"requiredFormats", 0
+;	db	"resource",
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"rx", 0
+;	db	"ry", 0
+;	db	"systemLanguage", 0
+;	db	"transform", 0
+;	db	"typeof",
+;	db	"width", 0
+;	db	"x", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"y",
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* scriptTokens[] = {
-;        "about", "class", "content", "datatype", "externalResourcesRequired",
-;        "id", "property", "rel", "resource", "rev", "role", "type", "typeof",
-;        "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-;        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-;        "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"externalResourcesRequired",
+;	db	"id", 0
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"type", 0
+;	db	"typeof",
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole", 0
+;	db	"xlink:href", 0
+;	db	"xlink:role",
+;	db	"xlink:show", 0
+;	db	"xlink:title", 0
+;	db	"xlink:type", 0
+;	db	"xml:base", 0
+;	db	"xml:id",
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* setTokens[] = {
-;        "about", "attributeName", "attributeType", "begin", "class", "content",
-;        "datatype", "dur", "end", "fill", "id", "max", "min", "property", "rel",
-;        "repeatCount", "repeatDur", "requiredExtensions", "requiredFeatures",
-;        "requiredFonts", "requiredFormats", "resource", "rev", "role",
-;        "systemLanguage", "to", "typeof", "xlink:actuate", "xlink:arcrole",
-;        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-;        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"attributeName", 0
+;	db	"attributeType", 0
+;	db	"begin", 0
+;	db	"class", 0
+;	db	"content",
+;	db	"datatype", 0
+;	db	"dur", 0
+;	db	"end", 0
+;	db	"fill", 0
+;	db	"id", 0
+;	db	"max", 0
+;	db	"min", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"repeatCount", 0
+;	db	"repeatDur", 0
+;	db	"requiredExtensions", 0
+;	db	"requiredFeatures",
+;	db	"requiredFonts", 0
+;	db	"requiredFormats", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role",
+;	db	"systemLanguage", 0
+;	db	"to", 0
+;	db	"typeof", 0
+;	db	"xlink:actuate", 0
+;	db	"xlink:arcrole",
+;	db	"xlink:href", 0
+;	db	"xlink:role", 0
+;	db	"xlink:show", 0
+;	db	"xlink:title", 0
+;	db	"xlink:type",
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;#define SOLIDCOLOR_ATTR        1
 ;#define STOP_ATTR              2
@@ -4577,180 +6247,435 @@ animate_color_token_table:
 ;
 ;
 ;static const char* switchTokens[] = {
-;        "about", "class", "content", "datatype", "externalResourcesRequired",
-;        "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
-;        "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
-;        "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
-;        "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-;        "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
-;        "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"externalResourcesRequired",
+;	db	"focusHighlight", 0
+;	db	"focusable", 0
+;	db	"id", 0
+;	db	"nav-down", 0
+;	db	"nav-down-left",
+;	db	"nav-down-right", 0
+;	db	"nav-left", 0
+;	db	"nav-next", 0
+;	db	"nav-prev", 0
+;	db	"nav-right",
+;	db	"nav-up", 0
+;	db	"nav-up-left", 0
+;	db	"nav-up-right", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"requiredExtensions", 0
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts",
+;	db	"requiredFormats", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage",
+;	db	"transform", 0
+;	db	"typeof", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space",
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* tbreakTokens[] = {
-;        "about", "class", "content", "datatype", "id", "property", "rel",
-;        "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-;        "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"id", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"requiredExtensions", 0
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts",
+;	db	"requiredFormats", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage",
+;	db	"typeof", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* textTokens[] = {
-;        "about", "class", "content", "datatype", "editable", "focusHighlight",
-;        "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
-;        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-;        "nav-up-left", "nav-up-right", "property", "rel", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-;        "rev", "role", "rotate", "systemLanguage", "transform", "typeof", "x",
-;        "xml:base", "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"editable", 0
+;	db	"focusHighlight",
+;	db	"focusable", 0
+;	db	"id", 0
+;	db	"nav-down", 0
+;	db	"nav-down-left", 0
+;	db	"nav-down-right",
+;	db	"nav-left", 0
+;	db	"nav-next", 0
+;	db	"nav-prev", 0
+;	db	"nav-right", 0
+;	db	"nav-up",
+;	db	"nav-up-left", 0
+;	db	"nav-up-right", 0
+;	db	"property", 0
+;	db	"rel", 0
+;	db	"requiredExtensions",
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts", 0
+;	db	"requiredFormats", 0
+;	db	"resource",
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"rotate", 0
+;	db	"systemLanguage", 0
+;	db	"transform", 0
+;	db	"typeof", 0
+;	db	"x",
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"y", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* textAreaTokens[] = {
-;        "about", "class", "content", "datatype", "editable", "focusHighlight",
-;        "focusable", "height", "id", "nav-down", "nav-down-left",
-;        "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
-;        "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
-;        "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-;        "transform", "typeof", "width", "x", "xml:base", "xml:id", "xml:lang",
-;        "xml:space", "y", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"editable", 0
+;	db	"focusHighlight",
+;	db	"focusable", 0
+;	db	"height", 0
+;	db	"id", 0
+;	db	"nav-down", 0
+;	db	"nav-down-left",
+;	db	"nav-down-right", 0
+;	db	"nav-left", 0
+;	db	"nav-next", 0
+;	db	"nav-prev", 0
+;	db	"nav-right",
+;	db	"nav-up", 0
+;	db	"nav-up-left", 0
+;	db	"nav-up-right", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"requiredExtensions", 0
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts",
+;	db	"requiredFormats", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage",
+;	db	"transform", 0
+;	db	"typeof", 0
+;	db	"width", 0
+;	db	"x", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang",
+;	db	"xml:space", 0
+;	db	"y", 0
+;	db	"/", 0
+;	db	"\0"
+;	};
 ;
 ;static const char* titleTokens[] = {
-;        "about", "class", "content", "datatype", "id", "property", "rel",
-;        "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-;        "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-;    };
-;
-;static const char* tspanTokens[] = {
-;        "about", "class", "content", "datatype", "focusHighlight", "focusable",
-;        "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
-;        "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
-;        "nav-up-right", "property", "rel", "requiredExtensions",
-;        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-;        "rev", "role", "systemLanguage", "typeof", "xml:base", "xml:id",
-;        "xml:lang", "xml:space", "/", "\0"
-;    };
+;	db	"about", 0
+;	db	"class", 0
+;	db	"content", 0
+;	db	"datatype", 0
+;	db	"id", 0
+;	db	"property", 0
+;	db	"rel",
+;	db	"requiredExtensions", 0
+;	db	"requiredFeatures", 0
+;	db	"requiredFonts",
+;	db	"requiredFormats", 0
+;	db	"resource", 0
+;	db	"rev", 0
+;	db	"role", 0
+;	db	"systemLanguage",
+;	db	"typeof", 0
+;	db	"xml:base", 0
+;	db	"xml:id", 0
+;	db	"xml:lang", 0
+;	db	"xml:space", 0
+;	db	"/", 0
+	dd	0
+
+
+tspan_token:
+;	dd	about_token
+;	db	"class_token
+;	db	"content_token
+;	db	"datatype_token
+;	db	"focusHighlight_token
+;	db	"focusable",
+;	db	"id_token
+;	db	"nav-down_token
+;	db	"nav-down-left_token
+;	db	"nav-down-right_token
+;	db	"nav-left",
+;	db	"nav-next_token
+;	db	"nav-prev_token
+;	db	"nav-right_token
+;	db	"nav-up_token
+;	db	"nav-up-left",
+;	db	"nav-up-right_token
+;	db	"property_token
+;	db	"rel_token
+;	db	"requiredExtensions",
+;	db	"requiredFeatures_token
+;	db	"requiredFonts_token
+;	db	"requiredFormats_token
+;	db	"resource",
+;	db	"rev_token
+;	db	"role_token
+;	db	"systemLanguage_token
+;	db	"typeof_token
+;	db	"xml:base_token
+;	db	"xml:id",
+;	db	"xml:lang_token
+;	db	"xml:space_token
+;	db	"/_token
+;	db	"\0"
+;	};
 ;
 ;static const char* useTokens[] = {
-;        "about", "class", "content", "datatype", "externalResourcesRequired",
-;        "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
-;        "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
-;        "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
-;        "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-;        "transform", "typeof", "x", "xlink:actuate", "xlink:arcrole",
-;        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-;        "xml:base", "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
-;    };
+;	db	"about_token
+;	db	"class_token
+;	db	"content_token
+;	db	"datatype_token
+;	db	"externalResourcesRequired",
+;	db	"focusHighlight_token
+;	db	"focusable_token
+;	db	"id_token
+;	db	"nav-down_token
+;	db	"nav-down-left",
+;	db	"nav-down-right_token
+;	db	"nav-left_token
+;	db	"nav-next_token
+;	db	"nav-prev_token
+;	db	"nav-right",
+;	db	"nav-up_token
+;	db	"nav-up-left_token
+;	db	"nav-up-right_token
+;	db	"property_token
+;	db	"rel",
+;	db	"requiredExtensions_token
+;	db	"requiredFeatures_token
+;	db	"requiredFonts",
+;	db	"requiredFormats_token
+;	db	"resource_token
+;	db	"rev_token
+;	db	"role_token
+;	db	"systemLanguage",
+;	db	"transform_token
+;	db	"typeof_token
+;	db	"x_token
+;	db	"xlink:actuate_token
+;	db	"xlink:arcrole",
+;	db	"xlink:href_token
+;	db	"xlink:role_token
+;	db	"xlink:show_token
+;	db	"xlink:title_token
+;	db	"xlink:type",
+;	db	"xml:base_token
+;	db	"xml:id_token
+;	db	"xml:lang_token
+;	db	"xml:space_token
+;	db	"y_token
+;	db	"/_token
+;	db	"\0"
+;	};
 ;
-;static const char* videoTokens[] = {
-;        "about", "begin", "class", "content", "datatype", "dur", "end",
-;        "externalResourcesRequired", "fill", "focusHighlight", "focusable",
-;        "height", "id", "initialVisibility", "max", "min", "nav-down",
-;        "nav-down-left", "nav-down-right", "nav-left", "nav-next", "nav-prev",
-;        "nav-right", "nav-up", "nav-up-left", "nav-up-right", "overlay",
-;        "preserveAspectRatio", "property", "rel", "repeatCount", "repeatDur",
-;        "requiredExtensions", "requiredFeatures", "requiredFonts",
-;        "requiredFormats", "resource", "restart", "rev", "role", "syncBehavior",
-;        "syncMaster", "syncTolerance", "systemLanguage", "transform",
-;        "transformBehavior", "type", "typeof", "width", "x", "xlink:actuate",
-;        "xlink:arcrole", "xlink:href", "xlink:role", "xlink:show",
-;        "xlink:title", "xlink:type", "xml:base", "xml:id", "xml:lang",
-;        "xml:space", "y", "/", "\0"
-;    };
+video_tokens:
+;	dd	about_token
+;	dd	begin_token
+;	dd	"class
+;	dd	"content
+;	dd	"datatype
+;	dd	"dur
+;	dd	"end
+;	db	"externalResourcesRequired
+;	db	"fill
+;	db	"focusHighlight
+;	db	"focusable
+;	db	"height
+;	db	"id
+;	db	"initialVisibility
+;	db	"max
+;	db	"min
+;	db	"nav-down
+;	db	"nav-down-left
+;	db	"nav-down-right
+;	db	"nav-left
+;	db	"nav-next
+;	db	"nav-prev
+;	db	"nav-right
+;	db	"nav-up
+;	db	"nav-up-left
+;	db	"nav-up-right
+;	db	"overlay
+;	db	"preserveAspectRatio
+;	db	"property
+;	db	"rel
+;	db	"repeatCount
+;	db	"repeatDur
+;	db	"requiredExtensions
+;	db	"requiredFeatures
+;	db	"requiredFonts
+;	db	"requiredFormats
+;	db	"resource
+;	db	"restart
+;	db	"rev
+;	db	"role
+;	db	"syncBehavior
+;	db	"syncMaster
+;	db	"syncTolerance
+;	db	"systemLanguage
+;	db	"transform
+;	db	"transformBehavior
+;	db	"type
+;	db	"typeof
+;	db	"width
+;	db	"x
+;	db	"xlink:actuate",
+;	db	"xlink:arcrole
+;	db	"xlink:href
+;	db	"xlink:role
+;	dd	"xlink:show
+;	dd	"xlink:title
+;	dd	"xlink:type
+;	dd	"xml:base
+;	dd	"xml:id
+	dd	xml_lang_token
+	dd	xml_space_token
+	dd	y_token
+	dd	slash_token
+	dd	0
+
+
+; Triple pointer: this could be confusing to a new programmer to the project.
 ;
+; This could be a 0-1 matrix of element against attribute.
 ;
-;/* Triple pointer: this could be confusing to a new programmer to the project.
-; *
-; * This could be a 0-1 matrix of element against attribute.
-; *
-; * Or we can set an unsigned char index then it takes one level.
-; */
-;static const char **token_lists[] = {
-;    xmlTokens, linkTokens, animateTokens, animateColorTokens, animateMotionTokens,
-;    animateTransformTokens, animationTokens, audioTokens, circleTokens, defsTokens,
-;    descTokens, discardTokens, ellipseTokens, fontTokens, fontFaceTokens,
-;    fontFaceSrcTokens, fontFaceUriTokens, foreignObjectTokens, groupTokens,
-;    glyphTokens, handlerTokens, hkernTokens, imageTokens, lineTokens,
-;    linearGradientTokens, listenerTokens, metadataTokens, missingGlyphTokens,
-;    mpathTokens, pathTokens, polygonTokens, polylineTokens, prefetchTokens,
-;    radialGradientTokens, rectTokens, scriptTokens, setTokens, solidColorTokens,
-;    stopTokens, svgTokens, switchTokens, tbreakTokens, textTokens, textAreaTokens,
-;    titleTokens, tspanTokens, useTokens, videoTokens
-;};
+; Or we can set an unsigned char index then it takes one level.
 ;
-;static const char *stitchTypeLabels[] = {
-;    "STITCH", "JUMP", "TRIM", "COLOR", "END", "UNKNOWN"
-;};
-;
-;static const char csvByLine[] = \
-;    "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n" \
-;    "\"#\",\"http://embroidermodder.github.io\"\n" \
-;    "\n";
-;static const char csvNotes[] = \  
-;    "\"#\",\"General Notes:\"\n" \
-;    "\"#\",\"This file can be read by Excel or LibreOffice as CSV (Comma Separated Value) or with a text editor.\"\n" \
-;    "\"#\",\"Lines beginning with # are comments.\"\n" \
-;    "\"#\",\"Lines beginning with > are variables: [VAR_NAME], [VAR_VALUE]\"\n" \
-;    "\"#\",\"Lines beginning with $ are threads: [THREAD_NUMBER], [RED], [GREEN], [BLUE], [DESCRIPTION], [CATALOG_NUMBER]\"\n" \
-;    "\"#\",\"Lines beginning with * are stitch entries: [STITCH_TYPE], [X], [Y]\"\n" \
-;    "\n";
-;static const char csvStitchEntryNotes1[] = \
-;    "\"#\",\"Stitch Entry Notes:\"\n" \
-;    "\"#\",\"STITCH instructs the machine to move to the position [X][Y] and then make a stitch.\"\n" \
-;    "\"#\",\"JUMP instructs the machine to move to the position [X][Y] without making a stitch.\"\n" \
-;    "\"#\",\"TRIM instructs the machine to cut the thread before moving to the position [X][Y] without making a stitch.\"\n";
-;static const char csvStitchEntryNotes2[] = \
-;    "\"#\",\"COLOR instructs the machine to stop temporarily so that the user can change to a different color thread before resuming.\"\n" \
-;    "\"#\",\"END instructs the machine that the design is completed and there are no further instructions.\"\n" \
-;    "\"#\",\"UNKNOWN encompasses instructions that may not be supported currently.\"\n" \
-;    "\"#\",\"[X] and [Y] are absolute coordinates in millimeters (mm).\"\n" \
-;    "\n";
-;
-;
-;static const unsigned char vipDecodingTable[] = {
-;    0x2E, 0x82, 0xE4, 0x6F, 0x38, 0xA9, 0xDC, 0xC6, 0x7B, 0xB6, 0x28, 0xAC, 0xFD, 0xAA, 0x8A, 0x4E,
-;    0x76, 0x2E, 0xF0, 0xE4, 0x25, 0x1B, 0x8A, 0x68, 0x4E, 0x92, 0xB9, 0xB4, 0x95, 0xF0, 0x3E, 0xEF,
-;    0xF7, 0x40, 0x24, 0x18, 0x39, 0x31, 0xBB, 0xE1, 0x53, 0xA8, 0x1F, 0xB1, 0x3A, 0x07, 0xFB, 0xCB,
-;    0xE6, 0x00, 0x81, 0x50, 0x0E, 0x40, 0xE1, 0x2C, 0x73, 0x50, 0x0D, 0x91, 0xD6, 0x0A, 0x5D, 0xD6,
-;    0x8B, 0xB8, 0x62, 0xAE, 0x47, 0x00, 0x53, 0x5A, 0xB7, 0x80, 0xAA, 0x28, 0xF7, 0x5D, 0x70, 0x5E,
-;    0x2C, 0x0B, 0x98, 0xE3, 0xA0, 0x98, 0x60, 0x47, 0x89, 0x9B, 0x82, 0xFB, 0x40, 0xC9, 0xB4, 0x00,
-;    0x0E, 0x68, 0x6A, 0x1E, 0x09, 0x85, 0xC0, 0x53, 0x81, 0xD1, 0x98, 0x89, 0xAF, 0xE8, 0x85, 0x4F,
-;    0xE3, 0x69, 0x89, 0x03, 0xA1, 0x2E, 0x8F, 0xCF, 0xED, 0x91, 0x9F, 0x58, 0x1E, 0xD6, 0x84, 0x3C,
-;    0x09, 0x27, 0xBD, 0xF4, 0xC3, 0x90, 0xC0, 0x51, 0x1B, 0x2B, 0x63, 0xBC, 0xB9, 0x3D, 0x40, 0x4D,
-;    0x62, 0x6F, 0xE0, 0x8C, 0xF5, 0x5D, 0x08, 0xFD, 0x3D, 0x50, 0x36, 0xD7, 0xC9, 0xC9, 0x43, 0xE4,
-;    0x2D, 0xCB, 0x95, 0xB6, 0xF4, 0x0D, 0xEA, 0xC2, 0xFD, 0x66, 0x3F, 0x5E, 0xBD, 0x69, 0x06, 0x2A,
-;    0x03, 0x19, 0x47, 0x2B, 0xDF, 0x38, 0xEA, 0x4F, 0x80, 0x49, 0x95, 0xB2, 0xD6, 0xF9, 0x9A, 0x75,
-;    0xF4, 0xD8, 0x9B, 0x1D, 0xB0, 0xA4, 0x69, 0xDB, 0xA9, 0x21, 0x79, 0x6F, 0xD8, 0xDE, 0x33, 0xFE,
-;    0x9F, 0x04, 0xE5, 0x9A, 0x6B, 0x9B, 0x73, 0x83, 0x62, 0x7C, 0xB9, 0x66, 0x76, 0xF2, 0x5B, 0xC9,
-;    0x5E, 0xFC, 0x74, 0xAA, 0x6C, 0xF1, 0xCD, 0x93, 0xCE, 0xE9, 0x80, 0x53, 0x03, 0x3B, 0x97, 0x4B,
-;    0x39, 0x76, 0xC2, 0xC1, 0x56, 0xCB, 0x70, 0xFD, 0x3B, 0x3E, 0x52, 0x57, 0x81, 0x5D, 0x56, 0x8D,
-;    0x51, 0x90, 0xD4, 0x76, 0xD7, 0xD5, 0x16, 0x02, 0x6D, 0xF2, 0x4D, 0xE1, 0x0E, 0x96, 0x4F, 0xA1,
-;    0x3A, 0xA0, 0x60, 0x59, 0x64, 0x04, 0x1A, 0xE4, 0x67, 0xB6, 0xED, 0x3F, 0x74, 0x20, 0x55, 0x1F,
-;    0xFB, 0x23, 0x92, 0x91, 0x53, 0xC8, 0x65, 0xAB, 0x9D, 0x51, 0xD6, 0x73, 0xDE, 0x01, 0xB1, 0x80,
-;    0xB7, 0xC0, 0xD6, 0x80, 0x1C, 0x2E, 0x3C, 0x83, 0x63, 0xEE, 0xBC, 0x33, 0x25, 0xE2, 0x0E, 0x7A,
-;    0x67, 0xDE, 0x3F, 0x71, 0x14, 0x49, 0x9C, 0x92, 0x93, 0x0D, 0x26, 0x9A, 0x0E, 0xDA, 0xED, 0x6F,
-;    0xA4, 0x89, 0x0C, 0x1B, 0xF0, 0xA1, 0xDF, 0xE1, 0x9E, 0x3C, 0x04, 0x78, 0xE4, 0xAB, 0x6D, 0xFF,
-;    0x9C, 0xAF, 0xCA, 0xC7, 0x88, 0x17, 0x9C, 0xE5, 0xB7, 0x33, 0x6D, 0xDC, 0xED, 0x8F, 0x6C, 0x18,
-;    0x1D, 0x71, 0x06, 0xB1, 0xC5, 0xE2, 0xCF, 0x13, 0x77, 0x81, 0xC5, 0xB7, 0x0A, 0x14, 0x0A, 0x6B,
-;    0x40, 0x26, 0xA0, 0x88, 0xD1, 0x62, 0x6A, 0xB3, 0x50, 0x12, 0xB9, 0x9B, 0xB5, 0x83, 0x9B, 0x37
-;};
-;
-;char maxHeader[] = {
-;        0x56, 0x43, 0x53, 0x4D, 0xFC, 0x03, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
-;        0xF6, 0x25, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-;        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-;        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00,
-;        0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-;        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-;        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x31, 0x33, 0x37, 0x38,
-;        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-;        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-;        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x4D, 0x61, 0x64, 0x65, 0x69, 0x72, 0x61, 0x20,
-;        0x52, 0x61, 0x79, 0x6F, 0x6E, 0x20, 0x34, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-;        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-;        0x01, 0x38, 0x09, 0x31, 0x33, 0x30, 0x2F, 0x37, 0x30, 0x35, 0x20, 0x48, 0xFA, 0x00, 0x00, 0x00,
-;        0x00, 0x00, 0x00, 0x00, 0x00
-;    };
-;
+token_lists:
+;	xmlTokens, linkTokens, animateTokens, animateColorTokens, animateMotionTokens,
+;	animateTransformTokens, animationTokens, audioTokens, circleTokens, defsTokens,
+;	descTokens, discardTokens, ellipseTokens, fontTokens, fontFaceTokens,
+;	fontFaceSrcTokens, fontFaceUriTokens, foreignObjectTokens, groupTokens,
+;	glyphTokens, handlerTokens, hkernTokens, imageTokens, lineTokens,
+;	linearGradientTokens, listenerTokens, metadataTokens, missingGlyphTokens,
+;	mpathTokens, pathTokens, polygonTokens, polylineTokens, prefetchTokens,
+;	radialGradientTokens, rectTokens, scriptTokens, setTokens, solidColorTokens,
+;	stopTokens, svgTokens, switchTokens, tbreakTokens, textTokens, textAreaTokens,
+;	titleTokens, tspanTokens, useTokens, videoTokens
+
+
+stitchTypeLabels:
+	db	"STITCH", 0
+	db	"JUMP", 0
+	db	"TRIM", 0
+	db	"COLOR", 0
+	db	"END", 0
+	db	"UNKNOWN", 0
+
+
+csvHeader:
+;	db	"\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n"
+;	db	"\"#\",\"http://embroidermodder.github.io\"\n"
+;	db	"\n"
+;	db	"\"#\",\"General Notes:\"\n" \
+;	db	"\"#\",\"This file can be read by Excel or LibreOffice as CSV (Comma Separated Value) or with a text editor.\"\n" \
+;	db	"\"#\",\"Lines beginning with # are comments.\"\n" \
+;	db	"\"#\",\"Lines beginning with > are variables: [VAR_NAME], [VAR_VALUE]\"\n" \
+;	db	"\"#\",\"Lines beginning with $ are threads: [THREAD_NUMBER], [RED], [GREEN], [BLUE], [DESCRIPTION], [CATALOG_NUMBER]\"\n" \
+;	db	"\"#\",\"Lines beginning with * are stitch entries: [STITCH_TYPE], [X], [Y]\"\n" \
+;	db	"\n"
+;	db	"\"#\",\"Stitch Entry Notes:\"\n" \
+;	db	"\"#\",\"STITCH instructs the machine to move to the position [X][Y] and then make a stitch.\"\n" \
+;	db	"\"#\",\"JUMP instructs the machine to move to the position [X][Y] without making a stitch.\"\n" \
+;	db	"\"#\",\"TRIM instructs the machine to cut the thread before moving to the position [X][Y] without making a stitch.\"\n";
+;	db	"\"#\",\"COLOR instructs the machine to stop temporarily so that the user can change to a different color thread before resuming.\"\n" \
+;	db	"\"#\",\"END instructs the machine that the design is completed and there are no further instructions.\"\n" \
+;	db	"\"#\",\"UNKNOWN encompasses instructions that may not be supported currently.\"\n" \
+;	db	"\"#\",\"[X] and [Y] are absolute coordinates in millimeters (mm).\"\n" \
+;	db	"\n", 0
+
+
+vipDecodingTable:
+	db	0x2E, 0x82, 0xE4, 0x6F, 0x38, 0xA9, 0xDC, 0xC6, 0x7B, 0xB6, 0x28, 0xAC, 0xFD, 0xAA, 0x8A, 0x4E
+	db	0x76, 0x2E, 0xF0, 0xE4, 0x25, 0x1B, 0x8A, 0x68, 0x4E, 0x92, 0xB9, 0xB4, 0x95, 0xF0, 0x3E, 0xEF
+	db	0xF7, 0x40, 0x24, 0x18, 0x39, 0x31, 0xBB, 0xE1, 0x53, 0xA8, 0x1F, 0xB1, 0x3A, 0x07, 0xFB, 0xCB
+	db	0xE6, 0x00, 0x81, 0x50, 0x0E, 0x40, 0xE1, 0x2C, 0x73, 0x50, 0x0D, 0x91, 0xD6, 0x0A, 0x5D, 0xD6
+	db	0x8B, 0xB8, 0x62, 0xAE, 0x47, 0x00, 0x53, 0x5A, 0xB7, 0x80, 0xAA, 0x28, 0xF7, 0x5D, 0x70, 0x5E
+	db	0x2C, 0x0B, 0x98, 0xE3, 0xA0, 0x98, 0x60, 0x47, 0x89, 0x9B, 0x82, 0xFB, 0x40, 0xC9, 0xB4, 0x00
+	db	0x0E, 0x68, 0x6A, 0x1E, 0x09, 0x85, 0xC0, 0x53, 0x81, 0xD1, 0x98, 0x89, 0xAF, 0xE8, 0x85, 0x4F
+	db	0xE3, 0x69, 0x89, 0x03, 0xA1, 0x2E, 0x8F, 0xCF, 0xED, 0x91, 0x9F, 0x58, 0x1E, 0xD6, 0x84, 0x3C
+	db	0x09, 0x27, 0xBD, 0xF4, 0xC3, 0x90, 0xC0, 0x51, 0x1B, 0x2B, 0x63, 0xBC, 0xB9, 0x3D, 0x40, 0x4D
+	db	0x62, 0x6F, 0xE0, 0x8C, 0xF5, 0x5D, 0x08, 0xFD, 0x3D, 0x50, 0x36, 0xD7, 0xC9, 0xC9, 0x43, 0xE4
+	db	0x2D, 0xCB, 0x95, 0xB6, 0xF4, 0x0D, 0xEA, 0xC2, 0xFD, 0x66, 0x3F, 0x5E, 0xBD, 0x69, 0x06, 0x2A
+	db	0x03, 0x19, 0x47, 0x2B, 0xDF, 0x38, 0xEA, 0x4F, 0x80, 0x49, 0x95, 0xB2, 0xD6, 0xF9, 0x9A, 0x75
+	db	0xF4, 0xD8, 0x9B, 0x1D, 0xB0, 0xA4, 0x69, 0xDB, 0xA9, 0x21, 0x79, 0x6F, 0xD8, 0xDE, 0x33, 0xFE
+	db	0x9F, 0x04, 0xE5, 0x9A, 0x6B, 0x9B, 0x73, 0x83, 0x62, 0x7C, 0xB9, 0x66, 0x76, 0xF2, 0x5B, 0xC9
+	db	0x5E, 0xFC, 0x74, 0xAA, 0x6C, 0xF1, 0xCD, 0x93, 0xCE, 0xE9, 0x80, 0x53, 0x03, 0x3B, 0x97, 0x4B
+	db	0x39, 0x76, 0xC2, 0xC1, 0x56, 0xCB, 0x70, 0xFD, 0x3B, 0x3E, 0x52, 0x57, 0x81, 0x5D, 0x56, 0x8D
+	db	0x51, 0x90, 0xD4, 0x76, 0xD7, 0xD5, 0x16, 0x02, 0x6D, 0xF2, 0x4D, 0xE1, 0x0E, 0x96, 0x4F, 0xA1
+	db	0x3A, 0xA0, 0x60, 0x59, 0x64, 0x04, 0x1A, 0xE4, 0x67, 0xB6, 0xED, 0x3F, 0x74, 0x20, 0x55, 0x1F
+	db	0xFB, 0x23, 0x92, 0x91, 0x53, 0xC8, 0x65, 0xAB, 0x9D, 0x51, 0xD6, 0x73, 0xDE, 0x01, 0xB1, 0x80
+	db	0xB7, 0xC0, 0xD6, 0x80, 0x1C, 0x2E, 0x3C, 0x83, 0x63, 0xEE, 0xBC, 0x33, 0x25, 0xE2, 0x0E, 0x7A
+	db	0x67, 0xDE, 0x3F, 0x71, 0x14, 0x49, 0x9C, 0x92, 0x93, 0x0D, 0x26, 0x9A, 0x0E, 0xDA, 0xED, 0x6F
+	db	0xA4, 0x89, 0x0C, 0x1B, 0xF0, 0xA1, 0xDF, 0xE1, 0x9E, 0x3C, 0x04, 0x78, 0xE4, 0xAB, 0x6D, 0xFF
+	db	0x9C, 0xAF, 0xCA, 0xC7, 0x88, 0x17, 0x9C, 0xE5, 0xB7, 0x33, 0x6D, 0xDC, 0xED, 0x8F, 0x6C, 0x18
+	db	0x1D, 0x71, 0x06, 0xB1, 0xC5, 0xE2, 0xCF, 0x13, 0x77, 0x81, 0xC5, 0xB7, 0x0A, 0x14, 0x0A, 0x6B
+	db	0x40, 0x26, 0xA0, 0x88, 0xD1, 0x62, 0x6A, 0xB3, 0x50, 0x12, 0xB9, 0x9B, 0xB5, 0x83, 0x9B, 0x37
+
+
+maxHeader:
+	db	0x56, 0x43, 0x53, 0x4D, 0xFC, 0x03, 0x00, 0x00
+	db	0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00
+	db	0xF6, 0x25, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x08, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x31, 0x33, 0x37, 0x38
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x4D, 0x61, 0x64, 0x65, 0x69, 0x72, 0x61, 0x20
+	db	0x52, 0x61, 0x79, 0x6F, 0x6E, 0x20, 0x34, 0x30
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	db	0x01, 0x38, 0x09, 0x31, 0x33, 0x30, 0x2F, 0x37
+	db	0x30, 0x35, 0x20, 0x48, 0xFA, 0x00, 0x00, 0x00
+	db	0x00, 0x00, 0x00, 0x00, 0x00
+

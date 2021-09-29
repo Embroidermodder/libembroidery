@@ -576,7 +576,7 @@ int embArray_addPolyline(EmbArray* p, EmbPolylineObject* polyline)
         return 0;
     p->polyline[p->count - 1] = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
     if (!p->polyline[p->count - 1]) {
-        embLog("ERROR: emb-polyline.c embArray_create(), cannot allocate memory for heapPolylineObj\n");
+        embLog("ERROR: embArray_create(), cannot allocate memory for heapPolylineObj\n");
         return 0;
     }
     p->polyline[p->count - 1] = polyline;
@@ -1112,7 +1112,7 @@ static void embLog(const char* str)
     inoLog_serial(str);
     inoLog_serial("\n");
 #else
-    puts(str);
+    fwrite(str, 1, strlen(str), stdout);
 #endif
 }
 
@@ -1369,7 +1369,7 @@ void embVector_normalVector(EmbVector dir, EmbVector* result, int clockwise)
 void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise)
 {
     if (!result) {
-        embLog("ERROR: emb-line.c embLine_normalVector(), result argument is null\n");
+        embLog("ERROR: embLine_normalVector(), result==0\n");
         return;
     }
     embVector_subtract(line.end, line.end, result);
@@ -1394,7 +1394,7 @@ unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector*
     det = embVector_cross(D1, D2);
 
     if (!result) {
-        embLog("ERROR: emb-line.c embLine_intersectionPoint(), result argument is null\n");
+        embLog("ERROR: embLine_intersectionPoint(), result==0\n");
         return 0;
     }
     /*TODO: The code below needs revised since division by zero can still occur */
@@ -1477,7 +1477,7 @@ void embVector_normalize(EmbVector vector, EmbVector* result)
     length = embVector_getLength(vector);
 
     if (!result) {
-        embLog("ERROR: emb-vector.c embVector_normalize(), result argument is null\n");
+        embLog("ERROR: embVector_normalize(), result==0\n");
         return;
     }
     result->x = vector.x / length;
@@ -1491,7 +1491,7 @@ void embVector_normalize(EmbVector vector, EmbVector* result)
 void embVector_multiply(EmbVector vector, float magnitude, EmbVector* result)
 {
     if (!result) {
-        embLog("ERROR: emb-vector.c embVector_multiply(), result argument is null\n");
+        embLog("ERROR: embVector_multiply(), result==0\n");
         return;
     }
     result->x = vector.x * magnitude;
@@ -1504,7 +1504,7 @@ void embVector_multiply(EmbVector vector, float magnitude, EmbVector* result)
 void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog("ERROR: emb-vector.c embVector_add(), result argument is null\n");
+        embLog("ERROR: embVector_add(), result==0\n");
         return;
     }
     result->x = v1.x + v2.x;
@@ -1517,7 +1517,7 @@ void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result)
 void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog("ERROR: emb-vector.c embVector_add(), result argument is null\n");
+        embLog("ERROR: embVector_average(), result==0\n");
         return;
     }
     result->x = (v1.x + v2.x) / 2.0;
@@ -1530,7 +1530,7 @@ void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result)
 void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog("ERROR: emb-vector.c embVector_subtract(), result argument is null\n");
+        embLog("ERROR: embVector_subtract(), result==0\n");
         return;
     }
     result->x = v1.x - v2.x;
@@ -1571,7 +1571,7 @@ float embVector_distance(EmbVector v1, EmbVector v2)
 void embVector_transposeProduct(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog("ERROR: emb-vector.c embVector_transpose_product(), result argument is null\n");
+        embLog("ERROR: embVector_transpose_product(), result==0\n");
         return;
     }
     result->x = v1.x * v2.x;
@@ -1602,7 +1602,7 @@ EmbPattern* embPattern_create(void)
     EmbPattern* p = 0;
     p = (EmbPattern*)malloc(sizeof(EmbPattern));
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_create(), unable to allocate memory for p\n");
+        embLog("ERROR: embPattern_create(), unable to allocate memory for p\n");
         return 0;
     }
 
@@ -1635,7 +1635,7 @@ void embPattern_hideStitchesOverLength(EmbPattern* p, int length)
     EmbStitch st;
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_hideStitchesOverLength(), p argument is null\n");
+        embLog("ERROR: embPattern_hideStitchesOverLength(), p==0\n");
         return;
     }
 
@@ -1655,7 +1655,7 @@ void embPattern_hideStitchesOverLength(EmbPattern* p, int length)
 int embPattern_addThread(EmbPattern* p, EmbThread thread)
 {
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_addThread(), p argument is null\n");
+        embLog("ERROR: embPattern_addThread(), p==0\n");
         return 0;
     }
     if (!p->threads) {
@@ -1671,7 +1671,7 @@ void embPattern_fixColorCount(EmbPattern* p)
     int maxColorIndex = 0, i;
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_fixColorCount(), p argument is null\n");
+        embLog("ERROR: embPattern_fixColorCount(), p==0\n");
         return;
     }
     for (i = 0; i < p->stitchList->count; i++) {
@@ -1695,15 +1695,11 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
     EmbStitch st;
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_copyStitchListToPolylines(), p argument is null\n");
+        embLog("ERROR: embPattern_copyStitchListToPolylines(), p==0\n");
         return;
     }
 
-#ifdef EMB_DEBUG_JUMP
-    breakAtFlags = (STOP | TRIM);
-#else /* EMB_DEBUG_JUMP */
     breakAtFlags = (STOP | JUMP | TRIM);
-#endif /* EMB_DEBUG_JUMP */
 
     for (i = 0; i < p->stitchList->count; i++) {
         EmbArray* pointList;
@@ -1729,7 +1725,7 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
         if (pointList) {
             EmbPolylineObject* currentPolyline = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
             if (!currentPolyline) {
-                embLog("ERROR: emb-pattern.c embPattern_copyStitchListToPolylines(), cannot allocate memory for currentPolyline\n");
+                embLog("ERROR: embPattern_copyStitchListToPolylines(), cannot allocate memory for currentPolyline\n");
                 return;
             }
             currentPolyline->pointList = pointList;
@@ -1753,11 +1749,11 @@ void embPattern_copyPolylinesToStitchList(EmbPattern* p)
     /*int currentColor = polyList->polylineObj->color TODO: polyline color */
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_copyPolylinesToStitchList(), p argument is null\n");
+        embLog("ERROR: embPattern_copyPolylinesToStitchList(), p==0\n");
         return;
     }
     if (!p->polylines) {
-        embLog("ERROR: emb-pattern.c embPattern_copyPolylinesToStitchList(), p argument is null\n");
+        embLog("ERROR: embPattern_copyPolylinesToStitchList(), p==0\n");
         return;
     }
     for (i = 0; i < p->polylines->count; i++) {
@@ -1767,12 +1763,12 @@ void embPattern_copyPolylinesToStitchList(EmbPattern* p)
 
         currentPoly = p->polylines->polyline[i];
         if (!currentPoly) {
-            embLog("ERROR: emb-pattern.c embPattern_copyPolylinesToStitchList(), currentPoly is null\n");
+            embLog("ERROR: embPattern_copyPolylinesToStitchList(), currentPoly is null\n");
             return;
         }
         currentPointList = currentPoly->pointList;
         if (!currentPointList) {
-            embLog("ERROR: emb-pattern.c embPattern_copyPolylinesToStitchList(), currentPointList is null\n");
+            embLog("ERROR: embPattern_copyPolylinesToStitchList(), currentPointList is null\n");
             return;
         }
 
@@ -1798,7 +1794,7 @@ void embPattern_copyPolylinesToStitchList(EmbPattern* p)
 void embPattern_moveStitchListToPolylines(EmbPattern* p)
 {
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_moveStitchListToPolylines(), p argument is null\n");
+        embLog("ERROR: embPattern_moveStitchListToPolylines(), p==0\n");
         return;
     }
     embPattern_copyStitchListToPolylines(p);
@@ -1811,7 +1807,7 @@ void embPattern_moveStitchListToPolylines(EmbPattern* p)
 void embPattern_movePolylinesToStitchList(EmbPattern* p)
 {
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_movePolylinesToStitchList(), p argument is null\n");
+        embLog("ERROR: embPattern_movePolylinesToStitchList(), p==0\n");
         return;
     }
     embPattern_copyPolylinesToStitchList(p);
@@ -1825,7 +1821,7 @@ void embPattern_addStitchAbs(EmbPattern* p, float x, float y, int flags, int isA
     EmbVector home;
 
     if (!p || !p->stitchList) {
-        embLog("ERROR: emb-pattern.c embPattern_addStitchAbs(), p argument is null\n");
+        embLog("ERROR: embPattern_addStitchAbs(), p==0\n");
         return;
     }
 
@@ -1835,7 +1831,7 @@ void embPattern_addStitchAbs(EmbPattern* p, float x, float y, int flags, int isA
         }
         /* Prevent unnecessary multiple END stitches */
         if (p->stitchList->stitch[p->stitchList->count - 1].flags & END) {
-            embLog("ERROR: emb-pattern.c embPattern_addStitchAbs(), found multiple END stitches\n");
+            embLog("ERROR: embPattern_addStitchAbs(), found multiple END stitches\n");
             return;
         }
 
@@ -1882,7 +1878,7 @@ void embPattern_addStitchRel(EmbPattern* p, float dx, float dy, int flags, int i
     float x, y;
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_addStitchRel(), p argument is null\n");
+        embLog("ERROR: embPattern_addStitchRel(), p==0\n");
         return;
     }
     if (p->stitchList) {
@@ -1901,7 +1897,7 @@ void embPattern_addStitchRel(EmbPattern* p, float dx, float dy, int flags, int i
 void embPattern_changeColor(EmbPattern* p, int index)
 {
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_changeColor(), p argument is null\n");
+        embLog("ERROR: embPattern_changeColor(), p==0\n");
         return;
     }
     p->currentColorIndex = index;
@@ -1915,7 +1911,7 @@ int embPattern_readAuto(EmbPattern* pattern, const char* fileName) /* TODO: Writ
 
     reader = embReaderWriter_getByFileName(fileName);
     if (reader < 0) {
-        embLog("emb-pattern.c embPattern_read(), unsupported read file type:");
+        embLog("ERROR: embPattern_read(), unsupported read file type:");
         embLog(fileName);
         return 0;
     }
@@ -1931,7 +1927,7 @@ int embPattern_writeAuto(EmbPattern* pattern, const char* fileName) /* TODO: Wri
 
     writer = embReaderWriter_getByFileName(fileName);
     if (writer < 0) {
-        embLog("ERROR: emb-pattern.c embPattern_write(), unsupported write file type:");
+        embLog("ERROR: embPattern_write(), unsupported write file type:");
         embLog(fileName);
         return 0;
     }
@@ -1946,7 +1942,7 @@ void embPattern_scale(EmbPattern* p, float scale)
     int i;
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_scale(), p argument is null\n");
+        embLog("ERROR: embPattern_scale(), p==0\n");
         return;
     }
 
@@ -1970,7 +1966,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     boundingRect.bottom = 0;
 
     if (!p || !p->stitchList) {
-        embLog("ERROR: emb-pattern.c embPattern_calcBoundingBox(), p argument is null\n");
+        embLog("ERROR: embPattern_calcBoundingBox(), p==0\n");
         return boundingRect;
     }
 
@@ -2108,7 +2104,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 void embPattern_flipHorizontal(EmbPattern* p)
 {
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_flipHorizontal(), p argument is null\n");
+        embLog("ERROR: embPattern_flipHorizontal(), p==0\n");
         return;
     }
     embPattern_flip(p, 1, 0);
@@ -2118,7 +2114,7 @@ void embPattern_flipHorizontal(EmbPattern* p)
 void embPattern_flipVertical(EmbPattern* p)
 {
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_flipVertical(), p argument is null\n");
+        embLog("ERROR: embPattern_flipVertical(), p==0\n");
         return;
     }
     embPattern_flip(p, 0, 1);
@@ -2132,7 +2128,7 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     /* EmbVector flip; */
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_flip(), p argument is null\n");
+        embLog("ERROR: embPattern_flip(), p==0\n");
         return;
     }
 
@@ -2285,13 +2281,15 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     }
 }
 
+/* Does this need a tolerence to stop really long jumps?
+ */
 void embPattern_combineJumpStitches(EmbPattern* p)
 {
     int jump = 0, i, j;
     EmbStitch st;
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_combineJumpStitches(), p argument is null\n");
+        embLog("ERROR: embPattern_combineJumpStitches(), p==0\n");
         return;
     }
 
@@ -2322,7 +2320,7 @@ void embPattern_correctForMaxStitchLength(EmbPattern* p, float maxStitchLength, 
     EmbArray* newList;
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_correctForMaxStitchLength(), p argument is null\n");
+        embLog("ERROR: embPattern_correctForMaxStitchLength(), p==0\n");
         return;
     }
     if (p->stitchList->count > 1) {
@@ -2369,7 +2367,7 @@ void embPattern_center(EmbPattern* p)
     EmbStitch s;
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_center(), p argument is null\n");
+        embLog("ERROR: embPattern_center(), p==0\n");
         return;
     }
     boundingRect = embPattern_calcBoundingBox(p);
@@ -2392,7 +2390,7 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
 
     extractName = (char*)malloc(strlen(fileName) + 5);
     if (!extractName) {
-        embLog("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), cannot allocate memory for extractName\n");
+        embLog("ERROR: embPattern_loadExternalColorFile(), cannot allocate memory for extractName\n");
         return;
     }
 
@@ -2427,7 +2425,7 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
 void embPattern_free(EmbPattern* p)
 {
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_free(), p argument is null\n");
+        embLog("ERROR: embPattern_free(), p==0\n");
         return;
     }
     embArray_free(p->stitchList);
@@ -2456,7 +2454,7 @@ void embPattern_addCircleObjectAbs(EmbPattern* p, float cx, float cy, float r)
     circle.radius = r;
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_addCircleObjectAbs(), p argument is null\n");
+        embLog("ERROR: embPattern_addCircleObjectAbs(), p==0\n");
         return;
     }
     if (p->circles == 0) {
@@ -2477,7 +2475,7 @@ void embPattern_addEllipseObjectAbs(EmbPattern* p, float cx, float cy, float rx,
     ellipse.radius.y = ry;
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_addEllipseObjectAbs(), p argument is null\n");
+        embLog("ERROR: embPattern_addEllipseObjectAbs(), p==0\n");
         return;
     }
     if (!p->ellipses) {
@@ -2499,7 +2497,7 @@ void embPattern_addLineObjectAbs(EmbPattern* p, float x1, float y1, float x2, fl
     line.end.y = y2;
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_addLineObjectAbs(), p argument is null\n");
+        embLog("ERROR: embPattern_addLineObjectAbs(), p==0\n");
         return;
     }
     if (!p->lines) {
@@ -2511,15 +2509,15 @@ void embPattern_addLineObjectAbs(EmbPattern* p, float x1, float y1, float x2, fl
 void embPattern_addPathObjectAbs(EmbPattern* p, EmbPathObject* obj)
 {
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_addPathObjectAbs(), p argument is null\n");
+        embLog("ERROR: embPattern_addPathObjectAbs(), p==0\n");
         return;
     }
     if (!obj) {
-        embLog("ERROR: emb-pattern.c embPattern_addPathObjectAbs(), obj argument is null\n");
+        embLog("ERROR: embPattern_addPathObjectAbs(), obj==0\n");
         return;
     }
     if (!obj->pointList) {
-        embLog("ERROR: emb-pattern.c embPattern_addPathObjectAbs(), obj->pointList is empty\n");
+        embLog("ERROR: embPattern_addPathObjectAbs(), obj->pointList is empty\n");
         return;
     }
 
@@ -2537,7 +2535,7 @@ void embPattern_addPointObjectAbs(EmbPattern* p, float x, float y)
     point.y = y;
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_addPointObjectAbs(), p argument is null\n");
+        embLog("ERROR: embPattern_addPointObjectAbs(), p==0\n");
         return;
     }
     if (!p->points) {
@@ -2549,15 +2547,15 @@ void embPattern_addPointObjectAbs(EmbPattern* p, float x, float y)
 void embPattern_addPolygonObjectAbs(EmbPattern* p, EmbPolygonObject* obj)
 {
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), p argument is null\n");
+        embLog("ERROR: embPattern_addPolygonObjectAbs(), p==0\n");
         return;
     }
     if (!obj) {
-        embLog("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), obj argument is null\n");
+        embLog("ERROR: embPattern_addPolygonObjectAbs(), obj==0\n");
         return;
     }
     if (!obj->pointList) {
-        embLog("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), obj->pointList is empty\n");
+        embLog("ERROR: embPattern_addPolygonObjectAbs(), obj->pointList is empty\n");
         return;
     }
 
@@ -2570,15 +2568,15 @@ void embPattern_addPolygonObjectAbs(EmbPattern* p, EmbPolygonObject* obj)
 void embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj)
 {
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_addPolylineObjectAbs(), p argument is null\n");
+        embLog("ERROR: embPattern_addPolylineObjectAbs(), p==0\n");
         return;
     }
     if (!obj) {
-        embLog("ERROR: emb-pattern.c embPattern_addPolylineObjectAbs(), obj argument is null\n");
+        embLog("ERROR: embPattern_addPolylineObjectAbs(), obj==0\n");
         return;
     }
     if (!obj->pointList) {
-        embLog("ERROR: emb-pattern.c embPattern_addPolylineObjectAbs(), obj->pointList is empty\n");
+        embLog("ERROR: embPattern_addPolylineObjectAbs(), obj->pointList is empty\n");
         return;
     }
 
@@ -2616,7 +2614,7 @@ void embPattern_addRectObjectAbs(EmbPattern* p, float x, float y, float w, float
     rect.bottom = y + h;
 
     if (!p) {
-        embLog("ERROR: emb-pattern.c embPattern_addRectObjectAbs(), p argument is null\n");
+        embLog("ERROR: embPattern_addRectObjectAbs(), p==0\n");
         return;
     }
     if (!p->rects) {
@@ -3222,12 +3220,12 @@ void embSatinOutline_generateSatinOutline(EmbArray* lines, float thickness, EmbS
     int intermediateOutlineCount = 2 * lines->count - 2;
     outline.side1 = embArray_create(EMB_VECTOR);
     if (!outline.side1) {
-        embLog("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for outline->side1\n");
+        embLog("ERROR: embSatinOutline_generateSatinOutline() embArray_create()\n");
         return;
     }
     outline.side2 = embArray_create(EMB_VECTOR);
     if (!outline.side2) {
-        embLog("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for outline->side2\n");
+        embLog("ERROR: embSatinOutline_generateSatinOutline() embArray_create()\n");
         return;
     }
 
@@ -3252,17 +3250,17 @@ void embSatinOutline_generateSatinOutline(EmbArray* lines, float thickness, EmbS
     }
 
     if (!result) {
-        embLog("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), result argument is null\n");
+        embLog("ERROR: embSatinOutline_generateSatinOutline(), result==0\n");
         return;
     }
     result->side1 = embArray_create(EMB_VECTOR);
     if (!result->side1) {
-        embLog("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side1\n");
+        embLog("ERROR: embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side1\n");
         return;
     }
     result->side2 = embArray_create(EMB_VECTOR);
     if (!result->side2) {
-        embLog("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side2\n");
+        embLog("ERROR: embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side2\n");
         return;
     }
 
@@ -3299,7 +3297,7 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, float density)
     float midLength;
 
     if (!result) {
-        embLog("ERROR: emb-satin-line.c embSatinOutline_renderStitches(), result argument is null\n");
+        embLog("ERROR: embSatinOutline_renderStitches(), result==0\n");
         return 0;
     }
 
@@ -3372,7 +3370,7 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
     if (!fileName) {
         embLog("ERROR: ");
         embLog(fileName);
-        embLog("(), fileName argument is null\n");
+        embLog("(), fileName==0\n");
         return 0;
     }
 
@@ -3602,11 +3600,11 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
     int r;
 
     if (!pattern) {
-        embLog("ERROR: embPattern_read(), pattern argument is null\n");
+        embLog("ERROR: embPattern_read(), pattern==0\n");
         return 0;
     }
     if (!fileName) {
-        embLog("ERROR: embPattern_read(), fileName argument is null\n");
+        embLog("ERROR: embPattern_read(), fileName==0\n");
         return 0;
     }
 
@@ -4054,7 +4052,7 @@ EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind)
     sectorSize = bcfFile->difat->sectorSize;
     input = (char*)malloc(sectorSize);
     if (!input) {
-        embLog("ERROR: compound-file.c GetFile(), cannot allocate memory for input\n");
+        embLog("ERROR: GetFile(), cannot allocate memory for input\n");
     } /* TODO: avoid crashing. null pointer will be accessed */
     currentSize = 0;
     currentSector = pointer->startingSectorLocation;
@@ -4101,7 +4099,7 @@ bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const u
 
     difat = (bcf_file_difat*)malloc(sizeof(bcf_file_difat));
     if (!difat) {
-        embLog("ERROR: compound-file-difat.c bcf_difat_create(), cannot allocate memory for difat\n");
+        embLog("ERROR: bcf_difat_create(), cannot allocate memory for difat\n");
     } /* TODO: avoid crashing. null pointer will be accessed */
 
     difat->sectorSize = sectorSize;
@@ -4117,7 +4115,7 @@ bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const u
     for (i = fatSectors; i < NumberOfDifatEntriesInHeader; ++i) {
         sectorRef = binaryReadUInt32(file);
         if (sectorRef != CompoundFileSector_FreeSector) {
-            embLog("ERROR: compound-file-difat.c bcf_difat_create(), Unexpected sector value\n");
+            embLog("ERROR: bcf_difat_create(), Unexpected sector value\n");
             /* TODO " %x at DIFAT[%d]\n", sectorRef, i); */
         }
     }
@@ -4157,7 +4155,7 @@ unsigned int readFullSector(EmbFile* file, bcf_file_difat* bcfFile, unsigned int
     for (i = entriesToReadInThisSector; i < numberOfEntriesInDifatSector(bcfFile); ++i) {
         sectorRef = binaryReadUInt32(file);
         if (sectorRef != CompoundFileSector_FreeSector) {
-            embLog("ERROR: compound-file-difat.c readFullSector(), Unexpected sector value");
+            embLog("ERROR: readFullSector(), Unexpected sector value");
             /* TODO: end of message: %x at DIFAT[%d]]\n", sectorRef, i); */
         }
     }
@@ -4195,7 +4193,7 @@ bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntr
 {
     bcf_directory* dir = (bcf_directory*)malloc(sizeof(bcf_directory));
     if (!dir) {
-        embLog("ERROR: compound-file-directory.c CompoundFileDirectory(), cannot allocate memory for dir\n");
+        embLog("ERROR: CompoundFileDirectory(), cannot allocate memory for dir\n");
     } /* TODO: avoid crashing. null pointer will be accessed */
     dir->maxNumberOfDirectoryEntries = maxNumberOfDirectoryEntries;
     dir->dirEntries = 0;
@@ -4226,7 +4224,7 @@ bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file)
 {
     bcf_directory_entry* dir = (bcf_directory_entry*)malloc(sizeof(bcf_directory_entry));
     if (!dir) {
-        embLog("ERROR: compound-file-directory.c CompoundFileDirectoryEntry(), cannot allocate memory for dir\n");
+        embLog("ERROR: CompoundFileDirectoryEntry(), cannot allocate memory for dir\n");
     } /* TODO: avoid crashing. null pointer will be accessed */
     memset(dir->directoryEntryName, 0, 32);
     parseDirectoryEntryName(file, dir);
@@ -4234,7 +4232,7 @@ bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file)
     dir->directoryEntryNameLength = binaryReadUInt16(file);
     dir->objectType = (unsigned char)binaryReadByte(file);
     if ((dir->objectType != ObjectTypeStorage) && (dir->objectType != ObjectTypeStream) && (dir->objectType != ObjectTypeRootEntry)) {
-        embLog("ERROR: compound-file-directory.c CompoundFileDirectoryEntry(), unexpected object type:\n");
+        embLog("ERROR: CompoundFileDirectoryEntry(), unexpected object type:\n");
         /* TODO: "%d\n", dir->objectType); */
         return 0;
     }
@@ -4300,7 +4298,7 @@ bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize)
 {
     bcf_file_fat* fat = (bcf_file_fat*)malloc(sizeof(bcf_file_fat));
     if (!fat) {
-        embLog("ERROR: compound-file-fat.c bcfFileFat_create(), cannot allocate memory for fat\n");
+        embLog("ERROR: bcfFileFat_create(), cannot allocate memory for fat\n");
     } /* TODO: avoid crashing. null pointer will be accessed */
     fat->numberOfEntriesInFatSector = sectorSize / sizeOfFatEntry;
     fat->fatEntryCount = 0;
@@ -4379,7 +4377,7 @@ int embFormat_getExtension(const char* fileName, char* ending)
     const char* offset;
 
     if (!fileName) {
-        embLog("ERROR: emb-format.c embFormat_getExtension(), fileName argument is null\n");
+        embLog("ERROR: embFormat_getExtension(), fileName==0\n");
         return 0;
     }
 
@@ -4422,7 +4420,7 @@ int embReaderWriter_getByFileName(const char* fileName)
         }
     }
 
-    embLog("ERROR: emb-reader-writer.c embReaderWriter_getByFileName(), unsupported file type:");
+    embLog("ERROR: embReaderWriter_getByFileName(), unsupported file type:");
     embLog(ending);
     return -1;
 }
@@ -4478,7 +4476,6 @@ static char read10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
             st.flags = STOP;
         }
         if (b[0] == 0xF8 || b[0] == 0x91 || b[0] == 0x87) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
         embPattern_addStitchRel(pattern, st.x, st.y, st.flags, 1);
@@ -4762,7 +4759,7 @@ static const char* csvStitchFlagToStr(int flags)
 static char csvStrToStitchFlag(const char* str)
 {
     if (!str) {
-        embLog("ERROR: format-csv.c csvStrToStitchFlag(), str argument is null\n");
+        embLog("ERROR: csvStrToStitchFlag(), str==0\n");
         return -1;
     }
     if (!strcmp(str, stitchTypeLabels[0]))
@@ -4798,7 +4795,7 @@ static char readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     buff = (char*)malloc(size);
     if (!buff) {
-        embLog("ERROR: format-csv.c readCsv(), unable to allocate memory for buff\n");
+        embLog("ERROR: readCsv(), unable to allocate memory for buff\n");
         return 0;
     }
 
@@ -4822,7 +4819,7 @@ static char readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
             } else if (expect == CSV_EXPECT_QUOTE1) {
                 /* Do Nothing. We encountered a blank line. */
             } else {
-                embLog("ERROR: format-csv.c readCsv(), premature newline\n");
+                embLog("ERROR: readCsv(), premature newline\n");
                 return 0;
             }
             break;
@@ -4831,7 +4828,7 @@ static char readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
             size *= 2;
             buff = (char*)realloc(buff, size);
             if (!buff) {
-                embLog("ERROR: format-csv.c readCsv(), cannot re-allocate memory for buff\n");
+                embLog("ERROR: readCsv(), cannot re-allocate memory for buff\n");
                 return 0;
             }
         }
@@ -4937,7 +4934,7 @@ static char writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     boundingRect = embPattern_calcBoundingBox(pattern);
 
     if (!stitchCount) {
-        embLog("ERROR: format-csv.c writeCsv(), pattern contains no stitches\n");
+        embLog("ERROR: writeCsv(), pattern contains no stitches\n");
         return 0;
     }
 
@@ -5103,58 +5100,6 @@ static char writeDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
  * notes appeared at http://www.wotsit.org under Tajima Format.
  */
 
-/* TODO: review this then remove since there is a similar function */
-/*
-void combineJumpStitches(EmbPattern* p, int jumpsPerTrim)
-{
-    if(!p) { embLog("ERROR: format-dst.c combineJumpStitches(), p argument is null\n"); return; }
-    EmbStitchList* pointer = p->stitchList;
-    int jumpCount = 0;
-    EmbStitchList* jumpListStart = 0;
-    char needleDown = 0;
-    while(pointer)
-    {
-        if((pointer->stitch.flags & JUMP) && !(pointer->stitch.flags & STOP))
-        {
-            if(jumpCount == 0)
-            {
-                jumpListStart = pointer;
-            }
-            jumpCount++;
-            if(needleDown && jumpCount >= jumpsPerTrim)
-            {
-                EmbStitchList* removePointer = jumpListStart->next;
-                jumpListStart->stitch.x = pointer->stitch.x;
-                jumpListStart->stitch.y = pointer->stitch.y;
-                jumpListStart->stitch.flags |= TRIM;
-                jumpListStart->next = pointer;
-
-                jumpCount-=2;
-                for(; jumpCount > 0; jumpCount--)
-                {
-                    EmbStitchList* tempPointer = removePointer->next;
-                    jumpListStart->stitch.flags |= removePointer->stitch.flags;
-                    free(removePointer);
-                    removePointer = 0;
-                    removePointer = tempPointer;
-                }
-                jumpCount = 0;
-                needleDown = 0;
-            }
-        }
-        else
-        {
-            if(pointer->stitch.flags == NORMAL)
-            {
-                needleDown = 1;
-                jumpCount = 0;
-            }
-        }
-        pointer = pointer->next;
-    }
-}
-*/
-
 static void encode_record(EmbFile* file, int x, int y, int flags)
 {
     char b[4];
@@ -5162,10 +5107,10 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
 
     /* cannot encode values > +121 or < -121. */
     if (x > 121 || x < -121) {
-        embLog("ERROR: format-dst.c encode_record(), x is not in valid range [-121,121] , x =\n"); /* , x); */
+        embLog("ERROR: encode_record(), x is not in valid range [-121,121]\n");
     }
     if (y > 121 || y < -121) {
-        embLog("ERROR: format-dst.c encode_record(), y is not in valid range [-121,121] , y = \n"); /* , y); */
+        embLog("ERROR: encode_record(), y is not in valid range [-121,121]\n");
     }
 
     if (x >= +41) {
@@ -5209,7 +5154,7 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
         x += 1;
     }
     if (x != 0) {
-        embLog("ERROR: format-dst.c encode_record(), x should be zero yet x = \n"); /*, x); */
+        embLog("ERROR: encode_record(), x should be zero yet\n");
     }
     if (y >= +41) {
         b[2] += 1 << 5;
@@ -5252,7 +5197,7 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
         y += 1;
     }
     if (y != 0) {
-        embLog("ERROR: format-dst.c encode_record(), y should be zero yet y = \n"); /* , y); */
+        embLog("ERROR: encode_record(), y!=0\n");
     }
 
     b[2] |= (char)3;
@@ -5358,52 +5303,6 @@ static char readDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
     int i = 0;
     int flags; /* for converting stitches from file encoding */
 
-    /*
-    * The header seems to contain information about the design.
-    * Seems to be ASCII text delimited by 0x0D (carriage returns).
-    * This must be in the file for most new software or hardware
-    * to consider it a good file! This is much more important
-    * than I originally believed. The header is 125 bytes in
-    * length and padded out by 0x20 to 512 bytes total.
-    * All entries in the header seem to be 2 ASCII characters
-    * followed by a colon, then it's value trailed by a carriage return.
-    *
-    * char LA[16+1];  First is the 'LA' entry, which is the design name with no
-    *                 path or extension information. The blank is 16 characters
-    *                 in total, but the name must not be longer that 8 characters
-    *                 and padded out with 0x20.
-    *
-    * char ST[7+1];   Next is the stitch count ST, this is a 7 digit number
-    *                 padded by leading zeros. This is the total stitch count
-    *                 including color changes, jumps, nups, and special records.
-    *
-    * char CO[3+1];   Next, is CO or colors, a 3 digit number padded by leading
-    *                 zeros. This is the number of color change records in the file.
-    *
-    * char POSX[5+1]; Next is +X or the positive X extent in centimeters, a 5
-    *                 digit non-decimal number padded by leading zeros.
-    *
-    * char NEGX[5+1]; Following is the -X or the negative X extent in millimeters,
-    *                 a 5 digit non-decimal number padded by leading zeros.
-    *
-    * char POSY[5+1]; Again, the +Y extents.
-    *
-    * char NEGY[5+1]; Again, the -Y extents.
-    *
-    * char AX[6+1];   AX and AY should express the relative coordinates of the
-    * char AY[6+1];   last point from the start point in 0.1 mm. If the start
-    *                 and last points are the same, the coordinates are (0,0).
-    *
-    * char MX[6+1];   MX and MY should express coordinates of the last point of
-    * char MY[6+1];   the previous file for a multi-volume design. A multi-
-    *                 volume design means a design consisted of two or more files.
-    *                 This was used for huge designs that can not be stored in a
-    *                 single paper tape roll. It is not used so much (almost
-    *                 never) nowadays.
-    *
-    * char PD[9+1];   PD is also storing some information for multi-volume design.
-    */
-
     /* TODO: review commented code below
     pattern->clear();
     pattern->set_variable("file_name",filename);
@@ -5414,7 +5313,9 @@ static char readDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     /* TODO: It would probably be a good idea to validate file before accepting it. */
 
-    /* fill variables from header fields */
+    /* Fill variables from header fields.
+     * See the section on Tajima dst format in the manual for details.
+     */
     for (i = 0; i < 512; i++) {
         if (header[i] == ':' && i > 1) {
             var[0] = header[i - 2];
@@ -5422,7 +5323,9 @@ static char readDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
             var[2] = '\0';
             valpos = i + 1;
             for (i++; i < 512; i++) {
-                /* don't accept : without CR because there's a bug below: i-valpos must be > 0 which is not the case if the : is before the third character. */
+                /* don't accept : without CR because there's a bug below:
+                 * i-valpos must be > 0 which is not the case if
+                 * the : is before the third character. */
                 if (header[i] == 13 /*||header[i]==':'*/) /* 0x0d = carriage return */
                 {
                     if (header[i] == ':') /* : indicates another variable, CR was missing! */
@@ -5463,7 +5366,7 @@ static char readDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
     }
 
-    /* combineJumpStitches(pattern, 5); */
+    /* embPattern_combineJumpStitches(pattern, 5); */
     return 1;
 }
 
@@ -5817,7 +5720,7 @@ static char readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     if (!eof) {
         /* NOTE: The EOF item must be present at the end of file to be considered a valid DXF file. */
-        embLog("ERROR: format-dxf.c readDxf(), missing EOF at end of DXF file\n");
+        embLog("ERROR: readDxf(), missing EOF at end of DXF file\n");
     }
     return eof;
 }
@@ -5903,7 +5806,6 @@ static char readEmd(EmbPattern* pattern, EmbFile* file, const char* fileName)
                 b1 = binaryReadUInt8(file);
                 flags = TRIM;
             } else if (b1 == 0xFD) {
-                embPattern_addStitchRel(pattern, 0, 0, END, 1);
                 break;
             } else {
                 continue;
@@ -5929,11 +5831,6 @@ static char expDecode(unsigned char a1)
 
 static void expEncode(unsigned char* b, char dx, char dy, int flags)
 {
-    if (!b) {
-        embLog("ERROR: format-exp.c expEncode(), b argument is null\n");
-        return;
-    }
-
     if (flags == STOP) {
         b[0] = 0x80;
         b[1] = 0x01;
@@ -6101,7 +5998,9 @@ static char writeExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
 static char readFxy(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     embPattern_loadExternalColorFile(pattern, fileName);
-    embFile_seek(file, 0x100, SEEK_SET); /* TODO: review for combining code. This line appears to be the only difference from the GT format. */
+    /* TODO: review for combining code.
+     * This line appears to be the only difference from the GT format. */
+    embFile_seek(file, 0x100, SEEK_SET);
 
     while (1) {
         int stitchType = NORMAL;
@@ -6110,7 +6009,6 @@ static char readFxy(EmbPattern* pattern, EmbFile* file, const char* fileName)
         unsigned char commandByte = binaryReadByte(file);
 
         if (commandByte == 0x91) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
         if ((commandByte & 0x01) == 0x01)
@@ -6135,7 +6033,9 @@ static char writeFxy(EmbPattern* pattern, EmbFile* file, const char* fileName)
 static char readGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     embPattern_loadExternalColorFile(pattern, fileName);
-    embFile_seek(file, 0x200, SEEK_SET); /* TODO: review for combining code. This line appears to be the only difference from the FXY format. */
+    /* TODO: review for combining code.
+     * This line appears to be the only difference from the FXY format. */
+    embFile_seek(file, 0x200, SEEK_SET);
 
     while (1) {
         int stitchType = NORMAL;
@@ -6144,7 +6044,6 @@ static char readGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
         unsigned char commandByte = binaryReadByte(file);
 
         if (commandByte == 0x91) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
         if ((commandByte & 0x01) == 0x01)
@@ -6195,7 +6094,7 @@ static unsigned char* husDecompressData(unsigned char* input, int compressedInpu
 {
     unsigned char* decompressedData = (unsigned char*)malloc(sizeof(unsigned char) * decompressedContentLength);
     if (!decompressedData) {
-        embLog("ERROR: format-hus.c husDecompressData(), cannot allocate memory for decompressedData\n");
+        embLog("ERROR: husDecompressData(), malloc()\n");
         return 0;
     }
     husExpand((unsigned char*)input, decompressedData, compressedInputLength, 10);
@@ -6206,7 +6105,7 @@ static unsigned char* husCompressData(unsigned char* input, int decompressedInpu
 {
     unsigned char* compressedData = (unsigned char*)malloc(sizeof(unsigned char) * decompressedInputSize * 2);
     if (!compressedData) {
-        embLog("ERROR: format-hus.c husCompressData(), cannot allocate memory for compressedData\n");
+        embLog("ERROR: husCompressData(), malloc()\n");
         return 0;
     }
     *compressedSize = husCompress(input, (unsigned long)decompressedInputSize, compressedData, 10, 0);
@@ -6273,7 +6172,7 @@ static char readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     stringVal = (unsigned char*)malloc(sizeof(unsigned char) * 8);
     if (!stringVal) {
-        embLog("ERROR: format-hus.c readHus(), cannot allocate memory for stringVal\n");
+        embLog("ERROR: readHus(), malloc()\n");
         return 0;
     }
     binaryReadBytes(file, stringVal, 8); /* TODO: check return value */
@@ -6286,7 +6185,7 @@ static char readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     attributeData = (unsigned char*)malloc(sizeof(unsigned char) * (xOffset - attributeOffset + 1));
     if (!attributeData) {
-        embLog("ERROR: format-hus.c readHus(), cannot allocate memory for attributeData\n");
+        embLog("ERROR: readHus(), malloc()\n");
         return 0;
     }
     binaryReadBytes(file, attributeData, xOffset - attributeOffset); /* TODO: check return value */
@@ -6294,7 +6193,7 @@ static char readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     xData = (unsigned char*)malloc(sizeof(unsigned char) * (yOffset - xOffset + 1));
     if (!xData) {
-        embLog("ERROR: format-hus.c readHus(), cannot allocate memory for xData\n");
+        embLog("ERROR: readHus(), malloc()\n");
         return 0;
     }
     binaryReadBytes(file, xData, yOffset - xOffset); /* TODO: check return value */
@@ -6302,7 +6201,7 @@ static char readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     yData = (unsigned char*)malloc(sizeof(unsigned char) * (fileLength - yOffset + 1));
     if (!yData) {
-        embLog("ERROR: format-hus.c readHus(), cannot allocate memory for yData\n");
+        embLog("ERROR: readHus(), malloc()\n");
         return 0;
     }
     binaryReadBytes(file, yData, fileLength - yOffset); /* TODO: check return value */
@@ -6362,17 +6261,17 @@ static char writeHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     xValues = (unsigned char*)malloc(sizeof(unsigned char) * (stitchCount));
     if (!xValues) {
-        embLog("ERROR: format-hus.c writeHus(), cannot allocate memory for xValues\n");
+        embLog("ERROR: writeHus(), malloc()\n");
         return 0;
     }
     yValues = (unsigned char*)malloc(sizeof(unsigned char) * (stitchCount));
     if (!yValues) {
-        embLog("ERROR: format-hus.c writeHus(), cannot allocate memory for yValues\n");
+        embLog("ERROR: writeHus(), malloc()\n");
         return 0;
     }
     attributeValues = (unsigned char*)malloc(sizeof(unsigned char) * (stitchCount));
     if (!attributeValues) {
-        embLog("ERROR: format-hus.c writeHus(), cannot allocate memory for attributeValues\n");
+        embLog("ERROR: writeHus(), malloc()\n");
         return 0;
     }
 
@@ -6560,7 +6459,7 @@ static char jefDecode(unsigned char inputByte)
 static void jefSetHoopFromId(EmbPattern* pattern, int hoopCode)
 {
     if (!pattern) {
-        embLog("ERROR: format-jef.c jefSetHoopFromId(), pattern argument is null\n");
+        embLog("ERROR: jefSetHoopFromId(), pattern==0\n");
         return;
     }
 
@@ -6885,7 +6784,7 @@ static float maxDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 static void maxEncode(EmbFile* file, int x, int y)
 {
     if (!file) {
-        embLog("ERROR: format-max.c maxEncode(), file argument is null\n");
+        embLog("ERROR: maxEncode(), file==0\n");
         return;
     }
 
@@ -6927,28 +6826,12 @@ static char readMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static char writeMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    char header[] = {
-        0x56, 0x43, 0x53, 0x4D, 0xFC, 0x03, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
-        0xF6, 0x25, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x31, 0x33, 0x37, 0x38,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x4D, 0x61, 0x64, 0x65, 0x69, 0x72, 0x61, 0x20,
-        0x52, 0x61, 0x79, 0x6F, 0x6E, 0x20, 0x34, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x01, 0x38, 0x09, 0x31, 0x33, 0x30, 0x2F, 0x37, 0x30, 0x35, 0x20, 0x48, 0xFA, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00
-    };
-    float x, y;
-    EmbStitch st;
     int i;
 
-    binaryWriteBytes(file, header, 0xD5);
+    binaryWriteBytes(file, maxHeader, 0xD5);
     for (i = 0; i < pattern->stitchList->count; i++) {
+        float x, y;
+        EmbStitch st;
         st = pattern->stitchList->stitch[i];
         x = roundDouble(st.x * 10.0);
         y = roundDouble(st.y * 10.0);
@@ -7066,16 +6949,11 @@ static char* ofmReadLibrary(EmbFile* file)
     /* FF FE FF */
     unsigned char leadIn[3];
 
-    if (!file) {
-        embLog("ERROR: format-ofm.c ofmReadLibrary(), file argument is null\n");
-        return 0;
-    }
-
     binaryReadBytes(file, leadIn, 3); /* TODO: check return value */
     stringLength = binaryReadByte(file);
     libraryName = (char*)malloc(sizeof(char) * stringLength * 2);
     if (!libraryName) {
-        embLog("ERROR: format-ofm.c ofmReadLibrary(), unable to allocate memory for libraryName\n");
+        embLog("ERROR: ofmReadLibrary(), unable to allocate memory for libraryName\n");
         return 0;
     }
     binaryReadBytes(file, (unsigned char*)libraryName, stringLength * 2); /* TODO: check return value */
@@ -7092,7 +6970,7 @@ static int ofmReadClass(EmbFile* file)
 
     s = (char*)malloc(sizeof(char) * len + 1);
     if (!s) {
-        embLog("ERROR: format-ofm.c ofmReadClass(), unable to allocate memory for s\n");
+        embLog("ERROR: ofmReadClass(), malloc()\n");
         return 0;
     }
     binaryReadBytes(file, (unsigned char*)s, len); /* TODO: check return value */
@@ -7153,7 +7031,7 @@ static void ofmReadThreads(EmbFile* file, EmbPattern* p)
     stringLen = binaryReadInt16(file);
     expandedString = (char*)malloc(stringLen);
     if (!expandedString) {
-        embLog("ERROR: format-ofm.c ofmReadThreads(), unable to allocate memory for expandedString\n");
+        embLog("ERROR: ofmReadThreads(), malloc()\n");
         return;
     }
     binaryReadBytes(file, (unsigned char*)expandedString, stringLen); /* TODO: check return value */
@@ -7173,7 +7051,7 @@ static void ofmReadThreads(EmbFile* file, EmbPattern* p)
         colorNameLength = binaryReadByte(file);
         colorName = (char*)malloc(colorNameLength * 2);
         if (!colorName) {
-            embLog("ERROR: format-ofm.c ofmReadThreads(), unable to allocate memory for colorName\n");
+            embLog("ERROR: ofmReadThreads(), malloc()\n");
             return;
         }
         binaryReadBytes(file, (unsigned char*)colorName, colorNameLength * 2); /* TODO: check return value */
@@ -7234,13 +7112,12 @@ static char readOfm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     bcfFile = (bcf_file*)malloc(sizeof(bcf_file));
     if (!bcfFile) {
-        embLog("ERROR: format-ofm.c readOfm(), unable to allocate memory for bcfFile\n");
+        embLog("ERROR: readOfm(), malloc()\n");
         return 0;
     }
     bcfFile_read(fileCompound, bcfFile);
     file = GetFile(bcfFile, fileCompound, "EdsIV Object");
     bcf_file_free(bcfFile);
-    bcfFile = 0;
     embFile_seek(file, 0x1C6, SEEK_SET);
     ofmReadThreads(file, pattern);
     embFile_seek(file, 0x110, SEEK_CUR);
@@ -7248,7 +7125,7 @@ static char readOfm(EmbPattern* pattern, EmbFile* file, const char* fileName)
     classNameLength = binaryReadInt16(file);
     s = (char*)malloc(sizeof(char) * classNameLength);
     if (!s) {
-        embLog("ERROR: format-ofm.c readOfm(), unable to allocate memory for s\n");
+        embLog("ERROR: readOfm(), malloc()\n");
         return 0;
     }
     binaryReadBytes(file, (unsigned char*)s, classNameLength); /* TODO: check return value */
@@ -7453,11 +7330,6 @@ static void pcqEncode(EmbFile* file, int dx, int dy, int flags)
 {
     unsigned char flagsToWrite = 0;
 
-    if (!file) {
-        embLog("ERROR: format-pcq.c pcqEncode(), file argument is null\n");
-        return;
-    }
-
     binaryWriteByte(file, (unsigned char)0);
     binaryWriteByte(file, (unsigned char)(dx & 0xFF));
     binaryWriteByte(file, (unsigned char)((dx >> 8) & 0xFF));
@@ -7559,11 +7431,6 @@ static float pcsDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 static void pcsEncode(EmbFile* file, int dx, int dy, int flags)
 {
     unsigned char flagsToWrite = 0;
-
-    if (!file) {
-        embLog("ERROR: format-pcs.c pcsEncode(), file argument is null\n");
-        return;
-    }
 
     binaryWriteByte(file, (unsigned char)0);
     binaryWriteByte(file, (unsigned char)(dx & 0xFF));
@@ -7726,11 +7593,6 @@ static void pecEncodeJump(EmbFile* file, int x, int types)
 {
     int outputVal = abs(x) & 0x7FF;
     unsigned int orPart = 0x80;
-
-    if (!file) {
-        embLog("ERROR: format-pec.c pecEncodeJump(), file argument is null\n");
-        return;
-    }
 
     if (types & TRIM) {
         orPart |= 0x20;
@@ -7963,7 +7825,9 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static char writePec(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    embPattern_flipVertical(pattern); /* TODO: There needs to be a matching flipVertical() call after the write to ensure multiple writes from the same pattern work properly */
+    /* TODO: There needs to be a matching flipVertical() call after the write
+     * to ensure multiple writes from the same pattern work properly */
+    embPattern_flipVertical(pattern);
     embPattern_fixColorCount(pattern);
     embPattern_correctForMaxStitchLength(pattern, 12.7, 204.7);
     embPattern_scale(pattern, 10.0);
@@ -8379,14 +8243,12 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file, const char
         blockCount++;
     }
     binaryWriteShort(file, (short)colorCount);
-    for (i = 0; i < colorCount; i++) {
-        binaryWriteShort(file, colorInfo[i * 2]);
-        binaryWriteShort(file, colorInfo[i * 2 + 1]);
+    for (i = 0; i < 2*colorCount; i++) {
+        binaryWriteShort(file, colorInfo[i]);
     }
     binaryWriteInt(file, 0);
     if (colorInfo) {
         free(colorInfo);
-        colorInfo = 0;
     }
 }
 
@@ -8610,23 +8472,15 @@ static char writePlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static char readRgb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    int i, numberOfColors;
     EmbThread t;
-
-    embFile_seek(file, 0x00, SEEK_END);
-    numberOfColors = embFile_tell(file) / 4;
 
     embArray_free(pattern->threads);
     pattern->threads = embArray_create(EMB_THREAD);
 
-    embFile_seek(file, 0x00, SEEK_SET);
-    for (i = 0; i < numberOfColors; i++) {
-        t.color.r = binaryReadByte(file);
-        t.color.g = binaryReadByte(file);
-        t.color.b = binaryReadByte(file);
-        t.catalogNumber = "";
-        t.description = "";
-        binaryReadByte(file);
+    t.catalogNumber = "";
+    t.description = "";
+    while (embFile_read(embBuffer, 1, 4, file) == 4) {
+        t.color = embColor_fromStr(embBuffer);
         embPattern_addThread(pattern, t);
     }
     return 1;
@@ -8635,14 +8489,11 @@ static char readRgb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 static char writeRgb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     int i;
-    EmbColor c;
 
+    embBuffer[3] = 0;
     for (i = 0; i < pattern->threads->count; i++) {
-        c = pattern->threads->thread[i].color;
-        binaryWriteByte(file, c.r);
-        binaryWriteByte(file, c.g);
-        binaryWriteByte(file, c.b);
-        embFile_write("\0", 1, 1, file);
+        embColor_toStr(pattern->threads->thread[i].color, embBuffer);
+        embFile_write(embBuffer, 1, 4, file);
     }
     return 1;
 }
@@ -8708,10 +8559,6 @@ static char readSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static void sewEncode(unsigned char* b, char dx, char dy, int flags)
 {
-    if (!b) {
-        embLog("ERROR: format-exp.c expEncode(), b argument is null\n");
-        return;
-    }
     if (flags == STOP) {
         b[0] = 0x80;
         b[1] = 1;
@@ -8751,13 +8598,8 @@ static char writeSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
         binaryWriteInt(file, thr);
     }
 
-    for (i = 0; i < (minColors - colorlistSize); i++) {
-        binaryWriteInt(file, 0x0D);
-    }
-
-    for (i = 2; i < 7538; i++) {
-        embFile_print(file, " ");
-    }
+    embFile_pad(file, 0x0D, (minColors - colorlistSize));
+    embFile_pad(file, ' ', 7536);
 
     xx = 0.0;
     yy = 0.0;
@@ -8969,18 +8811,18 @@ static char stxReadThread(StxThread* thread, EmbFile* file)
     unsigned char whatIsthis; /* TODO: determine what this represents */
 
     if (!thread) {
-        embLog("ERROR: format-stx.c stxReadThread(), thread argument is null\n");
+        embLog("ERROR: stxReadThread(), thread==0\n");
         return 0;
     }
     if (!file) {
-        embLog("ERROR: format-stx.c stxReadThread(), file argument is null\n");
+        embLog("ERROR: stxReadThread(), file==0\n");
         return 0;
     }
 
     codeLength = binaryReadUInt8(file);
     codeBuff = (char*)malloc(codeLength);
     if (!codeBuff) {
-        embLog("ERROR: format-stx.c stxReadThread(), unable to allocate memory for codeBuff\n");
+        embLog("ERROR: stxReadThread(), malloc()\n");
         return 0;
     }
     binaryReadBytes(file, (unsigned char*)codeBuff, codeLength); /* TODO: check return value */
@@ -8988,7 +8830,7 @@ static char stxReadThread(StxThread* thread, EmbFile* file)
     colorNameLength = binaryReadUInt8(file);
     codeNameBuff = (char*)malloc(colorNameLength);
     if (!codeNameBuff) {
-        embLog("ERROR: format-stx.c stxReadThread(), unable to allocate memory for codeNameBuff\n");
+        embLog("ERROR: stxReadThread(), malloc()\n");
         return 0;
     }
     binaryReadBytes(file, (unsigned char*)codeNameBuff, colorNameLength); /* TODO: check return value */
@@ -9003,7 +8845,7 @@ static char stxReadThread(StxThread* thread, EmbFile* file)
     sectionNameLength = binaryReadUInt8(file);
     sectionNameBuff = (char*)malloc(sectionNameLength);
     if (!sectionNameBuff) {
-        embLog("ERROR: format-stx.c stxReadThread(), unable to allocate memory for sectionNameBuff\n");
+        embLog("ERROR: stxReadThread(), malloc()\n");
         return 0;
     }
     binaryReadBytes(file, (unsigned char*)sectionNameBuff, sectionNameLength); /* TODO: check return value */
@@ -9016,7 +8858,7 @@ static char stxReadThread(StxThread* thread, EmbFile* file)
 
     thread->subDescriptors = (SubDescriptor*)malloc(sizeof(SubDescriptor) * numberOfOtherDescriptors);
     if (!thread->subDescriptors) {
-        embLog("ERROR: format-stx.c stxReadThread(), unable to allocate memory for thread->subDescriptors\n");
+        embLog("ERROR: stxReadThread(), malloc()\n");
         return 0;
     }
     for (j = 0; j < numberOfOtherDescriptors; j++) {
@@ -9030,7 +8872,7 @@ static char stxReadThread(StxThread* thread, EmbFile* file)
         subCodeLength = binaryReadUInt8(file);
         subCodeBuff = (char*)malloc(subCodeLength);
         if (!subCodeBuff) {
-            embLog("ERROR: format-stx.c stxReadThread(), unable to allocate memory for subCodeBuff\n");
+            embLog("ERROR: stxReadThread(), malloc()\n");
             return 0;
         }
         binaryReadBytes(file, (unsigned char*)subCodeBuff, subCodeLength); /* TODO: check return value */
@@ -9038,7 +8880,7 @@ static char stxReadThread(StxThread* thread, EmbFile* file)
         subColorNameLength = binaryReadUInt8(file);
         subColorNameBuff = (char*)malloc(subColorNameLength);
         if (!subColorNameBuff) {
-            embLog("ERROR: format-stx.c stxReadThread(), unable to allocate memory for subColorNameBuff\n");
+            embLog("ERROR: stxReadThread(), malloc()\n");
             return 0;
         }
         binaryReadBytes(file, (unsigned char*)subColorNameBuff, subColorNameLength); /* TODO: check return value */
@@ -9262,11 +9104,11 @@ static void encode_t01_record(EmbFile* file, int x, int y, int flags)
 
     /* cannot encode values > +121 or < -121. */
     if (x > 121 || x < -121) {
-        embLog("ERROR: format-t01.c encode_t01_record(), x is not in valid range [-121,121] , x =");
+        embLog("ERROR: encode_t01_record(), x is not in [-121,121]\n");
         /* embLog_print("%d\n", x); */
     }
     if (y > 121 || y < -121) {
-        embLog("ERROR: format-t01.c encode_t01_record(), y is not in valid range [-121,121] , y =");
+        embLog("ERROR: encode_t01_record(), y is not in [-121,121]\n");
         /* embLog_print("%d\n", y); */
     }
 
@@ -9311,7 +9153,7 @@ static void encode_t01_record(EmbFile* file, int x, int y, int flags)
         x += 1;
     }
     if (x != 0) {
-        embLog("ERROR: format-dst.c encode_t01_record(), x should be zero yet x = %d\n");
+        embLog("ERROR: encode_t01_record(), x!=0\n");
     }
     if (y >= +41) {
         b[2] += 1 << 5;
@@ -9354,7 +9196,7 @@ static void encode_t01_record(EmbFile* file, int x, int y, int flags)
         y += 1;
     }
     if (y != 0) {
-        embLog("ERROR: format-dst.c encode_t01_record(), y should be zero yet y = %d\n");
+        embLog("ERROR: encode_t01_record(), y!=0\n");
     }
 
     b[2] |= (char)3;
@@ -9400,23 +9242,20 @@ static char writeT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static char readT09(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    unsigned char b[3];
-
     embFile_seek(file, 0x0C, SEEK_SET);
 
-    while (embFile_read(b, 1, 3, file) == 3) {
+    while (embFile_read(embBuffer, 1, 3, file) == 3) {
         int stitchType = NORMAL;
-        int b1 = b[0];
-        int b2 = b[1];
-        unsigned char commandByte = b[2];
-        if (commandByte == 0x00) {
+        int b1 = embBuffer[0];
+        int b2 = embBuffer[1];
+        if (embBuffer[2] == 0x00) {
             break;
         }
-        if (commandByte & 0x10)
+        if (embBuffer[2] & 0x10)
             stitchType = STOP;
-        if (commandByte & 0x20)
+        if (embBuffer[2] & 0x20)
             b1 = -b1;
-        if (commandByte & 0x40)
+        if (embBuffer[2] & 0x40)
             b2 = -b2;
 
         embPattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
@@ -9513,9 +9352,9 @@ static void encode_tap_record(EmbFile* file, int x, int y, int flags)
 
     /* cannot encode values > +121 or < -121. */
     if (x > 121 || x < -121)
-        embLog("ERROR: format-tap.c encode_tap_record(), x is not in valid range [-121,121] , x =\n");
+        embLog("ERROR: encode_tap_record(), x is not in valid range [-121,121]\n");
     if (y > 121 || y < -121)
-        embLog("ERROR: format-tap.c encode_tap_record(), y is not in valid range [-121,121] , y =\n");
+        embLog("ERROR: encode_tap_record(), y is not in valid range [-121,121]\n");
 
     if (x >= +41) {
         b2 += 1 << 2;
@@ -9558,7 +9397,7 @@ static void encode_tap_record(EmbFile* file, int x, int y, int flags)
         x += 1;
     }
     if (x != 0) {
-        embLog("ERROR: format-tap.c encode_tap_record(), x should be zero yet x =\n");
+        embLog("ERROR: encode_tap_record(), x!=0\n");
     }
     if (y >= +41) {
         b2 += 1 << 5;
@@ -9601,7 +9440,7 @@ static void encode_tap_record(EmbFile* file, int x, int y, int flags)
         y += 1;
     }
     if (y != 0) {
-        embLog("ERROR: format-tap.c encode_tap_record(), y should be zero yet y =\n");
+        embLog("ERROR: encode_tap_record(), y!=0\n");
     }
 
     b2 |= (char)3;
@@ -9688,21 +9527,17 @@ bit definitions for attributes of stitch
 static char readThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     ThredHeader header;
-    unsigned char r, g, b;
-    int currentColor, i;
+    EmbColor c;
     EmbThread thread;
+    int currentColor, i;
 
     header.sigVersion = binaryReadUInt32(file);
     header.length = binaryReadUInt32(file);
     header.numStiches = binaryReadUInt16(file);
     header.hoopSize = binaryReadUInt16(file);
-    header.reserved[0] = binaryReadUInt16(file);
-    header.reserved[1] = binaryReadUInt16(file);
-    header.reserved[2] = binaryReadUInt16(file);
-    header.reserved[3] = binaryReadUInt16(file);
-    header.reserved[4] = binaryReadUInt16(file);
-    header.reserved[5] = binaryReadUInt16(file);
-    header.reserved[6] = binaryReadUInt16(file);
+    for (i=0; i<7; i++) {
+        header.reserved[i] = binaryReadUInt16(file);
+    }
 
     if ((header.sigVersion & 0xffffff) == 0x746872) {
         unsigned int verVar = (header.sigVersion & 0xff000000) >> 24;
@@ -9734,18 +9569,14 @@ static char readThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
     }
     embFile_seek(file, 16, SEEK_CUR); /* skip bitmap name (16 chars) */
 
-    r = binaryReadByte(file);
-    g = binaryReadByte(file);
-    b = binaryReadByte(file);
-    binaryReadByte(file);
+    embFile_read(embBuffer, 1, 4, file);
+    c = embColor_fromStr(embBuffer);
 
+    thread.description = NULL;
+    thread.catalogNumber = NULL;
+    embFile_read(embBuffer, 1, 16*4, file);
     for (i = 0; i < 16; i++) {
-        thread.description = NULL;
-        thread.catalogNumber = NULL;
-        thread.color.r = binaryReadByte(file);
-        thread.color.g = binaryReadByte(file);
-        thread.color.b = binaryReadByte(file);
-        binaryReadByte(file);
+        thread.color = embColor_fromStr(embBuffer+4*i);
         embPattern_addThread(pattern, thread);
     }
     /*  64 bytes of rgbx(4 bytes) colors (16 custom colors) */
@@ -9904,22 +9735,22 @@ static EmbStitch decode_u00_stitch(unsigned char *data)
 
 static char readU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbThread t;
-    EmbStitch st;
-    unsigned char b[4], i;
+    int i;
 
     /* 16 3byte RGB's start @ 0x08 followed by 14 bytes between 0 and 15 with index of color for each color change */
     embFile_seek(file, 0x08, SEEK_SET);
 
     for (i = 0; i < 16; i++) {
-        embFile_read(b, 1, 3, file);
-        t.color = embColor_fromStr(b);
+        EmbThread t;
+        embFile_read(embBuffer, 1, 3, file);
+        t.color = embColor_fromStr(embBuffer);
         embPattern_addThread(pattern, t);
     }
 
     embFile_seek(file, 0x100, SEEK_SET);
-    while (embFile_read(b, 1, 3, file) == 3) {
-        st = decode_u00_stitch(b);
+    while (embFile_read(embBuffer, 1, 3, file) == 3) {
+        EmbStitch st;
+        st = decode_u00_stitch(embBuffer);
         if (st.flags == END) {
             break;
         }
@@ -9960,34 +9791,6 @@ static char writeU01(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return writeU00(pattern, file, fileName);
 }
 
-static const unsigned char vipDecodingTable[] = {
-    0x2E, 0x82, 0xE4, 0x6F, 0x38, 0xA9, 0xDC, 0xC6, 0x7B, 0xB6, 0x28, 0xAC, 0xFD, 0xAA, 0x8A, 0x4E,
-    0x76, 0x2E, 0xF0, 0xE4, 0x25, 0x1B, 0x8A, 0x68, 0x4E, 0x92, 0xB9, 0xB4, 0x95, 0xF0, 0x3E, 0xEF,
-    0xF7, 0x40, 0x24, 0x18, 0x39, 0x31, 0xBB, 0xE1, 0x53, 0xA8, 0x1F, 0xB1, 0x3A, 0x07, 0xFB, 0xCB,
-    0xE6, 0x00, 0x81, 0x50, 0x0E, 0x40, 0xE1, 0x2C, 0x73, 0x50, 0x0D, 0x91, 0xD6, 0x0A, 0x5D, 0xD6,
-    0x8B, 0xB8, 0x62, 0xAE, 0x47, 0x00, 0x53, 0x5A, 0xB7, 0x80, 0xAA, 0x28, 0xF7, 0x5D, 0x70, 0x5E,
-    0x2C, 0x0B, 0x98, 0xE3, 0xA0, 0x98, 0x60, 0x47, 0x89, 0x9B, 0x82, 0xFB, 0x40, 0xC9, 0xB4, 0x00,
-    0x0E, 0x68, 0x6A, 0x1E, 0x09, 0x85, 0xC0, 0x53, 0x81, 0xD1, 0x98, 0x89, 0xAF, 0xE8, 0x85, 0x4F,
-    0xE3, 0x69, 0x89, 0x03, 0xA1, 0x2E, 0x8F, 0xCF, 0xED, 0x91, 0x9F, 0x58, 0x1E, 0xD6, 0x84, 0x3C,
-    0x09, 0x27, 0xBD, 0xF4, 0xC3, 0x90, 0xC0, 0x51, 0x1B, 0x2B, 0x63, 0xBC, 0xB9, 0x3D, 0x40, 0x4D,
-    0x62, 0x6F, 0xE0, 0x8C, 0xF5, 0x5D, 0x08, 0xFD, 0x3D, 0x50, 0x36, 0xD7, 0xC9, 0xC9, 0x43, 0xE4,
-    0x2D, 0xCB, 0x95, 0xB6, 0xF4, 0x0D, 0xEA, 0xC2, 0xFD, 0x66, 0x3F, 0x5E, 0xBD, 0x69, 0x06, 0x2A,
-    0x03, 0x19, 0x47, 0x2B, 0xDF, 0x38, 0xEA, 0x4F, 0x80, 0x49, 0x95, 0xB2, 0xD6, 0xF9, 0x9A, 0x75,
-    0xF4, 0xD8, 0x9B, 0x1D, 0xB0, 0xA4, 0x69, 0xDB, 0xA9, 0x21, 0x79, 0x6F, 0xD8, 0xDE, 0x33, 0xFE,
-    0x9F, 0x04, 0xE5, 0x9A, 0x6B, 0x9B, 0x73, 0x83, 0x62, 0x7C, 0xB9, 0x66, 0x76, 0xF2, 0x5B, 0xC9,
-    0x5E, 0xFC, 0x74, 0xAA, 0x6C, 0xF1, 0xCD, 0x93, 0xCE, 0xE9, 0x80, 0x53, 0x03, 0x3B, 0x97, 0x4B,
-    0x39, 0x76, 0xC2, 0xC1, 0x56, 0xCB, 0x70, 0xFD, 0x3B, 0x3E, 0x52, 0x57, 0x81, 0x5D, 0x56, 0x8D,
-    0x51, 0x90, 0xD4, 0x76, 0xD7, 0xD5, 0x16, 0x02, 0x6D, 0xF2, 0x4D, 0xE1, 0x0E, 0x96, 0x4F, 0xA1,
-    0x3A, 0xA0, 0x60, 0x59, 0x64, 0x04, 0x1A, 0xE4, 0x67, 0xB6, 0xED, 0x3F, 0x74, 0x20, 0x55, 0x1F,
-    0xFB, 0x23, 0x92, 0x91, 0x53, 0xC8, 0x65, 0xAB, 0x9D, 0x51, 0xD6, 0x73, 0xDE, 0x01, 0xB1, 0x80,
-    0xB7, 0xC0, 0xD6, 0x80, 0x1C, 0x2E, 0x3C, 0x83, 0x63, 0xEE, 0xBC, 0x33, 0x25, 0xE2, 0x0E, 0x7A,
-    0x67, 0xDE, 0x3F, 0x71, 0x14, 0x49, 0x9C, 0x92, 0x93, 0x0D, 0x26, 0x9A, 0x0E, 0xDA, 0xED, 0x6F,
-    0xA4, 0x89, 0x0C, 0x1B, 0xF0, 0xA1, 0xDF, 0xE1, 0x9E, 0x3C, 0x04, 0x78, 0xE4, 0xAB, 0x6D, 0xFF,
-    0x9C, 0xAF, 0xCA, 0xC7, 0x88, 0x17, 0x9C, 0xE5, 0xB7, 0x33, 0x6D, 0xDC, 0xED, 0x8F, 0x6C, 0x18,
-    0x1D, 0x71, 0x06, 0xB1, 0xC5, 0xE2, 0xCF, 0x13, 0x77, 0x81, 0xC5, 0xB7, 0x0A, 0x14, 0x0A, 0x6B,
-    0x40, 0x26, 0xA0, 0x88, 0xD1, 0x62, 0x6A, 0xB3, 0x50, 0x12, 0xB9, 0x9B, 0xB5, 0x83, 0x9B, 0x37
-};
-
 static char vipDecodeByte(unsigned char b)
 {
     if (b >= 0x80)
@@ -10015,7 +9818,7 @@ static unsigned char* vipDecompressData(unsigned char* input, int compressedInpu
 {
     unsigned char* decompressedData = (unsigned char*)malloc(decompressedContentLength);
     if (!decompressedData) {
-        embLog("ERROR: format-vip.c vipDecompressData(), cannot allocate memory for decompressedData\n");
+        embLog("ERROR: vipDecompressData(), malloc()\n");
         return 0;
     }
     husExpand((unsigned char*)input, decompressedData, compressedInputLength, 10);
@@ -10288,7 +10091,7 @@ static unsigned char* vp3ReadString(EmbFile* file)
     int stringLength = 0;
     unsigned char* charString = 0;
     if (!file) {
-        embLog("ERROR: format-vp3.c vp3ReadString(), file argument is null\n");
+        embLog("ERROR: format-vp3.c vp3ReadString(), file==0\n");
         return 0;
     }
     stringLength = binaryReadInt16BE(file);
@@ -10351,7 +10154,7 @@ static vp3Hoop vp3ReadHoopSection(EmbFile* file)
     vp3Hoop hoop;
 
     if (!file) {
-        embLog("ERROR: format-vp3.c vp3ReadHoopSection(), file argument is null\n");
+        embLog("ERROR: format-vp3.c vp3ReadHoopSection(), file==0\n");
         hoop.bottom = 0;
         hoop.left = 0;
         hoop.right = 0;
@@ -11193,7 +10996,7 @@ static int svgPathCmdToEmbPathFlag(char cmd)
 
     /*else if(toUpper(cmd) == 'B') return BULGETOCONTROL; */ /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
     /*else if(toUpper(cmd) == 'BB') return BULGETOEND; */ /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
-    /*else { embLog("ERROR: format-svg.c svgPathCmdToEmbPathFlag(), unknown command '%c'\n", cmd); return MOVETO; } */
+    /*else { embLog("ERROR: svgPathCmdToEmbPathFlag(), unknown command '%c'\n", cmd); return MOVETO; } */
 
     return LINETO;
 }
@@ -11213,14 +11016,14 @@ SvgAttribute svgAttribute_create(const char* name, const char* value)
 void svgElement_addAttribute(SvgElement* element, SvgAttribute data)
 {
     if (!element) {
-        embLog("ERROR: format-svg.c svgElement_addAttribute(), element argument is null.");
+        embLog("ERROR: svgElement_addAttribute(), element==0.");
         return;
     }
 
     if (!(element->attributeList)) {
         element->attributeList = (SvgAttributeList*)malloc(sizeof(SvgAttributeList));
         if (!(element->attributeList)) {
-            embLog("ERROR: format-svg.c svgElement_addAttribute(), cannot allocate memory for element->attributeList.");
+            embLog("ERROR: svgElement_addAttribute(), cannot allocate memory for element->attributeList.");
             return;
         }
         element->attributeList->attribute = data;
@@ -11231,7 +11034,7 @@ void svgElement_addAttribute(SvgElement* element, SvgAttribute data)
         SvgAttributeList* pointerLast = element->lastAttribute;
         SvgAttributeList* list = (SvgAttributeList*)malloc(sizeof(SvgAttributeList));
         if (!list) {
-            embLog("ERROR: format-svg.c svgElement_addAttribute(), cannot allocate memory for list.");
+            embLog("ERROR: svgElement_addAttribute(), cannot allocate memory for list.");
             return;
         }
         list->attribute = data;
@@ -11271,13 +11074,13 @@ SvgElement* svgElement_create(const char* name)
 
     element = (SvgElement*)malloc(sizeof(SvgElement));
     if (!element) {
-        embLog("ERROR: format-svg.c svgElement_create(), cannot allocate memory for element\n");
+        embLog("ERROR: svgElement_create(), cannot allocate memory for element\n");
         return 0;
     }
     /* switch the element index */
 /*    element->name = emb_strdup((char*)name); */
     if (!element->name) {
-        embLog("ERROR: format-svg.c svgElement_create(), element->name is null\n");
+        embLog("ERROR: svgElement_create(), element->name is null\n");
         return 0;
     }
     element->attributeList = 0;
@@ -11290,11 +11093,11 @@ char* svgAttribute_getValue(SvgElement* element, const char* name)
     SvgAttributeList* pointer = 0;
 
     if (!element) {
-        embLog("ERROR: format-svg.c svgAttribute_getValue(), element argument is null\n");
+        embLog("ERROR: svgAttribute_getValue(), element==0\n");
         return "none";
     }
     if (!name) {
-        embLog("ERROR: format-svg.c svgAttribute_getValue(), name argument is null\n");
+        embLog("ERROR: svgAttribute_getValue(), name==0\n");
         return "none";
     }
     if (!element->attributeList) { /* TODO: error */
@@ -11320,7 +11123,7 @@ void svgAddToPattern(EmbPattern* p)
     EmbPathObject* path;
 
     if (!p) {
-        embLog("ERROR: format-svg.c svgAddToPattern(), p argument is null\n");
+        embLog("ERROR: svgAddToPattern(), p==0\n");
         return;
     }
     if (!currentElement) {
@@ -11412,7 +11215,7 @@ void svgAddToPattern(EmbPattern* p)
         char* pathbuff = 0;
         pathbuff = (char*)malloc(size);
         if (!pathbuff) {
-            embLog("ERROR: format-svg.c svgAddToPattern(), cannot allocate memory for pathbuff\n");
+            embLog("ERROR: svgAddToPattern(), cannot allocate memory for pathbuff\n");
             return;
         }
 
@@ -11599,7 +11402,7 @@ void svgAddToPattern(EmbPattern* p)
                             if (c=='m') numMoves++;
                         }
                         if (reset < 0) {
-                            embLog("ERROR: format-svg.c svgAddToPattern(), %s is not a valid svg path command, skipping...");
+                            embLog("ERROR: svgAddToPattern(), %s is not a valid svg path command, skipping...");
                             embLog(pathbuff);
                             trip = -1;
                             break;
@@ -11618,7 +11421,7 @@ void svgAddToPattern(EmbPattern* p)
                 size *= 2;
                 pathbuff = (char*)realloc(pathbuff, size);
                 if (!pathbuff) {
-                    embLog("ERROR: format-svg.c svgAddToPattern(), cannot re-allocate memory for pathbuff\n");
+                    embLog("ERROR: svgAddToPattern(), cannot re-allocate memory for pathbuff\n");
                     return;
                 }
             }
@@ -11648,7 +11451,7 @@ void svgAddToPattern(EmbPattern* p)
         char* polybuff = 0;
         polybuff = (char*)malloc(size);
         if (!polybuff) {
-            embLog("ERROR: format-svg.c svgAddToPattern(), cannot allocate memory for polybuff\n");
+            embLog("ERROR: svgAddToPattern(), cannot allocate memory for polybuff\n");
             return;
         }
 
@@ -11687,7 +11490,7 @@ void svgAddToPattern(EmbPattern* p)
                 size *= 2;
                 polybuff = (char*)realloc(polybuff, size);
                 if (!polybuff) {
-                    embLog("ERROR: format-svg.c svgAddToPattern(), cannot re-allocate memory for polybuff\n");
+                    embLog("ERROR: svgAddToPattern(), cannot re-allocate memory for polybuff\n");
                     return;
                 }
             }
@@ -11779,7 +11582,7 @@ static char svgIsSvgAttribute(const char* buff)
             return SVG_ATTRIBUTE;
     }
 
-    embLog("format-svg.c svgIsSvgAttribute(), unknown:");
+    embLog("svgIsSvgAttribute(), unknown:");
     embLog(buff);
     return SVG_NULL;
 }
@@ -11798,7 +11601,7 @@ static char svgHasAttribute(const char *buff, const char *tokens[], const char *
         return SVG_ATTRIBUTE;
     }
     else {
-        embLog("format-svg.c ");
+        embLog("");
         embLog(errormsg);
         embLog("attribute unknown:");
         embLog(buff);
@@ -11918,7 +11721,7 @@ void svgProcess(int c, const char* buff)
                 strcpy(tmp, currentValue);
                 currentValue = realloc(strlen(buff) + strlen(tmp) + 2, 1);
                 if (!currentValue) {
-                    embLog("ERROR: format-svg.c svgProcess(), cannot allocate memory for currentValue\n");
+                    embLog("ERROR: svgProcess(), cannot allocate memory for currentValue\n");
                     return;
                 }
                 if (currentValue) {
@@ -11959,7 +11762,7 @@ static char readSvg(EmbPattern* p, EmbFile* file, const char* fileName)
 
     buff = (char*)malloc(size);
     if (!buff) {
-        embLog("ERROR: format-svg.c readSvg(), cannot allocate memory for buff\n");
+        embLog("ERROR: readSvg(), cannot allocate memory for buff\n");
         return 0;
     }
 
@@ -12010,7 +11813,7 @@ static char readSvg(EmbPattern* p, EmbFile* file, const char* fileName)
             size *= 2;
             buff = (char*)realloc(buff, size);
             if (!buff) {
-                embLog("ERROR: format-svg.c readSvg(), cannot re-allocate memory for buff.");
+                embLog("ERROR: readSvg(), cannot re-allocate memory for buff.");
                 return 0;
             }
         }

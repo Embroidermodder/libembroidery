@@ -8,6 +8,7 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{xcolor}
+\usepackage{tabularx}
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt plus 2pt minus 1pt}
@@ -250,13 +251,65 @@ We don't know much about this format. TODO: Find a source.
 \item[$\square$] Well Tested Write
 \end{itemize}
 
+.DST (Tajima) embroidery file read/write routines
+Format comments are thanks to tspilman@dalcoathletic.com who's
+notes appeared at \url{http://www.wotsit.org} under Tajima Format.
+
+\subsubsection{Header}
+
+The header seems to contain information about the design.
+Seems to be ASCII text delimited by 0x0D (carriage returns).
+This must be in the file for most new software or hardware
+to consider it a good file! This is much more important
+than I originally believed. The header is 125 bytes in
+length and padded out by 0x20 to 512 bytes total.
+All entries in the header seem to be 2 ASCII characters
+followed by a colon, then it's value trailed by a carriage return.
+
+\begin{tabularx}{\columnwidth}{>{\hsize=0.3\hsize}X >{\hsize=0.7\hsize}X}
+\texttt{char LA[16+1];} & First is the 'LA' entry, which is the design name with no
+path or extension information. The blank is 16 characters
+in total, but the name must not be longer that 8 characters
+and padded out with spaces (0x20). \\
+\hline
+\texttt{char ST[7+1];} & Next is the stitch count ST, this is a 7 digit number
+padded by leading zeros. This is the total stitch count
+including color changes, jumps, nups, and special records. \\
+\hline
+\texttt{char CO[3+1];} & Next, is CO or colors, a 3 digit number padded by leading
+zeros. This is the number of color change records in the file. \\
+\hline
+\texttt{char POSX[5+1];} & Next is +X or the positive X extent in centimeters, a 5
+digit non-decimal number padded by leading zeros. \\
+\hline
+\texttt{char NEGX[5+1];} & Following is the -X or the negative X extent in millimeters,
+a 5 digit non-decimal number padded by leading zeros. \\
+\hline
+\texttt{char POSY[5+1];} & Again, the +Y extents. \\
+\hline
+\texttt{char NEGY[5+1];} & Again, the -Y extents. \\
+\hline
+\texttt{char AX[6+1];} \break\ \texttt{char AY[6+1];} & AX and AY should express the relative coordinates of the
+last point from the start point in 0.1 mm. If the start
+and last points are the same, the coordinates are (0,0). \\
+\hline
+\texttt{char MX[6+1];} \break\ \texttt{char MY[6+1];} &
+ MX and MY should express coordinates of the last point of
+the previous file for a multi-volume design. A multi-volume design means a design
+consisted of two or more files. This was used for huge designs that can not be stored in a
+single paper tape roll. It is not used so much (almost never) nowadays. \\
+\hline
+\texttt{char PD[9+1];} & PD is also storing some information for multi-volume design.
+\end{tabularx}
+
 Uses 3 byte per stitch encoding with the format as follows:
 
-% Byte\Bit | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0
-% ---------|---|---|---|---|---|---|---|---
-% 0        | y+1 | y-1 | y+9 | y-9 | x-9 | x+9 | x-1 | x+1
-% 1        | y+3 | y-3 | y+27 | y-27 | x-27 | x+27 | x-3 | x+3
-% 2        | jump | color change | y+81 | y-81 | x-81 | x+81 | set | set
+\begin{tabularx}{1.1\columnwidth}{X | X X X X X X X X}
+Bit & 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\
+Byte 0 & y+1 & y-1 & y+9 & y-9 & x-9 & x+9 & x-1 & x+1 \\
+Byte 1 & y+3 & y-3 & y+27 & y-27 & x-27 & x+27 & x-3 & x+3 \\
+Byte 2 & jump & color \break\ change & y+81 & y-81 & x-81 & x+81 & set & set
+\end{tabularx}
 
 T01 and Tap appear to use Tajima Ternary.
  
@@ -400,7 +453,7 @@ the system you ran the program on.
 
 \section{On Arduino}
 
-This folder contains Arduino specific files for libembroidery.
+The library is designed to support embedded environments.
 
 \subsection{Compatible Boards}
 

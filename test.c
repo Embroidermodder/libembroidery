@@ -9,23 +9,39 @@
 
 int svg_all_tokens_table[] = {0, 4};
 
+int dereference_int(FILE *f, int p)
+{
+    int out;
+    fseek(f, p, SEEK_SET);
+    fread(&out, 4, 1, f);
+    return out;
+}
+
+int get_str(FILE *f, char *s, int p)
+{
+    int i;
+    char c;
+    fseek(f, p, SEEK_SET);
+    c = 1;
+    for (i=0; c; i++) {
+        fread(&c, 1, 1, f);
+        s[i] = c;
+    }
+}
+
 int string_table(FILE *f, int *table, char *s, int n)
 {
-    int p, str;
+    int p;
     if (n>=table[1]) {
         puts("ERROR: this is outside of the scope of the table.");
         return 0;
     }
     /* get the position of svg_all_tokens */
-    fseek(f, table[0], SEEK_SET);
-    fread(&p, 4, 1, f);
-    p += 4*n;
+    p = dereference_int(f, 4*table[0]) + 4*n;
     /* get the position of next token */
-    fseek(f, p, SEEK_SET);
-    fread(&str, 4, 1, f);
-    /* go to string */
-    fseek(f, str, SEEK_SET);
-    fread(s, 1, 20, f);
+    p = dereference_int(f, p);
+    /* read string out */
+    get_str(f, s, p);
     return 1;
 }
 

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 #include(GNUInstallDirs)
 
-project(libembroidery VERSION 1.0.0 LANGUAGES C CXX)
+project(libembroidery VERSION 1.0.0 LANGUAGES C CXX ASM_NASM)
 
 set(CMAKE_C_STANDARD 90)
 set(CMAKE_C_STANDARD_REQUIRED True)
@@ -15,6 +15,14 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")
 add_library(embroidery_static STATIC
     ${LIBRARY_SOURCE_FILES}
 )
+
+add_custom_command(OUTPUT libembroidery_data.bin
+                   COMMAND  nasm -f bin -o libembroidery_data.bin -l libembroidery_data.lst ${CMAKE_CURRENT_SOURCE_DIR}/libembroidery_data.asm
+)
+add_executable(testdata test.c)
+add_custom_target(datafile
+                  DEPENDS libembroidery_data.bin)
+add_dependencies(testdata datafile)
 
 #compile SWIG if requested
 add_subdirectory(experimental)

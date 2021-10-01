@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Set up NASM
+      uses: ilammy/setup-nasm@v1.2.0
     - name: Run test script on Linux.
       run: |
         git clone https://github.com/Embroidermodder/libembroidery
@@ -22,6 +24,8 @@ jobs:
     runs-on: macOS-latest
     
     steps:
+    - name: Set up NASM
+      uses: ilammy/setup-nasm@v1.2.0
     - name: Run test script on macOS.
       run: |
         git clone https://github.com/Embroidermodder/libembroidery
@@ -36,7 +40,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Run test script on macOS.
+    - name: Set up NASM
+      uses: ilammy/setup-nasm@v1.2.0
+    - name: Run test script on Windows.
       run: |
         git clone https://github.com/Embroidermodder/libembroidery
         cd libembroidery
@@ -44,5 +50,5 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=Debug ..
         cmake --build .
-# Need to fix the executable name?
-#        embroider.exe -test
+        # Need to fix the executable name?
+        embroider.exe -test

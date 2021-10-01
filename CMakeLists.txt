@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 #include(GNUInstallDirs)
 
-project(libembroidery VERSION 1.0.0 LANGUAGES C CXX ASM_NASM)
+project(libembroidery VERSION 1.0.0 LANGUAGES C CXX)
 
 set(CMAKE_C_STANDARD 90)
 set(CMAKE_C_STANDARD_REQUIRED True)

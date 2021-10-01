@@ -4539,7 +4539,7 @@ static char writeBro(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static char readCol(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    int numberOfColors, i;
+    int nColors, i;
     int num, blue, green, red;
     EmbThread t;
     char line[30];
@@ -4548,12 +4548,12 @@ static char readCol(EmbPattern* pattern, EmbFile* file, const char* fileName)
     pattern->threads = embArray_create(EMB_THREAD);
 
     embFile_readline(file, line, 30);
-    numberOfColors = atoi(line);
-    if (numberOfColors < 1) {
+    nColors = atoi(line);
+    if (nColors < 1) {
         embLog("ERROR: Number of colors is zero.");
         return 0;
     }
-    for (i = 0; i < numberOfColors; i++) {
+    for (i = 0; i < nColors; i++) {
         embFile_readline(file, line, 30);
         if (strlen(line) < 1) {
             embLog("ERROR: Empty line in col file.");
@@ -5732,16 +5732,16 @@ static char writeDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static char readEdr(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    int numberOfColors, i;
+    int nColors, i;
     EmbThread t;
 
     embFile_seek(file, 0x00, SEEK_END);
-    numberOfColors = embFile_tell(file) / 4;
+    nColors = embFile_tell(file) / 4;
     embFile_seek(file, 0x00, SEEK_SET);
 
     embArray_free(pattern->threads);
 
-    for (i = 0; i < numberOfColors; i++) {
+    for (i = 0; i < nColors; i++) {
         t.color.r = binaryReadByte(file);
         t.color.g = binaryReadByte(file);
         t.color.b = binaryReadByte(file);
@@ -6141,7 +6141,7 @@ static unsigned char husEncodeStitchType(int st)
 
 static char readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    int fileLength, i, magicCode, numberOfStitches, numberOfColors;
+    int fileLength, i, magicCode, numberOfStitches, nColors;
     int postitiveXHoopSize, postitiveYHoopSize, negativeXHoopSize, negativeYHoopSize, attributeOffset, xOffset, yOffset;
     unsigned char* attributeData = 0;
     unsigned char* attributeDataDecompressed = 0;
@@ -6159,7 +6159,7 @@ static char readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     magicCode = binaryReadInt32(file);
     numberOfStitches = binaryReadInt32(file);
-    numberOfColors = binaryReadInt32(file);
+    nColors = binaryReadInt32(file);
 
     postitiveXHoopSize = binaryReadInt16(file);
     postitiveYHoopSize = binaryReadInt16(file);
@@ -6178,7 +6178,7 @@ static char readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryReadBytes(file, stringVal, 8); /* TODO: check return value */
 
     binaryReadInt16(file);
-    for (i = 0; i < numberOfColors; i++) {
+    for (i = 0; i < nColors; i++) {
         int pos = binaryReadInt16(file);
         embPattern_addThread(pattern, husThreads[pos]);
     }
@@ -6380,15 +6380,15 @@ static char writeInb(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static char readInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    int numberOfColors, i;
+    int nColors, i;
 
     embFile_seek(file, 12L, SEEK_SET);
-    numberOfColors = binaryReadUInt32BE(file);
+    nColors = binaryReadUInt32BE(file);
 
     embArray_free(pattern->threads);
     pattern->threads = embArray_create(EMB_THREAD);
 
-    for (i = 0; i < numberOfColors; i++) {
+    for (i = 0; i < nColors; i++) {
         char colorType[50];
         char colorDescription[50];
         EmbThread t;
@@ -6496,7 +6496,7 @@ struct hoop_padding {
 
 static char readJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    int stitchOffset, formatFlags, numberOfColors, numberOfStitchs;
+    int stitchOffset, formatFlags, nColors, numberOfStitchs;
     int hoopSize, i;
     struct hoop_padding bounds, rectFrom110x110, rectFrom50x50, rectFrom200x140, rect_from_custom;
     int stitchCount;
@@ -6510,7 +6510,7 @@ static char readJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     binaryReadBytes(file, (unsigned char*)date, 8); /* TODO: check return value */
     binaryReadBytes(file, (unsigned char*)time, 8); /* TODO: check return value */
-    numberOfColors = binaryReadInt32(file);
+    nColors = binaryReadInt32(file);
     numberOfStitchs = binaryReadInt32(file);
     hoopSize = binaryReadInt32(file);
     jefSetHoopFromId(pattern, hoopSize);
@@ -6540,7 +6540,7 @@ static char readJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
     rect_from_custom.right = binaryReadInt32(file);
     rect_from_custom.bottom = binaryReadInt32(file);
 
-    for (i = 0; i < numberOfColors; i++) {
+    for (i = 0; i < nColors; i++) {
         embPattern_addThread(pattern, jefThreads[binaryReadInt32(file) % 79]);
     }
     embFile_seek(file, stitchOffset, SEEK_SET);
@@ -7017,7 +7017,7 @@ static void ofmReadColorChange(EmbFile* file, EmbPattern* pattern)
 
 static void ofmReadThreads(EmbFile* file, EmbPattern* p)
 {
-    int i, numberOfColors, stringLen, numberOfLibraries;
+    int i, nColors, stringLen, numberOfLibraries;
     char* primaryLibraryName = 0;
     char* expandedString = 0;
 
@@ -7026,7 +7026,7 @@ static void ofmReadThreads(EmbFile* file, EmbPattern* p)
      */
     embFile_read(embBuffer, 1, 4, file);
 
-    numberOfColors = binaryReadInt16(file);
+    nColors = binaryReadInt16(file);
     embFile_read(embBuffer, 1, 2, file);
     stringLen = binaryReadInt16(file);
     expandedString = (char*)malloc(stringLen);
@@ -7035,7 +7035,7 @@ static void ofmReadThreads(EmbFile* file, EmbPattern* p)
         return;
     }
     binaryReadBytes(file, (unsigned char*)expandedString, stringLen); /* TODO: check return value */
-    for (i = 0; i < numberOfColors; i++) {
+    for (i = 0; i < nColors; i++) {
         EmbThread thread;
         char colorNumberText[10];
         int threadLibrary = 0, colorNameLength, colorNumber;
@@ -7862,6 +7862,24 @@ static char readPes(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
+const char *pesVersionTable[9] = {
+    "#PES0100",
+    "#PES0090",
+    "#PES0080",
+    "#PES0070",
+    "#PES0060",
+    "#PES0056",
+    "#PES0055",
+    "#PES0050",
+    "#PES0040",
+    "#PES0030",
+    "#PES0022",
+    "#PES0020",
+    "#PES0001",
+    "#PEC0001",
+    0
+};
+
 /*
 static void readPESHeader(EmbFile* file, EmbPattern* pattern)
 {
@@ -7903,258 +7921,258 @@ static void readPESHeader(EmbFile* file, EmbPattern* pattern)
 
 static void readPESHeaderDefault()
 {
-    int pecStart = readInt32LE();
+    int pecStart = binaryReadInt32();
     skip(pecStart - readPosition);
 }
 
 static void readDescriptions()
 {
-    int DesignStringLength = readInt8();
+    int DesignStringLength = binaryReadByte();
     String DesignName = readString(DesignStringLength);
     pattern.setName(DesignName);
-    int categoryStringLength = readInt8();
+    int categoryStringLength = binaryReadByte();
     String Category = readString(categoryStringLength);
     pattern.setCategory(Category);
-    int authorStringLength = readInt8();
+    int authorStringLength = binaryReadByte();
     String Author = readString(authorStringLength);
     pattern.setAuthor(Author);
-    int keywordsStringLength = readInt8();
+    int keywordsStringLength = binaryReadByte();
     String keywords = readString(keywordsStringLength);
     pattern.setKeywords(keywords);
-    int commentsStringLength = readInt8();
+    int commentsStringLength = binaryReadByte();
     String Comments = readString(commentsStringLength);
     pattern.setComments(Comments);
 }
 
 static void readPESHeaderV4()
 {
-    int pecStart = readInt32LE();
-    skip(4);
+    int pecStart = binaryReadInt32();
+    embFile_seek(file, 4, SEEK_CUR);
     readDescriptions();
     skip(pecStart - readPosition);
 }
 
     static void readPESHeaderV5()  {
-        int pecStart = readInt32LE();
-        skip(4);
+        int pecStart = binaryReadInt32();
+        embFile_seek(file, 4, SEEK_CUR);
         readDescriptions();
-        skip(24);//36 v6
-        int fromImageStringLength = readInt8();
+        embFile_seek(file, 24, SEEK_CUR);//36 v6
+        int fromImageStringLength = binaryReadByte();
         skip(fromImageStringLength);
-        skip(24);
-        int numberOfProgrammableFillPatterns = readInt16LE();
-        if (numberOfProgrammableFillPatterns != 0) {
-            seek(pecStart);
+        embFile_seek(file, 24, SEEK_CUR);
+        int nProgrammableFills = binaryReadInt16();
+        if (nProgrammableFills != 0) {
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int numberOfMotifPatterns = readInt16LE();
-        if (numberOfMotifPatterns != 0) {
-            seek(pecStart);
+        int nMotifs = binaryReadInt16();
+        if (nMotifs != 0) {
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int featherPatternCount = readInt16LE();
+        int featherPatternCount = binaryReadInt16();
         if (featherPatternCount != 0) {
-            seek(pecStart);
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int numberOfColors = readInt16LE();
-        for (int i = 0; i < numberOfColors; i++) {
+        int nColors = binaryReadInt16();
+        for (int i = 0; i < nColors; i++) {
             readThread();
         }
-        seek(pecStart);
+        embFile_seek(file, pecStart, SEEK_SET);
     }
 
     static void readPESHeaderV6()  {
-        int pecStart = readInt32LE();
-        skip(4);
+        int pecStart = binaryReadInt32();
+        embFile_seek(file, 4, SEEK_CUR);
         readDescriptions();
-        skip(36);
-        int fromImageStringLength = readInt8();
+        embFile_seek(file, 36, SEEK_CUR);
+        int fromImageStringLength = binaryReadByte();
         String fromImageString = readString(fromImageStringLength);
         if (fromImageString.length() != 0) {
             pattern.setMetadata("image_file", fromImageString);
         }
-        skip(24);
-        int numberOfProgrammableFillPatterns = readInt16LE();
-        if (numberOfProgrammableFillPatterns != 0) {
-            seek(pecStart);
+        embFile_seek(file, 24, SEEK_CUR);
+        int nProgrammableFills = binaryReadInt16();
+        if (nProgrammableFills != 0) {
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int numberOfMotifPatterns = readInt16LE();
-        if (numberOfMotifPatterns != 0) {
-            seek(pecStart);
+        int nMotifs = binaryReadInt16();
+        if (nMotifs != 0) {
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int featherPatternCount = readInt16LE();
+        int featherPatternCount = binaryReadInt16();
         if (featherPatternCount != 0) {
-            seek(pecStart);
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int numberOfColors = readInt16LE();
-        for (int i = 0; i < numberOfColors; i++) {
+        int nColors = binaryReadInt16();
+        for (int i = 0; i < nColors; i++) {
             readThread();
         }
-        seek(pecStart);
+        embFile_seek(file, pecStart, SEEK_SET);
     }
     
     static void readPESHeaderV7()  {
-        int pecStart = readInt32LE();
-        skip(4);
+        int pecStart = binaryReadInt32();
+        embFile_seek(file, 4, SEEK_CUR);
         readDescriptions();
-        skip(36);
-        int fromImageStringLength = readInt8();
+        embFile_seek(file, 36, SEEK_CUR);
+        int fromImageStringLength = binaryReadByte();
         String fromImageString = readString(fromImageStringLength);
         if (fromImageString.length() != 0) {
             pattern.setMetadata("image_file", fromImageString);
         }
-        skip(24);
-        int numberOfProgrammableFillPatterns = readInt16LE();
-        if (numberOfProgrammableFillPatterns != 0) {
-            seek(pecStart);
+        embFile_seek(file, 24, SEEK_CUR);
+        int nProgrammableFills = binaryReadInt16();
+        if (nProgrammableFills != 0) {
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int numberOfMotifPatterns = readInt16LE();
-        if (numberOfMotifPatterns != 0) {
-            seek(pecStart);
+        int nMotifs = binaryReadInt16();
+        if (nMotifs != 0) {
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int featherPatternCount = readInt16LE();
+        int featherPatternCount = binaryReadInt16();
         if (featherPatternCount != 0) {
-            seek(pecStart);
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int numberOfColors = readInt16LE();
-        for (int i = 0; i < numberOfColors; i++) {
+        int nColors = binaryReadInt16();
+        for (int i = 0; i < nColors; i++) {
             readThread();
         }
-        seek(pecStart);
+        embFile_seek(file, pecStart, SEEK_SET);
     }
     
     static void readPESHeaderV8()  {
-        int pecStart = readInt32LE();
-        skip(4);
+        int pecStart = binaryReadInt32();
+        embFile_seek(file, 4, SEEK_CUR);
         readDescriptions();
-        skip(38);
-        int fromImageStringLength = readInt8();
+        embFile_seek(file, 38, SEEK_CUR);
+        int fromImageStringLength = binaryReadByte();
         String fromImageString = readString(fromImageStringLength);
         if (fromImageString.length() != 0) {
             pattern.setMetadata("image_file", fromImageString);
         }
         skip(26);
-        int numberOfProgrammableFillPatterns = readInt16LE();
-        if (numberOfProgrammableFillPatterns != 0) {
-            seek(pecStart);
+        int nProgrammableFills = binaryReadInt16();
+        if (nProgrammableFills != 0) {
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int numberOfMotifPatterns = readInt16LE();
-        if (numberOfMotifPatterns != 0) {
-            seek(pecStart);
+        int nMotifs = binaryReadInt16();
+        if (nMotifs != 0) {
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int featherPatternCount = readInt16LE();
+        int featherPatternCount = binaryReadInt16();
         if (featherPatternCount != 0) {
-            seek(pecStart);
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int numberOfColors = readInt16LE();
-        for (int i = 0; i < numberOfColors; i++) {
+        int nColors = binaryReadInt16();
+        for (int i = 0; i < nColors; i++) {
             readThread();
         }
-        seek(pecStart);
+        embFile_seek(file, pecStart, SEEK_SET);
     }
 
     static void readPESHeaderV9()  {
-        int pecStart = readInt32LE();
-        skip(4);
+        int pecStart = binaryReadInt32();
+        embFile_seek(file, 4, SEEK_CUR);
         readDescriptions();
         skip(14);
-        int hoopNameStringLength = readInt8();
+        int hoopNameStringLength = binaryReadByte();
         String hoopNameString = readString(hoopNameStringLength);
         if (hoopNameString.length() != 0) {
             pattern.setMetadata("hoop_name", hoopNameString);
         }
         skip(30);
-        int fromImageStringLength = readInt8();
+        int fromImageStringLength = binaryReadByte();
         String fromImageString = readString(fromImageStringLength);
         if (fromImageString.length() != 0) {
             pattern.setMetadata("image_file", fromImageString);
         }
         skip(34);
-        int numberOfProgrammableFillPatterns = readInt16LE();
-        if (numberOfProgrammableFillPatterns != 0) {
-            seek(pecStart);
+        int nProgrammableFills = binaryReadInt16();
+        if (nProgrammableFills != 0) {
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int numberOfMotifPatterns = readInt16LE();
-        if (numberOfMotifPatterns != 0) {
-            seek(pecStart);
+        int nMotifs = binaryReadInt16();
+        if (nMotifs != 0) {
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int featherPatternCount = readInt16LE();
+        int featherPatternCount = binaryReadInt16();
         if (featherPatternCount != 0) {
-            seek(pecStart);
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int numberOfColors = readInt16LE();
-        for (int i = 0; i < numberOfColors; i++) {
+        int nColors = binaryReadInt16();
+        for (int i = 0; i < nColors; i++) {
             readThread();
         }
-        seek(pecStart);
+        embFile_seek(file, pecStart, SEEK_SET);
     }
 
     static void readPESHeaderV10()  {
-        int pecStart = readInt32LE();
-        skip(4);
+        int pecStart = binaryReadInt32();
+        embFile_seek(file, 4, SEEK_CUR);
         readDescriptions();
         skip(14);
-        int hoopNameStringLength = readInt8();
+        int hoopNameStringLength = binaryReadByte();
         String hoopNameString = readString(hoopNameStringLength);
         if (hoopNameString.length() != 0) {
             pattern.setMetadata("hoop_name", hoopNameString);
         }
-        skip(38);
-        int fromImageStringLength = readInt8();
+        embFile_seek(file, 38, SEEK_CUR);
+        int fromImageStringLength = binaryReadByte();
         String fromImageString = readString(fromImageStringLength);
         if (fromImageString.length() != 0) {
             pattern.setMetadata("image_file", fromImageString);
         }
         skip(34);
-        int numberOfProgrammableFillPatterns = readInt16LE();
-        if (numberOfProgrammableFillPatterns != 0) {
-            seek(pecStart);
+        int nProgrammableFills = binaryReadInt16();
+        if (nProgrammableFills != 0) {
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int numberOfMotifPatterns = readInt16LE();
-        if (numberOfMotifPatterns != 0) {
-            seek(pecStart);
+        int nMotifs = binaryReadInt16();
+        if (nMotifs != 0) {
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int featherPatternCount = readInt16LE();
+        int featherPatternCount = binaryReadInt16();
         if (featherPatternCount != 0) {
-            seek(pecStart);
+            embFile_seek(file, pecStart, SEEK_SET);
             return;
         }
-        int numberOfColors = readInt16LE();
-        for (int i = 0; i < numberOfColors; i++) {
+        int nColors = binaryReadInt16();
+        for (int i = 0; i < nColors; i++) {
             readThread();
         }
-        seek(pecStart);
+        embFile_seek(file, pecStart, SEEK_SET);
     }
     
     static void readThread() {
-        int color_code_length = readInt8();
+        int color_code_length = binaryReadByte();
         String color_code = readString(color_code_length);
-        int red = readInt8();
-        int green = readInt8();
-        int blue = readInt8();
+        int red = binaryReadByte();
+        int green = binaryReadByte();
+        int blue = binaryReadByte();
         skip(5);
-        int descriptionStringLength = readInt8();
+        int descriptionStringLength = binaryReadByte();
         String description = readString(descriptionStringLength);
 
-        int brandStringLength = readInt8();
+        int brandStringLength = binaryReadByte();
         String brand = readString(brandStringLength);
 
-        int threadChartStringLength = readInt8();
+        int threadChartStringLength = binaryReadByte();
         String threadChart = readString(threadChartStringLength);
 
         int color = (red & 0xFF) << 16 | (green & 0xFF) << 8 | (blue & 0xFF);
@@ -8506,16 +8524,16 @@ static char sewDecode(unsigned char inputByte)
 
 static char readSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    int i, flags, numberOfColors, fileLength;
+    int i, flags, nColors, fileLength;
     char dx, dy, thisStitchIsJump = 0;
 
     embFile_seek(file, 0x00, SEEK_END);
     fileLength = embFile_tell(file);
     embFile_seek(file, 0x00, SEEK_SET);
-    numberOfColors = binaryReadByte(file);
-    numberOfColors += (binaryReadByte(file) << 8);
+    nColors = binaryReadByte(file);
+    nColors += (binaryReadByte(file) << 8);
 
-    for (i = 0; i < numberOfColors; i++) {
+    for (i = 0; i < nColors; i++) {
         embPattern_addThread(pattern, jefThreads[binaryReadInt16(file)]);
     }
     embFile_seek(file, 0x1D78, SEEK_SET);
@@ -8646,7 +8664,7 @@ static char readShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     char halfDesignWidth, halfDesignHeight, halfDesignWidth2, halfDesignHeight2;
     char* headerText = "Embroidery disk created using software licensed from Viking Sewing Machines AB, Sweden";
     char dx = 0, dy = 0;
-    char numberOfColors;
+    char nColors;
     unsigned short magicCode;
     int something;
     short left, top, right, bottom;
@@ -8670,7 +8688,7 @@ static char readShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     } else {
         embFile_seek(file, (designHeight * designWidth) / 2, SEEK_CUR);
     }
-    numberOfColors = binaryReadUInt8(file);
+    nColors = binaryReadUInt8(file);
     magicCode = binaryReadUInt16(file);
     binaryReadByte(file);
     something = binaryReadInt32(file);
@@ -8683,7 +8701,7 @@ static char readShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     numberOfSections = binaryReadUInt8(file);
     something3 = binaryReadByte(file);
 
-    for (i = 0; i < numberOfColors; i++) {
+    for (i = 0; i < nColors; i++) {
         unsigned int stitchCount, colorNumber;
         stitchCount = binaryReadUInt32BE(file);
         colorNumber = binaryReadUInt8(file);
@@ -9828,7 +9846,7 @@ static unsigned char* vipDecompressData(unsigned char* input, int compressedInpu
 typedef struct VipHeader_ {
     int magicCode;
     int numberOfStitches;
-    int numberOfColors;
+    int nColors;
     short postitiveXHoopSize;
     short postitiveYHoopSize;
     short negativeXHoopSize;
@@ -9855,7 +9873,7 @@ static char readVip(EmbPattern* pattern, EmbFile* file, const char* fileName)
     embFile_seek(file, 0x00, SEEK_SET);
     header.magicCode = binaryReadInt32(file);
     header.numberOfStitches = binaryReadInt32(file);
-    header.numberOfColors = binaryReadInt32(file);
+    header.nColors = binaryReadInt32(file);
 
     header.postitiveXHoopSize = binaryReadInt16(file);
     header.postitiveYHoopSize = binaryReadInt16(file);
@@ -9875,18 +9893,18 @@ static char readVip(EmbPattern* pattern, EmbFile* file, const char* fileName)
     header.unknown = binaryReadInt16(file);
 
     header.colorLength = binaryReadInt32(file);
-    decodedColors = (unsigned char*)malloc(header.numberOfColors * 4);
+    decodedColors = (unsigned char*)malloc(header.nColors * 4);
     if (!decodedColors) {
         embLog("ERROR: format-vip.c readVip(), cannot allocate memory for decodedColors\n");
         return 0;
     }
-    for (i = 0; i < header.numberOfColors * 4; ++i) {
+    for (i = 0; i < header.nColors * 4; ++i) {
         unsigned char inputByte = binaryReadByte(file);
         unsigned char tmpByte = (unsigned char)(inputByte ^ vipDecodingTable[i]);
         decodedColors[i] = (unsigned char)(tmpByte ^ prevByte);
         prevByte = inputByte;
     }
-    for (i = 0; i < header.numberOfColors; i++) {
+    for (i = 0; i < header.nColors; i++) {
         EmbThread thread;
         int startIndex = i << 2;
         thread.color.r = decodedColors[startIndex];
@@ -10127,7 +10145,7 @@ typedef struct _vp3Hoop {
     int top;
     int threadLength;
     char unknown2;
-    unsigned char numberOfColors;
+    unsigned char nColors;
     unsigned short unknown3;
     int unknown4;
     int numberOfBytesRemaining;
@@ -10169,7 +10187,7 @@ static vp3Hoop vp3ReadHoopSection(EmbFile* file)
 
     hoop.threadLength = binaryReadInt32(file); /* yes, it seems this is _not_ big endian */
     hoop.unknown2 = binaryReadByte(file);
-    hoop.numberOfColors = binaryReadByte(file);
+    hoop.nColors = binaryReadByte(file);
     hoop.unknown3 = binaryReadInt16BE(file);
     hoop.unknown4 = binaryReadInt32BE(file);
     hoop.numberOfBytesRemaining = binaryReadInt32BE(file);
@@ -10200,7 +10218,7 @@ static char readVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
     unsigned char v1;
     /* unsigned char v2, ..., v18; */
     unsigned char* anotherSoftwareVendorString = 0;
-    int numberOfColors;
+    int nColors;
     long colorSectionOffset;
     unsigned char magicCode[6];
     short someShort;
@@ -10234,11 +10252,11 @@ static char readVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     anotherSoftwareVendorString = vp3ReadString(file);
 
-    numberOfColors = binaryReadInt16BE(file);
-    embLog("ERROR: format-vp3.c Number of Colors: %d\n" /*, numberOfColors */);
+    nColors = binaryReadInt16BE(file);
+    embLog("ERROR: format-vp3.c Number of Colors: %d\n" /*, nColors */);
     colorSectionOffset = (int)embFile_tell(file);
 
-    for (i = 0; i < numberOfColors; i++) {
+    for (i = 0; i < nColors; i++) {
         EmbThread t;
         char tableSize;
         int startX, startY, offsetToNextColorX, offsetToNextColorY;
@@ -10302,7 +10320,7 @@ static char readVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
                 return 0;
             }
         }
-        if (i + 1 < numberOfColors)
+        if (i + 1 < nColors)
             embPattern_addStitchRel(pattern, 0, 0, STOP, 1);
     }
 
@@ -10336,10 +10354,10 @@ static char writeVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
     EmbRect bounds;
     EmbStitch st;
     int remainingBytesPos, remainingBytesPos2, colorSectionStitchBytes,
-        first, i, numberOfColors, flag;
+        first, i, nColors, flag;
     EmbColor newColor, color = { 0xFE, 0xFE, 0xFE };
     first = 1;
-    numberOfColors = 0;
+    nColors = 0;
 
     bounds = embPattern_calcBoundingBox(pattern);
 
@@ -10364,7 +10382,7 @@ static char writeVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryWriteInt(file, 0); /* this would be some (unknown) function of thread length */
     binaryWriteByte(file, 0);
 
-    numberOfColors = 0;
+    nColors = 0;
 
     for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
@@ -10373,12 +10391,12 @@ static char writeVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
         flag = st.flags;
         newColor = pattern->threads->thread[st.color].color;
         if (newColor.r != color.r || newColor.g != color.g || newColor.b != color.b) {
-            numberOfColors++;
+            nColors++;
             color.r = newColor.r;
             color.g = newColor.g;
             color.b = newColor.b;
         } else if (flag & END || flag & STOP) {
-            numberOfColors++;
+            nColors++;
         }
 
         while (flag == pattern->stitchList->stitch[i].flags) {
@@ -10387,7 +10405,7 @@ static char writeVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
         /* mainPointer = pointer; */
     }
 
-    binaryWriteByte(file, numberOfColors);
+    binaryWriteByte(file, nColors);
     binaryWriteByte(file, 12);
     binaryWriteByte(file, 0);
     binaryWriteByte(file, 1);
@@ -10421,7 +10439,7 @@ static char writeVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     binaryWriteBytes(file, "xxPP\x01\0", 6);
     vp3WriteString(file, "");
-    binaryWriteShortBE(file, numberOfColors);
+    binaryWriteShortBE(file, nColors);
 
     for (i = 0; i < pattern->stitchList->count; i++) {
         char colorName[8] = { 0 };
@@ -10545,19 +10563,19 @@ static char readXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
     unsigned char b[4];
     unsigned char b0, b1;
     int dx = 0, dy = 0;
-    int flags, numberOfColors, paletteOffset, i;
+    int flags, nColors, paletteOffset, i;
     char endOfStream = 0;
     char thisStitchJump = 0;
     EmbThread thread;
     EmbStitch st;
 
     embFile_seek(file, 0x27, SEEK_SET);
-    numberOfColors = binaryReadInt16(file);
+    nColors = binaryReadInt16(file);
     embFile_seek(file, 0xFC, SEEK_SET);
     paletteOffset = binaryReadInt32(file);
     embFile_seek(file, paletteOffset + 6, SEEK_SET);
 
-    for (i = 0; i < numberOfColors; i++) {
+    for (i = 0; i < nColors; i++) {
         embFile_read(b, 1, 4, file);
         thread.color = embColor_fromStr(b);
         embPattern_addThread(pattern, thread);

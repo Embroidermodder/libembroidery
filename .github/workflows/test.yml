@@ -46,16 +46,16 @@ jobs:
     steps:
     - name: Set up NASM
       uses: ilammy/setup-nasm@v1.2.0
-    - name: Run test script on Windows.
-      run: |
-        git clone https://github.com/Embroidermodder/libembroidery
-        cd libembroidery
-        mkdir build
-        cd build
-        cmake -DCMAKE_BUILD_TYPE=Debug ..
-        cmake --build .
-        # Need to fix the executable name?
-        # embroider.exe -test
+    #- name: Run test script on Windows.
+    #  run: |
+    #    git clone https://github.com/Embroidermodder/libembroidery
+    #    cd libembroidery
+    #    mkdir build
+    #    cd build
+    #    cmake -DCMAKE_BUILD_TYPE=Debug ..
+    #    cmake --build .
+    #    # Need to fix the executable name?
+    #    # embroider.exe -test
 
   analyze:
     name: Analyze

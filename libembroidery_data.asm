@@ -5781,7 +5781,6 @@ brand_codes:
 	dd	svg_color_codes			; 23
 
 
-%if 0
 ; Based on the DraftSight color table
 dxf_color_table:
 	db	0, 0, 0		; BYBLOCK
@@ -6044,6 +6043,7 @@ dxf_color_table:
 
 husThreadCount:	db	29
 
+%if 0
 ; TODO: HUS catalog numbers
 hus_thread_table:
 	thread	"Black", 0, 0, 0, 0
@@ -6060,19 +6060,19 @@ hus_thread_table:
 	thread	"Brown", 153, 75, 0, 11
 	thread	"White", 255, 255, 255, 12
 	thread	"Dark Blue", 0, 0, 127, 13
-;	thread2	{ 0, 127, 0, "Dark Green", 14
-;	thread2	{ 127, 0, 0, "Dark Red", 15
-;	thread2	{ 255, 127, 127, "Light Red", 16
-;	thread	127, 0, 127, "Dark Purple", 17
-;	thread	255, 127, 255, "Light Purple", 18
-;	thread	200, 200, 0, "Dark Yellow", 19
-;	thread	255, 255, 153, "Light Yellow", 20
-;	thread	60, 60, 60, "Dark Gray", 21
-;	thread	192, 192, 192, "Light Gray", 22
-;	thread	232, 63, 0, "Dark Orange", 23
-;	thread	255, 165, 65, "Light Orange", 24
-;	thread	255, 102, 122, "Dark Pink", 25
-;	thread	{ 255, 204, 204, "Light Pink", 26
+	thread	"Dark Green", 0, 127, 0, 14
+	thread	"Dark Red", 127, 0, 0, 15
+	thread	{ 255, 127, 127, "Light Red", 16
+	thread	127, 0, 127, "Dark Purple", 17
+	thread	255, 127, 255, "Light Purple", 18
+	thread	200, 200, 0, "Dark Yellow", 19
+	thread	255, 255, 153, "Light Yellow", 20
+	thread	60, 60, 60, "Dark Gray", 21
+	thread	192, 192, 192, "Light Gray", 22
+	thread	232, 63, 0, "Dark Orange", 23
+	thread	255, 165, 65, "Light Orange", 24
+	thread	255, 102, 122, "Dark Pink", 25
+	thread	{ 255, 204, 204, "Light Pink", 26
 	thread	"Dark Brown", 115, 40, 0, 27
 	thread	"Light Brown", 175, 90, 10, 28
 
@@ -6082,13 +6082,13 @@ jef_thread_table:
 	thread	"Black", 0, 0, 0, 1
 	thread	"White", 255, 255, 255, 2
 	thread	"Yellow", 255, 255, 23, 3
-;	thread	{ 250, 160, 96, "Orange", 0
-;	thread	{ 92, 118, 73, "Olive Green", 0
-;	thread	{ 64, 192, 48, "Green", 0
-;;	thread	{ 101, 194, 200, "Sky", 0
-;	thread	{ 172, 128, 190, "Purple", 0
-;	thread	{ 245, 188, 203, "Pink", 0
-;	thread	{ 255, 0, 0, "Red", 0
+	thread	{ 250, 160, 96, "Orange", 0
+	thread	{ 92, 118, 73, "Olive Green", 0
+	thread	{ 64, 192, 48, "Green", 0
+	thread	{ 101, 194, 200, "Sky", 0
+	thread	{ 172, 128, 190, "Purple", 0
+	thread	{ 245, 188, 203, "Pink", 0
+	thread	{ 255, 0, 0, "Red", 0
 ;	thread	{ 192, 128, 0, "Brown", 0
 ;	thread	{ 0, 0, 240, "Blue", 0
 ;	thread	{ 228, 195, 93, "Gold", 0
@@ -6106,39 +6106,22 @@ jef_thread_table:
 ;	thread	{ 152, 214, 189, "Pale Aqua", 0
 ;	thread	{ 184, 240, 240, "Baby Blue", 0
 ;	thread	{ 54, 139, 160, "Powder Blue", 0
-;	dd	""
 ;	thread	{ 79, 131, 171, "Bright Blue", 0
-;	dd	""
 ;	thread	{ 56, 106, 145, "Slate Blue", 0
-;	dd	""
 ;	thread	{ 0, 32, 107, "Nave Blue", 0
-;	dd	""
 ;	thread	{ 229, 197, 202, "Salmon Pink", 0
-;	dd	""
 ;	thread	{ 249, 103, 107, "Coral", 0
-;	dd	""
 ;	thread	{ 227, 49, 31, "Burnt Orange", 0
-;	dd	""
 ;	thread	{ 226, 161, 136, "Cinnamon", 0
-;	dd	""
 ;	thread	{ 181, 148, 116, "Umber", 0
-;	dd	""
 ;	thread	{ 228, 207, 153, "Blonde", 0
-;	dd	""
 ;	thread	{ 225, 203, 0, "Sunflower", 0
-;	dd	""
 ;	thread	{ 225, 173, 212, "Orchid Pink", 0
-;	dd	""
 ;	thread	{ 195, 0, 126, "Peony Purple", 0
-;	dd	""
 ;	thread	{ 128, 0, 75, "Burgundy", 0
-;	dd	""
 ;	thread	{ 160, 96, 176, "Royal Purple", 0
-;	dd	""
 ;;	thread	{ 192, 64, 32, "Cardinal Red", 0
-;	dd	""
 ;	thread	{ 202, 224, 192, "Opal Green", 0
-;	dd	""
 ;	thread	{ 137, 152, 86, "Moss Green", 0
 ;	dd	""
 ;	thread	{ 0, 170, 0, "Meadow Green", 0
@@ -6211,22 +6194,22 @@ pcmThreadCount
 	dd	65
 
 pcmThreads:
-	thread	"PCM Color 1", 0x00, 0x00, 0x00, 0
-	thread	"PCM Color 2", 0x00, 0x00, 0x80, 0
-	thread	"PCM Color 3", 0x00, 0x00, 0xFF, 0
-	thread	"PCM Color 4", 0x00, 0x80, 0x80, 0
-	thread	"PCM Color 5", 0x00, 0xFF, 0xFF, 0
-	thread	"PCM Color 6", 0x80, 0x00, 0x80, 0
-;	thread	{ 0xFF, 0x00, 0xFF, "PCM Color 7", 0
-;	thread	{ 0x80, 0x00, 0x00, "PCM Color 8", 0
-;	thread	{ 0xFF, 0x00, 0x00, "PCM Color 9", 0
-;	thread	{ 0x00, 0x80, 0x00, "PCM Color 10", 0
-;	thread	{ 0x00, 0xFF, 0x00, "PCM Color 11", 0
-;	thread	{ 0x80, 0x80, 0x00, "PCM Color 12", 0
-;	thread	{ 0xFF, 0xFF, 0x00, "PCM Color 13", 0
-;	thread	{ 0x80, 0x80, 0x80, "PCM Color 14", 0
-;	thread	{ 0xC0, 0xC0, 0xC0, "PCM Color 15", 0
-;	thread	{ 0xFF, 0xFF, 0xFF, "PCM Color 16", 0
+	thread	"PCM Color 1", 0x00, 0x00, 0x00, 1
+	thread	"PCM Color 2", 0x00, 0x00, 0x80, 2
+	thread	"PCM Color 3", 0x00, 0x00, 0xFF, 3
+	thread	"PCM Color 4", 0x00, 0x80, 0x80, 4
+	thread	"PCM Color 5", 0x00, 0xFF, 0xFF, 5
+	thread	"PCM Color 6", 0x80, 0x00, 0x80, 6
+;	thread	"PCM Color 7", 0xFF, 0x00, 0xFF, 7
+;	thread	"PCM Color 8", 0x80, 0x00, 0x00, 8
+;	thread	"PCM Color 9", 0xFF, 0x00, 0x00, 9
+;	thread	{ 0x00, 0x80, 0x00, "PCM Color 10", 10
+;	thread	{ 0x00, 0xFF, 0x00, "PCM Color 11", 11
+;	thread	{ 0x80, 0x80, 0x00, "PCM Color 12", 12
+;	thread	{ 0xFF, 0xFF, 0x00, "PCM Color 13", 13
+;	thread	{ 0x80, 0x80, 0x80, "PCM Color 14", 14
+;	thread	{ 0xC0, 0xC0, 0xC0, "PCM Color 15", 15
+;	thread	{ 0xFF, 0xFF, 0xFF, "PCM Color 16", 16
 
 
 ;static const int pecThreadCount = 65;

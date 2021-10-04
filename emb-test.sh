@@ -7,6 +7,9 @@
 # This matches the GitHub Action we have set up.
 
 function build_libembroidery () {
+nasm -f bin -l libembroidery_data.lst -o libembroidery_data.bin \
+	libembroidery_data.asm
+
 rm -fr build
 mkdir build
 cd build

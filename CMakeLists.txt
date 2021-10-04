@@ -16,7 +16,8 @@ add_library(embroidery_static STATIC libembroidery.c)
 add_library(embroidery SHARED libembroidery.c)
 
 add_custom_command(OUTPUT libembroidery_data.bin
-                   COMMAND  nasm -f bin -o libembroidery_data.bin -l libembroidery_data.lst ${CMAKE_CURRENT_SOURCE_DIR}/libembroidery_data.asm
+                   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/libembroidery_data.bin libembroidery_data.bin
+#  nasm -f bin -o libembroidery_data.bin -l libembroidery_data.lst ${CMAKE_CURRENT_SOURCE_DIR}/libembroidery_data.asm
 )
 add_custom_target(datafile
     DEPENDS libembroidery_data.bin

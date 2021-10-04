@@ -1,15 +1,3 @@
-/* This list is the index of the names list, allowing us to 
- * interpret that list without storing a pointer (8 bytes)
- * instead an unsigned short (2 bytes).
- *
- * After removing the alpha channel (1 byte), the remaining table will be
- * 2 + 3 + 2 = 7 bytes per entry as opposed to 8 + 4 + 4 = 16 bytes per entry.
- */
-#define EMB_LABEL_ALICE_BLUE     1
-#define EMB_LABEL_ANTIQUE_WHITE  2
-#define EMB_LABEL_BLUE           1
-
-
 /* path flag codes */
 #define LINETO                         0
 #define MOVETO                         1

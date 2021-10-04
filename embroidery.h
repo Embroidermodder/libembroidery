@@ -313,41 +313,12 @@ typedef struct EmbStitch_
     unsigned char color; /* color number for this stitch */ /* TODO: this should be called colorIndex since it is not an EmbColor */
 } EmbStitch;
 
-/**
- * Improving the size of the stored data for embedded systems.
- * 
- * Store thread colors as:
- *     "\xFF\xFF\xFF" "1001" "Pure White"
- *
- * Since the color is always three characters, it doesn't need to be
- * stored with a spacing character. No manufacturer code takes more than
- * 4 chars in the current set, so we can pad them all to 4 char.
- *
- * Then zero termination sorts out the variable length of the string.
- *
- * That means that we have a single string for each data.
- *
- * This requires reworking the embThread functions.
- *
- * It also removes the need for either struct.
- */
 typedef struct EmbThread_
 {
     EmbColor color;
     const char* description;
     const char* catalogNumber;
 } EmbThread;
-
-/**
- * TODO: this should be merged with the EmbThread.
- */
-typedef struct thread_color_ {
-    const char *name;
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    short manufacturer_code;
-} thread_color;
 
 typedef struct EmbHoop_
 {

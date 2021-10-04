@@ -20,13 +20,6 @@ function make_doc () {
 man -Tpdf ./doc/embroider.1 >./doc/embroider.pdf
 }
 
-function assembly_experiment () {
-nasm -f bin -o libembroidery_data.bin -l libembroidery_data.lst libembroidery_data.asm
-gcc test.c
-./a.out
-du -b libembroidery_data.bin a.out
-}
-
 function embedded_compatibility_report () {
 echo "SYMBOL USAGE" > embedded.txt
 for s in `nm -j build/embroider`
@@ -43,7 +36,6 @@ strip build/libembroidery_static.a
 du -h build/libembroidery_static.a >> embedded.txt
 }
 
-#build_libembroidery
+build_libembroidery
 #embedded_compatibility_report
-assembly_experiment
 

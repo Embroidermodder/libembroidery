@@ -216,6 +216,8 @@ int main(int argc, const char* argv[])
         return 0;
     }
 
+    init_embroidery();
+
     flags = argc - 1;
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-help") || !strcmp(argv[i], "-h")) {
@@ -242,6 +244,7 @@ int main(int argc, const char* argv[])
         convert(argv[1], argv[2]);
     }
 
+    close_embroidery();
     return 0;
 }
 

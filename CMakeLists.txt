@@ -8,28 +8,25 @@ set(CMAKE_C_STANDARD 90)
 set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(LIBRARY_SOURCE_FILES libembroidery.c)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")
 
-add_library(embroidery_static STATIC
-    ${LIBRARY_SOURCE_FILES}
-)
+add_executable(embroider embroider-main.c)
+add_library(embroidery_static STATIC libembroidery.c)
+add_library(embroidery SHARED libembroidery.c)
 
 add_custom_command(OUTPUT libembroidery_data.bin
                    COMMAND  nasm -f bin -o libembroidery_data.bin -l libembroidery_data.lst ${CMAKE_CURRENT_SOURCE_DIR}/libembroidery_data.asm
 )
-add_executable(testdata test.c)
 add_custom_target(datafile
-                  DEPENDS libembroidery_data.bin)
-add_dependencies(testdata datafile)
+    DEPENDS libembroidery_data.bin
+)
+add_dependencies(embroider datafile)
+add_dependencies(embroidery datafile)
+add_dependencies(embroidery_static datafile)
 
 #compile SWIG if requested
 add_subdirectory(experimental)
-
-add_library(embroidery SHARED
-    ${LIBRARY_SOURCE_FILES}
-)
 
 target_include_directories(embroidery
     INTERFACE
@@ -45,10 +42,6 @@ target_include_directories(embroidery_static
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     PRIVATE
         include
-)
-
-add_executable(embroider
-    embroider-main.c
 )
 
 target_include_directories(embroider

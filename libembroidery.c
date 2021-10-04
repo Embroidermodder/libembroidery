@@ -84,6 +84,12 @@
  * that won't be called by users through embroidery.h.
  */
 
+static int svg_all_tokens_table[] = {0, 4};
+static EmbFile *datafile;
+static int dereference_int(int p);
+static int get_str(char *s, int p);
+static int string_table(int *table, char *s, int n);
+
 static EmbColor embColor_fromStr(unsigned char *b);
 static void embColor_toStr(EmbColor c, unsigned char *b);
 
@@ -12214,5 +12220,53 @@ const char* threadColorName(EmbColor color, int brand)
     }
 
     return "COLOR NOT FOUND";
+}
+
+static int dereference_int(int p)
+{
+    int out;
+    embFile_seek(datafile, p, SEEK_SET);
+    embFile_read(&out, 4, 1, datafile);
+    return out;
+}
+
+static int get_str(char *s, int p)
+{
+    int i;
+    char c;
+    embFile_seek(datafile, p, SEEK_SET);
+    c = 1;
+    for (i=0; c; i++) {
+        embFile_read(&c, 1, 1, datafile);
+        s[i] = c;
+    }
+}
+
+static int string_table(int *table, char *s, int n)
+{
+    int p;
+    if (n>=table[1]) {
+        puts("ERROR: this is outside of the scope of the table.");
+        return 0;
+    }
+    /* get the position of svg_all_tokens */
+    p = dereference_int(4*table[0]) + 4*n;
+    /* get the position of next token */
+    p = dereference_int(p);
+    /* read string out */
+    get_str(s, p);
+    return 1;
+}
+
+int init_embroidery(void)
+{
+    datafile = embFile_open("libembroidery_data.bin", "rb", 0);
+    return 0;
+}
+
+int close_embroidery(void)
+{
+    embFile_close(datafile);
+    return 0;
 }
 

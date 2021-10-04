@@ -1222,8 +1222,6 @@ char getArcDataFromBulge(float bulge, EmbArc* arc, EmbVector* arcCenter,
     return 1;
 }
 
-/* Computational Geometry for Circles */
-
 /****************************************************************
  * Calculates the intersection points of two overlapping circles.
  * Returns true if the circles intersect.
@@ -12172,17 +12170,31 @@ int embColor_equal(EmbColor a, EmbColor b)
     return (a.r == b.r) && (a.g == b.g) && (a.b == b.b);
 }
 
+static int brand_codes = 12;
+static int brand_codes_length = 24;
+static int brand_codes_lengths[] = {
+    10, 10, 10, 10, 10, 10,
+    10, 10, 10, 10, 10, 10,
+    10, 10, 10, 10, 10, 10,
+    10, 10, 10, 10, 100, 10
+};
+static int thread_type_length = 35;
+static int thread_color_offset = 30;
+static int thread_code = 33;
+
 int threadColor(EmbColor *c, const char* name, int brand)
 {
-    int i;
-    c->r = 0;
-    c->g = 0;
-    c->b = 0;
-    for (i = 0; brand_codes[brand][i].manufacturer_code >= 0; i++) {
-        if (!strcmp(brand_codes[brand][i].name, name)) {
-            c->r = brand_codes[brand][i].r;
-            c->g = brand_codes[brand][i].g;
-            c->b = brand_codes[brand][i].b;
+    int i, out;
+    out = dereference_int(brand_codes);
+    out = dereference_int(out+brand*4);
+    embFile_seek(datafile, out, SEEK_SET);
+    *c = black;
+    embBuffer[0] = 0;
+
+    while (strcmp(embBuffer, "END")) {
+        embFile_read(embBuffer, 1, thread_type_length, datafile);
+        if (!strcmp(embBuffer, name)) {
+            *c = embColor_fromStr(embBuffer+thread_color_offset);
             return 1;
         }
     }
@@ -12192,14 +12204,19 @@ int threadColor(EmbColor *c, const char* name, int brand)
 
 int threadColorNum(EmbColor color, int brand)
 {
-    EmbColor c;
-    int i;
-    for (i = 0; brand_codes[brand][i].manufacturer_code >= 0; i++) {
-        c.r = brand_codes[brand][i].r;
-        c.g = brand_codes[brand][i].g;
-        c.b = brand_codes[brand][i].b;
+    int i, out;
+    out = dereference_int(brand_codes);
+    out = dereference_int(out+brand*4);
+    embFile_seek(datafile, out, SEEK_SET);
+
+    embBuffer[0] = 0;
+
+    while (strcmp(embBuffer, "END")) {
+        EmbColor c;
+        embFile_read(embBuffer, 1, thread_type_length, datafile);
+        c = embColor_fromStr(embBuffer+thread_color_offset);
         if (embColor_equal(c, color)) {
-            return brand_codes[brand][i].manufacturer_code;
+            return embBuffer[thread_code] + 256 * embBuffer[thread_code+1];
         }
     }
 
@@ -12208,14 +12225,19 @@ int threadColorNum(EmbColor color, int brand)
 
 const char* threadColorName(EmbColor color, int brand)
 {
-    int i;
-    for (i = 0; brand_codes[brand][i].manufacturer_code >= 0; i++) {
+    int i, out;
+    out = dereference_int(brand_codes);
+    out = dereference_int(out+brand*4);
+    embFile_seek(datafile, out, SEEK_SET);
+
+    embBuffer[0] = 0;
+
+    while (strcmp(embBuffer, "END")) {
         EmbColor c;
-        c.r = brand_codes[brand][i].r;
-        c.g = brand_codes[brand][i].g;
-        c.b = brand_codes[brand][i].b;
+        embFile_read(embBuffer, 1, thread_type_length, datafile);
+        c = embColor_fromStr(embBuffer+thread_color_offset);
         if (embColor_equal(c, color)) {
-            return brand_codes[brand][i].name;
+            return embBuffer;
         }
     }
 

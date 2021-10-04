@@ -8,7 +8,7 @@
 	dd	svg_property_token_table
 	dd	svg_attribute_token_table
 	dd	svg_token_lists
-;	dd	brand_codes
+	dd	brand_codes
 ;	dd	image_frame
 ;	dd	format_list
 	dd	0
@@ -4696,7 +4696,7 @@ pantone_codes:
 ;   https://help.brother-usa.com/app/answers/detail/a_id/75245/~/thread-color-conversion-chart
 ; using a colour picker.
 
-robisonAnton_polyester_codes:
+robison_anton_polyester_codes:
 	thread	"Black", 0x00, 0x00, 0x00, 5596
 	thread	"White", 0xFF, 0xFF, 0xFF, 5597
 ; unfinished
@@ -5753,33 +5753,35 @@ z102_isacord_polyester_codes:
 	thread	"?", 0x97, 0x8B, 0x3C, 6133
 	thread	"END", 0, 0, 0, -1
 
-%if 0
+
 brand_codes:
-	dd	arc_polyester_codes	; 0
-	dd	arc_rayon_codes		; 1
+	dd	arc_polyester_codes		; 0
+	dd	arc_rayon_codes			; 1
 	dd	coats_and_clark_rayon_codes	; 2
 	dd	exquisite_polyester_codes	; 3
-	dd	fufu_polyester_codes	; 4
-	dd	fufu_rayon_codes	; 5
-	dd	hemingworth_polyester_codes ; 6
-;	Isacord_Polyester_codes	; 7
-;	Isafil_Rayon_codes	; 8
-;	Marathon_Polyester_codes	; 9
-;	Marathon_Rayon_codes	; 10
-;	Madeira_Polyester_codes	; 11
-;	Madeira_Rayon_codes, /* 12 */
-;	Metro_Polyester_codes, /* 13 */
-;	Pantone_codes, /* 14 */
-;	RobisonAnton_Polyester_codes, /* 15 */
-;	RobisonAnton_Rayon_codes, /* 16 */
-;	Sigma_Polyester_codes, /* 17 */
-;	Sulky_Rayon_codes, /* 18 */
-;	ThreadArt_Rayon_codes, /* 19 */
-;	ThreadArt_Polyester_codes, /* 20 */
-;	ThreaDelight_Polyester_codes, /* 21 */
-;	Z102_Isacord_Polyester_codes, /* 22 */
-;	svg_color_codes /* 23 */
+	dd	fufu_polyester_codes		; 4
+	dd	fufu_rayon_codes		; 5
+	dd	hemingworth_polyester_codes 	; 6
+	dd	isacord_polyester_codes		; 7
+	dd	isafil_rayon_codes		; 8
+	dd	marathon_polyester_codes	; 9
+	dd	marathon_rayon_codes		; 10
+	dd	madeira_polyester_codes		; 11
+	dd	madeira_rayon_codes		; 12
+	dd	metro_polyester_codes		; 13
+	dd	pantone_codes			; 14
+	dd	robison_anton_polyester_codes	; 15
+	dd	robison_anton_rayon_codes	; 16
+	dd	sigma_polyester_codes		; 17
+	dd	sulky_rayon_codes		; 18
+	dd	thread_art_rayon_codes		; 19
+	dd	thread_art_polyester_codes	; 20
+	dd	threadelight_polyester_codes	; 21
+	dd	z102_isacord_polyester_codes	; 22
+	dd	svg_color_codes			; 23
 
+
+%if 0
 ; Based on the DraftSight color table
 dxf_color_table:
 	db	0, 0, 0		; BYBLOCK

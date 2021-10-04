@@ -1,8 +1,6 @@
 #ifndef LIBEMBROIDERY_HEADER__
 #define LIBEMBROIDERY_HEADER__
 
-#include <stdio.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -42,10 +40,7 @@ int inoFile_printf(InoFile* stream, const char* msg);
 
 void inoLog_serial(const char* msg);
 #else
-typedef struct EmbFile_
-{
-    FILE* file;
-} EmbFile;
+typedef struct EmbFile_ EmbFile;
 #endif
 
 /* Machine codes for stitch flags */
@@ -180,78 +175,6 @@ typedef struct EmbTime_
     unsigned int minute;
     unsigned int second;
 } EmbTime;
-
-/* float-indirection file allocation table references */
-typedef struct _bcf_file_difat
-{
-    unsigned int fatSectorCount;
-    unsigned int fatSectorEntries[109];
-    unsigned int sectorSize;
-} bcf_file_difat;
-
-typedef struct _bcf_file_fat
-{
-    int          fatEntryCount;
-    unsigned int fatEntries[255]; /* maybe make this dynamic */
-    unsigned int numberOfEntriesInFatSector;
-} bcf_file_fat;
-
-typedef struct _bcf_directory_entry
-{
-    char                         directoryEntryName[32];
-    unsigned short               directoryEntryNameLength;
-    unsigned char                objectType;
-    unsigned char                colorFlag;
-    unsigned int                 leftSiblingId;
-    unsigned int                 rightSiblingId;
-    unsigned int                 childId;
-    unsigned char                CLSID[16];
-    unsigned int                 stateBits;
-    EmbTime                      creationTime;
-    EmbTime                      modifiedTime;
-    unsigned int                 startingSectorLocation;
-    unsigned long                streamSize; /* should be long long but in our case we shouldn't need it, and hard to support on c89 cross platform */
-    unsigned int                 streamSizeHigh; /* store the high int of streamsize */
-    struct _bcf_directory_entry* next;
-} bcf_directory_entry;
-
-typedef struct _bcf_directory
-{
-    bcf_directory_entry* dirEntries;
-    unsigned int         maxNumberOfDirectoryEntries;
-    /* TODO: possibly add a directory tree in the future */
-
-} bcf_directory;
-
-typedef struct _bcf_file_header
-{
-    unsigned char  signature[8];
-    unsigned char  CLSID[16]; /* TODO: this should be a separate type */
-    unsigned short minorVersion;
-    unsigned short majorVersion;
-    unsigned short byteOrder;
-    unsigned short sectorShift;
-    unsigned short miniSectorShift;
-    unsigned short reserved1;
-    unsigned int   reserved2;
-    unsigned int   numberOfDirectorySectors;
-    unsigned int   numberOfFATSectors;
-    unsigned int   firstDirectorySectorLocation;
-    unsigned int   transactionSignatureNumber;
-    unsigned int   miniStreamCutoffSize;
-    unsigned int   firstMiniFATSectorLocation;
-    unsigned int   numberOfMiniFatSectors;
-    unsigned int   firstDifatSectorLocation;
-    unsigned int   numberOfDifatSectors;
-} bcf_file_header;
-
-typedef struct _bcf_file
-{
-    bcf_file_header header;   /*! The header for the CompoundFile */
-    bcf_file_difat* difat;    /*! The "Double Indirect FAT" for the CompoundFile */
-    bcf_file_fat* fat;        /*! The File Allocation Table for the Compound File */
-    bcf_directory* directory; /*! The directory for the CompoundFile */
-} bcf_file;
 
 typedef struct EmbArray_ EmbArray;
 

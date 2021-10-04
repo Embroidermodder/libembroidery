@@ -9,6 +9,10 @@
 #define YELLOW_TERM_COLOR "\e[1;33m"
 #define RESET_TERM_COLOR "\033[0m"
 
+struct EmbFile_ {
+    FILE *file;
+};
+
 static void usage(void);
 static void formats(void);
 static void testTangentPoints(EmbCircle c, EmbVector p, EmbVector*, EmbVector*);

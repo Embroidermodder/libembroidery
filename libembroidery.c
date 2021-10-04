@@ -10,6 +10,82 @@
 #include <time.h>
 #endif
 
+struct EmbFile_ {
+    FILE *file;
+};
+
+/* float-indirection file allocation table references */
+typedef struct _bcf_file_difat
+{
+    unsigned int fatSectorCount;
+    unsigned int fatSectorEntries[109];
+    unsigned int sectorSize;
+} bcf_file_difat;
+
+typedef struct _bcf_file_fat
+{
+    int          fatEntryCount;
+    unsigned int fatEntries[255]; /* maybe make this dynamic */
+    unsigned int numberOfEntriesInFatSector;
+} bcf_file_fat;
+
+typedef struct _bcf_directory_entry
+{
+    char                         directoryEntryName[32];
+    unsigned short               directoryEntryNameLength;
+    unsigned char                objectType;
+    unsigned char                colorFlag;
+    unsigned int                 leftSiblingId;
+    unsigned int                 rightSiblingId;
+    unsigned int                 childId;
+    unsigned char                CLSID[16];
+    unsigned int                 stateBits;
+    EmbTime                      creationTime;
+    EmbTime                      modifiedTime;
+    unsigned int                 startingSectorLocation;
+    unsigned long                streamSize; /* should be long long but in our case we shouldn't need it, and hard to support on c89 cross platform */
+    unsigned int                 streamSizeHigh; /* store the high int of streamsize */
+    struct _bcf_directory_entry* next;
+} bcf_directory_entry;
+
+typedef struct _bcf_directory
+{
+    bcf_directory_entry* dirEntries;
+    unsigned int         maxNumberOfDirectoryEntries;
+    /* TODO: possibly add a directory tree in the future */
+
+} bcf_directory;
+
+typedef struct _bcf_file_header
+{
+    unsigned char  signature[8];
+    unsigned char  CLSID[16]; /* TODO: this should be a separate type */
+    unsigned short minorVersion;
+    unsigned short majorVersion;
+    unsigned short byteOrder;
+    unsigned short sectorShift;
+    unsigned short miniSectorShift;
+    unsigned short reserved1;
+    unsigned int   reserved2;
+    unsigned int   numberOfDirectorySectors;
+    unsigned int   numberOfFATSectors;
+    unsigned int   firstDirectorySectorLocation;
+    unsigned int   transactionSignatureNumber;
+    unsigned int   miniStreamCutoffSize;
+    unsigned int   firstMiniFATSectorLocation;
+    unsigned int   numberOfMiniFatSectors;
+    unsigned int   firstDifatSectorLocation;
+    unsigned int   numberOfDifatSectors;
+} bcf_file_header;
+
+typedef struct _bcf_file
+{
+    bcf_file_header header;   /*! The header for the CompoundFile */
+    bcf_file_difat* difat;    /*! The "Double Indirect FAT" for the CompoundFile */
+    bcf_file_fat* fat;        /*! The File Allocation Table for the Compound File */
+    bcf_directory* directory; /*! The directory for the CompoundFile */
+} bcf_file;
+
 /* STATIC FUNCTION PROTOTYPES
  *
  * For functions that can be declared static and inlined automatically
@@ -222,9 +298,12 @@ static unsigned char embBuffer[1024];
 short wordExample = 0x0001;
 char *endianTest = (char*)&wordExample;
 
-static int svg_all_tokens_table[] = {0, 4};
-
+static int svg_property_token_table = 0;
+static int svg_attribute_token_table = 4;
+static int svg_token_lists = 8;
 static int brand_codes = 12;
+static int image_frame = 16;
+
 static int brand_codes_length = 24;
 static int thread_type_length = 35;
 static int thread_color_offset = 30;
@@ -289,52 +368,6 @@ static int thread_code = 33;
 #define SVG_MEDIA_PROPERTY             3
 #define SVG_ATTRIBUTE                  4
 #define SVG_CATCH_ALL                  5
-
-static const char* svg_all_tokens[] = {
-    /* Catch All Properties */
-    "audio-level", "buffered-rendering", "color", "color-rendering", "direction",
-    "display", "display-align", "fill", "fill-opacity", "fill-rule",
-    "font-family", "font-size", "font-style", "font-variant", "font-weight",
-    "image-rendering", "line-increment", "opacity", "pointer-events", "shape-rendering",
-    "solid-color", "solid-opacity", "stop-color", "stop-opacity", "stroke",
-    "stroke-dasharray", "stroke-linecap", "stroke-linejoin",
-    "stroke-miterlimit", "stroke-opacity", "stroke-width",
-    "text-align", "text-anchor", "text-rendering", "unicode-bidi",
-    "vector-effect", "viewport-fill", "viewport-fill-opacity", "visibility",
-    /* Catch All Attributes */
-    "about", "accent-height", "accumulate", "additive", "alphabetic",
-    "arabic-form", "ascent", "attributeName", "attributeType", "bandwidth",
-    "baseProfile", "bbox", "begin", "by", "calcMode",
-    "cap-height", "class", "content", "contentScriptType", "cx", "cy",
-    "d", "datatype", "defaultAction", "descent", "dur", "editable",
-    "end", "ev:event", "event", "externalResourcesRequired",
-    "focusHighlight", "focusable", "font-family", "font-stretch",
-    "font-style", "font-variant", "font-weight", "from", "g1", "g2",
-    "glyph-name", "gradientUnits", "handler", "hanging", "height",
-    "horiz-adv-x", "horiz-origin-x", "id", "ideographic",
-    "initialVisibility", "k", "keyPoints", "keySplines", "keyTimes",
-    "lang", "mathematical", "max", "mediaCharacterEncoding",
-    "mediaContentEncodings", "mediaSize", "mediaTime", "min",
-    "nav-down", "nav-down-left", "nav-down-right", "nav-left", "nav-next",
-    "nav-prev", "nav-right", "nav-up", "nav-up-left", "nav-up-right",
-    "observer", "offset", "origin", "overlay", "overline-position",
-    "overline-thickness", "panose-1", "path", "pathLength", "phase",
-    "playbackOrder", "points", "preserveAspectRatio", "propagate",
-    "property", "r", "rel", "repeatCount", "repeatDur",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "restart", "rev", "role", "rotate",
-    "rx", "ry", "slope", "snapshotTime", "stemh", "stemv",
-    "strikethrough-position", "strikethrough-thickness", "syncBehavior",
-    "syncBehaviorDefault", "syncMaster", "syncTolerance",
-    "syncToleranceDefault", "systemLanguage", "target", "timelineBegin",
-    "to", "transform", "transformBehavior", "type", "typeof", "u1", "u2",
-    "underline-position", "underline-thickness", "unicode", "unicode-range",
-    "units-per-em", "values", "version", "viewBox", "width", "widths",
-    "x", "x-height", "x1", "x2", "xlink:actuate", "xlink:arcrole",
-    "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-    "xml:base", "xml:id", "xml:lang", "xml:space", "y", "y1", "y2",
-    "zoomAndPan", "/", "\0"
-};
 
 static const char* solidColorTokens[] = {
         "about", "class", "content", "datatype", "id", "property", "rel",
@@ -969,48 +1002,6 @@ static const EmbThread pecThreads[] = {
     { { 255, 200, 200 }, "Applique", "" } /* Index 64 */
 };
 
-static const char imageWithFrame[38][48] = {
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 },
-    { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
-    { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-    { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
-    { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
-    { 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-};
-
-
 /*****************************************
  * SHV Colors
  ****************************************/
@@ -1136,18 +1127,6 @@ static const char* svg_media_property_tokens[] = {
     "audio-level", "buffered-rendering", "display", "image-rendering",
     "pointer-events", "shape-rendering", "text-rendering", "viewport-fill",
     "viewport-fill-opacity", "visibility", "\0"
-};
-
-static const char* svg_property_tokens[] = {
-    "audio-level", "buffered-rendering", "color", "color-rendering", "direction",
-    "display", "display-align", "fill", "fill-opacity", "fill-rule",
-    "font-family", "font-size", "font-style", "font-variant", "font-weight",
-    "image-rendering", "line-increment", "opacity", "pointer-events",
-    "shape-rendering", "solid-color", "solid-opacity", "stop-color",
-    "stop-opacity", "stroke", "stroke-dasharray", "stroke-linecap", "stroke-linejoin",
-    "stroke-miterlimit", "stroke-opacity", "stroke-width", "text-align",
-    "text-anchor", "text-rendering", "unicode-bidi", "vector-effect",
-    "viewport-fill", "viewport-fill-opacity", "visibility", "\0"
 };
 
 
@@ -2495,7 +2474,6 @@ EmbColor embColor_fromHexStr(char* val)
     return color;
 }
 
-#if 0
 /* Replacing the %d in *printf functionality.
  */
 static void embPointerToArray(char* buffer, void* pointer, int maxDigits)
@@ -2516,7 +2494,6 @@ static void embPointerToArray(char* buffer, void* pointer, int maxDigits)
     }
     buffer += i;
 }
-#endif
 
 /* Replacing the %d in *printf functionality.
  *
@@ -2561,7 +2538,6 @@ static void writeInt(EmbFile* file, int n, int m)
     embFile_print(file, buffer);
 }
 
-#if 0
 /* Replacing the %f in *printf functionality.
  */
 static void embFloatToArray(char* buffer, float number, float tolerence, int before, int after)
@@ -2603,7 +2579,6 @@ static void embFloatToArray(char* buffer, float number, float tolerence, int bef
     buffer[before + 1 + after] = 0;
     lTrim(buffer, ' ');
 }
-#endif
 
 /* puts() abstraction. Uses Serial.print() on ARDUINO */
 static void embLog(const char* str)
@@ -2612,7 +2587,7 @@ static void embLog(const char* str)
     inoLog_serial(str);
     inoLog_serial("\n");
 #else
-    fwrite(str, 1, strlen(str), stdout);
+    puts(str);
 #endif
 }
 
@@ -7741,10 +7716,8 @@ static char writeHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     stitchCount = pattern->stitchList->count;
     /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
-    minColors = pattern->threads->count;
-    patternColor = minColors;
-    if (minColors > 24)
-        minColors = 24;
+    patternColor = pattern->threads->count;
+    minColors = emb_min_int(24, patternColor);
     binaryWriteUInt(file, 0x00C8AF5B);
     binaryWriteUInt(file, stitchCount);
     binaryWriteUInt(file, minColors);
@@ -9193,7 +9166,10 @@ static void pecEncode(EmbFile* file, EmbPattern* p)
 
 static void clearImage(unsigned char image[][48])
 {
-    memcpy(image, imageWithFrame, 48 * 38);
+    int out;
+    out = dereference_int(image_frame);
+    embFile_seek(datafile, out, SEEK_SET);
+    embFile_read(image, 1, 48*38, datafile);
 }
 
 static void writeImage(EmbFile* file, unsigned char image[][48])
@@ -10102,7 +10078,7 @@ static char writeSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     colorlistSize = pattern->threads->count;
 
-    minColors = emb_max_float(pattern->threads->count, 6);
+    minColors = emb_max_int(pattern->threads->count, 6);
     binaryWriteInt(file, 0x74 + (minColors * 4));
     binaryWriteInt(file, 0x0A);
 
@@ -11607,13 +11583,13 @@ static unsigned char* vp3ReadString(EmbFile* file)
     int stringLength = 0;
     unsigned char* charString = 0;
     if (!file) {
-        embLog("ERROR: format-vp3.c vp3ReadString(), file==0\n");
+        embLog("ERROR: vp3ReadString(), file==0\n");
         return 0;
     }
     stringLength = binaryReadInt16BE(file);
     charString = (unsigned char*)malloc(stringLength);
     if (!charString) {
-        embLog("ERROR: format-vp3.c vp3ReadString(), cannot allocate memory for charString\n");
+        embLog("ERROR: vp3ReadString(), malloc()\n");
         return 0;
     }
     binaryReadBytes(file, charString, stringLength); /* TODO: check return value */
@@ -11670,7 +11646,7 @@ static vp3Hoop vp3ReadHoopSection(EmbFile* file)
     vp3Hoop hoop;
 
     if (!file) {
-        embLog("ERROR: format-vp3.c vp3ReadHoopSection(), file==0\n");
+        embLog("ERROR: vp3ReadHoopSection(), file==0\n");
         hoop.bottom = 0;
         hoop.left = 0;
         hoop.right = 0;
@@ -11751,7 +11727,7 @@ static char readVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
     anotherSoftwareVendorString = vp3ReadString(file);
 
     nColors = binaryReadInt16BE(file);
-    embLog("ERROR: format-vp3.c Number of Colors: %d\n" /*, nColors */);
+    embLog("ERROR: Number of Colors: %d\n" /*, nColors */);
     colorSectionOffset = (int)embFile_tell(file);
 
     for (i = 0; i < nColors; i++) {
@@ -11762,9 +11738,10 @@ static char readVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
         int unknownThreadString, numberOfBytesInColor;
 
         embFile_seek(file, colorSectionOffset, SEEK_SET);
-        embLog("ERROR: format-vp3.c Color Check Byte #1: 0 == %d\n" /*, binaryReadByte(file)*/);
-        embLog("ERROR: format-vp3.c Color Check Byte #2: 5 == %d\n" /*, binaryReadByte(file)*/);
-        embLog("ERROR: format-vp3.c Color Check Byte #3: 0 == %d\n" /*, binaryReadByte(file)*/);
+        embFile_read(embBuffer, 1, 3, file);
+        embLog("ERROR: Color Check Byte #1: 0 == %d\n");
+        embLog("ERROR: Color Check Byte #2: 5 == %d\n");
+        embLog("ERROR: Color Check Byte #3: 0 == %d\n");
         colorSectionOffset = binaryReadInt32BE(file);
         colorSectionOffset += embFile_tell(file);
         startX = binaryReadInt32BE(file);
@@ -12472,9 +12449,9 @@ EmbColor svgColorToEmbColor(char* colorStr)
     } else if (percent) {
         /* Float functional - rgb(R%, G%, B%) */
         charReplace(colorStr, "rgb,()%", "      ");
-        c.r = (unsigned char)round(255.0 / 100.0 * strtod(colorStr, &pEnd));
-        c.g = (unsigned char)round(255.0 / 100.0 * strtod(pEnd, &pEnd));
-        c.b = (unsigned char)round(255.0 / 100.0 * strtod(pEnd, &pEnd));
+        c.r = (unsigned char)roundDouble(255.0 / 100.0 * strtod(colorStr, &pEnd));
+        c.g = (unsigned char)roundDouble(255.0 / 100.0 * strtod(pEnd, &pEnd));
+        c.b = (unsigned char)roundDouble(255.0 / 100.0 * strtod(pEnd, &pEnd));
     } else if (length > 3 && colorStr[0] == 'r' && colorStr[1] == 'g' && colorStr[2] == 'b') {
         /* Integer functional - rgb(rrr, ggg, bbb) */
         charReplace(colorStr, "rgb,()", "     ");
@@ -13082,8 +13059,15 @@ static char svgIsMediaProperty(const char* buff)
 
 static char svgIsProperty(const char* buff)
 {
-    if (stringInArray(buff, svg_property_tokens)) {
-        return SVG_PROPERTY;
+    int out;
+    out = dereference_int(svg_property_token_table);
+    embBuffer[0] = 1;
+    while (embBuffer[0]) {
+        get_str(embBuffer, out);
+        if (!strcmp(embBuffer, buff)) {
+            return SVG_PROPERTY;
+        }
+        out += 4;
     }
     return SVG_NULL;
 }
@@ -13105,9 +13089,19 @@ static char svgIsSvgAttribute(const char* buff)
 
 static int svgIsCatchAllAttribute(const char* buff)
 {
-    if (stringInArray(buff, svg_all_tokens))
+    int out;
+    if (svgIsProperty(buff)) {
         return SVG_CATCH_ALL;
-
+    }
+    out = dereference_int(svg_attribute_token_table);
+    embBuffer[0] = 1;
+    while (embBuffer[0]) {
+        get_str(embBuffer, out);
+        if (!strcmp(embBuffer, buff)) {
+            return SVG_CATCH_ALL;
+        }
+        out += 4;
+    }
     return SVG_NULL;
 }
 

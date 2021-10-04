@@ -40,5 +40,5 @@ du -h build/libembroidery_static.a >> embedded.txt
 }
 
 build_libembroidery
-#embedded_compatibility_report
+embedded_compatibility_report
 

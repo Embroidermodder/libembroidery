@@ -9,7 +9,7 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -Os")
 
 add_executable(embroider embroider-main.c)
 add_library(embroidery_static STATIC libembroidery.c)

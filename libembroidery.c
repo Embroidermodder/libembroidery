@@ -254,6 +254,15 @@ static char writeXxx(EmbPattern *pattern, EmbFile* file, const char* fileName);
 static char readZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
 static char writeZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
 
+static void writePoint(EmbFile* file, float x, float y, int space);
+static void write_svg_color(EmbFile* file, EmbColor color);
+static void writeCircles(EmbPattern* p, EmbFile* file);
+static void writeEllipse(EmbPattern* p, EmbFile* file);
+static void writePoints(EmbPattern* p, EmbFile* file);
+static void writePolygons(EmbPattern* p, EmbFile* file);
+static void writePolylines(EmbPattern* p, EmbFile* file);
+static void writeStitchList(EmbPattern* p, EmbFile* file);
+
 static EmbFile* embFile_open(const char* fileName, const char* mode, int optional);
 static int embFile_readline(EmbFile* stream, char *, int);
 static int embFile_close(EmbFile* stream);
@@ -1600,31 +1609,6 @@ static const char *stitchTypeLabels[] = {
     "STITCH", "JUMP", "TRIM", "COLOR", "END", "UNKNOWN"
 };
 
-static const char csvByLine[] = \
-    "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n" \
-    "\"#\",\"http://embroidermodder.github.io\"\n" \
-    "\n";
-static const char csvNotes[] = \
-    "\"#\",\"General Notes:\"\n" \
-    "\"#\",\"This file can be read by Excel or LibreOffice as CSV (Comma Separated Value) or with a text editor.\"\n" \
-    "\"#\",\"Lines beginning with # are comments.\"\n" \
-    "\"#\",\"Lines beginning with > are variables: [VAR_NAME], [VAR_VALUE]\"\n" \
-    "\"#\",\"Lines beginning with $ are threads: [THREAD_NUMBER], [RED], [GREEN], [BLUE], [DESCRIPTION], [CATALOG_NUMBER]\"\n" \
-    "\"#\",\"Lines beginning with * are stitch entries: [STITCH_TYPE], [X], [Y]\"\n" \
-    "\n";
-static const char csvStitchEntryNotes1[] = \
-    "\"#\",\"Stitch Entry Notes:\"\n" \
-    "\"#\",\"STITCH instructs the machine to move to the position [X][Y] and then make a stitch.\"\n" \
-    "\"#\",\"JUMP instructs the machine to move to the position [X][Y] without making a stitch.\"\n" \
-    "\"#\",\"TRIM instructs the machine to cut the thread before moving to the position [X][Y] without making a stitch.\"\n";
-static const char csvStitchEntryNotes2[] = \
-    "\"#\",\"COLOR instructs the machine to stop temporarily so that the user can change to a different color thread before resuming.\"\n" \
-    "\"#\",\"END instructs the machine that the design is completed and there are no further instructions.\"\n" \
-    "\"#\",\"UNKNOWN encompasses instructions that may not be supported currently.\"\n" \
-    "\"#\",\"[X] and [Y] are absolute coordinates in millimeters (mm).\"\n" \
-    "\n";
-
-
 static const unsigned char vipDecodingTable[] = {
     0x2E, 0x82, 0xE4, 0x6F, 0x38, 0xA9, 0xDC, 0xC6, 0x7B, 0xB6, 0x28, 0xAC, 0xFD, 0xAA, 0x8A, 0x4E,
     0x76, 0x2E, 0xF0, 0xE4, 0x25, 0x1B, 0x8A, 0x68, 0x4E, 0x92, 0xB9, 0xB4, 0x95, 0xF0, 0x3E, 0xEF,
@@ -2577,7 +2561,7 @@ static void embFloatToArray(char* buffer, float number, float tolerence, int bef
         }
     }
     buffer[before + 1 + after] = 0;
-    lTrim(buffer, ' ');
+    /* lTrim(buffer, ' '); */
 }
 
 /* puts() abstraction. Uses Serial.print() on ARDUINO */
@@ -6411,11 +6395,21 @@ static char writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
         return 0;
     }
 
-    /* write header */
-    embFile_print(file, csvByLine);
-    embFile_print(file, csvNotes);
-    embFile_print(file, csvStitchEntryNotes1);
-    embFile_print(file, csvStitchEntryNotes2);
+    /* write header
+     * file-to-file function
+     * Note that in this function we don't load the whole string into the
+     * buffer so the string can exceed the limitations of the binary.
+     * copy_string_to_file(file, csv_header);
+     */
+    static const int csv_header = 24;
+    char ch = 1;
+    embFile_seek(datafile, dereference_int(csv_header), SEEK_SET);
+    while (ch) {
+        embFile_read(&ch, 1, 1, datafile);
+        if (ch) {
+            embFile_write(&ch, 1, 1, file);
+        }
+    }
 
     /* write variables */
     embFile_print(file, "\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");
@@ -6425,24 +6419,13 @@ static char writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     embFile_print(file, "\">\",\"THREAD_COUNT:\",\"");
     writeInt(file, threadCount, 6);
     embFile_print(file, "\"\n");
-    embFile_print(file, "\">\",\"EXTENTS_LEFT:\",\"");
-    writeFloat(file, boundingRect.left);
-    embFile_print(file, "\"\n");
-    embFile_print(file, "\">\",\"EXTENTS_TOP:\",\"");
-    writeFloat(file, boundingRect.top);
-    embFile_print(file, "\"\n");
-    embFile_print(file, "\">\",\"EXTENTS_RIGHT:\",\"");
-    writeFloat(file, boundingRect.right);
-    embFile_print(file, "\"\n");
-    embFile_print(file, "\">\",\"EXTENTS_BOTTOM:\",\"");
-    writeFloat(file, boundingRect.bottom);
-    embFile_print(file, "\"\n");
-    embFile_print(file, "\">\",\"EXTENTS_WIDTH:\",\"");
-    writeFloat(file, embRect_width(boundingRect));
-    embFile_print(file, "\"\n");
-    embFile_print(file, "\">\",\"EXTENTS_HEIGHT:\",\"");
-    writeFloat(file, embRect_height(boundingRect));
-    embFile_print(file, "\"\n\n");
+    writeFloatWrap(file, "\">\",\"EXTENTS_LEFT:\",\"", boundingRect.left, "\"\n");
+    writeFloatWrap(file, "\">\",\"EXTENTS_TOP:\",\"", boundingRect.top, "\"\n");
+    writeFloatWrap(file, "\">\",\"EXTENTS_RIGHT:\",\"", boundingRect.right, "\"\n");
+    writeFloatWrap(file, "\">\",\"EXTENTS_BOTTOM:\",\"", boundingRect.bottom, "\"\n");
+    writeFloatWrap(file, "\">\",\"EXTENTS_WIDTH:\",\"", embRect_width(boundingRect), "\"\n");
+    writeFloatWrap(file, "\">\",\"EXTENTS_HEIGHT:\",\"", embRect_height(boundingRect), "\"\n");
+    embFile_print(file, "\n");
 
     /* write colors */
     embFile_print(file, "\"#\",\"[THREAD_NUMBER]\",\"[RED]\",\"[GREEN]\",\"[BLUE]\",\"[DESCRIPTION]\",\"[CATALOG_NUMBER]\"\n");
@@ -12297,22 +12280,20 @@ static void embColor_toStr(EmbColor c, unsigned char *b)
 }
 
 /**
- * Writes out a \a color to the EmbFile* \a file in hex format without using
+ * Writes out a color to the EmbFile* file in hex format without using
  * printf or varadic functions (for embedded systems).
  */
-static void writeColor(EmbFile* file, EmbColor color)
+static void write_svg_color(EmbFile *file, EmbColor color)
 {
-    char str[8];
     const char hex[] = "0123456789ABCDEF";
-    str[0] = '#';
-    str[1] = hex[color.r % 16];
-    str[2] = hex[color.r / 16];
-    str[3] = hex[color.g % 16];
-    str[4] = hex[color.g / 16];
-    str[5] = hex[color.b % 16];
-    str[6] = hex[color.b / 16];
-    str[7] = 0;
-    embFile_print(file, str);
+    embFile_print(file, "stroke=\"#");
+    embFile_write(hex + (color.r % 16), 1, 1, file);
+    embFile_write(hex + (color.r / 16), 1, 1, file);
+    embFile_write(hex + (color.g % 16), 1, 1, file);
+    embFile_write(hex + (color.g / 16), 1, 1, file);
+    embFile_write(hex + (color.b % 16), 1, 1, file);
+    embFile_write(hex + (color.b / 16), 1, 1, file);
+    embFile_print(file, "\" ");
 }
 
 static void writePoint(EmbFile* file, float x, float y, int space)
@@ -12320,9 +12301,10 @@ static void writePoint(EmbFile* file, float x, float y, int space)
     if (space) {
         embFile_print(file, " ");
     }
-    writeFloat(file, x);
-    embFile_print(file, ",");
-    writeFloat(file, y);
+    /*    char buffer[30];
+    embFloatToArray(buffer, number, 1.0e-7, 3, 5);
+    embFile_print(file, buffer);*/
+    fprintf(file->file, "%f,%f", x, y);
 }
 
 void writeFloat(EmbFile* file, float number)
@@ -12334,14 +12316,18 @@ void writeFloat(EmbFile* file, float number)
     fprintf(file->file, "%f", number);
 }
 
-static void writePoint(EmbFile* file, float x, float y, int space);
-static void writeColor(EmbFile* file, EmbColor color);
-static void writeCircles(EmbPattern* p, EmbFile* file);
-static void writeEllipse(EmbPattern* p, EmbFile* file);
-static void writePoints(EmbPattern* p, EmbFile* file);
-static void writePolygons(EmbPattern* p, EmbFile* file);
-static void writePolylines(EmbPattern* p, EmbFile* file);
-static void writeStitchList(EmbPattern* p, EmbFile* file);
+void writeFloatWrap(EmbFile* file, char *prefix, float number, char *suffix)
+{
+    embFile_print(file, prefix);
+    writeFloat(file, number);
+    embFile_print(file, suffix);
+}
+
+void writeFloatAttribute(EmbFile* file, char *attribute, float number)
+{
+    embFile_print(file, attribute);
+    writeFloatWrap(file, "=\"", number, "\" ");
+}
 
 /**
  * Tests for the presense of a string \a s in the supplied
@@ -12360,28 +12346,6 @@ static int stringInArray(const char* s, const char** array)
         }
     }
     return 0;
-}
-
-/**
- * Function is similar to the Unix utility tr.
- *
- * Character for character replacement in strings.
- * Takes a string \a s and for every character in the
- * \a from string replace with the corresponding character
- * in the \a to string.
- *
- * For example: ("test", "tb", "..") -> ".es."
- */
-static void charReplace(char* s, const char* from, const char* to)
-{
-    int i;
-    for (; *s; s++) {
-        for (i = 0; from[i]; i++) {
-            if (*s == from[i]) {
-                *s = to[i];
-            }
-        }
-    }
 }
 
 typedef struct SvgAttribute_ {
@@ -12412,52 +12376,75 @@ static char* currentValue;
 EmbColor svgColorToEmbColor(char* colorStr)
 {
     EmbColor c;
-    char* pEnd = 0;
-    int i, length, percent;
+    char ch, *r, *g, *b;
+    int i, length, percent, hash, intfunc;
 
-    /* Trim out any junk spaces */
+    /* Trim out any junk spaces, remove the rgb() function, parentheses and commas.
+     * TODO: create a state variable the replace percent, hash, intfunc, default for color keyword.
+     */
     length = 0;
+    percent = 0;
+    hash = 0;
+    intfunc = 0;
+    r = colorStr;
+    g = 0;
+    b = 0;
+    if (colorStr[0] == 'r' && colorStr[1] == 'g' && colorStr[2] == 'b') {
+        intfunc = 1;
+        colorStr += 3;
+    }
     for (i=0; colorStr[i]; i++) {
-        if (colorStr[i] == ' ' || colorStr[i] == '\t') continue;
-        if (colorStr[i] == '\n' || colorStr[i] == '\r') continue;
-        if (colorStr[i] == '%') percent = 1;
-        colorStr[length] = colorStr[i];
+        ch = colorStr[i];
+        if (!hash) {
+            if (ch == '(' || ch == ')') continue;
+        }
+        if (ch == ',') {
+            /* we have commas, so replace them with zeros and split into r, g, b */
+            if (g == 0) {
+                g = colorStr + length + 1;
+            }
+            else {
+                b = colorStr + length + 1;
+            }
+            ch = 0;
+        }
+        if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r') continue;
+        if (ch == '%') {
+            percent = 1;
+            continue;
+        }
+        if (ch == '#') {
+            hash = 1;
+            continue;
+        }
+        colorStr[length] = ch;
         length++;
     }
     colorStr[length] = 0;
 
     /* SVGTiny1.2 Spec Section 11.13.1 syntax for color values */
-    if (colorStr[0] == '#') {
-        if (length == 7) {
-            /* Six digit hex - #rrggbb */
-            c = embColor_fromHexStr(colorStr+1);
-        }
-        else {
+    if (hash) {
+        if (length == 3) {
             /* Three digit hex - #rgb */
-           /* Convert the 3 digit hex to a six digit hex */
-            char hex[7];
-            hex[0] = colorStr[1];
-            hex[1] = colorStr[1];
-            hex[2] = colorStr[2];
-            hex[3] = colorStr[2];
-            hex[4] = colorStr[3];
-            hex[5] = colorStr[3];
-            hex[6] = 0;
-
-            c = embColor_fromHexStr(hex);
+            /* Convert the 3 digit hex to a six digit hex */
+            colorStr[4] = colorStr[2];
+            colorStr[5] = colorStr[2];
+            colorStr[2] = colorStr[1];
+            colorStr[3] = colorStr[1];
+            colorStr[1] = colorStr[0];
+            colorStr[6] = 0;
         }
+        c = embColor_fromHexStr(colorStr);
     } else if (percent) {
-        /* Float functional - rgb(R%, G%, B%) */
-        charReplace(colorStr, "rgb,()%", "      ");
-        c.r = (unsigned char)roundDouble(255.0 / 100.0 * strtod(colorStr, &pEnd));
-        c.g = (unsigned char)roundDouble(255.0 / 100.0 * strtod(pEnd, &pEnd));
-        c.b = (unsigned char)roundDouble(255.0 / 100.0 * strtod(pEnd, &pEnd));
-    } else if (length > 3 && colorStr[0] == 'r' && colorStr[1] == 'g' && colorStr[2] == 'b') {
-        /* Integer functional - rgb(rrr, ggg, bbb) */
-        charReplace(colorStr, "rgb,()", "     ");
-        c.r = (unsigned char)strtol(colorStr, &pEnd, 10);
-        c.g = (unsigned char)strtol(pEnd, &pEnd, 10);
-        c.b = (unsigned char)strtol(pEnd, &pEnd, 10);
+        /* Float functional - rgb(R%, G%, B%), by now it is stored in r, g and b */
+        c.r = (unsigned char)roundDouble(255.0 / 100.0 * atof(r));
+        c.g = (unsigned char)roundDouble(255.0 / 100.0 * atof(g));
+        c.b = (unsigned char)roundDouble(255.0 / 100.0 * atof(b));
+    } else if (intfunc) {
+        /* Integer functional - rgb(rrr, ggg, bbb), by now it is stored in r, g and b. */
+        c.r = (unsigned char)atoi(r);
+        c.g = (unsigned char)atoi(g);
+        c.b = (unsigned char)atoi(b);
     } else {
         /* Color keyword */
         int tableColor = threadColor(&c, colorStr, SVG_Colors);
@@ -12466,7 +12453,6 @@ EmbColor svgColorToEmbColor(char* colorStr)
         }
     }
 
-    free(colorStr);
     /* Returns black if all else fails */
     return c;
 }
@@ -12496,11 +12482,19 @@ static int svgPathCmdToEmbPathFlag(char cmd)
 
 SvgAttribute svgAttribute_create(const char* name, const char* value)
 {
+    int i, j;
     SvgAttribute attribute;
     char modValue[1000];
 
     strcpy(modValue, value);
-    charReplace(modValue, "\"'/,", "    ");
+    j = 0;
+    for (i=0; i<strlen(value); i++) {
+        if (value[i] == '"') continue;
+        if (value[i] == '\'') continue;
+        if (value[i] == '/') continue;
+        if (value[i] == ',') continue;
+        modValue[j] = value[i];
+    }
     strcpy(attribute.name, name);
     attribute.value = modValue;
     return attribute;
@@ -12628,6 +12622,14 @@ void svgAddToPattern(EmbPattern* p)
         return;
     }
 
+    /* TODO: This needs to switch to a jump table on svg elements.
+     *
+     * Each case inside it should be a function if it's longer than 10 lines.
+     * char token = identify_element(currentElement->name);
+     * switch (token) {
+     * 
+     * }
+     */
     if (!strcmp(buff, "?xml")) {
     } else if (!strcmp(buff, "a")) {
     } else if (!strcmp(buff, "animate")) {
@@ -13349,15 +13351,12 @@ static void writeCircles(EmbPattern* p, EmbFile* file)
         for (i = 0; i < p->circles->count; i++) {
             circle = p->circles->circle[i];
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<circle stroke-width=\"0.2\" stroke=\"");
-            writeColor(file, p->circles->color[i]);
-            embFile_print(file, "\" fill=\"none\" cx=\"");
-            writeFloat(file, circle.center.x);
-            embFile_print(file, "\" cy=\"");
-            writeFloat(file, circle.center.y);
-            embFile_print(file, "\" r=\"");
-            writeFloat(file, circle.radius);
-            embFile_print(file, "\" />");
+            embFile_print(file, "\n<circle stroke-width=\"0.2\" fill=\"none\" ");
+            write_svg_color(file, p->circles->color[i]);
+            writeFloatAttribute(file, "cx", circle.center.x);
+            writeFloatAttribute(file, "cy", circle.center.y);
+            writeFloatAttribute(file, "r", circle.radius);
+            embFile_print(file, "/>");
         }
     }
 }
@@ -13370,17 +13369,13 @@ static void writeEllipses(EmbPattern* p, EmbFile* file)
             EmbEllipse ellipse;
             ellipse = p->ellipses->ellipse[i];
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<ellipse stroke-width=\"0.2\" stroke=\"");
-            writeColor(file, p->ellipses->color[i]);
-            embFile_print(file, "\" fill=\"none\" cx=\"");
-            writeFloat(file, ellipse.center.x);
-            embFile_print(file, "\" cy=\"");
-            writeFloat(file, ellipse.center.y);
-            embFile_print(file, "\" rx=\"");
-            writeFloat(file, ellipse.radius.x);
-            embFile_print(file, "\" ry=\"");
-            writeFloat(file, ellipse.radius.y);
-            embFile_print(file, "\" />");
+            embFile_print(file, "\n<ellipse stroke-width=\"0.2\" fill=\"none\" ");
+            write_svg_color(file, p->ellipses->color[i]);
+            writeFloatAttribute(file, "cx", ellipse.center.x);
+            writeFloatAttribute(file, "cy", ellipse.center.y);
+            writeFloatAttribute(file, "rx", ellipse.radius.x);
+            writeFloatAttribute(file, "ry", ellipse.radius.y);
+            embFile_print(file, "/>");
         }
     }
 }
@@ -13392,43 +13387,35 @@ static void writeLines(EmbPattern* p, EmbFile* file)
         for (i = 0; i < p->lines->count; i++) {
             EmbLine line = p->lines->line[i];
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<line stroke-width=\"0.2\" stroke=\"");
-            writeColor(file, p->lines->color[i]);
-            embFile_print(file, "\" fill=\"none\" x1=\"");
-            writeFloat(file, line.start.x);
-            embFile_print(file, "\" y1=\"");
-            writeFloat(file, line.start.y);
-            embFile_print(file, "\" x2=\"");
-            writeFloat(file, line.end.x);
-            embFile_print(file, "\" y2=\"");
-            writeFloat(file, line.end.y);
-            embFile_print(file, "\" />");
+            embFile_print(file, "\n<line stroke-width=\"0.2\" fill=\"none\" ");
+            write_svg_color(file, p->lines->color[i]);
+            writeFloatAttribute(file, "x1", line.start.x);
+            writeFloatAttribute(file, "y1", line.start.y);
+            writeFloatAttribute(file, "x2", line.end.x);
+            writeFloatAttribute(file, "y2", line.end.y);
+            embFile_print(file, " />");
         }
     }
 }
 
 static void writePoints(EmbPattern* p, EmbFile* file)
 {
-    int i;
-    EmbVector point;
     if (p->points) {
+        int i;
         for (i = 0; i < p->points->count; i++) {
+            EmbVector point;
             point = p->points->point[i];
             /* See SVG Tiny 1.2 Spec:
              * Section 9.5 The 'line' element
              * Section C.6 'path' element implementation notes */
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
-            writeColor(file, p->points->color[i]);
-            embFile_print(file, "\" fill=\"none\" x1=\"");
-            writeFloat(file, point.x);
-            embFile_print(file, "\" y1=\"");
-            writeFloat(file, point.y);
-            embFile_print(file, "\" x2=\"");
-            writeFloat(file, point.x);
-            embFile_print(file, "\" y2=\"");
-            writeFloat(file, point.y);
-            embFile_print(file, "\" />");
+            embFile_print(file, "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" fill=\"none\" ");
+            write_svg_color(file, p->points->color[i]);
+            writeFloatAttribute(file, "x1", point.x);
+            writeFloatAttribute(file, "y1", point.y);
+            writeFloatAttribute(file, "x2", point.x);
+            writeFloatAttribute(file, "y2", point.y);
+            embFile_print(file, " />");
         }
     }
 }
@@ -13441,14 +13428,14 @@ static void writePolygons(EmbPattern* p, EmbFile* file)
         for (i = 0; i < p->polygons->count; i++) {
             pointList = p->polygons->polygon[i]->pointList;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
-            writeColor(file, p->polygons->polygon[i]->color);
-            embFile_print(file, "\" fill=\"none\" points=\"");
+            embFile_print(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" fill=\"none\" ");
+            write_svg_color(file, p->polygons->polygon[i]->color);
+            embFile_print(file, "points=\"");
             writePoint(file, pointList->point[0].x, pointList->point[0].y, 0);
             for (j = 1; j < pointList->count; j++) {
                 writePoint(file, pointList->point[j].x, pointList->point[j].y, 1);
             }
-            embFile_print(file, "\"/>");
+            embFile_print(file, "\" />");
         }
     }
 }
@@ -13463,14 +13450,14 @@ static void writePolylines(EmbPattern* p, EmbFile* file)
             pointList = p->polylines->polyline[i]->pointList;
             color = p->polylines->polyline[i]->color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
-            writeColor(file, color);
-            embFile_print(file, "\" fill=\"none\" points=\"");
+            embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" ");
+            write_svg_color(file, color);
+            embFile_print(file, "fill=\"none\" points=\"");
             writePoint(file, pointList->point[0].x, pointList->point[0].y, 0);
             for (j = 1; j < pointList->count; j++) {
                 writePoint(file, pointList->point[j].x, pointList->point[j].y, 1);
             }
-            embFile_print(file, "\"/>");
+            embFile_print(file, "\" />");
         }
     }
 }
@@ -13483,17 +13470,13 @@ static void writeRects(EmbPattern* p, EmbFile* file)
         for (i = 0; i < p->rects->count; i++) {
             rect = p->rects->rect[i];
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<rect stroke-width=\"0.2\" stroke=\"");
-            writeColor(file, p->rects->color[i]);
-            embFile_print(file, "\" fill=\"none\" x=\"");
-            writeFloat(file, embRect_x(rect));
-            embFile_print(file, "\" y=\"");
-            writeFloat(file, embRect_y(rect));
-            embFile_print(file, "\" width=\"");
-            writeFloat(file, embRect_width(rect));
-            embFile_print(file, "\" height=\"");
-            writeFloat(file, embRect_height(rect));
-            embFile_print(file, "\" />");
+            embFile_print(file, "\n<rect stroke-width=\"0.2\" fill=\"none\" ");
+            write_svg_color(file, p->rects->color[i]);
+            writeFloatAttribute(file, "x", embRect_x(rect));
+            writeFloatAttribute(file, "y", embRect_y(rect));
+            writeFloatAttribute(file, "width", embRect_width(rect));
+            writeFloatAttribute(file, "height", embRect_height(rect));
+            embFile_print(file, " />");
         }
     }
 }
@@ -13515,9 +13498,9 @@ static void writeStitchList(EmbPattern* p, EmbFile* file)
                 isNormal = 1;
                 color = p->threads->thread[st.color].color;
                 /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-                embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"");
-                writeColor(file, color);
-                embFile_print(file, "\" fill=\"none\" points=\"");
+                embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" ");
+                write_svg_color(file, color);
+                embFile_print(file, "fill=\"none\" points=\"");
                 writePoint(file, st.x, st.y, 0);
             } else if (st.flags == NORMAL && isNormal) {
                 writePoint(file, st.x, st.y, 1);
@@ -13547,14 +13530,11 @@ static char writeSvg(EmbPattern* p, EmbFile* file, const char* fileName)
      *       Until all of the formats and API is stable, the width, height and viewBox attributes need to be left unspecified.
      *       If the attribute values are incorrect, some applications wont open it at all.
      */
-    writeFloat(file, boundingRect.left);
-    embFile_print(file, " ");
-    writeFloat(file, boundingRect.top);
-    embFile_print(file, " ");
-    writeFloat(file, embRect_width(boundingRect));
-    embFile_print(file, " ");
-    writeFloat(file, embRect_height(boundingRect));
-    embFile_print(file, "\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\">");
+    writeFloatWrap(file, "", boundingRect.left, " ");
+    writeFloatWrap(file, "", boundingRect.top, " ");
+    writeFloatWrap(file, "", embRect_width(boundingRect), " ");
+    writeFloatWrap(file, "", embRect_height(boundingRect),
+        "\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\">");
 
     /*TODO: Low Priority: Indent output properly. */
 

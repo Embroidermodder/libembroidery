@@ -9,7 +9,7 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")
 
 add_executable(embroider embroider-main.c)
 add_library(embroidery_static STATIC libembroidery.c)
@@ -17,7 +17,6 @@ add_library(embroidery SHARED libembroidery.c)
 
 add_custom_command(OUTPUT libembroidery_data.bin
                    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/libembroidery_data.bin libembroidery_data.bin
-#  nasm -f bin -o libembroidery_data.bin -l libembroidery_data.lst ${CMAKE_CURRENT_SOURCE_DIR}/libembroidery_data.asm
 )
 add_custom_target(datafile
     DEPENDS libembroidery_data.bin

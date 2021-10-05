@@ -20,27 +20,32 @@ extern "C" {
     #endif
 #endif
 
+/* It's up to the user to define the struct for the file, that way we don't
+ * need to include stdio.h or any other headers here (which improves the
+ * compatibility with systems without the C Standard Library).
+ */
+
 #ifdef ARDUINO
-typedef EmbPattern InoPattern;
-typedef struct InoFile_ InoFile;
-typedef InoFile EmbFile;
 
-void inoEvent_addStitchAbs(InoPattern* p, float x, float y, int flags, int isAutoColorIndex);
+typedef struct InoFile_ EmbFile;
 
-InoFile* inoFile_open(const char* fileName, const char* mode);
-int inoFile_close(InoFile* stream);
-int inoFile_eof(InoFile* stream);
-int inoFile_getc(InoFile* stream);
-int inoFile_seek(InoFile* stream, long offset, int origin);
-long inoFile_tell(InoFile* stream);
-InoFile* inoFile_tmpfile(void);
-int inoFile_putc(int ch, InoFile* stream);
-
-int inoFile_printf(InoFile* stream, const char* msg);
-
+/* TODO: These 8 functions are the whole interface with arduino
+ * but I think wrapping the file pointer in a typedef should be enough to
+ * embed the contents of these in libembroidery.c.
+ */
+EmbFile* inoFile_open(const char* fileName, const char* mode);
+int inoFile_close(EmbFile* stream);
+int inoFile_seek(EmbFile* stream, long offset, int origin);
+long inoFile_tell(EmbFile* stream);
+EmbFile* inoFile_tmpfile(void);
+int inoFile_read(void*, int, int, EmbFile* stream);
+int inoFile_write(void*, int, int, EmbFile* stream);
 void inoLog_serial(const char* msg);
+
 #else
+
 typedef struct EmbFile_ EmbFile;
+
 #endif
 
 /* Machine codes for stitch flags */

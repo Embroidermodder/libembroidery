@@ -5,11 +5,12 @@
 ; $ gcc test.c
 ; $ ./a.out
 
-	dd	svg_property_token_table
-	dd	svg_attribute_token_table
-	dd	svg_token_lists
-	dd	brand_codes
-	dd	image_frame
+	dd	svg_property_token_table	; 0
+	dd	svg_attribute_token_table	; 4
+	dd	svg_token_lists			; 8
+	dd	brand_codes			; 16
+	dd	image_frame			; 20
+	dd	csv_header			; 24
 ;	dd	format_list
 	dd	0
 
@@ -2261,7 +2262,7 @@ unknown_token:
 	db	"UNKNOWN", 0
 
 
-csvHeader:
+csv_header:
 	csv_comment	"Embroidermodder 2 CSV Embroidery File"
 	csv_comment	"http://embroidermodder.github.io"
 	db	10

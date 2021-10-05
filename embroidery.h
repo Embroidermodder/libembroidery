@@ -428,7 +428,7 @@ EMB_PUBLIC int threadColor(EmbColor *c, const char*, int brand);
 EMB_PUBLIC int threadColorNum(EmbColor color, int brand);
 EMB_PUBLIC const char* threadColorName(EmbColor color, int brand);
 EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbArray* colors, int mode);
-EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, const EmbThread* colors, int length);
+EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, int table, int length);
 EMB_PUBLIC EmbThread embThread_getRandom(void);
 
 EMB_PUBLIC float embEllipse_diameterX(EmbEllipse ellipse);

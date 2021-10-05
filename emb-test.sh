@@ -36,7 +36,9 @@ nm -S --size-sort build/libembroidery_static.a >> embedded.txt
 
 echo "TOTAL SPACE USAGE" >> embedded.txt
 strip build/libembroidery_static.a
-du -h build/libembroidery_static.a >> embedded.txt
+du -b build/libembroidery_static.a >> embedded.txt
+
+du -b build/libembroidery_static.a >> progress.txt
 }
 
 build_libembroidery

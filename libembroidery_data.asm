@@ -10,7 +10,29 @@
 	dd	max_header			; 24
 	dd	vip_decoding_table		; 28
 	dd	format_list			; 32
+	dd	write_csv_error_0		; 36
+	dd	read_csv_error_0		; 40
+	dd	read_csv_error_1		; 44
+	dd	read_csv_error_2		; 48
+	dd	svg_token_table			; 52
+	dd	inkscape_token_table		; 56
+	dd	svg_element_token_table		; 60
+	dd	svg_media_property_token_table  ; 64
+	dd	hus_thread_table		; 68
+	dd	jef_thread_table		; 72
+	dd	pcm_thread_table		; 76
+	dd	pec_thread_table		; 80
+	dd	shv_thread_table		; 84
 	dd	0
+
+write_csv_error_0:
+	db	"ERROR: writeCsv(), pattern contains no stitches.", 10, 0
+read_csv_error_0:
+	db	"ERROR: readCsv(), unable to allocate memory for buff.", 10, 0
+read_csv_error_1:
+	db	"ERROR: readCsv(), premature newline.", 10, 0
+read_csv_error_2:
+	db	"ERROR: readCsv(), cannot re-allocate memory for buff.", 10, 0
 
 svg_property_token_table:
 	dd	audio_level_token
@@ -6038,11 +6060,11 @@ dxf_color_table:
 	db	173, 173, 173	; 253
 	db	214, 214, 214	; 254
 	db	255, 255, 255	; 255
-	db	0, 0, 0	; 256 (BYLAYER)
+	db	0, 0, 0		; 256 (BYLAYER)
 
-husThreadCount:	db	29
+hus_thread_count:
+	db	29
 
-%if 0
 ; TODO: HUS catalog numbers
 hus_thread_table:
 	thread	"Black", 0, 0, 0, 0
@@ -6061,19 +6083,20 @@ hus_thread_table:
 	thread	"Dark Blue", 0, 0, 127, 13
 	thread	"Dark Green", 0, 127, 0, 14
 	thread	"Dark Red", 127, 0, 0, 15
-	thread	{ 255, 127, 127, "Light Red", 16
-	thread	127, 0, 127, "Dark Purple", 17
-	thread	255, 127, 255, "Light Purple", 18
-	thread	200, 200, 0, "Dark Yellow", 19
-	thread	255, 255, 153, "Light Yellow", 20
-	thread	60, 60, 60, "Dark Gray", 21
-	thread	192, 192, 192, "Light Gray", 22
-	thread	232, 63, 0, "Dark Orange", 23
-	thread	255, 165, 65, "Light Orange", 24
-	thread	255, 102, 122, "Dark Pink", 25
-	thread	{ 255, 204, 204, "Light Pink", 26
+	thread	"Light Red", 255, 127, 127, 16
+	thread	"Dark Purple", 127, 0, 127, 17
+	thread	"Light Purple", 255, 127, 255, 18
+	thread	"Dark Yellow", 200, 200, 0, 19
+	thread	"Light Yellow", 255, 255, 153, 20
+	thread	"Dark Gray", 60, 60, 60, 21
+	thread	"Light Gray", 192, 192, 192, 22
+	thread	"Dark Orange", 232, 63, 0, 23
+	thread	"Light Orange", 255, 165, 65, 24
+	thread	"Dark Pink", 255, 102, 122, 25
+	thread	"Light Pink", 255, 204, 204, 26
 	thread	"Dark Brown", 115, 40, 0, 27
 	thread	"Light Brown", 175, 90, 10, 28
+	thread	"END", 0, 0, 0, 0
 
 
 jef_thread_table:
@@ -6081,268 +6104,177 @@ jef_thread_table:
 	thread	"Black", 0, 0, 0, 1
 	thread	"White", 255, 255, 255, 2
 	thread	"Yellow", 255, 255, 23, 3
-	thread	{ 250, 160, 96, "Orange", 0
-	thread	{ 92, 118, 73, "Olive Green", 0
-	thread	{ 64, 192, 48, "Green", 0
-	thread	{ 101, 194, 200, "Sky", 0
-	thread	{ 172, 128, 190, "Purple", 0
-	thread	{ 245, 188, 203, "Pink", 0
-	thread	{ 255, 0, 0, "Red", 0
-;	thread	{ 192, 128, 0, "Brown", 0
-;	thread	{ 0, 0, 240, "Blue", 0
-;	thread	{ 228, 195, 93, "Gold", 0
-;	thread	{ 165, 42, 42, "Dark Brown", 0
-;	thread	{ 213, 176, 212, "Pale Violet", 0
-;	thread	{ 252, 242, 148, "Pale Yellow", 0
-;	thread	{ 240, 208, 192, "Pale Pink", 0
-;	thread	{ 255, 192, 0, "Peach", 0
-;;	thread	{ 201, 164, 128, "Beige", 0
-;	thread	{ 155, 61, 75, "Wine Red", 0
-;	thread	{ 160, 184, 204, "Pale Sky", 0
-;	thread	{ 127, 194, 28, "Yellow Green", 0
-;	thread	{ 185, 185, 185, "Silver Grey", 0
-;	thread	{ 160, 160, 160, "Grey", 0
-;	thread	{ 152, 214, 189, "Pale Aqua", 0
-;	thread	{ 184, 240, 240, "Baby Blue", 0
-;	thread	{ 54, 139, 160, "Powder Blue", 0
-;	thread	{ 79, 131, 171, "Bright Blue", 0
-;	thread	{ 56, 106, 145, "Slate Blue", 0
-;	thread	{ 0, 32, 107, "Nave Blue", 0
-;	thread	{ 229, 197, 202, "Salmon Pink", 0
-;	thread	{ 249, 103, 107, "Coral", 0
-;	thread	{ 227, 49, 31, "Burnt Orange", 0
-;	thread	{ 226, 161, 136, "Cinnamon", 0
-;	thread	{ 181, 148, 116, "Umber", 0
-;	thread	{ 228, 207, 153, "Blonde", 0
-;	thread	{ 225, 203, 0, "Sunflower", 0
-;	thread	{ 225, 173, 212, "Orchid Pink", 0
-;	thread	{ 195, 0, 126, "Peony Purple", 0
-;	thread	{ 128, 0, 75, "Burgundy", 0
-;	thread	{ 160, 96, 176, "Royal Purple", 0
-;;	thread	{ 192, 64, 32, "Cardinal Red", 0
-;	thread	{ 202, 224, 192, "Opal Green", 0
-;	thread	{ 137, 152, 86, "Moss Green", 0
-;	dd	""
-;	thread	{ 0, 170, 0, "Meadow Green", 0
-;	dd	""
-;	thread	{ 33, 138, 33, "Dark Green", 0
-;	dd	""
-;	thread	{ 93, 174, 148, "Aquamarine", 0
-;	dd	""
-;	thread	{ 76, 191, 143, "Emerald Green", 0
-;	dd	""
-;	thread	{ 0, 119, 114, "Peacock Green", 0
-;	dd	""
-;	thread	{ 112, 112, 112, "Dark Grey", 0
-;	dd	""
-;	thread	{ 242, 255, 255, "Ivory White", 0
-;	dd	""
-;	thread	{ 177, 88, 24, "Hazel", 0
-;	dd	""
-;	thread	{ 203, 138, 7, "Toast", 0
-;	dd	""
-;;	thread	{ 247, 146, 123, "Salmon", 0
-;	dd	""
-;	thread	{ 152, 105, 45, "Cocoa Brown", 0
-;	dd	""
-;	thread	{ 162, 113, 72, "Sienna", 0
-;	dd	""
-;	thread	{ 123, 85, 74, "Sepia", 0
-;	dd	""
-;	thread	{ 79, 57, 70, "Dark Sepia", 0
-;	dd	""
-;	thread	{ 82, 58, 151, "Violet Blue", 0
-;	dd	""
-;	thread	{ 0, 0, 160, "Blue Ink", 0
-;	dd	""
-;	thread	{ 0, 150, 222, "Solar Blue", 0
-;	dd	""
-;	thread	{ 178, 221, 83, "Green Dust", 0
-;	dd	""
-;	thread	{ 250, 143, 187, "Crimson", 0
-;	dd	""
-;	thread	{ 222, 100, 158, "Floral Pink", 0
-;	dd	""
-;	thread	{ 181, 80, 102, "Wine", 0
-;	dd	""
-;	thread	{ 94, 87, 71, "Olive Drab", 0
-;	dd	""
-;	thread	{ 76, 136, 31, "Meadow", 0
-;	dd	""
-;	thread	{ 228, 220, 121, "Mustard", 0
-;	dd	""
-;	thread	{ 203, 138, 26, "Yellow Ochre", 0
-;	dd	""
-;	thread	{ 198, 170, 66, "Old Gold", 0
-;	dd	""
-;	thread	{ 236, 176, 44, "Honeydew", 0
-;	dd	""
-;	thread	{ 248, 128, 64, "Tangerine", 0
-;	dd	""
-;	thread	{ 255, 229, 5, "Canary Yellow", 0
-;	dd	""
-;	thread	{ 250, 122, 122, "Vermillion", 0
-;	dd	""
-;	thread	{ 107, 224, 0, "Bright Green", 0
-	thread	"Ocean Blue", 56, 108, 174, 0
-	thread	"Beige Grey", 227, 196, 180, 0
-	thread	"Bamboo", 227, 172, 129, 0
+	thread	"Orange", 250, 160, 96, 4
+	thread	"Olive Green", 92, 118, 73, 5
+	thread	"Green", 64, 192, 48, 6
+	thread	"Sky", 101, 194, 200, 7
+	thread	"Purple", 172, 128, 190, 8
+	thread	"Pink", 245, 188, 203, 9
+	thread	"Red", 255, 0, 0, 10
+	thread	"Brown", 192, 128, 0, 11
+	thread	"Blue", 0, 0, 240, 12
+;	thread	{ 228, 195, 93, "Gold", 13
+;	thread	{ 165, 42, 42, "Dark Brown", 14
+;	thread	{ 213, 176, 212, "Pale Violet", 15
+;	thread	{ 252, 242, 148, "Pale Yellow", 16
+;	thread	{ 240, 208, 192, "Pale Pink", 17
+;	thread	{ 255, 192, 0, "Peach", 18
+;	thread	{ 201, 164, 128, "Beige", 19
+;	thread	{ 155, 61, 75, "Wine Red", 20
+;	thread	{ 160, 184, 204, "Pale Sky", 21
+;	thread	{ 127, 194, 28, "Yellow Green", 22
+;	thread	{ 185, 185, 185, "Silver Grey", 23
+;	thread	{ 160, 160, 160, "Grey", 24
+;	thread	{ 152, 214, 189, "Pale Aqua", 25
+;	thread	{ 184, 240, 240, "Baby Blue", 26
+;	thread	{ 54, 139, 160, "Powder Blue", 27
+;	thread	{ 79, 131, 171, "Bright Blue", 28
+;	thread	{ 56, 106, 145, "Slate Blue", 29
+;	thread	{ 0, 32, 107, "Nave Blue", 30
+;	thread	{ 229, 197, 202, "Salmon Pink", 31
+;	thread	{ 249, 103, 107, "Coral", 32
+;	thread	{ 227, 49, 31, "Burnt Orange", 33
+;	thread	{ 226, 161, 136, "Cinnamon", 34
+;	thread	{ 181, 148, 116, "Umber", 35
+;	thread	{ 228, 207, 153, "Blonde", 36
+;	thread	{ 225, 203, 0, "Sunflower", 37
+;	thread	{ 225, 173, 212, "Orchid Pink", 38
+;	thread	{ 195, 0, 126, "Peony Purple", 39
+;	thread	{ 128, 0, 75, "Burgundy", 40
+;	thread	{ 160, 96, 176, "Royal Purple", 41
+;;	thread	{ 192, 64, 32, "Cardinal Red", 42
+;	thread	{ 202, 224, 192, "Opal Green", 43
+;	thread	{ 137, 152, 86, "Moss Green", 44
+;	thread	{ 0, 170, 0, "Meadow Green", 45
+;	thread	{ 33, 138, 33, "Dark Green", 46
+;	thread	{ 93, 174, 148, "Aquamarine", 47
+;	thread	{ 76, 191, 143, "Emerald Green", 48
+;	thread	{ 0, 119, 114, "Peacock Green", 49
+;	thread	{ 112, 112, 112, "Dark Grey", 50
+;	thread	{ 242, 255, 255, "Ivory White", 51
+;	thread	{ 177, 88, 24, "Hazel", 52
+;	thread	{ 203, 138, 7, "Toast", 53
+;	thread	{ 247, 146, 123, "Salmon", 54
+;	thread	{ 152, 105, 45, "Cocoa Brown", 55
+;	thread	{ 162, 113, 72, "Sienna", 56
+;	thread	{ 123, 85, 74, "Sepia", 57
+;	thread	{ 79, 57, 70, "Dark Sepia", 58
+;	thread	{ 82, 58, 151, "Violet Blue", 59
+;	thread	{ 0, 0, 160, "Blue Ink", 60
+;	thread	{ 0, 150, 222, "Solar Blue", 61
+;	thread	{ 178, 221, 83, "Green Dust", 62
+;	thread	{ 250, 143, 187, "Crimson", 63
+;	thread	{ 222, 100, 158, "Floral Pink", 64
+;	thread	{ 181, 80, 102, "Wine", 65
+;	thread	{ 94, 87, 71, "Olive Drab", 66
+;	thread	{ 76, 136, 31, "Meadow", 67
+;	thread	{ 228, 220, 121, "Mustard", 68
+;	thread	{ 203, 138, 26, "Yellow Ochre", 69
+;	thread	{ 198, 170, 66, "Old Gold", 70
+;	thread	{ 236, 176, 44, "Honeydew", 71
+;	thread	{ 248, 128, 64, "Tangerine", 72
+;	thread	{ 255, 229, 5, "Canary Yellow", 73
+;	thread	{ 250, 122, 122, "Vermillion", 74
+;	thread	{ 107, 224, 0, "Bright Green", 75
+	thread	"Ocean Blue", 56, 108, 174, 76
+	thread	"Beige Grey", 227, 196, 180, 77
+	thread	"Bamboo", 227, 172, 129, 78
 
 
-pcmThreadCount
-	dd	65
+pcm_thread_count:
+	dd	16
 
-pcmThreads:
+pcm_thread_table:
 	thread	"PCM Color 1", 0x00, 0x00, 0x00, 1
 	thread	"PCM Color 2", 0x00, 0x00, 0x80, 2
 	thread	"PCM Color 3", 0x00, 0x00, 0xFF, 3
 	thread	"PCM Color 4", 0x00, 0x80, 0x80, 4
 	thread	"PCM Color 5", 0x00, 0xFF, 0xFF, 5
 	thread	"PCM Color 6", 0x80, 0x00, 0x80, 6
-;	thread	"PCM Color 7", 0xFF, 0x00, 0xFF, 7
-;	thread	"PCM Color 8", 0x80, 0x00, 0x00, 8
-;	thread	"PCM Color 9", 0xFF, 0x00, 0x00, 9
-;	thread	{ 0x00, 0x80, 0x00, "PCM Color 10", 10
-;	thread	{ 0x00, 0xFF, 0x00, "PCM Color 11", 11
-;	thread	{ 0x80, 0x80, 0x00, "PCM Color 12", 12
-;	thread	{ 0xFF, 0xFF, 0x00, "PCM Color 13", 13
-;	thread	{ 0x80, 0x80, 0x80, "PCM Color 14", 14
-;	thread	{ 0xC0, 0xC0, 0xC0, "PCM Color 15", 15
-;	thread	{ 0xFF, 0xFF, 0xFF, "PCM Color 16", 16
+	thread	"PCM Color 7", 0xFF, 0x00, 0xFF, 7
+	thread	"PCM Color 8", 0x80, 0x00, 0x00, 8
+	thread	"PCM Color 9", 0xFF, 0x00, 0x00, 9
+	thread	"PCM Color 10", 0x00, 0x80, 0x00, 10
+	thread	"PCM Color 11", 0x00, 0xFF, 0x00, 11
+	thread	"PCM Color 12", 0x80, 0x80, 0x00, 12
+	thread	"PCM Color 13", 0xFF, 0xFF, 0x00, 13
+	thread	"PCM Color 14", 0x80, 0x80, 0x80, 14
+	thread	"PCM Color 15", 0xC0, 0xC0, 0xC0, 15
+	thread	"PCM Color 16", 0xFF, 0xFF, 0xFF, 16
 
 
-;static const int pecThreadCount = 65;
-;;static const EmbThread pecThreads[] = {
-;	thread	{ 0, 0, 0, "Unknown", 0
-;	dd	"", /* Index  0 */
-;	thread	{ 14, 31, 124, "Prussian Blue", 0
-;	dd	"", /* Index  1 */
-;	thread	{ 10, 85, 163, "Blue", 0
-;	dd	"", /* Index  2 */
-;	thread	{ 0, 135, 119, "Teal Green", 0
-;	dd	"", /* Index  3 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 75, 107, 175, "Cornflower Blue", 0
-;	dd	"", /* Index  4 */
-;	thread	{ 237, 23, 31, "Red", 0
-;	dd	"", /* Index  5 */
-;	thread	{ 209, 92, 0, "Reddish Brown", 0
-;	dd	"", /* Index  6 */
-;	thread	{ 145, 54, 151, "Magenta", 0
-;	dd	"", /* Index  7 */
-;	thread	{ 228, 154, 203, "Light Lilac", 0
-;	dd	"", /* Index  8 */
-;	thread	{ 145, 95, 172, "Lilac", 0
-;	dd	"", /* Index  9 */
-;	thread	{ 158, 214, 125, "Mint Green", 0
-;	dd	"", /* Index 10 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 232, 169, 0, "Deep Gold", 0
-;	dd	"", /* Index 11 */
-;	thread	{ 254, 186, 53, "Orange", 0
-;	dd	"", /* Index 12 */
-;	thread	{ 255, 255, 0, "Yellow", 0
-;	dd	"", /* Index 13 */
-;	thread	{ 112, 188, 31, "Lime Green", 0
-;	dd	"", /* Index 14 */
-;	thread	{ 186, 152, 0, "Brass", 0
-;	dd	"", /* Index 15 */
-;	thread	{ 168, 168, 168, "Silver", 0
-;	dd	"", /* Index 16 */
-;	thread	{ 125, 111, 0, "Russet Brown", 0
-;	dd	"", /* Index 17 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 255, 255, 179, "Cream Brown", 0
-;	dd	"", /* Index 18 */
-;	thread	{ 79, 85, 86, "Pewter", 0
-;	dd	"", /* Index 19 */
-;	thread	{ 0, 0, 0, "Black", 0
-;	dd	"", /* Index 20 */
-;	thread	{ 11, 61, 145, "Ultramarine", 0
-;	dd	"", /* Index 21 */
-;	thread	{ 119, 1, 118, "Royal Purple", 0
-;	dd	"", /* Index 22 */
-;	thread	{ 41, 49, 51, "Dark Gray", 0
-;	dd	"", /* Index 23 */
-;	thread	{ 42, 19, 1, "Dark Brown", 0
-;	dd	"", /* Index 24 */
-;	thread	{ 246, 74, 138, "Deep Rose", 0
-;	dd	"", /* Index 25 */
-;	thread	{ 178, 118, 36, "Light Brown", 0
-;	dd	"", /* Index 26 */
-;	thread	{ 252, 187, 197, "Salmon Pink", 0
-;	dd	"", /* Index 27 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 254, 55, 15, "Vermillion", 0
-;	dd	"", /* Index 28 */
-;	thread	{ 240, 240, 240, "White", 0
-;	dd	"", /* Index 29 */
-;	thread	{ 106, 28, 138, "Violet", 0
-;	dd	"", /* Index 30 */
-;	thread	{ 168, 221, 196, "Seacrest", 0
-;	dd	"", /* Index 31 */
-;	thread	{ 37, 132, 187, "Sky Blue", 0
-;	dd	"", /* Index 32 */
-;	thread	{ 254, 179, 67, "Pumpkin", 0
-;	dd	"", /* Index 33 */
-;	thread	{ 255, 243, 107, "Cream Yellow", 0
-;	dd	"", /* Index 34 */
-;	thread	{ 208, 166, 96, "Khaki", 0
-;	dd	"", /* Index 35 */
-;	thread	{ 209, 84, 0, "Clay Brown", 0
-;	dd	"", /* Index 36 */
-;	thread	{ 102, 186, 73, "Leaf Green", 0
-;	dd	"", /* Index 37 */
-;	thread	{ 19, 74, 70, "Peacock Blue", 0
-;	dd	"", /* Index 38 */
-;	thread	{ 135, 135, 135, "Gray", 0
-;	dd	"", /* Index 39 */
-;	thread	{ 216, 204, 198, "Warm Gray", 0
-;	dd	"", /* Index 40 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 67, 86, 7, "Dark Olive", 0
-;	dd	"", /* Index 41 */
-;	thread	{ 253, 217, 222, "Flesh Pink", 0
-;	dd	"", /* Index 42 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 249, 147, 188, "Pink", 0
-;	dd	"", /* Index 43 */
-;	thread	{ 0, 56, 34, "Deep Green", 0
-;	dd	"", /* Index 44 */
-;	thread	{ 178, 175, 212, "Lavender", 0
-;	dd	"", /* Index 45 */
-;	thread	{ 104, 106, 176, "Wisteria Violet", 0
-;	dd	"", /* Index 46 */
-;	thread	{ 239, 227, 185, "Beige", 0
-;	dd	"", /* Index 47 */
-;	thread	{ 247, 56, 102, "Carmine", 0
-;	dd	"", /* Index 48 */
-;	thread	{ 181, 75, 100, "Amber Red", 0
-;	dd	"", /* Index 49 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 19, 43, 26, "Olive Green", 0
-;	dd	"", /* Index 50 */
-;	thread	{ 199, 1, 86, "Dark Fuschia", 0
-;	dd	"", /* Index 51 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 254, 158, 50, "Tangerine", 0
-;	dd	"", /* Index 52 */
-;	thread	{ 168, 222, 235, "Light Blue", 0
-;	dd	"", /* Index 53 */
-;	thread	{ 0, 103, 62, "Emerald Green", 0
-;	dd	"", /* Index 54 */ /* TODO: Verify RGB value is correct */
-;	thread	{ 78, 41, 144, "Purple", 0
-;	dd	"", /* Index 55 */
-;	thread	{ 47, 126, 32, "Moss Green", 0
-;	dd	"", /* Index 56 */
-;	thread	{ 255, 204, 204, "Flesh Pink", 0
-;	dd	"", /* Index 57 */ /* TODO: Verify RGB value is correct */ /* TODO: Flesh Pink is Index 42, is this Index incorrect? */
-;	thread	{ 255, 217, 17, "Harvest Gold", 0
-;	dd	"", /* Index 58 */
-;	thread	{ 9, 91, 166, "Electric Blue", 0
-;	dd	"", /* Index 59 */
-;	thread	{ 240, 249, 112, "Lemon Yellow", 0
-;	dd	"", /* Index 60 */
-;	thread	{ 227, 243, 91, "Fresh Green", 0
-;	dd	"", /* Index 61 */
-;	thread	{ 255, 153, 0, "Orange", 0
-;	dd	"", /* Index 62 */ /* TODO: Verify RGB value is correct */ /* TODO: Orange is Index 12, is this Index incorrect? */
-;	thread	{ 255, 240, 141, "Cream Yellow", 0
-;	dd	"", /* Index 63 */ /* TODO: Verify RGB value is correct */ /* TODO: Cream Yellow is Index 34, is this Index incorrect? */
-;	thread	{ 255, 200, 200, "Applique", 0
-;	dd	"" } /* Index 64 */
+pec_thread_count:
+	db	65
+
+pec_thread_table:
+	thread	"Unknown", 0, 0, 0, 0
+	thread	"Prussian Blue", 14, 31, 124, 1
+	thread	"Blue", 10, 85, 163, 2
+	thread	"Teal Green", 0, 135, 119, 3		; TODO: Verify RGB value is correct
+	thread	"Cornflower Blue", 75, 107, 175, 4
+	thread	"Red", 237, 23, 31, 5
+	thread	"Reddish Brown", 209, 92, 0, 6
+	thread	"Magenta", 145, 54, 151, 7
+	thread	"Light Lilac", 228, 154, 203, 8
+	thread	"Lilac", 145, 95, 172, 9
+	thread	"Mint Green", 158, 214, 125, 10		; TODO: Verify RGB value is correct.
+	thread	"Deep Gold", 232, 169, 0, 11
+;	thread	{ 254, 186, 53, "Orange", 12
+;	thread	{ 255, 255, 0, "Yellow", 13
+;	thread	{ 112, 188, 31, "Lime Green", 14
+;	thread	{ 186, 152, 0, "Brass", 15
+;	thread	{ 168, 168, 168, "Silver", 16
+;	thread	{ 125, 111, 0, "Russet Brown", 17	; TODO: Verify RGB value is correct.
+;	thread	{ 255, 255, 179, "Cream Brown", 18
+;	thread	{ 79, 85, 86, "Pewter", 19
+;	thread	{ 0, 0, 0, "Black", 20
+;	thread	{ 11, 61, 145, "Ultramarine", 21
+;	thread	{ 119, 1, 118, "Royal Purple", 22
+;	thread	{ 41, 49, 51, "Dark Gray", 23
+;	thread	{ 42, 19, 1, "Dark Brown", 24
+;	thread	{ 246, 74, 138, "Deep Rose", 25
+;	thread	{ 178, 118, 36, "Light Brown", 26
+;	thread	{ 252, 187, 197, "Salmon Pink", 27	; TODO: Verify RGB value is correct.
+;	thread	{ 254, 55, 15, "Vermillion", 28
+;	thread	{ 240, 240, 240, "White", 29
+;	thread	{ 106, 28, 138, "Violet", 30
+;	thread	{ 168, 221, 196, "Seacrest", 31
+;	thread	{ 37, 132, 187, "Sky Blue", 32
+;	thread	{ 254, 179, 67, "Pumpkin", 33
+;	thread	{ 255, 243, 107, "Cream Yellow", 34
+;	thread	{ 208, 166, 96, "Khaki", 35
+;	thread	{ 209, 84, 0, "Clay Brown", 36
+;	thread	{ 102, 186, 73, "Leaf Green", 37
+;	thread	{ 19, 74, 70, "Peacock Blue", 38
+;	thread	{ 135, 135, 135, "Gray", 39
+;	thread	{ 216, 204, 198, "Warm Gray", 40	; TODO: Verify RGB value is correct.
+;	thread	{ 67, 86, 7, "Dark Olive", 41
+;	thread	{ 253, 217, 222, "Flesh Pink", 42	; TODO: Verify RGB value is correct.
+;	thread	{ 249, 147, 188, "Pink", 43
+;	thread	{ 0, 56, 34, "Deep Green", 44
+;	thread	{ 178, 175, 212, "Lavender", 45
+;	thread	{ 104, 106, 176, "Wisteria Violet", 46
+;	thread	{ 239, 227, 185, "Beige", 47
+;	thread	{ 247, 56, 102, "Carmine", 48
+;	thread	"Amber Red", 181, 75, 100, 49		; TODO: Verify RGB value is correct.
+;	thread	{ 19, 43, 26, "Olive Green", 50
+;	thread	{ 199, 1, 86, "Dark Fuschia", 51	; TODO: Verify RGB value is correct.
+;	thread	{ 254, 158, 50, "Tangerine", 52
+;	thread	{ 168, 222, 235, "Light Blue", 53
+;	thread	{ 0, 103, 62, "Emerald Green", 54	; TODO: Verify RGB value is correct.
+;	thread	{ 78, 41, 144, "Purple", 55
+;	thread	{ 47, 126, 32, "Moss Green", 56
+;	thread	{ 255, 204, 204, "Flesh Pink", 57	; TODO: Verify RGB value is correct.
+							; TODO: Flesh Pink is Index 42, is this Index incorrect?
+;	thread	{ 255, 217, 17, "Harvest Gold", 58
+;	thread	{ 9, 91, 166, "Electric Blue", 59
+;	thread	{ 240, 249, 112, "Lemon Yellow", 60
+	thread	"Fresh Green", 227, 243, 91, 61
+	thread	"Orange", 255, 153, 0, 62		; TODO: Verify RGB value is correct.
+							; TODO: Orange is Index 12, is this Index incorrect?
+	thread	"Cream Yellow", 255, 240, 141, 63	; TODO: Verify RGB value is correct.
+							; TODO: Cream Yellow is Index 34, is this Index incorrect?
+	thread	"Applique", 255, 200, 200, 64
 
 
 ; SHV Colors
@@ -6351,52 +6283,52 @@ pcmThreads:
 shvThreadCount:
 	db	42
 
-shvThreads:
+shv_thread_table:
 	thread	"Black", 0, 0, 0, 0
-	thread	"Blue", 0, 0, 255, 0
-	thread	"Green", 51, 204, 102, 0
-	thread	"Red", 255, 0, 0, 0
-	thread	"Purple", 255, 0, 255, 0
-	thread	"Yellow", 255, 255, 0, 0
-	thread	"Grey", 127, 127, 127, 0
-	thread	51, 154, 255, "Light Blue", 0
-	thread	0, 255, 0, "Light Green", 0
-	thread	255, 127, 0, "Orange", 0
-	thread	255, 160, 180, "Pink", 0
-	thread	153, 75, 0, "Brown", 0
-	thread	255, 255, 255, "White", 0
-	thread	0, 0, 0, "Black", 0
-	thread	0, 0, 0, "Black", 0
-	thread	0, 0, 0, "Black", 0
-	thread	0, 0, 0, "Black", 0
-	thread	0, 0, 0, "Black", 0
-	thread	0, 0, 0, "Black", 0
-	thread	255, 127, 127, "Light Red", 0
-	thread	255, 127, 255, "Light Purple", 0
-	thread	255, 255, 153, "Light Yellow", 0
-	thread	192, 192, 192, "Light Grey", 0
-	thread	0, 0, 0, "Black", 0
-	thread	0, 0, 0, "Black", 0
-	thread	255, 165, 65, "Light Orange", 0
-	thread	255, 204, 204, "Light Pink", 0
-	thread	175, 90, 10, "Light Brown", 0
-	thread	0, 0, 0, "Black", 0
-	thread	0, 0, 0, "Black", 0
-	thread	0, 0, 0, "Black", 0
-	thread	0, 0, 0, "Black", 0
-	thread	0, 0, 0, "Black", 0
-	thread	0, 0, 127, "Dark Blue", 0
-	thread	0, 127, 0, "Dark Green", 0
-	thread	127, 0, 0, "Dark Red", 0
-	thread	127, 0, 127, "Dark Purple", 0
-	thread	200, 200, 0, "Dark Yellow", 0
-	thread	60, 60, 60, "Dark Gray", 0
-	thread	0, 0, 0, "Black", 0
-	thread	0, 0, 0, "Black", 0
-	thread	232, 63, 0, "Dark Orange", 0
-	thread	255, 102, 122, "Dark Pink", 0
+	thread	"Blue", 0, 0, 255, 1
+	thread	"Green", 51, 204, 102, 2
+	thread	"Red", 255, 0, 0, 3
+	thread	"Purple", 255, 0, 255, 4
+	thread	"Yellow", 255, 255, 0, 5
+	thread	"Grey", 127, 127, 127, 6
+	thread	"Light Blue", 51, 154, 255, 7
+	thread	"Light Green", 0, 255, 0, 8
+	thread	"Orange", 255, 127, 0, 9
+	thread	"Pink", 255, 160, 180, 10
+	thread	"Brown", 153, 75, 0, 11
+	thread	"White", 255, 255, 255, 12
+	thread	0, 0, 0, "Black", 13
+	thread	0, 0, 0, "Black", 14
+	thread	0, 0, 0, "Black", 15
+	thread	0, 0, 0, "Black", 16
+	thread	0, 0, 0, "Black", 17
+	thread	0, 0, 0, "Black", 18
+	thread	255, 127, 127, "Light Red", 19
+	thread	255, 127, 255, "Light Purple", 20
+	thread	255, 255, 153, "Light Yellow", 21
+	thread	192, 192, 192, "Light Grey", 22
+	thread	"Black", 0, 0, 0, 23
+	thread	"Black", 0, 0, 0, 24
+	thread	"Light Orange", 255, 165, 65, 25
+	thread	"Light Pink", 255, 204, 204, 26
+	thread	"Light Brown", 175, 90, 10, 27
+	thread	"Black", 0, 0, 0, 28
+	thread	"Black", 0, 0, 0,29
+	thread	"Black", 0, 0, 0, 30
+	thread	"Black", 0, 0, 0, 31
+	thread	"Black", 0, 0, 0, 32
+	thread	"Dark Blue", 0, 0, 127, 33
+	thread	"Dark Green", 0, 127, 0, 34
+	thread	"Dark Red", 127, 0, 0, 35
+	thread	"Dark Purple", 127, 0, 127, 36
+	thread	"Dark Yellow", 200, 200, 0, 37
+	thread	"Dark Gray", 60, 60, 60, 38
+	thread	"Black", 0, 0, 0, 39
+	thread	"Black", 0, 0, 0, 40
+	thread	"Dark Orange", 232, 63, 0, 41
+	thread	"Dark Pink", 255, 102, 122, 42
 
-%endif
+
 ;-------------------------------------------------------------------------------
 ;	String table
 ;-------------------------------------------------------------------------------

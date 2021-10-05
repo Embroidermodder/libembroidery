@@ -149,6 +149,8 @@ static int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned c
 static void readPecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName);
 static void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* filename);
 
+static char string_in_table(char *buff, int table);
+
 static void embLog(const char* str);
 static void embTime_initNow(EmbTime* t);
 static EmbTime embTime_time(EmbTime* t);
@@ -258,6 +260,9 @@ static char writeXxx(EmbPattern *pattern, EmbFile* file, const char* fileName);
 static char readZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
 static char writeZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
 
+static char identify_element(char *token);
+static void print_log_string(int offset);
+
 static int encode_dst_ternary(int *, unsigned char *);
 static void decode_dst_ternary(int *, unsigned char *);
 
@@ -314,6 +319,8 @@ static unsigned char embBuffer[1024];
 short wordExample = 0x0001;
 char *endianTest = (char*)&wordExample;
 
+static EmbColor black = { 0, 0, 0 };
+
 /* These mirror the first table in libembroidery_data.asm. */
 #define svg_property_token_table       0
 #define svg_attribute_token_table      4
@@ -324,6 +331,19 @@ char *endianTest = (char*)&wordExample;
 #define max_header                     24
 #define vip_decoding_table             28
 #define format_list                    32
+#define write_csv_error_0              36
+#define read_csv_error_0               40
+#define read_csv_error_1               44
+#define read_csv_error_2               48
+#define svg_token_table                52
+#define inkscape_token_table           56
+#define svg_element_token_table        60
+#define svg_media_property_token_table 64
+#define hus_thread_table               68
+#define jef_thread_table               72
+#define pcm_thread_table               76
+#define pec_thread_table               80
+#define shv_thread_table               84
 
 #define brand_codes_length             24
 #define thread_type_length             35
@@ -360,24 +380,6 @@ char *endianTest = (char*)&wordExample;
 #define SVG_MEDIA_PROPERTY             3
 #define SVG_ATTRIBUTE                  4
 #define SVG_CATCH_ALL                  5
-
-static const char* svgTokens[] = {
-        "about", "baseProfile", "class", "content", "contentScriptType",
-        "datatype", "externalResourcesRequired", "focusHighlight", "focusable",
-        "height", "id", "nav-down", "nav-down-left", "nav-down-right",
-        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-        "nav-up-left", "nav-up-right", "playbackOrder", "preserveAspectRatio",
-        "property", "rel", "resource", "rev", "role", "snapshotTime",
-        "syncBehaviorDefault", "syncToleranceDefault", "timelineBegin",
-        "typeof", "version", "viewBox", "width", "xml:base", "xml:id",
-        "xml:lang", "xml:space", "zoomAndPan", "/", "\0"
-    };
-
-static const char* inkscape_tokens[] = {
-        "xmlns:dc", "xmlns:cc", "xmlns:rdf", "xmlns:svg", "xmlns", "\0"
-    };
-
-static EmbColor black = { 0, 0, 0 };
 
 /**
 Type of sector
@@ -504,43 +506,6 @@ const EmbFormatList formatTable[100] = {
 
 #define MAX_LAYERS 16
 #define MAX_LAYER_NAME_LENGTH 30
-
-/*****************************************
- * HUS Colors
- ****************************************/
-static const int husThreadCount = 29;
-static const EmbThread husThreads[] = {
-    { { 0, 0, 0 }, "Black", "TODO:HUS_CATALOG_NUMBER" },
-    { { 0, 0, 255 }, "Blue", "TODO:HUS_CATALOG_NUMBER" },
-    { { 0, 255, 0 }, "Light Green", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 0, 0 }, "Red", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 0, 255 }, "Purple", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 255, 0 }, "Yellow", "TODO:HUS_CATALOG_NUMBER" },
-    { { 127, 127, 127 }, "Gray", "TODO:HUS_CATALOG_NUMBER" },
-    { { 51, 154, 255 }, "Light Blue", "TODO:HUS_CATALOG_NUMBER" },
-    { { 51, 204, 102 }, "Green", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 127, 0 }, "Orange", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 160, 180 }, "Pink", "TODO:HUS_CATALOG_NUMBER" },
-    { { 153, 75, 0 }, "Brown", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 255, 255 }, "White", "TODO:HUS_CATALOG_NUMBER" },
-    { { 0, 0, 127 }, "Dark Blue", "TODO:HUS_CATALOG_NUMBER" },
-    { { 0, 127, 0 }, "Dark Green", "TODO:HUS_CATALOG_NUMBER" },
-    { { 127, 0, 0 }, "Dark Red", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 127, 127 }, "Light Red", "TODO:HUS_CATALOG_NUMBER" },
-    { { 127, 0, 127 }, "Dark Purple", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 127, 255 }, "Light Purple", "TODO:HUS_CATALOG_NUMBER" },
-    { { 200, 200, 0 }, "Dark Yellow", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 255, 153 }, "Light Yellow", "TODO:HUS_CATALOG_NUMBER" },
-    { { 60, 60, 60 }, "Dark Gray", "TODO:HUS_CATALOG_NUMBER" },
-    { { 192, 192, 192 }, "Light Gray", "TODO:HUS_CATALOG_NUMBER" },
-    { { 232, 63, 0 }, "Dark Orange", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 165, 65 }, "Light Orange", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 102, 122 }, "Dark Pink", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 204, 204 }, "Light Pink", "TODO:HUS_CATALOG_NUMBER" },
-    { { 115, 40, 0 }, "Dark Brown", "TODO:HUS_CATALOG_NUMBER" },
-    { { 175, 90, 10 }, "Light Brown", "TODO:HUS_CATALOG_NUMBER" }
-};
-
 
 static const EmbThread jefThreads[] = {
     { { 0, 0, 0 }, "Black", "" },
@@ -820,33 +785,6 @@ static const EmbThread shvThreads[] = {
 #define ELEMENT_USE               46
 #define ELEMENT_VIDEO             47
 #define ELEMENT_UNKNOWN           48
-
-static const char* svg_element_tokens[] = {
-    "?xml", "a", "animate", "animateColor", "animateMotion", "animateTransform", "animation",
-    "audio", "circle", "defs", "desc", "discard", "ellipse",
-    "font", "font-face", "font-face-src", "font-face-uri", "foreignObject",
-    "g", "glyph", "handler", "hkern", "image", "line", "linearGradient", "listener",
-    "metadata", "missing-glyph", "mpath", "path", "polygon", "polyline", "prefetch",
-    "radialGradient", "rect", "script", "set", "solidColor", "stop", "svg", "switch",
-    "tbreak", "text", "textArea", "title", "tspan", "use", "video", "\0"
-    /* "altGlyph", "altGlyphDef", "altGlyphItem", "clipPath", "color-profile", "cursor",
-     * "feBlend", "feColorMatrix", "feComponentTransfer", "feComposite", "feConvolveMatrix",
-     * "feDiffuseLighting", "feDisplacementMap", "feDistantLight", "feFlood",
-     * "feFuncA", "feFuncB", "feFuncG", "feFuncR", "feGaussianBlur", "feImage",
-     * "feMerge", "feMergeNode", "feMorphology", "feOffset", "fePointLight",
-     * "feSpecularLighting", "feSpotLight", "feTile", "feTurbulence", "filter",
-     * "font-face-format", "font-face-name", "glyphRef", "marker", "mask",
-     * "pattern", "style", "symbol", "textPath", "tref", "view", "vkern"
-     * TODO: not implemented SVG Full 1.1 Spec Elements
-     */
-};
-
-static const char* svg_media_property_tokens[] = {
-    "audio-level", "buffered-rendering", "display", "image-rendering",
-    "pointer-events", "shape-rendering", "text-rendering", "viewport-fill",
-    "viewport-fill-opacity", "visibility", "\0"
-};
-
 
 /* attribute tokens */
 
@@ -4016,6 +3954,10 @@ static const unsigned int sizeOfDirectoryEntry = 128;
 /* static const int supportedMinorVersion = 0x003E;
 static const int littleEndianByteOrderMark = 0xFFFE; */
 
+static char *embpattern_write_error_no_stitches = "ERROR: embPattern_write(), pattern contains no stitches\n";
+static char *embpattern_write_error_open_file = "ERROR: embPattern_write(), failed to open file\n";
+static char *error_format_not_supported = "ERROR: This format is not implemented.";
+
 int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
 {
     EmbFile *file;
@@ -4029,12 +3971,12 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
     }
 
     if (!pattern->stitchList) {
-        embLog("ERROR: embPattern_write(), pattern contains no stitches\n");
+        embLog(embpattern_write_error_no_stitches);
         return 0;
     }
 
     if (!pattern->stitchList->count) {
-        embLog("ERROR: embPattern_write(), pattern contains no stitches\n");
+        embLog(embpattern_write_error_no_stitches);
         return 0;
     }
 
@@ -4045,7 +3987,7 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
 
     file = embFile_open(fileName, "wb", 0);
     if (!file) {
-        embLog("ERROR: embPattern_write(), failed to open file\n");
+        embLog(embpattern_write_error_open_file);
         return 0;    
     }
 
@@ -4058,16 +4000,16 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         r = write10o(pattern, file, fileName);
         break;
     case EMB_FORMAT_ART:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_BMC:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_BRO:
         r = writeBro(pattern, file, fileName);
         break;
     case EMB_FORMAT_CND:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_COL:
         r = writeCol(pattern, file, fileName);
@@ -4082,7 +4024,7 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         r = writeDat(pattern, file, fileName);
         break;
     case EMB_FORMAT_DEM:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_DSB:
         r = writeDsb(pattern, file, fileName);
@@ -4109,17 +4051,17 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         r = writeExy(pattern, file, fileName);
         break;
     case EMB_FORMAT_EYS:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_FXY:
         r = writeFxy(pattern, file, fileName);
         break;
     case EMB_FORMAT_GC:
         /* Smoothie G-Code */
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_GNC:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_GT: 
         r = writeGt(pattern, file, fileName);
@@ -4167,10 +4109,10 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         r = writePec(pattern, file, fileName);
         break;
     case EMB_FORMAT_PEL:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_PEM:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_PES:
         r = writePes(pattern, file, fileName);
@@ -4277,16 +4219,16 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
         r = read10o(pattern, file, fileName);
         break;
     case EMB_FORMAT_ART:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_BMC:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_BRO:
         r = readBro(pattern, file, fileName);
         break;
     case EMB_FORMAT_CND:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_COL:
         r = readCol(pattern, file, fileName);
@@ -4301,7 +4243,7 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
         r = readDat(pattern, file, fileName);
         break;
     case EMB_FORMAT_DEM:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_DSB:
         r = readDsb(pattern, file, fileName);
@@ -4328,17 +4270,17 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
         r = readExy(pattern, file, fileName);
         break;
     case EMB_FORMAT_EYS:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_FXY:
         r = readFxy(pattern, file, fileName);
         break;
     case EMB_FORMAT_GC:
         /* Smoothie G-Code */
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_GNC:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_GT:
         r = readGt(pattern, file, fileName);
@@ -4386,10 +4328,10 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
         r = readPec(pattern, file, fileName);
         break;
     case EMB_FORMAT_PEL:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_PEM:
-        embLog("ERROR: This format is not implimented.");
+        embLog(error_format_not_supported);
         break;
     case EMB_FORMAT_PES:
         r = readPes(pattern, file, fileName);
@@ -5449,7 +5391,7 @@ static char readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     buff = (char*)malloc(size);
     if (!buff) {
-        embLog("ERROR: readCsv(), unable to allocate memory for buff\n");
+        print_log_string(read_csv_error_0);
         return 0;
     }
 
@@ -5473,7 +5415,7 @@ static char readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
             } else if (expect == CSV_EXPECT_QUOTE1) {
                 /* Do Nothing. We encountered a blank line. */
             } else {
-                embLog("ERROR: readCsv(), premature newline\n");
+                print_log_string(read_csv_error_1);
                 return 0;
             }
             break;
@@ -5482,7 +5424,7 @@ static char readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
             size *= 2;
             buff = (char*)realloc(buff, size);
             if (!buff) {
-                embLog("ERROR: readCsv(), cannot re-allocate memory for buff\n");
+                print_log_string(read_csv_error_2);
                 return 0;
             }
         }
@@ -5598,6 +5540,17 @@ static void string_to_file(EmbFile *file, int offset, int length)
     }
 }
 
+/* 
+ */
+static void print_log_string(int offset)
+{
+    int i;
+    /* acts as an error number */
+    printf("%d\n", offset);
+    get_str(embBuffer, offset);
+    embLog(embBuffer);
+}
+
 static char writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
     EmbStitch st;
@@ -5613,7 +5566,7 @@ static char writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     boundingRect = embPattern_calcBoundingBox(pattern);
 
     if (!stitchCount) {
-        embLog("ERROR: writeCsv(), pattern contains no stitches\n");
+        print_log_string(write_csv_error_0);
         return 0;
     }
 
@@ -6055,15 +6008,14 @@ static char writeDsz(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static char readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    char buff[1024];
     char* dxfVersion = "";
     char* section = "";
     char* tableName = "";
     char* layerName = "";
     char* entityType = "";
-    /* layer_names uses the same indexing as the EmbColor array, no need for hash table */
+    /* layer_names uses the same indexing as the EmbColor array, no need for hash table
     char layer_names[MAX_LAYERS][MAX_LAYER_NAME_LENGTH];
-
+    */
     int eof = 0; /* End Of File */
 
     float bulge = 0.0, firstX = 0.0, firstY = 0.0, x = 0.0, y, prevX = 0.0, prevY = 0.0;
@@ -6077,26 +6029,26 @@ static char readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
     embFile_seek(file, 0L, SEEK_SET);
 
     while (embFile_tell(file) < fileLength) {
-        embFile_readline(file, buff, 1000);
+        embFile_readline(file, embBuffer, 1000);
         /*printf("%s\n", buff);*/
-        if ((!strcmp(buff, "HEADER")) || (!strcmp(buff, "CLASSES")) || (!strcmp(buff, "TABLES")) || (!strcmp(buff, "BLOCKS")) || (!strcmp(buff, "ENTITIES")) || (!strcmp(buff, "OBJECTS")) || (!strcmp(buff, "THUMBNAILIMAGE"))) {
-            section = buff;
-            printf("SECTION:%s\n", buff);
+        if ((!strcmp(embBuffer, "HEADER")) || (!strcmp(embBuffer, "CLASSES")) || (!strcmp(embBuffer, "TABLES")) || (!strcmp(embBuffer, "BLOCKS")) || (!strcmp(embBuffer, "ENTITIES")) || (!strcmp(embBuffer, "OBJECTS")) || (!strcmp(embBuffer, "THUMBNAILIMAGE"))) {
+            section = embBuffer;
+            printf("SECTION:%s\n", embBuffer);
         }
-        if (!strcmp(buff, "ENDSEC")) {
+        if (!strcmp(embBuffer, "ENDSEC")) {
             section = "";
-            printf("ENDSEC:%s\n", buff);
+            printf("ENDSEC:%s\n", embBuffer);
         }
-        if ((!strcmp(buff, "ARC")) || (!strcmp(buff, "CIRCLE")) || (!strcmp(buff, "ELLIPSE")) || (!strcmp(buff, "LINE")) || (!strcmp(buff, "LWPOLYLINE")) || (!strcmp(buff, "POINT"))) {
-            entityType = buff;
+        if ((!strcmp(embBuffer, "ARC")) || (!strcmp(embBuffer, "CIRCLE")) || (!strcmp(embBuffer, "ELLIPSE")) || (!strcmp(embBuffer, "LINE")) || (!strcmp(embBuffer, "LWPOLYLINE")) || (!strcmp(embBuffer, "POINT"))) {
+            entityType = embBuffer;
         }
-        if (!strcmp(buff, "EOF")) {
+        if (!strcmp(embBuffer, "EOF")) {
             eof = 1;
         }
 
         if (!strcmp(section, "HEADER")) {
-            if (!strcmp(buff, "$ACADVER")) {
-                embFile_readline(file, buff, 1000);
+            if (!strcmp(embBuffer, "$ACADVER")) {
+                embFile_readline(file, embBuffer, 1000);
                 embFile_readline(file, dxfVersion, 1000);
                 /* TODO: Allow these versions when POLYLINE is handled. */
                 if ((!strcmp(dxfVersion, DXF_VERSION_R10))
@@ -6106,48 +6058,49 @@ static char readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
                     return 0;
             }
         } else if (!strcmp(section, "TABLES")) {
-            if (!strcmp(buff, "ENDTAB")) {
+            if (!strcmp(embBuffer, "ENDTAB")) {
                 tableName = NULL;
             }
 
             if (tableName == NULL) {
-                if (!strcmp(buff, "2")) /* Table Name */
+                if (!strcmp(embBuffer, "2")) /* Table Name */
                 {
                     embFile_readline(file, tableName, 1000);
                 }
             } else if (!strcmp(tableName, "LAYER")) {
                 /* Common Group Codes for Tables */
-                if (!strcmp(buff, "5")) /* Handle */
+                if (!strcmp(embBuffer, "5")) /* Handle */
                 {
-                    embFile_readline(file, buff, 1000);
+                    embFile_readline(file, embBuffer, 1000);
                     continue;
-                } else if (!strcmp(buff, "330")) /* Soft Pointer */
+                } else if (!strcmp(embBuffer, "330")) /* Soft Pointer */
                 {
-                    embFile_readline(file, buff, 1000);
+                    embFile_readline(file, embBuffer, 1000);
                     continue;
-                } else if (!strcmp(buff, "100")) /* Subclass Marker */
+                } else if (!strcmp(embBuffer, "100")) /* Subclass Marker */
                 {
-                    embFile_readline(file, buff, 1000);
+                    embFile_readline(file, embBuffer, 1000);
                     continue;
-                } else if (!strcmp(buff, "70")) /* Number of Entries in Table */
+                } else if (!strcmp(embBuffer, "70")) /* Number of Entries in Table */
                 {
-                    embFile_readline(file, buff, 1000);
+                    embFile_readline(file, embBuffer, 1000);
                     continue;
                 }
                 /* The meaty stuff */
-                else if (!strcmp(buff, "2")) /* Layer Name */
+                else if (!strcmp(embBuffer, "2")) /* Layer Name */
                 {
                     embFile_readline(file, layerName, 1000);
-                } else if (!strcmp(buff, "62")) /* Color Number */
+                } else if (!strcmp(embBuffer, "62")) /* Color Number */
                 {
-                    embFile_readline(file, buff, 1000);
+                    embFile_readline(file, embBuffer, 1000);
                     /*
                     TODO: finish this
                     unsigned char colorNum = atoi(buff);
                     EmbColor co;
-                    co.r = _dxfColorTable[colorNum][0];
-                    co.g = _dxfColorTable[colorNum][1];
-                    co.b = _dxfColorTable[colorNum][2];
+                    read _dxfColorTable
+                    co.r = embBuffer[3*colorNum+0];
+                    co.g = embBuffer[3*colorNum+1];
+                    co.b = embBuffer[3*colorNum+2];
                     printf("inserting:%s,%d,%d,%d\n", layerName, co.r, co.g, co.b);
                     if (embHash_insert(layer_names[i], emb_strdup(layerName), &co)) {
                          TODO: log error: failed inserting into layerColorHash
@@ -6158,64 +6111,64 @@ static char readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
             }
         } else if (!strcmp(section, "ENTITIES")) {
             /* Common Group Codes for Entities */
-            if (!strcmp(buff, "5")) /* Handle */
+            if (!strcmp(embBuffer, "5")) /* Handle */
             {
-                embFile_readline(file, buff, 1000);
+                embFile_readline(file, embBuffer, 1000);
                 continue;
-            } else if (!strcmp(buff, "330")) /* Soft Pointer */
+            } else if (!strcmp(embBuffer, "330")) /* Soft Pointer */
             {
-                embFile_readline(file, buff, 1000);
+                embFile_readline(file, embBuffer, 1000);
                 continue;
-            } else if (!strcmp(buff, "100")) /* Subclass Marker */
+            } else if (!strcmp(embBuffer, "100")) /* Subclass Marker */
             {
-                embFile_readline(file, buff, 1000);
+                embFile_readline(file, embBuffer, 1000);
                 continue;
-            } else if (!strcmp(buff, "8")) /* Layer Name */
+            } else if (!strcmp(embBuffer, "8")) /* Layer Name */
             {
-                embFile_readline(file, buff, 1000);
+                embFile_readline(file, embBuffer, 1000);
                 /* embPattern_changeColor(pattern, colorIndexMap[buff]); TODO: port to C */
                 continue;
             }
 
             if (!strcmp(entityType, "LWPOLYLINE")) {
                 /* The not so important group codes */
-                if (!strcmp(buff, "90")) /* Vertices */
+                if (!strcmp(embBuffer, "90")) /* Vertices */
                 {
-                    embFile_readline(file, buff, 1000);
+                    embFile_readline(file, embBuffer, 1000);
                     continue;
-                } else if (!strcmp(buff, "70")) /* Polyline Flag */
+                } else if (!strcmp(embBuffer, "70")) /* Polyline Flag */
                 {
-                    embFile_readline(file, buff, 1000);
+                    embFile_readline(file, embBuffer, 1000);
                     continue;
                 }
                 /* TODO: Try to use the widths at some point */
-                else if (!strcmp(buff, "40")) /* Starting Width */
+                else if (!strcmp(embBuffer, "40")) /* Starting Width */
                 {
-                    embFile_readline(file, buff, 1000);
+                    embFile_readline(file, embBuffer, 1000);
                     continue;
-                } else if (!strcmp(buff, "41")) /* Ending Width */
+                } else if (!strcmp(embBuffer, "41")) /* Ending Width */
                 {
-                    embFile_readline(file, buff, 1000);
+                    embFile_readline(file, embBuffer, 1000);
                     continue;
-                } else if (!strcmp(buff, "43")) /* Constant Width */
+                } else if (!strcmp(embBuffer, "43")) /* Constant Width */
                 {
-                    embFile_readline(file, buff, 1000);
+                    embFile_readline(file, embBuffer, 1000);
                     continue;
                 }
                 /* The meaty stuff */
-                else if (!strcmp(buff, "42")) /* Bulge */
+                else if (!strcmp(embBuffer, "42")) /* Bulge */
                 {
-                    embFile_readline(file, buff, 1000);
-                    bulge = atof(buff);
+                    embFile_readline(file, embBuffer, 1000);
+                    bulge = atof(embBuffer);
                     bulgeFlag = 1;
-                } else if (!strcmp(buff, "10")) /* X */
+                } else if (!strcmp(embBuffer, "10")) /* X */
                 {
-                    embFile_readline(file, buff, 1000);
-                    x = atof(buff);
-                } else if (!strcmp(buff, "20")) /* Y */
+                    embFile_readline(file, embBuffer, 1000);
+                    x = atof(embBuffer);
+                } else if (!strcmp(embBuffer, "20")) /* Y */
                 {
-                    embFile_readline(file, buff, 1000);
-                    y = atof(buff);
+                    embFile_readline(file, embBuffer, 1000);
+                    y = atof(embBuffer);
 
                     if (bulgeFlag) {
                         EmbArc arc;
@@ -6245,7 +6198,7 @@ static char readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
                         firstY = y;
                         firstStitch = 0;
                     }
-                } else if (!strcmp(buff, "0")) {
+                } else if (!strcmp(embBuffer, "0")) {
                     entityType = NULL;
                     firstStitch = 1;
                     if (bulgeFlag) {
@@ -6696,9 +6649,19 @@ static char readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryReadBytes(file, stringVal, 8); /* TODO: check return value */
 
     binaryReadInt16(file);
+    int out;
+    out = dereference_int(hus_thread_table);
     for (i = 0; i < nColors; i++) {
+        EmbThread t;
         int pos = binaryReadInt16(file);
-        embPattern_addThread(pattern, husThreads[pos]);
+        embFile_seek(file, out+35*pos, SEEK_SET);
+        embFile_read(embBuffer, 1, 35, datafile);
+        t.color.r = embBuffer[30];
+        t.color.g = embBuffer[31];
+        t.color.b = embBuffer[32];
+        strcpy(t.catalogNumber, "TODO:HUS_CODE");
+        strcpy(t.description, embBuffer);
+        embPattern_addThread(pattern, t);
     }
 
     attributeData = (unsigned char*)malloc(sizeof(unsigned char) * (xOffset - attributeOffset + 1));
@@ -6813,7 +6776,7 @@ static char writeHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryWriteUShort(file, 0x0000);
 
     for (i = 0; i < patternColor; i++) {
-        short color_index = (short)embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, husThreads, 0);
+        short color_index = (short)embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, hus_thread_table, 0);
         binaryWriteShort(file, color_index);
     }
 
@@ -7193,7 +7156,7 @@ static char writeJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryWriteInt(file, (int)(550 - designHeight / 2)); /* bottom */
 
     for (i = 0; i < pattern->threads->count; i++) {
-        int j = embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, jefThreads, 79);
+        int j = embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, jef_thread_table, 79);
         binaryWriteInt(file, j);
     }
 
@@ -7263,17 +7226,16 @@ static char readKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static char writeKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbStitch st;
     float xx, yy, dx, dy;
     int i;
-    unsigned char b[4];
 
-    for (i = 0; i < 0x80; i++) {
-        binaryWriteInt(file, 0);
-    }
+    embFile_pad(file, 0, 0x200);
+
     /* write stitches */
     xx = yy = 0;
     for (i = 0; i < pattern->stitchList->count; i++) {
+        EmbStitch st;
+        unsigned char b[4];
         st = pattern->stitchList->stitch[i];
         dx = st.x - xx;
         dy = st.y - yy;
@@ -7371,7 +7333,10 @@ static char readMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
     /* embPattern_loadExternalColorFile(pattern, fileName); TODO: review this and uncomment or remove it */
 
     while (binaryReadBytes(file, data, 2) == 2) {
-        embPattern_addStitchRel(pattern, mitDecodeStitch(data[0]) / 10.0, mitDecodeStitch(data[1]) / 10.0, NORMAL, 1);
+        float x, y;
+        x = mitDecodeStitch(data[0]) / 10.0;
+        y = mitDecodeStitch(data[1]) / 10.0;
+        embPattern_addStitchRel(pattern, x, y, NORMAL, 1);
     }
 
     return 1;
@@ -8275,7 +8240,7 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryWriteByte(file, (unsigned char)(currentThreadCount - 1));
 
     for (i = 0; i < currentThreadCount; i++) {
-        binaryWriteByte(file, (unsigned char)embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, (EmbThread*)pecThreads, pecThreadCount));
+        binaryWriteByte(file, (unsigned char)embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, pec_thread_table, pecThreadCount));
     }
     embFile_pad(file, 0x20, (int)(0x1CF - currentThreadCount));
     embFile_pad(file, 0, 2);
@@ -8721,7 +8686,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file, const char
         j = i;
         flag = st.flags;
         color = pattern->threads->thread[st.color].color;
-        newColorCode = embThread_findNearestColor_fromThread(color, (EmbThread*)pecThreads, pecThreadCount);
+        newColorCode = embThread_findNearestColor_fromThread(color, pec_thread_table, pecThreadCount);
         if (newColorCode != colorCode) {
             colorCount++;
             colorCode = newColorCode;
@@ -8751,7 +8716,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file, const char
         st = pattern->stitchList->stitch[i];
         flag = st.flags;
         color = pattern->threads->thread[st.color].color;
-        newColorCode = embThread_findNearestColor_fromThread(color, (EmbThread*)pecThreads, pecThreadCount);
+        newColorCode = embThread_findNearestColor_fromThread(color, pec_thread_table, pecThreadCount);
         if (newColorCode != colorCode) {
             colorInfo[colorInfoIndex++] = (short)blockCount;
             colorInfo[colorInfoIndex++] = (short)newColorCode;
@@ -9131,7 +9096,7 @@ static char writeSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
         int thr;
         EmbColor col;
         col = pattern->threads->thread[i].color;
-        thr = embThread_findNearestColor_fromThread(col, jefThreads, 79);
+        thr = embThread_findNearestColor_fromThread(col, jef_thread_table, 79);
         binaryWriteInt(file, thr);
     }
 
@@ -9438,9 +9403,7 @@ static char readStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
     char* header = 0;
     char filetype[4], version[5];
     int paletteLength, imageLength, something1, stitchDataOffset, something3, threadDescriptionOffset, stitchCount, left, right, colors;
-    int val1, val2, val3, val4, val5, val6;
-
-    int vala1, vala2, vala3, vala4, vala5, vala6;
+    int val[6], vala[6];
     int bottom, top;
 
     binaryReadBytes(file, headerBytes, 7); /* TODO: check return value */
@@ -9476,7 +9439,7 @@ static char readStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
     threadCount = binaryReadInt16(file);
     stxThreads = (StxThread*)malloc(sizeof(StxThread) * threadCount);
     if (!stxThreads) {
-        embLog("ERROR: format-stx.c readStx(), unable to allocate memory for stxThreads\n");
+        embLog("ERROR: readStx(), malloc()\n");
         return 0;
     }
     for (i = 0; i < threadCount; i++) {
@@ -9493,29 +9456,19 @@ static char readStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
         stxThreads[i] = st;
     }
 
-    binaryReadInt32(file);
-    binaryReadInt32(file);
-    binaryReadInt32(file);
-    binaryReadInt16(file);
-    binaryReadUInt8(file);
+    embFile_read(embBuffer, 1, 15, file);
 
-    val1 = binaryReadInt16(file);
-    val2 = binaryReadInt16(file);
-    val3 = binaryReadInt16(file);
-    val4 = binaryReadInt16(file);
+    for (i=0; i<6; i++) {
+        val[i] = binaryReadInt16(file);
+    }
+    /* last two val[4] = 0, val[5] = 0 */
 
-    val5 = binaryReadInt16(file); /* 0 */
-    val6 = binaryReadInt16(file); /* 0 */
+    for (i=0; i<6; i++) {
+        vala[i] = binaryReadInt16(file);
+    }
+    /* last two vala[4] = 0, vala[5] = 0 */
 
-    vala1 = binaryReadInt16(file);
-    vala2 = binaryReadInt16(file);
-    vala3 = binaryReadInt16(file);
-    vala4 = binaryReadInt16(file);
-    vala5 = binaryReadInt16(file); /* 0 */
-    vala6 = binaryReadInt16(file); /* 0 */
-
-    binaryReadInt32(file); /* 0 */
-    binaryReadInt32(file); /* 0 */
+    embFile_read(embBuffer, 1, 8, file);
 
     /* br.BaseStream.Position = stitchDataOffset; TODO: review */
     for (i = 1; i < stitchCount;) {
@@ -11196,7 +11149,7 @@ static void embColor_toStr(EmbColor c, unsigned char *b)
  */
 static void write_svg_color(EmbFile *file, EmbColor color)
 {
-    const char hex[] = "0123456789ABCDEF";
+    char hex[] = "0123456789ABCDEF";
     embFile_print(file, "stroke=\"#");
     embFile_write(hex + (color.r % 16), 1, 1, file);
     embFile_write(hex + (color.r / 16), 1, 1, file);
@@ -11238,25 +11191,6 @@ void writeFloatAttribute(EmbFile* file, char *attribute, float number)
 {
     embFile_print(file, attribute);
     writeFloatWrap(file, "=\"", number, "\" ");
-}
-
-/**
- * Tests for the presense of a string \a s in the supplied
- * \a array.
- *
- * The end of the array is marked by an empty string.
- *
- * @return 0 if not present 1 if present.
- */
-static int stringInArray(const char* s, const char** array)
-{
-    int i;
-    for (i = 0; array[i][0]; i++) {
-        if (!strcmp(s, array[i])) {
-            return 1;
-        }
-    }
-    return 0;
 }
 
 typedef struct SvgAttribute_ {
@@ -11529,66 +11463,76 @@ void svgAddToPattern(EmbPattern* p)
         return;
     }
 
-    buff = currentElement->name;
-    if (!buff) {
-        return;
-    }
+    char token = identify_element(currentElement->name);
 
-    /* TODO: This needs to switch to a jump table on svg elements.
-     *
-     * Each case inside it should be a function if it's longer than 10 lines.
-     * char token = identify_element(currentElement->name);
-     * switch (token) {
-     * 
-     * }
-     */
-    if (!strcmp(buff, "?xml")) {
-    } else if (!strcmp(buff, "a")) {
-    } else if (!strcmp(buff, "animate")) {
-    } else if (!strcmp(buff, "animateColor")) {
-    } else if (!strcmp(buff, "animateMotion")) {
-    } else if (!strcmp(buff, "animateTransform")) {
-    } else if (!strcmp(buff, "animation")) {
-    } else if (!strcmp(buff, "audio")) {
-    } else if (!strcmp(buff, "circle")) {
-        embPattern_addCircleObjectAbs(p, atof(svgAttribute_getValue(currentElement, "cx")),
-            atof(svgAttribute_getValue(currentElement, "cy")),
-            atof(svgAttribute_getValue(currentElement, "r")));
-    } else if (!strcmp(buff, "defs")) {
-    } else if (!strcmp(buff, "desc")) {
-    } else if (!strcmp(buff, "discard")) {
-    } else if (!strcmp(buff, "ellipse")) {
-        embPattern_addEllipseObjectAbs(p, atof(svgAttribute_getValue(currentElement, "cx")),
-            atof(svgAttribute_getValue(currentElement, "cy")),
-            atof(svgAttribute_getValue(currentElement, "rx")),
-            atof(svgAttribute_getValue(currentElement, "ry")));
-    } else if (!strcmp(buff, "font")) {
-    } else if (!strcmp(buff, "font-face")) {
-    } else if (!strcmp(buff, "font-face-src")) {
-    } else if (!strcmp(buff, "font-face-uri")) {
-    } else if (!strcmp(buff, "foreignObject")) {
-    } else if (!strcmp(buff, "g")) {
-    } else if (!strcmp(buff, "glyph")) {
-    } else if (!strcmp(buff, "handler")) {
-    } else if (!strcmp(buff, "hkern")) {
-    } else if (!strcmp(buff, "image")) {
-    } else if (!strcmp(buff, "line")) {
+    switch (token) {
+    case ELEMENT_XML:
+    case ELEMENT_A:
+    case ELEMENT_ANIMATE:
+    case ELEMENT_ANIMATE_COLOR:
+    case ELEMENT_ANIMATE_MOTION:
+    case ELEMENT_ANIMATE_TRANSFORM:
+    case ELEMENT_ANIMATION:
+    case ELEMENT_AUDIO:
+        break;
+    case ELEMENT_CIRCLE:
+        {
+        float cx, cy, r;
+        cx = atof(svgAttribute_getValue(currentElement, "cx"));
+        cy = atof(svgAttribute_getValue(currentElement, "cy"));
+        r = atof(svgAttribute_getValue(currentElement, "r"));
+        embPattern_addCircleObjectAbs(p, cx, cy, r);
+        }
+        break;
+    case ELEMENT_DEFS:
+    case ELEMENT_DESC:
+    case ELEMENT_DISCARD:
+        break;
+    case ELEMENT_ELLIPSE:
+        {
+        float cx, cy, rx, ry;
+        cx = atof(svgAttribute_getValue(currentElement, "cx"));
+        cy = atof(svgAttribute_getValue(currentElement, "cy"));
+        rx = atof(svgAttribute_getValue(currentElement, "rx"));
+        ry = atof(svgAttribute_getValue(currentElement, "ry"));
+        embPattern_addEllipseObjectAbs(p, cx, cy, rx, ry);
+        }
+        break;
+    case ELEMENT_FONT:
+    case ELEMENT_FONT_FACE:
+    case ELEMENT_FONT_FACE_SRC:
+    case ELEMENT_FONT_FACE_URI:
+    case ELEMENT_FOREIGN_OBJECT:
+    case ELEMENT_G:
+    case ELEMENT_GLYPH:
+    case ELEMENT_HANDLER:
+    case ELEMENT_HKERN:
+    case ELEMENT_IMAGE:
+        break;
+    case ELEMENT_LINE:
+        {
         char* x1 = svgAttribute_getValue(currentElement, "x1");
         char* y1 = svgAttribute_getValue(currentElement, "y1");
         char* x2 = svgAttribute_getValue(currentElement, "x2");
         char* y2 = svgAttribute_getValue(currentElement, "y2");
 
         /* If the starting and ending points are the same, it is a point */
-        if (!strcmp(x1, x2) && !strcmp(y1, y2))
+        if (!strcmp(x1, x2) && !strcmp(y1, y2)) {
             embPattern_addPointObjectAbs(p, atof(x1), atof(y1));
-        else
+        }
+        else {
             embPattern_addLineObjectAbs(p, atof(x1), atof(y1), atof(x2), atof(y2));
-    } else if (!strcmp(buff, "linearGradient")) {
-    } else if (!strcmp(buff, "listener")) {
-    } else if (!strcmp(buff, "metadata")) {
-    } else if (!strcmp(buff, "missing-glyph")) {
-    } else if (!strcmp(buff, "mpath")) {
-    } else if (!strcmp(buff, "path")) {
+        }
+        }
+        break;
+    case ELEMENT_LINEAR_GRADIENT:
+    case ELEMENT_LISTENER:
+    case ELEMENT_METADATA:
+    case ELEMENT_MISSING_GLYPH:
+    case ELEMENT_MPATH:
+        break;
+    case ELEMENT_PATH:
+        {
         /* TODO: finish */
 
         char* pointStr = svgAttribute_getValue(currentElement, "d");
@@ -11843,7 +11787,11 @@ void svgAddToPattern(EmbPattern* p)
         path->color = color;
         path->lineType = 1;
         embPattern_addPathObjectAbs(p, path);
-    } else if (!strcmp(buff, "polygon") || !strcmp(buff, "polyline")) {
+        }
+        break;
+    case ELEMENT_POLYGON:
+    case ELEMENT_POLYLINE:
+    {
         char* pointStr = svgAttribute_getValue(currentElement, "points");
         int last = strlen(pointStr);
         int size = 32;
@@ -11903,51 +11851,60 @@ void svgAddToPattern(EmbPattern* p)
             }
         }
         free(polybuff);
-        polybuff = 0;
 
-        if (!strcmp(buff, "polygon")) {
+        if (token == ELEMENT_POLYGON) {
             EmbPolygonObject polygonObj;
             polygonObj.pointList = pointList;
             polygonObj.color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
             polygonObj.lineType = 1; /* TODO: use lineType enum */
             embPattern_addPolygonObjectAbs(p, &polygonObj);
-        } else /* polyline */
-        {
+        }
+        else { /* polyline */
             EmbPolylineObject* polylineObj;
             polylineObj->pointList = pointList;
             polylineObj->color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
             polylineObj->lineType = 1; /* TODO: use lineType enum */
             embPattern_addPolylineObjectAbs(p, polylineObj);
         }
-    } else if (!strcmp(buff, "prefetch")) {
-    } else if (!strcmp(buff, "radialGradient")) {
-    } else if (!strcmp(buff, "rect")) {
-        embPattern_addRectObjectAbs(p, atof(svgAttribute_getValue(currentElement, "x")),
-            atof(svgAttribute_getValue(currentElement, "y")),
-            atof(svgAttribute_getValue(currentElement, "width")),
-            atof(svgAttribute_getValue(currentElement, "height")));
-    } else if (!strcmp(buff, "script")) {
-    } else if (!strcmp(buff, "set")) {
-    } else if (!strcmp(buff, "solidColor")) {
-    } else if (!strcmp(buff, "stop")) {
-    } else if (!strcmp(buff, "svg")) {
-    } else if (!strcmp(buff, "switch")) {
-    } else if (!strcmp(buff, "tbreak")) {
-    } else if (!strcmp(buff, "text")) {
-    } else if (!strcmp(buff, "textArea")) {
-    } else if (!strcmp(buff, "title")) {
-    } else if (!strcmp(buff, "tspan")) {
-    } else if (!strcmp(buff, "use")) {
-    } else if (!strcmp(buff, "video")) {
+
+        }
+        break;
+    case ELEMENT_PREFETCH:
+    case ELEMENT_RADIAL_GRADIENT:
+    case ELEMENT_RECT:
+        {
+        float x1, y1, width, height;
+        x1 = atof(svgAttribute_getValue(currentElement, "x"));
+        y1 = atof(svgAttribute_getValue(currentElement, "y"));
+        width = atof(svgAttribute_getValue(currentElement, "width"));
+        height = atof(svgAttribute_getValue(currentElement, "height"));
+        embPattern_addRectObjectAbs(p, x1, y1, width, height);
+        }
+        break;
+    case ELEMENT_SCRIPT:
+    case ELEMENT_SET:
+    case ELEMENT_SOLID_COLOR:
+    case ELEMENT_STOP:
+    case ELEMENT_SVG:
+    case ELEMENT_SWITCH:
+    case ELEMENT_TBREAK:
+    case ELEMENT_TEXT:
+    case ELEMENT_TEXT_AREA:
+    case ELEMENT_TITLE:
+    case ELEMENT_TSPAN:
+    case ELEMENT_USE:
+    case ELEMENT_VIDEO:
+    case ELEMENT_UNKNOWN:
+    default:
+        break;
     }
 
     svgElement_free(currentElement);
-    currentElement = 0;
 }
 
 static int svgIsElement(const char* buff)
 {
-    if (stringInArray(buff, svg_element_tokens)) {
+    if (string_in_table(buff, svg_element_token_table)) {
         return SVG_ELEMENT;
     }
 
@@ -11965,7 +11922,7 @@ static int svgIsElement(const char* buff)
 
 static char svgIsMediaProperty(const char* buff)
 {
-    if (stringInArray(buff, svg_media_property_tokens)) {
+    if (string_in_table(buff, svg_media_property_token_table)) {
         return SVG_MEDIA_PROPERTY;
     }
     return SVG_NULL;
@@ -11973,27 +11930,37 @@ static char svgIsMediaProperty(const char* buff)
 
 static char svgIsProperty(const char* buff)
 {
-    int out;
-    out = dereference_int(svg_property_token_table);
-    embBuffer[0] = 1;
-    while (embBuffer[0]) {
-        get_str(embBuffer, out);
-        if (!strcmp(embBuffer, buff)) {
-            return SVG_PROPERTY;
-        }
-        out += 4;
+    if (string_in_table(buff, svg_property_token_table)) {
+        return SVG_PROPERTY;
     }
     return SVG_NULL;
 }
 
+static char string_in_table(char *buff, int table)
+{
+    int out;
+    out = dereference_int(table);
+    embBuffer[0] = 1;
+    while (embBuffer[0]) {
+        get_str(embBuffer, out);
+        if (!strcmp(embBuffer, buff)) {
+            return 1;
+        }
+        out += 4;
+    }
+    return 0;
+}
+
 static char svgIsSvgAttribute(const char* buff)
 {
-    if (stringInArray(buff, svgTokens))
+    if (string_in_table(buff, svg_token_table)) {
         return SVG_ATTRIBUTE;
+    }
 
     if (svgCreator == SVG_CREATOR_INKSCAPE) {
-        if (stringInArray(buff, inkscape_tokens))
+        if (string_in_table(buff, inkscape_token_table)) {
             return SVG_ATTRIBUTE;
+        }
     }
 
     embLog("svgIsSvgAttribute(), unknown:");
@@ -12004,35 +11971,22 @@ static char svgIsSvgAttribute(const char* buff)
 static int svgIsCatchAllAttribute(const char* buff)
 {
     int out;
-    if (svgIsProperty(buff)) {
+    if (string_in_table(buff, svg_property_token_table)) {
         return SVG_CATCH_ALL;
     }
-    out = dereference_int(svg_attribute_token_table);
-    embBuffer[0] = 1;
-    while (embBuffer[0]) {
-        get_str(embBuffer, out);
-        if (!strcmp(embBuffer, buff)) {
+    if (svgCreator == SVG_CREATOR_INKSCAPE) {
+        if (string_in_table(buff, svg_attribute_token_table)) {
             return SVG_CATCH_ALL;
         }
-        out += 4;
     }
+
     return SVG_NULL;
 }
 
 static char svgHasAttribute(const char *buff, int out, const char *errormsg)
 {
-    embFile_seek(datafile, out, SEEK_SET);
-    while (1) {
-        int n = 0;
-        embFile_read(embBuffer, 1, 1, datafile);
-        if (embBuffer[0] == 0) break;
-        while (embBuffer[n]) {
-            n++;
-            embFile_read(embBuffer+n, 1, 1, datafile);
-        }
-        if (strcmp(buff, embBuffer)) {
-            return SVG_ATTRIBUTE;
-        }
+    if (string_in_table(buff, out)) {
+        return SVG_ATTRIBUTE;
     }
 
     embLog("");
@@ -12043,11 +11997,15 @@ static char svgHasAttribute(const char *buff, int out, const char *errormsg)
     return SVG_NULL;
 }
 
-static char identify_element(const char *token)
+
+static char identify_element(char *token)
 {
+    int offset;
     char id;
     for (id=0; id < ELEMENT_UNKNOWN; id++) {
-        if (!strcmp(svg_element_tokens[id], token)) {
+        offset = dereference_int(svg_element_token_table);
+        get_str(embBuffer, offset + 4*id);
+        if (!strcmp(embBuffer, token)) {
             break;
         }
     }
@@ -12123,9 +12081,14 @@ void svgProcess(int c, const char* buff)
                 advance = svgIsSvgAttribute(buff);
             }
             else if (token != ELEMENT_UNKNOWN) {
+                char element_token[30];
+                int out2;
                 int out = dereference_int(svg_token_lists);
                 out = dereference_int(out+4*token);
-                advance = svgHasAttribute(buff, out, svg_element_tokens[token]);
+                out2 = dereference_int(svg_element_token_table);
+                get_str(element_token, out2+4*token);
+                
+                advance = svgHasAttribute(buff, out, element_token);
             }
         }
 
@@ -12519,14 +12482,23 @@ int embThread_findNearestColor(EmbColor color, EmbArray* a, int mode)
     return closestIndex;
 }
 
-int embThread_findNearestColor_fromThread(EmbColor color, const EmbThread* a, int length)
+int embThread_findNearestColor_fromThread(EmbColor color, int thread_table, int length)
 {
-    int currentClosestValue, closestIndex, i, delta;
+    int currentClosestValue, closestIndex, i, out;
 
     currentClosestValue = 256 * 256 * 3;
     closestIndex = -1;
+
+    out = dereference_int(thread_table);
     for (i = 0; i < length; i++) {
-        delta = embColor_distance(color, a[i].color);
+        int delta;
+        EmbColor c;
+        embFile_seek(datafile, out+35*i, SEEK_SET);
+        embFile_read(embBuffer, 1, 35, datafile);
+        c.r = embBuffer[30];
+        c.g = embBuffer[31];
+        c.b = embBuffer[32];
+        delta = embColor_distance(color, c);
 
         if (delta <= currentClosestValue) {
             currentClosestValue = delta;
@@ -12638,22 +12610,6 @@ static int get_str(char *s, int p)
         embFile_read(&c, 1, 1, datafile);
         s[i] = c;
     }
-}
-
-static int string_table(int *table, char *s, int n)
-{
-    int p;
-    if (n>=table[1]) {
-        puts("ERROR: this is outside of the scope of the table.");
-        return 0;
-    }
-    /* get the position of svg_all_tokens */
-    p = dereference_int(4*table[0]) + 4*n;
-    /* get the position of next token */
-    p = dereference_int(p);
-    /* read string out */
-    get_str(s, p);
-    return 1;
 }
 
 int init_embroidery(void)

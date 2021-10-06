@@ -146,6 +146,12 @@ typedef struct EmbFile_ EmbFile;
 #define ThreaDelight_Polyester  21
 #define Z102_Isacord_Polyester  22
 #define SVG_Colors              23
+#define hus_thread              24
+#define jef_thread              25
+#define pcm_thread              26
+#define pec_thread              27
+#define shv_thread              28
+#define dxf_color               29
 
 #define EMB_ARC                 0
 #define EMB_CIRCLE              1
@@ -244,8 +250,8 @@ typedef struct EmbStitch_
 typedef struct EmbThread_
 {
     EmbColor color;
-    const char* description;
-    const char* catalogNumber;
+    char description[30];
+    char catalogNumber[10];
 } EmbThread;
 
 typedef struct EmbHoop_
@@ -370,8 +376,8 @@ typedef struct EmbPattern_
 
 typedef struct EmbFormatList_
 {
-    char *extension;
-    char *description;
+    char extension[7];
+    char description[51];
     char reader;
     char writer;
     int type;
@@ -427,8 +433,7 @@ EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
 EMB_PUBLIC int threadColor(EmbColor *c, const char*, int brand);
 EMB_PUBLIC int threadColorNum(EmbColor color, int brand);
 EMB_PUBLIC const char* threadColorName(EmbColor color, int brand);
-EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbArray* colors, int mode);
-EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, int table, int length);
+EMB_PUBLIC int embThread_findNearestColor(EmbColor c, int brand);
 EMB_PUBLIC EmbThread embThread_getRandom(void);
 
 EMB_PUBLIC float embEllipse_diameterX(EmbEllipse ellipse);
@@ -457,6 +462,7 @@ EMB_PUBLIC void embRect_setHeight(EmbRect* rect, float h);
 EMB_PUBLIC void embRect_setCoords(EmbRect* rect, float x1, float y1, float x2, float y2);
 EMB_PUBLIC void embRect_setRect(EmbRect* rect, float x, float y, float w, float h);
 
+EMB_PUBLIC EmbFormatList embFormat_data(int format);
 EMB_PUBLIC int embReaderWriter_getByFileName(const char* fileName);
 
 EMB_PUBLIC EmbPattern* embPattern_create(void);

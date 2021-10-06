@@ -18,21 +18,51 @@
 	dd	inkscape_token_table		; 56
 	dd	svg_element_token_table		; 60
 	dd	svg_media_property_token_table  ; 64
-	dd	hus_thread_table		; 68
-	dd	jef_thread_table		; 72
-	dd	pcm_thread_table		; 76
-	dd	pec_thread_table		; 80
-	dd	shv_thread_table		; 84
+	dd	stitch_labels			; 68
+	dd	dxf_version_year		; 72
+	dd	dxf_version_r			; 76
+	dd	table_lengths			; 80
 	dd	0
 
-write_csv_error_0:
-	db	"ERROR: writeCsv(), pattern contains no stitches.", 10, 0
-read_csv_error_0:
-	db	"ERROR: readCsv(), unable to allocate memory for buff.", 10, 0
-read_csv_error_1:
-	db	"ERROR: readCsv(), premature newline.", 10, 0
-read_csv_error_2:
-	db	"ERROR: readCsv(), cannot re-allocate memory for buff.", 10, 0
+%define	thread_entry_length	35
+%macro	table_length_entry	2
+
+	dd	(%2 - %1)/thread_entry_length
+
+%endmacro
+
+table_lengths:
+	table_length_entry	arc_polyester_codes, arc_polyester_end
+	table_length_entry	arc_rayon_codes, arc_rayon_end
+	table_length_entry	coats_and_clark_rayon_codes, coats_and_clark_rayon_end
+	table_length_entry	exquisite_polyester_codes, exquisite_polyester_end
+	table_length_entry	fufu_polyester_codes, fufu_polyester_end
+	table_length_entry	fufu_rayon_codes, fufu_rayon_end
+	table_length_entry	hemingworth_polyester_codes, hemingworth_polyester_end
+	table_length_entry	isacord_polyester_codes, isacord_polyester_end
+	table_length_entry	isafil_rayon_codes, isafil_rayon_end
+	table_length_entry	marathon_polyester_codes, marathon_polyester_end
+	table_length_entry	marathon_rayon_codes, marathon_rayon_end
+	table_length_entry	madeira_polyester_codes, madeira_polyester_end
+	table_length_entry	madeira_rayon_codes, madeira_rayon_end
+	table_length_entry	metro_polyester_codes, metro_polyester_end
+	table_length_entry	pantone_codes, pantone_end
+	table_length_entry	robison_anton_polyester_codes, robison_anton_polyester_end
+	table_length_entry	robison_anton_rayon_codes, robison_anton_rayon_end
+	table_length_entry	sigma_polyester_codes, sigma_polyester_end
+	table_length_entry	sulky_rayon_codes, sulky_rayon_end
+	table_length_entry	thread_art_rayon_codes, thread_art_rayon_end
+	table_length_entry	thread_art_polyester_codes, thread_art_polyester_end
+	table_length_entry	threadelight_polyester_codes, threadelight_polyester_end
+	table_length_entry	z102_isacord_polyester_codes, z102_isacord_polyester_end
+	table_length_entry	svg_color_codes, svg_color_end
+	table_length_entry	hus_thread_table, hus_thread_end
+	table_length_entry	jef_thread_table, jef_thread_end
+	table_length_entry	pcm_thread_table, pcm_thread_end
+	table_length_entry	pec_thread_table, pec_thread_end
+	table_length_entry	shv_thread_table, shv_thread_end
+	table_length_entry	dxf_color_table, dxf_color_end
+
 
 svg_property_token_table:
 	dd	audio_level_token
@@ -2256,10 +2286,9 @@ format_list:
 	format_entry	".vp3", "Pfaff Embroidery Format", 'U', 'U', STITCHONLY
 	format_entry	".xxx", "Singer Embroidery Format", 'U', 'U', STITCHONLY
 	format_entry	".zsk", "ZSK USA Embroidery Format", 'U', ' ', STITCHONLY
-	format_entry	"END", "END", ' ', ' ', 0
 
 
-stitchTypeLabels:
+stitch_labels:
 	dd	stitch_token
 	dd	jump_token
 	dd	trim_token
@@ -2572,25 +2601,25 @@ svg_color_codes:
 	thread	"whitesmoke", 0xf5, 0xf5, 0xf5, 145
 	thread	"yellow", 0xff, 0xff, 0x00, 146
 	thread	"yellowgreen", 0x9a, 0xcd, 0x0e, 147
-	thread	"END", 0, 0, 0, -1
+svg_color_end:
 
 arc_polyester_codes:
-	thread	"END", 0, 0, 0, -1
+arc_polyester_end:
 
 arc_rayon_codes:
-	thread	"END", 0, 0, 0, -1
+arc_rayon_end:
 
 coats_and_clark_rayon_codes:
-	thread	"END", 0, 0, 0, -1
+coats_and_clark_rayon_end:
 
 exquisite_polyester_codes:
-	thread	"END", 0, 0, 0, -1
+exquisite_polyester_end:
 
 fufu_polyester_codes:
-	thread	"END", 0, 0, 0, -1
+fufu_polyester_end:
 
 fufu_rayon_codes:
-	thread	"END", 0, 0, 0, -1
+fufu_rayon_end:
 
 hemingworth_polyester_codes:
 	thread	"Pure White", 0xFF, 0xFF, 0xFF, 1001
@@ -2875,7 +2904,7 @@ hemingworth_polyester_codes:
 	thread	"Dark Mauve", 0x89, 0x68, 0x7C, 1153
 	thread	"Wild Plum", 0x64, 0x44, 0x59, 1154
 	thread	"Huckleberry", 0x4B, 0x30, 0x6A, 1212
-	thread	"END", 0, 0, 0, -1
+hemingworth_polyester_end:
 
 
 isacord_polyester_codes:
@@ -3197,7 +3226,7 @@ isacord_polyester_codes:
 	thread	"?", 0xBE, 0xD7, 0x82, 6051
 	thread	"?", 0x91, 0x96, 0x00, 6133
 	thread	"?", 0x48, 0x46, 0x01, 6156
-	thread	"END", 0, 0, 0, -1
+isacord_polyester_end:
 
 
 isafil_rayon_codes:
@@ -3642,27 +3671,27 @@ isafil_rayon_codes:
 	thread	"?", 0xDC, 0xDD, 0xD1, 6071
 	thread	"?", 0x91, 0x96, 0x00, 6133
 	thread	"?", 0x48, 0x46, 0x01, 6156
-	thread	"END", 0, 0, 0, -1
+isafil_rayon_end:
 
 
 marathon_polyester_codes:
-	thread	"END", 0, 0, 0, -1
+marathon_polyester_end:
 
 
 marathon_rayon_codes:
-	thread	"END", 0, 0, 0, -1
+marathon_rayon_end:
 
 
 madeira_polyester_codes:
-	thread	"END", 0, 0, 0, -1
+madeira_polyester_end:
 
 
 madeira_rayon_codes:
-	thread	"END", 0, 0, 0, -1
+madeira_rayon_end:
 
 
 metro_polyester_codes:
-	thread	"END", 0, 0, 0, -1
+metro_polyester_end:
 
 
 pantone_codes:
@@ -4710,7 +4739,7 @@ pantone_codes:
 	thread	"?", 0x49, 0x5C, 0x5E, 7545
 	thread	"?", 0x30, 0x45, 0x47, 7546
 	thread	"?", 0x0A, 0x0F, 0x0F, 7547
-	thread	"END", 0, 0, 0, -1
+pantone_end:
 
 
 ; Based on the manufacturer table at 
@@ -4721,7 +4750,7 @@ robison_anton_polyester_codes:
 	thread	"Black", 0x00, 0x00, 0x00, 5596
 	thread	"White", 0xFF, 0xFF, 0xFF, 5597
 ; unfinished
-	thread	"END", 0, 0, 0, -1
+robison_anton_polyester_end:
 
 
 robison_anton_rayon_codes:
@@ -5145,7 +5174,7 @@ robison_anton_rayon_codes:
 	thread	"Natural White", 0xF5, 0xED, 0xDE, 2342
 	thread	"Eggshell", 0xF0, 0xE8, 0xD6, 2343
 	thread	"Jet Black", 0x1C, 0x26, 0x30, 2632
-	thread	"END", 0, 0, 0, -1
+robison_anton_rayon_end:
 
 
 sigma_polyester_codes:
@@ -5299,7 +5328,7 @@ sigma_polyester_codes:
 	thread	"Powder Blue", 0x91, 0xB9, 0xE2, 5554
 	thread	"Froggy Green", 0x42, 0x96, 0x48, 5557
 	thread	"Stone Grey", 0x87, 0x8C, 0x8C, 8010
-	thread	"END", 0, 0, 0, -1
+sigma_polyester_end:
 
 
 sulky_rayon_codes:
@@ -5636,19 +5665,19 @@ sulky_rayon_codes:
 	thread	"Dark Forest", 0x36, 0x36, 0x1F, 1273
 	thread	"Watermelon", 0xFA, 0x5F, 0x7F, 1303
 	thread	"Caribbean Mist", 0xA3, 0xC2, 0xD7, 1644
-	thread	"END", 0, 0, 0, -1
+sulky_rayon_end:
 
 
 thread_art_rayon_codes:
-	thread	"END", 0, 0, 0, -1
+thread_art_rayon_end:
 
 
 thread_art_polyester_codes:
-	thread	"END", 0, 0, 0, -1
+thread_art_polyester_end:
 
 
 threadelight_polyester_codes:
-	thread	"END", 0, 0, 0, -1
+threadelight_polyester_end:
 
 
 z102_isacord_polyester_codes:
@@ -5772,7 +5801,7 @@ z102_isacord_polyester_codes:
 	thread	"?", 0xBC, 0xD6, 0x33, 6011
 	thread	"?", 0xBB, 0xCD, 0x91, 6051
 	thread	"?", 0x97, 0x8B, 0x3C, 6133
-	thread	"END", 0, 0, 0, -1
+z102_isacord_polyester_end:
 
 
 brand_codes:
@@ -5800,270 +5829,275 @@ brand_codes:
 	dd	threadelight_polyester_codes	; 21
 	dd	z102_isacord_polyester_codes	; 22
 	dd	svg_color_codes			; 23
+	dd	hus_thread_table		; 24
+	dd	jef_thread_table		; 25
+	dd	pcm_thread_table		; 26
+	dd	pec_thread_table		; 27
+	dd	shv_thread_table		; 28
+	dd	dxf_color_table			; 29
+	dd	0
 
 
 ; Based on the DraftSight color table
 dxf_color_table:
-	db	0, 0, 0		; BYBLOCK
-	db	255, 0, 0	; red
-	db	255, 255, 0	; yellow
-	db	0, 255, 0	; green
-	db	0, 255, 255	; cyan
-	db	0, 0, 255	; blue
-	db	255, 0, 255	; magenta
-	db	255, 255, 255	; white
-	db	128, 128, 128	; dark gray
-	db	192, 192, 192	; light gray
-	db	255, 0, 0	; 10
-	db	255, 127, 127	; 11
-	db	204, 0, 0	; 12
-	db	204, 102, 102	; 13
-	db	153, 0, 0	; 14
-	db	153, 76, 76	; 15
-	db	127, 0, 0	; 16
-	db	127, 63, 63	; 17
-	db	76, 0, 0	; 18
-	db	76, 38, 38	; 19
-	db	255, 63, 0	; 20
-	db	255, 159, 127	; 21
-	db	204, 51, 0	; 22
-	db	204, 127, 102	; 23
-	db	153, 38, 0	; 24
-	db	153, 95, 76	; 25
-	db	127, 31, 0	; 26
-	db	127, 79, 63	; 27
-	db	76, 19, 0	; 28
-	db	76, 47, 38	; 29
-	db	255, 127, 0	; 30
-	db	255, 191, 127	; 31
-	db	204, 102, 0	; 32
-	db	204, 153, 102	; 33
-	db	153, 76, 0	; 34
-	db	153, 114, 76	; 35
-	db	127, 63, 0	; 36
-	db	127, 95, 63	; 37
-	db	76, 38, 0	; 38
-	db	76, 57, 38	; 39
-	db	255, 191, 0	; 40
-	db	255, 223, 127	; 41
-	db	204, 153, 0	; 42
-	db	204, 178, 102	; 43
-	db	153, 114, 0	; 44
-	db	153, 133, 76	; 45
-	db	127, 95, 0	; 46
-	db	127, 111, 63	; 47
-	db	76, 57, 0	; 48
-	db	76, 66, 38	; 49
-	db	255, 255, 0	; 50
-	db	255, 255, 127	; 51
-	db	204, 204, 0	; 52
-	db	204, 204, 102	; 53
-	db	153, 153, 0	; 54
-	db	153, 153, 76	; 55
-	db	127, 127, 0	; 56
-	db	127, 127, 63	; 57
-	db	76, 76, 0	; 58
-	db	76, 76, 38	; 59
-	db	191, 255, 0	; 60
-	db	223, 255, 127	; 61
-	db	153, 204, 0	; 62
-	db	178, 204, 102	; 63
-	db	114, 153, 0	; 64
-	db	133, 153, 76	; 65
-	db	95, 127, 0	; 66
-	db	111, 127, 63	; 67
-	db	57, 76, 0	; 68
-	db	66, 76, 38	; 69
-	db	127, 255, 0	; 70
-	db	191, 255, 127	; 71
-	db	102, 204, 0	; 72
-	db	153, 204, 102	; 73
-	db	76, 153, 0	; 74
-	db	114, 153, 76	; 75
-	db	63, 127, 0	; 76
-	db	95, 127, 63	; 77
-	db	38, 76, 0	; 78
-	db	57, 76, 38	; 79
-	db	63, 255, 0	; 80
-	db	159, 255, 127	; 81
-	db	51, 204, 0	; 82
-	db	127, 204, 102	; 83
-	db	38, 153, 0	; 84
-	db	95, 153, 76	; 85
-	db	31, 127, 0	; 86
-	db	79, 127, 63	; 87
-	db	19, 76, 0	; 88
-	db	47, 76, 38	; 89
-	db	0, 255, 0	; 90
-	db	127, 255, 127	; 91
-	db	0, 204, 0	; 92
-	db	102, 204, 102	; 93
-	db	0, 153, 0	; 94
-	db	76, 153, 76	; 95
-	db	0, 127, 0	; 96
-	db	63, 127, 63	; 97
-	db	0, 76, 0	; 98
-	db	38, 76, 38	; 99
-	db	0, 255, 63	; 100
-	db	127, 255, 159	; 101
-	db	0, 204, 51	; 102
-	db	102, 204, 127	; 103
-	db	0, 153, 38	; 104
-	db	76, 153, 95	; 105
-	db	0, 127, 31	; 106
-	db	63, 127, 79	; 107
-	db	0, 76, 19	; 108
-	db	38, 76, 47	; 109
-	db	0, 255, 127	; 110
-	db	127, 255, 191	; 111
-	db	0, 204, 102	; 112
-	db	102, 204, 153	; 113
-	db	0, 153, 76	; 114
-	db	76, 153, 114	; 115
-	db	0, 127, 63	; 116
-	db	63, 127, 95	; 117
-	db	0, 76, 38	; 118
-	db	38, 76, 57	; 119
-	db	0, 255, 191	; 120
-	db	127, 255, 223	; 121
-	db	0, 204, 153	; 122
-	db	102, 204, 178	; 123
-	db	0, 153, 114	; 124
-	db	76, 153, 133	; 125
-	db	0, 127, 95	; 126
-	db	63, 127, 111	; 127
-	db	0, 76, 57	; 128
-	db	38, 76, 66	; 129
-	db	0, 255, 255	; 130
-	db	127, 255, 255	; 131
-	db	0, 204, 204	; 132
-	db	102, 204, 204	; 133
-	db	0, 153, 153	; 134
-	db	76, 153, 153	; 135
-	db	0, 127, 127	; 136
-	db	63, 127, 127	; 137
-	db	0, 76, 76	; 138
-	db	38, 76, 76	; 139
-	db	0, 191, 255	; 140
-	db	127, 223, 255	; 141
-	db	0, 153, 204	; 142
-	db	102, 178, 204	; 143
-	db	0, 114, 153	; 144
-	db	76, 133, 153	; 145
-	db	0, 95, 127	; 146
-	db	63, 111, 127	; 147
-	db	0, 57, 76	; 148
-	db	38, 66, 76	; 149
-	db	0, 127, 255	; 150
-	db	127, 191, 255	; 151
-	db	0, 102, 204	; 152
-	db	102, 153, 204	; 153
-	db	0, 76, 153	; 154
-	db	76, 114, 153	; 155
-	db	0, 63, 127	; 156
-	db	63, 95, 127	; 157
-	db	0, 38, 76	; 158
-	db	38, 57, 76	; 159
-	db	0, 63, 255	; 160
-	db	127, 159, 255	; 161
-	db	0, 51, 204	; 162
-	db	102, 127, 204	; 163
-	db	0, 38, 153	; 164
-	db	76, 95, 153	; 165
-	db	0, 31, 127	; 166
-	db	63, 79, 127	; 167
-	db	0, 19, 76	; 168
-	db	38, 47, 76	; 169
-	db	0, 0, 255	; 170
-	db	127, 127, 255	; 171
-	db	0, 0, 204	; 172
-	db	102, 102, 204	; 173
-	db	0, 0, 153	; 174
-	db	76, 76, 153	; 175
-	db	0, 0, 127	; 176
-	db	63, 63, 127	; 177
-	db	0, 0, 76	; 178
-	db	38, 38, 76	; 179
-	db	63, 0, 255	; 180
-	db	159, 127, 255	; 181
-	db	51, 0, 204	; 182
-	db	127, 102, 204	; 183
-	db	38, 0, 153	; 184
-	db	95, 76, 153	; 185
-	db	31, 0, 127	; 186
-	db	79, 63, 127	; 187
-	db	19, 0, 76	; 188
-	db	47, 38, 76	; 189
-	db	127, 0, 255	; 190
-	db	191, 127, 255	; 191
-	db	102, 0, 204	; 192
-	db	153, 102, 204	; 193
-	db	76, 0, 153	; 194
-	db	114, 76, 153	; 195
-	db	63, 0, 127	; 196
-	db	95, 63, 127	; 197
-	db	38, 0, 76	; 198
-	db	57, 38, 76	; 199
-	db	191, 0, 255	; 200
-	db	223, 127, 255	; 201
-	db	153, 0, 204	; 202
-	db	178, 102, 204	; 203
-	db	114, 0, 153	; 204
-	db	133, 76, 153	; 205
-	db	95, 0, 127	; 206
-	db	111, 63, 127	; 207
-	db	57, 0, 76	; 208
-	db	66, 38, 76	; 209
-	db	255, 0, 255	; 210
-	db	255, 127, 255	; 211
-	db	204, 0, 204	; 212
-	db	204, 102, 204	; 213
-	db	153, 0, 153	; 214
-	db	153, 76, 153	; 215
-	db	127, 0, 127	; 216
-	db	127, 63, 127	; 217
-	db	76, 0, 76	; 218
-	db	76, 38, 76	; 219
-	db	255, 0, 191	; 220
-	db	255, 127, 223	; 221
-	db	204, 0, 153	; 222
-	db	204, 102, 178	; 223
-	db	153, 0, 114	; 224
-	db	153, 76, 133	; 225
-	db	127, 0, 95	; 226
-	db	127, 63, 111	; 227
-	db	76, 0, 57	; 228
-	db	76, 38, 66	; 229
-	db	255, 0, 127	; 230
-	db	255, 127, 191	; 231
-	db	204, 0, 102	; 232
-	db	204, 102, 153	; 233
-	db	153, 0, 76	; 234
-	db	153, 76, 114	; 235
-	db	127, 0, 63	; 236
-	db	127, 63, 95	; 237
-	db	76, 0, 38	; 238
-	db	76, 38, 57	; 239
-	db	255, 0, 63	; 240
-	db	255, 127, 159	; 241
-	db	204, 0, 51	; 242
-	db	204, 102, 127	; 243
-	db	153, 0, 38	; 244
-	db	153, 76, 95	; 245
-	db	127, 0, 31	; 246
-	db	127, 63, 79	; 247
-	db	76, 0, 19	; 248
-	db	76, 38, 47	; 249
-	db	51, 51, 51	; 250
-	db	91, 91, 91	; 251
-	db	132, 132, 132	; 252
-	db	173, 173, 173	; 253
-	db	214, 214, 214	; 254
-	db	255, 255, 255	; 255
-	db	0, 0, 0		; 256 (BYLAYER)
-
-hus_thread_count:
-	db	29
+	thread	"BYBLOCK", 0, 0, 0, 0
+	thread	"red", 255, 0, 0, 1
+	thread	"yellow", 255, 255, 0, 2
+	thread	"green", 0, 255, 0, 3
+	thread	"cyan", 0, 255, 255, 4
+	thread	"blue", 0, 0, 255, 5
+	thread	"magenta", 255, 0, 255, 6
+	thread	"white", 255, 255, 255, 7
+	thread	"dark gray", 128, 128, 128, 8
+	thread	"light gray", 192, 192, 192, 9
+	thread	"dxf10", 255, 0, 0, 10
+	thread	"dxf11", 255, 127, 127, 11
+	thread	"dxf12", 204, 0, 0, 12
+	thread	"dxf13", 204, 102, 102, 13
+	thread	"dxf", 153, 0, 0, 14
+	thread	"dxf", 153, 76, 76, 15
+	thread	"dxf", 127, 0, 0, 16
+	thread	"dxf", 127, 63, 63, 17
+	thread	"dxf", 76, 0, 0, 18
+	thread	"dxf", 76, 38, 38, 19
+	thread	"dxf", 255, 63, 0, 20
+	thread	"dxf", 255, 159, 127, 21
+	thread	"dxf", 204, 51, 0, 22
+	thread	"dxf", 204, 127, 102, 23
+	thread	"dxf", 153, 38, 0, 24
+	thread	"dxf", 153, 95, 76, 25
+	thread	"dxf", 127, 31, 0, 26
+	thread	"dxf", 127, 79, 63, 27
+	thread	"dxf", 76, 19, 0, 28
+	thread	"dxf", 76, 47, 38, 29
+	thread	"dxf", 255, 127, 0, 30
+	thread	"dxf", 255, 191, 127, 31
+	thread	"dxf", 204, 102, 0, 32
+	thread	"dxf", 204, 153, 102, 33
+	thread	"dxf", 153, 76, 0, 34
+	thread	"dxf", 153, 114, 76, 35
+	thread	"dxf", 127, 63, 0, 36
+	thread	"dxf", 127, 95, 63, 37
+	thread	"dxf", 76, 38, 0, 38
+	thread	"dxf", 76, 57, 38, 39
+	thread	"dxf", 255, 191, 0, 40
+	thread	"dxf", 255, 223, 127, 41
+	thread	"dxf", 204, 153, 0, 42
+	thread	"dxf", 204, 178, 102, 43
+	thread	"dxf", 153, 114, 0, 44
+	thread	"dxf", 153, 133, 76, 45
+	thread	"dxf", 127, 95, 0, 46
+	thread	"dxf", 127, 111, 63, 47
+	thread	"dxf", 76, 57, 0, 48
+	thread	"dxf", 76, 66, 38, 49
+	thread	"dxf", 255, 255, 0, 50
+	thread	"dxf", 255, 255, 127, 51
+	thread	"dxf", 204, 204, 0, 52
+	thread	"dxf", 204, 204, 102, 53
+	thread	"dxf", 153, 153, 0, 54
+	thread	"dxf", 153, 153, 76, 55
+	thread	"dxf", 127, 127, 0, 56
+	thread	"dxf", 127, 127, 63, 57
+	thread	"dxf", 76, 76, 0, 58
+	thread	"dxf", 76, 76, 38, 59
+	thread	"dxf", 191, 255, 0, 60
+	thread	"dxf", 223, 255, 127, 61
+	thread	"dxf", 153, 204, 0, 62
+	thread	"dxf", 178, 204, 102, 63
+	thread	"dxf", 114, 153, 0, 64
+	thread	"dxf", 133, 153, 76, 65
+	thread	"dxf", 95, 127, 0, 66
+	thread	"dxf", 111, 127, 63, 67
+	thread	"dxf", 57, 76, 0, 68
+	thread	"dxf", 66, 76, 38, 69
+	thread	"dxf", 127, 255, 0, 70
+	thread	"dxf", 191, 255, 127, 71
+	thread	"dxf", 102, 204, 0, 72
+	thread	"dxf", 153, 204, 102, 73
+	thread	"dxf", 76, 153, 0, 74
+	thread	"dxf", 114, 153, 76, 75
+	thread	"dxf", 63, 127, 0, 76
+	thread	"dxf", 95, 127, 63, 77
+	thread	"dxf", 38, 76, 0, 78
+	thread	"dxf", 57, 76, 38, 79
+	thread	"dxf", 63, 255, 0, 80
+	thread	"dxf", 159, 255, 127, 81
+	thread	"dxf", 51, 204, 0, 82
+	thread	"dxf", 127, 204, 102, 83
+	thread	"dxf", 38, 153, 0, 84
+	thread	"dxf", 95, 153, 76, 85
+	thread	"dxf", 31, 127, 0, 86
+	thread	"dxf", 79, 127, 63, 87
+	thread	"dxf", 19, 76, 0, 88
+	thread	"dxf", 47, 76, 38, 89
+	thread	"dxf", 0, 255, 0, 90
+	thread	"dxf", 127, 255, 127, 91
+	thread	"dxf", 0, 204, 0, 92
+	thread	"dxf", 102, 204, 102, 93
+	thread	"dxf", 0, 153, 0, 94
+	thread	"dxf", 76, 153, 76, 95
+	thread	"dxf", 0, 127, 0, 96
+	thread	"dxf", 63, 127, 63, 97
+	thread	"dxf", 0, 76, 0, 98
+	thread	"dxf", 38, 76, 38, 99
+	thread	"dxf", 0, 255, 63, 100
+	thread	"dxf", 127, 255, 159, 101
+	thread	"dxf", 0, 204, 51, 102
+	thread	"dxf", 102, 204, 127, 103
+	thread	"dxf", 0, 153, 38, 104
+	thread	"dxf", 76, 153, 95, 105
+	thread	"dxf", 0, 127, 31, 106
+	thread	"dxf", 63, 127, 79, 107
+	thread	"dxf", 0, 76, 19, 108
+	thread	"dxf", 38, 76, 47, 109
+	thread	"dxf", 0, 255, 127, 110
+	thread	"dxf", 127, 255, 191, 111
+	thread	"dxf", 0, 204, 102, 112
+	thread	"dxf", 102, 204, 153, 113
+	thread	"dxf", 0, 153, 76, 114
+	thread	"dxf", 76, 153, 114, 115
+	thread	"dxf", 0, 127, 63, 116
+	thread	"dxf", 63, 127, 95, 117
+	thread	"dxf", 0, 76, 38, 118
+	thread	"dxf", 38, 76, 57, 119
+	thread	"dxf", 0, 255, 191, 120
+	thread	"dxf", 127, 255, 223, 121
+	thread	"dxf", 0, 204, 153, 122
+	thread	"dxf", 102, 204, 178, 123
+	thread	"dxf", 0, 153, 114, 124
+	thread	"dxf", 76, 153, 133, 125
+	thread	"dxf", 0, 127, 95, 126
+	thread	"dxf", 63, 127, 111, 127
+	thread	"dxf", 0, 76, 57, 128
+	thread	"dxf", 38, 76, 66, 129
+	thread	"dxf", 0, 255, 255, 130
+	thread	"dxf", 127, 255, 255, 131
+	thread	"dxf", 0, 204, 204, 132
+	thread	"dxf", 102, 204, 204, 133
+	thread	"dxf", 0, 153, 153, 134
+	thread	"dxf", 76, 153, 153, 135
+	thread	"dxf", 0, 127, 127, 136
+	thread	"dxf", 63, 127, 127, 137
+	thread	"dxf", 0, 76, 76, 138
+	thread	"dxf", 38, 76, 76, 139
+	thread	"dxf", 0, 191, 255, 140
+	thread	"dxf", 127, 223, 255, 141
+	thread	"dxf", 0, 153, 204, 142
+	thread	"dxf", 102, 178, 204, 143
+	thread	"dxf", 0, 114, 153, 144
+	thread	"dxf", 76, 133, 153, 145
+	thread	"dxf", 0, 95, 127, 146
+	thread	"dxf", 63, 111, 127, 147
+	thread	"dxf", 0, 57, 76, 148
+	thread	"dxf", 38, 66, 76, 149
+	thread	"dxf", 0, 127, 255, 150
+	thread	"dxf", 127, 191, 255, 151
+	thread	"dxf", 0, 102, 204, 152
+	thread	"dxf", 102, 153, 204, 153
+	thread	"dxf", 0, 76, 153, 154
+	thread	"dxf", 76, 114, 153, 155
+	thread	"dxf", 0, 63, 127, 156
+	thread	"dxf", 63, 95, 127, 157
+	thread	"dxf", 0, 38, 76, 158
+	thread	"dxf", 38, 57, 76, 159
+	thread	"dxf", 0, 63, 255, 160
+	thread	"dxf", 127, 159, 255, 161
+	thread	"dxf", 0, 51, 204, 162
+	thread	"dxf", 102, 127, 204, 163
+	thread	"dxf", 0, 38, 153, 164
+	thread	"dxf", 76, 95, 153, 165
+	thread	"dxf", 0, 31, 127, 166
+	thread	"dxf", 63, 79, 127, 167
+	thread	"dxf", 0, 19, 76, 168
+	thread	"dxf", 38, 47, 76, 169
+	thread	"dxf", 0, 0, 255, 170
+	thread	"dxf", 127, 127, 255, 171
+	thread	"dxf", 0, 0, 204, 172
+	thread	"dxf", 102, 102, 204, 173
+	thread	"dxf", 0, 0, 153, 174
+	thread	"dxf", 76, 76, 153, 175
+	thread	"dxf", 0, 0, 127, 176
+	thread	"dxf", 63, 63, 127, 177
+	thread	"dxf", 0, 0, 76, 178
+	thread	"dxf", 38, 38, 76, 179
+	thread	"dxf", 63, 0, 255, 180
+	thread	"dxf", 159, 127, 255, 181
+	thread	"dxf", 51, 0, 204, 182
+	thread	"dxf", 127, 102, 204, 183
+	thread	"dxf", 38, 0, 153, 184
+	thread	"dxf", 95, 76, 153, 185
+	thread	"dxf", 31, 0, 127, 186
+	thread	"dxf", 79, 63, 127, 187
+	thread	"dxf", 19, 0, 76, 188
+	thread	"dxf", 47, 38, 76, 189
+	thread	"dxf", 127, 0, 255, 190
+	thread	"dxf", 191, 127, 255, 191
+	thread	"dxf", 102, 0, 204, 192
+	thread	"dxf", 153, 102, 204, 193
+	thread	"dxf", 76, 0, 153, 194
+	thread	"dxf", 114, 76, 153, 195
+	thread	"dxf", 63, 0, 127, 196
+	thread	"dxf", 95, 63, 127, 197
+	thread	"dxf", 38, 0, 76, 198
+	thread	"dxf", 57, 38, 76, 199
+	thread	"dxf", 191, 0, 255, 200
+	thread	"dxf", 223, 127, 255, 201
+	thread	"dxf", 153, 0, 204, 202
+	thread	"dxf", 178, 102, 204, 203
+	thread	"dxf", 114, 0, 153, 204
+	thread	"dxf", 133, 76, 153, 205
+	thread	"dxf", 95, 0, 127, 206
+	thread	"dxf", 111, 63, 127, 207
+	thread	"dxf", 57, 0, 76, 208
+	thread	"dxf", 66, 38, 76, 209
+	thread	"dxf", 255, 0, 255, 210
+	thread	"dxf", 255, 127, 255, 211
+	thread	"dxf", 204, 0, 204, 212
+	thread	"dxf", 204, 102, 204, 213
+	thread	"dxf", 153, 0, 153, 214
+	thread	"dxf", 153, 76, 153, 215
+	thread	"dxf", 127, 0, 127, 216
+	thread	"dxf", 127, 63, 127, 217
+	thread	"dxf", 76, 0, 76, 218
+	thread	"dxf", 76, 38, 76, 219
+	thread	"dxf", 255, 0, 191, 220
+	thread	"dxf", 255, 127, 223, 221
+	thread	"dxf", 204, 0, 153, 222
+	thread	"dxf", 204, 102, 178, 223
+	thread	"dxf", 153, 0, 114, 224
+	thread	"dxf", 153, 76, 133, 225
+	thread	"dxf", 127, 0, 95, 226
+	thread	"dxf", 127, 63, 111, 227
+	thread	"dxf", 76, 0, 57, 228
+	thread	"dxf", 76, 38, 66, 229
+	thread	"dxf", 255, 0, 127, 230
+	thread	"dxf", 255, 127, 191, 231
+	thread	"dxf", 204, 0, 102, 232
+	thread	"dxf", 204, 102, 153, 233
+	thread	"dxf", 153, 0, 76, 234
+	thread	"dxf", 153, 76, 114, 235
+	thread	"dxf", 127, 0, 63, 236
+	thread	"dxf", 127, 63, 95, 237
+	thread	"dxf", 76, 0, 38, 238
+	thread	"dxf", 76, 38, 57, 239
+	thread	"dxf", 255, 0, 63, 240
+	thread	"dxf", 255, 127, 159, 241
+	thread	"dxf", 204, 0, 51, 242
+	thread	"dxf", 204, 102, 127, 243
+	thread	"dxf", 153, 0, 38, 244
+	thread	"dxf", 153, 76, 95, 245
+	thread	"dxf", 127, 0, 31, 246
+	thread	"dxf", 127, 63, 79, 247
+	thread	"dxf", 76, 0, 19, 248
+	thread	"dxf", 76, 38, 47, 249
+	thread	"dxf", 51, 51, 51, 250
+	thread	"dxf", 91, 91, 91, 251
+	thread	"dxf", 132, 132, 132, 252
+	thread	"dxf", 173, 173, 173, 253
+	thread	"dxf254", 214, 214, 214, 254
+	thread	"dxf255", 255, 255, 255, 255
+	thread	"dxf256", 0, 0, 0, 256	; (BYLAYER)
+dxf_color_end:
 
 ; TODO: HUS catalog numbers
 hus_thread_table:
@@ -6097,6 +6131,7 @@ hus_thread_table:
 	thread	"Dark Brown", 115, 40, 0, 27
 	thread	"Light Brown", 175, 90, 10, 28
 	thread	"END", 0, 0, 0, 0
+hus_thread_end:
 
 
 jef_thread_table:
@@ -6113,76 +6148,74 @@ jef_thread_table:
 	thread	"Red", 255, 0, 0, 10
 	thread	"Brown", 192, 128, 0, 11
 	thread	"Blue", 0, 0, 240, 12
-;	thread	{ 228, 195, 93, "Gold", 13
-;	thread	{ 165, 42, 42, "Dark Brown", 14
-;	thread	{ 213, 176, 212, "Pale Violet", 15
-;	thread	{ 252, 242, 148, "Pale Yellow", 16
-;	thread	{ 240, 208, 192, "Pale Pink", 17
-;	thread	{ 255, 192, 0, "Peach", 18
-;	thread	{ 201, 164, 128, "Beige", 19
-;	thread	{ 155, 61, 75, "Wine Red", 20
-;	thread	{ 160, 184, 204, "Pale Sky", 21
-;	thread	{ 127, 194, 28, "Yellow Green", 22
-;	thread	{ 185, 185, 185, "Silver Grey", 23
-;	thread	{ 160, 160, 160, "Grey", 24
-;	thread	{ 152, 214, 189, "Pale Aqua", 25
-;	thread	{ 184, 240, 240, "Baby Blue", 26
-;	thread	{ 54, 139, 160, "Powder Blue", 27
-;	thread	{ 79, 131, 171, "Bright Blue", 28
-;	thread	{ 56, 106, 145, "Slate Blue", 29
-;	thread	{ 0, 32, 107, "Nave Blue", 30
-;	thread	{ 229, 197, 202, "Salmon Pink", 31
-;	thread	{ 249, 103, 107, "Coral", 32
-;	thread	{ 227, 49, 31, "Burnt Orange", 33
-;	thread	{ 226, 161, 136, "Cinnamon", 34
-;	thread	{ 181, 148, 116, "Umber", 35
-;	thread	{ 228, 207, 153, "Blonde", 36
-;	thread	{ 225, 203, 0, "Sunflower", 37
-;	thread	{ 225, 173, 212, "Orchid Pink", 38
-;	thread	{ 195, 0, 126, "Peony Purple", 39
-;	thread	{ 128, 0, 75, "Burgundy", 40
-;	thread	{ 160, 96, 176, "Royal Purple", 41
-;;	thread	{ 192, 64, 32, "Cardinal Red", 42
-;	thread	{ 202, 224, 192, "Opal Green", 43
-;	thread	{ 137, 152, 86, "Moss Green", 44
-;	thread	{ 0, 170, 0, "Meadow Green", 45
-;	thread	{ 33, 138, 33, "Dark Green", 46
-;	thread	{ 93, 174, 148, "Aquamarine", 47
-;	thread	{ 76, 191, 143, "Emerald Green", 48
-;	thread	{ 0, 119, 114, "Peacock Green", 49
-;	thread	{ 112, 112, 112, "Dark Grey", 50
-;	thread	{ 242, 255, 255, "Ivory White", 51
-;	thread	{ 177, 88, 24, "Hazel", 52
-;	thread	{ 203, 138, 7, "Toast", 53
-;	thread	{ 247, 146, 123, "Salmon", 54
-;	thread	{ 152, 105, 45, "Cocoa Brown", 55
-;	thread	{ 162, 113, 72, "Sienna", 56
-;	thread	{ 123, 85, 74, "Sepia", 57
-;	thread	{ 79, 57, 70, "Dark Sepia", 58
-;	thread	{ 82, 58, 151, "Violet Blue", 59
-;	thread	{ 0, 0, 160, "Blue Ink", 60
-;	thread	{ 0, 150, 222, "Solar Blue", 61
-;	thread	{ 178, 221, 83, "Green Dust", 62
-;	thread	{ 250, 143, 187, "Crimson", 63
-;	thread	{ 222, 100, 158, "Floral Pink", 64
-;	thread	{ 181, 80, 102, "Wine", 65
-;	thread	{ 94, 87, 71, "Olive Drab", 66
-;	thread	{ 76, 136, 31, "Meadow", 67
-;	thread	{ 228, 220, 121, "Mustard", 68
-;	thread	{ 203, 138, 26, "Yellow Ochre", 69
-;	thread	{ 198, 170, 66, "Old Gold", 70
-;	thread	{ 236, 176, 44, "Honeydew", 71
-;	thread	{ 248, 128, 64, "Tangerine", 72
-;	thread	{ 255, 229, 5, "Canary Yellow", 73
-;	thread	{ 250, 122, 122, "Vermillion", 74
-;	thread	{ 107, 224, 0, "Bright Green", 75
+	thread	"Gold", 228, 195, 93, 13
+	thread	"Dark Brown", 165, 42, 42, 14
+	thread	"Pale Violet", 213, 176, 212, 15
+	thread	"Pale Yellow", 252, 242, 148, 16
+	thread	"Pale Pink", 240, 208, 192, 17
+	thread	"Peach", 255, 192, 0, 18
+	thread	"Beige", 201, 164, 128, 19
+	thread	"Wine Red", 155, 61, 75, 20
+	thread	"Pale Sky", 160, 184, 204, 21
+	thread	"Yellow Green", 127, 194, 28, 22
+	thread	"Silver Grey", 185, 185, 185, 23
+	thread	"Grey", 160, 160, 160, 24
+	thread	"Pale Aqua", 152, 214, 189, 25
+	thread	"Baby Blue", 184, 240, 240, 26
+	thread	"Powder Blue", 54, 139, 160, 27
+	thread	"Bright Blue", 79, 131, 171, 28
+	thread	"Slate Blue", 56, 106, 145, 29
+	thread	"Nave Blue", 0, 32, 107, 30
+	thread	"Salmon Pink", 229, 197, 202, 31
+	thread	"Coral", 249, 103, 107, 32
+	thread	"Burnt Orange", 227, 49, 31, 33
+	thread	"Cinnamon", 226, 161, 136, 34
+	thread	"Umber", 181, 148, 116, 35
+	thread	"Blonde", 228, 207, 153, 36
+	thread	"Sunflower", 225, 203, 0, 37
+	thread	"Orchid Pink", 225, 173, 212, 38
+	thread	"Peony Purple", 195, 0, 126, 39
+	thread	"Burgundy", 128, 0, 75, 40
+	thread	"Royal Purple", 160, 96, 176, 41
+	thread	"Cardinal Red", 192, 64, 32, 42
+	thread	"Opal Green", 202, 224, 192, 43
+	thread	"Moss Green", 137, 152, 86, 44
+	thread	"Meadow Green", 0, 170, 0, 45
+	thread	"Dark Green", 33, 138, 33, 46
+	thread	"Aquamarine", 93, 174, 148, 47
+	thread	"Emerald Green", 76, 191, 143, 48
+	thread	"Peacock Green", 0, 119, 114, 49
+	thread	"Dark Grey", 112, 112, 112, 50
+	thread	"Ivory White", 242, 255, 255, 51
+	thread	"Hazel", 177, 88, 24, 52
+	thread	"Toast", 203, 138, 7, 53
+	thread	"Salmon", 247, 146, 123, 54
+	thread	"Cocoa Brown", 152, 105, 45, 55
+	thread	"Sienna", 162, 113, 72, 56
+	thread	"Sepia", 123, 85, 74, 57
+	thread	"Dark Sepia", 79, 57, 70, 58
+	thread	"Violet Blue", 82, 58, 151, 59
+	thread	"Blue Ink", 0, 0, 160, 60
+	thread	"Solar Blue", 0, 150, 222, 61
+	thread	"Green Dust", 178, 221, 83, 62
+	thread	"Crimson", 250, 143, 187, 63
+	thread	"Floral Pink", 222, 100, 158, 64
+	thread	"Wine", 181, 80, 102, 65
+	thread	"Olive Drab", 94, 87, 71, 66
+	thread	"Meadow", 76, 136, 31, 67
+	thread	"Mustard", 228, 220, 121, 68
+	thread	"Yellow Ochre", 203, 138, 26, 69
+	thread	"Old Gold", 198, 170, 66, 70
+	thread	"Honeydew", 236, 176, 44, 71
+	thread	"Tangerine", 248, 128, 64, 72
+	thread	"Canary Yellow", 255, 229, 5, 73
+	thread	"Vermillion", 250, 122, 122, 74
+	thread	"Bright Green", 107, 224, 0, 75
 	thread	"Ocean Blue", 56, 108, 174, 76
 	thread	"Beige Grey", 227, 196, 180, 77
 	thread	"Bamboo", 227, 172, 129, 78
+jef_thread_end:
 
-
-pcm_thread_count:
-	dd	16
 
 pcm_thread_table:
 	thread	"PCM Color 1", 0x00, 0x00, 0x00, 1
@@ -6201,10 +6234,8 @@ pcm_thread_table:
 	thread	"PCM Color 14", 0x80, 0x80, 0x80, 14
 	thread	"PCM Color 15", 0xC0, 0xC0, 0xC0, 15
 	thread	"PCM Color 16", 0xFF, 0xFF, 0xFF, 16
+pcm_thread_end:
 
-
-pec_thread_count:
-	db	65
 
 pec_thread_table:
 	thread	"Unknown", 0, 0, 0, 0
@@ -6219,69 +6250,67 @@ pec_thread_table:
 	thread	"Lilac", 145, 95, 172, 9
 	thread	"Mint Green", 158, 214, 125, 10		; TODO: Verify RGB value is correct.
 	thread	"Deep Gold", 232, 169, 0, 11
-;	thread	{ 254, 186, 53, "Orange", 12
-;	thread	{ 255, 255, 0, "Yellow", 13
-;	thread	{ 112, 188, 31, "Lime Green", 14
-;	thread	{ 186, 152, 0, "Brass", 15
-;	thread	{ 168, 168, 168, "Silver", 16
-;	thread	{ 125, 111, 0, "Russet Brown", 17	; TODO: Verify RGB value is correct.
-;	thread	{ 255, 255, 179, "Cream Brown", 18
-;	thread	{ 79, 85, 86, "Pewter", 19
-;	thread	{ 0, 0, 0, "Black", 20
-;	thread	{ 11, 61, 145, "Ultramarine", 21
-;	thread	{ 119, 1, 118, "Royal Purple", 22
-;	thread	{ 41, 49, 51, "Dark Gray", 23
-;	thread	{ 42, 19, 1, "Dark Brown", 24
-;	thread	{ 246, 74, 138, "Deep Rose", 25
-;	thread	{ 178, 118, 36, "Light Brown", 26
-;	thread	{ 252, 187, 197, "Salmon Pink", 27	; TODO: Verify RGB value is correct.
-;	thread	{ 254, 55, 15, "Vermillion", 28
-;	thread	{ 240, 240, 240, "White", 29
-;	thread	{ 106, 28, 138, "Violet", 30
-;	thread	{ 168, 221, 196, "Seacrest", 31
-;	thread	{ 37, 132, 187, "Sky Blue", 32
-;	thread	{ 254, 179, 67, "Pumpkin", 33
-;	thread	{ 255, 243, 107, "Cream Yellow", 34
-;	thread	{ 208, 166, 96, "Khaki", 35
-;	thread	{ 209, 84, 0, "Clay Brown", 36
-;	thread	{ 102, 186, 73, "Leaf Green", 37
-;	thread	{ 19, 74, 70, "Peacock Blue", 38
-;	thread	{ 135, 135, 135, "Gray", 39
-;	thread	{ 216, 204, 198, "Warm Gray", 40	; TODO: Verify RGB value is correct.
-;	thread	{ 67, 86, 7, "Dark Olive", 41
-;	thread	{ 253, 217, 222, "Flesh Pink", 42	; TODO: Verify RGB value is correct.
-;	thread	{ 249, 147, 188, "Pink", 43
-;	thread	{ 0, 56, 34, "Deep Green", 44
-;	thread	{ 178, 175, 212, "Lavender", 45
-;	thread	{ 104, 106, 176, "Wisteria Violet", 46
-;	thread	{ 239, 227, 185, "Beige", 47
-;	thread	{ 247, 56, 102, "Carmine", 48
-;	thread	"Amber Red", 181, 75, 100, 49		; TODO: Verify RGB value is correct.
-;	thread	{ 19, 43, 26, "Olive Green", 50
-;	thread	{ 199, 1, 86, "Dark Fuschia", 51	; TODO: Verify RGB value is correct.
-;	thread	{ 254, 158, 50, "Tangerine", 52
-;	thread	{ 168, 222, 235, "Light Blue", 53
-;	thread	{ 0, 103, 62, "Emerald Green", 54	; TODO: Verify RGB value is correct.
-;	thread	{ 78, 41, 144, "Purple", 55
-;	thread	{ 47, 126, 32, "Moss Green", 56
-;	thread	{ 255, 204, 204, "Flesh Pink", 57	; TODO: Verify RGB value is correct.
+	thread	"Orange", 254, 186, 53, 12
+	thread	"Yellow", 255, 255, 0, 13
+	thread	"Lime Green", 112, 188, 31, 14
+	thread	"Brass", 186, 152, 0, 15
+	thread	"Silver", 168, 168, 168, 16
+	thread	"Russet Brown", 125, 111, 0, 17		; TODO: Verify RGB value is correct.
+	thread	"Cream Brown", 255, 255, 179, 18
+	thread	"Pewter", 79, 85, 86, 19
+	thread	"Black", 0, 0, 0, 20
+	thread	"Ultramarine", 11, 61, 145, 21
+	thread	"Royal Purple", 119, 1, 118, 22
+	thread	"Dark Gray", 41, 49, 51, 23
+	thread	"Dark Brown", 42, 19, 1, 24
+	thread	"Deep Rose", 246, 74, 138, 25
+	thread	"Light Brown", 178, 118, 36, 26
+	thread	"Salmon Pink", 252, 187, 197, 27	; TODO: Verify RGB value is correct.
+	thread	"Vermillion", 254, 55, 15, 28
+	thread	"White", 240, 240, 240, 29
+	thread	"Violet", 106, 28, 138, 30
+	thread	"Seacrest", 168, 221, 196, 31
+	thread	"Sky Blue", 37, 132, 187, 32
+	thread	"Pumpkin", 254, 179, 67, 33
+	thread	"Cream Yellow", 255, 243, 107, 34
+	thread	"Khaki", 208, 166, 96, 35
+	thread	"Clay Brown", 209, 84, 0, 36
+	thread	"Leaf Green", 102, 186, 73, 37
+	thread	"Peacock Blue", 19, 74, 70, 38
+	thread	"Gray", 135, 135, 135, 39
+	thread	"Warm Gray", 216, 204, 198, 40		; TODO: Verify RGB value is correct.
+	thread	"Dark Olive", 67, 86, 7, 41
+	thread	"Flesh Pink", 253, 217, 222, 42		; TODO: Verify RGB value is correct.
+	thread	"Pink", 249, 147, 188, 43
+	thread	"Deep Green", 0, 56, 34, 44
+	thread	"Lavender", 178, 175, 212, 45
+	thread	"Wisteria Violet", 104, 106, 176, 46
+	thread	"Beige", 239, 227, 185, 47
+	thread	"Carmine", 247, 56, 102, 48
+	thread	"Amber Red", 181, 75, 100, 49		; TODO: Verify RGB value is correct.
+	thread	"Olive Green", 19, 43, 26, 50
+	thread	"Dark Fuschia", 199, 1, 86, 51		; TODO: Verify RGB value is correct.
+	thread	"Tangerine", 254, 158, 50, 52
+	thread	"Light Blue", 168, 222, 235, 53
+	thread	"Emerald Green", 0, 103, 62, 54		; TODO: Verify RGB value is correct.
+	thread	"Purple", 78, 41, 144, 55
+	thread	"Moss Green", 47, 126, 32, 56
+	thread	"Flesh Pink", 255, 204, 204, 57		; TODO: Verify RGB value is correct.
 							; TODO: Flesh Pink is Index 42, is this Index incorrect?
-;	thread	{ 255, 217, 17, "Harvest Gold", 58
-;	thread	{ 9, 91, 166, "Electric Blue", 59
-;	thread	{ 240, 249, 112, "Lemon Yellow", 60
+	thread	"Harvest Gold", 255, 217, 17, 58
+	thread	"Electric Blue", 9, 91, 166, 59
+	thread	"Lemon Yellow", 240, 249, 112, 60
 	thread	"Fresh Green", 227, 243, 91, 61
 	thread	"Orange", 255, 153, 0, 62		; TODO: Verify RGB value is correct.
 							; TODO: Orange is Index 12, is this Index incorrect?
 	thread	"Cream Yellow", 255, 240, 141, 63	; TODO: Verify RGB value is correct.
 							; TODO: Cream Yellow is Index 34, is this Index incorrect?
 	thread	"Applique", 255, 200, 200, 64
+pec_thread_end:
 
 
 ; SHV Colors
 ; TODO: catalog numbers
-
-shvThreadCount:
-	db	42
 
 shv_thread_table:
 	thread	"Black", 0, 0, 0, 0
@@ -6297,16 +6326,16 @@ shv_thread_table:
 	thread	"Pink", 255, 160, 180, 10
 	thread	"Brown", 153, 75, 0, 11
 	thread	"White", 255, 255, 255, 12
-	thread	0, 0, 0, "Black", 13
-	thread	0, 0, 0, "Black", 14
-	thread	0, 0, 0, "Black", 15
-	thread	0, 0, 0, "Black", 16
-	thread	0, 0, 0, "Black", 17
-	thread	0, 0, 0, "Black", 18
-	thread	255, 127, 127, "Light Red", 19
-	thread	255, 127, 255, "Light Purple", 20
-	thread	255, 255, 153, "Light Yellow", 21
-	thread	192, 192, 192, "Light Grey", 22
+	thread	"Black", 0, 0, 0, 13
+	thread	"Black", 0, 0, 0, 14
+	thread	"Black", 0, 0, 0, 15
+	thread	"Black", 0, 0, 0, 16
+	thread	"Black", 0, 0, 0, 17
+	thread	"Black", 0, 0, 0, 18
+	thread	"Light Red", 255, 127, 127, 19
+	thread	"Light Purple", 255, 127, 255, 20
+	thread	"Light Yellow", 255, 255, 153, 21
+	thread	"Light Grey", 192, 192, 192, 22
 	thread	"Black", 0, 0, 0, 23
 	thread	"Black", 0, 0, 0, 24
 	thread	"Light Orange", 255, 165, 65, 25
@@ -6327,11 +6356,73 @@ shv_thread_table:
 	thread	"Black", 0, 0, 0, 40
 	thread	"Dark Orange", 232, 63, 0, 41
 	thread	"Dark Pink", 255, 102, 122, 42
+shv_thread_end:
 
+dxf_version_r:
+	dd	DXF_VERSION_R10
+	dd	DXF_VERSION_R11
+	dd	DXF_VERSION_R12
+	dd	DXF_VERSION_R13
+	dd	DXF_VERSION_R14
+	dd	DXF_VERSION_R15
+	dd	DXF_VERSION_R18
+	dd	DXF_VERSION_R21
+	dd	DXF_VERSION_R24
+	dd	DXF_VERSION_R27
+
+
+dxf_version_year:
+	dd	DXF_VERSION_2000
+	dd	DXF_VERSION_2002
+	dd	DXF_VERSION_2004
+	dd	DXF_VERSION_2006
+	dd	DXF_VERSION_2007
+	dd	DXF_VERSION_2009
+	dd	DXF_VERSION_2010
+	dd	DXF_VERSION_2013
+	dd	0
 
 ;-------------------------------------------------------------------------------
 ;	String table
 ;-------------------------------------------------------------------------------
+
+DXF_VERSION_R10:
+	dd	"AC1006", 0
+DXF_VERSION_R11:
+	dd	"AC1009", 0
+DXF_VERSION_R12:
+	dd	"AC1009", 0
+DXF_VERSION_R13:
+	dd	"AC1012", 0
+DXF_VERSION_R14:
+	dd	"AC1014", 0
+DXF_VERSION_R15:
+	dd	"AC1015", 0
+DXF_VERSION_R18:
+	dd	"AC1018", 0
+DXF_VERSION_R21:
+	dd	"AC1021", 0
+DXF_VERSION_R24:
+	dd	"AC1024", 0
+DXF_VERSION_R27:
+	dd	"AC1027", 0
+
+DXF_VERSION_2000:
+	db	"AC1015", 0
+DXF_VERSION_2002:
+	db	"AC1015", 0
+DXF_VERSION_2004:
+	db	"AC1018", 0
+DXF_VERSION_2006:
+	db	"AC1018", 0
+DXF_VERSION_2007:
+	db	"AC1021", 0
+DXF_VERSION_2009:
+	db	"AC1021", 0
+DXF_VERSION_2010:
+	db	"AC1024", 0
+DXF_VERSION_2013:
+	db	"AC1027", 0
 
 audio_level_token:
 	db	"audio-level", 0
@@ -6818,4 +6909,13 @@ xmlns_dc_token:
 	db	"xmlns:dc", 0
 xmlns_cc_token:
 	db	"xmlns:cc", 0
+
+write_csv_error_0:
+	db	"ERROR: writeCsv(), pattern contains no stitches.", 10, 0
+read_csv_error_0:
+	db	"ERROR: readCsv(), unable to allocate memory for buff.", 10, 0
+read_csv_error_1:
+	db	"ERROR: readCsv(), premature newline.", 10, 0
+read_csv_error_2:
+	db	"ERROR: readCsv(), cannot re-allocate memory for buff.", 10, 0
 

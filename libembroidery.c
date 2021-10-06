@@ -97,10 +97,9 @@ static int embFile_write(void *ptr, int a, int b, EmbFile *stream);
 static int embFile_seek(EmbFile *stream, int offset, int flags);
 static int embFile_tell(EmbFile *stream);
 
-static EmbFile *datafile;
 static int dereference_int(int p);
+static int double_dereference_int(int table, int entry);
 static int get_str(char *s, int p);
-static int string_table(int *table, char *s, int n);
 
 static EmbColor embColor_fromStr(unsigned char *b);
 static void embColor_toStr(EmbColor c, unsigned char *b);
@@ -150,6 +149,7 @@ static void readPecStitches(EmbPattern* pattern, EmbFile* file, const char* file
 static void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* filename);
 
 static char string_in_table(char *buff, int table);
+static EmbThread load_thread(int, int);
 
 static void embLog(const char* str);
 static void embTime_initNow(EmbTime* t);
@@ -301,25 +301,13 @@ int embVector_collinear(EmbVector a1, EmbVector a2, EmbVector a3, float collinea
  */
 
 static unsigned char embBuffer[1024];
+static EmbFile *datafile;
 
-/* Global Constants
+/* Flag Defines
  */
 
-#define EMB_BIG_ENDIAN    0
-#define EMB_LITTLE_ENDIAN 1
-
-/* Detect endianness, if running on a big endian machine
- * then the first byte of the short 0x0001 is 0x00 since it
- * reads left to right.
- *
- * So if the code is written for a little endian machine
- * and this detects big endian then we do the same casting
- * and then swap the byte order.
- */
-short wordExample = 0x0001;
-char *endianTest = (char*)&wordExample;
-
-static EmbColor black = { 0, 0, 0 };
+#define EMB_BIG_ENDIAN                 0
+#define EMB_LITTLE_ENDIAN              1
 
 /* These mirror the first table in libembroidery_data.asm. */
 #define svg_property_token_table       0
@@ -339,11 +327,10 @@ static EmbColor black = { 0, 0, 0 };
 #define inkscape_token_table           56
 #define svg_element_token_table        60
 #define svg_media_property_token_table 64
-#define hus_thread_table               68
-#define jef_thread_table               72
-#define pcm_thread_table               76
-#define pec_thread_table               80
-#define shv_thread_table               84
+#define stitch_labels                  68
+#define dxf_version_year               72
+#define dxf_version_r                  76
+#define table_lengths                  80
 
 #define brand_codes_length             24
 #define thread_type_length             35
@@ -404,337 +391,46 @@ Special values for Stream Identifiers
 #define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /*!< All real stream Ids are less than this */
 #define CompoundFileStreamId_NoStream 0xFFFFFFFF /*!< There is no valid stream Id            */
 
-/* TODO: This list needs reviewed in case some stitch formats also can contain object data (EMBFORMAT_STCHANDOBJ). */
+#define CSV_EXPECT_NULL           0
+#define CSV_EXPECT_QUOTE1         1
+#define CSV_EXPECT_QUOTE2         2
+#define CSV_EXPECT_COMMA          3
 
-const EmbFormatList formatTable[100] = {
-    { ".10o", "Toyota Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".100", "Toyota Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".art", "Bernina Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
-    { ".bmc", "Bitmap Cache Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
-    { ".bro", "Bits & Volts Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".cnd", "Melco Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
-    { ".col", "Embroidery Thread Color Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".csd", "Singer Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".csv", "Comma Separated Values Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".dat", "Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".dem", "Melco Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
-    { ".dsb", "Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".dst", "Tajima Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".dsz", "ZSK USA Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".dxf", "Drawing Exchange Format", ' ', ' ', EMBFORMAT_OBJECTONLY },
-    { ".edr", "Embird Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".emd", "Elna Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".exp", "Melco Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".exy", "Eltac Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".eys", "Sierra Expanded Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
-    { ".fxy", "Fortron Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".gc", "Smoothie G-Code Format", ' ', ' ', EMBFORMAT_STITCHONLY },
-    { ".gnc", "Great Notions Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
-    { ".gt", "Gold Thread Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".hus", "Husqvarna Viking Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".inb", "Inbro Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".inf", "Embroidery Color Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".jef", "Janome Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".ksm", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".max", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".mit", "Mitsubishi Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".new", "Ameco Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".ofm", "Melco Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".pcd", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".pcm", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".pcq", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".pcs", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".pec", "Brother Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".pel", "Brother Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
-    { ".pem", "Brother Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
-    { ".pes", "Brother Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".phb", "Brother Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".phc", "Brother Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".plt", "AutoCAD Plot Drawing Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".rgb", "RGB Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".sew", "Janome Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".shv", "Husqvarna Viking Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".sst", "Sunstar Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".stx", "Data Stitch Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".svg", "Scalable Vector Graphics", 'U', 'U', EMBFORMAT_OBJECTONLY },
-    { ".t01", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".t09", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".tap", "Happy Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".thr", "ThredWorks Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".txt", "Text File", ' ', 'U', EMBFORMAT_STITCHONLY },
-    { ".u00", "Barudan Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".u01", "Barudan Embroidery Format", ' ', ' ', EMBFORMAT_STITCHONLY },
-    { ".vip", "Pfaff Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { ".vp3", "Pfaff Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".xxx", "Singer Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY },
-    { ".zsk", "ZSK USA Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY },
-    { "END", "END", ' ', ' ', 0 }
-};
-
-#define CSV_EXPECT_NULL   0
-#define CSV_EXPECT_QUOTE1 1
-#define CSV_EXPECT_QUOTE2 2
-#define CSV_EXPECT_COMMA  3
-
-#define CSV_MODE_NULL     0
-#define CSV_MODE_COMMENT  1
-#define CSV_MODE_VARIABLE 2
-#define CSV_MODE_THREAD   3
-#define CSV_MODE_STITCH   4
-
+#define CSV_MODE_NULL             0
+#define CSV_MODE_COMMENT          1
+#define CSV_MODE_VARIABLE         2
+#define CSV_MODE_THREAD           3
+#define CSV_MODE_STITCH           4
 
 /* DXF Version Identifiers */
-#define DXF_VERSION_R10 "AC1006"
-#define DXF_VERSION_R11 "AC1009"
-#define DXF_VERSION_R12 "AC1009"
-#define DXF_VERSION_R13 "AC1012"
-#define DXF_VERSION_R14 "AC1014"
-#define DXF_VERSION_R15 "AC1015"
-#define DXF_VERSION_R18 "AC1018"
-#define DXF_VERSION_R21 "AC1021"
-#define DXF_VERSION_R24 "AC1024"
-#define DXF_VERSION_R27 "AC1027"
+#define DXF_VERSION_R10           0
+#define DXF_VERSION_R11           1
+#define DXF_VERSION_R12           2
+#define DXF_VERSION_R13           3
+#define DXF_VERSION_R14           4
+#define DXF_VERSION_R15           5
+#define DXF_VERSION_R18           6
+#define DXF_VERSION_R21           7
+#define DXF_VERSION_R24           8
+#define DXF_VERSION_R27           9
 
-#define DXF_VERSION_2000 "AC1015"
-#define DXF_VERSION_2002 "AC1015"
-#define DXF_VERSION_2004 "AC1018"
-#define DXF_VERSION_2006 "AC1018"
-#define DXF_VERSION_2007 "AC1021"
-#define DXF_VERSION_2009 "AC1021"
-#define DXF_VERSION_2010 "AC1024"
-#define DXF_VERSION_2013 "AC1027"
+#define DXF_VERSION_2000          0
+#define DXF_VERSION_2002          1
+#define DXF_VERSION_2004          2
+#define DXF_VERSION_2006          3
+#define DXF_VERSION_2007          4
+#define DXF_VERSION_2009          5
+#define DXF_VERSION_2010          6
+#define DXF_VERSION_2013          7
 
-#define MAX_LAYERS 16
-#define MAX_LAYER_NAME_LENGTH 30
+#define MAX_LAYERS                16
+#define MAX_LAYER_NAME_LENGTH     30
 
-static const EmbThread jefThreads[] = {
-    { { 0, 0, 0 }, "Black", "" },
-    { { 0, 0, 0 }, "Black", "" },
-    { { 255, 255, 255 }, "White", "" },
-    { { 255, 255, 23 }, "Yellow", "" },
-    { { 250, 160, 96 }, "Orange", "" },
-    { { 92, 118, 73 }, "Olive Green", "" },
-    { { 64, 192, 48 }, "Green", "" },
-    { { 101, 194, 200 }, "Sky", "" },
-    { { 172, 128, 190 }, "Purple", "" },
-    { { 245, 188, 203 }, "Pink", "" },
-    { { 255, 0, 0 }, "Red", "" },
-    { { 192, 128, 0 }, "Brown", "" },
-    { { 0, 0, 240 }, "Blue", "" },
-    { { 228, 195, 93 }, "Gold", "" },
-    { { 165, 42, 42 }, "Dark Brown", "" },
-    { { 213, 176, 212 }, "Pale Violet", "" },
-    { { 252, 242, 148 }, "Pale Yellow", "" },
-    { { 240, 208, 192 }, "Pale Pink", "" },
-    { { 255, 192, 0 }, "Peach", "" },
-    { { 201, 164, 128 }, "Beige", "" },
-    { { 155, 61, 75 }, "Wine Red", "" },
-    { { 160, 184, 204 }, "Pale Sky", "" },
-    { { 127, 194, 28 }, "Yellow Green", "" },
-    { { 185, 185, 185 }, "Silver Grey", "" },
-    { { 160, 160, 160 }, "Grey", "" },
-    { { 152, 214, 189 }, "Pale Aqua", "" },
-    { { 184, 240, 240 }, "Baby Blue", "" },
-    { { 54, 139, 160 }, "Powder Blue", "" },
-    { { 79, 131, 171 }, "Bright Blue", "" },
-    { { 56, 106, 145 }, "Slate Blue", "" },
-    { { 0, 32, 107 }, "Nave Blue", "" },
-    { { 229, 197, 202 }, "Salmon Pink", "" },
-    { { 249, 103, 107 }, "Coral", "" },
-    { { 227, 49, 31 }, "Burnt Orange", "" },
-    { { 226, 161, 136 }, "Cinnamon", "" },
-    { { 181, 148, 116 }, "Umber", "" },
-    { { 228, 207, 153 }, "Blonde", "" },
-    { { 225, 203, 0 }, "Sunflower", "" },
-    { { 225, 173, 212 }, "Orchid Pink", "" },
-    { { 195, 0, 126 }, "Peony Purple", "" },
-    { { 128, 0, 75 }, "Burgundy", "" },
-    { { 160, 96, 176 }, "Royal Purple", "" },
-    { { 192, 64, 32 }, "Cardinal Red", "" },
-    { { 202, 224, 192 }, "Opal Green", "" },
-    { { 137, 152, 86 }, "Moss Green", "" },
-    { { 0, 170, 0 }, "Meadow Green", "" },
-    { { 33, 138, 33 }, "Dark Green", "" },
-    { { 93, 174, 148 }, "Aquamarine", "" },
-    { { 76, 191, 143 }, "Emerald Green", "" },
-    { { 0, 119, 114 }, "Peacock Green", "" },
-    { { 112, 112, 112 }, "Dark Grey", "" },
-    { { 242, 255, 255 }, "Ivory White", "" },
-    { { 177, 88, 24 }, "Hazel", "" },
-    { { 203, 138, 7 }, "Toast", "" },
-    { { 247, 146, 123 }, "Salmon", "" },
-    { { 152, 105, 45 }, "Cocoa Brown", "" },
-    { { 162, 113, 72 }, "Sienna", "" },
-    { { 123, 85, 74 }, "Sepia", "" },
-    { { 79, 57, 70 }, "Dark Sepia", "" },
-    { { 82, 58, 151 }, "Violet Blue", "" },
-    { { 0, 0, 160 }, "Blue Ink", "" },
-    { { 0, 150, 222 }, "Solar Blue", "" },
-    { { 178, 221, 83 }, "Green Dust", "" },
-    { { 250, 143, 187 }, "Crimson", "" },
-    { { 222, 100, 158 }, "Floral Pink", "" },
-    { { 181, 80, 102 }, "Wine", "" },
-    { { 94, 87, 71 }, "Olive Drab", "" },
-    { { 76, 136, 31 }, "Meadow", "" },
-    { { 228, 220, 121 }, "Mustard", "" },
-    { { 203, 138, 26 }, "Yellow Ochre", "" },
-    { { 198, 170, 66 }, "Old Gold", "" },
-    { { 236, 176, 44 }, "Honeydew", "" },
-    { { 248, 128, 64 }, "Tangerine", "" },
-    { { 255, 229, 5 }, "Canary Yellow", "" },
-    { { 250, 122, 122 }, "Vermillion", "" },
-    { { 107, 224, 0 }, "Bright Green", "" },
-    { { 56, 108, 174 }, "Ocean Blue", "" },
-    { { 227, 196, 180 }, "Beige Grey", "" },
-    { { 227, 172, 129 }, "Bamboo", "" }
-};
-
-#define HOOP_126X110 0
-#define HOOP_110X110 1
-#define HOOP_50X50 2
-#define HOOP_140X200 3
-#define HOOP_230X200 4
-
-static const int pcmThreadCount = 65;
-static const EmbThread pcmThreads[] = {
-    { { 0x00, 0x00, 0x00 }, "PCM Color 1", "" },
-    { { 0x00, 0x00, 0x80 }, "PCM Color 2", "" },
-    { { 0x00, 0x00, 0xFF }, "PCM Color 3", "" },
-    { { 0x00, 0x80, 0x80 }, "PCM Color 4", "" },
-    { { 0x00, 0xFF, 0xFF }, "PCM Color 5", "" },
-    { { 0x80, 0x00, 0x80 }, "PCM Color 6", "" },
-    { { 0xFF, 0x00, 0xFF }, "PCM Color 7", "" },
-    { { 0x80, 0x00, 0x00 }, "PCM Color 8", "" },
-    { { 0xFF, 0x00, 0x00 }, "PCM Color 9", "" },
-    { { 0x00, 0x80, 0x00 }, "PCM Color 10", "" },
-    { { 0x00, 0xFF, 0x00 }, "PCM Color 11", "" },
-    { { 0x80, 0x80, 0x00 }, "PCM Color 12", "" },
-    { { 0xFF, 0xFF, 0x00 }, "PCM Color 13", "" },
-    { { 0x80, 0x80, 0x80 }, "PCM Color 14", "" },
-    { { 0xC0, 0xC0, 0xC0 }, "PCM Color 15", "" },
-    { { 0xFF, 0xFF, 0xFF }, "PCM Color 16", "" }
-};
-
-
-static const int pecThreadCount = 65;
-static const EmbThread pecThreads[] = {
-    { { 0, 0, 0 }, "Unknown", "" }, /* Index  0 */
-    { { 14, 31, 124 }, "Prussian Blue", "" }, /* Index  1 */
-    { { 10, 85, 163 }, "Blue", "" }, /* Index  2 */
-    { { 0, 135, 119 }, "Teal Green", "" }, /* Index  3 */ /* TODO: Verify RGB value is correct */
-    { { 75, 107, 175 }, "Cornflower Blue", "" }, /* Index  4 */
-    { { 237, 23, 31 }, "Red", "" }, /* Index  5 */
-    { { 209, 92, 0 }, "Reddish Brown", "" }, /* Index  6 */
-    { { 145, 54, 151 }, "Magenta", "" }, /* Index  7 */
-    { { 228, 154, 203 }, "Light Lilac", "" }, /* Index  8 */
-    { { 145, 95, 172 }, "Lilac", "" }, /* Index  9 */
-    { { 158, 214, 125 }, "Mint Green", "" }, /* Index 10 */ /* TODO: Verify RGB value is correct */
-    { { 232, 169, 0 }, "Deep Gold", "" }, /* Index 11 */
-    { { 254, 186, 53 }, "Orange", "" }, /* Index 12 */
-    { { 255, 255, 0 }, "Yellow", "" }, /* Index 13 */
-    { { 112, 188, 31 }, "Lime Green", "" }, /* Index 14 */
-    { { 186, 152, 0 }, "Brass", "" }, /* Index 15 */
-    { { 168, 168, 168 }, "Silver", "" }, /* Index 16 */
-    { { 125, 111, 0 }, "Russet Brown", "" }, /* Index 17 */ /* TODO: Verify RGB value is correct */
-    { { 255, 255, 179 }, "Cream Brown", "" }, /* Index 18 */
-    { { 79, 85, 86 }, "Pewter", "" }, /* Index 19 */
-    { { 0, 0, 0 }, "Black", "" }, /* Index 20 */
-    { { 11, 61, 145 }, "Ultramarine", "" }, /* Index 21 */
-    { { 119, 1, 118 }, "Royal Purple", "" }, /* Index 22 */
-    { { 41, 49, 51 }, "Dark Gray", "" }, /* Index 23 */
-    { { 42, 19, 1 }, "Dark Brown", "" }, /* Index 24 */
-    { { 246, 74, 138 }, "Deep Rose", "" }, /* Index 25 */
-    { { 178, 118, 36 }, "Light Brown", "" }, /* Index 26 */
-    { { 252, 187, 197 }, "Salmon Pink", "" }, /* Index 27 */ /* TODO: Verify RGB value is correct */
-    { { 254, 55, 15 }, "Vermillion", "" }, /* Index 28 */
-    { { 240, 240, 240 }, "White", "" }, /* Index 29 */
-    { { 106, 28, 138 }, "Violet", "" }, /* Index 30 */
-    { { 168, 221, 196 }, "Seacrest", "" }, /* Index 31 */
-    { { 37, 132, 187 }, "Sky Blue", "" }, /* Index 32 */
-    { { 254, 179, 67 }, "Pumpkin", "" }, /* Index 33 */
-    { { 255, 243, 107 }, "Cream Yellow", "" }, /* Index 34 */
-    { { 208, 166, 96 }, "Khaki", "" }, /* Index 35 */
-    { { 209, 84, 0 }, "Clay Brown", "" }, /* Index 36 */
-    { { 102, 186, 73 }, "Leaf Green", "" }, /* Index 37 */
-    { { 19, 74, 70 }, "Peacock Blue", "" }, /* Index 38 */
-    { { 135, 135, 135 }, "Gray", "" }, /* Index 39 */
-    { { 216, 204, 198 }, "Warm Gray", "" }, /* Index 40 */ /* TODO: Verify RGB value is correct */
-    { { 67, 86, 7 }, "Dark Olive", "" }, /* Index 41 */
-    { { 253, 217, 222 }, "Flesh Pink", "" }, /* Index 42 */ /* TODO: Verify RGB value is correct */
-    { { 249, 147, 188 }, "Pink", "" }, /* Index 43 */
-    { { 0, 56, 34 }, "Deep Green", "" }, /* Index 44 */
-    { { 178, 175, 212 }, "Lavender", "" }, /* Index 45 */
-    { { 104, 106, 176 }, "Wisteria Violet", "" }, /* Index 46 */
-    { { 239, 227, 185 }, "Beige", "" }, /* Index 47 */
-    { { 247, 56, 102 }, "Carmine", "" }, /* Index 48 */
-    { { 181, 75, 100 }, "Amber Red", "" }, /* Index 49 */ /* TODO: Verify RGB value is correct */
-    { { 19, 43, 26 }, "Olive Green", "" }, /* Index 50 */
-    { { 199, 1, 86 }, "Dark Fuschia", "" }, /* Index 51 */ /* TODO: Verify RGB value is correct */
-    { { 254, 158, 50 }, "Tangerine", "" }, /* Index 52 */
-    { { 168, 222, 235 }, "Light Blue", "" }, /* Index 53 */
-    { { 0, 103, 62 }, "Emerald Green", "" }, /* Index 54 */ /* TODO: Verify RGB value is correct */
-    { { 78, 41, 144 }, "Purple", "" }, /* Index 55 */
-    { { 47, 126, 32 }, "Moss Green", "" }, /* Index 56 */
-    { { 255, 204, 204 }, "Flesh Pink", "" }, /* Index 57 */ /* TODO: Verify RGB value is correct */ /* TODO: Flesh Pink is Index 42, is this Index incorrect? */
-    { { 255, 217, 17 }, "Harvest Gold", "" }, /* Index 58 */
-    { { 9, 91, 166 }, "Electric Blue", "" }, /* Index 59 */
-    { { 240, 249, 112 }, "Lemon Yellow", "" }, /* Index 60 */
-    { { 227, 243, 91 }, "Fresh Green", "" }, /* Index 61 */
-    { { 255, 153, 0 }, "Orange", "" }, /* Index 62 */ /* TODO: Verify RGB value is correct */ /* TODO: Orange is Index 12, is this Index incorrect? */
-    { { 255, 240, 141 }, "Cream Yellow", "" }, /* Index 63 */ /* TODO: Verify RGB value is correct */ /* TODO: Cream Yellow is Index 34, is this Index incorrect? */
-    { { 255, 200, 200 }, "Applique", "" } /* Index 64 */
-};
-
-/*****************************************
- * SHV Colors
- ****************************************/
-static const int shvThreadCount = 42;
-static const EmbThread shvThreads[] = {
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 255 }, "Blue", "TODO:CATALOG_NUMBER" },
-    { { 51, 204, 102 }, "Green", "TODO:CATALOG_NUMBER" },
-    { { 255, 0, 0 }, "Red", "TODO:CATALOG_NUMBER" },
-    { { 255, 0, 255 }, "Purple", "TODO:CATALOG_NUMBER" },
-    { { 255, 255, 0 }, "Yellow", "TODO:CATALOG_NUMBER" },
-    { { 127, 127, 127 }, "Grey", "TODO:CATALOG_NUMBER" },
-    { { 51, 154, 255 }, "Light Blue", "TODO:CATALOG_NUMBER" },
-    { { 0, 255, 0 }, "Light Green", "TODO:CATALOG_NUMBER" },
-    { { 255, 127, 0 }, "Orange", "TODO:CATALOG_NUMBER" },
-    { { 255, 160, 180 }, "Pink", "TODO:CATALOG_NUMBER" },
-    { { 153, 75, 0 }, "Brown", "TODO:CATALOG_NUMBER" },
-    { { 255, 255, 255 }, "White", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 255, 127, 127 }, "Light Red", "TODO:CATALOG_NUMBER" },
-    { { 255, 127, 255 }, "Light Purple", "TODO:CATALOG_NUMBER" },
-    { { 255, 255, 153 }, "Light Yellow", "TODO:CATALOG_NUMBER" },
-    { { 192, 192, 192 }, "Light Grey", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 255, 165, 65 }, "Light Orange", "TODO:CATALOG_NUMBER" },
-    { { 255, 204, 204 }, "Light Pink", "TODO:CATALOG_NUMBER" },
-    { { 175, 90, 10 }, "Light Brown", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 127 }, "Dark Blue", "TODO:CATALOG_NUMBER" },
-    { { 0, 127, 0 }, "Dark Green", "TODO:CATALOG_NUMBER" },
-    { { 127, 0, 0 }, "Dark Red", "TODO:CATALOG_NUMBER" },
-    { { 127, 0, 127 }, "Dark Purple", "TODO:CATALOG_NUMBER" },
-    { { 200, 200, 0 }, "Dark Yellow", "TODO:CATALOG_NUMBER" },
-    { { 60, 60, 60 }, "Dark Gray", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 232, 63, 0 }, "Dark Orange", "TODO:CATALOG_NUMBER" },
-    { { 255, 102, 122 }, "Dark Pink", "TODO:CATALOG_NUMBER" }
-};
-
+#define HOOP_126X110              0
+#define HOOP_110X110              1
+#define HOOP_50X50                2
+#define HOOP_140X200              3
+#define HOOP_230X200              4
 
 #define ELEMENT_XML               0
 #define ELEMENT_A                 1
@@ -786,13 +482,21 @@ static const EmbThread shvThreads[] = {
 #define ELEMENT_VIDEO             47
 #define ELEMENT_UNKNOWN           48
 
-/* attribute tokens */
+/* Global Constants
+ */
 
-static const char* xmlTokens[] = { "encoding", "standalone", "version", "/", "\0" };
+/* Detect endianness, if running on a big endian machine
+ * then the first byte of the short 0x0001 is 0x00 since it
+ * reads left to right.
+ *
+ * So if the code is written for a little endian machine
+ * and this detects big endian then we do the same casting
+ * and then swap the byte order.
+ */
+short wordExample = 0x0001;
+char *endianTest = (char*)&wordExample;
 
-static const char *stitchTypeLabels[] = {
-    "STITCH", "JUMP", "TRIM", "COLOR", "END", "UNKNOWN"
-};
+static EmbColor black = { 0, 0, 0 };
 
 /*******************************************************************************
  * CODE SECTION
@@ -2364,9 +2068,9 @@ void embPattern_copyPolylinesToStitchList(EmbPattern* p)
             return;
         }
 
-        thread.catalogNumber = 0;
+        strcpy(thread.catalogNumber, "NULL");
         thread.color = currentPoly->color;
-        thread.description = 0;
+        strcpy(thread.description, "NULL");
         embPattern_addThread(p, thread);
 
         if (!firstObject) {
@@ -4997,12 +4701,29 @@ int embFormat_getExtension(const char* fileName, char* ending)
     return 1;
 }
 
+EmbFormatList embFormat_data(int format)
+{
+    EmbFormatList f;
+    int out;
+    out = dereference_int(format_list);
+    embFile_seek(datafile, out+59*format, SEEK_SET);
+    embFile_read(embBuffer, 1, 59, datafile);
+    
+    strcpy(f.extension, embBuffer);
+    strcpy(f.description, embBuffer+6);
+    f.reader = embBuffer[56];
+    f.writer = embBuffer[57];
+    f.type = embBuffer[58];
+
+    return f;
+}
+
 /**
  * Returns a pointer to an EmbReaderWriter if the \a fileName is a supported file type.
  */
 int embReaderWriter_getByFileName(const char* fileName)
 {
-    int i;
+    int i, out;
     char ending[10];
 
     if (!embFormat_getExtension(fileName, ending)) {
@@ -5010,8 +4731,10 @@ int embReaderWriter_getByFileName(const char* fileName)
     }
 
     /* checks the first character to see if it is the end symbol */
-    for (i = 0; formatTable[i].extension[0] != 'E'; i++) {
-        if (!strcmp(ending, formatTable[i].extension)) {
+    for (i = 0; i < 61; i++) {
+        EmbFormatList f;
+        f = embFormat_data(i);
+        if (!strcmp(ending, f.extension)) {
             return i;
         }
     }
@@ -5162,8 +4885,8 @@ static char readCol(EmbPattern* pattern, EmbFile* file, const char* fileName)
         t.color.r = (unsigned char)red;
         t.color.g = (unsigned char)green;
         t.color.b = (unsigned char)blue;
-        t.catalogNumber = "";
-        t.description = "";
+        strcpy(t.catalogNumber, "NULL");
+        strcpy(t.description, "NULL");
         embPattern_addThread(pattern, t);
     }
     return 1;
@@ -5271,8 +4994,8 @@ static char readCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
         thread.color.r = DecodeCsdByte(embFile_tell(file), embBuffer[3*i+0], type);
         thread.color.g = DecodeCsdByte(embFile_tell(file), embBuffer[3*i+1], type);
         thread.color.b = DecodeCsdByte(embFile_tell(file), embBuffer[3*i+2], type);
-        thread.catalogNumber = "";
-        thread.description = "";
+        strcpy(thread.catalogNumber, "");
+        strcpy(thread.description, "");
         embPattern_addThread(pattern, thread);
     }
     unknown1 = DecodeCsdByte(embFile_tell(file), embBuffer[3*16+0], type);
@@ -5330,46 +5053,47 @@ static char writeCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static const char* csvStitchFlagToStr(int flags)
 {
+    int i, p;
     switch (flags) {
     case NORMAL:
-        return stitchTypeLabels[0];
+        i = 0;
         break;
     case JUMP:
-        return stitchTypeLabels[1];
+        i = 1;
         break;
     case TRIM:
-        return stitchTypeLabels[2];
+        i = 2;
         break;
     case STOP:
-        return stitchTypeLabels[3];
+        i = 3;
         break;
     case END:
-        return stitchTypeLabels[4];
+        i = 4;
         break;
     default:
-        return stitchTypeLabels[5];
+        i = 5;
         break;
     }
+    p = double_dereference_int(stitch_labels, i);
+    get_str(embBuffer, p);
+    return embBuffer;
 }
 
 static char csvStrToStitchFlag(const char* str)
 {
+    int i, p;
     if (!str) {
         embLog("ERROR: csvStrToStitchFlag(), str==0\n");
         return -1;
     }
-    if (!strcmp(str, stitchTypeLabels[0]))
-        return NORMAL;
-    else if (!strcmp(str, stitchTypeLabels[1]))
-        return JUMP;
-    else if (!strcmp(str, stitchTypeLabels[2]))
-        return TRIM;
-    else if (!strcmp(str, stitchTypeLabels[3]))
-        return STOP;
-    else if (!strcmp(str, stitchTypeLabels[4]))
-        return END;
-    else if (!strcmp(str, stitchTypeLabels[5]))
-        return -1;
+    char out[] = {NORMAL, JUMP, TRIM, STOP, END};
+    for (i=0; i<5; i++) {
+        p = double_dereference_int(stitch_labels, i);
+        get_str(embBuffer, p);
+        if (!strcmp(str, embBuffer)) {
+            return out[i];
+        }
+    }
     return -1;
 }
 
@@ -5468,8 +5192,8 @@ static char readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
                     t.color.r = r;
                     t.color.g = g;
                     t.color.b = b;
-                    t.description = "TODO:DESCRIPTION";
-                    t.catalogNumber = "TODO:CATALOG_NUMBER";
+                    strcpy(t.description, "TODO:DESCRIPTION");
+                    strcpy(t.catalogNumber, "TODO:CATALOG_NUMBER");
                     embPattern_addThread(pattern, t);
                     csvMode = CSV_MODE_NULL;
                     cellNum = 0;
@@ -5807,8 +5531,8 @@ static void set_dst_variable(EmbPattern* pattern, char* var, char* val)
         catalog_number=split_cell_str(val,3);
         */
         t.color = embColor_fromHexStr(val);
-        t.description = "";
-        t.catalogNumber = "";
+        strcpy(t.description, "NULL");
+        strcpy(t.catalogNumber, "NULL");
         embPattern_addThread(pattern, t);
         break;
     default:
@@ -6256,8 +5980,8 @@ static char readEdr(EmbPattern* pattern, EmbFile* file, const char* fileName)
         t.color.r = binaryReadByte(file);
         t.color.g = binaryReadByte(file);
         t.color.b = binaryReadByte(file);
-        t.catalogNumber = "";
-        t.description = "";
+        strcpy(t.catalogNumber, "NULL");
+        strcpy(t.description, "NULL");
         binaryReadByte(file);
         embPattern_addThread(pattern, t);
     }
@@ -6649,18 +6373,10 @@ static char readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryReadBytes(file, stringVal, 8); /* TODO: check return value */
 
     binaryReadInt16(file);
-    int out;
-    out = dereference_int(hus_thread_table);
     for (i = 0; i < nColors; i++) {
         EmbThread t;
         int pos = binaryReadInt16(file);
-        embFile_seek(file, out+35*pos, SEEK_SET);
-        embFile_read(embBuffer, 1, 35, datafile);
-        t.color.r = embBuffer[30];
-        t.color.g = embBuffer[31];
-        t.color.b = embBuffer[32];
-        strcpy(t.catalogNumber, "TODO:HUS_CODE");
-        strcpy(t.description, embBuffer);
+        t = load_thread(hus_thread, pos);
         embPattern_addThread(pattern, t);
     }
 
@@ -6776,7 +6492,7 @@ static char writeHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryWriteUShort(file, 0x0000);
 
     for (i = 0; i < patternColor; i++) {
-        short color_index = (short)embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, hus_thread_table, 0);
+        short color_index = (short)embThread_findNearestColor(pattern->threads->thread[i].color, hus_thread);
         binaryWriteShort(file, color_index);
     }
 
@@ -6875,8 +6591,8 @@ static char readInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
         t.color.r = binaryReadByte(file);
         t.color.g = binaryReadByte(file);
         t.color.b = binaryReadByte(file);
-        t.catalogNumber = "";
-        t.description = "";
+        strcpy(t.catalogNumber, "NULL");
+        strcpy(t.description, "NULL");
         embPattern_addThread(pattern, t);
         binaryReadUInt16(file);
         binaryReadString(file, colorType, 50);
@@ -7020,7 +6736,9 @@ static char readJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
     rect_from_custom.bottom = binaryReadInt32(file);
 
     for (i = 0; i < nColors; i++) {
-        embPattern_addThread(pattern, jefThreads[binaryReadInt32(file) % 79]);
+        EmbThread t;
+        t = load_thread(jef_thread, binaryReadInt32(file) % 79);
+        embPattern_addThread(pattern, t);
     }
     embFile_seek(file, stitchOffset, SEEK_SET);
     stitchCount = 0;
@@ -7156,7 +6874,7 @@ static char writeJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryWriteInt(file, (int)(550 - designHeight / 2)); /* bottom */
 
     for (i = 0; i < pattern->threads->count; i++) {
-        int j = embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, jef_thread_table, 79);
+        int j = embThread_findNearestColor(pattern->threads->thread[i].color, jef_thread);
         binaryWriteInt(file, j);
     }
 
@@ -7540,8 +7258,8 @@ static void ofmReadThreads(EmbFile* file, EmbPattern* p)
         /* itoa(colorNumber, colorNumberText, 10); TODO: never use itoa, it's non-standard, use sprintf:
            http://stackoverflow.com/questions/5242524/converting-int-to-string-in-c */
         thread.color = embColor_fromStr(color);
-        thread.catalogNumber = colorNumberText;
-        thread.description = colorName;
+        strcpy(thread.catalogNumber, colorNumberText);
+        strcpy(thread.description, colorName);
         embPattern_addThread(p, thread);
     }
     binaryReadInt16(file);
@@ -7695,8 +7413,8 @@ static char readPcd(EmbPattern* pattern, EmbFile* file, const char* fileName)
         EmbThread t;
         embFile_read(embBuffer, 1, 4, file);
         t.color = embColor_fromStr(embBuffer);
-        t.catalogNumber = "";
-        t.description = "";
+        strcpy(t.catalogNumber, "NULL");
+        strcpy(t.description, "NULL");
         if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
@@ -7765,11 +7483,13 @@ static char readPcm(EmbPattern* pattern, EmbFile* file, const char* fileName)
     embFile_seek(file, 4, SEEK_SET);
 
     for (i = 0; i < 16; i++) {
+        EmbThread t;
         int colorNumber;
         embFile_read(embBuffer, 1, 2, file);
         /* zero followed by colorNumber */
         colorNumber = embBuffer[1];
-        embPattern_addThread(pattern, pcmThreads[colorNumber]);
+        t = load_thread(pcm_thread, colorNumber);
+        embPattern_addThread(pattern, t);
     }
     st = binaryReadUInt16BE(file);
     /* READ STITCH RECORDS */
@@ -7849,8 +7569,8 @@ static char readPcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
     for (i = 0; i < colorCount; i++) {
         embFile_read(b, 1, 4, file);
         t.color = embColor_fromStr(b);
-        t.catalogNumber = "";
-        t.description = "";
+        strcpy(t.catalogNumber, "NULL");
+        strcpy(t.description, "NULL");
         if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
@@ -7960,8 +7680,8 @@ static char readPcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
         t.color.r = binaryReadByte(file);
         t.color.g = binaryReadByte(file);
         t.color.b = binaryReadByte(file);
-        t.catalogNumber = "";
-        t.description = "";
+        strcpy(t.catalogNumber, "NULL");
+        strcpy(t.description, "NULL");
         if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
@@ -7994,6 +7714,21 @@ static char readPcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
     }
 
     return 1;
+}
+
+static EmbThread load_thread(int thread_table, int index)
+{
+    EmbThread t;
+    int out;
+    out = double_dereference_int(brand_codes, thread_table);
+    embFile_seek(datafile, out+35*index, SEEK_SET);
+    embFile_read(embBuffer, 1, 35, datafile);
+    t.color.r = embBuffer[30];
+    t.color.g = embBuffer[31];
+    t.color.b = embBuffer[32];
+    strcpy(t.catalogNumber, "TODO:HUS_CODE");
+    strcpy(t.description, embBuffer);
+    return t;    
 }
 
 static char writePcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
@@ -8105,7 +7840,7 @@ static char readPec(EmbPattern* pattern, EmbFile* file, const char* fileName)
     embFile_seek(file, 0x38, SEEK_SET);
     colorChanges = (unsigned char)binaryReadByte(file);
     for (i = 0; i <= colorChanges; i++) {
-        embPattern_addThread(pattern, pecThreads[binaryReadByte(file) % 65]);
+        embPattern_addThread(pattern, load_thread(pec_thread, binaryReadByte(file) % 65));
     }
 
     /* Get Graphics offset */
@@ -8240,7 +7975,7 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
     binaryWriteByte(file, (unsigned char)(currentThreadCount - 1));
 
     for (i = 0; i < currentThreadCount; i++) {
-        binaryWriteByte(file, (unsigned char)embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, pec_thread_table, pecThreadCount));
+        binaryWriteByte(file, (unsigned char)embThread_findNearestColor(pattern->threads->thread[i].color, pec_thread));
     }
     embFile_pad(file, 0x20, (int)(0x1CF - currentThreadCount));
     embFile_pad(file, 0, 2);
@@ -8335,7 +8070,7 @@ static char readPes(EmbPattern* pattern, EmbFile* file, const char* fileName)
     numColors = embBuffer[0] + 1;
     embFile_read(embBuffer, 1, numColors, file);
     for (x = 0; x < numColors; x++) {
-        embPattern_addThread(pattern, pecThreads[embBuffer[x]]);
+        embPattern_addThread(pattern, load_thread(pec_thread, embBuffer[x]));
     }
 
     embFile_seek(file, pecstart + 532, SEEK_SET);
@@ -8686,7 +8421,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file, const char
         j = i;
         flag = st.flags;
         color = pattern->threads->thread[st.color].color;
-        newColorCode = embThread_findNearestColor_fromThread(color, pec_thread_table, pecThreadCount);
+        newColorCode = embThread_findNearestColor_fromThread(color, pec_thread);
         if (newColorCode != colorCode) {
             colorCount++;
             colorCode = newColorCode;
@@ -8716,7 +8451,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file, const char
         st = pattern->stitchList->stitch[i];
         flag = st.flags;
         color = pattern->threads->thread[st.color].color;
-        newColorCode = embThread_findNearestColor_fromThread(color, pec_thread_table, pecThreadCount);
+        newColorCode = embThread_findNearestColor(color, pec_thread);
         if (newColorCode != colorCode) {
             colorInfo[colorInfoIndex++] = (short)blockCount;
             colorInfo[colorInfoIndex++] = (short)newColorCode;
@@ -8836,7 +8571,7 @@ static char readPhb(EmbPattern* pattern, EmbFile* file, const char* fileName)
     colorCount = binaryReadInt16(file);
 
     for (i = 0; i < colorCount; i++) {
-        EmbThread t = pecThreads[(int)binaryReadByte(file)];
+        EmbThread t = load_thread(pec_thread, (int)binaryReadByte(file));
         embPattern_addThread(pattern, t);
     }
 
@@ -8884,7 +8619,7 @@ static char readPhc(EmbPattern* pattern, EmbFile* file, const char* fileName)
     colorChanges = binaryReadUInt16(file);
 
     for (i = 0; i < colorChanges; i++) {
-        t = pecThreads[(int)binaryReadByte(file)];
+        t = load_thread(pec_thread, (int)binaryReadByte(file));
         embPattern_addThread(pattern, t);
     }
     embFile_seek(file, 0x2B, SEEK_SET);
@@ -8979,8 +8714,8 @@ static char readRgb(EmbPattern* pattern, EmbFile* file, const char* fileName)
     embArray_free(pattern->threads);
     pattern->threads = embArray_create(EMB_THREAD);
 
-    t.catalogNumber = "";
-    t.description = "";
+    strcpy(t.catalogNumber, "NULL");
+    strcpy(t.description, "NULL");
     while (embFile_read(embBuffer, 1, 4, file) == 4) {
         t.color = embColor_fromStr(embBuffer);
         embPattern_addThread(pattern, t);
@@ -9018,7 +8753,9 @@ static char readSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
     nColors += (binaryReadByte(file) << 8);
 
     for (i = 0; i < nColors; i++) {
-        embPattern_addThread(pattern, jefThreads[binaryReadInt16(file)]);
+        EmbThread t;
+        t = load_thread(jef_thread, binaryReadInt16(file));
+        embPattern_addThread(pattern, t);
     }
     embFile_seek(file, 0x1D78, SEEK_SET);
 
@@ -9096,7 +8833,7 @@ static char writeSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
         int thr;
         EmbColor col;
         col = pattern->threads->thread[i].color;
-        thr = embThread_findNearestColor_fromThread(col, jef_thread_table, 79);
+        thr = embThread_findNearestColor(col, jef_thread);
         binaryWriteInt(file, thr);
     }
 
@@ -9186,10 +8923,12 @@ static char readShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     something3 = binaryReadByte(file);
 
     for (i = 0; i < nColors; i++) {
+        EmbThread t;
         unsigned int stitchCount, colorNumber;
         stitchCount = binaryReadUInt32BE(file);
         colorNumber = binaryReadUInt8(file);
-        embPattern_addThread(pattern, shvThreads[colorNumber % 43]);
+        t = load_thread(shv_thread, colorNumber % 43);
+        embPattern_addThread(pattern, t);
         stitchesPerColor[i] = stitchCount;
         embFile_seek(file, 9, SEEK_CUR);
     }
@@ -9450,8 +9189,8 @@ static char readStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
         t.color.r = st.stxColor.r;
         t.color.g = st.stxColor.g;
         t.color.b = st.stxColor.b;
-        t.description = st.colorName;
-        t.catalogNumber = st.colorCode;
+        strcpy(t.description, st.colorName);
+        strcpy(t.catalogNumber, st.colorCode);
         embPattern_addThread(pattern, t);
         stxThreads[i] = st;
     }
@@ -9906,8 +9645,8 @@ static char readThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
     embFile_read(embBuffer, 1, 4, file);
     c = embColor_fromStr(embBuffer);
 
-    thread.description = NULL;
-    thread.catalogNumber = NULL;
+    strcpy(thread.description, "NULL");
+    strcpy(thread.catalogNumber, "NULL");
     embFile_read(embBuffer, 1, 16*4, file);
     for (i = 0; i < 16; i++) {
         thread.color = embColor_fromStr(embBuffer+4*i);
@@ -11082,8 +10821,8 @@ static char readZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
     while (colorNumber != 0) {
         embFile_read(b, 1, 3, file);
         t.color = embColor_fromStr(b);
-        t.catalogNumber = "";
-        t.description = "";
+        strcpy(t.catalogNumber, "NULL");
+        strcpy(t.description, "NULL");
         embPattern_addThread(pattern, t);
         embFile_seek(file, 0x48, SEEK_CUR);
         embFile_read(&colorNumber, 1, 1, file);
@@ -12075,6 +11814,7 @@ void svgProcess(int c, const char* buff)
 
         if (!advance) {
             if (token == ELEMENT_XML) {
+                int xmlTokens = double_dereference_int(svg_token_lists, 0);
                 advance = svgHasAttribute(buff, xmlTokens, "?xml");
             }
             else if (token == ELEMENT_SVG) {
@@ -12083,8 +11823,7 @@ void svgProcess(int c, const char* buff)
             else if (token != ELEMENT_UNKNOWN) {
                 char element_token[30];
                 int out2;
-                int out = dereference_int(svg_token_lists);
-                out = dereference_int(out+4*token);
+                int out = double_dereference_int(svg_token_lists, token);
                 out2 = dereference_int(svg_element_token_table);
                 get_str(element_token, out2+4*token);
                 
@@ -12447,48 +12186,14 @@ static int embColor_distance(EmbColor a, EmbColor b)
     return d;
 }
 
-/**
- * Returns the closest color to the required color based on
- * a list of available threads. The algorithm is a simple least
- * squares search against the list. If the (square of) Euclidean 3-dimensional
- * distance between the points in (red, green, blue) space is smaller
- * then the index is saved and the remaining index is returned to the
- * caller.
- *
- * @param color  The EmbColor color to match.
- * @param colors The EmbThreadList pointer to start the search at.
- * @param mode   Is the argument an array of threads (0) or colors (1)?
- * @return closestIndex The entry in the ThreadList that matches.
- */
-int embThread_findNearestColor(EmbColor color, EmbArray* a, int mode)
+int embThread_findNearestColor(EmbColor color, int thread_table)
 {
-    int currentClosestValue, closestIndex, i, delta;
-
-    currentClosestValue = 256 * 256 * 3;
-    closestIndex = -1;
-    for (i = 0; i < a->count; i++) {
-        if (mode == 0) { /* thread mode */
-            delta = embColor_distance(color, a->thread[i].color);
-        }
-        else { /* color array mode */
-            delta = embColor_distance(color, a->color[i]);
-        }
-
-        if (delta <= currentClosestValue) {
-            currentClosestValue = delta;
-            closestIndex = i;
-        }
-    }
-    return closestIndex;
-}
-
-int embThread_findNearestColor_fromThread(EmbColor color, int thread_table, int length)
-{
-    int currentClosestValue, closestIndex, i, out;
+    int currentClosestValue, closestIndex, i, out, length;
 
     currentClosestValue = 256 * 256 * 3;
     closestIndex = -1;
 
+    length = dereference_int(table_lengths);
     out = dereference_int(thread_table);
     for (i = 0; i < length; i++) {
         int delta;
@@ -12520,8 +12225,8 @@ EmbThread embThread_getRandom(void)
     c.color.r = rand() % 256;
     c.color.g = rand() % 256;
     c.color.b = rand() % 256;
-    c.description = "random";
-    c.catalogNumber = "";
+    strcpy(c.description, "random");
+    strcpy(c.catalogNumber, "NULL");
     return c;
 }
 
@@ -12530,19 +12235,18 @@ int embColor_equal(EmbColor a, EmbColor b)
     return (a.r == b.r) && (a.g == b.g) && (a.b == b.b);
 }
 
+
+
 int threadColor(EmbColor *c, const char* name, int brand)
 {
-    int out;
-    out = dereference_int(brand_codes);
-    out = dereference_int(out+brand*4);
-    embFile_seek(datafile, out, SEEK_SET);
+    int length, i;
+    length = double_dereference_int(table_lengths, brand);
     *c = black;
-    embBuffer[0] = 0;
 
-    while (strcmp(embBuffer, "END")) {
-        embFile_read(embBuffer, 1, thread_type_length, datafile);
-        if (!strcmp(embBuffer, name)) {
-            *c = embColor_fromStr(embBuffer+thread_color_offset);
+    for (i=0; i<length; i++) {
+        EmbThread t = load_thread(brand, i);
+        if (!strcmp(t.description, name)) {
+            *c = t.color;
             return 1;
         }
     }
@@ -12552,40 +12256,37 @@ int threadColor(EmbColor *c, const char* name, int brand)
 
 int threadColorNum(EmbColor color, int brand)
 {
-    int out;
-    out = dereference_int(brand_codes);
-    out = dereference_int(out+brand*4);
-    embFile_seek(datafile, out, SEEK_SET);
+    int out, length, i;
+    length = double_dereference_int(table_lengths, brand);
 
-    embBuffer[0] = 0;
-
-    while (strcmp(embBuffer, "END")) {
-        EmbColor c;
-        embFile_read(embBuffer, 1, thread_type_length, datafile);
-        c = embColor_fromStr(embBuffer+thread_color_offset);
-        if (embColor_equal(c, color)) {
-            return embBuffer[thread_code] + 256 * embBuffer[thread_code+1];
+    for (i=0; i<length; i++) {
+        EmbThread t = load_thread(brand, i);
+        if (embColor_equal(t.color, color)) {
+            /* return t.catalogNumber; */
+            return 0;
         }
     }
 
     return -1;
 }
 
-const char* threadColorName(EmbColor color, int brand)
+static int double_dereference_int(int table, int entry)
 {
     int out;
-    out = dereference_int(brand_codes);
-    out = dereference_int(out+brand*4);
-    embFile_seek(datafile, out, SEEK_SET);
+    out = dereference_int(table);
+    out = dereference_int(out+4*entry);
+    return out;
+}
 
-    embBuffer[0] = 0;
+const char* threadColorName(EmbColor color, int brand)
+{
+    int length, i;
+    length = double_dereference_int(table_lengths, brand);
 
-    while (strcmp(embBuffer, "END")) {
-        EmbColor c;
-        embFile_read(embBuffer, 1, thread_type_length, datafile);
-        c = embColor_fromStr(embBuffer+thread_color_offset);
-        if (embColor_equal(c, color)) {
-            return embBuffer;
+    for (i=0; i<length; i++) {
+        EmbThread t = load_thread(brand, i);
+        if (embColor_equal(t.color, color)) {
+            return t.description;
         }
     }
 

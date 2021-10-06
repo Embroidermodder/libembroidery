@@ -91,14 +91,12 @@ static void formats(void)
     puts("|        |       |       |                                                    |\n");
 
     for (i = 0; i < numberOfFormats; i++) {
-        extension = formatTable[i].extension;
-        description = formatTable[i].description;
-        readerState = formatTable[i].reader;
-        writerState = formatTable[i].writer;
+        EmbFormatList f;
+        f = embFormat_data(i);
 
-        numReaders += readerState != ' ' ? 1 : 0;
-        numWriters += writerState != ' ' ? 1 : 0;
-        printf("|  %-4s  |   %c   |   %c   |  %-49s |\n", extension, readerState, writerState, description);
+        numReaders += f.reader != ' ' ? 1 : 0;
+        numWriters += f.writer != ' ' ? 1 : 0;
+        printf("|  %-4s  |   %c   |   %c   |  %-49s |\n", f.extension, f.reader, f.writer, f.description);
     }
 
     puts("|________|_______|_______|____________________________________________________|\n");
@@ -198,8 +196,12 @@ static int convert(const char* inf, const char* outf)
 
     embPattern_read(p, inf, reader);
 
-    if (formatTable[reader].type == EMBFORMAT_OBJECTONLY) {
-        if (formatTable[writer].type == EMBFORMAT_STITCHONLY) {
+    EmbFormatList f, g;
+    f = embFormat_data(reader);
+    g = embFormat_data(writer);
+
+    if (f.type == EMBFORMAT_OBJECTONLY) {
+        if (g.type == EMBFORMAT_STITCHONLY) {
             embPattern_movePolylinesToStitchList(p);
         }
     }
@@ -401,13 +403,10 @@ static int testThreadColor(void)
 
 static int testEmbFormat(void)
 {
+    EmbFormatList f;
     const char* tName = "example.zsk";
     int code = embReaderWriter_getByFileName(tName);
-    const char* description = formatTable[code].description;
-    const char *extension = formatTable[code].extension;
-    char reader = formatTable[code].reader;
-    char writer = formatTable[code].writer;
-    int type = formatTable[code].type;
+    f = embFormat_data(code);
 
     printf("Filename   : %s\n"
            "Extension  : %s\n"
@@ -416,21 +415,21 @@ static int testEmbFormat(void)
            "Writer     : %c\n"
            "Type       : %d\n\n",
         tName,
-        extension,
-        description,
-        reader,
-        writer,
-        type);
+        f.extension,
+        f.description,
+        f.reader,
+        f.writer,
+        f.type);
 
-    if (strcmp(extension, ".zsk"))
+    if (strcmp(f.extension, ".zsk"))
         return 20;
-    if (strcmp(description, "ZSK USA Embroidery Format"))
+    if (strcmp(f.description, "ZSK USA Embroidery Format"))
         return 21;
-    if (reader != 'U')
+    if (f.reader != 'U')
         return 22;
-    if (writer != ' ')
+    if (f.writer != ' ')
         return 23;
-    if (type != 1)
+    if (f.type != 1)
         return 24;
     return 0;
 }

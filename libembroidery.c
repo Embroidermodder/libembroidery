@@ -140,7 +140,7 @@ static void writeFloat(EmbFile *, float);
 
 static void embPointerToArray(char *buffer, void* pointer, int maxDigits);
 static void embIntToArray(char *buffer, int number, int maxDigits);
-static void embFloatToArray(char *buffer, float number, float tolerence, int before, int after);
+static void embFloatToArray(char *buffer, float number, float tolerance, int before, int after);
 
 static void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int _269);
 static int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _267, int _269, int _235);
@@ -556,7 +556,7 @@ static int embFile_write(void *ptr, int a, int b, EmbFile *stream)
 static int embFile_seek(EmbFile *stream, int offset, int origin)
 {
 #ifdef ARDUINO
-    return inoFile_seek(stream, offet, origin);
+    return inoFile_seek(stream, offset, origin);
 #else
     return fseek(stream->file, offset, origin);
 #endif
@@ -1363,7 +1363,7 @@ static void writeInt(EmbFile* file, int n, int m)
 
 /* Replacing the %f in *printf functionality.
  */
-static void embFloatToArray(char* buffer, float number, float tolerence, int before, int after)
+static void embFloatToArray(char* buffer, float number, float tolerance, int before, int after)
 {
     int i, maxDigits, j;
     float t;
@@ -1379,7 +1379,7 @@ static void embFloatToArray(char* buffer, float number, float tolerence, int bef
         for (j = 0; j < 9; j++) {
             t += beforePos[i];
             printf("%s %d %d %f %f\n", buffer, i, j, t, number);
-            if ((number - tolerence > t) && (t + beforePos[i] > number + tolerence)) {
+            if ((number - tolerance > t) && (t + beforePos[i] > number + tolerance)) {
                 buffer[before - 1 - i] = j + '1';
                 number -= (j + 1) * beforePos[i];
                 break;
@@ -1392,7 +1392,7 @@ static void embFloatToArray(char* buffer, float number, float tolerence, int bef
         for (j = 0; j < 9; j++) {
             t += afterPos[i];
             printf("%s %d %d %f %f\n", buffer, i, j, t, number);
-            if ((number - tolerence > t) && (t + afterPos[i] > number + tolerence)) {
+            if ((number - tolerance > t) && (t + afterPos[i] > number + tolerance)) {
                 buffer[before + 1 + i] = j + '1';
                 number -= (j + 1) * afterPos[i];
                 break;
@@ -1579,7 +1579,7 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVector* p3, EmbV
 
        TODO: using == in floating point arithmetic
        doesn't account for the machine accuracy, having
-       a stated (float) tolerence value would help.
+       a stated (float) tolerance value would help.
     */
     if (d == (c0.radius + c1.radius)) {
         *p3 = *p4 = p2;
@@ -1679,8 +1679,8 @@ void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise)
 unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector* result)
 {
     EmbVector D1, D2, C;
-    float tolerence, det;
-    tolerence = 1e-10;
+    float tolerance, det;
+    tolerance = 1e-10;
     embVector_subtract(line1.end, line1.start, &D2);
     C.y = embVector_cross(line1.start, D2);
 
@@ -1694,7 +1694,7 @@ unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector*
         return 0;
     }
     /*TODO: The code below needs revised since division by zero can still occur */
-    if (fabs(det) < tolerence) {
+    if (fabs(det) < tolerance) {
         embLog("ERROR: Intersecting lines cannot be parallel.\n");
         return 0;
     }
@@ -2577,7 +2577,7 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     }
 }
 
-/* Does this need a tolerence to stop really long jumps?
+/* Does this need a tolerance to stop really long jumps?
  */
 void embPattern_combineJumpStitches(EmbPattern* p)
 {
@@ -3309,13 +3309,13 @@ void embPolygon_simplifySection(EmbArray *vertices, EmbArray *_usePt, int i, int
  */
 float embVector_distancePointLine(EmbVector p, EmbVector a, EmbVector b)
 {
-    float r, curve2, s, tolerence;
+    float r, curve2, s, tolerance;
     EmbVector pa, ba;
 
-    tolerence = 0.00001;
+    tolerance = 0.00001;
     embVector_subtract(b, a, &ba);
     /* if start == end, then use point-to-point distance */
-    if (fabs(ba.x) < tolerence && fabs(ba.y) < tolerence) {
+    if (fabs(ba.x) < tolerance && fabs(ba.y) < tolerance) {
         return embVector_distance(p, a);
     }
 

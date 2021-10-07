@@ -295,7 +295,7 @@ int testEmbCircle(void)
     testTangentPoints(c2, test1, &p0, &p1);
     float error = embVector_distance(p0, s0) + embVector_distance(p1, s1);
     if (error > epsilon) {
-        printf("Error larger than tolerence, circle test 2: %f.\n\n", error);
+        printf("Error larger than tolerance, circle test 2: %f.\n\n", error);
         return 17;
     }
 

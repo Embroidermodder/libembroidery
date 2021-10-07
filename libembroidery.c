@@ -1781,7 +1781,7 @@ void embVector_normalize(EmbVector vector, EmbVector* result)
 }
 
 /**
- * The scalar multiple \a magnatude of a vector \a vector. Returned as
+ * The scalar multiple \a magnitude of a vector \a vector. Returned as
  * \a result.
  */
 void embVector_multiply(EmbVector vector, float magnitude, EmbVector* result)
@@ -3304,7 +3304,7 @@ void embPolygon_simplifySection(EmbArray *vertices, EmbArray *_usePt, int i, int
 
 /**
  * Find the distance from (\a p) to the line from (\a a) to (\a b) by
- * finding the length of the normal from ab (extended to an infinte line)
+ * finding the length of the normal from ab (extended to an infinite line)
  * to p.
  */
 float embVector_distancePointLine(EmbVector p, EmbVector a, EmbVector b)
@@ -9235,7 +9235,7 @@ static char readStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
                 i++;
                 break;
             case -94:
-                /* TODO: Is this a syncronize? If so document it in the comments. */
+                /* TODO: Is this a synchronize? If so document it in the comments. */
                 break;
             default:
                 /*Debugger.Break(); TODO: review */
@@ -9582,7 +9582,7 @@ typedef struct ThredExtension_ /* thred v1.0 file header extension */
     float stitchGranularity; /* stitches per millimeter--not implemented */
     char creatorName[50]; /* name of the file creator */
     char modifierName[50]; /* name of last file modifier */
-    char auxFormat; /* auxillary file format, 0=PCS,1=DST,2=PES */
+    char auxFormat; /* auxiliary file format, 0=PCS,1=DST,2=PES */
     char reserved[31]; /* reserved for expansion */
 } ThredExtension;
 
@@ -9628,7 +9628,7 @@ static char readThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
             embFile_seek(file, 144, SEEK_CUR); /* skip the file header extension */
             break;
         default:
-            return 0; /* unsuported version */
+            return 0; /* unsupported version */
         }
     }
 
@@ -11374,7 +11374,7 @@ void svgAddToPattern(EmbPattern* p)
 
                 /**** Compose Point List ****/
 
-                /* below "while" is for avoid loosing last 'z' command that maybe never accomodated. */
+                /* below "while" is for avoid losing last 'z' command that maybe never accommodated. */
                 pendingTask = 1;
                 if (i == last - 1) {
                     pendingTask = 2;
@@ -11383,7 +11383,7 @@ void svgAddToPattern(EmbPattern* p)
                 while (pendingTask > 0) {
                     pendingTask -= 1;
 
-                    /* Check wether prior command need to be saved */
+                    /* Check whether prior command need to be saved */
                     if (trip >= 0) {
                         trip = -1;
                         reset = -1;
@@ -11508,7 +11508,7 @@ void svgAddToPattern(EmbPattern* p)
                             break;
                         }
                     }
-                    /* avoid loosing 'z' command that maybe never accomodated. */
+                    /* avoid losing 'z' command that maybe never accommodated. */
                     if (i == last - 1) {
                         trip = 2;
                     }
@@ -11920,7 +11920,7 @@ static char readSvg(EmbPattern* p, EmbFile* file, const char* fileName)
     currentAttribute = 0;
     currentValue = 0;
 
-    /* Pre-flip incase of multiple reads on the same p */
+    /* Pre-flip in case of multiple reads on the same p */
     embPattern_flipVertical(p);
 
     pos = 0;

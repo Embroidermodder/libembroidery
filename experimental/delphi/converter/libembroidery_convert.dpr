@@ -96,7 +96,7 @@ begin
     end;
 
     p := embPattern_create();
-    //if (p) then  raise excepion. 'libembroidery-convert-main.c main(), cannot allocate memory for p'); exit(1); }
+    //if (p) then  raise exception. 'libembroidery-convert-main.c main(), cannot allocate memory for p'); exit(1); }
 
     successful := embPattern_read(p, pchar(paramstr(1)) );
     if successful = 0 then

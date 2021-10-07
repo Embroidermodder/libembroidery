@@ -56,8 +56,6 @@ typedef struct EmbFile_ EmbFile;
 #define SEQUIN                  8 /* sequin */
 #define END                     16 /* end of program */
 
-#define CHUNK_SIZE              128
-
 /* Format identifiers */
 #define EMB_FORMAT_100          0
 #define EMB_FORMAT_10O          1
@@ -347,7 +345,6 @@ struct EmbArray_ {
     EmbStitch *stitch;
     EmbThread *thread;
     EmbVector *vector;
-    int count;
     int length;
     int type;
 };
@@ -358,7 +355,6 @@ typedef struct EmbPattern_
     EmbHoop hoop;
 
     EmbArray* stitchList;
-    EmbArray* threads;
     EmbArray* arcs;
     EmbArray* circles;
     EmbArray* ellipses;
@@ -369,6 +365,8 @@ typedef struct EmbPattern_
     EmbArray* polylines;
     EmbArray* rects;
     EmbArray* splines;
+
+    int thread_count;
 
     int currentColorIndex;
     EmbVector lastPosition;
@@ -401,7 +399,6 @@ EMB_PUBLIC int embArray_addPoint(EmbArray* g, EmbVector p, int lineType, EmbColo
 EMB_PUBLIC int embArray_addPolygon(EmbArray* g, EmbPolygonObject *p);
 EMB_PUBLIC int embArray_addPolyline(EmbArray* g, EmbPolylineObject *p);
 EMB_PUBLIC int embArray_addStitch(EmbArray* g, EmbStitch st);
-EMB_PUBLIC int embArray_addThread(EmbArray* g, EmbThread p);
 EMB_PUBLIC int embArray_addVector(EmbArray* g, EmbVector);
 EMB_PUBLIC void embArray_free(EmbArray* p);
 

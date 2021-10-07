@@ -124,7 +124,7 @@ static int create_test_file_1(const char* outf)
     }
 
     EmbThread thr = { { 0, 0, 0 }, "Black", "Black" };
-    embArray_addThread(p->threads, thr);
+    embPattern_addThread(p, thr);
 
     result = embPattern_write(p, outf, EMB_FORMAT_CSV);
 
@@ -154,7 +154,7 @@ static int create_test_file_2(const char* outf)
     }
 
     EmbThread thr = { { 0, 0, 0 }, "Black", "Black" };
-    embArray_addThread(p->threads, thr);
+    embPattern_addThread(p, thr);
 
     result = embPattern_write(p, outf, EMB_FORMAT_CSV);
 

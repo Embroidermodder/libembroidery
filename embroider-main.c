@@ -71,10 +71,6 @@ static void usage(void)
 
 static void formats(void)
 {
-    const char* extension = 0;
-    const char* description = 0;
-    char readerState;
-    char writerState;
     int numReaders = 0;
     int numWriters = 0;
     int i;

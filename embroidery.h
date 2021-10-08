@@ -387,7 +387,6 @@ EMB_PUBLIC int init_embroidery(void);
 EMB_PUBLIC int close_embroidery(void);
 
 EMB_PUBLIC EmbArray* embArray_create(int type);
-EMB_PUBLIC int embArray_resize(EmbArray *g);
 EMB_PUBLIC int embArray_addArc(EmbArray* g, EmbArc arc, int lineType, EmbColor color);
 EMB_PUBLIC int embArray_addCircle(EmbArray* g, EmbCircle circle, int lineType, EmbColor color);
 EMB_PUBLIC int embArray_addEllipse(EmbArray* g, EmbEllipse circle, float rotation, int lineType, EmbColor color);
@@ -501,8 +500,8 @@ EMB_PUBLIC void embPattern_movePolylinesToStitchList(EmbPattern* pattern);
 /* NON-MACRO CONSTANTS
  ******************************************************************************/
 
-EMB_PUBLIC extern const EmbFormatList formatTable[];
-EMB_PUBLIC extern int numberOfFormats;
+EMB_PUBLIC const EmbFormatList formatTable[];
+EMB_PUBLIC int numberOfFormats;
 
 #ifdef __cplusplus
 }

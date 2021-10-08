@@ -17,9 +17,9 @@ if (SWIG_CSHARP)
         LANGUAGE csharp
         OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/csharp/binding
         SOURCES
-        ${LIBRARY_SOURCE_FILES}
-        swig.i
         ../embroidery.h
+        ../libembroidery.c
+        swig.i
     )
     target_include_directories(libembroidery
         INTERFACE

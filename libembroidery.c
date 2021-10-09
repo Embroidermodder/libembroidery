@@ -4,13 +4,7 @@
 /*TODO: arduino includes */
 #define EmbFile    InoFile
 #else
-#ifdef _WIN32
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
-#define EmbFile    FILE *
-#else
+#ifdef linux
 #include <unistd.h>
 #include <fcntl.h>
 #include <time.h>
@@ -24,6 +18,12 @@ void *calloc(long unsigned int, long unsigned int);
 void free(void *);
 
 #define EmbFile    int
+#else
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define EmbFile    FILE *
 #endif
 #endif
 

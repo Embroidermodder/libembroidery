@@ -1,13 +1,10 @@
 #include "embroidery.h"
 #include <stdio.h>
 
-void * malloc(size_t);
+void *malloc(size_t);
+void *realloc(void *, size_t);
+void *calloc(long unsigned int, long unsigned int);
 void free(void *);
-
-double sqrt(double);
-double cos(double);
-double sin(double);
-double atan2(double, double);
 
 #if ARDUINO
 /*TODO: arduino embTime includes */
@@ -489,16 +486,42 @@ Special values for Stream Identifiers
 #define ELEMENT_VIDEO             47
 #define ELEMENT_UNKNOWN           48
 
-#define GEOMETRY_ARRAY_MAXIMUM    (1<<10)
-#define STITCH_MAXIMUM            (1<<20)
+#define GEOMETRY_ARRAY_MAXIMUM    (1<<8)
+#define STITCH_MAXIMUM            (1<<16)
 #define THREAD_MAXIMUM            (1<<8)
 
 /* Global Constants
  */
 
-static int thread_offset = 0;
+static int arc_offset;
+static int circle_offset;
+static int ellipse_offset;
+static int flag_offset;
+static int line_offset;
+static int path_offset;
+static int point_offset;
+static int polygon_offset;
+static int polyline_offset;
+static int rect_offset;
+static int spline_offset;
+static int thread_offset;
 static int stitch_offset;
 static int vector_offset;
+
+static const int arc_size = 24;
+static const int circle_size = 12;
+static const int ellipse_size = 16;
+static const int flag_size = 1;
+static const int line_size = 16;
+static const int path_size = 40;
+static const int point_size = 4;
+static const int polygon_size = 40;
+static const int polyline_size = 40;
+static const int rect_size = 16;
+static const int spline_size = 40;
+static const int thread_size = 43;
+static const int stitch_size = 10;
+static const int vector_size = 8;
 
 /* Detect endianness, if running on a big endian machine
  * then the first byte of the short 0x0001 is 0x00 since it
@@ -546,11 +569,134 @@ static float emb_max_float(float a, float b)
     return b;
 }
 
-static float emb_fabs(float a)
+float emb_fabs(float a);
+int emb_abs(int a);
+float emb_sqrt(float a);
+float emb_pow(float a, int n);
+float emb_sin(float a);
+float emb_cos(float a);
+float emb_atan2(float a, float b);
+
+float emb_fabs(float a)
 {
     if (a<0.0) return -a;
     return a;
 }
+
+int emb_abs(int a)
+{
+    if (a<0) return -a;
+    return a;
+}
+
+/* Babylonian square root algorithm.
+ * NEEDS TEST IN THE TEST SUITE.
+ */
+float emb_sqrt(float a)
+{
+    int i;
+    float b, epsilon;
+    epsilon = 0.0001;
+    b = 1.0;
+    for (i=0; i<20; i++) {
+        b = 0.5*(b+a/b);
+    }
+    if (emb_fabs(a-b*b) > epsilon) {
+        embLog("emb_sqrt did not converge.");
+    }
+    return b;
+}
+
+float emb_factorial[] = {
+    1.0,
+    1.0,
+    2.0,
+    6.0,
+    24.0,
+    120.0,
+    720.0,
+    5040.0,
+    40320.0,
+    362880.0,
+    3628800.0
+};
+
+/* integer power for the taylor series. */
+float emb_pow(float a, int n)
+{
+    int i;
+    float b, epsilon;
+    b = a;
+    if (n==0) return 1.0;
+    for (i=0; i<n-1; i++) {
+        b *= a;
+    }
+    return b;
+}
+
+/* Taylor series sine algorithm.
+ */
+float emb_sin(float a)
+{
+    int i, sign;
+    float b;
+    b = 0.0;
+    sign = 1;
+    for (i=0; i<5; i++) {
+        b += sign*emb_pow(a, 2*i+1)/emb_factorial[2*i+1];
+        sign *= -1;
+    }
+    return b;
+}
+
+/* Taylor series cosine algorithm.
+ */
+float emb_cos(float a)
+{
+    int i, sign;
+    float b;
+    b = 0.0;
+    sign = 1;
+    for (i=0; i<5; i++) {
+        b += sign*emb_pow(a, 2*i)/emb_factorial[2*i];
+        sign *= -1;
+    }
+    return b;
+}
+
+/* Euler's series for arctan. (See Utility Functions section of the manual).
+ */
+float emb_atan2(float y, float x)
+{
+    int i;
+    float a, t, b, epsilon, coeff;
+    epsilon = 0.0001;
+    if (x>epsilon) {
+        a = y/(emb_sqrt(x*x+y*y)+x);
+        t = 0.0;
+        coeff = 1.0;
+        for (i=0; i<20; i++) {
+            if (i>0) {
+                coeff *= 4.0 * i;
+                coeff /= (2*i)*(2*i+1);
+            }
+            t += coeff*(emb_pow(a, 2*i+1)/emb_pow(1+a*a, i+1));
+        }
+        return 2*t;
+    }
+    if (y>epsilon) {
+        return 0.5*3.141592 - emb_atan2(b, a);
+    }
+    if (y<epsilon) {
+        return -0.5*3.141592 - emb_atan2(b, a);
+    }
+    if (x<epsilon) {
+        return 3.141592 + emb_atan2(a, b);
+    }
+    embLog("Arctan2 of (0, 0) is undefined.");
+    return 0.0;
+}
+
 
 static int dereference_int(int p)
 {
@@ -1456,19 +1602,19 @@ char getArcDataFromBulge(float bulge, EmbArc* arc, EmbVector* arcCenter,
     }
 
     /* Calculate the Included Angle in Radians */
-    incAngleInRadians = atan2(bulge, 1.0) * 4.0;
+    incAngleInRadians = emb_atan2(bulge, 1.0) * 4.0;
 
     embVector_subtract(arc->end, arc->start, &diff);
     *chord = embVector_getLength(diff);
 
-    *radius = emb_fabs(*chord / (2.0 * sin(incAngleInRadians / 2.0)));
+    *radius = emb_fabs(*chord / (2.0 * emb_sin(incAngleInRadians / 2.0)));
     *diameter = *radius * 2.0;
     *sagitta = emb_fabs((*chord / 2.0) * bulge);
     *apothem = emb_fabs(*radius - *sagitta);
 
     embVector_average(arc->start, arc->end, chordMid);
 
-    chordAngleInRadians = atan2(diff.y, diff.x);
+    chordAngleInRadians = emb_atan2(diff.y, diff.x);
 
     if (*clockwise) {
         sagittaAngleInRadians = chordAngleInRadians + radians(90.0);
@@ -1476,8 +1622,8 @@ char getArcDataFromBulge(float bulge, EmbArc* arc, EmbVector* arcCenter,
         sagittaAngleInRadians = chordAngleInRadians - radians(90.0);
     }
 
-    f.x = *sagitta * cos(sagittaAngleInRadians);
-    f.y = *sagitta * sin(sagittaAngleInRadians);
+    f.x = *sagitta * emb_cos(sagittaAngleInRadians);
+    f.y = *sagitta * emb_sin(sagittaAngleInRadians);
     embVector_add(*chordMid, f, &(arc->mid));
 
     getArcCenter(*arc, arcCenter);
@@ -1547,7 +1693,7 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVector* p3, EmbV
 
     a = ((c0.radius * c0.radius) - (c1.radius * c1.radius) + (d * d)) / (2.0 * d);
     /* Solve for h by substituting a into a^2 + h^2 = r0^2 */
-    h = sqrt((c0.radius * c0.radius) - (a * a));
+    h = emb_sqrt((c0.radius * c0.radius) - (a * a));
 
     /*Find point p2 by adding the a offset in relation to line d to point p0 */
 
@@ -1602,7 +1748,7 @@ int getCircleTangentPoints(EmbCircle c, EmbVector point, EmbVector* t0, EmbVecto
 
     /* Since the tangent lines are always perpendicular to the radius, so
      * we can use the Pythagorean theorem to solve for the missing side */
-    p.radius = sqrt((hyp * hyp) - (c.radius * c.radius));
+    p.radius = emb_sqrt((hyp * hyp) - (c.radius * c.radius));
     p.center = point;
     return getCircleCircleIntersections(c, p, t0, t1);
 }
@@ -1831,7 +1977,7 @@ float embVector_distance(EmbVector v1, EmbVector v2)
 {
     EmbVector v3;
     embVector_subtract(v1, v2, &v3);
-    return sqrt(embVector_dot(v3, v3));
+    return emb_sqrt(embVector_dot(v3, v3));
 }
 
 /**
@@ -1858,7 +2004,7 @@ void embVector_transposeProduct(EmbVector v1, EmbVector v2, EmbVector* result)
  */
 float embVector_getLength(EmbVector vector)
 {
-    return sqrt(vector.x * vector.x + vector.y * vector.y);
+    return emb_sqrt(vector.x * vector.x + vector.y * vector.y);
 }
 
 /**
@@ -2944,7 +3090,7 @@ float GetAngle(EmbVector a, EmbVector b)
 {
     EmbVector h;
     embVector_subtract(a, b, &h);
-    return atan2(h.x, h.y);
+    return emb_atan2(h.x, h.y);
 }
 
 void embPattern_breakIntoColorBlocks(EmbPattern *pattern)
@@ -3299,7 +3445,7 @@ float embVector_distancePointLine(EmbVector p, EmbVector a, EmbVector b)
 
     s = (pa.x * ba.y - pa.y * ba.x) / curve2;
 
-    return emb_fabs(s) * sqrt(curve2);
+    return emb_fabs(s) * emb_sqrt(curve2);
 }
 
 /* From physics2d.net */
@@ -3596,8 +3742,6 @@ static void bcf_directory_free(bcf_directory* dir);
 
 static bcf_file_header bcfFileHeader_read(EmbFile* file);
 static int bcfFileHeader_isValid(bcf_file_header header);
-
-int numberOfFormats = 61;
 
 /*! Constant representing the number of Double Indirect FAT entries in a single header */
 static const unsigned int NumberOfDifatEntriesInHeader = 109;
@@ -5236,10 +5380,8 @@ static char writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     EmbThread thr;
     int i;
     int stitchCount = 0;
-    int threadCount = 0;
 
     stitchCount = pattern->stitchList->length;
-    threadCount = pattern->thread_count;
 
     boundingRect = embPattern_calcBoundingBox(pattern);
 
@@ -5257,7 +5399,7 @@ static char writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     writeInt(file, stitchCount, 6);
     embFile_print(file, "\"\n");
     embFile_print(file, "\">\",\"THREAD_COUNT:\",\"");
-    writeInt(file, threadCount, 6);
+    writeInt(file, pattern->thread_count, 6);
     embFile_print(file, "\"\n");
     writeFloatWrap(file, "\">\",\"EXTENTS_LEFT:\",\"", boundingRect.left, "\"\n");
     writeFloatWrap(file, "\">\",\"EXTENTS_TOP:\",\"", boundingRect.top, "\"\n");
@@ -5269,7 +5411,7 @@ static char writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     /* write colors */
     embFile_print(file, "\"#\",\"[THREAD_NUMBER]\",\"[RED]\",\"[GREEN]\",\"[BLUE]\",\"[DESCRIPTION]\",\"[CATALOG_NUMBER]\"\n");
-    for (i = 0; i < threadCount; i++) {
+    for (i = 0; i < pattern->thread_count; i++) {
         thr = pattern_thread(i);
         /* TODO: fix segfault that backtraces here when libembroidery-convert from dst to csv. */
         embFile_print(file, "\"$\",\"");
@@ -7677,15 +7819,31 @@ static char readPcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
+static EmbStitch pattern_stitch(int index);
+
 static EmbThread pattern_thread(int index)
 {
     EmbThread t;
-    embFile_seek(memory, thread_offset+43*index, SEEK_SET);
-    embFile_read(embBuffer, 1, 43, memory);
+    embFile_seek(memory, thread_offset+thread_size*index, SEEK_SET);
+    embFile_read(embBuffer, 1, thread_size, memory);
     t.color = embColor_fromStr(embBuffer);
     memory_copy(t.description, embBuffer+3, 30);
     memory_copy(t.catalogNumber, embBuffer+33, 10);
     return t;
+}
+
+static EmbStitch pattern_stitch(int index)
+{
+    EmbStitch st;
+    embFile_seek(memory, stitch_offset+stitch_size*index, SEEK_SET);
+    embFile_read(embBuffer, 1, stitch_size, memory);
+    st.flags = embBuffer[0];
+    four_char_order(embBuffer+1, EMB_LITTLE_ENDIAN);
+    memory_set(&(st.x), embBuffer+1, 4);
+    four_char_order(embBuffer+5, EMB_LITTLE_ENDIAN);
+    memory_set(&(st.y), embBuffer+5, 4);
+    st.color = embBuffer[9];
+    return st;
 }
 
 static EmbThread load_thread(int thread_table, int index)
@@ -7779,7 +7937,7 @@ void readPecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 static void pecEncodeJump(EmbFile* file, int x, int types)
 {
-    int outputVal = abs(x) & 0x7FF;
+    int outputVal = emb_abs(x) & 0x7FF;
     unsigned int orPart = 0x80;
 
     if (types & TRIM) {
@@ -11065,8 +11223,7 @@ SvgAttribute svgAttribute_create(const char* name, const char* value)
     SvgAttribute attribute;
     char *modValue;
 
-    modValue = malloc(string_length(value) + 1);
-    string_copy(modValue, value);
+    modValue = malloc(1000);
     j = 0;
     for (i=0; i<string_length(value); i++) {
         if (value[i] == '"') continue;
@@ -12189,18 +12346,13 @@ int embThread_findNearestColor(EmbColor color, int thread_table)
 
     currentClosestValue = 256 * 256 * 3;
     closestIndex = -1;
+    length = double_dereference_int(table_lengths, thread_table);
 
-    length = dereference_int(table_lengths);
-    out = dereference_int(thread_table);
     for (i = 0; i < length; i++) {
         int delta;
-        EmbColor c;
-        embFile_seek(datafile, out+35*i, SEEK_SET);
-        embFile_read(embBuffer, 1, 35, datafile);
-        c.r = embBuffer[30];
-        c.g = embBuffer[31];
-        c.b = embBuffer[32];
-        delta = embColor_distance(color, c);
+        EmbThread t;
+        t = load_thread(thread_table, i);
+        delta = embColor_distance(color, t.color);
 
         if (delta <= currentClosestValue) {
             currentClosestValue = delta;
@@ -12231,7 +12383,6 @@ int embColor_equal(EmbColor a, EmbColor b)
 {
     return (a.r == b.r) && (a.g == b.g) && (a.b == b.b);
 }
-
 
 
 int threadColor(EmbColor *c, const char* name, int brand)
@@ -12293,9 +12444,34 @@ int init_embroidery(void)
     datafile = embFile_open("libembroidery_data.bin", "rb", 0);
     memory = embFile_open("libembroidery_memory.bin", "wb+", 0);
 
-    size = THREAD_MAXIMUM*sizeof(EmbThread);
-    size += STITCH_MAXIMUM*sizeof(EmbStitch);
-    size += GEOMETRY_ARRAY_MAXIMUM*sizeof(EmbArc);
+    size = 0;
+    arc_offset = size;
+    size += GEOMETRY_ARRAY_MAXIMUM * arc_size;
+    circle_offset = size;
+    size += GEOMETRY_ARRAY_MAXIMUM * circle_size;
+    ellipse_offset = size;
+    size += GEOMETRY_ARRAY_MAXIMUM * ellipse_size;
+    flag_offset = size;
+    size += GEOMETRY_ARRAY_MAXIMUM * flag_size;
+    line_offset = size;
+    size += GEOMETRY_ARRAY_MAXIMUM * line_size;
+    path_offset = size;
+    size += GEOMETRY_ARRAY_MAXIMUM * point_size;
+    point_offset = size;
+    size += GEOMETRY_ARRAY_MAXIMUM * polygon_size;
+    polygon_offset = size;
+    size += GEOMETRY_ARRAY_MAXIMUM * polyline_size;
+    polyline_offset = size;
+    size += GEOMETRY_ARRAY_MAXIMUM * rect_size;
+    rect_offset = size;
+    size += GEOMETRY_ARRAY_MAXIMUM * spline_size;
+    spline_offset = size;
+    size += THREAD_MAXIMUM * thread_size;
+    thread_offset = size;
+    size += STITCH_MAXIMUM * stitch_size;
+    stitch_offset = size;
+    size += GEOMETRY_ARRAY_MAXIMUM * vector_size;
+    vector_offset = size;
     for (i=0; i<size; i++) {
         embFile_write("\0", 1, 1, memory);
     }

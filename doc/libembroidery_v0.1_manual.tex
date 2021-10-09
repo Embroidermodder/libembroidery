@@ -1835,6 +1835,14 @@ An example for building for use in C\#
 swig -csharp -o ./csharp/binding/swig_wrap.c -I../ swig.i
 \end{verbatim}
 
+\section{Utility Function}
+
+Euler's series for the inverse tangent\cite{Chien-Lih2005}:
+
+\begin{equation}
+\tan^{-1}(x) = \sum_{n=0}^{\infty} \frac{2^{2n}(n!)^{2}}{(2n+1)!} \frac{x^{2n+1}}{(1+x^{2})^{n+1}}
+\end{equation}
+
 \newpage
 
 \bibliographystyle{plain}

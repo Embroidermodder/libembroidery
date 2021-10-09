@@ -171,6 +171,7 @@ typedef struct EmbFile_ EmbFile;
 #define EMBFORMAT_OBJECTONLY    2
 #define EMBFORMAT_STCHANDOBJ    3 /* binary operation: 1+2=3 */
 
+#define numberOfFormats         61
 
 /* STRUCTS
  *****************************************************************************/
@@ -497,12 +498,6 @@ EMB_PUBLIC void embPattern_copyStitchListToPolylines(EmbPattern* pattern);
 EMB_PUBLIC void embPattern_copyPolylinesToStitchList(EmbPattern* pattern);
 EMB_PUBLIC void embPattern_moveStitchListToPolylines(EmbPattern* pattern);
 EMB_PUBLIC void embPattern_movePolylinesToStitchList(EmbPattern* pattern);
-
-/* NON-MACRO CONSTANTS
- ******************************************************************************/
-
-EMB_PUBLIC extern const EmbFormatList formatTable[];
-EMB_PUBLIC extern int numberOfFormats;
 
 #ifdef __cplusplus
 }

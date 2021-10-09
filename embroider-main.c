@@ -13,6 +13,15 @@ struct EmbFile_ {
     FILE *file;
 };
 
+
+float emb_fabs(float a);
+int emb_abs(int a);
+float emb_sqrt(float a);
+float emb_pow(float a, int n);
+float emb_sin(float a);
+float emb_cos(float a);
+float emb_atan2(float a, float b);
+
 static void usage(void);
 static void formats(void);
 static void testTangentPoints(EmbCircle c, EmbVector p, EmbVector*, EmbVector*);
@@ -159,6 +168,43 @@ static int create_test_file_2(const char* outf)
     result = embPattern_write(p, outf, EMB_FORMAT_CSV);
 
     embPattern_free(p);
+    return 0;
+}
+
+static int test_math_functions(void)
+{
+    float t;
+    float error;
+    puts("SQRT TEST");
+    error = 0.0;
+    for (t = 1.0; t<10.0; t+=1.0) {
+        error += fabs(sqrt(t)-emb_sqrt(t));
+    }
+    printf("SQRT TEST: %f\n", error);
+
+    error = 0.0;
+    for (t = 0.1; t<1.0; t+=0.1) {
+        error += fabs(pow(t, 5)-emb_pow(t, 5));
+    }
+    printf("POW TEST: %f\n", error);
+
+    error = 0.0;
+    for (t = 0.1; t<1.0; t+=0.1) {
+        error += fabs(cos(t)-emb_cos(t));
+    }
+    printf("COS TEST: %f\n", error);
+
+    error = 0.0;
+    for (t = 0.1; t<1.0; t+=0.1) {
+        error += fabs(sin(t)-emb_sin(t));
+    }
+    printf("SIN TEST: %f\n", error);
+
+    error = 0.0;
+    for (t = 1.0; t<10.0; t+=1.0) {
+        error += fabs(atan2(t, 1.0)-emb_atan2(t, 1.0));
+    }
+    printf("ATAN2 TEST: %f\n", error);
     return 0;
 }
 
@@ -481,6 +527,7 @@ static void testMain(void)
     int svg2Result = convert("test02.csv", "test02.svg");
     int dst1Result = convert("test01.csv", "test01.dst");
     int dst2Result = convert("test02.csv", "test02.dst");
+    int mathResult = test_math_functions();
     /* int embeddedResult = embeddedFunctionsResult(); */
 
     puts("SUMMARY OF RESULTS");
@@ -495,6 +542,7 @@ static void testMain(void)
     report(svg2Result, "Convert CSV-SVG 2");
     report(dst1Result, "Convert CSV-DST 1");
     report(dst2Result, "Convert CSV-DST 2");
+    report(mathResult, "Mathematics Functions");
     /* report(embeddedResult, "Embedded Functions"); */
 }
 

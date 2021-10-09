@@ -20,34 +20,6 @@ extern "C" {
     #endif
 #endif
 
-/* It's up to the user to define the struct for the file, that way we don't
- * need to include stdio.h or any other headers here (which improves the
- * compatibility with systems without the C Standard Library).
- */
-
-#ifdef ARDUINO
-
-typedef struct InoFile_ EmbFile;
-
-/* TODO: These 8 functions are the whole interface with arduino
- * but I think wrapping the file pointer in a typedef should be enough to
- * embed the contents of these in libembroidery.c.
- */
-EmbFile* inoFile_open(const char* fileName, const char* mode);
-int inoFile_close(EmbFile* stream);
-int inoFile_seek(EmbFile* stream, long offset, int origin);
-long inoFile_tell(EmbFile* stream);
-EmbFile* inoFile_tmpfile(void);
-int inoFile_read(void*, int, int, EmbFile* stream);
-int inoFile_write(void*, int, int, EmbFile* stream);
-void inoLog_serial(const char* msg);
-
-#else
-
-typedef struct EmbFile_ EmbFile;
-
-#endif
-
 /* Machine codes for stitch flags */
 #define NORMAL                  0 /* stitch to (x, y) */
 #define JUMP                    1 /* move to (x, y) */
@@ -163,8 +135,7 @@ typedef struct EmbFile_ EmbFile;
 #define EMB_RECT                9
 #define EMB_SPLINE              10
 #define EMB_STITCH              11
-#define EMB_THREAD              12
-#define EMB_VECTOR              13
+#define EMB_VECTOR              12
 
 #define EMBFORMAT_UNSUPPORTED   0
 #define EMBFORMAT_STITCHONLY    1

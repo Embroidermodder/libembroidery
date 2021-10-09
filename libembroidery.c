@@ -1,21 +1,32 @@
 #include "embroidery.h"
+
+#if ARDUINO
+/*TODO: arduino includes */
+#define EmbFile    InoFile
+#else
+#ifdef _WIN32
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
+#define EmbFile    FILE *
+#else
+#include <unistd.h>
+#include <fcntl.h>
+#include <time.h>
+
+int sprintf(char *, const char *format, ...);
+int sscanf(char *, const char *, ...);
 
 void *malloc(size_t);
 void *realloc(void *, size_t);
 void *calloc(long unsigned int, long unsigned int);
 void free(void *);
 
-#if ARDUINO
-/*TODO: arduino embTime includes */
-#else
-#include <time.h>
+#define EmbFile    int
+#endif
 #endif
 
-struct EmbFile_ {
-    FILE *file;
-};
 
 /* float-indirection file allocation table references */
 typedef struct _bcf_file_difat
@@ -95,10 +106,10 @@ typedef struct _bcf_file
  * that won't be called by users through embroidery.h.
  */
 
-static int embFile_read(void *ptr, int a, int b, EmbFile *stream);
-static int embFile_write(void *ptr, int a, int b, EmbFile *stream);
-static int embFile_seek(EmbFile *stream, int offset, int flags);
-static int embFile_tell(EmbFile *stream);
+static int embFile_read(void *ptr, int a, int b, EmbFile stream);
+static int embFile_write(void *ptr, int a, int b, EmbFile stream);
+static int embFile_seek(EmbFile stream, int offset, int flags);
+static int embFile_tell(EmbFile stream);
 
 static int dereference_int(int p);
 static int double_dereference_int(int table, int entry);
@@ -107,39 +118,39 @@ static int get_str(char *s, int p);
 static EmbColor embColor_fromStr(unsigned char *b);
 static void embColor_toStr(EmbColor c, unsigned char *b);
 
-static char binaryReadByte(EmbFile* file);
-static int binaryReadBytes(EmbFile* file, unsigned char* destination, int count);
-static short binaryReadInt16(EmbFile* file);
-static int binaryReadInt32(EmbFile* file);
-static unsigned char binaryReadUInt8(EmbFile* file);
-static unsigned short binaryReadUInt16(EmbFile* file);
-static unsigned int binaryReadUInt32(EmbFile* file);
-static short binaryReadInt16BE(EmbFile* file); /* Big endian version */
-static unsigned short binaryReadUInt16BE(EmbFile* file); /* Big endian version */
-static int binaryReadInt32BE(EmbFile* file);   /* Big endian version */
-static unsigned int binaryReadUInt32BE(EmbFile* file);
-static float binaryReadFloat(EmbFile* file);
-static void binaryReadString(EmbFile* file, char *buffer, int maxLength);
+static char binaryReadByte(EmbFile file);
+static int binaryReadBytes(EmbFile file, unsigned char* destination, int count);
+static short binaryReadInt16(EmbFile file);
+static int binaryReadInt32(EmbFile file);
+static unsigned char binaryReadUInt8(EmbFile file);
+static unsigned short binaryReadUInt16(EmbFile file);
+static unsigned int binaryReadUInt32(EmbFile file);
+static short binaryReadInt16BE(EmbFile file); /* Big endian version */
+static unsigned short binaryReadUInt16BE(EmbFile file); /* Big endian version */
+static int binaryReadInt32BE(EmbFile file);   /* Big endian version */
+static unsigned int binaryReadUInt32BE(EmbFile file);
+static float binaryReadFloat(EmbFile file);
+static void binaryReadString(EmbFile file, char *buffer, int maxLength);
 
-static void binaryWriteByte(EmbFile* file, unsigned char data);
-static void binaryWriteBytes(EmbFile* file, const char* data, int size);
-static void binaryWriteShort(EmbFile* file, short data);
-static void binaryWriteShortBE(EmbFile* file, short data);
-static void binaryWriteUShort(EmbFile* file, unsigned short data);
-static void binaryWriteUShortBE(EmbFile* file, unsigned short data);
-static void binaryWriteInt(EmbFile* file, int data);
-static void binaryWriteIntBE(EmbFile* file, int data);
-static void binaryWriteUInt(EmbFile* file, unsigned int data);
-static void binaryWriteUIntBE(EmbFile* file, unsigned int data);
-static void binaryWriteFloat(EmbFile* file, float data);
+static void binaryWriteByte(EmbFile file, unsigned char data);
+static void binaryWriteBytes(EmbFile file, const char* data, int size);
+static void binaryWriteShort(EmbFile file, short data);
+static void binaryWriteShortBE(EmbFile file, short data);
+static void binaryWriteUShort(EmbFile file, unsigned short data);
+static void binaryWriteUShortBE(EmbFile file, unsigned short data);
+static void binaryWriteInt(EmbFile file, int data);
+static void binaryWriteIntBE(EmbFile file, int data);
+static void binaryWriteUInt(EmbFile file, unsigned int data);
+static void binaryWriteUIntBE(EmbFile file, unsigned int data);
+static void binaryWriteFloat(EmbFile file, float data);
 
-static void writeFloat(EmbFile* file, float number);
-static void writeFloatWrap(EmbFile* file, char *prefix, float number, char *suffix);
-static void writeFloatAttribute(EmbFile* file, char *attribute, float number);
+static void writeFloat(EmbFile file, float number);
+static void writeFloatWrap(EmbFile file, char *prefix, float number, char *suffix);
+static void writeFloatAttribute(EmbFile file, char *attribute, float number);
 
 static int roundDouble(float src);
-static void writeInt(EmbFile *, int, int);
-static void writeFloat(EmbFile *, float);
+static void writeInt(EmbFile , int, int);
+static void writeFloat(EmbFile , float);
 
 static void embPointerToArray(char *buffer, void* pointer, int maxDigits);
 static void embIntToArray(char *buffer, int number, int maxDigits);
@@ -148,8 +159,8 @@ static void embFloatToArray(char *buffer, float number, float tolerance, int bef
 static void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int _269);
 static int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _267, int _269, int _235);
  
-static void readPecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName);
-static void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* filename);
+static void readPecStitches(EmbPattern* pattern, EmbFile file, const char* fileName);
+static void writePecStitches(EmbPattern* pattern, EmbFile file, const char* filename);
 
 static char string_in_table(char *buff, int table);
 static EmbThread load_thread(int, int);
@@ -159,110 +170,110 @@ static void embLog(const char* str);
 static void embTime_initNow(EmbTime* t);
 static EmbTime embTime_time(EmbTime* t);
 
-static char read100(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char write100(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char read10o(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char write10o(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readBro(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeBro(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readCol(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeCol(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readCsd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeCsd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readCsv(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeCsv(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readDat(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeDat(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readDsb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeDsb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readDst(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeDst(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readDsz(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeDsz(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readDxf(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeDxf(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readEdr(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeEdr(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readEmd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeEmd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readExp(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeExp(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readExy(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeExy(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readFxy(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeFxy(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readGt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeGt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readHus(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeHus(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readInb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeInb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readInf(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeInf(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readJef(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeJef(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readKsm(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeKsm(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readMax(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeMax(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readMit(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeMit(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readNew(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeNew(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readOfm(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeOfm(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readPcd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writePcd(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readPcm(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writePcm(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readPcq(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writePcq(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readPcs(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writePcs(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readPec(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writePec(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readPes(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writePes(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readPhb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writePhb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readPhc(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writePhc(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readPlt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writePlt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readRgb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeRgb(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readSew(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeSew(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readShv(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeShv(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readSst(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeSst(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readStx(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeStx(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readSvg(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeSvg(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readT01(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeT01(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readT09(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeT09(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readTap(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeTap(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readThr(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeThr(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readTxt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeTxt(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readU00(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeU00(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readU01(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeU01(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readVip(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeVip(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readVp3(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeVp3(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readXxx(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeXxx(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char readZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
-static char writeZsk(EmbPattern *pattern, EmbFile* file, const char* fileName);
+static char read100(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char write100(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char read10o(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char write10o(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readBro(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeBro(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readCol(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeCol(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readCsd(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeCsd(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readCsv(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeCsv(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readDat(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeDat(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readDsb(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeDsb(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readDst(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeDst(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readDsz(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeDsz(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readDxf(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeDxf(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readEdr(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeEdr(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readEmd(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeEmd(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readExp(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeExp(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readExy(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeExy(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readFxy(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeFxy(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readGt(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeGt(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readHus(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeHus(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readInb(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeInb(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readInf(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeInf(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readJef(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeJef(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readKsm(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeKsm(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readMax(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeMax(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readMit(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeMit(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readNew(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeNew(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readOfm(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeOfm(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readPcd(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writePcd(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readPcm(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writePcm(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readPcq(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writePcq(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readPcs(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writePcs(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readPec(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writePec(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readPes(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writePes(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readPhb(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writePhb(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readPhc(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writePhc(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readPlt(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writePlt(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readRgb(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeRgb(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readSew(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeSew(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readShv(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeShv(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readSst(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeSst(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readStx(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeStx(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readSvg(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeSvg(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readT01(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeT01(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readT09(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeT09(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readTap(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeTap(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readThr(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeThr(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readTxt(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeTxt(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readU00(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeU00(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readU01(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeU01(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readVip(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeVip(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readVp3(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeVp3(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readXxx(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeXxx(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char readZsk(EmbPattern *pattern, EmbFile file, const char* fileName);
+static char writeZsk(EmbPattern *pattern, EmbFile file, const char* fileName);
 
 static char identify_element(char *token);
 static void print_log_string(int offset);
@@ -270,24 +281,24 @@ static void print_log_string(int offset);
 static int encode_dst_ternary(int *, unsigned char *);
 static void decode_dst_ternary(int *, unsigned char *);
 
-static void writePoint(EmbFile* file, float x, float y, int space);
-static void write_svg_color(EmbFile* file, EmbColor color);
-static void writeCircles(EmbPattern* p, EmbFile* file);
-static void writeEllipse(EmbPattern* p, EmbFile* file);
-static void writePoints(EmbPattern* p, EmbFile* file);
-static void writePolygons(EmbPattern* p, EmbFile* file);
-static void writePolylines(EmbPattern* p, EmbFile* file);
-static void writeStitchList(EmbPattern* p, EmbFile* file);
+static void writePoint(EmbFile file, float x, float y, int space);
+static void write_svg_color(EmbFile file, EmbColor color);
+static void writeCircles(EmbPattern* p, EmbFile file);
+static void writeEllipse(EmbPattern* p, EmbFile file);
+static void writePoints(EmbPattern* p, EmbFile file);
+static void writePolygons(EmbPattern* p, EmbFile file);
+static void writePolylines(EmbPattern* p, EmbFile file);
+static void writeStitchList(EmbPattern* p, EmbFile file);
 
-static EmbFile* embFile_open(const char* fileName, const char* mode, int optional);
-static int embFile_readline(EmbFile* stream, char *, int);
-static int embFile_close(EmbFile* stream);
-static EmbFile* embFile_tmpfile(void);
-static void embFile_print(EmbFile* stream, char*);
-static void embFile_pad(EmbFile *f, char, int);
+static EmbFile embFile_open(const char* fileName, const char* mode, int optional);
+static int embFile_readline(EmbFile stream, char *, int);
+static int embFile_close(EmbFile stream);
+static EmbFile embFile_tmpfile(void);
+static void embFile_print(EmbFile stream, char*);
+static void embFile_pad(EmbFile f, char, int);
 
-static int bcfFile_read(EmbFile* file, bcf_file* bcfFile);
-static EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind);
+static int bcfFile_read(EmbFile file, bcf_file* bcfFile);
+static EmbFile GetFile(bcf_file* bcfFile, EmbFile file, char* fileToFind);
 static void bcf_file_free(bcf_file* bcfFile);
 
 void embArray_resample(EmbArray *a, EmbArray *usePt);
@@ -305,8 +316,8 @@ int embVector_collinear(EmbVector a1, EmbVector a2, EmbVector a3, float collinea
  */
 
 static unsigned char embBuffer[1024];
-static EmbFile *datafile;
-static EmbFile *memory;
+static EmbFile datafile;
+static EmbFile memory;
 
 /* Flag Defines
  */
@@ -686,13 +697,13 @@ float emb_atan2(float y, float x)
         return 2*t;
     }
     if (y>epsilon) {
-        return 0.5*3.141592 - emb_atan2(b, a);
+        return 0.5*3.141592 - emb_atan2(x, y);
     }
     if (y<epsilon) {
-        return -0.5*3.141592 - emb_atan2(b, a);
+        return -0.5*3.141592 - emb_atan2(x, y);
     }
     if (x<epsilon) {
-        return 3.141592 + emb_atan2(a, b);
+        return 3.141592 + emb_atan2(y, x);
     }
     embLog("Arctan2 of (0, 0) is undefined.");
     return 0.0;
@@ -793,39 +804,55 @@ static void string_copy(void *a, void *b)
  * SD File read() doesn't appear to return the same way as fread().
  * This will need work.
  * ARDUINO TODO: Implement inoFile_write. */
-static int embFile_read(void *ptr, int a, int b, EmbFile *stream)
+static int embFile_read(void *ptr, int a, int b, EmbFile stream)
 {
 #ifdef ARDUINO
     return inoFile_read(ptr, a, b, stream);
 #else
-    return fread(ptr, a, b, stream->file);
+#ifdef _WIN32
+    return fread(ptr, a, b, stream);
+#else
+    return read(stream, ptr, a*b);
+#endif
 #endif
 }
 
-static int embFile_write(void *ptr, int a, int b, EmbFile *stream)
+static int embFile_write(void *ptr, int a, int b, EmbFile stream)
 {
 #ifdef ARDUINO
     return inoFile_write(ptr, a, b, stream);
 #else
-    return fwrite(ptr, a, b, stream->file);
+#ifdef _WIN32
+    return fwrite(ptr, a, b, stream);
+#else
+    return write(stream, ptr, a*b);
+#endif
 #endif
 }
 
-static int embFile_seek(EmbFile *stream, int offset, int origin)
+static int embFile_seek(EmbFile stream, int offset, int origin)
 {
 #ifdef ARDUINO
     return inoFile_seek(stream, offset, origin);
 #else
-    return fseek(stream->file, offset, origin);
+#ifdef _WIN32
+    return fseek(stream, offset, origin);
+#else
+    return lseek(stream, offset, origin);
+#endif
 #endif
 }
 
-static int embFile_tell(EmbFile *stream)
+static int embFile_tell(EmbFile stream)
 {
 #ifdef ARDUINO
     return inoFile_tell(stream);
 #else
-    return ftell(stream->file);
+#ifdef _WIN32
+    return ftell(stream);
+#else
+    return lseek(stream, 0, SEEK_CUR);
+#endif
 #endif
 }
 
@@ -1148,14 +1175,14 @@ int husCompress(unsigned char* input, unsigned long _inputSize, unsigned char* o
     return 0;
 }
 
-static char binaryReadByte(EmbFile* file)
+static char binaryReadByte(EmbFile file)
 {
     char c;
     embFile_read(&c, 1, 1, file);
     return c;
 }
 
-static int binaryReadBytes(EmbFile* file, unsigned char* destination, int count)
+static int binaryReadBytes(EmbFile file, unsigned char* destination, int count)
 {
     return (int)embFile_read((char*)destination, 1, count, file);
 }
@@ -1191,35 +1218,35 @@ static void four_char_order(unsigned char *s, unsigned char endianness)
  * -----------------------------------------------------------------------------
  */
 
-static short binaryReadInt16(EmbFile* file)
+static short binaryReadInt16(EmbFile file)
 {
     embFile_read(embBuffer, 1, 2, file);
     two_char_order(embBuffer, EMB_LITTLE_ENDIAN);
     return *((short *)embBuffer);
 }
 
-static int binaryReadInt32(EmbFile* file)
+static int binaryReadInt32(EmbFile file)
 {
     embFile_read(embBuffer, 1, 4, file);
     four_char_order(embBuffer, EMB_LITTLE_ENDIAN);
     return *((int *)embBuffer);
 }
 
-static unsigned char binaryReadUInt8(EmbFile* file)
+static unsigned char binaryReadUInt8(EmbFile file)
 {
     unsigned char c;
     embFile_read(&c, 1, 1, file);
     return c;
 }
 
-static unsigned short binaryReadUInt16(EmbFile* file)
+static unsigned short binaryReadUInt16(EmbFile file)
 {
     embFile_read(embBuffer, 1, 2, file);
     two_char_order(embBuffer, EMB_LITTLE_ENDIAN);
     return *((unsigned short *)embBuffer);
 }
 
-static unsigned int binaryReadUInt32(EmbFile* file)
+static unsigned int binaryReadUInt32(EmbFile file)
 {
     embFile_read(embBuffer, 1, 4, file);
     four_char_order(embBuffer, EMB_LITTLE_ENDIAN);
@@ -1227,7 +1254,7 @@ static unsigned int binaryReadUInt32(EmbFile* file)
 }
 
 /* Big endian version */
-static short binaryReadInt16BE(EmbFile* file)
+static short binaryReadInt16BE(EmbFile file)
 {
     embFile_read(embBuffer, 1, 2, file);
     two_char_order(embBuffer, EMB_BIG_ENDIAN);
@@ -1235,7 +1262,7 @@ static short binaryReadInt16BE(EmbFile* file)
 }
 
 /* Big endian version */
-static unsigned short binaryReadUInt16BE(EmbFile* file)
+static unsigned short binaryReadUInt16BE(EmbFile file)
 {
     embFile_read(embBuffer, 1, 2, file);
     two_char_order(embBuffer, EMB_BIG_ENDIAN);
@@ -1243,7 +1270,7 @@ static unsigned short binaryReadUInt16BE(EmbFile* file)
 }
 
 /* Big endian version */
-static int binaryReadInt32BE(EmbFile* file)
+static int binaryReadInt32BE(EmbFile file)
 {
     embFile_read(embBuffer, 1, 4, file);
     four_char_order(embBuffer, EMB_BIG_ENDIAN);
@@ -1251,14 +1278,14 @@ static int binaryReadInt32BE(EmbFile* file)
 }
 
 /* Big endian version */
-static unsigned int binaryReadUInt32BE(EmbFile* file)
+static unsigned int binaryReadUInt32BE(EmbFile file)
 {
     embFile_read(embBuffer, 1, 4, file);
     four_char_order(embBuffer, EMB_BIG_ENDIAN);
     return *((unsigned int *)embBuffer);
 }
 
-static void binaryReadString(EmbFile* file, char* buffer, int maxLength)
+static void binaryReadString(EmbFile file, char* buffer, int maxLength)
 {
     int i;
     for (i=0; i < maxLength; i++) {
@@ -1268,7 +1295,7 @@ static void binaryReadString(EmbFile* file, char* buffer, int maxLength)
     }
 }
 
-static float binaryReadFloat(EmbFile* file)
+static float binaryReadFloat(EmbFile file)
 {
     float a;
     int idata = binaryReadInt32(file);
@@ -1276,73 +1303,73 @@ static float binaryReadFloat(EmbFile* file)
     return a;
 }
 
-static void binaryWriteByte(EmbFile* file, unsigned char data)
+static void binaryWriteByte(EmbFile file, unsigned char data)
 {
     embFile_write(&data, 1, 1, file);
 }
 
-static void binaryWriteBytes(EmbFile* file, const char* data, int size)
+static void binaryWriteBytes(EmbFile file, const char* data, int size)
 {
     embFile_write((char*)data, 1, size, file);
 }
 
-static void binaryWriteShort(EmbFile* file, short data)
+static void binaryWriteShort(EmbFile file, short data)
 {
     memory_copy(embBuffer, (unsigned char *)(&data), 2);
     two_char_order(embBuffer, EMB_LITTLE_ENDIAN);
     embFile_write(embBuffer, 1, 2, file);
 }
 
-static void binaryWriteShortBE(EmbFile* file, short data)
+static void binaryWriteShortBE(EmbFile file, short data)
 {
     memory_copy(embBuffer, (unsigned char *)(&data), 2);
     two_char_order(embBuffer, EMB_BIG_ENDIAN);
     embFile_write(embBuffer, 1, 2, file);
 }
 
-static void binaryWriteUShort(EmbFile* file, unsigned short data)
+static void binaryWriteUShort(EmbFile file, unsigned short data)
 {
     memory_copy(embBuffer, (unsigned char *)(&data), 2);
     two_char_order(embBuffer, EMB_LITTLE_ENDIAN);
     embFile_write(embBuffer, 1, 2, file);
 }
 
-static void binaryWriteUShortBE(EmbFile* file, unsigned short data)
+static void binaryWriteUShortBE(EmbFile file, unsigned short data)
 {
     memory_copy(embBuffer, (unsigned char *)(&data), 2);
     two_char_order(embBuffer, EMB_BIG_ENDIAN);
     embFile_write(embBuffer, 1, 2, file);
 }
 
-static void binaryWriteInt(EmbFile* file, int data)
+static void binaryWriteInt(EmbFile file, int data)
 {
     memory_copy(embBuffer, (unsigned char *)(&data), 4);
     four_char_order(embBuffer, EMB_LITTLE_ENDIAN);
     embFile_write(embBuffer, 1, 2, file);
 }
 
-static void binaryWriteIntBE(EmbFile* file, int data)
+static void binaryWriteIntBE(EmbFile file, int data)
 {
     memory_copy(embBuffer, (unsigned char *)(&data), 4);
     four_char_order(embBuffer, EMB_BIG_ENDIAN);
     embFile_write(embBuffer, 1, 2, file);
 }
 
-static void binaryWriteUInt(EmbFile* file, unsigned int data)
+static void binaryWriteUInt(EmbFile file, unsigned int data)
 {
     memory_copy(embBuffer, (unsigned char *)(&data), 4);
     four_char_order(embBuffer, EMB_LITTLE_ENDIAN);
     embFile_write(embBuffer, 1, 2, file);
 }
 
-static void binaryWriteUIntBE(EmbFile* file, unsigned int data)
+static void binaryWriteUIntBE(EmbFile file, unsigned int data)
 {
     memory_copy(embBuffer, (unsigned char *)(&data), 4);
     four_char_order(embBuffer, EMB_BIG_ENDIAN);
     embFile_write(embBuffer, 1, 2, file);
 }
 
-static void binaryWriteFloat(EmbFile* file, float data)
+static void binaryWriteFloat(EmbFile file, float data)
 {
     int idata;
     memory_copy(&idata, &data, 4);
@@ -1463,7 +1490,6 @@ static void embIntToArray(char* buffer, int number, int maxDigits)
     }
     buffer[maxDigits - 1] = 0;
     for (i = maxDigits - 2; i >= 0; i--) {
-        printf("%s %d %d\n", buffer, i, unumber);
         buffer[i] = (char)(unumber % 10) + '0';
         unumber = unumber / 10;
         if (unumber == 0)
@@ -1480,7 +1506,7 @@ static void embIntToArray(char* buffer, int number, int maxDigits)
     }
 }
 
-static void writeInt(EmbFile* file, int n, int m)
+static void writeInt(EmbFile file, int n, int m)
 {
     char buffer[30];
     embIntToArray(buffer, n, m);
@@ -1504,7 +1530,6 @@ static void embFloatToArray(char* buffer, float number, float tolerance, int bef
         t = 0.0;
         for (j = 0; j < 9; j++) {
             t += beforePos[i];
-            printf("%s %d %d %f %f\n", buffer, i, j, t, number);
             if ((number - tolerance > t) && (t + beforePos[i] > number + tolerance)) {
                 buffer[before - 1 - i] = j + '1';
                 number -= (j + 1) * beforePos[i];
@@ -1517,7 +1542,6 @@ static void embFloatToArray(char* buffer, float number, float tolerance, int bef
         t = 0.0;
         for (j = 0; j < 9; j++) {
             t += afterPos[i];
-            printf("%s %d %d %f %f\n", buffer, i, j, t, number);
             if ((number - tolerance > t) && (t + afterPos[i] > number + tolerance)) {
                 buffer[before + 1 + i] = j + '1';
                 number -= (j + 1) * afterPos[i];
@@ -1536,7 +1560,12 @@ static void embLog(const char* str)
     inoLog_serial(str);
     inoLog_serial("\n");
 #else
+#ifdef _WIN32
     puts(str);
+#else
+    write(1, str, string_length(str));
+    write(1, "\n", 1);
+#endif
 #endif
 }
 
@@ -2980,7 +3009,7 @@ void embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj)
     embArray_addPolyline(p->polylines, obj);
 }
 
-static void embPattern_colorBlock16(EmbPattern *pattern, EmbFile *file)
+static void embPattern_colorBlock16(EmbPattern *pattern, EmbFile file)
 {
     int i;
 
@@ -3727,21 +3756,21 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, float density)
     return stitches;
 }
 
-static bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const unsigned int sectorSize);
-static unsigned int readFullSector(EmbFile* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
+static bcf_file_difat* bcf_difat_create(EmbFile file, unsigned int fatSectors, const unsigned int sectorSize);
+static unsigned int readFullSector(EmbFile file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
 static unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
 static void bcf_file_difat_free(bcf_file_difat* difat);
 
 static bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
-static void loadFatFromSector(bcf_file_fat* fat, EmbFile* file);
+static void loadFatFromSector(bcf_file_fat* fat, EmbFile file);
 static void bcf_file_fat_free(bcf_file_fat* fat);
 
-static bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file);
+static bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile file);
 static bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
-static void readNextSector(EmbFile* file, bcf_directory* dir);
+static void readNextSector(EmbFile file, bcf_directory* dir);
 static void bcf_directory_free(bcf_directory* dir);
 
-static bcf_file_header bcfFileHeader_read(EmbFile* file);
+static bcf_file_header bcfFileHeader_read(EmbFile file);
 static int bcfFileHeader_isValid(bcf_file_header header);
 
 /*! Constant representing the number of Double Indirect FAT entries in a single header */
@@ -3759,7 +3788,7 @@ static char *error_format_not_supported = "ERROR: This format is not implemented
 
 int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
 {
-    EmbFile *file;
+    EmbFile file;
     int r;
 
     if (!fileName) {
@@ -3991,7 +4020,7 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
 
 int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
 {
-    EmbFile *file;
+    EmbFile file;
     int r;
 
     if (!pattern) {
@@ -4217,13 +4246,20 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
 /**
  * TODO: documentation.
  */
-EmbFile* embFile_open(const char* fileName, const char* mode, int optional)
+EmbFile embFile_open(const char* fileName, const char* mode, int optional)
 {
+    EmbFile oFile;
+
 #ifdef ARDUINO
-    return inoFile_open(fileName, mode);
+    oFile = inoFile_open(fileName, mode);
 #else
-    EmbFile* eFile = 0;
-    FILE* oFile = fopen(fileName, mode);
+#ifdef _WIN32
+    oFile = fopen(fileName, mode);
+#else
+    oFile = open(fileName, O_RDWR | O_CREAT);
+#endif
+#endif
+
     if (!oFile) {
         if (!optional) {
             embLog("ERROR: Cannot open the fileName in the given mode.");
@@ -4232,34 +4268,22 @@ EmbFile* embFile_open(const char* fileName, const char* mode, int optional)
         }
         return 0;
     }
-
-    eFile = (EmbFile*)malloc(sizeof(EmbFile));
-    if (!eFile) {
-        if (!optional) {
-            embLog("ERROR: Cannot allocate memory for EmbFile with arguments:");
-            embLog(fileName);
-            embLog(mode);
-        }
-        fclose(oFile);
-        return 0;
-    }
-
-    eFile->file = oFile;
-    return eFile;
-#endif
+    return oFile;
 }
 
 /**
  * TODO: documentation.
  */
-int embFile_close(EmbFile* stream)
+int embFile_close(EmbFile stream)
 {
 #ifdef ARDUINO
     return inoFile_close(stream);
 #else /* ARDUINO */
-    int retVal = fclose(stream->file);
-    free(stream);
-    return retVal;
+#ifdef _WIN32
+    return fclose(stream);
+#else
+    return close(stream);
+#endif
 #endif /* ARDUINO */
 }
 
@@ -4268,7 +4292,7 @@ int embFile_close(EmbFile* stream)
  * ISSUE: the last line may get cut off in certain cases.
  * ISSUE: how are blank lines dealt with?
  */
-static int embFile_readline(EmbFile* stream, char* line, int maxLength)
+static int embFile_readline(EmbFile stream, char* line, int maxLength)
 {
     int i, pass;
     char c;
@@ -4301,7 +4325,7 @@ static int embFile_readline(EmbFile* stream, char* line, int maxLength)
 /**
  * TODO: documentation.
  */
-void embFile_pad(EmbFile* stream, char c, int n)
+void embFile_pad(EmbFile stream, char c, int n)
 {
     int i;
     for (i=0; i<n; i++) {
@@ -4312,31 +4336,19 @@ void embFile_pad(EmbFile* stream, char c, int n)
 /**
  * TODO: documentation.
  */
-EmbFile* embFile_tmpfile(void)
+EmbFile embFile_tmpfile(void)
 {
 #ifdef ARDUINO
     return inoFile_tmpfile();
 #else
-    EmbFile* eFile = 0;
-    FILE* tFile = tmpfile();
-    if (!tFile)
-        return 0;
-
-    eFile = (EmbFile*)malloc(sizeof(EmbFile));
-    if (!eFile) {
-        fclose(tFile);
-        return 0;
-    }
-
-    eFile->file = tFile;
-    return eFile;
+    return tmpfile();
 #endif
 }
 
 /**
  * TODO: documentation.
  */
-void embFile_print(EmbFile* stream, char* str)
+void embFile_print(EmbFile stream, char* str)
 {
     embFile_write(str, 1, string_length(str), stream);
 }
@@ -4364,7 +4376,7 @@ static int haveExtraDIFATSectors(bcf_file* file)
 /**
  * TODO: documentation.
  */
-static int seekToOffset(EmbFile* file, const unsigned int offset)
+static int seekToOffset(EmbFile file, const unsigned int offset)
 {
     return embFile_seek(file, offset, SEEK_SET);
 }
@@ -4372,7 +4384,7 @@ static int seekToOffset(EmbFile* file, const unsigned int offset)
 /**
  * TODO: documentation.
  */
-static int seekToSector(bcf_file* bcfFile, EmbFile* file, const unsigned int sector)
+static int seekToSector(bcf_file* bcfFile, EmbFile file, const unsigned int sector)
 {
     unsigned int offset = sector * sectorSize(bcfFile) + sectorSize(bcfFile);
     return seekToOffset(file, offset);
@@ -4381,7 +4393,7 @@ static int seekToSector(bcf_file* bcfFile, EmbFile* file, const unsigned int sec
 /**
  * TODO: documentation.
  */
-static void parseDIFATSectors(EmbFile* file, bcf_file* bcfFile)
+static void parseDIFATSectors(EmbFile file, bcf_file* bcfFile)
 {
     unsigned int numberOfDifatEntriesStillToRead = bcfFile->header.numberOfFATSectors - NumberOfDifatEntriesInHeader;
     unsigned int difatSectorNumber = bcfFile->header.firstDifatSectorLocation;
@@ -4394,7 +4406,7 @@ static void parseDIFATSectors(EmbFile* file, bcf_file* bcfFile)
 /**
  * TODO: documentation.
  */
-int bcfFile_read(EmbFile* file, bcf_file* bcfFile)
+int bcfFile_read(EmbFile file, bcf_file* bcfFile)
 {
     unsigned int i, numberOfDirectoryEntriesPerSector, directorySectorToReadFrom;
 
@@ -4431,11 +4443,11 @@ int bcfFile_read(EmbFile* file, bcf_file* bcfFile)
 /**
  * TODO: documentation.
  */
-EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind)
+EmbFile GetFile(bcf_file* bcfFile, EmbFile file, char* fileToFind)
 {
     int filesize, sectorSize, currentSector, sizeToWrite, currentSize, totalSectors, i;
     char* input = 0;
-    EmbFile* fileOut = embFile_tmpfile();
+    EmbFile fileOut = embFile_tmpfile();
     bcf_directory_entry* pointer = bcfFile->directory->dirEntries;
     while (pointer) {
         if (string_equal(fileToFind, pointer->directoryEntryName))
@@ -4485,7 +4497,7 @@ void bcf_file_free(bcf_file* bcfFile)
 /**
  * TODO: documentation.
  */
-bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const unsigned int sectorSize)
+bcf_file_difat* bcf_difat_create(EmbFile file, unsigned int fatSectors, const unsigned int sectorSize)
 {
     unsigned int i;
     bcf_file_difat* difat = 0;
@@ -4527,7 +4539,7 @@ unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat)
 /**
  * TODO: documentation.
  */
-unsigned int readFullSector(EmbFile* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead)
+unsigned int readFullSector(EmbFile file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead)
 {
     unsigned int i;
     unsigned int sectorRef;
@@ -4568,7 +4580,7 @@ void bcf_file_difat_free(bcf_file_difat* difat)
 /**
  * TODO: documentation.
  */
-static void parseDirectoryEntryName(EmbFile* file, bcf_directory_entry* dir)
+static void parseDirectoryEntryName(EmbFile file, bcf_directory_entry* dir)
 {
     int i;
     unsigned short unicodechar;
@@ -4597,7 +4609,7 @@ bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntr
 /**
  * TODO: documentation.
  */
-EmbTime parseTime(EmbFile* file)
+EmbTime parseTime(EmbFile file)
 {
     EmbTime returnVal;
 #if 0
@@ -4614,7 +4626,7 @@ EmbTime parseTime(EmbFile* file)
 /**
  * TODO: documentation.
  */
-bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file)
+bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile file)
 {
     bcf_directory_entry* dir = (bcf_directory_entry*)malloc(sizeof(bcf_directory_entry));
     if (!dir) {
@@ -4648,7 +4660,7 @@ bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file)
 /**
  * TODO: documentation.
  */
-void readNextSector(EmbFile* file, bcf_directory* dir)
+void readNextSector(EmbFile file, bcf_directory* dir)
 {
     unsigned int i;
     for (i = 0; i < dir->maxNumberOfDirectoryEntries; ++i) {
@@ -4702,7 +4714,7 @@ bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize)
 /**
  * TODO: documentation.
  */
-void loadFatFromSector(bcf_file_fat* fat, EmbFile* file)
+void loadFatFromSector(bcf_file_fat* fat, EmbFile file)
 {
     unsigned int i;
     unsigned int currentNumberOfFatEntries = fat->fatEntryCount;
@@ -4726,7 +4738,7 @@ void bcf_file_fat_free(bcf_file_fat* fat)
 /**
  * TODO: documentation.
  */
-bcf_file_header bcfFileHeader_read(EmbFile* file)
+bcf_file_header bcfFileHeader_read(EmbFile file)
 {
     bcf_file_header header;
     embFile_read(header.signature, 1, 8, file);
@@ -4838,7 +4850,7 @@ int embReaderWriter_getByFileName(const char* fileName)
     return -1;
 }
 
-static char read100(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char read100(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char b[4];
     EmbStitch st;
@@ -4863,12 +4875,12 @@ static char read100(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char write100(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char write100(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish write100 */
 }
 
-static char read10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char read10o(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char b[3];
 
@@ -4897,12 +4909,12 @@ static char read10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char write10o(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char write10o(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish write10o */
 }
 
-static char readBro(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readBro(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char x55;
     short unknown[5];
@@ -4919,9 +4931,6 @@ static char readBro(EmbPattern* pattern, EmbFile* file, const char* fileName)
     unknown[2] = binaryReadInt16(file); /* TODO: determine what this unknown data is */
     unknown[3] = binaryReadInt16(file); /* TODO: determine what this unknown data is */
     unknown[4] = binaryReadInt16(file);
-    
-    printf("Determine what these are %d %d %d %d %d\n",
-        unknown[0], unknown[1], unknown[2], unknown[3], unknown[4]);
 
     embFile_seek(file, 0x100, SEEK_SET);
 
@@ -4948,12 +4957,12 @@ static char readBro(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeBro(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeBro(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeBro */
 }
 
-static char readCol(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readCol(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int nColors, i;
     int num, blue, green, red;
@@ -4988,7 +4997,7 @@ static char readCol(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeCol(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeCol(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
 
@@ -5064,7 +5073,7 @@ static unsigned char DecodeCsdByte(long fileOffset, unsigned char val, int type)
     return ((unsigned char)((unsigned char)(val ^ _xorMask[newOffset % CsdXorMaskSize]) - _subMask[newOffset % CsdSubMaskSize]));
 }
 
-static char readCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readCsd(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i, type = 0;
     unsigned char identifier[8];
@@ -5144,7 +5153,7 @@ static char readCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeCsd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeCsd(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeCsd */
 }
@@ -5195,7 +5204,7 @@ static char csvStrToStitchFlag(const char* str)
     return -1;
 }
 
-static char readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int numColorChanges = 0;
     int size = 1024;
@@ -5342,7 +5351,7 @@ static char readCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
  * if length == 0 use null termination to end copy, otherwise
  * copy length bytes.
  */
-static void string_to_file(EmbFile *file, int offset, int length)
+static void string_to_file(EmbFile file, int offset, int length)
 {
     char ch = 1;
     int i;
@@ -5367,14 +5376,14 @@ static void string_to_file(EmbFile *file, int offset, int length)
  */
 static void print_log_string(int offset)
 {
-    int i;
     /* acts as an error number */
-    printf("%d\n", offset);
+    sprintf((char*)embBuffer, "%d\n", offset);
+    embLog((char*)embBuffer);
     get_str((char*)embBuffer, offset);
     embLog((char*)embBuffer);
 }
 
-static char writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     EmbStitch st;
     EmbRect boundingRect;
@@ -5447,7 +5456,7 @@ static char writeCsv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char readDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readDat(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char b0;
     int fileLength, stitchesRemaining, b1, b2, stitchType;
@@ -5488,12 +5497,12 @@ static char readDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeDat(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeDat(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeDat */
 }
 
-static char readDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readDsb(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char b[4];
     unsigned char header[512];
@@ -5529,7 +5538,7 @@ static char readDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeDsb(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeDsb */
 }
@@ -5539,7 +5548,7 @@ static char writeDsb(EmbPattern* pattern, EmbFile* file, const char* fileName)
  * notes appeared at http://www.wotsit.org under Tajima Format.
  */
 
-static void encode_record(EmbFile* file, int *dx, int flags)
+static void encode_record(EmbFile file, int *dx, int flags)
 {
     unsigned char b[3];
 
@@ -5639,7 +5648,7 @@ static void set_dst_variable(EmbPattern* pattern, char* var, char* val)
     }
 }
 
-static char readDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readDst(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     char var[3]; /* temporary storage variable name */
     char val[512]; /* temporary storage variable value */
@@ -5701,7 +5710,7 @@ static char readDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeDst(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     EmbRect boundingRect;
     int pos[2], dx[2], flags, i, ax, ay, mx, my;
@@ -5788,7 +5797,7 @@ static char writeDst(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char readDsz(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readDsz(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     embPattern_loadExternalColorFile(pattern, fileName);
 
@@ -5822,12 +5831,12 @@ static char readDsz(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeDsz(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeDsz(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeDsz */
 }
 
-static char readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readDxf(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     char* dxfVersion = "";
     char* section = "";
@@ -5851,14 +5860,15 @@ static char readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     while (embFile_tell(file) < fileLength) {
         embFile_readline(file, (char *)embBuffer, 1000);
-        /*printf("%s\n", buff);*/
         if ((string_equal((char *)embBuffer, "HEADER")) || (string_equal((char *)embBuffer, "CLASSES")) || (string_equal((char *)embBuffer, "TABLES")) || (string_equal((char *)embBuffer, "BLOCKS")) || (string_equal((char *)embBuffer, "ENTITIES")) || (string_equal((char *)embBuffer, "OBJECTS")) || (string_equal((char *)embBuffer, "THUMBNAILIMAGE"))) {
             section = embBuffer;
-            printf("SECTION:%s\n", embBuffer);
+            embLog("SECTION:\n");
+            embLog(embBuffer);
         }
         if (string_equal((char *)embBuffer, "ENDSEC")) {
             section = "";
-            printf("ENDSEC:%s\n", embBuffer);
+            embLog("ENDSEC:\n");
+            embLog(embBuffer);
         }
         if ((string_equal((char *)embBuffer, "ARC")) || (string_equal((char *)embBuffer, "CIRCLE")) || (string_equal((char *)embBuffer, "ELLIPSE")) || (string_equal((char *)embBuffer, "LINE")) || (string_equal((char *)embBuffer, "LWPOLYLINE")) || (string_equal((char *)embBuffer, "POINT"))) {
             entityType = embBuffer;
@@ -6059,12 +6069,12 @@ static char readDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return eof;
 }
 
-static char writeDxf(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeDxf(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeDxf */
 }
 
-static char readEdr(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readEdr(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int nColors, i;
     EmbThread t;
@@ -6087,7 +6097,7 @@ static char readEdr(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeEdr(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeEdr(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
 
@@ -6107,7 +6117,7 @@ static char emdDecode(unsigned char inputByte)
     return (inputByte >= 0x80) ? ((-~inputByte) - 1) : inputByte; /* TODO: eliminate ternary return statement */
 }
 
-static char readEmd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readEmd(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char b0 = 0, b1 = 0;
     char dx = 0, dy = 0;
@@ -6153,7 +6163,7 @@ static char readEmd(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeEmd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeEmd(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeEmd */
 }
@@ -6186,7 +6196,7 @@ static void expEncode(unsigned char* b, char dx, char dy, int flags)
     }
 }
 
-static char readExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readExp(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     char dx = 0, dy = 0;
     int flags = 0;
@@ -6221,7 +6231,7 @@ static char readExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeExp(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeExp(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     float xx, yy;
     int i;
@@ -6262,7 +6272,7 @@ static char exyDecodeFlags(unsigned char b2)
     return returnCode;
 }
 
-static char readExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readExy(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char b[3];
 
@@ -6284,12 +6294,12 @@ static char readExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeExy(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeExy(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeExy */
 }
 
-static char readFxy(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readFxy(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     embPattern_loadExternalColorFile(pattern, fileName);
     /* TODO: review for combining code.
@@ -6319,12 +6329,12 @@ static char readFxy(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeFxy(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeFxy(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeFxy */
 }
 
-static char readGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readGt(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     embPattern_loadExternalColorFile(pattern, fileName);
     /* TODO: review for combining code.
@@ -6354,7 +6364,7 @@ static char readGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeGt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeGt(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeGt */
 }
@@ -6433,7 +6443,7 @@ static unsigned char husEncodeStitchType(int st)
     }
 }
 
-static char readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readHus(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int fileLength, i, magicCode, numberOfStitches, nColors;
     int postitiveXHoopSize, postitiveYHoopSize, negativeXHoopSize, negativeYHoopSize, attributeOffset, xOffset, yOffset;
@@ -6527,7 +6537,7 @@ static char readHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeHus(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor;
@@ -6610,7 +6620,7 @@ static char writeHus(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char readInb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readInb(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char fileDescription[8];
     unsigned char nullVal;
@@ -6669,12 +6679,12 @@ static char readInb(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeInb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeInb(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeInb */
 }
 
-static char readInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readInf(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int nColors, i;
 
@@ -6701,7 +6711,7 @@ static char readInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeInf(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeInf(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i, bytesRemaining;
 
@@ -6791,7 +6801,7 @@ struct hoop_padding {
     int bottom;
 };
 
-static char readJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readJef(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int stitchOffset, formatFlags, nColors, numberOfStitchs;
     int hoopSize, i;
@@ -6894,7 +6904,7 @@ static void jefEncode(unsigned char* b, char dx, char dy, int flags)
     }
 }
 
-static char writeJef(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeJef(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int colorlistSize, minColors, designWidth, designHeight, i;
     EmbRect boundingRect;
@@ -7021,7 +7031,7 @@ static void ksmEncode(unsigned char* b, char dx, char dy, int flags)
     }
 }
 
-static char readKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readKsm(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int prevStitchType = NORMAL;
     char b[3];
@@ -7046,7 +7056,7 @@ static char readKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeKsm(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeKsm(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     float xx, yy, dx, dy;
     int i;
@@ -7081,7 +7091,7 @@ static float maxDecode(unsigned char a1, unsigned char a2, unsigned char a3)
     return res;
 }
 
-static void maxEncode(EmbFile* file, int x, int y)
+static void maxEncode(EmbFile file, int x, int y)
 {
     if (!file) {
         embLog("ERROR: maxEncode(), file==0\n");
@@ -7099,7 +7109,7 @@ static void maxEncode(EmbFile* file, int x, int y)
     binaryWriteByte(file, (unsigned char)((y >> 16) & 0xFF));
 }
 
-static char readMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readMax(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char b[8];
     float dx, dy;
@@ -7124,7 +7134,7 @@ static char readMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeMax(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeMax(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
 
@@ -7148,7 +7158,7 @@ static char mitDecodeStitch(unsigned char value)
     return value;
 }
 
-static char readMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readMit(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char data[2];
 
@@ -7172,7 +7182,7 @@ static unsigned char mitEncodeStitch(float value)
     return (unsigned char)value;
 }
 
-static char writeMit(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeMit(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     EmbStitch st;
     float xx, yy, dx, dy;
@@ -7198,7 +7208,7 @@ static char decodeNewStitch(unsigned char value)
     return (int)value;
 }
 
-static char readNew(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readNew(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned int stitchCount;
     unsigned char data[3];
@@ -7240,12 +7250,12 @@ static char readNew(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeNew(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeNew(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeNew */
 }
 
-static char* ofmReadLibrary(EmbFile* file)
+static char* ofmReadLibrary(EmbFile file)
 {
     int stringLength = 0;
     char* libraryName = 0;
@@ -7263,7 +7273,7 @@ static char* ofmReadLibrary(EmbFile* file)
     return libraryName;
 }
 
-static int ofmReadClass(EmbFile* file)
+static int ofmReadClass(EmbFile file)
 {
     int len;
     char* s = 0;
@@ -7285,7 +7295,7 @@ static int ofmReadClass(EmbFile* file)
     return 0;
 }
 
-static void ofmReadBlockHeader(EmbFile* file)
+static void ofmReadBlockHeader(EmbFile file)
 {
     int val[10]; /* TODO: determine what these represent */
     unsigned char len;
@@ -7312,13 +7322,13 @@ static void ofmReadBlockHeader(EmbFile* file)
     short1 = binaryReadInt16(file); /*  0 */
 }
 
-static void ofmReadColorChange(EmbFile* file, EmbPattern* pattern)
+static void ofmReadColorChange(EmbFile file, EmbPattern* pattern)
 {
     ofmReadBlockHeader(file);
     embPattern_addStitchRel(pattern, 0.0, 0.0, STOP, 1);
 }
 
-static void ofmReadThreads(EmbFile* file, EmbPattern* p)
+static void ofmReadThreads(EmbFile file, EmbPattern* p)
 {
     int i, nColors, stringLen, numberOfLibraries;
     char* primaryLibraryName = 0;
@@ -7383,7 +7393,7 @@ static float ofmDecode(unsigned char b1, unsigned char b2)
     return val;
 }
 
-static void ofmReadExpanded(EmbFile* file, EmbPattern* p)
+static void ofmReadExpanded(EmbFile file, EmbPattern* p)
 {
     int i, numberOfStitches = 0;
 
@@ -7401,12 +7411,12 @@ static void ofmReadExpanded(EmbFile* file, EmbPattern* p)
     }
 }
 
-static char readOfm(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readOfm(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int unknownCount = 0;
     int key = 0, classNameLength;
     char* s = 0;
-    EmbFile* fileCompound = 0;
+    EmbFile fileCompound = 0;
     bcf_file* bcfFile = 0;
 
     fileCompound = embFile_open(fileName, "rb", 0);
@@ -7458,7 +7468,7 @@ static char readOfm(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeOfm(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeOfm(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeOfm */
 }
@@ -7472,7 +7482,7 @@ static float pcdDecode(unsigned char a1, unsigned char a2, unsigned char a3)
     return res;
 }
 
-static void pcdEncode(EmbFile* file, int dx, int dy, int flags)
+static void pcdEncode(EmbFile file, int dx, int dy, int flags)
 {
     unsigned char flagsToWrite = 0;
 
@@ -7494,7 +7504,7 @@ static void pcdEncode(EmbFile* file, int dx, int dy, int flags)
     binaryWriteByte(file, flagsToWrite);
 }
 
-static char readPcd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPcd(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     char allZeroColor = 1;
     int i;
@@ -7548,7 +7558,7 @@ static char readPcd(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writePcd(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePcd(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
 
@@ -7577,7 +7587,7 @@ static float pcmDecode(unsigned char a1, unsigned char a2, unsigned char a3)
     return res;
 }
 
-static char readPcm(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPcm(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i = 0;
     unsigned char b[9];
@@ -7617,7 +7627,7 @@ static char readPcm(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writePcm(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePcm(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writePcm */
 }
@@ -7631,7 +7641,7 @@ static float pcqDecode(unsigned char a1, unsigned char a2, unsigned char a3)
     return res;
 }
 
-static void pcqEncode(EmbFile* file, int dx, int dy, int flags)
+static void pcqEncode(EmbFile file, int dx, int dy, int flags)
 {
     unsigned char flagsToWrite = 0;
 
@@ -7653,7 +7663,7 @@ static void pcqEncode(EmbFile* file, int dx, int dy, int flags)
     binaryWriteByte(file, flagsToWrite);
 }
 
-static char readPcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPcq(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     char allZeroColor = 1;
     int i = 0;
@@ -7704,7 +7714,7 @@ static char readPcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writePcq(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePcq(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
 
@@ -7733,7 +7743,7 @@ static float pcsDecode(unsigned char a1, unsigned char a2, unsigned char a3)
     return res;
 }
 
-static void pcsEncode(EmbFile* file, int dx, int dy, int flags)
+static void pcsEncode(EmbFile file, int dx, int dy, int flags)
 {
     unsigned char flagsToWrite = 0;
 
@@ -7755,7 +7765,7 @@ static void pcsEncode(EmbFile* file, int dx, int dy, int flags)
     binaryWriteByte(file, flagsToWrite);
 }
 
-static char readPcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPcs(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i, st;
     unsigned char allZeroColor, version, hoopSize;
@@ -7862,7 +7872,7 @@ static EmbThread load_thread(int thread_table, int index)
     return t;    
 }
 
-static char writePcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePcs(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
 
@@ -7882,7 +7892,7 @@ static char writePcs(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-void readPecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
+void readPecStitches(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int stitchNumber = 0;
 
@@ -7936,7 +7946,7 @@ void readPecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
     }
 }
 
-static void pecEncodeJump(EmbFile* file, int x, int types)
+static void pecEncodeJump(EmbFile file, int x, int types)
 {
     int outputVal = emb_abs(x) & 0x7FF;
     unsigned int orPart = 0x80;
@@ -7956,13 +7966,13 @@ static void pecEncodeJump(EmbFile* file, int x, int types)
     binaryWriteByte(file, (unsigned char)(outputVal & 0xFF));
 }
 
-static void pecEncodeStop(EmbFile* file, unsigned char val)
+static void pecEncodeStop(EmbFile file, unsigned char val)
 {
     embFile_write("\xFE\xB0", 1, 2, file);
     embFile_write(&val, 1, 1, file);
 }
 
-static char readPec(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPec(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned int graphicsOffset;
     unsigned char colorChanges;
@@ -8004,7 +8014,7 @@ static char readPec(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static void pecEncode(EmbFile* file, EmbPattern* p)
+static void pecEncode(EmbFile file, EmbPattern* p)
 {
     float thisX = 0.0;
     float thisY = 0.0;
@@ -8048,7 +8058,7 @@ static void clearImage(unsigned char image[][48])
     embFile_read(image, 1, 48*38, datafile);
 }
 
-static void writeImage(EmbFile* file, unsigned char image[][48])
+static void writeImage(EmbFile file, unsigned char image[][48])
 {
     int i, j;
 
@@ -8069,7 +8079,7 @@ static void writeImage(EmbFile* file, unsigned char image[][48])
     }
 }
 
-void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
+void writePecStitches(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     EmbStitch st;
     EmbRect bounds;
@@ -8182,7 +8192,7 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
     }
 }
 
-static char writePec(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePec(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     /* TODO: There needs to be a matching flipVertical() call after the write
      * to ensure multiple writes from the same pattern work properly */
@@ -8198,7 +8208,7 @@ static char writePec(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char readPes(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPes(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int pecstart, numColors, x;
 
@@ -8240,7 +8250,7 @@ static const char pesVersionTable[16][9] = {
 };
 
 /*
-static void readPESHeader(EmbFile* file, EmbPattern* pattern)
+static void readPESHeader(EmbFile file, EmbPattern* pattern)
 {
     char* signature = readString(8);
     if (strcmp(signature, "#PES0100") {
@@ -8538,7 +8548,7 @@ static void readPESHeaderV4()
         pattern.add(new EmbThread(color, description, color_code, brand, threadChart));
     }
 */
-static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     /* TODO: pointer safety */
     short* colorInfo = 0;
@@ -8630,7 +8640,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file, const char
     }
 }
 
-static void pesWriteEmbOneSection(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static void pesWriteEmbOneSection(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     /* TODO: pointer safety */
     int i;
@@ -8671,7 +8681,7 @@ static void pesWriteEmbOneSection(EmbPattern* pattern, EmbFile* file, const char
     /*WriteSubObjects(br, pes, SubBlocks); */
 }
 
-static char writePes(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePes(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int pecLocation;
 
@@ -8702,7 +8712,7 @@ static char writePes(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char readPhb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPhb(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned int fileOffset;
     short colorCount;
@@ -8741,12 +8751,12 @@ static char readPhb(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1; /*TODO: finish ReadPhb */
 }
 
-static char writePhb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePhb(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writePhb */
 }
 
-static char readPhc(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPhc(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int colorChanges, version, bytesInSection2;
     unsigned short pecOffset, bytesInSection, bytesInSection3;
@@ -8781,12 +8791,12 @@ static char readPhc(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1; /*TODO: finish ReadPhc */
 }
 
-static char writePhc(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePhc(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writePhc */
 }
 
-static char readPlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readPlt(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     float x, y;
     float scalingFactor = 40;
@@ -8813,7 +8823,7 @@ static char readPlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writePlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writePlt(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     /* TODO: pointer safety */
     float scalingFactor = 40;
@@ -8848,7 +8858,7 @@ static char writePlt(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1; /*TODO: finish WritePlt */
 }
 
-static char readRgb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readRgb(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     EmbThread t;
     pattern->thread_count = 0;
@@ -8861,7 +8871,7 @@ static char readRgb(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeRgb(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeRgb(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
 
@@ -8881,7 +8891,7 @@ static char sewDecode(unsigned char inputByte)
     return (inputByte >= 0x80) ? (char)(-~(inputByte - 1)) : (char)inputByte;
 }
 
-static char readSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readSew(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i, flags, nColors, fileLength;
     char dx, dy, thisStitchIsJump = 0;
@@ -8931,7 +8941,8 @@ static char readSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    printf("current position: %ld\n", embFile_tell(file));
+    sprintf(embBuffer, "current position: %ld\n", embFile_tell(file));
+    embLog(embBuffer);
 
     return 1;
 }
@@ -8958,7 +8969,7 @@ static void sewEncode(unsigned char* b, char dx, char dy, int flags)
         b[1] = dy;
     }
 }
-static char writeSew(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeSew(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int colorlistSize, minColors, i;
     float xx, yy;
@@ -9017,7 +9028,7 @@ static short shvDecodeShort(unsigned short inputByte)
     return ((short)inputByte);
 }
 
-static char readShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readShv(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
     char inJump = 0;
@@ -9121,12 +9132,12 @@ static char readShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeShv(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeShv(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeShv */
 }
 
-static char readSst(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readSst(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int fileLength;
 
@@ -9159,7 +9170,7 @@ static char readSst(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1; /*TODO: finish readSst */
 }
 
-static char writeSst(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeSst(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeSst */
 }
@@ -9180,7 +9191,7 @@ typedef struct StxThread_ {
     EmbColor stxColor;
 } StxThread;
 
-static char stxReadThread(StxThread* thread, EmbFile* file)
+static char stxReadThread(StxThread* thread, EmbFile file)
 {
     int j, colorNameLength, sectionNameLength;
     int somethingSomething, somethingSomething2, somethingElse, numberOfOtherDescriptors; /* TODO: determine what these represent */
@@ -9272,7 +9283,7 @@ static char stxReadThread(StxThread* thread, EmbFile* file)
     return 1;
 }
 
-static char readStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readStx(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i, threadCount;
     unsigned char* gif = 0;
@@ -9385,7 +9396,7 @@ static char readStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeStx(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeStx(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeStx */
 }
@@ -9407,7 +9418,7 @@ static char decodeT01RecordFlags(unsigned char b2)
     }
 }
 
-static char readT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readT01(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char b[3];
 
@@ -9426,7 +9437,7 @@ static char readT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeT01(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     EmbRect boundingRect;
     int pos[2], i;
@@ -9469,7 +9480,7 @@ static char writeT01(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char readT09(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readT09(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     embFile_seek(file, 0x0C, SEEK_SET);
 
@@ -9493,7 +9504,7 @@ static char readT09(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeT09(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeT09(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeT09 */
 }
@@ -9636,7 +9647,7 @@ static void decode_dst_ternary(int *x, unsigned char *b)
     x[1] += 81*(bit(b[2], 5) - bit(b[2], 4));
 }
 
-static char readTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readTap(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char b[3];
 
@@ -9655,7 +9666,7 @@ static char readTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeTap(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeTap(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     EmbRect boundingRect;
     int pos[2], i;
@@ -9737,7 +9748,7 @@ bit definitions for attributes of stitch
 31      set for user edited stitches
 */
 
-static char readThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readThr(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     ThredHeader header;
     EmbColor c;
@@ -9798,7 +9809,7 @@ static char readThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeThr(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i, stitchCount;
     unsigned char version = 0;
@@ -9860,12 +9871,12 @@ static char writeThr(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char readTxt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readTxt(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish readTxt */
 }
 
-static char writeTxt(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeTxt(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
 
@@ -9946,7 +9957,7 @@ static EmbStitch decode_u00_stitch(unsigned char *data)
     return st;
 }
 
-static char readU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readU00(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
 
@@ -9973,7 +9984,7 @@ static char readU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeU00(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char b[4], i;
 
@@ -9996,12 +10007,12 @@ static char writeU00(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char readU01(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readU01(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return readU00(pattern, file, fileName);
 }
 
-static char writeU01(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeU01(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return writeU00(pattern, file, fileName);
 }
@@ -10056,7 +10067,7 @@ typedef struct VipHeader_ {
     int colorLength;
 } VipHeader;
 
-static char readVip(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readVip(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int fileLength;
     int i;
@@ -10190,7 +10201,7 @@ static unsigned char vipEncodeStitchType(int st)
     }
 }
 
-static char writeVip(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeVip(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor, attributeSize = 0,
@@ -10307,7 +10318,7 @@ static char writeVip(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static unsigned char* vp3ReadString(EmbFile* file)
+static unsigned char* vp3ReadString(EmbFile file)
 {
     int stringLength = 0;
     unsigned char* charString = 0;
@@ -10370,7 +10381,7 @@ typedef struct _vp3Hoop {
     int height;
 } vp3Hoop;
 
-static vp3Hoop vp3ReadHoopSection(EmbFile* file)
+static vp3Hoop vp3ReadHoopSection(EmbFile file)
 {
     vp3Hoop hoop;
 
@@ -10413,7 +10424,7 @@ static vp3Hoop vp3ReadHoopSection(EmbFile* file)
     return hoop;
 }
 
-static char readVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char magicString[5];
     unsigned char some;
@@ -10447,10 +10458,6 @@ static char readVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     /* TODO: review v1 thru v18 variables and use emb_unused() if needed */
     embFile_read(v1, 1, 18, file);
-    printf("determine what these 18 variables are: ");
-    for (i=0; i<18; i++) {
-        printf("%c\n", v1[i]);
-    }
 
     binaryReadBytes(file, magicCode, 6);
     if (!(magicCode[5] == 0 && string_equal("\x78\x78\x55\x55\x01", magicCode))) {
@@ -10537,18 +10544,18 @@ static char readVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-void vp3WriteStringLen(EmbFile* file, const char* str, int len)
+void vp3WriteStringLen(EmbFile file, const char* str, int len)
 {
     binaryWriteUShortBE(file, len);
     binaryWriteBytes(file, str, len);
 }
 
-void vp3WriteString(EmbFile* file, const char* str)
+void vp3WriteString(EmbFile file, const char* str)
 {
     vp3WriteStringLen(file, str, string_length(str));
 }
 
-void vp3PatchByteCount(EmbFile* file, int offset, int adjustment)
+void vp3PatchByteCount(EmbFile file, int offset, int adjustment)
 {
     int currentPos = embFile_tell(file);
     embFile_seek(file, offset, SEEK_SET);
@@ -10557,7 +10564,7 @@ void vp3PatchByteCount(EmbFile* file, int offset, int adjustment)
     embFile_seek(file, currentPos, SEEK_SET);
 }
 
-static char writeVp3(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     EmbRect bounds;
     EmbStitch st;
@@ -10770,7 +10777,7 @@ static char xxxDecodeByte(unsigned char inputByte)
     return ((char)inputByte);
 }
 
-static char readXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readXxx(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     unsigned char b[4];
     unsigned char b0, b1;
@@ -10855,13 +10862,13 @@ static char readXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static void xxxEncodeStop(EmbFile* file, EmbStitch s)
+static void xxxEncodeStop(EmbFile file, EmbStitch s)
 {
     binaryWriteByte(file, (unsigned char)0x7F);
     binaryWriteByte(file, (unsigned char)(s.color + 8));
 }
 
-static void xxxEncodeStitch(EmbFile* file, float deltaX, float deltaY, int flags)
+static void xxxEncodeStitch(EmbFile file, float deltaX, float deltaY, int flags)
 {
     if ((flags & (JUMP | TRIM)) && (emb_fabs(deltaX) > 124 || emb_fabs(deltaY) > 124)) {
         binaryWriteByte(file, 0x7E);
@@ -10874,7 +10881,7 @@ static void xxxEncodeStitch(EmbFile* file, float deltaX, float deltaY, int flags
     }
 }
 
-static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
+static void xxxEncodeDesign(EmbFile file, EmbPattern* p)
 {
     float thisX = 0.0f;
     float thisY = 0.0f;
@@ -10906,7 +10913,7 @@ static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
     }
 }
 
-static char writeXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeXxx(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     char i;
     EmbRect rect;
@@ -10962,7 +10969,7 @@ static char writeXxx(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char readZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char readZsk(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     char b[3];
     int stitchType;
@@ -11014,7 +11021,7 @@ static char readZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
     return 1;
 }
 
-static char writeZsk(EmbPattern* pattern, EmbFile* file, const char* fileName)
+static char writeZsk(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     return 0; /*TODO: finish writeZsk */
 }
@@ -11036,10 +11043,10 @@ static void embColor_toStr(EmbColor c, unsigned char *b)
 }
 
 /**
- * Writes out a color to the EmbFile* file in hex format without using
+ * Writes out a color to the EmbFile file in hex format without using
  * printf or varadic functions (for embedded systems).
  */
-static void write_svg_color(EmbFile *file, EmbColor color)
+static void write_svg_color(EmbFile file, EmbColor color)
 {
     char hex[] = "0123456789ABCDEF";
     embFile_print(file, "stroke=\"#");
@@ -11052,35 +11059,32 @@ static void write_svg_color(EmbFile *file, EmbColor color)
     embFile_print(file, "\" ");
 }
 
-static void writePoint(EmbFile* file, float x, float y, int space)
+static void writePoint(EmbFile file, float x, float y, int space)
 {
     if (space) {
         embFile_print(file, " ");
     }
-    /*    char buffer[30];
-    embFloatToArray(buffer, number, 1.0e-7, 3, 5);
-    embFile_print(file, buffer);*/
-    fprintf(file->file, "%f,%f", x, y);
+    writeFloat(file, x);
+    embFile_print(file, ",");
+    writeFloat(file, y);
 }
 
-void writeFloat(EmbFile* file, float number)
+void writeFloat(EmbFile file, float number)
 {
     /* TODO: fix bugs in embFloatToArray */
-    /*    char buffer[30];
-    embFloatToArray(buffer, number, 1.0e-7, 3, 5);
-    embFile_print(file, buffer);*/
+    /* embFloatToArray(buffer, number, 1.0e-7, 3, 5); */
     sprintf(embBuffer, "%f", number);
     embFile_print(file, embBuffer);
 }
 
-void writeFloatWrap(EmbFile* file, char *prefix, float number, char *suffix)
+void writeFloatWrap(EmbFile file, char *prefix, float number, char *suffix)
 {
     embFile_print(file, prefix);
     writeFloat(file, number);
     embFile_print(file, suffix);
 }
 
-void writeFloatAttribute(EmbFile* file, char *attribute, float number)
+void writeFloatAttribute(EmbFile file, char *attribute, float number)
 {
     embFile_print(file, attribute);
     writeFloatWrap(file, "=\"", number, "\" ");
@@ -11187,7 +11191,8 @@ EmbColor svgColorToEmbColor(char* colorStr)
         /* Color keyword */
         int tableColor = threadColor(&c, colorStr, SVG_Colors);
         if (!tableColor) {
-            printf("SVG color string not found: %s.\n", colorStr);
+            embLog("SVG color string not found:\n");
+            embLog(colorStr);
         }
     }
 
@@ -11462,7 +11467,8 @@ void svgAddToPattern(EmbPattern* p)
             return;
         }
 
-        printf("stroke:%s\n", mystrok);
+        sprintf(embBuffer, "stroke:%s\n", mystrok);
+        embLog(embBuffer);
 
         /* M44.219,26.365c0,10.306-8.354,18.659-18.652,18.659c-10.299,0-18.663-8.354-18.663-18.659c0-10.305,8.354-18.659,18.659-18.659C35.867,7.707,44.219,16.06,44.219,26.365z */
         for (i = 0; i < last; i++) {
@@ -11489,7 +11495,8 @@ void svgAddToPattern(EmbPattern* p)
                 if (pos > 0) { /* append float to array, if it not yet stored */
                     pathbuff[pos] = 0;
                     pos = 0;
-                    printf("    ,val:%s\n", pathbuff);
+                    embLog("    ,val:"); 
+                    embLog(pathbuff);
                     pathData[++trip] = atof(pathbuff);
                 }
                 break;
@@ -11499,7 +11506,8 @@ void svgAddToPattern(EmbPattern* p)
                 if (pos > 0) { /* append float to array, if it not yet stored */
                     pathbuff[pos] = 0;
                     pos = 0;
-                    printf("    -val:%s\n", pathbuff);
+                    embLog("    -val:"); 
+                    embLog(pathbuff);
                     pathData[++trip] = atof(pathbuff);
                 }
                 pathbuff[pos++] = (char)c; /* add a more char */
@@ -11511,7 +11519,8 @@ void svgAddToPattern(EmbPattern* p)
                 if (pos > 0) { /* just make sure: append float to array, if it not yet stored */
                     pathbuff[pos] = 0;
                     pos = 0;
-                    printf("    >val:%s\n", pathbuff);
+                    embLog("    >val:"); 
+                    embLog(pathbuff);
                     pathData[++trip] = atof(pathbuff);
                 }
 
@@ -11614,6 +11623,7 @@ void svgAddToPattern(EmbPattern* p)
                         pathbuff[1] = 0;
                         pos = 0;
 
+                        /*
                         printf("*prior:%s (%f, %f,  %f, %f,     %f,%f,  %f) \n", pathbuff,
                             pathData[0],
                             pathData[1],
@@ -11621,7 +11631,7 @@ void svgAddToPattern(EmbPattern* p)
                             pathData[3],
                             pathData[4],
                             pathData[5],
-                            pathData[6]);
+                            pathData[6]); */
                     }
 
                     /* assign new command */
@@ -11629,7 +11639,8 @@ void svgAddToPattern(EmbPattern* p)
                         pathbuff[0] = (char)c; /* set the command for compare */
                         pathbuff[1] = 0;
 
-                        printf("cmd:%s\n", pathbuff);
+                        embLog("cmd:");
+                        embLog(pathbuff);
                         cmd = c;
                         if (c>='A' && c<='Z') {
                             c += 'a' - 'A';
@@ -11915,7 +11926,7 @@ void svgProcess(int c, const char* buff)
         advance = (char)svgIsElement(buff);
 
         if (advance) {
-            printf("ELEMENT:\n");
+            embLog("ELEMENT:\n");
             svgExpect = SVG_EXPECT_ATTRIBUTE;
             currentElement = svgElement_create(buff);
         } else {
@@ -11985,14 +11996,14 @@ void svgProcess(int c, const char* buff)
         }
 
         if (advance) {
-            printf("ATTRIBUTE:\n");
+            embLog("ATTRIBUTE:\n");
             svgExpect = SVG_EXPECT_VALUE;
             free(currentAttribute);
             string_copy(currentAttribute, buff);
         }
     } else if (svgExpect == SVG_EXPECT_VALUE) {
         int last = string_length(buff) - 1;
-        printf("VALUE:\n");
+        embLog("VALUE:\n");
 
         /* single-value */
         if ((buff[0] == '"' || buff[0] == '\'') && (buff[last] == '/' || buff[last] == '"' || buff[last] == '\'') && !svgMultiValue) {
@@ -12031,7 +12042,7 @@ void svgProcess(int c, const char* buff)
     }
 
     if (svgExpect != SVG_EXPECT_NULL) {
-        puts(buff);
+        embLog(buff);
     }
 
     if (c == '>') {
@@ -12041,7 +12052,7 @@ void svgProcess(int c, const char* buff)
 
 /*! Reads a file with the given \a fileName and loads the data into \a p.
  *  Returns \c true if successful, otherwise returns \c false. */
-static char readSvg(EmbPattern* p, EmbFile* file, const char* fileName)
+static char readSvg(EmbPattern* p, EmbFile file, const char* fileName)
 {
     int size = 1024;
     int pos;
@@ -12118,7 +12129,7 @@ static char readSvg(EmbPattern* p, EmbFile* file, const char* fileName)
     return 1; /*TODO: finish readSvg */
 }
 
-static void writeCircles(EmbPattern* p, EmbFile* file)
+static void writeCircles(EmbPattern* p, EmbFile file)
 {
     int i;
     EmbCircle circle;
@@ -12136,7 +12147,7 @@ static void writeCircles(EmbPattern* p, EmbFile* file)
     }
 }
 
-static void writeEllipses(EmbPattern* p, EmbFile* file)
+static void writeEllipses(EmbPattern* p, EmbFile file)
 {
     if (p->ellipses) {
         int i;
@@ -12155,7 +12166,7 @@ static void writeEllipses(EmbPattern* p, EmbFile* file)
     }
 }
 
-static void writeLines(EmbPattern* p, EmbFile* file)
+static void writeLines(EmbPattern* p, EmbFile file)
 {
     if (p->lines) {
         int i;
@@ -12173,7 +12184,7 @@ static void writeLines(EmbPattern* p, EmbFile* file)
     }
 }
 
-static void writePoints(EmbPattern* p, EmbFile* file)
+static void writePoints(EmbPattern* p, EmbFile file)
 {
     if (p->points) {
         int i;
@@ -12195,12 +12206,12 @@ static void writePoints(EmbPattern* p, EmbFile* file)
     }
 }
 
-static void writePolygons(EmbPattern* p, EmbFile* file)
+static void writePolygons(EmbPattern* p, EmbFile file)
 {
     int i, j;
-    EmbArray* pointList;
     if (p->polygons) {
         for (i = 0; i < p->polygons->length; i++) {
+            EmbArray* pointList;
             pointList = p->polygons->polygon[i]->pointList;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_print(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" fill=\"none\" ");
@@ -12215,13 +12226,13 @@ static void writePolygons(EmbPattern* p, EmbFile* file)
     }
 }
 
-static void writePolylines(EmbPattern* p, EmbFile* file)
+static void writePolylines(EmbPattern* p, EmbFile file)
 {
     int i, j;
-    EmbArray* pointList;
-    EmbColor color;
     if (p->polylines) {
         for (i = 0; i < p->polylines->length; i++) {
+            EmbArray* pointList;
+            EmbColor color;
             pointList = p->polylines->polyline[i]->pointList;
             color = p->polylines->polyline[i]->color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
@@ -12237,12 +12248,12 @@ static void writePolylines(EmbPattern* p, EmbFile* file)
     }
 }
 
-static void writeRects(EmbPattern* p, EmbFile* file)
+static void writeRects(EmbPattern* p, EmbFile file)
 {
     int i;
-    EmbRect rect;
     if (p->rects) {
         for (i = 0; i < p->rects->length; i++) {
+            EmbRect rect;
             rect = p->rects->rect[i];
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_print(file, "\n<rect stroke-width=\"0.2\" fill=\"none\" ");
@@ -12256,7 +12267,7 @@ static void writeRects(EmbPattern* p, EmbFile* file)
     }
 }
 
-static void writeStitchList(EmbPattern* p, EmbFile* file)
+static void writeStitchList(EmbPattern* p, EmbFile file)
 {
     /*TODO: Low Priority Optimization:
      *      Make sure that the line length that is output doesn't exceed 1000 characters. */
@@ -12289,7 +12300,7 @@ static void writeStitchList(EmbPattern* p, EmbFile* file)
     }
 }
 
-static char writeSvg(EmbPattern* p, EmbFile* file, const char* fileName)
+static char writeSvg(EmbPattern* p, EmbFile file, const char* fileName)
 {
     EmbRect boundingRect;
 

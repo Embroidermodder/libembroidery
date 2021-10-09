@@ -9,11 +9,6 @@
 #define YELLOW_TERM_COLOR "\e[1;33m"
 #define RESET_TERM_COLOR "\033[0m"
 
-struct EmbFile_ {
-    FILE *file;
-};
-
-
 float emb_fabs(float a);
 int emb_abs(int a);
 float emb_sqrt(float a);
@@ -210,7 +205,6 @@ static int test_math_functions(void)
 
 static int convert(const char* inf, const char* outf)
 {
-    EmbFile *file;
     EmbPattern* p;
     int reader, writer, formatType;
 

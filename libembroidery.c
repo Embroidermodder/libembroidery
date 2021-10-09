@@ -809,10 +809,10 @@ static int embFile_read(void *ptr, int a, int b, EmbFile stream)
 #ifdef ARDUINO
     return inoFile_read(ptr, a, b, stream);
 #else
-#ifdef _WIN32
-    return fread(ptr, a, b, stream);
-#else
+#ifdef linux
     return read(stream, ptr, a*b);
+#else
+    return fread(ptr, a, b, stream);
 #endif
 #endif
 }
@@ -822,10 +822,10 @@ static int embFile_write(void *ptr, int a, int b, EmbFile stream)
 #ifdef ARDUINO
     return inoFile_write(ptr, a, b, stream);
 #else
-#ifdef _WIN32
-    return fwrite(ptr, a, b, stream);
-#else
+#ifdef linux
     return write(stream, ptr, a*b);
+#else
+    return fwrite(ptr, a, b, stream);
 #endif
 #endif
 }
@@ -835,10 +835,10 @@ static int embFile_seek(EmbFile stream, int offset, int origin)
 #ifdef ARDUINO
     return inoFile_seek(stream, offset, origin);
 #else
-#ifdef _WIN32
-    return fseek(stream, offset, origin);
-#else
+#ifdef linux
     return lseek(stream, offset, origin);
+#else
+    return fseek(stream, offset, origin);
 #endif
 #endif
 }
@@ -848,10 +848,10 @@ static int embFile_tell(EmbFile stream)
 #ifdef ARDUINO
     return inoFile_tell(stream);
 #else
-#ifdef _WIN32
-    return ftell(stream);
-#else
+#ifdef linux
     return lseek(stream, 0, SEEK_CUR);
+#else
+    return ftell(stream);
 #endif
 #endif
 }
@@ -1560,11 +1560,11 @@ static void embLog(const char* str)
     inoLog_serial(str);
     inoLog_serial("\n");
 #else
-#ifdef _WIN32
-    puts(str);
-#else
+#ifdef linux
     write(1, str, string_length(str));
     write(1, "\n", 1);
+#else
+    puts(str);
 #endif
 #endif
 }
@@ -4253,10 +4253,10 @@ EmbFile embFile_open(const char* fileName, const char* mode, int optional)
 #ifdef ARDUINO
     oFile = inoFile_open(fileName, mode);
 #else
-#ifdef _WIN32
-    oFile = fopen(fileName, mode);
-#else
+#ifdef linux
     oFile = open(fileName, O_RDWR | O_CREAT);
+#else
+    oFile = fopen(fileName, mode);
 #endif
 #endif
 
@@ -4279,10 +4279,10 @@ int embFile_close(EmbFile stream)
 #ifdef ARDUINO
     return inoFile_close(stream);
 #else /* ARDUINO */
-#ifdef _WIN32
-    return fclose(stream);
-#else
+#ifdef linux
     return close(stream);
+#else
+    return fclose(stream);
 #endif
 #endif /* ARDUINO */
 }

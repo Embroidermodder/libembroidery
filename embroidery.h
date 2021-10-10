@@ -135,7 +135,8 @@ extern "C" {
 #define EMB_RECT                9
 #define EMB_SPLINE              10
 #define EMB_STITCH              11
-#define EMB_VECTOR              12
+#define EMB_THREAD              12
+#define EMB_VECTOR              13
 
 #define EMBFORMAT_UNSUPPORTED   0
 #define EMBFORMAT_STITCHONLY    1
@@ -180,27 +181,26 @@ typedef struct EmbVector_
     float y;
 } EmbVector;
 
-/**
- * TODO: documentation.
- */
+typedef struct EmbPoint_ {
+    EmbVector position;
+    int lineType;
+    EmbColor color;
+} EmbPoint;
+
 typedef struct EmbLine_
 {
     EmbVector start;
     EmbVector end;
+    int lineType;
+    EmbColor color;
 } EmbLine;
 
-/**
- * Is this used anywhere?
- */
 typedef struct EmbLayer_
 {
     EmbColor color;
-    const char* name;
+    const char name[50];
 } EmbLayer;
 
-/**
- * 
- */
 typedef struct EmbPathObject_
 {
     EmbArray* pointList;
@@ -234,6 +234,9 @@ typedef struct EmbEllipse_
 {
     EmbVector center;
     EmbVector radius;
+    float rotation;
+    int lineType;
+    EmbColor color;
 } EmbEllipse;
 
 typedef struct EmbArc_
@@ -241,6 +244,8 @@ typedef struct EmbArc_
     EmbVector start;  /* absolute position (not relative) */
     EmbVector mid;    /* absolute position (not relative) */
     EmbVector end;    /* absolute position (not relative) */
+    int lineType;
+    EmbColor color;
 } EmbArc;
 
 typedef struct EmbRect_
@@ -249,12 +254,16 @@ typedef struct EmbRect_
     float left;
     float bottom;
     float right;
+    int lineType;
+    EmbColor color;
 } EmbRect;
 
 typedef struct EmbCircle_
 {
     EmbVector center;
     float radius;
+    int lineType;
+    EmbColor color;
 } EmbCircle;
 
 typedef struct EmbPolygonObject_
@@ -317,6 +326,8 @@ struct EmbArray_ {
     EmbStitch *stitch;
     EmbThread *thread;
     EmbVector *vector;
+    int file_id;
+    int size;
     int length;
     int type;
 };
@@ -337,6 +348,7 @@ typedef struct EmbPattern_
     EmbArray* polylines;
     EmbArray* rects;
     EmbArray* splines;
+    EmbArray* threads;
 
     int thread_count;
 

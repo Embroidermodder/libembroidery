@@ -14,7 +14,7 @@ rm -fr build
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Debug ..
-make
+make 2> error.txt || grep error error.txt
 gdb --batch -ex=r --args ./embroider -test
 cd -
 }

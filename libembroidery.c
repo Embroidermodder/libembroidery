@@ -5,6 +5,7 @@
 #define EmbFile    InoFile
 #else
 #ifdef linux
+#include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <time.h>
@@ -164,7 +165,8 @@ static void writePecStitches(EmbPattern* pattern, EmbFile file, const char* file
 
 static char string_in_table(char *buff, int table);
 static EmbThread load_thread(int, int);
-static EmbThread pattern_thread(int);
+static EmbThread pattern_thread(EmbPattern *p, int index);
+static EmbStitch pattern_stitch(EmbPattern *p, int index);
 
 static void embLog(const char* str);
 static void embTime_initNow(EmbTime* t);
@@ -317,7 +319,8 @@ int embVector_collinear(EmbVector a1, EmbVector a2, EmbVector a3, float collinea
 
 static unsigned char embBuffer[1024];
 static EmbFile datafile;
-static EmbFile memory;
+static EmbFile memory[100];
+static int memory_files = 0;
 
 /* Flag Defines
  */
@@ -504,36 +507,6 @@ Special values for Stream Identifiers
 
 /* Global Constants
  */
-
-static int arc_offset;
-static int circle_offset;
-static int ellipse_offset;
-static int flag_offset;
-static int line_offset;
-static int path_offset;
-static int point_offset;
-static int polygon_offset;
-static int polyline_offset;
-static int rect_offset;
-static int spline_offset;
-static int thread_offset;
-static int stitch_offset;
-static int vector_offset;
-
-static const int arc_size = 24;
-static const int circle_size = 12;
-static const int ellipse_size = 16;
-static const int flag_size = 1;
-static const int line_size = 16;
-static const int path_size = 40;
-static const int point_size = 4;
-static const int polygon_size = 40;
-static const int polyline_size = 40;
-static const int rect_size = 16;
-static const int spline_size = 40;
-static const int thread_size = 43;
-static const int stitch_size = 10;
-static const int vector_size = 8;
 
 /* Detect endianness, if running on a big endian machine
  * then the first byte of the short 0x0001 is 0x00 since it
@@ -856,12 +829,38 @@ static int embFile_tell(EmbFile stream)
 #endif
 }
 
+static void make_directory(const char *dir, int mode)
+{
+#ifdef ARDUINO
+#else
+#ifdef linux
+    mkdir(dir, mode);
+#else
+    mkdir(dir);
+#endif
+#endif
+}
+
 EmbArray* embArray_create(int type)
 {
+    int sizes[] = {
+        sizeof(EmbArc), sizeof(EmbCircle), sizeof(EmbEllipse),
+        sizeof(int), sizeof(EmbLine), sizeof(EmbPathObject),
+        sizeof(EmbPoint), sizeof(EmbPolygonObject),
+        sizeof(EmbPolylineObject), sizeof(EmbRect), sizeof(EmbSplineObject),
+        sizeof(EmbStitch), sizeof(EmbThread), sizeof(EmbVector)
+    };
+    char fname[40];
     EmbArray* p;
     p = (EmbArray*)malloc(sizeof(EmbArray));
     p->type = type;
     p->length = 0;
+    p->size = sizes[type];
+    p->file_id = memory_files;
+    memory_files++;
+    sprintf(fname, "memory/libemb_%d.bin", p->file_id);
+    memory[p->file_id] = embFile_open(fname, "wb+", 0);
+
     switch (p->type) {
     case EMB_ARC:
         p->arc = (EmbArc*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbArc));
@@ -2060,19 +2059,20 @@ EmbPattern* embPattern_create(void)
     p->settings = embSettings_init();
     p->currentColorIndex = 0;
     p->stitchList = embArray_create(EMB_STITCH);
+    p->threads = embArray_create(EMB_THREAD);
     p->thread_count = 0;
     p->hoop.height = 0.0;
     p->hoop.width = 0.0;
-    p->arcs = embArray_create(EMB_ARC);
-    p->circles = embArray_create(EMB_CIRCLE);
-    p->ellipses = embArray_create(EMB_ELLIPSE);
-    p->lines = embArray_create(EMB_LINE);
-    p->paths = embArray_create(EMB_PATH);
-    p->points = embArray_create(EMB_POINT);
-    p->polygons = embArray_create(EMB_POLYGON);
-    p->polylines = embArray_create(EMB_POLYLINE);
-    p->rects = embArray_create(EMB_RECT);
-    p->splines = embArray_create(EMB_SPLINE);
+    p->arcs = 0;
+    p->circles = 0;
+    p->ellipses = 0;
+    p->lines = 0;
+    p->paths = 0;
+    p->points = 0;
+    p->polygons = 0;
+    p->polylines = 0;
+    p->rects = 0;
+    p->splines = 0;
     p->lastPosition.x = 0.0;
     p->lastPosition.y = 0.0;
 
@@ -2106,15 +2106,8 @@ void embPattern_hideStitchesOverLength(EmbPattern* p, int length)
 int embPattern_addThread(EmbPattern* p, EmbThread thread)
 {
     p->thread_count++;
-    if (p->thread_count >= THREAD_MAXIMUM) {
-        return 0;
-    }
-    embFile_seek(memory, thread_offset+(p->thread_count-1)*43, SEEK_SET);
-    embFile_read(&(thread.color.r), 1, 1, memory);
-    embFile_read(&(thread.color.g), 1, 1, memory);
-    embFile_read(&(thread.color.b), 1, 1, memory);
-    embFile_read(thread.description, 1, 30, memory); 
-    embFile_read(thread.catalogNumber, 1, 10, memory); 
+    embFile_seek(memory[p->threads->file_id], (p->thread_count-1)*sizeof(EmbThread), SEEK_SET);
+    embFile_write(&thread, sizeof(EmbThread), 1, memory[p->threads->file_id]);
     return 1;
 }
 
@@ -2165,7 +2158,7 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
             }
             if (!(st.flags & JUMP)) {
                 if (!pointList) {
-                    EmbThread t = pattern_thread(st.color);
+                    EmbThread t = pattern_thread(p, st.color);
                     pointList = embArray_create(EMB_POINT);
                     color = t.color;
                 }
@@ -3018,7 +3011,7 @@ static void embPattern_colorBlock16(EmbPattern *pattern, EmbFile file)
 
     for (i = 0; i < pattern->thread_count; i++) {
         EmbThread t;
-        t = pattern_thread(i);
+        t = pattern_thread(pattern, i);
         embColor_toStr(t.color, embBuffer+4*i);
     }
 
@@ -5006,7 +4999,7 @@ static char writeCol(EmbPattern* pattern, EmbFile file, const char* fileName)
     for (i = 0; i < pattern->thread_count; i++) {
         EmbThread t;
         EmbColor c;
-        t = pattern_thread(i);
+        t = pattern_thread(pattern, i);
         c = t.color;
         sprintf((char*)embBuffer, "%d,%d,%d,%d\r\n", i, (int)c.r, (int)c.g, (int)c.b);
         embFile_print(file, embBuffer);
@@ -5422,7 +5415,7 @@ static char writeCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
     /* write colors */
     embFile_print(file, "\"#\",\"[THREAD_NUMBER]\",\"[RED]\",\"[GREEN]\",\"[BLUE]\",\"[DESCRIPTION]\",\"[CATALOG_NUMBER]\"\n");
     for (i = 0; i < pattern->thread_count; i++) {
-        thr = pattern_thread(i);
+        thr = pattern_thread(pattern, i);
         /* TODO: fix segfault that backtraces here when libembroidery-convert from dst to csv. */
         embFile_print(file, "\"$\",\"");
         writeInt(file, i + 1, 3);
@@ -6103,7 +6096,7 @@ static char writeEdr(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     for (i = 0; i < pattern->thread_count; i++) {
         EmbThread t;
-        t = pattern_thread(i);
+        t = pattern_thread(pattern, i);
         binaryWriteByte(file, t.color.r);
         binaryWriteByte(file, t.color.g);
         binaryWriteByte(file, t.color.b);
@@ -6602,7 +6595,7 @@ static char writeHus(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     for (i = 0; i < patternColor; i++) {
         EmbThread t;
-        t = pattern_thread(i);
+        t = pattern_thread(pattern, i);
         short color_index = (short)embThread_findNearestColor(t.color, hus_thread);
         binaryWriteShort(file, color_index);
     }
@@ -6724,7 +6717,7 @@ static char writeInf(EmbPattern* pattern, EmbFile file, const char* fileName)
     for (i = 0; i < pattern->thread_count; i++) {
         EmbColor c;
         EmbThread t;
-        t = pattern_thread(i);
+        t = pattern_thread(pattern, i);
         c = t.color;
         sprintf((char*)embBuffer, "RGB(%d,%d,%d)", (int)c.r, (int)c.g, (int)c.b);
         binaryWriteUShortBE(file, (unsigned short)(14 + string_length(embBuffer))); /* record length */
@@ -6987,7 +6980,7 @@ static char writeJef(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     for (i = 0; i < pattern->thread_count; i++) {
         EmbThread t;
-        t = pattern_thread(i);
+        t = pattern_thread(pattern, i);
         int j = embThread_findNearestColor(t.color, jef_thread);
         binaryWriteInt(file, j);
     }
@@ -7830,30 +7823,19 @@ static char readPcs(EmbPattern* pattern, EmbFile file, const char* fileName)
     return 1;
 }
 
-static EmbStitch pattern_stitch(int index);
-
-static EmbThread pattern_thread(int index)
+static EmbThread pattern_thread(EmbPattern *p, int index)
 {
     EmbThread t;
-    embFile_seek(memory, thread_offset+thread_size*index, SEEK_SET);
-    embFile_read(embBuffer, 1, thread_size, memory);
-    t.color = embColor_fromStr(embBuffer);
-    memory_copy(t.description, embBuffer+3, 30);
-    memory_copy(t.catalogNumber, embBuffer+33, 10);
+    embFile_seek(memory[p->threads->file_id], sizeof(EmbThread)*index, SEEK_SET);
+    embFile_read(&t, sizeof(EmbThread), 1, memory[p->threads->file_id]);
     return t;
 }
 
-static EmbStitch pattern_stitch(int index)
+static EmbStitch pattern_stitch(EmbPattern *p, int index)
 {
     EmbStitch st;
-    embFile_seek(memory, stitch_offset+stitch_size*index, SEEK_SET);
-    embFile_read(embBuffer, 1, stitch_size, memory);
-    st.flags = embBuffer[0];
-    four_char_order(embBuffer+1, EMB_LITTLE_ENDIAN);
-    memory_set(&(st.x), embBuffer+1, 4);
-    four_char_order(embBuffer+5, EMB_LITTLE_ENDIAN);
-    memory_set(&(st.y), embBuffer+5, 4);
-    st.color = embBuffer[9];
+    embFile_seek(memory[p->stitchList->file_id], sizeof(EmbStitch)*index, SEEK_SET);
+    embFile_read(&st, sizeof(EmbStitch), 1, memory[p->stitchList->file_id]);
     return st;
 }
 
@@ -8124,7 +8106,7 @@ void writePecStitches(EmbPattern* pattern, EmbFile file, const char* fileName)
     binaryWriteByte(file, (unsigned char)(currentThreadCount - 1));
 
     for (i = 0; i < currentThreadCount; i++) {
-        EmbThread t = pattern_thread(i);
+        EmbThread t = pattern_thread(pattern, i);
         binaryWriteByte(file, (unsigned char)embThread_findNearestColor(t.color, pec_thread));
     }
     embFile_pad(file, 0x20, (int)(0x1CF - currentThreadCount));
@@ -8570,7 +8552,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile file, const char*
     for (i=0; i<pattern->stitchList->length; i++) {
         j = i;
         flag = st.flags;
-        t = pattern_thread(st.color);
+        t = pattern_thread(p, st.color);
         newColorCode = embThread_findNearestColor_fromThread(t.color, pec_thread);
         if (newColorCode != colorCode) {
             colorCount++;
@@ -8601,7 +8583,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile file, const char*
         EmbThread t;
         st = pattern->stitchList->stitch[i];
         flag = st.flags;
-        t = pattern_thread(st.color);
+        t = pattern_thread(pattern, st.color);
         newColorCode = embThread_findNearestColor(t.color, pec_thread);
         if (newColorCode != colorCode) {
             colorInfo[colorInfoIndex++] = (short)blockCount;
@@ -8878,7 +8860,7 @@ static char writeRgb(EmbPattern* pattern, EmbFile file, const char* fileName)
     embBuffer[3] = 0;
     for (i = 0; i < pattern->thread_count; i++) {
         EmbThread t;
-        t = pattern_thread(i);
+        t = pattern_thread(pattern, i);
         embColor_toStr(t.color, embBuffer);
         embFile_write(embBuffer, 1, 4, file);
     }
@@ -8983,7 +8965,7 @@ static char writeSew(EmbPattern* pattern, EmbFile file, const char* fileName)
     for (i = 0; i < pattern->thread_count; i++) {
         int thr;
         EmbThread t;
-        t = pattern_thread(i);
+        t = pattern_thread(pattern, i);
         thr = embThread_findNearestColor(t.color, jef_thread);
         binaryWriteInt(file, thr);
     }
@@ -9992,7 +9974,7 @@ static char writeU00(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     for (i = 0; i < pattern->thread_count; i++) {
         EmbThread t;
-        t = pattern_thread(i);
+        t = pattern_thread(pattern, i);
         embColor_toStr(t.color, b);
         embFile_write(b, 1, 3, file);
     }
@@ -10272,7 +10254,7 @@ static char writeVip(EmbPattern* pattern, EmbFile file, const char* fileName)
         for (i = 0; i < minColors; i++) {
             EmbThread t;
             int byteChunk = i << 2;
-            t = pattern_thread(i);
+            t = pattern_thread(pattern, i);
             decodedColors[byteChunk] = t.color.r;
             decodedColors[byteChunk + 1] = t.color.g;
             decodedColors[byteChunk + 2] = t.color.b;
@@ -10605,7 +10587,7 @@ static char writeVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
         /* pointer = mainPointer; */
         flag = st.flags;
         EmbThread t;
-        t = pattern_thread(st.color);
+        t = pattern_thread(pattern, st.color);
         newColor = t.color;
         if (newColor.r != color.r || newColor.g != color.g || newColor.b != color.b) {
             nColors++;
@@ -10677,7 +10659,7 @@ static char writeVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
 
         /* pointer = mainPointer; */
         EmbThread t;
-        t = pattern_thread(st.color);
+        t = pattern_thread(pattern, st.color);
         color = t.color;
 
         if (first && (st.flags & JUMP) && pattern->stitchList->stitch[i + 1].flags & JUMP) {
@@ -10956,7 +10938,7 @@ static char writeXxx(EmbPattern* pattern, EmbFile file, const char* fileName)
     for (i = 0; i < 22; i++) {
         if (i < pattern->thread_count) {
             EmbThread t;
-            t = pattern_thread(i);
+            t = pattern_thread(pattern, i);
             b[0] = 0;
             embColor_toStr(t.color, b+1);
             embFile_write(b, 1, 4, file);
@@ -12283,7 +12265,7 @@ static void writeStitchList(EmbPattern* p, EmbFile file)
             if (st.flags == NORMAL && !isNormal) {
                 isNormal = 1;
                 EmbThread t;
-                t = pattern_thread(st.color);
+                t = pattern_thread(p, st.color);
                 color = t.color;
                 /* TODO: use proper thread width for stoke-width rather than just 0.2 */
                 embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" ");
@@ -12451,49 +12433,20 @@ const char* threadColorName(EmbColor color, int brand)
  */
 int init_embroidery(void)
 {
-    int i;
-    int size;
     datafile = embFile_open("libembroidery_data.bin", "rb", 0);
-    memory = embFile_open("libembroidery_memory.bin", "wb+", 0);
+    make_directory("memory", 0666);
 
-    size = 0;
-    arc_offset = size;
-    size += GEOMETRY_ARRAY_MAXIMUM * arc_size;
-    circle_offset = size;
-    size += GEOMETRY_ARRAY_MAXIMUM * circle_size;
-    ellipse_offset = size;
-    size += GEOMETRY_ARRAY_MAXIMUM * ellipse_size;
-    flag_offset = size;
-    size += GEOMETRY_ARRAY_MAXIMUM * flag_size;
-    line_offset = size;
-    size += GEOMETRY_ARRAY_MAXIMUM * line_size;
-    path_offset = size;
-    size += GEOMETRY_ARRAY_MAXIMUM * point_size;
-    point_offset = size;
-    size += GEOMETRY_ARRAY_MAXIMUM * polygon_size;
-    polygon_offset = size;
-    size += GEOMETRY_ARRAY_MAXIMUM * polyline_size;
-    polyline_offset = size;
-    size += GEOMETRY_ARRAY_MAXIMUM * rect_size;
-    rect_offset = size;
-    size += GEOMETRY_ARRAY_MAXIMUM * spline_size;
-    spline_offset = size;
-    size += THREAD_MAXIMUM * thread_size;
-    thread_offset = size;
-    size += STITCH_MAXIMUM * stitch_size;
-    stitch_offset = size;
-    size += GEOMETRY_ARRAY_MAXIMUM * vector_size;
-    vector_offset = size;
-    for (i=0; i<size; i++) {
-        embFile_write("\0", 1, 1, memory);
-    }
     return 0;
 }
 
 int close_embroidery(void)
 {
+    int i;
     embFile_close(datafile);
-    embFile_close(memory);
+    
+    for (i=0; i<memory_files; i++) {
+        embFile_close(memory[i]);
+    }
     return 0;
 }
 

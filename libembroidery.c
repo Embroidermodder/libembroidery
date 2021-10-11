@@ -839,10 +839,10 @@ static void make_directory(const char *dir, int mode)
 {
 #ifdef ARDUINO
 #else
-#ifdef linux
-    mkdir(dir, mode);
-#else
+#ifdef _WIN32
     mkdir(dir);
+#else
+    mkdir(dir, mode);
 #endif
 #endif
 }

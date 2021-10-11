@@ -13,6 +13,8 @@
 int sprintf(char *, const char *format, ...);
 int sscanf(char *, const char *, ...);
 
+int rand();
+
 void *malloc(size_t);
 void *realloc(void *, size_t);
 void *calloc(long unsigned int, long unsigned int);
@@ -163,7 +165,7 @@ static int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned c
 static void readPecStitches(EmbPattern* pattern, EmbFile file, const char* fileName);
 static void writePecStitches(EmbPattern* pattern, EmbFile file, const char* filename);
 
-static char string_in_table(char *buff, int table);
+static char string_in_table(const char *buff, int table);
 static EmbThread load_thread(int, int);
 static EmbThread pattern_thread(EmbPattern *p, int index);
 static EmbStitch pattern_stitch(EmbPattern *p, int index);
@@ -296,7 +298,7 @@ static EmbFile embFile_open(const char* fileName, const char* mode, int optional
 static int embFile_readline(EmbFile stream, char *, int);
 static int embFile_close(EmbFile stream);
 static EmbFile embFile_tmpfile(void);
-static void embFile_print(EmbFile stream, char*);
+static void embFile_print(EmbFile stream, const char*);
 static void embFile_pad(EmbFile f, char, int);
 
 static int bcfFile_read(EmbFile file, bcf_file* bcfFile);
@@ -610,7 +612,7 @@ float emb_factorial[] = {
 float emb_pow(float a, int n)
 {
     int i;
-    float b, epsilon;
+    float b;
     b = a;
     if (n==0) return 1.0;
     for (i=0; i<n-1; i++) {
@@ -654,7 +656,7 @@ float emb_cos(float a)
 float emb_atan2(float y, float x)
 {
     int i;
-    float a, t, b, epsilon, coeff;
+    float a, t, epsilon, coeff;
     epsilon = 0.0001;
     if (x>epsilon) {
         a = y/(emb_sqrt(x*x+y*y)+x);
@@ -704,10 +706,10 @@ static int double_dereference_int(int table, int entry)
 /* These use void * so the sign of the char array has no effect as they are cast
  * to char * internally.
  */
-static int string_length(void *a);
-static int string_equal(void *a, void *b);
-static void memory_copy(void *a, void *b, int length);
-static void string_copy(void *a, void *b);
+static int string_length(const char *a);
+static int string_equal(const void *a, const void *b);
+static void memory_copy(void *a, const void *b, int length);
+static void string_copy(char *a, const char *b);
 
 static void memory_set(void *ptr, int p, int length)
 {
@@ -730,7 +732,7 @@ static int get_str(char *s, int p)
     return 0;
 }
 
-static int string_length(void *a)
+static int string_length(const char *a)
 {
     int i;
     for (i=0; i<MAX_STRING_LENGTH; i++) {
@@ -741,7 +743,7 @@ static int string_length(void *a)
     return MAX_STRING_LENGTH;
 }
 
-static int string_equal(void *a, void *b)
+static int string_equal(const void *a, const void *b)
 {
     int i;
     for (i=0; i< MAX_STRING_LENGTH; i++) {
@@ -758,16 +760,16 @@ static int string_equal(void *a, void *b)
     return 0;
 }
 
-static void memory_copy(void *a, void *b, int length)
+static void memory_copy(void *a, const void *b, int length)
 {
     int i;
     length = emb_min_int(length, MAX_STRING_LENGTH);
     for (i=0; i<length; i++) {
-        ((char *)a)[i] = ((char *)b)[i];
+        ((char *)a)[i] = ((const char *)b)[i];
     }
 }
 
-static void string_copy(void *a, void *b)
+static void string_copy(char *a, const char *b)
 {
     memory_copy(a, b, string_length(b));
     ((char *)a)[string_length(b)] = 0;
@@ -2833,29 +2835,30 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
 {
     char *dotPos;
     char hasRead;
+    char *buffer = (char*)embBuffer;
 
     hasRead = 0;
-    string_copy(embBuffer, (char*)fileName);
-    dotPos = embBuffer + string_length(embBuffer);
+    string_copy(buffer, (char*)fileName);
+    dotPos = buffer + string_length(buffer);
     while (*dotPos != '.') {
         dotPos--;
     }
     string_copy(dotPos, ".edr");
-    hasRead = embPattern_readAuto(p, embBuffer);
+    hasRead = embPattern_readAuto(p, buffer);
     if (!hasRead) {
-        string_copy(embBuffer, (char*)fileName);
+        string_copy(buffer, (char*)fileName);
         string_copy(dotPos, ".rgb");
-        hasRead = embPattern_readAuto(p, embBuffer);
+        hasRead = embPattern_readAuto(p, buffer);
     }
     if (!hasRead) {
-        string_copy(embBuffer, fileName);
+        string_copy(buffer, fileName);
         string_copy(dotPos, ".col");
-        hasRead = embPattern_readAuto(p, embBuffer);
+        hasRead = embPattern_readAuto(p, buffer);
     }
     if (!hasRead) {
-        string_copy(embBuffer, fileName);
+        string_copy(buffer, fileName);
         string_copy(dotPos, ".inf");
-        hasRead = embPattern_readAuto(p, embBuffer);
+        hasRead = embPattern_readAuto(p, buffer);
     }
 }
 
@@ -4341,9 +4344,9 @@ EmbFile embFile_tmpfile(void)
 /**
  * TODO: documentation.
  */
-void embFile_print(EmbFile stream, char* str)
+void embFile_print(EmbFile stream, const char* str)
 {
-    embFile_write(str, 1, string_length(str), stream);
+    embFile_write((void *)str, 1, string_length(str), stream);
 }
 
 /**
@@ -4993,16 +4996,15 @@ static char readCol(EmbPattern* pattern, EmbFile file, const char* fileName)
 static char writeCol(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
+    char *buffer = (char*)embBuffer;
 
-    sprintf((char*)embBuffer, "%d\r\n", pattern->thread_count);
-    embFile_print(file, embBuffer);
+    sprintf(buffer, "%d\r\n", pattern->thread_count);
+    embFile_print(file, buffer);
     for (i = 0; i < pattern->thread_count; i++) {
-        EmbThread t;
         EmbColor c;
-        t = pattern_thread(pattern, i);
-        c = t.color;
-        sprintf((char*)embBuffer, "%d,%d,%d,%d\r\n", i, (int)c.r, (int)c.g, (int)c.b);
-        embFile_print(file, embBuffer);
+        c = pattern_thread(pattern, i).color;
+        sprintf(buffer, "%d,%d,%d,%d\r\n", i, (int)c.r, (int)c.g, (int)c.b);
+        embFile_print(file, buffer);
     }
     return 1;
 }
@@ -5845,6 +5847,7 @@ static char readDxf(EmbPattern* pattern, EmbFile file, const char* fileName)
     char firstStitch = 1;
     char bulgeFlag = 0;
     int fileLength = 0;
+    char *buffer = (char*)embBuffer;
 
     embFile_seek(file, 0L, SEEK_END);
 
@@ -5852,27 +5855,27 @@ static char readDxf(EmbPattern* pattern, EmbFile file, const char* fileName)
     embFile_seek(file, 0L, SEEK_SET);
 
     while (embFile_tell(file) < fileLength) {
-        embFile_readline(file, (char *)embBuffer, 1000);
-        if ((string_equal((char *)embBuffer, "HEADER")) || (string_equal((char *)embBuffer, "CLASSES")) || (string_equal((char *)embBuffer, "TABLES")) || (string_equal((char *)embBuffer, "BLOCKS")) || (string_equal((char *)embBuffer, "ENTITIES")) || (string_equal((char *)embBuffer, "OBJECTS")) || (string_equal((char *)embBuffer, "THUMBNAILIMAGE"))) {
-            section = embBuffer;
+        embFile_readline(file, buffer, 1000);
+        if ((string_equal(buffer, "HEADER")) || (string_equal(buffer, "CLASSES")) || (string_equal(buffer, "TABLES")) || (string_equal(buffer, "BLOCKS")) || (string_equal(buffer, "ENTITIES")) || (string_equal(buffer, "OBJECTS")) || (string_equal(buffer, "THUMBNAILIMAGE"))) {
+            section = buffer;
             embLog("SECTION:\n");
-            embLog(embBuffer);
+            embLog(buffer);
         }
-        if (string_equal((char *)embBuffer, "ENDSEC")) {
+        if (string_equal(buffer, "ENDSEC")) {
             section = "";
             embLog("ENDSEC:\n");
-            embLog(embBuffer);
+            embLog(buffer);
         }
-        if ((string_equal((char *)embBuffer, "ARC")) || (string_equal((char *)embBuffer, "CIRCLE")) || (string_equal((char *)embBuffer, "ELLIPSE")) || (string_equal((char *)embBuffer, "LINE")) || (string_equal((char *)embBuffer, "LWPOLYLINE")) || (string_equal((char *)embBuffer, "POINT"))) {
-            entityType = embBuffer;
+        if ((string_equal(buffer, "ARC")) || (string_equal(buffer, "CIRCLE")) || (string_equal(buffer, "ELLIPSE")) || (string_equal(buffer, "LINE")) || (string_equal(buffer, "LWPOLYLINE")) || (string_equal(buffer, "POINT"))) {
+            entityType = buffer;
         }
-        if (string_equal((char *)embBuffer, "EOF")) {
+        if (string_equal(buffer, "EOF")) {
             eof = 1;
         }
 
         if (string_equal((char *)section, "HEADER")) {
-            if (string_equal((char *)embBuffer, "$ACADVER")) {
-                embFile_readline(file, (char *)embBuffer, 1000);
+            if (string_equal(buffer, "$ACADVER")) {
+                embFile_readline(file, buffer, 1000);
                 embFile_readline(file, dxfVersion, 1000);
                 /* TODO: Allow these versions when POLYLINE is handled. */
                 /*
@@ -5884,41 +5887,41 @@ static char readDxf(EmbPattern* pattern, EmbFile file, const char* fileName)
                 */
             }
         } else if (string_equal((char *)section, "TABLES")) {
-            if (string_equal((char *)embBuffer, "ENDTAB")) {
+            if (string_equal(buffer, "ENDTAB")) {
                 tableName = NULL;
             }
 
             if (tableName == NULL) {
-                if (string_equal((char *)embBuffer, "2")) /* Table Name */
+                if (string_equal(buffer, "2")) /* Table Name */
                 {
                     embFile_readline(file, tableName, 1000);
                 }
             } else if (string_equal(tableName, "LAYER")) {
                 /* Common Group Codes for Tables */
-                if (string_equal((char *)embBuffer, "5")) /* Handle */
+                if (string_equal(buffer, "5")) /* Handle */
                 {
-                    embFile_readline(file, (char *)embBuffer, 1000);
+                    embFile_readline(file, buffer, 1000);
                     continue;
-                } else if (string_equal((char *)embBuffer, "330")) /* Soft Pointer */
+                } else if (string_equal(buffer, "330")) /* Soft Pointer */
                 {
-                    embFile_readline(file, (char *)embBuffer, 1000);
+                    embFile_readline(file, buffer, 1000);
                     continue;
-                } else if (string_equal((char *)embBuffer, "100")) /* Subclass Marker */
+                } else if (string_equal(buffer, "100")) /* Subclass Marker */
                 {
-                    embFile_readline(file, (char *)embBuffer, 1000);
+                    embFile_readline(file, buffer, 1000);
                     continue;
-                } else if (string_equal((char *)embBuffer, "70")) /* Number of Entries in Table */
+                } else if (string_equal(buffer, "70")) /* Number of Entries in Table */
                 {
-                    embFile_readline(file, (char *)embBuffer, 1000);
+                    embFile_readline(file, buffer, 1000);
                     continue;
                 }
                 /* The meaty stuff */
-                else if (string_equal((char *)embBuffer, "2")) /* Layer Name */
+                else if (string_equal(buffer, "2")) /* Layer Name */
                 {
                     embFile_readline(file, layerName, 1000);
-                } else if (string_equal((char *)embBuffer, "62")) /* Color Number */
+                } else if (string_equal(buffer, "62")) /* Color Number */
                 {
-                    embFile_readline(file, (char *)embBuffer, 1000);
+                    embFile_readline(file, buffer, 1000);
                     /*
                     TODO: finish this
                     unsigned char colorNum = atoi(buff);
@@ -5937,21 +5940,21 @@ static char readDxf(EmbPattern* pattern, EmbFile file, const char* fileName)
             }
         } else if (string_equal(section, "ENTITIES")) {
             /* Common Group Codes for Entities */
-            if (string_equal((char *)embBuffer, "5")) /* Handle */
+            if (string_equal(buffer, "5")) /* Handle */
             {
-                embFile_readline(file, (char *)embBuffer, 1000);
+                embFile_readline(file, buffer, 1000);
                 continue;
-            } else if (string_equal((char *)embBuffer, "330")) /* Soft Pointer */
+            } else if (string_equal(buffer, "330")) /* Soft Pointer */
             {
-                embFile_readline(file, (char *)embBuffer, 1000);
+                embFile_readline(file, buffer, 1000);
                 continue;
-            } else if (string_equal((char *)embBuffer, "100")) /* Subclass Marker */
+            } else if (string_equal(buffer, "100")) /* Subclass Marker */
             {
-                embFile_readline(file, (char *)embBuffer, 1000);
+                embFile_readline(file, buffer, 1000);
                 continue;
-            } else if (string_equal((char *)embBuffer, "8")) /* Layer Name */
+            } else if (string_equal(buffer, "8")) /* Layer Name */
             {
-                embFile_readline(file, (char *)embBuffer, 1000);
+                embFile_readline(file, buffer, 1000);
                 /* embPattern_changeColor(pattern, colorIndexMap[buff]); TODO: port to C */
                 continue;
             }
@@ -8069,20 +8072,20 @@ void writePecStitches(EmbPattern* pattern, EmbFile file, const char* fileName)
     int i, currentThreadCount, graphicsOffsetLocation, graphicsOffsetValue, height, width, x, y;
     float xFactor, yFactor;
     char* slashPos, *backslashPos, *dotPos, *start;
-    slashPos = fileName+string_length(fileName);
+    slashPos = (char*)fileName+string_length(fileName);
     while (slashPos > fileName && *slashPos != '/') {
         slashPos--;
     }
-    backslashPos = fileName+string_length(fileName);
+    backslashPos = (char*)fileName+string_length(fileName);
     while (backslashPos > fileName && *backslashPos != '\\') {
         backslashPos--;
     }
-    dotPos = fileName+string_length(fileName);
+    dotPos = (char*)fileName+string_length(fileName);
     while (dotPos > fileName && *dotPos != '.') {
         dotPos--;
     }
 
-    start = fileName;
+    start = (char*)fileName;
     if (slashPos > fileName) {
         start = slashPos + 1;
     }
@@ -8544,7 +8547,6 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile file, const char*
     int colorInfoIndex = 0;
     int i;
     EmbRect bounds = embPattern_calcBoundingBox(pattern);
-    EmbColor color;
     EmbStitch st;
 
     /* TODO: why is this repeated below? */
@@ -8923,8 +8925,8 @@ static char readSew(EmbPattern* pattern, EmbFile file, const char* fileName)
 
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    sprintf(embBuffer, "current position: %ld\n", embFile_tell(file));
-    embLog(embBuffer);
+    sprintf((char*)embBuffer, "current position: %ld\n", embFile_tell(file));
+    embLog((char*)embBuffer);
 
     return 1;
 }
@@ -9799,7 +9801,6 @@ static char writeThr(EmbPattern* pattern, EmbFile file, const char* fileName)
     ThredExtension extension;
     char bitmapName[16];
     EmbStitch st;
-    EmbColor c;
 
     stitchCount = pattern->stitchList->length;
 
@@ -10190,7 +10191,7 @@ static char writeVip(EmbPattern* pattern, EmbFile file, const char* fileName)
                                               xCompressedSize = 0, yCompressedSize = 0;
     EmbVector previous;
     EmbStitch st;
-    int flags = 0, i;
+    int i;
     unsigned char *xValues, *yValues, *attributeValues, *attributeCompressed = 0,
                                                         *xCompressed = 0, *yCompressed = 0, *decodedColors = 0, *encodedColors = 0,
                                                         prevByte = 0;
@@ -10768,7 +10769,6 @@ static char readXxx(EmbPattern* pattern, EmbFile file, const char* fileName)
     char endOfStream = 0;
     char thisStitchJump = 0;
     EmbThread thread;
-    EmbStitch st;
 
     embFile_seek(file, 0x27, SEEK_SET);
     nColors = binaryReadInt16(file);
@@ -10899,7 +10899,6 @@ static char writeXxx(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     char i;
     EmbRect rect;
-    EmbColor c;
     int endOfStitches;
     unsigned char b[4];
 
@@ -11055,8 +11054,9 @@ void writeFloat(EmbFile file, float number)
 {
     /* TODO: fix bugs in embFloatToArray */
     /* embFloatToArray(buffer, number, 1.0e-7, 3, 5); */
-    sprintf(embBuffer, "%f", number);
-    embFile_print(file, embBuffer);
+    char *buffer = (char*)embBuffer;
+    sprintf(buffer, "%f", number);
+    embFile_print(file, buffer);
 }
 
 void writeFloatWrap(EmbFile file, char *prefix, float number, char *suffix)
@@ -11329,7 +11329,6 @@ char* svgAttribute_getValue(SvgElement* element, const char* name)
 
 void svgAddToPattern(EmbPattern* p)
 {
-    const char* buff = 0;
     EmbVector test;
     EmbColor color;
     EmbPathObject* path;
@@ -11420,7 +11419,6 @@ void svgAddToPattern(EmbPattern* p)
         int last = string_length(pointStr);
         int size = 32;
         int i = 0;
-        int j = 0;
         int pos = 0;
         /* An odometer aka 'tripometer' used for stepping thru the pathData */
         int trip = -1; /* count of float[] that has been filled. 0=first item of array, -1=not filled = empty array */
@@ -11708,13 +11706,13 @@ void svgAddToPattern(EmbPattern* p)
                     odd = 0;
                     xx = atof(polybuff);
                 } else {
+                    EmbVector a;
                     odd = 1;
                     yy = atof(polybuff);
 
                     if (!pointList) {
                         pointList = embArray_create(EMB_POINT);
                     }
-                    EmbVector a;
                     a.x = xx;
                     a.y = yy;
                     embArray_addPoint(pointList, a, 0, black);
@@ -11821,7 +11819,7 @@ static char svgIsProperty(const char* buff)
     return SVG_NULL;
 }
 
-static char string_in_table(char *buff, int table)
+static char string_in_table(const char *buff, int table)
 {
     int out;
     out = dereference_int(table);
@@ -11855,7 +11853,6 @@ static char svgIsSvgAttribute(const char* buff)
 
 static int svgIsCatchAllAttribute(const char* buff)
 {
-    int out;
     if (string_in_table(buff, svg_property_token_table)) {
         return SVG_CATCH_ALL;
     }
@@ -12000,18 +11997,18 @@ void svgProcess(int c, const char* buff)
                     return;
                 }
             } else {
-                string_copy((char *)embBuffer, currentValue);
-                currentValue = realloc(string_length(buff) + string_length((char *)embBuffer) + 2, 1);
+                char *buffer = (char*)embBuffer;
+                int length;
+                string_copy(buffer, currentValue);
+                length = string_length(buff) + string_length(buffer) + 2;
+                currentValue = realloc(currentValue, length);
                 if (!currentValue) {
                     embLog("ERROR: svgProcess(), cannot allocate memory for currentValue\n");
                     return;
                 }
-                if (currentValue) {
-                    memory_set(currentValue, 0, string_length(buff) + string_length(embBuffer) + 2);
-                }
-                string_copy(currentValue, embBuffer);
-                string_copy(currentValue+string_length(embBuffer), " ");
-                string_copy(currentValue+string_length(embBuffer)+1, buff);
+                string_copy(currentValue, buffer);
+                string_copy(currentValue+string_length(buffer), " ");
+                string_copy(currentValue+string_length(buffer)+1, buff);
             }
 
             if (buff[last] == '/' || buff[last] == '"' || buff[last] == '\'') {
@@ -12263,8 +12260,8 @@ static void writeStitchList(EmbPattern* p, EmbFile file)
         for (i = 0; i < p->stitchList->length; i++) {
             st = p->stitchList->stitch[i];
             if (st.flags == NORMAL && !isNormal) {
-                isNormal = 1;
                 EmbThread t;
+                isNormal = 1;
                 t = pattern_thread(p, st.color);
                 color = t.color;
                 /* TODO: use proper thread width for stoke-width rather than just 0.2 */
@@ -12336,7 +12333,7 @@ static int embColor_distance(EmbColor a, EmbColor b)
 
 int embThread_findNearestColor(EmbColor color, int thread_table)
 {
-    int currentClosestValue, closestIndex, i, out, length;
+    int currentClosestValue, closestIndex, i, length;
 
     currentClosestValue = 256 * 256 * 3;
     closestIndex = -1;
@@ -12398,7 +12395,7 @@ int threadColor(EmbColor *c, const char* name, int brand)
 
 int threadColorNum(EmbColor color, int brand)
 {
-    int out, length, i;
+    int length, i;
     length = double_dereference_int(table_lengths, brand);
 
     for (i=0; i<length; i++) {

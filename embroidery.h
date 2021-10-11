@@ -287,11 +287,6 @@ typedef struct EmbPolylineObject_
     EmbColor color;
 } EmbPolylineObject;
 
-typedef struct EmbSettings_ {
-    unsigned int dstJumpsPerTrim;
-    EmbVector home;
-} EmbSettings;
-
 typedef struct EmbBezier_ {
     EmbVector start;
     EmbVector control1;
@@ -334,7 +329,6 @@ struct EmbArray_ {
 
 typedef struct EmbPattern_
 {
-    EmbSettings settings;
     EmbHoop hoop;
 
     EmbArray* stitchList;
@@ -350,7 +344,16 @@ typedef struct EmbPattern_
     EmbArray* splines;
     EmbArray* threads;
 
+    unsigned int dstJumpsPerTrim;
+    EmbVector home;
+
     int thread_count;
+    int ax;
+    int ay;
+    int mx;
+    int my;
+    char name[17];
+    char pd[16];
 
     int currentColorIndex;
     EmbVector lastPosition;
@@ -420,11 +423,6 @@ EMB_PUBLIC float embEllipse_diameterX(EmbEllipse ellipse);
 EMB_PUBLIC float embEllipse_diameterY(EmbEllipse ellipse);
 EMB_PUBLIC float embEllipse_width(EmbEllipse ellipse);
 EMB_PUBLIC float embEllipse_height(EmbEllipse ellipse);
-
-EMB_PUBLIC EmbSettings embSettings_init(void);
-
-EMB_PUBLIC EmbVector embSettings_home(EmbSettings* settings);
-EMB_PUBLIC void embSettings_setHome(EmbSettings* settings, EmbVector point);
 
 EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbArray* lines, float thickness, EmbSatinOutline* result);
 EMB_PUBLIC EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, float density);

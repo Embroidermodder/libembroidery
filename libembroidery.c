@@ -2065,14 +2065,14 @@ float embVector_cross(EmbVector a, EmbVector b)
  * embPattern_free(). */
 EmbPattern* embPattern_create(void)
 {
-    EmbPattern* p = 0;
+    EmbPattern* p;
     p = (EmbPattern*)malloc(sizeof(EmbPattern));
     if (!p) {
         embLog("ERROR: embPattern_create(), unable to allocate memory for p\n");
         return 0;
     }
 
-    p->settings = embSettings_init();
+    string_copy(p->name, "Untitled");
     p->currentColorIndex = 0;
     p->stitchList = embArray_create(EMB_STITCH);
     p->threads = embArray_create(EMB_THREAD);
@@ -2089,8 +2089,15 @@ EmbPattern* embPattern_create(void)
     p->polylines = 0;
     p->rects = 0;
     p->splines = 0;
+    p->ax = 0;
+    p->ay = 0;
+    p->mx = 0;
+    p->my = 0;
     p->lastPosition.x = 0.0;
     p->lastPosition.y = 0.0;
+    p->dstJumpsPerTrim = 6;
+    p->home.x = 0.0;
+    p->home.y = 0.0;
 
     return p;
 }
@@ -2315,9 +2322,8 @@ void embPattern_addStitchAbs(EmbPattern* p, float x, float y, int flags, int isA
      * The first coordinate will be the HOME position. */
     if (!p->stitchList) {
         /* NOTE: Always HOME the machine before starting any stitching */
-        home = embSettings_home(&(p->settings));
-        s.x = home.x;
-        s.y = home.y;
+        s.x = p->home.x;
+        s.y = p->home.y;
         s.flags = JUMP;
         s.color = p->currentColorIndex;
         p->stitchList = embArray_create(EMB_STITCH);
@@ -2349,9 +2355,8 @@ void embPattern_addStitchRel(EmbPattern* p, float dx, float dy, int flags, int i
     } else {
         /* NOTE: The stitchList is empty, so add it to the HOME position.
          * The embStitchList_create function will ensure the first coordinate is at the HOME position. */
-        home = embSettings_home(&(p->settings));
-        x = home.x + dx;
-        y = home.y + dy;
+        x = p->home.x + dx;
+        y = p->home.y + dy;
     }
     embPattern_addStitchAbs(p, x, y, flags, isAutoColorIndex);
 }
@@ -3053,29 +3058,6 @@ void embPattern_addRectObjectAbs(EmbPattern* p, float x, float y, float w, float
         return;
     }
     embArray_addRect(p->rects, rect, 0, black);
-}
-
-/* Initializes and returns an EmbSettings */
-EmbSettings embSettings_init(void)
-{
-    EmbSettings settings;
-    settings.dstJumpsPerTrim = 6;
-    settings.home.x = 0.0;
-    settings.home.y = 0.0;
-    return settings;
-}
-
-/* Returns the home position stored in settings as an EmbVector. */
-EmbVector embSettings_home(EmbSettings* settings)
-{
-    return settings->home;
-}
-
-/* Sets the home position stored in settings to an EmbPoint point.
- * You will rarely ever need to use this. */
-void embSettings_setHome(EmbSettings* settings, EmbVector point)
-{
-    settings->home = point;
 }
 
 /* TODO:
@@ -5634,12 +5616,12 @@ static void set_dst_variable(EmbPattern* pattern, char* var, char* val)
 static char readDst(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     char var[3]; /* temporary storage variable name */
-    char val[512]; /* temporary storage variable value */
-    int valpos;
     unsigned char b[3];
-    char header[512 + 1];
-    int i = 0;
-    int flags; /* for converting stitches from file encoding */
+    int i, valpos;
+    char *header, *val;
+
+    header = (char*)embBuffer;
+    val = (char*)(embBuffer+512);
 
     /* TODO: review commented code below
     pattern->clear();
@@ -5680,7 +5662,7 @@ static char readDst(EmbPattern* pattern, EmbFile file, const char* fileName)
     }
 
     while (embFile_read(b, 1, 3, file) == 3) {
-        int x[2];
+        int x[2], flags;
         if (b[2] == 0xF3) {
             break;
         }
@@ -5696,30 +5678,24 @@ static char readDst(EmbPattern* pattern, EmbFile file, const char* fileName)
 static char writeDst(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     EmbRect boundingRect;
-    int pos[2], dx[2], flags, i, ax, ay, mx, my;
-    char* pd = 0;
+    int pos[2], dx[2], i;
     EmbStitch st;
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
     /* TODO: make sure that pattern->thread_count defaults to 1 in new patterns */
-    flags = NORMAL;
     boundingRect = embPattern_calcBoundingBox(pattern);
-    /* TODO: review the code below
-    if(pattern->get_variable("design_name") != NULL)
-    {
-    char *la = stralloccopy(pattern->get_variable("design_name"));
-    if(string_length(la)>16) la[16]='\0';
 
-    embFile_print(file,"LA:%-16s\x0d",la);
-    free(la);
-    }
-    else
-    {
-    */
     /* pad to 16 char */
-    embFile_print(file, "LA:Untitled        \x0d");
-    /*} */
+    int namelen = string_length(pattern->name);
+    for (i=namelen; i<16; i++) {
+        pattern->name[i] = ' ';
+    }
+    pattern->name[16] = 0;
+    embFile_print(file, "LA:");
+    embFile_print(file, pattern->name);
+    embFile_print(file, "\x0d");
+
     /* TODO: check that the number of characters adds to 125, or pad
     correctly. */
     embFile_print(file, "ST:");
@@ -5736,29 +5712,22 @@ static char writeDst(EmbPattern* pattern, EmbFile file, const char* fileName)
     writeInt(file, (int)(emb_fabs(boundingRect.top) * 10.0), 6);
     embFile_print(file, "\x0d");
 
-    ax = ay = mx = my = 0;
     /* TODO: review the code below */
-    /*ax=pattern->get_variable_int("ax"); */ /* will return 0 if not defined */
-    /*ay=pattern->get_variable_int("ay"); */
-    /*mx=pattern->get_variable_int("mx"); */
-    /*my=pattern->get_variable_int("my"); */
-
-    /*pd=pattern->get_variable("pd");*/ /* will return null pointer if not defined */
-    pd = 0;
-    if (pd == 0 || string_length(pd) != 6) {
+    /* will return null pointer if not defined */
+    if (pattern->pd[0] == 0 || string_length(pattern->pd) != 6) {
         /* pd is not valid, so fill in a default consisting of "******" */
-        pd = "******";
+        string_copy(pattern->pd, "******");
     }
     embFile_print(file, "AX:+");
-    writeInt(file, ax, 6);
+    writeInt(file, pattern->ax, 6); /* will return 0 if not defined */
     embFile_print(file, "\x0dAY:+");
-    writeInt(file, ay, 6);
+    writeInt(file, pattern->ay, 6);
     embFile_print(file, "\x0dMX:+");
-    writeInt(file, mx, 6);
+    writeInt(file, pattern->mx, 6);
     embFile_print(file, "\x0dMY:+");
-    writeInt(file, my, 6);
+    writeInt(file, pattern->my, 6);
     embFile_print(file, "\x0dPD:");
-    embFile_print(file, pd); /* 6 char, swap for embFile_write */
+    embFile_print(file, pattern->pd); /* 6 char, swap for embFile_write */
     embFile_print(file, "\x0d\x1a"); /* 0x1a is the code for end of section. */
 
     embFile_pad(file, ' ', 512-125);
@@ -5949,43 +5918,43 @@ static char readDxf(EmbPattern* pattern, EmbFile file, const char* fileName)
 
             if (string_equal(entityType, "LWPOLYLINE")) {
                 /* The not so important group codes */
-                if (string_equal(embBuffer, "90")) /* Vertices */
+                if (string_equal(buffer, "90")) /* Vertices */
                 {
-                    embFile_readline(file, (char*)embBuffer, 1000);
+                    embFile_readline(file, buffer, 1000);
                     continue;
-                } else if (string_equal(embBuffer, "70")) /* Polyline Flag */
+                } else if (string_equal(buffer, "70")) /* Polyline Flag */
                 {
-                    embFile_readline(file, (char*)embBuffer, 1000);
+                    embFile_readline(file, buffer, 1000);
                     continue;
                 }
                 /* TODO: Try to use the widths at some point */
-                else if (string_equal(embBuffer, "40")) /* Starting Width */
+                else if (string_equal(buffer, "40")) /* Starting Width */
                 {
-                    embFile_readline(file, (char*)embBuffer, 1000);
+                    embFile_readline(file, buffer, 1000);
                     continue;
-                } else if (string_equal(embBuffer, "41")) /* Ending Width */
+                } else if (string_equal(buffer, "41")) /* Ending Width */
                 {
-                    embFile_readline(file, (char*)embBuffer, 1000);
+                    embFile_readline(file, buffer, 1000);
                     continue;
-                } else if (string_equal(embBuffer, "43")) /* Constant Width */
+                } else if (string_equal(buffer, "43")) /* Constant Width */
                 {
-                    embFile_readline(file, (char*)embBuffer, 1000);
+                    embFile_readline(file, buffer, 1000);
                     continue;
                 }
                 /* The meaty stuff */
-                else if (string_equal(embBuffer, "42")) /* Bulge */
+                else if (string_equal(buffer, "42")) /* Bulge */
                 {
-                    embFile_readline(file, embBuffer, 1000);
-                    bulge = emb_array_to_float(embBuffer);
+                    embFile_readline(file, buffer, 1000);
+                    bulge = emb_array_to_float(buffer);
                     bulgeFlag = 1;
-                } else if (string_equal(embBuffer, "10")) /* X */
+                } else if (string_equal(buffer, "10")) /* X */
                 {
-                    embFile_readline(file, (char*)embBuffer, 1000);
-                    x = emb_array_to_float(embBuffer);
-                } else if (string_equal(embBuffer, "20")) /* Y */
+                    embFile_readline(file, buffer, 1000);
+                    x = emb_array_to_float(buffer);
+                } else if (string_equal(buffer, "20")) /* Y */
                 {
-                    embFile_readline(file, (char*)embBuffer, 1000);
-                    y = emb_array_to_float(embBuffer);
+                    embFile_readline(file, buffer, 1000);
+                    y = emb_array_to_float(buffer);
 
                     if (bulgeFlag) {
                         EmbArc arc;
@@ -6015,7 +5984,7 @@ static char readDxf(EmbPattern* pattern, EmbFile file, const char* fileName)
                         firstY = y;
                         firstStitch = 0;
                     }
-                } else if (string_equal(embBuffer, "0")) {
+                } else if (string_equal(buffer, "0")) {
                     entityType = NULL;
                     firstStitch = 1;
                     if (bulgeFlag) {
@@ -6698,6 +6667,7 @@ static char readInf(EmbPattern* pattern, EmbFile file, const char* fileName)
 static char writeInf(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i, bytesRemaining;
+    char *buffer = (char*)embBuffer;
 
     binaryWriteUIntBE(file, 0x01);
     binaryWriteUIntBE(file, 0x08);
@@ -6710,15 +6680,15 @@ static char writeInf(EmbPattern* pattern, EmbFile file, const char* fileName)
         EmbThread t;
         t = pattern_thread(pattern, i);
         c = t.color;
-        sprintf((char*)embBuffer, "RGB(%d,%d,%d)", (int)c.r, (int)c.g, (int)c.b);
-        binaryWriteUShortBE(file, (unsigned short)(14 + string_length(embBuffer))); /* record length */
+        sprintf(buffer, "RGB(%d,%d,%d)", (int)c.r, (int)c.g, (int)c.b);
+        binaryWriteUShortBE(file, (unsigned short)(14 + string_length(buffer))); /* record length */
         binaryWriteUShortBE(file, (unsigned short)i); /* record number */
         binaryWriteByte(file, c.r);
         binaryWriteByte(file, c.g);
         binaryWriteByte(file, c.b);
         binaryWriteUShortBE(file, (unsigned short)i); /* needle number */
         binaryWriteBytes(file, "RGB\0", 4);
-        embFile_print(file, embBuffer);
+        embFile_print(file, buffer);
         binaryWriteByte(file, 0);
     }
     embFile_seek(file, -8, SEEK_END);
@@ -10446,7 +10416,7 @@ static char readVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
         char tableSize;
         int startX, startY, offsetToNextColorX, offsetToNextColorY;
         unsigned char *threadColorNumber, *colorName, *threadVendor;
-        int unknownThreadString, numberOfBytesInColor;
+        int unknownThreadString;
 
         embFile_seek(file, colorSectionOffset, SEEK_SET);
         embFile_read(embBuffer, 1, 3, file);
@@ -10476,8 +10446,11 @@ static char readVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
 
         unknownThreadString = binaryReadInt16BE(file);
         embFile_seek(file, unknownThreadString, SEEK_CUR);
+        /*
         numberOfBytesInColor = binaryReadInt32BE(file);
         embFile_seek(file, 0x3, SEEK_CUR);
+        */
+        embFile_seek(file, 0x7, SEEK_CUR);
         while (embFile_tell(file) < colorSectionOffset - 1) {
             int lastFilePosition = embFile_tell(file);
 

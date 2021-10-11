@@ -4246,7 +4246,7 @@ EmbFile embFile_open(const char* fileName, const char* mode, int optional)
     oFile = inoFile_open(fileName, mode);
 #else
 #ifdef linux
-    oFile = open(fileName, O_RDWR | O_CREAT);
+    oFile = open(fileName, O_RDWR | O_CREAT, 0666);
 #else
     oFile = fopen(fileName, mode);
 #endif
@@ -4334,7 +4334,7 @@ EmbFile embFile_tmpfile(void)
     return inoFile_tmpfile();
 #else
 #ifdef linux
-    return open("/tmp/libembroidery.bin", O_RDWR);
+    return open("/tmp/libembroidery.bin", O_RDWR | O_CREAT, 0666);
 #else
     return tmpfile();
 #endif

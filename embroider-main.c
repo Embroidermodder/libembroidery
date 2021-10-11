@@ -207,6 +207,8 @@ static int convert(const char* inf, const char* outf)
 {
     EmbPattern* p;
     int reader, writer, formatType;
+    
+    printf("Converting %s to %s.\n", inf, outf);
 
     p = embPattern_create();
     if (!p) {

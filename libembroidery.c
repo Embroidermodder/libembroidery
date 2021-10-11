@@ -5,6 +5,7 @@
 #define EmbFile    InoFile
 #else
 #ifdef linux
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -13,7 +14,7 @@
 int sprintf(char *, const char *format, ...);
 int sscanf(char *, const char *, ...);
 
-int rand();
+int rand(void);
 
 void *malloc(size_t);
 void *realloc(void *, size_t);
@@ -22,8 +23,10 @@ void free(void *);
 
 #define EmbFile    int
 #else
+#include <sys/stat.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <time.h>
 
 #define EmbFile    FILE *
@@ -155,9 +158,10 @@ static int roundDouble(float src);
 static void writeInt(EmbFile , int, int);
 static void writeFloat(EmbFile , float);
 
-static void embPointerToArray(char *buffer, void* pointer, int maxDigits);
-static void embIntToArray(char *buffer, int number, int maxDigits);
-static void embFloatToArray(char *buffer, float number, float tolerance, int before, int after);
+static void emb_int_to_array(char *buffer, int number, int maxDigits);
+static void emb_float_to_array(char *buffer, float number, float tolerance, int before, int after);
+static int emb_array_to_int(char *buffer);
+static float emb_array_to_float(char *buffer);
 
 static void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int _269);
 static int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _267, int _269, int _235);
@@ -418,10 +422,10 @@ Special values for Stream Identifiers
 #define CSV_EXPECT_COMMA          3
 
 #define CSV_MODE_NULL             0
-#define CSV_MODE_COMMENT          1
-#define CSV_MODE_VARIABLE         2
-#define CSV_MODE_THREAD           3
-#define CSV_MODE_STITCH           4
+#define CSV_MODE_COMMENT          '#'
+#define CSV_MODE_VARIABLE         '>'
+#define CSV_MODE_THREAD           '$'
+#define CSV_MODE_STITCH           '*'
 
 /* DXF Version Identifiers */
 #define DXF_VERSION_R10           0
@@ -1451,32 +1455,42 @@ EmbColor embColor_fromHexStr(char* val)
     return color;
 }
 
-/* Replacing the %d in *printf functionality.
- */
-static void embPointerToArray(char* buffer, void* pointer, int maxDigits)
+static int emb_array_to_int(char* buffer)
 {
-    unsigned int i, value;
-    value = (unsigned long int)pointer;
-    for (i = 0; i < maxDigits - 1; i++) {
-        buffer[i] = ' ';
+    int result;
+    result = 0;
+    for (; *buffer; buffer++) {
+        if (*buffer >= '0' && *buffer <= '9') {
+            result = 10*result + *buffer - '0';
+        }
     }
-    buffer[maxDigits - 1] = 0;
-    for (; i >= 0; i--) {
-        buffer[i] = (value % 16) - '0';
-        if (buffer[i] > '9')
-            buffer[i] += 'A' - '9';
-        value /= 16;
-        if (value == 0)
-            break;
+    return result;
+}
+
+static float emb_array_to_float(char* buffer)
+{
+    float result;
+    int offset;
+    int decimal_places;
+    decimal_places = 0;
+    result = 0.0;
+    for (offset=0; buffer[offset]; offset++) {
+        if (buffer[offset] >= '0' && buffer[offset] <= '9') {
+            result = 1.0*(10*result + buffer[offset] - '0');
+        }
+        if (buffer[offset] == '.') {
+            decimal_places = 0;
+        }
+        decimal_places++;
     }
-    buffer += i;
+    return result / emb_pow(10.0, decimal_places);
 }
 
 /* Replacing the %d in *printf functionality.
  *
  * Accounts for the sign of the 
  */
-static void embIntToArray(char* buffer, int number, int maxDigits)
+static void emb_int_to_array(char* buffer, int number, int maxDigits)
 {
     int i, j, sign;
     unsigned int unumber;
@@ -1510,13 +1524,13 @@ static void embIntToArray(char* buffer, int number, int maxDigits)
 static void writeInt(EmbFile file, int n, int m)
 {
     char buffer[30];
-    embIntToArray(buffer, n, m);
+    emb_int_to_array(buffer, n, m);
     embFile_print(file, buffer);
 }
 
 /* Replacing the %f in *printf functionality.
  */
-static void embFloatToArray(char* buffer, float number, float tolerance, int before, int after)
+static void emb_float_to_array(char* buffer, float number, float tolerance, int before, int after)
 {
     int i, maxDigits, j;
     float t;
@@ -4337,7 +4351,11 @@ EmbFile embFile_tmpfile(void)
 #ifdef ARDUINO
     return inoFile_tmpfile();
 #else
+#ifdef linux
+    return open("/tmp/libembroidery.bin", O_RDWR);
+#else
     return tmpfile();
+#endif
 #endif
 }
 
@@ -4968,7 +4986,7 @@ static char readCol(EmbPattern* pattern, EmbFile file, const char* fileName)
     pattern->thread_count = 0;
 
     embFile_readline(file, line, 30);
-    nColors = atoi(line);
+    nColors = emb_array_to_int(line);
     if (nColors < 1) {
         embLog("ERROR: Number of colors is zero.");
         return 0;
@@ -5201,27 +5219,19 @@ static char csvStrToStitchFlag(const char* str)
 
 static char readCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
-    int numColorChanges = 0;
-    int size = 1024;
-    int pos = 0;
-    int c = 0;
-    int cellNum = 0;
-    int process = 0;
-    int csvMode = CSV_MODE_NULL;
-    int expect = CSV_EXPECT_QUOTE1;
-    int flags = 0;
-    float xx = 0.0;
-    float yy = 0.0;
+    int numColorChanges, pos, cellNum, process, csvMode, expect, flags;
+    float xx, yy;
     unsigned char r = 0, g = 0, b = 0;
-    char* buff = 0;
+    char c;
+    char* buff = (char*)embBuffer;
 
-    buff = (char*)malloc(size);
-    if (!buff) {
-        print_log_string(read_csv_error_0);
-        return 0;
-    }
-
+    numColorChanges = 0;
     pos = 0;
+    cellNum = 0;
+    process = 0;
+    csvMode = CSV_MODE_NULL;
+    expect = CSV_EXPECT_QUOTE1;
+    flags = 0;
     while (embFile_read(&c, 1, 1, file)) {
         switch (c) {
         case '"':
@@ -5246,14 +5256,6 @@ static char readCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
             }
             break;
         }
-        if (pos >= size - 1) {
-            size *= 2;
-            buff = (char*)realloc(buff, size);
-            if (!buff) {
-                print_log_string(read_csv_error_2);
-                return 0;
-            }
-        }
 
         if (process) {
             buff[pos] = 0;
@@ -5262,30 +5264,18 @@ static char readCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
             cellNum++;
             expect = CSV_EXPECT_QUOTE1;
             if (csvMode == CSV_MODE_NULL) {
-                if (string_equal(buff, "#")) {
-                    csvMode = CSV_MODE_COMMENT;
-                } else if (string_equal(buff, ">")) {
-                    csvMode = CSV_MODE_VARIABLE;
-                } else if (string_equal(buff, "$")) {
-                    csvMode = CSV_MODE_THREAD;
-                } else if (string_equal(buff, "*")) {
-                    csvMode = CSV_MODE_STITCH;
-                } else { /* TODO: error */
-                    return 0;
-                }
-            } else if (csvMode == CSV_MODE_COMMENT) {
-                /* Do Nothing */
+                csvMode = buff[0];
             } else if (csvMode == CSV_MODE_VARIABLE) {
                 /* Do Nothing */
             } else if (csvMode == CSV_MODE_THREAD) {
                 if (cellNum == 2) {
                     /* Do Nothing. Ignore Thread Number */
                 } else if (cellNum == 3)
-                    r = (unsigned char)atoi(buff);
+                    r = (unsigned char)emb_array_to_int(buff);
                 else if (cellNum == 4)
-                    g = (unsigned char)atoi(buff);
+                    g = (unsigned char)emb_array_to_int(buff);
                 else if (cellNum == 5)
-                    b = (unsigned char)atoi(buff);
+                    b = (unsigned char)emb_array_to_int(buff);
                 else if (cellNum == 6) {
                     /* TODO: Thread Description */
                 } else if (cellNum == 7) {
@@ -5309,10 +5299,10 @@ static char readCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
                     flags = csvStrToStitchFlag(buff);
                     if (flags == STOP)
                         numColorChanges++;
-                } else if (cellNum == 3)
-                    xx = atof(buff);
-                else if (cellNum == 4) {
-                    yy = atof(buff);
+                } else if (cellNum == 3) {
+                    xx = emb_array_to_float(buff);
+                } else if (cellNum == 4) {
+                    yy = emb_array_to_float(buff);
                     embPattern_addStitchAbs(pattern, xx, yy, flags, 1);
                     csvMode = CSV_MODE_NULL;
                     cellNum = 0;
@@ -5328,7 +5318,7 @@ static char readCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
             }
         } else {
             if (expect == CSV_EXPECT_QUOTE2 && c != '"')
-                buff[pos++] = (char)c;
+                buff[pos++] = c;
         }
     }
 
@@ -5336,8 +5326,6 @@ static char readCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
     while (pattern->thread_count < numColorChanges) {
         embPattern_addThread(pattern, embThread_getRandom());
     }
-
-    free(buff);
 
     return 1;
 }
@@ -5924,7 +5912,7 @@ static char readDxf(EmbPattern* pattern, EmbFile file, const char* fileName)
                     embFile_readline(file, buffer, 1000);
                     /*
                     TODO: finish this
-                    unsigned char colorNum = atoi(buff);
+                    unsigned char colorNum = emb_array_to_int(buff);
                     EmbColor co;
                     read _dxfColorTable
                     co.r = embBuffer[3*colorNum+0];
@@ -5988,16 +5976,16 @@ static char readDxf(EmbPattern* pattern, EmbFile file, const char* fileName)
                 else if (string_equal(embBuffer, "42")) /* Bulge */
                 {
                     embFile_readline(file, embBuffer, 1000);
-                    bulge = atof(embBuffer);
+                    bulge = emb_array_to_float(embBuffer);
                     bulgeFlag = 1;
                 } else if (string_equal(embBuffer, "10")) /* X */
                 {
                     embFile_readline(file, (char*)embBuffer, 1000);
-                    x = atof(embBuffer);
+                    x = emb_array_to_float(embBuffer);
                 } else if (string_equal(embBuffer, "20")) /* Y */
                 {
                     embFile_readline(file, (char*)embBuffer, 1000);
-                    y = atof(embBuffer);
+                    y = emb_array_to_float(embBuffer);
 
                     if (bulgeFlag) {
                         EmbArc arc;
@@ -8216,7 +8204,7 @@ static char readPes(EmbPattern* pattern, EmbFile file, const char* fileName)
     return 1;
 }
 
-static const char pesVersionTable[16][9] = {
+static const char *pesVersionTable[] = {
     "#PES0100",
     "#PES0090",
     "#PES0080",
@@ -8918,7 +8906,7 @@ static char readSew(EmbPattern* pattern, EmbFile file, const char* fileName)
         }
         dx = sewDecode(b0);
         dy = sewDecode(b1);
-        if (abs(dx) == 127 || abs(dy) == 127) {
+        if (emb_abs(dx) == 127 || emb_abs(dy) == 127) {
             thisStitchIsJump = 1;
             flags = TRIM;
         }
@@ -9735,7 +9723,7 @@ bit definitions for attributes of stitch
 static char readThr(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     ThredHeader header;
-    EmbColor c;
+    /* EmbColor c; */
     EmbThread thread;
     int currentColor, i;
 
@@ -9778,7 +9766,7 @@ static char readThr(EmbPattern* pattern, EmbFile file, const char* fileName)
     embFile_seek(file, 16, SEEK_CUR); /* skip bitmap name (16 chars) */
 
     embFile_read(embBuffer, 1, 4, file);
-    c = embColor_fromStr(embBuffer);
+    /* background color: c = embColor_fromStr(embBuffer); */
 
     string_copy(thread.description, "NULL");
     string_copy(thread.catalogNumber, "NULL");
@@ -11161,14 +11149,14 @@ EmbColor svgColorToEmbColor(char* colorStr)
         c = embColor_fromHexStr(colorStr);
     } else if (percent) {
         /* Float functional - rgb(R%, G%, B%), by now it is stored in r, g and b */
-        c.r = (unsigned char)roundDouble(255.0 / 100.0 * atof(r));
-        c.g = (unsigned char)roundDouble(255.0 / 100.0 * atof(g));
-        c.b = (unsigned char)roundDouble(255.0 / 100.0 * atof(b));
+        c.r = (unsigned char)roundDouble(255.0 / 100.0 * emb_array_to_float((char*)r));
+        c.g = (unsigned char)roundDouble(255.0 / 100.0 * emb_array_to_float((char*)g));
+        c.b = (unsigned char)roundDouble(255.0 / 100.0 * emb_array_to_float((char*)b));
     } else if (intfunc) {
         /* Integer functional - rgb(rrr, ggg, bbb), by now it is stored in r, g and b. */
-        c.r = (unsigned char)atoi(r);
-        c.g = (unsigned char)atoi(g);
-        c.b = (unsigned char)atoi(b);
+        c.r = (unsigned char)emb_array_to_int((char*)r);
+        c.g = (unsigned char)emb_array_to_int((char*)g);
+        c.b = (unsigned char)emb_array_to_int((char*)b);
     } else {
         /* Color keyword */
         int tableColor = threadColor(&c, colorStr, SVG_Colors);
@@ -11356,9 +11344,9 @@ void svgAddToPattern(EmbPattern* p)
     case ELEMENT_CIRCLE:
         {
         float cx, cy, r;
-        cx = atof(svgAttribute_getValue(currentElement, "cx"));
-        cy = atof(svgAttribute_getValue(currentElement, "cy"));
-        r = atof(svgAttribute_getValue(currentElement, "r"));
+        cx = emb_array_to_float(svgAttribute_getValue(currentElement, "cx"));
+        cy = emb_array_to_float(svgAttribute_getValue(currentElement, "cy"));
+        r = emb_array_to_float(svgAttribute_getValue(currentElement, "r"));
         embPattern_addCircleObjectAbs(p, cx, cy, r);
         }
         break;
@@ -11369,10 +11357,10 @@ void svgAddToPattern(EmbPattern* p)
     case ELEMENT_ELLIPSE:
         {
         float cx, cy, rx, ry;
-        cx = atof(svgAttribute_getValue(currentElement, "cx"));
-        cy = atof(svgAttribute_getValue(currentElement, "cy"));
-        rx = atof(svgAttribute_getValue(currentElement, "rx"));
-        ry = atof(svgAttribute_getValue(currentElement, "ry"));
+        cx = emb_array_to_float(svgAttribute_getValue(currentElement, "cx"));
+        cy = emb_array_to_float(svgAttribute_getValue(currentElement, "cy"));
+        rx = emb_array_to_float(svgAttribute_getValue(currentElement, "rx"));
+        ry = emb_array_to_float(svgAttribute_getValue(currentElement, "ry"));
         embPattern_addEllipseObjectAbs(p, cx, cy, rx, ry);
         }
         break;
@@ -11396,10 +11384,10 @@ void svgAddToPattern(EmbPattern* p)
 
         /* If the starting and ending points are the same, it is a point */
         if (string_equal(x1, x2) && string_equal(y1, y2)) {
-            embPattern_addPointObjectAbs(p, atof(x1), atof(y1));
+            embPattern_addPointObjectAbs(p, emb_array_to_float(x1), emb_array_to_float(y1));
         }
         else {
-            embPattern_addLineObjectAbs(p, atof(x1), atof(y1), atof(x2), atof(y2));
+            embPattern_addLineObjectAbs(p, emb_array_to_float(x1), emb_array_to_float(y1), emb_array_to_float(x2), emb_array_to_float(y2));
         }
         }
         break;
@@ -11477,7 +11465,7 @@ void svgAddToPattern(EmbPattern* p)
                     pos = 0;
                     embLog("    ,val:"); 
                     embLog(pathbuff);
-                    pathData[++trip] = atof(pathbuff);
+                    pathData[++trip] = emb_array_to_float(pathbuff);
                 }
                 break;
 
@@ -11488,7 +11476,7 @@ void svgAddToPattern(EmbPattern* p)
                     pos = 0;
                     embLog("    -val:"); 
                     embLog(pathbuff);
-                    pathData[++trip] = atof(pathbuff);
+                    pathData[++trip] = emb_array_to_float(pathbuff);
                 }
                 pathbuff[pos++] = (char)c; /* add a more char */
                 break;
@@ -11501,7 +11489,7 @@ void svgAddToPattern(EmbPattern* p)
                     pos = 0;
                     embLog("    >val:"); 
                     embLog(pathbuff);
-                    pathData[++trip] = atof(pathbuff);
+                    pathData[++trip] = emb_array_to_float(pathbuff);
                 }
 
                 /**** Compose Point List ****/
@@ -11704,11 +11692,11 @@ void svgAddToPattern(EmbPattern* p)
                 /*Compose Point List */
                 if (odd) {
                     odd = 0;
-                    xx = atof(polybuff);
+                    xx = emb_array_to_float(polybuff);
                 } else {
                     EmbVector a;
                     odd = 1;
-                    yy = atof(polybuff);
+                    yy = emb_array_to_float(polybuff);
 
                     if (!pointList) {
                         pointList = embArray_create(EMB_POINT);
@@ -11757,10 +11745,10 @@ void svgAddToPattern(EmbPattern* p)
     case ELEMENT_RECT:
         {
         float x1, y1, width, height;
-        x1 = atof(svgAttribute_getValue(currentElement, "x"));
-        y1 = atof(svgAttribute_getValue(currentElement, "y"));
-        width = atof(svgAttribute_getValue(currentElement, "width"));
-        height = atof(svgAttribute_getValue(currentElement, "height"));
+        x1 = emb_array_to_float(svgAttribute_getValue(currentElement, "x"));
+        y1 = emb_array_to_float(svgAttribute_getValue(currentElement, "y"));
+        width = emb_array_to_float(svgAttribute_getValue(currentElement, "width"));
+        height = emb_array_to_float(svgAttribute_getValue(currentElement, "height"));
         embPattern_addRectObjectAbs(p, x1, y1, width, height);
         }
         break;

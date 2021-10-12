@@ -171,6 +171,7 @@ static void writePecStitches(EmbPattern* pattern, EmbFile file, const char* file
 
 static char string_in_table(const char *buff, int table);
 static EmbThread load_thread(int, int);
+static EmbArc pattern_arc(EmbPattern *p, int index);
 static EmbThread pattern_thread(EmbPattern *p, int index);
 static EmbStitch pattern_stitch(EmbPattern *p, int index);
 
@@ -868,26 +869,8 @@ EmbArray* embArray_create(int type)
     memory[p->file_id] = embFile_open(fname, "wb+", 0);
 
     switch (p->type) {
-    case EMB_ARC:
-        p->arc = (EmbArc*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbArc));
-        break;
-    case EMB_CIRCLE:
-        p->circle = (EmbCircle*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbCircle));
-        break;
-    case EMB_ELLIPSE:
-        p->ellipse = (EmbEllipse*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbEllipse));
-        break;
-    case EMB_FLAG:
-        p->flag = (int*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(int));
-        break;
     case EMB_PATH:
         p->path = (EmbPathObject**)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbPathObject*));
-        break;
-    case EMB_POINT:
-        p->point = (EmbVector*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbVector));
-        break;
-    case EMB_LINE:
-        p->line = (EmbLine*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbLine));
         break;
     case EMB_POLYGON:
         p->polygon = (EmbPolygonObject**)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbPolygonObject*));
@@ -895,108 +878,75 @@ EmbArray* embArray_create(int type)
     case EMB_POLYLINE:
         p->polyline = (EmbPolylineObject**)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbPolylineObject*));
         break;
-    case EMB_RECT:
-        p->rect = (EmbRect*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbRect));
-        break;
-    case EMB_SPLINE:
-        p->spline = (EmbSplineObject*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbSplineObject));
-        break;
-    case EMB_STITCH:
-        p->stitch = (EmbStitch*)malloc(STITCH_MAXIMUM * sizeof(EmbStitch));
-        break;
-    case EMB_VECTOR:
-        p->vector = (EmbVector*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbVector));
-        break;
-    default:
-        break;
-    }
-    switch (p->type) {
-    case EMB_ARC:
-    case EMB_CIRCLE:
-    case EMB_POINT:
-    case EMB_LINE:
-    case EMB_RECT:
-        p->color = (EmbColor*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbColor));
-        if (!p->color)
-            return 0;
-        p->flag = (int*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(int));
-        if (!p->flag)
-            return 0;
-        break;
-    case EMB_ELLIPSE:
-        p->color = (EmbColor*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbColor));
-        if (!p->color)
-            return 0;
-        p->flag = (int*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(int));
-        if (!p->flag)
-            return 0;
-        p->floats = (float*)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(float));
-        if (!p->floats)
-            return 0;
-        break;
     default:
         break;
     }
     return p;
 }
 
+int embArray_add(EmbArray *p, void *data);
+int embArray_get(EmbArray *p, void *data, int i);
+int embArray_set(EmbArray *p, void *data, int i);
+
+int embArray_add(EmbArray *p, void *data)
+{
+    embFile_seek(memory[p->file_id], p->length*p->size, SEEK_SET);
+    embFile_write(data, p->size, 1, memory[p->file_id]);
+    p->length++;
+    return 1;    
+}
+
+int embArray_get(EmbArray *p, void *data, int i)
+{
+    embFile_seek(memory[p->file_id], i*p->size, SEEK_SET);
+    embFile_read(data, p->size, 1, memory[p->file_id]);
+    return 1;    
+}
+
+int embArray_set(EmbArray *p, void *data, int i)
+{
+    embFile_seek(memory[p->file_id], i*p->size, SEEK_SET);
+    embFile_write(data, p->size, 1, memory[p->file_id]);
+    return 1;    
+}
+
 int embArray_addArc(EmbArray* p, EmbArc arc, int lineType, EmbColor color)
 {
-    p->length++;
-    if (p->length >= GEOMETRY_ARRAY_MAXIMUM) {
-        return 0;
-    }
-    p->arc[p->length - 1] = arc;
-    p->flag[p->length - 1] = lineType;
-    p->color[p->length - 1] = color;
+    arc.lineType = lineType;
+    arc.color = color;
+    embArray_add(p, &arc);
     return 1;
 }
 
 int embArray_addCircle(EmbArray* p, EmbCircle circle, int lineType, EmbColor color)
 {
-    p->length++;
-    if (p->length >= GEOMETRY_ARRAY_MAXIMUM) {
-        return 0;
-    }
-    p->circle[p->length - 1] = circle;
-    p->flag[p->length - 1] = lineType;
-    p->color[p->length - 1] = color;
+    circle.lineType = lineType;
+    circle.color = color;
+    embArray_add(p, &circle);
     return 1;
 }
 
 int embArray_addEllipse(EmbArray* p,
     EmbEllipse ellipse, float rotation, int lineType, EmbColor color)
 {
-    p->length++;
-    if (p->length >= GEOMETRY_ARRAY_MAXIMUM) {
-        return 0;
-    }
-    p->ellipse[p->length - 1] = ellipse;
-    p->floats[p->length - 1] = rotation;
-    p->flag[p->length - 1] = lineType;
-    p->color[p->length - 1] = color;
+    ellipse.rotation = rotation;
+    ellipse.lineType = lineType;
+    ellipse.color = color;
+    embArray_add(p, &ellipse);
     return 1;
 }
 
 int embArray_addFlag(EmbArray* p, int flag)
 {
-    p->length++;
-    if (p->length >= GEOMETRY_ARRAY_MAXIMUM) {
-        return 0;
-    }
-    p->flag[p->length - 1] = flag;
+    embArray_add(p, &flag);
     return 1;
 }
 
 int embArray_addLine(EmbArray* p, EmbLine line, int lineType, EmbColor color)
 {
-    p->length++;
-    if (p->length >= GEOMETRY_ARRAY_MAXIMUM) {
-        return 0;
-    }
-    p->line[p->length - 1] = line;
-    p->flag[p->length - 1] = lineType;
-    p->color[p->length - 1] = color;
+    line.lineType = lineType;
+    line.color = color;
+    embArray_add(p, &line);
     return 1;
 }
 
@@ -1017,13 +967,13 @@ int embArray_addPath(EmbArray* p, EmbPathObject* path)
 
 int embArray_addPoint(EmbArray* p, EmbVector point, int lineType, EmbColor color)
 {
-    p->length++;
-    if (p->length >= GEOMETRY_ARRAY_MAXIMUM) {
-        return 0;
-    }
-    p->point[p->length - 1] = point;
-    p->flag[p->length - 1] = lineType;
-    p->color[p->length - 1] = color;
+    /* TODO: lineType, color in EmbPointObject */
+    EmbPointObject po;
+    po.x = point.x;
+    po.y = point.y;
+    po.lineType = lineType;
+    po.color = color;
+    embArray_add(p, &po);
     return 1;
 }
 
@@ -1060,33 +1010,21 @@ int embArray_addPolyline(EmbArray* p, EmbPolylineObject* polyline)
 int embArray_addRect(EmbArray* p,
     EmbRect rect, int lineType, EmbColor color)
 {
-    p->length++;
-    if (p->length >= GEOMETRY_ARRAY_MAXIMUM) {
-        return 0;
-    }
-    p->rect[p->length - 1] = rect;
-    p->flag[p->length - 1] = lineType;
-    p->color[p->length - 1] = color;
+    rect.lineType = lineType;
+    rect.color = color;
+    embArray_add(p, &rect);
     return 1;
 }
 
 int embArray_addStitch(EmbArray* p, EmbStitch st)
 {
-    p->length++;
-    if (p->length >= STITCH_MAXIMUM) {
-        return 0;
-    }
-    p->stitch[p->length - 1] = st;
+    embArray_add(p, &st);
     return 1;
 }
 
 int embArray_addVector(EmbArray* p, EmbVector vector)
 {
-    p->length++;
-    if (p->length >= GEOMETRY_ARRAY_MAXIMUM) {
-        return 0;
-    }
-    p->vector[p->length - 1] = vector;
+    embArray_add(p, &vector);
     return 1;
 }
 
@@ -1097,29 +1035,11 @@ void embArray_free(EmbArray* p)
         return;
 
     switch (p->type) {
-    case EMB_ARC:
-        free(p->arc);
-        break;
-    case EMB_CIRCLE:
-        free(p->circle);
-        break;
-    case EMB_ELLIPSE:
-        free(p->ellipse);
-        break;
-    case EMB_FLAG:
-        free(p->flag);
-        break;
-    case EMB_LINE:
-        free(p->line);
-        break;
     case EMB_PATH:
         for (i = 0; i < p->length; i++) {
             embArray_free(p->path[i]->pointList);
         }
         free(p->path);
-        break;
-    case EMB_POINT:
-        free(p->point);
         break;
     case EMB_POLYGON:
         for (i = 0; i < p->length; i++) {
@@ -1133,34 +1053,6 @@ void embArray_free(EmbArray* p)
         }
         free(p->polyline);
         break;
-    case EMB_RECT:
-        free(p->rect);
-        break;
-    case EMB_SPLINE:
-        free(p->spline);
-        break;
-    case EMB_STITCH:
-        free(p->stitch);
-        break;
-    case EMB_VECTOR:
-        free(p->vector);
-        break;
-    default:
-        break;
-    }
-    switch (p->type) {
-    case EMB_ARC:
-    case EMB_CIRCLE:
-    case EMB_POINT:
-    case EMB_LINE:
-    case EMB_RECT:
-        free(p->color);
-        free(p->flag);
-        break;
-    case EMB_ELLIPSE:
-        free(p->color);
-        free(p->flag);
-        free(p->floats);
     default:
         break;
     }
@@ -2034,7 +1926,7 @@ float embVector_distance(EmbVector v1, EmbVector v2)
  *      (1 0) (a) = (xa)
  * (x y)(0 1) (b)   (yb)
  */
-void embVector_transposeProduct(EmbVector v1, EmbVector v2, EmbVector* result)
+void embVector_component_product(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
         embLog("ERROR: embVector_transpose_product(), result==0\n");
@@ -2076,7 +1968,7 @@ EmbPattern* embPattern_create(void)
     p->currentColorIndex = 0;
     p->stitchList = embArray_create(EMB_STITCH);
     p->threads = embArray_create(EMB_THREAD);
-    p->thread_count = 0;
+    p->threads->length = 0;
     p->hoop.height = 0.0;
     p->hoop.width = 0.0;
     p->arcs = 0;
@@ -2116,21 +2008,20 @@ void embPattern_hideStitchesOverLength(EmbPattern* p, int length)
     prevX = 0;
     prevY = 0;
     for (i = 0; i < p->stitchList->length; i++) {
-        st = p->stitchList->stitch[i];
+        embArray_get(p->stitchList, &st, i);
         if ((emb_fabs(st.x - prevX) > length) || (emb_fabs(st.y - prevY) > length)) {
             st.flags |= TRIM;
             st.flags &= ~NORMAL;
         }
         prevX = st.x;
         prevY = st.y;
+        embArray_set(p->stitchList, &st, i);
     }
 }
 
 int embPattern_addThread(EmbPattern* p, EmbThread thread)
 {
-    p->thread_count++;
-    embFile_seek(memory[p->threads->file_id], (p->thread_count-1)*sizeof(EmbThread), SEEK_SET);
-    embFile_write(&thread, sizeof(EmbThread), 1, memory[p->threads->file_id]);
+    embArray_add(p->threads, &thread);
     return 1;
 }
 
@@ -2144,9 +2035,11 @@ void embPattern_fixColorCount(EmbPattern* p)
         return;
     }
     for (i = 0; i < p->stitchList->length; i++) {
-        maxColorIndex = emb_max_int(maxColorIndex, p->stitchList->stitch[i].color);
+        EmbStitch st;
+        embArray_get(p->stitchList, &st, i);
+        maxColorIndex = emb_max_int(maxColorIndex, st.color);
     }
-    while (p->thread_count <= maxColorIndex) {
+    while (p->threads->length <= maxColorIndex) {
         embPattern_addThread(p, embThread_getRandom());
     }
     /*
@@ -2175,7 +2068,7 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
         EmbColor color;
         pointList = 0;
         for (i = 0; i < p->stitchList->length; i++) {
-            st = p->stitchList->stitch[i];
+            embArray_get(p->stitchList, &st, i);
             if (st.flags & breakAtFlags) {
                 break;
             }
@@ -2247,14 +2140,18 @@ void embPattern_copyPolylinesToStitchList(EmbPattern* p)
         string_copy(thread.description, "NULL");
         embPattern_addThread(p, thread);
 
+        EmbVector v;
         if (!firstObject) {
-            embPattern_addStitchAbs(p, currentPointList->point[0].x, currentPointList->point[0].y, TRIM, 1);
+            embArray_get(currentPointList, &v, 0);
+            embPattern_addStitchAbs(p, v.x, v.y, TRIM, 1);
             embPattern_addStitchRel(p, 0.0, 0.0, STOP, 1);
         }
 
-        embPattern_addStitchAbs(p, currentPointList->point[0].x, currentPointList->point[0].y, JUMP, 1);
+        embArray_get(currentPointList, &v, 0);
+        embPattern_addStitchAbs(p, v.x, v.y, JUMP, 1);
         for (j = 1; j < currentPointList->length; j++) {
-            embPattern_addStitchAbs(p, currentPointList->point[j].x, currentPointList->point[j].y, NORMAL, 1);
+            embArray_get(currentPointList, &v, j);
+            embPattern_addStitchAbs(p, v.x, v.y, NORMAL, 1);
         }
         firstObject = 0;
     }
@@ -2299,7 +2196,8 @@ void embPattern_addStitchAbs(EmbPattern* p, float x, float y, int flags, int isA
             return;
         }
         /* Prevent unnecessary multiple END stitches */
-        if (p->stitchList->stitch[p->stitchList->length - 1].flags & END) {
+        embArray_get(p->stitchList, &s, p->stitchList->length - 1);
+        if (s.flags & END) {
             embLog("ERROR: embPattern_addStitchAbs(), found multiple END stitches\n");
             return;
         }
@@ -2414,8 +2312,11 @@ void embPattern_scale(EmbPattern* p, float scale)
     }
 
     for (i = 0; i < p->stitchList->length; i++) {
-        p->stitchList->stitch[i].x *= scale;
-        p->stitchList->stitch[i].y *= scale;
+        EmbStitch st;
+        embArray_get(p->stitchList, &st, i);
+        st.x *= scale;
+        st.y *= scale;
+        embArray_set(p->stitchList, &st, i);
     }
 }
 
@@ -2455,7 +2356,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     for (i = 0; i < p->stitchList->length; i++) {
         /* If the point lies outside of the accumulated bounding
         * rectangle, then inflate the bounding rect to include it. */
-        pt = p->stitchList->stitch[i];
+        embArray_get(p->stitchList, &pt, i);
         if (!(pt.flags & TRIM)) {
             boundingRect.left = emb_min_float(boundingRect.left, pt.x);
             boundingRect.top = emb_min_float(boundingRect.top, pt.y);
@@ -2467,7 +2368,8 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     if (p->arcs) {
         /* TODO: embPattern_calcBoundingBox for arcs, for now just checks the start point */
         for (i = 0; i < p->arcs->length; i++) {
-            EmbArc arc = p->arcs->arc[i];
+            EmbArc arc;
+            embArray_get(p->arcs, &arc, i);
             boundingRect.left = emb_min_float(boundingRect.left, arc.start.x);
             boundingRect.top = emb_min_float(boundingRect.top, arc.start.y);
             boundingRect.right = emb_max_float(boundingRect.right, arc.start.x);
@@ -2477,7 +2379,8 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->circles) {
         for (i = 0; i < p->circles->length; i++) {
-            EmbCircle circle = p->circles->circle[i];
+            EmbCircle circle;
+            embArray_get(p->circles, &circle, i);
             boundingRect.left = emb_min_float(boundingRect.left, circle.center.x - circle.radius);
             boundingRect.top = emb_min_float(boundingRect.top, circle.center.y - circle.radius);
             boundingRect.right = emb_max_float(boundingRect.right, circle.center.x + circle.radius);
@@ -2488,7 +2391,8 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     if (p->ellipses) {
         for (i = 0; i < p->ellipses->length; i++) {
             /* TODO: account for rotation */
-            EmbEllipse ellipse = p->ellipses->ellipse[i];
+            EmbEllipse ellipse;
+            embArray_get(p->ellipses, &ellipse, i);
             boundingRect.left = emb_min_float(boundingRect.left, ellipse.center.x - ellipse.radius.x);
             boundingRect.top = emb_min_float(boundingRect.top, ellipse.center.y - ellipse.radius.y);
             boundingRect.right = emb_max_float(boundingRect.right, ellipse.center.x + ellipse.radius.x);
@@ -2498,7 +2402,8 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->lines) {
         for (i = 0; i < p->lines->length; i++) {
-            EmbLine line = p->lines->line[i];
+            EmbLine line;
+            embArray_get(p->lines, &line, i);
             boundingRect.left = emb_min_float(boundingRect.left, emb_min_float(line.start.x, line.end.x));
             boundingRect.top = emb_min_float(boundingRect.top, emb_min_float(line.start.y, line.end.y));
             boundingRect.right = emb_max_float(boundingRect.right, emb_max_float(line.start.x, line.end.x));
@@ -2508,7 +2413,8 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->points) {
         for (i = 0; i < p->points->length; i++) {
-            EmbVector point = p->points->point[i];
+            EmbPointObject point;
+            embArray_get(p->points, &point, i);
             boundingRect.left = emb_min_float(boundingRect.left, point.x);
             boundingRect.top = emb_min_float(boundingRect.top, point.y);
             boundingRect.right = emb_max_float(boundingRect.right, point.x);
@@ -2521,10 +2427,12 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
             EmbArray* polygon;
             polygon = p->polygons->polygon[i]->pointList;
             for (j = 0; j < polygon->length; j++) {
-                boundingRect.left = emb_min_float(boundingRect.left, polygon[i].vector[j].x);
-                boundingRect.top = emb_min_float(boundingRect.top, polygon[i].vector[j].y);
-                boundingRect.right = emb_max_float(boundingRect.right, polygon[i].vector[j].x);
-                boundingRect.bottom = emb_max_float(boundingRect.bottom, polygon[i].vector[j].y);
+                EmbVector v;
+                embArray_get(polygon, &v, j);
+                boundingRect.left = emb_min_float(boundingRect.left, v.x);
+                boundingRect.top = emb_min_float(boundingRect.top, v.y);
+                boundingRect.right = emb_max_float(boundingRect.right, v.x);
+                boundingRect.bottom = emb_max_float(boundingRect.bottom, v.y);
             }
         }
     }
@@ -2534,17 +2442,20 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
             EmbArray* polyline;
             polyline = p->polylines->polyline[i]->pointList;
             for (j = 0; j < polyline->length; j++) {
-                boundingRect.left = emb_min_float(boundingRect.left, polyline[i].vector[j].x);
-                boundingRect.top = emb_min_float(boundingRect.top, polyline[i].vector[j].y);
-                boundingRect.right = emb_max_float(boundingRect.right, polyline[i].vector[j].x);
-                boundingRect.bottom = emb_max_float(boundingRect.bottom, polyline[i].vector[j].y);
+                EmbVector v;
+                embArray_get(polyline, &v, j);
+                boundingRect.left = emb_min_float(boundingRect.left, v.x);
+                boundingRect.top = emb_min_float(boundingRect.top, v.y);
+                boundingRect.right = emb_max_float(boundingRect.right, v.x);
+                boundingRect.bottom = emb_max_float(boundingRect.bottom, v.y);
             }
         }
     }
 
     if (p->rects) {
         for (i = 0; i < p->rects->length; i++) {
-            EmbRect rect = p->rects->rect[i];
+            EmbRect rect;
+            embArray_get(p->rects, &rect, i);
             /* TODO: other points */
             boundingRect.left = emb_min_float(boundingRect.left, rect.left);
             boundingRect.top = emb_min_float(boundingRect.top, rect.left);
@@ -2555,7 +2466,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->splines) {
         for (i = 0; i < p->splines->length; i++) {
-            bezier = p->splines->spline[i].bezier;
+            embArray_get(p->splines, &bezier, i);
             /* TODO: other points */
             boundingRect.left = emb_min_float(boundingRect.left, bezier.start.x);
             boundingRect.top = emb_min_float(boundingRect.top, bezier.start.y);
@@ -2592,14 +2503,13 @@ void embPattern_flipVertical(EmbPattern* p)
 void embPattern_flip(EmbPattern* p, int horz, int vert)
 {
     int i, j;
-    /* EmbVector flip; */
+    EmbVector flip;
 
     if (!p) {
         embLog("ERROR: embPattern_flip(), p==0\n");
         return;
     }
 
-    /*
     flip.x = 1.0;
     flip.y = 1.0;
     if (horz) {
@@ -2608,68 +2518,51 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
     if (vert) {
         flip.y = -1.0;
     }
-    
-    then use embVector_product
-    */
 
-    if (p->stitchList) {
-        for (i = 0; i < p->stitchList->length; i++) {
-            if (horz) {
-                p->stitchList->stitch[i].x *= -1.0;
-            }
-            if (vert) {
-                p->stitchList->stitch[i].y *= -1.0;
-            }
-        }
+    for (i = 0; i < p->stitchList->length; i++) {
+        EmbStitch st;
+        embArray_get(p->stitchList, &st, i);
+        st.x *= flip.x;
+        st.y *= flip.y;
+        embArray_get(p->stitchList, &st, i);
     }
 
     if (p->arcs) {
         for (i = 0; i < p->arcs->length; i++) {
-            if (horz) {
-                p->arcs->arc[i].start.x *= -1.0;
-                p->arcs->arc[i].mid.x *= -1.0;
-                p->arcs->arc[i].end.x *= -1.0;
-            }
-            if (vert) {
-                p->arcs->arc[i].start.y *= -1.0;
-                p->arcs->arc[i].mid.y *= -1.0;
-                p->arcs->arc[i].end.y *= -1.0;
-            }
+            EmbArc arc;
+            embArray_get(p->arcs, &arc, i);
+            embVector_component_product(arc.start, flip, &(arc.start));
+            embVector_component_product(arc.mid, flip, &(arc.mid));
+            embVector_component_product(arc.end, flip, &(arc.end));
+            embArray_set(p->arcs, &arc, i);
         }
     }
 
     if (p->circles) {
         for (i = 0; i < p->circles->length; i++) {
-            if (horz) {
-                p->circles->circle[i].center.x *= -1.0;
-            }
-            if (vert) {
-                p->circles->circle[i].center.y *= -1.0;
-            }
+            EmbCircle circle;
+            embArray_get(p->circles, &circle, i);
+            embVector_component_product(circle.center, flip, &(circle.center));
+            embArray_set(p->circles, &circle, i);
         }
     }
 
     if (p->ellipses) {
         for (i = 0; i < p->ellipses->length; i++) {
-            if (horz) {
-                p->ellipses->ellipse[i].center.x *= -1.0;
-            }
-            if (vert) {
-                p->ellipses->ellipse[i].center.y *= -1.0;
-            }
+            EmbEllipse ellipse;
+            embArray_get(p->ellipses, &ellipse, i);
+            embVector_component_product(ellipse.center, flip, &(ellipse.center));
+            embArray_set(p->ellipses, &ellipse, i);
         }
     }
 
     if (p->lines) {
         for (i = 0; i < p->lines->length; i++) {
-            if (horz) {
-                p->lines->line[i].start.x *= -1.0;
-                p->lines->line[i].end.x *= -1.0;
-            }
-            if (vert) {
-                p->lines->line[i].start.y *= -1.0;
-                p->lines->line[i].end.y *= -1.0;
-            }
+            EmbLine line;
+            embArray_get(p->lines, &line, j);
+            embVector_component_product(line.start, flip, &(line.start));
+            embVector_component_product(line.end, flip, &(line.end));
+            embArray_set(p->lines, &line, j);
         }
     }
 
@@ -2677,24 +2570,21 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
         for (i = 0; i < p->paths->length; i++) {
             EmbArray* path = p->paths->path[i]->pointList;
             for (j = 0; j < path->length; j++) {
-                if (horz) {
-                    path->point[j].x *= -1.0;
-                }
-                if (vert) {
-                    path->point[j].y *= -1.0;
-                }
+                EmbVector point;
+                embArray_get(path, &point, j);
+                embVector_component_product(point, flip, &point);
+                embArray_set(path, &point, j);
             }
         }
     }
 
     if (p->points) {
         for (i = 0; i < p->points->length; i++) {
-            if (horz) {
-                p->points->point[i].x *= -1.0;
-            }
-            if (vert) {
-                p->points->point[i].y *= -1.0;
-            }
+            EmbPointObject point;
+            embArray_get(p->points, &point, i);
+            point.x *= flip.x;
+            point.y *= flip.y;
+            embArray_set(p->points, &point, i);
         }
     }
 
@@ -2703,12 +2593,10 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
             EmbArray* polygon;
             polygon = p->polygons->polygon[i]->pointList;
             for (j = 0; j < polygon->length; j++) {
-                if (horz) {
-                    polygon->point[j].x *= -1.0;
-                }
-                if (vert) {
-                    polygon->point[j].y *= -1.0;
-                }
+                EmbVector point;
+                embArray_get(polygon, &point, j);
+                embVector_component_product(point, flip, &point);
+                embArray_set(polygon, &point, j);
             }
         }
     }
@@ -2718,26 +2606,23 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
             EmbArray* polyline;
             polyline = p->polylines->polygon[i]->pointList;
             for (j = 0; j < polyline->length; j++) {
-                if (horz) {
-                    polyline->point[j].x *= -1.0;
-                }
-                if (vert) {
-                    polyline->point[j].y *= -1.0;
-                }
+                EmbVector point;
+                embArray_get(polyline, &point, j);
+                embVector_component_product(point, flip, &point);
+                embArray_set(polyline, &point, j);
             }
         }
     }
 
     if (p->rects) {
         for (i = 0; i < p->rects->length; i++) {
-            if (horz) {
-                p->rects->rect[i].left *= -1.0;
-                p->rects->rect[i].right *= -1.0;
-            }
-            if (vert) {
-                p->rects->rect[i].top *= -1.0;
-                p->rects->rect[i].bottom *= -1.0;
-            }
+            EmbRect rect;
+            embArray_get(p->rects, &rect, j);
+            rect.left *= flip.x;
+            rect.right *= flip.x;
+            rect.top *= flip.y;
+            rect.bottom *= flip.y;
+            embArray_set(p->rects, &rect, j);
         }
     }
 
@@ -2762,8 +2647,8 @@ void embPattern_combineJumpStitches(EmbPattern* p)
 
     j = 0;
     for (i = 0; i < p->stitchList->length; i++) {
-        st = p->stitchList->stitch[i];
-        p->stitchList->stitch[j] = st;
+        embArray_get(p->stitchList, &st, i);
+        embArray_set(p->stitchList, &st, j);
         if (st.flags & JUMP) {
             if (jump == 0) {
                 j++;
@@ -2791,16 +2676,21 @@ void embPattern_correctForMaxStitchLength(EmbPattern* p, float maxStitchLength, 
         return;
     }
     if (p->stitchList->length > 1) {
+        EmbStitch stitch;
         newList = embArray_create(EMB_STITCH);
-        embArray_addStitch(newList, p->stitchList->stitch[0]);
+        embArray_get(p->stitchList, &stitch, 0);
+        embArray_addStitch(newList, stitch);
         for (i = 1; i < p->stitchList->length; i++) {
-            st.x = p->stitchList->stitch[i - 1].x;
-            st.y = p->stitchList->stitch[i - 1].y;
-            diff.x = p->stitchList->stitch[i].x - st.x;
-            diff.y = p->stitchList->stitch[i].y - st.y;
+            EmbStitch st1, st2;
+            embArray_get(p->stitchList, &st1, i - 1);
+            embArray_get(p->stitchList, &st2, i);
+            st.x = st1.x;
+            st.y = st1.y;
+            diff.x = st2.x - st.x;
+            diff.y = st2.y - st.y;
             maxXY = embVector_getLength(diff);
             if (maxXY > maxStitchLength) {
-                if (p->stitchList->stitch[i].flags & (JUMP | TRIM))
+                if (st2.flags & (JUMP | TRIM))
                     maxLen = maxJumpLength;
                 else
                     maxLen = maxStitchLength;
@@ -2812,14 +2702,14 @@ void embPattern_correctForMaxStitchLength(EmbPattern* p, float maxStitchLength, 
 
                     for (j = 1; j < splits; j++) {
                         EmbStitch s;
-                        s = p->stitchList->stitch[i - 1];
+                        s = st1;
                         s.x += add.x * j;
                         s.y += add.y * j;
                         embArray_addStitch(newList, s);
                     }
                 }
             }
-            embArray_addStitch(newList, p->stitchList->stitch[i]);
+            embArray_addStitch(newList, st2);
         }
         embArray_free(p->stitchList);
         p->stitchList = newList;
@@ -2843,9 +2733,10 @@ void embPattern_center(EmbPattern* p)
     moveTop = (int)(boundingRect.top - (embRect_height(boundingRect) / 2.0));
 
     for (i = 0; i < p->stitchList->length; i++) {
-        s = p->stitchList->stitch[i];
+        embArray_get(p->stitchList, &s, i);
         s.x -= moveLeft;
         s.y -= moveTop;
+        embArray_set(p->stitchList, &s, i);
     }
 }
 
@@ -3031,7 +2922,7 @@ static void embPattern_colorBlock16(EmbPattern *pattern, EmbFile file)
     /* write remaining colors to reach 16 */
     memory_set(embBuffer, 0, 16*4);
 
-    for (i = 0; i < pattern->thread_count; i++) {
+    for (i = 0; i < pattern->threads->length; i++) {
         EmbThread t;
         t = pattern_thread(pattern, i);
         embColor_toStr(t.color, embBuffer+4*i);
@@ -3060,25 +2951,20 @@ void embPattern_addRectObjectAbs(EmbPattern* p, float x, float y, float w, float
     embArray_addRect(p->rects, rect, 0, black);
 }
 
-/* TODO:
- * 1. Add tests for functions to embroider_main.c.
- * 2. Incorporate the last 4 functions #if 0'ed out.
- * 3. Add flags to trigger the use of these algorithms to embroider.
- */
-
 void embArray_resample(EmbArray *a, EmbArray *usePt)
 {
-    EmbArray *b;
-    int i;
-    b = embArray_create(a->type);
-    /* could support other types */
+    int i, j, flag;
+    j = 0;
     for (i=0; i<a->length; i++) {
-        if (usePt->flag[i]) {
-            embArray_addVector(b, a->vector[i]);
+        embArray_get(usePt, &flag, i);
+        if (flag) {
+            void *data;
+            embArray_get(a, data, i);
+            embArray_set(a, data, j);
+            j++;
         }
     }
-    embArray_free(a);
-    a = b;
+    a->length = j;
 }
 
 int embVector_collinear(EmbVector a1, EmbVector a2, EmbVector a3, float collinearity_tolerance)
@@ -3117,11 +3003,12 @@ float GetAngle(EmbVector a, EmbVector b)
 
 void embPattern_breakIntoColorBlocks(EmbPattern *pattern)
 {
-#if 0
     EmbColor color;
     int oldColor, i;
+    EmbArray *sa2;
+#if 0
     VectorStitch vs;
-    EmbArray *sa2 = new StitchBlock();
+    sa2 = new StitchBlock();
     oldColor = pattern.StitchList[0].ColorIndex;
     color = pattern.ColorList[oldColor];
     sa2.Thread = new Thread(color.Red, color.Blue, color.Green);
@@ -3143,9 +3030,9 @@ void embPattern_breakIntoColorBlocks(EmbPattern *pattern)
 
 int embPolygon_breakIntoSeparateObjects(EmbArray *blocks)
 {
-#if 0
     int i, j;
     float dx, dy, dy2, dy3;
+#if 0
     float previousAngle = 0.0;
     for (j=0; j<blocks->length; j++) {
         block = blocks[j];
@@ -3195,9 +3082,9 @@ int embPolygon_breakIntoSeparateObjects(EmbArray *blocks)
 
 int FindOutline(EmbArray *stitchData, EmbArray *result)
 {
-#if 0
     int currColorIndex = 0, oddEven, i;
     float dx, dy, dy2, dy3;
+#if 0
     EmbArray *pOdd = new List<Point>();
     EmbArray *pEven = new List<Point>();
     foreach (StitchBlock sa in stitchData) {
@@ -3309,13 +3196,13 @@ int DrawGraphics(EmbPattern p)
 
 int SimplifyOutline(EmbPattern *pattern, EmbPattern *patternOut)
 {
-#if 0
     int color;
+#if 0
     var v = new Vertices();
     v.AddRange(pattern.StitchList.Select(point => new Vector2(point.X, point.Y)));
     output = SimplifyTools.DouglasPeuckerSimplify(v, 10);
     patternOut = embPattern_create();
-    for (color=0; color<pattern->thread_count; color++) {
+    for (color=0; color<pattern->threads->length; color++) {
         
         embPattern_addThread(patternOut, pattern->threads->thread[color]);
     }
@@ -3348,20 +3235,19 @@ int embPolygon_collinearSimplify(EmbArray *vertices, float collinearityTolerance
     usePt = embArray_create(EMB_FLAG);
 
     for (i = 0; i < vertices->length; i++) {
+        int flag;
         prevId = (i-1+vertices->length) % vertices->length;
         nextId = (i+1) % vertices->length;
 
-        prev = vertices->vector[prevId];
-        current = vertices->vector[i];
-        next = vertices->vector[nextId];
+        embArray_get(vertices, &prev, prevId);
+        embArray_get(vertices, &current, i);
+        embArray_get(vertices, &next, nextId);
 
-        /* If they collinear, continue */
+        flag = 1;
         if (embVector_collinear(prev, current, next, collinearityTolerance)) {
-            embArray_addFlag(usePt, 0);
+            flag = 0;
         }
-        else {
-            embArray_addFlag(usePt, 1);
-        }
+        embArray_add(usePt, &flag);
     }
 
     embArray_resample(vertices, usePt);
@@ -3392,17 +3278,18 @@ int embPolygon_DouglasPeuckerSimplify(EmbArray *vertices, float distanceToleranc
 void embPolygon_simplifySection(EmbArray *vertices, EmbArray *_usePt, int i, int j, float distanceTolerance)
 {
     int k, maxIndex;
-    EmbVector a, b;
+    EmbVector a, b, c;
     float maxDistance, distance;
     if ((i + 1) == j)
         return;
 
-    a = vertices->vector[i];
-    b = vertices->vector[j];
+    embArray_get(vertices, &a, i);
+    embArray_get(vertices, &b, j);
     maxDistance = -1.0;
     maxIndex = i;
     for (k = i + 1; k < j; k++) {
-        distance = embVector_distancePointLine(vertices->vector[k], a, b);
+        embArray_get(vertices, &c, k);
+        distance = embVector_distancePointLine(c, a, b);
 
         if (distance > maxDistance) {
             maxDistance = distance;
@@ -3411,7 +3298,8 @@ void embPolygon_simplifySection(EmbArray *vertices, EmbArray *_usePt, int i, int
     }
     if (maxDistance <= distanceTolerance) {
         for (k = i + 1; k < j; k++) {
-            _usePt->flag[k] = 0;
+            int flag = 0;
+            embArray_set(_usePt, &flag, k);
         }
     }
     else {
@@ -3486,8 +3374,8 @@ int embPolygon_reduceByArea(EmbArray *vertices, EmbArray *result, float areaTole
     }
 
     result = embArray_create(EMB_VECTOR);
-    v1 = vertices->vector[vertices->length - 2];
-    v2 = vertices->vector[vertices->length - 1];
+    embArray_get(vertices, &v1, vertices->length - 2); 
+    embArray_get(vertices, &v2, vertices->length - 1); 
     areaTolerance *= 2;
     for (index = 0; index < vertices->length; ++index, v2 = v3) {
         if (index == vertices->length - 1) {
@@ -3495,10 +3383,10 @@ int embPolygon_reduceByArea(EmbArray *vertices, EmbArray *result, float areaTole
                 embLog("The areaTolerance is too high.");
                 return 0;
             }
-            v3 = result->vector[0];
+            embArray_get(vertices, &v3, 0); 
         }
         else {
-            v3 = vertices->vector[index];
+            embArray_get(vertices, &v3, index); 
         }
         old1 = embVector_cross(v1, v2);
         old2 = embVector_cross(v2, v3);
@@ -3518,7 +3406,7 @@ int embPolygon_reduceByArea(EmbArray *vertices, EmbArray *result, float areaTole
 void MergeParallelEdges(EmbArray *vertices, float tolerance)
 {
     int lower, upper, i, newNVertices;
-    EmbVector d0, d1;
+    EmbVector d0, d1, a, b, c;
     float norm0, norm1, cross, dot;
     EmbArray *usePoints;
     if (vertices->length <= 3) {
@@ -3533,8 +3421,12 @@ void MergeParallelEdges(EmbArray *vertices, float tolerance)
         lower = (i+vertices->length-1) % vertices->length;
         upper = (i+1)% vertices->length;
 
-        embVector_subtract(vertices->vector[i], vertices->vector[lower], &d0);
-        embVector_subtract(vertices->vector[upper], vertices->vector[i], &d1);
+        embArray_get(vertices, &a, lower);
+        embArray_get(vertices, &b, i);
+        embArray_get(vertices, &c, upper);
+
+        embVector_subtract(b, a, &d0);
+        embVector_subtract(c, b, &d1);
         norm0 = embVector_getLength(d0);
         norm1 = embVector_getLength(d1);
 
@@ -3574,6 +3466,7 @@ int embPolygon_reduceByDistance(EmbArray *vertices, float distance)
     int i, nextId;
     float vdist;
     EmbArray *usePoints;
+    EmbVector a, b;
     /* We can't simplify polygons under 3 vertices */
     if (vertices->length < 3) return 0;
 
@@ -3582,7 +3475,9 @@ int embPolygon_reduceByDistance(EmbArray *vertices, float distance)
     for (i = 0; i < vertices->length; i++) {
         nextId = (i + 1) % vertices->length;
 
-        vdist = embVector_distance(vertices->vector[i], vertices->vector[nextId]);
+        embArray_get(vertices, &a, i);
+        embArray_get(vertices, &b, nextId);
+        vdist = embVector_distance(a, b);
 
         /* If they are closer than the distance, do not use the i-th point */
         if (vdist < distance) {
@@ -3616,7 +3511,9 @@ int embPolygon_reduceByNth(EmbArray* vertices, int nth)
 
     /* Shift everything left one place then reduce the count. */
     for (i = nth; i < vertices->length - 1; i++) {
-        vertices->vector[i] = vertices->vector[i + 1];
+        EmbVector v;
+        embArray_get(vertices, &v, i+1);
+        embArray_set(vertices, &v, i);
     }
     vertices->length--;
 
@@ -3645,21 +3542,21 @@ void embSatinOutline_generateSatinOutline(EmbArray* lines, float thickness, EmbS
 
     for (i = 1; i < lines->length; i++) {
         j = (i - 1) * 2;
-        line.start = lines->vector[j - 1];
-        line.end = lines->vector[j];
+        embArray_get(lines, &(line.start), j - 1);
+        embArray_get(lines, &(line.end), j);
 
         embLine_normalVector(line, &v1, 1);
 
         embVector_multiply(v1, halfThickness, &temp);
-        embVector_add(temp, lines->vector[j - 1], &temp);
+        embVector_add(temp, line.start, &temp);
         embArray_addVector(outline.side1, temp);
-        embVector_add(temp, lines->vector[j], &temp);
+        embVector_add(temp, line.end, &temp);
         embArray_addVector(outline.side1, temp);
 
         embVector_multiply(v1, -halfThickness, &temp);
-        embVector_add(temp, lines->vector[j - 1], &temp);
+        embVector_add(temp, line.start, &temp);
         embArray_addVector(outline.side2, temp);
-        embVector_add(temp, lines->vector[j], &temp);
+        embVector_add(temp, line.end, &temp);
         embArray_addVector(outline.side2, temp);
     }
 
@@ -3668,37 +3565,34 @@ void embSatinOutline_generateSatinOutline(EmbArray* lines, float thickness, EmbS
         return;
     }
     result->side1 = embArray_create(EMB_VECTOR);
-    if (!result->side1) {
-        embLog("ERROR: embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side1\n");
-        return;
-    }
     result->side2 = embArray_create(EMB_VECTOR);
-    if (!result->side2) {
-        embLog("ERROR: embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side2\n");
-        return;
-    }
 
-    embArray_addVector(result->side1, outline.side1->vector[0]);
-    embArray_addVector(result->side2, outline.side2->vector[0]);
+    EmbVector a;
+    embArray_get(outline.side1, &a, 0);
+    embArray_addVector(result->side1, a);
+    embArray_get(outline.side2, &a, 0);
+    embArray_addVector(result->side2, a);
 
     for (i = 3; i < intermediateOutlineCount; i += 2) {
-        line1.start = outline.side1->vector[i - 3];
-        line1.end = outline.side1->vector[i - 2];
-        line2.start = outline.side1->vector[i - 1];
-        line2.end = outline.side1->vector[i];
+        embArray_get(outline.side1, &(line1.start), i - 3);
+        embArray_get(outline.side1, &(line1.end), i - 2);
+        embArray_get(outline.side1, &(line2.start), i - 1);
+        embArray_get(outline.side1, &(line2.end), i);
         embLine_intersectionPoint(line1, line2, &temp);
         embArray_addVector(result->side1, temp);
 
-        line1.start = outline.side2->vector[i - 3];
-        line1.end = outline.side2->vector[i - 2];
-        line2.start = outline.side2->vector[i - 1];
-        line2.end = outline.side2->vector[i];
+        embArray_get(outline.side2, &(line1.start), i - 3);
+        embArray_get(outline.side2, &(line1.end), i - 2);
+        embArray_get(outline.side2, &(line2.start), i - 1);
+        embArray_get(outline.side2, &(line2.end), i);
         embLine_intersectionPoint(line1, line2, &temp);
         embArray_addVector(result->side2, temp);
     }
 
-    embArray_addVector(result->side1, outline.side1->vector[2 * lines->length - 3]);
-    embArray_addVector(result->side2, outline.side2->vector[2 * lines->length - 3]);
+    embArray_get(outline.side1, &a, 2*lines->length - 3);
+    embArray_addVector(result->side1, a);
+    embArray_get(outline.side2, &a, 2*lines->length - 3);
+    embArray_addVector(result->side2, a);
     result->length = lines->length;
 }
 
@@ -3707,6 +3601,7 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, float density)
     int i, j, numberOfSteps;
     EmbVector currTop, currBottom, topDiff, bottomDiff, midDiff;
     EmbVector midLeft, midRight, topStep, bottomStep;
+    EmbVector a, b, c;
     EmbArray* stitches = 0;
     float midLength;
 
@@ -3717,11 +3612,19 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, float density)
 
     if (result->length > 0) {
         for (j = 0; j < result->length - 1; j++) {
-            embVector_subtract(result->side1->vector[j + 1], result->side1->vector[j], &topDiff);
-            embVector_subtract(result->side2->vector[j + 1], result->side2->vector[j], &bottomDiff);
+            embArray_get(result->side1, &a, j + 1);
+            embArray_get(result->side1, &b, j);
+            embVector_subtract(a, b, &topDiff);
+            embArray_get(result->side2, &a, j + 1);
+            embArray_get(result->side2, &b, j);
+            embVector_subtract(a, b, &bottomDiff);
 
-            embVector_average(result->side1->vector[j], result->side2->vector[j], &midLeft);
-            embVector_average(result->side1->vector[j + 1], result->side2->vector[j + 1], &midRight);
+            embArray_get(result->side1, &a, j);
+            embArray_get(result->side2, &b, j);
+            embVector_average(a, b, &midLeft);
+            embArray_get(result->side1, &a, j + 1);
+            embArray_get(result->side2, &b, j + 1);
+            embVector_average(a, b, &midRight);
 
             embVector_subtract(midLeft, midRight, &midDiff);
             midLength = embVector_getLength(midDiff);
@@ -3729,8 +3632,8 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, float density)
             numberOfSteps = (int)(midLength * density / 200);
             embVector_multiply(topDiff, 1.0 / numberOfSteps, &topStep);
             embVector_multiply(bottomDiff, 1.0 / numberOfSteps, &bottomStep);
-            currTop = result->side1->vector[j];
-            currBottom = result->side2->vector[j];
+            embArray_get(result->side1, &currTop, j);
+            embArray_get(result->side2, &currBottom, j);
 
             for (i = 0; i < numberOfSteps; i++) {
                 if (!stitches) {
@@ -3790,18 +3693,15 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         return 0;
     }
 
-    if (!pattern->stitchList) {
-        embLog(embpattern_write_error_no_stitches);
-        return 0;
-    }
-
     if (!pattern->stitchList->length) {
         embLog(embpattern_write_error_no_stitches);
         return 0;
     }
 
     /* Check for an END stitch and add one if it is not present */
-    if (pattern->stitchList->stitch[pattern->stitchList->length - 1].flags != END) {
+    EmbStitch st;
+    embArray_get(pattern->stitchList, &st, pattern->stitchList->length - 1);
+    if (st.flags != END) {
         embPattern_addStitchRel(pattern, 0, 0, END, 1);
     }
 
@@ -4228,7 +4128,9 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
     embFile_close(file);
 
     /* Check for an END stitch and add one if it is not present */
-    if (pattern->stitchList->stitch[pattern->stitchList->length - 1].flags != END) {
+    EmbStitch st;
+    embArray_get(pattern->stitchList, &st, pattern->stitchList->length - 1);
+    if (st.flags != END) {
         embPattern_addStitchRel(pattern, 0, 0, END, 1);
     }
 
@@ -4246,7 +4148,7 @@ EmbFile embFile_open(const char* fileName, const char* mode, int optional)
     oFile = inoFile_open(fileName, mode);
 #else
 #ifdef linux
-    oFile = open(fileName, O_RDWR | O_CREAT);
+    oFile = open(fileName, O_RDWR | O_CREAT, 0666);
 #else
     oFile = fopen(fileName, mode);
 #endif
@@ -4334,7 +4236,7 @@ EmbFile embFile_tmpfile(void)
     return inoFile_tmpfile();
 #else
 #ifdef linux
-    return open("/tmp/libembroidery.bin", O_RDWR);
+    return open("/tmp/libembroidery.bin", O_RDWR | O_CREAT, 0666);
 #else
     return tmpfile();
 #endif
@@ -4965,7 +4867,7 @@ static char readCol(EmbPattern* pattern, EmbFile file, const char* fileName)
     EmbThread t;
     char line[30];
 
-    pattern->thread_count = 0;
+    pattern->threads->length = 0;
 
     embFile_readline(file, line, 30);
     nColors = emb_array_to_int(line);
@@ -4998,9 +4900,9 @@ static char writeCol(EmbPattern* pattern, EmbFile file, const char* fileName)
     int i;
     char *buffer = (char*)embBuffer;
 
-    sprintf(buffer, "%d\r\n", pattern->thread_count);
+    sprintf(buffer, "%d\r\n", pattern->threads->length);
     embFile_print(file, buffer);
-    for (i = 0; i < pattern->thread_count; i++) {
+    for (i = 0; i < pattern->threads->length; i++) {
         EmbColor c;
         c = pattern_thread(pattern, i).color;
         sprintf(buffer, "%d,%d,%d,%d\r\n", i, (int)c.r, (int)c.g, (int)c.b);
@@ -5305,7 +5207,7 @@ static char readCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
     }
 
     /* if not enough colors defined, fill in random colors */
-    while (pattern->thread_count < numColorChanges) {
+    while (pattern->threads->length < numColorChanges) {
         embPattern_addThread(pattern, embThread_getRandom());
     }
 
@@ -5373,8 +5275,8 @@ static char writeCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
     embFile_print(file, "\">\",\"STITCH_COUNT:\",\"");
     writeInt(file, stitchCount, 6);
     embFile_print(file, "\"\n");
-    embFile_print(file, "\">\",\"THREAD_COUNT:\",\"");
-    writeInt(file, pattern->thread_count, 6);
+    embFile_print(file, "\">\",\"threads->length:\",\"");
+    writeInt(file, pattern->threads->length, 6);
     embFile_print(file, "\"\n");
     writeFloatWrap(file, "\">\",\"EXTENTS_LEFT:\",\"", boundingRect.left, "\"\n");
     writeFloatWrap(file, "\">\",\"EXTENTS_TOP:\",\"", boundingRect.top, "\"\n");
@@ -5386,7 +5288,7 @@ static char writeCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     /* write colors */
     embFile_print(file, "\"#\",\"[THREAD_NUMBER]\",\"[RED]\",\"[GREEN]\",\"[BLUE]\",\"[DESCRIPTION]\",\"[CATALOG_NUMBER]\"\n");
-    for (i = 0; i < pattern->thread_count; i++) {
+    for (i = 0; i < pattern->threads->length; i++) {
         thr = pattern_thread(pattern, i);
         /* TODO: fix segfault that backtraces here when libembroidery-convert from dst to csv. */
         embFile_print(file, "\"$\",\"");
@@ -5408,7 +5310,7 @@ static char writeCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
     /* write stitches */
     embFile_print(file, "\"#\",\"[STITCH_TYPE]\",\"[X]\",\"[Y]\"\n");
     for (i = 0; i < pattern->stitchList->length; i++) {
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         embFile_print(file, "\"*\",\"");
         embFile_print(file, csvStitchFlagToStr(st.flags));
         embFile_print(file, "\",\"");
@@ -5683,7 +5585,7 @@ static char writeDst(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
-    /* TODO: make sure that pattern->thread_count defaults to 1 in new patterns */
+    /* TODO: make sure that pattern->threads->length defaults to 1 in new patterns */
     boundingRect = embPattern_calcBoundingBox(pattern);
 
     /* pad to 16 char */
@@ -5701,7 +5603,7 @@ static char writeDst(EmbPattern* pattern, EmbFile file, const char* fileName)
     embFile_print(file, "ST:");
     writeInt(file, pattern->stitchList->length, 6);
     embFile_print(file, "\x0dCO:");
-    writeInt(file, pattern->thread_count - 1, 6); /* number of color changes, not number of colors! */
+    writeInt(file, pattern->threads->length - 1, 6); /* number of color changes, not number of colors! */
     embFile_print(file, "\x0d+X:");
     writeInt(file, (int)(boundingRect.right * 10.0), 6);
     embFile_print(file, "\x0d-X:");
@@ -5736,7 +5638,7 @@ static char writeDst(EmbPattern* pattern, EmbFile file, const char* fileName)
     pos[0] = 0;
     pos[1] = 0;
     for (i = 0; i < pattern->stitchList->length; i++) {
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         /* convert from mm to 0.1mm for file format */
         dx[0] = roundDouble(st.x * 10.0) - pos[0];
         dx[1] = roundDouble(st.y * 10.0) - pos[1];
@@ -6036,7 +5938,7 @@ static char readEdr(EmbPattern* pattern, EmbFile file, const char* fileName)
     nColors = embFile_tell(file) / 4;
     embFile_seek(file, 0x00, SEEK_SET);
 
-    pattern->thread_count = 0;
+    pattern->threads->length = 0;
 
     for (i = 0; i < nColors; i++) {
         t.color.r = binaryReadByte(file);
@@ -6054,7 +5956,7 @@ static char writeEdr(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
 
-    for (i = 0; i < pattern->thread_count; i++) {
+    for (i = 0; i < pattern->threads->length; i++) {
         EmbThread t;
         t = pattern_thread(pattern, i);
         binaryWriteByte(file, t.color.r);
@@ -6194,7 +6096,7 @@ static char writeExp(EmbPattern* pattern, EmbFile file, const char* fileName)
     for (i = 0; i < pattern->stitchList->length; i++) {
         EmbStitch st;
         float dx, dy;
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         dx = st.x * 10.0 - xx;
         dy = st.y * 10.0 - yy;
         xx = st.x * 10.0;
@@ -6408,7 +6310,6 @@ static char readHus(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     unsigned char* yData = 0;
     unsigned char* yDecompressed = 0;
-    unsigned char* stringVal = 0;
 
     embFile_seek(file, 0x00, SEEK_END);
     fileLength = embFile_tell(file);
@@ -6427,12 +6328,7 @@ static char readHus(EmbPattern* pattern, EmbFile file, const char* fileName)
     xOffset = binaryReadInt32(file);
     yOffset = binaryReadInt32(file);
 
-    stringVal = (unsigned char*)malloc(sizeof(unsigned char) * 8);
-    if (!stringVal) {
-        embLog("ERROR: readHus(), malloc()\n");
-        return 0;
-    }
-    binaryReadBytes(file, stringVal, 8); /* TODO: check return value */
+    binaryReadBytes(file, embBuffer, 8); /* TODO: check return value */
 
     binaryReadInt16(file);
     for (i = 0; i < nColors; i++) {
@@ -6473,7 +6369,6 @@ static char readHus(EmbPattern* pattern, EmbFile file, const char* fileName)
             husDecodeStitchType(attributeDataDecompressed[i]), 1);
     }
 
-    free(stringVal);
     free(xData);
     free(yData);
     free(attributeData);
@@ -6502,7 +6397,7 @@ static char writeHus(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     stitchCount = pattern->stitchList->length;
     /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
-    patternColor = pattern->thread_count;
+    patternColor = pattern->threads->length;
     minColors = emb_min_int(24, patternColor);
     binaryWriteUInt(file, 0x00C8AF5B);
     binaryWriteUInt(file, stitchCount);
@@ -6535,7 +6430,7 @@ static char writeHus(EmbPattern* pattern, EmbFile file, const char* fileName)
     previousX = 0.0;
     previousY = 0.0;
     for (i = 0; i < pattern->stitchList->length; i++) {
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         xValues[i] = husEncodeByte((st.x - previousX) * 10.0);
         previousX = st.x;
         yValues[i] = husEncodeByte((st.y - previousY) * 10.0);
@@ -6644,7 +6539,7 @@ static char readInf(EmbPattern* pattern, EmbFile file, const char* fileName)
     embFile_seek(file, 12L, SEEK_SET);
     nColors = binaryReadUInt32BE(file);
 
-    pattern->thread_count = 0;
+    pattern->threads->length = 0;
 
     for (i = 0; i < nColors; i++) {
         char colorType[50];
@@ -6673,9 +6568,9 @@ static char writeInf(EmbPattern* pattern, EmbFile file, const char* fileName)
     binaryWriteUIntBE(file, 0x08);
     /* write place holder offset */
     binaryWriteUIntBE(file, 0x00);
-    binaryWriteUIntBE(file, pattern->thread_count);
+    binaryWriteUIntBE(file, pattern->threads->length);
 
-    for (i = 0; i < pattern->thread_count; i++) {
+    for (i = 0; i < pattern->threads->length; i++) {
         EmbColor c;
         EmbThread t;
         t = pattern_thread(pattern, i);
@@ -6869,7 +6764,7 @@ static char writeJef(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     embPattern_correctForMaxStitchLength(pattern, 12.7, 12.7);
 
-    colorlistSize = pattern->thread_count;
+    colorlistSize = pattern->threads->length;
     minColors = emb_max_float(colorlistSize, 6);
     binaryWriteInt(file, 0x74 + (minColors * 4));
     binaryWriteInt(file, 0x0A);
@@ -6884,7 +6779,7 @@ static char writeJef(EmbPattern* pattern, EmbFile file, const char* fileName)
     writeInt(file, (int)(time.second), 2);
     binaryWriteByte(file, 0x00);
     binaryWriteByte(file, 0x00);
-    binaryWriteInt(file, pattern->thread_count);
+    binaryWriteInt(file, pattern->threads->length);
     binaryWriteInt(file, pattern->stitchList->length + emb_max_float(0, (6 - colorlistSize) * 2) + 1);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
@@ -6939,7 +6834,7 @@ static char writeJef(EmbPattern* pattern, EmbFile file, const char* fileName)
     binaryWriteInt(file, (int)(630 - designWidth / 2)); /* right */
     binaryWriteInt(file, (int)(550 - designHeight / 2)); /* bottom */
 
-    for (i = 0; i < pattern->thread_count; i++) {
+    for (i = 0; i < pattern->threads->length; i++) {
         EmbThread t;
         t = pattern_thread(pattern, i);
         int j = embThread_findNearestColor(t.color, jef_thread);
@@ -6951,7 +6846,7 @@ static char writeJef(EmbPattern* pattern, EmbFile file, const char* fileName)
     }
 
     for (i = 0; i < pattern->stitchList->length; i++) {
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         dx = st.x * 10.0 - xx;
         dy = st.y * 10.0 - yy;
         xx = st.x * 10.0;
@@ -7022,7 +6917,7 @@ static char writeKsm(EmbPattern* pattern, EmbFile file, const char* fileName)
     for (i = 0; i < pattern->stitchList->length; i++) {
         EmbStitch st;
         unsigned char b[4];
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         dx = st.x - xx;
         dy = st.y - yy;
         xx = st.x;
@@ -7096,7 +6991,7 @@ static char writeMax(EmbPattern* pattern, EmbFile file, const char* fileName)
     for (i = 0; i < pattern->stitchList->length; i++) {
         float x, y;
         EmbStitch st;
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         x = roundDouble(st.x * 10.0);
         y = roundDouble(st.y * 10.0);
         maxEncode(file, x, y);
@@ -7145,7 +7040,7 @@ static char writeMit(EmbPattern* pattern, EmbFile file, const char* fileName)
     embPattern_correctForMaxStitchLength(pattern, 0x1F, 0x1F);
     xx = yy = 0;
     for (i = 0; i < pattern->stitchList->length; i++) {
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         dx = st.x - xx;
         dy = st.y - yy;
         xx = st.x;
@@ -7518,7 +7413,7 @@ static char writePcd(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     binaryWriteByte(file, (unsigned char)'2');
     binaryWriteByte(file, 3); /* TODO: select hoop size defaulting to Large PCS hoop */
-    binaryWriteUShort(file, (unsigned short)pattern->thread_count);
+    binaryWriteUShort(file, (unsigned short)pattern->threads->length);
 
     embPattern_colorBlock16(pattern, file);
 
@@ -7526,7 +7421,7 @@ static char writePcd(EmbPattern* pattern, EmbFile file, const char* fileName)
     /* write stitches */
     for (i = 0; i < pattern->stitchList->length; i++) {
         EmbStitch st;
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         pcdEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
     }
     return 1;
@@ -7674,7 +7569,7 @@ static char writePcq(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     embFile_write("2\x03", 1, 2, file);
     /* TODO: select hoop size defaulting to Large PCS hoop */
-    binaryWriteUShort(file, (unsigned short)pattern->thread_count);
+    binaryWriteUShort(file, (unsigned short)pattern->threads->length);
 
     embPattern_colorBlock16(pattern, file);
 
@@ -7682,7 +7577,7 @@ static char writePcq(EmbPattern* pattern, EmbFile file, const char* fileName)
     /* write stitches */
     for (i = 0; i < pattern->stitchList->length; i++) {
         EmbStitch st;
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         pcqEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
     }
     return 1;
@@ -7784,6 +7679,14 @@ static char readPcs(EmbPattern* pattern, EmbFile file, const char* fileName)
     return 1;
 }
 
+static EmbArc pattern_arc(EmbPattern *p, int index)
+{
+    EmbArc a;
+    embFile_seek(memory[p->arcs->file_id], sizeof(EmbArc)*index, SEEK_SET);
+    embFile_read(&a, sizeof(EmbArc), 1, memory[p->arcs->file_id]);
+    return a;
+}
+
 static EmbThread pattern_thread(EmbPattern *p, int index)
 {
     EmbThread t;
@@ -7821,7 +7724,7 @@ static char writePcs(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     /* TODO: select hoop size defaulting to Large PCS hoop */
     embFile_write("2\x03", 1, 2, file);
-    binaryWriteUShort(file, (unsigned short)pattern->thread_count);
+    binaryWriteUShort(file, (unsigned short)pattern->threads->length);
 
     embPattern_colorBlock16(pattern, file);
 
@@ -7829,7 +7732,7 @@ static char writePcs(EmbPattern* pattern, EmbFile file, const char* fileName)
     /* write stitches */
     for (i = 0; i < pattern->stitchList->length; i++) {
         EmbStitch st;
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         pcsEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
     }
     return 1;
@@ -7966,7 +7869,7 @@ static void pecEncode(EmbFile file, EmbPattern* p)
     int deltaX, deltaY, i;
 
     for (i = 0; i < p->stitchList->length; i++) {
-        s = p->stitchList->stitch[i];
+        embArray_get(p->stitchList, &s, i);
 
         deltaX = roundDouble(s.x - thisX);
         deltaY = roundDouble(s.y - thisY);
@@ -8063,7 +7966,7 @@ void writePecStitches(EmbPattern* pattern, EmbFile file, const char* fileName)
     embFile_write("\xFF\x00\x06\x26", 1, 4, file);
 
     embFile_pad(file, 0x20, 12);
-    currentThreadCount = pattern->thread_count;
+    currentThreadCount = pattern->threads->length;
     binaryWriteByte(file, (unsigned char)(currentThreadCount - 1));
 
     for (i = 0; i < currentThreadCount; i++) {
@@ -8112,7 +8015,7 @@ void writePecStitches(EmbPattern* pattern, EmbFile file, const char* fileName)
     xFactor = 42.0 / width;
     for (i = 0; i < pattern->stitchList->length; i++) {
         int x, y;
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         x = roundDouble((st.x - bounds.left) * xFactor) + 3;
         y = roundDouble((st.y - bounds.top) * yFactor) + 3;
         image[y][x] = 1;
@@ -8123,7 +8026,7 @@ void writePecStitches(EmbPattern* pattern, EmbFile file, const char* fileName)
     for (i = 0; i < currentThreadCount; i++) {
         clearImage(image);
         for (i = 0; i < pattern->stitchList->length; i++) {
-            st = pattern->stitchList->stitch[i];
+            embArray_get(pattern->stitchList, &st, i);
             x = roundDouble((st.x - bounds.left) * xFactor) + 3;
             y = roundDouble((st.y - bounds.top) * yFactor) + 3;
             if (st.flags & STOP) {
@@ -8541,7 +8444,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile file, const char*
     blockCount = 0;
     for (i = 0; i < pattern->stitchList->length; i++) {
         EmbThread t;
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         flag = st.flags;
         t = pattern_thread(pattern, st.color);
         newColorCode = embThread_findNearestColor(t.color, pec_thread);
@@ -8552,7 +8455,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile file, const char*
         }
         /* TODO: check if this has an off-by-one error */
         for (count = 0; flag == st.flags; count++) {
-            st = pattern->stitchList->stitch[i + count];
+            embArray_get(pattern->stitchList, &st, i + count);
         }
 
         /* 1 for jump, 0 for normal */
@@ -8563,7 +8466,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile file, const char*
         /* stitches in block */
         binaryWriteShort(file, (short)count);
         for (; flag == st.flags && i < pattern->stitchList->length; i++) {
-            st = pattern->stitchList->stitch[i];
+            embArray_get(pattern->stitchList, &st, i);
             binaryWriteShort(file, (short)(st.x - bounds.left));
             binaryWriteShort(file, (short)(st.y + bounds.top));
         }
@@ -8776,7 +8679,7 @@ static char writePlt(EmbPattern* pattern, EmbFile file, const char* fileName)
     embFile_print(file, "IN;ND;");
 
     for (i = 0; i < pattern->stitchList->length; i++) {
-        stitch = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &stitch, i);
         if (stitch.flags & STOP) {
             firstStitchOfBlock = 1;
         }
@@ -8803,7 +8706,7 @@ static char writePlt(EmbPattern* pattern, EmbFile file, const char* fileName)
 static char readRgb(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     EmbThread t;
-    pattern->thread_count = 0;
+    pattern->threads->length = 0;
     string_copy(t.catalogNumber, "NULL");
     string_copy(t.description, "NULL");
     while (embFile_read(embBuffer, 1, 4, file) == 4) {
@@ -8818,7 +8721,7 @@ static char writeRgb(EmbPattern* pattern, EmbFile file, const char* fileName)
     int i;
 
     embBuffer[3] = 0;
-    for (i = 0; i < pattern->thread_count; i++) {
+    for (i = 0; i < pattern->threads->length; i++) {
         EmbThread t;
         t = pattern_thread(pattern, i);
         embColor_toStr(t.color, embBuffer);
@@ -8916,13 +8819,13 @@ static char writeSew(EmbPattern* pattern, EmbFile file, const char* fileName)
     int colorlistSize, minColors, i;
     float xx, yy;
 
-    colorlistSize = pattern->thread_count;
+    colorlistSize = pattern->threads->length;
 
-    minColors = emb_max_int(pattern->thread_count, 6);
+    minColors = emb_max_int(pattern->threads->length, 6);
     binaryWriteInt(file, 0x74 + (minColors * 4));
     binaryWriteInt(file, 0x0A);
 
-    for (i = 0; i < pattern->thread_count; i++) {
+    for (i = 0; i < pattern->threads->length; i++) {
         int thr;
         EmbThread t;
         t = pattern_thread(pattern, i);
@@ -8939,7 +8842,7 @@ static char writeSew(EmbPattern* pattern, EmbFile file, const char* fileName)
         unsigned char b[4];
         float dx, dy;
         EmbStitch st;
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         dx = st.x * 10.0 - xx;
         dy = st.y * 10.0 - yy;
         xx = st.x * 10.0;
@@ -9394,7 +9297,7 @@ static char writeT01(EmbPattern* pattern, EmbFile file, const char* fileName)
         char b[4];
         int dx[2];
         EmbStitch st;
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         /* convert from mm to 0.1mm for file format */
         dx[0] = roundDouble(st.x * 10.0) - pos[0];
         dx[1] = roundDouble(st.y * 10.0) - pos[1];
@@ -9623,7 +9526,7 @@ static char writeTap(EmbPattern* pattern, EmbFile file, const char* fileName)
         unsigned char b[3];
         int dx[2];
         EmbStitch st;
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         /* convert from mm to 0.1mm for file format */
         dx[0] = roundDouble(st.x * 10.0) - pos[0];
         dx[1] = roundDouble(st.y * 10.0) - pos[1];
@@ -9796,7 +9699,7 @@ static char writeThr(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     /* write stitches */
     for (i = 0; i < pattern->stitchList->length; i++) {
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         binaryWriteFloat(file, (float)(st.x * 10.0));
         binaryWriteFloat(file, (float)(st.y * 10.0));
         binaryWriteUInt(file, NOTFRM | (st.color & 0x0F));
@@ -9826,7 +9729,7 @@ static char writeTxt(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     for (i = 0; i < pattern->stitchList->length; i++) {
         EmbStitch st;
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
         /* embFile_print(file, "%.1f,%.1f color:%i flags:%i\n", st.x, st.y, st.color, st.flags); */
         writeFloat(file, st.x);
         embFile_print(file, ",");
@@ -9931,7 +9834,7 @@ static char writeU00(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     embFile_pad(file, ' ', 8);
 
-    for (i = 0; i < pattern->thread_count; i++) {
+    for (i = 0; i < pattern->threads->length; i++) {
         EmbThread t;
         t = pattern_thread(pattern, i);
         embColor_toStr(t.color, b);
@@ -9939,10 +9842,12 @@ static char writeU00(EmbPattern* pattern, EmbFile file, const char* fileName)
     }
 
     /* this should pad to 256 bytes */
-    embFile_pad(file, ' ', 0x100 - 3*pattern->thread_count - 8);
+    embFile_pad(file, ' ', 0x100 - 3*pattern->threads->length - 8);
 
     for (i = 0; i < pattern->stitchList->length; i++) {
-        encode_u00_stitch(pattern->stitchList->stitch[i], b);
+        EmbStitch st;
+        embArray_get(pattern->stitchList, &st, i);
+        encode_u00_stitch(st, b);
         embFile_write(b, 1, 3, file);
     }
     return 1;
@@ -10155,7 +10060,7 @@ static char writeVip(EmbPattern* pattern, EmbFile file, const char* fileName)
                                                         prevByte = 0;
 
     stitchCount = pattern->stitchList->length;
-    minColors = pattern->thread_count;
+    minColors = pattern->threads->length;
     decodedColors = (unsigned char*)malloc(minColors << 2);
     if (!decodedColors)
         return 0;
@@ -10191,7 +10096,7 @@ static char writeVip(EmbPattern* pattern, EmbFile file, const char* fileName)
         previous.x = 0.0;
         previous.y = 0.0;
         for (i = 0; i < pattern->stitchList->length; i++) {
-            st = pattern->stitchList->stitch[i];
+            embArray_get(pattern->stitchList, &st, i);
             xValues[i] = vipEncodeByte((st.x - previous.x) * 10.0);
             yValues[i] = vipEncodeByte((st.y - previous.y) * 10.0);
             previous.x = st.x;
@@ -10544,7 +10449,7 @@ static char writeVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
     nColors = 0;
 
     for (i = 0; i < pattern->stitchList->length; i++) {
-        st = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &st, i);
 
         /* pointer = mainPointer; */
         flag = st.flags;
@@ -10560,8 +10465,9 @@ static char writeVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
             nColors++;
         }
 
-        while (flag == pattern->stitchList->stitch[i].flags) {
+        while (flag == st.flags) {
             i++;
+            embArray_get(pattern->stitchList, &st, i);
         }
         /* mainPointer = pointer; */
     }
@@ -10606,7 +10512,7 @@ static char writeVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
         char colorName[8] = { 0 };
         float lastX, lastY;
         int colorSectionLengthPos;
-        EmbStitch s;
+        EmbStitch s, s1;
         int lastColor;
 
         if (!first) {
@@ -10624,11 +10530,12 @@ static char writeVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
         t = pattern_thread(pattern, st.color);
         color = t.color;
 
-        if (first && (st.flags & JUMP) && pattern->stitchList->stitch[i + 1].flags & JUMP) {
+        embArray_get(pattern->stitchList, &s1, i);
+        if (first && (st.flags & JUMP) && s1.flags & JUMP) {
             i++;
         }
 
-        s = pattern->stitchList->stitch[i];
+        embArray_get(pattern->stitchList, &s, i);
         embLog("format-vp3.c DEBUG %d, %lf, %lf\n" /*, s.flags, s.x, s.y */);
         binaryWriteIntBE(file, s.x * 1000);
         binaryWriteIntBE(file, -s.y * 1000);
@@ -10676,7 +10583,9 @@ static char writeVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
         for (i = 0; i < pattern->stitchList->length; i++) {
             int dx, dy;
 
-            EmbStitch s = pattern->stitchList->stitch[i];
+            EmbStitch;
+            embArray_get(pattern->stitchList, &s, i);
+
             if (s.color != lastColor) {
                 break;
             }
@@ -10829,18 +10738,20 @@ static void xxxEncodeDesign(EmbFile file, EmbPattern* p)
     float thisX = 0.0f;
     float thisY = 0.0f;
     float previousX, previousY, deltaX, deltaY;
-    EmbStitch s;
     int i;
 
     if (p->stitchList) {
-        thisX = (float)p->stitchList->stitch[0].x;
-        thisY = (float)p->stitchList->stitch[0].y;
+        EmbStitch s;
+        embArray_get(p->stitchList, &s, 0);
+        thisX = s.x;
+        thisY = s.y;
     } else {
         return;
     }
 
     for (i = 0; i < p->stitchList->length; i++) {
-        s = p->stitchList->stitch[i];
+        EmbStitch s;
+        embArray_get(p->stitchList, &s, i);
         previousX = thisX;
         previousY = thisY;
         thisX = s.x;
@@ -10853,6 +10764,7 @@ static void xxxEncodeDesign(EmbFile file, EmbPattern* p)
         } else {
             xxxEncodeStitch(file, deltaX * 10.0f, deltaY * 10.0f, s.flags);
         }
+        embArray_set(p->stitchList, &s, i);
     }
 }
 
@@ -10868,7 +10780,7 @@ static char writeXxx(EmbPattern* pattern, EmbFile file, const char* fileName)
     embFile_pad(file, 0, 0x17);
     binaryWriteUInt(file, (unsigned int)pattern->stitchList->length);
     embFile_pad(file, 0, 0x0C);
-    binaryWriteUShort(file, (unsigned short)pattern->thread_count);
+    binaryWriteUShort(file, (unsigned short)pattern->threads->length);
     embFile_pad(file, 0, 2);
 
     rect = embPattern_calcBoundingBox(pattern);
@@ -10896,7 +10808,7 @@ static char writeXxx(EmbPattern* pattern, EmbFile file, const char* fileName)
     embFile_write("\x7F\x7F\x03\x14\x00\x00", 1, 6, file);
 
     for (i = 0; i < 22; i++) {
-        if (i < pattern->thread_count) {
+        if (i < pattern->threads->length) {
             EmbThread t;
             t = pattern_thread(pattern, i);
             b[0] = 0;
@@ -12075,10 +11987,10 @@ static void writeCircles(EmbPattern* p, EmbFile file)
     EmbCircle circle;
     if (p->circles) {
         for (i = 0; i < p->circles->length; i++) {
-            circle = p->circles->circle[i];
+            embArray_get(p->circles, &circle, i);
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_print(file, "\n<circle stroke-width=\"0.2\" fill=\"none\" ");
-            write_svg_color(file, p->circles->color[i]);
+            write_svg_color(file, circle.color);
             writeFloatAttribute(file, "cx", circle.center.x);
             writeFloatAttribute(file, "cy", circle.center.y);
             writeFloatAttribute(file, "r", circle.radius);
@@ -12093,10 +12005,10 @@ static void writeEllipses(EmbPattern* p, EmbFile file)
         int i;
         for (i = 0; i < p->ellipses->length; i++) {
             EmbEllipse ellipse;
-            ellipse = p->ellipses->ellipse[i];
+            embArray_get(p->ellipses, &ellipse, i);
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_print(file, "\n<ellipse stroke-width=\"0.2\" fill=\"none\" ");
-            write_svg_color(file, p->ellipses->color[i]);
+            write_svg_color(file, ellipse.color);
             writeFloatAttribute(file, "cx", ellipse.center.x);
             writeFloatAttribute(file, "cy", ellipse.center.y);
             writeFloatAttribute(file, "rx", ellipse.radius.x);
@@ -12111,10 +12023,11 @@ static void writeLines(EmbPattern* p, EmbFile file)
     if (p->lines) {
         int i;
         for (i = 0; i < p->lines->length; i++) {
-            EmbLine line = p->lines->line[i];
+            EmbLine line;
+            embArray_get(p->lines, &line, i);
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_print(file, "\n<line stroke-width=\"0.2\" fill=\"none\" ");
-            write_svg_color(file, p->lines->color[i]);
+            write_svg_color(file, line.color);
             writeFloatAttribute(file, "x1", line.start.x);
             writeFloatAttribute(file, "y1", line.start.y);
             writeFloatAttribute(file, "x2", line.end.x);
@@ -12129,14 +12042,14 @@ static void writePoints(EmbPattern* p, EmbFile file)
     if (p->points) {
         int i;
         for (i = 0; i < p->points->length; i++) {
-            EmbVector point;
-            point = p->points->point[i];
+            EmbPointObject point;
+            embArray_get(p->points, &point, i);
             /* See SVG Tiny 1.2 Spec:
              * Section 9.5 The 'line' element
              * Section C.6 'path' element implementation notes */
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_print(file, "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" fill=\"none\" ");
-            write_svg_color(file, p->points->color[i]);
+            write_svg_color(file, point.color);
             writeFloatAttribute(file, "x1", point.x);
             writeFloatAttribute(file, "y1", point.y);
             writeFloatAttribute(file, "x2", point.x);
@@ -12152,14 +12065,17 @@ static void writePolygons(EmbPattern* p, EmbFile file)
     if (p->polygons) {
         for (i = 0; i < p->polygons->length; i++) {
             EmbArray* pointList;
+            EmbVector a;
             pointList = p->polygons->polygon[i]->pointList;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_print(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" fill=\"none\" ");
             write_svg_color(file, p->polygons->polygon[i]->color);
             embFile_print(file, "points=\"");
-            writePoint(file, pointList->point[0].x, pointList->point[0].y, 0);
+            embArray_get(pointList, &a, 0);
+            writePoint(file, a.x, a.y, 0);
             for (j = 1; j < pointList->length; j++) {
-                writePoint(file, pointList->point[j].x, pointList->point[j].y, 1);
+                embArray_get(pointList, &a, j);
+                writePoint(file, a.x, a.y, 1);
             }
             embFile_print(file, "\" />");
         }
@@ -12173,15 +12089,18 @@ static void writePolylines(EmbPattern* p, EmbFile file)
         for (i = 0; i < p->polylines->length; i++) {
             EmbArray* pointList;
             EmbColor color;
+            EmbVector v;
             pointList = p->polylines->polyline[i]->pointList;
             color = p->polylines->polyline[i]->color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" ");
             write_svg_color(file, color);
             embFile_print(file, "fill=\"none\" points=\"");
-            writePoint(file, pointList->point[0].x, pointList->point[0].y, 0);
+            embArray_get(pointList, &v, 0);
+            writePoint(file, v.x, v.y, 0);
             for (j = 1; j < pointList->length; j++) {
-                writePoint(file, pointList->point[j].x, pointList->point[j].y, 1);
+                embArray_get(pointList, &v, j);
+                writePoint(file, v.x, v.y, 1);
             }
             embFile_print(file, "\" />");
         }
@@ -12194,10 +12113,10 @@ static void writeRects(EmbPattern* p, EmbFile file)
     if (p->rects) {
         for (i = 0; i < p->rects->length; i++) {
             EmbRect rect;
-            rect = p->rects->rect[i];
+            embArray_get(p->rects, &rect, i);
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_print(file, "\n<rect stroke-width=\"0.2\" fill=\"none\" ");
-            write_svg_color(file, p->rects->color[i]);
+            write_svg_color(file, rect.color);
             writeFloatAttribute(file, "x", embRect_x(rect));
             writeFloatAttribute(file, "y", embRect_y(rect));
             writeFloatAttribute(file, "width", embRect_width(rect));
@@ -12219,7 +12138,7 @@ static void writeStitchList(EmbPattern* p, EmbFile file)
         /*TODO: #ifdef SVG_DEBUG for Josh which outputs JUMPS/TRIMS instead of chopping them out */
         isNormal = 0;
         for (i = 0; i < p->stitchList->length; i++) {
-            st = p->stitchList->stitch[i];
+            embArray_get(p->stitchList, &st, i);
             if (st.flags == NORMAL && !isNormal) {
                 EmbThread t;
                 isNormal = 1;

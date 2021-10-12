@@ -301,26 +301,17 @@ typedef struct EmbSplineObject_ {
     EmbColor color;
 } EmbSplineObject;
 
-/**
- * Instead of supporting object types use multiple pointers at once.
- */
+typedef struct EmbPointObject_ {
+    float x;
+    float y;
+    int lineType;
+    EmbColor color;
+} EmbPointObject;
+
 struct EmbArray_ {
-    EmbArc *arc;
-    EmbCircle *circle;
-    EmbColor *color;
-    EmbEllipse *ellipse;
-    int *flag;
-    float *floats;
     EmbPathObject **path;
-    EmbVector *point;
-    EmbLine *line;
     EmbPolygonObject **polygon;
     EmbPolylineObject **polyline;
-    EmbRect *rect;
-    EmbSplineObject *spline;
-    EmbStitch *stitch;
-    EmbThread *thread;
-    EmbVector *vector;
     int file_id;
     int size;
     int length;
@@ -347,7 +338,6 @@ typedef struct EmbPattern_
     unsigned int dstJumpsPerTrim;
     EmbVector home;
 
-    int thread_count;
     int ax;
     int ay;
     int mx;
@@ -400,7 +390,7 @@ EMB_PUBLIC float embVector_distance(EmbVector v1, EmbVector v2);
 EMB_PUBLIC float embVector_dot(EmbVector v1, EmbVector v2);
 EMB_PUBLIC float embVector_cross(EmbVector a, EmbVector b);
 EMB_PUBLIC void embVector_normalVector(EmbVector a, EmbVector *b, int clockwise);
-EMB_PUBLIC void embVector_transposeProduct(EmbVector v1, EmbVector v2, EmbVector* result);
+EMB_PUBLIC void embVector_component_product(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC float embVector_getLength(EmbVector vector);
 
 EMB_PUBLIC char isArcClockwise(EmbArc arc);

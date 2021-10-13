@@ -137,6 +137,8 @@ extern "C" {
 #define EMB_STITCH              11
 #define EMB_THREAD              12
 #define EMB_VECTOR              13
+#define EMB_CHAR                14
+#define EMB_ARRAY               15
 
 #define EMBFORMAT_UNSUPPORTED   0
 #define EMBFORMAT_STITCHONLY    1
@@ -158,7 +160,12 @@ typedef struct EmbTime_
     unsigned int second;
 } EmbTime;
 
-typedef struct EmbArray_ EmbArray;
+typedef struct EmbArray_ {
+    int file_id;
+    int size;
+    int length;
+    int type;
+} EmbArray;
 
 /**
  * EmbColor uses the light primaries: red, green, blue in that order.
@@ -308,16 +315,6 @@ typedef struct EmbPointObject_ {
     EmbColor color;
 } EmbPointObject;
 
-struct EmbArray_ {
-    EmbPathObject **path;
-    EmbPolygonObject **polygon;
-    EmbPolylineObject **polyline;
-    int file_id;
-    int size;
-    int length;
-    int type;
-};
-
 typedef struct EmbPattern_
 {
     EmbHoop hoop;
@@ -364,18 +361,9 @@ EMB_PUBLIC int init_embroidery(void);
 EMB_PUBLIC int close_embroidery(void);
 
 EMB_PUBLIC EmbArray* embArray_create(int type);
-EMB_PUBLIC int embArray_addArc(EmbArray* g, EmbArc arc, int lineType, EmbColor color);
-EMB_PUBLIC int embArray_addCircle(EmbArray* g, EmbCircle circle, int lineType, EmbColor color);
-EMB_PUBLIC int embArray_addEllipse(EmbArray* g, EmbEllipse circle, float rotation, int lineType, EmbColor color);
-EMB_PUBLIC int embArray_addFlag(EmbArray* g, int flag);
-EMB_PUBLIC int embArray_addLine(EmbArray* g, EmbLine line, int lineType, EmbColor color);
-EMB_PUBLIC int embArray_addRect(EmbArray* g, EmbRect rect, int lineType, EmbColor color);
-EMB_PUBLIC int embArray_addPath(EmbArray* g, EmbPathObject *p);
-EMB_PUBLIC int embArray_addPoint(EmbArray* g, EmbVector p, int lineType, EmbColor color);
-EMB_PUBLIC int embArray_addPolygon(EmbArray* g, EmbPolygonObject *p);
-EMB_PUBLIC int embArray_addPolyline(EmbArray* g, EmbPolylineObject *p);
-EMB_PUBLIC int embArray_addStitch(EmbArray* g, EmbStitch st);
-EMB_PUBLIC int embArray_addVector(EmbArray* g, EmbVector);
+EMB_PUBLIC int embArray_add(EmbArray *p, void *data);
+EMB_PUBLIC int embArray_get(EmbArray *p, void *data, int i);
+EMB_PUBLIC int embArray_set(EmbArray *p, void *data, int i);
 EMB_PUBLIC void embArray_free(EmbArray* p);
 
 EMB_PUBLIC void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise);
@@ -455,14 +443,14 @@ EMB_PUBLIC int embPattern_read(EmbPattern* pattern, const char *function, int);
 EMB_PUBLIC int embPattern_writeAuto(EmbPattern* pattern, const char *function);
 EMB_PUBLIC int embPattern_readAuto(EmbPattern* pattern, const char *function);
 
-EMB_PUBLIC void embPattern_addCircleObjectAbs(EmbPattern* p, float cx, float cy, float r);
-EMB_PUBLIC void embPattern_addEllipseObjectAbs(EmbPattern* p, float cx, float cy, float rx, float ry); /* TODO: ellipse rotation */
-EMB_PUBLIC void embPattern_addLineObjectAbs(EmbPattern* p, float x1, float y1, float x2, float y2);
+EMB_PUBLIC void embPattern_addCircleObjectAbs(EmbPattern* p, float cx, float cy, float r, int lineType, EmbColor color);
+EMB_PUBLIC void embPattern_addEllipseObjectAbs(EmbPattern* p, float cx, float cy, float rx, float ry, float rotation, int lineType, EmbColor color);
+EMB_PUBLIC void embPattern_addLineObjectAbs(EmbPattern* p, float x1, float y1, float x2, float y2, int lineType, EmbColor color);
 EMB_PUBLIC void embPattern_addPathObjectAbs(EmbPattern* p, EmbPathObject* obj);
-EMB_PUBLIC void embPattern_addPointObjectAbs(EmbPattern* p, float x, float y);
+EMB_PUBLIC void embPattern_addPointObjectAbs(EmbPattern* p, float x, float y, int lineType, EmbColor color);
 EMB_PUBLIC void embPattern_addPolygonObjectAbs(EmbPattern* p, EmbPolygonObject* obj);
 EMB_PUBLIC void embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj);
-EMB_PUBLIC void embPattern_addRectObjectAbs(EmbPattern* p, float x, float y, float w, float h);
+EMB_PUBLIC void embPattern_addRectObjectAbs(EmbPattern* p, float x, float y, float w, float h, int lineType, EmbColor color);
 
 EMB_PUBLIC void embPattern_copyStitchListToPolylines(EmbPattern* pattern);
 EMB_PUBLIC void embPattern_copyPolylinesToStitchList(EmbPattern* pattern);

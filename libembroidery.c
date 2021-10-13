@@ -327,6 +327,7 @@ int embVector_collinear(EmbVector a1, EmbVector a2, EmbVector a3, float collinea
 static unsigned char embBuffer[1024];
 static EmbFile datafile;
 static EmbFile memory[100];
+static EmbArray arrays[100];
 static int memory_files = 0;
 
 /* Flag Defines
@@ -855,11 +856,12 @@ EmbArray* embArray_create(int type)
         sizeof(int), sizeof(EmbLine), sizeof(EmbPathObject),
         sizeof(EmbPoint), sizeof(EmbPolygonObject),
         sizeof(EmbPolylineObject), sizeof(EmbRect), sizeof(EmbSplineObject),
-        sizeof(EmbStitch), sizeof(EmbThread), sizeof(EmbVector)
+        sizeof(EmbStitch), sizeof(EmbThread), sizeof(EmbVector),
+        sizeof(char), sizeof(EmbArray)
     };
     char fname[40];
     EmbArray* p;
-    p = (EmbArray*)malloc(sizeof(EmbArray));
+    p = &(arrays[memory_files]);
     p->type = type;
     p->length = 0;
     p->size = sizes[type];
@@ -867,26 +869,8 @@ EmbArray* embArray_create(int type)
     memory_files++;
     sprintf(fname, "memory/libemb_%d.bin", p->file_id);
     memory[p->file_id] = embFile_open(fname, "wb+", 0);
-
-    switch (p->type) {
-    case EMB_PATH:
-        p->path = (EmbPathObject**)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbPathObject*));
-        break;
-    case EMB_POLYGON:
-        p->polygon = (EmbPolygonObject**)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbPolygonObject*));
-        break;
-    case EMB_POLYLINE:
-        p->polyline = (EmbPolylineObject**)malloc(GEOMETRY_ARRAY_MAXIMUM * sizeof(EmbPolylineObject*));
-        break;
-    default:
-        break;
-    }
     return p;
 }
-
-int embArray_add(EmbArray *p, void *data);
-int embArray_get(EmbArray *p, void *data, int i);
-int embArray_set(EmbArray *p, void *data, int i);
 
 int embArray_add(EmbArray *p, void *data)
 {
@@ -910,153 +894,9 @@ int embArray_set(EmbArray *p, void *data, int i)
     return 1;    
 }
 
-int embArray_addArc(EmbArray* p, EmbArc arc, int lineType, EmbColor color)
-{
-    arc.lineType = lineType;
-    arc.color = color;
-    embArray_add(p, &arc);
-    return 1;
-}
-
-int embArray_addCircle(EmbArray* p, EmbCircle circle, int lineType, EmbColor color)
-{
-    circle.lineType = lineType;
-    circle.color = color;
-    embArray_add(p, &circle);
-    return 1;
-}
-
-int embArray_addEllipse(EmbArray* p,
-    EmbEllipse ellipse, float rotation, int lineType, EmbColor color)
-{
-    ellipse.rotation = rotation;
-    ellipse.lineType = lineType;
-    ellipse.color = color;
-    embArray_add(p, &ellipse);
-    return 1;
-}
-
-int embArray_addFlag(EmbArray* p, int flag)
-{
-    embArray_add(p, &flag);
-    return 1;
-}
-
-int embArray_addLine(EmbArray* p, EmbLine line, int lineType, EmbColor color)
-{
-    line.lineType = lineType;
-    line.color = color;
-    embArray_add(p, &line);
-    return 1;
-}
-
-int embArray_addPath(EmbArray* p, EmbPathObject* path)
-{
-    p->length++;
-    if (p->length >= GEOMETRY_ARRAY_MAXIMUM) {
-        return 0;
-    }
-    p->path[p->length - 1] = (EmbPathObject*)malloc(sizeof(EmbPathObject));
-    if (!p->path[p->length - 1]) {
-        embLog("ERROR: emb-polygon.c embArray_create(), cannot allocate memory for heapPolygonObj\n");
-        return 0;
-    }
-    p->path[p->length - 1] = path;
-    return 1;
-}
-
-int embArray_addPoint(EmbArray* p, EmbVector point, int lineType, EmbColor color)
-{
-    /* TODO: lineType, color in EmbPointObject */
-    EmbPointObject po;
-    po.x = point.x;
-    po.y = point.y;
-    po.lineType = lineType;
-    po.color = color;
-    embArray_add(p, &po);
-    return 1;
-}
-
-int embArray_addPolygon(EmbArray* p, EmbPolygonObject* polygon)
-{
-    p->length++;
-    if (p->length >= GEOMETRY_ARRAY_MAXIMUM) {
-        return 0;
-    }
-    p->polygon[p->length - 1] = (EmbPolygonObject*)malloc(sizeof(EmbPolygonObject));
-    if (!p->polygon[p->length - 1]) {
-        embLog("ERROR: emb-polygon.c embArray_create(), cannot allocate memory for heapPolygonObj\n");
-        return 0;
-    }
-    p->polygon[p->length - 1] = polygon;
-    return 1;
-}
-
-int embArray_addPolyline(EmbArray* p, EmbPolylineObject* polyline)
-{
-    p->length++;
-    if (p->length >= GEOMETRY_ARRAY_MAXIMUM) {
-        return 0;
-    }
-    p->polyline[p->length - 1] = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
-    if (!p->polyline[p->length - 1]) {
-        embLog("ERROR: embArray_create(), cannot allocate memory for heapPolylineObj\n");
-        return 0;
-    }
-    p->polyline[p->length - 1] = polyline;
-    return 1;
-}
-
-int embArray_addRect(EmbArray* p,
-    EmbRect rect, int lineType, EmbColor color)
-{
-    rect.lineType = lineType;
-    rect.color = color;
-    embArray_add(p, &rect);
-    return 1;
-}
-
-int embArray_addStitch(EmbArray* p, EmbStitch st)
-{
-    embArray_add(p, &st);
-    return 1;
-}
-
-int embArray_addVector(EmbArray* p, EmbVector vector)
-{
-    embArray_add(p, &vector);
-    return 1;
-}
-
 void embArray_free(EmbArray* p)
 {
-    int i;
-    if (!p)
-        return;
-
-    switch (p->type) {
-    case EMB_PATH:
-        for (i = 0; i < p->length; i++) {
-            embArray_free(p->path[i]->pointList);
-        }
-        free(p->path);
-        break;
-    case EMB_POLYGON:
-        for (i = 0; i < p->length; i++) {
-            embArray_free(p->polygon[i]->pointList);
-        }
-        free(p->polygon);
-        break;
-    case EMB_POLYLINE:
-        for (i = 0; i < p->length; i++) {
-            embArray_free(p->polyline[i]->pointList);
-        }
-        free(p->polyline);
-        break;
-    default:
-        break;
-    }
-    free(p);
+    /* delete file, will be automatic for TMPFILE */
 }
 
 void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int compressionType)
@@ -1370,10 +1210,10 @@ static float emb_array_to_float(char* buffer)
         if (buffer[offset] >= '0' && buffer[offset] <= '9') {
             result = 1.0*(10*result + buffer[offset] - '0');
         }
+        decimal_places++;
         if (buffer[offset] == '.') {
             decimal_places = 0;
         }
-        decimal_places++;
     }
     return result / emb_pow(10.0, decimal_places);
 }
@@ -1968,19 +1808,18 @@ EmbPattern* embPattern_create(void)
     p->currentColorIndex = 0;
     p->stitchList = embArray_create(EMB_STITCH);
     p->threads = embArray_create(EMB_THREAD);
-    p->threads->length = 0;
     p->hoop.height = 0.0;
     p->hoop.width = 0.0;
-    p->arcs = 0;
-    p->circles = 0;
-    p->ellipses = 0;
-    p->lines = 0;
-    p->paths = 0;
-    p->points = 0;
-    p->polygons = 0;
-    p->polylines = 0;
-    p->rects = 0;
-    p->splines = 0;
+    p->arcs = embArray_create(EMB_ARC);
+    p->circles = embArray_create(EMB_CIRCLE);
+    p->ellipses = embArray_create(EMB_ELLIPSE);
+    p->lines = embArray_create(EMB_LINE);
+    p->paths = embArray_create(EMB_PATH);
+    p->points = embArray_create(EMB_POINT);
+    p->polygons = embArray_create(EMB_POLYGON);
+    p->polylines = embArray_create(EMB_POLYLINE);
+    p->rects = embArray_create(EMB_RECT);
+    p->splines = embArray_create(EMB_SPLINE);
     p->ax = 0;
     p->ay = 0;
     p->mx = 0;
@@ -2052,7 +1891,7 @@ void embPattern_fixColorCount(EmbPattern* p)
 /*! Copies all of the EmbStitchList data to EmbPolylineObjectList data for pattern (\a p). */
 void embPattern_copyStitchListToPolylines(EmbPattern* p)
 {
-    EmbVector point;
+    EmbPointObject point;
     int breakAtFlags, i;
     EmbStitch st;
 
@@ -2080,26 +1919,24 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
                 }
                 point.x = st.x;
                 point.y = st.y;
-                embArray_addPoint(pointList, point, 0, color);
+                point.lineType = 0;
+                point.color = color;
+                embArray_add(pointList, &point);
             }
         }
 
         /* NOTE: Ensure empty polylines are not created. This is critical. */
         if (pointList) {
-            EmbPolylineObject* currentPolyline = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
-            if (!currentPolyline) {
-                embLog("ERROR: embPattern_copyStitchListToPolylines(), cannot allocate memory for currentPolyline\n");
-                return;
-            }
-            currentPolyline->pointList = pointList;
-            currentPolyline->color = color;
-            currentPolyline->lineType = 1;
+            EmbPolylineObject currentPolyline;
+            currentPolyline.pointList = pointList;
+            currentPolyline.color = color;
+            currentPolyline.lineType = 1;
             /* TODO: Determine what the correct value should be. */
 
             if (!p->polylines) {
                 p->polylines = embArray_create(EMB_POLYLINE);
             }
-            embArray_addPolyline(p->polylines, currentPolyline);
+            embArray_add(p->polylines, &currentPolyline);
         }
         embArray_free(pointList);
     }
@@ -2120,23 +1957,19 @@ void embPattern_copyPolylinesToStitchList(EmbPattern* p)
         return;
     }
     for (i = 0; i < p->polylines->length; i++) {
-        EmbPolylineObject* currentPoly = 0;
-        EmbArray* currentPointList = 0;
+        EmbPolylineObject currentPoly;
+        EmbArray* currentPointList;
         EmbThread thread;
 
-        currentPoly = p->polylines->polyline[i];
-        if (!currentPoly) {
-            embLog("ERROR: embPattern_copyPolylinesToStitchList(), currentPoly is null\n");
-            return;
-        }
-        currentPointList = currentPoly->pointList;
+        embArray_get(p->polylines, &currentPoly, i);
+        currentPointList = currentPoly.pointList;
         if (!currentPointList) {
             embLog("ERROR: embPattern_copyPolylinesToStitchList(), currentPointList is null\n");
             return;
         }
 
         string_copy(thread.catalogNumber, "NULL");
-        thread.color = currentPoly->color;
+        thread.color = currentPoly.color;
         string_copy(thread.description, "NULL");
         embPattern_addThread(p, thread);
 
@@ -2225,14 +2058,14 @@ void embPattern_addStitchAbs(EmbPattern* p, float x, float y, int flags, int isA
         s.flags = JUMP;
         s.color = p->currentColorIndex;
         p->stitchList = embArray_create(EMB_STITCH);
-        embArray_addStitch(p->stitchList, s);
+        embArray_add(p->stitchList, &s);
     }
 
     s.x = x;
     s.y = y;
     s.flags = flags;
     s.color = p->currentColorIndex;
-    embArray_addStitch(p->stitchList, s);
+    embArray_add(p->stitchList, &s);
     p->lastPosition.x = s.x;
     p->lastPosition.y = s.y;
 }
@@ -2365,114 +2198,96 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
         }
     }
 
-    if (p->arcs) {
-        /* TODO: embPattern_calcBoundingBox for arcs, for now just checks the start point */
-        for (i = 0; i < p->arcs->length; i++) {
-            EmbArc arc;
-            embArray_get(p->arcs, &arc, i);
-            boundingRect.left = emb_min_float(boundingRect.left, arc.start.x);
-            boundingRect.top = emb_min_float(boundingRect.top, arc.start.y);
-            boundingRect.right = emb_max_float(boundingRect.right, arc.start.x);
-            boundingRect.bottom = emb_max_float(boundingRect.bottom, arc.start.y);
+    /* TODO: embPattern_calcBoundingBox for arcs, for now just checks the start point */
+    for (i = 0; i < p->arcs->length; i++) {
+        EmbArc arc;
+        embArray_get(p->arcs, &arc, i);
+        boundingRect.left = emb_min_float(boundingRect.left, arc.start.x);
+        boundingRect.top = emb_min_float(boundingRect.top, arc.start.y);
+        boundingRect.right = emb_max_float(boundingRect.right, arc.start.x);
+        boundingRect.bottom = emb_max_float(boundingRect.bottom, arc.start.y);
+    }
+
+    for (i = 0; i < p->circles->length; i++) {
+        EmbCircle circle;
+        embArray_get(p->circles, &circle, i);
+        boundingRect.left = emb_min_float(boundingRect.left, circle.center.x - circle.radius);
+        boundingRect.top = emb_min_float(boundingRect.top, circle.center.y - circle.radius);
+        boundingRect.right = emb_max_float(boundingRect.right, circle.center.x + circle.radius);
+        boundingRect.bottom = emb_max_float(boundingRect.bottom, circle.center.y + circle.radius);
+    }
+
+    for (i = 0; i < p->ellipses->length; i++) {
+        /* TODO: account for rotation */
+        EmbEllipse ellipse;
+        embArray_get(p->ellipses, &ellipse, i);
+        boundingRect.left = emb_min_float(boundingRect.left, ellipse.center.x - ellipse.radius.x);
+        boundingRect.top = emb_min_float(boundingRect.top, ellipse.center.y - ellipse.radius.y);
+        boundingRect.right = emb_max_float(boundingRect.right, ellipse.center.x + ellipse.radius.x);
+        boundingRect.bottom = emb_max_float(boundingRect.bottom, ellipse.center.y + ellipse.radius.y);
+    }
+
+    for (i = 0; i < p->lines->length; i++) {
+        EmbLine line;
+        embArray_get(p->lines, &line, i);
+        boundingRect.left = emb_min_float(boundingRect.left, emb_min_float(line.start.x, line.end.x));
+        boundingRect.top = emb_min_float(boundingRect.top, emb_min_float(line.start.y, line.end.y));
+        boundingRect.right = emb_max_float(boundingRect.right, emb_max_float(line.start.x, line.end.x));
+        boundingRect.bottom = emb_max_float(boundingRect.bottom, emb_max_float(line.start.y, line.end.y));
+    }
+
+    for (i = 0; i < p->points->length; i++) {
+        EmbPointObject point;
+        embArray_get(p->points, &point, i);
+        boundingRect.left = emb_min_float(boundingRect.left, point.x);
+        boundingRect.top = emb_min_float(boundingRect.top, point.y);
+        boundingRect.right = emb_max_float(boundingRect.right, point.x);
+        boundingRect.bottom = emb_max_float(boundingRect.bottom, point.y);
+    }
+
+    for (i = 0; i < p->polygons->length; i++) {
+        EmbPolygonObject* polygon;
+        embArray_get(p->polygons, &polygon, i);
+        for (j = 0; j < polygon->pointList->length; j++) {
+            EmbVector v;
+            embArray_get(polygon->pointList, &v, j);
+            boundingRect.left = emb_min_float(boundingRect.left, v.x);
+            boundingRect.top = emb_min_float(boundingRect.top, v.y);
+            boundingRect.right = emb_max_float(boundingRect.right, v.x);
+            boundingRect.bottom = emb_max_float(boundingRect.bottom, v.y);
         }
     }
 
-    if (p->circles) {
-        for (i = 0; i < p->circles->length; i++) {
-            EmbCircle circle;
-            embArray_get(p->circles, &circle, i);
-            boundingRect.left = emb_min_float(boundingRect.left, circle.center.x - circle.radius);
-            boundingRect.top = emb_min_float(boundingRect.top, circle.center.y - circle.radius);
-            boundingRect.right = emb_max_float(boundingRect.right, circle.center.x + circle.radius);
-            boundingRect.bottom = emb_max_float(boundingRect.bottom, circle.center.y + circle.radius);
+    for (i = 0; i < p->polylines->length; i++) {
+        EmbPolylineObject* polyline;
+        embArray_get(p->polylines, &polyline, i);
+        for (j = 0; j < polyline->pointList->length; j++) {
+            EmbVector v;
+            embArray_get(polyline->pointList, &v, j);
+            boundingRect.left = emb_min_float(boundingRect.left, v.x);
+            boundingRect.top = emb_min_float(boundingRect.top, v.y);
+            boundingRect.right = emb_max_float(boundingRect.right, v.x);
+            boundingRect.bottom = emb_max_float(boundingRect.bottom, v.y);
         }
     }
 
-    if (p->ellipses) {
-        for (i = 0; i < p->ellipses->length; i++) {
-            /* TODO: account for rotation */
-            EmbEllipse ellipse;
-            embArray_get(p->ellipses, &ellipse, i);
-            boundingRect.left = emb_min_float(boundingRect.left, ellipse.center.x - ellipse.radius.x);
-            boundingRect.top = emb_min_float(boundingRect.top, ellipse.center.y - ellipse.radius.y);
-            boundingRect.right = emb_max_float(boundingRect.right, ellipse.center.x + ellipse.radius.x);
-            boundingRect.bottom = emb_max_float(boundingRect.bottom, ellipse.center.y + ellipse.radius.y);
-        }
+    for (i = 0; i < p->rects->length; i++) {
+        EmbRect rect;
+        embArray_get(p->rects, &rect, i);
+        /* TODO: other points */
+        boundingRect.left = emb_min_float(boundingRect.left, rect.left);
+        boundingRect.top = emb_min_float(boundingRect.top, rect.left);
+        boundingRect.right = emb_max_float(boundingRect.right, rect.left);
+        boundingRect.bottom = emb_max_float(boundingRect.bottom, rect.left);
     }
 
-    if (p->lines) {
-        for (i = 0; i < p->lines->length; i++) {
-            EmbLine line;
-            embArray_get(p->lines, &line, i);
-            boundingRect.left = emb_min_float(boundingRect.left, emb_min_float(line.start.x, line.end.x));
-            boundingRect.top = emb_min_float(boundingRect.top, emb_min_float(line.start.y, line.end.y));
-            boundingRect.right = emb_max_float(boundingRect.right, emb_max_float(line.start.x, line.end.x));
-            boundingRect.bottom = emb_max_float(boundingRect.bottom, emb_max_float(line.start.y, line.end.y));
-        }
-    }
-
-    if (p->points) {
-        for (i = 0; i < p->points->length; i++) {
-            EmbPointObject point;
-            embArray_get(p->points, &point, i);
-            boundingRect.left = emb_min_float(boundingRect.left, point.x);
-            boundingRect.top = emb_min_float(boundingRect.top, point.y);
-            boundingRect.right = emb_max_float(boundingRect.right, point.x);
-            boundingRect.bottom = emb_max_float(boundingRect.bottom, point.y);
-        }
-    }
-
-    if (p->polygons) {
-        for (i = 0; i < p->polygons->length; i++) {
-            EmbArray* polygon;
-            polygon = p->polygons->polygon[i]->pointList;
-            for (j = 0; j < polygon->length; j++) {
-                EmbVector v;
-                embArray_get(polygon, &v, j);
-                boundingRect.left = emb_min_float(boundingRect.left, v.x);
-                boundingRect.top = emb_min_float(boundingRect.top, v.y);
-                boundingRect.right = emb_max_float(boundingRect.right, v.x);
-                boundingRect.bottom = emb_max_float(boundingRect.bottom, v.y);
-            }
-        }
-    }
-
-    if (p->polylines) {
-        for (i = 0; i < p->polylines->length; i++) {
-            EmbArray* polyline;
-            polyline = p->polylines->polyline[i]->pointList;
-            for (j = 0; j < polyline->length; j++) {
-                EmbVector v;
-                embArray_get(polyline, &v, j);
-                boundingRect.left = emb_min_float(boundingRect.left, v.x);
-                boundingRect.top = emb_min_float(boundingRect.top, v.y);
-                boundingRect.right = emb_max_float(boundingRect.right, v.x);
-                boundingRect.bottom = emb_max_float(boundingRect.bottom, v.y);
-            }
-        }
-    }
-
-    if (p->rects) {
-        for (i = 0; i < p->rects->length; i++) {
-            EmbRect rect;
-            embArray_get(p->rects, &rect, i);
-            /* TODO: other points */
-            boundingRect.left = emb_min_float(boundingRect.left, rect.left);
-            boundingRect.top = emb_min_float(boundingRect.top, rect.left);
-            boundingRect.right = emb_max_float(boundingRect.right, rect.left);
-            boundingRect.bottom = emb_max_float(boundingRect.bottom, rect.left);
-        }
-    }
-
-    if (p->splines) {
-        for (i = 0; i < p->splines->length; i++) {
-            embArray_get(p->splines, &bezier, i);
-            /* TODO: other points */
-            boundingRect.left = emb_min_float(boundingRect.left, bezier.start.x);
-            boundingRect.top = emb_min_float(boundingRect.top, bezier.start.y);
-            boundingRect.right = emb_max_float(boundingRect.right, bezier.start.x);
-            boundingRect.bottom = emb_max_float(boundingRect.bottom, bezier.start.y);
-        }
+    for (i = 0; i < p->splines->length; i++) {
+        embArray_get(p->splines, &bezier, i);
+        /* TODO: other points */
+        boundingRect.left = emb_min_float(boundingRect.left, bezier.start.x);
+        boundingRect.top = emb_min_float(boundingRect.top, bezier.start.y);
+        boundingRect.right = emb_max_float(boundingRect.right, bezier.start.x);
+        boundingRect.bottom = emb_max_float(boundingRect.bottom, bezier.start.y);
     }
 
     return boundingRect;
@@ -2527,53 +2342,46 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
         embArray_get(p->stitchList, &st, i);
     }
 
-    if (p->arcs) {
-        for (i = 0; i < p->arcs->length; i++) {
-            EmbArc arc;
-            embArray_get(p->arcs, &arc, i);
-            embVector_component_product(arc.start, flip, &(arc.start));
-            embVector_component_product(arc.mid, flip, &(arc.mid));
-            embVector_component_product(arc.end, flip, &(arc.end));
-            embArray_set(p->arcs, &arc, i);
-        }
+    for (i = 0; i < p->arcs->length; i++) {
+        EmbArc arc;
+        embArray_get(p->arcs, &arc, i);
+        embVector_component_product(arc.start, flip, &(arc.start));
+        embVector_component_product(arc.mid, flip, &(arc.mid));
+        embVector_component_product(arc.end, flip, &(arc.end));
+        embArray_set(p->arcs, &arc, i);
     }
 
-    if (p->circles) {
-        for (i = 0; i < p->circles->length; i++) {
-            EmbCircle circle;
-            embArray_get(p->circles, &circle, i);
-            embVector_component_product(circle.center, flip, &(circle.center));
-            embArray_set(p->circles, &circle, i);
-        }
+    for (i = 0; i < p->circles->length; i++) {
+        EmbCircle circle;
+        embArray_get(p->circles, &circle, i);
+        embVector_component_product(circle.center, flip, &(circle.center));
+        embArray_set(p->circles, &circle, i);
     }
 
-    if (p->ellipses) {
-        for (i = 0; i < p->ellipses->length; i++) {
-            EmbEllipse ellipse;
-            embArray_get(p->ellipses, &ellipse, i);
-            embVector_component_product(ellipse.center, flip, &(ellipse.center));
-            embArray_set(p->ellipses, &ellipse, i);
-        }
+    for (i = 0; i < p->ellipses->length; i++) {
+        EmbEllipse ellipse;
+        embArray_get(p->ellipses, &ellipse, i);
+        embVector_component_product(ellipse.center, flip, &(ellipse.center));
+        embArray_set(p->ellipses, &ellipse, i);
     }
 
-    if (p->lines) {
-        for (i = 0; i < p->lines->length; i++) {
-            EmbLine line;
-            embArray_get(p->lines, &line, j);
-            embVector_component_product(line.start, flip, &(line.start));
-            embVector_component_product(line.end, flip, &(line.end));
-            embArray_set(p->lines, &line, j);
-        }
+    for (i = 0; i < p->lines->length; i++) {
+        EmbLine line;
+        embArray_get(p->lines, &line, j);
+        embVector_component_product(line.start, flip, &(line.start));
+        embVector_component_product(line.end, flip, &(line.end));
+        embArray_set(p->lines, &line, j);
     }
 
     if (p->paths) {
         for (i = 0; i < p->paths->length; i++) {
-            EmbArray* path = p->paths->path[i]->pointList;
-            for (j = 0; j < path->length; j++) {
+            EmbPathObject* path;
+            embArray_get(p->paths, &path, i);
+            for (j = 0; j < path->pointList->length; j++) {
                 EmbVector point;
-                embArray_get(path, &point, j);
+                embArray_get(path->pointList, &point, j);
                 embVector_component_product(point, flip, &point);
-                embArray_set(path, &point, j);
+                embArray_set(path->pointList, &point, j);
             }
         }
     }
@@ -2590,26 +2398,26 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
 
     if (p->polygons) {
         for (i = 0; i < p->polygons->length; i++) {
-            EmbArray* polygon;
-            polygon = p->polygons->polygon[i]->pointList;
-            for (j = 0; j < polygon->length; j++) {
+            EmbPolygonObject* polygon;
+            embArray_get(p->polygons, polygon, i);
+            for (j = 0; j < polygon->pointList->length; j++) {
                 EmbVector point;
-                embArray_get(polygon, &point, j);
+                embArray_get(polygon->pointList, &point, j);
                 embVector_component_product(point, flip, &point);
-                embArray_set(polygon, &point, j);
+                embArray_set(polygon->pointList, &point, j);
             }
         }
     }
 
     if (p->polylines) {
         for (i = 0; i < p->polylines->length; i++) {
-            EmbArray* polyline;
-            polyline = p->polylines->polygon[i]->pointList;
-            for (j = 0; j < polyline->length; j++) {
+            EmbPolylineObject* polyline;
+            embArray_get(p->polylines, polyline, i);
+            for (j = 0; j < polyline->pointList->length; j++) {
                 EmbVector point;
-                embArray_get(polyline, &point, j);
+                embArray_get(polyline->pointList, &point, j);
                 embVector_component_product(point, flip, &point);
-                embArray_set(polyline, &point, j);
+                embArray_set(polyline->pointList, &point, j);
             }
         }
     }
@@ -2679,7 +2487,7 @@ void embPattern_correctForMaxStitchLength(EmbPattern* p, float maxStitchLength, 
         EmbStitch stitch;
         newList = embArray_create(EMB_STITCH);
         embArray_get(p->stitchList, &stitch, 0);
-        embArray_addStitch(newList, stitch);
+        embArray_add(newList, &stitch);
         for (i = 1; i < p->stitchList->length; i++) {
             EmbStitch st1, st2;
             embArray_get(p->stitchList, &st1, i - 1);
@@ -2705,11 +2513,11 @@ void embPattern_correctForMaxStitchLength(EmbPattern* p, float maxStitchLength, 
                         s = st1;
                         s.x += add.x * j;
                         s.y += add.y * j;
-                        embArray_addStitch(newList, s);
+                        embArray_add(newList, &s);
                     }
                 }
             }
-            embArray_addStitch(newList, st2);
+            embArray_add(newList, &st2);
         }
         embArray_free(p->stitchList);
         p->stitchList = newList;
@@ -2796,55 +2604,62 @@ void embPattern_free(EmbPattern* p)
 /*! Adds a circle object to pattern (\a p) with its center at the absolute
  * position (\a cx,\a cy) with a radius of (\a r). Positive y is up.
  * Units are in millimeters. */
-void embPattern_addCircleObjectAbs(EmbPattern* p, float cx, float cy, float r)
+void embPattern_addCircleObjectAbs(EmbPattern* p, float cx, float cy, float r, int lineType, EmbColor color)
 {
     EmbCircle circle;
     circle.center.x = cx;
     circle.center.y = cy;
     circle.radius = r;
+    circle.lineType = 0;
+    circle.color = color;
 
     if (!p) {
         embLog("ERROR: embPattern_addCircleObjectAbs(), p==0\n");
         return;
     }
-    embArray_addCircle(p->circles, circle, 0, black);
+    embArray_add(p->circles, &circle);
 }
 
 /*! Adds an ellipse object to pattern (\a p) with its center at the
  * absolute position (\a cx,\a cy) with radii of (\a rx,\a ry). Positive y is up.
  * Units are in millimeters. */
-void embPattern_addEllipseObjectAbs(EmbPattern* p, float cx, float cy, float rx, float ry)
+void embPattern_addEllipseObjectAbs(EmbPattern* p, float cx, float cy, float rx, float ry, float rotation, int lineType, EmbColor color)
 {
     EmbEllipse ellipse;
     ellipse.center.x = cx;
     ellipse.center.y = cy;
     ellipse.radius.x = rx;
     ellipse.radius.y = ry;
+    ellipse.rotation = rotation;
+    ellipse.lineType = lineType;
+    ellipse.color = black;
 
     if (!p) {
         embLog("ERROR: embPattern_addEllipseObjectAbs(), p==0\n");
         return;
     }
-    embArray_addEllipse(p->ellipses, ellipse, 0.0, 0, black);
+    embArray_add(p->ellipses, &ellipse);
 }
 
 /*! Adds a line object to pattern (\a p) starting at the absolute position
  * (\a x1,\a y1) and ending at the absolute position (\a x2,\a y2).
  * Positive y is up. Units are in millimeters.
  */
-void embPattern_addLineObjectAbs(EmbPattern* p, float x1, float y1, float x2, float y2)
+void embPattern_addLineObjectAbs(EmbPattern* p, float x1, float y1, float x2, float y2, int lineType, EmbColor color)
 {
     EmbLine line;
     line.start.x = x1;
     line.start.y = y1;
     line.end.x = x2;
     line.end.y = y2;
+    line.lineType = lineType;
+    line.color = color;
 
     if (!p) {
         embLog("ERROR: embPattern_addLineObjectAbs(), p==0\n");
         return;
     }
-    embArray_addLine(p->lines, line, 0, black);
+    embArray_add(p->lines, &line);
 }
 
 void embPattern_addPathObjectAbs(EmbPattern* p, EmbPathObject* obj)
@@ -2862,21 +2677,23 @@ void embPattern_addPathObjectAbs(EmbPattern* p, EmbPathObject* obj)
         return;
     }
 
-    embArray_addPath(p->paths, obj);
+    embArray_add(p->paths, obj);
 }
 
 /*! Adds a point object to pattern (\a p) at the absolute position (\a x,\a y). Positive y is up. Units are in millimeters. */
-void embPattern_addPointObjectAbs(EmbPattern* p, float x, float y)
+void embPattern_addPointObjectAbs(EmbPattern* p, float x, float y, int lineType, EmbColor color)
 {
-    EmbVector point;
+    EmbPointObject point;
     point.x = x;
     point.y = y;
+    point.lineType = lineType;
+    point.color = color;
 
     if (!p) {
         embLog("ERROR: embPattern_addPointObjectAbs(), p==0\n");
         return;
     }
-    embArray_addPoint(p->points, point, 0, black);
+    embArray_add(p->points, &point);
 }
 
 void embPattern_addPolygonObjectAbs(EmbPattern* p, EmbPolygonObject* obj)
@@ -2894,7 +2711,7 @@ void embPattern_addPolygonObjectAbs(EmbPattern* p, EmbPolygonObject* obj)
         return;
     }
 
-    embArray_addPolygon(p->polygons, obj);
+    embArray_add(p->polygons, obj);
 }
 
 void embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj)
@@ -2912,7 +2729,7 @@ void embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj)
         return;
     }
 
-    embArray_addPolyline(p->polylines, obj);
+    embArray_add(p->polylines, obj);
 }
 
 static void embPattern_colorBlock16(EmbPattern *pattern, EmbFile file)
@@ -2936,19 +2753,21 @@ static void embPattern_colorBlock16(EmbPattern *pattern, EmbFile file)
  * (\a x,\a y) with a width of (\a w) and a height of (\a h).
  * Positive y is up. Units are in millimeters.
  */
-void embPattern_addRectObjectAbs(EmbPattern* p, float x, float y, float w, float h)
+void embPattern_addRectObjectAbs(EmbPattern* p, float x, float y, float w, float h, int lineType, EmbColor color)
 {
     EmbRect rect;
     rect.left = x;
     rect.top = y;
     rect.right = x + w;
     rect.bottom = y + h;
+    rect.lineType = 0;
+    rect.color = color;
 
     if (!p) {
         embLog("ERROR: embPattern_addRectObjectAbs(), p==0\n");
         return;
     }
-    embArray_addRect(p->rects, rect, 0, black);
+    embArray_add(p->rects, &rect);
 }
 
 void embArray_resample(EmbArray *a, EmbArray *usePt)
@@ -3267,7 +3086,8 @@ int embPolygon_DouglasPeuckerSimplify(EmbArray *vertices, float distanceToleranc
 
     _usePt = embArray_create(EMB_FLAG);
     for (i = 0; i < vertices->length; i++) {
-        embArray_addFlag(_usePt, 1);
+        int flag = 1;
+        embArray_add(_usePt, &flag);
     }
     embPolygon_simplifySection(vertices, _usePt, 0, vertices->length - 1, distanceTolerance);
     embArray_resample(vertices, _usePt);
@@ -3392,7 +3212,7 @@ int embPolygon_reduceByArea(EmbArray *vertices, EmbArray *result, float areaTole
         old2 = embVector_cross(v2, v3);
         new1 = embVector_cross(v1, v3);
         if (emb_fabs(new1 - (old1 + old2)) > areaTolerance) {
-            embArray_addVector(result, v2);
+            embArray_add(result, &v2);
             v1 = v2;
         }
     }
@@ -3430,9 +3250,10 @@ void MergeParallelEdges(EmbArray *vertices, float tolerance)
         norm0 = embVector_getLength(d0);
         norm1 = embVector_getLength(d1);
 
+        int flag = 0;
         if (!(norm0 > 0.0f && norm1 > 0.0f) && newNVertices > 3) {
             /* Merge identical points */
-            embArray_addFlag(usePoints, 0);
+            embArray_add(usePoints, &flag);
             --newNVertices;
             continue;
         }
@@ -3443,12 +3264,13 @@ void MergeParallelEdges(EmbArray *vertices, float tolerance)
         dot = embVector_dot(d0, d1);
 
         if (emb_fabs(cross) < tolerance && dot > 0 && newNVertices > 3) {
-            embArray_addFlag(usePoints, 0);
+            flag = 0;
             --newNVertices;
         }
         else {
-            embArray_addFlag(usePoints, 1);
+            flag = 1;
         }
+        embArray_add(usePoints, &flag);
     }
 
     if (newNVertices == vertices->length || newNVertices == 0) {
@@ -3480,12 +3302,14 @@ int embPolygon_reduceByDistance(EmbArray *vertices, float distance)
         vdist = embVector_distance(a, b);
 
         /* If they are closer than the distance, do not use the i-th point */
+        int flag;
         if (vdist < distance) {
-            embArray_addFlag(usePoints, 0);
+            flag = 0;
         }
         else {
-            embArray_addFlag(usePoints, 1);
+            flag = 1;
         }
+        embArray_add(usePoints, &flag);
     }
 
     embArray_resample(vertices, usePoints);
@@ -3549,15 +3373,15 @@ void embSatinOutline_generateSatinOutline(EmbArray* lines, float thickness, EmbS
 
         embVector_multiply(v1, halfThickness, &temp);
         embVector_add(temp, line.start, &temp);
-        embArray_addVector(outline.side1, temp);
+        embArray_add(outline.side1, &temp);
         embVector_add(temp, line.end, &temp);
-        embArray_addVector(outline.side1, temp);
+        embArray_add(outline.side1, &temp);
 
         embVector_multiply(v1, -halfThickness, &temp);
         embVector_add(temp, line.start, &temp);
-        embArray_addVector(outline.side2, temp);
+        embArray_add(outline.side2, &temp);
         embVector_add(temp, line.end, &temp);
-        embArray_addVector(outline.side2, temp);
+        embArray_add(outline.side2, &temp);
     }
 
     if (!result) {
@@ -3569,9 +3393,9 @@ void embSatinOutline_generateSatinOutline(EmbArray* lines, float thickness, EmbS
 
     EmbVector a;
     embArray_get(outline.side1, &a, 0);
-    embArray_addVector(result->side1, a);
+    embArray_add(result->side1, &a);
     embArray_get(outline.side2, &a, 0);
-    embArray_addVector(result->side2, a);
+    embArray_add(result->side2, &a);
 
     for (i = 3; i < intermediateOutlineCount; i += 2) {
         embArray_get(outline.side1, &(line1.start), i - 3);
@@ -3579,20 +3403,20 @@ void embSatinOutline_generateSatinOutline(EmbArray* lines, float thickness, EmbS
         embArray_get(outline.side1, &(line2.start), i - 1);
         embArray_get(outline.side1, &(line2.end), i);
         embLine_intersectionPoint(line1, line2, &temp);
-        embArray_addVector(result->side1, temp);
+        embArray_add(result->side1, &temp);
 
         embArray_get(outline.side2, &(line1.start), i - 3);
         embArray_get(outline.side2, &(line1.end), i - 2);
         embArray_get(outline.side2, &(line2.start), i - 1);
         embArray_get(outline.side2, &(line2.end), i);
         embLine_intersectionPoint(line1, line2, &temp);
-        embArray_addVector(result->side2, temp);
+        embArray_add(result->side2, &temp);
     }
 
     embArray_get(outline.side1, &a, 2*lines->length - 3);
-    embArray_addVector(result->side1, a);
+    embArray_add(result->side1, &a);
     embArray_get(outline.side2, &a, 2*lines->length - 3);
-    embArray_addVector(result->side2, a);
+    embArray_add(result->side2, &a);
     result->length = lines->length;
 }
 
@@ -3639,14 +3463,14 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, float density)
                 if (!stitches) {
                     stitches = embArray_create(EMB_VECTOR);
                 }
-                embArray_addVector(stitches, currTop);
-                embArray_addVector(stitches, currBottom);
+                embArray_add(stitches, &currTop);
+                embArray_add(stitches, &currBottom);
                 embVector_add(currTop, topStep, &currTop);
                 embVector_add(currBottom, bottomStep, &currBottom);
             }
         }
-        embArray_addVector(stitches, currTop);
-        embArray_addVector(stitches, currBottom);
+        embArray_add(stitches, &currTop);
+        embArray_add(stitches, &currBottom);
     }
     return stitches;
 }
@@ -4344,7 +4168,7 @@ int bcfFile_read(EmbFile file, bcf_file* bcfFile)
 EmbFile GetFile(bcf_file* bcfFile, EmbFile file, char* fileToFind)
 {
     int filesize, sectorSize, currentSector, sizeToWrite, currentSize, totalSectors, i;
-    char* input = 0;
+    char input;
     EmbFile fileOut = embFile_tmpfile();
     bcf_directory_entry* pointer = bcfFile->directory->dirEntries;
     while (pointer) {
@@ -4354,10 +4178,7 @@ EmbFile GetFile(bcf_file* bcfFile, EmbFile file, char* fileToFind)
     }
     filesize = pointer->streamSize;
     sectorSize = bcfFile->difat->sectorSize;
-    input = (char*)malloc(sectorSize);
-    if (!input) {
-        embLog("ERROR: GetFile(), cannot allocate memory for input\n");
-    } /* TODO: avoid crashing. null pointer will be accessed */
+
     currentSize = 0;
     currentSector = pointer->startingSectorLocation;
     totalSectors = (int)emb_ceil((float)filesize / sectorSize);
@@ -4367,13 +4188,11 @@ EmbFile GetFile(bcf_file* bcfFile, EmbFile file, char* fileToFind)
         if (sectorSize < sizeToWrite) {
             sizeToWrite = sectorSize;
         }
-        embFile_read(input, 1, sizeToWrite, file);
-        embFile_write(input, 1, sizeToWrite, fileOut);
+        embFile_read(&input, 1, sizeToWrite, file);
+        embFile_write(&input, 1, sizeToWrite, fileOut);
         currentSize += sizeToWrite;
         currentSector = bcfFile->fat->fatEntries[currentSector];
     }
-    free(input);
-    input = 0;
     return fileOut;
 }
 
@@ -11140,15 +10959,12 @@ void svgElement_free(SvgElement* element)
 
     while (list) {
         free(list->attribute.name);
-        list->attribute.name = 0;
         free(list->attribute.value);
-        list->attribute.value = 0;
         nextList = list->next;
         free(list);
         list = nextList;
     }
 
-    element->lastAttribute = 0;
     free(element->name);
     free(element);
 }
@@ -11202,7 +11018,7 @@ char* svgAttribute_getValue(SvgElement* element, const char* name)
 
 void svgAddToPattern(EmbPattern* p)
 {
-    EmbVector test;
+    EmbPointObject test;
     EmbColor color;
     EmbPathObject* path;
 
@@ -11217,27 +11033,14 @@ void svgAddToPattern(EmbPattern* p)
     char token = identify_element(currentElement->name);
 
     switch (token) {
-    case ELEMENT_XML:
-    case ELEMENT_A:
-    case ELEMENT_ANIMATE:
-    case ELEMENT_ANIMATE_COLOR:
-    case ELEMENT_ANIMATE_MOTION:
-    case ELEMENT_ANIMATE_TRANSFORM:
-    case ELEMENT_ANIMATION:
-    case ELEMENT_AUDIO:
-        break;
     case ELEMENT_CIRCLE:
         {
         float cx, cy, r;
         cx = emb_array_to_float(svgAttribute_getValue(currentElement, "cx"));
         cy = emb_array_to_float(svgAttribute_getValue(currentElement, "cy"));
         r = emb_array_to_float(svgAttribute_getValue(currentElement, "r"));
-        embPattern_addCircleObjectAbs(p, cx, cy, r);
+        embPattern_addCircleObjectAbs(p, cx, cy, r, 0, black);
         }
-        break;
-    case ELEMENT_DEFS:
-    case ELEMENT_DESC:
-    case ELEMENT_DISCARD:
         break;
     case ELEMENT_ELLIPSE:
         {
@@ -11246,19 +11049,8 @@ void svgAddToPattern(EmbPattern* p)
         cy = emb_array_to_float(svgAttribute_getValue(currentElement, "cy"));
         rx = emb_array_to_float(svgAttribute_getValue(currentElement, "rx"));
         ry = emb_array_to_float(svgAttribute_getValue(currentElement, "ry"));
-        embPattern_addEllipseObjectAbs(p, cx, cy, rx, ry);
+        embPattern_addEllipseObjectAbs(p, cx, cy, rx, ry, 0.0, 0, black);
         }
-        break;
-    case ELEMENT_FONT:
-    case ELEMENT_FONT_FACE:
-    case ELEMENT_FONT_FACE_SRC:
-    case ELEMENT_FONT_FACE_URI:
-    case ELEMENT_FOREIGN_OBJECT:
-    case ELEMENT_G:
-    case ELEMENT_GLYPH:
-    case ELEMENT_HANDLER:
-    case ELEMENT_HKERN:
-    case ELEMENT_IMAGE:
         break;
     case ELEMENT_LINE:
         {
@@ -11266,21 +11058,20 @@ void svgAddToPattern(EmbPattern* p)
         char* y1 = svgAttribute_getValue(currentElement, "y1");
         char* x2 = svgAttribute_getValue(currentElement, "x2");
         char* y2 = svgAttribute_getValue(currentElement, "y2");
+        
+        float x1_f = emb_array_to_float(x1);
+        float y1_f = emb_array_to_float(y1);
+        float x2_f = emb_array_to_float(x2);
+        float y2_f = emb_array_to_float(y2);
 
         /* If the starting and ending points are the same, it is a point */
         if (string_equal(x1, x2) && string_equal(y1, y2)) {
-            embPattern_addPointObjectAbs(p, emb_array_to_float(x1), emb_array_to_float(y1));
+            embPattern_addPointObjectAbs(p, x1_f, y1_f, 0, black);
         }
         else {
-            embPattern_addLineObjectAbs(p, emb_array_to_float(x1), emb_array_to_float(y1), emb_array_to_float(x2), emb_array_to_float(y2));
+            embPattern_addLineObjectAbs(p, x1_f, y1_f, x2_f, y2_f, 0, black);
         }
         }
-        break;
-    case ELEMENT_LINEAR_GRADIENT:
-    case ELEMENT_LISTENER:
-    case ELEMENT_METADATA:
-    case ELEMENT_MISSING_GLYPH:
-    case ELEMENT_MPATH:
         break;
     case ELEMENT_PATH:
         {
@@ -11467,8 +11258,11 @@ void svgAddToPattern(EmbPattern* p)
                         }
                         test.x = xx;
                         test.y = yy;
-                        embArray_addPoint(pointList, test, 0, black);
-                        embArray_addFlag(flagList, svgPathCmdToEmbPathFlag(cmd));
+                        test.lineType = 0;
+                        test.color = black;
+                        int flag = svgPathCmdToEmbPathFlag(cmd);
+                        embArray_add(pointList, &test);
+                        embArray_add(flagList, &flag);
                         lx = xx;
                         ly = yy;
 
@@ -11559,12 +11353,8 @@ void svgAddToPattern(EmbPattern* p)
 
         EmbArray* pointList = 0;
 
-        char* polybuff = 0;
-        polybuff = (char*)malloc(size);
-        if (!polybuff) {
-            embLog("ERROR: svgAddToPattern(), cannot allocate memory for polybuff\n");
-            return;
-        }
+        /* if this goes over, switch the embArray_create(EMB_CHAR) */
+        char* polybuff = (char*)embBuffer;
 
         for (i = 0; i < last; i++) {
             char c = pointStr[i];
@@ -11579,7 +11369,7 @@ void svgAddToPattern(EmbPattern* p)
                     odd = 0;
                     xx = emb_array_to_float(polybuff);
                 } else {
-                    EmbVector a;
+                    EmbPointObject a;
                     odd = 1;
                     yy = emb_array_to_float(polybuff);
 
@@ -11588,45 +11378,40 @@ void svgAddToPattern(EmbPattern* p)
                     }
                     a.x = xx;
                     a.y = yy;
-                    embArray_addPoint(pointList, a, 0, black);
+                    a.lineType = 0;
+                    a.color = black;
+                    embArray_add(pointList, &a);
                 }
 
                 break;
             default:
                 polybuff[pos++] = (char)c;
+                if (pos == 1024) {
+                    embLog("Buffer overflow: polybuff.");
+                    return 0;
+                }
                 break;
             }
-            if (pos >= size - 1) {
-                /* increase polybuff length - leave room for 0 */
-                size *= 2;
-                polybuff = (char*)realloc(polybuff, size);
-                if (!polybuff) {
-                    embLog("ERROR: svgAddToPattern(), cannot re-allocate memory for polybuff\n");
-                    return;
-                }
-            }
         }
-        free(polybuff);
 
+        char *s = svgAttribute_getValue(currentElement, "stroke");
         if (token == ELEMENT_POLYGON) {
             EmbPolygonObject polygonObj;
             polygonObj.pointList = pointList;
-            polygonObj.color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
+            polygonObj.color = svgColorToEmbColor(s);
             polygonObj.lineType = 1; /* TODO: use lineType enum */
-            embPattern_addPolygonObjectAbs(p, &polygonObj);
+            embArray_add(p->polygons, &polygonObj);
         }
         else { /* polyline */
-            EmbPolylineObject* polylineObj;
-            polylineObj->pointList = pointList;
-            polylineObj->color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
-            polylineObj->lineType = 1; /* TODO: use lineType enum */
-            embPattern_addPolylineObjectAbs(p, polylineObj);
+            EmbPolylineObject polylineObj;
+            polylineObj.pointList = pointList;
+            polylineObj.color = svgColorToEmbColor(s);
+            polylineObj.lineType = 1; /* TODO: use lineType enum */
+            embArray_add(p->polylines, &polylineObj);
         }
 
         }
         break;
-    case ELEMENT_PREFETCH:
-    case ELEMENT_RADIAL_GRADIENT:
     case ELEMENT_RECT:
         {
         float x1, y1, width, height;
@@ -11634,23 +11419,9 @@ void svgAddToPattern(EmbPattern* p)
         y1 = emb_array_to_float(svgAttribute_getValue(currentElement, "y"));
         width = emb_array_to_float(svgAttribute_getValue(currentElement, "width"));
         height = emb_array_to_float(svgAttribute_getValue(currentElement, "height"));
-        embPattern_addRectObjectAbs(p, x1, y1, width, height);
+        embPattern_addRectObjectAbs(p, x1, y1, width, height, 0, black);
         }
         break;
-    case ELEMENT_SCRIPT:
-    case ELEMENT_SET:
-    case ELEMENT_SOLID_COLOR:
-    case ELEMENT_STOP:
-    case ELEMENT_SVG:
-    case ELEMENT_SWITCH:
-    case ELEMENT_TBREAK:
-    case ELEMENT_TEXT:
-    case ELEMENT_TEXT_AREA:
-    case ELEMENT_TITLE:
-    case ELEMENT_TSPAN:
-    case ELEMENT_USE:
-    case ELEMENT_VIDEO:
-    case ELEMENT_UNKNOWN:
     default:
         break;
     }
@@ -11906,16 +11677,9 @@ void svgProcess(int c, const char* buff)
  *  Returns \c true if successful, otherwise returns \c false. */
 static char readSvg(EmbPattern* p, EmbFile file, const char* fileName)
 {
-    int size = 1024;
     int pos;
-    int c = 0;
-    char* buff = 0;
-
-    buff = (char*)malloc(size);
-    if (!buff) {
-        embLog("ERROR: readSvg(), cannot allocate memory for buff\n");
-        return 0;
-    }
+    char c;
+    char* buff = (char*)embBuffer;
 
     svgCreator = SVG_CREATOR_NULL;
 
@@ -11958,18 +11722,12 @@ static char readSvg(EmbPattern* p, EmbFile file, const char* fileName)
             buff[pos++] = (char)c;
             break;
         }
-        if (pos >= size - 1) {
-            /* increase buff length - leave room for 0 */
-            size *= 2;
-            buff = (char*)realloc(buff, size);
-            if (!buff) {
-                embLog("ERROR: readSvg(), cannot re-allocate memory for buff.");
-                return 0;
-            }
+        if (pos >= 1024) {
+            embLog("ERROR: readSvg(), buffer overflow.");
+            return 0;
         }
     }
 
-    free(buff);
     free(currentAttribute);
     free(currentValue);
 
@@ -12064,17 +11822,17 @@ static void writePolygons(EmbPattern* p, EmbFile file)
     int i, j;
     if (p->polygons) {
         for (i = 0; i < p->polygons->length; i++) {
-            EmbArray* pointList;
+            EmbPolygonObject polygon;
             EmbVector a;
-            pointList = p->polygons->polygon[i]->pointList;
+            embArray_get(p->polygons, &polygon, i);
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_print(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" fill=\"none\" ");
-            write_svg_color(file, p->polygons->polygon[i]->color);
+            write_svg_color(file, polygon.color);
             embFile_print(file, "points=\"");
-            embArray_get(pointList, &a, 0);
+            embArray_get(polygon.pointList, &a, 0);
             writePoint(file, a.x, a.y, 0);
-            for (j = 1; j < pointList->length; j++) {
-                embArray_get(pointList, &a, j);
+            for (j = 1; j < polygon.pointList->length; j++) {
+                embArray_get(polygon.pointList, &a, j);
                 writePoint(file, a.x, a.y, 1);
             }
             embFile_print(file, "\" />");
@@ -12087,19 +11845,17 @@ static void writePolylines(EmbPattern* p, EmbFile file)
     int i, j;
     if (p->polylines) {
         for (i = 0; i < p->polylines->length; i++) {
-            EmbArray* pointList;
-            EmbColor color;
+            EmbPolylineObject polyline;
             EmbVector v;
-            pointList = p->polylines->polyline[i]->pointList;
-            color = p->polylines->polyline[i]->color;
+            embArray_get(p->polylines, &polyline, i);
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" ");
-            write_svg_color(file, color);
+            write_svg_color(file, polyline.color);
             embFile_print(file, "fill=\"none\" points=\"");
-            embArray_get(pointList, &v, 0);
+            embArray_get(polyline.pointList, &v, 0);
             writePoint(file, v.x, v.y, 0);
-            for (j = 1; j < pointList->length; j++) {
-                embArray_get(pointList, &v, j);
+            for (j = 1; j < polyline.pointList->length; j++) {
+                embArray_get(polyline.pointList, &v, j);
                 writePoint(file, v.x, v.y, 1);
             }
             embFile_print(file, "\" />");

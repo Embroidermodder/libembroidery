@@ -124,7 +124,7 @@ static int create_test_file_1(const char* outf)
         st.y = 10 + 10 * cos(i * (0.5 / 3.141592));
         st.flags = NORMAL;
         st.color = 0;
-        embArray_addStitch(p->stitchList, st);
+        embArray_add(p->stitchList, &st);
     }
 
     EmbThread thr = { { 0, 0, 0 }, "Black", "Black" };
@@ -154,7 +154,7 @@ static int create_test_file_2(const char* outf)
         st.y = 10 + i * 0.1;
         st.flags = NORMAL;
         st.color = 0;
-        embArray_addStitch(p->stitchList, st);
+        embArray_add(p->stitchList, &st);
     }
 
     EmbThread thr = { { 0, 0, 0 }, "Black", "Black" };

@@ -5,6 +5,7 @@
 #define EmbFile    InoFile
 #else
 #ifdef linux
+#define _GNU_SOURCE
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -17,8 +18,6 @@ int sscanf(char *, const char *, ...);
 int rand(void);
 
 void *malloc(size_t);
-void *realloc(void *, size_t);
-void *calloc(long unsigned int, long unsigned int);
 void free(void *);
 
 #define EmbFile    int
@@ -284,7 +283,6 @@ static char writeXxx(EmbPattern *pattern, EmbFile file, const char* fileName);
 static char readZsk(EmbPattern *pattern, EmbFile file, const char* fileName);
 static char writeZsk(EmbPattern *pattern, EmbFile file, const char* fileName);
 
-static char identify_element(char *token);
 static void print_log_string(int offset);
 
 static int encode_dst_ternary(int *, unsigned char *);
@@ -292,12 +290,12 @@ static void decode_dst_ternary(int *, unsigned char *);
 
 static void writePoint(EmbFile file, float x, float y, int space);
 static void write_svg_color(EmbFile file, EmbColor color);
-static void writeCircles(EmbPattern* p, EmbFile file);
-static void writeEllipse(EmbPattern* p, EmbFile file);
-static void writePoints(EmbPattern* p, EmbFile file);
-static void writePolygons(EmbPattern* p, EmbFile file);
-static void writePolylines(EmbPattern* p, EmbFile file);
-static void writeStitchList(EmbPattern* p, EmbFile file);
+static void writeCircles(EmbFile file, EmbArray* a, int i);
+static void writeEllipse(EmbFile file, EmbArray* a, int i);
+static void writePoints(EmbFile file, EmbArray* a, int i);
+static void writePolygons(EmbFile file, EmbArray* a, int i);
+static void writePolylines(EmbFile file, EmbArray* a, int i);
+static void writeStitchList(EmbFile file, EmbArray* a, int i);
 
 static EmbFile embFile_open(const char* fileName, const char* mode, int optional);
 static int embFile_readline(EmbFile stream, char *, int);
@@ -305,6 +303,8 @@ static int embFile_close(EmbFile stream);
 static EmbFile embFile_tmpfile(void);
 static void embFile_print(EmbFile stream, const char*);
 static void embFile_pad(EmbFile f, char, int);
+
+static char identify_element(char *token);
 
 static int bcfFile_read(EmbFile file, bcf_file* bcfFile);
 static EmbFile GetFile(bcf_file* bcfFile, EmbFile file, char* fileToFind);
@@ -328,7 +328,9 @@ static unsigned char embBuffer[1024];
 static EmbFile datafile;
 static EmbFile memory[100];
 static EmbArray arrays[100];
+static EmbPattern patterns[10];
 static int memory_files = 0;
+static int active_patterns = 0;
 
 /* Flag Defines
  */
@@ -861,14 +863,13 @@ EmbArray* embArray_create(int type)
     };
     char fname[40];
     EmbArray* p;
-    p = &(arrays[memory_files]);
+    p = arrays+memory_files;
     p->type = type;
     p->length = 0;
     p->size = sizes[type];
     p->file_id = memory_files;
     memory_files++;
-    sprintf(fname, "memory/libemb_%d.bin", p->file_id);
-    memory[p->file_id] = embFile_open(fname, "wb+", 0);
+    memory[p->file_id] = embFile_tmpfile();
     return p;
 }
 
@@ -894,21 +895,51 @@ int embArray_set(EmbArray *p, void *data, int i)
     return 1;    
 }
 
+static void embArray_read(EmbFile *file, EmbArray *a, int offset, int n)
+{
+    int i;
+    void *data = (void*)embBuffer;
+    embFile_seek(file, offset, SEEK_SET);
+    for (i=0; i<n; i++) {
+        embFile_read(data, a->size, 1, file);
+        embArray_set(file, a, i);
+    }
+}
+
+static void embArray_write(EmbFile *file, EmbArray *a, int offset, int n)
+{
+    int i;
+    void *data = (void*)embBuffer;
+    embFile_seek(file, offset, SEEK_SET);
+    for (i=0; i<n; i++) {
+        embArray_get(file, data, i);
+        embFile_write(data, a->size, 1, file);
+    }
+}
+
 void embArray_free(EmbArray* p)
 {
     /* delete file, will be automatic for TMPFILE */
+    embFile_close(memory[p->file_id]);
 }
 
 void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int compressionType)
 {
     /* TODO: find and analyse some HUS encoded files and DST equivalents */
-    output = (unsigned char*)malloc(compressedSize + 1);
+    output = embBuffer;
+    if (compressedSize+1 > 1024) {
+        embLog("husExpand buffer overflow.");
+        return;
+    }
 }
 
 int husCompress(unsigned char* input, unsigned long _inputSize, unsigned char* output, int compressionType, int outputSize)
 {
     /* TODO: find and analyse some HUS encoded files and DST equivalents */
-    output = (unsigned char*)malloc(outputSize + 1);
+    if (outputSize+1 > 1024) {
+        embLog("huscompress buffer overflow.");
+        return 1;
+    }
     return 0;
 }
 
@@ -1798,7 +1829,8 @@ float embVector_cross(EmbVector a, EmbVector b)
 EmbPattern* embPattern_create(void)
 {
     EmbPattern* p;
-    p = (EmbPattern*)malloc(sizeof(EmbPattern));
+    p = patterns+active_patterns;
+    active_patterns++;
     if (!p) {
         embLog("ERROR: embPattern_create(), unable to allocate memory for p\n");
         return 0;
@@ -2583,10 +2615,6 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
 /*! Frees all memory allocated in the pattern (\a p). */
 void embPattern_free(EmbPattern* p)
 {
-    if (!p) {
-        embLog("ERROR: embPattern_free(), p==0\n");
-        return;
-    }
     embArray_free(p->stitchList);
     embArray_free(p->arcs);
     embArray_free(p->circles);
@@ -2598,7 +2626,6 @@ void embPattern_free(EmbPattern* p)
     embArray_free(p->polylines);
     embArray_free(p->rects);
     embArray_free(p->splines);
-    free(p);
 }
 
 /*! Adds a circle object to pattern (\a p) with its center at the absolute
@@ -3478,11 +3505,9 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, float density)
 static bcf_file_difat* bcf_difat_create(EmbFile file, unsigned int fatSectors, const unsigned int sectorSize);
 static unsigned int readFullSector(EmbFile file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
 static unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
-static void bcf_file_difat_free(bcf_file_difat* difat);
 
 static bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
 static void loadFatFromSector(bcf_file_fat* fat, EmbFile file);
-static void bcf_file_fat_free(bcf_file_fat* fat);
 
 static bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile file);
 static bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
@@ -4060,7 +4085,7 @@ EmbFile embFile_tmpfile(void)
     return inoFile_tmpfile();
 #else
 #ifdef linux
-    return open("/tmp/libembroidery.bin", O_RDWR | O_CREAT, 0666);
+    return open("/tmp", O_RDWR | O_TMPFILE, 0666);
 #else
     return tmpfile();
 #endif
@@ -4201,14 +4226,10 @@ EmbFile GetFile(bcf_file* bcfFile, EmbFile file, char* fileToFind)
  */
 void bcf_file_free(bcf_file* bcfFile)
 {
-    bcf_file_difat_free(bcfFile->difat);
-    bcfFile->difat = 0;
-    bcf_file_fat_free(bcfFile->fat);
-    bcfFile->fat = 0;
+    free(bcfFile->difat);
+    free(bcfFile->fat);
     bcf_directory_free(bcfFile->directory);
-    bcfFile->directory = 0;
     free(bcfFile);
-    bcfFile = 0;
 }
 
 /**
@@ -4284,14 +4305,6 @@ unsigned int readFullSector(EmbFile file, bcf_file_difat* bcfFile, unsigned int*
     }
     nextDifatSectorInChain = binaryReadUInt32(file);
     return nextDifatSectorInChain;
-}
-
-/**
- * TODO: documentation.
- */
-void bcf_file_difat_free(bcf_file_difat* difat)
-{
-    free(difat);
 }
 
 /**
@@ -4441,15 +4454,6 @@ void loadFatFromSector(bcf_file_fat* fat, EmbFile file)
         fat->fatEntries[i] = fatEntry;
     }
     fat->fatEntryCount = newSize;
-}
-
-/**
- * TODO: documentation.
- */
-void bcf_file_fat_free(bcf_file_fat* fat)
-{
-    free(fat);
-    fat = 0;
 }
 
 /**
@@ -6726,22 +6730,22 @@ static char readKsm(EmbPattern* pattern, EmbFile file, const char* fileName)
 
 static char writeKsm(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
-    float xx, yy, dx, dy;
+    EmbVector pos, diff;
     int i;
 
     embFile_pad(file, 0, 0x200);
 
     /* write stitches */
-    xx = yy = 0;
+    pos.x = pos.y = 0;
     for (i = 0; i < pattern->stitchList->length; i++) {
         EmbStitch st;
         unsigned char b[4];
         embArray_get(pattern->stitchList, &st, i);
-        dx = st.x - xx;
-        dy = st.y - yy;
-        xx = st.x;
-        yy = st.y;
-        ksmEncode(b, (char)(dx * 10.0), (char)(dy * 10.0), st.flags);
+        diff.x = st.x - pos.x;
+        diff.y = st.y - pos.y;
+        pos.x = st.x;
+        pos.y = st.y;
+        ksmEncode(b, (char)(diff.x * 10.0), (char)(diff.y * 10.0), st.flags);
         embFile_write(b, 1, 2, file);
     }
     embFile_print(file, "\x1a");
@@ -6853,19 +6857,19 @@ static unsigned char mitEncodeStitch(float value)
 static char writeMit(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     EmbStitch st;
-    float xx, yy, dx, dy;
+    EmbVector pos, diff;
     int i;
 
     embPattern_correctForMaxStitchLength(pattern, 0x1F, 0x1F);
-    xx = yy = 0;
+    pos.x = pos.y = 0;
     for (i = 0; i < pattern->stitchList->length; i++) {
         embArray_get(pattern->stitchList, &st, i);
-        dx = st.x - xx;
-        dy = st.y - yy;
-        xx = st.x;
-        yy = st.y;
-        embBuffer[0] = mitEncodeStitch(dx);
-        embBuffer[1] = mitEncodeStitch(dy);
+        diff.x = st.x - pos.x;
+        diff.y = st.y - pos.y;
+        pos.x = st.x;
+        pos.y = st.y;
+        embBuffer[0] = mitEncodeStitch(diff.x);
+        embBuffer[1] = mitEncodeStitch(diff.y);
         embFile_write(embBuffer, 1, 2, file);
     }
     return 1;
@@ -6887,7 +6891,6 @@ static char readNew(EmbPattern* pattern, EmbFile file, const char* fileName)
         int x = decodeNewStitch(data[0]);
         int y = decodeNewStitch(data[1]);
         int flag = NORMAL;
-        char val = data[2];
         if (data[2] & 0x40) {
             x = -x;
         }
@@ -6900,14 +6903,14 @@ static char readNew(EmbPattern* pattern, EmbFile file, const char* fileName)
         if (data[2] & 0x01) {
             flag = JUMP;
         }
-        if ((val & 0x1E) == 0x02) {
+        if ((data[2] & 0x1E) == 0x02) {
             flag = STOP;
         }
         /* Unknown values, possibly TRIM
         155 = 1001 1011 = 0x9B
         145 = 1001 0001 = 0x91
         */
-        /*val = (data[2] & 0x1C);
+        /*char val = (data[2] & 0x1C);
         if(val != 0 && data[2] != 0x9B && data[2] != 0x91)
         {
             int z = 1;
@@ -6944,16 +6947,11 @@ static char* ofmReadLibrary(EmbFile file)
 static int ofmReadClass(EmbFile file)
 {
     int len;
-    char* s = 0;
+    char* s = (char*)embBuffer;
 
     binaryReadInt16(file);
     len = binaryReadInt16(file);
 
-    s = (char*)malloc(sizeof(char) * len + 1);
-    if (!s) {
-        embLog("ERROR: ofmReadClass(), malloc()\n");
-        return 0;
-    }
     binaryReadBytes(file, (unsigned char*)s, len); /* TODO: check return value */
     s[len] = '\0';
     if (string_equal(s, "CExpStitch"))
@@ -7000,7 +6998,7 @@ static void ofmReadThreads(EmbFile file, EmbPattern* p)
 {
     int i, nColors, stringLen, numberOfLibraries;
     char* primaryLibraryName = 0;
-    char* expandedString = 0;
+    char* expandedString;
 
     /* Magic Code: FF FE FF 00
      * Number of colors: 2 bytes signed short
@@ -7010,11 +7008,7 @@ static void ofmReadThreads(EmbFile file, EmbPattern* p)
     nColors = binaryReadInt16(file);
     embFile_read(embBuffer, 1, 2, file);
     stringLen = binaryReadInt16(file);
-    expandedString = (char*)malloc(stringLen);
-    if (!expandedString) {
-        embLog("ERROR: ofmReadThreads(), malloc()\n");
-        return;
-    }
+    expandedString = (char*)embBuffer;
     binaryReadBytes(file, (unsigned char*)expandedString, stringLen); /* TODO: check return value */
     for (i = 0; i < nColors; i++) {
         EmbThread thread;
@@ -7030,15 +7024,14 @@ static void ofmReadThreads(EmbFile file, EmbPattern* p)
         binaryReadByte(file);
         binaryReadInt16(file);
         colorNameLength = binaryReadByte(file);
-        colorName = (char*)malloc(colorNameLength * 2);
-        if (!colorName) {
-            embLog("ERROR: ofmReadThreads(), malloc()\n");
+        colorName = (char*)embBuffer;
+        if (colorNameLength > 1023/2) {
+            embLog("ERROR: ofmReadThreads(), ran out of memory for colorName\n");
             return;
         }
         binaryReadBytes(file, (unsigned char*)colorName, colorNameLength * 2); /* TODO: check return value */
         binaryReadInt16(file);
-        /* itoa(colorNumber, colorNumberText, 10); TODO: never use itoa, it's non-standard, use sprintf:
-           http://stackoverflow.com/questions/5242524/converting-int-to-string-in-c */
+        emb_int_to_array(colorNumber, colorNumberText, 10);
         thread.color = embColor_fromStr(color);
         string_copy(thread.catalogNumber, colorNumberText);
         string_copy(thread.description, colorName);
@@ -7051,7 +7044,6 @@ static void ofmReadThreads(EmbFile file, EmbPattern* p)
         /*libraries.Add( TODO: review */
         char* libName = ofmReadLibrary(file);
         free(libName);
-        libName = 0;
     }
 }
 
@@ -8257,7 +8249,10 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile file, const char*
     binaryWriteShort(file, 0x07); /* string length */
     binaryWriteBytes(file, "CSewSeg", 7);
 
-    colorInfo = (short*)calloc(colorCount * 2, sizeof(short));
+    colorInfo = (short*)malloc(colorCount * 2);
+    for (i=0; i<colorCount*2; i++) {
+        colorInfo[i] = 0;
+    }
 
     colorCode = -1;
     blockCount = 0;
@@ -11319,8 +11314,6 @@ void svgAddToPattern(EmbPattern* p)
             }
             if (pos >= size - 1) {
                 /* increase pathbuff length - leave room for 0 */
-                size *= 2;
-                pathbuff = (char*)realloc(pathbuff, size);
                 if (!pathbuff) {
                     embLog("ERROR: svgAddToPattern(), cannot re-allocate memory for pathbuff\n");
                     return;
@@ -11645,7 +11638,6 @@ void svgProcess(int c, const char* buff)
                 int length;
                 string_copy(buffer, currentValue);
                 length = string_length(buff) + string_length(buffer) + 2;
-                currentValue = realloc(currentValue, length);
                 if (!currentValue) {
                     embLog("ERROR: svgProcess(), cannot allocate memory for currentValue\n");
                     return;
@@ -11739,184 +11731,119 @@ static char readSvg(EmbPattern* p, EmbFile file, const char* fileName)
     return 1; /*TODO: finish readSvg */
 }
 
-static void writeCircles(EmbPattern* p, EmbFile file)
+static void writeCircles(EmbFile file, EmbArray* a, int i)
 {
-    int i;
     EmbCircle circle;
-    if (p->circles) {
-        for (i = 0; i < p->circles->length; i++) {
-            embArray_get(p->circles, &circle, i);
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<circle stroke-width=\"0.2\" fill=\"none\" ");
-            write_svg_color(file, circle.color);
-            writeFloatAttribute(file, "cx", circle.center.x);
-            writeFloatAttribute(file, "cy", circle.center.y);
-            writeFloatAttribute(file, "r", circle.radius);
-            embFile_print(file, "/>");
-        }
-    }
+    embArray_get(a, &circle, i);
+    /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+    embFile_print(file, "\n<circle stroke-width=\"0.2\" fill=\"none\" ");
+    write_svg_color(file, circle.color);
+    writeFloatAttribute(file, "cx", circle.center.x);
+    writeFloatAttribute(file, "cy", circle.center.y);
+    writeFloatAttribute(file, "r", circle.radius);
+    embFile_print(file, "/>");
 }
 
-static void writeEllipses(EmbPattern* p, EmbFile file)
+static void writeEllipses(EmbFile file, EmbArray* a, int i)
 {
-    if (p->ellipses) {
-        int i;
-        for (i = 0; i < p->ellipses->length; i++) {
-            EmbEllipse ellipse;
-            embArray_get(p->ellipses, &ellipse, i);
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<ellipse stroke-width=\"0.2\" fill=\"none\" ");
-            write_svg_color(file, ellipse.color);
-            writeFloatAttribute(file, "cx", ellipse.center.x);
-            writeFloatAttribute(file, "cy", ellipse.center.y);
-            writeFloatAttribute(file, "rx", ellipse.radius.x);
-            writeFloatAttribute(file, "ry", ellipse.radius.y);
-            embFile_print(file, "/>");
-        }
-    }
+    EmbEllipse ellipse;
+    embArray_get(a, &ellipse, i);
+    /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+    embFile_print(file, "\n<ellipse stroke-width=\"0.2\" fill=\"none\" ");
+    write_svg_color(file, ellipse.color);
+    writeFloatAttribute(file, "cx", ellipse.center.x);
+    writeFloatAttribute(file, "cy", ellipse.center.y);
+    writeFloatAttribute(file, "rx", ellipse.radius.x);
+    writeFloatAttribute(file, "ry", ellipse.radius.y);
+    embFile_print(file, "/>");
 }
 
-static void writeLines(EmbPattern* p, EmbFile file)
+static void writeLines(EmbFile file, EmbArray* a, int i)
 {
-    if (p->lines) {
-        int i;
-        for (i = 0; i < p->lines->length; i++) {
-            EmbLine line;
-            embArray_get(p->lines, &line, i);
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<line stroke-width=\"0.2\" fill=\"none\" ");
-            write_svg_color(file, line.color);
-            writeFloatAttribute(file, "x1", line.start.x);
-            writeFloatAttribute(file, "y1", line.start.y);
-            writeFloatAttribute(file, "x2", line.end.x);
-            writeFloatAttribute(file, "y2", line.end.y);
-            embFile_print(file, " />");
-        }
-    }
+    EmbLine line;
+    embArray_get(a, &line, i);
+    /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+    embFile_print(file, "\n<line stroke-width=\"0.2\" fill=\"none\" ");
+    write_svg_color(file, line.color);
+    writeFloatAttribute(file, "x1", line.start.x);
+    writeFloatAttribute(file, "y1", line.start.y);
+    writeFloatAttribute(file, "x2", line.end.x);
+    writeFloatAttribute(file, "y2", line.end.y);
+    embFile_print(file, " />");
 }
 
-static void writePoints(EmbPattern* p, EmbFile file)
+static void writePoints(EmbFile file, EmbArray* a, int i)
 {
-    if (p->points) {
-        int i;
-        for (i = 0; i < p->points->length; i++) {
-            EmbPointObject point;
-            embArray_get(p->points, &point, i);
-            /* See SVG Tiny 1.2 Spec:
-             * Section 9.5 The 'line' element
-             * Section C.6 'path' element implementation notes */
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" fill=\"none\" ");
-            write_svg_color(file, point.color);
-            writeFloatAttribute(file, "x1", point.x);
-            writeFloatAttribute(file, "y1", point.y);
-            writeFloatAttribute(file, "x2", point.x);
-            writeFloatAttribute(file, "y2", point.y);
-            embFile_print(file, " />");
-        }
-    }
+    EmbPointObject point;
+    embArray_get(a, &point, i);
+    /* See SVG Tiny 1.2 Spec:
+     * Section 9.5 The 'line' element
+     * Section C.6 'path' element implementation notes */
+    /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+    embFile_print(file, "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" fill=\"none\" ");
+    write_svg_color(file, point.color);
+    writeFloatAttribute(file, "x1", point.x);
+    writeFloatAttribute(file, "y1", point.y);
+    writeFloatAttribute(file, "x2", point.x);
+    writeFloatAttribute(file, "y2", point.y);
+    embFile_print(file, " />");
 }
 
-static void writePolygons(EmbPattern* p, EmbFile file)
+static void writePolygons(EmbFile file, EmbArray* a, int i)
 {
-    int i, j;
-    if (p->polygons) {
-        for (i = 0; i < p->polygons->length; i++) {
-            EmbPolygonObject polygon;
-            EmbVector a;
-            embArray_get(p->polygons, &polygon, i);
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" fill=\"none\" ");
-            write_svg_color(file, polygon.color);
-            embFile_print(file, "points=\"");
-            embArray_get(polygon.pointList, &a, 0);
-            writePoint(file, a.x, a.y, 0);
-            for (j = 1; j < polygon.pointList->length; j++) {
-                embArray_get(polygon.pointList, &a, j);
-                writePoint(file, a.x, a.y, 1);
-            }
-            embFile_print(file, "\" />");
-        }
+    int j;
+    EmbPolygonObject polygon;
+    EmbVector v;
+    embArray_get(a, &polygon, i);
+    /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+    embFile_print(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" fill=\"none\" ");
+    write_svg_color(file, polygon.color);
+    embFile_print(file, "points=\"");
+    embArray_get(polygon.pointList, &v, 0);
+    writePoint(file, v.x, v.y, 0);
+    for (j = 1; j < polygon.pointList->length; j++) {
+        embArray_get(polygon.pointList, &v, j);
+        writePoint(file, v.x, v.y, 1);
     }
+    embFile_print(file, "\" />");
 }
 
-static void writePolylines(EmbPattern* p, EmbFile file)
+static void writePolylines(EmbFile file, EmbArray* a, int i)
 {
-    int i, j;
-    if (p->polylines) {
-        for (i = 0; i < p->polylines->length; i++) {
-            EmbPolylineObject polyline;
-            EmbVector v;
-            embArray_get(p->polylines, &polyline, i);
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" ");
-            write_svg_color(file, polyline.color);
-            embFile_print(file, "fill=\"none\" points=\"");
-            embArray_get(polyline.pointList, &v, 0);
-            writePoint(file, v.x, v.y, 0);
-            for (j = 1; j < polyline.pointList->length; j++) {
-                embArray_get(polyline.pointList, &v, j);
-                writePoint(file, v.x, v.y, 1);
-            }
-            embFile_print(file, "\" />");
-        }
+    int j;
+    EmbPolylineObject polyline;
+    EmbVector v;
+    embArray_get(a, &polyline, i);
+    /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+    embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" ");
+    write_svg_color(file, polyline.color);
+    embFile_print(file, "fill=\"none\" points=\"");
+    embArray_get(polyline.pointList, &v, 0);
+    writePoint(file, v.x, v.y, 0);
+    for (j = 1; j < polyline.pointList->length; j++) {
+        embArray_get(polyline.pointList, &v, j);
+        writePoint(file, v.x, v.y, 1);
     }
+    embFile_print(file, "\" />");
 }
 
-static void writeRects(EmbPattern* p, EmbFile file)
+static void writeRects(EmbFile file, EmbArray* p, int i)
 {
-    int i;
-    if (p->rects) {
-        for (i = 0; i < p->rects->length; i++) {
-            EmbRect rect;
-            embArray_get(p->rects, &rect, i);
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            embFile_print(file, "\n<rect stroke-width=\"0.2\" fill=\"none\" ");
-            write_svg_color(file, rect.color);
-            writeFloatAttribute(file, "x", embRect_x(rect));
-            writeFloatAttribute(file, "y", embRect_y(rect));
-            writeFloatAttribute(file, "width", embRect_width(rect));
-            writeFloatAttribute(file, "height", embRect_height(rect));
-            embFile_print(file, " />");
-        }
-    }
-}
-
-static void writeStitchList(EmbPattern* p, EmbFile file)
-{
-    /*TODO: Low Priority Optimization:
-     *      Make sure that the line length that is output doesn't exceed 1000 characters. */
-    int i;
-    char isNormal;
-    EmbColor color;
-    EmbStitch st;
-    if (p->stitchList) {
-        /*TODO: #ifdef SVG_DEBUG for Josh which outputs JUMPS/TRIMS instead of chopping them out */
-        isNormal = 0;
-        for (i = 0; i < p->stitchList->length; i++) {
-            embArray_get(p->stitchList, &st, i);
-            if (st.flags == NORMAL && !isNormal) {
-                EmbThread t;
-                isNormal = 1;
-                t = pattern_thread(p, st.color);
-                color = t.color;
-                /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-                embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" ");
-                write_svg_color(file, color);
-                embFile_print(file, "fill=\"none\" points=\"");
-                writePoint(file, st.x, st.y, 0);
-            } else if (st.flags == NORMAL && isNormal) {
-                writePoint(file, st.x, st.y, 1);
-            } else if (st.flags != NORMAL && isNormal) {
-                isNormal = 0;
-                embFile_print(file, "\"/>");
-            }
-        }
-    }
+    EmbRect rect;
+    embArray_get(p, &rect, i);
+    /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+    embFile_print(file, "\n<rect stroke-width=\"0.2\" fill=\"none\" ");
+    write_svg_color(file, rect.color);
+    writeFloatAttribute(file, "x", embRect_x(rect));
+    writeFloatAttribute(file, "y", embRect_y(rect));
+    writeFloatAttribute(file, "width", embRect_width(rect));
+    writeFloatAttribute(file, "height", embRect_height(rect));
+    embFile_print(file, " />");
 }
 
 static char writeSvg(EmbPattern* p, EmbFile file, const char* fileName)
 {
+    int i;
     EmbRect boundingRect;
 
     /* Pre-flip the p since SVG Y+ is down and libembroidery Y+ is up. */
@@ -11941,14 +11868,50 @@ static char writeSvg(EmbPattern* p, EmbFile file, const char* fileName)
 
     /*TODO: Low Priority: Indent output properly. */
 
-    writeCircles(p, file);
-    writeEllipses(p, file);
-    writeLines(p, file);
-    writePoints(p, file);
-    writePolygons(p, file);
-    writePolylines(p, file);
-    writeRects(p, file);
-    writeStitchList(p, file);
+    for (i = 0; i < p->circles->length; i++) {
+        writeCircles(file, p->circles, i);
+    }
+    for (i = 0; i < p->ellipses->length; i++) {
+        writeEllipses(file, p->ellipses, i);
+    }
+    for (i = 0; i < p->lines->length; i++) {
+        writeLines(file, p->lines, i);
+    }
+    for (i = 0; i < p->points->length; i++) {
+        writePoints(file, p->points, i);
+    }
+    for (i = 0; i < p->polygons->length; i++) {
+        writePolygons(file, p->polygons, i);
+    }
+    for (i = 0; i < p->polylines->length; i++) {
+        writePolylines(file, p->polylines, i);
+    }
+    for (i = 0; i < p->rects->length; i++) {
+        writeRects(file, p->rects, i);
+    }
+    int isNormal = 0;
+    for (i = 0; i < p->stitchList->length; i++) {
+        /*TODO: Low Priority Optimization:
+         *      Make sure that the line length that is output doesn't exceed 1000 characters. */
+        EmbStitch st;
+        /*TODO: #ifdef SVG_DEBUG for Josh which outputs JUMPS/TRIMS instead of chopping them out */
+        embArray_get(p->stitchList, &st, i);
+        if (st.flags == NORMAL && !isNormal) {
+            EmbThread t;
+            isNormal = 1;
+            t = pattern_thread(p, st.color);
+            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+            embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" ");
+            write_svg_color(file, t.color);
+            embFile_print(file, "fill=\"none\" points=\"");
+            writePoint(file, st.x, st.y, 0);
+        } else if (st.flags == NORMAL && isNormal) {
+            writePoint(file, st.x, st.y, 1);
+        } else if (st.flags != NORMAL && isNormal) {
+            isNormal = 0;
+            embFile_print(file, "\"/>");
+        }
+    }
 
     embFile_print(file, "\n</svg>\n");
 
@@ -12067,19 +12030,12 @@ const char* threadColorName(EmbColor color, int brand)
 int init_embroidery(void)
 {
     datafile = embFile_open("libembroidery_data.bin", "rb", 0);
-    make_directory("memory", 0666);
-
     return 0;
 }
 
 int close_embroidery(void)
 {
-    int i;
     embFile_close(datafile);
-    
-    for (i=0; i<memory_files; i++) {
-        embFile_close(memory[i]);
-    }
     return 0;
 }
 

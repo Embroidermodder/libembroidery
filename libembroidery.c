@@ -13,7 +13,7 @@
 #include <time.h>
 
 int sprintf(char *, const char *format, ...);
-int sscanf(char *, const char *, ...);
+int sscanf(const char *, const char *, ...);
 
 int rand(void);
 
@@ -114,7 +114,7 @@ typedef struct _bcf_file
 static int embFile_read(void *ptr, int a, int b, EmbFile stream);
 static int embFile_write(void *ptr, int a, int b, EmbFile stream);
 static int embFile_seek(EmbFile stream, int offset, int flags);
-static int embFile_tell(EmbFile stream);
+static long embFile_tell(EmbFile stream);
 
 static int dereference_int(int p);
 static int double_dereference_int(int table, int entry);
@@ -941,7 +941,7 @@ static int embFile_seek(EmbFile stream, int offset, int origin)
 #endif
 }
 
-static int embFile_tell(EmbFile stream)
+static long embFile_tell(EmbFile stream)
 {
 #ifdef ARDUINO
     return inoFile_tell(stream);
@@ -1010,24 +1010,24 @@ int embArray_set(EmbArray *p, void *data, int i)
     return 1;    
 }
 
-static void embArray_read(EmbFile *file, EmbArray *a, int offset, int n)
+static void embArray_read(EmbFile file, EmbArray *a, int offset, int n)
 {
     int i;
     void *data = (void*)embBuffer;
     embFile_seek(file, offset, SEEK_SET);
     for (i=0; i<n; i++) {
         embFile_read(data, a->size, 1, file);
-        embArray_set(file, a, i);
+        embArray_set(a, data, i);
     }
 }
 
-static void embArray_write(EmbFile *file, EmbArray *a, int offset, int n)
+static void embArray_write(EmbFile file, EmbArray *a, int offset, int n)
 {
     int i;
     void *data = (void*)embBuffer;
     embFile_seek(file, offset, SEEK_SET);
     for (i=0; i<n; i++) {
-        embArray_get(file, data, i);
+        embArray_get(a, data, i);
         embFile_write(data, a->size, 1, file);
     }
 }
@@ -7168,7 +7168,7 @@ static void ofmReadThreads(EmbFile file, EmbPattern* p)
         }
         binaryReadBytes(file, (unsigned char*)colorName, colorNameLength * 2); /* TODO: check return value */
         binaryReadInt16(file);
-        emb_int_to_array(colorNumber, colorNumberText, 10);
+        emb_int_to_array(colorNumberText, colorNumber, 10);
         thread.color = embColor_fromStr(color);
         string_copy(thread.catalogNumber, colorNumberText);
         string_copy(thread.description, colorName);
@@ -7662,7 +7662,7 @@ static EmbThread load_thread(int thread_table, int index)
     t.color.g = embBuffer[31];
     t.color.b = embBuffer[32];
     string_copy(t.catalogNumber, "TODO:HUS_CODE");
-    string_copy(t.description, embBuffer);
+    string_copy(t.description, (char *)embBuffer);
     return t;    
 }
 
@@ -9245,7 +9245,7 @@ static char writeT01(EmbPattern* pattern, EmbFile file, const char* fileName)
     pos[0] = 0;
     pos[1] = 0;
     for (i = 0; i < pattern->stitchList->length; i++) {
-        char b[4];
+        unsigned char b[4];
         int dx[2];
         EmbStitch st;
         embArray_get(pattern->stitchList, &st, i);
@@ -10534,7 +10534,7 @@ static char writeVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
         for (i = 0; i < pattern->stitchList->length; i++) {
             int dx, dy;
 
-            EmbStitch;
+            EmbStitch s;
             embArray_get(pattern->stitchList, &s, i);
 
             if (s.color != lastColor) {
@@ -10776,7 +10776,7 @@ static char writeXxx(EmbPattern* pattern, EmbFile file, const char* fileName)
 
 static char readZsk(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
-    char b[3];
+    unsigned char b[3];
     int stitchType;
     unsigned char colorNumber;
     EmbThread t;
@@ -10808,7 +10808,7 @@ static char readZsk(EmbPattern* pattern, EmbFile file, const char* fileName)
         if (b[0] & 0x20) {
             if (b[1] == 2) {
                 stitchType = TRIM;
-            } else if (b[1] == -1) {
+            } else if (b[1] == 0x80) {
                 break;
             } else {
                 if (b[2] != 0) {
@@ -11243,8 +11243,8 @@ void svgAddToPattern(EmbPattern* p)
             return;
         }
 
-        sprintf(embBuffer, "stroke:%s\n", mystrok);
-        embLog(embBuffer);
+        sprintf((char*)embBuffer, "stroke:%s\n", mystrok);
+        embLog((char*)embBuffer);
 
         /* M44.219,26.365c0,10.306-8.354,18.659-18.652,18.659c-10.299,0-18.663-8.354-18.663-18.659c0-10.305,8.354-18.659,18.659-18.659C35.867,7.707,44.219,16.06,44.219,26.365z */
         for (i = 0; i < last; i++) {
@@ -11518,7 +11518,7 @@ void svgAddToPattern(EmbPattern* p)
                 polybuff[pos++] = (char)c;
                 if (pos == 1024) {
                     embLog("Buffer overflow: polybuff.");
-                    return 0;
+                    return;
                 }
                 break;
             }
@@ -11660,7 +11660,7 @@ static char identify_element(char *token)
     char id;
     for (id=0; id < ELEMENT_UNKNOWN; id++) {
         offset = dereference_int(svg_element_token_table);
-        get_str(embBuffer, offset + 4*id);
+        get_str((char*)embBuffer, offset + 4*id);
         if (string_equal(embBuffer, token)) {
             break;
         }
@@ -12145,7 +12145,7 @@ int threadColorNum(EmbColor color, int brand)
     return -1;
 }
 
-const char* threadColorName(EmbColor color, int brand)
+void threadColorName(char *result, EmbColor color, int brand)
 {
     int length, i;
     length = double_dereference_int(table_lengths, brand);
@@ -12153,11 +12153,12 @@ const char* threadColorName(EmbColor color, int brand)
     for (i=0; i<length; i++) {
         EmbThread t = load_thread(brand, i);
         if (embColor_equal(t.color, color)) {
-            return t.description;
+            string_copy(result, t.description);
+            return;
         }
     }
 
-    return "COLOR NOT FOUND";
+    string_copy(result, "COLOR NOT FOUND");
 }
 
 /* For now we are assuming that there is only one pattern loaded at a time.

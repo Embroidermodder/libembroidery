@@ -393,7 +393,7 @@ EMB_PUBLIC int getCircleTangentPoints(EmbCircle c, EmbVector point, EmbVector* t
 EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
 EMB_PUBLIC int threadColor(EmbColor *c, const char*, int brand);
 EMB_PUBLIC int threadColorNum(EmbColor color, int brand);
-EMB_PUBLIC const char* threadColorName(EmbColor color, int brand);
+EMB_PUBLIC void threadColorName(char *result, EmbColor color, int brand);
 EMB_PUBLIC int embThread_findNearestColor(EmbColor c, int brand);
 EMB_PUBLIC EmbThread embThread_getRandom(void);
 

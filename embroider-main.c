@@ -426,7 +426,8 @@ static int testThreadColor(void)
     c.b = 0x00;
     int tBrand = Sulky_Rayon;
     int tNum = threadColorNum(c, tBrand);
-    const char* tName = threadColorName(c, tBrand);
+    char tName[50];
+    threadColorName(tName, c, tBrand);
 
     printf("Color : 0x%X\n"
            "Brand : %d\n"

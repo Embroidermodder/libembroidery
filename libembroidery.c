@@ -303,6 +303,7 @@ static int embFile_close(EmbFile stream);
 static EmbFile embFile_tmpfile(void);
 static void embFile_print(EmbFile stream, const char*);
 static void embFile_pad(EmbFile f, char, int);
+static void embfile_copy(EmbFile f, int offset, EmbFile out, int length);
 
 static char identify_element(char *token);
 
@@ -335,76 +336,194 @@ static int active_patterns = 0;
 /* Flag Defines
  */
 
-#define EMB_BIG_ENDIAN                 0
-#define EMB_LITTLE_ENDIAN              1
+#define EMB_BIG_ENDIAN                          0
+#define EMB_LITTLE_ENDIAN                       1
 
 /* These mirror the first table in libembroidery_data.asm. */
-#define svg_property_token_table       0
-#define svg_attribute_token_table      4
-#define svg_token_lists                8
-#define brand_codes                    12
-#define image_frame                    16
-#define csv_header                     20
-#define max_header                     24
-#define vip_decoding_table             28
-#define format_list                    32
-#define write_csv_error_0              36
-#define read_csv_error_0               40
-#define read_csv_error_1               44
-#define read_csv_error_2               48
-#define svg_token_table                52
-#define inkscape_token_table           56
-#define svg_element_token_table        60
-#define svg_media_property_token_table 64
-#define stitch_labels                  68
-#define dxf_version_year               72
-#define dxf_version_r                  76
-#define table_lengths                  80
+#define svg_property_token_table                (0*4)
+#define svg_attribute_token_table               (1*4)
+#define svg_token_lists                         (2*4)
+#define brand_codes                             (3*4)
+#define image_frame                             (4*4)
+#define csv_header                              (5*4)
+#define max_header                              (6*4)
+#define vip_decoding_table                      (7*4)
+#define format_list                             (8*4)
+#define svg_token_table                         (9*4)
+#define inkscape_token_table                    (10*4)
+#define svg_element_token_table                 (11*4)
+#define svg_media_property_token_table          (12*4)
+#define stitch_labels                           (13*4)
+#define dxf_version_year                        (14*4)
+#define dxf_version_r                           (15*4)
+#define table_lengths                           (16*4)
 
-#define brand_codes_length             24
-#define thread_type_length             35
-#define thread_color_offset            30
-#define thread_code                    33
+#define error_emb_sqrt                          17
+#define error_emb_atan2                         18
+#define error_hus_expand                        19
+#define error_hus_compress                      20
+#define error_arc_data                          21
+#define error_format_not_supported              22
+#define error_line_intersection                 23
+#define error_line_parallel                     24
+#define error_normalize                         25
+#define error_pattern_no_stitches               26
+#define error_pattern_open_file                 27
+#define error_vector_add                        28
+#define error_vector_average                    29
+#define error_vector_component_product          30
+#define error_vector_multiply                   31
+#define error_vector_normal                     32
+#define error_vector_subtract                   33
+#define error_pattern_create_malloc             34
+#define error_hide_stitches_no_pattern          35
+#define error_fix_color_count_no_pattern        36
+#define error_copy_stitch_list_no_pattern       37
+#define error_copy_polylines_no_point_list      38
+#define error_move_stitch_list_no_pattern       39
+#define error_add_stitch_abs_no_pattern         40
+#define error_add_stitch_abs_multiple_end       41
+#define error_add_stitch_rel_no_pattern         42
+#define error_change_color_no_pattern           43
+#define error_pattern_read_unsupported          44
+#define error_pattern_write_unsupported         45
+#define error_pattern_scale                     46
+#define error_bounding_box_no_pattern           47
+#define error_flip_horizontal_no_pattern        48
+#define error_flip_vertical_no_pattern          49
+#define error_flip_no_pattern                   50
+#define error_combine_jump_stitches             51
+#define error_pattern_max_stitch_length         52
+#define error_pattern_center                    53
+#define error_add_circle                        54
+#define error_add_ellipse                       55
+#define error_add_line                          56
+#define error_add_path                          57
+#define error_add_path_obj                      58
+#define error_add_path_obj_empty                59
+#define error_add_point                         60
+#define error_add_polygon_abs                   61
+#define error_add_polygon_abs_obj               62
+#define error_add_polygon_abs_empty             63
+#define error_add_polyline_abs                  64
+#define error_add_polyline_abs_obj              65
+#define error_add_polyline_abs_empty            66
+#define error_add_rect                          67
+#define error_generate_satin_array_create       68
+#define error_generate_satin_result_memory      69
+#define error_render_stitches_result_memory     70
+#define error_read_no_pattern                   71
+#define error_read_no_filename                  72
+#define error_read_cannot_open                  73
+#define error_cannot_open                       74
+#define error_bcf_difat_malloc                  75
+#define error_bcf_difat_sector_value            76
+#define error_read_sector_value                 77
+#define error_bcf_fat_create                    78
+#define error_col_empty_line                    79
+#define error_compound_entry_malloc             80
+#define error_compound_malloc                   81
+#define error_compound_unexpected_object_type   82
+#define error_csv_string                        83
+#define error_format_get_extension              84
+#define error_no_colors                         85
+#define error_read_dxf                          86
+#define error_unsupported                       87
+#define error_hus_decompress_data               88
+#define error_hus_compress_data                 89
+#define error_read_hus                          90
+#define error_write_hus                         91
+#define error_jef_hoop_no_pattern               92
+#define error_max_encode_no_file                93
+#define error_ofm_threads_library_name          94
+#define error_ofm_threads_color_name            95
+#define error_read_ofm_malloc                   96
+#define error_stx_thread_no_thread              97
+#define error_stx_thread_no_file                98
+#define error_stx_thread_malloc                 99
+#define error_read_stx_gif_malloc               100
+#define error_read_stx_malloc                   101
+#define error_encode_dst_x_out_of_range         102
+#define error_encode_dst_y_out_of_range         103
+#define error_encode_tap_x                      104
+#define error_encode_tap_y                      105
+#define error_vip_decompress_malloc             106
+#define error_read_vip_string_val_malloc        107
+#define error_read_vip_decoded_colors_malloc    108
+#define error_read_vip_attribute_malloc         109
+#define error_read_vip_x_malloc                 110
+#define error_read_vip_y_malloc                 111
+#define error_vip_compress_malloc               112
+#define error_vp3_read_string_file              113
+#define error_vp3_read_string_malloc            114
+#define error_vp3_read_hoop_no_file             115
+#define error_number_of_colors                  116
+#define error_check_color_byte_1                117
+#define error_check_color_byte_2                118
+#define error_check_color_byte_3                119
+#define error_format_vp3_cannot_read            120
+#define error_svg_add_attribute_no_element      121
+#define error_svg_add_attribute_element_malloc  122
+#define error_svg_add_attribute_list_malloc     123
+#define error_svg_create_malloc                 124
+#define error_svg_create_element_null           125
+#define error_svg_get_value_no_element          126
+#define error_svg_get_value_no_name             127
+#define error_svg_add_no_pattern                128
+#define error_svg_add_malloc                    129
+#define error_svg_add_invalid_path              130
+#define error_svg_add_realloc                   131
+#define error_svg_process_malloc                132
+#define error_read_svg                          133
+#define error_write_csv_0                       134
+#define error_read_csv_0                        135
+#define error_read_csv_1                        136
+#define error_read_csv_2                        137
+
+#define brand_codes_length                      24
+#define thread_type_length                      35
+#define thread_color_offset                     30
+#define thread_code                             33
 
 /* path flag codes */
-#define LINETO                         0
-#define MOVETO                         1
-#define BULGETOCONTROL                 2
-#define BULGETOEND                     4
-#define ELLIPSETORAD                   8
-#define ELLIPSETOEND                   16
-#define CUBICTOCONTROL1                32
-#define CUBICTOCONTROL2                64
-#define CUBICTOEND                     128
-#define QUADTOCONTROL                  256
-#define QUADTOEND                      512
+#define LINETO                                  0
+#define MOVETO                                  1
+#define BULGETOCONTROL                          2
+#define BULGETOEND                              4
+#define ELLIPSETORAD                            8
+#define ELLIPSETOEND                            16
+#define CUBICTOCONTROL1                         32
+#define CUBICTOCONTROL2                         64
+#define CUBICTOEND                              128
+#define QUADTOCONTROL                           256
+#define QUADTOEND                               512
 
-#define SVG_CREATOR_NULL               0
-#define SVG_CREATOR_EMBROIDERMODDER    1
-#define SVG_CREATOR_ILLUSTRATOR        2
-#define SVG_CREATOR_INKSCAPE           3
+#define SVG_CREATOR_NULL                        0
+#define SVG_CREATOR_EMBROIDERMODDER             1
+#define SVG_CREATOR_ILLUSTRATOR                 2
+#define SVG_CREATOR_INKSCAPE                    3
 
-#define SVG_EXPECT_NULL                0
-#define SVG_EXPECT_ELEMENT             1
-#define SVG_EXPECT_ATTRIBUTE           2
-#define SVG_EXPECT_VALUE               3
+#define SVG_EXPECT_NULL                         0
+#define SVG_EXPECT_ELEMENT                      1
+#define SVG_EXPECT_ATTRIBUTE                    2
+#define SVG_EXPECT_VALUE                        3
 
 /* SVG_TYPES */
-#define SVG_NULL                       0
-#define SVG_ELEMENT                    1
-#define SVG_PROPERTY                   2
-#define SVG_MEDIA_PROPERTY             3
-#define SVG_ATTRIBUTE                  4
-#define SVG_CATCH_ALL                  5
+#define SVG_NULL                                0
+#define SVG_ELEMENT                             1
+#define SVG_PROPERTY                            2
+#define SVG_MEDIA_PROPERTY                      3
+#define SVG_ATTRIBUTE                           4
+#define SVG_CATCH_ALL                           5
 
 /**
 Type of sector
 */
-#define CompoundFileSector_MaxRegSector 0xFFFFFFFA
-#define CompoundFileSector_DIFAT_Sector 0xFFFFFFFC
-#define CompoundFileSector_FAT_Sector 0xFFFFFFFD
-#define CompoundFileSector_EndOfChain 0xFFFFFFFE
-#define CompoundFileSector_FreeSector 0xFFFFFFFF
+#define CompoundFileSector_MaxRegSector         0xFFFFFFFA
+#define CompoundFileSector_DIFAT_Sector         0xFFFFFFFC
+#define CompoundFileSector_FAT_Sector           0xFFFFFFFD
+#define CompoundFileSector_EndOfChain           0xFFFFFFFE
+#define CompoundFileSector_FreeSector           0xFFFFFFFF
 
 /**
 Type of directory object
@@ -511,10 +630,6 @@ Special values for Stream Identifiers
 #define ELEMENT_VIDEO             47
 #define ELEMENT_UNKNOWN           48
 
-#define GEOMETRY_ARRAY_MAXIMUM    (1<<8)
-#define STITCH_MAXIMUM            (1<<16)
-#define THREAD_MAXIMUM            (1<<8)
-
 /* Global Constants
  */
 
@@ -597,7 +712,7 @@ float emb_sqrt(float a)
         b = 0.5*(b+a/b);
     }
     if (emb_fabs(a-b*b) > epsilon) {
-        embLog("emb_sqrt did not converge.");
+        print_log_string(error_emb_sqrt);
     }
     return b;
 }
@@ -688,7 +803,7 @@ float emb_atan2(float y, float x)
     if (x<epsilon) {
         return 3.141592 + emb_atan2(y, x);
     }
-    embLog("Arctan2 of (0, 0) is undefined.");
+    print_log_string(error_emb_atan2);
     return 0.0;
 }
 
@@ -928,7 +1043,7 @@ void husExpand(unsigned char* input, unsigned char* output, int compressedSize, 
     /* TODO: find and analyse some HUS encoded files and DST equivalents */
     output = embBuffer;
     if (compressedSize+1 > 1024) {
-        embLog("husExpand buffer overflow.");
+        print_log_string(error_hus_expand);
         return;
     }
 }
@@ -937,7 +1052,7 @@ int husCompress(unsigned char* input, unsigned long _inputSize, unsigned char* o
 {
     /* TODO: find and analyse some HUS encoded files and DST equivalents */
     if (outputSize+1 > 1024) {
-        embLog("huscompress buffer overflow.");
+        print_log_string(error_hus_compress);
         return 1;
     }
     return 0;
@@ -1440,7 +1555,7 @@ char getArcDataFromBulge(float bulge, EmbArc* arc, EmbVector* arcCenter,
 
     /* Confirm the direction of the Arc, it should match the Bulge */
     if (*clockwise != isArcClockwise(*arc)) {
-        embLog("Arc and Bulge direction do not match.\n");
+        print_log_string(error_arc_data);
         return 0;
     }
 
@@ -1598,7 +1713,7 @@ void embVector_normalVector(EmbVector dir, EmbVector* result, int clockwise)
 void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise)
 {
     if (!result) {
-        embLog("ERROR: embLine_normalVector(), result==0\n");
+        print_log_string(error_vector_normal);
         return;
     }
     embVector_subtract(line.end, line.end, result);
@@ -1623,12 +1738,12 @@ unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector*
     det = embVector_cross(D1, D2);
 
     if (!result) {
-        embLog("ERROR: embLine_intersectionPoint(), result==0\n");
+        print_log_string(error_line_intersection);
         return 0;
     }
     /*TODO: The code below needs revised since division by zero can still occur */
     if (emb_fabs(det) < tolerance) {
-        embLog("ERROR: Intersecting lines cannot be parallel.\n");
+        print_log_string(error_line_parallel);
         return 0;
     }
     result->x = D2.x * C.x - D1.x * C.y;
@@ -1706,7 +1821,7 @@ void embVector_normalize(EmbVector vector, EmbVector* result)
     length = embVector_getLength(vector);
 
     if (!result) {
-        embLog("ERROR: embVector_normalize(), result==0\n");
+        print_log_string(error_normalize);
         return;
     }
     result->x = vector.x / length;
@@ -1720,7 +1835,7 @@ void embVector_normalize(EmbVector vector, EmbVector* result)
 void embVector_multiply(EmbVector vector, float magnitude, EmbVector* result)
 {
     if (!result) {
-        embLog("ERROR: embVector_multiply(), result==0\n");
+        print_log_string(error_vector_multiply);
         return;
     }
     result->x = vector.x * magnitude;
@@ -1733,7 +1848,7 @@ void embVector_multiply(EmbVector vector, float magnitude, EmbVector* result)
 void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog("ERROR: embVector_add(), result==0\n");
+        print_log_string(error_vector_add);
         return;
     }
     result->x = v1.x + v2.x;
@@ -1746,7 +1861,7 @@ void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result)
 void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog("ERROR: embVector_average(), result==0\n");
+        print_log_string(error_vector_average);
         return;
     }
     result->x = (v1.x + v2.x) / 2.0;
@@ -1759,7 +1874,7 @@ void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result)
 void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog("ERROR: embVector_subtract(), result==0\n");
+        print_log_string(error_vector_subtract);
         return;
     }
     result->x = v1.x - v2.x;
@@ -1800,7 +1915,7 @@ float embVector_distance(EmbVector v1, EmbVector v2)
 void embVector_component_product(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog("ERROR: embVector_transpose_product(), result==0\n");
+        print_log_string(error_vector_component_product);
         return;
     }
     result->x = v1.x * v2.x;
@@ -1832,7 +1947,7 @@ EmbPattern* embPattern_create(void)
     p = patterns+active_patterns;
     active_patterns++;
     if (!p) {
-        embLog("ERROR: embPattern_create(), unable to allocate memory for p\n");
+        print_log_string(error_pattern_create_malloc);
         return 0;
     }
 
@@ -1872,7 +1987,7 @@ void embPattern_hideStitchesOverLength(EmbPattern* p, int length)
     EmbStitch st;
 
     if (!p) {
-        embLog("ERROR: embPattern_hideStitchesOverLength(), p==0\n");
+        print_log_string(error_hide_stitches_no_pattern);
         return;
     }
 
@@ -1902,7 +2017,7 @@ void embPattern_fixColorCount(EmbPattern* p)
     int maxColorIndex = 0, i;
 
     if (!p) {
-        embLog("ERROR: embPattern_fixColorCount(), p==0\n");
+        print_log_string(error_fix_color_count_no_pattern);
         return;
     }
     for (i = 0; i < p->stitchList->length; i++) {
@@ -1928,7 +2043,7 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
     EmbStitch st;
 
     if (!p) {
-        embLog("ERROR: embPattern_copyStitchListToPolylines(), p==0\n");
+        print_log_string(error_copy_stitch_list_no_pattern);
         return;
     }
 
@@ -3526,10 +3641,6 @@ static const unsigned int sizeOfDirectoryEntry = 128;
 /* static const int supportedMinorVersion = 0x003E;
 static const int littleEndianByteOrderMark = 0xFFFE; */
 
-static char *embpattern_write_error_no_stitches = "ERROR: embPattern_write(), pattern contains no stitches\n";
-static char *embpattern_write_error_open_file = "ERROR: embPattern_write(), failed to open file\n";
-static char *error_format_not_supported = "ERROR: This format is not implemented.";
-
 int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
 {
     EmbFile file;
@@ -3543,7 +3654,7 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
     }
 
     if (!pattern->stitchList->length) {
-        embLog(embpattern_write_error_no_stitches);
+        print_log_string(error_pattern_no_stitches);
         return 0;
     }
 
@@ -3556,7 +3667,7 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
 
     file = embFile_open(fileName, "wb", 0);
     if (!file) {
-        embLog(embpattern_write_error_open_file);
+        print_log_string(error_pattern_open_file);
         return 0;    
     }
 
@@ -3569,16 +3680,16 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         r = write10o(pattern, file, fileName);
         break;
     case EMB_FORMAT_ART:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_BMC:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_BRO:
         r = writeBro(pattern, file, fileName);
         break;
     case EMB_FORMAT_CND:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_COL:
         r = writeCol(pattern, file, fileName);
@@ -3593,7 +3704,7 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         r = writeDat(pattern, file, fileName);
         break;
     case EMB_FORMAT_DEM:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_DSB:
         r = writeDsb(pattern, file, fileName);
@@ -3620,17 +3731,17 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         r = writeExy(pattern, file, fileName);
         break;
     case EMB_FORMAT_EYS:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_FXY:
         r = writeFxy(pattern, file, fileName);
         break;
     case EMB_FORMAT_GC:
         /* Smoothie G-Code */
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_GNC:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_GT: 
         r = writeGt(pattern, file, fileName);
@@ -3678,10 +3789,10 @@ int embPattern_write(EmbPattern* pattern, const char* fileName, int format)
         r = writePec(pattern, file, fileName);
         break;
     case EMB_FORMAT_PEL:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_PEM:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_PES:
         r = writePes(pattern, file, fileName);
@@ -3788,16 +3899,16 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
         r = read10o(pattern, file, fileName);
         break;
     case EMB_FORMAT_ART:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_BMC:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_BRO:
         r = readBro(pattern, file, fileName);
         break;
     case EMB_FORMAT_CND:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_COL:
         r = readCol(pattern, file, fileName);
@@ -3812,7 +3923,7 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
         r = readDat(pattern, file, fileName);
         break;
     case EMB_FORMAT_DEM:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_DSB:
         r = readDsb(pattern, file, fileName);
@@ -3839,17 +3950,17 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
         r = readExy(pattern, file, fileName);
         break;
     case EMB_FORMAT_EYS:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_FXY:
         r = readFxy(pattern, file, fileName);
         break;
     case EMB_FORMAT_GC:
         /* Smoothie G-Code */
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_GNC:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_GT:
         r = readGt(pattern, file, fileName);
@@ -3897,10 +4008,10 @@ int embPattern_read(EmbPattern* pattern, const char* fileName, int format)
         r = readPec(pattern, file, fileName);
         break;
     case EMB_FORMAT_PEL:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_PEM:
-        embLog(error_format_not_supported);
+        print_log_string(error_format_not_supported);
         break;
     case EMB_FORMAT_PES:
         r = readPes(pattern, file, fileName);
@@ -4066,7 +4177,7 @@ static int embFile_readline(EmbFile stream, char* line, int maxLength)
 }
 
 /**
- * TODO: documentation.
+ * Pad the EmbFile stream with n bytes all with value c.
  */
 void embFile_pad(EmbFile stream, char c, int n)
 {
@@ -4077,7 +4188,33 @@ void embFile_pad(EmbFile stream, char c, int n)
 }
 
 /**
- * TODO: documentation.
+ * Copy a block of bytes from EmbFile in to EmbFile out, if the length argument
+ * n is 0 then use null termination (i.e. a c string) otherwise copy that many
+ * bytes.
+ */
+void embFile_copy(EmbFile in, int offset, EmbFile out, int n)
+{
+    embFile_seek(in, offset, SEEK_SET);
+    if (n==0) {
+        char c = 1;
+        while (c) {
+            embFile_read(&c, 1, 1, in);
+            embFile_write(&c, 1, 1, out);
+        }
+    }
+    else {
+        char c;
+        int i;
+        for (i=0; i<n; i++) {
+            embFile_read(&c, 1, 1, in);
+            embFile_write(&c, 1, 1, out);
+        }
+    }
+}
+
+/**
+ * Open a temporary file that we assume will be deleted after embFile_close
+ * is called on it.
  */
 EmbFile embFile_tmpfile(void)
 {
@@ -4958,7 +5095,7 @@ static char readCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
             } else if (expect == CSV_EXPECT_QUOTE1) {
                 /* Do Nothing. We encountered a blank line. */
             } else {
-                print_log_string(read_csv_error_1);
+                print_log_string(error_read_csv_1);
                 return 0;
             }
             break;
@@ -5064,12 +5201,12 @@ static void string_to_file(EmbFile file, int offset, int length)
 
 /* 
  */
-static void print_log_string(int offset)
+static void print_log_string(int index)
 {
     /* acts as an error number */
-    sprintf((char*)embBuffer, "%d\n", offset);
+    sprintf((char*)embBuffer, "%d\n", index);
     embLog((char*)embBuffer);
-    get_str((char*)embBuffer, offset);
+    get_str((char*)embBuffer, 4*index);
     embLog((char*)embBuffer);
 }
 
@@ -5086,7 +5223,7 @@ static char writeCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
     boundingRect = embPattern_calcBoundingBox(pattern);
 
     if (!stitchCount) {
-        print_log_string(write_csv_error_0);
+        print_log_string(error_write_csv_0);
         return 0;
     }
 
@@ -11315,7 +11452,7 @@ void svgAddToPattern(EmbPattern* p)
             if (pos >= size - 1) {
                 /* increase pathbuff length - leave room for 0 */
                 if (!pathbuff) {
-                    embLog("ERROR: svgAddToPattern(), cannot re-allocate memory for pathbuff\n");
+                    print_log_string(error_svg_add_realloc);
                     return;
                 }
             }

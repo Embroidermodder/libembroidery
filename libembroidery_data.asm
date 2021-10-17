@@ -2,27 +2,408 @@
 ; $ nasm -f bin -l libembroidery_data.lst -o libembroidery_data.o libembroidery_data.asm
 
 	dd	svg_property_token_table	; 0
-	dd	svg_attribute_token_table	; 4
-	dd	svg_token_lists			; 8
-	dd	brand_codes			; 12
-	dd	image_frame			; 16
-	dd	csv_header			; 20
-	dd	max_header			; 24
-	dd	vip_decoding_table		; 28
-	dd	format_list			; 32
-	dd	write_csv_error_0		; 36
-	dd	read_csv_error_0		; 40
-	dd	read_csv_error_1		; 44
-	dd	read_csv_error_2		; 48
-	dd	svg_token_table			; 52
-	dd	inkscape_token_table		; 56
-	dd	svg_element_token_table		; 60
-	dd	svg_media_property_token_table  ; 64
-	dd	stitch_labels			; 68
-	dd	dxf_version_year		; 72
-	dd	dxf_version_r			; 76
-	dd	table_lengths			; 80
+	dd	svg_attribute_token_table	; 1
+	dd	svg_token_lists			; 2
+	dd	brand_codes			; 3
+	dd	image_frame			; 4
+	dd	csv_header			; 5
+	dd	max_header			; 6
+	dd	vip_decoding_table		; 7
+	dd	format_list			; 8
+	dd	svg_token_table			; 9
+	dd	inkscape_token_table		; 10
+	dd	svg_element_token_table		; 11
+	dd	svg_media_property_token_table  ; 12
+	dd	stitch_labels			; 13
+	dd	dxf_version_year		; 14
+	dd	dxf_version_r			; 15
+	dd	table_lengths			; 16
+
+; ------------------------------------
+; error string table
+; ------------------------------------
+	dd	error_emb_sqrt				; 17
+	dd	error_emb_atan2				; 18
+	dd	error_hus_expand			; 19
+	dd	error_hus_compress			; 20
+	dd	error_arc_data				; 21
+	dd	error_format_not_supported		; 22
+	dd	error_line_intersection			; 23
+	dd	error_line_parallel			; 24
+	dd	error_normalize				; 25
+	dd	error_pattern_no_stitches		; 26
+	dd	error_pattern_open_file			; 27
+	dd	error_vector_add			; 28
+	dd	error_vector_average			; 29
+	dd	error_vector_component_product		; 30
+	dd	error_vector_multiply			; 31
+	dd	error_vector_normal			; 32
+	dd	error_vector_subtract
+	dd	error_pattern_create_malloc
+	dd	error_hide_stitches_no_pattern
+	dd	error_fix_color_count_no_pattern
+	dd	error_copy_stitch_list_no_pattern
+	dd	error_copy_polylines_no_point_list
+	dd	error_move_stitch_list_no_pattern
+	dd	error_add_stitch_abs_no_pattern
+	dd	error_add_stitch_abs_multiple_end
+	dd	error_add_stitch_rel_no_pattern
+	dd	error_change_color_no_pattern
+	dd	error_pattern_read_unsupported
+	dd	error_pattern_write_unsupported
+	dd	error_pattern_scale
+	dd	error_bounding_box_no_pattern
+	dd	error_flip_horizontal_no_pattern
+	dd	error_flip_vertical_no_pattern
+	dd	error_flip_no_pattern
+	dd	error_combine_jump_stitches
+	dd	error_pattern_max_stitch_length
+	dd	error_pattern_center
+	dd	error_add_circle
+	dd	error_add_ellipse
+	dd	error_add_line
+	dd	error_add_path
+	dd	error_add_path_obj
+	dd	error_add_path_obj_empty
+	dd	error_add_point
+	dd	error_add_polygon_abs
+	dd	error_add_polygon_abs_obj
+	dd	error_add_polygon_abs_empty
+	dd	error_add_polyline_abs
+	dd	error_add_polyline_abs_obj
+	dd	error_add_polyline_abs_empty
+	dd	error_add_rect
+	dd	error_generate_satin_array_create
+	dd	error_generate_satin_result_memory
+	dd	error_render_stitches_result_memory
+	dd	error_read_no_pattern
+	dd	error_read_no_filename
+	dd	error_read_cannot_open
+	dd	error_cannot_open
+	dd	error_bcf_difat_malloc
+	dd	error_bcf_difat_sector_value
+	dd	error_read_sector_value
+	dd	error_bcf_fat_create
+	dd	error_col_empty_line
+	dd	error_compound_entry_malloc
+	dd	error_compound_malloc
+	dd	error_compound_unexpected_object_type
+	dd	error_csv_string
+	dd	error_format_get_extension
+	dd	error_no_colors
+	dd	error_read_dxf
+	dd	error_unsupported
+	dd	error_hus_decompress_data
+	dd	error_hus_compress_data
+	dd	error_read_hus
+	dd	error_write_hus
+	dd	error_jef_hoop_no_pattern
+	dd	error_max_encode_no_file
+	dd	error_ofm_threads_library_name
+	dd	error_ofm_threads_color_name
+	dd	error_read_ofm_malloc
+	dd	error_stx_thread_no_thread
+	dd	error_stx_thread_no_file
+	dd	error_stx_thread_malloc
+	dd	error_read_stx_gif_malloc
+	dd	error_read_stx_malloc
+	dd	error_encode_dst_x_out_of_range
+	dd	error_encode_dst_y_out_of_range
+	dd	error_encode_tap_x
+	dd	error_encode_tap_y
+	dd	error_vip_decompress_malloc
+	dd	error_read_vip_string_val_malloc
+	dd	error_read_vip_decoded_colors_malloc
+	dd	error_read_vip_attribute_malloc
+	dd	error_read_vip_x_malloc
+	dd	error_read_vip_y_malloc
+	dd	error_vip_compress_malloc
+	dd	error_vp3_read_string_file
+	dd	error_vp3_read_string_malloc
+	dd	error_vp3_read_hoop_no_file
+	dd	error_number_of_colors
+	dd	error_check_color_byte_1
+	dd	error_check_color_byte_2
+	dd	error_check_color_byte_3
+	dd	error_format_vp3_cannot_read
+	dd	error_svg_add_attribute_no_element
+	dd	error_svg_add_attribute_element_malloc
+	dd	error_svg_add_attribute_list_malloc
+	dd	error_svg_create_malloc
+	dd	error_svg_create_element_null
+	dd	error_svg_get_value_no_element
+	dd	error_svg_get_value_no_name
+	dd	error_svg_add_no_pattern
+	dd	error_svg_add_malloc
+	dd	error_svg_add_invalid_path
+	dd	error_svg_add_realloc
+	dd	error_svg_process_malloc
+	dd	error_read_svg
+	dd	error_write_csv_0
+	dd	error_read_csv_0
+	dd	error_read_csv_1
+	dd	error_read_csv_2
 	dd	0
+
+error_string_table:
+; --------------------------------------------------------------
+; Do not include the \n since it will be added at runtime.
+; Each entry has a pointer in the header table.
+; --------------------------------------------------------------
+
+error_emb_sqrt:
+	db	"ERROR: emb_sqrt did not converge.", 0
+error_emb_atan2:
+	db	"ERROR: arctan2 of (0, 0) is undefined.", 0
+error_hus_expand:
+	db	"ERROR: husExpand() buffer overflow.", 0
+error_hus_compress:
+	db	"ERROR: huscompress() buffer overflow.", 0
+error_arc_data:
+	db	"ERROR: Arc and Bulge direction do not match.", 0
+error_format_not_supported:
+	db	"ERROR: This format is not implemented.", 0
+error_line_intersection:
+	db	"ERROR: embLine_intersectionPoint(), no memory for result.", 0
+error_line_parallel:
+	db	"ERROR: embLine_intersectionPoint(), intersecting lines cannot be parallel.", 0
+error_normalize:
+	db	"ERROR: embVector_normalize(), result==0.", 0
+error_pattern_no_stitches:
+	db	"ERROR: embPattern_write(), pattern contains no stitches.", 0
+error_pattern_open_file:
+	db	"ERROR: embPattern_write(), failed to open file.", 0
+error_vector_add:
+	db	"ERROR: embVector_add(), result==0", 0
+error_vector_average:
+	db	"ERROR: embVector_average(), result==0", 0
+error_vector_component_product:
+	db	"ERROR: embVector_component_product(), result==0", 0
+error_vector_multiply:
+	db	"ERROR: embVector_multiply(), result==0.", 0
+error_vector_normal:
+	db	"ERROR: embLine_normalVector(), no memory for result.", 0
+error_vector_subtract:
+	db	"ERROR: embVector_subtract(), result==0", 0
+error_pattern_create_malloc:
+	db	"ERROR: embPattern_create(), unable to allocate memory for p.", 0
+error_hide_stitches_no_pattern:
+	db	"ERROR: embPattern_hideStitchesOverLength(), p==0", 0
+error_fix_color_count_no_pattern:
+	db	"ERROR: embPattern_fixColorCount(), p==0", 0
+error_copy_stitch_list_no_pattern:
+	db	"ERROR: embPattern_copyStitchListToPolylines(), p==0", 0
+error_copy_polylines_no_point_list:
+	db	"ERROR: embPattern_copyPolylinesToStitchList(), currentPointList is null", 0
+error_move_stitch_list_no_pattern:
+	db	"ERROR: embPattern_moveStitchListToPolylines(), p==0", 0
+error_add_stitch_abs_no_pattern:
+	db	"ERROR: embPattern_addStitchAbs(), p==0", 0
+error_add_stitch_abs_multiple_end:
+	db	"ERROR: embPattern_addStitchAbs(), found multiple END stitches", 0
+error_add_stitch_rel_no_pattern:
+	db	"ERROR: embPattern_addStitchRel(), p==0", 0
+error_change_color_no_pattern:
+	db	"ERROR: embPattern_changeColor(), p==0", 0
+error_pattern_read_unsupported:
+	db	"ERROR: embPattern_read(), unsupported read file type:", 0
+error_pattern_write_unsupported:
+	db	"ERROR: embPattern_write(), unsupported write file type:", 0
+error_pattern_scale:
+	db	"ERROR: embPattern_scale(), p==0", 0
+error_bounding_box_no_pattern:
+	db	"ERROR: embPattern_calcBoundingBox(), p==0", 0
+error_flip_horizontal_no_pattern:
+	db	"ERROR: embPattern_flipHorizontal(), p==0", 0
+error_flip_vertical_no_pattern:
+	db	"ERROR: embPattern_flipVertical(), pattern memory not supplied", 0
+error_flip_no_pattern:
+	db	"ERROR: embPattern_flip(), pattern memory not supplied.", 0
+error_combine_jump_stitches:
+	db	"ERROR: embPattern_combineJumpStitches(), p==0", 0
+error_pattern_max_stitch_length:
+	db	"ERROR: embPattern_correctForMaxStitchLength(), p==0", 0
+error_pattern_center:
+	db	"ERROR: embPattern_center(), p==0", 0
+error_add_circle:
+	db	"ERROR: embPattern_addCircleObjectAbs(), p==0", 0
+error_add_ellipse:
+	db	"ERROR: embPattern_addEllipseObjectAbs(), p==0", 0
+error_add_line:
+	db	"ERROR: embPattern_addLineObjectAbs(), p==0", 0
+error_add_path:
+	db	"ERROR: embPattern_addPathObjectAbs(), p==0", 0
+error_add_path_obj:
+	db	"ERROR: embPattern_addPathObjectAbs(), obj==0", 0
+error_add_path_obj_empty:
+	db	"ERROR: embPattern_addPathObjectAbs(), obj->pointList is empty", 0
+error_add_point:
+	db	"ERROR: embPattern_addPointObjectAbs(), p==0", 0
+error_add_polygon_abs:
+	db	"ERROR: embPattern_addPolygonObjectAbs(), p==0", 0
+error_add_polygon_abs_obj:
+	db	"ERROR: embPattern_addPolygonObjectAbs(), obj==0", 0
+error_add_polygon_abs_empty:
+	db	"ERROR: embPattern_addPolygonObjectAbs(), obj->pointList is empty", 0
+error_add_polyline_abs:
+	db	"ERROR: embPattern_addPolylineObjectAbs(), p==0", 0
+error_add_polyline_abs_obj:
+	db	"ERROR: embPattern_addPolylineObjectAbs(), obj==0", 0
+error_add_polyline_abs_empty:
+	db	"ERROR: embPattern_addPolylineObjectAbs(), obj->pointList is empty", 0
+error_add_rect:
+	db	"ERROR: embPattern_addRectObjectAbs(), p==0", 0
+error_generate_satin_array_create:
+	db	"ERROR: embSatinOutline_generateSatinOutline() embArray_create()", 0
+error_generate_satin_result_memory:
+	db	"ERROR: embSatinOutline_generateSatinOutline(), result==0", 0
+error_render_stitches_result_memory:
+	db	"ERROR: embSatinOutline_renderStitches(), result==0", 0
+error_read_no_pattern:
+	db	"ERROR: embPattern_read(), pattern==0", 0
+error_read_no_filename:
+	db	"ERROR: embPattern_read(), fileName==0", 0
+error_read_cannot_open:
+	db	"ERROR: embPattern_read(), failed to open file", 0
+error_cannot_open:
+	db	"ERROR: Cannot open the fileName in the given mode.");
+error_bcf_difat_malloc:
+	db	"ERROR: bcf_difat_create(), cannot allocate memory for difat", 0
+error_bcf_difat_sector_value:
+	db	"ERROR: bcf_difat_create(), Unexpected sector value", 0
+error_read_sector_value:
+	db	"ERROR: readFullSector(), Unexpected sector value", 0
+error_bcf_fat_create:
+	db	"ERROR: bcfFileFat_create(), cannot allocate memory for fat", 0
+error_col_empty_line:
+	db	"ERROR: Empty line in col file.", 0
+error_compound_entry_malloc:
+	db	"ERROR: CompoundFileDirectoryEntry(), cannot allocate memory for dir", 0
+error_compound_malloc:
+	db	"ERROR: CompoundFileDirectory(), cannot allocate memory for dir", 0
+error_compound_unexpected_object_type:
+	db	"ERROR: CompoundFileDirectoryEntry(), unexpected object type:", 0
+error_csv_string:
+	db	"ERROR: csvStrToStitchFlag(), str==0", 0
+error_format_get_extension:
+	db	"ERROR: embFormat_getExtension(), fileName==0", 0
+error_no_colors:
+	db	"ERROR: Number of colors is zero.", 0
+error_read_dxf:
+	db	"ERROR: readDxf(), missing EOF at end of DXF file", 0
+error_unsupported:
+	db	"ERROR: embReaderWriter_getByFileName(), unsupported file type:", 0
+error_hus_decompress_data:
+	db	"ERROR: husDecompressData(), malloc()", 0
+error_hus_compress_data:
+	db	"ERROR: husCompressData(), malloc()", 0
+error_read_hus:
+	db	"ERROR: readHus(), malloc()", 0
+error_write_hus:
+	db	"ERROR: writeHus(), malloc()", 0
+error_jef_hoop_no_pattern:
+	db	"ERROR: jefSetHoopFromId(), pattern==0", 0
+error_max_encode_no_file:
+	db	"ERROR: maxEncode(), file==0", 0
+error_ofm_threads_library_name:
+	db	"ERROR: ofmReadLibrary(), unable to allocate memory for libraryName", 0
+error_ofm_threads_color_name:
+	db	"ERROR: ofmReadThreads(), ran out of memory for colorName", 0
+error_read_ofm_malloc:
+	db	"ERROR: readOfm(), malloc()", 0
+error_stx_thread_no_thread:
+	db	"ERROR: stxReadThread(), thread==0", 0
+error_stx_thread_no_file:
+	db	"ERROR: stxReadThread(), file==0", 0
+error_stx_thread_malloc:
+	db	"ERROR: stxReadThread(), malloc()", 0
+error_read_stx_gif_malloc:
+	db	"ERROR: readStx(), unable to allocate memory for gif", 0
+error_read_stx_malloc:
+	db	"ERROR: readStx(), malloc()", 0
+error_encode_dst_x_out_of_range:
+	db	"ERROR: encode_dst_ternary(), x is not in valid range [-121,121]", 0
+error_encode_dst_y_out_of_range:
+	db	"ERROR: encode_dst_ternary(), y is not in valid range [-121,121]", 0
+error_encode_tap_x:
+	db	"ERROR: encode_tap_record(), x!=0", 0
+error_encode_tap_y:
+	db	"ERROR: encode_tap_record(), y!=0", 0
+error_vip_decompress_malloc:
+	db	"ERROR: vipDecompressData(), malloc()", 0
+error_read_vip_string_val_malloc:
+	db	"ERROR: readVip(), cannot allocate memory for stringVal", 0
+error_read_vip_decoded_colors_malloc:
+	db	"ERROR: readVip(), cannot allocate memory for decodedColors", 0
+error_read_vip_attribute_malloc:
+	db	"ERROR: readVip(), cannot allocate memory for attributeData", 0
+error_read_vip_x_malloc:
+	db	"ERROR: readVip(), cannot allocate memory for xData", 0
+error_read_vip_y_malloc:
+	db	"ERROR: readVip(), cannot allocate memory for yData", 0
+error_vip_compress_malloc:
+	db	"ERROR: vipCompressData(), cannot allocate memory for compressedData", 0
+error_vp3_read_string_file:
+	db	"ERROR: vp3ReadString(), file==0", 0
+error_vp3_read_string_malloc:
+	db	"ERROR: vp3ReadString(), malloc()", 0
+error_vp3_read_hoop_no_file:
+	db	"ERROR: vp3ReadHoopSection(), file==0", 0
+error_number_of_colors:
+	db	"ERROR: Number of Colors: %d", 0
+error_check_color_byte_1:
+	db	"ERROR: Color Check Byte #1: 0 == %d", 0
+error_check_color_byte_2:
+	db	"ERROR: Color Check Byte #2: 5 == %d", 0
+error_check_color_byte_3:
+	db	"ERROR: Color Check Byte #3: 0 == %d", 0
+error_format_vp3_cannot_read:
+	db	"ERROR: format-vp3.c could not read stitch block in entirety", 0
+error_svg_add_attribute_no_element:
+	db	"ERROR: svgElement_addAttribute(), element==0.");
+error_svg_add_attribute_element_malloc:
+	db	"ERROR: svgElement_addAttribute(), cannot allocate memory for element->attributeList.");
+error_svg_add_attribute_list_malloc:
+	db	"ERROR: svgElement_addAttribute(), cannot allocate memory for list.");
+error_svg_create_malloc:
+	db	"ERROR: svgElement_create(), cannot allocate memory for element", 0
+error_svg_create_element_null:
+	db	"ERROR: svgElement_create(), element->name is null", 0
+error_svg_get_value_no_element:
+	db	"ERROR: svgAttribute_getValue(), element==0", 0
+error_svg_get_value_no_name:
+	db	"ERROR: svgAttribute_getValue(), name==0", 0
+error_svg_add_no_pattern:
+	db	"ERROR: svgAddToPattern(), p==0", 0
+error_svg_add_malloc:
+	db	"ERROR: svgAddToPattern(), cannot allocate memory for pathbuff", 0
+error_svg_add_invalid_path:
+	db	"ERROR: svgAddToPattern(), %s is not a valid svg path command, skipping...");
+error_svg_add_realloc:
+	db	"ERROR: svgAddToPattern(), cannot re-allocate memory for pathbuff", 0
+error_svg_process_malloc:
+	db	"ERROR: svgProcess(), cannot allocate memory for currentValue", 0
+error_read_svg:
+	db	"ERROR: readSvg(), buffer overflow.", 0
+error_write_csv_0:
+	db	"ERROR: writeCsv(), pattern contains no stitches.", 0
+error_read_csv_0:
+	db	"ERROR: readCsv(), unable to allocate memory for buff.", 0
+error_read_csv_1:
+	db	"ERROR: readCsv(), premature newline.", 0
+error_read_csv_2:
+	db	"ERROR: readCsv(), cannot re-allocate memory for buff.", 0
+end_error_string_table:
+
+error_string_table_length:
+	dd	end_error_string_table-error_string_table
+
+
+; Thread table.
+; --------------------------------------------------------------
+; This section has macros for the counting of the length of the table,
+; 
+; --------------------------------------------------------------
 
 %define	thread_entry_length	35
 %macro	table_length_entry	2
@@ -6909,13 +7290,4 @@ xmlns_dc_token:
 	db	"xmlns:dc", 0
 xmlns_cc_token:
 	db	"xmlns:cc", 0
-
-write_csv_error_0:
-	db	"ERROR: writeCsv(), pattern contains no stitches.", 10, 0
-read_csv_error_0:
-	db	"ERROR: readCsv(), unable to allocate memory for buff.", 10, 0
-read_csv_error_1:
-	db	"ERROR: readCsv(), premature newline.", 10, 0
-read_csv_error_2:
-	db	"ERROR: readCsv(), cannot re-allocate memory for buff.", 10, 0
 

@@ -12,11 +12,6 @@
 #include <fcntl.h>
 #include <time.h>
 
-int sprintf(char *, const char *format, ...);
-int sscanf(const char *, const char *, ...);
-
-int rand(void);
-
 void *malloc(size_t);
 void free(void *);
 
@@ -332,6 +327,7 @@ static EmbArray arrays[100];
 static EmbPattern patterns[10];
 static int memory_files = 0;
 static int active_patterns = 0;
+static int random_state = 37;
 
 /* Flag Defines
  */
@@ -686,6 +682,7 @@ float emb_pow(float a, int n);
 float emb_sin(float a);
 float emb_cos(float a);
 float emb_atan2(float a, float b);
+int random_int(void);
 
 float emb_fabs(float a)
 {
@@ -697,6 +694,18 @@ int emb_abs(int a)
 {
     if (a<0) return -a;
     return a;
+}
+
+int random_int(void)
+{
+    /* Linear something RNG, need to look up better constants
+     * all possible outputs happen (1, 999), one at a time.
+     * Not 0, so the result is offset.
+     *
+     * Note that gcd(37, 1000) = gcd(39, 1000) = 1. 
+     */
+    random_state = (39*random_state)%1000;
+    return random_state - 1;
 }
 
 /* Babylonian square root algorithm.
@@ -2164,7 +2173,6 @@ void embPattern_movePolylinesToStitchList(EmbPattern* p)
 void embPattern_addStitchAbs(EmbPattern* p, float x, float y, int flags, int isAutoColorIndex)
 {
     EmbStitch s;
-    EmbVector home;
 
     if (!p || !p->stitchList) {
         embLog("ERROR: embPattern_addStitchAbs(), p==0\n");
@@ -4841,13 +4849,39 @@ static char readCol(EmbPattern* pattern, EmbFile file, const char* fileName)
             embLog("ERROR: Empty line in col file.");
             return 0;
         }
-        /* TODO: replace all scanf code */
-        if (sscanf(line, "%d,%d,%d,%d", &num, &blue, &green, &red) != 4) {
+        /* Acts as a sscanf call. */
+        char *blue = line;
+        char *green = line;
+        char *red = line;
+        int cur = 0;
+        for (i=0; i<30; i++) {
+            if (line[i]==',') {
+                line[i] = 0;
+                switch (cur) {
+                case 0:
+                    blue = line+i+1;
+                    cur++;
+                    break;
+                case 1:
+                    green = line+i+1;
+                    cur++;
+                    break;
+                case 2:
+                    red = line+i+1;
+                    cur++;
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+        if (cur != 3) {
             break;
         }
-        t.color.r = (unsigned char)red;
-        t.color.g = (unsigned char)green;
-        t.color.b = (unsigned char)blue;
+        t.color.r = (unsigned char)emb_array_to_int(red);
+        t.color.g = (unsigned char)emb_array_to_int(green);
+        t.color.b = (unsigned char)emb_array_to_int(blue);
+        /* sscanf call finishes here */
         string_copy(t.catalogNumber, "NULL");
         string_copy(t.description, "NULL");
         embPattern_addThread(pattern, t);
@@ -4860,13 +4894,19 @@ static char writeCol(EmbPattern* pattern, EmbFile file, const char* fileName)
     int i;
     char *buffer = (char*)embBuffer;
 
-    sprintf(buffer, "%d\r\n", pattern->threads->length);
-    embFile_print(file, buffer);
+    writeInt(buffer, pattern->threads->length, 6);
+    embFile_print(file, "\r\n");
     for (i = 0; i < pattern->threads->length; i++) {
         EmbColor c;
         c = pattern_thread(pattern, i).color;
-        sprintf(buffer, "%d,%d,%d,%d\r\n", i, (int)c.r, (int)c.g, (int)c.b);
-        embFile_print(file, buffer);
+        writeInt(file, i, 3);
+        embFile_print(file, ",");
+        writeInt(file, (int)c.r, 3);
+        embFile_print(file, ",");
+        writeInt(file, (int)c.g, 3);
+        embFile_print(file, ",");
+        writeInt(file, (int)c.b, 3);
+        embFile_print(file, "\r\n");
     }
     return 1;
 }
@@ -5143,6 +5183,8 @@ static char readCsv(EmbPattern* pattern, EmbFile file, const char* fileName)
                     flags = csvStrToStitchFlag(buff);
                     if (flags == STOP)
                         numColorChanges++;
+                    if (flags == END)
+                        break;
                 } else if (cellNum == 3) {
                     xx = emb_array_to_float(buff);
                 } else if (cellNum == 4) {
@@ -5204,7 +5246,7 @@ static void string_to_file(EmbFile file, int offset, int length)
 static void print_log_string(int index)
 {
     /* acts as an error number */
-    sprintf((char*)embBuffer, "%d\n", index);
+    emb_int_to_array((char*)embBuffer, index, 5);
     embLog((char*)embBuffer);
     get_str((char*)embBuffer, 4*index);
     embLog((char*)embBuffer);
@@ -6535,7 +6577,6 @@ static char writeInf(EmbPattern* pattern, EmbFile file, const char* fileName)
         EmbThread t;
         t = pattern_thread(pattern, i);
         c = t.color;
-        sprintf(buffer, "RGB(%d,%d,%d)", (int)c.r, (int)c.g, (int)c.b);
         binaryWriteUShortBE(file, (unsigned short)(14 + string_length(buffer))); /* record length */
         binaryWriteUShortBE(file, (unsigned short)i); /* record number */
         binaryWriteByte(file, c.r);
@@ -6543,7 +6584,16 @@ static char writeInf(EmbPattern* pattern, EmbFile file, const char* fileName)
         binaryWriteByte(file, c.b);
         binaryWriteUShortBE(file, (unsigned short)i); /* needle number */
         binaryWriteBytes(file, "RGB\0", 4);
-        embFile_print(file, buffer);
+        /* Find an inf file format description to see
+         * why RGB appears twice in a row.
+         */
+        embFile_print(file, "RGB(");
+        writeInt(buffer, (int)c.r, 3);
+        embFile_print(file, ",");
+        writeInt(buffer, (int)c.b, 3);
+        embFile_print(file, ",");
+        writeInt(buffer, (int)c.g, 3);
+        embFile_print(file, ")");
         binaryWriteByte(file, 0);
     }
     embFile_seek(file, -8, SEEK_END);
@@ -6903,7 +6953,7 @@ static float maxDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 static void maxEncode(EmbFile file, int x, int y)
 {
     if (!file) {
-        embLog("ERROR: maxEncode(), file==0\n");
+        print_log_string(error_max_encode_no_file);
         return;
     }
 
@@ -7074,7 +7124,7 @@ static char* ofmReadLibrary(EmbFile file)
     stringLength = binaryReadByte(file);
     libraryName = (char*)malloc(sizeof(char) * stringLength * 2);
     if (!libraryName) {
-        embLog("ERROR: ofmReadLibrary(), unable to allocate memory for libraryName\n");
+        print_log_string(error_ofm_threads_library_name);
         return 0;
     }
     binaryReadBytes(file, (unsigned char*)libraryName, stringLength * 2); /* TODO: check return value */
@@ -7163,7 +7213,7 @@ static void ofmReadThreads(EmbFile file, EmbPattern* p)
         colorNameLength = binaryReadByte(file);
         colorName = (char*)embBuffer;
         if (colorNameLength > 1023/2) {
-            embLog("ERROR: ofmReadThreads(), ran out of memory for colorName\n");
+            print_log_string(error_ofm_threads_color_name);
             return;
         }
         binaryReadBytes(file, (unsigned char*)colorName, colorNameLength * 2); /* TODO: check return value */
@@ -7222,7 +7272,7 @@ static char readOfm(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     bcfFile = (bcf_file*)malloc(sizeof(bcf_file));
     if (!bcfFile) {
-        embLog("ERROR: readOfm(), malloc()\n");
+        print_log_string(error_read_ofm_malloc);
         return 0;
     }
     bcfFile_read(fileCompound, bcfFile);
@@ -7235,7 +7285,7 @@ static char readOfm(EmbPattern* pattern, EmbFile file, const char* fileName)
     classNameLength = binaryReadInt16(file);
     s = (char*)malloc(sizeof(char) * classNameLength);
     if (!s) {
-        embLog("ERROR: readOfm(), malloc()\n");
+        print_log_string(error_read_ofm_malloc);
         return 0;
     }
     binaryReadBytes(file, (unsigned char*)s, classNameLength); /* TODO: check return value */
@@ -8594,26 +8644,39 @@ static char writePhc(EmbPattern* pattern, EmbFile file, const char* fileName)
 
 static char readPlt(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
-    float x, y;
     float scalingFactor = 40;
     char input[512];
 
     embPattern_loadExternalColorFile(pattern, fileName);
-    /* TODO: replace all scanf code */
+
     /* readline needs not to stop at \n, check the file format definition */
     while (!embFile_readline(file, input, 511)) {
-        if (input[0] == 'P' && input[1] == 'D') {
-            /* TODO: replace all scanf code */
-            if (sscanf(input, "PD%f,%f;", &x, &y) < 2) {
+        if (input[0] == 'P') {
+            int flags, i, success;
+            char *x_str, *y_str;
+            float x, y;
+            if (input[1] == 'D') flags = NORMAL;
+            else if (input[1] == 'U') flags = STOP;
+            else break;
+            /* acts as sscanf call */
+            x_str = input+2;
+            for (i=0; i<511; i++) {
+                if (input[i] == ',') {
+                    input[i] = 0;
+                    y_str = input+i+1;
+                }
+                if (input[i] == ';') {
+                    input[i] = 0;
+                    success = 1;
+                }
+            }
+            if (!success) {
                 break;
             }
-            embPattern_addStitchAbs(pattern, x / scalingFactor, y / scalingFactor, NORMAL, 1);
-        } else if (input[0] == 'P' && input[1] == 'U') {
-            /* TODO: replace all scanf code */
-            if (sscanf(input, "PU%f,%f;", &x, &y) < 2) {
-                break;
-            }
-            embPattern_addStitchAbs(pattern, x / scalingFactor, y / scalingFactor, STOP, 1);
+            x = emb_array_to_float(x_str);
+            y = emb_array_to_float(y_str);
+
+            embPattern_addStitchAbs(pattern, x / scalingFactor, y / scalingFactor, flags, 1);
         }
     }
     return 1;
@@ -8737,7 +8800,8 @@ static char readSew(EmbPattern* pattern, EmbFile file, const char* fileName)
 
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    sprintf((char*)embBuffer, "current position: %ld\n", embFile_tell(file));
+    embLog("current position: ");
+    emb_int_to_array((char*)embBuffer, (int)embFile_tell(file), 10);
     embLog((char*)embBuffer);
 
     return 1;
@@ -10019,7 +10083,6 @@ static char writeVip(EmbPattern* pattern, EmbFile file, const char* fileName)
     if (encodedColors) /* TODO: review this line. It looks clearly wrong. If not, note why. */
     {
         free(decodedColors);
-        decodedColors = 0;
         return 0;
     }
     /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
@@ -10093,24 +10156,14 @@ static char writeVip(EmbPattern* pattern, EmbFile file, const char* fileName)
         binaryWriteBytes(file, (char*)yCompressed, yCompressedSize);
     }
 
-    if (attributeCompressed)
-        free(attributeCompressed);
-    if (xCompressed)
-        free(xCompressed);
-    if (yCompressed)
-        free(yCompressed);
-
-    if (attributeValues)
-        free(attributeValues);
-    if (xValues)
-        free(xValues);
-    if (yValues)
-        free(yValues);
-
-    if (decodedColors)
-        free(decodedColors);
-    if (encodedColors)
-        free(encodedColors);
+    free(attributeCompressed);
+    free(xCompressed);
+    free(yCompressed);
+    free(attributeValues);
+    free(xValues);
+    free(yValues);
+    free(decodedColors);
+    free(encodedColors);
 
     return 1;
 }
@@ -10513,8 +10566,16 @@ static char writeVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
         binaryWriteByte(file, 40);
 
         vp3WriteString(file, "");
-
-        sprintf(colorName, "#%02x%02x%02x", color.b, color.g, color.r);
+        
+        char hex[] = "0123456789ABCDEF";
+        colorName[0] = '#';
+        colorName[1] = hex[color.b % 16];
+        colorName[2] = hex[color.b / 16];
+        colorName[3] = hex[color.g % 16];
+        colorName[4] = hex[color.g / 16];
+        colorName[5] = hex[color.r % 16];
+        colorName[6] = hex[color.r / 16];
+        colorName[7] = 0;
 
         vp3WriteString(file, colorName);
         vp3WriteString(file, "");
@@ -10877,9 +10938,8 @@ static void writePoint(EmbFile file, float x, float y, int space)
 void writeFloat(EmbFile file, float number)
 {
     /* TODO: fix bugs in embFloatToArray */
-    /* embFloatToArray(buffer, number, 1.0e-7, 3, 5); */
     char *buffer = (char*)embBuffer;
-    sprintf(buffer, "%f", number);
+    emb_float_to_array(buffer, number, 1.0e-7, 3, 5);
     embFile_print(file, buffer);
 }
 
@@ -11243,8 +11303,8 @@ void svgAddToPattern(EmbPattern* p)
             return;
         }
 
-        sprintf((char*)embBuffer, "stroke:%s\n", mystrok);
-        embLog((char*)embBuffer);
+        embLog("stroke:");
+        embLog(mystrok);
 
         /* M44.219,26.365c0,10.306-8.354,18.659-18.652,18.659c-10.299,0-18.663-8.354-18.663-18.659c0-10.305,8.354-18.659,18.659-18.659C35.867,7.707,44.219,16.06,44.219,26.365z */
         for (i = 0; i < last; i++) {
@@ -12098,9 +12158,9 @@ int embThread_findNearestColor(EmbColor color, int thread_table)
 EmbThread embThread_getRandom(void)
 {
     EmbThread c;
-    c.color.r = rand() % 256;
-    c.color.g = rand() % 256;
-    c.color.b = rand() % 256;
+    c.color.r = random_int() % 256;
+    c.color.g = random_int() % 256;
+    c.color.b = random_int() % 256;
     string_copy(c.description, "random");
     string_copy(c.catalogNumber, "NULL");
     return c;

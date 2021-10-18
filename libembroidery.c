@@ -144,13 +144,19 @@ static void binaryWriteUInt(EmbFile file, unsigned int data);
 static void binaryWriteUIntBE(EmbFile file, unsigned int data);
 static void binaryWriteFloat(EmbFile file, float data);
 
+static int roundDouble(float src);
+static void writeInt(EmbFile file, int, int);
 static void writeFloat(EmbFile file, float number);
 static void writeFloatWrap(EmbFile file, char *prefix, float number, char *suffix);
 static void writeFloatAttribute(EmbFile file, char *attribute, float number);
-
-static int roundDouble(float src);
-static void writeInt(EmbFile , int, int);
-static void writeFloat(EmbFile , float);
+static void writePoint(EmbFile file, float x, float y);
+static void write_svg_color(EmbFile file, EmbColor color);
+static void writeCircles(EmbFile file, EmbArray* a, int i);
+static void writeEllipse(EmbFile file, EmbArray* a, int i);
+static void writePoints(EmbFile file, EmbArray* a, int i);
+static void writePolygons(EmbFile file, EmbArray* a, int i);
+static void writePolylines(EmbFile file, EmbArray* a, int i);
+static void writeStitchList(EmbFile file, EmbArray* a, int i);
 
 static void emb_int_to_array(char *buffer, int number, int maxDigits);
 static void emb_float_to_array(char *buffer, float number, float tolerance, int before, int after);
@@ -282,15 +288,6 @@ static void print_log_string(int offset);
 
 static int encode_dst_ternary(int *, unsigned char *);
 static void decode_dst_ternary(int *, unsigned char *);
-
-static void writePoint(EmbFile file, float x, float y, int space);
-static void write_svg_color(EmbFile file, EmbColor color);
-static void writeCircles(EmbFile file, EmbArray* a, int i);
-static void writeEllipse(EmbFile file, EmbArray* a, int i);
-static void writePoints(EmbFile file, EmbArray* a, int i);
-static void writePolygons(EmbFile file, EmbArray* a, int i);
-static void writePolylines(EmbFile file, EmbArray* a, int i);
-static void writeStitchList(EmbFile file, EmbArray* a, int i);
 
 static EmbFile embFile_open(const char* fileName, const char* mode, int optional);
 static int embFile_readline(EmbFile stream, char *, int);
@@ -6411,12 +6408,12 @@ static char writeHus(EmbPattern* pattern, EmbFile file, const char* fileName)
     embFile_copy(xCompressed, 0, file, xCompressedSize);
     embFile_copy(yCompressed, 0, file, yCompressedSize);
 
-    free(xValues);
-    free(xCompressed);
-    free(yValues);
-    free(yCompressed);
-    free(attributeValues);
-    free(attributeCompressed);
+    embFile_close(xValues);
+    embFile_close(xCompressed);
+    embFile_close(yValues);
+    embFile_close(yCompressed);
+    embFile_close(attributeValues);
+    embFile_close(attributeCompressed);
     return 1;
 }
 
@@ -8645,16 +8642,12 @@ static char writePlt(EmbPattern* pattern, EmbFile file, const char* fileName)
         }
         if (firstStitchOfBlock) {
             embFile_print(file, "PU");
-            writeFloat(file, stitch.x * scalingFactor);
-            embFile_print(file, ",");
-            writeFloat(file, stitch.y * scalingFactor);
+            writePoint(file, stitch.x * scalingFactor, stitch.y * scalingFactor);
             embFile_print(file, ";ST0.00,0.00;SP0;HT0;HS0;TT0;TS0;");
             firstStitchOfBlock = 0;
         } else {
             embFile_print(file, "PD");
-            writeFloat(file, stitch.x * scalingFactor);
-            embFile_print(file, ",");
-            writeFloat(file, stitch.y * scalingFactor);
+            writePoint(file, stitch.x * scalingFactor, stitch.y * scalingFactor);
             embFile_print(file, ";");
         }
     }
@@ -9143,9 +9136,7 @@ static char readStx(EmbPattern* pattern, EmbFile file, const char* fileName)
         StxThread st;
         stxReadThread(&st, file);
 
-        t.color.r = st.stxColor.r;
-        t.color.g = st.stxColor.g;
-        t.color.b = st.stxColor.b;
+        t.color = st.stxColor;
         string_copy(t.description, st.colorName);
         string_copy(t.catalogNumber, st.colorCode);
         embPattern_addThread(pattern, t);
@@ -9692,9 +9683,7 @@ static char writeTxt(EmbPattern* pattern, EmbFile file, const char* fileName)
         EmbStitch st;
         embArray_get(pattern->stitchList, &st, i);
         /* embFile_print(file, "%.1f,%.1f color:%i flags:%i\n", st.x, st.y, st.color, st.flags); */
-        writeFloat(file, st.x);
-        embFile_print(file, ",");
-        writeFloat(file, st.y);
+        writePoint(file, st.x, st.y);
         embFile_print(file, " color:");
         writeInt(file, st.color, 6);
         embFile_print(file, " flags:");
@@ -10034,9 +10023,7 @@ static char writeVip(EmbPattern* pattern, EmbFile file, const char* fileName)
 
     binaryWriteUInt(file, (unsigned int)(0x38 + (minColors << 3) + attributeSize));
     binaryWriteUInt(file, (unsigned int)(0x38 + (minColors << 3) + attributeSize + xCompressedSize));
-    binaryWriteUInt(file, 0x00000000);
-    binaryWriteUInt(file, 0x00000000);
-    binaryWriteUShort(file, 0x0000);
+    embFile_pad(file, 0, 10);
 
     binaryWriteInt(file, minColors << 2);
 
@@ -10836,11 +10823,8 @@ static void write_svg_color(EmbFile file, EmbColor color)
     embFile_print(file, "\" ");
 }
 
-static void writePoint(EmbFile file, float x, float y, int space)
+static void writePoint(EmbFile file, float x, float y)
 {
-    if (space) {
-        embFile_print(file, " ");
-    }
     writeFloat(file, x);
     embFile_print(file, ",");
     writeFloat(file, y);
@@ -10867,30 +10851,16 @@ void writeFloatAttribute(EmbFile file, char *attribute, float number)
     writeFloatWrap(file, "=\"", number, "\" ");
 }
 
-typedef struct SvgAttribute_ {
-    char* name;
-    char* value;
-} SvgAttribute;
-
-typedef struct SvgAttributeList_ {
-    SvgAttribute attribute;
-    struct SvgAttributeList_* next;
-} SvgAttributeList;
-
-typedef struct SvgElement_ {
-    char* name;
-    SvgAttributeList* attributeList;
-    SvgAttributeList* lastAttribute;
-} SvgElement;
-
 static int svgCreator;
-
 static int svgExpect;
 static int svgMultiValue;
-
-static SvgElement* currentElement;
-static char* currentAttribute;
-static char* currentValue;
+static int svgAttributes = 0;
+static int element_set = 0;
+static char currentElementToken;
+static EmbFile attributes;
+static EmbFile currentValue;
+static char currentElementName[30];
+static char currentAttribute[30];
 
 EmbColor svgColorToEmbColor(char* colorStr)
 {
@@ -11000,103 +10970,30 @@ static int svgPathCmdToEmbPathFlag(char cmd)
     return LINETO;
 }
 
-SvgAttribute svgAttribute_create(const char* name, const char* value)
+void svgElement_addAttribute(const char* name, const char* value)
 {
-    int i, j;
-    SvgAttribute attribute;
-    char *modValue;
+    int i;
+    if (!element_set) {
+        embLog("ERROR: svgElement_addAttribute(), no recognised element.");
+        return;
+    }
 
-    modValue = malloc(1000);
-    j = 0;
+    embFile_write(name, 1, string_length(name), attributes);
+    embFile_pad(attributes, 0, 50-string_length(name));
+
     for (i=0; i<string_length(value); i++) {
-        if (value[i] == '"') continue;
-        if (value[i] == '\'') continue;
-        if (value[i] == '/') continue;
-        if (value[i] == ',') continue;
-        modValue[j] = value[i];
+        char c = value[i];
+        if (c == '"' || c == '\'' || c == '/' || c == ',') continue;
+        embFile_write(&c, 1, 1, attributes);
     }
-    string_copy(attribute.name, name);
-    attribute.value = modValue;
-    return attribute;
+
+    embFile_pad(attributes, 0, 950-string_length(value));
+    svgAttributes++;
 }
 
-void svgElement_addAttribute(SvgElement* element, SvgAttribute data)
+char* svgAttribute_getValue(const char* name)
 {
-    if (!element) {
-        embLog("ERROR: svgElement_addAttribute(), element==0.");
-        return;
-    }
-
-    if (!(element->attributeList)) {
-        element->attributeList = (SvgAttributeList*)malloc(sizeof(SvgAttributeList));
-        if (!(element->attributeList)) {
-            embLog("ERROR: svgElement_addAttribute(), cannot allocate memory for element->attributeList.");
-            return;
-        }
-        element->attributeList->attribute = data;
-        element->attributeList->next = 0;
-        element->lastAttribute = element->attributeList;
-        element->lastAttribute->next = 0;
-    } else {
-        SvgAttributeList* pointerLast = element->lastAttribute;
-        SvgAttributeList* list = (SvgAttributeList*)malloc(sizeof(SvgAttributeList));
-        if (!list) {
-            embLog("ERROR: svgElement_addAttribute(), cannot allocate memory for list.");
-            return;
-        }
-        list->attribute = data;
-        list->next = 0;
-        pointerLast->next = list;
-        element->lastAttribute = list;
-    }
-}
-
-void svgElement_free(SvgElement* element)
-{
-    SvgAttributeList* list = 0;
-    SvgAttributeList* nextList = 0;
-    if (!element)
-        return;
-
-    list = element->attributeList;
-
-    while (list) {
-        free(list->attribute.name);
-        free(list->attribute.value);
-        nextList = list->next;
-        free(list);
-        list = nextList;
-    }
-
-    free(element->name);
-    free(element);
-}
-
-SvgElement* svgElement_create(const char* name)
-{
-    SvgElement* element = 0;
-
-    element = (SvgElement*)malloc(sizeof(SvgElement));
-    if (!element) {
-        embLog("ERROR: svgElement_create(), cannot allocate memory for element\n");
-        return 0;
-    }
-    /* switch the element index */
-/*    element->name = emb_strdup((char*)name); */
-    if (!element->name) {
-        embLog("ERROR: svgElement_create(), element->name is null\n");
-        return 0;
-    }
-    element->attributeList = 0;
-    element->lastAttribute = 0;
-    return element;
-}
-
-char* svgAttribute_getValue(SvgElement* element, const char* name)
-{
-    SvgAttributeList* pointer = 0;
-
-    if (!element) {
+    if (!element_set) {
         embLog("ERROR: svgAttribute_getValue(), element==0\n");
         return "none";
     }
@@ -11104,19 +11001,15 @@ char* svgAttribute_getValue(SvgElement* element, const char* name)
         embLog("ERROR: svgAttribute_getValue(), name==0\n");
         return "none";
     }
-    if (!element->attributeList) { /* TODO: error */
-        return "none";
-    }
 
-    pointer = element->attributeList;
-    while (pointer) {
-        if (string_equal(pointer->attribute.name, name)) {
-            return pointer->attribute.value;
+    int i;
+    for (i=0; i<svgAttributes; i++) {
+        embFile_read((char*)embBuffer, 1, 1000, attributes);
+        if (string_equal((char*)embBuffer, name)) {
+            return embBuffer+50;
         }
-        pointer = pointer->next;
     }
-
-    return "none";
+    return 0;
 }
 
 void svgAddToPattern(EmbPattern* p)
@@ -11129,38 +11022,35 @@ void svgAddToPattern(EmbPattern* p)
         embLog("ERROR: svgAddToPattern(), p==0\n");
         return;
     }
-    if (!currentElement) {
-        return;
-    }
 
-    char token = identify_element(currentElement->name);
+    currentElementToken = identify_element(currentElementName);
 
-    switch (token) {
+    switch (currentElementToken) {
     case ELEMENT_CIRCLE:
         {
         float cx, cy, r;
-        cx = emb_array_to_float(svgAttribute_getValue(currentElement, "cx"));
-        cy = emb_array_to_float(svgAttribute_getValue(currentElement, "cy"));
-        r = emb_array_to_float(svgAttribute_getValue(currentElement, "r"));
+        cx = emb_array_to_float(svgAttribute_getValue("cx"));
+        cy = emb_array_to_float(svgAttribute_getValue("cy"));
+        r = emb_array_to_float(svgAttribute_getValue("r"));
         embPattern_addCircleObjectAbs(p, cx, cy, r, 0, black);
         }
         break;
     case ELEMENT_ELLIPSE:
         {
         float cx, cy, rx, ry;
-        cx = emb_array_to_float(svgAttribute_getValue(currentElement, "cx"));
-        cy = emb_array_to_float(svgAttribute_getValue(currentElement, "cy"));
-        rx = emb_array_to_float(svgAttribute_getValue(currentElement, "rx"));
-        ry = emb_array_to_float(svgAttribute_getValue(currentElement, "ry"));
+        cx = emb_array_to_float(svgAttribute_getValue("cx"));
+        cy = emb_array_to_float(svgAttribute_getValue("cy"));
+        rx = emb_array_to_float(svgAttribute_getValue("rx"));
+        ry = emb_array_to_float(svgAttribute_getValue("ry"));
         embPattern_addEllipseObjectAbs(p, cx, cy, rx, ry, 0.0, 0, black);
         }
         break;
     case ELEMENT_LINE:
         {
-        char* x1 = svgAttribute_getValue(currentElement, "x1");
-        char* y1 = svgAttribute_getValue(currentElement, "y1");
-        char* x2 = svgAttribute_getValue(currentElement, "x2");
-        char* y2 = svgAttribute_getValue(currentElement, "y2");
+        char* x1 = svgAttribute_getValue("x1");
+        char* y1 = svgAttribute_getValue("y1");
+        char* x2 = svgAttribute_getValue("x2");
+        char* y2 = svgAttribute_getValue("y2");
         
         float x1_f = emb_array_to_float(x1);
         float y1_f = emb_array_to_float(y1);
@@ -11180,8 +11070,8 @@ void svgAddToPattern(EmbPattern* p)
         {
         /* TODO: finish */
 
-        char* pointStr = svgAttribute_getValue(currentElement, "d");
-        char* mystrok = svgAttribute_getValue(currentElement, "stroke");
+        char* pointStr = svgAttribute_getValue("d");
+        char* mystrok = svgAttribute_getValue("stroke");
 
         int last = string_length(pointStr);
         int size = 32;
@@ -11190,19 +11080,18 @@ void svgAddToPattern(EmbPattern* p)
         /* An odometer aka 'tripometer' used for stepping thru the pathData */
         int trip = -1; /* count of float[] that has been filled. 0=first item of array, -1=not filled = empty array */
         int reset = -1;
-        float xx = 0.0;
-        float yy = 0.0;
-        float fx = 0.0;
-        float fy = 0.0;
-        float lx = 0.0;
-        float ly = 0.0;
-        float cx1 = 0.0, cx2 = 0.0;
-        float cy1 = 0.0, cy2 = 0.0;
+        EmbVector position, f, l, c1, c2;
         int cmd = 0;
         float pathData[7];
         unsigned int numMoves = 0;
         int pendingTask = 0;
         int relative = 0;
+        position.x = 0.0;
+        position.y = 0.0;
+        f = position;
+        l = position;
+        c1 = position;
+        c2 = position;
 
         EmbArray* pointList = 0;
         EmbArray* flagList;
@@ -11290,84 +11179,79 @@ void svgAddToPattern(EmbPattern* p)
                         relative = 0; /* relative to prior coordinate point or absolute coordinate? */
 
                         if (cmd == 'M') {
-                            xx = pathData[0];
-                            yy = pathData[1];
-                            fx = xx;
-                            fy = yy;
+                            position.x = pathData[0];
+                            position.y = pathData[1];
+                            f = position;
                         } else if (cmd == 'm') {
-                            xx = pathData[0];
-                            yy = pathData[1];
-                            fx = xx;
-                            fy = yy;
+                            position.x = pathData[0];
+                            position.y = pathData[1];
+                            f = position;
                             relative = 1;
                         } else if (cmd == 'L') {
-                            xx = pathData[0];
-                            yy = pathData[1];
+                            position.x = pathData[0];
+                            position.y = pathData[1];
                         } else if (cmd == 'l') {
-                            xx = pathData[0];
-                            yy = pathData[1];
+                            position.x = pathData[0];
+                            position.y = pathData[1];
                             relative = 1;
                         } else if (cmd == 'H') {
-                            xx = pathData[0];
-                            yy = ly;
+                            position.x = pathData[0];
+                            position.y = l.y;
                         } else if (cmd == 'h') {
-                            xx = pathData[0];
-                            yy = ly;
+                            position.x = pathData[0];
+                            position.y = l.y;
                             relative = 1;
                         } else if (cmd == 'V') {
-                            xx = lx;
-                            yy = pathData[1];
+                            position.x = l.x;
+                            position.y = pathData[1];
                         } else if (cmd == 'v') {
-                            xx = lx;
-                            yy = pathData[1];
+                            position.x = l.x;
+                            position.y = pathData[1];
                             relative = 1;
                         } else if (cmd == 'C') {
-                            xx = pathData[4];
-                            yy = pathData[5];
-                            cx1 = pathData[0];
-                            cy1 = pathData[1];
-                            cx2 = pathData[2];
-                            cy2 = pathData[3];
+                            position.x = pathData[4];
+                            position.y = pathData[5];
+                            c1.x = pathData[0];
+                            c1.y = pathData[1];
+                            c2.x = pathData[2];
+                            c2.y = pathData[3];
                         } else if (cmd == 'c') {
-                            xx = pathData[4];
-                            yy = pathData[5];
-                            cx1 = pathData[0];
-                            cy1 = pathData[1];
-                            cx2 = pathData[2];
-                            cy2 = pathData[3];
+                            position.x = pathData[4];
+                            position.y = pathData[5];
+                            c1.x = pathData[0];
+                            c1.y = pathData[1];
+                            c2.x = pathData[2];
+                            c2.y = pathData[3];
                             relative = 1;
                         }
                         /*
-                            else if(cmd == 'S') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 's') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 'Q') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 'q') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 'T') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 't') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 'A') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 'a') { xx = pathData[0]; yy = pathData[1]; }
+                            else if(cmd == 'S') { position.x = pathData[0]; position.y = pathData[1]; }
+                            else if(cmd == 's') { position.x = pathData[0]; position.y = pathData[1]; }
+                            else if(cmd == 'Q') { position.x = pathData[0]; position.y = pathData[1]; }
+                            else if(cmd == 'q') { position.x = pathData[0]; position.y = pathData[1]; }
+                            else if(cmd == 'T') { position.x = pathData[0]; position.y = pathData[1]; }
+                            else if(cmd == 't') { position.x = pathData[0]; position.y = pathData[1]; }
+                            else if(cmd == 'A') { position.x = pathData[0]; position.y = pathData[1]; }
+                            else if(cmd == 'a') { position.x = pathData[0]; position.y = pathData[1]; }
                             */
                         else if (cmd == 'Z') {
-                            xx = fx;
-                            yy = fy;
+                            position = f;
                         } else if (cmd == 'z') {
-                            xx = fx;
-                            yy = fy;
+                            position = f;
                         }
 
                         if (!pointList && !flagList) {
                             pointList = embArray_create(EMB_POINT);
                             flagList = embArray_create(EMB_FLAG);
                         }
-                        test.x = xx;
-                        test.y = yy;
+                        test.x = position.x;
+                        test.y = position.y;
                         test.lineType = 0;
                         test.color = black;
                         int flag = svgPathCmdToEmbPathFlag(cmd);
                         embArray_add(pointList, &test);
                         embArray_add(flagList, &flag);
-                        lx = xx;
-                        ly = yy;
+                        l = position;
 
                         pathbuff[0] = (char)cmd; /* set the command for compare */
                         pathbuff[1] = 0;
@@ -11432,7 +11316,7 @@ void svgAddToPattern(EmbPattern* p)
 
         /* TODO: subdivide numMoves > 1 */
 
-        color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
+        color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
         path->pointList = pointList;
         path->flagList = flagList;
         path->color = color;
@@ -11443,14 +11327,15 @@ void svgAddToPattern(EmbPattern* p)
     case ELEMENT_POLYGON:
     case ELEMENT_POLYLINE:
     {
-        char* pointStr = svgAttribute_getValue(currentElement, "points");
+        char* pointStr = svgAttribute_getValue("points");
         int last = string_length(pointStr);
         int size = 32;
         int i = 0;
         int pos = 0;
         unsigned char odd = 1;
-        float xx = 0.0;
-        float yy = 0.0;
+        EmbPointObject a;
+        a.x = 0.0;
+        a.y = 0.0;
 
         EmbArray* pointList = 0;
 
@@ -11468,17 +11353,14 @@ void svgAddToPattern(EmbPattern* p)
                 /*Compose Point List */
                 if (odd) {
                     odd = 0;
-                    xx = emb_array_to_float(polybuff);
+                    a.x = emb_array_to_float(polybuff);
                 } else {
-                    EmbPointObject a;
                     odd = 1;
-                    yy = emb_array_to_float(polybuff);
+                    a.y = emb_array_to_float(polybuff);
 
                     if (!pointList) {
                         pointList = embArray_create(EMB_POINT);
                     }
-                    a.x = xx;
-                    a.y = yy;
                     a.lineType = 0;
                     a.color = black;
                     embArray_add(pointList, &a);
@@ -11495,8 +11377,8 @@ void svgAddToPattern(EmbPattern* p)
             }
         }
 
-        char *s = svgAttribute_getValue(currentElement, "stroke");
-        if (token == ELEMENT_POLYGON) {
+        char *s = svgAttribute_getValue("stroke");
+        if (currentElementToken == ELEMENT_POLYGON) {
             EmbPolygonObject polygonObj;
             polygonObj.pointList = pointList;
             polygonObj.color = svgColorToEmbColor(s);
@@ -11516,18 +11398,16 @@ void svgAddToPattern(EmbPattern* p)
     case ELEMENT_RECT:
         {
         float x1, y1, width, height;
-        x1 = emb_array_to_float(svgAttribute_getValue(currentElement, "x"));
-        y1 = emb_array_to_float(svgAttribute_getValue(currentElement, "y"));
-        width = emb_array_to_float(svgAttribute_getValue(currentElement, "width"));
-        height = emb_array_to_float(svgAttribute_getValue(currentElement, "height"));
+        x1 = emb_array_to_float(svgAttribute_getValue("x"));
+        y1 = emb_array_to_float(svgAttribute_getValue("y"));
+        width = emb_array_to_float(svgAttribute_getValue("width"));
+        height = emb_array_to_float(svgAttribute_getValue("height"));
         embPattern_addRectObjectAbs(p, x1, y1, width, height, 0, black);
         }
         break;
     default:
         break;
     }
-
-    svgElement_free(currentElement);
 }
 
 static int svgIsElement(const char* buff)
@@ -11652,19 +11532,25 @@ void svgProcess(int c, const char* buff)
         if (advance) {
             embLog("ELEMENT:\n");
             svgExpect = SVG_EXPECT_ATTRIBUTE;
-            currentElement = svgElement_create(buff);
+            element_set = 1;
+            svgAttributes = 0;
+            #if linux
+            ftruncate(attributes, 0);
+            #else
+            #endif
+            string_copy(currentElementName, buff);
         } else {
             return;
         }
     } else if (svgExpect == SVG_EXPECT_ATTRIBUTE) {
         char advance = 0;
-        if (!currentElement) {
+        if (!element_set) {
             embLog("There is no current element but the parser expects one.");
             return;
         }
-        char token = identify_element(currentElement->name);
+        currentElementToken = identify_element(currentElementName);
         
-        switch (token) {
+        switch (currentElementToken) {
         case ELEMENT_A:
         case ELEMENT_CIRCLE:
         case ELEMENT_DEFS:
@@ -11701,19 +11587,19 @@ void svgProcess(int c, const char* buff)
         }
 
         if (!advance) {
-            if (token == ELEMENT_XML) {
+            if (currentElementToken == ELEMENT_XML) {
                 int xmlTokens = double_dereference_int(svg_token_lists, 0);
                 advance = svgHasAttribute(buff, xmlTokens, "?xml");
             }
-            else if (token == ELEMENT_SVG) {
+            else if (currentElementToken == ELEMENT_SVG) {
                 advance = svgIsSvgAttribute(buff);
             }
-            else if (token != ELEMENT_UNKNOWN) {
+            else if (currentElementToken != ELEMENT_UNKNOWN) {
                 char element_token[30];
                 int out2;
-                int out = double_dereference_int(svg_token_lists, token);
+                int out = double_dereference_int(svg_token_lists, currentElementToken);
                 out2 = dereference_int(svg_element_token_table);
-                get_str(element_token, out2+4*token);
+                get_str(element_token, out2+4*currentElementToken);
                 
                 advance = svgHasAttribute(buff, out, element_token);
             }
@@ -11722,7 +11608,6 @@ void svgProcess(int c, const char* buff)
         if (advance) {
             embLog("ATTRIBUTE:\n");
             svgExpect = SVG_EXPECT_VALUE;
-            free(currentAttribute);
             string_copy(currentAttribute, buff);
         }
     } else if (svgExpect == SVG_EXPECT_VALUE) {
@@ -11732,15 +11617,12 @@ void svgProcess(int c, const char* buff)
         /* single-value */
         if ((buff[0] == '"' || buff[0] == '\'') && (buff[last] == '/' || buff[last] == '"' || buff[last] == '\'') && !svgMultiValue) {
             svgExpect = SVG_EXPECT_ATTRIBUTE;
-            svgElement_addAttribute(currentElement, svgAttribute_create(currentAttribute, buff));
+            svgElement_addAttribute(currentAttribute, buff);
         } else /* multi-value */
         {
             svgMultiValue = 1;
             if (!currentValue) {
                 string_copy(currentValue, buff);
-                if (!currentValue) { /*TODO: error */
-                    return;
-                }
             } else {
                 char *buffer = (char*)embBuffer;
                 int length;
@@ -11758,8 +11640,7 @@ void svgProcess(int c, const char* buff)
             if (buff[last] == '/' || buff[last] == '"' || buff[last] == '\'') {
                 svgMultiValue = 0;
                 svgExpect = SVG_EXPECT_ATTRIBUTE;
-                svgElement_addAttribute(currentElement, svgAttribute_create(currentAttribute, currentValue));
-                free(currentValue);
+                svgElement_addAttribute(currentAttribute, currentValue);
             }
         }
     }
@@ -11782,13 +11663,9 @@ static char readSvg(EmbPattern* p, EmbFile file, const char* fileName)
     char* buff = (char*)embBuffer;
 
     svgCreator = SVG_CREATOR_NULL;
-
     svgExpect = SVG_EXPECT_NULL;
     svgMultiValue = 0;
-
-    currentElement = 0;
-    currentAttribute = 0;
-    currentValue = 0;
+    element_set = 0;
 
     /* Pre-flip in case of multiple reads on the same p */
     embPattern_flipVertical(p);
@@ -11827,11 +11704,6 @@ static char readSvg(EmbPattern* p, EmbFile file, const char* fileName)
             return 0;
         }
     }
-
-    free(currentAttribute);
-    free(currentValue);
-
-    embPattern_writeAuto(p, "object_summary.svg");
 
     /* Flip the p since SVG Y+ is down and libembroidery Y+ is up. */
     embPattern_flipVertical(p);
@@ -11908,10 +11780,11 @@ static void writePolygons(EmbFile file, EmbArray* a, int i)
     write_svg_color(file, polygon.color);
     embFile_print(file, "points=\"");
     embArray_get(polygon.pointList, &v, 0);
-    writePoint(file, v.x, v.y, 0);
+    writePoint(file, v.x, v.y);
     for (j = 1; j < polygon.pointList->length; j++) {
         embArray_get(polygon.pointList, &v, j);
-        writePoint(file, v.x, v.y, 1);
+        embFile_write(" ", 1, 1, file);
+        writePoint(file, v.x, v.y);
     }
     embFile_print(file, "\" />");
 }
@@ -11927,10 +11800,11 @@ static void writePolylines(EmbFile file, EmbArray* a, int i)
     write_svg_color(file, polyline.color);
     embFile_print(file, "fill=\"none\" points=\"");
     embArray_get(polyline.pointList, &v, 0);
-    writePoint(file, v.x, v.y, 0);
+    writePoint(file, v.x, v.y);
     for (j = 1; j < polyline.pointList->length; j++) {
         embArray_get(polyline.pointList, &v, j);
-        writePoint(file, v.x, v.y, 1);
+        embFile_write(" ", 1, 1, file);
+        writePoint(file, v.x, v.y);
     }
     embFile_print(file, "\" />");
 }
@@ -12012,9 +11886,10 @@ static char writeSvg(EmbPattern* p, EmbFile file, const char* fileName)
             embFile_print(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" ");
             write_svg_color(file, t.color);
             embFile_print(file, "fill=\"none\" points=\"");
-            writePoint(file, st.x, st.y, 0);
+            writePoint(file, st.x, st.y);
         } else if (st.flags == NORMAL && isNormal) {
-            writePoint(file, st.x, st.y, 1);
+            embFile_write(" ", 1, 1, file);
+            writePoint(file, st.x, st.y);
         } else if (st.flags != NORMAL && isNormal) {
             isNormal = 0;
             embFile_print(file, "\"/>");

@@ -32,21 +32,6 @@ void free(void *);
 
 #define ENDIAN_HOST                             EMB_LITTLE_ENDIAN
 
-/* float-indirection file allocation table references */
-typedef struct _bcf_file_difat
-{
-    unsigned int fatSectorCount;
-    unsigned int fatSectorEntries[109];
-    unsigned int sectorSize;
-} bcf_file_difat;
-
-typedef struct _bcf_file_fat
-{
-    int          fatEntryCount;
-    unsigned int fatEntries[255]; /* maybe make this dynamic */
-    unsigned int numberOfEntriesInFatSector;
-} bcf_file_fat;
-
 typedef struct _bcf_directory_entry
 {
     char                         directoryEntryName[32];
@@ -61,21 +46,15 @@ typedef struct _bcf_directory_entry
     EmbTime                      creationTime;
     EmbTime                      modifiedTime;
     unsigned int                 startingSectorLocation;
-    unsigned long                streamSize; /* should be long long but in our case we shouldn't need it, and hard to support on c89 cross platform */
+    unsigned long                streamSize;
+    /* streamSize should be long long but in our case we shouldn't need it,
+     * and hard to support on c89 cross platform */
     unsigned int                 streamSizeHigh; /* store the high int of streamsize */
-    struct _bcf_directory_entry* next;
 } bcf_directory_entry;
 
-typedef struct _bcf_directory
+typedef struct _bcf_file
 {
-    bcf_directory_entry* dirEntries;
-    unsigned int         maxNumberOfDirectoryEntries;
-    /* TODO: possibly add a directory tree in the future */
-
-} bcf_directory;
-
-typedef struct _bcf_file_header
-{
+    /*! The header for the CompoundFile */
     unsigned char  signature[8];
     unsigned char  CLSID[16]; /* TODO: this should be a separate type */
     unsigned short minorVersion;
@@ -94,14 +73,21 @@ typedef struct _bcf_file_header
     unsigned int   numberOfMiniFatSectors;
     unsigned int   firstDifatSectorLocation;
     unsigned int   numberOfDifatSectors;
-} bcf_file_header;
 
-typedef struct _bcf_file
-{
-    bcf_file_header header;   /*! The header for the CompoundFile */
-    bcf_file_difat* difat;    /*! The "Double Indirect FAT" for the CompoundFile */
-    bcf_file_fat* fat;        /*! The File Allocation Table for the Compound File */
-    bcf_directory* directory; /*! The directory for the CompoundFile */
+    /*! The "Double Indirect FAT" for the CompoundFile */
+    /* float-indirection file allocation table references */
+    unsigned int fatSectorCount;
+    unsigned int fatSectorEntries[109];
+    unsigned int sectorSize;
+
+    /*! The File Allocation Table for the Compound File */
+    int          fatEntryCount;
+    unsigned int fatEntries[255]; /* maybe make this dynamic */
+    unsigned int numberOfEntriesInFatSector;
+
+    bcf_directory_entry dirEntries[10];
+    unsigned int        maxNumberOfDirectoryEntries;
+    /* TODO: possibly add a directory tree in the future */
 } bcf_file;
 
 /* STATIC FUNCTION PROTOTYPES
@@ -280,9 +266,8 @@ static void embFile_readInt_be(EmbFile file, void* data, int bytes);
 static void embFile_writeInt(EmbFile file, void* data, int bytes);
 static void embFile_writeInt_be(EmbFile file, void* data, int bytes);
 
-static int bcfFile_read(EmbFile file, bcf_file* bcfFile);
+static int bcfFile_read(EmbFile file);
 static EmbFile GetFile(bcf_file* bcfFile, EmbFile file, char* fileToFind);
-static void bcf_file_free(bcf_file* bcfFile);
 
 static char identify_element(char *token);
 
@@ -348,7 +333,6 @@ static int random_state = 37;
 #define error_vector_multiply                   31
 #define error_vector_normal                     32
 #define error_vector_subtract                   33
-#define error_pattern_create_malloc             34
 #define error_hide_stitches_no_pattern          35
 #define error_fix_color_count_no_pattern        36
 #define error_copy_stitch_list_no_pattern       37
@@ -389,13 +373,10 @@ static int random_state = 37;
 #define error_read_no_filename                  72
 #define error_read_cannot_open                  73
 #define error_cannot_open                       74
-#define error_bcf_difat_malloc                  75
 #define error_bcf_difat_sector_value            76
 #define error_read_sector_value                 77
 #define error_bcf_fat_create                    78
 #define error_col_empty_line                    79
-#define error_compound_entry_malloc             80
-#define error_compound_malloc                   81
 #define error_compound_unexpected_object_type   82
 #define error_csv_string                        83
 #define error_format_get_extension              84
@@ -410,25 +391,13 @@ static int random_state = 37;
 #define error_max_encode_no_file                93
 #define error_ofm_threads_library_name          94
 #define error_ofm_threads_color_name            95
-#define error_read_ofm_malloc                   96
 #define error_stx_thread_no_thread              97
 #define error_stx_thread_no_file                98
-#define error_stx_thread_malloc                 99
-#define error_read_stx_gif_malloc               100
-#define error_read_stx_malloc                   101
 #define error_encode_dst_x_out_of_range         102
 #define error_encode_dst_y_out_of_range         103
 #define error_encode_tap_x                      104
 #define error_encode_tap_y                      105
-#define error_vip_decompress_malloc             106
-#define error_read_vip_string_val_malloc        107
-#define error_read_vip_decoded_colors_malloc    108
-#define error_read_vip_attribute_malloc         109
-#define error_read_vip_x_malloc                 110
-#define error_read_vip_y_malloc                 111
-#define error_vip_compress_malloc               112
 #define error_vp3_read_string_file              113
-#define error_vp3_read_string_malloc            114
 #define error_vp3_read_hoop_no_file             115
 #define error_number_of_colors                  116
 #define error_check_color_byte_1                117
@@ -436,17 +405,12 @@ static int random_state = 37;
 #define error_check_color_byte_3                119
 #define error_format_vp3_cannot_read            120
 #define error_svg_add_attribute_no_element      121
-#define error_svg_add_attribute_element_malloc  122
-#define error_svg_add_attribute_list_malloc     123
-#define error_svg_create_malloc                 124
 #define error_svg_create_element_null           125
 #define error_svg_get_value_no_element          126
 #define error_svg_get_value_no_name             127
 #define error_svg_add_no_pattern                128
-#define error_svg_add_malloc                    129
 #define error_svg_add_invalid_path              130
 #define error_svg_add_realloc                   131
-#define error_svg_process_malloc                132
 #define error_read_svg                          133
 #define error_write_csv_0                       134
 #define error_read_csv_0                        135
@@ -1884,7 +1848,7 @@ EmbPattern* embPattern_create(void)
     p = patterns+active_patterns;
     active_patterns++;
     if (!p) {
-        print_log_string(error_pattern_create_malloc);
+        embLog("Ran out of memory for active patterns.");
         return 0;
     }
 
@@ -3553,20 +3517,10 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, float density)
     return stitches;
 }
 
-static bcf_file_difat* bcf_difat_create(EmbFile file, unsigned int fatSectors, const unsigned int sectorSize);
-static unsigned int readFullSector(EmbFile file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
-static unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
-
-static bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
-static void loadFatFromSector(bcf_file_fat* fat, EmbFile file);
-
-static bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile file);
-static bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
-static void readNextSector(EmbFile file, bcf_directory* dir);
-static void bcf_directory_free(bcf_directory* dir);
-
-static bcf_file_header bcfFileHeader_read(EmbFile file);
-static int bcfFileHeader_isValid(bcf_file_header header);
+static void bcf_difat_create(EmbFile file, unsigned int fatSectors, const unsigned int sectorSize);
+static unsigned int readFullSector(EmbFile file, unsigned int* numberOfDifatEntriesStillToRead);
+static void CompoundFileDirectoryEntry(bcf_directory_entry *dir, EmbFile file);
+static void readNextSector(EmbFile file);
 
 /*! Constant representing the number of Double Indirect FAT entries in a single header */
 static const unsigned int NumberOfDifatEntriesInHeader = 109;
@@ -4173,88 +4127,103 @@ void embFile_print(EmbFile stream, const char* str)
     embFile_write((void *)str, 1, string_length(str), stream);
 }
 
-/**
- * TODO: documentation.
- */
-static unsigned int sectorSize(bcf_file* bcfFile)
-{
-    /* version 3 uses 512 byte */
-    if (bcfFile->header.majorVersion == 3) {
-        return 512;
-    }
-    return 4096;
-}
+bcf_file BcfFile;
 
 /**
  * TODO: documentation.
  */
-static int haveExtraDIFATSectors(bcf_file* file)
+static int seekToSector(EmbFile file, const unsigned int sector)
 {
-    return (int)(numberOfEntriesInDifatSector(file->difat) > 0);
-}
-
-/**
- * TODO: documentation.
- */
-static int seekToOffset(EmbFile file, const unsigned int offset)
-{
+    unsigned int offset = (sector + 1) * BcfFile.sectorSize;
     return embFile_seek(file, offset, SEEK_SET);
 }
 
 /**
  * TODO: documentation.
  */
-static int seekToSector(bcf_file* bcfFile, EmbFile file, const unsigned int sector)
+int bcfFile_read(EmbFile file)
 {
-    unsigned int offset = sector * sectorSize(bcfFile) + sectorSize(bcfFile);
-    return seekToOffset(file, offset);
-}
+    unsigned int i, numberOfDirectoryEntriesPerSector, directorySectorToReadFrom, fatSectors;
 
-/**
- * TODO: documentation.
- */
-static void parseDIFATSectors(EmbFile file, bcf_file* bcfFile)
-{
-    unsigned int numberOfDifatEntriesStillToRead = bcfFile->header.numberOfFATSectors - NumberOfDifatEntriesInHeader;
-    unsigned int difatSectorNumber = bcfFile->header.firstDifatSectorLocation;
-    while ((difatSectorNumber != CompoundFileSector_EndOfChain) && (numberOfDifatEntriesStillToRead > 0)) {
-        seekToSector(bcfFile, file, difatSectorNumber);
-        difatSectorNumber = readFullSector(file, bcfFile->difat, &numberOfDifatEntriesStillToRead);
+    embFile_read(BcfFile.signature, 1, 8, file);
+    embFile_read(BcfFile.CLSID, 1, 16, file);
+    embFile_readInt(file, &(BcfFile.minorVersion), 2);
+    embFile_readInt(file, &(BcfFile.majorVersion), 2);
+    embFile_readInt(file, &(BcfFile.byteOrder), 2);
+    embFile_readInt(file, &(BcfFile.sectorShift), 2);
+    embFile_readInt(file, &(BcfFile.miniSectorShift), 2);
+    embFile_readInt(file, &(BcfFile.reserved1), 2);
+    embFile_readInt(file, &(BcfFile.reserved2), 4);
+    embFile_readInt(file, &(BcfFile.numberOfDirectorySectors), 4);
+    embFile_readInt(file, &(BcfFile.numberOfFATSectors), 4);
+    embFile_readInt(file, &(BcfFile.firstDirectorySectorLocation), 4);
+    embFile_readInt(file, &(BcfFile.transactionSignatureNumber), 4);
+    embFile_readInt(file, &(BcfFile.miniStreamCutoffSize), 4);
+    embFile_readInt(file, &(BcfFile.firstMiniFATSectorLocation), 4);
+    embFile_readInt(file, &(BcfFile.numberOfMiniFatSectors), 4);
+    embFile_readInt(file, &(BcfFile.firstDifatSectorLocation), 4);
+    embFile_readInt(file, &(BcfFile.numberOfDifatSectors), 4);
+
+    /* version 3 uses 512 byte */
+    if (BcfFile.majorVersion == 3) {
+        BcfFile.sectorSize = 512;
     }
-}
+    BcfFile.sectorSize = 4096;
 
-/**
- * TODO: documentation.
- */
-int bcfFile_read(EmbFile file, bcf_file* bcfFile)
-{
-    unsigned int i, numberOfDirectoryEntriesPerSector, directorySectorToReadFrom;
-
-    bcfFile->header = bcfFileHeader_read(file);
-    if (!bcfFileHeader_isValid(bcfFile->header)) {
+    if (!string_equal(BcfFile.signature, "\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1")) {
         embLog("Failed to parse header\n");
+        embLog("bad header signature\n");
         return 0;
     }
 
-    bcfFile->difat = bcf_difat_create(file, bcfFile->header.numberOfFATSectors, sectorSize(bcfFile));
-    if (haveExtraDIFATSectors(bcfFile)) {
-        parseDIFATSectors(file, bcfFile);
+    BcfFile.fatSectorCount = emb_min_int(BcfFile.numberOfFATSectors, NumberOfDifatEntriesInHeader);
+
+    for (i = 0; i < BcfFile.fatSectorCount; i++) {
+        embFile_readInt(file, BcfFile.fatSectorEntries + i, 4);
     }
 
-    bcfFile->fat = bcfFileFat_create(sectorSize(bcfFile));
-    for (i = 0; i < bcfFile->header.numberOfFATSectors; ++i) {
-        unsigned int fatSectorNumber = bcfFile->difat->fatSectorEntries[i];
-        seekToSector(bcfFile, file, fatSectorNumber);
-        loadFatFromSector(bcfFile->fat, file);
+    for (i = fatSectors; i < NumberOfDifatEntriesInHeader; ++i) {
+        unsigned int sectorRef;
+        embFile_readInt(file, &sectorRef, 4);
+        if (sectorRef != CompoundFileSector_FreeSector) {
+            embLog("ERROR: bcf_difat_create(), Unexpected sector value\n");
+            /* TODO " %x at DIFAT[%d]\n", sectorRef, i); */
+        }
     }
 
-    numberOfDirectoryEntriesPerSector = sectorSize(bcfFile) / sizeOfDirectoryEntry;
-    bcfFile->directory = CompoundFileDirectory(numberOfDirectoryEntriesPerSector);
-    directorySectorToReadFrom = bcfFile->header.firstDirectorySectorLocation;
+    /* parse DIFAT sectors */
+    if (BcfFile.sectorSize > sizeOfChainingEntryAtEndOfDifatSector) {
+        unsigned int numberOfDifatEntriesStillToRead = BcfFile.numberOfFATSectors - NumberOfDifatEntriesInHeader;
+        unsigned int difatSectorNumber = BcfFile.firstDifatSectorLocation;
+        while ((difatSectorNumber != CompoundFileSector_EndOfChain) && (numberOfDifatEntriesStillToRead > 0)) {
+            seekToSector(file, difatSectorNumber);
+            difatSectorNumber = readFullSector(file, &numberOfDifatEntriesStillToRead);
+        }
+    }
+
+    BcfFile.numberOfEntriesInFatSector = BcfFile.sectorSize / sizeOfFatEntry;
+    BcfFile.fatEntryCount = 0;
+    for (i = 0; i < BcfFile.numberOfFATSectors; ++i) {
+        unsigned int j, fatEntries_current, newSize;
+        unsigned int fatSectorNumber = BcfFile.fatSectorEntries[i];
+        seekToSector(file, fatSectorNumber);
+
+        /* load fat from sector */
+        fatEntries_current = BcfFile.fatEntryCount;
+        newSize = fatEntries_current + BcfFile.numberOfEntriesInFatSector;
+        for (j = fatEntries_current; j < newSize; ++j) {
+            embFile_readInt(file, BcfFile.fatEntries + j, 4);
+        }
+        BcfFile.fatEntryCount = newSize;
+    }
+
+    /* numberOfDirectoryEntriesPerSector = BcfFile.sectorSize / sizeOfDirectoryEntry;
+    CompoundFileDirectory(numberOfDirectoryEntriesPerSector); */
+    directorySectorToReadFrom = BcfFile.firstDirectorySectorLocation;
     while (directorySectorToReadFrom != CompoundFileSector_EndOfChain) {
-        seekToSector(bcfFile, file, directorySectorToReadFrom);
-        readNextSector(file, bcfFile->directory);
-        directorySectorToReadFrom = bcfFile->fat->fatEntries[directorySectorToReadFrom];
+        seekToSector(file, directorySectorToReadFrom);
+        readNextSector(file);
+        directorySectorToReadFrom = BcfFile.fatEntries[directorySectorToReadFrom];
     }
 
     return 1;
@@ -4265,31 +4234,25 @@ int bcfFile_read(EmbFile file, bcf_file* bcfFile)
  */
 EmbFile GetFile(bcf_file* bcfFile, EmbFile file, char* fileToFind)
 {
-    int filesize, sectorSize, currentSector, sizeToWrite, currentSize, totalSectors, i;
+    int filesize, currentSector, sizeToWrite, currentSize, totalSectors, i;
     char input;
     EmbFile fileOut = embFile_tmpfile();
-    bcf_directory_entry* pointer = bcfFile->directory->dirEntries;
-    while (pointer) {
-        if (string_equal(fileToFind, pointer->directoryEntryName))
+    for (i=0; i<BcfFile.maxNumberOfDirectoryEntries; i++) {
+        if (string_equal(fileToFind, BcfFile.dirEntries[i].directoryEntryName))
             break;
-        pointer = pointer->next;
     }
-    filesize = pointer->streamSize;
-    sectorSize = bcfFile->difat->sectorSize;
+    filesize = BcfFile.dirEntries[i].streamSize;
 
     currentSize = 0;
-    currentSector = pointer->startingSectorLocation;
-    totalSectors = (int)emb_ceil((float)filesize / sectorSize);
+    currentSector = BcfFile.dirEntries[i].startingSectorLocation;
+    totalSectors = (int)emb_ceil((float)filesize / BcfFile.sectorSize);
     for (i = 0; i < totalSectors; i++) {
-        seekToSector(bcfFile, file, currentSector);
-        sizeToWrite = filesize - currentSize;
-        if (sectorSize < sizeToWrite) {
-            sizeToWrite = sectorSize;
-        }
+        seekToSector(file, currentSector);
+        sizeToWrite = emb_min_int(filesize - currentSize, BcfFile.sectorSize);
         embFile_read(&input, 1, sizeToWrite, file);
         embFile_write(&input, 1, sizeToWrite, fileOut);
         currentSize += sizeToWrite;
-        currentSector = bcfFile->fat->fatEntries[currentSector];
+        currentSector = BcfFile.fatEntries[currentSector];
     }
     return fileOut;
 }
@@ -4297,78 +4260,28 @@ EmbFile GetFile(bcf_file* bcfFile, EmbFile file, char* fileToFind)
 /**
  * TODO: documentation.
  */
-void bcf_file_free(bcf_file* bcfFile)
+unsigned int readFullSector(EmbFile file, unsigned int* numberOfDifatEntriesStillToRead)
 {
-    free(bcfFile->difat);
-    free(bcfFile->fat);
-    bcf_directory_free(bcfFile->directory);
-    free(bcfFile);
-}
+    unsigned int i, sectorRef, nextDifatSectorInChain;
+    unsigned int entriesToReadInThisSector = 0, entriesInDifat;
 
-/**
- * TODO: documentation.
- */
-bcf_file_difat* bcf_difat_create(EmbFile file, unsigned int fatSectors, const unsigned int sectorSize)
-{
-    unsigned int i;
-    bcf_file_difat* difat = 0;
-    unsigned int sectorRef;
+    entriesInDifat = (BcfFile.sectorSize - sizeOfChainingEntryAtEndOfDifatSector) / sizeOfDifatEntry;
 
-    difat = (bcf_file_difat*)malloc(sizeof(bcf_file_difat));
-    if (!difat) {
-        embLog("ERROR: bcf_difat_create(), cannot allocate memory for difat\n");
-    } /* TODO: avoid crashing. null pointer will be accessed */
-
-    difat->sectorSize = sectorSize;
-    if (fatSectors > NumberOfDifatEntriesInHeader) {
-        fatSectors = NumberOfDifatEntriesInHeader;
-    }
-
-    for (i = 0; i < fatSectors; ++i) {
-        embFile_readInt(file, difat->fatSectorEntries + i, 4);
-    }
-    difat->fatSectorCount = fatSectors;
-    for (i = fatSectors; i < NumberOfDifatEntriesInHeader; ++i) {
-        embFile_readInt(file, &sectorRef, 4);
-        if (sectorRef != CompoundFileSector_FreeSector) {
-            embLog("ERROR: bcf_difat_create(), Unexpected sector value\n");
-            /* TODO " %x at DIFAT[%d]\n", sectorRef, i); */
-        }
-    }
-    return difat;
-}
-
-/**
- * TODO: documentation.
- */
-unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat)
-{
-    return (fat->sectorSize - sizeOfChainingEntryAtEndOfDifatSector) / sizeOfDifatEntry;
-}
-
-/**
- * TODO: documentation.
- */
-unsigned int readFullSector(EmbFile file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead)
-{
-    unsigned int i;
-    unsigned int sectorRef;
-    unsigned int nextDifatSectorInChain;
-    unsigned int entriesToReadInThisSector = 0;
-    if (*numberOfDifatEntriesStillToRead > numberOfEntriesInDifatSector(bcfFile)) {
-        entriesToReadInThisSector = numberOfEntriesInDifatSector(bcfFile);
+    if (*numberOfDifatEntriesStillToRead > entriesInDifat) {
+        entriesToReadInThisSector = entriesInDifat;
         *numberOfDifatEntriesStillToRead -= entriesToReadInThisSector;
-    } else {
+    }
+    else {
         entriesToReadInThisSector = *numberOfDifatEntriesStillToRead;
         *numberOfDifatEntriesStillToRead = 0;
     }
 
     for (i = 0; i < entriesToReadInThisSector; ++i) {
         embFile_readInt(file, &sectorRef, 4);
-        bcfFile->fatSectorEntries[bcfFile->fatSectorCount] = sectorRef;
-        bcfFile->fatSectorCount++;
+        BcfFile.fatSectorEntries[BcfFile.fatSectorCount] = sectorRef;
+        BcfFile.fatSectorCount++;
     }
-    for (i = entriesToReadInThisSector; i < numberOfEntriesInDifatSector(bcfFile); ++i) {
+    for (i = entriesToReadInThisSector; i < entriesInDifat; ++i) {
         embFile_readInt(file, &sectorRef, 4);
         if (sectorRef != CompoundFileSector_FreeSector) {
             embLog("ERROR: readFullSector(), Unexpected sector value");
@@ -4397,20 +4310,6 @@ static void parseDirectoryEntryName(EmbFile file, bcf_directory_entry* dir)
 /**
  * TODO: documentation.
  */
-bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries)
-{
-    bcf_directory* dir = (bcf_directory*)malloc(sizeof(bcf_directory));
-    if (!dir) {
-        embLog("ERROR: CompoundFileDirectory(), cannot allocate memory for dir\n");
-    } /* TODO: avoid crashing. null pointer will be accessed */
-    dir->maxNumberOfDirectoryEntries = maxNumberOfDirectoryEntries;
-    dir->dirEntries = 0;
-    return dir;
-}
-
-/**
- * TODO: documentation.
- */
 EmbTime parseTime(EmbFile file)
 {
     EmbTime returnVal;
@@ -4428,15 +4327,10 @@ EmbTime parseTime(EmbFile file)
 /**
  * TODO: documentation.
  */
-bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile file)
+void CompoundFileDirectoryEntry(bcf_directory_entry *dir, EmbFile file)
 {
-    bcf_directory_entry* dir = (bcf_directory_entry*)malloc(sizeof(bcf_directory_entry));
-    if (!dir) {
-        embLog("ERROR: CompoundFileDirectoryEntry(), cannot allocate memory for dir\n");
-    } /* TODO: avoid crashing. null pointer will be accessed */
     memory_set(dir->directoryEntryName, 0, 32);
     parseDirectoryEntryName(file, dir);
-    dir->next = 0;
     embFile_readInt(file, &(dir->directoryEntryNameLength), 2);
     dir->objectType = (unsigned char)binaryReadByte(file);
     if ((dir->objectType != ObjectTypeStorage) && (dir->objectType != ObjectTypeStream) && (dir->objectType != ObjectTypeRootEntry)) {
@@ -4462,108 +4356,12 @@ bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile file)
 /**
  * TODO: documentation.
  */
-void readNextSector(EmbFile file, bcf_directory* dir)
+void readNextSector(EmbFile file)
 {
     unsigned int i;
-    for (i = 0; i < dir->maxNumberOfDirectoryEntries; ++i) {
-        bcf_directory_entry* dirEntry = CompoundFileDirectoryEntry(file);
-        bcf_directory_entry* pointer = dir->dirEntries;
-        if (!pointer) {
-            dir->dirEntries = dirEntry;
-        } else {
-            while (pointer) {
-                if (!pointer->next) {
-                    pointer->next = dirEntry;
-                    break;
-                }
-                pointer = pointer->next;
-            }
-        }
+    for (i = 0; i < BcfFile.maxNumberOfDirectoryEntries; ++i) {
+        CompoundFileDirectoryEntry(BcfFile.dirEntries + i, file);
     }
-}
-
-/**
- * TODO: documentation.
- */
-void bcf_directory_free(bcf_directory* dir)
-{
-    bcf_directory_entry* pointer = dir->dirEntries;
-    bcf_directory_entry* entryToFree = 0;
-    while (pointer) {
-        entryToFree = pointer;
-        pointer = pointer->next;
-        free(entryToFree);
-    }
-    if (dir) {
-        free(dir);
-    }
-}
-
-/**
- * TODO: documentation.
- */
-bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize)
-{
-    bcf_file_fat* fat = (bcf_file_fat*)malloc(sizeof(bcf_file_fat));
-    if (!fat) {
-        embLog("ERROR: bcfFileFat_create(), cannot allocate memory for fat\n");
-    } /* TODO: avoid crashing. null pointer will be accessed */
-    fat->numberOfEntriesInFatSector = sectorSize / sizeOfFatEntry;
-    fat->fatEntryCount = 0;
-    return fat;
-}
-
-/**
- * TODO: documentation.
- */
-void loadFatFromSector(bcf_file_fat* fat, EmbFile file)
-{
-    unsigned int i;
-    unsigned int currentNumberOfFatEntries = fat->fatEntryCount;
-    unsigned int newSize = currentNumberOfFatEntries + fat->numberOfEntriesInFatSector;
-    for (i = currentNumberOfFatEntries; i < newSize; ++i) {
-        embFile_readInt(file, fat->fatEntries + i, 4);
-    }
-    fat->fatEntryCount = newSize;
-}
-
-/**
- * TODO: documentation.
- */
-bcf_file_header bcfFileHeader_read(EmbFile file)
-{
-    bcf_file_header header;
-    embFile_read(header.signature, 1, 8, file);
-    embFile_read(header.CLSID, 1, 16, file);
-    embFile_readInt(file, &(header.minorVersion), 2);
-    embFile_readInt(file, &(header.majorVersion), 2);
-    embFile_readInt(file, &(header.byteOrder), 2);
-    embFile_readInt(file, &(header.sectorShift), 2);
-    embFile_readInt(file, &(header.miniSectorShift), 2);
-    embFile_readInt(file, &(header.reserved1), 2);
-    embFile_readInt(file, &(header.reserved2), 4);
-    embFile_readInt(file, &(header.numberOfDirectorySectors), 4);
-    embFile_readInt(file, &(header.numberOfFATSectors), 4);
-    embFile_readInt(file, &(header.firstDirectorySectorLocation), 4);
-    embFile_readInt(file, &(header.transactionSignatureNumber), 4);
-    embFile_readInt(file, &(header.miniStreamCutoffSize), 4);
-    embFile_readInt(file, &(header.firstMiniFATSectorLocation), 4);
-    embFile_readInt(file, &(header.numberOfMiniFatSectors), 4);
-    embFile_readInt(file, &(header.firstDifatSectorLocation), 4);
-    embFile_readInt(file, &(header.numberOfDifatSectors), 4);
-    return header;
-}
-
-/**
- * TODO: documentation.
- */
-int bcfFileHeader_isValid(bcf_file_header header)
-{
-    if (!string_equal(header.signature, "\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1")) {
-        embLog("bad header signature\n");
-        return 0;
-    }
-    return 1;
 }
 
 /**
@@ -7140,20 +6938,15 @@ static char readOfm(EmbPattern* pattern, EmbFile file, const char* fileName)
     short classNameLength;
     char* s = 0;
     EmbFile fileCompound = 0;
-    bcf_file* bcfFile = 0;
 
     fileCompound = embFile_open(fileName, "rb", 0);
     if (!fileCompound)
         return 0;
 
-    bcfFile = (bcf_file*)malloc(sizeof(bcf_file));
-    if (!bcfFile) {
-        print_log_string(error_read_ofm_malloc);
-        return 0;
-    }
-    bcfFile_read(fileCompound, bcfFile);
-    file = GetFile(bcfFile, fileCompound, "EdsIV Object");
-    bcf_file_free(bcfFile);
+    bcfFile_read(fileCompound);
+    file = GetFile(&BcfFile, fileCompound, "EdsIV Object");
+    /* BcfFile.directory.maxEntries = 0; */
+
     embFile_seek(file, 0x1C6, SEEK_SET);
     ofmReadThreads(file, pattern);
     embFile_seek(file, 0x110, SEEK_CUR);
@@ -8922,15 +8715,15 @@ typedef struct SubDescriptor_ {
     int someNum; /* TODO: better variable naming */
     int someInt; /* TODO: better variable naming */
     int someOtherInt; /* TODO: better variable naming */
-    char* colorCode;
-    char* colorName;
+    char colorCode[40];
+    char colorName[40];
 } SubDescriptor;
 
 typedef struct StxThread_ {
-    char* colorCode;
-    char* colorName;
-    char* sectionName;
-    SubDescriptor* subDescriptors;
+    char colorCode[40];
+    char colorName[40];
+    char sectionName[40];
+    SubDescriptor subDescriptors[10];
     EmbColor stxColor;
 } StxThread;
 
@@ -8955,21 +8748,9 @@ static char stxReadThread(StxThread* thread, EmbFile file)
     }
 
     codeLength = binaryReadUInt8(file);
-    codeBuff = (char*)malloc(codeLength);
-    if (!codeBuff) {
-        embLog("ERROR: stxReadThread(), malloc()\n");
-        return 0;
-    }
-    binaryReadBytes(file, (unsigned char*)codeBuff, codeLength); /* TODO: check return value */
-    thread->colorCode = codeBuff;
+    embFile_read(thread->colorCode, 1, codeLength, file); /* TODO: check return value */
     colorNameLength = binaryReadUInt8(file);
-    codeNameBuff = (char*)malloc(colorNameLength);
-    if (!codeNameBuff) {
-        embLog("ERROR: stxReadThread(), malloc()\n");
-        return 0;
-    }
-    binaryReadBytes(file, (unsigned char*)codeNameBuff, colorNameLength); /* TODO: check return value */
-    thread->colorName = codeNameBuff;
+    embFile_read(thread->colorName, 1, colorNameLength, file); /* TODO: check return value */
 
     col.r = binaryReadUInt8(file);
     col.b = binaryReadUInt8(file);
@@ -8978,48 +8759,28 @@ static char stxReadThread(StxThread* thread, EmbFile file)
     whatIsthis = binaryReadUInt8(file);
 
     sectionNameLength = binaryReadUInt8(file);
-    sectionNameBuff = (char*)malloc(sectionNameLength);
-    if (!sectionNameBuff) {
-        embLog("ERROR: stxReadThread(), malloc()\n");
-        return 0;
-    }
-    binaryReadBytes(file, (unsigned char*)sectionNameBuff, sectionNameLength); /* TODO: check return value */
-    thread->sectionName = sectionNameBuff;
+    embFile_read(thread->sectionName, 1, sectionNameLength, file); /* TODO: check return value */
 
     embFile_readInt(file, &somethingSomething, 4);
     embFile_readInt(file, &somethingSomething2, 4);
     embFile_readInt(file, &somethingElse, 4);
     embFile_readInt(file, &numberOfOtherDescriptors, 2);
 
-    thread->subDescriptors = (SubDescriptor*)malloc(sizeof(SubDescriptor) * numberOfOtherDescriptors);
-    if (!thread->subDescriptors) {
-        embLog("ERROR: stxReadThread(), malloc()\n");
+    if (numberOfOtherDescriptors >= 10) {
+        embLog("Ran of out memory for descriptors.");
         return 0;
     }
     for (j = 0; j < numberOfOtherDescriptors; j++) {
         SubDescriptor sd;
-        char *subCodeBuff, *subColorNameBuff;
-        int subCodeLength, subColorNameLength;
+        unsigned char subCodeLength, subColorNameLength;
 
         embFile_readInt(file, &(sd.someNum), 2);
         /* Debug.Assert(sd.someNum == 1); TODO: review */
         embFile_readInt(file, &(sd.someInt), 4);
         subCodeLength = binaryReadUInt8(file);
-        subCodeBuff = (char*)malloc(subCodeLength);
-        if (!subCodeBuff) {
-            embLog("ERROR: stxReadThread(), malloc()\n");
-            return 0;
-        }
-        binaryReadBytes(file, (unsigned char*)subCodeBuff, subCodeLength); /* TODO: check return value */
-        sd.colorCode = subCodeBuff;
+        embFile_read(sd.colorCode, 1, subCodeLength, file); /* TODO: check return value */
         subColorNameLength = binaryReadUInt8(file);
-        subColorNameBuff = (char*)malloc(subColorNameLength);
-        if (!subColorNameBuff) {
-            embLog("ERROR: stxReadThread(), malloc()\n");
-            return 0;
-        }
-        binaryReadBytes(file, (unsigned char*)subColorNameBuff, subColorNameLength); /* TODO: check return value */
-        sd.colorName = subColorNameBuff;
+        embFile_read(sd.colorName, 1, subColorNameLength, file); /* TODO: check return value */
         embFile_readInt(file, &(sd.someOtherInt), 4);
         thread->subDescriptors[j] = sd;
     }
@@ -10013,19 +9774,13 @@ static char writeVip(EmbPattern* pattern, EmbFile file, const char* fileName)
 static unsigned char* vp3ReadString(EmbFile file)
 {
     short stringLength;
-    unsigned char* charString = 0;
     if (!file) {
         embLog("ERROR: vp3ReadString(), file==0\n");
         return 0;
     }
     embFile_readInt_be(file, &stringLength, 2);
-    charString = (unsigned char*)malloc(stringLength);
-    if (!charString) {
-        embLog("ERROR: vp3ReadString(), malloc()\n");
-        return 0;
-    }
-    binaryReadBytes(file, charString, stringLength); /* TODO: check return value */
-    return charString;
+    embFile_read(embBuffer, 1, stringLength, file); /* TODO: check return value */
+    return embBuffer;
 }
 
 static char vp3Decode(unsigned char inputByte)
@@ -11059,8 +10814,7 @@ void svgAddToPattern(EmbPattern* p)
         EmbArray* pointList = 0;
         EmbArray* flagList;
 
-        char* pathbuff = 0;
-        pathbuff = (char*)malloc(size);
+        char* pathbuff = (char*)embBuffer;
         if (!pathbuff) {
             embLog("ERROR: svgAddToPattern(), cannot allocate memory for pathbuff\n");
             return;
@@ -11275,7 +11029,6 @@ void svgAddToPattern(EmbPattern* p)
                 }
             }
         }
-        free(pathbuff);
 
         /* TODO: subdivide numMoves > 1 */
 

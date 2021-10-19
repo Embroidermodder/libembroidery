@@ -8641,7 +8641,8 @@ static char readSew(EmbPattern* pattern, EmbFile file, const char* fileName)
     nColors = binaryReadByte(file);
     nColors += (binaryReadByte(file) << 8);
 
-    for (i = 0; i < nColors; i++) {
+    for (i = 0; i < nColors; i++) { 
+    
         EmbThread t;
         short thread_number;
         embFile_readInt(file, &thread_number, 2);
@@ -10212,6 +10213,7 @@ static char readVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
                 case 0x03:
                     break;
                 case 0x01:
+                    {
                     unsigned short sh;
                     embFile_readInt_be(file, &sh, 2);
                     x = vp3DecodeInt16(sh);
@@ -10219,6 +10221,7 @@ static char readVp3(EmbPattern* pattern, EmbFile file, const char* fileName)
                     y = vp3DecodeInt16(sh);
                     embFile_read(embBuffer, 1, 2, file); /* binaryReadInt16BE(file); */
                     embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, TRIM, 1);
+                    }
                     break;
                 default:
                     break;

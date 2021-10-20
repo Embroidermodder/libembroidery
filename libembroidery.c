@@ -12,9 +12,6 @@
 #include <fcntl.h>
 #include <time.h>
 
-void *malloc(size_t);
-void free(void *);
-
 #define EmbFile    int
 #else
 #include <sys/stat.h>
@@ -85,7 +82,8 @@ typedef struct _bcf_file
     unsigned int fatEntries[255]; /* maybe make this dynamic */
     unsigned int numberOfEntriesInFatSector;
 
-    bcf_directory_entry dirEntries[10];
+    /* TODO: switch this to an EmbFile tmpfile */
+    bcf_directory_entry *dirEntries;
     unsigned int        maxNumberOfDirectoryEntries;
     /* TODO: possibly add a directory tree in the future */
 } bcf_file;
@@ -289,7 +287,7 @@ static unsigned char embBuffer[1024];
 static EmbFile datafile;
 static EmbFile memory[100];
 static EmbArray arrays[100];
-static EmbPattern patterns[10];
+static EmbPattern patterns[3];
 static int memory_files = 0;
 static int active_patterns = 0;
 static int random_state = 37;
@@ -2864,10 +2862,10 @@ float GetAngle(EmbVector a, EmbVector b)
 
 void embPattern_breakIntoColorBlocks(EmbPattern *pattern)
 {
+#if 0
     EmbColor color;
     int oldColor, i;
     EmbArray *sa2;
-#if 0
     VectorStitch vs;
     sa2 = new StitchBlock();
     oldColor = pattern.StitchList[0].ColorIndex;
@@ -2891,9 +2889,9 @@ void embPattern_breakIntoColorBlocks(EmbPattern *pattern)
 
 int embPolygon_breakIntoSeparateObjects(EmbArray *blocks)
 {
+#if 0
     int i, j;
     float dx, dy, dy2, dy3;
-#if 0
     float previousAngle = 0.0;
     for (j=0; j<blocks->length; j++) {
         block = blocks[j];
@@ -3517,7 +3515,6 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, float density)
     return stitches;
 }
 
-static void bcf_difat_create(EmbFile file, unsigned int fatSectors, const unsigned int sectorSize);
 static unsigned int readFullSector(EmbFile file, unsigned int* numberOfDifatEntriesStillToRead);
 static void CompoundFileDirectoryEntry(bcf_directory_entry *dir, EmbFile file);
 static void readNextSector(EmbFile file);
@@ -4336,7 +4333,6 @@ void CompoundFileDirectoryEntry(bcf_directory_entry *dir, EmbFile file)
     if ((dir->objectType != ObjectTypeStorage) && (dir->objectType != ObjectTypeStream) && (dir->objectType != ObjectTypeRootEntry)) {
         embLog("ERROR: CompoundFileDirectoryEntry(), unexpected object type:\n");
         /* TODO: "%d\n", dir->objectType); */
-        return 0;
     }
     dir->colorFlag = (unsigned char)binaryReadByte(file);
     embFile_readInt(file, &(dir->leftSiblingId), 4);
@@ -4350,7 +4346,6 @@ void CompoundFileDirectoryEntry(bcf_directory_entry *dir, EmbFile file)
     embFile_readInt(file, &(dir->startingSectorLocation), 4);
     embFile_readInt(file, &(dir->streamSize), 4); /* This should really be __int64 or long long, but for our uses we should never run into an issue */
     embFile_readInt(file, &(dir->streamSizeHigh), 4); /* top portion of int64 */
-    return dir;
 }
 
 /**
@@ -4405,8 +4400,8 @@ EmbFormatList embFormat_data(int format)
     embFile_seek(datafile, out+59*format, SEEK_SET);
     embFile_read(embBuffer, 1, 59, datafile);
     
-    memory_copy(f.extension, (char *)embBuffer, 6);
-    memory_copy(f.description, (char *)(embBuffer+6), 50);
+    string_copy(f.extension, (char *)embBuffer);
+    string_copy(f.description, (char *)(embBuffer+6));
     f.reader = embBuffer[56];
     f.writer = embBuffer[57];
     f.type = embBuffer[58];
@@ -6787,19 +6782,13 @@ static char writeNew(EmbPattern* pattern, EmbFile file, const char* fileName)
 static char* ofmReadLibrary(EmbFile file)
 {
     int stringLength = 0;
-    char* libraryName = 0;
     /* FF FE FF */
     unsigned char leadIn[3];
 
     binaryReadBytes(file, leadIn, 3); /* TODO: check return value */
     stringLength = binaryReadByte(file);
-    libraryName = (char*)malloc(sizeof(char) * stringLength * 2);
-    if (!libraryName) {
-        print_log_string(error_ofm_threads_library_name);
-        return 0;
-    }
-    binaryReadBytes(file, (unsigned char*)libraryName, stringLength * 2); /* TODO: check return value */
-    return libraryName;
+    embFile_read(embBuffer, 1, stringLength * 2, file); /* TODO: check return value */
+    return embBuffer;
 }
 
 static int ofmReadClass(EmbFile file)
@@ -8792,7 +8781,7 @@ static char readStx(EmbPattern* pattern, EmbFile file, const char* fileName)
     int i, threadCount;
     unsigned char* gif = 0;
     /* public bitmap Image; */
-    StxThread* stxThreads = 0;
+    StxThread stxThreads[100];
     unsigned char headerBytes[7];
     char* header = 0;
     char filetype[4], version[5];
@@ -8821,21 +8810,12 @@ static char readStx(EmbPattern* pattern, EmbFile file, const char* fileName)
     embFile_readInt(file, &bottom, 2);
     embFile_readInt(file, &top, 2);
 
-    gif = (unsigned char*)malloc(imageLength);
-    if (!gif) {
-        embLog("ERROR: format-stx.c readStx(), unable to allocate memory for gif\n");
-        return 0;
-    }
-    binaryReadBytes(file, gif, imageLength); /* TODO: check return value */
+    /* gif */
+    embFile_read(embBuffer, 1, imageLength, file); /* TODO: check return value */
     /*Stream s2 = new MemoryStream(gif); TODO: review */
     /*Image = new bitmap(s2); TODO: review */
 
     embFile_readInt(file, &threadCount, 2);
-    stxThreads = (StxThread*)malloc(sizeof(StxThread) * threadCount);
-    if (!stxThreads) {
-        embLog("ERROR: readStx(), malloc()\n");
-        return 0;
-    }
     for (i = 0; i < threadCount; i++) {
         EmbThread t;
         StxThread st;
@@ -9588,8 +9568,7 @@ static char readVip(EmbPattern* pattern, EmbFile file, const char* fileName)
     embFile_readInt(file, &(header.xOffset), 4);
     embFile_readInt(file, &(header.yOffset), 4);
 
-    /*stringVal = (unsigned char*)malloc(sizeof(unsigned char)*8); TODO: review this and uncomment or remove
-        if(!stringVal) { embLog("ERROR: format-vip.c readVip(), cannot allocate memory for stringVal\n"); return 0; }
+    /*stringVal = embBuffer; TODO: review this and uncomment or remove
      */
 
     binaryReadBytes(file, header.stringVal, 8); /* TODO: check return value */
@@ -10322,7 +10301,6 @@ static char readXxx(EmbPattern* pattern, EmbFile file, const char* fileName)
         }
         if((!pattern->stitchList) && lastStitch->stitch.flags == STOP && secondLast)
         {
-            free(lastStitch);
             lastStitch = 0;
             secondLast->next = NULL;
             embPattern_changeColor(pattern, pattern->currentColorIndex - 1);

@@ -303,14 +303,14 @@ static int random_state = 37;
 #define image_frame                             (4*4)
 #define csv_header                              (5*4)
 #define max_header                              (6*4)
-#define vip_decoding_table                      (7*4)
-#define format_list                             (8*4)
-#define svg_token_table                         (9*4)
-#define inkscape_token_table                    (10*4)
-#define svg_element_token_table                 (11*4)
-#define svg_media_property_token_table          (12*4)
-#define stitch_labels                           (13*4)
-#define dxf_version_year                        (14*4)
+#define csd_decoding_table                      (7*4)
+#define vip_decoding_table                      (8*4)
+#define format_list                             (9*4)
+#define svg_token_table                         (10*4)
+#define inkscape_token_table                    (11*4)
+#define svg_element_token_table                 (12*4)
+#define svg_media_property_token_table          (13*4)
+#define stitch_labels                           (14*4)
 #define dxf_version_r                           (15*4)
 #define table_lengths                           (16*4)
 
@@ -4632,36 +4632,40 @@ static char writeCol(EmbPattern* pattern, EmbFile file, const char* fileName)
     return 1;
 }
 
+static EmbFile csd_sub_mask;
+static EmbFile csd_xor_mask;
+
 #define CsdSubMaskSize 479
 #define CsdXorMaskSize 501
-
-static char _subMask[CsdSubMaskSize];
-static char _xorMask[CsdXorMaskSize];
 
 static void BuildDecryptionTable(int seed)
 {
     int i;
     const int mul1 = 0x41C64E6D;
     const int add1 = 0x3039;
+    char c;
 
     for (i = 0; i < CsdSubMaskSize; i++) {
         seed *= mul1;
         seed += add1;
-        _subMask[i] = (char)((seed >> 16) & 0xFF);
+        c = (char)((seed >> 16) & 0xFF);
+        embFile_write(&c, 1, 1, csd_sub_mask);
     }
     for (i = 0; i < CsdXorMaskSize; i++) {
         seed *= mul1;
         seed += add1;
-        _xorMask[i] = (char)((seed >> 16) & 0xFF);
+        c = (char)((seed >> 16) & 0xFF);
+        embFile_write(&c, 1, 1, csd_xor_mask);
     }
 }
 
 static unsigned char DecodeCsdByte(long fileOffset, unsigned char val, int type)
 {
-    static const unsigned char _decryptArray[] = {
-        0x43, 0x6E, 0x72, 0x7A, 0x76, 0x6C, 0x61, 0x6F, 0x7C, 0x29, 0x5D, 0x62, 0x60, 0x6E, 0x61, 0x62, 0x20, 0x41, 0x66, 0x6A, 0x3A, 0x35, 0x5A, 0x63, 0x7C, 0x37, 0x3A, 0x2A, 0x25, 0x24, 0x2A, 0x33, 0x00, 0x10, 0x14, 0x03, 0x72, 0x4C, 0x48, 0x42, 0x08, 0x7A, 0x5E, 0x0B, 0x6F, 0x45, 0x47, 0x5F, 0x40, 0x54, 0x5C, 0x57, 0x55, 0x59, 0x53, 0x3A, 0x32, 0x6F, 0x53, 0x54, 0x50, 0x5C, 0x4A, 0x56, 0x2F, 0x2F, 0x62, 0x2C, 0x22, 0x65, 0x25, 0x28, 0x38, 0x30, 0x38, 0x22, 0x2B, 0x25, 0x3A, 0x6F, 0x27, 0x38, 0x3E, 0x3F, 0x74, 0x37, 0x33, 0x77, 0x2E, 0x30, 0x3D, 0x34, 0x2E, 0x32, 0x2B, 0x2C, 0x0C, 0x18, 0x42, 0x13, 0x16, 0x0A, 0x15, 0x02, 0x0B, 0x1C, 0x1E, 0x0E, 0x08, 0x60, 0x64, 0x0D, 0x09, 0x51, 0x25, 0x1A, 0x18, 0x16, 0x19, 0x1A, 0x58, 0x10, 0x14, 0x5B, 0x08, 0x15, 0x1B, 0x5F, 0xD5, 0xD2, 0xAE, 0xA3, 0xC1, 0xF0, 0xF4, 0xE8, 0xF8, 0xEC, 0xA6, 0xAB, 0xCD, 0xF8, 0xFD, 0xFB, 0xE2, 0xF0, 0xFE, 0xFA, 0xF5, 0xB5, 0xF7, 0xF9, 0xFC, 0xB9, 0xF5, 0xEF, 0xF4, 0xF8, 0xEC, 0xBF, 0xC3, 0xCE, 0xD7, 0xCD, 0xD0, 0xD7, 0xCF, 0xC2, 0xDB, 0xA4, 0xA0, 0xB0, 0xAF, 0xBE, 0x98, 0xE2, 0xC2, 0x91, 0xE5, 0xDC, 0xDA, 0xD2, 0x96, 0xC4, 0x98, 0xF8, 0xC9, 0xD2, 0xDD, 0xD3, 0x9E, 0xDE, 0xAE, 0xA5, 0xE2, 0x8C, 0xB6, 0xAC, 0xA3, 0xA9, 0xBC, 0xA8, 0xA6, 0xEB, 0x8B, 0xBF, 0xA1, 0xAC, 0xB5, 0xA3, 0xBB, 0xB6, 0xA7, 0xD8, 0xDC, 0x9A, 0xAA, 0xF9, 0x82, 0xFB, 0x9D, 0xB9, 0xAB, 0xB3, 0x94, 0xC1, 0xA0, 0x8C, 0x8B, 0x8E, 0x95, 0x8F, 0x87, 0x99, 0xE7, 0xE1, 0xA3, 0x83, 0x8B, 0xCF, 0xA3, 0x85, 0x9D, 0x83, 0xD4, 0xB7, 0x83, 0x84, 0x91, 0x97, 0x9F, 0x88, 0x8F, 0xDD, 0xAD, 0x90
-    };
-    int newOffset;
+    int newOffset, csd_table;
+    char _xorMask, _subMask;
+
+    csd_table = dereference_int(csd_decoding_table);
+    get_str(embBuffer, csd_table);
 
     fileOffset = fileOffset - 1;
     if (type != 0) {
@@ -4673,22 +4677,29 @@ static unsigned char DecodeCsdByte(long fileOffset, unsigned char val, int type)
         fileOffsetLow = fileOffsetHigh;
         final = fileOffsetLow % 0x300;
         if (final != 0x100 && final != 0x200) {
-            newOffset = _decryptArray[newOffset] | fileOffsetHigh;
+            newOffset = embBuffer[newOffset] | fileOffsetHigh;
         } else if (final != 0x100 && final == 0x200) {
             if (newOffset == 0) {
                 fileOffsetHigh = fileOffsetHigh - 0x100;
             }
-            newOffset = _decryptArray[newOffset] | fileOffsetHigh;
+            newOffset = embBuffer[newOffset] | fileOffsetHigh;
         } else if (newOffset != 1 && newOffset != 0) {
-            newOffset = _decryptArray[newOffset] | fileOffsetHigh;
+            newOffset = embBuffer[newOffset] | fileOffsetHigh;
         } else {
             fileOffsetHigh = fileOffsetHigh - 0x100;
-            newOffset = _decryptArray[newOffset] | fileOffsetHigh;
+            newOffset = embBuffer[newOffset] | fileOffsetHigh;
         }
     } else {
         newOffset = (int)fileOffset;
     }
-    return ((unsigned char)((unsigned char)(val ^ _xorMask[newOffset % CsdXorMaskSize]) - _subMask[newOffset % CsdSubMaskSize]));
+
+    embFile_seek(csd_xor_mask, newOffset % CsdXorMaskSize, SEEK_SET);
+    embFile_read(&_xorMask, 1, 1, csd_xor_mask);
+
+    embFile_seek(csd_sub_mask, newOffset % CsdSubMaskSize, SEEK_SET);
+    embFile_read(&_subMask, 1, 1, csd_sub_mask);
+
+    return (unsigned char)(val ^ _xorMask) - _subMask;
 }
 
 static char readCsd(EmbPattern* pattern, EmbFile file, const char* fileName)
@@ -4701,6 +4712,9 @@ static char readCsd(EmbPattern* pattern, EmbFile file, const char* fileName)
     int flags;
     char endOfStream = 0;
     unsigned char colorOrder[14];
+
+    csd_sub_mask = embFile_tmpfile();
+    csd_xor_mask = embFile_tmpfile();
 
     binaryReadBytes(file, identifier, 8); /* TODO: check return value */
 
@@ -4767,6 +4781,9 @@ static char readCsd(EmbPattern* pattern, EmbFile file, const char* fileName)
         else
             embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
+
+    embFile_close(csd_xor_mask);
+    embFile_close(csd_sub_mask);
 
     return 1;
 }
@@ -6983,28 +7000,6 @@ static float pcdDecode(unsigned char a1, unsigned char a2, unsigned char a3)
     return res;
 }
 
-static void pcdEncode(EmbFile file, int dx, int dy, int flags)
-{
-    unsigned char flagsToWrite = 0;
-
-    binaryWriteByte(file, (unsigned char)0);
-    binaryWriteByte(file, (unsigned char)(dx & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dx >> 8) & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dx >> 16) & 0xFF));
-
-    binaryWriteByte(file, (unsigned char)0);
-    binaryWriteByte(file, (unsigned char)(dy & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dy >> 8) & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dy >> 16) & 0xFF));
-    if (flags & STOP) {
-        flagsToWrite |= 0x01;
-    }
-    if (flags & TRIM) {
-        flagsToWrite |= 0x04;
-    }
-    binaryWriteByte(file, flagsToWrite);
-}
-
 static char readPcd(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     char allZeroColor = 1;
@@ -7059,6 +7054,8 @@ static char readPcd(EmbPattern* pattern, EmbFile file, const char* fileName)
     return 1;
 }
 
+static void pcEncode(EmbFile file, int dx, int dy, int flags);
+
 static char writePcd(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
@@ -7077,7 +7074,7 @@ static char writePcd(EmbPattern* pattern, EmbFile file, const char* fileName)
     for (i = 0; i < pattern->stitchList->length; i++) {
         EmbStitch st;
         embArray_get(pattern->stitchList, &st, i);
-        pcdEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
+        pcEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
     }
     return 1;
 }
@@ -7145,28 +7142,6 @@ static float pcqDecode(unsigned char a1, unsigned char a2, unsigned char a3)
     return res;
 }
 
-static void pcqEncode(EmbFile file, int dx, int dy, int flags)
-{
-    unsigned char flagsToWrite = 0;
-
-    binaryWriteByte(file, (unsigned char)0);
-    binaryWriteByte(file, (unsigned char)(dx & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dx >> 8) & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dx >> 16) & 0xFF));
-
-    binaryWriteByte(file, (unsigned char)0);
-    binaryWriteByte(file, (unsigned char)(dy & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dy >> 8) & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dy >> 16) & 0xFF));
-    if (flags & STOP) {
-        flagsToWrite |= 0x01;
-    }
-    if (flags & TRIM) {
-        flagsToWrite |= 0x04;
-    }
-    binaryWriteByte(file, flagsToWrite);
-}
-
 static char readPcq(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     char allZeroColor = 1;
@@ -7220,19 +7195,22 @@ static char readPcq(EmbPattern* pattern, EmbFile file, const char* fileName)
 static char writePcq(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
+    unsigned short sh;
 
     embFile_write("2\x03", 1, 2, file);
     /* TODO: select hoop size defaulting to Large PCS hoop */
-    binaryWriteUShort(file, (unsigned short)pattern->threads->length);
+    sh = (unsigned short)pattern->threads->length;
+    embFile_writeInt(file, &sh, 2);
 
     embPattern_colorBlock16(pattern, file);
 
-    binaryWriteUShort(file, (unsigned short)pattern->stitchList->length);
+    sh = (unsigned short)pattern->stitchList->length;
+    embFile_writeInt(file, &sh, 2);
     /* write stitches */
     for (i = 0; i < pattern->stitchList->length; i++) {
         EmbStitch st;
         embArray_get(pattern->stitchList, &st, i);
-        pcqEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
+        pcEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
     }
     return 1;
 }
@@ -7246,26 +7224,28 @@ static float pcsDecode(unsigned char a1, unsigned char a2, unsigned char a3)
     return res;
 }
 
-static void pcsEncode(EmbFile file, int dx, int dy, int flags)
+static void pcEncode(EmbFile file, int dx, int dy, int flags)
 {
-    unsigned char flagsToWrite = 0;
+    unsigned char toWrite[9];
 
-    binaryWriteByte(file, (unsigned char)0);
-    binaryWriteByte(file, (unsigned char)(dx & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dx >> 8) & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dx >> 16) & 0xFF));
+    toWrite[0] = 0;
+    toWrite[1] = dx & 0xFF;
+    toWrite[2] = (dx >> 8) & 0xFF;
+    toWrite[3] = (dx >> 16) & 0xFF;
 
-    binaryWriteByte(file, (unsigned char)0);
-    binaryWriteByte(file, (unsigned char)(dy & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dy >> 8) & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dy >> 16) & 0xFF));
+    toWrite[4] = 0;
+    toWrite[5] = dy & 0xFF;
+    toWrite[6] = (dy >> 8) & 0xFF;
+    toWrite[7] = (dy >> 16) & 0xFF;
+    
+    toWrite[8] = 0;
     if (flags & STOP) {
-        flagsToWrite |= 0x01;
+        toWrite[8] |= 0x01;
     }
     if (flags & TRIM) {
-        flagsToWrite |= 0x04;
+        toWrite[8] |= 0x04;
     }
-    binaryWriteByte(file, flagsToWrite);
+    binaryWriteBytes(file, toWrite, 9);
 }
 
 static char readPcs(EmbPattern* pattern, EmbFile file, const char* fileName)
@@ -7378,19 +7358,22 @@ static EmbThread load_thread(int thread_table, int index)
 static char writePcs(EmbPattern* pattern, EmbFile file, const char* fileName)
 {
     int i;
+    unsigned short sh;
 
     /* TODO: select hoop size defaulting to Large PCS hoop */
     embFile_write("2\x03", 1, 2, file);
-    binaryWriteUShort(file, (unsigned short)pattern->threads->length);
+    sh = (unsigned short)pattern->threads->length;
+    embFile_writeInt(file, &sh, 2);
 
     embPattern_colorBlock16(pattern, file);
 
-    binaryWriteUShort(file, (unsigned short)pattern->stitchList->length);
+    sh = (unsigned short)pattern->stitchList->length;
+    embFile_writeInt(file, &sh, 2);
     /* write stitches */
-    for (i = 0; i < pattern->stitchList->length; i++) {
+    for (i = 0; i < sh; i++) {
         EmbStitch st;
         embArray_get(pattern->stitchList, &st, i);
-        pcsEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
+        pcEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
     }
     return 1;
 }

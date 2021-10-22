@@ -7,6 +7,7 @@
 \usepackage{lmodern}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{tikz}
 \usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{ltablex}
@@ -1022,550 +1023,83 @@ KDE Liberty Description\cite{libertyTajima}, ACHATINA\cite{achatina}.
 
 \subsection{DraftSight DXF color table}
 
-\begin{tabularx}{\linewidth}{l l | l l l}
+\begin{tabularx}{\linewidth}{l l | l l l | l}
 \caption{DraftSight DXF color table} \\
-\textbf{id} & \textbf{label} & \textbf{red} & \textbf{green} & \textbf{blue} \\
+\textbf{id} & \textbf{label} & \textbf{red} & \textbf{green} & \textbf{blue} & \textbf{swatch} \\
 \midrule
 \endhead
-0 & BYBLOCK & 0 & 0 & 0 \\
-1 & red & 255 & 0 & 0 \\
-2 & yellow & 255 & 255 & 0 \\
-3 & green & 0 & 255 & 0 \\
-4 & cyan & 0 & 255 & 255 \\
-5 & blue & 0 & 0 & 255 \\
-6 & magenta & 255 & 0 & 255 \\
-7 & white & 255 & 255 & 255 \\
-8 & dark gray & 128 & 128 & 128 \\
-9 & light gray & 192 & 192 & 192 \\
+\input{dxf_color_table.tex}
 \end{tabularx}
 
-\begin{verbatim}
-    { 255, 0, 0 }, /*  '10' */
-    { 255, 127, 127 }, /*  '11' */
-    { 204, 0, 0 }, /*  '12' */
-    { 204, 102, 102 }, /*  '13' */
-    { 153, 0, 0 }, /*  '14' */
-    { 153, 76, 76 }, /*  '15' */
-    { 127, 0, 0 }, /*  '16' */
-    { 127, 63, 63 }, /*  '17' */
-    { 76, 0, 0 }, /*  '18' */
-    { 76, 38, 38 }, /*  '19' */
-    { 255, 63, 0 }, /*  '20' */
-    { 255, 159, 127 }, /*  '21' */
-    { 204, 51, 0 }, /*  '22' */
-    { 204, 127, 102 }, /*  '23' */
-    { 153, 38, 0 }, /*  '24' */
-    { 153, 95, 76 }, /*  '25' */
-    { 127, 31, 0 }, /*  '26' */
-    { 127, 79, 63 }, /*  '27' */
-    { 76, 19, 0 }, /*  '28' */
-    { 76, 47, 38 }, /*  '29' */
-    { 255, 127, 0 }, /*  '30' */
-    { 255, 191, 127 }, /*  '31' */
-    { 204, 102, 0 }, /*  '32' */
-    { 204, 153, 102 }, /*  '33' */
-    { 153, 76, 0 }, /*  '34' */
-    { 153, 114, 76 }, /*  '35' */
-    { 127, 63, 0 }, /*  '36' */
-    { 127, 95, 63 }, /*  '37' */
-    { 76, 38, 0 }, /*  '38' */
-    { 76, 57, 38 }, /*  '39' */
-    { 255, 191, 0 }, /*  '40' */
-    { 255, 223, 127 }, /*  '41' */
-    { 204, 153, 0 }, /*  '42' */
-    { 204, 178, 102 }, /*  '43' */
-    { 153, 114, 0 }, /*  '44' */
-    { 153, 133, 76 }, /*  '45' */
-    { 127, 95, 0 }, /*  '46' */
-    { 127, 111, 63 }, /*  '47' */
-    { 76, 57, 0 }, /*  '48' */
-    { 76, 66, 38 }, /*  '49' */
-    { 255, 255, 0 }, /*  '50' */
-    { 255, 255, 127 }, /*  '51' */
-    { 204, 204, 0 }, /*  '52' */
-    { 204, 204, 102 }, /*  '53' */
-    { 153, 153, 0 }, /*  '54' */
-    { 153, 153, 76 }, /*  '55' */
-    { 127, 127, 0 }, /*  '56' */
-    { 127, 127, 63 }, /*  '57' */
-    { 76, 76, 0 }, /*  '58' */
-    { 76, 76, 38 }, /*  '59' */
-    { 191, 255, 0 }, /*  '60' */
-    { 223, 255, 127 }, /*  '61' */
-    { 153, 204, 0 }, /*  '62' */
-    { 178, 204, 102 }, /*  '63' */
-    { 114, 153, 0 }, /*  '64' */
-    { 133, 153, 76 }, /*  '65' */
-    { 95, 127, 0 }, /*  '66' */
-    { 111, 127, 63 }, /*  '67' */
-    { 57, 76, 0 }, /*  '68' */
-    { 66, 76, 38 }, /*  '69' */
-    { 127, 255, 0 }, /*  '70' */
-    { 191, 255, 127 }, /*  '71' */
-    { 102, 204, 0 }, /*  '72' */
-    { 153, 204, 102 }, /*  '73' */
-    { 76, 153, 0 }, /*  '74' */
-    { 114, 153, 76 }, /*  '75' */
-    { 63, 127, 0 }, /*  '76' */
-    { 95, 127, 63 }, /*  '77' */
-    { 38, 76, 0 }, /*  '78' */
-    { 57, 76, 38 }, /*  '79' */
-    { 63, 255, 0 }, /*  '80' */
-    { 159, 255, 127 }, /*  '81' */
-    { 51, 204, 0 }, /*  '82' */
-    { 127, 204, 102 }, /*  '83' */
-    { 38, 153, 0 }, /*  '84' */
-    { 95, 153, 76 }, /*  '85' */
-    { 31, 127, 0 }, /*  '86' */
-    { 79, 127, 63 }, /*  '87' */
-    { 19, 76, 0 }, /*  '88' */
-    { 47, 76, 38 }, /*  '89' */
-    { 0, 255, 0 }, /*  '90' */
-    { 127, 255, 127 }, /*  '91' */
-    { 0, 204, 0 }, /*  '92' */
-    { 102, 204, 102 }, /*  '93' */
-    { 0, 153, 0 }, /*  '94' */
-    { 76, 153, 76 }, /*  '95' */
-    { 0, 127, 0 }, /*  '96' */
-    { 63, 127, 63 }, /*  '97' */
-    { 0, 76, 0 }, /*  '98' */
-    { 38, 76, 38 }, /*  '99' */
-    { 0, 255, 63 }, /* '100' */
-    { 127, 255, 159 }, /* '101' */
-    { 0, 204, 51 }, /* '102' */
-    { 102, 204, 127 }, /* '103' */
-    { 0, 153, 38 }, /* '104' */
-    { 76, 153, 95 }, /* '105' */
-    { 0, 127, 31 }, /* '106' */
-    { 63, 127, 79 }, /* '107' */
-    { 0, 76, 19 }, /* '108' */
-    { 38, 76, 47 }, /* '109' */
-    { 0, 255, 127 }, /* '110' */
-    { 127, 255, 191 }, /* '111' */
-    { 0, 204, 102 }, /* '112' */
-    { 102, 204, 153 }, /* '113' */
-    { 0, 153, 76 }, /* '114' */
-    { 76, 153, 114 }, /* '115' */
-    { 0, 127, 63 }, /* '116' */
-    { 63, 127, 95 }, /* '117' */
-    { 0, 76, 38 }, /* '118' */
-    { 38, 76, 57 }, /* '119' */
-    { 0, 255, 191 }, /* '120' */
-    { 127, 255, 223 }, /* '121' */
-    { 0, 204, 153 }, /* '122' */
-    { 102, 204, 178 }, /* '123' */
-    { 0, 153, 114 }, /* '124' */
-    { 76, 153, 133 }, /* '125' */
-    { 0, 127, 95 }, /* '126' */
-    { 63, 127, 111 }, /* '127' */
-    { 0, 76, 57 }, /* '128' */
-    { 38, 76, 66 }, /* '129' */
-    { 0, 255, 255 }, /* '130' */
-    { 127, 255, 255 }, /* '131' */
-    { 0, 204, 204 }, /* '132' */
-    { 102, 204, 204 }, /* '133' */
-    { 0, 153, 153 }, /* '134' */
-    { 76, 153, 153 }, /* '135' */
-    { 0, 127, 127 }, /* '136' */
-    { 63, 127, 127 }, /* '137' */
-    { 0, 76, 76 }, /* '138' */
-    { 38, 76, 76 }, /* '139' */
-    { 0, 191, 255 }, /* '140' */
-    { 127, 223, 255 }, /* '141' */
-    { 0, 153, 204 }, /* '142' */
-    { 102, 178, 204 }, /* '143' */
-    { 0, 114, 153 }, /* '144' */
-    { 76, 133, 153 }, /* '145' */
-    { 0, 95, 127 }, /* '146' */
-    { 63, 111, 127 }, /* '147' */
-    { 0, 57, 76 }, /* '148' */
-    { 38, 66, 76 }, /* '149' */
-    { 0, 127, 255 }, /* '150' */
-    { 127, 191, 255 }, /* '151' */
-    { 0, 102, 204 }, /* '152' */
-    { 102, 153, 204 }, /* '153' */
-    { 0, 76, 153 }, /* '154' */
-    { 76, 114, 153 }, /* '155' */
-    { 0, 63, 127 }, /* '156' */
-    { 63, 95, 127 }, /* '157' */
-    { 0, 38, 76 }, /* '158' */
-    { 38, 57, 76 }, /* '159' */
-    { 0, 63, 255 }, /* '160' */
-    { 127, 159, 255 }, /* '161' */
-    { 0, 51, 204 }, /* '162' */
-    { 102, 127, 204 }, /* '163' */
-    { 0, 38, 153 }, /* '164' */
-    { 76, 95, 153 }, /* '165' */
-    { 0, 31, 127 }, /* '166' */
-    { 63, 79, 127 }, /* '167' */
-    { 0, 19, 76 }, /* '168' */
-    { 38, 47, 76 }, /* '169' */
-    { 0, 0, 255 }, /* '170' */
-    { 127, 127, 255 }, /* '171' */
-    { 0, 0, 204 }, /* '172' */
-    { 102, 102, 204 }, /* '173' */
-    { 0, 0, 153 }, /* '174' */
-    { 76, 76, 153 }, /* '175' */
-    { 0, 0, 127 }, /* '176' */
-    { 63, 63, 127 }, /* '177' */
-    { 0, 0, 76 }, /* '178' */
-    { 38, 38, 76 }, /* '179' */
-    { 63, 0, 255 }, /* '180' */
-    { 159, 127, 255 }, /* '181' */
-    { 51, 0, 204 }, /* '182' */
-    { 127, 102, 204 }, /* '183' */
-    { 38, 0, 153 }, /* '184' */
-    { 95, 76, 153 }, /* '185' */
-    { 31, 0, 127 }, /* '186' */
-    { 79, 63, 127 }, /* '187' */
-    { 19, 0, 76 }, /* '188' */
-    { 47, 38, 76 }, /* '189' */
-    { 127, 0, 255 }, /* '190' */
-    { 191, 127, 255 }, /* '191' */
-    { 102, 0, 204 }, /* '192' */
-    { 153, 102, 204 }, /* '193' */
-    { 76, 0, 153 }, /* '194' */
-    { 114, 76, 153 }, /* '195' */
-    { 63, 0, 127 }, /* '196' */
-    { 95, 63, 127 }, /* '197' */
-    { 38, 0, 76 }, /* '198' */
-    { 57, 38, 76 }, /* '199' */
-    { 191, 0, 255 }, /* '200' */
-    { 223, 127, 255 }, /* '201' */
-    { 153, 0, 204 }, /* '202' */
-    { 178, 102, 204 }, /* '203' */
-    { 114, 0, 153 }, /* '204' */
-    { 133, 76, 153 }, /* '205' */
-    { 95, 0, 127 }, /* '206' */
-    { 111, 63, 127 }, /* '207' */
-    { 57, 0, 76 }, /* '208' */
-    { 66, 38, 76 }, /* '209' */
-    { 255, 0, 255 }, /* '210' */
-    { 255, 127, 255 }, /* '211' */
-    { 204, 0, 204 }, /* '212' */
-    { 204, 102, 204 }, /* '213' */
-    { 153, 0, 153 }, /* '214' */
-    { 153, 76, 153 }, /* '215' */
-    { 127, 0, 127 }, /* '216' */
-    { 127, 63, 127 }, /* '217' */
-    { 76, 0, 76 }, /* '218' */
-    { 76, 38, 76 }, /* '219' */
-    { 255, 0, 191 }, /* '220' */
-    { 255, 127, 223 }, /* '221' */
-    { 204, 0, 153 }, /* '222' */
-    { 204, 102, 178 }, /* '223' */
-    { 153, 0, 114 }, /* '224' */
-    { 153, 76, 133 }, /* '225' */
-    { 127, 0, 95 }, /* '226' */
-    { 127, 63, 111 }, /* '227' */
-    { 76, 0, 57 }, /* '228' */
-    { 76, 38, 66 }, /* '229' */
-    { 255, 0, 127 }, /* '230' */
-    { 255, 127, 191 }, /* '231' */
-    { 204, 0, 102 }, /* '232' */
-    { 204, 102, 153 }, /* '233' */
-    { 153, 0, 76 }, /* '234' */
-    { 153, 76, 114 }, /* '235' */
-    { 127, 0, 63 }, /* '236' */
-    { 127, 63, 95 }, /* '237' */
-    { 76, 0, 38 }, /* '238' */
-    { 76, 38, 57 }, /* '239' */
-    { 255, 0, 63 }, /* '240' */
-    { 255, 127, 159 }, /* '241' */
-    { 204, 0, 51 }, /* '242' */
-    { 204, 102, 127 }, /* '243' */
-    { 153, 0, 38 }, /* '244' */
-    { 153, 76, 95 }, /* '245' */
-    { 127, 0, 31 }, /* '246' */
-    { 127, 63, 79 }, /* '247' */
-    { 76, 0, 19 }, /* '248' */
-    { 76, 38, 47 }, /* '249' */
-    { 51, 51, 51 }, /* '250' */
-    { 91, 91, 91 }, /* '251' */
-    { 132, 132, 132 }, /* '252' */
-    { 173, 173, 173 }, /* '253' */
-    { 214, 214, 214 }, /* '254' */
-    { 255, 255, 255 }, /* '255' */
-    { 0, 0, 0 } /* '256' (BYLAYER) */
+\subsection{HUS Colors}
 
+There are 29 HUS Colors encoded.
 
-/*****************************************
- * HUS Colors
- ****************************************/
-static const int husThreadCount = 29;
-
-\textbf{id} & \textbf{label} & \textbf{red} & \textbf{green} & \textbf{blue} \\
+\begin{tabularx}{\linewidth}{l l | l l l | l}
+\caption{HUS Color Table} \\
+\textbf{id} & \textbf{label} & \textbf{red} & \textbf{green} & \textbf{blue} & \textbf{swatch} \\
 \midrule
 \endhead
-static const EmbThread husThreads[] = {
-    { { 0, 0, 0 }, "Black", "TODO:HUS_CATALOG_NUMBER" },
-    { { 0, 0, 255 }, "Blue", "TODO:HUS_CATALOG_NUMBER" },
-    { { 0, 255, 0 }, "Light Green", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 0, 0 }, "Red", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 0, 255 }, "Purple", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 255, 0 }, "Yellow", "TODO:HUS_CATALOG_NUMBER" },
-    { { 127, 127, 127 }, "Gray", "TODO:HUS_CATALOG_NUMBER" },
-    { { 51, 154, 255 }, "Light Blue", "TODO:HUS_CATALOG_NUMBER" },
-    { { 51, 204, 102 }, "Green", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 127, 0 }, "Orange", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 160, 180 }, "Pink", "TODO:HUS_CATALOG_NUMBER" },
-    { { 153, 75, 0 }, "Brown", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 255, 255 }, "White", "TODO:HUS_CATALOG_NUMBER" },
-    { { 0, 0, 127 }, "Dark Blue", "TODO:HUS_CATALOG_NUMBER" },
-    { { 0, 127, 0 }, "Dark Green", "TODO:HUS_CATALOG_NUMBER" },
-    { { 127, 0, 0 }, "Dark Red", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 127, 127 }, "Light Red", "TODO:HUS_CATALOG_NUMBER" },
-    { { 127, 0, 127 }, "Dark Purple", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 127, 255 }, "Light Purple", "TODO:HUS_CATALOG_NUMBER" },
-    { { 200, 200, 0 }, "Dark Yellow", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 255, 153 }, "Light Yellow", "TODO:HUS_CATALOG_NUMBER" },
-    { { 60, 60, 60 }, "Dark Gray", "TODO:HUS_CATALOG_NUMBER" },
-    { { 192, 192, 192 }, "Light Gray", "TODO:HUS_CATALOG_NUMBER" },
-    { { 232, 63, 0 }, "Dark Orange", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 165, 65 }, "Light Orange", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 102, 122 }, "Dark Pink", "TODO:HUS_CATALOG_NUMBER" },
-    { { 255, 204, 204 }, "Light Pink", "TODO:HUS_CATALOG_NUMBER" },
-    { { 115, 40, 0 }, "Dark Brown", "TODO:HUS_CATALOG_NUMBER" },
-    { { 175, 90, 10 }, "Light Brown", "TODO:HUS_CATALOG_NUMBER" }
-};
+\input{hus_thread_table.tex}
 \end{tabularx}
 
+\subsection{Jef Threads}
 
-\textbf{id} & \textbf{label} & \textbf{red} & \textbf{green} & \textbf{blue} \\
+\begin{tabularx}{\linewidth}{l l | l l l | l}
+\caption{Jef Color Table} \\
+\textbf{id} & \textbf{label} & \textbf{red} & \textbf{green} & \textbf{blue} & \textbf{swatch} \\
 \midrule
 \endhead
-static const EmbThread jefThreads[] = {
-    { { 0, 0, 0 }, "Black", "" },
-    { { 0, 0, 0 }, "Black", "" },
-    { { 255, 255, 255 }, "White", "" },
-    { { 255, 255, 23 }, "Yellow", "" },
-    { { 250, 160, 96 }, "Orange", "" },
-    { { 92, 118, 73 }, "Olive Green", "" },
-    { { 64, 192, 48 }, "Green", "" },
-    { { 101, 194, 200 }, "Sky", "" },
-    { { 172, 128, 190 }, "Purple", "" },
-    { { 245, 188, 203 }, "Pink", "" },
-    { { 255, 0, 0 }, "Red", "" },
-    { { 192, 128, 0 }, "Brown", "" },
-    { { 0, 0, 240 }, "Blue", "" },
-    { { 228, 195, 93 }, "Gold", "" },
-    { { 165, 42, 42 }, "Dark Brown", "" },
-    { { 213, 176, 212 }, "Pale Violet", "" },
-    { { 252, 242, 148 }, "Pale Yellow", "" },
-    { { 240, 208, 192 }, "Pale Pink", "" },
-    { { 255, 192, 0 }, "Peach", "" },
-    { { 201, 164, 128 }, "Beige", "" },
-    { { 155, 61, 75 }, "Wine Red", "" },
-    { { 160, 184, 204 }, "Pale Sky", "" },
-    { { 127, 194, 28 }, "Yellow Green", "" },
-    { { 185, 185, 185 }, "Silver Grey", "" },
-    { { 160, 160, 160 }, "Grey", "" },
-    { { 152, 214, 189 }, "Pale Aqua", "" },
-    { { 184, 240, 240 }, "Baby Blue", "" },
-    { { 54, 139, 160 }, "Powder Blue", "" },
-    { { 79, 131, 171 }, "Bright Blue", "" },
-    { { 56, 106, 145 }, "Slate Blue", "" },
-    { { 0, 32, 107 }, "Nave Blue", "" },
-    { { 229, 197, 202 }, "Salmon Pink", "" },
-    { { 249, 103, 107 }, "Coral", "" },
-    { { 227, 49, 31 }, "Burnt Orange", "" },
-    { { 226, 161, 136 }, "Cinnamon", "" },
-    { { 181, 148, 116 }, "Umber", "" },
-    { { 228, 207, 153 }, "Blonde", "" },
-    { { 225, 203, 0 }, "Sunflower", "" },
-    { { 225, 173, 212 }, "Orchid Pink", "" },
-    { { 195, 0, 126 }, "Peony Purple", "" },
-    { { 128, 0, 75 }, "Burgundy", "" },
-    { { 160, 96, 176 }, "Royal Purple", "" },
-    { { 192, 64, 32 }, "Cardinal Red", "" },
-    { { 202, 224, 192 }, "Opal Green", "" },
-    { { 137, 152, 86 }, "Moss Green", "" },
-    { { 0, 170, 0 }, "Meadow Green", "" },
-    { { 33, 138, 33 }, "Dark Green", "" },
-    { { 93, 174, 148 }, "Aquamarine", "" },
-    { { 76, 191, 143 }, "Emerald Green", "" },
-    { { 0, 119, 114 }, "Peacock Green", "" },
-    { { 112, 112, 112 }, "Dark Grey", "" },
-    { { 242, 255, 255 }, "Ivory White", "" },
-    { { 177, 88, 24 }, "Hazel", "" },
-    { { 203, 138, 7 }, "Toast", "" },
-    { { 247, 146, 123 }, "Salmon", "" },
-    { { 152, 105, 45 }, "Cocoa Brown", "" },
-    { { 162, 113, 72 }, "Sienna", "" },
-    { { 123, 85, 74 }, "Sepia", "" },
-    { { 79, 57, 70 }, "Dark Sepia", "" },
-    { { 82, 58, 151 }, "Violet Blue", "" },
-    { { 0, 0, 160 }, "Blue Ink", "" },
-    { { 0, 150, 222 }, "Solar Blue", "" },
-    { { 178, 221, 83 }, "Green Dust", "" },
-    { { 250, 143, 187 }, "Crimson", "" },
-    { { 222, 100, 158 }, "Floral Pink", "" },
-    { { 181, 80, 102 }, "Wine", "" },
-    { { 94, 87, 71 }, "Olive Drab", "" },
-    { { 76, 136, 31 }, "Meadow", "" },
-    { { 228, 220, 121 }, "Mustard", "" },
-    { { 203, 138, 26 }, "Yellow Ochre", "" },
-    { { 198, 170, 66 }, "Old Gold", "" },
-    { { 236, 176, 44 }, "Honeydew", "" },
-    { { 248, 128, 64 }, "Tangerine", "" },
-    { { 255, 229, 5 }, "Canary Yellow", "" },
-    { { 250, 122, 122 }, "Vermillion", "" },
-    { { 107, 224, 0 }, "Bright Green", "" },
-    { { 56, 108, 174 }, "Ocean Blue", "" },
-    { { 227, 196, 180 }, "Beige Grey", "" },
-    { { 227, 172, 129 }, "Bamboo", "" }
-};
+\input{jef_thread_table.tex}
+\end{tabularx}
 
-#define HOOP_126X110 0
-#define HOOP_110X110 1
-#define HOOP_50X50 2
-#define HOOP_140X200 3
-#define HOOP_230X200 4
+\subsection{Pcm Threads}
 
-static const int pcmThreadCount = 65;
-static const EmbThread pcmThreads[] = {
-    { { 0x00, 0x00, 0x00 }, "PCM Color 1", "" },
-    { { 0x00, 0x00, 0x80 }, "PCM Color 2", "" },
-    { { 0x00, 0x00, 0xFF }, "PCM Color 3", "" },
-    { { 0x00, 0x80, 0x80 }, "PCM Color 4", "" },
-    { { 0x00, 0xFF, 0xFF }, "PCM Color 5", "" },
-    { { 0x80, 0x00, 0x80 }, "PCM Color 6", "" },
-    { { 0xFF, 0x00, 0xFF }, "PCM Color 7", "" },
-    { { 0x80, 0x00, 0x00 }, "PCM Color 8", "" },
-    { { 0xFF, 0x00, 0x00 }, "PCM Color 9", "" },
-    { { 0x00, 0x80, 0x00 }, "PCM Color 10", "" },
-    { { 0x00, 0xFF, 0x00 }, "PCM Color 11", "" },
-    { { 0x80, 0x80, 0x00 }, "PCM Color 12", "" },
-    { { 0xFF, 0xFF, 0x00 }, "PCM Color 13", "" },
-    { { 0x80, 0x80, 0x80 }, "PCM Color 14", "" },
-    { { 0xC0, 0xC0, 0xC0 }, "PCM Color 15", "" },
-    { { 0xFF, 0xFF, 0xFF }, "PCM Color 16", "" }
-};
+\begin{tabularx}{\linewidth}{l l}
+\caption{Hoop Identifiers} \\
+\textbf{id} & \textbf{hoop} \\
+\midrule
+\endhead
+0 & 126X110 \\
+1 & 110X110 \\
+2 & 50X50 \\
+3 & 140X200 \\
+4 & 230X200 \\
+\end{tabularx}
 
+There should be 65 Pcm Threads.
 
-static const int pecThreadCount = 65;
-static const EmbThread pecThreads[] = {
-    { { 0, 0, 0 }, "Unknown", "" }, /* Index  0 */
-    { { 14, 31, 124 }, "Prussian Blue", "" }, /* Index  1 */
-    { { 10, 85, 163 }, "Blue", "" }, /* Index  2 */
-    { { 0, 135, 119 }, "Teal Green", "" }, /* Index  3 */ /* TODO: Verify RGB value is correct */
-    { { 75, 107, 175 }, "Cornflower Blue", "" }, /* Index  4 */
-    { { 237, 23, 31 }, "Red", "" }, /* Index  5 */
-    { { 209, 92, 0 }, "Reddish Brown", "" }, /* Index  6 */
-    { { 145, 54, 151 }, "Magenta", "" }, /* Index  7 */
-    { { 228, 154, 203 }, "Light Lilac", "" }, /* Index  8 */
-    { { 145, 95, 172 }, "Lilac", "" }, /* Index  9 */
-    { { 158, 214, 125 }, "Mint Green", "" }, /* Index 10 */ /* TODO: Verify RGB value is correct */
-    { { 232, 169, 0 }, "Deep Gold", "" }, /* Index 11 */
-    { { 254, 186, 53 }, "Orange", "" }, /* Index 12 */
-    { { 255, 255, 0 }, "Yellow", "" }, /* Index 13 */
-    { { 112, 188, 31 }, "Lime Green", "" }, /* Index 14 */
-    { { 186, 152, 0 }, "Brass", "" }, /* Index 15 */
-    { { 168, 168, 168 }, "Silver", "" }, /* Index 16 */
-    { { 125, 111, 0 }, "Russet Brown", "" }, /* Index 17 */ /* TODO: Verify RGB value is correct */
-    { { 255, 255, 179 }, "Cream Brown", "" }, /* Index 18 */
-    { { 79, 85, 86 }, "Pewter", "" }, /* Index 19 */
-    { { 0, 0, 0 }, "Black", "" }, /* Index 20 */
-    { { 11, 61, 145 }, "Ultramarine", "" }, /* Index 21 */
-    { { 119, 1, 118 }, "Royal Purple", "" }, /* Index 22 */
-    { { 41, 49, 51 }, "Dark Gray", "" }, /* Index 23 */
-    { { 42, 19, 1 }, "Dark Brown", "" }, /* Index 24 */
-    { { 246, 74, 138 }, "Deep Rose", "" }, /* Index 25 */
-    { { 178, 118, 36 }, "Light Brown", "" }, /* Index 26 */
-    { { 252, 187, 197 }, "Salmon Pink", "" }, /* Index 27 */ /* TODO: Verify RGB value is correct */
-    { { 254, 55, 15 }, "Vermillion", "" }, /* Index 28 */
-    { { 240, 240, 240 }, "White", "" }, /* Index 29 */
-    { { 106, 28, 138 }, "Violet", "" }, /* Index 30 */
-    { { 168, 221, 196 }, "Seacrest", "" }, /* Index 31 */
-    { { 37, 132, 187 }, "Sky Blue", "" }, /* Index 32 */
-    { { 254, 179, 67 }, "Pumpkin", "" }, /* Index 33 */
-    { { 255, 243, 107 }, "Cream Yellow", "" }, /* Index 34 */
-    { { 208, 166, 96 }, "Khaki", "" }, /* Index 35 */
-    { { 209, 84, 0 }, "Clay Brown", "" }, /* Index 36 */
-    { { 102, 186, 73 }, "Leaf Green", "" }, /* Index 37 */
-    { { 19, 74, 70 }, "Peacock Blue", "" }, /* Index 38 */
-    { { 135, 135, 135 }, "Gray", "" }, /* Index 39 */
-    { { 216, 204, 198 }, "Warm Gray", "" }, /* Index 40 */ /* TODO: Verify RGB value is correct */
-    { { 67, 86, 7 }, "Dark Olive", "" }, /* Index 41 */
-    { { 253, 217, 222 }, "Flesh Pink", "" }, /* Index 42 */ /* TODO: Verify RGB value is correct */
-    { { 249, 147, 188 }, "Pink", "" }, /* Index 43 */
-    { { 0, 56, 34 }, "Deep Green", "" }, /* Index 44 */
-    { { 178, 175, 212 }, "Lavender", "" }, /* Index 45 */
-    { { 104, 106, 176 }, "Wisteria Violet", "" }, /* Index 46 */
-    { { 239, 227, 185 }, "Beige", "" }, /* Index 47 */
-    { { 247, 56, 102 }, "Carmine", "" }, /* Index 48 */
-    { { 181, 75, 100 }, "Amber Red", "" }, /* Index 49 */ /* TODO: Verify RGB value is correct */
-    { { 19, 43, 26 }, "Olive Green", "" }, /* Index 50 */
-    { { 199, 1, 86 }, "Dark Fuschia", "" }, /* Index 51 */ /* TODO: Verify RGB value is correct */
-    { { 254, 158, 50 }, "Tangerine", "" }, /* Index 52 */
-    { { 168, 222, 235 }, "Light Blue", "" }, /* Index 53 */
-    { { 0, 103, 62 }, "Emerald Green", "" }, /* Index 54 */ /* TODO: Verify RGB value is correct */
-    { { 78, 41, 144 }, "Purple", "" }, /* Index 55 */
-    { { 47, 126, 32 }, "Moss Green", "" }, /* Index 56 */
-    { { 255, 204, 204 }, "Flesh Pink", "" }, /* Index 57 */ /* TODO: Verify RGB value is correct */ /* TODO: Flesh Pink is Index 42, is this Index incorrect? */
-    { { 255, 217, 17 }, "Harvest Gold", "" }, /* Index 58 */
-    { { 9, 91, 166 }, "Electric Blue", "" }, /* Index 59 */
-    { { 240, 249, 112 }, "Lemon Yellow", "" }, /* Index 60 */
-    { { 227, 243, 91 }, "Fresh Green", "" }, /* Index 61 */
-    { { 255, 153, 0 }, "Orange", "" }, /* Index 62 */ /* TODO: Verify RGB value is correct */ /* TODO: Orange is Index 12, is this Index incorrect? */
-    { { 255, 240, 141 }, "Cream Yellow", "" }, /* Index 63 */ /* TODO: Verify RGB value is correct */ /* TODO: Cream Yellow is Index 34, is this Index incorrect? */
-    { { 255, 200, 200 }, "Applique", "" } /* Index 64 */
-};
+\begin{tabularx}{\linewidth}{l l | l l l | l}
+\caption{Pcm Color Table} \\
+\textbf{id} & \textbf{label} & \textbf{red} & \textbf{green} & \textbf{blue} & \textbf{swatch} \\
+\midrule
+\endhead
+\input{pcm_thread_table.tex}
+\end{tabularx}
+
+\subsection{Pec Threads}
+
+Pec has 65 pre-programmed threads. To do: verify that colors marked with $*$ are correct.
+
+\begin{tabularx}{\linewidth}{l l | l l l | l}
+\caption{HUS Color Table} \\
+\textbf{id} & \textbf{label} & \textbf{red} & \textbf{green} & \textbf{blue} & \textbf{swatch} \\
+\midrule
+\endhead
+\input{pec_thread_table.tex}
+\end{tabularx}
 
 \section{SHV Colors}
 
-There are 42 preprogrammed shv threads.
+There are 42 preprogrammed shv threads. (TODO: the ? ids)
 
-\begin{tabularx}{\linewidth}{l l | l l l}
+\begin{tabularx}{\linewidth}{l l | l l l | l}
 \caption{SHV Color Table}\\
-\textbf{}
+\textbf{id} & \textbf{label} & \textbf{red} & \textbf{green} & \textbf{blue} & \textbf{swatch} \\
+\midrule
 \endhead
-TODO:CATALOG_NUMBER &    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &    { { 0, 0, 255 }, "Blue", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &    { { 51, 204, 102 }, "Green", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &    { { 255, 0, 0 }, "Red", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &    { { 255, 0, 255 }, "Purple", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &    { { 255, 255, 0 }, "Yellow", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &    { { 127, 127, 127 }, "Grey", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &    { { 51, 154, 255 }, "Light Blue", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &    { { 0, 255, 0 }, "Light Green", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &    { { 255, 127, 0 }, "Orange", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &    { { 255, 160, 180 }, "Pink", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &    { { 153, 75, 0 }, "Brown", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &    { { 255, 255, 255 }, "White", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 255, 127, 127 }, "Light Red", "TODO:CATALOG_NUMBER" },
-    { { 255, 127, 255 }, "Light Purple", "TODO:CATALOG_NUMBER" },
-    { { 255, 255, 153 }, "Light Yellow", "TODO:CATALOG_NUMBER" },
-    { { 192, 192, 192 }, "Light Grey", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 255, 165, 65 }, "Light Orange", "TODO:CATALOG_NUMBER" },
-    { { 255, 204, 204 }, "Light Pink", "TODO:CATALOG_NUMBER" },
-    { { 175, 90, 10 }, "Light Brown", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-    { { 0, 0, 127 }, "Dark Blue", "TODO:CATALOG_NUMBER" },
-    { { 0, 127, 0 }, "Dark Green", "TODO:CATALOG_NUMBER" },
-    { { 127, 0, 0 }, "Dark Red", "TODO:CATALOG_NUMBER" },
-    { { 127, 0, 127 }, "Dark Purple", "TODO:CATALOG_NUMBER" },
-    { { 200, 200, 0 }, "Dark Yellow", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &    { { 60, 60, 60 }, "Dark Gray", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &   { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &  { { 0, 0, 0 }, "Black", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER &  { { 232, 63, 0 }, "Dark Orange", "TODO:CATALOG_NUMBER" },
-TODO:CATALOG_NUMBER & Dark Pink & 255 & 102 & 122 
+\input{shv_thread_table.tex}
 \end{tabularx}
-
-\end{verbatim}
 
 \subsection{Other Supported Thread Brands}
 
@@ -1620,6 +1154,11 @@ to save writing functions that may not inline.
 \item No GUI code will be present here.
 \item The library will be written in pedantic ANSI C/C90, aiming for no compiler warnings under GCC for compatibility with the most possible platforms.
 \item The command line program `embroider` targets 32-bit and 64 bit systems that comply to POSIX or current Windows/MacOS standards. Practically, this means we only call C99 standard library functions.
+\item Don't use any of the C Standard Library. All interfacing should be done by linux system calls or their equivalents.
+\item Never use dynamic memory allocation (malloc/free) all memory that would need those functions uses temporary files instead.
+\item Share heavy memory usage between functions, for example use
+embBuffer for buffering headers rather than having a separate
+\texttt{char\ header{[}{]}} variables.
 \end{itemize}
 
 \subsection{Image Fitting}
@@ -1638,13 +1177,10 @@ then be .
   \begin{enumerate}
   \def\labelenumii{\arabic{enumii}.}
   \tightlist
-  \item Incorporate \texttt{\#if\ 0}ed parts of \texttt{emb-stitch-fill.c}.
-  \item Interpret how to write formats that have a read mode from the source
-    code and vice versa.
-  \item Identify sources that break down the binary formats we currently
-    don't understand.
-  \item Better documentation of the structure of the headers for the formats
-    we do understand.
+  \item Incorporate \texttt{\#if\ 0}ed parts of \texttt{libembroidery.c}.
+  \item Interpret how to write formats that have a read mode from the source code and vice versa.
+  \item Document the specifics of the file formats here for embroidery machine specific formats. Find websites and other sources that break down the binary formats we currently don't understand.
+  \item Find more and better documentation of the structure of the headers for the formats we do understand.
   \end{enumerate}
 \item Code quality and user friendliness.
 
@@ -1653,7 +1189,6 @@ then be .
   \tightlist
   \item Document all structs, macros and functions (will contribute directly
     on the web version).
-  \item Make a texinfo/PDF user manual for embroider.
   \item Incorporate experimental code, improve support for language
     bindings.
   \item Make stitch x, y into an EmbVector.
@@ -1671,23 +1206,6 @@ then be .
     crosses).
   \item Make -ellipse flag to add to ellipse to the current pattern.
   \item Make -bezier flag to add a bezier curve to the current pattern.
-  \end{enumerate}
-\item Improve embedded compatibility.
-
-  \begin{enumerate}
-  \def\labelenumii{\arabic{enumii}.}
-  \tightlist
-  \item Remove reliance on slower, memory expensive parts of the C Standard
-    Library that are in the main library, for example, not using printf,
-    sprintf, fprintf etc. (Use embFile\_puts.)
-  \item Share heavy memory usage between functions, for example use
-    embBuffer for buffering headers rather than having a separate
-    \texttt{char\ header{[}{]}} variables.
-  \item Reduce calls to malloc when we know the total usage as dynamic
-    memory may not be present and we may need to get rid of malloc
-    entirely.
-  \item Consider using an alternative C standard library for the remaining
-    functions like uclibc.
   \end{enumerate}
 \end{enumerate}
 
@@ -1763,8 +1281,6 @@ This means the EmbArray approach won't work since we need to load
 each element and dynamic memory management is unnecessary because
 the arrays lie in storage.
 
-TODO: Remove all malloc/realloc/free from source.
-
 TODO: Replace EmbArray functions with embPattern load functions.
 
 \subsection{Tables}
@@ -1774,13 +1290,8 @@ into the source code. Instead we can package the library with a data packet
 that is compiled from an assembly program in raw format so the specific
 padding can be controlled.
 
-TODO: Reformat tables as \texttt{libembroidery$\_$data.bin}.
-
 In the user section above we will make it clear that this file
 needs to be loaded on the pattern USB/SD card or the program won't function.
-
-TODO: Keep EmbFile* datfile open, use an init library function for the library
-to open it and a close library function to close it.
 
 TODO: Start file with a list of offsets to data with a corresponding table
 to load into with macro constants for each label needed.
@@ -1835,9 +1346,25 @@ An example for building for use in C\#
 swig -csharp -o ./csharp/binding/swig_wrap.c -I../ swig.i
 \end{verbatim}
 
-\section{Utility Function}
+\section{The Assembly Split}
 
-Euler's series for the inverse tangent\cite{Chien-Lih2005}:
+One problem to the problem of supporting both systems with
+abundant memory (such as a 2010s or later desktop) and with scarce memory (such as embedded systems) is that they don't share the same assembly language. To deal with this: there will be two equivalent softwares which are hand engineered to be similar but one will be in C and the other in the assembly dialects we support.
+
+All assembly will be intended for embedded systems only, since a slightly smaller set of features will be supported. However, we will write a \texttt{x86} version since that can be tested.
+
+That way the work that has been done to simplify the C code can be applied to the assembly versions.
+
+\section{Utility Functions}
+
+\subsection{Avoiding the use of libc}
+
+
+\subsection{Avoiding the use of libm}
+
+The $\cos$ and $\sin$ functions are calculated using 
+
+The arctan2 function in the source is calculated using Euler's series for the inverse tangent\cite{Chien-Lih2005}:
 
 \begin{equation}
 \tan^{-1}(x) = \sum_{n=0}^{\infty} \frac{2^{2n}(n!)^{2}}{(2n+1)!} \frac{x^{2n+1}}{(1+x^{2})^{n+1}}

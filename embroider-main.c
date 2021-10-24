@@ -9,14 +9,6 @@
 #define YELLOW_TERM_COLOR "\e[1;33m"
 #define RESET_TERM_COLOR "\033[0m"
 
-float emb_fabs(float a);
-int emb_abs(int a);
-float emb_sqrt(float a);
-float emb_pow(float a, int n);
-float emb_sin(float a);
-float emb_cos(float a);
-float emb_atan2(float a, float b);
-
 static void usage(void);
 static void formats(void);
 static void testTangentPoints(EmbCircle c, EmbVector p, EmbVector*, EmbVector*);
@@ -166,6 +158,16 @@ static int create_test_file_2(const char* outf)
     return 0;
 }
 
+/* move these to the assembly test program */
+#if 0
+float emb_fabs(float a);
+int emb_abs(int a);
+float emb_sqrt(float a);
+float emb_pow(float a, int n);
+float emb_sin(float a);
+float emb_cos(float a);
+float emb_atan2(float a, float b);
+
 static int test_math_functions(void)
 {
     float t;
@@ -202,6 +204,7 @@ static int test_math_functions(void)
     printf("ATAN2 TEST: %f\n", error);
     return 0;
 }
+#endif
 
 static int convert(const char* inf, const char* outf)
 {
@@ -524,8 +527,6 @@ static void testMain(void)
     int svg2Result = convert("test02.csv", "test02.svg");
     int dst1Result = convert("test01.csv", "test01.dst");
     int dst2Result = convert("test02.csv", "test02.dst");
-    int mathResult = test_math_functions();
-    /* int embeddedResult = embeddedFunctionsResult(); */
 
     puts("SUMMARY OF RESULTS");
     puts("------------------");
@@ -539,7 +540,5 @@ static void testMain(void)
     report(svg2Result, "Convert CSV-SVG 2");
     report(dst1Result, "Convert CSV-DST 1");
     report(dst2Result, "Convert CSV-DST 2");
-    report(mathResult, "Mathematics Functions");
-    /* report(embeddedResult, "Embedded Functions"); */
 }
 

@@ -162,8 +162,8 @@ typedef struct EmbTime_
 
 typedef struct EmbArray_ {
     int file_id;
-    int size;
-    int length;
+    long size;
+    long length;
     int type;
 } EmbArray;
 

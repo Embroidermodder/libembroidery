@@ -4023,7 +4023,7 @@ static char readCol(EmbPattern* pattern, FILE* file, const char* fileName)
 static char writeCol(EmbPattern* pattern, FILE* file, const char* fileName)
 {
     int i;
-    fprintf(file, "%d\r\n", pattern->threads->length);
+    fprintf(file, "%ld\r\n", pattern->threads->length);
     for (i = 0; i < pattern->threads->length; i++) {
         EmbThread t;
         EmbColor c;
@@ -4404,7 +4404,7 @@ static char writeCsv(EmbPattern* pattern, FILE* file, const char* fileName)
     /* write variables */
     fprintf(file, "\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");
     fprintf(file, "\">\",\"STITCH_COUNT:\",\"%d\"\n", stitchCount);
-    fprintf(file, "\">\",\"THREAD_COUNT:\",\"%d\"\n", pattern->threads->length);
+    fprintf(file, "\">\",\"THREAD_COUNT:\",\"%ld\"\n", pattern->threads->length);
     fprintf(file, "\">\",\"EXTENTS_LEFT:\",\"%1.5f\"\n", boundingRect.left);
     fprintf(file, "\">\",\"EXTENTS_TOP:\",\"%1.5f\"\n", boundingRect.top);
     fprintf(file, "\">\",\"EXTENTS_RIGHT:\",\"%1.5f\"\n", boundingRect.right);
@@ -8763,7 +8763,8 @@ static char readU00(EmbPattern* pattern, FILE* file, const char* fileName)
 
 static char writeU00(EmbPattern* pattern, FILE* file, const char* fileName)
 {
-    unsigned char b[4], i;
+    unsigned char b[4];
+    int i;
 
     embFile_pad(file, ' ', 8);
 

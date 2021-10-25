@@ -59,7 +59,6 @@ if(WIN32)
 target_link_libraries(embroider PRIVATE embroidery_static)
 else(WIN32)
 target_link_libraries(embroider PRIVATE embroidery_static m)
-endif(WIN32)
 
 install(
     TARGETS
@@ -68,5 +67,7 @@ install(
        embroider
     LIBRARY DESTINATION /usr/lib
     ARCHIVE DESTINATION /usr/lib
-    RUNTIME DESTINATION /usr/bin/env
+    RUNTIME DESTINATION /usr/bin
 )
+endif(WIN32)
+

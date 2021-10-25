@@ -147,5 +147,5 @@ install(
        embroider
     LIBRARY DESTINATION /usr/lib
     ARCHIVE DESTINATION /usr/lib
-    RUNTIME DESTINATION /usr/bin/env
+    RUNTIME DESTINATION /usr/bin
 )

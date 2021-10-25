@@ -1,8 +1,8 @@
 #include "embroidery.h"
-#include <math.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #define RED_TERM_COLOR "\e[0;31m"
 #define GREEN_TERM_COLOR "\e[0;32m"
@@ -11,14 +11,12 @@
 
 static void usage(void);
 static void formats(void);
-static void testTangentPoints(EmbCircle c, EmbVector p, EmbVector*, EmbVector*);
+static void testTangentPoints(EmbCircle c, double  px, double  py, EmbPoint *, EmbPoint *);
 static int testEmbCircle(void);
 static int testThreadColor(void);
-static void report(int result, char* label);
+static void report(int result, char *label);
 static void testMain(void);
-static int convert(const char* inf, const char* outf);
-static int create_test_file_1(const char* outf);
-static int create_test_file_2(const char* outf);
+static int convert(const char *inf, const char *outf);
 
 static const char version_string[] = "embroider v0.1";
 
@@ -67,6 +65,10 @@ static void usage(void)
 
 static void formats(void)
 {
+    const char* extension = 0;
+    const char* description = 0;
+    char readerState;
+    char writerState;
     int numReaders = 0;
     int numWriters = 0;
     int i;
@@ -78,177 +80,75 @@ static void formats(void)
     puts("    'U' = Yes, but may be unstable.");
     puts("    ' ' = No.");
     puts("");
-    puts("  Format   Read    Write   Description\n");
-    puts("|________|_______|_______|____________________________________________________|\n");
-    puts("|        |       |       |                                                    |\n");
+    printf("  Format   Read    Write   Description\n");
+    printf("|________|_______|_______|____________________________________________________|\n");
+    printf("|        |       |       |                                                    |\n");
 
-    for (i = 0; i < numberOfFormats; i++) {
-        EmbFormatList f;
-        f = embFormat_data(i);
+    for (i=0; i<numberOfFormats; i++) {
+        extension = formatTable[i].extension;
+        description = formatTable[i].description;
+        readerState = formatTable[i].reader;
+        writerState = formatTable[i].writer;
 
-        numReaders += f.reader != ' ' ? 1 : 0;
-        numWriters += f.writer != ' ' ? 1 : 0;
-        printf("|  %-4s  |   %c   |   %c   |  %-49s |\n", f.extension, f.reader, f.writer, f.description);
+        numReaders += readerState != ' '? 1 : 0;
+        numWriters += writerState != ' '? 1 : 0;
+        printf("|  %-4s  |   %c   |   %c   |  %-49s |\n", extension, readerState, writerState, description);
     }
 
-    puts("|________|_______|_______|____________________________________________________|\n");
-    puts("|        |       |       |                                                    |\n");
+    printf("|________|_______|_______|____________________________________________________|\n");
+    printf("|        |       |       |                                                    |\n");
     printf("| Total: |  %3d  |  %3d  |                                                    |\n", numReaders, numWriters);
-    puts("|________|_______|_______|____________________________________________________|\n");
+    printf("|________|_______|_______|____________________________________________________|\n");
     puts("");
 }
 
-static int create_test_file_1(const char* outf)
+static int convert(const char *inf, const char *outf)
 {
-    int i, result;
-    EmbPattern* p;
-    EmbStitch st;
+    EmbPattern* p = 0;
+    int formatType;
+    EmbReaderWriter* reader = 0, *writer = 0;
 
     p = embPattern_create();
-    if (!p) {
-        puts("ERROR: convert(), cannot allocate memory for p\n");
-        return 1;
-    }
-
-    /* 10mm circle */
-    for (i = 0; i < 100; i++) {
-        st.x = 10 + 10 * sin(i * (0.5 / 3.141592));
-        st.y = 10 + 10 * cos(i * (0.5 / 3.141592));
-        st.flags = NORMAL;
-        st.color = 0;
-        embArray_add(p->stitchList, &st);
-    }
-
-    EmbThread thr = { { 0, 0, 0 }, "Black", "Black" };
-    embPattern_addThread(p, thr);
-
-    result = embPattern_write(p, outf, EMB_FORMAT_CSV);
-
-    embPattern_free(p);
-    return 0;
-}
-
-static int create_test_file_2(const char* outf)
-{
-    int i, result;
-    EmbPattern* p;
-    EmbStitch st;
-
-    p = embPattern_create();
-    if (!p) {
-        puts("ERROR: convert(), cannot allocate memory for p\n");
-        return 1;
-    }
-
-    /* sin wave */
-    for (i = 0; i < 100; i++) {
-        st.x = 10 + 10 * sin(i * (0.5 / 3.141592));
-        st.y = 10 + i * 0.1;
-        st.flags = NORMAL;
-        st.color = 0;
-        embArray_add(p->stitchList, &st);
-    }
-
-    EmbThread thr = { { 0, 0, 0 }, "Black", "Black" };
-    embPattern_addThread(p, thr);
-
-    result = embPattern_write(p, outf, EMB_FORMAT_CSV);
-
-    embPattern_free(p);
-    return 0;
-}
-
-/* move these to the assembly test program */
-#if 0
-float emb_fabs(float a);
-int emb_abs(int a);
-float emb_sqrt(float a);
-float emb_pow(float a, int n);
-float emb_sin(float a);
-float emb_cos(float a);
-float emb_atan2(float a, float b);
-
-static int test_math_functions(void)
-{
-    float t;
-    float error;
-    puts("SQRT TEST");
-    error = 0.0;
-    for (t = 1.0; t<10.0; t+=1.0) {
-        error += fabs(sqrt(t)-emb_sqrt(t));
-    }
-    printf("SQRT TEST: %f\n", error);
-
-    error = 0.0;
-    for (t = 0.1; t<1.0; t+=0.1) {
-        error += fabs(pow(t, 5)-emb_pow(t, 5));
-    }
-    printf("POW TEST: %f\n", error);
-
-    error = 0.0;
-    for (t = 0.1; t<1.0; t+=0.1) {
-        error += fabs(cos(t)-emb_cos(t));
-    }
-    printf("COS TEST: %f\n", error);
-
-    error = 0.0;
-    for (t = 0.1; t<1.0; t+=0.1) {
-        error += fabs(sin(t)-emb_sin(t));
-    }
-    printf("SIN TEST: %f\n", error);
-
-    error = 0.0;
-    for (t = 1.0; t<10.0; t+=1.0) {
-        error += fabs(atan2(t, 1.0)-emb_atan2(t, 1.0));
-    }
-    printf("ATAN2 TEST: %f\n", error);
-    return 0;
-}
-#endif
-
-static int convert(const char* inf, const char* outf)
-{
-    EmbPattern* p;
-    int reader, writer, formatType;
-    
-    printf("Converting %s to %s.\n", inf, outf);
-
-    p = embPattern_create();
-    if (!p) {
-        puts("ERROR: convert(), cannot allocate memory for p\n");
+    if (!p) { 
+        embLog_error("convert(), cannot allocate memory for p\n");
         return 1;
     }
 
     reader = embReaderWriter_getByFileName(inf);
-    if (reader < 0) {
-        puts("convert(), unsupported read file type:");
-        puts(inf);
+    if (!reader) {
+        embLog_error("convert(), unsupported read file type: %s\n", inf);
         embPattern_free(p);
         return 1;
     }
-
-    writer = embReaderWriter_getByFileName(outf);
-    if (writer < 0) {
-        puts("convert(), unsupported write file type:");
-        puts(outf);
+    if (!reader->reader(p, inf)) {
+        embLog_error("convert(), reading file was unsuccessful: %s\n", inf);
+        free(reader);
         embPattern_free(p);
         return 1;
     }
+    free(reader);
 
-    embPattern_read(p, inf, reader);
-
-    EmbFormatList f, g;
-    f = embFormat_data(reader);
-    g = embFormat_data(writer);
-
-    if (f.type == EMBFORMAT_OBJECTONLY) {
-        if (g.type == EMBFORMAT_STITCHONLY) {
+    formatType = embFormat_typeFromName(inf);
+    if (formatType == EMBFORMAT_OBJECTONLY) {
+        formatType = embFormat_typeFromName(outf);
+        if (formatType == EMBFORMAT_STITCHONLY) {
             embPattern_movePolylinesToStitchList(p);
         }
     }
 
-    embPattern_write(p, outf, writer);
-
+    writer = embReaderWriter_getByFileName(outf);
+    if (!writer) {
+        embLog_error("convert(), unsupported write file type: %s\n", outf);
+        embPattern_free(p);
+        return 1;
+    }
+    if (!writer->writer(p, outf)) {
+        embLog_error("convert(), writing file %s was unsuccessful\n", outf);
+        free(writer);
+        embPattern_free(p);
+        return 1;
+    }
+    free(writer);
     embPattern_free(p);
     return 0;
 }
@@ -263,10 +163,8 @@ int main(int argc, const char* argv[])
         return 0;
     }
 
-    init_embroidery();
-
-    flags = argc - 1;
-    for (i = 1; i < argc; i++) {
+    flags = argc-1;
+    for (i=1; i<argc; i++) {
         if (!strcmp(argv[i], "-help") || !strcmp(argv[i], "-h")) {
             usage();
             continue;
@@ -291,61 +189,84 @@ int main(int argc, const char* argv[])
         convert(argv[1], argv[2]);
     }
 
-    close_embroidery();
     return 0;
+
 }
 
-static void testTangentPoints(EmbCircle c, EmbVector p, EmbVector* t0, EmbVector* t1)
+
+static void testTangentPoints(EmbCircle c,
+    double px, double py,
+    EmbPoint *t0, EmbPoint *t1)
 {
-    if (!getCircleTangentPoints(c, p, t0, t1)) {
+    double tx0 = 0.0, tx1 = 0.0, ty0 = 0.0, ty1 = 0.0;
+    if(!getCircleTangentPoints(c, px, py,
+                               &tx0, &ty0,
+                               &tx1, &ty1)) {
         printf("Error calculating tangent points.\n");
-    } else {
+    }
+    else {
         printf("Circle : cr=%f, cx=%f, cy=%f\n"
                "Point  : px=%f, py=%f\n"
                "Tangent: tx0=%f, ty0=%f\n"
                "Tangent: tx1=%f, ty1=%f\n\n",
-            c.radius, c.center.x, c.center.y,
-            p.x, p.y,
-            t0->x, t0->y,
-            t1->x, t1->y);
+               c.radius, c.centerX, c.centerY,
+               px, py,
+               tx0, ty0,
+               tx1, ty1);
+        t0->x = tx0;
+        t0->y = ty0;
+        t1->x = tx1;
+        t1->y = ty1;
     }
+}
+
+double distance(EmbPoint p, EmbPoint q)
+{
+    double x2 = (p.x-q.x)*(p.x-q.x);
+    double y2 = (p.y-q.y)*(p.y-q.y);
+    return sqrt(x2+y2);
 }
 
 int testEmbCircle(void)
 {
-    float epsilon = 1e-3;
-    EmbVector p0, p1;
+    double epsilon = 1e-3;
+    EmbPoint p0, p1;
     /* Problem */
-    EmbCircle c1 = { { 0.0, 0.0 }, 3.0 };
+    EmbCircle c1 = {0.0, 0.0, 3.0};
     /* Solution */
-    EmbVector t0 = { 2.2500, 1.9843 };
-    EmbVector t1 = { 2.2500, -1.9843 };
+    EmbPoint t0 = {2.2500, 1.9843};
+    EmbPoint t1 = {2.2500, -1.9843};
     /* Test */
-    EmbVector test0 = { 4.0, 0.0 };
-    testTangentPoints(c1, test0, &p0, &p1);
-    if (embVector_distance(p0, t0) + embVector_distance(p1, t1) > epsilon) {
+    testTangentPoints(c1, 4.0, 0.0, &p0, &p1);
+    if (distance(p0, t0) + distance(p1, t1) > epsilon) {
         return 16;
     }
 
-    EmbCircle c2 = { { 20.1762, 10.7170 }, 6.8221 };
+    EmbCircle c2 = {20.1762, 10.7170, 6.8221};
     /* Solution */
-    EmbVector s0 = { 19.0911, 17.4522 };
-    EmbVector s1 = { 26.4428, 13.4133 };
+    EmbPoint s0 = {19.0911, 17.4522};
+    EmbPoint s1 = {26.4428, 13.4133};
     /* Test */
-    EmbVector test1 = { 24.3411, 18.2980 };
-    testTangentPoints(c2, test1, &p0, &p1);
-    float error = embVector_distance(p0, s0) + embVector_distance(p1, s1);
+    testTangentPoints(c2, 24.3411, 18.2980, &p0, &p1);
+    double error = distance(p0, s0) + distance(p1, s1);
     if (error > epsilon) {
-        printf("Error larger than tolerance, circle test 2: %f.\n\n", error);
+        printf("Error larger than tolerence, circle test 2: %f.\n\n", error);
         return 17;
     }
 
     return 0;
 }
 
-static void printArcResults(float bulge, EmbArc arc, EmbVector center,
-    float radius, float diameter, float chord, EmbVector chordMid,
-    float sagitta, float apothem, float incAngle, char clockwise)
+static void printArcResults(double bulge,
+                     double startX,    double startY,
+                     double endX,      double endY,
+                     double midX,      double midY,
+                     double centerX,   double centerY,
+                     double radius,    double diameter,
+                     double chord,
+                     double chordMidX, double chordMidY,
+                     double sagitta,   double apothem,
+                     double incAngle,  char   clockwise)
 {
     fprintf(stdout, "bulge     = %f\n"
                     "startX    = %f\n"
@@ -366,55 +287,98 @@ static void printArcResults(float bulge, EmbArc arc, EmbVector center,
                     "incAngle  = %f\n"
                     "clockwise = %d\n"
                     "\n",
-        bulge,
-        arc.start.x,
-        arc.start.y,
-        arc.end.x,
-        arc.end.y,
-        arc.mid.x,
-        arc.mid.y,
-        center.x,
-        center.y,
-        radius,
-        diameter,
-        chord,
-        chordMid.x,
-        chordMid.y,
-        sagitta,
-        apothem,
-        incAngle,
-        clockwise);
+                    bulge,
+                    startX,
+                    startY,
+                    endX,
+                    endY,
+                    midX,
+                    midY,
+                    centerX,
+                    centerY,
+                    radius,
+                    diameter,
+                    chord,
+                    chordMidX,
+                    chordMidY,
+                    sagitta,
+                    apothem,
+                    incAngle,
+                    clockwise);
 }
 
 int testGeomArc(void)
 {
-    EmbArc arc;
-    EmbVector center, chordMid;
-    float bulge, radius, diameter, chord, sagitta, apothem, incAngle;
-    char clockwise;
+    double bulge;
+    double startX;    double startY;
+    double endX;      double endY;
+    /* returned data */
+    double midX;      double midY;
+    double centerX;   double centerY;
+    double radius;    double diameter;
+    double chord;
+    double chordMidX; double chordMidY;
+    double sagitta;   double apothem;
+    double incAngle;  char   clockwise;
 
     fprintf(stdout, "Clockwise Test:\n");
     bulge = -0.414213562373095;
-    arc.start.x = 1.0;
-    arc.start.y = 0.0;
-    arc.end.x = 2.0;
-    arc.end.y = 1.0;
-    if (getArcDataFromBulge(bulge, &arc, &center, &radius, &diameter, &chord,
-            &chordMid, &sagitta, &apothem, &incAngle, &clockwise)) {
-        printArcResults(bulge, arc, center, radius, diameter,
-            chord, chordMid, sagitta, apothem, incAngle, clockwise);
+    startX = 1.0;
+    startY = 0.0;
+    endX   = 2.0;
+    endY   = 1.0;
+    if(getArcDataFromBulge(bulge,
+                           startX,     startY,
+                           endX,       endY,
+                           /* returned data */
+                           &midX,      &midY,
+                           &centerX,   &centerY,
+                           &radius,    &diameter,
+                           &chord,
+                           &chordMidX, &chordMidY,
+                           &sagitta,   &apothem,
+                           &incAngle,  &clockwise))
+    {
+        printArcResults(bulge,
+                        startX,    startY,
+                        endX,      endY,
+                        midX,      midY,
+                        centerX,   centerY,
+                        radius,    diameter,
+                        chord,
+                        chordMidX, chordMidY,
+                        sagitta,   apothem,
+                        incAngle,  clockwise);
     }
 
     fprintf(stdout, "Counter-Clockwise Test:\n");
-    bulge = 2.414213562373095;
-    arc.start.x = 4.0;
-    arc.start.y = 0.0;
-    arc.end.x = 5.0;
-    arc.end.y = 1.0;
-    if (getArcDataFromBulge(bulge, &arc, &center, &radius, &diameter, &chord,
-            &chordMid, &sagitta, &apothem, &incAngle, &clockwise)) {
-        printArcResults(bulge, arc, center, radius, diameter,
-            chord, chordMid, sagitta, apothem, incAngle, clockwise);
+    bulge  = 2.414213562373095;
+    startX = 4.0;
+    startY = 0.0;
+    endX   = 5.0;
+    endY   = 1.0;
+    if(getArcDataFromBulge(bulge,
+                           startX,     startY,
+                           endX,       endY,
+                           /* returned data */
+                           &midX,      &midY,
+                           &centerX,   &centerY,
+                           &radius,    &diameter,
+                           &chord,
+                           &chordMidX, &chordMidY,
+                           &sagitta,   &apothem,
+                           &incAngle,  &clockwise))
+    {
+        printArcResults(bulge,
+                        startX,    startY,
+                        endX,      endY,
+                        midX,      midY,
+                        centerX,   centerY,
+                        radius,    diameter,
+                        chord,
+                        chordMidX, chordMidY,
+                        sagitta,   apothem,
+                        incAngle,  clockwise);
     }
 
     return 0;
@@ -423,32 +387,29 @@ int testGeomArc(void)
 static int testThreadColor(void)
 {
     unsigned int tColor = 0xFFD25F00;
-    EmbColor c;
-    c.r = 0xD2;
-    c.g = 0x5F;
-    c.b = 0x00;
-    int tBrand = Sulky_Rayon;
-    int tNum = threadColorNum(c, tBrand);
-    char tName[50];
-    threadColorName(tName, c, tBrand);
+    int          tBrand = Sulky_Rayon;
+    int          tNum   = threadColorNum(tColor, tBrand);
+    const char*  tName  = threadColorName(tColor, tBrand);
 
     printf("Color : 0x%X\n"
            "Brand : %d\n"
            "Num   : %d\n"
            "Name  : %s\n\n",
-        tColor,
-        tBrand,
-        tNum, /* Solution: 1833 */
-        tName); /* Solution: Pumpkin Pie */
+            tColor,
+            tBrand,
+            tNum, /* Solution: 1833 */
+            tName); /* Solution: Pumpkin Pie */
     return 0;
 }
 
 static int testEmbFormat(void)
 {
-    EmbFormatList f;
-    const char* tName = "example.zsk";
-    int code = embReaderWriter_getByFileName(tName);
-    f = embFormat_data(code);
+    const char*  tName = "example.zsk";
+    const char *extension = embFormat_extensionFromName(tName);
+    const char *description = embFormat_descriptionFromName(tName);
+    char reader = embFormat_readerStateFromName(tName);
+    char writer = embFormat_writerStateFromName(tName);
+    int type = embFormat_typeFromName(tName);
 
     printf("Filename   : %s\n"
            "Extension  : %s\n"
@@ -456,89 +417,81 @@ static int testEmbFormat(void)
            "Reader     : %c\n"
            "Writer     : %c\n"
            "Type       : %d\n\n",
-        tName,
-        f.extension,
-        f.description,
-        f.reader,
-        f.writer,
-        f.type);
+            tName,
+            extension,
+            description,
+            reader,
+            writer,
+            type);
 
-    if (strcmp(f.extension, ".zsk"))
-        return 20;
-    if (strcmp(f.description, "ZSK USA Embroidery Format"))
-        return 21;
-    if (f.reader != 'U')
-        return 22;
-    if (f.writer != ' ')
-        return 23;
-    if (f.type != 1)
-        return 24;
+    if (strcmp(extension, ".zsk")) return 20;
+    if (strcmp(description, "ZSK USA Embroidery Format")) return 21;
+    if (reader != 'U') return 22;
+    if (writer != ' ') return 23;
+    if (type != 1) return 24;
+    return 0;
+}
+
+static int testHash(void)
+{
+    EmbHash* hash = 0;
+    hash = embHash_create();
+    if(!hash) return 1;
+    if(!embHash_empty(hash)) return 2;
+    if(embHash_count(hash) != 0) return 3;
+
+    /* insert */
+    if(embHash_insert(hash, "four", (void*)4)) return 4;
+    if(embHash_insert(hash, "five", (void*)5)) return 5;
+    if(embHash_insert(hash, "six",  (void*)6)) return 6;
+    if(embHash_count(hash) != 3) return 7;
+
+    /* replace */
+    if(embHash_insert(hash, "four",  (void*)8)) return 8;
+    if(embHash_insert(hash, "five", (void*)10)) return 9;
+    if(embHash_insert(hash, "six",  (void*)12)) return 10;
+    if(embHash_count(hash) != 3) return 11;
+
+    /* contains */
+    if(!embHash_contains(hash, "four")) return 12;
+    if(embHash_contains(hash, "empty")) return 13;
+
+    /* remove */
+    embHash_remove(hash, "four");
+    if(embHash_count(hash) != 2) return 14;
+    embHash_clear(hash);
+    if(embHash_count(hash) != 0) return 15;
+
+    embHash_free(hash);
     return 0;
 }
 
 static void
-report(int result, char* label)
+report(int result, char *label)
 {
-    printf("%s Test...%*c", label, (int)(20 - strlen(label)), ' ');
+    printf("%s Test...%*c", label, (int)(20-strlen(label)), ' ');
     if (result) {
         printf(RED_TERM_COLOR "[FAIL] [CODE=%d]\n" RESET_TERM_COLOR, result);
-    } else {
+    }
+    else {
         printf(GREEN_TERM_COLOR "[PASS]\n" RESET_TERM_COLOR);
     }
 }
 
-/**
- * Note that we can use printf here because this file isn't compiled into
- * libembroidery.so.
- */
-#if 0
-static int embeddedFunctionsResult(void)
-{
-    char buffer[30];
-    int dnumber;
-    float fnumber;
-    dnumber = 2031;
-    fnumber = 12.4123;
-    /* embPointerToArray(buffer, (void *)buffer, 10);
-    printf("%s %p\n", buffer, (void *)buffer); */
-    embIntToArray(buffer, dnumber, 10);
-    printf("%s %d\n", buffer, dnumber);
-    if (strcmp(buffer, "2031")) {
-        return 1;
-    }
-    embFloatToArray(buffer, fnumber, 1.0e-7, 3, 3);
-    printf("%s %f\n", buffer, fnumber);
-    if (strcmp(buffer, "12.412")) {
-        return 1;
-    }
-    return 0;
-}
-#endif
-
 static void testMain(void)
 {
+    int hashResult = testHash();
     int circleResult = testEmbCircle();
     int threadResult = testThreadColor();
     int formatResult = testEmbFormat();
     int arcResult = testGeomArc();
-    int create1Result = create_test_file_1("test01.csv");
-    int create2Result = create_test_file_2("test02.csv");
-    int svg1Result = convert("test01.csv", "test01.svg");
-    int svg2Result = convert("test02.csv", "test02.svg");
-    int dst1Result = convert("test01.csv", "test01.dst");
-    int dst2Result = convert("test02.csv", "test02.dst");
 
     puts("SUMMARY OF RESULTS");
     puts("------------------");
+    report(hashResult, "Hash");
     report(circleResult, "Tangent Point");
     report(threadResult, "Thread");
     report(formatResult, "Format");
     report(arcResult, "Arc");
-    report(create1Result, "Create CSV 1");
-    report(create2Result, "Create CSV 2");
-    report(svg1Result, "Convert CSV-SVG 1");
-    report(svg2Result, "Convert CSV-SVG 2");
-    report(dst1Result, "Convert CSV-DST 1");
-    report(dst2Result, "Convert CSV-DST 2");
 }
 

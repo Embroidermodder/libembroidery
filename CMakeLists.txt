@@ -9,18 +9,6 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(LIBRARY_SOURCE_FILES
-    emb-array.c
-    emb-file.c
-    emb-format.c
-    emb-pattern.c
-    emb-reader-writer.c
-    emb-rect.c
-    emb-satin-line.c
-    emb-settings.c
-    emb-stitch.c
-    emb-thread.c
-    emb-vector.c
-    emb-utility.c
     format-100.c
     format-10o.c
     format-art.c

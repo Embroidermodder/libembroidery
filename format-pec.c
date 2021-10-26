@@ -119,7 +119,7 @@ void readPecStitches(EmbPattern* pattern, EmbFile* file)
     if(!pattern) { printf("ERROR: format-pec.c readPecStitches(), pattern argument is null\n"); return; }
     if(!file) { printf("ERROR: format-pec.c readPecStitches(), file argument is null\n"); return; }
 
-    while(!embFile_eof(file))
+    while(!feof(file->file))
     {
         int val1 = (int)binaryReadUInt8(file);
         int val2 = (int)binaryReadUInt8(file);

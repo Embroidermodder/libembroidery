@@ -25,18 +25,26 @@ static int decodeRecordFlags(unsigned char b2)
 int readTap(EmbPattern* pattern, const char* fileName)
 {
     unsigned char b[3];
-    EmbFile* file = 0;
+    FILE* file = 0;
 
-    if(!pattern) { printf("ERROR: format-tap.c readTap(), pattern argument is null\n"); return 0; }
-    if(!fileName) { printf("ERROR: format-tap.c readTap(), fileName argument is null\n"); return 0; }
+    if (!pattern) {
+        puts("ERROR: format-tap.c readTap(), pattern argument is null.");
+        return 0;
+    }
+    if (!fileName) {
+        puts("ERROR: format-tap.c readTap(), fileName argument is null.");
+        return 0;
+    }
 
-    file = embFile_open(fileName, "rb", 0);
-    if(!file) return 0;
+    file = fopen(fileName, "rb");
+    if (!file) {
+        puts("ERROR: format-tap.c cannot open file for reading.");
+        return 0;
+    }
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
-    while(embFile_read(b, 1, 3, file) == 3)
-    {
+    while (fread(b, 1, 3, file) == 3) {
         int flags;
         int x = 0;
         int y = 0;
@@ -85,7 +93,7 @@ int readTap(EmbPattern* pattern, const char* fileName)
         if(flags == END)
             break;
     }
-    embFile_close(file);
+    fclose(file);
     embPattern_end(pattern);
 
     return 1;
@@ -96,7 +104,7 @@ static unsigned char setbit(int pos)
 	return (unsigned char)(1 << pos);
 }
 
-static void encode_record(EmbFile* file, int x, int y, int flags)
+static void encode_record(FILE* file, int x, int y, int flags)
 {
 	char b0, b1, b2;
 	b0 = b1 = b2 = 0;
@@ -145,53 +153,44 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
 		b2 = (char)(b2 | 0xC3);
 	}
 
-	binaryWriteByte(file, (unsigned char)b0);
-	binaryWriteByte(file, (unsigned char)b1);
-	binaryWriteByte(file, (unsigned char)b2);
+    fwrite(&b0, 1, 1, file);
+    fwrite(&b1, 1, 1, file);
+    fwrite(&b2, 1, 1, file);
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeTap(EmbPattern* pattern, const char* fileName)
 {
-	EmbRect boundingRect;
-	EmbFile* file = 0;
-	int xx, yy, dx, dy, flags;
-	int co = 1, st = 0;
-	int ax, ay, mx, my;
-	EmbStitchList* pointer = 0;
+    FILE* file = 0;
+    int xx, yy, dx, dy;
+    EmbStitchList* pointer = 0;
 	
     if (!validateWritePattern(pattern, fileName, "writeTap")) {
         return 0;
     }
 
-	file = embFile_open(fileName, "wb", 0);
-	if (!file) return 0;
+    file = fopen(fileName, "wb");
+    if (!file) {
+        puts("ERROR: writeTap failed to open file.");
+        return 0;
+    }
 
-	embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
+    embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
-	xx = yy = 0;
-	co = pattern->threads->count;
-	st = 0;
-	st = embStitchList_count(pattern->stitchList);
-	flags = NORMAL;
-	boundingRect = embPattern_calcBoundingBox(pattern);
-	ax = ay = mx = my = 0;
-	xx = yy = 0;
-	pointer = pattern->stitchList;
-	while (pointer)
-	{
-		/* convert from mm to 0.1mm for file format */
-		dx = roundDouble(pointer->stitch.x * 10.0) - xx;
-		dy = roundDouble(pointer->stitch.y * 10.0) - yy;
-		xx = roundDouble(pointer->stitch.x * 10.0);
-		yy = roundDouble(pointer->stitch.y * 10.0);
-		flags = pointer->stitch.flags;
-		encode_record(file, dx, dy, flags);
-		pointer = pointer->next;
-	}
-	embFile_close(file);
-	return 1;
+    xx = yy = 0;
+    pointer = pattern->stitchList;
+    while (pointer) {
+        /* convert from mm to 0.1mm for file format */
+        dx = roundDouble(pointer->stitch.x * 10.0) - xx;
+        dy = roundDouble(pointer->stitch.y * 10.0) - yy;
+        xx = roundDouble(pointer->stitch.x * 10.0);
+        yy = roundDouble(pointer->stitch.y * 10.0);
+        encode_record(file, dx, dy, pointer->stitch.flags);
+        pointer = pointer->next;
+    }
+    fclose(file);
+    return 1;
 }
 
 

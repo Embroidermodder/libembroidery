@@ -208,12 +208,12 @@ int readJef(EmbPattern* pattern, const char* fileName)
     {
         flags = NORMAL;
         b0 = (unsigned char)embFile_getc(file);
-        if(embFile_eof(file))
+        if(feof(file->file))
         {
             break;
         }
         b1 = (unsigned char)embFile_getc(file);
-        if(embFile_eof(file))
+        if(feof(file->file))
         {
             break;
         }
@@ -222,10 +222,10 @@ int readJef(EmbPattern* pattern, const char* fileName)
             if(b1 & 1)
             {
                 b0 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if(feof(file->file))
                     break;
                 b1 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if(feof(file->file))
                     break;
                 flags = STOP;
             }
@@ -233,12 +233,12 @@ int readJef(EmbPattern* pattern, const char* fileName)
             {
                 flags = TRIM;
                 b0 = (unsigned char)embFile_getc(file);
-                if (embFile_eof(file))
+                if (feof(file->file))
                 {
                     break;
                 }
                 b1 = (unsigned char)embFile_getc(file);
-                if (embFile_eof(file))
+                if (feof(file->file))
                 {
                     break;
                 }

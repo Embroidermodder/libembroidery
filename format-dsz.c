@@ -21,11 +21,11 @@ int readDsz(EmbPattern* pattern, const char* fileName)
         int stitchType = NORMAL;
 
         y = embFile_getc(file);
-        if(embFile_eof(file)) break;
+        if(feof(file->file)) break;
         x = embFile_getc(file);
-        if(embFile_eof(file)) break;
+        if(feof(file->file)) break;
         ctrl = (unsigned char)embFile_getc(file);
-        if(embFile_eof(file)) break;
+        if(feof(file->file)) break;
         if(ctrl & 0x01) stitchType = TRIM;
         if(ctrl & 0x20) y = -y;
         if(ctrl & 0x40) x = -x;

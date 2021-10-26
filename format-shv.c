@@ -139,7 +139,7 @@ int readShv(EmbPattern* pattern, const char* fileName)
 
     embFile_seek(file, -2, SEEK_CUR);
     
-    for(i = 0; !embFile_eof(file); i++)
+    for(i = 0; !feof(file->file); i++)
     {
         unsigned char b0, b1;
         int flags;

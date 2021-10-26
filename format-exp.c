@@ -60,24 +60,24 @@ int readExp(EmbPattern* pattern, const char* fileName)
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
-    for(i = 0; !embFile_eof(file); i++)
+    for(i = 0; !feof(file->file); i++)
     {
         flags = NORMAL;
         b0 = (unsigned char)embFile_getc(file);
-        if(embFile_eof(file))
+        if(feof(file->file))
             break;
         b1 = (unsigned char)embFile_getc(file);
-        if(embFile_eof(file))
+        if(feof(file->file))
             break;
         if(b0 == 0x80)
         {
             if(b1 & 1)
             {
                 b0 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if(feof(file->file))
                     break;
                 b1 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if(feof(file->file))
                     break;
                 flags = STOP;
             }
@@ -86,19 +86,19 @@ int readExp(EmbPattern* pattern, const char* fileName)
                 flags = TRIM;
                 if(b1 == 2) flags = NORMAL;
                 b0 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if(feof(file->file))
                     break;
                 b1 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if(feof(file->file))
                     break;
             }
             else if(b1 == 0x80)
             {
                 b0 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if(feof(file->file))
                     break;
                 b1 = (unsigned char)embFile_getc(file);
-                if(embFile_eof(file))
+                if(feof(file->file))
                     break;
                 /* Seems to be b0=0x07 and b1=0x00
                  * Maybe used as extension functions */
@@ -122,9 +122,6 @@ int readExp(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 int writeExp(EmbPattern* pattern, const char* fileName)
 {
-#ifdef ARDUINO /* ARDUINO TODO: This is temporary. Remove when complete. */
-return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
-#else /* ARDUINO TODO: This is temporary. Remove when complete. */
     EmbFile* file = 0;
     EmbStitchList* stitches = 0;
     double dx = 0.0, dy = 0.0;
@@ -161,6 +158,5 @@ return 0; /* ARDUINO TODO: This is temporary. Remove when complete. */
     embFile_printf(file, "\x1a");
     embFile_close(file);
     return 1;
-#endif /* ARDUINO TODO: This is temporary. Remove when complete. */
 }
 

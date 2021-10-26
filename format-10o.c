@@ -18,13 +18,13 @@ int read10o(EmbPattern* pattern, const char* fileName)
         int x, y;
         int stitchType = NORMAL;
         unsigned char ctrl = (unsigned char)embFile_getc(file);
-        if(embFile_eof(file))
+        if(feof(file->file))
             break;
         y = embFile_getc(file);
-        if(embFile_eof(file))
+        if(feof(file->file))
             break;
         x = embFile_getc(file);
-        if(embFile_eof(file))
+        if(feof(file->file))
             break;
         if(ctrl & 0x20)
             x = -x;

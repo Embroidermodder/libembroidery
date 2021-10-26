@@ -29,11 +29,11 @@ int readDsb(EmbPattern* pattern, const char* fileName)
         int stitchType = NORMAL;
 
         ctrl =(unsigned char)embFile_getc(file);
-        if(embFile_eof(file)) break;
+        if(feof(file->file)) break;
         y = embFile_getc(file);
-        if(embFile_eof(file)) break;
+        if(feof(file->file)) break;
         x = embFile_getc(file);
-        if(embFile_eof(file)) break;
+        if(feof(file->file)) break;
         if(ctrl & 0x01) stitchType = TRIM;
         if(ctrl & 0x20) x = -x;
         if(ctrl & 0x40) y = -y;

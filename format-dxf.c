@@ -305,7 +305,7 @@ int readDxf(EmbPattern* pattern, const char* fileName)
     char* tableName = "";
     char* layerName = "";
     char* entityType = "";
-    EmbHash* layerColorHash = 0; /* hash <layerName, EmbColor> */
+    char layerColorHash[100][8]; /* hash <layerName, EmbColor> */
 
     int eof = 0; /* End Of File */
 
@@ -317,9 +317,6 @@ int readDxf(EmbPattern* pattern, const char* fileName)
 
     if (!validateReadPattern(pattern, fileName, "readDxf"))
         return 0;
-
-    layerColorHash = embHash_create();
-    if(!layerColorHash) { printf("ERROR: format-dxf.c readDxf(), unable to allocate memory for layerColorHash\n"); return 0; }
 
     file = fopen(fileName, "r");
     if(!file)

@@ -1,8 +1,5 @@
 #include "embroidery.h"
 
-#ifdef ARDUINO /* ARDUINO TODO: remove this line when emb-outline is C89 complete. This is a temporary arduino build fix. */
-#else          /* ARDUINO TODO: remove this line when emb-outline is C89 complete. This is a temporary arduino build fix. */
-
 struct StitchBlock
 {
     IThread Thread { get; set; }
@@ -12,7 +9,7 @@ struct StitchBlock
 
 double LineLength(EmbPoint a1, EmbPoint a2)
 {
-    return sqrt(pow(a2.X - a1.X, 2) + pow(a2.Y - a1.Y, 2));
+    return sqrt(pow(a2.x - a1.x, 2) + pow(a2.y - a1.y, 2));
 }
 
 double DistancePointPoint(Vector2 p, Vector2 p2)
@@ -544,6 +541,3 @@ Vertices ReduceByNth(Vertices vertices, int nth)
 
     return result;
 }
-
-#endif /* ARDUINO TODO: remove this line when emb-outline is C89 complete. This is a temporary arduino build fix. */
-

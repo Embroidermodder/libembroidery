@@ -4,8 +4,8 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 int readCnd(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { embLog_error("format-cnd.c readCnd(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-cnd.c readCnd(), fileName argument is null\n"); return 0; }
+    if(!pattern) { printf("ERROR: format-cnd.c readCnd(), pattern argument is null\n"); return 0; }
+    if(!fileName) { printf("ERROR: format-cnd.c readCnd(), fileName argument is null\n"); return 0; }
     return 0; /*TODO: finish readCnd */
 }
 

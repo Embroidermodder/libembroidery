@@ -87,7 +87,7 @@ static void sewEncode(unsigned char* b, char dx, char dy, int flags)
 {
     if(!b)
     {
-        embLog_error("format-exp.c expEncode(), b argument is null\n");
+        printf("ERROR: format-exp.c expEncode(), b argument is null\n");
         return;
     }
     if(flags == STOP)

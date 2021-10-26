@@ -26,8 +26,8 @@ int readXxx(EmbPattern* pattern, const char* fileName)
     EmbStitchList* lastStitch = 0;
     EmbStitchList* secondLast = 0;
 
-    if(!pattern) { embLog_error("format-xxx.c readXxx(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-xxx.c readXxx(), fileName argument is null\n"); return 0; }
+    if(!pattern) { printf("ERROR: format-xxx.c readXxx(), pattern argument is null\n"); return 0; }
+    if(!fileName) { printf("ERROR: format-xxx.c readXxx(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file) return 0;

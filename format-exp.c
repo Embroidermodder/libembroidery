@@ -10,7 +10,7 @@ static void expEncode(unsigned char* b, char dx, char dy, int flags)
 {
     if(!b)
     {
-        embLog_error("format-exp.c expEncode(), b argument is null\n");
+        printf("ERROR: format-exp.c expEncode(), b argument is null\n");
         return;
     }
 
@@ -52,8 +52,8 @@ int readExp(EmbPattern* pattern, const char* fileName)
     char dx = 0, dy = 0;
     int flags = 0;
 
-    if(!pattern) { embLog_error("format-exp.c readExp(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-exp.c readExp(), fileName argument is null\n"); return 0; }
+    if(!pattern) { printf("ERROR: format-exp.c readExp(), pattern argument is null\n"); return 0; }
+    if(!fileName) { printf("ERROR: format-exp.c readExp(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file) return 0;

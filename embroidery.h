@@ -731,9 +731,6 @@ int bcfFile_read(EmbFile* file, bcf_file* bcfFile);
 EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind);
 void bcf_file_free(bcf_file* bcfFile);
 
-EMB_PUBLIC void embLog_print(const char* format, ...);
-EMB_PUBLIC void embLog_error(const char* format, ...);
-
 int threadColor(const char*, int brand);
 int threadColorNum(unsigned int color, int brand);
 const char* threadColorName(unsigned int color, int brand);

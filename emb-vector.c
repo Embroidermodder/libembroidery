@@ -10,7 +10,7 @@ void embVector_normalize(EmbVector vector, EmbVector* result)
     double length = embVector_getLength(vector);
 
     if (!result) {
-        embLog_error("emb-vector.c embVector_normalize(), result argument is null\n");
+        printf("ERROR: emb-vector.c embVector_normalize(), result argument is null\n");
         return;
     }
     result->x = vector.x / length;
@@ -24,7 +24,7 @@ void embVector_normalize(EmbVector vector, EmbVector* result)
 void embVector_multiply(EmbVector vector, double magnitude, EmbVector* result)
 {
     if (!result) {
-        embLog_error("emb-vector.c embVector_multiply(), result argument is null\n");
+        printf("ERROR: emb-vector.c embVector_multiply(), result argument is null\n");
         return;
     }
     result->x = vector.x * magnitude;
@@ -37,7 +37,7 @@ void embVector_multiply(EmbVector vector, double magnitude, EmbVector* result)
 void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog_error("emb-vector.c embVector_add(), result argument is null\n");
+        printf("ERROR: emb-vector.c embVector_add(), result argument is null\n");
         return;
     }
     result->x = v1.x + v2.x;
@@ -50,7 +50,7 @@ void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result)
 void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog_error("emb-vector.c embVector_add(), result argument is null\n");
+        printf("ERROR: emb-vector.c embVector_add(), result argument is null\n");
         return;
     }
     result->x = (v1.x + v2.x) / 2.0;
@@ -63,7 +63,7 @@ void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result)
 void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog_error("emb-vector.c embVector_subtract(), result argument is null\n");
+        printf("ERROR: emb-vector.c embVector_subtract(), result argument is null\n");
         return;
     }
     result->x = v1.x - v2.x;
@@ -94,7 +94,7 @@ double embVector_dot(EmbVector v1, EmbVector v2)
 void embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result)
 {
     if (!result) {
-        embLog_error("emb-vector.c embVector_transpose_product(), result argument is null\n");
+        printf("ERROR: emb-vector.c embVector_transpose_product(), result argument is null\n");
         return;
     }
     result->x = v1.x * v2.x;

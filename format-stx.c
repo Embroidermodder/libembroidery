@@ -31,17 +31,17 @@ static int stxReadThread(StxThread* thread, EmbFile* file)
     EmbColor col;
     unsigned char whatIsthis; /* TODO: determine what this represents */
 
-    if(!thread) { embLog_error("format-stx.c stxReadThread(), thread argument is null\n"); return 0; }
-    if(!file) { embLog_error("format-stx.c stxReadThread(), file argument is null\n"); return 0; }
+    if(!thread) { printf("ERROR: format-stx.c stxReadThread(), thread argument is null\n"); return 0; }
+    if(!file) { printf("ERROR: format-stx.c stxReadThread(), file argument is null\n"); return 0; }
 
     codeLength = binaryReadUInt8(file);
     codeBuff = (char*)malloc(codeLength);
-    if(!codeBuff) { embLog_error("format-stx.c stxReadThread(), unable to allocate memory for codeBuff\n"); return 0; }
+    if(!codeBuff) { printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for codeBuff\n"); return 0; }
     binaryReadBytes(file, (unsigned char*)codeBuff, codeLength); /* TODO: check return value */
     thread->colorCode = codeBuff;
     colorNameLength = binaryReadUInt8(file);
     codeNameBuff = (char*)malloc(colorNameLength);
-    if(!codeNameBuff) { embLog_error("format-stx.c stxReadThread(), unable to allocate memory for codeNameBuff\n"); return 0; }
+    if(!codeNameBuff) { printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for codeNameBuff\n"); return 0; }
     binaryReadBytes(file, (unsigned char*)codeNameBuff, colorNameLength); /* TODO: check return value */
     thread->colorName = codeNameBuff;
 
@@ -53,7 +53,7 @@ static int stxReadThread(StxThread* thread, EmbFile* file)
 
     sectionNameLength = binaryReadUInt8(file);
     sectionNameBuff = (char*)malloc(sectionNameLength);
-    if(!sectionNameBuff) { embLog_error("format-stx.c stxReadThread(), unable to allocate memory for sectionNameBuff\n"); return 0; }
+    if(!sectionNameBuff) { printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for sectionNameBuff\n"); return 0; }
     binaryReadBytes(file, (unsigned char*)sectionNameBuff, sectionNameLength); /* TODO: check return value */
     thread->sectionName = sectionNameBuff;
 
@@ -63,7 +63,7 @@ static int stxReadThread(StxThread* thread, EmbFile* file)
     numberOfOtherDescriptors = binaryReadInt16(file);
 
     thread->subDescriptors = (SubDescriptor*)malloc(sizeof(SubDescriptor) * numberOfOtherDescriptors);
-    if(!thread->subDescriptors) { embLog_error("format-stx.c stxReadThread(), unable to allocate memory for thread->subDescriptors\n"); return 0; }
+    if(!thread->subDescriptors) { printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for thread->subDescriptors\n"); return 0; }
     for(j = 0; j < numberOfOtherDescriptors; j++)
     {
         SubDescriptor sd;
@@ -75,12 +75,12 @@ static int stxReadThread(StxThread* thread, EmbFile* file)
         sd.someInt = binaryReadInt32(file);
         subCodeLength = binaryReadUInt8(file);
         subCodeBuff = (char*)malloc(subCodeLength);
-        if(!subCodeBuff) { embLog_error("format-stx.c stxReadThread(), unable to allocate memory for subCodeBuff\n"); return 0; }
+        if(!subCodeBuff) { printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for subCodeBuff\n"); return 0; }
         binaryReadBytes(file, (unsigned char*)subCodeBuff, subCodeLength); /* TODO: check return value */
         sd.colorCode = subCodeBuff;
         subColorNameLength = binaryReadUInt8(file);
         subColorNameBuff = (char*)malloc(subColorNameLength);
-        if(!subColorNameBuff) { embLog_error("format-stx.c stxReadThread(), unable to allocate memory for subColorNameBuff\n"); return 0; }
+        if(!subColorNameBuff) { printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for subColorNameBuff\n"); return 0; }
         binaryReadBytes(file, (unsigned char*)subColorNameBuff, subColorNameLength); /* TODO: check return value */
         sd.colorName = subColorNameBuff;
         sd.someOtherInt = binaryReadInt32(file);
@@ -107,8 +107,8 @@ int readStx(EmbPattern* pattern, const char* fileName)
     int bottom,top;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-stx.c readStx(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-stx.c readStx(), fileName argument is null\n"); return 0; }
+    if(!pattern) { printf("ERROR: format-stx.c readStx(), pattern argument is null\n"); return 0; }
+    if(!fileName) { printf("ERROR: format-stx.c readStx(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file)
@@ -136,14 +136,14 @@ int readStx(EmbPattern* pattern, const char* fileName)
     top = binaryReadInt16(file);
 
     gif = (unsigned char*)malloc(imageLength);
-    if(!gif) { embLog_error("format-stx.c readStx(), unable to allocate memory for gif\n"); return 0; }
+    if(!gif) { printf("ERROR: format-stx.c readStx(), unable to allocate memory for gif\n"); return 0; }
     binaryReadBytes(file, gif, imageLength); /* TODO: check return value */
     /*Stream s2 = new MemoryStream(gif); TODO: review */
     /*Image = new Bitmap(s2); TODO: review */
 
     threadCount = binaryReadInt16(file);
     stxThreads = (StxThread*)malloc(sizeof(StxThread) * threadCount);
-    if(!stxThreads) { embLog_error("format-stx.c readStx(), unable to allocate memory for stxThreads\n"); return 0; }
+    if(!stxThreads) { printf("ERROR: format-stx.c readStx(), unable to allocate memory for stxThreads\n"); return 0; }
     for(i = 0; i < threadCount; i++)
     {
         EmbThread t;

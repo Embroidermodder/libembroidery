@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <stdarg.h>
-#
+
 const double embConstantPi = 3.1415926535;
 
 /* Returns an EmbArcObject. It is created on the stack. */
@@ -307,7 +306,7 @@ EmbColor embColor_make(unsigned char r, unsigned char g, unsigned char b)
 EmbColor* embColor_create(unsigned char r, unsigned char g, unsigned char b)
 {
     EmbColor* heapColor = (EmbColor*)malloc(sizeof(EmbColor));
-    if(!heapColor) { embLog_error("emb-color.c embColor_create(), cannot allocate memory for heapColor\n"); return 0; }
+    if(!heapColor) { printf("ERROR: emb-color.c embColor_create(), cannot allocate memory for heapColor\n"); return 0; }
     heapColor->r = r;
     heapColor->g = g;
     heapColor->b = b;
@@ -403,7 +402,7 @@ void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise)
 {
     double temp;
     if (!result) {
-        embLog_error("emb-line.c embLine_normalVector(), result argument is null\n");
+        printf("ERROR: emb-line.c embLine_normalVector(), result argument is null\n");
         return;
     }
     result->x = line.x2 - line.x1;
@@ -436,42 +435,18 @@ unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector*
     double det = A1 * B2 - A2 * B1;
 
     if (!result) {
-        embLog_error("emb-line.c embLine_intersectionPoint(), result argument is null\n");
+        printf("ERROR: emb-line.c embLine_intersectionPoint(), result argument is null\n");
         return 0;
     }
     /*TODO: The code below needs revised since division by zero can still occur */
     if (fabs(det) < tolerence) {
-        embLog_error("Intersecting lines cannot be parallel.\n");
+        printf("ERROR: Intersecting lines cannot be parallel.\n");
         return 0;
     }
     result->x = (B2 * C1 - B1 * C2) / det;
     result->y = (A1 * C2 - A2 * C1) / det;
     return 1;
 }
-
-/* printf() abstraction. Uses Serial.print() on ARDUINO */
-void embLog_print(const char* format, ...)
-{
-    /* TODO: log debug message in struct for later use */
-
-    va_list args;
-    va_start(args, format);
-    vprintf(format, args);
-    va_end(args);
-}
-
-/* serious errors */
-void embLog_error(const char* format, ...)
-{
-    /* TODO: log debug message in struct for later use */
-
-    va_list args;
-    va_start(args, format);
-    printf("ERROR: ");
-    vprintf(format, args);
-    va_end(args);
-}
-
 
 void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int _269) {}
 int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _267, int _269, int _235) { return 0; }

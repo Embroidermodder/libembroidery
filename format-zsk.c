@@ -9,11 +9,11 @@ int readZsk(EmbPattern* pattern, const char* fileName)
     int stitchType;
     unsigned char colorNumber;
     if (!pattern) {
-        embLog_error("format-zsk.c readZsk(), pattern argument is null\n");
+        printf("ERROR: format-zsk.c readZsk(), pattern argument is null\n");
         return 0;
     }
     if (!fileName) {
-        embLog_error("format-zsk.c readZsk(), fileName argument is null\n");
+        printf("ERROR: format-zsk.c readZsk(), fileName argument is null\n");
         return 0;
     }
 

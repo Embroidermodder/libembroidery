@@ -116,8 +116,8 @@ void readPecStitches(EmbPattern* pattern, EmbFile* file)
 {
     int stitchNumber = 0;
 
-    if(!pattern) { embLog_error("format-pec.c readPecStitches(), pattern argument is null\n"); return; }
-    if(!file) { embLog_error("format-pec.c readPecStitches(), file argument is null\n"); return; }
+    if(!pattern) { printf("ERROR: format-pec.c readPecStitches(), pattern argument is null\n"); return; }
+    if(!file) { printf("ERROR: format-pec.c readPecStitches(), file argument is null\n"); return; }
 
     while(!embFile_eof(file))
     {
@@ -182,7 +182,7 @@ static void pecEncodeJump(EmbFile* file, int x, int types)
     int outputVal = abs(x) & 0x7FF;
     unsigned int orPart = 0x80;
 
-    if(!file) { embLog_error("format-pec.c pecEncodeJump(), file argument is null\n"); return; }
+    if(!file) { printf("ERROR: format-pec.c pecEncodeJump(), file argument is null\n"); return; }
 
     if(types & TRIM)
     {
@@ -204,7 +204,7 @@ static void pecEncodeJump(EmbFile* file, int x, int types)
 
 static void pecEncodeStop(EmbFile* file, unsigned char val)
 {
-    if(!file) { embLog_error("format-pec.c pecEncodeStop(), file argument is null\n"); return; }
+    if(!file) { printf("ERROR: format-pec.c pecEncodeStop(), file argument is null\n"); return; }
     binaryWriteByte(file, 0xFE);
     binaryWriteByte(file, 0xB0);
     binaryWriteByte(file, val);
@@ -274,8 +274,8 @@ static void pecEncode(EmbFile* file, EmbPattern* p)
     unsigned char stopCode = 2;
     EmbStitchList* list = 0;
 
-    if(!file) { embLog_error("format-pec.c pecEncode(), file argument is null\n"); return; }
-    if(!p) { embLog_error("format-pec.c pecEncode(), p argument is null\n"); return; }
+    if(!file) { printf("ERROR: format-pec.c pecEncode(), file argument is null\n"); return; }
+    if(!p) { printf("ERROR: format-pec.c pecEncode(), p argument is null\n"); return; }
 
     list = p->stitchList;
     while(list)
@@ -328,7 +328,7 @@ static void writeImage(EmbFile* file, unsigned char image[][48])
 {
     int i, j;
 
-    if(!file) { embLog_error("format-pec.c writeImage(), file argument is null\n"); return; }
+    if(!file) { printf("ERROR: format-pec.c writeImage(), file argument is null\n"); return; }
 
     for(i = 0; i < 38; i++)
     {
@@ -361,9 +361,9 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
     const char* dotPos = strrchr(fileName, '.');
     const char* start = 0;
 
-    if(!pattern) { embLog_error("format-pec.c writePecStitches(), pattern argument is null\n"); return; }
-    if(!file) { embLog_error("format-pec.c writePecStitches(), file argument is null\n"); return; }
-    if(!fileName) { embLog_error("format-pec.c writePecStitches(), fileName argument is null\n"); return; }
+    if(!pattern) { printf("ERROR: format-pec.c writePecStitches(), pattern argument is null\n"); return; }
+    if(!file) { printf("ERROR: format-pec.c writePecStitches(), file argument is null\n"); return; }
+    if(!fileName) { printf("ERROR: format-pec.c writePecStitches(), fileName argument is null\n"); return; }
 
     if(forwardSlashPos)
     {

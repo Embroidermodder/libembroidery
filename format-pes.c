@@ -8,8 +8,8 @@ int readPes(EmbPattern* pattern, const char* fileName)
     int pecstart, numColors, x;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-pes.c readPes(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-pes.c readPes(), fileName argument is null\n"); return 0; }
+    if(!pattern) { printf("ERROR: format-pes.c readPes(), pattern argument is null\n"); return 0; }
+    if(!fileName) { printf("ERROR: format-pes.c readPes(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file)

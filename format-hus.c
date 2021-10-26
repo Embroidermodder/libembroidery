@@ -76,7 +76,7 @@ static int husDecodeStitchType(unsigned char b)
 static unsigned char* husDecompressData(unsigned char* input, int compressedInputLength, int decompressedContentLength)
 {
     unsigned char* decompressedData = (unsigned char*)malloc(sizeof(unsigned char)*decompressedContentLength);
-    if(!decompressedData) { embLog_error("format-hus.c husDecompressData(), cannot allocate memory for decompressedData\n"); return 0; }
+    if(!decompressedData) { printf("ERROR: format-hus.c husDecompressData(), cannot allocate memory for decompressedData\n"); return 0; }
     husExpand((unsigned char*) input, decompressedData, compressedInputLength, 10);
     return decompressedData;
 }
@@ -84,7 +84,7 @@ static unsigned char* husDecompressData(unsigned char* input, int compressedInpu
 static unsigned char* husCompressData(unsigned char* input, int decompressedInputSize, int* compressedSize)
 {
     unsigned char* compressedData = (unsigned char*)malloc(sizeof(unsigned char)*decompressedInputSize*2);
-    if(!compressedData) { embLog_error("format-hus.c husCompressData(), cannot allocate memory for compressedData\n"); return 0; }
+    if(!compressedData) { printf("ERROR: format-hus.c husCompressData(), cannot allocate memory for compressedData\n"); return 0; }
     *compressedSize = husCompress(input, (unsigned long) decompressedInputSize, compressedData, 10, 0);
     return compressedData;
 }
@@ -162,7 +162,7 @@ int readHus(EmbPattern* pattern, const char* fileName)
     yOffset = binaryReadInt32(file);
 
     stringVal = (unsigned char*)malloc(sizeof(unsigned char)*8);
-    if(!stringVal) { embLog_error("format-hus.c readHus(), cannot allocate memory for stringVal\n"); return 0; }
+    if(!stringVal) { printf("ERROR: format-hus.c readHus(), cannot allocate memory for stringVal\n"); return 0; }
     binaryReadBytes(file, stringVal, 8); /* TODO: check return value */
 
     unknown = binaryReadInt16(file);
@@ -173,17 +173,17 @@ int readHus(EmbPattern* pattern, const char* fileName)
     }
 
     attributeData = (unsigned char*)malloc(sizeof(unsigned char)*(xOffset - attributeOffset + 1));
-    if(!attributeData) { embLog_error("format-hus.c readHus(), cannot allocate memory for attributeData\n"); return 0; }
+    if(!attributeData) { printf("ERROR: format-hus.c readHus(), cannot allocate memory for attributeData\n"); return 0; }
     binaryReadBytes(file, attributeData, xOffset - attributeOffset); /* TODO: check return value */
     attributeDataDecompressed = husDecompressData(attributeData, xOffset - attributeOffset, numberOfStitches + 1);
 
     xData = (unsigned char*)malloc(sizeof(unsigned char)*(yOffset - xOffset + 1));
-    if(!xData) { embLog_error("format-hus.c readHus(), cannot allocate memory for xData\n"); return 0; }
+    if(!xData) { printf("ERROR: format-hus.c readHus(), cannot allocate memory for xData\n"); return 0; }
     binaryReadBytes(file, xData, yOffset - xOffset); /* TODO: check return value */
     xDecompressed = husDecompressData(xData, yOffset - xOffset, numberOfStitches);
 
     yData = (unsigned char*)malloc(sizeof(unsigned char)*(fileLength - yOffset + 1));
-    if(!yData) { embLog_error("format-hus.c readHus(), cannot allocate memory for yData\n"); return 0; }
+    if(!yData) { printf("ERROR: format-hus.c readHus(), cannot allocate memory for yData\n"); return 0; }
     binaryReadBytes(file, yData, fileLength - yOffset); /* TODO: check return value */
     yDecompressed = husDecompressData(yData, fileLength - yOffset, numberOfStitches);
 
@@ -248,11 +248,11 @@ int writeHus(EmbPattern* pattern, const char* fileName)
     binaryWriteUInt(file, 0x2A + 2 * minColors);
 
     xValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
-    if(!xValues) { embLog_error("format-hus.c writeHus(), cannot allocate memory for xValues\n"); return 0; }
+    if(!xValues) { printf("ERROR: format-hus.c writeHus(), cannot allocate memory for xValues\n"); return 0; }
     yValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
-    if(!yValues) { embLog_error("format-hus.c writeHus(), cannot allocate memory for yValues\n"); return 0; }
+    if(!yValues) { printf("ERROR: format-hus.c writeHus(), cannot allocate memory for yValues\n"); return 0; }
     attributeValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
-    if(!attributeValues) { embLog_error("format-hus.c writeHus(), cannot allocate memory for attributeValues\n"); return 0; }
+    if(!attributeValues) { printf("ERROR: format-hus.c writeHus(), cannot allocate memory for attributeValues\n"); return 0; }
 
     pointer = pattern->stitchList;
     previousX = 0.0;

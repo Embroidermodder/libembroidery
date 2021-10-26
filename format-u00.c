@@ -10,8 +10,8 @@ int readU00(EmbPattern* pattern, const char* fileName)
     char endOfStream = 0;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-u00.c readU00(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-u00.c readU00(), fileName argument is null\n"); return 0; }
+    if(!pattern) { printf("ERROR: format-u00.c readU00(), pattern argument is null\n"); return 0; }
+    if(!fileName) { printf("ERROR: format-u00.c readU00(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if (!file) return 0;

@@ -7,8 +7,8 @@ int readT09(EmbPattern* pattern, const char* fileName)
     unsigned char b[3];
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-t09.c readT09(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-t09.c readT09(), fileName argument is null\n"); return 0; }
+    if(!pattern) { printf("ERROR: format-t09.c readT09(), pattern argument is null\n"); return 0; }
+    if(!fileName) { printf("ERROR: format-t09.c readT09(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file)

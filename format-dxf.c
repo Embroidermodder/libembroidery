@@ -319,12 +319,12 @@ int readDxf(EmbPattern* pattern, const char* fileName)
         return 0;
 
     layerColorHash = embHash_create();
-    if(!layerColorHash) { embLog_error("format-dxf.c readDxf(), unable to allocate memory for layerColorHash\n"); return 0; }
+    if(!layerColorHash) { printf("ERROR: format-dxf.c readDxf(), unable to allocate memory for layerColorHash\n"); return 0; }
 
     file = fopen(fileName, "r");
     if(!file)
     {
-        embLog_error("format-dxf.c readDxf(), cannot open %s for reading\n", fileName);
+        printf("ERROR: format-dxf.c readDxf(), cannot open %s for reading\n", fileName);
         return 0;
     }
 
@@ -578,7 +578,7 @@ int readDxf(EmbPattern* pattern, const char* fileName)
     if(!eof)
     {
         /* NOTE: The EOF item must be present at the end of file to be considered a valid DXF file. */
-        embLog_error("format-dxf.c readDxf(), missing EOF at end of DXF file\n");
+        printf("ERROR: format-dxf.c readDxf(), missing EOF at end of DXF file\n");
     }
     return eof;
 }

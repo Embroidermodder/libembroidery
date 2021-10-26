@@ -1,9 +1,9 @@
 #include "embroidery.h"
-#include <stdarg.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 const unsigned int NumberOfDifatEntriesInHeader = 109;
 const unsigned int sizeOfFatEntry = sizeof(unsigned int);
@@ -20,16 +20,16 @@ static const int littleEndianByteOrderMark = 0xFFFE;
 int validateWritePattern(EmbPattern *pattern, const char* fileName, const char *function)
 {
     if (!pattern) {
-        embLog_error("%s(), pattern argument is null\n", function);
+        printf("ERROR: %s(), pattern argument is null\n", function);
         return 0;
     }
     if (!fileName) {
-        embLog_error("%s(), fileName argument is null\n", function);
+        printf("ERROR: %s(), fileName argument is null\n", function);
         return 0;
     }
 
     if (!embStitchList_count(pattern->stitchList)) {
-        embLog_error("%s(), pattern contains no stitches\n", function);
+        printf("ERROR: %s(), pattern contains no stitches\n", function);
         return 0;
     }
     
@@ -47,11 +47,11 @@ int validateWritePattern(EmbPattern *pattern, const char* fileName, const char *
 int validateReadPattern(EmbPattern *pattern, const char* fileName, const char *function)
 {
     if (!pattern) {
-        embLog_error("%s(), pattern argument is null\n", function);
+        printf("ERROR: %s(), pattern argument is null\n", function);
         return 0;
     }
     if (!fileName) {
-        embLog_error("%s(), fileName argument is null\n", function);
+        printf("ERROR: %s(), fileName argument is null\n", function);
         return 0;
     }
     return 1;
@@ -66,7 +66,7 @@ EmbFile* embFile_open(const char* fileName, const char* mode, int optional)
     FILE* oFile = fopen(fileName, mode);
     if (!oFile) {
         if (!optional) {
-            embLog_error("Cannot open %s in mode %s.", fileName, mode);
+            printf("ERROR: Cannot open %s in mode %s.", fileName, mode);
         }
         return 0;
     }
@@ -74,7 +74,7 @@ EmbFile* embFile_open(const char* fileName, const char* mode, int optional)
     eFile = (EmbFile*)malloc(sizeof(EmbFile));
     if (!eFile) {
         if (!optional) {
-            embLog_error("Cannot allocate memory for EmbFile with arguments (%s, %s, 0).",
+            printf("ERROR: Cannot allocate memory for EmbFile with arguments (%s, %s, 0).",
                 fileName, mode);
         }
         fclose(oFile);
@@ -144,45 +144,26 @@ void embFile_readline(EmbFile* stream, char *line, int maxLength)
 
 size_t embFile_read(void* ptr, size_t size, size_t nmemb, EmbFile* stream)
 {
-#ifdef ARDUINO
-    return 0; /* ARDUINO TODO: SD File read() doesn't appear to return the same way as fread(). This will need work. */
-#else /* ARDUINO */
     return fread(ptr, size, nmemb, stream->file);
-#endif /* ARDUINO */
 }
 
 size_t embFile_write(const void* ptr, size_t size, size_t nmemb, EmbFile* stream)
 {
-#ifdef ARDUINO
-    return 0; /* ARDUINO TODO: Implement inoFile_write. */
-#else /* ARDUINO */
     return fwrite(ptr, size, nmemb, stream->file);
-#endif /* ARDUINO */
 }
 
 int embFile_seek(EmbFile* stream, long offset, int origin)
 {
-#ifdef ARDUINO
-    return inoFile_seek(stream, offset, origin);
-#else /* ARDUINO */
     return fseek(stream->file, offset, origin);
-#endif /* ARDUINO */
 }
 
 long embFile_tell(EmbFile* stream)
 {
-#ifdef ARDUINO
-    return inoFile_tell(stream);
-#else /* ARDUINO */
     return ftell(stream->file);
-#endif /* ARDUINO */
 }
 
 EmbFile* embFile_tmpfile(void)
 {
-#ifdef ARDUINO
-    return inoFile_tmpfile();
-#else
     EmbFile* eFile = 0;
     FILE* tFile = tmpfile();
     if (!tFile)
@@ -196,35 +177,21 @@ EmbFile* embFile_tmpfile(void)
 
     eFile->file = tFile;
     return eFile;
-#endif
 }
 
 int embFile_putc(int ch, EmbFile* stream)
 {
-#ifdef ARDUINO
-    return inoFile_putc(ch, stream);
-#else /* ARDUINO */
     return fputc(ch, stream->file);
-#endif /* ARDUINO */
 }
 
 int embFile_printf(EmbFile* stream, const char* format, ...)
 {
-#ifdef ARDUINO /* ARDUINO */
-    char buff[256];
-    va_list args;
-    va_start(args, format);
-    vsprintf(buff, format, args);
-    va_end(args);
-    return inoFile_printf(stream, buff);
-#else /* ARDUINO */
     int retVal;
     va_list args;
     va_start(args, format);
     retVal = vfprintf(stream->file, format, args);
     va_end(args);
     return retVal;
-#endif /* ARDUINO */
 }
 
 static unsigned int sectorSize(bcf_file* bcfFile)
@@ -313,7 +280,7 @@ EmbFile* GetFile(bcf_file* bcfFile, EmbFile* file, char* fileToFind)
     sectorSize = bcfFile->difat->sectorSize;
     input = (char*)malloc(sectorSize);
     if (!input) {
-        embLog_error("compound-file.c GetFile(), cannot allocate memory for input\n");
+        printf("ERROR: compound-file.c GetFile(), cannot allocate memory for input\n");
     } /* TODO: avoid crashing. null pointer will be accessed */
     currentSize = 0;
     currentSector = pointer->startingSectorLocation;
@@ -354,7 +321,7 @@ bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const u
 
     difat = (bcf_file_difat*)malloc(sizeof(bcf_file_difat));
     if (!difat) {
-        embLog_error("compound-file-difat.c bcf_difat_create(), cannot allocate memory for difat\n");
+        printf("ERROR: compound-file-difat.c bcf_difat_create(), cannot allocate memory for difat\n");
     } /* TODO: avoid crashing. null pointer will be accessed */
 
     difat->sectorSize = sectorSize;
@@ -370,7 +337,7 @@ bcf_file_difat* bcf_difat_create(EmbFile* file, unsigned int fatSectors, const u
     for (i = fatSectors; i < NumberOfDifatEntriesInHeader; ++i) {
         sectorRef = binaryReadUInt32(file);
         if (sectorRef != CompoundFileSector_FreeSector) {
-            embLog_error("compound-file-difat.c bcf_difat_create(), Unexpected sector value %x at DIFAT[%d]\n", sectorRef, i);
+            printf("ERROR: compound-file-difat.c bcf_difat_create(), Unexpected sector value %x at DIFAT[%d]\n", sectorRef, i);
         }
     }
     return difat;
@@ -403,7 +370,7 @@ unsigned int readFullSector(EmbFile* file, bcf_file_difat* bcfFile, unsigned int
     for (i = entriesToReadInThisSector; i < numberOfEntriesInDifatSector(bcfFile); ++i) {
         sectorRef = binaryReadUInt32(file);
         if (sectorRef != CompoundFileSector_FreeSector) {
-            embLog_error("compound-file-difat.c readFullSector(), Unexpected sector value %x at DIFAT[%d]]\n", sectorRef, i);
+            printf("ERROR: compound-file-difat.c readFullSector(), Unexpected sector value %x at DIFAT[%d]]\n", sectorRef, i);
         }
     }
     nextDifatSectorInChain = binaryReadUInt32(file);
@@ -443,7 +410,7 @@ bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntr
 {
     bcf_directory* dir = (bcf_directory*)malloc(sizeof(bcf_directory));
     if (!dir) {
-        embLog_error("compound-file-directory.c CompoundFileDirectory(), cannot allocate memory for dir\n");
+        printf("ERROR: compound-file-directory.c CompoundFileDirectory(), cannot allocate memory for dir\n");
     } /* TODO: avoid crashing. null pointer will be accessed */
     dir->maxNumberOfDirectoryEntries = maxNumberOfDirectoryEntries;
     dir->dirEntries = 0;
@@ -465,7 +432,7 @@ bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file)
 {
     bcf_directory_entry* dir = (bcf_directory_entry*)malloc(sizeof(bcf_directory_entry));
     if (!dir) {
-        embLog_error("compound-file-directory.c CompoundFileDirectoryEntry(), cannot allocate memory for dir\n");
+        printf("ERROR: compound-file-directory.c CompoundFileDirectoryEntry(), cannot allocate memory for dir\n");
     } /* TODO: avoid crashing. null pointer will be accessed */
     memset(dir->directoryEntryName, 0, 32);
     parseDirectoryEntryName(file, dir);
@@ -473,7 +440,7 @@ bcf_directory_entry* CompoundFileDirectoryEntry(EmbFile* file)
     dir->directoryEntryNameLength = binaryReadUInt16(file);
     dir->objectType = (unsigned char)binaryReadByte(file);
     if ((dir->objectType != ObjectTypeStorage) && (dir->objectType != ObjectTypeStream) && (dir->objectType != ObjectTypeRootEntry)) {
-        embLog_error("compound-file-directory.c CompoundFileDirectoryEntry(), unexpected object type: %d\n", dir->objectType);
+        printf("ERROR: compound-file-directory.c CompoundFileDirectoryEntry(), unexpected object type: %d\n", dir->objectType);
         return 0;
     }
     dir->colorFlag = (unsigned char)binaryReadByte(file);
@@ -530,7 +497,7 @@ bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize)
 {
     bcf_file_fat* fat = (bcf_file_fat*)malloc(sizeof(bcf_file_fat));
     if (!fat) {
-        embLog_error("compound-file-fat.c bcfFileFat_create(), cannot allocate memory for fat\n");
+        printf("ERROR: compound-file-fat.c bcfFileFat_create(), cannot allocate memory for fat\n");
     } /* TODO: avoid crashing. null pointer will be accessed */
     fat->numberOfEntriesInFatSector = sectorSize / sizeOfFatEntry;
     fat->fatEntryCount = 0;

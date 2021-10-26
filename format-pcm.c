@@ -40,8 +40,8 @@ int readPcm(EmbPattern* pattern, const char* fileName)
     int flags = 0, st = 0;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-pcm.c readPcm(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-pcm.c readPcm(), fileName argument is null\n"); return 0; }
+    if(!pattern) { printf("ERROR: format-pcm.c readPcm(), pattern argument is null\n"); return 0; }
+    if(!fileName) { printf("ERROR: format-pcm.c readPcm(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file) return 0;

@@ -83,7 +83,7 @@ int embFormat_getExtension(const char *fileName, char *ending)
     const char *offset;
 
     if (!fileName) {
-        embLog_error("emb-format.c embFormat_getExtension(), fileName argument is null\n");
+        printf("ERROR: emb-format.c embFormat_getExtension(), fileName argument is null\n");
         return 0;
     }
 

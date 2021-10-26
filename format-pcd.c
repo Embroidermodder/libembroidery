@@ -14,7 +14,7 @@ static void pcdEncode(EmbFile* file, int dx, int dy, int flags)
 {
     unsigned char flagsToWrite = 0;
 
-    if(!file) { embLog_error("format-pcd.c pcdEncode(), file argument is null\n"); return; }
+    if(!file) { printf("ERROR: format-pcd.c pcdEncode(), file argument is null\n"); return; }
 
     binaryWriteByte(file, (unsigned char)0);
     binaryWriteByte(file, (unsigned char)(dx & 0xFF));
@@ -49,8 +49,8 @@ int readPcd(EmbPattern* pattern, const char* fileName)
     unsigned short colorCount = 0;
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-pcd.c readPcd(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-pcd.c readPcd(), fileName argument is null\n"); return 0; }
+    if(!pattern) { printf("ERROR: format-pcd.c readPcd(), pattern argument is null\n"); return 0; }
+    if(!fileName) { printf("ERROR: format-pcd.c readPcd(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file) return 0;

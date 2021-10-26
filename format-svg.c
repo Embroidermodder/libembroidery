@@ -122,7 +122,7 @@ int svgPathCmdToEmbPathFlag(char cmd)
 
     /*else if(toUpper(cmd) == 'B') return BULGETOCONTROL; /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
 	/*else if(toUpper(cmd) == 'BB') return BULGETOEND;    /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
-    /*else { embLog_error("format-svg.c svgPathCmdToEmbPathFlag(), unknown command '%c'\n", cmd); return MOVETO; } */
+    /*else { printf("ERROR: format-svg.c svgPathCmdToEmbPathFlag(), unknown command '%c'\n", cmd); return MOVETO; } */
 
     return LINETO;
 }
@@ -143,12 +143,12 @@ SvgAttribute svgAttribute_create(const char* name, const char* value)
 
 void svgElement_addAttribute(SvgElement* element, SvgAttribute data)
 {
-    if(!element) { embLog_error("format-svg.c svgElement_addAttribute(), element argument is null\n"); return; }
+    if(!element) { printf("ERROR: format-svg.c svgElement_addAttribute(), element argument is null\n"); return; }
 
     if(!(element->attributeList))
     {
         element->attributeList = (SvgAttributeList*)malloc(sizeof(SvgAttributeList));
-        if(!(element->attributeList)) { embLog_error("format-svg.c svgElement_addAttribute(), cannot allocate memory for element->attributeList\n"); return; }
+        if(!(element->attributeList)) { printf("ERROR: format-svg.c svgElement_addAttribute(), cannot allocate memory for element->attributeList\n"); return; }
         element->attributeList->attribute = data;
         element->attributeList->next = 0;
         element->lastAttribute = element->attributeList;
@@ -158,7 +158,7 @@ void svgElement_addAttribute(SvgElement* element, SvgAttribute data)
     {
         SvgAttributeList* pointerLast = element->lastAttribute;
         SvgAttributeList* list = (SvgAttributeList*)malloc(sizeof(SvgAttributeList));
-        if(!list) { embLog_error("format-svg.c svgElement_addAttribute(), cannot allocate memory for list\n"); return; }
+        if(!list) { printf("ERROR: format-svg.c svgElement_addAttribute(), cannot allocate memory for list\n"); return; }
         list->attribute = data;
         list->next = 0;
         pointerLast->next = list;
@@ -198,9 +198,9 @@ SvgElement* svgElement_create(const char* name)
     SvgElement* element = 0;
 
     element = (SvgElement*)malloc(sizeof(SvgElement));
-    if(!element) { embLog_error("format-svg.c svgElement_create(), cannot allocate memory for element\n"); return 0; }
+    if(!element) { printf("ERROR: format-svg.c svgElement_create(), cannot allocate memory for element\n"); return 0; }
     element->name = emb_strdup(name);
-    if(!element->name) { embLog_error("format-svg.c svgElement_create(), element->name is null\n"); return 0; }
+    if(!element->name) { printf("ERROR: format-svg.c svgElement_create(), element->name is null\n"); return 0; }
     element->attributeList = 0;
     element->lastAttribute = 0;
     return element;
@@ -210,8 +210,8 @@ char* svgAttribute_getValue(SvgElement* element, const char* name)
 {
     SvgAttributeList* pointer = 0;
 
-    if(!element) { embLog_error("format-svg.c svgAttribute_getValue(), element argument is null\n"); return "none"; }
-    if(!name) { embLog_error("format-svg.c svgAttribute_getValue(), name argument is null\n"); return "none"; }
+    if(!element) { printf("ERROR: format-svg.c svgAttribute_getValue(), element argument is null\n"); return "none"; }
+    if(!name) { printf("ERROR: format-svg.c svgAttribute_getValue(), name argument is null\n"); return "none"; }
     if(!element->attributeList) { /* TODO: error */ return "none"; }
 
     pointer = element->attributeList;
@@ -228,7 +228,7 @@ void svgAddToPattern(EmbPattern* p)
 {
     const char* buff = 0;
 
-    if(!p) { embLog_error("format-svg.c svgAddToPattern(), p argument is null\n"); return; }
+    if(!p) { printf("ERROR: format-svg.c svgAddToPattern(), p argument is null\n"); return; }
     if(!currentElement) { return; }
 
     buff = currentElement->name;
@@ -320,7 +320,7 @@ void svgAddToPattern(EmbPattern* p)
 
         char* pathbuff = 0;
         pathbuff = (char*)malloc(size);
-        if(!pathbuff) { embLog_error("format-svg.c svgAddToPattern(), cannot allocate memory for pathbuff\n"); return; }
+        if(!pathbuff) { printf("ERROR: format-svg.c svgAddToPattern(), cannot allocate memory for pathbuff\n"); return; }
 
         printf("stroke:%s\n", mystrok);
 
@@ -473,7 +473,7 @@ void svgAddToPattern(EmbPattern* p)
                         else if(!strcmp(pathbuff, "Z")) { cmd = 'Z'; reset = 0; }
                         else if(!strcmp(pathbuff, "z")) { cmd = 'z'; reset = 0; }
                         else {
-                            embLog_error("format-svg.c svgAddToPattern(), %s is not a valid svg path command, skipping...\n", pathbuff);
+                            printf("ERROR: format-svg.c svgAddToPattern(), %s is not a valid svg path command, skipping...\n", pathbuff);
                             trip = -1;
                             reset = -1;
                         }
@@ -492,7 +492,7 @@ void svgAddToPattern(EmbPattern* p)
                 /* increase pathbuff length - leave room for 0 */
                 size *= 2;
                 pathbuff = (char*)realloc(pathbuff, size);
-                if(!pathbuff) { embLog_error("format-svg.c svgAddToPattern(), cannot re-allocate memory for pathbuff\n"); return; }
+                if(!pathbuff) { printf("ERROR: format-svg.c svgAddToPattern(), cannot re-allocate memory for pathbuff\n"); return; }
             }
         }
         free(pathbuff);
@@ -525,7 +525,7 @@ void svgAddToPattern(EmbPattern* p)
 
         char* polybuff = 0;
         polybuff = (char*)malloc(size);
-        if(!polybuff) { embLog_error("format-svg.c svgAddToPattern(), cannot allocate memory for polybuff\n"); return; }
+        if(!polybuff) { printf("ERROR: format-svg.c svgAddToPattern(), cannot allocate memory for polybuff\n"); return; }
 
         for(i = 0; i < last; i++)
         {
@@ -567,7 +567,7 @@ void svgAddToPattern(EmbPattern* p)
                 /* increase polybuff length - leave room for 0 */
                 size *= 2;
                 polybuff = (char*)realloc(polybuff, size);
-                if(!polybuff) { embLog_error("format-svg.c svgAddToPattern(), cannot re-allocate memory for polybuff\n"); return; }
+                if(!polybuff) { printf("ERROR: format-svg.c svgAddToPattern(), cannot re-allocate memory for polybuff\n"); return; }
             }
         }
         free(polybuff);
@@ -647,7 +647,7 @@ int svgIsXmlAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsXmlAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsXmlAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -670,7 +670,7 @@ int svgIsLinkAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsLinkAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsLinkAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -690,7 +690,7 @@ int svgIsAnimateAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsAnimateAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsAnimateAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -712,7 +712,7 @@ int svgIsAnimateColorAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsAnimateColorAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsAnimateColorAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -732,7 +732,7 @@ int svgIsAnimateMotionAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsAnimateMotionAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsAnimateMotionAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -752,7 +752,7 @@ int svgIsAnimateTransformAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsAnimateTransformAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsAnimateTransformAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -775,7 +775,7 @@ int svgIsAnimationAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsAnimationAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsAnimationAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -794,7 +794,7 @@ int svgIsAudioAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsAudioAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsAudioAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -813,7 +813,7 @@ int svgIsCircleAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsCircleAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsCircleAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -827,7 +827,7 @@ int svgIsDefsAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsDefsAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsDefsAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -842,7 +842,7 @@ int svgIsDescAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsDescAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsDescAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -859,7 +859,7 @@ int svgIsDiscardAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsDiscardAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsDiscardAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -877,7 +877,7 @@ int svgIsEllipseAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsEllipseAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsEllipseAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -892,7 +892,7 @@ int svgIsFontAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsFontAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsFontAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -913,7 +913,7 @@ int svgIsFontFaceAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsFontFaceAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsFontFaceAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -927,7 +927,7 @@ int svgIsFontFaceSrcAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsFontFaceSrcAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsFontFaceSrcAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -944,7 +944,7 @@ int svgIsFontFaceUriAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsFontFaceUriAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsFontFaceUriAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -965,7 +965,7 @@ int svgIsForeignObjectAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsForeignObjectAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsForeignObjectAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -984,7 +984,7 @@ int svgIsGroupAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsGroupAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsGroupAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -999,7 +999,7 @@ int svgIsGlyphAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsGlyphAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsGlyphAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1015,7 +1015,7 @@ int svgIsHandlerAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsHandlerAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsHandlerAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1029,7 +1029,7 @@ int svgIsHKernAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
     
-    embLog_print("format-svg.c svgIsHKernAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsHKernAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1050,7 +1050,7 @@ int svgIsImageAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsImageAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsImageAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1068,7 +1068,7 @@ int svgIsLineAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsLineAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsLineAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1082,7 +1082,7 @@ int svgIsLinearGradientAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsLinearGradientAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsLinearGradientAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1097,7 +1097,7 @@ int svgIsListenerAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsListenerAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsListenerAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1112,7 +1112,7 @@ int svgIsMetadataAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsMetadataAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsMetadataAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1126,7 +1126,7 @@ int svgIsMissingGlyphAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsMissingGlyphAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsMissingGlyphAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1141,7 +1141,7 @@ int svgIsMPathAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsMPathAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsMPathAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1160,7 +1160,7 @@ int svgIsPathAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsPathAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsPathAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1178,7 +1178,7 @@ int svgIsPolygonAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsPolygonAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsPolygonAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1196,7 +1196,7 @@ int svgIsPolylineAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsPolylineAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsPolylineAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1213,7 +1213,7 @@ int svgIsPrefetchAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsPrefetchAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsPrefetchAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1227,7 +1227,7 @@ int svgIsRadialGradientAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsRadialGradientAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsRadialGradientAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1246,7 +1246,7 @@ int svgIsRectAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsRectAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsRectAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1262,7 +1262,7 @@ int svgIsScriptAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsScriptAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsScriptAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1280,7 +1280,7 @@ int svgIsSetAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsSetAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsSetAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1294,7 +1294,7 @@ int svgIsSolidColorAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsSolidColorAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsSolidColorAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1308,7 +1308,7 @@ int svgIsStopAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsStopAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsStopAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1336,7 +1336,7 @@ int svgIsSvgAttribute(const char* buff)
             return SVG_ATTRIBUTE;
     }
 
-    embLog_print("format-svg.c svgIsSvgAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsSvgAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1355,7 +1355,7 @@ int svgIsSwitchAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsSwitchAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsSwitchAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1370,7 +1370,7 @@ int svgIsTBreakAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsTBreakAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsTBreakAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1388,7 +1388,7 @@ int svgIsTextAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsTextAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsTextAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1407,7 +1407,7 @@ int svgIsTextAreaAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsTextAreaAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsTextAreaAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1422,7 +1422,7 @@ int svgIsTitleAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsTitleAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsTitleAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1440,7 +1440,7 @@ int svgIsTSpanAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsTSpanAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsTSpanAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1460,7 +1460,7 @@ int svgIsUseAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsUseAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsUseAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1484,7 +1484,7 @@ int svgIsVideoAttribute(const char* buff)
     if (stringInArray(buff, tokens))
         return SVG_ATTRIBUTE;
 
-    embLog_print("format-svg.c svgIsVideoAttribute(), unknown: %s\n", buff);
+    printf("format-svg.c svgIsVideoAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
 
@@ -1818,7 +1818,7 @@ void svgProcess(int c, const char* buff)
                 free(currentValue);
                 currentValue = 0;
                 currentValue = (char*)malloc(strlen(buff) + strlen(tmp) + 2);
-                if(!currentValue) { embLog_error("format-svg.c svgProcess(), cannot allocate memory for currentValue\n"); return; }
+                if(!currentValue) { printf("ERROR: format-svg.c svgProcess(), cannot allocate memory for currentValue\n"); return; }
                 if(currentValue) memset(currentValue, 0, strlen(buff) + strlen(tmp) + 2);
                 strcat(currentValue, tmp);
                 strcat(currentValue, " ");
@@ -1855,11 +1855,11 @@ int readSvg(EmbPattern* pattern, const char* fileName)
     int c = 0;
     char* buff = 0;
 
-    if(!pattern) { embLog_error("format-svg.c readSvg(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-svg.c readSvg(), fileName argument is null\n"); return 0; }
+    if(!pattern) { printf("ERROR: format-svg.c readSvg(), pattern argument is null\n"); return 0; }
+    if(!fileName) { printf("ERROR: format-svg.c readSvg(), fileName argument is null\n"); return 0; }
 
     buff = (char*)malloc(size);
-    if(!buff) { embLog_error("format-svg.c readSvg(), cannot allocate memory for buff\n"); return 0; }
+    if(!buff) { printf("ERROR: format-svg.c readSvg(), cannot allocate memory for buff\n"); return 0; }
 
     svgCreator = SVG_CREATOR_NULL;
 
@@ -1915,7 +1915,7 @@ int readSvg(EmbPattern* pattern, const char* fileName)
                 /* increase buff length - leave room for 0 */
                 size *= 2;
                 buff = (char*)realloc(buff, size);
-                if(!buff) { embLog_error("format-svg.c readSvg(), cannot re-allocate memory for buff\n"); return 0; }
+                if(!buff) { printf("ERROR: format-svg.c readSvg(), cannot re-allocate memory for buff\n"); return 0; }
             }
         }
         while(c != EOF);
@@ -1994,8 +1994,8 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
     char tmpX[32];
     char tmpY[32];
 
-    if(!pattern) { embLog_error("format-svg.c writeSvg(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-svg.c writeSvg(), fileName argument is null\n"); return 0; }
+    if(!pattern) { printf("ERROR: format-svg.c writeSvg(), pattern argument is null\n"); return 0; }
+    if(!fileName) { printf("ERROR: format-svg.c writeSvg(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "w", 0);
     if(!file)

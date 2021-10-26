@@ -4,7 +4,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#ifndef ARDUINO /* ARDUINO TODO: This is temporary. Remove when complete. */
 typedef struct reader_writer_prototype {
     char file_ext[10];
     int (*reader)(EmbPattern*, const char*);
@@ -75,7 +74,6 @@ reader_writer_proto file_type_list[] = {
     {".zsk", readZsk, writeZsk},
     {"END", 0, 0}
 };
-#endif
 
 /*! Returns a pointer to an EmbReaderWriter if the \a fileName is a supported file type. */
 EmbReaderWriter* embReaderWriter_getByFileName(const char* fileName)
@@ -89,16 +87,8 @@ EmbReaderWriter* embReaderWriter_getByFileName(const char* fileName)
     }
 
     rw = (EmbReaderWriter*)malloc(sizeof(EmbReaderWriter));
-    if(!rw) { embLog_error("emb-reader-writer.c embReaderWriter_getByFileName(), cannot allocate memory for rw\n"); return 0; }
+    if(!rw) { printf("ERROR: emb-reader-writer.c embReaderWriter_getByFileName(), cannot allocate memory for rw\n"); return 0; }
 
-    #ifdef ARDUINO /* ARDUINO TODO: This is temporary. Remove when complete. */
-    if(!strcmp(ending, ".exp"))
-    {
-        rw->reader = readExp;
-        rw->writer = writeExp;
-        return rw;
-    }
-    #else /* ARDUINO TODO: This is temporary. Remove when complete. */        
     /* checks the first character to see if it is the end symbol */
     for (i=0; file_type_list[i].file_ext[0]!='E'; i++) {
         if (!strcmp(ending, file_type_list[i].file_ext))
@@ -108,9 +98,8 @@ EmbReaderWriter* embReaderWriter_getByFileName(const char* fileName)
             return rw;
         }
     }
-    #endif /* ARDUINO TODO: This is temporary. Remove when complete. */
 
-    embLog_error("emb-reader-writer.c embReaderWriter_getByFileName(), unsupported file type: %s\n", ending);
+    printf("ERROR: emb-reader-writer.c embReaderWriter_getByFileName(), unsupported file type: %s\n", ending);
     return 0;
 }
 

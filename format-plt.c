@@ -11,13 +11,13 @@ int readPlt(EmbPattern* pattern, const char* fileName)
     char input[512];
     FILE* file = 0;
 
-    if(!pattern) { embLog_error("format-plt.c readPlt(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-plt.c readPlt(), fileName argument is null\n"); return 0; }
+    if(!pattern) { printf("ERROR: format-plt.c readPlt(), pattern argument is null\n"); return 0; }
+    if(!fileName) { printf("ERROR: format-plt.c readPlt(), fileName argument is null\n"); return 0; }
 
     file = fopen(fileName, "rb");
     if(!file)
     {
-        embLog_error("format-plt.c readPlt(), cannot open %s for reading\n", fileName);
+        printf("ERROR: format-plt.c readPlt(), cannot open %s for reading\n", fileName);
         return 0;
     }
 

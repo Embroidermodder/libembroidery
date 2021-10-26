@@ -16,8 +16,8 @@ int readMit(EmbPattern* pattern, const char* fileName)
     unsigned char data[2];
     EmbFile* file = 0;
 
-    if(!pattern) { embLog_error("format-mit.c readMit(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-mit.c readMit(), fileName argument is null\n"); return 0; }
+    if(!pattern) { printf("ERROR: format-mit.c readMit(), pattern argument is null\n"); return 0; }
+    if(!fileName) { printf("ERROR: format-mit.c readMit(), fileName argument is null\n"); return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file)

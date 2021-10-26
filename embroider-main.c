@@ -110,18 +110,18 @@ static int convert(const char *inf, const char *outf)
 
     p = embPattern_create();
     if (!p) { 
-        embLog_error("convert(), cannot allocate memory for p\n");
+        printf("ERROR: convert(), cannot allocate memory for p\n");
         return 1;
     }
 
     reader = embReaderWriter_getByFileName(inf);
     if (!reader) {
-        embLog_error("convert(), unsupported read file type: %s\n", inf);
+        printf("ERROR: convert(), unsupported read file type: %s\n", inf);
         embPattern_free(p);
         return 1;
     }
     if (!reader->reader(p, inf)) {
-        embLog_error("convert(), reading file was unsuccessful: %s\n", inf);
+        printf("ERROR: convert(), reading file was unsuccessful: %s\n", inf);
         free(reader);
         embPattern_free(p);
         return 1;
@@ -138,12 +138,12 @@ static int convert(const char *inf, const char *outf)
 
     writer = embReaderWriter_getByFileName(outf);
     if (!writer) {
-        embLog_error("convert(), unsupported write file type: %s\n", outf);
+        printf("ERROR: convert(), unsupported write file type: %s\n", outf);
         embPattern_free(p);
         return 1;
     }
     if (!writer->writer(p, outf)) {
-        embLog_error("convert(), writing file %s was unsuccessful\n", outf);
+        printf("ERROR: convert(), writing file %s was unsuccessful\n", outf);
         free(writer);
         embPattern_free(p);
         return 1;

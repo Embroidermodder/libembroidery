@@ -70,7 +70,6 @@ set(LIBRARY_SOURCE_FILES
     format-vp3.c
     format-xxx.c
     format-zsk.c
-    hashtable.c
     thread-color.c
     libembroidery.c
 )

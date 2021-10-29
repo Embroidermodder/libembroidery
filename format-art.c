@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readArt(EmbPattern* pattern, const char* fileName)
+char readArt(EmbPattern* pattern, const char* fileName)
 {
     if (!validateReadPattern(pattern, fileName, "readArt")) return 0;
 
@@ -13,7 +13,7 @@ int readArt(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeArt(EmbPattern* pattern, const char* fileName)
+char writeArt(EmbPattern* pattern, const char* fileName)
 {
     if (!validateWritePattern(pattern, fileName, "writeArt")) return 0;
 

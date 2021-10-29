@@ -89,8 +89,8 @@ static void formats(void)
     for (i=0; i<numberOfFormats; i++) {
         extension = formatTable[i].extension;
         description = formatTable[i].description;
-        readerState = formatTable[i].reader;
-        writerState = formatTable[i].writer;
+        readerState = formatTable[i].reader_state;
+        writerState = formatTable[i].writer_state;
 
         numReaders += readerState != ' '? 1 : 0;
         numWriters += writerState != ' '? 1 : 0;
@@ -107,50 +107,47 @@ static void formats(void)
 static int convert(const char *inf, const char *outf)
 {
     EmbPattern* p = 0;
-    int formatType;
-    EmbReaderWriter* reader = 0, *writer = 0;
+    int formatType, reader, writer;
 
     p = embPattern_create();
-    if (!p) { 
+    if (!p) {
         printf("ERROR: convert(), cannot allocate memory for p\n");
         return 1;
     }
 
-    reader = embReaderWriter_getByFileName(inf);
-    if (!reader) {
+    reader = emb_identify_format(inf);
+    if (reader < 0) {
         printf("ERROR: convert(), unsupported read file type: %s\n", inf);
         embPattern_free(p);
         return 1;
     }
-    if (!reader->reader(p, inf)) {
-        printf("ERROR: convert(), reading file was unsuccessful: %s\n", inf);
-        free(reader);
+    writer = emb_identify_format(outf);
+    if (writer < 0) {
+        printf("ERROR: convert(), unsupported write file type: %s\n", outf);
         embPattern_free(p);
         return 1;
     }
-    free(reader);
 
-    formatType = embFormat_typeFromName(inf);
+    if (!formatTable[reader].reader(p, inf)) {
+        printf("ERROR: convert(), reading file was unsuccessful: %s\n", inf);
+        embPattern_free(p);
+        return 1;
+    }
+
+    formatType = formatTable[reader].type;
     if (formatType == EMBFORMAT_OBJECTONLY) {
-        formatType = embFormat_typeFromName(outf);
+        formatType = formatTable[writer].type;
         if (formatType == EMBFORMAT_STITCHONLY) {
             embPattern_movePolylinesToStitchList(p);
         }
     }
 
-    writer = embReaderWriter_getByFileName(outf);
-    if (!writer) {
-        printf("ERROR: convert(), unsupported write file type: %s\n", outf);
-        embPattern_free(p);
-        return 1;
-    }
-    if (!writer->writer(p, outf)) {
+    if (!formatTable[writer].writer(p, outf)) {
         printf("ERROR: convert(), writing file %s was unsuccessful\n", outf);
-        free(writer);
         embPattern_free(p);
         return 1;
     }
-    free(writer);
+
     embPattern_free(p);
     return 0;
 }
@@ -527,11 +524,7 @@ static int testThreadColor(void)
 static int testEmbFormat(void)
 {
     const char*  tName = "example.zsk";
-    const char *extension = embFormat_extensionFromName(tName);
-    const char *description = embFormat_descriptionFromName(tName);
-    char reader = embFormat_readerStateFromName(tName);
-    char writer = embFormat_writerStateFromName(tName);
-    int type = embFormat_typeFromName(tName);
+    int format = emb_identify_format(tName);
 
     printf("Filename   : %s\n"
            "Extension  : %s\n"
@@ -540,17 +533,17 @@ static int testEmbFormat(void)
            "Writer     : %c\n"
            "Type       : %d\n\n",
             tName,
-            extension,
-            description,
-            reader,
-            writer,
-            type);
+            formatTable[format].extension,
+            formatTable[format].description,
+            formatTable[format].reader_state,
+            formatTable[format].writer_state,
+            formatTable[format].type);
 
-    if (strcmp(extension, ".zsk")) return 20;
-    if (strcmp(description, "ZSK USA Embroidery Format")) return 21;
-    if (reader != 'U') return 22;
-    if (writer != ' ') return 23;
-    if (type != 1) return 24;
+    if (strcmp(formatTable[format].extension, ".zsk")) return 20;
+    if (strcmp(formatTable[format].description, "ZSK USA Embroidery Format")) return 21;
+    if (formatTable[format].reader_state != 'U') return 22;
+    if (formatTable[format].writer_state != ' ') return 23;
+    if (formatTable[format].type != 1) return 24;
     return 0;
 }
 
@@ -771,39 +764,6 @@ static int testThreadColor(void)
         tBrand,
         tNum, /* Solution: 1833 */
         tName); /* Solution: Pumpkin Pie */
-    return 0;
-}
-
-static int testEmbFormat(void)
-{
-    EmbFormatList f;
-    const char* tName = "example.zsk";
-    int code = embReaderWriter_getByFileName(tName);
-    f = embFormat_data(code);
-
-    printf("Filename   : %s\n"
-           "Extension  : %s\n"
-           "Description: %s\n"
-           "Reader     : %c\n"
-           "Writer     : %c\n"
-           "Type       : %d\n\n",
-        tName,
-        f.extension,
-        f.description,
-        f.reader,
-        f.writer,
-        f.type);
-
-    if (strcmp(f.extension, ".zsk"))
-        return 20;
-    if (strcmp(f.description, "ZSK USA Embroidery Format"))
-        return 21;
-    if (f.reader != 'U')
-        return 22;
-    if (f.writer != ' ')
-        return 23;
-    if (f.type != 1)
-        return 24;
     return 0;
 }
 

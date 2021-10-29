@@ -32,7 +32,7 @@ static double pcmDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPcm(EmbPattern* pattern, const char* fileName)
+char readPcm(EmbPattern* pattern, const char* fileName)
 {
     int i = 0;
     unsigned char b[9];
@@ -87,7 +87,7 @@ int readPcm(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePcm(EmbPattern* pattern, const char* fileName)
+char writePcm(EmbPattern* pattern, const char* fileName)
 {
     if (!validateWritePattern(pattern, fileName, "writePcm")) {
         return 0;

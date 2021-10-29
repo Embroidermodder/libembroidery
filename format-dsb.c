@@ -4,7 +4,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readDsb(EmbPattern* pattern, const char* fileName)
+char readDsb(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
 
@@ -56,7 +56,7 @@ int readDsb(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeDsb(EmbPattern* pattern, const char* fileName)
+char writeDsb(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file;
     if (!validateWritePattern(pattern, fileName, "writeDsb")) return 0;

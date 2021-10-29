@@ -3,7 +3,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readRgb(EmbPattern* pattern, const char* fileName)
+char readRgb(EmbPattern* pattern, const char* fileName)
 {
     int i, numberOfColors;
     EmbFile* file = 0;
@@ -38,7 +38,7 @@ int readRgb(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeRgb(EmbPattern* pattern, const char* fileName)
+char writeRgb(EmbPattern* pattern, const char* fileName)
 {
     int i;
     EmbFile* file = 0;

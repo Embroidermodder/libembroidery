@@ -29,7 +29,7 @@ static void maxEncode(EmbFile* file, int x, int y)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readMax(EmbPattern* pattern, const char* fileName)
+char readMax(EmbPattern* pattern, const char* fileName)
 {
     unsigned char b[8];
     double dx, dy;
@@ -65,7 +65,7 @@ int readMax(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeMax(EmbPattern* pattern, const char* fileName)
+char writeMax(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
     EmbStitchList* pointer = 0;

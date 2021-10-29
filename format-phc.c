@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPhc(EmbPattern* pattern, const char* fileName)
+char readPhc(EmbPattern* pattern, const char* fileName)
 {
     int colorChanges, version, bytesInSection2;
     unsigned short pecOffset, bytesInSection, bytesInSection3;
@@ -48,7 +48,7 @@ int readPhc(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePhc(EmbPattern* pattern, const char* fileName)
+char writePhc(EmbPattern* pattern, const char* fileName)
 {
     if (!validateWritePattern(pattern, fileName, "writePhc")) {
         return 0;

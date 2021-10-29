@@ -12,7 +12,7 @@ static char xxxDecodeByte(unsigned char inputByte)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readXxx(EmbPattern* pattern, const char* fileName)
+char readXxx(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
     unsigned char b0, b1;
@@ -177,7 +177,7 @@ static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeXxx(EmbPattern* pattern, const char* fileName)
+char writeXxx(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
     int i;

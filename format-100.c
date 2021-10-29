@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int read100(EmbPattern* pattern, const char* fileName)
+char read100(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
     int x, y;
@@ -34,7 +34,7 @@ int read100(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int write100(EmbPattern* pattern, const char* fileName)
+char write100(EmbPattern* pattern, const char* fileName)
 {
     EmbFile *file;
     if (!validateWritePattern(pattern, fileName, "write100")) return 0;

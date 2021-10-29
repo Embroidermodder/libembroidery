@@ -72,7 +72,7 @@ static short shvDecodeShort(unsigned short inputByte)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readShv(EmbPattern* pattern, const char* fileName)
+char readShv(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
     int i;
@@ -198,7 +198,7 @@ int readShv(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeShv(EmbPattern* pattern, const char* fileName)
+char writeShv(EmbPattern* pattern, const char* fileName)
 {
     if (!validateWritePattern(pattern, fileName, "writeShv"))
         return 0;

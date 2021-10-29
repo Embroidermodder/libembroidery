@@ -3,7 +3,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPes(EmbPattern* pattern, const char* fileName)
+char readPes(EmbPattern* pattern, const char* fileName)
 {
     int pecstart, numColors, x;
     EmbFile* file = 0;
@@ -482,7 +482,7 @@ static void pesWriteEmbOneSection(EmbPattern* pattern, EmbFile* file)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePes(EmbPattern* pattern, const char* fileName)
+char writePes(EmbPattern* pattern, const char* fileName)
 {
     int pecLocation;
     EmbFile* file = 0;

@@ -119,7 +119,7 @@ static unsigned char husEncodeStitchType(int st)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readHus(EmbPattern* pattern, const char* fileName)
+char readHus(EmbPattern* pattern, const char* fileName)
 {
     int fileLength;
     int magicCode, numberOfStitches, numberOfColors;
@@ -212,7 +212,7 @@ int readHus(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeHus(EmbPattern* pattern, const char* fileName)
+char writeHus(EmbPattern* pattern, const char* fileName)
 {
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor;

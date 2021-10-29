@@ -4,7 +4,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPlt(EmbPattern* pattern, const char* fileName)
+char readPlt(EmbPattern* pattern, const char* fileName)
 {
     double x, y;
     double scalingFactor = 40;
@@ -52,7 +52,7 @@ int readPlt(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePlt(EmbPattern* pattern, const char* fileName)
+char writePlt(EmbPattern* pattern, const char* fileName)
 {
     /* TODO: pointer safety */
     double scalingFactor = 40;

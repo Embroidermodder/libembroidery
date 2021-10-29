@@ -22,7 +22,7 @@ static int decodeRecordFlags(unsigned char b2)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readT01(EmbPattern* pattern, const char* fileName)
+char readT01(EmbPattern* pattern, const char* fileName)
 {
     unsigned char b[3];
     EmbFile* file = 0;
@@ -152,7 +152,7 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeT01(EmbPattern* pattern, const char* fileName)
+char writeT01(EmbPattern* pattern, const char* fileName)
 {
 	EmbRect boundingRect;
 	EmbFile* file = 0;

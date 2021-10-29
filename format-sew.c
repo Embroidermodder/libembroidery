@@ -10,7 +10,7 @@ static char sewDecode(unsigned char inputByte)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readSew(EmbPattern* pattern, const char* fileName)
+char readSew(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file;
     int i, flags, numberOfColors, fileLength;
@@ -119,7 +119,7 @@ static void sewEncode(unsigned char* b, char dx, char dy, int flags)
 }
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeSew(EmbPattern* pattern, const char* fileName)
+char writeSew(EmbPattern* pattern, const char* fileName)
 {
     int colorlistSize, minColors, i, thr;
     EmbFile* file;

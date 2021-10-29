@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int read10o(EmbPattern* pattern, const char* fileName)
+char read10o(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file;
 
@@ -52,7 +52,7 @@ int read10o(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int write10o(EmbPattern* pattern, const char* fileName)
+char write10o(EmbPattern* pattern, const char* fileName)
 {
     EmbFile *file;
     if (!validateWritePattern(pattern, fileName, "write10o")) return 0;

@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readGnc(EmbPattern* pattern, const char* fileName)
+char readGnc(EmbPattern* pattern, const char* fileName)
 {
     if (!validateReadPattern(pattern, fileName, "readGnc")) {
         return 0;
@@ -15,7 +15,7 @@ int readGnc(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeGnc(EmbPattern* pattern, const char* fileName)
+char writeGnc(EmbPattern* pattern, const char* fileName)
 {
     if (!validateWritePattern(pattern, fileName, "writeGnc")) {
         return 0;

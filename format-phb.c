@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPhb(EmbPattern* pattern, const char* fileName)
+char readPhb(EmbPattern* pattern, const char* fileName)
 {
     unsigned int fileOffset;
     short colorCount;
@@ -63,7 +63,7 @@ int readPhb(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePhb(EmbPattern* pattern, const char* fileName)
+char writePhb(EmbPattern* pattern, const char* fileName)
 {
     if (!validateWritePattern(pattern, fileName, "writePhb")) {
         return 0;

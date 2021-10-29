@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readBmc(EmbPattern* pattern, const char* fileName)
+char readBmc(EmbPattern* pattern, const char* fileName)
 {
     if (!validateReadPattern(pattern, fileName, "readBmc")) return 0;
 
@@ -13,7 +13,7 @@ int readBmc(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeBmc(EmbPattern* pattern, const char* fileName)
+char writeBmc(EmbPattern* pattern, const char* fileName)
 {
     if (!validateWritePattern(pattern, fileName, "writeBmc")) return 0;
 

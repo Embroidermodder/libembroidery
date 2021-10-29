@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readInb(EmbPattern* pattern, const char* fileName)
+char readInb(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file;
     unsigned char fileDescription[8];
@@ -72,7 +72,7 @@ int readInb(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeInb(EmbPattern* pattern, const char* fileName)
+char writeInb(EmbPattern* pattern, const char* fileName)
 {
     if (!validateWritePattern(pattern, fileName, "writeInb"))
         return 0;

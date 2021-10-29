@@ -212,7 +212,7 @@ static void pecEncodeStop(EmbFile* file, unsigned char val)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readPec(EmbPattern* pattern, const char* fileName)
+char readPec(EmbPattern* pattern, const char* fileName)
 {
     unsigned int graphicsOffset;
     unsigned char colorChanges;
@@ -490,7 +490,7 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writePec(EmbPattern* pattern, const char* fileName)
+char writePec(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
 

@@ -84,7 +84,7 @@ typedef struct VipHeader_
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readVip(EmbPattern* pattern, const char* fileName)
+char readVip(EmbPattern* pattern, const char* fileName)
 {
     int fileLength;
     int i;
@@ -220,7 +220,7 @@ static unsigned char vipEncodeStitchType(int st)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeVip(EmbPattern* pattern, const char* fileName)
+char writeVip(EmbPattern* pattern, const char* fileName)
 {
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor;

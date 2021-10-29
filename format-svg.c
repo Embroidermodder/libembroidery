@@ -1847,7 +1847,7 @@ void svgProcess(int c, const char* buff)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readSvg(EmbPattern* pattern, const char* fileName)
+char readSvg(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
     int size = 1024;
@@ -1982,7 +1982,7 @@ int readSvg(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeSvg(EmbPattern* pattern, const char* fileName)
+char writeSvg(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
     EmbRect boundingRect;

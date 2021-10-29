@@ -108,7 +108,7 @@ static vp3Hoop vp3ReadHoopSection(EmbFile* file)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readVp3(EmbPattern* pattern, const char* fileName)
+char readVp3(EmbPattern* pattern, const char* fileName)
 {
     unsigned char magicString[5];
     unsigned char some;
@@ -265,7 +265,7 @@ void vp3PatchByteCount(EmbFile* file, int offset, int adjustment)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeVp3(EmbPattern* pattern, const char* fileName)
+char writeVp3(EmbPattern* pattern, const char* fileName)
 {
     EmbFile *file = 0;
     EmbRect bounds;

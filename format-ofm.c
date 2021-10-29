@@ -178,7 +178,7 @@ static void ofmReadExpanded(EmbFile* file, EmbPattern* p)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readOfm(EmbPattern* pattern, const char* fileName)
+char readOfm(EmbPattern* pattern, const char* fileName)
 {
     int unknownCount = 0;
     int key = 0, classNameLength;
@@ -243,7 +243,7 @@ int readOfm(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeOfm(EmbPattern* pattern, const char* fileName)
+char writeOfm(EmbPattern* pattern, const char* fileName)
 {
     if (!validateWritePattern(pattern, fileName, "writeOfm")) {
         return 0;

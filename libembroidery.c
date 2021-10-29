@@ -16,145 +16,71 @@
 
 static EmbColor black = {0,0,0};
 
-typedef struct reader_writer_prototype {
-    char file_ext[10];
-    int (*reader)(EmbPattern*, const char*);
-    int (*writer)(EmbPattern*, const char*);
-} reader_writer_proto;
-
-reader_writer_proto file_type_list[] = {
-    {".10o", read10o, write10o},
-    {".100", read100, write100},
-    {".art", readArt, writeArt},
-    {".bmc", readBmc, writeBmc},
-    {".bro", readBro, writeBro},
-    {".cnd", readCnd, writeCnd},
-    {".col", readCol, writeCol},
-    {".csd", readCsd, writeCsd},
-    {".csv", readCsv, writeCsv},
-    {".dat", readDat, writeDat},
-    {".dem", readDem, writeDem},
-    {".dsb", readDsb, writeDsb},
-    {".dst", readDst, writeDst},
-    {".dsz", readDsz, writeDsz},
-    {".dxf", readDxf, writeDxf},
-    {".edr", readEdr, writeEdr},
-    {".emd", readEmd, writeEmd},
-    {".exp", readExp, writeExp},
-    {".exy", readExy, writeExy},
-    {".eys", readEys, writeEys},
-    {".fxy", readFxy, writeFxy},
-    {".gc", readGc, writeGc},
-    {".gnc", readGnc, writeGnc},
-    {".gt", readGt, writeGt},
-    {".hus", readHus, writeHus},
-    {".inb", readInb, writeInb},
-    {".inf", readInf, writeInf},
-    {".jef", readJef, writeJef},
-    {".ksm", readKsm, writeKsm},
-    {".max", readMax, writeMax},
-    {".mit", readMit, writeMit},
-    {".new", readNew, writeNew},
-    {".ofm", readOfm, writeOfm},
-    {".pcd", readPcd, writePcd},
-    {".pcm", readPcm, writePcm},
-    {".pcq", readPcq, writePcq},
-    {".pcs", readPcs, writePcs},
-    {".pec", readPec, writePec},
-    {".pel", readPel, writePel},
-    {".pem", readPem, writePem},
-    {".pes", readPes, writePes},
-    {".phb", readPhb, writePhb},
-    {".phc", readPhc, writePhc},
-    {".plt", readPlt, writePlt},
-    {".rgb", readRgb, writeRgb},
-    {".sew", readSew, writeSew},
-    {".shv", readShv, writeShv},
-    {".sst", readSst, writeSst},
-    {".stx", readStx, writeStx},
-    {".svg", readSvg, writeSvg},
-    {".t01", readT01, writeT01},
-    {".t09", readT09, writeT09},
-    {".tap", readTap, writeTap},
-    {".thr", readThr, writeThr},
-    {".txt", readTxt, writeTxt},
-    {".u00", readU00, writeU00},
-    {".u01", readU01, writeU01},
-    {".vip", readVip, writeVip},
-    {".vp3", readVp3, writeVp3},
-    {".xxx", readXxx, writeXxx},
-    {".zsk", readZsk, writeZsk},
-    {"END", 0, 0}
-};
-
 /* TODO: This list needs reviewed in case some stitch formats also can contain object data (EMBFORMAT_STCHANDOBJ). */
 
-EmbFormatList formatTable[100] = {
-    {".10o", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY},
-    {".100", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY},
-    {".art", "Bernina Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY},
-    {".bmc", "Bitmap Cache Embroidery Format",     ' ', ' ', EMBFORMAT_STITCHONLY},
-    {".bro", "Bits & Volts Embroidery Format",     'U', ' ', EMBFORMAT_STITCHONLY},
-    {".cnd", "Melco Embroidery Format",            ' ', ' ', EMBFORMAT_STITCHONLY},
-    {".col", "Embroidery Thread Color Format",     'U', 'U', EMBFORMAT_STITCHONLY},
-    {".csd", "Singer Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY},
-    {".csv", "Comma Separated Values Format",      'U', 'U', EMBFORMAT_STITCHONLY},
-    {".dat", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
-    {".dem", "Melco Embroidery Format",            ' ', ' ', EMBFORMAT_STITCHONLY},
-    {".dsb", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
-    {".dst", "Tajima Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
-    {".dsz", "ZSK USA Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
-    {".dxf", "Drawing Exchange Format",            ' ', ' ', EMBFORMAT_OBJECTONLY},
-    {".edr", "Embird Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
-    {".emd", "Elna Embroidery Format",             'U', ' ', EMBFORMAT_STITCHONLY},
-    {".exp", "Melco Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
-    {".exy", "Eltac Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
-    {".eys", "Sierra Expanded Embroidery Format",  ' ', ' ', EMBFORMAT_STITCHONLY},
-    {".fxy", "Fortron Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
-    {".gc",  "Smoothie G-Code Format",             ' ', ' ', EMBFORMAT_STITCHONLY},
-    {".gnc", "Great Notions Embroidery Format",    ' ', ' ', EMBFORMAT_STITCHONLY},
-    {".gt",  "Gold Thread Embroidery Format",      'U', ' ', EMBFORMAT_STITCHONLY},
-    {".hus", "Husqvarna Viking Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY},
-    {".inb", "Inbro Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
-    {".inf", "Embroidery Color Format",            'U', 'U', EMBFORMAT_STITCHONLY},
-    {".jef", "Janome Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
-    {".ksm", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
-    {".max", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
-    {".mit", "Mitsubishi Embroidery Format",       'U', ' ', EMBFORMAT_STITCHONLY},
-    {".new", "Ameco Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
-    {".ofm", "Melco Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
-    {".pcd", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
-    {".pcm", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
-    {".pcq", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
-    {".pcs", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
-    {".pec", "Brother Embroidery Format",          'U', 'U', EMBFORMAT_STITCHONLY},
-    {".pel", "Brother Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY},
-    {".pem", "Brother Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY},
-    {".pes", "Brother Embroidery Format",          'U', 'U', EMBFORMAT_STITCHONLY},
-    {".phb", "Brother Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
-    {".phc", "Brother Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
-    {".plt", "AutoCAD Plot Drawing Format",        'U', 'U', EMBFORMAT_STITCHONLY},
-    {".rgb", "RGB Embroidery Format",              'U', 'U', EMBFORMAT_STITCHONLY},
-    {".sew", "Janome Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
-    {".shv", "Husqvarna Viking Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY},
-    {".sst", "Sunstar Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
-    {".stx", "Data Stitch Embroidery Format",      'U', ' ', EMBFORMAT_STITCHONLY},
-    {".svg", "Scalable Vector Graphics",           'U', 'U', EMBFORMAT_OBJECTONLY},
-    {".t01", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
-    {".t09", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
-    {".tap", "Happy Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
-    {".thr", "ThredWorks Embroidery Format",       'U', 'U', EMBFORMAT_STITCHONLY},
-    {".txt", "Text File",                          ' ', 'U', EMBFORMAT_STITCHONLY},
-    {".u00", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
-    {".u01", "Barudan Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY},
-    {".vip", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY},
-    {".vp3", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY},
-    {".xxx", "Singer Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY},
-    {".zsk", "ZSK USA Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY},
-    {"END",  "END",                                ' ', ' ', 0,                  }
+EmbFormatList formatTable[numberOfFormats] = {
+    {".10o", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY, read10o, write10o},
+    {".100", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY, read100, write100},
+    {".art", "Bernina Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY, readArt, writeArt},
+    {".bmc", "Bitmap Cache Embroidery Format",     ' ', ' ', EMBFORMAT_STITCHONLY, readBmc, writeBmc},
+    {".bro", "Bits & Volts Embroidery Format",     'U', ' ', EMBFORMAT_STITCHONLY, readBro, writeBro},
+    {".cnd", "Melco Embroidery Format",            ' ', ' ', EMBFORMAT_STITCHONLY, readCnd, writeCnd},
+    {".col", "Embroidery Thread Color Format",     'U', 'U', EMBFORMAT_STITCHONLY, readCol, writeCol},
+    {".csd", "Singer Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY, readCsd, writeCsd},
+    {".csv", "Comma Separated Values Format",      'U', 'U', EMBFORMAT_STITCHONLY, readCsv, writeCsv},
+    {".dat", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY, readDat, writeDat},
+    {".dem", "Melco Embroidery Format",            ' ', ' ', EMBFORMAT_STITCHONLY, readDem, writeDem},
+    {".dsb", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY, readDsb, writeDsb},
+    {".dst", "Tajima Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY, readDst, writeDst},
+    {".dsz", "ZSK USA Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY, readDsz, writeDsz},
+    {".dxf", "Drawing Exchange Format",            ' ', ' ', EMBFORMAT_OBJECTONLY, readDxf, writeDxf},
+    {".edr", "Embird Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY, readEdr, writeEdr},
+    {".emd", "Elna Embroidery Format",             'U', ' ', EMBFORMAT_STITCHONLY, readEmd, writeEmd},
+    {".exp", "Melco Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY, readExp, writeExp},
+    {".exy", "Eltac Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY, readExy, writeExy},
+    {".eys", "Sierra Expanded Embroidery Format",  ' ', ' ', EMBFORMAT_STITCHONLY, readEys, writeEys},
+    {".fxy", "Fortron Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY, readFxy, writeFxy},
+    {".gc",  "Smoothie G-Code Format",             ' ', ' ', EMBFORMAT_STITCHONLY, readGc, writeGc},
+    {".gnc", "Great Notions Embroidery Format",    ' ', ' ', EMBFORMAT_STITCHONLY, readGnc, writeGnc},
+    {".gt",  "Gold Thread Embroidery Format",      'U', ' ', EMBFORMAT_STITCHONLY, readGt, writeGt},
+    {".hus", "Husqvarna Viking Embroidery Format", 'U', 'U', EMBFORMAT_STITCHONLY, readHus, writeHus},
+    {".inb", "Inbro Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY, readInb, writeInb},
+    {".inf", "Embroidery Color Format",            'U', 'U', EMBFORMAT_STITCHONLY, readInf, writeInf},
+    {".jef", "Janome Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY, readJef, writeJef},
+    {".ksm", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY, readKsm, writeKsm},
+    {".max", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY, readMax, writeMax},
+    {".mit", "Mitsubishi Embroidery Format",       'U', ' ', EMBFORMAT_STITCHONLY, readMit, writeMit},
+    {".new", "Ameco Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY, readNew, writeNew},
+    {".ofm", "Melco Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY, readOfm, writeOfm},
+    {".pcd", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY, readPcd, writePcd},
+    {".pcm", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY, readPcm, writePcm},
+    {".pcq", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY, readPcq, writePcq},
+    {".pcs", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY, readPcs, writePcs},
+    {".pec", "Brother Embroidery Format",          'U', 'U', EMBFORMAT_STITCHONLY, readPec, writePec},
+    {".pel", "Brother Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY, readPel, writePel},
+    {".pem", "Brother Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY, readPem, writePem},
+    {".pes", "Brother Embroidery Format",          'U', 'U', EMBFORMAT_STITCHONLY, readPes, writePes},
+    {".phb", "Brother Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY, readPhb, writePhb},
+    {".phc", "Brother Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY, readPhc, writePhc},
+    {".plt", "AutoCAD Plot Drawing Format",        'U', 'U', EMBFORMAT_STITCHONLY, readPlt, writePlt},
+    {".rgb", "RGB Embroidery Format",              'U', 'U', EMBFORMAT_STITCHONLY, readRgb, writeRgb},
+    {".sew", "Janome Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY, readSew, writeSew},
+    {".shv", "Husqvarna Viking Embroidery Format", 'U', ' ', EMBFORMAT_STITCHONLY, readShv, writeShv},
+    {".sst", "Sunstar Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY, readSst, writeSst},
+    {".stx", "Data Stitch Embroidery Format",      'U', ' ', EMBFORMAT_STITCHONLY, readStx, writeStx},
+    {".svg", "Scalable Vector Graphics",           'U', 'U', EMBFORMAT_OBJECTONLY, readSvg, writeSvg},
+    {".t01", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY, readT01, writeT01},
+    {".t09", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY, readT09, writeT09},
+    {".tap", "Happy Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY, readTap, writeTap},
+    {".thr", "ThredWorks Embroidery Format",       'U', 'U', EMBFORMAT_STITCHONLY, readThr, writeThr},
+    {".txt", "Text File",                          ' ', 'U', EMBFORMAT_STITCHONLY, readTxt, writeTxt},
+    {".u00", "Barudan Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY, readU00, writeU00},
+    {".u01", "Barudan Embroidery Format",          ' ', ' ', EMBFORMAT_STITCHONLY, readU01, writeU01},
+    {".vip", "Pfaff Embroidery Format",            'U', ' ', EMBFORMAT_STITCHONLY, readVip, writeVip},
+    {".vp3", "Pfaff Embroidery Format",            'U', 'U', EMBFORMAT_STITCHONLY, readVp3, writeVp3},
+    {".xxx", "Singer Embroidery Format",           'U', 'U', EMBFORMAT_STITCHONLY, readXxx, writeXxx},
+    {".zsk", "ZSK USA Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY, readZsk, writeZsk}
 };
-
-int numberOfFormats = 61;
 
 const unsigned int NumberOfDifatEntriesInHeader = 109;
 const unsigned int sizeOfFatEntry = sizeof(unsigned int);
@@ -2415,17 +2341,14 @@ void embPattern_changeColor(EmbPattern* p, int index)
  *  Returns \c true if successful, otherwise returns \c false. */
 int embPattern_read(EmbPattern* pattern, const char* fileName) /* TODO: Write test case using this convenience function. */
 {
-    EmbReaderWriter* reader = 0;
-    int result = 0;
+    int reader, result;
 
     if(!pattern) { printf("ERROR: emb-pattern.c embPattern_read(), pattern argument is null\n"); return 0; }
     if(!fileName) { printf("ERROR: emb-pattern.c embPattern_read(), fileName argument is null\n"); return 0; }
 
-    reader = embReaderWriter_getByFileName(fileName);
-    if(!reader) { printf("ERROR: emb-pattern.c embPattern_read(), unsupported read file type: %s\n", fileName); return 0; }
-    result = reader->reader(pattern, fileName);
-    free(reader);
-    reader = 0;
+    reader = emb_identify_format(fileName);
+    if(reader < 0) { printf("ERROR: emb-pattern.c embPattern_read(), unsupported read file type: %s\n", fileName); return 0; }
+    result = formatTable[reader].reader(pattern, fileName);
     return result;
 }
 
@@ -2433,17 +2356,14 @@ int embPattern_read(EmbPattern* pattern, const char* fileName) /* TODO: Write te
  *  Returns \c true if successful, otherwise returns \c false. */
 int embPattern_write(EmbPattern* pattern, const char* fileName) /* TODO: Write test case using this convenience function. */
 {
-    EmbReaderWriter* writer = 0;
-    int result = 0;
+    int writer, result;
 
     if(!pattern) { printf("ERROR: emb-pattern.c embPattern_write(), pattern argument is null\n"); return 0; }
     if(!fileName) { printf("ERROR: emb-pattern.c embPattern_write(), fileName argument is null\n"); return 0; }
 
-    writer = embReaderWriter_getByFileName(fileName);
+    writer = emb_identify_format(fileName);
     if(!writer) { printf("ERROR: emb-pattern.c embPattern_write(), unsupported write file type: %s\n", fileName); return 0; }
-    result = writer->writer(pattern, fileName);
-    free(writer);
-    writer = 0;
+    result = formatTable[writer].writer(pattern, fileName);
     return result;
 }
 
@@ -2877,7 +2797,6 @@ void embPattern_center(EmbPattern* p)
 void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
 {
     char hasRead = 0;
-    EmbReaderWriter* colorFile = 0;
     char extractName[200], *dotPos;
 
     if(!p) { printf("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), p argument is null\n"); return; }
@@ -2887,35 +2806,22 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
     dotPos = strrchr(extractName, '.');
     *dotPos = 0;
     strcat(extractName, ".edr");
-    colorFile = embReaderWriter_getByFileName(extractName);
-    if (colorFile) {
-        hasRead = (char)colorFile->reader(p, extractName);
-    }
+    hasRead = readEdr(p, extractName);
     if (!hasRead) {
         *dotPos = 0;
         strcat(extractName,".rgb");
-        colorFile = embReaderWriter_getByFileName(extractName);
-        if (colorFile) {
-            hasRead = (char)colorFile->reader(p, extractName);
-        }
+        hasRead = readRgb(p, extractName);
     }
     if (!hasRead) {
         *dotPos = 0;
         strcat(extractName,".col");
-        colorFile = embReaderWriter_getByFileName(extractName);
-        if (colorFile) {
-            hasRead = (char)colorFile->reader(p, extractName);
-        }
+        hasRead = readCol(p, extractName);
     }
     if (!hasRead) {
         *dotPos = 0;
         strcat(extractName,".inf");
-        colorFile = embReaderWriter_getByFileName(extractName);
-        if (colorFile) {
-            hasRead = (char)colorFile->reader(p, extractName);
-        }
+        hasRead = readInf(p, extractName);
     }
-    free(colorFile);
 }
 
 /*! Frees all memory allocated in the pattern (\a p). */
@@ -3086,32 +2992,20 @@ void embPattern_end(EmbPattern *p)
     }
 }
 
-/*! Returns a pointer to an EmbReaderWriter if the \a fileName is a supported file type. */
-EmbReaderWriter* embReaderWriter_getByFileName(const char* fileName)
+int emb_identify_format(char *fileName)
 {
-    int i = 0;
+    int i;
     char ending[5];
-    EmbReaderWriter* rw = 0;
-
     if (!embFormat_getExtension(fileName, ending)) {
         return 0;
     }
 
-    rw = (EmbReaderWriter*)malloc(sizeof(EmbReaderWriter));
-    if(!rw) { printf("ERROR: emb-reader-writer.c embReaderWriter_getByFileName(), cannot allocate memory for rw\n"); return 0; }
-
-    /* checks the first character to see if it is the end symbol */
-    for (i=0; file_type_list[i].file_ext[0]!='E'; i++) {
-        if (!strcmp(ending, file_type_list[i].file_ext))
-        {
-            rw->reader = file_type_list[i].reader;
-            rw->writer = file_type_list[i].writer;
-            return rw;
+    for (i=0; i<numberOfFormats; i++) {
+        if (!strcmp(ending, formatTable[i].extension)) {
+            return i;
         }
     }
-
-    printf("ERROR: emb-reader-writer.c embReaderWriter_getByFileName(), unsupported file type: %s\n", ending);
-    return 0;
+    return -1;
 }
 
 double embRect_x(EmbRect rect)

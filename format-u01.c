@@ -4,7 +4,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readU01(EmbPattern* pattern, const char* fileName)
+char readU01(EmbPattern* pattern, const char* fileName)
 {
     int fileLength, negativeX = 0, negativeY = 0, flags = NORMAL;
     char dx, dy;
@@ -54,7 +54,7 @@ int readU01(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeU01(EmbPattern* pattern, const char* fileName)
+char writeU01(EmbPattern* pattern, const char* fileName)
 {
     if (!validateWritePattern(pattern, fileName, "writeU01")) {
         return 0;

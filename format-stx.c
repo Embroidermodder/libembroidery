@@ -91,7 +91,7 @@ static int stxReadThread(StxThread* thread, EmbFile* file)
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readStx(EmbPattern* pattern, const char* fileName)
+char readStx(EmbPattern* pattern, const char* fileName)
 {
     int i, threadCount;
     unsigned char* gif = 0;
@@ -227,7 +227,7 @@ int readStx(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeStx(EmbPattern* pattern, const char* fileName)
+char writeStx(EmbPattern* pattern, const char* fileName)
 {
     if (!validateWritePattern(pattern, fileName, "writeStx")) {
         return 0;

@@ -2,7 +2,7 @@
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readBro(EmbPattern* pattern, const char* fileName)
+char readBro(EmbPattern* pattern, const char* fileName)
 {
     unsigned char x55;
     short unknown1, unknown2, unknown3, unknown4, moreBytesToEnd;
@@ -64,7 +64,7 @@ int readBro(EmbPattern* pattern, const char* fileName)
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeBro(EmbPattern* pattern, const char* fileName)
+char writeBro(EmbPattern* pattern, const char* fileName)
 {
     if (!validateWritePattern(pattern, fileName, "writeBro")) return 0;
 

@@ -32,7 +32,10 @@ char readDsz(EmbPattern* pattern, const char* fileName)
 
         if(ctrl & 0x0E)
         {
+            /*
+            TODO: Add back if head number is added to the library 
             int headNumber = (ctrl & 0x0E) >> 1;
+            */
             stitchType = STOP;
         }
         if(ctrl & 0x10)

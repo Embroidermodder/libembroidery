@@ -87,8 +87,8 @@ const unsigned int sizeOfFatEntry = sizeof(unsigned int);
 static const unsigned int sizeOfDifatEntry = 4;
 static const unsigned int sizeOfChainingEntryAtEndOfDifatSector = 4;
 static const unsigned int sizeOfDirectoryEntry = 128;
-static const int supportedMinorVersion = 0x003E;
-static const int littleEndianByteOrderMark = 0xFFFE;
+//static const int supportedMinorVersion = 0x003E;
+//static const int littleEndianByteOrderMark = 0xFFFE;
 
 const double embConstantPi = 3.1415926535;
 
@@ -585,59 +585,59 @@ int embArray_resize(EmbArray *p)
     p->length += CHUNK_SIZE;
     switch (p->type) {
     case EMB_ARC:
-        p->arc = realloc(p->arc, p->length*sizeof(EmbArcObject));
+        p->arc = (EmbArcObject *)realloc(p->arc, p->length*sizeof(EmbArcObject));
         if (!p->arc) return 1;
         break;
     case EMB_CIRCLE:
-        p->circle = realloc(p->circle, p->length*sizeof(EmbCircleObject));
+        p->circle = (EmbCircleObject *)realloc(p->circle, p->length*sizeof(EmbCircleObject));
         if (!p->circle) return 1;
         break;
     case EMB_ELLIPSE:
-        p->ellipse = realloc(p->ellipse, p->length*sizeof(EmbEllipseObject));
+        p->ellipse = (EmbEllipseObject *)realloc(p->ellipse, p->length*sizeof(EmbEllipseObject));
         if (!p->ellipse) return 1;
         break;
     case EMB_FLAG:
-        p->flag = realloc(p->flag, p->length*sizeof(int));
+        p->flag = (int *)realloc(p->flag, p->length*sizeof(int));
         if (!p->flag) return 1;
         break;
     case EMB_PATH:
-        p->path = realloc(p->path, p->length*sizeof(EmbPathObject*));
+        p->path = (EmbPathObject **)realloc(p->path, p->length*sizeof(EmbPathObject*));
         if (!p->path) return 1;
         break;
     case EMB_POINT:
-        p->point = realloc(p->point, p->length*sizeof(EmbPointObject));
+        p->point = (EmbPointObject *)realloc(p->point, p->length*sizeof(EmbPointObject));
         if (!p->point) return 1;
         break;
     case EMB_LINE:
-        p->line = realloc(p->line, p->length*sizeof(EmbLineObject));
+        p->line = (EmbLineObject *)realloc(p->line, p->length*sizeof(EmbLineObject));
         if (!p->line) return 1;
         break;
     case EMB_POLYGON:
-        p->polygon = realloc(p->polygon, p->length*sizeof(EmbPolygonObject*));
+        p->polygon = (EmbPolygonObject **)realloc(p->polygon, p->length*sizeof(EmbPolygonObject*));
         if (!p->polygon) return 1;
         break;
     case EMB_POLYLINE:
-        p->polyline = realloc(p->polyline, p->length*sizeof(EmbPolylineObject*));
+        p->polyline = (EmbPolylineObject **)realloc(p->polyline, p->length*sizeof(EmbPolylineObject*));
         if (!p->polyline) return 1;
         break;
     case EMB_RECT:
-        p->rect = realloc(p->rect, p->length*sizeof(EmbRectObject));
+        p->rect = (EmbRectObject *)realloc(p->rect, p->length*sizeof(EmbRectObject));
         if (!p->rect) return 1;
         break;
     case EMB_SPLINE:
-        p->spline = realloc(p->spline, p->length*sizeof(EmbSplineObject));
+        p->spline = (EmbSplineObject *)realloc(p->spline, p->length*sizeof(EmbSplineObject));
         if (!p->spline) return 1;
         break;
     case EMB_STITCH:
-        p->stitch = realloc(p->stitch, CHUNK_SIZE*sizeof(EmbStitch));
+        p->stitch = (EmbStitch *)realloc(p->stitch, CHUNK_SIZE*sizeof(EmbStitch));
         if (!p->stitch) return 1;
         break;
     case EMB_THREAD:
-        p->thread = realloc(p->thread, CHUNK_SIZE*sizeof(EmbThread));
+        p->thread = (EmbThread *)realloc(p->thread, CHUNK_SIZE*sizeof(EmbThread));
         if (!p->thread) return 1;
         break;
     case EMB_VECTOR:
-        p->vector = realloc(p->vector, CHUNK_SIZE*sizeof(EmbVector));
+        p->vector = (EmbVector *)realloc(p->vector, CHUNK_SIZE*sizeof(EmbVector));
         if (!p->vector) return 1;
         break;
     default:
@@ -927,7 +927,7 @@ char embFile_getc(EmbFile* stream)
 
 void embFile_readline(EmbFile* stream, char *line, int maxLength)
 {
-    int state = 0, i;
+    int i;
     char c;
     for (i=0; i<maxLength-1; i++) {
         c = embFile_getc(stream);
@@ -1234,6 +1234,12 @@ EmbTime parseTime(EmbFile* file)
     ft_low = binaryReadInt32(file);
     ft_high = binaryReadInt32(file);
     /* TODO: translate to actual date time */
+    returnVal.day = 1;
+    returnVal.hour = 2;
+    returnVal.minute = 3;
+    returnVal.month = 4;
+    returnVal.second = 5;
+    returnVal.year = 6;
     return returnVal;
 }
 
@@ -2050,6 +2056,9 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
 {
     EmbStitchList* stList = 0;
     int breakAtFlags;
+    EmbPointObject point;
+    EmbArray *pointList;
+    EmbColor color;
 
     if(!p) { printf("ERROR: emb-pattern.c embPattern_copyStitchListToPolylines(), p argument is null\n"); return; }
 
@@ -2062,8 +2071,6 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
     stList = p->stitchList;
     while(stList)
     {
-        EmbArray *pointList;
-        EmbColor color;
         while(stList)
         {
             if(stList->stitch.flags & breakAtFlags)
@@ -2077,7 +2084,7 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
                     pointList = embArray_create(EMB_POINT);
                     color = p->threads->thread[stList->stitch.color].color;
                 }
-                EmbPointObject point;
+                
                 point.point.x = stList->stitch.x;
                 point.point.y = stList->stitch.y;
                 embArray_addPoint(pointList, &point);
@@ -2300,6 +2307,15 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     EmbRect boundingRect;
     EmbStitch pt;
     EmbBezier bezier;
+    EmbArc arc;
+    EmbCircle circle;
+    EmbEllipse ellipse;
+    EmbLine line;
+    EmbPoint point;
+    EmbArray *polygon;
+    EmbArray *polyline;
+    EmbRect rect;
+    int i, j;
 
     boundingRect.left = 0;
     boundingRect.right = 0;
@@ -2342,11 +2358,10 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
         pointer = pointer->next;
     }
 
-    int i, j;
     if (p->arcs) {
         /* TODO: embPattern_calcBoundingBox for arcs, for now just checks the start point */
         for (i=0; i<p->arcs->count; i++) {
-            EmbArc arc = p->arcs->arc[i].arc;
+            arc = p->arcs->arc[i].arc;
             boundingRect.left = embMinDouble(boundingRect.left, arc.startX);
             boundingRect.top = embMinDouble(boundingRect.top, arc.startY);
             boundingRect.right = embMaxDouble(boundingRect.right, arc.startX);
@@ -2356,7 +2371,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->circles) {
         for (i=0; i<p->circles->count; i++) {
-            EmbCircle circle = p->circles->circle[i].circle;
+            circle = p->circles->circle[i].circle;
             boundingRect.left = embMinDouble(boundingRect.left, circle.centerX - circle.radius);
             boundingRect.top = embMinDouble(boundingRect.top, circle.centerY - circle.radius);
             boundingRect.right = embMaxDouble(boundingRect.right, circle.centerX + circle.radius);
@@ -2367,7 +2382,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     if (p->ellipses) {
         for (i=0; i<p->ellipses->count; i++) {
             /* TODO: account for rotation */
-            EmbEllipse ellipse = p->ellipses->ellipse[i].ellipse;
+            ellipse = p->ellipses->ellipse[i].ellipse;
             boundingRect.left = embMinDouble(boundingRect.left, ellipse.centerX - ellipse.radiusX);
             boundingRect.top = embMinDouble(boundingRect.top, ellipse.centerY - ellipse.radiusY);
             boundingRect.right = embMaxDouble(boundingRect.right, ellipse.centerX + ellipse.radiusX);
@@ -2377,7 +2392,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->lines) {
         for (i=0; i<p->lines->count; i++) {
-            EmbLine line = p->lines->line[i].line;
+            line = p->lines->line[i].line;
             boundingRect.left = embMinDouble(boundingRect.left, line.x1);
             boundingRect.left = embMinDouble(boundingRect.left, line.x2);
             boundingRect.top = embMinDouble(boundingRect.top, line.y1);
@@ -2391,7 +2406,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->points) {
         for (i=0; i<p->points->count; i++) {
-            EmbPoint point = p->points->point[i].point;
+            point = p->points->point[i].point;
             /* TODO: embPattern_calcBoundingBox for points */
 
         }
@@ -2399,7 +2414,6 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->polygons) {
         for (i=0; i<p->polygons->count; i++) {
-            EmbArray *polygon;
             polygon = p->polygons->polygon[i]->pointList;
             for (j=0; j<polygon->count; j++) {
                 /* TODO: embPattern_calcBoundingBox for polygons */
@@ -2409,7 +2423,6 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->polylines) {
         for (i=0; i<p->polylines->count; i++) {
-            EmbArray *polyline;
             polyline = p->polylines->polyline[i]->pointList;
             for (j=0; j<polyline->count; j++) {
                 /* TODO: embPattern_calcBoundingBox for polylines */
@@ -2419,7 +2432,7 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 
     if (p->rects) {
         for (i=0; i<p->rects->count; i++) {
-            EmbRect rect = p->rects->rect[i].rect;
+            rect = p->rects->rect[i].rect;
             /* TODO: embPattern_calcBoundingBox for rectangles */
         }
     }
@@ -2766,7 +2779,10 @@ void embPattern_free(EmbPattern* p)
  * Units are in millimeters. */
 void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r)
 {
-    EmbCircle circle = {cx, cy, r};
+    EmbCircle circle;
+    circle.centerX = cx;
+    circle.centerY = cy;
+    circle.radius = r;
 
     if (!p) { printf("ERROR: emb-pattern.c embPattern_addCircleObjectAbs(), p argument is null\n"); return; }
     if (p->circles == 0) {
@@ -2902,7 +2918,7 @@ void embPattern_end(EmbPattern *p)
     }
 }
 
-int emb_identify_format(char *fileName)
+int emb_identify_format(const char *fileName)
 {
     int i;
     char ending[5];
@@ -2992,7 +3008,13 @@ EmbRectObject embRectObject_make(double x, double y, double w, double h)
 void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, EmbSatinOutline* result)
 {
     int i;
+    EmbLine line1, line2;
     EmbSatinOutline outline;
+    EmbVector out;
+    EmbVector v1;
+    EmbVector temp;
+    EmbLine line;
+
     double halfThickness = thickness / 2.0;
     int intermediateOutlineCount = 2 * lines->count - 2;
     outline.side1 = embArray_create(EMB_VECTOR);
@@ -3007,11 +3029,6 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
     }
 
     for (i = 1; i < lines->count; i++) {
-        int j = (i - 1) * 2;
-        EmbVector v1;
-        EmbVector temp;
-
-        EmbLine line;
         line.x1 = lines->vector[i - 1].x;
         line.y1 = lines->vector[i - 1].y;
         line.x2 = lines->vector[i].x;
@@ -3050,8 +3067,6 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
     embArray_addVector(result->side1, outline.side1->vector[0]);
     embArray_addVector(result->side2, outline.side2->vector[0]);
 
-    EmbLine line1, line2;
-    EmbVector out;
     for (i = 3; i < intermediateOutlineCount; i += 2) {
         line1.x1 = outline.side1->vector[i - 3].x;
         line1.y1 = outline.side1->vector[i - 3].y;
@@ -3087,6 +3102,8 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density
     EmbVector currTop, currBottom, topDiff, bottomDiff, midDiff;
     EmbVector midLeft, midRight, topStep, bottomStep;
     EmbArray* stitches = 0;
+    int numberOfSteps;
+    double midLength;
 
     if (!result) {
         printf("ERROR: emb-satin-line.c embSatinOutline_renderStitches(), result argument is null\n");
@@ -3102,9 +3119,9 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density
             embVector_average(result->side1->vector[j+1], result->side2->vector[j+1], &midRight);
 
             embVector_subtract(midLeft, midRight, &midDiff);
-            double midLength = embVector_getLength(midDiff);
+            midLength = embVector_getLength(midDiff);
 
-            int numberOfSteps = (int)(midLength * density / 200);
+            numberOfSteps = (int)(midLength * density / 200);
             embVector_multiply(topDiff, 1.0/numberOfSteps, &topStep);
             embVector_multiply(bottomDiff, 1.0/numberOfSteps, &bottomStep);
             currTop = result->side1->vector[j];
@@ -3711,6 +3728,7 @@ int divideByZero = 0;
 divideByZero = divideByZero/divideByZero; /*TODO: wrap time() from time.h and verify it works consistently */
 
 #endif /* ARDUINO */
+    return *t;
 }
 
 /**

@@ -4,9 +4,9 @@
 #include <string.h>
 #include <math.h>
 
-#define RED_TERM_COLOR "\e[0;31m"
-#define GREEN_TERM_COLOR "\e[0;32m"
-#define YELLOW_TERM_COLOR "\e[1;33m"
+#define RED_TERM_COLOR "\x1B[0;31m"
+#define GREEN_TERM_COLOR "\x1B[0;32m"
+#define YELLOW_TERM_COLOR "\x1B[1;33m"
 #define RESET_TERM_COLOR "\033[0m"
 
 static void testTangentPoints(EmbCircle c, double  px, double  py, EmbPoint *, EmbPoint *);
@@ -50,6 +50,7 @@ double distance(EmbPoint p, EmbPoint q)
 
 int testEmbCircle(void)
 {
+    double error;
     double epsilon = 1e-3;
     EmbPoint p0, p1;
     /* Problem */
@@ -59,17 +60,27 @@ int testEmbCircle(void)
     EmbPoint t1 = {2.2500, -1.9843};
     /* Test */
     testTangentPoints(c1, 4.0, 0.0, &p0, &p1);
-    if (distance(p0, t0) + distance(p1, t1) > epsilon) {
+    error = distance(p0, t0) + distance(p1, t1);
+    if (error > epsilon) {
+        printf("Error larger than tolerence, circle test 1: %f.\n\n", error);
         return 16;
     }
 
+    return 0;
+}
+
+int testEmbCircle_2(void)
+{
+    double error;
+    double epsilon = 1e-3;
+    EmbPoint p0, p1;
     EmbCircle c2 = {20.1762, 10.7170, 6.8221};
     /* Solution */
     EmbPoint s0 = {19.0911, 17.4522};
     EmbPoint s1 = {26.4428, 13.4133};
     /* Test */
     testTangentPoints(c2, 24.3411, 18.2980, &p0, &p1);
-    double error = distance(p0, s0) + distance(p1, s1);
+    error = distance(p0, s0) + distance(p1, s1);
     if (error > epsilon) {
         printf("Error larger than tolerence, circle test 2: %f.\n\n", error);
         return 17;
@@ -430,11 +441,11 @@ int create_test_csv_file(char *fname, int type)
 
 int full_test_matrix (char *fname)
 {
-    const char *example_files[] = {
-        "example.pes", "",
-        "", "",
-        "", ""
-    };
+    // const char *example_files[] = {
+    //     "example.pes", "",
+    //     "", "",
+    //     "", ""
+    // };
 
     FILE *f;
     f = fopen(fname, "wb");
@@ -461,6 +472,7 @@ int full_test_matrix (char *fname)
     }
     */
     fclose(f);
+    return 0;
 }
 
 

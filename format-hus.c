@@ -7,7 +7,6 @@
 /*****************************************
  * HUS Colors
  ****************************************/
-static const int husThreadCount = 29;
 static const EmbThread husThreads[] = {
 {{   0,   0,   0 }, "Black",        "TODO:HUS_CATALOG_NUMBER"},
 {{   0,   0, 255 }, "Blue",         "TODO:HUS_CATALOG_NUMBER"},
@@ -39,22 +38,6 @@ static const EmbThread husThreads[] = {
 {{ 115,  40,   0 }, "Dark Brown",   "TODO:HUS_CATALOG_NUMBER"},
 {{ 175,  90,  10 }, "Light Brown",  "TODO:HUS_CATALOG_NUMBER"}
 };
-
-/*TODO: 'husDecode' is defined but not used. Either remove it or use it. */
-/*
-static short husDecode(unsigned char a1, unsigned char a2)
-{
-    unsigned short res = (a2 << 8) + a1;
-    if(res >= 0x8000)
-    {
-        return ((-~res) - 1);
-    }
-    else
-    {
-        return (res);
-	}
-}
-*/
 
 static int husDecodeStitchType(unsigned char b)
 {
@@ -227,9 +210,10 @@ char writeHus(EmbPattern* pattern, const char* fileName)
     if (!validateWritePattern(pattern, fileName, "writeHus")) return 0;
 
     file = embFile_open(fileName, "wb", 0);
-    if(!file)
+    if(!file) {
         return 0;
-
+    }
+    
     stitchCount = embStitchList_count(pattern->stitchList);
     /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
     minColors = pattern->threads->count;
@@ -257,6 +241,7 @@ char writeHus(EmbPattern* pattern, const char* fileName)
     pointer = pattern->stitchList;
     previousX = 0.0;
     previousY = 0.0;
+    i = 0;
     while (pointer) {
         st = pointer->stitch;
         xValues[i] = husEncodeByte((st.x - previousX) * 10.0);
@@ -279,7 +264,7 @@ char writeHus(EmbPattern* pattern, const char* fileName)
     binaryWriteUShort(file, 0x0000);
 
     for (i = 0; i < patternColor; i++) {
-        short color_index = (short)embThread_findNearestColor(pattern->threads->thread[i].color, husThreads, 0);
+        short color_index = (short)embThread_findNearestColor(pattern->threads->thread[i].color, (EmbArray *)husThreads, 0);
         binaryWriteShort(file, color_index);
     }
 

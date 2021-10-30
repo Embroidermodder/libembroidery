@@ -387,7 +387,7 @@ typedef struct EmbHoop_
 } EmbHoop;
 
 typedef struct thread_color_ {
-    char name[20];
+    char name[22];
     unsigned int hex_code;
     int manufacturer_code;
 } thread_color;
@@ -652,7 +652,7 @@ EMB_PUBLIC double embMaxDouble(double, double);
 EMB_PUBLIC int embMinInt(int, int);
 EMB_PUBLIC int embMaxInt(int, int);
 
-EMB_PUBLIC int emb_identify_format(char *ending);
+EMB_PUBLIC int emb_identify_format(const char *ending);
 
 EMB_PUBLIC EmbArray* embArray_create(int type);
 EMB_PUBLIC int embArray_resize(EmbArray *g);

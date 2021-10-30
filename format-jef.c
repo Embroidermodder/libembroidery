@@ -390,7 +390,7 @@ char writeJef(EmbPattern* pattern, const char* fileName)
     binaryWriteInt(file, (int) (550 - designHeight / 2)); /* bottom */
 
     for (i=0; i<pattern->threads->count; i++) {
-        int j = embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, jefThreads, 79);
+        int j = embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, (EmbThread *)jefThreads, 79);
         binaryWriteInt(file, j);
     }
 

@@ -12,6 +12,8 @@
 static void testTangentPoints(EmbCircle c, double  px, double  py, EmbPoint *, EmbPoint *);
 static int testEmbCircle(void);
 static int testThreadColor(void);
+int create_test_csv_file(char *fname, int type);
+int full_test_matrix (char *fname);
 
 static void testTangentPoints(EmbCircle c,
     double px, double py,
@@ -296,40 +298,6 @@ void testMain(int level)
 }
 
 #if 0
-/* the new version matches the main to this point */
-static void formats(void)
-{
-    int numReaders = 0;
-    int numWriters = 0;
-    int i;
-    puts("List of Formats");
-    puts("---------------");
-    puts("");
-    puts("    KEY");
-    puts("    'S' = Yes, and is considered stable.");
-    puts("    'U' = Yes, but may be unstable.");
-    puts("    ' ' = No.");
-    puts("");
-    puts("  Format   Read    Write   Description\n");
-    puts("|________|_______|_______|____________________________________________________|\n");
-    puts("|        |       |       |                                                    |\n");
-
-    for (i = 0; i < numberOfFormats; i++) {
-        EmbFormatList f;
-        f = embFormat_data(i);
-
-        numReaders += f.reader != ' ' ? 1 : 0;
-        numWriters += f.writer != ' ' ? 1 : 0;
-        printf("|  %-4s  |   %c   |   %c   |  %-49s |\n", f.extension, f.reader, f.writer, f.description);
-    }
-
-    puts("|________|_______|_______|____________________________________________________|\n");
-    puts("|        |       |       |                                                    |\n");
-    printf("| Total: |  %3d  |  %3d  |                                                    |\n", numReaders, numWriters);
-    puts("|________|_______|_______|____________________________________________________|\n");
-    puts("");
-}
-
 static int create_test_file_1(const char* outf)
 {
     int i, result;
@@ -390,53 +358,6 @@ static int create_test_file_2(const char* outf)
     return 0;
 }
 
-static int convert(const char* inf, const char* outf)
-{
-    EmbPattern* p;
-    int reader, writer, formatType;
-    
-    printf("Converting %s to %s.\n", inf, outf);
-
-    p = embPattern_create();
-    if (!p) {
-        puts("ERROR: convert(), cannot allocate memory for p\n");
-        return 1;
-    }
-
-    reader = embReaderWriter_getByFileName(inf);
-    if (reader < 0) {
-        puts("convert(), unsupported read file type:");
-        puts(inf);
-        embPattern_free(p);
-        return 1;
-    }
-
-    writer = embReaderWriter_getByFileName(outf);
-    if (writer < 0) {
-        puts("convert(), unsupported write file type:");
-        puts(outf);
-        embPattern_free(p);
-        return 1;
-    }
-
-    embPattern_read(p, inf, reader);
-
-    EmbFormatList f, g;
-    f = embFormat_data(reader);
-    g = embFormat_data(writer);
-
-    if (f.type == EMBFORMAT_OBJECTONLY) {
-        if (g.type == EMBFORMAT_STITCHONLY) {
-            embPattern_movePolylinesToStitchList(p);
-        }
-    }
-
-    embPattern_write(p, outf, writer);
-
-    embPattern_free(p);
-    return 0;
-}
-
 /* TODO: Add capability for converting multiple files of various types to a single format. Currently, we only convert a single file to multiple formats. */
 /* the only difference in main() between new and current is these lines
 
@@ -468,7 +389,6 @@ static int testThreadColor(void)
 }
 
 #endif
-
 
 int create_test_csv_file(char *fname, int type)
 {

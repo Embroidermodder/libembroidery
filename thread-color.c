@@ -3400,7 +3400,6 @@ int threadColor(const char *name, int brand)
             return brand_codes[brand][i].hex_code;
         }
     }
-
     return -1;
 }
 

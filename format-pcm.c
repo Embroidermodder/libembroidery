@@ -1,6 +1,5 @@
 #include "embroidery.h"
 
-static const int pcmThreadCount = 65;
 static const EmbThread pcmThreads[] = {
     {{0x00, 0x00, 0x00}, "PCM Color 1", ""},
     {{0x00, 0x00, 0x80}, "PCM Color 2", ""},

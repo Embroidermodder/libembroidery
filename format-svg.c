@@ -53,10 +53,10 @@ const char *svg_property_tokens[] = {
 EmbColor svgColorToEmbColor(char* colorString)
 {
     EmbColor c;
-    int i = 0;
     char* pEnd = 0;
     char* colorStr = copy_trim(colorString); /* Trim out any junk spaces */
     int length = strlen(colorStr);
+    int tableColor;
 
     /* SVGTiny1.2 Spec Section 11.13.1 syntax for color values */
     if(length == 7 && colorStr[0] == '#') /* Six digit hex — #rrggbb */
@@ -88,14 +88,17 @@ EmbColor svgColorToEmbColor(char* colorString)
     }
     else /* Color keyword */
     {
-        int tableColor = threadColor(colorStr, SVG_Colors);
+        tableColor = threadColor(colorStr, SVG_Colors);
         if (tableColor < 0) {
             printf("SVG color string not found: %s.\n", colorStr);
+            c.r = 0;
+            c.g = 0;
+            c.b = 0;
         }
         else {
-            c.r = (tableColor/256)%16;
-            c.g = (tableColor/16)%16;
-            c.b = tableColor%16;
+            c.r = (tableColor >> 16) & 0xFF;
+            c.g = (tableColor >> 8) & 0xFF;
+            c.b = tableColor & 0xFF;
         }
     }
 
@@ -120,8 +123,8 @@ int svgPathCmdToEmbPathFlag(char cmd)
     else if(toUpper(cmd) == 'Z') return LINETO;
     */
 
-    /*else if(toUpper(cmd) == 'B') return BULGETOCONTROL; /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
-	/*else if(toUpper(cmd) == 'BB') return BULGETOEND;    /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
+    /*else if(toUpper(cmd) == 'B') return BULGETOCONTROL; */ /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
+	/*else if(toUpper(cmd) == 'BB') return BULGETOEND; */   /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
     /*else { printf("ERROR: format-svg.c svgPathCmdToEmbPathFlag(), unknown command '%c'\n", cmd); return MOVETO; } */
 
     return LINETO;
@@ -131,8 +134,6 @@ SvgAttribute svgAttribute_create(const char* name, const char* value)
 {
     SvgAttribute attribute;
     char* modValue = 0;
-    int last = 0;
-    int i = 0;
 
     modValue = emb_strdup(value);
     charReplace(modValue, "\"'/,", "    ");
@@ -210,9 +211,18 @@ char* svgAttribute_getValue(SvgElement* element, const char* name)
 {
     SvgAttributeList* pointer = 0;
 
-    if(!element) { printf("ERROR: format-svg.c svgAttribute_getValue(), element argument is null\n"); return "none"; }
-    if(!name) { printf("ERROR: format-svg.c svgAttribute_getValue(), name argument is null\n"); return "none"; }
-    if(!element->attributeList) { /* TODO: error */ return "none"; }
+    if(!element) { 
+        printf("ERROR: format-svg.c svgAttribute_getValue(), element argument is null\n"); 
+        return (char *)"none"; 
+    }
+    if(!name) { 
+        printf("ERROR: format-svg.c svgAttribute_getValue(), name argument is null\n");
+        return (char *)"none"; 
+    }
+    if(!element->attributeList) { 
+        /* TODO: error */ 
+        return (char *)"none"; 
+    }
 
     pointer = element->attributeList;
     while(pointer)
@@ -296,7 +306,6 @@ void svgAddToPattern(EmbPattern* p)
         int last = strlen(pointStr);
         int size = 32;
         int i = 0;
-        int j = 0;
         int pos = 0;
         /* An odometer aka 'tripometer' used for stepping thru the pathData */
         int trip = -1; /* count of float[] that has been filled. 0=first item of array, -1=not filled = empty array */
@@ -315,8 +324,10 @@ void svgAddToPattern(EmbPattern* p)
         int pendingTask = 0;
         int relative = 0;
 
+        EmbColor color;
         EmbArray* pointList = 0;
         EmbArray* flagList;
+        EmbPathObject *path;
 
         char* pathbuff = 0;
         pathbuff = (char*)malloc(size);
@@ -390,58 +401,58 @@ void svgAddToPattern(EmbPattern* p)
                     /* Check wether prior command need to be saved */
                     if(trip>=0)
                     {
-                            trip = -1;
-                            reset = -1;
+                        EmbPointObject test;
+                        trip = -1;
+                        reset = -1;
 
-                            relative = 0; /* relative to prior coordinate point or absolute coordinate? */
+                        relative = 0; /* relative to prior coordinate point or absolute coordinate? */
 
-                            if     (cmd == 'M') { xx = pathData[0]; yy = pathData[1]; fx = xx; fy = yy; }
-                            else if(cmd == 'm') { xx = pathData[0]; yy = pathData[1]; fx = xx; fy = yy; relative=1; }
-                            else if(cmd == 'L') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 'l') { xx = pathData[0]; yy = pathData[1]; relative=1;}
-                            else if(cmd == 'H') { xx = pathData[0]; yy = ly; }
-                            else if(cmd == 'h') { xx = pathData[0]; yy = ly; relative=1;}
-                            else if(cmd == 'V') { xx = lx;          yy = pathData[1]; }
-                            else if(cmd == 'v') { xx = lx;          yy = pathData[1]; relative=1;}
-                            else if(cmd == 'C') { xx = pathData[4]; yy = pathData[5]; cx1 = pathData[0]; cy1 = pathData[1]; cx2 = pathData[2]; cy2 = pathData[3]; }
-                            else if(cmd == 'c') { xx = pathData[4]; yy = pathData[5]; cx1 = pathData[0]; cy1 = pathData[1]; cx2 = pathData[2]; cy2 = pathData[3]; relative=1;}
-                            /*
-                            else if(cmd == 'S') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 's') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 'Q') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 'q') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 'T') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 't') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 'A') { xx = pathData[0]; yy = pathData[1]; }
-                            else if(cmd == 'a') { xx = pathData[0]; yy = pathData[1]; }
-                            */
-                            else if(cmd == 'Z') { xx = fx;          yy = fy; }
-                            else if(cmd == 'z') { xx = fx;          yy = fy; }
+                        if     (cmd == 'M') { xx = pathData[0]; yy = pathData[1]; fx = xx; fy = yy; }
+                        else if(cmd == 'm') { xx = pathData[0]; yy = pathData[1]; fx = xx; fy = yy; relative=1; }
+                        else if(cmd == 'L') { xx = pathData[0]; yy = pathData[1]; }
+                        else if(cmd == 'l') { xx = pathData[0]; yy = pathData[1]; relative=1;}
+                        else if(cmd == 'H') { xx = pathData[0]; yy = ly; }
+                        else if(cmd == 'h') { xx = pathData[0]; yy = ly; relative=1;}
+                        else if(cmd == 'V') { xx = lx;          yy = pathData[1]; }
+                        else if(cmd == 'v') { xx = lx;          yy = pathData[1]; relative=1;}
+                        else if(cmd == 'C') { xx = pathData[4]; yy = pathData[5]; cx1 = pathData[0]; cy1 = pathData[1]; cx2 = pathData[2]; cy2 = pathData[3]; }
+                        else if(cmd == 'c') { xx = pathData[4]; yy = pathData[5]; cx1 = pathData[0]; cy1 = pathData[1]; cx2 = pathData[2]; cy2 = pathData[3]; relative=1;}
+                        /*
+                        else if(cmd == 'S') { xx = pathData[0]; yy = pathData[1]; }
+                        else if(cmd == 's') { xx = pathData[0]; yy = pathData[1]; }
+                        else if(cmd == 'Q') { xx = pathData[0]; yy = pathData[1]; }
+                        else if(cmd == 'q') { xx = pathData[0]; yy = pathData[1]; }
+                        else if(cmd == 'T') { xx = pathData[0]; yy = pathData[1]; }
+                        else if(cmd == 't') { xx = pathData[0]; yy = pathData[1]; }
+                        else if(cmd == 'A') { xx = pathData[0]; yy = pathData[1]; }
+                        else if(cmd == 'a') { xx = pathData[0]; yy = pathData[1]; }
+                        */
+                        else if(cmd == 'Z') { xx = fx;          yy = fy; }
+                        else if(cmd == 'z') { xx = fx;          yy = fy; }
 
-                            if (!pointList && !flagList) {
-                                pointList = embArray_create(EMB_POINT);
-                                flagList = embArray_create(EMB_FLAG);
-                            }
-                            EmbPointObject test;
-                            test.point.x = xx;
-                            test.point.y = yy;
-                            embArray_addPoint(pointList, &test);
-                            embArray_addFlag(flagList, svgPathCmdToEmbPathFlag(cmd));
-                            lx = xx; ly = yy;
+                        if (!pointList && !flagList) {
+                            pointList = embArray_create(EMB_POINT);
+                            flagList = embArray_create(EMB_FLAG);
+                        }
+                        test.point.x = xx;
+                        test.point.y = yy;
+                        embArray_addPoint(pointList, &test);
+                        embArray_addFlag(flagList, svgPathCmdToEmbPathFlag(cmd));
+                        lx = xx; ly = yy;
 
-                            pathbuff[0] = (char)cmd;                  /* set the command for compare */
-                            pathbuff[1] = 0;
-                            pos = 0;
+                        pathbuff[0] = (char)cmd;                  /* set the command for compare */
+                        pathbuff[1] = 0;
+                        pos = 0;
 
-                            printf("*prior:%s (%f, %f,  %f, %f,     %f,%f,  %f) \n", pathbuff,
-                                   pathData[0],
-                                   pathData[1],
-                                   pathData[2],
-                                   pathData[3],
-                                   pathData[4],
-                                   pathData[5],
-                                   pathData[6]
-                                   );
+                        printf("*prior:%s (%f, %f,  %f, %f,     %f,%f,  %f) \n", pathbuff,
+                                pathData[0],
+                                pathData[1],
+                                pathData[2],
+                                pathData[3],
+                                pathData[4],
+                                pathData[5],
+                                pathData[6]
+                                );
 
                     }
 
@@ -500,8 +511,9 @@ void svgAddToPattern(EmbPattern* p)
 
         /* TODO: subdivide numMoves > 1 */
 
-        EmbColor color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
-        EmbPathObject *path;
+        color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
+        
+        path = (EmbPathObject *)malloc(sizeof(EmbPathObject));
         path->pointList = pointList;
         path->flagList = flagList;
         path->color = color;
@@ -515,7 +527,6 @@ void svgAddToPattern(EmbPattern* p)
         int last = strlen(pointStr);
         int size = 32;
         int i = 0;
-        int c = 0;
         int pos = 0;
         unsigned char odd = 1;
         double xx = 0.0;
@@ -545,13 +556,13 @@ void svgAddToPattern(EmbPattern* p)
                     }
                     else
                     {
+                        EmbPointObject a;
                         odd = 1;
                         yy = atof(polybuff);
 
                         if (!pointList) {
                             pointList = embArray_create(EMB_POINT);
                         }
-                        EmbPointObject a;
                         a.point.x = xx;
                         a.point.y = yy;
                         embArray_addPoint(pointList, &a);
@@ -576,6 +587,8 @@ void svgAddToPattern(EmbPattern* p)
         if(!strcmp(buff, "polygon"))
         {
             EmbPolygonObject* polygonObj;
+
+            polygonObj = (EmbPolygonObject*)malloc(sizeof(EmbPolygonObject));
             polygonObj->pointList = pointList;
             polygonObj->color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
             polygonObj->lineType = 1; /* TODO: use lineType enum */
@@ -584,6 +597,7 @@ void svgAddToPattern(EmbPattern* p)
         else /* polyline */
         {
             EmbPolylineObject* polylineObj;
+            polylineObj = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
             polylineObj->pointList = pointList;
             polylineObj->color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
             polylineObj->lineType = 1; /* TODO: use lineType enum */
@@ -1854,6 +1868,7 @@ char readSvg(EmbPattern* pattern, const char* fileName)
     int pos;
     int c = 0;
     char* buff = 0;
+    int i;
 
     if(!pattern) { printf("ERROR: format-svg.c readSvg(), pattern argument is null\n"); return 0; }
     if(!fileName) { printf("ERROR: format-svg.c readSvg(), fileName argument is null\n"); return 0; }
@@ -1930,7 +1945,6 @@ char readSvg(EmbPattern* pattern, const char* fileName)
 
     /*TODO: remove this summary after testing is complete */
     printf("OBJECT SUMMARY:\n");
-    int i;
     if (pattern->circles) {
         for (i=0; i<pattern->circles->count; i++) {
             EmbCircle c = pattern->circles->circle[i].circle;
@@ -1990,6 +2004,7 @@ char writeSvg(EmbPattern* pattern, const char* fileName)
     EmbPoint point;
     EmbRect rect;
     EmbColor color;
+    int i, j;
 
     char tmpX[32];
     char tmpY[32];
@@ -2032,7 +2047,6 @@ char writeSvg(EmbPattern* pattern, const char* fileName)
 
     /*TODO: Low Priority: Indent output properly. */
 
-    int i, j;
     /* write circles */
     if (pattern->circles) {
         for (i=0; i<pattern->circles->count; i++) {

@@ -305,7 +305,7 @@ char readDxf(EmbPattern* pattern, const char* fileName)
     char* tableName = "";
     char* layerName = "";
     char* entityType = "";
-    char layerColorHash[100][8]; /* hash <layerName, EmbColor> */
+    /*char layerColorHash[100][8]; */ /* hash <layerName, EmbColor> */
 
     int eof = 0; /* End Of File */
 
@@ -313,7 +313,6 @@ char readDxf(EmbPattern* pattern, const char* fileName)
     char firstStitch = 1;
     char bulgeFlag = 0;
     int fileLength = 0;
-    unsigned char colorNum = 0;
 
     if (!validateReadPattern(pattern, fileName, "readDxf"))
         return 0;
@@ -422,19 +421,25 @@ char readDxf(EmbPattern* pattern, const char* fileName)
                 }
                 else if(!strcmp(buff,"62")) /* Color Number */
                 {
+                    unsigned char colorNum;
+                    EmbColor* co;
+
                     buff = readLine(file);
                     colorNum = atoi(buff);
-/*
-                    TODO: finish this
-                    unsigned char colorNum = atoi(buff);
-                    EmbColor* co = embColor_create(_dxfColorTable[colorNum][0], _dxfColorTable[colorNum][1], _dxfColorTable[colorNum][2]);
-                    if(!co) { / TODO: error allocating memory for EmbColor  return 0; }
+
+                    colorNum = atoi(buff);
+                    co = embColor_create(_dxfColorTable[colorNum][0], _dxfColorTable[colorNum][1], _dxfColorTable[colorNum][2]);
+                    if(!co) { 
+                        /* TODO: error allocating memory for EmbColor */  
+                        return 0; 
+                    }
                     printf("inserting:%s,%d,%d,%d\n", layerName, co->r, co->g, co->b);
+                    /* TODO: fix this with a lookup finish this 
                     if(embHash_insert(layerColorHash, emb_strdup(layerName), co))
                     {
                          TODO: log error: failed inserting into layerColorHash
                     }
-*/
+                */
                     layerName = NULL;
                 }
             }

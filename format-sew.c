@@ -145,7 +145,7 @@ char writeSew(EmbPattern* pattern, const char* fileName)
 
     for (i=0; i<pattern->threads->count; i++) {
         col = pattern->threads->thread[i].color;
-        thr = embThread_findNearestColor_fromThread(col, jefThreads, 79);
+        thr = embThread_findNearestColor_fromThread(col, (EmbThread *)jefThreads, 79);
         binaryWriteInt(file, thr);
     }
 

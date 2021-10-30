@@ -2022,11 +2022,21 @@ void embPattern_fixColorCount(EmbPattern* p)
     }
     list = p->stitchList;
     while (list) {
+/*        printf("%d %d\n", list->stitch.color, maxColorIndex);*/
         maxColorIndex = embMaxInt(maxColorIndex, list->stitch.color);
         list = list->next;
     }
-    while (p->threads->count <= maxColorIndex) {
-        embPattern_addThread(p, embThread_getRandom());
+    if (maxColorIndex == 0) {
+        EmbThread t;
+        t.color = black;
+        t.description = "Black";
+        embPattern_addThread(p, t);
+    }
+    else {
+        while (p->threads->count <= maxColorIndex) {
+/*        printf("%d %d\n", p->threads->count, maxColorIndex);*/
+            embPattern_addThread(p, embThread_getRandom());
+        }
     }
     /*
     while (p->threadLists->count > (maxColorIndex + 1)) {

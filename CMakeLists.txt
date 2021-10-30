@@ -9,6 +9,7 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(LIBRARY_SOURCE_FILES
+    tests.c
     format-100.c
     format-10o.c
     format-art.c

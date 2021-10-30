@@ -701,6 +701,9 @@ EMB_PUBLIC double embVector_dot(EmbVector v1, EmbVector v2);
 EMB_PUBLIC void embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC double embVector_getLength(EmbVector vector);
 
+EMB_PUBLIC void testMain(int level);
+EMB_PUBLIC int convert(const char *inf, const char *outf);
+
 char binaryReadByte(EmbFile* file);
 int binaryReadBytes(EmbFile* file, unsigned char* destination, int count);
 short binaryReadInt16(EmbFile* file);

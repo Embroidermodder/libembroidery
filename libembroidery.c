@@ -1397,106 +1397,6 @@ int embFormat_getExtension(const char *fileName, char *ending)
     return 1;
 }
 
-const char* embFormat_extensionFromName(const char* fileName)
-{
-    int i = 0;
-    char ending[2 + EMBFORMAT_MAXEXT];
-    const char* extension = 0;
-
-    if (!embFormat_getExtension(fileName, ending)) {
-        return 0;
-    }
-
-    for (i=0; i<numberOfFormats; i++) {
-        if (!strcmp(ending, formatTable[i].extension)) {
-            extension = formatTable[i].extension;
-            break;
-        }
-    }
-
-    return extension;
-}
-
-const char* embFormat_descriptionFromName(const char* fileName)
-{
-    int i = 0;
-    char ending[2 + EMBFORMAT_MAXEXT];
-    const char* description = 0;
-
-    if (!embFormat_getExtension(fileName, ending)) {
-        return 0;
-    }
-
-    for (i=0; i<numberOfFormats; i++) {
-        if (!strcmp(ending, formatTable[i].extension)) {
-            description = formatTable[i].description;
-            break;
-        }
-    }
-
-    return description;
-}
-
-char embFormat_readerStateFromName(const char* fileName)
-{
-    int i = 0;
-    char ending[2 + EMBFORMAT_MAXEXT];
-    char readerState = ' ';
-
-    if (!embFormat_getExtension(fileName, ending)) {
-        return 0;
-    }
-
-    for (i=0; i<numberOfFormats; i++) {
-        if (!strcmp(ending, formatTable[i].extension)) {
-            readerState = formatTable[i].reader;
-            break;
-        }
-    }
-
-    return readerState;
-}
-
-char embFormat_writerStateFromName(const char* fileName)
-{
-    int i = 0;
-    char ending[2 + EMBFORMAT_MAXEXT];
-    char writerState = ' ';
-
-    if (!embFormat_getExtension(fileName, ending)) {
-        return 0;
-    }
-
-    for (i=0; i<numberOfFormats; i++) {
-        if (!strcmp(ending, formatTable[i].extension)) {
-            writerState = formatTable[i].writer;
-            break;
-        }
-    }
-
-    return writerState;
-}
-
-int embFormat_typeFromName(const char* fileName)
-{
-    int i = 0;
-    char ending[2 + EMBFORMAT_MAXEXT];
-    int type = EMBFORMAT_UNSUPPORTED;
-
-    if (!embFormat_getExtension(fileName, ending)) {
-        return 0;
-    }
-
-    for (i=0; i<numberOfFormats; i++) {
-        if (!strcmp(ending, formatTable[i].extension)) {
-            type = formatTable[i].type;
-            break;
-        }
-    }
-
-    return type;
-}
-
 #if 0
 
 struct StitchBlock
@@ -3908,5 +3808,54 @@ void embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result)
 double embVector_getLength(EmbVector vector)
 {
     return sqrt(vector.x * vector.x + vector.y * vector.y);
+}
+
+
+int convert(const char *inf, const char *outf)
+{
+    EmbPattern* p = 0;
+    int formatType, reader, writer;
+
+    p = embPattern_create();
+    if (!p) {
+        printf("ERROR: convert(), cannot allocate memory for p\n");
+        return 1;
+    }
+
+    reader = emb_identify_format(inf);
+    if (reader < 0) {
+        printf("ERROR: convert(), unsupported read file type: %s\n", inf);
+        embPattern_free(p);
+        return 1;
+    }
+    writer = emb_identify_format(outf);
+    if (writer < 0) {
+        printf("ERROR: convert(), unsupported write file type: %s\n", outf);
+        embPattern_free(p);
+        return 1;
+    }
+
+    if (!formatTable[reader].reader(p, inf)) {
+        printf("ERROR: convert(), reading file was unsuccessful: %s\n", inf);
+        embPattern_free(p);
+        return 1;
+    }
+
+    formatType = formatTable[reader].type;
+    if (formatType == EMBFORMAT_OBJECTONLY) {
+        formatType = formatTable[writer].type;
+        if (formatType == EMBFORMAT_STITCHONLY) {
+            embPattern_movePolylinesToStitchList(p);
+        }
+    }
+
+    if (!formatTable[writer].writer(p, outf)) {
+        printf("ERROR: convert(), writing file %s was unsuccessful\n", outf);
+        embPattern_free(p);
+        return 1;
+    }
+
+    embPattern_free(p);
+    return 0;
 }
 

@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(LIBRARY_SOURCE_FILES
     tests.c
+    fills.c
+    image.c
     format-100.c
     format-10o.c
     format-art.c
@@ -72,7 +74,7 @@ set(LIBRARY_SOURCE_FILES
     format-xxx.c
     format-zsk.c
     thread-color.c
-    libembroidery.c
+    utility.c
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")

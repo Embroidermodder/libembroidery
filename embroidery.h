@@ -584,6 +584,13 @@ typedef struct EmbSplineObject_ {
     EmbColor color;
 } EmbSplineObject;
 
+typedef struct LSYSTEM {
+    char axiom;
+    char *alphabet;
+    char *constants;
+    char **rules;
+} L_system;
+
 /**
  * Only one of the pointers is used at a time so this should be a union.
  */
@@ -648,6 +655,9 @@ typedef struct EmbFormatList_
 *****************************************************************************/
 EMB_PUBLIC double embMinDouble(double, double);
 EMB_PUBLIC double embMaxDouble(double, double);
+
+EMB_PUBLIC int lindenmayer_system(L_system L, char* state, int iteration);
+EMB_PUBLIC int hilbert_curve(int iterations);
 
 EMB_PUBLIC int embMinInt(int, int);
 EMB_PUBLIC int embMaxInt(int, int);

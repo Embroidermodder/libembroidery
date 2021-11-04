@@ -136,6 +136,10 @@ int main(int argc, const char* argv[])
             puts("This flag is not implimented.");
             continue;
         }
+        if (!strcmp(argv[i], "--hilbert-curve")) {
+            hilbert_curve(4);
+            continue;
+        }
         if (!strcmp(argv[i], "--polygon") || !strcmp(argv[i], "-P")) {
             puts("This flag is not implimented.");
             continue;

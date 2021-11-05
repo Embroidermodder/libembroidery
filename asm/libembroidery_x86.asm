@@ -552,18 +552,18 @@ emb_sqrt:
 emb_factorial:
 	dd	1.0
 	dd	1.0
-;	dd	2.0
-;    6.0,
-;    24.0,
-;    120.0,
-;    720.0,
-;    5040.0,
-;    40320.0,
-;    362880.0,
-;    3628800.0
-;};
+	dd	2.0
+	dd	6.0
+	dd	24.0
+	dd	120.0
+	dd	720.0
+	dd	5040.0
+	dd	40320.0
+	dd	362880.0
+	dd	3628800.0
 
-;/* integer power for the taylor series. */
+; integer power for the taylor series.
+emb_pow:
 ;float emb_pow(float a, int n)
 ;{
 ;    int i;
@@ -608,13 +608,13 @@ double_dereference_int:
 
 %macro	memory_set	3
 
-;(void *ptr, int p, int length)
-;{
-;    int i;
+; argument 1: *ptr
+; argument 2: padding character
+; argument 3: length
+;
 ;    for (i=0; i<length; i++) {
 ;        ((char *)ptr)[i] = p;
 ;    }
-;}
 
 %%loop_label:
 
@@ -624,34 +624,36 @@ double_dereference_int:
 %endmacro
 
 get_str:
-;static int get_str(char *s, int p)
-;{
+
+; argument 1: *s (null terminated)
+; argument 2: location
 ;    int i;
-;    embFile_seek(datafile, p, SEEK_SET);
+;    fseek(datafile, p, SEEK_SET);
 ;    for (i=0; i<MAX_STRING_LENGTH; i++) {
-;        embFile_read(s+i, 1, 1, datafile);
+;        fread(s+i, 1, 1, datafile);
 ;        if (!s[i]) {
 ;            return 1;
 ;        }
 ;    }
 ;    return 0;
-;}
+	ret
 
 string_length:
-;static int string_length(const char *a)
-;{
+
+; argument 1: const char *a
 ;    int i;
 ;    for (i=0; i<MAX_STRING_LENGTH; i++) {
 ;        if (((char*)a)[i] == 0) {
 ;            return i;
 ;        }
-;    }
+;	cmp
+;	jl
 ;    return MAX_STRING_LENGTH;
-;}
+	ret
 
 string_equal:
-;static int string_equal(const void *a, const void *b)
-;{
+; argument 1: *a
+; argument 2: *b
 ;    int i;
 ;    for (i=0; i< MAX_STRING_LENGTH; i++) {
 ;        if (((char*)a)[i] != ((char*)b)[i]) {
@@ -665,79 +667,25 @@ string_equal:
 ;        return 1;
 ;    }
 ;    return 0;
-;}
+	ret
 
 memory_copy:
-;static void memory_copy(void *a, const void *b, int length)
-;{
+; argument 1: *a
+; argument 2: *b
+; argument 3: length
 ;    int i;
 ;    length = emb_min_int(length, MAX_STRING_LENGTH);
 ;    for (i=0; i<length; i++) {
 ;        ((char *)a)[i] = ((const char *)b)[i];
 ;    }
-;}
+	ret
 
-;static void string_copy(char *a, const char *b)
-;{
+string_copy:
+; argument 1: *a (null terminated)
+; argument 2: *b (null terminated)
 ;    memory_copy(a, b, string_length(b));
 ;    ((char *)a)[string_length(b)] = 0;
-;}
-
-;/* ARDUINO TODO:
-; * SD File read() doesn't appear to return the same way as fread().
-; * This will need work.
-; * ARDUINO TODO: Implement inoFile_write. */
-;static int embFile_read(void *ptr, int a, int b, EmbFile stream)
-;{
-;#ifdef ARDUINO
-;    return inoFile_read(ptr, a, b, stream);
-;#else
-;#ifdef linux
-;    return read(stream, ptr, a*b);
-;#else
-;    return fread(ptr, a, b, stream);
-;#endif
-;#endif
-;}
-
-;static int embFile_write(void *ptr, int a, int b, EmbFile stream)
-;{
-;#ifdef ARDUINO
-;    return inoFile_write(ptr, a, b, stream);
-;#else
-;#ifdef linux
-;    return write(stream, ptr, a*b);
-;#else
-;    return fwrite(ptr, a, b, stream);
-;#endif
-;#endif
-;}
-
-;static int embFile_seek(EmbFile stream, int offset, int origin)
-;{
-;#ifdef ARDUINO
-;    return inoFile_seek(stream, offset, origin);
-;#else
-;#ifdef linux
-;    return lseek(stream, offset, origin);
-;#else
-;    return fseek(stream, offset, origin);
-;#endif
-;#endif
-;}
-
-;static long embFile_tell(EmbFile stream)
-;{
-;#ifdef ARDUINO
-;    return inoFile_tell(stream);
-;#else
-;#ifdef linux
-;    return lseek(stream, 0, SEEK_CUR);
-;#else
-;    return ftell(stream);
-;#endif
-;#endif
-;}
+	ret
 
 ;static void make_directory(const char *dir, int mode)
 ;{
@@ -773,30 +721,34 @@ memory_copy:
 ;    return p;
 ;}
 
-;int embArray_add(EmbArray *p, void *data)
+embArray_add:
+;(EmbArray *p, void *data)
 ;{
 ;    embFile_seek(memory[p->file_id], p->length*p->size, SEEK_SET);
 ;    embFile_write(data, p->size, 1, memory[p->file_id]);
 ;    p->length++;
 ;    return 1;    
 ;}
+	ret
 
-;int embArray_get(EmbArray *p, void *data, int i)
+embArray_get:
+;(EmbArray *p, void *data, int i)
 ;{
 ;    embFile_seek(memory[p->file_id], i*p->size, SEEK_SET);
 ;    embFile_read(data, p->size, 1, memory[p->file_id]);
 ;    return 1;    
 ;}
+	ret
 
 ;int embArray_set(EmbArray *p, void *data, int i)
 ;{
 ;    embFile_seek(memory[p->file_id], i*p->size, SEEK_SET);
 ;    embFile_write(data, p->size, 1, memory[p->file_id]);
 ;    return 1;    
-;}
+	ret
 
-;static void embArray_read(EmbFile file, EmbArray *a, int offset, int n)
-;{
+embArray_read:
+;(EmbFile file, EmbArray *a, int offset, int n)
 ;    int i;
 ;    void *data = (void*)embBuffer;
 ;    embFile_seek(file, offset, SEEK_SET);
@@ -804,10 +756,10 @@ memory_copy:
 ;        embFile_read(data, a->size, 1, file);
 ;        embArray_set(a, data, i);
 ;    }
-;}
+	ret
 
-;static void embArray_write(EmbFile file, EmbArray *a, int offset, int n)
-;{
+embArray_write:
+;static void (EmbFile file, EmbArray *a, int offset, int n)
 ;    int i;
 ;    void *data = (void*)embBuffer;
 ;    embFile_seek(file, offset, SEEK_SET);
@@ -815,28 +767,23 @@ memory_copy:
 ;        embArray_get(a, data, i);
 ;        embFile_write(data, a->size, 1, file);
 ;    }
-;}
+	ret
 
-;void embArray_free(EmbArray* p)
+embArray_free:
+;(EmbArray* p)
 ;{
 ;    /* delete file, will be automatic for TMPFILE */
 ;    embFile_close(memory[p->file_id]);
 ;}
+	ret
 
-;int husExpand(EmbFile input, EmbFile output, int compressionType)
-;{
-;    /* TODO: find and analyse some HUS encoded files and DST equivalents */
-;    return 0;
-;}
+hus_decompress:
+;(EmbFile input, EmbFile output, int compressionType)
+	ret
 
-;int husCompress(EmbFile input, EmbFile output, int compressionType)
-;{
-;    /* TODO: find and analyse some HUS encoded files and DST equivalents */
-
-;    return 0;
-;}
-
-;#if ENDIAN_HOST == EMB_LITTLE_ENDIAN
+hus_compress:
+;(EmbFile input, EmbFile output, int compressionType)
+	ret
 
 ;static void embFile_readInt(EmbFile file, void* data, int bytes)
 ;{
@@ -862,11 +809,13 @@ memory_copy:
 ;    }
 ;}
 
+emb_file_write_int:
 ;static void embFile_writeInt(EmbFile file, void* data, int bytes)
 ;{
 ;    embFile_write(data, bytes, 1, file);
 ;}
 
+emb_file_write_int_be:
 ;static void embFile_writeInt_be(EmbFile file, void* data, int bytes)
 ;{
 ;    char *a = (char *)data, c;
@@ -884,97 +833,46 @@ memory_copy:
 ;        a[2] = c;
 ;    }
 ;    embFile_write(a, 1, bytes, file);
-;}
+	ret
 
-;#else
-
-;static void embFile_readInt(EmbFile file, void* data, int bytes)
-;{
-;    char *a = (char*)data, c;
-;    embFile_read(data, 1, bytes, file);
-;    if (bytes==2) {
-;        c = a[0];
-;        a[0] = a[1];
-;        a[1] = c;
-;    }
-;    else {
-;        c = a[0];
-;        a[0] = a[3];
-;        a[3] = c;
-;        c = a[1];
-;        a[1] = a[2];
-;        a[2] = c;
-;    }
-;}
-
-;static void embFile_readInt_be(EmbFile file, void* data, int bytes)
-;{
-;    embFile_read(data, 1, bytes, file);
-;}
-
-;static void embFile_writeInt(EmbFile file, void* data, int bytes)
-;{
-;    char *a = (char *)data, c;
-;    if (bytes==2) {
-;        c = a[0];
-;        a[0] = a[1];
-;        a[1] = c;
-;    }
-;    else {
-;        c = a[0];
-;        a[0] = a[3];
-;        a[3] = c;
-;        c = a[1];
-;        a[1] = a[2];
-;        a[2] = c;
-;    }
-;    embFile_write(a, 1, bytes, file);
-;}
-
-;static void embFile_writeInt_be(EmbFile file, void* data, int bytes)
-;{
-;    embFile_write(data, bytes, 1, file);
-;}
-
-;#endif
-
-;static void binaryReadString(EmbFile file, char* buffer, int maxLength)
-;{
+binary_read_string:
+;(EmbFile file, char* buffer, int maxLength)
 ;    int i;
 ;    for (i=0; i < maxLength; i++) {
 ;        embFile_read(buffer+i, 1, 1, file);
 ;        if (!buffer[i])
 ;            break;
 ;    }
-;}
+	ret
 
-;static int emb_ceil(float src)
+emb_ceil:
+;(float src)
 ;{
 ;    return (int)(src)+1;
 ;}
+	ret
 
+emb_floor:
 ;static int emb_floor(float src)
 ;{
 ;    return (int)(src);
 ;}
+	ret
 
-;/* Rounds a float (src) and returns it as an int.
-; *
-; * We assume that the source is within.
-; */
-;static int roundDouble(float src)
-;{
+; Rounds a float (src) and returns it as an int.
+;
+; We assume that the source is within.
+;
+round_double:
+;(float src)
 ;    if (src < 0.0) {
 ;        return emb_ceil(src - 0.5);
 ;    }
 ;    return emb_floor(src + 0.5);
-;}
+	ret
 
-;static void embTime_initNow(EmbTime* t)
-;{
-;#if ARDUINO
-;/*TODO: arduino embTime_initNow */
-;#else
+emb_time_init_now:
+;(EmbTime* t)
 ;    time_t rawtime;
 ;    struct tm* timeinfo;
 ;    time(&rawtime);
@@ -986,27 +884,18 @@ memory_copy:
 ;    t->hour = timeinfo->tm_hour;
 ;    t->minute = timeinfo->tm_min;
 ;    t->second = timeinfo->tm_sec;
-;#endif /* ARDUINO */
-;}
+	ret
 
-;static EmbTime embTime_time(EmbTime* t)
-;{
-;#if ARDUINO
-;/*TODO: arduino embTime_time */
-;#else
-
+emb_time:
+;(EmbTime* t)
 ;    int divideByZero = 0;
 ;    divideByZero = divideByZero / divideByZero;
 ;    /*TODO: wrap time() from time.h and verify it works consistently */
+	ret
 
-;#endif /* ARDUINO */
-;    return *t;
-;}
-
-;/* Converts a 6 digit hex string (I.E. "00FF00") into an
-; * EmbColor and returns it. */
-;EmbColor embColor_fromHexStr(char* val)
-;{
+; Converts a 6 digit hex string (I.E. "00FF00") into an EmbColor and returns it.
+emb_color_from_hex_str:
+;(char* val)
 ;    int i;
 ;    EmbColor color;
 ;    for (i = 0; i < 6; i++) {
@@ -1015,15 +904,15 @@ memory_copy:
 ;        }
 ;        val[i] -= '0';
 ;    }
-
+;
 ;    color.r = val[0] * 16 + val[1];
 ;    color.g = val[2] * 16 + val[3];
 ;    color.b = val[4] * 16 + val[5];
 ;    return color;
-;}
+	ret
 
-;static int emb_array_to_int(char* buffer)
-;{
+emb_array_to_int:
+;(char* buffer)
 ;    int result;
 ;    result = 0;
 ;    for (; *buffer; buffer++) {
@@ -1032,10 +921,10 @@ memory_copy:
 ;        }
 ;    }
 ;    return result;
-;}
+	ret
 
-;static float emb_array_to_float(char* buffer)
-;{
+emb_array_to_float:
+;(char* buffer)
 ;    float result;
 ;    int offset;
 ;    int decimal_places;
@@ -1051,14 +940,14 @@ memory_copy:
 ;        }
 ;    }
 ;    return result / emb_pow(10.0, decimal_places);
-;}
+	ret
 
-;/* Replacing the %d in *printf functionality.
-; *
-; * Accounts for the sign of the 
-; */
-;static void emb_int_to_array(char* buffer, int number, int maxDigits)
-;{
+; Replacing the %d in *printf functionality.
+;
+; Accounts for the sign of the 
+;
+emb_int_to_array:
+;(char* buffer, int number, int maxDigits)
 ;    int i, j, sign;
 ;    unsigned int unumber;
 ;    sign = 0;
@@ -1080,25 +969,22 @@ memory_copy:
 ;    if (sign) {
 ;        buffer[i] = '-';
 ;    }
-;    /* left shift to the front of the buffer so the buffer doesn't change
-;     * size in later use
-;     */
+; left shift to the front of the buffer so the buffer doesn't change size in later use
 ;    for (j = 0; j < maxDigits - i; j++) {
 ;        buffer[j] = buffer[i + j];
 ;    }
-;}
+	ret
 
-;static void writeInt(EmbFile file, int n, int m)
-;{
+write_int:
+;(EmbFile file, int n, int m)
 ;    char buffer[30];
 ;    emb_int_to_array(buffer, n, m);
 ;    embFile_print(file, buffer);
-;}
+	ret
 
-;/* Replacing the %f in *printf functionality.
-; */
-;static void emb_float_to_array(char* buffer, float number, float tolerance, int before, int after)
-;{
+; Replacing the %f in *printf functionality.
+emb_float_to_array:
+;(char* buffer, float number, float tolerance, int before, int after)
 ;    int i, maxDigits, j;
 ;    float t;
 ;    float afterPos[] = { 1.0e-1, 1.0e-2, 1.0e-3, 1.0e-4, 1.0e-5, 1.0e-6, 1.0e-7, 1.0e-8 };
@@ -1135,23 +1021,7 @@ memory_copy:
 ;    /* lTrim(buffer, ' '); */
 ;}
 
-;/* puts() abstraction. Uses Serial.print() on ARDUINO */
-;static void embLog(const char* str)
-;{
-;#if ARDUINO
-;    inoLog_serial(str);
-;    inoLog_serial("\n");
-;#else
-;#ifdef linux
-;    write(1, str, string_length(str));
-;    write(1, "\n", 1);
-;#else
-;    puts(str);
-;#endif
-;#endif
-;}
-
-;static const float embConstantPi = 3.1415926535;
+embConstantPi: dd	3.1415926535
 
 ;float radians(float degree)
 ;{
@@ -1544,92 +1414,100 @@ memory_copy:
 ;    result->y = v1.y + v2.y;
 ;}
 
-;/**
-; * The average of vectors \a v1 and \a v2 returned as \a result.
-; */
-;void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result)
-;{
+
+; The average of vectors \a v1 and \a v2 returned as \a result.
+;
+emb_vector_average:
+; argument 1: memory reference for v1
+; argument 2: memory reference for v2
+; argument 3: memory reference for result
 ;    if (!result) {
 ;        print_log_string(error_vector_average);
 ;        return;
 ;    }
 ;    result->x = (v1.x + v2.x) / 2.0;
 ;    result->y = (v1.y + v2.y) / 2.0;
-;}
+	ret
 
-;/**
-; * The difference between vectors \a v1 and \a v2 returned as \a result.
-; */
-;void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result)
-;{
+
+; The difference between vectors \a v1 and \a v2 returned as \a result.
+;
+emb_vector_difference:
+; argument 1: memory reference for v1
+; argument 2: memory reference for v2
+; argument 3: memory reference for result
 ;    if (!result) {
 ;        print_log_string(error_vector_subtract);
 ;        return;
 ;    }
 ;    result->x = v1.x - v2.x;
 ;    result->y = v1.y - v2.y;
-;}
+	ret
 
-;/**
-; * The dot product as vectors \a v1 and \a v2 returned as a float.
-; *
-; * That is
-; * (x)   (a) = xa+yb
-; * (y) . (b)
-; */
-;float embVector_dot(EmbVector v1, EmbVector v2)
-;{
+
+; The dot product as vectors \a v1 and \a v2 returned as a float.
+; That is
+; (x)   (a) = xa+yb
+; (y) . (b)
+;
+emb_vector_dot:
+; argument 1: memory reference for v1
+; argument 2: memory reference for v2
+; returns: dot product
 ;    return v1.x * v2.x + v1.y * v2.y;
-;}
+	ret
 
-;/**
+
 ; * The Euclidean distance between points v1 and v2, aka |v2-v1|.
-; */
+;
+emb_vector_distance:
+; argument 1: memory reference for v1
+; argument 2: memory reference for v2
+; returns: the length |v2-v1|
 ;float embVector_distance(EmbVector v1, EmbVector v2)
-;{
 ;    EmbVector v3;
 ;    embVector_subtract(v1, v2, &v3);
 ;    return emb_sqrt(embVector_dot(v3, v3));
-;}
+	ret
 
-;/**
-; * Since we aren't using full vector algebra here, all vectors are "vertical".
-; * so this is like the product v1^{T} I_{2} v2 for our vectors \a v1 and \v2
-; * so a "component-wise product". The result is stored at the pointer \a result.
-; *
-; * That is
-; *      (1 0) (a) = (xa)
-; * (x y)(0 1) (b)   (yb)
-; */
-;void embVector_component_product(EmbVector v1, EmbVector v2, EmbVector* result)
-;{
+
+; Since we aren't using full vector algebra here, all vectors are "vertical".
+; so this is like the product v1^{T} I_{2} v2 for our vectors \a v1 and \v2
+; so a "component-wise product". The result is stored at the pointer \a result.
+;
+; That is
+;      (1 0) (a) = (xa)
+; (x y)(0 1) (b)   (yb)
+;
+emb_vector_component_product:
+;(EmbVector v1, EmbVector v2, EmbVector* result)
 ;    if (!result) {
 ;        print_log_string(error_vector_component_product);
 ;        return;
 ;    }
 ;    result->x = v1.x * v2.x;
 ;    result->y = v1.y * v2.y;
-;}
+	ret
 
-;/**
-; * The length or absolute value of the vector \a vector. 
-; */
+
+; The length or absolute value of the vector \a vector. 
+;
 ;float embVector_getLength(EmbVector vector)
 ;{
 ;    return emb_sqrt(vector.x * vector.x + vector.y * vector.y);
 ;}
 
-;/**
-; * The length or absolute value of the vector \a vector. 
-; */
+
+; The length or absolute value of the vector \a vector. 
+;
 ;float embVector_cross(EmbVector a, EmbVector b)
 ;{
 ;    return a.x * b.y - a.y * b.x;
 ;}
 
-;/*! Returns a pointer to an EmbPattern. It is created on the heap.
-; * The caller is responsible for freeing the allocated memory with
-; * embPattern_free(). */
+; Returns a pointer to an EmbPattern. It is created on the heap.
+; The caller is responsible for freeing the allocated memory with
+; embPattern_free().
 ;EmbPattern* embPattern_create(void)
 ;{
 ;    EmbPattern* p;
@@ -1667,10 +1545,10 @@ memory_copy:
 ;    p->home.y = 0.0;
 
 ;    return p;
-;}
+	ret
 
-;void embPattern_hideStitchesOverLength(EmbPattern* p, int length)
-;{
+emb_pattern_hide_stitches_over_length:
+;(EmbPattern* p, int length)
 ;    float prevX, prevY;
 ;    int i;
 ;    EmbStitch st;
@@ -1692,7 +1570,7 @@ memory_copy:
 ;        prevY = st.y;
 ;        embArray_set(p->stitchList, &st, i);
 ;    }
-;}
+	ret
 
 ;int embPattern_addThread(EmbPattern* p, EmbThread thread)
 ;{

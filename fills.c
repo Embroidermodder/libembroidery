@@ -13,7 +13,7 @@ L_system hilbert_curve_l_system = {
 int max_stitches = 100000;
 
 /* This is a slow generation algorithm */
-int lindenmayer_system(L_system L, char *state, int iterations)
+int lindenmayer_system(L_system L, char *state, int iterations, int complete)
 {
     /* We know that the full length of the curve has to fit within
      * the number of stitches and we can cancel consequtive +-, -+
@@ -30,31 +30,35 @@ Potential reference:
 	publisher = {Springer}
 }
      */
-    char *new_state, *storage_ptr;
-    int i, j, s;
+    char *new_state;
+    int j;
+
+    if (complete == 0) {
+        state[0] = L.axiom;
+        state[1] = 0;
+        lindenmayer_system(L, state, iterations, complete+1);
+        return 0;
+    }
 
     new_state = state + max_stitches*5;
-    state[0] = L.axiom;
-    state[1] = 0;
 
-    for (i=0; i<iterations; i++) {
-        new_state[0] = 0;
-        /* replace letters using rules by copying to new_state */
-        for (j=0; j<strlen(state); j++) {
-            s = state[j]-'A';
-            if (s < 2 && s >= 0) {
-                strcat(new_state, L.rules[s]);
-            }
-            else {
-                new_state[strlen(new_state)] = state[j];
-                new_state[strlen(new_state)] = 0;
-            }
+    new_state[0] = 0;
+
+    /* replace letters using rules by copying to new_state */
+    for (j=0; j<strlen(state); j++) {
+        if (state[j] >= 'A' && state[j] < 'F') {
+            strcat(new_state, L.rules[state[j]-'A']);
         }
-        /* swap pointers */
-        storage_ptr = state;
-        state = new_state;
-        new_state = storage_ptr;
+        if (state[j] == 'F') strcat(new_state, "F");
+        if (state[j] == '+') strcat(new_state, "+");
+        if (state[j] == '-') strcat(new_state, "-");
     }
+    memcpy(state, new_state, strlen(new_state)+1);
+
+    if (complete < iterations) {
+        lindenmayer_system(L, state, iterations, complete+1);
+    }
+    return 0;
 }
 
 int hilbert_curve(int iterations)
@@ -66,22 +70,21 @@ int hilbert_curve(int iterations)
     different functions
     */
     char *state;
-    int i;
+    int i, position[2], direction;
+    FILE *f;
 
     /* Make the n-th iteration. */
     state = malloc(max_stitches*10);
-    lindenmayer_system(hilbert_curve_l_system, state, iterations);
+    lindenmayer_system(hilbert_curve_l_system, state, iterations, 0);
 
     /* Convert to an embroidery pattern. */
-    int position[2], direction;
     position[0] = 0;
     position[1] = 0;
     direction = 0;
 
-    FILE *f;
     f = fopen("plot.py", "w");
     fprintf(f, "#!/usr/bin/env python3\n");
-    fprintf(f, "A = [\n");
+    fprintf(f, "A = [\n    0, 0");
 
     for (i=0; i<strlen(state); i++) {
         if (state[i] == '+') {
@@ -96,22 +99,19 @@ int hilbert_curve(int iterations)
             switch (direction) {
             case 0:
             default:
-                position[0]++;
+                position[0]--;
                 break;
             case 1:
                 position[1]++;
                 break;
             case 2:
-                position[0]--;
+                position[0]++;
                 break;
             case 3:
                 position[1]--;
                 break;
             }
-            fprintf(f, "    %d, %d", position[0], position[1]);
-            if (i != strlen(state) - 1) {
-                fprintf(f, ",\n");
-            }
+            fprintf(f, ",\n    %d, %d", position[0], position[1]);
         }
     }
     fprintf(f, "]\n");
@@ -128,4 +128,30 @@ int hilbert_curve(int iterations)
     return 0;
 }
 
+/* using the "paper folding" method (find citation) */
+void generate_dragon_curve(char *state, int iterations)
+{
+    int i, length;
+    if (iterations==1) {
+        state[0] = 'R';
+        state[1] = 0;
+        return;
+    }
+    length = strlen(state);
+    for (i=length-1; i>=0; i--) {
+        state[2*i+1] = state[i];
+        if (i%2 == 0) {
+            state[2*i] = 'R';
+        }
+        else {
+            state[2*i] = 'L';
+        }
+    }
+    state[2*length+1] = 0;
+    generate_dragon_curve(state, iterations-1);
+}
 
+int dragon_curve(int iterations)
+{
+    return 0;
+}

@@ -12,6 +12,7 @@ typedef struct EmbImage_ {
 
 int render_line(EmbLine, EmbImage *, EmbColor);
 int render(EmbPattern *pattern, EmbImage *image);
+int render_postscript(EmbPattern *pattern, EmbImage *image);
 
 /* Render Line
  * -----------
@@ -64,5 +65,15 @@ int render(EmbPattern *p, EmbImage *image)
         stlist = stlist->next;
         st = stlist->stitch;
     }
+}
+
+/* EPS style render
+ *
+ *
+ */
+
+int render_postscript(EmbPattern *pattern, EmbImage *image)
+{
+    
 }
 

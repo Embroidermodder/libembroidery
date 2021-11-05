@@ -520,9 +520,6 @@ unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector*
     return 1;
 }
 
-void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int _269) {}
-int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _267, int _269, int _235) { return 0; }
-
 EmbArray* embArray_create(int type)
 {
     EmbArray *p;

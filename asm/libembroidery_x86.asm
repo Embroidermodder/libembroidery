@@ -1,17 +1,109 @@
 ;
 ; Libembroidery assembly for x86 compatible systems.
+; --------------------------------------------------------------------
+;
+; MACRO MINI LIBRARY
+; --------------------------------------------------------------------
 
+%macro writeBytes	3
+
+	mov	edx, %3
+	mov	ecx, %2
+	mov	ebx, %1
+	mov	eax, 4
+	int	0x80
+
+%endmacro
+
+%macro writeByte	2
+
+	writeBytes	%1, %2, 1
+
+%endmacro
+
+%macro writeInt	2
+
+	writeBytes	%1, %2, 4
+
+%endmacro
+
+%macro writeUInt	2
+
+	writeBytes	%1, %2, 4
+
+%endmacro
+
+%macro writeFloat	2
+
+	writeBytes	%1, %2, 4
+
+%endmacro
+
+%macro writeShort	2
+
+	writeBytes	%1, %2, 2
+
+%endmacro
+
+%macro writeUShort	2
+
+	writeBytes	%1, %2, 2
+
+%endmacro
+
+%macro writeIntBE	2
+
+	; we need to reverse order here because x86 is little-endian
+	writeBytes	%1, %2, 4
+
+%endmacro
+
+%macro writeUIntBE	2
+
+	; we need to reverse order here because x86 is little-endian
+	writeBytes	%1, %2, 4
+
+%endmacro
+
+%macro embLog	2
+
+; put 1 as file descriptor: that's stdout
+
+	writeBytes	1, %1, %2
+
+%endmacro
+
+%macro readBytes	3
+
+	mov	edx, %3
+	mov	ecx, %2
+	mov	ebx, %1
+	mov	eax, 4  ; need to change to correct syscall
+	int	0x80
+
+%endmacro
+
+%macro readByte	2
+
+	readBytes	%1, %2, 1
+
+%endmacro
+
+%macro readFloat	2
+
+	readBytes	%1, %2, 4
+
+%endmacro
+
+
+; --------------------------------------------------------------------
 
 	global	_start
 
 section .text
 
 _start:
-	mov	edx, welcome_msg_len
-	mov	ecx, welcome_msg
-	mov	ebx, 1
-	mov	eax, 4
-	int	0x80
+	embLog	welcome_msg, welcome_msg_len
 
 	mov	eax, 1
 	int	0x80
@@ -230,7 +322,8 @@ active_patterns:
 %define thread_color_offset                     30
 %define thread_code                             33
 
-;/* path flag codes */
+; path flag codes
+; ---------------
 %define LINETO                                  0
 %define MOVETO                                  1
 %define BULGETOCONTROL                          2
@@ -382,83 +475,25 @@ black:
 ; CODE SECTION
 ; ------------
 
-;static void binaryWriteByte(EmbFile f, char b)
-;{
-;    embFile_write(&b, 1, 1, f);
-;}
-
-;static void binaryWriteBytes(EmbFile f, char *b, int n)
-;{
-;    embFile_write(b, 1, n, f);
-;}
-
-;static void binaryWriteInt(EmbFile f, int b)
-;{
-;    embFile_writeInt(f, &b, 4);
-;}
-
-;static void binaryWriteUInt(EmbFile f, unsigned int b)
-;{
-;    embFile_writeInt(f, &b, 4);
-;}
-
-;static void binaryWriteShort(EmbFile f, short b)
-;{
-;    embFile_writeInt(f, &b, 2);
-;}
-
-;static void binaryWriteUShort(EmbFile f, unsigned short b)
-;{
-;    embFile_writeInt(f, &b, 2);
-;}
-
-;static void binaryWriteFloat(EmbFile f, float fl)
-;{
-;    embFile_writeInt(f, &fl, 4);
-;}
-
-;static char binaryReadByte(EmbFile f)
-;{
-;    char b;
-;    embFile_read(&b, 1, 1, f);
-;    return b;
-;}
-
-;static char binaryReadBytes(EmbFile f, char *s, int n)
-;{
-;    embFile_read(s, 1, n, f);
-;}
-
-;static char binaryReadUInt8(EmbFile f)
-;{
-;    unsigned char b;
-;    embFile_read(&b, 1, 1, f);
-;    return b;
-;}
-
-;static float binaryReadFloat(EmbFile f)
-;{
-;    float fl;
-;    embFile_read(&fl, 4, 1, f);
-;    return fl;
-;}
 
 ;static int bit(unsigned char a, int n)
 ;{
 ;    return ((a & (1 << n)) / (1 << n));
 ;}
 
-;static int emb_min_int(int a, int b)
-;{
-;    if (a<b) return a;
-;    return b;
-;}
+emb_min_int:
+	cmp	eax, ebx
+	jl	min_int_b
+	mov	eax, ebx
+min_int_b:
+	ret
 
-;static int emb_max_int(int a, int b)
-;{
-;    if (a>b) return a;
-;    return b;
-;}
+emb_max_int:
+	cmp	eax, ebx
+	jg	min_int_b
+	mov	eax, ebx
+max_int_b:
+	ret
 
 ;static float emb_min_float(float a, float b)
 ;{
@@ -472,44 +507,35 @@ black:
 ;    return b;
 ;}
 
-;float emb_fabs(float a);
-;int emb_abs(int a);
-;float emb_sqrt(float a);
-;float emb_pow(float a, int n);
-;float emb_sin(float a);
-;float emb_cos(float a);
-;float emb_atan2(float a, float b);
-;int random_int(void);
-
-;float emb_fabs(float a)
-;{
-;    if (a<0.0) return -a;
+emb_fabs:
+;(float a)
+;    if (a<0.0) a = -a;
 ;    return a;
-;}
+	ret
 
-;int emb_abs(int a)
-;{
-;    if (a<0) return -a;
+emb_abs:
+;(int a)
+;    if (a<0) a = -a;
 ;    return a;
-;}
+	ret
 
-;int random_int(void)
-;{
-;    /* Linear something RNG, need to look up better constants
-;     * all possible outputs happen (1, 999), one at a time.
-;     * Not 0, so the result is offset.
-;     *
-;     * Note that gcd(37, 1000) = gcd(39, 1000) = 1. 
-;     */
+; Linear something RNG, need to look up better constants
+; all possible outputs happen (1, 999), one at a time.
+; Not 0, so the result is offset.
+;
+; Note that gcd(37, 1000) = gcd(39, 1000) = 1. 
+;
+random_int:
+;	mul	
 ;    random_state = (39*random_state)%1000;
 ;    return random_state - 1;
-;}
+	ret
 
-;/* Babylonian square root algorithm.
-; * NEEDS TEST IN THE TEST SUITE.
-; */
-;float emb_sqrt(float a)
-;{
+; Babylonian square root algorithm.
+; NEEDS TEST IN THE TEST SUITE.
+;
+emb_sqrt:
+;(float a)
 ;    int i;
 ;    float b, epsilon;
 ;    epsilon = 0.0001;
@@ -523,10 +549,10 @@ black:
 ;    return b;
 ;}
 
-;float emb_factorial[] = {
-;    1.0,
-;    1.0,
-;    2.0,
+emb_factorial:
+	dd	1.0
+	dd	1.0
+;	dd	2.0
 ;    6.0,
 ;    24.0,
 ;    120.0,
@@ -550,85 +576,25 @@ black:
 ;    return b;
 ;}
 
-;/* Taylor series sine algorithm.
-; */
-;float emb_sin(float a)
-;{
-;    int i, sign;
-;    float b;
-;    b = 0.0;
-;    sign = 1;
-;    for (i=0; i<5; i++) {
-;        b += sign*emb_pow(a, 2*i+1)/emb_factorial[2*i+1];
-;        sign *= -1;
-;    }
-;    return b;
-;}
+; sin: use fsin in x86
+; cos: use fcos in x86
+; atan2: use fpatan in x86
 
-;/* Taylor series cosine algorithm.
-; */
-;float emb_cos(float a)
-;{
-;    int i, sign;
-;    float b;
-;    b = 0.0;
-;    sign = 1;
-;    for (i=0; i<5; i++) {
-;        b += sign*emb_pow(a, 2*i)/emb_factorial[2*i];
-;        sign *= -1;
-;    }
-;    return b;
-;}
-
-;/* Euler's series for arctan. (See Utility Functions section of the manual).
-; */
-;float emb_atan2(float y, float x)
-;{
-;    int i;
-;    float a, t, epsilon, coeff;
-;    epsilon = 0.0001;
-;    if (x>epsilon) {
-;        a = y/(emb_sqrt(x*x+y*y)+x);
-;        t = 0.0;
-;        coeff = 1.0;
-;        for (i=0; i<20; i++) {
-;            if (i>0) {
-;                coeff *= 4.0 * i;
-;                coeff /= (2*i)*(2*i+1);
-;            }
-;            t += coeff*(emb_pow(a, 2*i+1)/emb_pow(1+a*a, i+1));
-;        }
-;        return 2*t;
-;    }
-;    if (y>epsilon) {
-;        return 0.5*3.141592 - emb_atan2(x, y);
-;    }
-;    if (y<epsilon) {
-;        return -0.5*3.141592 - emb_atan2(x, y);
-;    }
-;    if (x<epsilon) {
-;        return 3.141592 + emb_atan2(y, x);
-;    }
-;    print_log_string(error_emb_atan2);
-;    return 0.0;
-;}
-
-
-;static int dereference_int(int p)
-;{
+dereference_int:
+;(int p)
 ;    int out;
 ;    embFile_seek(datafile, p, SEEK_SET);
 ;    embFile_read(&out, 4, 1, datafile);
 ;    return out;
-;}
+	ret
 
-;static int double_dereference_int(int table, int entry)
-;{
+double_dereference_int:
+;(int table, int entry)
 ;    int out;
 ;    out = dereference_int(table);
 ;    out = dereference_int(out+4*entry);
 ;    return out;
-;}
+	ret
 
 %define MAX_STRING_LENGTH       1024
 
@@ -642,7 +608,7 @@ black:
 
 %macro	memory_set	3
 
-;static void memory_set(void *ptr, int p, int length)
+;(void *ptr, int p, int length)
 ;{
 ;    int i;
 ;    for (i=0; i<length; i++) {
@@ -650,11 +616,14 @@ black:
 ;    }
 ;}
 
+%%loop_label:
+
 	mov	eax, 0
 	inc	eax
 
 %endmacro
 
+get_str:
 ;static int get_str(char *s, int p)
 ;{
 ;    int i;
@@ -668,6 +637,7 @@ black:
 ;    return 0;
 ;}
 
+string_length:
 ;static int string_length(const char *a)
 ;{
 ;    int i;
@@ -679,6 +649,7 @@ black:
 ;    return MAX_STRING_LENGTH;
 ;}
 
+string_equal:
 ;static int string_equal(const void *a, const void *b)
 ;{
 ;    int i;
@@ -696,6 +667,7 @@ black:
 ;    return 0;
 ;}
 
+memory_copy:
 ;static void memory_copy(void *a, const void *b, int length)
 ;{
 ;    int i;

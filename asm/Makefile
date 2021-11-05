@@ -2,9 +2,8 @@ data:
 	nasm -fbin libembroidery_data.asm -l libembroidery_data.lst -o ../libembroidery_data.bin
 
 x86:
-	m4 libembroidery_x86.asm > libembroidery_x86.s
-	as -o libembroidery_x86.o libembroidery_x86.s
-	ld libembroidery_x86.o -o embroider_x86
+	nasm -o libembroidery_x86.o libembroidery_x86.asm -felf32
+	ld -melf_i386 libembroidery_x86.o -o embroider_x86
 
 arm:
 	m4 libembroidery_arm.asm > libembroidery_arm.s

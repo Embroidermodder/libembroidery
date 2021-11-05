@@ -41,7 +41,14 @@ char read100(EmbPattern* pattern, const char* fileName)
 char write100(EmbPattern* pattern, const char* fileName)
 {
     FILE *file;
-    if (!validateWritePattern(pattern, fileName, "write100")) return 0;
+    int x, y;
+    int stitchType;
+    unsigned char b[4];
+
+    if (!validateWritePattern(pattern, fileName, "write100")) {
+        printf("Failed to validate file with name: %s.", fileName);
+        return 1;
+    }
 
     file = fopen(fileName, "wb");
     if (!file) {
@@ -49,7 +56,30 @@ char write100(EmbPattern* pattern, const char* fileName)
         return 1;
     }
 
+    /*
+    TODO:
+    while (1) {
+        stitchType = NORMAL;
+        x = (b[2] > 0x80) ? -(b[2] - 0x80) : b[2];
+        y = (b[3] > 0x80) ? -(b[3] - 0x80) : b[3];
+        if (st.flags & JUMP) {
+            ?
+        }
+        if (st.flags & STOP) {
+            ?
+        }
+        if (st.flags & END) {
+            ?
+        }
+        // if(!(b[0] & 0xFC)) stitchType = JUMP; TODO: review & fix
+        if (!(b[0] & 0x01)) stitchType = STOP;
+        if (b[0] == 0x1F) stitchType = END;
+        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
+        fwrite(b, 1, 4, file);
+    }
+    */
+
     fclose(file);
-    return 0; /*TODO: finish write100 */
+    return 0;
 }
 

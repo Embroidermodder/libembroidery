@@ -14,8 +14,8 @@ static int testEmbCircle(void);
 static int testThreadColor(void);
 int create_test_csv_file(char *fname, int type);
 int full_test_matrix (char *fname);
-static int create_test_file_1(const char* outf);
-static int create_test_file_2(const char* outf);
+static int create_test_file_1(const char* outf, int mode);
+static int create_test_file_2(const char* outf, int mode);
 
 static void testTangentPoints(EmbCircle c,
     double px, double py,
@@ -280,8 +280,8 @@ void testMain(int level)
     int threadResult = testThreadColor();
     int formatResult = testEmbFormat();
     int arcResult = testGeomArc();
-    int create1Result = create_test_file_1("test01.csv");
-    int create2Result = create_test_file_2("test02.csv");
+    int create1Result = create_test_file_1("test01.csv", EMB_FORMAT_CSV);
+    int create2Result = create_test_file_2("test02.csv", EMB_FORMAT_CSV);
     int svg1Result = convert("test01.csv", "test01.svg");
     int svg2Result = convert("test02.csv", "test02.svg");
     int dst1Result = convert("test01.csv", "test01.dst");
@@ -308,7 +308,7 @@ void testMain(int level)
 
 EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
 
-static int create_test_file_1(const char* outf)
+static int create_test_file_1(const char* outf, int mode)
 {
     int i, result;
     EmbPattern* p;
@@ -331,13 +331,13 @@ static int create_test_file_1(const char* outf)
 
     embPattern_addThread(p, black_thread);
 
-    result = writeCsv(p, outf);
+    result = formatTable[mode].writer(p, outf);
 
     embPattern_free(p);
     return result;
 }
 
-static int create_test_file_2(const char* outf)
+static int create_test_file_2(const char* outf, int mode)
 {
     int i, result;
     EmbPattern* p;
@@ -360,7 +360,7 @@ static int create_test_file_2(const char* outf)
 
     embPattern_addThread(p, black_thread);
 
-    result = writeCsv(p, outf);
+    result = formatTable[mode].writer(p, outf);
 
     embPattern_free(p);
     return result;
@@ -405,16 +405,9 @@ static int testThreadColor(void)
  * Add command "--full-test-suite" for this full matrix.
  */
 
-int full_test_matrix (char *fname)
+int full_test_matrix(char *fname)
 {
-    /*
-    const char *example_files[] = {
-        "example.pes", "",
-        "", "",
-        "", ""
-    };
-    */
-
+    int i, j;
     FILE *f;
     f = fopen(fname, "wb");
     if (!f) {
@@ -422,23 +415,32 @@ int full_test_matrix (char *fname)
         return 1;
     }
 
-/*
-    for (i=0; i<NUMBER_OF_EXAMPLES; i++) {
+    for (i=0; i<numberOfFormats; i++) {
+        char fname[100];
+        sprintf(fname, "test01%s", formatTable[i].extension);
+        create_test_file_1(fname, i);
+        /* p3_render(b); */
         for (j=0; j<numberOfFormats; j++) {
-            create_test_file(a, script[i]);
-            convert(a, b);
-            p3_render(b);
+            char fname_converted[100];
+            int result;
+            if (j==i) continue;
+            printf("\n");
+            sprintf(fname_converted, "test01_%02d_converted%s", i, formatTable[j].extension);
+            result = convert(fname, fname_converted);
+            /* p3_render(b); */
+            /*
             int d = image_distance(a, b);
             fprintf(f, "%d %d ", i, j);
-            if (d < tolerence) {
-                fprintf(f, "PASS\n");
-            }
+            */
+            if (!result) {
+                fprintf(f, "PASS %d %d\n", i, j);
+            } 
             else {
-                fprintf(f, "FAIL\n");
+                fprintf(f, "FAIL %d %d\n", i, j);
             }
         }
     }
-    */
+
     fclose(f);
     return 0;
 }

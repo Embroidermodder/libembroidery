@@ -60,7 +60,7 @@ static unsigned char* husDecompressData(unsigned char* input, int compressedInpu
 {
     unsigned char* decompressedData = (unsigned char*)malloc(sizeof(unsigned char)*decompressedContentLength);
     if(!decompressedData) { printf("ERROR: format-hus.c husDecompressData(), cannot allocate memory for decompressedData\n"); return 0; }
-    husExpand((unsigned char*) input, decompressedData, compressedInputLength, 10);
+    hus_decompress((char*)input, compressedInputLength, decompressedData, &decompressedContentLength);
     return decompressedData;
 }
 
@@ -68,7 +68,7 @@ static unsigned char* husCompressData(unsigned char* input, int decompressedInpu
 {
     unsigned char* compressedData = (unsigned char*)malloc(sizeof(unsigned char)*decompressedInputSize*2);
     if(!compressedData) { printf("ERROR: format-hus.c husCompressData(), cannot allocate memory for compressedData\n"); return 0; }
-    *compressedSize = husCompress(input, (unsigned long) decompressedInputSize, compressedData, 10, 0);
+    hus_compress((char*)input, decompressedInputSize, compressedData, compressedSize);
     return compressedData;
 }
 

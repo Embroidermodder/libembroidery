@@ -656,7 +656,7 @@ typedef struct EmbFormatList_
 EMB_PUBLIC double embMinDouble(double, double);
 EMB_PUBLIC double embMaxDouble(double, double);
 
-EMB_PUBLIC int lindenmayer_system(L_system L, char* state, int iteration);
+EMB_PUBLIC int lindenmayer_system(L_system L, char* state, int iteration, int complete);
 EMB_PUBLIC int hilbert_curve(int iterations);
 
 EMB_PUBLIC int embMinInt(int, int);
@@ -754,8 +754,8 @@ void inplace_trim(char *s);
 char* emb_optOut(double num, char* str);
 char* emb_strdup(const char* src);
 
-void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int _269);
-int husCompress(unsigned char* _266, unsigned long _inputSize, unsigned char* _267, int _269, int _235);
+int hus_compress(char* input, int size, char* output, int *out_size);
+int hus_decompress(char* input, int size, char* output, int *out_size);
 
 EMB_PUBLIC EmbArcObject embArcObject_make(double sx, double sy, double mx, double my, double ex, double ey);
 EMB_PUBLIC EmbArcObject* embArcObject_create(double sx, double sy, double mx, double my, double ex, double ey);

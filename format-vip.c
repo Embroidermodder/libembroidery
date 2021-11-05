@@ -55,13 +55,13 @@ static int vipDecodeStitchType(unsigned char b)
 
 static unsigned char* vipDecompressData(unsigned char* input, int compressedInputLength, int decompressedContentLength)
 {
-    unsigned char* decompressedData = (unsigned char*)malloc(decompressedContentLength);
+    char* decompressedData = (char*)malloc(decompressedContentLength);
     if(!decompressedData)
     {
         printf("ERROR: format-vip.c vipDecompressData(), cannot allocate memory for decompressedData\n");
         return 0;
     }
-    husExpand((unsigned char*)input, decompressedData, compressedInputLength, 10);
+    hus_decompress((char*)input, compressedInputLength, decompressedData, &decompressedContentLength);
     return decompressedData;
 }
 
@@ -185,13 +185,12 @@ char readVip(EmbPattern* pattern, const char* fileName)
 
 static unsigned char* vipCompressData(unsigned char* input, int decompressedInputSize, int* compressedSize)
 {
-    unsigned char* compressedData = (unsigned char*)malloc(sizeof(unsigned char)*decompressedInputSize*2);
-    if(!compressedData)
-    {
+    char* compressedData = (char*)malloc(decompressedInputSize*2);
+    if (!compressedData) {
         printf("ERROR: format-vip.c vipCompressData(), cannot allocate memory for compressedData\n");
         return 0;
     }
-    *compressedSize = husCompress(input, (unsigned long) decompressedInputSize, compressedData, 10, 0);
+    hus_compress((char*)input, decompressedInputSize, compressedData, compressedSize);
     return compressedData;
 }
 

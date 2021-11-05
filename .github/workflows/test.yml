@@ -48,9 +48,8 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=Debug ..
         cmake --build .
-        cmake --install .
-        # Need to fix the executable name?
-        embroider.exe --test
+        #cmake --install .
+        Debug\embroider.exe --test
 
   analyze:
     name: Analyze

@@ -1,22 +1,26 @@
 #include "embroidery.h"
 
+#include <stdio.h>
+
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
 char read100(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file = 0;
+    FILE* file;
     int x, y;
     int stitchType;
     unsigned char b[4];
 
     if (!validateReadPattern(pattern, fileName, "read100")) return 0;
 
-    file = embFile_open(fileName, "rb", 0);
-    if (!file) return 0;
+    file = fopen(fileName, "rb");
+    if (!file) {
+        printf("Failed to open file with name: %s.", fileName);
+        return 0;
+    }
 
     embPattern_loadExternalColorFile(pattern, fileName);
-    while(embFile_read(b, 1, 4, file) == 4)
-    {
+    while (fread(b, 1, 4, file) == 4) {
         stitchType = NORMAL;
         x = (b[2] > 0x80) ? -(b[2] - 0x80) : b[2];
         y = (b[3] > 0x80) ? -(b[3] - 0x80) : b[3];
@@ -25,7 +29,7 @@ char read100(EmbPattern* pattern, const char* fileName)
         if(b[0] == 0x1F) stitchType = END;
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
     }
-    embFile_close(file);
+    fclose(file);
 
     embPattern_end(pattern);
 
@@ -36,12 +40,16 @@ char read100(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 char write100(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile *file;
+    FILE *file;
     if (!validateWritePattern(pattern, fileName, "write100")) return 0;
 
-    file = embFile_open(fileName, "wb", 0);
+    file = fopen(fileName, "wb");
+    if (!file) {
+        printf("Failed to open file with name: %s.", fileName);
+        return 1;
+    }
 
-    embFile_close(file);
+    fclose(file);
     return 0; /*TODO: finish write100 */
 }
 

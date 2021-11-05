@@ -8,37 +8,40 @@ char readBro(EmbPattern* pattern, const char* fileName)
     short unknown1, unknown2, unknown3, unknown4, moreBytesToEnd;
     char name[8];
     int stitchType;
-    EmbFile* file;
+    FILE* file;
 
     if (!validateReadPattern(pattern, fileName, "readBro")) return 0;
 
-    file = embFile_open(fileName, "rb", 0);
-    if (!file) return 0;
+    file = fopen(fileName, "rb");
+    if (!file) {
+        printf("Failed to open file with name: %s.", fileName);
+        return 0;
+    }
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
-    x55 = binaryReadByte(file);
-    unknown1 = binaryReadInt16(file); /* TODO: determine what this unknown data is */
+    fread(&x55, 1, 1, file);
+    fread(&unknown1, 2, 1, file); /* TODO: determine what this unknown data is */
 
-    embFile_read(name, 1, 8, file);
-    unknown2 = binaryReadInt16(file); /* TODO: determine what this unknown data is */
-    unknown3 = binaryReadInt16(file); /* TODO: determine what this unknown data is */
-    unknown4 = binaryReadInt16(file); /* TODO: determine what this unknown data is */
-    moreBytesToEnd = binaryReadInt16(file);
+    fread(name, 1, 8, file);
+    fread(&unknown2, 2, 1, file); /* TODO: determine what this unknown data is */
+    fread(&unknown3, 2, 1, file); /* TODO: determine what this unknown data is */
+    fread(&unknown4, 2, 1, file); /* TODO: determine what this unknown data is */
+    fread(&moreBytesToEnd, 2, 1, file);
 
-    embFile_seek(file, 0x100, SEEK_SET);
+    fseek(file, 0x100, SEEK_SET);
 
     while(1)
     {
         short b1, b2;
         stitchType = NORMAL;
-        b1 = binaryReadByte(file);
-        b2 = binaryReadByte(file);
+        b1 = (unsigned char)fgetc(file);
+        b2 = (unsigned char)fgetc(file);
         if(b1 == -128)
         {
-            unsigned char bCode = binaryReadByte(file);
-            b1 = binaryReadInt16(file);
-            b2 = binaryReadInt16(file);
+            unsigned char bCode = (unsigned char)fgetc(file);
+            fread(&b1, 2, 1, file);
+            fread(&b2, 2, 1, file);
             if(bCode == 2)
             {
                 stitchType = STOP;
@@ -55,7 +58,7 @@ char readBro(EmbPattern* pattern, const char* fileName)
         }
         embPattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
     }
-    embFile_close(file);
+    fclose(file);
 
     embPattern_end(pattern);
 

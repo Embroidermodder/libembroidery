@@ -14,6 +14,8 @@ static int testEmbCircle(void);
 static int testThreadColor(void);
 int create_test_csv_file(char *fname, int type);
 int full_test_matrix (char *fname);
+static int create_test_file_1(const char* outf);
+static int create_test_file_2(const char* outf);
 
 static void testTangentPoints(EmbCircle c,
     double px, double py,
@@ -278,14 +280,12 @@ void testMain(int level)
     int threadResult = testThreadColor();
     int formatResult = testEmbFormat();
     int arcResult = testGeomArc();
-    /*
     int create1Result = create_test_file_1("test01.csv");
     int create2Result = create_test_file_2("test02.csv");
     int svg1Result = convert("test01.csv", "test01.svg");
     int svg2Result = convert("test02.csv", "test02.svg");
     int dst1Result = convert("test01.csv", "test01.dst");
     int dst2Result = convert("test02.csv", "test02.dst");
-    */
 
     puts("SUMMARY OF RESULTS");
     puts("------------------");
@@ -293,14 +293,12 @@ void testMain(int level)
     report(threadResult, "Thread");
     report(formatResult, "Format");
     report(arcResult, "Arc");
-    /*
     report(create1Result, "Create CSV 1");
     report(create2Result, "Create CSV 2");
     report(svg1Result, "Convert CSV-SVG 1");
     report(svg2Result, "Convert CSV-SVG 2");
     report(dst1Result, "Convert CSV-DST 1");
     report(dst2Result, "Convert CSV-DST 2");
-    */
     
     if (level > 0) {
         puts("More expensive tests.");
@@ -308,7 +306,8 @@ void testMain(int level)
     }
 }
 
-#if 0
+EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
+
 static int create_test_file_1(const char* outf)
 {
     int i, result;
@@ -327,16 +326,15 @@ static int create_test_file_1(const char* outf)
         st.y = 10 + 10 * cos(i * (0.5 / 3.141592));
         st.flags = NORMAL;
         st.color = 0;
-        embArray_add(p->stitchList, &st);
+        embPattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
     }
 
-    EmbThread thr = { { 0, 0, 0 }, "Black", "Black" };
-    embPattern_addThread(p, thr);
+    embPattern_addThread(p, black_thread);
 
-    result = embPattern_write(p, outf, EMB_FORMAT_CSV);
+    result = writeCsv(p, outf);
 
     embPattern_free(p);
-    return 0;
+    return result;
 }
 
 static int create_test_file_2(const char* outf)
@@ -357,16 +355,15 @@ static int create_test_file_2(const char* outf)
         st.y = 10 + i * 0.1;
         st.flags = NORMAL;
         st.color = 0;
-        embArray_add(p->stitchList, &st);
+        embPattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
     }
 
-    EmbThread thr = { { 0, 0, 0 }, "Black", "Black" };
-    embPattern_addThread(p, thr);
+    embPattern_addThread(p, black_thread);
 
-    result = embPattern_write(p, outf, EMB_FORMAT_CSV);
+    result = writeCsv(p, outf);
 
     embPattern_free(p);
-    return 0;
+    return result;
 }
 
 /* TODO: Add capability for converting multiple files of various types to a single format. Currently, we only convert a single file to multiple formats. */
@@ -376,6 +373,7 @@ static int create_test_file_2(const char* outf)
     close_embroidery();
 */
 
+#if 0
 static int testThreadColor(void)
 {
     unsigned int tColor = 0xFFD25F00;
@@ -398,39 +396,7 @@ static int testThreadColor(void)
         tName); /* Solution: Pumpkin Pie */
     return 0;
 }
-
 #endif
-
-int create_test_csv_file(char *fname, int type)
-{
-    FILE *f;
-    int i;
-    EmbStitch st;
-
-    f = fopen(fname, "w");
-
-    for (i = 0; i < 100; i++) {
-        switch (type) {
-        case 1:
-            st.x = 10 + 10 * sin(i * (0.5 / 3.141592));
-            st.y = 10 + i * 0.1;
-            st.flags = NORMAL;
-            st.color = 0;
-            break;
-        default:
-            st.x = 10 + 10 * sin(i * (0.5 / 3.141592));
-            st.y = 10 + 10 * cos(i * (0.5 / 3.141592));
-            st.flags = NORMAL;
-            st.color = 0;
-            break;
-        }
-        fprintf(f, "\n");
-    }
-    
-    fclose(f);
-    return 0;
-}
-
 
 /*
  * Table of from/to for formats. What conversions after a from A to B conversion
@@ -441,11 +407,13 @@ int create_test_csv_file(char *fname, int type)
 
 int full_test_matrix (char *fname)
 {
-    // const char *example_files[] = {
-    //     "example.pes", "",
-    //     "", "",
-    //     "", ""
-    // };
+    /*
+    const char *example_files[] = {
+        "example.pes", "",
+        "", "",
+        "", ""
+    };
+    */
 
     FILE *f;
     f = fopen(fname, "wb");

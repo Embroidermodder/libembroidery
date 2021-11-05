@@ -1,30 +1,34 @@
 #include "embroidery.h"
 
+#include <stdio.h>
+
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
 char read10o(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file;
+    FILE* file;
 
     if (!validateReadPattern(pattern, fileName, "read10o")) return 0;
 
-    file = embFile_open(fileName, "rb", 0);
-    if (!file) return 0;
+    file = fopen(fileName, "rb");
+    if (!file) {
+        printf("Failed to open file with name: %s.", fileName);
+        return 0;
+    }
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
-    while(1)
-    {
+    while (1) {
         int x, y;
         int stitchType = NORMAL;
-        unsigned char ctrl = (unsigned char)embFile_getc(file);
-        if(feof(file->file))
+        unsigned char ctrl = (unsigned char)fgetc(file);
+        if (feof(file))
             break;
-        y = embFile_getc(file);
-        if(feof(file->file))
+        y = fgetc(file);
+        if (feof(file))
             break;
-        x = embFile_getc(file);
-        if(feof(file->file))
+        x = fgetc(file);
+        if (feof(file))
             break;
         if(ctrl & 0x20)
             x = -x;
@@ -43,7 +47,7 @@ char read10o(EmbPattern* pattern, const char* fileName)
         }
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
     }
-    embFile_close(file);
+    fclose(file);
 
     embPattern_end(pattern);
 
@@ -54,13 +58,16 @@ char read10o(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 char write10o(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile *file;
+    FILE *file;
     if (!validateWritePattern(pattern, fileName, "write10o")) return 0;
 
-    file = embFile_open(fileName, "rb", 0);
-    if (!file) return 0;
+    file = fopen(fileName, "rb");
+    if (!file) {
+        printf("Failed to open file with name: %s.", fileName);
+        return 0;
+    }
 
-    embFile_close(file);
+    fclose(file);
     return 0; /*TODO: finish write10o */
 }
 

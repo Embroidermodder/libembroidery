@@ -20,7 +20,7 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=Debug ..
         make
-        ./embroider -test
+        ./embroider --test
 
   test-macOS:
     runs-on: macOS-latest
@@ -34,7 +34,7 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=Debug ..
         cmake --build .
-        ./embroider -test
+        ./embroider --test
 
   test-windows:
     runs-on: windows-latest
@@ -48,8 +48,9 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=Debug ..
         cmake --build .
+        cmake --install .
         # Need to fix the executable name?
-        # embroider.exe -test
+        embroider.exe --test
 
   analyze:
     name: Analyze

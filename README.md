@@ -63,3 +63,13 @@ Development
 All the documentation for the development of the library and CLI is also
 in [the manual](https://github.com/Embroidermodder/libembroidery/blob/master/doc/libembroidery_v0.1_manual.pdf).
 If you want to find a simple fix to contribute see the *To Do* section. 
+
+We currently need help with:
+
+  1. Thorough descriptions of each embroidery format.
+  2. Finding resources for each of the branded thread libraries (along with a full citation for documentation).
+  3. Finding resources for each geometric algorithm used (along with a full citation for documentation).
+  4. Completing the full `--full-test-suite`  with no segfaults and at least a clear error message (for example "not implimented yet").
+  5. Identifying "best guesses" for filling in missing information when going from, say `.csv` to a late `.pes` version. What should the default be when the data doesn't clarify?
+  6. Improving the written documentation.
+  7. Funding, see the Sponsor button above. We can treat this as "work" and put far more hours in with broad support in small donations from people who want specific features.

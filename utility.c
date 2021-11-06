@@ -838,7 +838,6 @@ void embArray_free(EmbArray* p)
         break;
     }
     free(p);
-    p = 0;
 }
 
 /**
@@ -920,32 +919,6 @@ int embFile_close(EmbFile* stream)
 char embFile_getc(EmbFile* stream)
 {
     return fgetc(stream->file);
-}
-
-void embFile_readline(EmbFile* stream, char *line, int maxLength)
-{
-    int i;
-    char c;
-    for (i=0; i<maxLength-1; i++) {
-        c = embFile_getc(stream);
-        if (feof(stream->file)) {
-            break;
-        }
-        if (c == '\r') {
-            c = embFile_getc(stream);
-            if (c != '\n') {
-                embFile_seek(stream, -1L, SEEK_CUR);
-            }
-            break;
-        }
-        if (c == '\n') {
-            break;
-        }
-        *line = c;
-        line++;
-        c = embFile_getc(stream);
-    }
-    *line = 0;
 }
 
 size_t embFile_read(void* ptr, size_t size, size_t nmemb, EmbFile* stream)
@@ -2029,16 +2002,18 @@ void embPattern_fixColorCount(EmbPattern* p)
         maxColorIndex = embMaxInt(maxColorIndex, list->stitch.color);
         list = list->next;
     }
-    if (maxColorIndex == 0) {
+    if (p->threads == 0) {
         EmbThread t;
         t.color = black;
         t.description = "Black";
         embPattern_addThread(p, t);
     }
     else {
-        while (p->threads->count <= maxColorIndex) {
+        if (maxColorIndex > 0) {
+            while (p->threads->count <= maxColorIndex) {
 /*        printf("%d %d\n", p->threads->count, maxColorIndex);*/
-            embPattern_addThread(p, embThread_getRandom());
+                embPattern_addThread(p, embThread_getRandom());
+            }
         }
     }
     /*
@@ -2215,11 +2190,7 @@ void embPattern_addStitchAbs(EmbPattern* p, double x, double y, int flags, int i
     s.y = y;
     s.flags = flags;
     s.color = p->currentColorIndex;
-#ifdef ARDUINO
-    inoEvent_addStitchAbs(p, s.x, s.y, s.flags, s.color);
-#else /* ARDUINO */
     p->lastStitch = embStitchList_add(p->lastStitch, s);
-#endif /* ARDUINO */
     p->lastX = s.x;
     p->lastY = s.y;
 }
@@ -2909,6 +2880,10 @@ void embPattern_addRectObjectAbs(EmbPattern* p, double x, double y, double w, do
 
 void embPattern_end(EmbPattern *p)
 {
+    if (!p->lastStitch) {
+        printf("ERROR: no lastStitch, probably entirely empty pattern.");
+        return;
+    }
     /* Check for an END stitch and add one if it is not present */
     if (p->lastStitch->stitch.flags != END) {
         embPattern_addStitchRel(p, 0, 0, END, 1);

@@ -804,7 +804,6 @@ int validateWritePattern(EmbPattern* pattern, const char* fileName, const char *
 int validateReadPattern(EmbPattern* pattern, const char* fileName, const char *function);
 
 EMB_PUBLIC EmbFile* embFile_open(const char* fileName, const char* mode, int optional);
-EMB_PUBLIC void embFile_readline(EmbFile* stream, char *, int);
 EMB_PUBLIC int embFile_close(EmbFile* stream);
 EMB_PUBLIC int embFile_eof(EmbFile* stream);
 EMB_PUBLIC char embFile_getc(EmbFile* stream);

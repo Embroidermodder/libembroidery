@@ -1,4 +1,5 @@
 #include "embroidery.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -252,29 +253,16 @@ char writeCsv(EmbPattern* pattern, const char* fileName)
     FILE* file;
     EmbStitchList* sList;
     EmbRect boundingRect;
-    EmbThread thr;
-    int i;
-    int stitchCount = 0;
-    int threadCount = 0;
+    int i, stitchCount, threadCount;
 
-    if (!validateReadPattern(pattern, fileName, "writeCsv")) {
+    if (!validateWritePattern(pattern, fileName, "writeCsv")) {
         printf("ERROR: Failed to validate pattern.");
         return 60;
     }
 
     sList = pattern->stitchList;
-    stitchCount = embStitchList_count(sList);
-    threadCount = pattern->threads->count;
 
     boundingRect = embPattern_calcBoundingBox(pattern);
-
-    if(!stitchCount)
-    {
-        printf("ERROR: format-csv.c writeCsv(), pattern contains no stitches.\n");
-        return 1;
-    }
-
-    embPattern_end(pattern);
 
     file = fopen(fileName, "w");
     if (!file) {
@@ -305,8 +293,8 @@ char writeCsv(EmbPattern* pattern, const char* fileName)
 
     /* write variables */
     fprintf(file,"\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");
-    fprintf(file, "\">\",\"STITCH_COUNT:\",\"%u\"\n",   (unsigned int)stitchCount);
-    fprintf(file, "\">\",\"THREAD_COUNT:\",\"%u\"\n",   (unsigned int)threadCount);
+    fprintf(file, "\">\",\"STITCH_COUNT:\",\"%u\"\n", (unsigned int)embStitchList_count(sList));
+    fprintf(file, "\">\",\"THREAD_COUNT:\",\"%u\"\n", (unsigned int)pattern->threads->count);
     fprintf(file, "\">\",\"EXTENTS_LEFT:\",\"%f\"\n",   boundingRect.left);
     fprintf(file, "\">\",\"EXTENTS_TOP:\",\"%f\"\n",    boundingRect.top);
     fprintf(file, "\">\",\"EXTENTS_RIGHT:\",\"%f\"\n",  boundingRect.right);
@@ -317,15 +305,18 @@ char writeCsv(EmbPattern* pattern, const char* fileName)
 
     /* write colors */
     fprintf(file, "\"#\",\"[THREAD_NUMBER]\",\"[RED]\",\"[GREEN]\",\"[BLUE]\",\"[DESCRIPTION]\",\"[CATALOG_NUMBER]\"\n");
-    for (i=0; i<threadCount; i++) {
+    
+    for (i=0; i<pattern->threads->count; i++) {
+        EmbThread thr;
         thr = pattern->threads->thread[i];
         /* TODO: fix segfault that backtraces here when libembroidery-convert from dst to csv. */
-        fprintf(file, "\"$\",\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n", i+1,
-                (int)thr.color.r,
-                (int)thr.color.g,
-                (int)thr.color.b,
-                thr.description,
-                thr.catalogNumber);
+        fprintf(file, "\"$\",\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
+            i+1,
+            (int)thr.color.r,
+            (int)thr.color.g,
+            (int)thr.color.b,
+            thr.description,
+            thr.catalogNumber);
     }
     fprintf(file, "\n");
 

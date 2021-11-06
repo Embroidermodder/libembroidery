@@ -407,7 +407,7 @@ static int testThreadColor(void)
 
 int full_test_matrix(char *fname)
 {
-    int i, j;
+    int i, j, tests, success;
     FILE *f;
     f = fopen(fname, "wb");
     if (!f) {
@@ -415,6 +415,8 @@ int full_test_matrix(char *fname)
         return 1;
     }
 
+    tests = 0;
+    success = 0;
     for (i=0; i<numberOfFormats; i++) {
         char fname[100];
         sprintf(fname, "test01%s", formatTable[i].extension);
@@ -433,11 +435,14 @@ int full_test_matrix(char *fname)
             fprintf(f, "%d %d ", i, j);
             */
             if (!result) {
-                fprintf(f, "PASS %d %d\n", i, j);
+                fprintf(f, "PASS");
+                success++;
             } 
             else {
-                fprintf(f, "FAIL %d %d\n", i, j);
+                fprintf(f, "FAIL");
             }
+            fprintf(f, " %d %d %d %d\n", i, j, success, tests);
+            tests++;
         }
     }
 

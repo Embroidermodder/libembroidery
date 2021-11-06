@@ -1,4 +1,6 @@
 #include "embroidery.h"
+
+#include <stdio.h>
 #include <stdlib.h>
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
@@ -6,30 +8,35 @@
 char readEdr(EmbPattern* pattern, const char* fileName)
 {
     int numberOfColors, i;
-    EmbFile* file;
+    FILE* file;
     EmbThread t;
 
-    if (!validateReadPattern(pattern, fileName, "readEdr")) return 0;
+    if (!validateReadPattern(pattern, fileName, "readEdr")) {
+        return 0;
+    }
 
-    file = embFile_open(fileName, "rb", 1);
+    file = fopen(fileName, "rb");
+    if (!file) {
+        return 0;
+    }
 
-    embFile_seek(file, 0x00, SEEK_END);
-    numberOfColors = embFile_tell(file) / 4;
-    embFile_seek(file, 0x00, SEEK_SET);
+    fseek(file, 0x00, SEEK_END);
+    numberOfColors = ftell(file) / 4;
+    fseek(file, 0x00, SEEK_SET);
 
     embArray_free(pattern->threads);
 
-    for(i = 0; i < numberOfColors; i++)
-    {
-        t.color.r = binaryReadByte(file);
-        t.color.g = binaryReadByte(file);
-        t.color.b = binaryReadByte(file);
+    for (i = 0; i < numberOfColors; i++) {
+        unsigned char color[4];
+        fread(color, 1, 4, file);
+        t.color.r = color[0];
+        t.color.g = color[1];
+        t.color.b = color[2];
         t.catalogNumber = "";
         t.description = "";
-        binaryReadByte(file);
         embPattern_addThread(pattern, t);
     }
-    embFile_close(file);
+    fclose(file);
     return 1;
 }
 
@@ -37,23 +44,29 @@ char readEdr(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 char writeEdr(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file;
+    FILE* file;
     EmbColor c;
     int i;
 
-    if (!validateWritePattern(pattern, fileName, "writeEdr")) return 0;
+    if (!validateWritePattern(pattern, fileName, "writeEdr")) {
+        return 0;
+    }
 
-    file = embFile_open(fileName, "wb", 0);
-    if (!file) return 0;
+    file = fopen(fileName, "wb");
+    if (!file) {
+        return 0;
+    }
 
     for (i=0; i<pattern->threads->count; i++) {
+        unsigned char output[4];
         c = pattern->threads->thread[i].color;
-        binaryWriteByte(file, c.r);
-        binaryWriteByte(file, c.g);
-        binaryWriteByte(file, c.b);
-        binaryWriteByte(file, 0);
+        output[0] = c.r;
+        output[1] = c.g;
+        output[2] = c.b;
+        output[3] = 0;
+        fwrite(output, 1, 4, file);
     }
-    embFile_close(file);
+    fclose(file);
     return 1;
 }
 

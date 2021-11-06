@@ -8,8 +8,8 @@ char readRgb(EmbPattern* pattern, const char* fileName)
     int i, numberOfColors;
     EmbFile* file = 0;
 
-    if(!pattern) { printf("ERROR: format-rgb.c readRgb(), pattern argument is null\n"); return 0; }
-    if(!fileName) { printf("ERROR: format-rgb.c readRgb(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readRgb"))
+        return 0;
 
     file = embFile_open(fileName, "rb", 1);
     if(!file)
@@ -43,8 +43,8 @@ char writeRgb(EmbPattern* pattern, const char* fileName)
     int i;
     EmbFile* file = 0;
 
-    if(!pattern) { printf("ERROR: format-rgb.c writeRgb(), pattern argument is null\n"); return 0; }
-    if(!fileName) { printf("ERROR: format-rgb.c writeRgb(), fileName argument is null\n"); return 0; }
+    if (!validateWritePattern(pattern, fileName, "readRgb"))
+        return 0;
 
     file = embFile_open(fileName, "wb", 0);
     if(!file)

@@ -114,15 +114,12 @@ const char imageWithFrame[38][48] = {
 
 void readPecStitches(EmbPattern* pattern, EmbFile* file)
 {
+    FILE *f = file->file;
     int stitchNumber = 0;
 
-    if(!pattern) { printf("ERROR: format-pec.c readPecStitches(), pattern argument is null\n"); return; }
-    if(!file) { printf("ERROR: format-pec.c readPecStitches(), file argument is null\n"); return; }
-
-    while(!feof(file->file))
-    {
-        int val1 = (int)binaryReadUInt8(file);
-        int val2 = (int)binaryReadUInt8(file);
+    while(!feof(f)) {
+        int val1 = (int)(unsigned char)fgetc(f);
+        int val2 = (int)(unsigned char)fgetc(f);
 
         int stitchType = NORMAL;
         if(val1 == 0xFF && val2 == 0x00)
@@ -132,7 +129,7 @@ void readPecStitches(EmbPattern* pattern, EmbFile* file)
         }
         if(val1 == 0xFE && val2 == 0xB0)
         {
-            (void)binaryReadByte(file);
+            (void)fgetc(f);
             embPattern_addStitchRel(pattern, 0.0, 0.0, STOP, 1);
             stitchNumber++;
             continue;
@@ -361,23 +358,16 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
     const char* dotPos = strrchr(fileName, '.');
     const char* start = 0;
 
-    if(!pattern) { printf("ERROR: format-pec.c writePecStitches(), pattern argument is null\n"); return; }
-    if(!file) { printf("ERROR: format-pec.c writePecStitches(), file argument is null\n"); return; }
-    if(!fileName) { printf("ERROR: format-pec.c writePecStitches(), fileName argument is null\n"); return; }
-
-    if(forwardSlashPos)
-    {
+    if (forwardSlashPos) {
         start = forwardSlashPos + 1;
     }
-    if(backSlashPos && backSlashPos > start)
-    {
+    if (backSlashPos && backSlashPos > start) {
         start = backSlashPos + 1;
     }
-    if(!start)
-    {
+    if (!start) {
         start = fileName;
     }
-    binaryWriteBytes(file, "LA:", 3);
+    embFile_write("LA:", 1, 3, file);
     flen = (int)(dotPos - start);
 
     while(start < dotPos)
@@ -504,7 +494,7 @@ char writePec(EmbPattern* pattern, const char* fileName)
 
     embPattern_flipVertical(pattern); /* TODO: There needs to be a matching flipVertical() call after the write to ensure multiple writes from the same pattern work properly */
     embPattern_fixColorCount(pattern);
-    embPattern_correctForMaxStitchLength(pattern,12.7, 204.7);
+    embPattern_correctForMaxStitchLength(pattern, 12.7, 204.7);
     embPattern_scale(pattern, 10.0);
 
     binaryWriteBytes(file, "#PEC0001", 8);

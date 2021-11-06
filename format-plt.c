@@ -2,6 +2,32 @@
 #include <stdio.h>
 #include <string.h>
 
+static
+int emb_readline(FILE* file, char *line, int maxLength)
+{
+    int i;
+    char c;
+    for (i=0; i<maxLength-1; i++) {
+        if (!fread(&c, 1, 1, file)) {
+            break;
+        }
+        if (c == '\r') {
+            fread(&c, 1, 1, file);
+            if (c != '\n') {
+                fseek(file, -1L, SEEK_CUR);
+            }
+            break;
+        }
+        if (c == '\n') {
+            break;
+        }
+        *line = c;
+        line++;
+    }
+    *line = 0;
+    return i;
+}
+
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
 char readPlt(EmbPattern* pattern, const char* fileName)
@@ -11,22 +37,19 @@ char readPlt(EmbPattern* pattern, const char* fileName)
     char input[512];
     FILE* file = 0;
 
-    if(!pattern) { printf("ERROR: format-plt.c readPlt(), pattern argument is null\n"); return 0; }
-    if(!fileName) { printf("ERROR: format-plt.c readPlt(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readPlt"))
+        return 0;
 
     file = fopen(fileName, "rb");
-    if(!file)
-    {
+    if (!file) {
         printf("ERROR: format-plt.c readPlt(), cannot open %s for reading\n", fileName);
         return 0;
     }
 
     embPattern_loadExternalColorFile(pattern, fileName);
     /* TODO: replace all scanf code */
-    while(fscanf(file, "%s", input) >= 0)
-    {
-        if(startsWith("PD", input))
-        {
+    while (emb_readline(file, input, 511)) {
+        if (input[0] == 'P' && input[1] == 'D') {
             /* TODO: replace all scanf code */
             if(sscanf(input, "PD%lf,%lf;", &x, &y) < 2)
             {
@@ -34,8 +57,7 @@ char readPlt(EmbPattern* pattern, const char* fileName)
             }
             embPattern_addStitchAbs(pattern, x / scalingFactor, y / scalingFactor, NORMAL, 1);
         }
-        else if(startsWith("PU", input))
-        {
+        else if (input[0] == 'P' && input[1] == 'U') {
             /* TODO: replace all scanf code */
             if(sscanf(input, "PU%lf,%lf;", &x, &y) < 2)
             {
@@ -59,11 +81,15 @@ char writePlt(EmbPattern* pattern, const char* fileName)
     EmbStitch stitch;
     EmbStitchList* pointer = 0;
     char firstStitchOfBlock = 1;
-    FILE* file = 0;
+    FILE* file;
 
     if (!validateWritePattern(pattern, fileName, "writePlt")) {
         return 0;
     }
+    
+    file = fopen(fileName, "w");
+    if (!file)
+        return 0;
 
     fprintf(file, "IN;");
     fprintf(file, "ND;");

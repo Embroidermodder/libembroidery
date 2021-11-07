@@ -1,4 +1,5 @@
 #include "embroidery.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -58,13 +59,14 @@ char readDsb(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 char writeDsb(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file;
+    FILE* file;
     if (!validateWritePattern(pattern, fileName, "writeDsb")) return 0;
 
-    file = embFile_open(fileName, "wb", 0);
+    file = fopen(fileName, "wb");
     if (!file) return 0;
 
-    embFile_close(file);
+    fclose(file);
+    puts("writeDsb is not implimented");
     return 0; /*TODO: finish writeDsb */
 }
 

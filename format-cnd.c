@@ -4,8 +4,9 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 char readCnd(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { printf("ERROR: format-cnd.c readCnd(), pattern argument is null\n"); return 0; }
-    if(!fileName) { printf("ERROR: format-cnd.c readCnd(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readCnd")) return 0;
+
+    puts("readCnd is not implimented");
     return 0; /*TODO: finish readCnd */
 }
 
@@ -17,6 +18,7 @@ char writeCnd(EmbPattern* pattern, const char* fileName)
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 
+    puts("writeCnd is not implimented");
     return 0; /*TODO: finish writeCnd */
 }
 

@@ -9,6 +9,7 @@ char readDem(EmbPattern* pattern, const char* fileName)
 
     embPattern_end(pattern);
 
+    puts("readDem is not implimented.");
     return 0; /*TODO: finish readDem */
 }
 
@@ -21,6 +22,7 @@ char writeDem(EmbPattern* pattern, const char* fileName)
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 
+    puts("writeDem is not implimented.");
     return 0; /*TODO: finish writeDem */
 }
 

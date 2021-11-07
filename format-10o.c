@@ -63,13 +63,13 @@ char write10o(EmbPattern* pattern, const char* fileName)
     FILE *file;
     if (!validateWritePattern(pattern, fileName, "write10o")) {
         printf("Failed to validate file with name: %s.", fileName);
-        return 1;
+        return 0;
     }
 
     file = fopen(fileName, "wb");
     if (!file) {
         printf("Failed to open file with name: %s.", fileName);
-        return 1;
+        return 0;
     }
 
     /*
@@ -106,6 +106,8 @@ char write10o(EmbPattern* pattern, const char* fileName)
     }
     */
     fclose(file);
+    
+    puts("Write10o is not supported currently.");
     return 0; /*TODO: finish write10o */
 }
 

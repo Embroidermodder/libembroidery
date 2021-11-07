@@ -190,6 +190,7 @@ char writeCsd(EmbPattern* pattern, const char* fileName)
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 
+    puts("writeCsd is not implimented.");
     return 0; /*TODO: finish writeCsd */
 }
 

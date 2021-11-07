@@ -257,7 +257,7 @@ char writeCsv(EmbPattern* pattern, const char* fileName)
 
     if (!validateWritePattern(pattern, fileName, "writeCsv")) {
         printf("ERROR: Failed to validate pattern.");
-        return 60;
+        return 0;
     }
 
     sList = pattern->stitchList;
@@ -267,7 +267,7 @@ char writeCsv(EmbPattern* pattern, const char* fileName)
     file = fopen(fileName, "w");
     if (!file) {
         printf("Failed to open file with name: %s.", fileName);
-        return 1;
+        return 0;
     }
 
     /* write header */
@@ -329,6 +329,6 @@ char writeCsv(EmbPattern* pattern, const char* fileName)
     }
 
     fclose(file);
-    return 0;
+    return 1;
 }
 

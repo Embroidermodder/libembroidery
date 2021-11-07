@@ -4,6 +4,9 @@
  */
 
 #include "embroidery.h"
+#include "embroidery-internal.h"
+
+#include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
@@ -24,11 +27,6 @@ static int decode_record_flags(unsigned char b2)
         returnCode |= STOP;
     }
     return returnCode;
-}
-
-static unsigned char setbit(int pos)
-{
-    return (unsigned char)(1 << pos);
 }
 
 /* TODO: review this then remove since emb-pattern.c has a similar function */
@@ -82,7 +80,7 @@ static unsigned char setbit(int pos)
 }
 */
 
-static void encode_record(EmbFile* file, int x, int y, int flags)
+static void encode_record(FILE* file, int x, int y, int flags)
 {
     char b0, b1, b2;
     b0 = b1 = b2 = 0;
@@ -142,9 +140,9 @@ static void encode_record(EmbFile* file, int x, int y, int flags)
         b2 = (char) (b2 | 0xC3);
     }
 
-    binaryWriteByte(file, (unsigned char)b0);
-    binaryWriteByte(file, (unsigned char)b1);
-    binaryWriteByte(file, (unsigned char)b2);
+    fwrite(&b0, 1, 1, file);
+    fwrite(&b1, 1, 1, file);
+    fwrite(&b2, 1, 1, file);
 }
 
 /*convert 2 characters into 1 int for case statement */
@@ -282,15 +280,11 @@ char readDst(EmbPattern* pattern, const char* fileName)
 
     if (!validateReadPattern(pattern, fileName, "readDst")) return 0;
 
-    file = embFile_open(fileName, "rb", 0);
+    file = fopen(fileName, "rb");
     if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
-    /* READ 512 BYTE HEADER INTO header[] */
-    for(i = 0; i < 512; i++)
-    {
-        header[i] = (char)embFile_getc(file);
-    }
+    fread(header, 1, 512, file);
 
     /*TODO:It would probably be a good idea to validate file before accepting it. */
 
@@ -321,7 +315,7 @@ char readDst(EmbPattern* pattern, const char* fileName)
         }
     }
 
-    while(embFile_read(b, 1, 3, file) == 3)
+    while(fread(b, 1, 3, file) == 3)
     {
         int x = 0;
         int y = 0;
@@ -372,7 +366,7 @@ char readDst(EmbPattern* pattern, const char* fileName)
         }
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
     }
-    embFile_close(file);
+    fclose(file);
 
     embPattern_end(pattern);
 
@@ -385,7 +379,7 @@ char readDst(EmbPattern* pattern, const char* fileName)
 char writeDst(EmbPattern* pattern, const char* fileName)
 {
     EmbRect boundingRect;
-    EmbFile* file = 0;
+    FILE* file;
     int xx, yy, dx, dy, flags, i, ax, ay, mx, my;
     char* pd = 0;
     EmbStitchList* pointer = 0;
@@ -393,14 +387,12 @@ char writeDst(EmbPattern* pattern, const char* fileName)
 
     if (!validateWritePattern(pattern, fileName, "writeDst")) return 0;
 
-    file = embFile_open(fileName, "wb", 0);
+    file = fopen(fileName, "wb");
     if (!file) return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
-    xx = yy = 0;
     /* TODO: make sure that pattern->threads->count defaults to 1 in new patterns */
-    flags = NORMAL;
     boundingRect = embPattern_calcBoundingBox(pattern);
     /* TODO: review the code below
     if(pattern->get_variable("design_name") != NULL)
@@ -414,14 +406,14 @@ char writeDst(EmbPattern* pattern, const char* fileName)
     else
     {
     */
-    embFile_printf(file, "LA:%-16s\x0d", "Untitled");
+    fprintf(file, "LA:%-16s\x0d", "Untitled");
     /*} */
-    embFile_printf(file, "ST:%7d\x0d", embStitchList_count(pattern->stitchList));
-    embFile_printf(file, "CO:%3d\x0d", pattern->threads->count - 1); /* number of color changes, not number of colors! */
-    embFile_printf(file, "+X:%5d\x0d", (int)(boundingRect.right * 10.0));
-    embFile_printf(file, "-X:%5d\x0d", (int)(fabs(boundingRect.left) * 10.0));
-    embFile_printf(file, "+Y:%5d\x0d", (int)(boundingRect.bottom * 10.0));
-    embFile_printf(file, "-Y:%5d\x0d", (int)(fabs(boundingRect.top) * 10.0));
+    fprintf(file, "ST:%7d\x0d", embStitchList_count(pattern->stitchList));
+    fprintf(file, "CO:%3d\x0d", pattern->threads->count - 1); /* number of color changes, not number of colors! */
+    fprintf(file, "+X:%5d\x0d", (int)(boundingRect.right * 10.0));
+    fprintf(file, "-X:%5d\x0d", (int)(fabs(boundingRect.left) * 10.0));
+    fprintf(file, "+Y:%5d\x0d", (int)(boundingRect.bottom * 10.0));
+    fprintf(file, "-Y:%5d\x0d", (int)(fabs(boundingRect.top) * 10.0));
 
 
     ax = ay = mx = my = 0;
@@ -438,17 +430,17 @@ char writeDst(EmbPattern* pattern, const char* fileName)
         /* pd is not valid, so fill in a default consisting of "******" */
         pd = "******";
     }
-    embFile_printf(file, "AX:+%5d\x0d", ax);
-    embFile_printf(file, "AY:+%5d\x0d", ay);
-    embFile_printf(file, "MX:+%5d\x0d", mx);
-    embFile_printf(file, "MY:+%5d\x0d", my);
-    embFile_printf(file, "PD:%6s\x0d", pd);
-    binaryWriteByte(file, 0x1a); /* 0x1a is the code for end of section. */
+    fprintf(file, "AX:+%5d\x0d", ax);
+    fprintf(file, "AY:+%5d\x0d", ay);
+    fprintf(file, "MX:+%5d\x0d", mx);
+    fprintf(file, "MY:+%5d\x0d", my);
+    fprintf(file, "PD:%6s\x0d", pd);
+    fprintf(file, "\x1a");
 
     /* pad out header to proper length */
     for(i = 125; i < 512; i++)
     {
-        embFile_printf(file, " ");
+        fprintf(file, " ");
     }
 
     /* write stitches */
@@ -461,13 +453,12 @@ char writeDst(EmbPattern* pattern, const char* fileName)
         dy = roundDouble(st.y * 10.0) - yy;
         xx = roundDouble(st.x * 10.0);
         yy = roundDouble(st.y * 10.0);
-        flags = st.flags;
-        encode_record(file, dx, dy, flags);
+        encode_record(file, dx, dy, st.flags);
         pointer = pointer->next;
     }
-    binaryWriteByte(file, 0xA1); /* finish file with a terminator character */
-    binaryWriteShort(file, 0);
-    embFile_close(file);
+    fprintf(file, "\xa1"); /* finish file with a terminator character */
+    fwrite("\0\0", 1, 2, file);
+    fclose(file);
     return 1;
 }
 

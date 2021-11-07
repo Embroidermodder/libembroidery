@@ -330,11 +330,14 @@ static int create_test_file_1(const char* outf, int mode)
     }
 
     embPattern_addThread(p, black_thread);
+    embPattern_end(p);
 
-    result = formatTable[mode].writer(p, outf);
+    if (!formatTable[mode].writer(p, outf)) {
+        return 16;
+    }
 
     embPattern_free(p);
-    return result;
+    return 0;
 }
 
 static int create_test_file_2(const char* outf, int mode)
@@ -359,11 +362,14 @@ static int create_test_file_2(const char* outf, int mode)
     }
 
     embPattern_addThread(p, black_thread);
+    embPattern_end(p);
 
-    result = formatTable[mode].writer(p, outf);
+    if (!formatTable[mode].writer(p, outf)) {
+        return 16;
+    }
 
     embPattern_free(p);
-    return result;
+    return 0;
 }
 
 /* TODO: Add capability for converting multiple files of various types to a single format. Currently, we only convert a single file to multiple formats. */
@@ -437,12 +443,11 @@ int full_test_matrix(char *fname)
             if (!result) {
                 fprintf(f, "PASS");
                 success++;
-            } 
+            }
             else {
                 fprintf(f, "FAIL");
             }
-            fprintf(f, " %d %d %d %d\n", i, j, success, tests);
-            tests++;
+            fprintf(f, " %d %d\n%f%%\n", i, j, 100*success/(1.0*numberOfFormats*(numberOfFormats-1)));
         }
     }
 

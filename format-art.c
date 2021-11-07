@@ -8,6 +8,7 @@ char readArt(EmbPattern* pattern, const char* fileName)
 
     embPattern_end(pattern);
 
+    puts("readArt is not implimented");
     return 0; /*TODO: finish readArt */
 }
 
@@ -19,6 +20,7 @@ char writeArt(EmbPattern* pattern, const char* fileName)
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 
+    puts("writeArt is not implimented");
     return 0; /*TODO: finish writeArt */
 }
 

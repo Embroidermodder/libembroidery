@@ -4,28 +4,30 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 char readDsz(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file = 0;
+    FILE* file;
+    unsigned char b[3];
+    int i;
 
     if (!validateReadPattern(pattern, fileName, "readDsz")) return 0;
 
-    file = embFile_open(fileName, "rb", 0);
+    file = fopen(fileName, "rb");
     if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
-    embFile_seek(file, 0x200, SEEK_SET);
-    while(1)
-    {
+    for (i=0; i<0x200; i++) {
+        fwrite("\0", 1, 1, file);
+    }
+
+    while (fread(b, 1, 3, file) == 3) {
         int x, y;
         unsigned char ctrl;
         int stitchType = NORMAL;
 
-        y = embFile_getc(file);
-        if(feof(file->file)) break;
-        x = embFile_getc(file);
-        if(feof(file->file)) break;
-        ctrl = (unsigned char)embFile_getc(file);
-        if(feof(file->file)) break;
+        y = b[0];
+        x = b[1];
+        ctrl = b[2];
+
         if(ctrl & 0x01) stitchType = TRIM;
         if(ctrl & 0x20) y = -y;
         if(ctrl & 0x40) x = -x;
@@ -45,7 +47,7 @@ char readDsz(EmbPattern* pattern, const char* fileName)
         }
         embPattern_addStitchRel(pattern, x  / 10.0, y  / 10.0, stitchType, 1);
     }
-    embFile_close(file);
+    fclose(file);
 
     embPattern_end(pattern);
 
@@ -60,6 +62,7 @@ char writeDsz(EmbPattern* pattern, const char* fileName)
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 
+    puts("writeDsz is not implimented.");
     return 0; /*TODO: finish writeDsz */
 }
 

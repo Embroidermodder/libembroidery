@@ -1,32 +1,7 @@
 #include "embroidery.h"
-#include <stdio.h>
-#include <string.h>
+#include "embroidery-internal.h"
 
-static
-int emb_readline(FILE* file, char *line, int maxLength)
-{
-    int i;
-    char c;
-    for (i=0; i<maxLength-1; i++) {
-        if (!fread(&c, 1, 1, file)) {
-            break;
-        }
-        if (c == '\r') {
-            fread(&c, 1, 1, file);
-            if (c != '\n') {
-                fseek(file, -1L, SEEK_CUR);
-            }
-            break;
-        }
-        if (c == '\n') {
-            break;
-        }
-        *line = c;
-        line++;
-    }
-    *line = 0;
-    return i;
-}
+#include <string.h>
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */

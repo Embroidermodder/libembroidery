@@ -8,6 +8,7 @@ char readBmc(EmbPattern* pattern, const char* fileName)
 
     embPattern_end(pattern);
 
+    puts("readBmc is not implimented");
     return 0; /*TODO: finish readBmc */
 }
 
@@ -19,6 +20,7 @@ char writeBmc(EmbPattern* pattern, const char* fileName)
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 
+    puts("writeBmc is not implimented");
     return 0; /*TODO: finish writeBmc */
 }
 

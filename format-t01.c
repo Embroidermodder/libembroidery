@@ -1,4 +1,5 @@
 #include "embroidery.h"
+#include "embroidery-internal.h"
 #include <stdio.h>
 
 static int decodeRecordFlags(unsigned char b2)
@@ -89,11 +90,6 @@ char readT01(EmbPattern* pattern, const char* fileName)
     embPattern_end(pattern);
 
     return 1;
-}
-
-static unsigned char setbit(int pos)
-{
-	return (unsigned char)(1 << pos);
 }
 
 static void encode_record(EmbFile* file, int x, int y, int flags)

@@ -47,13 +47,13 @@ char write100(EmbPattern* pattern, const char* fileName)
 
     if (!validateWritePattern(pattern, fileName, "write100")) {
         printf("Failed to validate file with name: %s.", fileName);
-        return 1;
+        return 0;
     }
 
     file = fopen(fileName, "wb");
     if (!file) {
         printf("Failed to open file with name: %s.", fileName);
-        return 1;
+        return 0;
     }
 
     /*
@@ -80,6 +80,6 @@ char write100(EmbPattern* pattern, const char* fileName)
     */
 
     fclose(file);
-    return 0;
+    return 1;
 }
 

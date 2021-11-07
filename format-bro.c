@@ -73,6 +73,7 @@ char writeBro(EmbPattern* pattern, const char* fileName)
 
     /* TODO: embFile_open() needs to occur here after the check for no stitches */
 
+    puts("writeBro is not implimented");
     return 0; /*TODO: finish writeBro */
 }
 

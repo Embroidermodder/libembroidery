@@ -916,7 +916,7 @@ int embFile_close(EmbFile* stream)
     return retVal;
 }
 
-char embFile_getc(EmbFile* stream)
+unsigned char embFile_getc(EmbFile* stream)
 {
     return fgetc(stream->file);
 }

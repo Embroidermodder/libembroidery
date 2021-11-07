@@ -806,7 +806,7 @@ int validateReadPattern(EmbPattern* pattern, const char* fileName, const char *f
 EMB_PUBLIC EmbFile* embFile_open(const char* fileName, const char* mode, int optional);
 EMB_PUBLIC int embFile_close(EmbFile* stream);
 EMB_PUBLIC int embFile_eof(EmbFile* stream);
-EMB_PUBLIC char embFile_getc(EmbFile* stream);
+EMB_PUBLIC unsigned char embFile_getc(EmbFile* stream);
 EMB_PUBLIC size_t embFile_read(void* ptr, size_t size, size_t nmemb, EmbFile* stream);
 EMB_PUBLIC size_t embFile_write(const void* ptr, size_t size, size_t nmemb, EmbFile* stream);
 EMB_PUBLIC int embFile_seek(EmbFile* stream, long offset, int origin);

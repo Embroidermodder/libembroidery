@@ -2009,8 +2009,8 @@ char writeSvg(EmbPattern* pattern, const char* fileName)
     char tmpX[32];
     char tmpY[32];
 
-    if(!pattern) { printf("ERROR: format-svg.c writeSvg(), pattern argument is null\n"); return 0; }
-    if(!fileName) { printf("ERROR: format-svg.c writeSvg(), fileName argument is null\n"); return 0; }
+    if (!validateWritePattern(pattern, fileName, "writeSvg"))
+        return 0;
 
     file = embFile_open(fileName, "w", 0);
     if(!file)

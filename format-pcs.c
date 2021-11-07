@@ -49,8 +49,7 @@ char readPcs(EmbPattern* pattern, const char* fileName)
     unsigned short colorCount;
     EmbFile* file = 0;
 
-    if(!pattern) { printf("ERROR: format-pcs.c readPcs(), pattern argument is null\n"); return 0; }
-    if(!fileName) { printf("ERROR: format-pcs.c readPcs(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readPcs")) return 0;
 
     file = embFile_open(fileName, "rb", 0);
     if(!file)

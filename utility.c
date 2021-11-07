@@ -859,11 +859,8 @@ int validateWritePattern(EmbPattern *pattern, const char* fileName, const char *
         printf("ERROR: %s(), pattern contains no stitches\n", function);
         return 0;
     }
-    
-    /* Check for an END stitch and add one if it is not present */
-    if (pattern->lastStitch->stitch.flags != END) {
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
-    }
+
+    embPattern_end(pattern);
 
     return 1;
 }

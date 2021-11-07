@@ -1,4 +1,5 @@
 #include "embroidery.h"
+#include "embroidery-internal.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -385,7 +386,7 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     for(i = 0; i < currentThreadCount; i++) {
         EmbColor thr = pattern->threads->thread[i].color;
-        unsigned char color = (unsigned char)embThread_findNearestColor_fromThread(thr, pecThreads, pecThreadCount);
+        unsigned char color = (unsigned char)embThread_findNearestColor_fromThread(thr, (EmbThread*)pecThreads, pecThreadCount);
         embFile_write(&color, 1, 1, file);
     }
     embFile_pad(file, 0x20, (int)(0x1CF - currentThreadCount));

@@ -120,17 +120,18 @@ static void encode_record(FILE* file, int x, int y, int flags)
         b0 = b1 = (char) 0;
     }
 
-    /* if(flags & TRIM)
+    /* make the variable v configurable for the pattern */
+    if(flags & TRIM)
     {
-        int v = 5;
-        int dx = (int)(x/v), dy = (int)(y/v);
-        for(i = 1; i < v; i++)
-        {
+        int dx, dy, i, v = 5;
+        dx = x/v;
+        dy = y/v;
+        for (i = 1; i < v; i++) {
             encode_record(file, dx, dy, JUMP);
         }
         encode_record(file, x - (dx * (v - 1)), y - (dy * (v - 1)), JUMP);
         return;
-    } */
+    }
     if(flags & (JUMP | TRIM))
     {
         b2 = (char) (b2 | 0x83);

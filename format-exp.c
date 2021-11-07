@@ -14,31 +14,29 @@ static void expEncode(unsigned char* b, char dx, char dy, int flags)
         return;
     }
 
-    if(flags == STOP)
-    {
+    switch (flags) {
+    case STOP:
         b[0] = 0x80;
         b[1] = 0x01;
-        b[2] = dx;
-        b[3] = dy;
-    }
-    else if (flags == JUMP)
-    {
+        b[2] = 0x00;
+        b[3] = 0x00;
+        break;
+    case JUMP:
         b[0] = 0x80;
         b[1] = 0x04;
         b[2] = dx;
         b[3] = dy;
-    }
-    else if (flags == TRIM || flags == END)
-    {
+        break;
+    case TRIM:
         b[0] = 0x80;
         b[1] = 0x80;
-        b[2] = 0;
-        b[3] = 0;
-	}
-    else
-    {
+        b[2] = 0x07;
+        b[3] = 0x00;
+        break;
+    default: /* STITCH */
         b[0] = dx;
         b[1] = dy;
+        break;
     }
 }
 
@@ -46,69 +44,37 @@ static void expEncode(unsigned char* b, char dx, char dy, int flags)
  *  Returns \c true if successful, otherwise returns \c false. */
 char readExp(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file = 0;
-    int i = 0;
-    unsigned char b0 = 0, b1 = 0;
-    char dx = 0, dy = 0;
-    int flags = 0;
+    EmbFile* file;
+    unsigned char b[2];
 
-    if(!pattern) { printf("ERROR: format-exp.c readExp(), pattern argument is null\n"); return 0; }
-    if(!fileName) { printf("ERROR: format-exp.c readExp(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readExp")) return 0;
 
     file = embFile_open(fileName, "rb", 0);
-    if(!file) return 0;
+    if (!file) return 0;
 
     embPattern_loadExternalColorFile(pattern, fileName);
 
-    for(i = 0; !feof(file->file); i++)
-    {
-        flags = NORMAL;
-        b0 = (unsigned char)embFile_getc(file);
-        if(feof(file->file))
-            break;
-        b1 = (unsigned char)embFile_getc(file);
-        if(feof(file->file))
-            break;
-        if(b0 == 0x80)
-        {
-            if(b1 & 1)
-            {
-                b0 = (unsigned char)embFile_getc(file);
-                if(feof(file->file))
-                    break;
-                b1 = (unsigned char)embFile_getc(file);
-                if(feof(file->file))
-                    break;
+    while (embFile_read(b, 1, 2, file) == 2) {
+        char dx = 0, dy = 0;
+        int flags = NORMAL;
+        if (b[0] == 0x80) {
+            if (b[1] == 0x01) {
+                if (embFile_read(b, 1, 2, file) != 2) break;
+                /* b0=0x00 and b1=0x00, but accept any, not worth crashing over. */
                 flags = STOP;
             }
-            else if((b1 == 2) || (b1 == 4) || b1 == 6)
-            {
-                flags = TRIM;
-                if(b1 == 2) flags = NORMAL;
-                b0 = (unsigned char)embFile_getc(file);
-                if(feof(file->file))
-                    break;
-                b1 = (unsigned char)embFile_getc(file);
-                if(feof(file->file))
-                    break;
+            else if (b[1] == 0x04) {
+                if (embFile_read(b, 1, 2, file) != 2) break;
+                flags = JUMP;
             }
-            else if(b1 == 0x80)
-            {
-                b0 = (unsigned char)embFile_getc(file);
-                if(feof(file->file))
-                    break;
-                b1 = (unsigned char)embFile_getc(file);
-                if(feof(file->file))
-                    break;
-                /* Seems to be b0=0x07 and b1=0x00
-                 * Maybe used as extension functions */
-                b0 = 0;
-                b1 = 0;
+            else if (b[1] == 0x80) {
+                if (embFile_read(b, 1, 2, file) != 2) break;
+                /* b0=0x07 and b1=0x00, but accept any, not worth crashing over. */
                 flags = TRIM;
             }
         }
-        dx = expDecode(b0);
-        dy = expDecode(b1);
+        dx = expDecode(b[0]);
+        dy = expDecode(b[1]);
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     embFile_close(file);

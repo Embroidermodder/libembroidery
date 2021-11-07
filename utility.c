@@ -958,6 +958,14 @@ EmbFile* embFile_tmpfile(void)
     return eFile;
 }
 
+void embFile_pad(EmbFile* stream, char c, int n)
+{
+    int i;
+    for (i=0; i<n; i++) {
+        embFile_write(&c, 1, 1, stream);
+    }
+}
+
 int embFile_putc(int ch, EmbFile* stream)
 {
     return fputc(ch, stream->file);
@@ -2739,7 +2747,6 @@ void embPattern_free(EmbPattern* p)
     embArray_free(p->splines);
 
     free(p);
-    p = 0;
 }
 
 /*! Adds a circle object to pattern (\a p) with its center at the absolute
@@ -2752,7 +2759,10 @@ void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r
     circle.centerY = cy;
     circle.radius = r;
 
-    if (!p) { printf("ERROR: emb-pattern.c embPattern_addCircleObjectAbs(), p argument is null\n"); return; }
+    if (!p) {
+        printf("ERROR: emb-pattern.c embPattern_addCircleObjectAbs(), p argument is null\n");
+        return;
+    }
     if (p->circles == 0) {
          p->circles = embArray_create(EMB_CIRCLE);
     }
@@ -2802,9 +2812,18 @@ void embPattern_addLineObjectAbs(EmbPattern* p, double x1, double y1, double x2,
 
 void embPattern_addPathObjectAbs(EmbPattern* p, EmbPathObject* obj)
 {
-    if(!p) { printf("ERROR: emb-pattern.c embPattern_addPathObjectAbs(), p argument is null\n"); return; }
-    if(!obj) { printf("ERROR: emb-pattern.c embPattern_addPathObjectAbs(), obj argument is null\n"); return; }
-    if(!obj->pointList) { printf("ERROR: emb-pattern.c embPattern_addPathObjectAbs(), obj->pointList is empty\n"); return; }
+    if (!p) {
+        printf("ERROR: emb-pattern.c embPattern_addPathObjectAbs(), p argument is null\n");
+        return;
+    }
+    if (!obj) {
+        printf("ERROR: emb-pattern.c embPattern_addPathObjectAbs(), obj argument is null\n");
+        return;
+    }
+    if (!obj->pointList) {
+        printf("ERROR: emb-pattern.c embPattern_addPathObjectAbs(), obj->pointList is empty\n");
+        return;
+    }
 
     if (!p->paths) {
         p->paths = embArray_create(EMB_PATH);
@@ -2831,7 +2850,10 @@ void embPattern_addPointObjectAbs(EmbPattern* p, double x, double y)
 
 void embPattern_addPolygonObjectAbs(EmbPattern* p, EmbPolygonObject* obj)
 {
-    if(!p) { printf("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), p argument is null\n"); return; }
+    if (!p) {
+        printf("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), p argument is null\n");
+        return;
+    }
     if(!obj) { printf("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), obj argument is null\n"); return; }
     if(!obj->pointList) { printf("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), obj->pointList is empty\n"); return; }
 
@@ -3548,12 +3570,40 @@ int stringInArray(const char *s, const char **array)
     return 0;
 }
 
+unsigned char setbit(int pos)
+{
+    return (unsigned char)(1 << pos);
+}
+
+int emb_readline(FILE* file, char *line, int maxLength)
+{
+    int i;
+    char c;
+    for (i=0; i<maxLength-1; i++) {
+        if (!fread(&c, 1, 1, file)) {
+            break;
+        }
+        if (c == '\r') {
+            fread(&c, 1, 1, file);
+            if (c != '\n') {
+                fseek(file, -1L, SEEK_CUR);
+            }
+            break;
+        }
+        if (c == '\n') {
+            break;
+        }
+        *line = c;
+        line++;
+    }
+    *line = 0;
+    return i;
+}
+
 /*! Rounds a double (\a src) and returns it as an \c int. */
 int roundDouble(double src)
 {
-    if(src < 0.0)
-        return (int) ceil(src - 0.5);
-    return (int)floor(src+0.5);
+    return (int)round(src);
 }
 
 /*! Returns \c true if string (\a str) begins with substring (\a pre), otherwise returns \c false. */

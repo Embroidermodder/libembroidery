@@ -413,7 +413,7 @@ static int testThreadColor(void)
 
 int full_test_matrix(char *fname)
 {
-    int i, j, tests, success;
+    int i, j, success, ntests;
     FILE *f;
     f = fopen(fname, "wb");
     if (!f) {
@@ -421,17 +421,24 @@ int full_test_matrix(char *fname)
         return 1;
     }
 
-    tests = 0;
     success = 0;
+    ntests = (numberOfFormats - 4)*(numberOfFormats - 5);
     for (i=0; i<numberOfFormats; i++) {
         char fname[100];
+        if (i==EMB_FORMAT_COL || i==EMB_FORMAT_RGB ||
+            i==EMB_FORMAT_INF || i==EMB_FORMAT_EDR) {
+            continue;
+        }
         sprintf(fname, "test01%s", formatTable[i].extension);
         create_test_file_1(fname, i);
         /* p3_render(b); */
         for (j=0; j<numberOfFormats; j++) {
             char fname_converted[100];
             int result;
-            if (j==i) continue;
+            if (i==j || j==EMB_FORMAT_COL || j==EMB_FORMAT_RGB ||
+                j==EMB_FORMAT_INF || j==EMB_FORMAT_EDR) {
+                continue;
+            }
             printf("\n");
             sprintf(fname_converted, "test01_%02d_converted%s", i, formatTable[j].extension);
             result = convert(fname, fname_converted);
@@ -447,7 +454,7 @@ int full_test_matrix(char *fname)
             else {
                 fprintf(f, "FAIL");
             }
-            fprintf(f, " %d %d\n%f%%\n", i, j, 100*success/(1.0*numberOfFormats*(numberOfFormats-1)));
+            fprintf(f, " %d %d\n%f%%\n", i, j, 100*success/(1.0*ntests));
         }
     }
 

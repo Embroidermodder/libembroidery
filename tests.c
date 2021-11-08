@@ -284,8 +284,10 @@ void testMain(int level)
     int create2Result = create_test_file_2("test02.csv", EMB_FORMAT_CSV);
     int svg1Result = convert("test01.csv", "test01.svg");
     int svg2Result = convert("test02.csv", "test02.svg");
+    /*
     int dst1Result = convert("test01.csv", "test01.dst");
     int dst2Result = convert("test02.csv", "test02.dst");
+    */
 
     puts("SUMMARY OF RESULTS");
     puts("------------------");
@@ -297,8 +299,10 @@ void testMain(int level)
     report(create2Result, "Create CSV 2");
     report(svg1Result, "Convert CSV-SVG 1");
     report(svg2Result, "Convert CSV-SVG 2");
+    /*
     report(dst1Result, "Convert CSV-DST 1");
     report(dst2Result, "Convert CSV-DST 2");
+    */
     
     if (level > 0) {
         puts("More expensive tests.");

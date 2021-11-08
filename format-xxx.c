@@ -14,6 +14,7 @@ static char xxxDecodeByte(unsigned char inputByte)
  *  Returns \c true if successful, otherwise returns \c false. */
 char readXxx(EmbPattern* pattern, const char* fileName)
 {
+#if 0
     EmbFile* file = 0;
     unsigned char b0, b1;
     int dx = 0, dy = 0;
@@ -26,8 +27,9 @@ char readXxx(EmbPattern* pattern, const char* fileName)
     EmbStitchList* lastStitch = 0;
     EmbStitchList* secondLast = 0;
 
-    if(!pattern) { printf("ERROR: format-xxx.c readXxx(), pattern argument is null\n"); return 0; }
-    if(!fileName) { printf("ERROR: format-xxx.c readXxx(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readXxx")) {
+        return 0;
+    }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file) return 0;
@@ -112,8 +114,9 @@ char readXxx(EmbPattern* pattern, const char* fileName)
     }
     embFile_close(file);
     embPattern_end(pattern);
-
-    return 1;
+#endif
+    puts("This format is not supported.");
+    return 0;
 }
 
 static void xxxEncodeStop(EmbFile* file, EmbStitch s)
@@ -140,19 +143,17 @@ static void xxxEncodeStitch(EmbFile* file, double deltaX, double deltaY, int fla
 
 static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
 {
+    int i;
     double thisX = 0.0f;
     double thisY = 0.0f;
-    EmbStitchList* stitches = 0;
 
-    if(!embStitchList_empty(p->stitchList))
-    {
-        thisX = (float)p->stitchList->stitch.x;
-        thisY = (float)p->stitchList->stitch.y;
+    if (p->stitchList->count > 0) {
+        thisX = (float)p->stitchList->stitch[0].x;
+        thisY = (float)p->stitchList->stitch[0].y;
     }
-    stitches = p->stitchList;
-    while(stitches)
-    {
-        EmbStitch s = stitches->stitch;
+    
+    for (i=0; i<p->stitchList->count; i++) {
+        EmbStitch s = p->stitchList->stitch[i];
         double deltaX, deltaY;
         double previousX = thisX;
         double previousY = thisY;
@@ -171,7 +172,6 @@ static void xxxEncodeDesign(EmbFile* file, EmbPattern* p)
         {
             xxxEncodeStitch(file, deltaX * 10.0f, deltaY * 10.0f, s.flags);
         }
-        stitches = stitches->next;
     }
 }
 
@@ -198,7 +198,7 @@ char writeXxx(EmbPattern* pattern, const char* fileName)
     {
         binaryWriteByte(file, 0x00);
     }
-    binaryWriteUInt(file, (unsigned int) embStitchList_count(pattern->stitchList));
+    binaryWriteUInt(file, (unsigned int)pattern->stitchList->count);
     for(i = 0; i < 0x0C; i++)
     {
         binaryWriteByte(file, 0x00);

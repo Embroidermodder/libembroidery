@@ -87,8 +87,10 @@ const unsigned int sizeOfFatEntry = sizeof(unsigned int);
 static const unsigned int sizeOfDifatEntry = 4;
 static const unsigned int sizeOfChainingEntryAtEndOfDifatSector = 4;
 static const unsigned int sizeOfDirectoryEntry = 128;
-//static const int supportedMinorVersion = 0x003E;
-//static const int littleEndianByteOrderMark = 0xFFFE;
+/*
+static const int supportedMinorVersion = 0x003E;
+static const int littleEndianByteOrderMark = 0xFFFE;
+*/
 
 const double embConstantPi = 3.1415926535;
 
@@ -583,64 +585,64 @@ int embArray_resize(EmbArray *p)
     switch (p->type) {
     case EMB_ARC:
         p->arc = (EmbArcObject *)realloc(p->arc, p->length*sizeof(EmbArcObject));
-        if (!p->arc) return 1;
+        if (!p->arc) return 0;
         break;
     case EMB_CIRCLE:
         p->circle = (EmbCircleObject *)realloc(p->circle, p->length*sizeof(EmbCircleObject));
-        if (!p->circle) return 1;
+        if (!p->circle) return 0;
         break;
     case EMB_ELLIPSE:
         p->ellipse = (EmbEllipseObject *)realloc(p->ellipse, p->length*sizeof(EmbEllipseObject));
-        if (!p->ellipse) return 1;
+        if (!p->ellipse) return 0;
         break;
     case EMB_FLAG:
         p->flag = (int *)realloc(p->flag, p->length*sizeof(int));
-        if (!p->flag) return 1;
+        if (!p->flag) return 0;
         break;
     case EMB_PATH:
         p->path = (EmbPathObject **)realloc(p->path, p->length*sizeof(EmbPathObject*));
-        if (!p->path) return 1;
+        if (!p->path) return 0;
         break;
     case EMB_POINT:
         p->point = (EmbPointObject *)realloc(p->point, p->length*sizeof(EmbPointObject));
-        if (!p->point) return 1;
+        if (!p->point) return 0;
         break;
     case EMB_LINE:
         p->line = (EmbLineObject *)realloc(p->line, p->length*sizeof(EmbLineObject));
-        if (!p->line) return 1;
+        if (!p->line) return 0;
         break;
     case EMB_POLYGON:
         p->polygon = (EmbPolygonObject **)realloc(p->polygon, p->length*sizeof(EmbPolygonObject*));
-        if (!p->polygon) return 1;
+        if (!p->polygon) return 0;
         break;
     case EMB_POLYLINE:
         p->polyline = (EmbPolylineObject **)realloc(p->polyline, p->length*sizeof(EmbPolylineObject*));
-        if (!p->polyline) return 1;
+        if (!p->polyline) return 0;
         break;
     case EMB_RECT:
         p->rect = (EmbRectObject *)realloc(p->rect, p->length*sizeof(EmbRectObject));
-        if (!p->rect) return 1;
+        if (!p->rect) return 0;
         break;
     case EMB_SPLINE:
         p->spline = (EmbSplineObject *)realloc(p->spline, p->length*sizeof(EmbSplineObject));
-        if (!p->spline) return 1;
+        if (!p->spline) return 0;
         break;
     case EMB_STITCH:
         p->stitch = (EmbStitch *)realloc(p->stitch, CHUNK_SIZE*sizeof(EmbStitch));
-        if (!p->stitch) return 1;
+        if (!p->stitch) return 0;
         break;
     case EMB_THREAD:
         p->thread = (EmbThread *)realloc(p->thread, CHUNK_SIZE*sizeof(EmbThread));
-        if (!p->thread) return 1;
+        if (!p->thread) return 0;
         break;
     case EMB_VECTOR:
         p->vector = (EmbVector *)realloc(p->vector, CHUNK_SIZE*sizeof(EmbVector));
-        if (!p->vector) return 1;
+        if (!p->vector) return 0;
         break;
     default:
         break;
     }
-    return 0;
+    return 1;
 }
 
 int embArray_addArc(EmbArray* p, EmbArc arc, int lineType, EmbColor color)
@@ -749,15 +751,11 @@ int embArray_addRect(EmbArray* p,
     return 1;
 }
 
-int embArray_addStitch(EmbArray* p,
-    double x, double y, int flag, int color)
+int embArray_addStitch(EmbArray* p, EmbStitch st)
 {
     p->count++;
     if (!embArray_resize(p)) return 0;
-    p->stitch[p->count - 1].x = x;
-    p->stitch[p->count - 1].y = y;
-    p->stitch[p->count - 1].flags = flag;
-    p->stitch[p->count - 1].color = color;
+    p->stitch[p->count - 1] = st;
     return 1;
 }
 
@@ -855,7 +853,7 @@ int validateWritePattern(EmbPattern *pattern, const char* fileName, const char *
         return 0;
     }
 
-    if (!embStitchList_count(pattern->stitchList)) {
+    if (pattern->stitchList->count == 0) {
         printf("ERROR: %s(), pattern contains no stitches\n", function);
         return 0;
     }
@@ -1416,14 +1414,14 @@ double GetAngle(VectorStitch vs, VectorStitch vs2)
 
 StitchBlock* BreakIntoColorBlocks(EmbPattern pattern)
 {
+    int i;
     var sa2 = new StitchBlock();
-    int oldColor = pattern.StitchList[0].ColorIndex;
+    int oldColor = pattern->stitchList->stitch[0].color;
     var color = pattern.ColorList[oldColor];
     sa2.Thread = new Thread(color.Red, color.Blue, color.Green);
-    foreach (Stitch s in pattern.stitchList)
-    {
-        if (s.ColorIndex != oldColor)
-        {
+    for (i=0; i<pattern->stitchList->count; i++) {
+        EmbStitch s = pattern->stitchList->stitch[i];
+        if (s.color != oldColor) {
             yield return sa2;
             sa2 = new StitchBlock();
             color = pattern.ColorList[s.ColorIndex];
@@ -1447,7 +1445,7 @@ StitchBlock * BreakIntoSeparateObjects(EmbStitchBlock* blocks)
         block.Stitches[0].Type = VectorStitchType.Contour;
         block.Stitches[block.Stitches.Count - 1].Type = VectorStitchType.Contour;
 
-        for (int i = 0; i < block.Stitches.Count - 2; i++) // step 0
+        for (int i = 0; i < block.Stitches.Count - 2; i++) /* step 0 */
         {
             double dx = (GetRelativeX(block.Stitches[i].Xy, block.Stitches[i + 1].Xy, block.Stitches[i + 2].Xy));
             block.Stitches[i + 1].Type = dx <= 0 ? VectorStitchType.Run : VectorStitchType.Contour;
@@ -1470,24 +1468,27 @@ StitchBlock * BreakIntoSeparateObjects(EmbStitchBlock* blocks)
             }
         }
 
-        //for (int i = 1; i < sa.Stitches.Count - 3; i++) // step 1
-        //{
-        //    if (sa.Stitches[i + 1].Type == VectorStitchType.Contour)
-        //    {
-        //        //float dy = GetRelativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
-        //        //float dy2 = GetRelativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
-        //        //float dy3 = GetRelativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
-        //        //if(dy)
-        //        if (sa.Stitches[i - 1].Type == VectorStitchType.Run || sa.Stitches[i + 1].Type == VectorStitchType.Run)
-        //        {
-        //            sa.Stitches[i].Type = VectorStitchType.Tatami;
-        //        }
-        //        else
-        //        {
-        //            sa.Stitches[i].Type = VectorStitchType.Satin;
-        //        }
-        //    }
-        //}
+        /* step 1 */
+        /*
+        for (int i = 1; i < sa.Stitches.Count - 3; i++)
+        {
+            if (sa.Stitches[i + 1].Type == VectorStitchType.Contour)
+            {
+                float dy = GetRelativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
+                float dy2 = GetRelativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
+                float dy3 = GetRelativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
+                if(dy)
+                if (sa.Stitches[i - 1].Type == VectorStitchType.Run || sa.Stitches[i + 1].Type == VectorStitchType.Run)
+                {
+                    sa.Stitches[i].Type = VectorStitchType.Tatami;
+                }
+                else
+                {
+                    sa.Stitches[i].Type = VectorStitchType.Satin;
+                }
+            }
+        }
+        */
     }
 }
 
@@ -1502,30 +1503,28 @@ StitchObject * FindOutline(EmbStitchBlock* stitchData)
         {
             sa.Stitches[0].Type = VectorStitchType.Contour;
             sa.Stitches[sa.Stitches.Count - 1].Type = VectorStitchType.Contour;
-            for (int i = 0; i < sa.Stitches.Count - 2; i++) // step 0
-            {
+            /* step 0 */
+            for (int i = 0; i < sa.Stitches.Count - 2; i++) {
                 float dx = (GetRelativeX(sa.Stitches[i].Xy, sa.Stitches[i + 1].Xy, sa.Stitches[i + 2].Xy));
                 sa.Stitches[i + 1].Type = dx <= 0 ? VectorStitchType.Run : VectorStitchType.Contour;
                 sa.Stitches[i].Angle = GetAngle(sa.Stitches[i], sa.Stitches[i + 1]);
             }
-            //for (int i = 1; i < sa.Stitches.Count - 3; i++) // step 1
-            //{
-            //    if (sa.Stitches[i + 1].Type == VectorStitchType.Contour)
-            //    {
-            //        //float dy = GetRelativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
-            //        //float dy2 = GetRelativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
-            //        //float dy3 = GetRelativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
-            //        //if(dy)
-            //        if (sa.Stitches[i - 1].Type == VectorStitchType.Run || sa.Stitches[i + 1].Type == VectorStitchType.Run)
-            //        {
-            //            sa.Stitches[i].Type = VectorStitchType.Tatami;
-            //        }
-            //        else
-            //        {
-            //            sa.Stitches[i].Type = VectorStitchType.Satin;
-            //        }
-            //    }
-            //}
+            /* step 1 */
+            /*
+            for (int i = 1; i < sa.Stitches.Count - 3; i++) {
+                if (sa.Stitches[i + 1].Type == VectorStitchType.Contour) {
+                    //float dy = GetRelativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
+                    //float dy2 = GetRelativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
+                    //float dy3 = GetRelativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
+                    //if(dy)
+                    if (sa.Stitches[i - 1].Type == VectorStitchType.Run || sa.Stitches[i + 1].Type == VectorStitchType.Run) {
+                        sa.Stitches[i].Type = VectorStitchType.Tatami;
+                    }
+                    else {
+                        sa.Stitches[i].Type = VectorStitchType.Satin;
+                    }
+                }
+            }
         }
 
 
@@ -1557,19 +1556,17 @@ EmbPattern DrawGraphics(EmbPattern p)
 {
     var stitchData = BreakIntoColorBlocks(p);
 
-
-    //var outBlock = new List<StitchBlock>(BreakIntoSeparateObjects(stitchData));
-    //foreach(var block in stitchData)
-    //{
-    //    foreach (var stitch in block.Stitches)
-    //    {
-    //        if(stitch.Angle != 0)
-    //        {
-    //            int aaa = 1;
-    //        }
-    //    }
-    //}
-    //var xxxxx = outBlock;
+    /*
+    var outBlock = new List<StitchBlock>(BreakIntoSeparateObjects(stitchData));
+    foreach(var block in stitchData) {
+        foreach (var stitch in block.Stitches) {
+            if (stitch.Angle != 0) {
+                int aaa = 1;
+            }
+        }
+    }
+    var xxxxx = outBlock;
+    */
     var objectsFound = FindOutline(stitchData);
     var outPattern = new Pattern();
     outPattern.AddColor(new Thread(255, 0, 0, "none", "None"));
@@ -1588,6 +1585,7 @@ EmbPattern DrawGraphics(EmbPattern p)
             {
                 outPattern.AddStitchAbsolute(point.X, point.Y, StitchTypes.Normal);
             }
+            /*
             //break;
             //StitchObject stitchObject = objectsFound[1];))
             //////if (stitchObject.SideOne.Count > 0)
@@ -1602,15 +1600,18 @@ EmbPattern DrawGraphics(EmbPattern p)
             //////}
             //////foreach (Point t in stitchObject.SideTwo)
             //////{
-            //////    outPattern.StitchList.Add(new Stitch(t.X, t.Y,
-            //////                                         StitchType.Normal, colorIndex));
-            //////}
-            //break;
+                outPattern.StitchList.Add(new Stitch(t.X, t.Y,
+                                                     StitchType.Normal, colorIndex));
+            }
+            break;
+            */
         }
     }
     outPattern.AddStitchRelative(0, 0, StitchTypes.End);
     return outPattern;
-    //return (SimplifyOutline(outPattern));
+    /*
+    return (SimplifyOutline(outPattern));
+    */
 }
 
 EmbPattern SimplifyOutline(EmbPattern pattern)
@@ -1644,8 +1645,7 @@ Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance)
 
     var simplified = new Vertices();
 
-    for (int i = 0; i < vertices.Count; i++)
-    {
+    for (int i = 0; i < vertices.Count; i++) {
         int prevId = vertices.PreviousIndex(i);
         int nextId = vertices.NextIndex(i);
 
@@ -1654,7 +1654,7 @@ Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance)
         Vector2 next = vertices[nextId];
 
         /* If they collinear, continue */
-        if (MathUtils.Collinear(ref prev, ref current, ref next, collinearityTolerance))
+        if (embVector_collinear(ref prev, ref current, ref next, collinearityTolerance))
             continue;
 
         simplified.Add(current);
@@ -1662,21 +1662,27 @@ Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance)
 
     return simplified;
 }
+#endif
 
-/// <summary>
-/// Removes all collinear points on the polygon.
-/// Has a default bias of 0
-/// </summary>
-/// <param name="vertices">The polygon that needs simplification.</param>
-/// <returns>A simplified polygon.</returns>
+/* Removes all collinear points on the polygon.
+ * Has a default bias of 0
+ *
+ * param vertices: The polygon that needs simplification.
+ * returns: A simplified polygon.
+ */
+#if 0
 Vertices CollinearSimplify(Vertices vertices)
 {
     return CollinearSimplify(vertices, 0);
 }
+#endif
 
-/// Ramer-Douglas-Peucker polygon simplification algorithm. This is the general recursive version that does not use the
-/// speed-up technique by using the Melkman convex hull.
-/// If you pass in 0, it will remove all collinear points
+/*
+ * Ramer-Douglas-Peucker polygon simplification algorithm. This is the general recursive version that does not use the
+ * speed-up technique by using the Melkman convex hull.
+ * If you pass in 0, it will remove all collinear points.
+ */
+#if 0
 Vertices DouglasPeuckerSimplify(Vertices vertices, float distanceTolerance)
 {
     _distanceTolerance = distanceTolerance;
@@ -1764,7 +1770,7 @@ double DistancePointLine(EmbPoint p, EmbPoint a, EmbPoint b)
                /
                ((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y));
 
-    return Math.Abs(s) * Math.Sqrt(((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y)));
+    return fabs(s) * sqrt(((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y)));
 }
 
 /* From physics2d.net */
@@ -1797,11 +1803,9 @@ public static Vertices ReduceByArea(Vertices vertices, float areaTolerance)
         {
             v3 = vertices[index];
         }
-        float old1;
+        float old1, old2, new1;
         MathUtils.Cross(ref v1, ref v2, out old1);
-        float old2;
         MathUtils.Cross(ref v2, ref v3, out old2);
-        float new1;
         MathUtils.Cross(ref v1, ref v3, out new1);
         if (Math.Abs(new1 - (old1 + old2)) > areaTolerance)
         {
@@ -1811,10 +1815,12 @@ public static Vertices ReduceByArea(Vertices vertices, float areaTolerance)
     }
     return result;
 }
+#endif
 
 /* From Eric Jordan's convex decomposition library */
 /* Merges all parallel edges in the list of vertices */
-public static void MergeParallelEdges(Vertices vertices, float tolerance)
+#if 0
+static void MergeParallelEdges(Vertices vertices, float tolerance)
 {
     if (vertices.Count <= 3)
         return; /* Can't do anything useful here to a triangle */
@@ -1934,8 +1940,8 @@ EmbPattern* embPattern_create(void)
 
     p->settings = embSettings_init();
     p->currentColorIndex = 0;
-    p->stitchList = 0;
-    p->threads = 0;
+    p->stitchList = embArray_create(EMB_STITCH);
+    p->threads = embArray_create(EMB_THREAD);
     p->hoop.height = 0.0;
     p->hoop.width = 0.0;
     p->arcs = 0;
@@ -1949,8 +1955,6 @@ EmbPattern* embPattern_create(void)
     p->rects = 0;
     p->splines = 0;
 
-    p->lastStitch = 0;
-
     p->lastX = 0.0;
     p->lastY = 0.0;
 
@@ -1961,20 +1965,19 @@ void embPattern_hideStitchesOverLength(EmbPattern* p, int length)
 {
     double prevX = 0;
     double prevY = 0;
-    EmbStitchList* pointer = 0;
+    int i;
 
     if(!p) { printf("ERROR: emb-pattern.c embPattern_hideStitchesOverLength(), p argument is null\n"); return; }
-    pointer = p->stitchList;
-    while(pointer)
-    {
-        if((fabs(pointer->stitch.x - prevX) > length) || (fabs(pointer->stitch.y - prevY) > length))
+
+    for (i=0; i<p->stitchList->count; i++) {
+        if ((fabs(p->stitchList->stitch[i].x - prevX) > length)
+         || (fabs(p->stitchList->stitch[i].y - prevY) > length))
         {
-            pointer->stitch.flags |= TRIM;
-            pointer->stitch.flags &= ~NORMAL;
+            p->stitchList->stitch[i].flags |= TRIM;
+            p->stitchList->stitch[i].flags &= ~NORMAL;
         }
-        prevX = pointer->stitch.x;
-        prevY = pointer->stitch.y;
-        pointer = pointer->next;
+        prevX = p->stitchList->stitch[i].x;
+        prevY = p->stitchList->stitch[i].y;
     }
 }
 
@@ -1994,23 +1997,21 @@ int embPattern_addThread(EmbPattern* p, EmbThread thread)
 void embPattern_fixColorCount(EmbPattern* p)
 {
     /* fix color count to be max of color index. */
-    int maxColorIndex = 0;
-    EmbStitchList* list = 0;
+    int maxColorIndex = 0, i;
 
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_fixColorCount(), p argument is null\n");
         return;
     }
-    list = p->stitchList;
-    while (list) {
+    for (i=0; i<p->stitchList->count; i++) {
 /*        printf("%d %d\n", list->stitch.color, maxColorIndex);*/
-        maxColorIndex = embMaxInt(maxColorIndex, list->stitch.color);
-        list = list->next;
+        maxColorIndex = embMaxInt(maxColorIndex, p->stitchList->stitch[i].color);
     }
-    if (p->threads == 0) {
+    if (p->threads->count == 0 || maxColorIndex == 0) {
         EmbThread t;
         t.color = black;
         t.description = "Black";
+        t.catalogNumber = "000";
         embPattern_addThread(p, t);
     }
     else {
@@ -2031,10 +2032,8 @@ void embPattern_fixColorCount(EmbPattern* p)
 /*! Copies all of the EmbStitchList data to EmbPolylineObjectList data for pattern (\a p). */
 void embPattern_copyStitchListToPolylines(EmbPattern* p)
 {
-    EmbStitchList* stList = 0;
-    int breakAtFlags;
+    int breakAtFlags, i;
     EmbPointObject point;
-    EmbArray *pointList;
     EmbColor color;
 
     if(!p) { printf("ERROR: emb-pattern.c embPattern_copyStitchListToPolylines(), p argument is null\n"); return; }
@@ -2045,33 +2044,28 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
     breakAtFlags = (STOP | JUMP | TRIM);
 #endif /* EMB_DEBUG_JUMP */
 
-    stList = p->stitchList;
-    while(stList)
-    {
-        while(stList)
-        {
-            if(stList->stitch.flags & breakAtFlags)
-            {
+    for (i=0; i<p->stitchList->count; i++) {
+        EmbArray *pointList = 0;
+
+        for (; i<p->stitchList->count; i++) {
+            EmbStitch st = p->stitchList->stitch[i];
+            if (st.flags & breakAtFlags) {
                 break;
             }
-            if(!(stList->stitch.flags & JUMP))
-            {
-                if (!pointList)
-                {
+            if (!(st.flags & JUMP)) {
+                if (!pointList) {
                     pointList = embArray_create(EMB_POINT);
-                    color = p->threads->thread[stList->stitch.color].color;
+                    color = p->threads->thread[st.color].color;
                 }
                 
-                point.point.x = stList->stitch.x;
-                point.point.y = stList->stitch.y;
+                point.point.x = st.x;
+                point.point.y = st.y;
                 embArray_addPoint(pointList, &point);
             }
-            stList = stList->next;
         }
 
         /* NOTE: Ensure empty polylines are not created. This is critical. */
-        if(pointList)
-        {
+        if (pointList) {
             EmbPolylineObject* currentPolyline = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
             if(!currentPolyline) { printf("ERROR: emb-pattern.c embPattern_copyStitchListToPolylines(), cannot allocate memory for currentPolyline\n"); return; }
             currentPolyline->pointList = pointList;
@@ -2083,10 +2077,6 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p)
             }
             embArray_addPolyline(p->polylines, currentPolyline);
         }
-        if(stList)
-        {
-            stList = stList->next;
-        }
     }
 }
 
@@ -2096,7 +2086,10 @@ void embPattern_copyPolylinesToStitchList(EmbPattern* p)
     int firstObject = 1, i, j;
     /*int currentColor = polyList->polylineObj->color TODO: polyline color */
 
-    if(!p) { printf("ERROR: emb-pattern.c embPattern_copyPolylinesToStitchList(), p argument is null\n"); return; }
+    if (!p) {
+        printf("ERROR: emb-pattern.c embPattern_copyPolylinesToStitchList(), p argument is null\n");
+        return;
+    }
     if (!p->polylines) { printf("ERROR: emb-pattern.c embPattern_copyPolylinesToStitchList(), p argument is null\n"); return; }
     for (i=0; i<p->polylines->count; i++) {
         EmbPolylineObject* currentPoly = 0;
@@ -2133,10 +2126,8 @@ void embPattern_moveStitchListToPolylines(EmbPattern* p)
     if(!p) { printf("ERROR: emb-pattern.c embPattern_moveStitchListToPolylines(), p argument is null\n"); return; }
     embPattern_copyStitchListToPolylines(p);
     /* Free the stitchList and threadList since their data has now been transferred to polylines */
-    embStitchList_free(p->stitchList);
-    p->stitchList = 0;
-    p->lastStitch = 0;
-    embArray_free(p->threads);
+    p->stitchList->count = 0;
+    p->threads->count = 0;
 }
 
 /*! Moves all of the EmbPolylineObjectList data to EmbStitchList data for pattern (\a p). */
@@ -2154,12 +2145,12 @@ void embPattern_addStitchAbs(EmbPattern* p, double x, double y, int flags, int i
 
     if(!p) { printf("ERROR: emb-pattern.c embPattern_addStitchAbs(), p argument is null\n"); return; }
 
-    if(flags & END)
-    {
-        if(embStitchList_empty(p->stitchList))
+    if (flags & END) {
+        if(p->stitchList->count == 0)
             return;
+
         /* Prevent unnecessary multiple END stitches */
-        if(p->lastStitch->stitch.flags & END)
+        if(p->stitchList->stitch[p->stitchList->count - 1].flags & END)
         {
             printf("ERROR: emb-pattern.c embPattern_addStitchAbs(), found multiple END stitches\n");
             return;
@@ -2172,15 +2163,14 @@ void embPattern_addStitchAbs(EmbPattern* p, double x, double y, int flags, int i
 
     if(flags & STOP)
     {
-        if(embStitchList_empty(p->stitchList))
+        if(p->stitchList->count == 0)
             return;
         if(isAutoColorIndex)
             p->currentColorIndex++;
     }
 
     /* NOTE: If the stitchList is empty, we will create it before adding stitches to it. The first coordinate will be the HOME position. */
-    if(embStitchList_empty(p->stitchList))
-    {
+    if (p->stitchList->count == 0) {
         /* NOTE: Always HOME the machine before starting any stitching */
         EmbPoint home = embSettings_home(&(p->settings));
         EmbStitch h;
@@ -2188,14 +2178,14 @@ void embPattern_addStitchAbs(EmbPattern* p, double x, double y, int flags, int i
         h.y = home.y;
         h.flags = JUMP;
         h.color = p->currentColorIndex;
-        p->stitchList = p->lastStitch = embStitchList_create(h);
+        embArray_addStitch(p->stitchList, h);
     }
 
     s.x = x;
     s.y = y;
     s.flags = flags;
     s.color = p->currentColorIndex;
-    p->lastStitch = embStitchList_add(p->lastStitch, s);
+    embArray_addStitch(p->stitchList, s);
     p->lastX = s.x;
     p->lastY = s.y;
 }
@@ -2205,25 +2195,32 @@ void embPattern_addStitchRel(EmbPattern* p, double dx, double dy, int flags, int
 {
     double x,y;
 
-    if(!p) { printf("ERROR: emb-pattern.c embPattern_addStitchRel(), p argument is null\n"); return; }
-    if(!embStitchList_empty(p->stitchList))
-    {
+    if (!p) {
+        printf("ERROR: emb-pattern.c embPattern_addStitchRel(), p argument is null\n");
+        return;
+    }
+
+    if (p->stitchList->count > 0) {
         x = p->lastX + dx;
         y = p->lastY + dy;
     }
-    else
-    {
-        /* NOTE: The stitchList is empty, so add it to the HOME position. The embStitchList_create function will ensure the first coordinate is at the HOME position. */
+    else {
+        /* NOTE: The stitchList is empty, so add it to the HOME position.
+         * The embStitchList_create function will ensure the first coordinate is at the HOME position. */
         EmbPoint home = embSettings_home(&(p->settings));
         x = home.x + dx;
         y = home.y + dy;
     }
+
     embPattern_addStitchAbs(p, x, y, flags, isAutoColorIndex);
 }
 
 void embPattern_changeColor(EmbPattern* p, int index)
 {
-    if(!p) { printf("ERROR: emb-pattern.c embPattern_changeColor(), p argument is null\n"); return; }
+    if (!p) {
+        printf("ERROR: emb-pattern.c embPattern_changeColor(), p argument is null\n");
+        return;
+    }
     p->currentColorIndex = index;
 }
 
@@ -2233,8 +2230,7 @@ int embPattern_read(EmbPattern* pattern, const char* fileName) /* TODO: Write te
 {
     int reader, result;
 
-    if(!pattern) { printf("ERROR: emb-pattern.c embPattern_read(), pattern argument is null\n"); return 0; }
-    if(!fileName) { printf("ERROR: emb-pattern.c embPattern_read(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "embPattern_read")) return 0;
 
     reader = emb_identify_format(fileName);
     if(reader < 0) { printf("ERROR: emb-pattern.c embPattern_read(), unsupported read file type: %s\n", fileName); return 0; }
@@ -2248,8 +2244,7 @@ int embPattern_write(EmbPattern* pattern, const char* fileName) /* TODO: Write t
 {
     int writer, result;
 
-    if(!pattern) { printf("ERROR: emb-pattern.c embPattern_write(), pattern argument is null\n"); return 0; }
-    if(!fileName) { printf("ERROR: emb-pattern.c embPattern_write(), fileName argument is null\n"); return 0; }
+    if (!validateWritePattern(pattern, fileName, "embPattern_write")) return 0;
 
     writer = emb_identify_format(fileName);
     if(!writer) { printf("ERROR: emb-pattern.c embPattern_write(), unsupported write file type: %s\n", fileName); return 0; }
@@ -2261,22 +2256,19 @@ int embPattern_write(EmbPattern* pattern, const char* fileName) /* TODO: Write t
 * Doesn't insert or delete stitches to preserve density. */
 void embPattern_scale(EmbPattern* p, double scale)
 {
-    EmbStitchList* pointer = 0;
+    int i;
 
     if(!p) { printf("ERROR: emb-pattern.c embPattern_scale(), p argument is null\n"); return; }
-    pointer = p->stitchList;
-    while(pointer)
-    {
-        pointer->stitch.x *= scale;
-        pointer->stitch.y *= scale;
-        pointer = pointer->next;
+
+    for (i=0; i<p->stitchList->count; i++) {
+        p->stitchList->stitch[i].x *= scale;
+        p->stitchList->stitch[i].y *= scale;
     }
 }
 
 /*! Returns an EmbRect that encapsulates all stitches and objects in the pattern (\a p). */
 EmbRect embPattern_calcBoundingBox(EmbPattern* p)
 {
-    EmbStitchList* pointer = 0;
     EmbRect boundingRect;
     EmbStitch pt;
     EmbBezier bezier;
@@ -2295,12 +2287,15 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     boundingRect.top = 0;
     boundingRect.bottom = 0;
 
-    if(!p) { printf("ERROR: emb-pattern.c embPattern_calcBoundingBox(), p argument is null\n"); return boundingRect; }
+    if (!p) {
+        printf("ERROR: emb-pattern.c embPattern_calcBoundingBox(), p argument is null\n");
+        return boundingRect;
+    }
 
     /* Calculate the bounding rectangle.  It's needed for smart repainting. */
     /* TODO: Come back and optimize this mess so that after going thru all objects
             and stitches, if the rectangle isn't reasonable, then return a default rect */
-    if (embStitchList_empty(p->stitchList) &&
+    if (p->stitchList->count == 0 &&
         !(p->arcs || p->circles || p->ellipses || p->lines || p->points ||
         p->polygons || p->polylines || p->rects || p->splines))
     {
@@ -2315,12 +2310,10 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
     boundingRect.right = -99999.0;
     boundingRect.bottom = -99999.0;
 
-    pointer = p->stitchList;
-    while(pointer)
-    {
+    for (i=0; i<p->stitchList->count; i++) {
         /* If the point lies outside of the accumulated bounding
         * rectangle, then inflate the bounding rect to include it. */
-        pt = pointer->stitch;
+        pt = p->stitchList->stitch[i];
         if(!(pt.flags & TRIM))
         {
             boundingRect.left = embMinDouble(boundingRect.left, pt.x);
@@ -2328,7 +2321,6 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p)
             boundingRect.right = embMaxDouble(boundingRect.right, pt.x);
             boundingRect.bottom = embMaxDouble(boundingRect.bottom, pt.y);
         }
-        pointer = pointer->next;
     }
 
     if (p->arcs) {
@@ -2440,16 +2432,12 @@ void embPattern_flipVertical(EmbPattern* p)
 void embPattern_flip(EmbPattern* p, int horz, int vert)
 {
     int i, j;
-    EmbStitchList* stList = 0;
 
     if(!p) { printf("ERROR: emb-pattern.c embPattern_flip(), p argument is null\n"); return; }
 
-    stList = p->stitchList;
-    while(stList)
-    {
-        if(horz) { stList->stitch.x = -stList->stitch.x; }
-        if(vert) { stList->stitch.y = -stList->stitch.y; }
-        stList = stList->next;
+    for (i=0; i<p->stitchList->count; i++) {
+        if (horz) { p->stitchList->stitch[i].x *= -1.0; }
+        if (vert) { p->stitchList->stitch[i].y *= -1.0; }
     }
 
     if (p->arcs) {
@@ -2563,115 +2551,92 @@ void embPattern_flip(EmbPattern* p, int horz, int vert)
 
 void embPattern_combineJumpStitches(EmbPattern* p)
 {
-    EmbStitchList* pointer = 0;
-    int jumpCount = 0;
-    EmbStitchList* jumpListStart = 0;
+    int jumpCount = 0, jumpListStart, i;
+    EmbArray *newList;
+    EmbStitch j;
 
-    if(!p) { printf("ERROR: emb-pattern.c embPattern_combineJumpStitches(), p argument is null\n"); return; }
-    pointer = p->stitchList;
-    while(pointer)
-    {
-        if(pointer->stitch.flags & JUMP)
-        {
-            if(jumpCount == 0)
-            {
-                jumpListStart = pointer;
+    if (!p) { printf("ERROR: emb-pattern.c embPattern_combineJumpStitches(), p argument is null\n"); return; }
+
+    newList = embArray_create(EMB_STITCH);
+    for (i=0; i<p->stitchList->count; i++) {
+        EmbStitch st = p->stitchList->stitch[i];
+        if (st.flags & JUMP) {
+            if (jumpCount == 0) {
+                j = st;
+            }
+            else {
+                j.x += st.x;
+                j.y += st.y;
             }
             jumpCount++;
         }
-        else
-        {
-            if(jumpCount > 0)
-            {
-                EmbStitchList* removePointer = jumpListStart->next;
-                jumpListStart->stitch.x = pointer->stitch.x;
-                jumpListStart->stitch.y = pointer->stitch.y;
-                jumpListStart->next = pointer;
-
-                for(; jumpCount > 0; jumpCount--)
-                {
-                    EmbStitchList* tempPointer = removePointer->next;
-                    free(removePointer);
-                    removePointer = tempPointer;
-                }
-                jumpCount = 0;
+        else {
+            if (jumpCount > 0) {
+                embArray_addStitch(newList, j);
             }
+            embArray_addStitch(newList, st);
         }
-        pointer = pointer->next;
     }
+    embArray_free(p->stitchList);
+    p->stitchList = newList;
 }
 
 /*TODO: The params determine the max XY movement rather than the length. They need renamed or clarified further. */
 void embPattern_correctForMaxStitchLength(EmbPattern* p, double maxStitchLength, double maxJumpLength)
 {
-    int j = 0, splits;
+    int i, j = 0, splits;
     double maxXY, maxLen, addX, addY;
 
-    if(!p) { printf("ERROR: emb-pattern.c embPattern_correctForMaxStitchLength(), p argument is null\n"); return; }
-    if(embStitchList_count(p->stitchList) > 1)
-    {
-        EmbStitchList* pointer = 0;
-        EmbStitchList* prev = 0;
-        prev = p->stitchList;
-        pointer = prev->next;
+    if (!p) {
+        printf("ERROR: emb-pattern.c embPattern_correctForMaxStitchLength(), p argument is null\n");
+        return;
+    }
 
-        while(pointer)
-        {
-            double xx = prev->stitch.x;
-            double yy = prev->stitch.y;
-            double dx = pointer->stitch.x - xx;
-            double dy = pointer->stitch.y - yy;
-            if((fabs(dx) > maxStitchLength) || (fabs(dy) > maxStitchLength))
-            {
+    if (p->stitchList->count > 1) {
+        EmbArray *newList = embArray_create(EMB_STITCH);
+        for (i=1; i<p->stitchList->count; i++) {
+            EmbStitch st = p->stitchList->stitch[i];
+            double xx = st.x;
+            double yy = st.y;
+            double dx = p->stitchList->stitch[i-1].x - xx;
+            double dy = p->stitchList->stitch[i-1].y - yy;
+            if ((fabs(dx) > maxStitchLength) || (fabs(dy) > maxStitchLength)) {
                 maxXY = embMaxDouble(fabs(dx), fabs(dy));
-                if(pointer->stitch.flags & (JUMP | TRIM)) maxLen = maxJumpLength;
-                else maxLen = maxStitchLength;
+                if (st.flags & (JUMP | TRIM)) {
+                    maxLen = maxJumpLength;
+                }
+                else {
+                    maxLen = maxStitchLength;
+                }
 
                 splits = (int)ceil((double)maxXY / maxLen);
 
-                if(splits > 1)
-                {
-                    int flagsToUse = pointer->stitch.flags;
-                    int colorToUse = pointer->stitch.color;
+                if (splits > 1) {
                     addX = (double)dx / splits;
                     addY = (double)dy / splits;
 
-                    for(j = 1; j < splits; j++)
-                    {
-                        EmbStitchList* item = 0;
+                    for(j = 1; j < splits; j++) {
                         EmbStitch s;
+                        s = st;
                         s.x = xx + addX * j;
                         s.y = yy + addY * j;
-                        s.flags = flagsToUse;
-                        s.color = colorToUse;
-                        item = (EmbStitchList*)malloc(sizeof(EmbStitchList));
-                        if(!item) { printf("ERROR: emb-pattern.c embPattern_correctForMaxStitchLength(), cannot allocate memory for item\n"); return; }
-                        item->stitch = s;
-                        item->next = pointer;
-                        prev->next = item;
-                        prev = item;
+                        embArray_addStitch(newList, s);
                     }
                 }
             }
-            prev = pointer;
-            if(pointer)
-            {
-                pointer = pointer->next;
-            }
+            embArray_addStitch(newList, st);
         }
+        p->stitchList = newList;
+        embArray_free(p->stitchList);
     }
-    if(p->lastStitch && p->lastStitch->stitch.flags != END)
-    {
-        embPattern_addStitchAbs(p, p->lastStitch->stitch.x, p->lastStitch->stitch.y, END, 1);
-    }
+    embPattern_end(p);
 }
 
 void embPattern_center(EmbPattern* p)
 {
     /* TODO: review this. currently not used in anywhere. Also needs to handle various design objects */
-    int moveLeft, moveTop;
+    int moveLeft, moveTop, i;
     EmbRect boundingRect;
-    EmbStitchList* pointer = 0;
 
     if(!p) { printf("ERROR: emb-pattern.c embPattern_center(), p argument is null\n"); return; }
     boundingRect = embPattern_calcBoundingBox(p);
@@ -2679,13 +2644,10 @@ void embPattern_center(EmbPattern* p)
     moveLeft = (int)(boundingRect.left - (embRect_width(boundingRect) / 2.0));
     moveTop = (int)(boundingRect.top - (embRect_height(boundingRect) / 2.0));
 
-    pointer = p->stitchList;
-    while(pointer)
-    {
+    for (i=0; i<p->stitchList->count; i++) {
         EmbStitch s;
-        s = pointer->stitch;
-        s.x -= moveLeft;
-        s.y -= moveTop;
+        p->stitchList->stitch[i].x -= moveLeft;
+        p->stitchList->stitch[i].y -= moveTop;
     }
 }
 
@@ -2727,10 +2689,7 @@ void embPattern_free(EmbPattern* p)
         printf("ERROR: emb-pattern.c embPattern_free(), p argument is null\n");
         return;
     }
-    embStitchList_free(p->stitchList);
-    p->stitchList = 0;
-    p->lastStitch = 0;
-
+    embArray_free(p->stitchList);
     embArray_free(p->threads);
     embArray_free(p->arcs);
     embArray_free(p->circles);
@@ -2744,6 +2703,7 @@ void embPattern_free(EmbPattern* p)
     embArray_free(p->splines);
 
     free(p);
+    p = 0;
 }
 
 /*! Adds a circle object to pattern (\a p) with its center at the absolute
@@ -2899,12 +2859,11 @@ void embPattern_addRectObjectAbs(EmbPattern* p, double x, double y, double w, do
 
 void embPattern_end(EmbPattern *p)
 {
-    if (!p->lastStitch) {
-        printf("ERROR: no lastStitch, probably entirely empty pattern.");
+    if (p->stitchList->count == 0) {
         return;
     }
     /* Check for an END stitch and add one if it is not present */
-    if (p->lastStitch->stitch.flags != END) {
+    if (p->stitchList->stitch[p->stitchList->count-1].flags != END) {
         embPattern_addStitchRel(p, 0, 0, END, 1);
     }
 }
@@ -3154,71 +3113,6 @@ EmbPoint embSettings_home(EmbSettings* settings)
 void embSettings_setHome(EmbSettings* settings, EmbPoint point)
 {
     settings->home = point;
-}
-
-EmbStitchList* embStitchList_create(EmbStitch data)
-{
-    EmbStitchList* heapStitchList = (EmbStitchList*)malloc(sizeof(EmbStitchList));
-    if(!heapStitchList) { printf("ERROR: emb-stitch.c embStitchList_create(), cannot allocate memory for heapStitchList\n"); return 0; }
-    heapStitchList->stitch = data;
-    heapStitchList->next = 0;
-    return heapStitchList;
-}
-
-EmbStitchList* embStitchList_add(EmbStitchList* pointer, EmbStitch data)
-{
-    if(!pointer) { printf("ERROR: emb-stitch.c embStitchList_add(), pointer argument is null\n"); return 0; }
-    if(pointer->next) { printf("ERROR: emb-stitch.c embStitchList_add(), pointer->next should be null\n"); return 0; }
-    pointer->next = (EmbStitchList*)malloc(sizeof(EmbStitchList));
-    if(!pointer->next) { printf("ERROR: emb-stitch.c embStitchList_add(), cannot allocate memory for pointer->next\n"); return 0; }
-    pointer = pointer->next;
-    pointer->stitch = data;
-    pointer->next = 0;
-    return pointer;
-}
-
-EmbStitch embStitchList_getAt(EmbStitchList* pointer, int num)
-{
-    /* TODO: pointer safety */
-    int i;
-    for(i = 0; i < num; i++)
-    {
-        pointer = pointer->next;
-    }
-    return pointer->stitch;
-}
-
-/* TODO: Add a default parameter to handle returning count based on stitch flags. Currently, it includes JUMP and TRIM stitches, maybe we just want NORMAL stitches only or vice versa */
-int embStitchList_count(EmbStitchList* pointer)
-{
-    int i = 1;
-    if(!pointer) return 0;
-    while(pointer->next)
-    {
-        pointer = pointer->next;
-        i++;
-    }
-    return i;
-}
-
-int embStitchList_empty(EmbStitchList* pointer)
-{
-    if(!pointer)
-        return 1;
-    return 0;
-}
-
-void embStitchList_free(EmbStitchList* pointer)
-{
-    EmbStitchList* tempPointer = pointer;
-    EmbStitchList* nextPointer = 0;
-    while(tempPointer)
-    {
-        nextPointer = tempPointer->next;
-        free(tempPointer);
-        tempPointer = nextPointer;
-    }
-    pointer = 0;
 }
 
 /**
@@ -3902,7 +3796,12 @@ int convert(const char *inf, const char *outf)
         return 1;
     }
 
-    embPattern_free(p);
+    if (p) {
+        embPattern_free(p);
+    }
+    else {
+        puts("Somehow free was already called.");
+    }
     return 0;
 }
 

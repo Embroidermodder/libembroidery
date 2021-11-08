@@ -68,7 +68,7 @@ char readMax(EmbPattern* pattern, const char* fileName)
 char writeMax(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
-    EmbStitchList* pointer = 0;
+    int i;
     char header[] = {
         0x56,0x43,0x53,0x4D,0xFC,0x03,0x00,0x00,0x01,0x00,0x00,0x00,0x01,0x00,0x00,0x00,
         0xF6,0x25,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -95,10 +95,10 @@ char writeMax(EmbPattern* pattern, const char* fileName)
         return 0;
 
     binaryWriteBytes(file, header, 0xD5);
-    for (pointer=pattern->stitchList; pointer; pointer=pointer->next) {
-        st = pointer->stitch;
-        x = roundDouble(pointer->stitch.x * 10.0);
-        y = roundDouble(pointer->stitch.y * 10.0);
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
+        x = roundDouble(st.x * 10.0);
+        y = roundDouble(st.y * 10.0);
         maxEncode(file, x, y);
     }
     embFile_close(file);

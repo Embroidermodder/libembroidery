@@ -89,10 +89,9 @@ char readExp(EmbPattern* pattern, const char* fileName)
 char writeExp(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
-    EmbStitchList* stitches = 0;
     double dx = 0.0, dy = 0.0;
     double xx = 0.0, yy = 0.0;
-    int flags = 0;
+    int flags = 0, i;
     unsigned char b[4];
     EmbStitch st;
 
@@ -102,9 +101,8 @@ char writeExp(EmbPattern* pattern, const char* fileName)
     if (!file) return 0;
 
     /* write stitches */
-    stitches = pattern->stitchList;
-    while (stitches) {
-        st = stitches->stitch;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
         dx = st.x * 10.0 - xx;
         dy = st.y * 10.0 - yy;
         xx = st.x * 10.0;
@@ -119,7 +117,6 @@ char writeExp(EmbPattern* pattern, const char* fileName)
         {
             embFile_printf(file, "%c%c", b[0], b[1]);
         }
-        stitches = stitches->next;
     }
     embFile_printf(file, "\x1a");
     embFile_close(file);

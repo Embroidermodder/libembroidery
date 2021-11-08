@@ -383,7 +383,6 @@ char writeDst(EmbPattern* pattern, const char* fileName)
     FILE* file;
     int xx, yy, dx, dy, flags, i, ax, ay, mx, my;
     char* pd = 0;
-    EmbStitchList* pointer = 0;
     EmbStitch st;
 
     if (!validateWritePattern(pattern, fileName, "writeDst")) return 0;
@@ -409,7 +408,7 @@ char writeDst(EmbPattern* pattern, const char* fileName)
     */
     fprintf(file, "LA:%-16s\x0d", "Untitled");
     /*} */
-    fprintf(file, "ST:%7d\x0d", embStitchList_count(pattern->stitchList));
+    fprintf(file, "ST:%7d\x0d", pattern->stitchList->count);
     fprintf(file, "CO:%3d\x0d", pattern->threads->count - 1); /* number of color changes, not number of colors! */
     fprintf(file, "+X:%5d\x0d", (int)(boundingRect.right * 10.0));
     fprintf(file, "-X:%5d\x0d", (int)(fabs(boundingRect.left) * 10.0));
@@ -446,16 +445,14 @@ char writeDst(EmbPattern* pattern, const char* fileName)
 
     /* write stitches */
     xx = yy = 0;
-    pointer = pattern->stitchList;
-    while (pointer) {
-        st = pointer->stitch;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        st = pattern->stitchList->stitch[i];
         /* convert from mm to 0.1mm for file format */
         dx = roundDouble(st.x * 10.0) - xx;
         dy = roundDouble(st.y * 10.0) - yy;
         xx = roundDouble(st.x * 10.0);
         yy = roundDouble(st.y * 10.0);
         encode_record(file, dx, dy, st.flags);
-        pointer = pointer->next;
     }
     fprintf(file, "\xa1"); /* finish file with a terminator character */
     fwrite("\0\0", 1, 2, file);

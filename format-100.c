@@ -80,6 +80,7 @@ char write100(EmbPattern* pattern, const char* fileName)
     */
 
     fclose(file);
+
     return 1;
 }
 

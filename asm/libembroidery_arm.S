@@ -1,4 +1,48 @@
-;#include "embroidery.h"
+/* ARM originally Acorn RISC Machine
+ * now Advanced RISC Machine
+ * The instruction set is called THUMB.
+ */
+
+	.data
+hello_world:
+        .ascii "Hello, world!\n"
+	.equ hello_world_len, . - hello_world
+
+/* Look up THUMB defines
+ * ---------------------
+ */
+	.equ SYS_EXIT, 1
+	.equ SYS_READ, 3
+	.equ SYS_WRITE, 4
+	.equ SYS_OPEN, 5
+	.equ SYS_CLOSE, 6
+	.equ SYS_CREAT, 8
+	.equ SYS_LINK, 9
+	.equ SYS_UNLINK, 10
+	.equ SYS_TIME, 13
+	.equ SYS_STAT, 18
+	.equ STDOUT, 1
+	.equ SUCCESS, 0
+
+#include "asm_embroidery.h"
+
+/* .set directive? */
+
+        .text
+.global _start
+_start:
+	mov	r2, $hello_world_len
+	mov	r1, %pc
+	add	r0, $24
+	mov	r0, $STDOUT
+	mov	r7, $SYS_WRITE
+	svc	$0
+
+	mov	r0, $SUCCESS
+	mov	r7, $SYS_EXIT
+	svc	$0
+
+#if 0
 ;
 ;#if ARDUINO
 ;/*TODO: arduino includes */
@@ -291,279 +335,6 @@
 ;static int memory_files = 0;
 ;static int active_patterns = 0;
 ;static int random_state = 37;
-;
-;/* Flag Defines
-; */
-;
-;/* These mirror the first table in libembroidery_data.asm. */
-;#define svg_property_token_table                (0*4)
-;#define svg_attribute_token_table               (1*4)
-;#define svg_token_lists                         (2*4)
-;#define brand_codes                             (3*4)
-;#define image_frame                             (4*4)
-;#define csv_header                              (5*4)
-;#define max_header                              (6*4)
-;#define csd_decoding_table                      (7*4)
-;#define vip_decoding_table                      (8*4)
-;#define format_list                             (9*4)
-;#define svg_token_table                         (10*4)
-;#define inkscape_token_table                    (11*4)
-;#define svg_element_token_table                 (12*4)
-;#define svg_media_property_token_table          (13*4)
-;#define stitch_labels                           (14*4)
-;#define dxf_version_r                           (15*4)
-;#define table_lengths                           (16*4)
-;
-;#define error_emb_sqrt                          17
-;#define error_emb_atan2                         18
-;#define error_hus_expand                        19
-;#define error_hus_compress                      20
-;#define error_arc_data                          21
-;#define error_format_not_supported              22
-;#define error_line_intersection                 23
-;#define error_line_parallel                     24
-;#define error_normalize                         25
-;#define error_pattern_no_stitches               26
-;#define error_pattern_open_file                 27
-;#define error_vector_add                        28
-;#define error_vector_average                    29
-;#define error_vector_component_product          30
-;#define error_vector_multiply                   31
-;#define error_vector_normal                     32
-;#define error_vector_subtract                   33
-;#define error_hide_stitches_no_pattern          35
-;#define error_fix_color_count_no_pattern        36
-;#define error_copy_stitch_list_no_pattern       37
-;#define error_copy_polylines_no_point_list      38
-;#define error_move_stitch_list_no_pattern       39
-;#define error_add_stitch_abs_no_pattern         40
-;#define error_add_stitch_abs_multiple_end       41
-;#define error_add_stitch_rel_no_pattern         42
-;#define error_change_color_no_pattern           43
-;#define error_pattern_read_unsupported          44
-;#define error_pattern_write_unsupported         45
-;#define error_pattern_scale                     46
-;#define error_bounding_box_no_pattern           47
-;#define error_flip_horizontal_no_pattern        48
-;#define error_flip_vertical_no_pattern          49
-;#define error_flip_no_pattern                   50
-;#define error_combine_jump_stitches             51
-;#define error_pattern_max_stitch_length         52
-;#define error_pattern_center                    53
-;#define error_add_circle                        54
-;#define error_add_ellipse                       55
-;#define error_add_line                          56
-;#define error_add_path                          57
-;#define error_add_path_obj                      58
-;#define error_add_path_obj_empty                59
-;#define error_add_point                         60
-;#define error_add_polygon_abs                   61
-;#define error_add_polygon_abs_obj               62
-;#define error_add_polygon_abs_empty             63
-;#define error_add_polyline_abs                  64
-;#define error_add_polyline_abs_obj              65
-;#define error_add_polyline_abs_empty            66
-;#define error_add_rect                          67
-;#define error_generate_satin_array_create       68
-;#define error_generate_satin_result_memory      69
-;#define error_render_stitches_result_memory     70
-;#define error_read_no_pattern                   71
-;#define error_read_no_filename                  72
-;#define error_read_cannot_open                  73
-;#define error_cannot_open                       74
-;#define error_bcf_difat_sector_value            76
-;#define error_read_sector_value                 77
-;#define error_bcf_fat_create                    78
-;#define error_col_empty_line                    79
-;#define error_compound_unexpected_object_type   82
-;#define error_csv_string                        83
-;#define error_format_get_extension              84
-;#define error_no_colors                         85
-;#define error_read_dxf                          86
-;#define error_unsupported                       87
-;#define error_hus_decompress_data               88
-;#define error_hus_compress_data                 89
-;#define error_read_hus                          90
-;#define error_write_hus                         91
-;#define error_jef_hoop_no_pattern               92
-;#define error_max_encode_no_file                93
-;#define error_ofm_threads_library_name          94
-;#define error_ofm_threads_color_name            95
-;#define error_stx_thread_no_thread              97
-;#define error_stx_thread_no_file                98
-;#define error_encode_dst_x_out_of_range         102
-;#define error_encode_dst_y_out_of_range         103
-;#define error_encode_tap_x                      104
-;#define error_encode_tap_y                      105
-;#define error_vp3_read_string_file              113
-;#define error_vp3_read_hoop_no_file             115
-;#define error_number_of_colors                  116
-;#define error_check_color_byte_1                117
-;#define error_check_color_byte_2                118
-;#define error_check_color_byte_3                119
-;#define error_format_vp3_cannot_read            120
-;#define error_svg_add_attribute_no_element      121
-;#define error_svg_create_element_null           125
-;#define error_svg_get_value_no_element          126
-;#define error_svg_get_value_no_name             127
-;#define error_svg_add_no_pattern                128
-;#define error_svg_add_invalid_path              130
-;#define error_svg_add_realloc                   131
-;#define error_read_svg                          133
-;#define error_write_csv_0                       134
-;#define error_read_csv_0                        135
-;#define error_read_csv_1                        136
-;#define error_read_csv_2                        137
-;
-;#define brand_codes_length                      24
-;#define thread_type_length                      35
-;#define thread_color_offset                     30
-;#define thread_code                             33
-;
-;/* path flag codes */
-;#define LINETO                                  0
-;#define MOVETO                                  1
-;#define BULGETOCONTROL                          2
-;#define BULGETOEND                              4
-;#define ELLIPSETORAD                            8
-;#define ELLIPSETOEND                            16
-;#define CUBICTOCONTROL1                         32
-;#define CUBICTOCONTROL2                         64
-;#define CUBICTOEND                              128
-;#define QUADTOCONTROL                           256
-;#define QUADTOEND                               512
-;
-;#define SVG_CREATOR_NULL                        0
-;#define SVG_CREATOR_EMBROIDERMODDER             1
-;#define SVG_CREATOR_ILLUSTRATOR                 2
-;#define SVG_CREATOR_INKSCAPE                    3
-;
-;#define SVG_EXPECT_NULL                         0
-;#define SVG_EXPECT_ELEMENT                      1
-;#define SVG_EXPECT_ATTRIBUTE                    2
-;#define SVG_EXPECT_VALUE                        3
-;
-;/* SVG_TYPES */
-;#define SVG_NULL                                0
-;#define SVG_ELEMENT                             1
-;#define SVG_PROPERTY                            2
-;#define SVG_MEDIA_PROPERTY                      3
-;#define SVG_ATTRIBUTE                           4
-;#define SVG_CATCH_ALL                           5
-;
-;/**
-;Type of sector
-;*/
-;#define CompoundFileSector_MaxRegSector         0xFFFFFFFA
-;#define CompoundFileSector_DIFAT_Sector         0xFFFFFFFC
-;#define CompoundFileSector_FAT_Sector           0xFFFFFFFD
-;#define CompoundFileSector_EndOfChain           0xFFFFFFFE
-;#define CompoundFileSector_FreeSector           0xFFFFFFFF
-;
-;/**
-;Type of directory object
-;*/
-;#define ObjectTypeUnknown 0x00 /*!< Probably unallocated    */
-;#define ObjectTypeStorage 0x01 /*!< a directory type object */
-;#define ObjectTypeStream 0x02 /*!< a file type object      */
-;#define ObjectTypeRootEntry 0x05 /*!< the root entry          */
-;
-;/**
-;Special values for Stream Identifiers
-;*/
-;#define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /*!< All real stream Ids are less than this */
-;#define CompoundFileStreamId_NoStream 0xFFFFFFFF /*!< There is no valid stream Id            */
-;
-;#define CSV_EXPECT_NULL           0
-;#define CSV_EXPECT_QUOTE1         1
-;#define CSV_EXPECT_QUOTE2         2
-;#define CSV_EXPECT_COMMA          3
-;
-;#define CSV_MODE_NULL             0
-;#define CSV_MODE_COMMENT          '#'
-;#define CSV_MODE_VARIABLE         '>'
-;#define CSV_MODE_THREAD           '$'
-;#define CSV_MODE_STITCH           '*'
-;
-;/* DXF Version Identifiers */
-;#define DXF_VERSION_R10           0
-;#define DXF_VERSION_R11           1
-;#define DXF_VERSION_R12           2
-;#define DXF_VERSION_R13           3
-;#define DXF_VERSION_R14           4
-;#define DXF_VERSION_R15           5
-;#define DXF_VERSION_R18           6
-;#define DXF_VERSION_R21           7
-;#define DXF_VERSION_R24           8
-;#define DXF_VERSION_R27           9
-;
-;#define DXF_VERSION_2000          0
-;#define DXF_VERSION_2002          1
-;#define DXF_VERSION_2004          2
-;#define DXF_VERSION_2006          3
-;#define DXF_VERSION_2007          4
-;#define DXF_VERSION_2009          5
-;#define DXF_VERSION_2010          6
-;#define DXF_VERSION_2013          7
-;
-;#define MAX_LAYERS                16
-;#define MAX_LAYER_NAME_LENGTH     30
-;
-;#define HOOP_126X110              0
-;#define HOOP_110X110              1
-;#define HOOP_50X50                2
-;#define HOOP_140X200              3
-;#define HOOP_230X200              4
-;
-;#define ELEMENT_XML               0
-;#define ELEMENT_A                 1
-;#define ELEMENT_ANIMATE           2
-;#define ELEMENT_ANIMATE_COLOR     3
-;#define ELEMENT_ANIMATE_MOTION    4
-;#define ELEMENT_ANIMATE_TRANSFORM 5
-;#define ELEMENT_ANIMATION         6
-;#define ELEMENT_AUDIO             7
-;#define ELEMENT_CIRCLE            8
-;#define ELEMENT_DEFS              9
-;#define ELEMENT_DESC              10
-;#define ELEMENT_DISCARD           11
-;#define ELEMENT_ELLIPSE           12
-;#define ELEMENT_FONT              13
-;#define ELEMENT_FONT_FACE         14
-;#define ELEMENT_FONT_FACE_SRC     15
-;#define ELEMENT_FONT_FACE_URI     16
-;#define ELEMENT_FOREIGN_OBJECT    17
-;#define ELEMENT_G                 18
-;#define ELEMENT_GLYPH             19
-;#define ELEMENT_HANDLER           20
-;#define ELEMENT_HKERN             21
-;#define ELEMENT_IMAGE             22
-;#define ELEMENT_LINE              23
-;#define ELEMENT_LINEAR_GRADIENT   24
-;#define ELEMENT_LISTENER          25
-;#define ELEMENT_METADATA          26
-;#define ELEMENT_MISSING_GLYPH     27
-;#define ELEMENT_MPATH             28
-;#define ELEMENT_PATH              29
-;#define ELEMENT_POLYGON           30
-;#define ELEMENT_POLYLINE          31
-;#define ELEMENT_PREFETCH          32
-;#define ELEMENT_RADIAL_GRADIENT   33
-;#define ELEMENT_RECT              34
-;#define ELEMENT_SCRIPT            35
-;#define ELEMENT_SET               36
-;#define ELEMENT_SOLID_COLOR       37
-;#define ELEMENT_STOP              38
-;#define ELEMENT_SVG               39
-;#define ELEMENT_SWITCH            40
-;#define ELEMENT_TBREAK            41
-;#define ELEMENT_TEXT              42
-;#define ELEMENT_TEXT_AREA         43
-;#define ELEMENT_TITLE             44
-;#define ELEMENT_TSPAN             45
-;#define ELEMENT_USE               46
-;#define ELEMENT_VIDEO             47
-;#define ELEMENT_UNKNOWN           48
 ;
 ;static EmbColor black = { 0, 0, 0 };
 ;
@@ -11721,4 +11492,5 @@
 ;    embFile_close(datafile);
 ;    return 0;
 ;}
-;
+
+#endif

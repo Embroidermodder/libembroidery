@@ -271,7 +271,7 @@ static void pecEncode(EmbFile* file, EmbPattern* p)
     double thisX = 0.0;
     double thisY = 0.0;
     unsigned char stopCode = 2;
-    EmbStitchList* list = 0;
+    int i;
 
     if (!file) {
         printf("ERROR: format-pec.c pecEncode(), file argument is null\n");
@@ -282,11 +282,9 @@ static void pecEncode(EmbFile* file, EmbPattern* p)
         return;
     }
 
-    list = p->stitchList;
-    while(list)
-    {
+    for (i=0; i<p->stitchList->count; i++) {
         int deltaX, deltaY;
-        EmbStitch s = list->stitch;
+        EmbStitch s = p->stitchList->stitch[i];
 
         deltaX = roundDouble(s.x - thisX);
         deltaY = roundDouble(s.y - thisY);
@@ -320,7 +318,6 @@ static void pecEncode(EmbFile* file, EmbPattern* p)
             pecEncodeJump(file, deltaX, s.flags);
             pecEncodeJump(file, deltaY, s.flags);
         }
-        list = list->next;
     }
 }
 
@@ -351,10 +348,9 @@ static void writeImage(FILE* file, unsigned char image[][48])
 
 void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
 {
-    EmbStitchList* tempStitches = 0;
     EmbRect bounds;
     unsigned char image[38][48];
-    int i, flen, currentThreadCount, graphicsOffsetLocation, graphicsOffsetValue, height, width;
+    int i, j, flen, currentThreadCount, graphicsOffsetLocation, graphicsOffsetValue, height, width;
     double xFactor, yFactor;
     const char* forwardSlashPos = strrchr(fileName, '/');
     const char* backSlashPos = strrchr(fileName, '\\');
@@ -425,33 +421,29 @@ void writePecStitches(EmbPattern* pattern, EmbFile* file, const char* fileName)
 
     /* Writing all colors */
     memcpy(image, imageWithFrame, 48*38);
-    tempStitches = pattern->stitchList;
 
     yFactor = 32.0 / height;
     xFactor = 42.0 / width;
-    while (tempStitches->next) {
-        EmbStitch st = tempStitches->stitch;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        EmbStitch st = pattern->stitchList->stitch[i];
         int x = roundDouble((st.x - bounds.left) * xFactor) + 3;
         int y = roundDouble((st.y - bounds.top) * yFactor) + 3;
         image[y][x] = 1;
-        tempStitches = tempStitches->next;
     }
     writeImage(file->file, image);
 
     /* Writing each individual color */
-    tempStitches = pattern->stitchList;
+    j = 0;
     for (i = 0; i < currentThreadCount; i++) {
         memcpy(image, imageWithFrame, 48*38);
-        while (tempStitches->next) {
-            EmbStitch st = tempStitches->stitch;
+        for (; j<pattern->stitchList->count; j++) {
+            EmbStitch st = pattern->stitchList->stitch[j];
             int x = roundDouble((st.x - bounds.left) * xFactor) + 3;
             int y = roundDouble((st.y - bounds.top) * yFactor) + 3;
             if (st.flags & STOP) {
-                tempStitches = tempStitches->next;
                 break;
             }
             image[y][x] = 1;
-            tempStitches = tempStitches->next;
         }
         writeImage(file->file, image);
     }

@@ -137,14 +137,13 @@ char writeThr(EmbPattern* pattern, const char* fileName)
     ThredHeader header;
     ThredExtension extension;
     char bitmapName[16];
-    EmbStitchList* pointer = 0;
     EmbFile* file = 0;
 
     if (!validateWritePattern(pattern, fileName, "writeThr")) {
         return 0;
     }
 
-    stitchCount = embStitchList_count(pattern->stitchList);
+    stitchCount = pattern->stitchList->count;
 
     file = embFile_open(fileName, "wb", 0);
     if(!file) return 0;
@@ -188,16 +187,11 @@ char writeThr(EmbPattern* pattern, const char* fileName)
     }
 
     /* write stitches */
-    i = 0;
-    pointer = pattern->stitchList;
-    while(pointer)
-    {
-        binaryWriteFloat(file, (float)(pointer->stitch.x * 10.0));
-        binaryWriteFloat(file, (float)(pointer->stitch.y * 10.0));
-        binaryWriteUInt(file, NOTFRM | (pointer->stitch.color & 0x0F));
-        pointer = pointer->next;
-        i++;
-        if(i >= stitchCount) break;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        EmbStitch st = pattern->stitchList->stitch[i];
+        binaryWriteFloat(file, (float)(st.x * 10.0));
+        binaryWriteFloat(file, (float)(st.y * 10.0));
+        binaryWriteUInt(file, NOTFRM | (st.color & 0x0F));
     }
     binaryWriteBytes(file, bitmapName, 16);
     /* background color */

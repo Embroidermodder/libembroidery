@@ -111,7 +111,6 @@ char readPcd(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 char writePcd(EmbPattern* pattern, const char* fileName)
 {
-    EmbStitchList* pointer = 0;
     EmbFile* file = 0;
     int i;
     unsigned char colorCount;
@@ -141,14 +140,11 @@ char writePcd(EmbPattern* pattern, const char* fileName)
         binaryWriteUInt(file, 0); /* write remaining colors to reach 16 */
     }
 
-    binaryWriteUShort(file, (unsigned short)embStitchList_count(pattern->stitchList));
+    binaryWriteUShort(file, (unsigned short)pattern->stitchList->count);
     /* write stitches */
-    xx = yy = 0;
-    pointer = pattern->stitchList;
-    while(pointer)
-    {
-        pcdEncode(file, roundDouble(pointer->stitch.x * 10.0), roundDouble(pointer->stitch.y * 10.0), pointer->stitch.flags);
-        pointer = pointer->next;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        EmbStitch st = pattern->stitchList->stitch[i];
+        pcdEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
     }
     embFile_close(file);
     return 1;

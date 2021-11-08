@@ -251,16 +251,13 @@ char readCsv(EmbPattern* pattern, const char* fileName)
 char writeCsv(EmbPattern* pattern, const char* fileName)
 {
     FILE* file;
-    EmbStitchList* sList;
     EmbRect boundingRect;
-    int i, stitchCount, threadCount;
+    int i;
 
     if (!validateWritePattern(pattern, fileName, "writeCsv")) {
         printf("ERROR: Failed to validate pattern.");
         return 0;
     }
-
-    sList = pattern->stitchList;
 
     boundingRect = embPattern_calcBoundingBox(pattern);
 
@@ -293,7 +290,7 @@ char writeCsv(EmbPattern* pattern, const char* fileName)
 
     /* write variables */
     fprintf(file,"\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");
-    fprintf(file, "\">\",\"STITCH_COUNT:\",\"%u\"\n", (unsigned int)embStitchList_count(sList));
+    fprintf(file, "\">\",\"STITCH_COUNT:\",\"%u\"\n", (unsigned int)pattern->stitchList->count);
     fprintf(file, "\">\",\"THREAD_COUNT:\",\"%u\"\n", (unsigned int)pattern->threads->count);
     fprintf(file, "\">\",\"EXTENTS_LEFT:\",\"%f\"\n",   boundingRect.left);
     fprintf(file, "\">\",\"EXTENTS_TOP:\",\"%f\"\n",    boundingRect.top);
@@ -322,10 +319,9 @@ char writeCsv(EmbPattern* pattern, const char* fileName)
 
     /* write stitches */
     fprintf(file, "\"#\",\"[STITCH_TYPE]\",\"[X]\",\"[Y]\"\n");
-    while (sList) {
-        EmbStitch s = sList->stitch;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        EmbStitch s = pattern->stitchList->stitch[i];
         fprintf(file, "\"*\",\"%s\",\"%f\",\"%f\"\n", csvStitchFlagToStr(s.flags), s.x, s.y);
-        sList = sList->next;
     }
 
     fclose(file);

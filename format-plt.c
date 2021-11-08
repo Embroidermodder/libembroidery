@@ -53,10 +53,9 @@ char writePlt(EmbPattern* pattern, const char* fileName)
 {
     /* TODO: pointer safety */
     double scalingFactor = 40;
-    EmbStitch stitch;
-    EmbStitchList* pointer = 0;
     char firstStitchOfBlock = 1;
     FILE* file;
+    int i;
 
     if (!validateWritePattern(pattern, fileName, "writePlt")) {
         return 0;
@@ -69,16 +68,13 @@ char writePlt(EmbPattern* pattern, const char* fileName)
     fprintf(file, "IN;");
     fprintf(file, "ND;");
 
-    pointer = pattern->stitchList;
-    while(pointer)
-    {
-        stitch = pointer->stitch;
-        if(stitch.flags & STOP)
-        {
+    for (i=0; i<pattern->stitchList->count; i++) {
+        EmbStitch stitch;
+        stitch = pattern->stitchList->stitch[i];
+        if (stitch.flags & STOP) {
             firstStitchOfBlock = 1;
         }
-        if(firstStitchOfBlock)
-        {
+        if (firstStitchOfBlock) {
             fprintf(file, "PU%f,%f;", stitch.x * scalingFactor, stitch.y * scalingFactor);
             fprintf(file, "ST0.00,0.00;");
             fprintf(file, "SP0;");
@@ -88,12 +84,9 @@ char writePlt(EmbPattern* pattern, const char* fileName)
             fprintf(file, "TS0;");
             firstStitchOfBlock = 0;
         }
-        else
-        {
+        else {
             fprintf(file, "PD%f,%f;", stitch.x * scalingFactor, stitch.y * scalingFactor);
         }
-
-        pointer = pointer->next;
     }
     fprintf(file, "PU0.0,0.0;");
     fprintf(file, "PU0.0,0.0;");

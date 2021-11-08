@@ -2000,7 +2000,6 @@ char writeSvg(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
     EmbRect boundingRect;
-    EmbStitchList* stList;
     EmbPoint point;
     EmbRect rect;
     EmbColor color;
@@ -2161,37 +2160,30 @@ char writeSvg(EmbPattern* pattern, const char* fileName)
         }
     }
 
-    stList = pattern->stitchList;
-    if(stList)
-    {
+    char isNormal = 0;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        EmbStitch st = pattern->stitchList->stitch[i];
         /*TODO: #ifdef SVG_DEBUG for Josh which outputs JUMPS/TRIMS instead of chopping them out */
-        char isNormal = 0;
-        while(stList)
-        {
-            if(stList->stitch.flags == NORMAL && !isNormal)
-            {
-                    isNormal = 1;
-                    color = pattern->threads->thread[stList->stitch.color].color;
-                    /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-                    embFile_printf(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
+        if (st.flags == NORMAL && !isNormal) {
+            isNormal = 1;
+            color = pattern->threads->thread[st.color].color;
+            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+              embFile_printf(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
                                 color.r,
                                 color.g,
                                 color.b,
-                                emb_optOut(stList->stitch.x, tmpX),
-                                emb_optOut(stList->stitch.y, tmpY));
+                                emb_optOut(st.x, tmpX),
+                                emb_optOut(st.y, tmpY));
             }
-            else if(stList->stitch.flags == NORMAL && isNormal)
+            else if(st.flags == NORMAL && isNormal)
             {
-                embFile_printf(file, " %s,%s", emb_optOut(stList->stitch.x, tmpX), emb_optOut(stList->stitch.y, tmpY));
+                embFile_printf(file, " %s,%s", emb_optOut(st.x, tmpX), emb_optOut(st.y, tmpY));
             }
-            else if(stList->stitch.flags != NORMAL && isNormal)
+            else if(st.flags != NORMAL && isNormal)
             {
                 isNormal = 0;
                 embFile_printf(file, "\"/>");
             }
-
-            stList = stList->next;
-        }
     }
     embFile_printf(file, "\n</svg>\n");
     embFile_close(file);

@@ -8,8 +8,7 @@ char readPes(EmbPattern* pattern, const char* fileName)
     int pecstart, numColors, x;
     EmbFile* file = 0;
 
-    if(!pattern) { printf("ERROR: format-pes.c readPes(), pattern argument is null\n"); return 0; }
-    if(!fileName) { printf("ERROR: format-pes.c readPes(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readPes")) { return 0; }
 
     file = embFile_open(fileName, "rb", 0);
     if(!file)
@@ -332,8 +331,6 @@ char readPes(EmbPattern* pattern, const char* fileName)
 static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
 {
     /* TODO: pointer safety */
-    EmbStitchList* pointer = 0;
-    EmbStitchList* mainPointer = 0;
     short* colorInfo = 0;
     int flag = 0;
     int count = 0;
@@ -343,29 +340,25 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
     int colorCount = 0;
     int newColorCode = 0;
     int colorInfoIndex = 0;
-    int i;
+    int i, j;
     EmbRect bounds = embPattern_calcBoundingBox(pattern);
     EmbColor color;
 
-    mainPointer = pattern->stitchList;
-    while(mainPointer)
-    {
-        pointer = mainPointer;
-        flag = pointer->stitch.flags;
-        color = pattern->threads->thread[pointer->stitch.color].color;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        EmbStitch st = pattern->stitchList->stitch[i];
+        flag = st.flags;
+        color = pattern->threads->thread[st.color].color;
         newColorCode = embThread_findNearestColor_fromThread(color, (EmbThread*)pecThreads, pecThreadCount);
-        if(newColorCode != colorCode)
-        {
+        if (newColorCode != colorCode) {
             colorCount++;
             colorCode = newColorCode;
         }
-        while(pointer && (flag == pointer->stitch.flags))
-        {
+        while (i<pattern->stitchList->count && (flag == st.flags)) {
+            st = pattern->stitchList->stitch[i];
             count++;
-            pointer = pointer->next;
+            i++;
         }
         blockCount++;
-        mainPointer = pointer;
     }
 
     binaryWriteShort(file, (short)blockCount); /* block count */
@@ -376,53 +369,47 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
     binaryWriteBytes(file, "CSewSeg", 7);
 
     colorInfo = (short *) calloc(colorCount * 2, sizeof(short));
-    mainPointer = pattern->stitchList;
     colorCode = -1;
     blockCount = 0;
-    while(mainPointer)
-    {
-        pointer = mainPointer;
-        flag = pointer->stitch.flags;
-        color = pattern->threads->thread[pointer->stitch.color].color;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        EmbStitch st;
+        st = pattern->stitchList->stitch[i];
+        j = i;
+        flag = st.flags;
+        color = pattern->threads->thread[st.color].color;
         newColorCode = embThread_findNearestColor_fromThread(color, (EmbThread*)pecThreads, pecThreadCount);
-        if(newColorCode != colorCode)
-        {
+        if (newColorCode != colorCode) {
             colorInfo[colorInfoIndex++] = (short)blockCount;
             colorInfo[colorInfoIndex++] = (short)newColorCode;
             colorCode = newColorCode;
         }
         count = 0;
-        while(pointer && (flag == pointer->stitch.flags))
-        {
+        while (j<pattern->stitchList->count && (flag == st.flags)) {
+            st = pattern->stitchList->stitch[j];
             count++;
-            pointer = pointer->next;
+            j++;
         }
-        if(flag & JUMP)
-        {
+        if (flag & JUMP) {
             stitchType = 1;
         }
-        else
-        {
+        else {
             stitchType = 0;
         }
 
         binaryWriteShort(file, (short)stitchType); /* 1 for jump, 0 for normal */
         binaryWriteShort(file, (short)colorCode); /* color code */
         binaryWriteShort(file, (short)count); /* stitches in block */
-        pointer = mainPointer;
-        while(pointer && (flag == pointer->stitch.flags))
-        {
-            EmbStitch s = pointer->stitch;
-            binaryWriteShort(file, (short)(s.x - bounds.left));
-            binaryWriteShort(file, (short)(s.y + bounds.top));
-            pointer = pointer->next;
+        j = i;
+        while (j<pattern->stitchList->count && (flag == st.flags)) {
+            st = pattern->stitchList->stitch[j];
+            binaryWriteShort(file, (short)(st.x - bounds.left));
+            binaryWriteShort(file, (short)(st.y + bounds.top));
         }
-        if(pointer)
-        {
+        if (j < pattern->stitchList->count ) {
             binaryWriteShort(file, 0x8003);
         }
         blockCount++;
-        mainPointer = pointer;
+        i = j;
     }
     binaryWriteShort(file, (short)colorCount);
     for(i = 0; i < colorCount; i++)
@@ -431,10 +418,8 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
         binaryWriteShort(file, colorInfo[i * 2 + 1]);
     }
     binaryWriteInt(file, 0);
-    if(colorInfo)
-    {
+    if (colorInfo) {
         free(colorInfo);
-        colorInfo = 0;
     }
 }
 

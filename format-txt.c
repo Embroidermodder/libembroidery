@@ -4,8 +4,8 @@
  *  Returns \c true if successful, otherwise returns \c false. */
 char readTxt(EmbPattern* pattern, const char* fileName)
 {
-    if(!pattern) { printf("ERROR: format-txt.c readTxt(), pattern argument is null\n"); return 0; }
-    if(!fileName) { printf("ERROR: format-txt.c readTxt(), fileName argument is null\n"); return 0; }
+    if(!validateReadPattern(pattern, fileName, "readTxt")) { return 0; }
+
     return 0; /*TODO: finish readTxt */
 }
 
@@ -13,7 +13,7 @@ char readTxt(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 char writeTxt(EmbPattern* pattern, const char* fileName)
 {
-    EmbStitchList* pointer = 0;
+    int i;
     EmbFile* file = 0;
 
     if (!validateWritePattern(pattern, fileName, "writeTxt")) {
@@ -24,14 +24,11 @@ char writeTxt(EmbPattern* pattern, const char* fileName)
     if(!file)
         return 0;
 
-    pointer = pattern->stitchList;
-    embFile_printf(file, "%u\n", (unsigned int) embStitchList_count(pointer));
+    embFile_printf(file, "%u\n", (unsigned int) pattern->stitchList->count);
 
-    while(pointer)
-    {
-        EmbStitch s = pointer->stitch;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        EmbStitch s = pattern->stitchList->stitch[i];
         embFile_printf(file, "%.1f,%.1f color:%i flags:%i\n", s.x, s.y, s.color, s.flags);
-        pointer = pointer->next;
     }
 
     embFile_close(file);

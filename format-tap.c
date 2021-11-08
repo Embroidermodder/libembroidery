@@ -158,8 +158,7 @@ static void encode_record(FILE* file, int x, int y, int flags)
 char writeTap(EmbPattern* pattern, const char* fileName)
 {
     FILE* file;
-    int xx, yy, dx, dy;
-    EmbStitchList* pointer = 0;
+    int xx, yy, dx, dy, i;
 	
     if (!validateWritePattern(pattern, fileName, "writeTap")) {
         return 0;
@@ -174,15 +173,14 @@ char writeTap(EmbPattern* pattern, const char* fileName)
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
     xx = yy = 0;
-    pointer = pattern->stitchList;
-    while (pointer) {
+    for (i=0; i<pattern->stitchList->count; i++) {
+        EmbStitch st = pattern->stitchList->stitch[i];
         /* convert from mm to 0.1mm for file format */
-        dx = roundDouble(pointer->stitch.x * 10.0) - xx;
-        dy = roundDouble(pointer->stitch.y * 10.0) - yy;
-        xx = roundDouble(pointer->stitch.x * 10.0);
-        yy = roundDouble(pointer->stitch.y * 10.0);
-        encode_record(file, dx, dy, pointer->stitch.flags);
-        pointer = pointer->next;
+        dx = roundDouble(st.x * 10.0) - xx;
+        dy = roundDouble(st.y * 10.0) - yy;
+        xx = roundDouble(st.x * 10.0);
+        yy = roundDouble(st.y * 10.0);
+        encode_record(file, dx, dy, st.flags);
     }
     fclose(file);
     return 1;

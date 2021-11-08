@@ -48,22 +48,15 @@ int render_line(EmbLine line, EmbImage *image, EmbColor color)
 
 int render(EmbPattern *p, EmbImage *image)
 {
+    int i;
     EmbColor color = {0, 0, 0};
     EmbLine line;
-    EmbStitch st, previous;
-    EmbStitchList *stlist;
-    stlist = p->stitchList;
-    st = stlist->stitch;
-    previous = stlist->stitch;
-    while (stlist->next) {
-        line.x1 = previous.x;
-        line.y1 = previous.y;
-        line.x2 = st.x;
-        line.y2 = st.y;
+    for (i=1; i<p->stitchList->count; i++)  {
+        line.x1 = p->stitchList->stitch[i-1].x;
+        line.y1 = p->stitchList->stitch[i-1].y;
+        line.x2 = p->stitchList->stitch[i].x;
+        line.y2 = p->stitchList->stitch[i].y;
         render_line(line, image, color); /* HACK: st.color); */
-        previous = stlist->stitch;
-        stlist = stlist->next;
-        st = stlist->stitch;
     }
 }
 

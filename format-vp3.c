@@ -267,6 +267,7 @@ void vp3PatchByteCount(EmbFile* file, int offset, int adjustment)
  *  Returns \c true if successful, otherwise returns \c false. */
 char writeVp3(EmbPattern* pattern, const char* fileName)
 {
+#if 0
     EmbFile *file = 0;
     EmbRect bounds;
     int remainingBytesPos, remainingBytesPos2;
@@ -493,7 +494,8 @@ char writeVp3(EmbPattern* pattern, const char* fileName)
     embFile_close(file);
 
     embPattern_flipVertical(pattern);
-
-    return 1;
+#endif
+    puts("ERROR: vp3 format is not supported.");
+    return 0;
 }
 

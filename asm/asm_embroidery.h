@@ -47,47 +47,48 @@
 	.equ error_copy_stitch_list_no_pattern, 37
 	.equ error_copy_polylines_no_point_list, 38
 	.equ error_move_stitch_list_no_pattern, 39
-	.equ error_add_stitch_abs_no_pattern  40
-	.equ error_add_stitch_abs_multiple_end   41
-	.equ error_add_stitch_rel_no_pattern  42
-	.equ error_change_color_no_pattern 43
-	.equ error_pattern_read_unsupported   44
-	.equ error_pattern_write_unsupported  45
-	.equ error_pattern_scale 46
-	.equ error_bounding_box_no_pattern 47
-	.equ error_flip_horizontal_no_pattern 48
-	.equ error_flip_vertical_no_pattern   49
-	.equ error_flip_no_pattern  50
-	.equ error_combine_jump_stitches   51
-	.equ error_pattern_max_stitch_length  52
-	.equ error_pattern_center   53
-	.equ error_add_circle    54
-	.equ error_add_ellipse   55
-	.equ error_add_line  56
-	.equ error_add_path  57
-	.equ error_add_path_obj  58
-	.equ error_add_path_obj_empty  59
-	.equ error_add_point 60
-	.equ error_add_polygon_abs  61
-	.equ error_add_polygon_abs_obj 62
-	.equ error_add_polygon_abs_empty   63
-	.equ error_add_polyline_abs 64
-	.equ error_add_polyline_abs_obj    65
-	.equ error_add_polyline_abs_empty  66
-	.equ error_add_rect  67
-	.equ error_generate_satin_array_create   68
-	.equ error_generate_satin_result_memory  69
-	.equ error_render_stitches_result_memory 70
-	.equ error_read_no_pattern  71
-	.equ error_read_no_filename 72
-	.equ error_read_cannot_open 73
-	.equ error_cannot_open   74
-	.equ error_bcf_difat_sector_value  76
-	.equ error_read_sector_value   77
-	.equ error_bcf_fat_create   78
-	.equ error_col_empty_line   79
-	.equ error_compound_unexpected_object_type   82
-	.equ error_csv_string    83
+	.equ error_add_stitch_abs_no_pattern, 40
+	.equ error_add_stitch_abs_multiple_end, 41
+	.equ error_add_stitch_rel_no_pattern, 42
+	.equ error_change_color_no_pattern, 43
+	.equ error_pattern_read_unsupported, 44
+	.equ error_pattern_write_unsupported, 45
+	.equ error_pattern_scale, 46
+	.equ error_bounding_box_no_pattern, 47
+	.equ error_flip_horizontal_no_pattern, 48
+	.equ error_flip_vertical_no_pattern, 49
+	.equ error_flip_no_pattern, 50
+	.equ error_combine_jump_stitches, 51
+	.equ error_pattern_max_stitch_length, 52
+	.equ error_pattern_center, 53
+	.equ error_add_circle, 54
+	.equ error_add_ellipse, 55
+	.equ error_add_line, 56
+	.equ error_add_path, 57
+	.equ error_add_path_obj, 58
+	.equ error_add_path_obj_empty, 59
+	.equ error_add_point, 60
+	.equ error_add_polygon_abs, 61
+	.equ error_add_polygon_abs_obj, 62
+	.equ error_add_polygon_abs_empty, 63
+	.equ error_add_polyline_abs, 64
+	.equ error_add_polyline_abs_obj, 65
+	.equ error_add_polyline_abs_empty, 66
+	.equ error_add_rect, 67
+	.equ error_generate_satin_array_create, 68
+	.equ error_generate_satin_result_memory, 69
+	.equ error_render_stitches_result_memory, 70
+	.equ error_read_no_pattern, 71
+	.equ error_read_no_filename, 72
+	.equ error_read_cannot_open, 73
+	.equ error_cannot_open, 74
+	.equ error_bcf_difat_sector_value, 76
+	.equ error_read_sector_value, 77
+	.equ error_bcf_fat_create, 78
+	.equ error_col_empty_line, 79
+	.equ error_compound_unexpected_object_type, 82
+	.equ error_csv_string, 83
+	#if 0
 	.equ error_format_get_extension    84
 	.equ error_no_colors 85
 	.equ error_read_dxf  86
@@ -636,5 +637,6 @@ dnl
 new_label:')dnl
 dnl
 */
+#endif
 
 #endif

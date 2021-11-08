@@ -3,9 +3,14 @@
  */
 
 	.data
-hello_world:
-        .ascii "Hello, world!\n"
-	.equ hello_world_len, . - hello_world
+welcome_message:
+        .ascii "EMBROIDER EMBEDDED VERSION 0.1\n\n"
+	.ascii "    Copyright 2021 The Embroidermodder Team\n"
+	.ascii "    Licensed under the zlib license.\n"
+	.ascii "    Please obtain a copy of the printed documentation from:\n"
+	.ascii "        https://embroidermodder.org/libembroidery_manual_current.pdf\n"
+        .ascii "    for help on usage.\n\n"
+	.equ welcome_message_len, . - welcome_message
 
 /* Linux system defines
  * --------------------
@@ -23,7 +28,7 @@ hello_world:
 	.equ STDOUT, 1
 	.equ SUCCESS, 0
 
-/* #include "asm_embroidery.h" */
+#include "asm_embroidery.h"
 
 /* .set directive? */
 
@@ -31,8 +36,8 @@ hello_world:
 .globl main
 main:
 	pushl	%ebp
-	movl	$hello_world_len, %edx
-	movl	$hello_world, %ecx
+	movl	$welcome_message_len, %edx
+	movl	$welcome_message, %ecx
 	movl	$STDOUT, %ebx
 	movl	$SYS_WRITE, %eax
 	int	$0x80

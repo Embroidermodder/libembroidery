@@ -78,7 +78,7 @@ set(LIBRARY_SOURCE_FILES
     utility.c
 )
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -g -O2")
 
 add_library(embroidery_static STATIC
     ${LIBRARY_SOURCE_FILES}

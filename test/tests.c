@@ -4,11 +4,6 @@
 #include <string.h>
 #include <math.h>
 
-#define RED_TERM_COLOR "\x1B[0;31m"
-#define GREEN_TERM_COLOR "\x1B[0;32m"
-#define YELLOW_TERM_COLOR "\x1B[1;33m"
-#define RESET_TERM_COLOR "\033[0m"
-
 void testTangentPoints(EmbCircle c,
     double px, double py,
     EmbPoint *t0, EmbPoint *t1) {
@@ -244,46 +239,6 @@ int testEmbFormat(void) {
     if (formatTable[format].writer_state != ' ') return 23;
     if (formatTable[format].type != 1) return 24;
     return 0;
-}
-
-void report(int result, char *label) {
-    printf("%s Test...%*c", label, (int)(20-strlen(label)), ' ');
-    if (result) {
-        printf(RED_TERM_COLOR "[FAIL] [CODE=%d]\n" RESET_TERM_COLOR, result);
-    } else {
-        printf(GREEN_TERM_COLOR "[PASS]\n" RESET_TERM_COLOR);
-    }
-}
-
-void testMain(int level) {
-    int circleResult = testEmbCircle();
-    int threadResult = testThreadColor();
-    int formatResult = testEmbFormat();
-    int arcResult = testGeomArc();
-    int create1Result = create_test_file_1("test01.csv", EMB_FORMAT_CSV);
-    int create2Result = create_test_file_2("test02.csv", EMB_FORMAT_CSV);
-    int svg1Result = convert("test01.csv", "test01.svg");
-    int svg2Result = convert("test02.csv", "test02.svg");
-    int dst1Result = convert("test01.csv", "test01.dst");
-    int dst2Result = convert("test02.csv", "test02.dst");
-
-    puts("SUMMARY OF RESULTS");
-    puts("------------------");
-    report(circleResult, "Tangent Point");
-    report(threadResult, "Thread");
-    report(formatResult, "Format");
-    report(arcResult, "Arc");
-    report(create1Result, "Create CSV 1");
-    report(create2Result, "Create CSV 2");
-    report(svg1Result, "Convert CSV-SVG 1");
-    report(svg2Result, "Convert CSV-SVG 2");
-    report(dst1Result, "Convert CSV-DST 1");
-    report(dst2Result, "Convert CSV-DST 2");
-
-    if (level > 0) {
-        puts("More expensive tests.");
-        full_test_matrix("test_matrix.txt");
-    }
 }
 
 EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };

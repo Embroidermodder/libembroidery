@@ -1,4 +1,4 @@
-#include "embroidery.h"
+#include "tests.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -9,25 +9,15 @@
 #define YELLOW_TERM_COLOR "\x1B[1;33m"
 #define RESET_TERM_COLOR "\033[0m"
 
-static void testTangentPoints(EmbCircle c, double  px, double  py, EmbPoint *, EmbPoint *);
-static int testEmbCircle(void);
-static int testThreadColor(void);
-int create_test_csv_file(char *fname, int type);
-int full_test_matrix (char *fname);
-static int create_test_file_1(const char* outf, int mode);
-static int create_test_file_2(const char* outf, int mode);
-
-static void testTangentPoints(EmbCircle c,
+void testTangentPoints(EmbCircle c,
     double px, double py,
-    EmbPoint *t0, EmbPoint *t1)
-{
+    EmbPoint *t0, EmbPoint *t1) {
     double tx0 = 0.0, tx1 = 0.0, ty0 = 0.0, ty1 = 0.0;
-    if(!getCircleTangentPoints(c, px, py,
+    if (!getCircleTangentPoints(c, px, py,
                                &tx0, &ty0,
                                &tx1, &ty1)) {
         printf("Error calculating tangent points.\n");
-    }
-    else {
+    } else {
         printf("Circle : cr=%f, cx=%f, cy=%f\n"
                "Point  : px=%f, py=%f\n"
                "Tangent: tx0=%f, ty0=%f\n"
@@ -43,15 +33,13 @@ static void testTangentPoints(EmbCircle c,
     }
 }
 
-double distance(EmbPoint p, EmbPoint q)
-{
-    double x2 = (p.x-q.x)*(p.x-q.x);
-    double y2 = (p.y-q.y)*(p.y-q.y);
+double distance(EmbPoint p, EmbPoint q) {
+    double x2 = (p.x - q.x)*(p.x - q.x);
+    double y2 = (p.y - q.y)*(p.y - q.y);
     return sqrt(x2+y2);
 }
 
-int testEmbCircle(void)
-{
+int testEmbCircle(void) {
     double error;
     double epsilon = 1e-3;
     EmbPoint p0, p1;
@@ -71,8 +59,7 @@ int testEmbCircle(void)
     return 0;
 }
 
-int testEmbCircle_2(void)
-{
+int testEmbCircle_2(void) {
     double error;
     double epsilon = 1e-3;
     EmbPoint p0, p1;
@@ -91,7 +78,7 @@ int testEmbCircle_2(void)
     return 0;
 }
 
-static void printArcResults(double bulge,
+void printArcResults(double bulge,
                      double startX,    double startY,
                      double endX,      double endY,
                      double midX,      double midY,
@@ -100,8 +87,7 @@ static void printArcResults(double bulge,
                      double chord,
                      double chordMidX, double chordMidY,
                      double sagitta,   double apothem,
-                     double incAngle,  char   clockwise)
-{
+                     double incAngle,  char   clockwise) {
     fprintf(stdout, "bulge     = %f\n"
                     "startX    = %f\n"
                     "startY    = %f\n"
@@ -141,19 +127,19 @@ static void printArcResults(double bulge,
                     clockwise);
 }
 
-int testGeomArc(void)
-{
+int testGeomArc(void) {
     double bulge;
-    double startX;    double startY;
-    double endX;      double endY;
+    double startX, startY;
+    double endX, endY;
     /* returned data */
-    double midX;      double midY;
-    double centerX;   double centerY;
-    double radius;    double diameter;
+    double midX, midY;
+    double centerX, centerY;
+    double radius, diameter;
     double chord;
-    double chordMidX; double chordMidY;
-    double sagitta;   double apothem;
-    double incAngle;  char   clockwise;
+    double chordMidX, chordMidY;
+    double sagitta, apothem;
+    double incAngle;
+    char clockwise;
 
     fprintf(stdout, "Clockwise Test:\n");
     bulge = -0.414213562373095;
@@ -161,7 +147,7 @@ int testGeomArc(void)
     startY = 0.0;
     endX   = 2.0;
     endY   = 1.0;
-    if(getArcDataFromBulge(bulge,
+    if (getArcDataFromBulge(bulge,
                            startX,     startY,
                            endX,       endY,
                            /* returned data */
@@ -171,8 +157,7 @@ int testGeomArc(void)
                            &chord,
                            &chordMidX, &chordMidY,
                            &sagitta,   &apothem,
-                           &incAngle,  &clockwise))
-    {
+                           &incAngle,  &clockwise)) {
         printArcResults(bulge,
                         startX,    startY,
                         endX,      endY,
@@ -191,7 +176,7 @@ int testGeomArc(void)
     startY = 0.0;
     endX   = 5.0;
     endY   = 1.0;
-    if(getArcDataFromBulge(bulge,
+    if (getArcDataFromBulge(bulge,
                            startX,     startY,
                            endX,       endY,
                            /* returned data */
@@ -201,8 +186,7 @@ int testGeomArc(void)
                            &chord,
                            &chordMidX, &chordMidY,
                            &sagitta,   &apothem,
-                           &incAngle,  &clockwise))
-    {
+                           &incAngle,  &clockwise)) {
         printArcResults(bulge,
                         startX,    startY,
                         endX,      endY,
@@ -218,8 +202,7 @@ int testGeomArc(void)
     return 0;
 }
 
-static int testThreadColor(void)
-{
+int testThreadColor(void) {
     unsigned int tColor = 0xFFD25F00;
     int          tBrand = Sulky_Rayon;
     int          tNum   = threadColorNum(tColor, tBrand);
@@ -236,8 +219,7 @@ static int testThreadColor(void)
     return 0;
 }
 
-static int testEmbFormat(void)
-{
+int testEmbFormat(void) {
     const char*  tName = "example.zsk";
     int format = emb_identify_format(tName);
 
@@ -255,27 +237,25 @@ static int testEmbFormat(void)
             formatTable[format].type);
 
     if (strcmp(formatTable[format].extension, ".zsk")) return 20;
-    if (strcmp(formatTable[format].description, "ZSK USA Embroidery Format")) return 21;
+    if (strcmp(formatTable[format].description, "ZSK USA Embroidery Format")) {
+            return 21;
+    }
     if (formatTable[format].reader_state != 'U') return 22;
     if (formatTable[format].writer_state != ' ') return 23;
     if (formatTable[format].type != 1) return 24;
     return 0;
 }
 
-static void
-report(int result, char *label)
-{
+void report(int result, char *label) {
     printf("%s Test...%*c", label, (int)(20-strlen(label)), ' ');
     if (result) {
         printf(RED_TERM_COLOR "[FAIL] [CODE=%d]\n" RESET_TERM_COLOR, result);
-    }
-    else {
+    } else {
         printf(GREEN_TERM_COLOR "[PASS]\n" RESET_TERM_COLOR);
     }
 }
 
-void testMain(int level)
-{
+void testMain(int level) {
     int circleResult = testEmbCircle();
     int threadResult = testThreadColor();
     int formatResult = testEmbFormat();
@@ -284,10 +264,8 @@ void testMain(int level)
     int create2Result = create_test_file_2("test02.csv", EMB_FORMAT_CSV);
     int svg1Result = convert("test01.csv", "test01.svg");
     int svg2Result = convert("test02.csv", "test02.svg");
-    /*
     int dst1Result = convert("test01.csv", "test01.dst");
     int dst2Result = convert("test02.csv", "test02.dst");
-    */
 
     puts("SUMMARY OF RESULTS");
     puts("------------------");
@@ -299,11 +277,9 @@ void testMain(int level)
     report(create2Result, "Create CSV 2");
     report(svg1Result, "Convert CSV-SVG 1");
     report(svg2Result, "Convert CSV-SVG 2");
-    /*
     report(dst1Result, "Convert CSV-DST 1");
     report(dst2Result, "Convert CSV-DST 2");
-    */
-    
+
     if (level > 0) {
         puts("More expensive tests.");
         full_test_matrix("test_matrix.txt");
@@ -312,9 +288,8 @@ void testMain(int level)
 
 EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
 
-static int create_test_file_1(const char* outf, int mode)
-{
-    int i, result;
+int create_test_file_1(const char* outf, int mode) {
+    int i;
     EmbPattern* p;
     EmbStitch st;
 
@@ -344,9 +319,8 @@ static int create_test_file_1(const char* outf, int mode)
     return 0;
 }
 
-static int create_test_file_2(const char* outf, int mode)
-{
-    int i, result;
+int create_test_file_2(const char* outf, int mode) {
+    int i;
     EmbPattern* p;
     EmbStitch st;
 
@@ -376,7 +350,8 @@ static int create_test_file_2(const char* outf, int mode)
     return 0;
 }
 
-/* TODO: Add capability for converting multiple files of various types to a single format. Currently, we only convert a single file to multiple formats. */
+/* TODO: Add capability for converting multiple files of various types to a single format. 
+Currently, we only convert a single file to multiple formats. */
 /* the only difference in main() between new and current is these lines
 
     init_embroidery();
@@ -384,8 +359,7 @@ static int create_test_file_2(const char* outf, int mode)
 */
 
 #if 0
-static int testThreadColor(void)
-{
+int testThreadColor(void) {
     unsigned int tColor = 0xFFD25F00;
     EmbColor c;
     c.r = 0xD2;
@@ -415,8 +389,7 @@ static int testThreadColor(void)
  * Add command "--full-test-suite" for this full matrix.
  */
 
-int full_test_matrix(char *fname)
-{
+int full_test_matrix(char *fname) {
     int i, j, success, ntests;
     FILE *f;
     f = fopen(fname, "wb");
@@ -427,24 +400,25 @@ int full_test_matrix(char *fname)
 
     success = 0;
     ntests = (numberOfFormats - 4)*(numberOfFormats - 5);
-    for (i=0; i<numberOfFormats; i++) {
+    for (i=0; i < numberOfFormats; i++) {
         char fname[100];
-        if (i==EMB_FORMAT_COL || i==EMB_FORMAT_RGB ||
-            i==EMB_FORMAT_INF || i==EMB_FORMAT_EDR) {
+        if (i == EMB_FORMAT_COL || i == EMB_FORMAT_RGB ||
+            i == EMB_FORMAT_INF || i == EMB_FORMAT_EDR) {
             continue;
         }
-        sprintf(fname, "test01%s", formatTable[i].extension);
+        snprintf(fname, "test01%s", formatTable[i].extension);
         create_test_file_1(fname, i);
         /* p3_render(b); */
-        for (j=0; j<numberOfFormats; j++) {
+        for (j=0; j < numberOfFormats; j++) {
             char fname_converted[100];
             int result;
-            if (i==j || j==EMB_FORMAT_COL || j==EMB_FORMAT_RGB ||
-                j==EMB_FORMAT_INF || j==EMB_FORMAT_EDR) {
+            if (i == j || j == EMB_FORMAT_COL || j == EMB_FORMAT_RGB ||
+                j == EMB_FORMAT_INF || j == EMB_FORMAT_EDR) {
                 continue;
             }
             printf("\n");
-            sprintf(fname_converted, "test01_%02d_converted%s", i, formatTable[j].extension);
+            snprintf(fname_converted, "test01_%02d_converted%s",
+                    i, formatTable[j].extension);
             result = convert(fname, fname_converted);
             /* p3_render(b); */
             /*
@@ -454,8 +428,7 @@ int full_test_matrix(char *fname)
             if (!result) {
                 fprintf(f, "PASS");
                 success++;
-            }
-            else {
+            } else {
                 fprintf(f, "FAIL");
             }
             fprintf(f, " %d %d\n%f%%\n", i, j, 100*success/(1.0*ntests));

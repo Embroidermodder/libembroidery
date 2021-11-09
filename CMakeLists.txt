@@ -8,11 +8,13 @@ set(CMAKE_C_STANDARD 90)
 set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+set(CMAKE_C_FLAGS "-fPIC")
 set(LIBRARY_SOURCE_FILES
     compress.c
-    tests.c
     fills.c
     image.c
+    embroidery.h
     format-100.c
     format-10o.c
     format-art.c
@@ -133,3 +135,4 @@ install(
     ARCHIVE DESTINATION /usr/lib
     RUNTIME DESTINATION /usr/bin
 )
+add_subdirectory(test)

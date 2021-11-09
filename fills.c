@@ -45,13 +45,19 @@ Potential reference:
     new_state[0] = 0;
 
     /* replace letters using rules by copying to new_state */
-    for (j=0; j<strlen(state); j++) {
+    for (j=0; j < strlen(state); j++) {
         if (state[j] >= 'A' && state[j] < 'F') {
             strcat(new_state, L.rules[state[j]-'A']);
         }
-        if (state[j] == 'F') strcat(new_state, "F");
-        if (state[j] == '+') strcat(new_state, "+");
-        if (state[j] == '-') strcat(new_state, "-");
+        if (state[j] == 'F') {
+            strcat(new_state, "F");
+        }
+        if (state[j] == '+') {
+            strcat(new_state, "+");
+        }
+        if (state[j] == '-') {
+            strcat(new_state, "-");
+        }
     }
     memcpy(state, new_state, strlen(new_state)+1);
 
@@ -86,7 +92,7 @@ int hilbert_curve(int iterations)
     fprintf(f, "#!/usr/bin/env python3\n");
     fprintf(f, "A = [\n    0, 0");
 
-    for (i=0; i<strlen(state); i++) {
+    for (i=0; i < strlen(state); i++) {
         if (state[i] == '+') {
             direction = (direction + 1) % 4;
             continue;
@@ -118,8 +124,7 @@ int hilbert_curve(int iterations)
 
     fprintf(f, "import matplotlib.pyplot as plt\n"
            "plt.plot(A[0::2], A[1::2])\n"
-           "plt.show()\n"
-    );
+           "plt.show()\n");
 
     fclose(f);
 
@@ -132,7 +137,7 @@ int hilbert_curve(int iterations)
 void generate_dragon_curve(char *state, int iterations)
 {
     int i, length;
-    if (iterations==1) {
+    if (iterations == 1) {
         state[0] = 'R';
         state[1] = 0;
         return;
@@ -142,8 +147,7 @@ void generate_dragon_curve(char *state, int iterations)
         state[2*i+1] = state[i];
         if (i%2 == 0) {
             state[2*i] = 'R';
-        }
-        else {
+        } else {
             state[2*i] = 'L';
         }
     }

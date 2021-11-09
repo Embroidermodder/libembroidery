@@ -223,12 +223,6 @@ int main(int argc, const char* argv[])
         case FLAG_VERSION_SHORT:
             puts(version_string);
             break;
-        case FLAG_TEST:
-            testMain(0);
-            break;
-        case FLAG_FULL_TEST_SUITE:
-            testMain(1);
-            break;
         case FLAG_HILBERT_CURVE:
             hilbert_curve(3);
             break;

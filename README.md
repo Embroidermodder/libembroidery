@@ -45,17 +45,7 @@ For basic use, we recommend you build as above then run:
 
 which will print out advice on how to use these tools without digging
 straight into the full manual. Beyond this the full documentation is in
-[doc/libembroidery_v0.1_manual.pdf](https://github.com/Embroidermodder/libembroidery/blob/master/doc/libembroidery_v0.1_manual.pdf).
-
-If for some reason this is out of date then you can use
-
-```
-cd doc
-make
-make clean
-```
-
-to build the manual.
+[embroidermodder_v1.90.0_manual.pdf](https://github.com/Embroidermodder/embroidermodder-manual/blob/master/embroidermodder_v1.90.0_manual.pdf).
 
 Development
 -----------

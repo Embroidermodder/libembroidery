@@ -398,6 +398,10 @@ char writeJef(EmbPattern* pattern, const char* fileName)
     }
 
     for (i=0; i<pattern->stitchList->count; i++) {
+        b[0] = 0;
+        b[1] = 0;
+        b[2] = 0;
+        b[3] = 0;
         st = pattern->stitchList->stitch[i];
         dx = st.x * 10.0 - xx;
         dy = st.y * 10.0 - yy;

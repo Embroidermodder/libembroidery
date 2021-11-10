@@ -1,4 +1,5 @@
 #include "embroidery.h"
+#include "embroidery-internal.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -75,12 +76,18 @@ static int stxReadThread(StxThread* thread, EmbFile* file)
         sd.someInt = binaryReadInt32(file);
         subCodeLength = binaryReadUInt8(file);
         subCodeBuff = (char*)malloc(subCodeLength);
-        if(!subCodeBuff) { printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for subCodeBuff\n"); return 0; }
+        if (!subCodeBuff) {
+            printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for subCodeBuff\n");
+            return 0;
+        }
         binaryReadBytes(file, (unsigned char*)subCodeBuff, subCodeLength); /* TODO: check return value */
         sd.colorCode = subCodeBuff;
         subColorNameLength = binaryReadUInt8(file);
         subColorNameBuff = (char*)malloc(subColorNameLength);
-        if(!subColorNameBuff) { printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for subColorNameBuff\n"); return 0; }
+        if (!subColorNameBuff) {
+            printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for subColorNameBuff\n");
+            return 0;
+        }
         binaryReadBytes(file, (unsigned char*)subColorNameBuff, subColorNameLength); /* TODO: check return value */
         sd.colorName = subColorNameBuff;
         sd.someOtherInt = binaryReadInt32(file);
@@ -101,9 +108,7 @@ char readStx(EmbPattern* pattern, const char* fileName)
     char* header = 0;
     char filetype[4], version[5];
     int paletteLength, imageLength, something1, stitchDataOffset, something3, threadDescriptionOffset, stitchCount, left, right, colors;
-    int val1, val2, val3, val4, val5, val6;
-
-    int vala1, vala2, vala3, vala4, vala5, vala6;
+    int val[12];
     int bottom,top;
     EmbFile* file = 0;
 
@@ -134,6 +139,20 @@ char readStx(EmbPattern* pattern, const char* fileName)
     left = binaryReadInt16(file);
     bottom = binaryReadInt16(file);
     top = binaryReadInt16(file);
+    if (EMB_DEBUG) {
+        printf("paletteLength:           %d\n", paletteLength);
+        printf("imageLength:             %d\n", imageLength);
+        printf("something1:              %d\n", something1);
+        printf("stitchDataOffset:        %d\n", stitchDataOffset);
+        printf("something3:              %d\n", something3);
+        printf("threadDescriptionOffset: %d\n", threadDescriptionOffset);
+        printf("stitchCount:             %d\n", stitchCount);
+        printf("colors:                  %d\n", colors);
+        printf("right:                   %d\n", right);
+        printf("left:                    %d\n", left);
+        printf("bottom:                  %d\n", bottom);
+        printf("top:                     %d\n", top);
+    }
 
     gif = (unsigned char*)malloc(imageLength);
     if(!gif) { printf("ERROR: format-stx.c readStx(), unable to allocate memory for gif\n"); return 0; }
@@ -165,20 +184,16 @@ char readStx(EmbPattern* pattern, const char* fileName)
     binaryReadInt16(file);
     binaryReadUInt8(file);
 
-    val1 = binaryReadInt16(file);
-    val2 = binaryReadInt16(file);
-    val3 = binaryReadInt16(file);
-    val4 = binaryReadInt16(file);
-
-    val5 = binaryReadInt16(file); /* 0 */
-    val6 = binaryReadInt16(file); /* 0 */
-
-    vala1 = binaryReadInt16(file);
-    vala2 = binaryReadInt16(file);
-    vala3 = binaryReadInt16(file);
-    vala4 = binaryReadInt16(file);
-    vala5 = binaryReadInt16(file); /* 0 */
-    vala6 = binaryReadInt16(file); /* 0 */
+    for (i=0; i<12; i++) {
+        val[i] = binaryReadInt16(file);
+        if (EMB_DEBUG) {
+            printf("identify val[%d] = %d", i, val[i]);
+        }
+    }
+    if (EMB_DEBUG) {
+        puts("val[4] == val[5] == 0");
+        puts("val[10] == val[11] == 0");
+    }
 
     binaryReadInt32(file); /* 0 */
     binaryReadInt32(file); /* 0 */

@@ -3,6 +3,7 @@
 
 #define CsdSubMaskSize  479
 #define CsdXorMaskSize  501
+#define DEBUG 0
 
 static char _subMask[CsdSubMaskSize];
 static char _xorMask[CsdXorMaskSize];
@@ -135,6 +136,9 @@ char readCsd(EmbPattern* pattern, const char* fileName)
     }
     unknown1 = DecodeCsdByte(embFile_tell(file), binaryReadByte(file), type);
     unknown2 = DecodeCsdByte(embFile_tell(file), binaryReadByte(file), type);
+    if (DEBUG) {
+        printf("unknown bytes to decode: %c %c", unknown1, unknown2);
+    }
 
     for(i = 0; i < 14; i++)
     {

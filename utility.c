@@ -628,15 +628,15 @@ int embArray_resize(EmbArray *p)
         if (!p->spline) return 0;
         break;
     case EMB_STITCH:
-        p->stitch = (EmbStitch *)realloc(p->stitch, CHUNK_SIZE*sizeof(EmbStitch));
+        p->stitch = (EmbStitch *)realloc(p->stitch, p->length*sizeof(EmbStitch));
         if (!p->stitch) return 0;
         break;
     case EMB_THREAD:
-        p->thread = (EmbThread *)realloc(p->thread, CHUNK_SIZE*sizeof(EmbThread));
+        p->thread = (EmbThread *)realloc(p->thread, p->length*sizeof(EmbThread));
         if (!p->thread) return 0;
         break;
     case EMB_VECTOR:
-        p->vector = (EmbVector *)realloc(p->vector, CHUNK_SIZE*sizeof(EmbVector));
+        p->vector = (EmbVector *)realloc(p->vector, p->length*sizeof(EmbVector));
         if (!p->vector) return 0;
         break;
     default:
@@ -2626,8 +2626,8 @@ void embPattern_correctForMaxStitchLength(EmbPattern* p, double maxStitchLength,
             }
             embArray_addStitch(newList, st);
         }
-        p->stitchList = newList;
         embArray_free(p->stitchList);
+        p->stitchList = newList;
     }
     embPattern_end(p);
 }
@@ -2755,6 +2755,7 @@ void embPattern_addLineObjectAbs(EmbPattern* p, double x1, double y1, double x2,
 {
     EmbLineObject lineObj;
     lineObj.line = embLine_make(x1, y1, x2, y2);
+    lineObj.lineType = 0;
     lineObj.color = embColor_make(0, 0, 0);
 
     if (!p) {

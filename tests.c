@@ -284,10 +284,8 @@ void testMain(int level)
     int create2Result = create_test_file_2("test02.csv", EMB_FORMAT_CSV);
     int svg1Result = convert("test01.csv", "test01.svg");
     int svg2Result = convert("test02.csv", "test02.svg");
-    /*
     int dst1Result = convert("test01.csv", "test01.dst");
     int dst2Result = convert("test02.csv", "test02.dst");
-    */
 
     puts("SUMMARY OF RESULTS");
     puts("------------------");
@@ -299,10 +297,8 @@ void testMain(int level)
     report(create2Result, "Create CSV 2");
     report(svg1Result, "Convert CSV-SVG 1");
     report(svg2Result, "Convert CSV-SVG 2");
-    /*
     report(dst1Result, "Convert CSV-DST 1");
     report(dst2Result, "Convert CSV-DST 2");
-    */
     
     if (level > 0) {
         puts("More expensive tests.");
@@ -314,7 +310,7 @@ EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
 
 static int create_test_file_1(const char* outf, int mode)
 {
-    int i, result;
+    int i;
     EmbPattern* p;
     EmbStitch st;
 
@@ -325,9 +321,12 @@ static int create_test_file_1(const char* outf, int mode)
     }
 
     /* 10mm circle */
-    for (i = 0; i < 100; i++) {
-        st.x = 10 + 10 * sin(i * (0.5 / 3.141592));
-        st.y = 10 + 10 * cos(i * (0.5 / 3.141592));
+    for (i = 0; i < 20; i++) {
+        embPattern_addStitchRel(p, 0.0, 1.0, JUMP, 0);
+    }
+    for (i = 0; i < 200; i++) {
+        st.x = 10 + 10 * sin(i * (0.03141592));
+        st.y = 10 + 10 * cos(i * (0.03141592));
         st.flags = NORMAL;
         st.color = 0;
         embPattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
@@ -346,7 +345,7 @@ static int create_test_file_1(const char* outf, int mode)
 
 static int create_test_file_2(const char* outf, int mode)
 {
-    int i, result;
+    int i;
     EmbPattern* p;
     EmbStitch st;
 

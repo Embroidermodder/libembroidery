@@ -113,8 +113,6 @@ char writePcq(EmbPattern* pattern, const char* fileName)
 {
     EmbFile* file = 0;
     int i;
-    unsigned char colorCount;
-    double xx = 0.0, yy = 0.0;
 
     if (!validateWritePattern(pattern, fileName, "writePcq")) {
         return 0;
@@ -125,8 +123,7 @@ char writePcq(EmbPattern* pattern, const char* fileName)
 
     binaryWriteByte(file, (unsigned char)'2');
     binaryWriteByte(file, 3); /* TODO: select hoop size defaulting to Large PCS hoop */
-    colorCount = (unsigned char)pattern->threads->count;
-    binaryWriteUShort(file, (unsigned short)colorCount);
+    binaryWriteUShort(file, (unsigned short)pattern->threads->count);
     for (i = 0; i<pattern->threads->count; i++) {
         EmbColor color = pattern->threads->thread[i].color;
         binaryWriteByte(file, color.r);

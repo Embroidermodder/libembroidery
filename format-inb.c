@@ -1,4 +1,5 @@
 #include "embroidery.h"
+#include "embroidery-internal.h"
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
@@ -43,6 +44,18 @@ char readInb(EmbPattern* pattern, const char* fileName)
     right = binaryReadInt16(file);
     top = binaryReadInt16(file);
     bottom = binaryReadInt16(file);
+    if (EMB_DEBUG) {
+        printf("nullVal:                 %c\n", nullVal);
+        printf("stitchCount:             %d\n", stitchCount);
+        printf("width:                   %d\n", width);
+        printf("height:                  %d\n", height);
+        /*... */
+        printf("right:                   %d\n", right);
+        printf("left:                    %d\n", left);
+        printf("bottom:                  %d\n", bottom);
+        printf("top:                     %d\n", top);
+    }
+
     embFile_seek(file, 0x2000, SEEK_SET);
     /* Calculate stitch count since header has been seen to be blank */
     stitchCount = (int)((fileLength - 0x2000) / 3);
@@ -74,11 +87,17 @@ char readInb(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 char writeInb(EmbPattern* pattern, const char* fileName)
 {
+    FILE *file;
+
     if (!validateWritePattern(pattern, fileName, "writeInb"))
         return 0;
 
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
+    file = fopen(fileName, "w");
+    if (!file) return 0;
 
+    fclose(file);
+
+    puts("writeInb not implimented.");
     return 0; /*TODO: finish writeInb */
 }
 

@@ -224,7 +224,7 @@ char readDst(EmbPattern* pattern, const char* fileName)
     int valpos;
     unsigned char b[3];
     char header[512 + 1];
-    EmbFile* file = 0;
+    FILE* file = 0;
     int i = 0;
     int flags; /* for converting stitches from file encoding */
 
@@ -381,8 +381,8 @@ char writeDst(EmbPattern* pattern, const char* fileName)
 {
     EmbRect boundingRect;
     FILE* file;
-    int xx, yy, dx, dy, flags, i, ax, ay, mx, my;
-    char* pd = 0;
+    int xx, yy, i, ax, ay, mx, my;
+    char pd[10];
     EmbStitch st;
 
     if (!validateWritePattern(pattern, fileName, "writeDst")) return 0;
@@ -424,12 +424,11 @@ char writeDst(EmbPattern* pattern, const char* fileName)
     /*my=pattern->get_variable_int("my"); */
 
     /*pd=pattern->get_variable("pd");*/ /* will return null pointer if not defined */
-    pd = 0;
-    if(pd == 0 || strlen(pd) != 6)
-    {
+   /* pd = 0;
+    if (pd == 0 || strlen(pd) != 6) { */
         /* pd is not valid, so fill in a default consisting of "******" */
-        pd = "******";
-    }
+        strcpy(pd, "******");
+    /*}*/
     fprintf(file, "AX:+%5d\x0d", ax);
     fprintf(file, "AY:+%5d\x0d", ay);
     fprintf(file, "MX:+%5d\x0d", mx);
@@ -446,12 +445,14 @@ char writeDst(EmbPattern* pattern, const char* fileName)
     /* write stitches */
     xx = yy = 0;
     for (i=0; i<pattern->stitchList->count; i++) {
+        int dx, dy;
         st = pattern->stitchList->stitch[i];
         /* convert from mm to 0.1mm for file format */
         dx = roundDouble(st.x * 10.0) - xx;
         dy = roundDouble(st.y * 10.0) - yy;
         xx = roundDouble(st.x * 10.0);
         yy = roundDouble(st.y * 10.0);
+        printf("%d %f %f %d %d %d %d\n", i, st.x, st.y, dx, dy, xx, yy);
         encode_record(file, dx, dy, st.flags);
     }
     fprintf(file, "\xa1"); /* finish file with a terminator character */

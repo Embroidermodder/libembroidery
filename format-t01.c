@@ -152,9 +152,7 @@ char writeT01(EmbPattern* pattern, const char* fileName)
 {
 	EmbRect boundingRect;
 	EmbFile* file = 0;
-	int xx, yy, dx, dy, flags;
-	int co = 1;
-	int ax, ay, mx, my, i;
+	int xx, yy, i;
 	
     if (!validateWritePattern(pattern, fileName, "writeT01")) return 0;
 
@@ -164,20 +162,19 @@ char writeT01(EmbPattern* pattern, const char* fileName)
 	embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
 	xx = yy = 0;
-	co = pattern->threads->count;
-	flags = NORMAL;
 	boundingRect = embPattern_calcBoundingBox(pattern);
-	ax = ay = mx = my = 0;
-	xx = yy = 0;
+	if (EMB_DEBUG) {
+	    printf("bounding rectangle with top %f not used in the function writeT01\n", boundingRect.top);
+	}
 	for (i=0; i<pattern->stitchList->count; i++) {
+	    int dx, dy;
 	    EmbStitch st = pattern->stitchList->stitch[i];
 		/* convert from mm to 0.1mm for file format */
 		dx = roundDouble(st.x * 10.0) - xx;
 		dy = roundDouble(st.y * 10.0) - yy;
 		xx = roundDouble(st.x * 10.0);
 		yy = roundDouble(st.y * 10.0);
-		flags = st.flags;
-		encode_record(file, dx, dy, flags);
+		encode_record(file, dx, dy, st.flags);
 	}
 	embFile_close(file);
 	return 1;

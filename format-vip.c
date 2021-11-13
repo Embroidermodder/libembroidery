@@ -278,6 +278,7 @@ char writeVip(EmbPattern* pattern, const char* fileName)
     {
         for (i=0; i<pattern->stitchList->count; i++) {
             EmbStitch st;
+            st = pattern->stitchList->stitch[i];
             xx = st.x;
             yy = st.y;
             flags = st.flags;

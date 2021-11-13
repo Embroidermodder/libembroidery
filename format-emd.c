@@ -30,6 +30,8 @@ char readEmd(EmbPattern* pattern, const char* fileName)
     height = binaryReadInt16(file);
     colors = binaryReadInt16(file);
 
+    printf("width: %d\nheight: %d\ncolors: %d\n", width, height, colors);
+
     embFile_seek(file, 0x30, SEEK_SET);
 
     for (i = 0; !endOfStream; i++) {
@@ -70,10 +72,19 @@ char readEmd(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 char writeEmd(EmbPattern* pattern, const char* fileName)
 {
+    FILE *file;
+
     if (!validateWritePattern(pattern, fileName, "writeEmd")) return 0;
 
-    /* TODO: embFile_open() needs to occur here after the check for no stitches */
+    file = fopen(fileName, "wb");
+    if (!file) {
+        puts("ERROR: Failed to open file.");
+        return 0;
+    }
 
+    fclose(file);
+
+    puts("writeEmd not implimented.");
     return 0; /*TODO: finish writeEmd */
 }
 

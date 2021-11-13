@@ -88,38 +88,37 @@ char readExp(EmbPattern* pattern, const char* fileName)
  *  Returns \c true if successful, otherwise returns \c false. */
 char writeExp(EmbPattern* pattern, const char* fileName)
 {
-    EmbFile* file = 0;
-    double dx = 0.0, dy = 0.0;
+    FILE* file;
     double xx = 0.0, yy = 0.0;
-    int flags = 0, i;
-    unsigned char b[4];
-    EmbStitch st;
+    int i;
 
     if (!validateWritePattern(pattern, fileName, "writeExp")) return 0;
 
-    file = embFile_open(fileName, "wb", 0);
-    if (!file) return 0;
+    file = fopen(fileName, "wb");
+    if (!file) {
+        puts("ERROR: writeExp failed to open file.");
+        return 0;
+    }
 
     /* write stitches */
     for (i=0; i<pattern->stitchList->count; i++) {
-        st = pattern->stitchList->stitch[i];
+        unsigned char b[4];
+        double dx, dy;
+        EmbStitch st = pattern->stitchList->stitch[i];
         dx = st.x * 10.0 - xx;
         dy = st.y * 10.0 - yy;
         xx = st.x * 10.0;
         yy = st.y * 10.0;
-        flags = st.flags;
-        expEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), flags);
-        if((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10)))
-        {
-            embFile_printf(file, "%c%c%c%c", b[0], b[1], b[2], b[3]);
+        expEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), st.flags);
+        if((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10))) {
+            fprintf(file, "%c%c%c%c", b[0], b[1], b[2], b[3]);
         }
-        else
-        {
-            embFile_printf(file, "%c%c", b[0], b[1]);
+        else {
+            fprintf(file, "%c%c", b[0], b[1]);
         }
     }
-    embFile_printf(file, "\x1a");
-    embFile_close(file);
+    fprintf(file, "\x1a");
+    fclose(file);
     return 1;
 }
 

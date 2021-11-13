@@ -1,0 +1,28 @@
+site_name: "libembroidery: A low-level embroidery format library"
+repo_url: "https://github.com/Embroidermodder/libembroidery/"
+site_url: "http://embroidermodder.org/libembroidery/"
+edit_uri: 'tree/master/docs_src/'
+docs_dir: "docs_src/"
+site_dir: "docs/"
+theme:
+  name: "material"
+nav:
+  - Overview: 'README.md'
+  - Formats:
+    - Overview: 'formats/overview.md'
+  - Development:
+    - Contributing: 'contributing.md'
+    - Style Guide: 'libembroidery_style.md'
+markdown_extensions:
+  - mdx_truly_sane_lists
+  - pymdownx.superfences
+  - pymdownx.arithmatex:
+        generic: true
+  - footnotes
+extra_javascript:
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+plugins:
+  - exclude:
+      glob: BUILD
+  - search

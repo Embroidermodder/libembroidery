@@ -4,6 +4,11 @@
 #include <string.h>
 #include <math.h>
 
+#define RED_TERM_COLOR "\x1B[0;31m"
+#define GREEN_TERM_COLOR "\x1B[0;32m"
+#define YELLOW_TERM_COLOR "\x1B[1;33m"
+#define RESET_TERM_COLOR "\033[0m"
+
 void testTangentPoints(EmbCircle c,
     double px, double py,
     EmbPoint *t0, EmbPoint *t1) {
@@ -243,7 +248,53 @@ int testEmbFormat(void) {
 
 EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
 
-int create_test_file_1(const char* outf, int mode) {
+
+static void
+report(int result, char *label)
+{
+    printf("%s Test...%*c", label, (int)(20-strlen(label)), ' ');
+    if (result) {
+        printf(RED_TERM_COLOR "[FAIL] [CODE=%d]\n" RESET_TERM_COLOR, result);
+    }
+    else {
+        printf(GREEN_TERM_COLOR "[PASS]\n" RESET_TERM_COLOR);
+    }
+}
+
+void testMain(int level)
+{
+    int circleResult = testEmbCircle();
+    int threadResult = testThreadColor();
+    int formatResult = testEmbFormat();
+    int arcResult = testGeomArc();
+    int create1Result = create_test_file_1("test01.csv", EMB_FORMAT_CSV);
+    int create2Result = create_test_file_2("test02.csv", EMB_FORMAT_CSV);
+    int svg1Result = convert("test01.csv", "test01.svg");
+    int svg2Result = convert("test02.csv", "test02.svg");
+    int dst1Result = convert("test01.csv", "test01.dst");
+    int dst2Result = convert("test02.csv", "test02.dst");
+
+    puts("SUMMARY OF RESULTS");
+    puts("------------------");
+    report(circleResult, "Tangent Point");
+    report(threadResult, "Thread");
+    report(formatResult, "Format");
+    report(arcResult, "Arc");
+    report(create1Result, "Create CSV 1");
+    report(create2Result, "Create CSV 2");
+    report(svg1Result, "Convert CSV-SVG 1");
+    report(svg2Result, "Convert CSV-SVG 2");
+    report(dst1Result, "Convert CSV-DST 1");
+    report(dst2Result, "Convert CSV-DST 2");
+    
+    if (level > 0) {
+        puts("More expensive tests.");
+        full_test_matrix("test_matrix.txt");
+    }
+}
+
+int create_test_file_1(const char* outf, int mode)
+{
     int i;
     EmbPattern* p;
     EmbStitch st;
@@ -255,9 +306,12 @@ int create_test_file_1(const char* outf, int mode) {
     }
 
     /* 10mm circle */
-    for (i = 0; i < 100; i++) {
-        st.x = 10 + 10 * sin(i * (0.5 / 3.141592));
-        st.y = 10 + 10 * cos(i * (0.5 / 3.141592));
+    for (i = 0; i < 20; i++) {
+        embPattern_addStitchRel(p, 0.0, 1.0, JUMP, 0);
+    }
+    for (i = 0; i < 200; i++) {
+        st.x = 10 + 10 * sin(i * (0.03141592));
+        st.y = 10 + 10 * cos(i * (0.03141592));
         st.flags = NORMAL;
         st.color = 0;
         embPattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
@@ -274,7 +328,8 @@ int create_test_file_1(const char* outf, int mode) {
     return 0;
 }
 
-int create_test_file_2(const char* outf, int mode) {
+int create_test_file_2(const char* outf, int mode)
+{
     int i;
     EmbPattern* p;
     EmbStitch st;
@@ -361,7 +416,7 @@ int full_test_matrix(char *fname) {
             i == EMB_FORMAT_INF || i == EMB_FORMAT_EDR) {
             continue;
         }
-        snprintf(fname, "test01%s", formatTable[i].extension);
+        sprintf(fname, "test01%s", formatTable[i].extension);
         create_test_file_1(fname, i);
         /* p3_render(b); */
         for (j=0; j < numberOfFormats; j++) {
@@ -372,7 +427,7 @@ int full_test_matrix(char *fname) {
                 continue;
             }
             printf("\n");
-            snprintf(fname_converted, "test01_%02d_converted%s",
+            sprintf(fname_converted, "test01_%02d_converted%s",
                     i, formatTable[j].extension);
             result = convert(fname, fname_converted);
             /* p3_render(b); */

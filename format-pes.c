@@ -406,7 +406,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, EmbFile* file)
             binaryWriteShort(file, (short)(st.y + bounds.top));
         }
         if (j < pattern->stitchList->count ) {
-            binaryWriteShort(file, 0x8003);
+            binaryWriteUShort(file, 0x8003);
         }
         blockCount++;
         i = j;
@@ -491,7 +491,7 @@ char writePes(EmbPattern* pattern, const char* fileName)
 
     /* Write object count */
     binaryWriteShort(file, 0x01);
-    binaryWriteShort(file, 0xFFFF); /* command */
+    binaryWriteUShort(file, 0xFFFF); /* command */
     binaryWriteShort(file, 0x00); /* unknown */
 
     pesWriteEmbOneSection(pattern, file);

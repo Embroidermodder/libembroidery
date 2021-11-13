@@ -7,8 +7,6 @@
 char read100(EmbPattern* pattern, const char* fileName)
 {
     FILE* file;
-    int x, y;
-    int stitchType;
     unsigned char b[4];
 
     if (!validateReadPattern(pattern, fileName, "read100")) return 0;
@@ -21,6 +19,8 @@ char read100(EmbPattern* pattern, const char* fileName)
 
     embPattern_loadExternalColorFile(pattern, fileName);
     while (fread(b, 1, 4, file) == 4) {
+        int x, y;
+        int stitchType;
         stitchType = NORMAL;
         x = (b[2] > 0x80) ? -(b[2] - 0x80) : b[2];
         y = (b[3] > 0x80) ? -(b[3] - 0x80) : b[3];
@@ -41,9 +41,11 @@ char read100(EmbPattern* pattern, const char* fileName)
 char write100(EmbPattern* pattern, const char* fileName)
 {
     FILE *file;
+    /*
     int x, y;
     int stitchType;
     unsigned char b[4];
+    */
 
     if (!validateWritePattern(pattern, fileName, "write100")) {
         printf("Failed to validate file with name: %s.", fileName);

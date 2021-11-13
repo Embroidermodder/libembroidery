@@ -1,4 +1,5 @@
 #include "embroidery.h"
+#include "embroidery-internal.h"
 #include <string.h>
 
 #define NOTFRM 0x00080000
@@ -107,6 +108,9 @@ char readThr(EmbPattern* pattern, const char* fileName)
     g = binaryReadByte(file);
     b = binaryReadByte(file);
     binaryReadByte(file);
+    if (EMB_DEBUG) {
+        printf("background: %c %c %c\n", r, g, b);
+    }
 
     for(i = 0; i < 16; i++)
     {

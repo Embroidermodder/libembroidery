@@ -199,23 +199,24 @@ char readCsv(EmbPattern* pattern, const char* fileName)
                 }
                 else if(csvMode == CSV_MODE_STITCH)
                 {
-                    if(cellNum == 2)
-                    {
+                    printf("%s\n", buff);
+                    if (cellNum == 2) {
                         flags = csvStrToStitchFlag(buff);
                         if(flags == STOP)
                             numColorChanges++;
                     }
-                    else if(cellNum == 3)
+                    else if(cellNum == 3) {
                         xx = atof(buff);
+                    }
                     else if(cellNum == 4)
                     {
                         yy = atof(buff);
+                        printf("%d %d %f %f\n", pattern->stitchList->count, flags, xx, yy);
                         embPattern_addStitchAbs(pattern, xx, yy, flags, 1);
                         csvMode = CSV_MODE_NULL;
                         cellNum = 0;
                     }
-                    else
-                    {
+                    else {
                         /* TODO: error */
                         return 0;
                     }
@@ -236,12 +237,8 @@ char readCsv(EmbPattern* pattern, const char* fileName)
         while(c != EOF);
         fclose(file);
 
-    /* if not enough colors defined, fill in random colors */
-    while (pattern->threads->count < numColorChanges) {
-        embPattern_addThread(pattern, embThread_getRandom());
-    }
-
     free(buff);
+    embPattern_end(pattern);
 
     return 1;
 }

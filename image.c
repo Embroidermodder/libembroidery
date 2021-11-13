@@ -36,6 +36,7 @@ int render_line(EmbLine line, EmbImage *image, EmbColor color)
         y = (int)round(pos.y / pix_h);
         image->color[x+y*image->pixel_width] = color;
     }
+    return 1;
 }
 
 /* Basic Render
@@ -58,6 +59,7 @@ int render(EmbPattern *p, EmbImage *image)
         line.y2 = p->stitchList->stitch[i].y;
         render_line(line, image, color); /* HACK: st.color); */
     }
+    return 1;
 }
 
 /* EPS style render
@@ -67,6 +69,6 @@ int render(EmbPattern *p, EmbImage *image)
 
 int render_postscript(EmbPattern *pattern, EmbImage *image)
 {
-    
+    return 1;
 }
 

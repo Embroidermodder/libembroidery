@@ -33,10 +33,50 @@ int testEmbFormat(void);
 double distance(EmbPoint p, EmbPoint q);
 int full_test_matrix(char *fname);
 
+EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
+
+static void
+report(int result, char *label)
+{
+    printf("%s Test...%*c", label, (int)(20-strlen(label)), ' ');
+    if (result) {
+        printf(RED_TERM_COLOR "[FAIL] [CODE=%d]\n" RESET_TERM_COLOR, result);
+    }
+    else {
+        printf(GREEN_TERM_COLOR "[PASS]\n" RESET_TERM_COLOR);
+    }
+}
+
 void testMain(int level)
 {
-    puts("FIXME");
-    return 0;
+    int circleResult = testEmbCircle();
+    int threadResult = testThreadColor();
+    int formatResult = testEmbFormat();
+    int arcResult = testGeomArc();
+    int create1Result = create_test_file_1("test01.csv", EMB_FORMAT_CSV);
+    int create2Result = create_test_file_2("test02.csv", EMB_FORMAT_CSV);
+    int svg1Result = convert("test01.csv", "test01.svg");
+    int svg2Result = convert("test02.csv", "test02.svg");
+    int dst1Result = convert("test01.csv", "test01.dst");
+    int dst2Result = convert("test02.csv", "test02.dst");
+
+    puts("SUMMARY OF RESULTS");
+    puts("------------------");
+    report(circleResult, "Tangent Point");
+    report(threadResult, "Thread");
+    report(formatResult, "Format");
+    report(arcResult, "Arc");
+    report(create1Result, "Create CSV 1");
+    report(create2Result, "Create CSV 2");
+    report(svg1Result, "Convert CSV-SVG 1");
+    report(svg2Result, "Convert CSV-SVG 2");
+    report(dst1Result, "Convert CSV-DST 1");
+    report(dst2Result, "Convert CSV-DST 2");
+    
+    if (level > 0) {
+        puts("More expensive tests.");
+        full_test_matrix("test_matrix.txt");
+    }
 }
 
 void testTangentPoints(EmbCircle c,
@@ -275,8 +315,6 @@ int testEmbFormat(void) {
     if (formatTable[format].type != 1) return 24;
     return 0;
 }
-
-EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
 
 int create_test_file_1(const char* outf, int mode) {
     int i;

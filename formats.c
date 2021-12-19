@@ -6381,13 +6381,14 @@ char readRgb(EmbPattern* pattern, const char* fileName) {
 
     fseek(file, 0x00, SEEK_SET);
     for (i = 0; i < numberOfColors; i++) {
+        unsigned char b[4];
         EmbThread t;
-        t.color.r = binaryReadByte(file);
-        t.color.g = binaryReadByte(file);
-        t.color.b = binaryReadByte(file);
+        fread(b, 1, 4, file);
+        t.color.r = b[0];
+        t.color.g = b[1];
+        t.color.b = b[2];
         t.catalogNumber = "";
         t.description = "";
-        binaryReadByte(file);
         embPattern_addThread(pattern, t);
     }
     fclose(file);
@@ -6408,11 +6409,13 @@ char writeRgb(EmbPattern* pattern, const char* fileName) {
         return 0;
 
     for (i = 0; i < pattern->threads->count; i++) {
+        unsigned char b[4];
         EmbColor c = pattern->threads->thread[i].color;
-        binaryWriteByte(file, c.r);
-        binaryWriteByte(file, c.g);
-        binaryWriteByte(file, c.b);
-        binaryWriteByte(file, 0);
+        b[0] = c.r;
+        b[1] = c.g;
+        b[2] = c.b;
+        b[3] = 0;
+        fwrite(b, 1, 4, file);
     }
     fclose(file);
     return 1;
@@ -6440,8 +6443,8 @@ char readSew(EmbPattern* pattern, const char* fileName) {
     fseek(file, 0x00, SEEK_END);
     fileLength = ftell(file);
     fseek(file, 0x00, SEEK_SET);
-    numberOfColors = binaryReadByte(file);
-    numberOfColors += (binaryReadByte(file) << 8);
+    numberOfColors = fgetc(file);
+    numberOfColors += (fgetc(file) << 8);
 
     for (i = 0; i < numberOfColors; i++) {
         embPattern_addThread(pattern, jefThreads[fread_int16(file)]);
@@ -6449,30 +6452,28 @@ char readSew(EmbPattern* pattern, const char* fileName) {
     fseek(file, 0x1D78, SEEK_SET);
 
     for (i = 0; ftell(file) < fileLength; i++) {
-        unsigned char b0 = binaryReadByte(file);
-        unsigned char b1 = binaryReadByte(file);
+        unsigned char b[2];
+        fread(b, 1, 2, file);
 
         flags = NORMAL;
         if (thisStitchIsJump) {
             flags = TRIM;
             thisStitchIsJump = 0;
         }
-        if (b0 == 0x80) {
-            if (b1 == 1) {
-                b0 = binaryReadByte(file);
-                b1 = binaryReadByte(file);
+        if (b[0] == 0x80) {
+            if (b[1] == 1) {
+                fread(b, 1, 2, file);
                 flags = STOP;
-            } else if ((b1 == 0x02) || (b1 == 0x04)) {
+            } else if ((b[1] == 0x02) || (b[1] == 0x04)) {
                 thisStitchIsJump = 1;
-                b0 = binaryReadByte(file);
-                b1 = binaryReadByte(file);
+                fread(b, 1, 2, file);
                 flags = TRIM;
-            } else if (b1 == 0x10) {
+            } else if (b[1] == 0x10) {
                break;
             }
         }
-        dx = sewDecode(b0);
-        dy = sewDecode(b1);
+        dx = sewDecode(b[0]);
+        dy = sewDecode(b[1]);
         if (abs(dx) == 127 || abs(dy) == 127) {
             thisStitchIsJump = 1;
             flags = TRIM;
@@ -6545,9 +6546,7 @@ char writeSew(EmbPattern* pattern, const char* fileName) {
         binaryWriteInt(file, 0x0D);
     }
 
-    for (i = 2; i < 7538; i++) {
-        fprintf(file, " ");
-    }
+    fpad(file, ' ', 7536);
 
     for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
@@ -6557,10 +6556,9 @@ char writeSew(EmbPattern* pattern, const char* fileName) {
         yy = st.y * 10.0;
         sewEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), st.flags);
         if ((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10))) {
-            fprintf(file, "%c%c%c%c", b[0], b[1], b[2], b[3]);
+            fwrite(b, 1, 4, file);
         } else {
-            binaryWriteByte(file, b[0]);
-            binaryWriteByte(file, b[1]);
+            fwrite(b, 1, 2, file);
         }
     }
     fclose(file);
@@ -6795,9 +6793,9 @@ char readSst(EmbPattern* pattern, const char* fileName)
     {
         int stitchType = NORMAL;
 
-        int b1 = (int) binaryReadByte(file);
-        int b2 = (int) binaryReadByte(file);
-        unsigned char commandByte = binaryReadByte(file);
+        int b1 = fgetc(file);
+        int b2 = fgetc(file);
+        unsigned char commandByte = (unsigned char)fgetc(file);
 
         if (commandByte == 0x04)
         {
@@ -6868,12 +6866,19 @@ static int stxReadThread(StxThread* thread, FILE* file)
 
     codeLength = fgetc(file);
     codeBuff = (char*)malloc(codeLength);
-    if (!codeBuff) { printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for codeBuff\n"); return 0; }
-    binaryReadBytes(file, (unsigned char*)codeBuff, codeLength); /* TODO: check return value */
+    if (!codeBuff) {
+        printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for codeBuff\n");
+        return 0;
+    }
+    /* TODO: check return value */
+    fread(codeBuff, 1, codeLength, file);
     thread->colorCode = codeBuff;
     colorNameLength = fgetc(file);
     codeNameBuff = (char*)malloc(colorNameLength);
-    if (!codeNameBuff) { printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for codeNameBuff\n"); return 0; }
+    if (!codeNameBuff) {
+        printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for codeNameBuff\n");
+        return 0;
+    }
     binaryReadBytes(file, (unsigned char*)codeNameBuff, colorNameLength); /* TODO: check return value */
     thread->colorName = codeNameBuff;
 
@@ -6885,7 +6890,10 @@ static int stxReadThread(StxThread* thread, FILE* file)
 
     sectionNameLength = fgetc(file);
     sectionNameBuff = (char*)malloc(sectionNameLength);
-    if (!sectionNameBuff) { printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for sectionNameBuff\n"); return 0; }
+    if (!sectionNameBuff) {
+        printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for sectionNameBuff\n");
+        return 0;
+    }
     binaryReadBytes(file, (unsigned char*)sectionNameBuff, sectionNameLength); /* TODO: check return value */
     thread->sectionName = sectionNameBuff;
 
@@ -6896,8 +6904,7 @@ static int stxReadThread(StxThread* thread, FILE* file)
 
     thread->subDescriptors = (SubDescriptor*)malloc(sizeof(SubDescriptor) * numberOfOtherDescriptors);
     if (!thread->subDescriptors) { printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for thread->subDescriptors\n"); return 0; }
-    for (j = 0; j < numberOfOtherDescriptors; j++)
-    {
+    for (j = 0; j < numberOfOtherDescriptors; j++) {
         SubDescriptor sd;
         char* subCodeBuff, *subColorNameBuff;
         int subCodeLength, subColorNameLength;

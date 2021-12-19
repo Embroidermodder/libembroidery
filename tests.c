@@ -437,7 +437,7 @@ int full_test_matrix(char *fname) {
             i == EMB_FORMAT_INF || i == EMB_FORMAT_EDR) {
             continue;
         }
-        snprintf(fname, "test01%s", formatTable[i].extension);
+        snprintf(fname, 30, "test01%s", formatTable[i].extension);
         create_test_file_1(fname, i);
         /* p3_render(b); */
         for (j=0; j < numberOfFormats; j++) {
@@ -448,7 +448,7 @@ int full_test_matrix(char *fname) {
                 continue;
             }
             printf("\n");
-            snprintf(fname_converted, "test01_%02d_converted%s",
+            snprintf(fname_converted, 30, "test01_%02d_converted%s",
                     i, formatTable[j].extension);
             result = convert(fname, fname_converted);
             /* p3_render(b); */

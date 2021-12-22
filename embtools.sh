@@ -8,6 +8,10 @@ function embphoto () {
 echo "Photo filtering function."
 }
 
+function docs () {
+pandoc README.md -o README.pdf
+}
+
 function build_datafile () {
 gcc -c -Wa,-adhln -g libembroidery_data.S > libembroidery_data.lst
 gcc -c libembroidery_data.S -o libembroidery_data.bin
@@ -123,6 +127,10 @@ do
       ;;
     full)
       full_test_suite
+      shift
+      ;;
+    docs)
+      docs
       shift
       ;;
     *)

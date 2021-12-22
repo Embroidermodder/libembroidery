@@ -108,6 +108,11 @@ Finally there are some shell tools in `embtools.sh/embtools.bat`
 to help with calls to ImageMagick and other programs that can
 help produce new embroidery machine files.
 
+Libembroidery is distributed under the permissive zlib licence, see the LICENSE file.
+
+If you want to find a simple fix to contribute see the *To Do* section
+of the manual. 
+
 ## Build
 
 libembroidery and EmbroiderModder 2 use CMake builds
@@ -135,11 +140,7 @@ embtools.bat build
 These builds both the static and shared versions of the library as well
 as the command line program `embroider`.
 
-### License
-
-Libembroidery is distributed under the permissive zlib licence, see the LICENSE file.
-
-## Documentation
+## Usage
 
 For basic use, we recommend you build as above then run:
 
@@ -147,13 +148,56 @@ For basic use, we recommend you build as above then run:
 ./embroider
 ```
 
-which will print out advice on how to use these tools without digging
-straight into the [full manual](manual.md).
+which will print out this advice on how to use these tools without digging
+straight into the rest of this manual.
 
-## Contributing
+    EMBROIDER
+        A command line program for machine embroidery.
+        Copyright 2013-2021 The Embroidermodder Team
+        Licensed under the terms of the zlib license.
 
-If you want to find a simple fix to contribute see the *To Do* section
-of the manual. 
+        https://github.com/Embroidermodder/libembroidery
+        https://embroidermodder.org
+
+    Usage: embroider [OPTIONS] fileToRead...
+
+    Conversion:
+    -t, -to         Convert all files given to the format specified
+                    by the arguments to the flag, for example:
+                        $ embroider -t dst input.pes
+                    would convert \"input.pes\" to \"input.dst\"
+                    in the same directory the program runs in.
+
+                    The accepted input formats are (TO BE DETERMINED).
+                    The accepted output formats are (TO BE DETERMINED).
+
+    Output:
+    -h, -help       Print this message.
+    -f, -format     Print help on the formats that
+                    embroider can deal with.
+    -q, -quiet      Only print fatal errors.
+    -V, -verbose    Print everything that has reporting.
+    -v, -version    Print the version.
+
+    Graphics:
+    -c, -circle     Add a circle defined by the arguments
+                    given to the current pattern.
+    -e, -ellipse    Add a circle defined by the arguments
+                    given to the current pattern.
+    -l, -line       Add a line defined by the arguments
+                    given to the current pattern.
+    -P, -polyline   Add a polyline.
+    -p, -polygon    Add a polygon.
+    -s, -satin      Fill the current geometry with satin
+                    stitches according
+                    to the defined algorithm.
+    -S, -stitch     Add a stitch defined by the arguments
+                    given to the current pattern.
+
+    Quality Assurance:
+        -test       Run the test suite.
+
+For each of the flags described here we will go into greater detail in this manual.
 
 ## Abstract
 
@@ -1138,58 +1182,6 @@ using the DllImport feature:
 see this StackOverflow discussion [for help](https://stackoverflow.com/questions/11425202/is-it-possible-to-call-a-c-function-from-c-net).
 
 For Python you can do the same using [ctypes](https://www.geeksforgeeks.org/how-to-call-a-c-function-in-python/).
-
-### Help Message
-
-The user is presented with this help message when the program is given no arguments.
-
-    EMBROIDER
-        A command line program for machine embroidery.
-        Copyright 2013-2021 The Embroidermodder Team
-        Licensed under the terms of the zlib license.
-
-        https://github.com/Embroidermodder/libembroidery
-        https://embroidermodder.org
-
-    Usage: embroider [OPTIONS] fileToRead...
-
-    Conversion:
-    -t, -to         Convert all files given to the format specified
-                    by the arguments to the flag, for example:
-                        $ embroider -t dst input.pes
-                    would convert \"input.pes\" to \"input.dst\"
-                    in the same directory the program runs in.
-
-                    The accepted input formats are (TO BE DETERMINED).
-                    The accepted output formats are (TO BE DETERMINED).
-
-    Output:
-    -h, -help       Print this message.
-    -f, -format     Print help on the formats that
-                    embroider can deal with.
-    -q, -quiet      Only print fatal errors.
-    -V, -verbose    Print everything that has reporting.
-    -v, -version    Print the version.
-
-    Graphics:
-    -c, -circle     Add a circle defined by the arguments
-                    given to the current pattern.
-    -e, -ellipse    Add a circle defined by the arguments
-                    given to the current pattern.
-    -l, -line       Add a line defined by the arguments
-                    given to the current pattern.
-    -P, -polyline   Add a polyline.
-    -p, -polygon    Add a polygon.
-    -s, -satin      Fill the current geometry with satin
-                    stitches according
-                    to the defined algorithm.
-    -S, -stitch     Add a stitch defined by the arguments
-                    given to the current pattern.
-
-    Quality Assurance:
-        -test       Run the test suite.
-
-For each of the flags described here we will go into greater detail in this manual.
 
 ## To Flag
 

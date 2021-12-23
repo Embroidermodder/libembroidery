@@ -799,7 +799,8 @@ isArcClockwise:
 
 
 /* Calculates the CenterPoint of the Arc */
-getArcCenter(EmbArc arc, EmbVector* arcCenter):
+getArcCenter:
+	/* (EmbArc arc, EmbVector* arcCenter) */
 	EmbVector a, b, pa, pb
 	EmbLine line1, line2
 	embVector_subtract(arc.mid, arc.start, &a)
@@ -876,23 +877,26 @@ getArcDataFromBulge:
 
 	return 1
 	ret
-
+#endif
 
 /****************************************************************
  * Calculates the intersection points of two overlapping circles.
  * Returns true if the circles intersect.
  * Returns false if the circles do not intersect.
+ *
+ * (EmbCircle c0, EmbCircle c1, EmbVector* p3, EmbVector* p4)
+ * returns int 
  ****************************************************************/
 getCircleCircleIntersections:
-	/* (EmbCircle c0, EmbCircle c1, EmbVector* p3, EmbVector* p4)
-	returns int */
+#if 0
 	EmbVector diff, p2, m
 	float a, h, d
 	embVector_subtract(c1.center, c0.center, &diff)
 	d = embVector_getLength(diff); /* Distance between centers */
 
-	/*Circles share centers. This results in division by zero,
-	  infinite solutions or one circle being contained within the other. */
+/* Circles share centers. This results in division by zero,
+ * infinite solutions or one circle being contained within the other.
+ */
 	if (d == 0.0) {
 		return 0
 	}
@@ -905,11 +909,11 @@ getCircleCircleIntersections:
 		return 0
 	}
 
-	/*
-	 * Considering the two right triangles p0p2p3 and p1p2p3 we can write:
-	 * a^2 + h^2 = r0^2 and b^2 + h^2 = r1^2
-	 *
-	 * BEGIN PROOF
+/*
+ * Considering the two right triangles p0p2p3 and p1p2p3 we can write:
+ * a^2 + h^2 = r0^2 and b^2 + h^2 = r1^2
+ *
+ * BEGIN PROOF
 	 *
 	 * Remove h^2 from the equation by setting them equal to themselves:
 	 *     r0^2 - a^2 = r1^2 - b^2
@@ -940,23 +944,24 @@ getCircleCircleIntersections:
 	embVector_multiply(diff, a / d, &p2)
 	embVector_add(c0.center, p2, &p2)
 
-	/* Tangent circles have only one intersection
-
-	   TODO: using == in floating point arithmetic
-	   doesn't account for the machine accuracy, having
-	   a stated (float) tolerance value would help.
-	*/
+/* Tangent circles have only one intersection
+ *
+ * TODO: using == in floating point arithmetic
+ * doesn't account for the machine accuracy, having
+ * a stated (float) tolerance value would help.
+ */
 	if (d == (c0.radius + c1.radius)) {
 		*p3 = *p4 = p2
 		return 1
 	}
 
-	/* Get the perpendicular slope by multiplying by the negative reciprocal
-	 * Then multiply by the h offset in relation to d to get the actual offsets */
+/* Get the perpendicular slope by multiplying by the negative reciprocal
+ * Then multiply by the h offset in relation to d to get the actual offsets 
+ */
 	m.x = -(diff.y * h / d)
 	m.y = (diff.x * h / d)
 
-	/* Add the offsets to point p2 to obtain the intersection points */
+/* Add the offsets to point p2 to obtain the intersection points */
 	embVector_add(p2, m, p3)
 	embVector_subtract(p2, m, p4)
 
@@ -1000,16 +1005,19 @@ embEllipse_diameterX:
 	ret
 
 
+/* (EmbEllipse ellipse) returns float
+ */
 embEllipse_diameterY:
-	/* (EmbEllipse ellipse) returns float */
 	return ellipse.radius.y * 2.0
 	ret
 
 
-/* takes EmbEllipse, returns float width
+/*
+ * takes EmbEllipse, returns float width
+ *
+ * (EmbEllipse ellipse) returns float
  */
 embEllipse_width:
-	/* (EmbEllipse ellipse) returns float */
 	return ellipse.radius.x * 2.0
 	ret
 
@@ -1020,7 +1028,8 @@ embEllipse_height:
 	ret
 
 
-embVector_normalVector(EmbVector dir, EmbVector* result, int clockwise):
+embVector_normalVector:
+	/* (EmbVector dir, EmbVector* result, int clockwise) */
 	float temp
 	embVector_normalize(dir, result)
 	temp = result->x
@@ -1032,9 +1041,13 @@ embVector_normalVector(EmbVector dir, EmbVector* result, int clockwise):
 	ret
 
 
-/*! Finds the normalized vector perpendicular (clockwise) to the line
- * given by v1->v2 (normal to the line) */
-embLine_normalVector(EmbLine line, EmbVector* result, int clockwise):
+/*
+ * Finds the normalized vector perpendicular (clockwise) to the line
+ * given by v1->v2 (normal to the line)
+ *
+ * (EmbLine line, EmbVector* result, int clockwise)
+ */
+embLine_normalVector:
 	if (!result) {
 		print_log_string(error_vector_normal)
 		return
@@ -1226,12 +1239,15 @@ embVector_average:
 	mull	$0.5, (result.x)
 	mull	$0.5, (result.x)
 	ret
+#endif
 
-
-/**
+/*
  * The difference between vectors \a v1 and \a v2 returned as \a result.
+ *
+ * (EmbVector v1, EmbVector v2, EmbVector* result)
  */
-embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result):
+embVector_subtract:
+#if 0
 	if (!result) {
 		print_log_string(error_vector_subtract)
 		return
@@ -1240,10 +1256,11 @@ embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result):
 	movl	(v1.y), (result.y)
 	sub	(v2.x), (result.x)
 	sub	(v2.y), (result.y)
+#endif
 	ret
 
 
-/**
+/*
  * The dot product as vectors \a v1 and \a v2 returned as a float.
  *
  * That is
@@ -1253,6 +1270,7 @@ embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result):
  * (EmbVector v1, EmbVector v2) returns float
  */
 embVector_dot:
+#if 0
 	mov	(v1.x), %eax
 	mul	(v2.x), %eax
 	mov	(v1.y), %ebx

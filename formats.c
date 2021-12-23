@@ -1242,7 +1242,6 @@ char writeT01(EmbPattern* pattern, const char* fileName) {
 char readT09(EmbPattern* pattern, const char* fileName) {
     unsigned char b[3];
     FILE* file;
-    int i;
 
     if (!validateReadPattern(pattern, fileName, "readT09")) {
         return 0;
@@ -1936,7 +1935,6 @@ char writeDst(EmbPattern* pattern, const char* fileName) {
 char readDsz(EmbPattern* pattern, const char* fileName) {
     FILE* file;
     unsigned char b[3];
-    int i;
     if (!validateReadPattern(pattern, fileName, "readDsz")) {
         return 0;
     }
@@ -3303,6 +3301,10 @@ char writeHus(EmbPattern* pattern, const char* fileName)
     int stitchCount, minColors, patternColor;
     int attributeSize, xCompressedSize, yCompressedSize, i;
     double previousX, previousY;
+    short right, top, bottom, left;
+    unsigned int code;
+    unsigned int colors;
+    unsigned int offset1, offset2;
     unsigned char* xValues = 0, *yValues = 0, *attributeValues = 0;
     unsigned char* attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
     EmbStitch st;
@@ -3321,8 +3323,7 @@ char writeHus(EmbPattern* pattern, const char* fileName)
     minColors = pattern->threads->count;
     patternColor = minColors;
     if (minColors > 24) minColors = 24;
-    short right, top, bottom, left;
-    unsigned int code = 0x00C8AF5B;
+    code = 0x00C8AF5B;
     fwrite_nbytes(file, &code, 4);
     fwrite_nbytes(file, &stitchCount, 4);
     fwrite_nbytes(file, &minColors, 4);
@@ -3337,7 +3338,7 @@ char writeHus(EmbPattern* pattern, const char* fileName)
     fwrite_nbytes(file, &left, 2);
     fwrite_nbytes(file, &bottom, 2);
 
-    unsigned int colors = 0x2A + 2 * minColors;
+    colors = 0x2A + 2 * minColors;
     fwrite_nbytes(file, &colors, 4);
 
     xValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
@@ -3370,8 +3371,8 @@ char writeHus(EmbPattern* pattern, const char* fileName)
     yCompressed = husCompressData(yValues, stitchCount, &yCompressedSize);
     /* TODO: error if husCompressData returns zero? */
 
-    unsigned int offset1 = (unsigned int) (0x2A + 2 * patternColor + attributeSize);
-    unsigned int offset2 = (unsigned int) (0x2A + 2 * patternColor + attributeSize + xCompressedSize);
+    offset1 = (unsigned int) (0x2A + 2 * patternColor + attributeSize);
+    offset2 = (unsigned int) (0x2A + 2 * patternColor + attributeSize + xCompressedSize);
     fwrite_nbytes(file, &offset1, 4);
     fwrite_nbytes(file, &offset2, 4);
     fpad(file, 0, 10);
@@ -3401,23 +3402,20 @@ char writeHus(EmbPattern* pattern, const char* fileName)
 char readInb(EmbPattern* pattern, const char* fileName)
 {
     FILE* file;
-    unsigned char fileDescription[8];
-    unsigned char nullVal;
-    int stitchCount;
-    short width, height;
-    short colorCount;
-    short unknown3, unknown2;
-    short imageWidth, imageHeight;
-    unsigned char bytesUnknown[300]; /* TODO: determine what this represents */
-    short nullbyte;
-    short left, right, top, bottom;
-    int x, y, i, fileLength;
+    /* TODO: determine what this represents */
+    unsigned char fileDescription[8], nullVal, bytesUnknown[300];
+    int stitchCount, x, y, i, fileLength;
+    short width, height, colorCount, unknown3, unknown2,
+        nullbyte, left, right, top, bottom, imageWidth, imageHeight;
 
-    if (!validateReadPattern(pattern, fileName, "readInb"))
+    if (!validateReadPattern(pattern, fileName, "readInb")) {
         return 0;
+    }
 
     file = fopen(fileName, "rb");
-    if (!file) return 0;
+    if (!file) {
+        return 0;
+    }
 
     embPattern_loadExternalColorFile(pattern, fileName);
     fseek(file, 0, SEEK_END);
@@ -3444,7 +3442,13 @@ char readInb(EmbPattern* pattern, const char* fileName)
         printf("stitchCount:             %d\n", stitchCount);
         printf("width:                   %d\n", width);
         printf("height:                  %d\n", height);
-        /*... */
+        printf("colorCount:              %d\n", colorCount);
+        printf("Identify the purpose of:\n");
+        printf("    unknown3:            %d\n", unknown3);
+        printf("    unknown2:            %d\n", unknown2);
+        printf("imageWidth:              %d\n", imageWidth);
+        printf("imageHeight:             %d\n", imageHeight);
+        printf("This should be null:     %d\n", nullbyte);
         printf("right:                   %d\n", right);
         printf("left:                    %d\n", left);
         printf("bottom:                  %d\n", bottom);
@@ -3569,9 +3573,9 @@ char writeInf(EmbPattern* pattern, const char* fileName) {
         binaryWriteByte(file, c.g);
         binaryWriteByte(file, c.b);
         binaryWriteUShortBE(file, (unsigned short)i); /* needle number */
-        binaryWriteBytes(file, "RGB\0", 4);
+        fwrite("RGB\0", 1, 4, file);
         fprintf(file, buffer);
-        binaryWriteByte(file, 0);
+        fwrite("\0", 1, 1, file);
     }
     fseek(file, -8, SEEK_END);
     bytesRemaining = ftell(file);
@@ -3724,6 +3728,21 @@ struct hoop_padding
     int bottom;
 };
 
+void read_hoop(FILE *file, struct hoop_padding *hoop, char *label)
+{
+    hoop->left = fread_int32(file);
+    hoop->top = fread_int32(file);
+    hoop->right = fread_int32(file);
+    hoop->bottom = fread_int32(file);
+    if (EMB_DEBUG) {
+        printf("%s\n", label);
+        printf("    left:      %d\n", hoop->left);
+        printf("    top:       %d\n", hoop->top);
+        printf("    right:     %d\n", hoop->right);
+        printf("    bottom:    %d\n", hoop->bottom);
+    }
+}
+
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
 char readJef(EmbPattern* pattern, const char* fileName) {
@@ -3759,30 +3778,11 @@ char readJef(EmbPattern* pattern, const char* fileName) {
     hoopSize = fread_int32(file);
     jefSetHoopFromId(pattern, hoopSize);
 
-    bounds.left = fread_int32(file);
-    bounds.top = fread_int32(file);
-    bounds.right = fread_int32(file);
-    bounds.bottom = fread_int32(file);
-
-    rectFrom110x110.left = fread_int32(file);
-    rectFrom110x110.top = fread_int32(file);
-    rectFrom110x110.right = fread_int32(file);
-    rectFrom110x110.bottom = fread_int32(file);
-
-    rectFrom50x50.left = fread_int32(file);
-    rectFrom50x50.top = fread_int32(file);
-    rectFrom50x50.right = fread_int32(file);
-    rectFrom50x50.bottom = fread_int32(file);
-
-    rectFrom200x140.left = fread_int32(file);
-    rectFrom200x140.top = fread_int32(file);
-    rectFrom200x140.right = fread_int32(file);
-    rectFrom200x140.bottom = fread_int32(file);
-
-    rect_from_custom.left = fread_int32(file);
-    rect_from_custom.top = fread_int32(file);
-    rect_from_custom.right = fread_int32(file);
-    rect_from_custom.bottom = fread_int32(file);
+    read_hoop(file, &bounds, "bounds");
+    read_hoop(file, &rectFrom110x110, "rectFrom110x110");
+    read_hoop(file, &rectFrom50x50, "rectFrom50x50");
+    read_hoop(file, &rectFrom200x140, "rectFrom200x140");
+    read_hoop(file, &rect_from_custom, "rect_from_custom");
 
     for (i = 0; i < numberOfColors; i++) {
         embPattern_addThread(pattern, jefThreads[fread_int32(file) % 79]);
@@ -3892,10 +3892,10 @@ char writeJef(EmbPattern* pattern, const char* fileName)
     fprintf(file, "%04d%02d%02d%02d%02d%02d", (int)(time.year + 1900),
             (int)(time.month + 1), (int)(time.day), (int)(time.hour),
             (int)(time.minute), (int)(time.second));
-    binaryWriteByte(file, 0x00);
-    binaryWriteByte(file, 0x00);
-    binaryWriteInt(file, pattern->threads->count);
-    binaryWriteInt(file, pattern->stitchList->count + embMaxInt(0, (6 - colorlistSize) * 2) + 1);
+    fpad(file, 0, 2);
+    fwrite_nbytes(file, &(pattern->threads->count), 4);
+    int data = pattern->stitchList->count + embMaxInt(0, (6 - colorlistSize) * 2) + 1;
+    fwrite_nbytes(file, &data, 4);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
 
@@ -3970,9 +3970,9 @@ char writeJef(EmbPattern* pattern, const char* fileName)
         yy = st.y * 10.0;
         jefEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), st.flags);
         if ((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10))) {
-            fprintf(file, "%c%c%c%c", b[0], b[1], b[2], b[3]);
+            fwrite(b, 1, 4, file);
         } else {
-            fprintf(file, "%c%c", b[0], b[1]);
+            fwrite(b, 1, 2, file);
         }
     }
     fclose(file);
@@ -4044,7 +4044,7 @@ char readKsm(EmbPattern* pattern, const char* fileName) {
 char writeKsm(EmbPattern* pattern, const char* fileName) {
     FILE* file = 0;
     double xx, yy;
-    int flags = 0, i;
+    int i;
     unsigned char b[4];
 
     if (!validateWritePattern(pattern, fileName, "writeKsm")) {
@@ -4099,7 +4099,7 @@ static void maxEncode(FILE* file, int x, int y) {
     out[6] = (unsigned char)((y >> 8) & 0xFF);
     out[7] = (unsigned char)((y >> 16) & 0xFF);
     
-    fwrite(out, 1, 4, file);
+    fwrite(out, 1, 8, file);
 }
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
@@ -4199,10 +4199,13 @@ char readMit(EmbPattern* pattern, const char* fileName) {
         puts("ERROR: Failed to open file.");
         return 0;
     }
-    /* embPattern_loadExternalColorFile(pattern, fileName); TODO: review this and uncomment or remove it */
+
+    embPattern_loadExternalColorFile(pattern, fileName);
 
     while (fread(data, 1, 2, file) == 2) {
-        embPattern_addStitchRel(pattern, mitDecodeStitch(data[0]) / 10.0, mitDecodeStitch(data[1]) / 10.0, NORMAL, 1);
+        int x = mitDecodeStitch(data[0]);
+        int y = mitDecodeStitch(data[1]);
+        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, NORMAL, 1);
     }
     fclose(file);
     embPattern_end(pattern);
@@ -4258,21 +4261,17 @@ char readNew(EmbPattern* pattern, const char* fileName) {
     unsigned char data[3];
     FILE* file = 0;
 
-    if (!pattern) {
-        printf("ERROR: format-new.c readNew(), pattern argument is null\n");
+    if (!validateReadPattern(pattern, fileName, "readNew")) {
         return 0;
     }
-    if (!fileName) {
-        printf("ERROR: format-new.c readNew(), fileName argument is null\n");
-        return 0;
-    }
+
     file = fopen(fileName, "rb");
     if (!file) {
         return 0;
     }
     embPattern_loadExternalColorFile(pattern, fileName);
     stitchCount = fread_uint16(file);
-    while (binaryReadBytes(file, data, 3) == 3) {
+    while (fread(data, 1, 3, file) == 3) {
         int x = decodeNewStitch(data[0]);
         int y = decodeNewStitch(data[1]);
         int flag = NORMAL;
@@ -4322,6 +4321,7 @@ char writeNew(EmbPattern* pattern, const char* fileName) {
 
     return 0; /*TODO: finish writeNew */
 }
+
 static char* ofmReadLibrary(FILE* file)
 {
     int stringLength = 0;
@@ -4344,19 +4344,28 @@ static int ofmReadClass(FILE* file)
     int len;
     char* s = 0;
 
-    if (!file) { printf("ERROR: format-ofm.c ofmReadClass(), file argument is null\n"); return 0; }
+    if (!file) {
+        printf("ERROR: format-ofm.c ofmReadClass(), file argument is null\n");
+        return 0;
+    }
 
     fread_int16(file);
     len = fread_int16(file);
 
     s = (char*)malloc(sizeof(char) * len + 1);
-    if (!s) { printf("ERROR: format-ofm.c ofmReadClass(), unable to allocate memory for s\n"); return 0; }
-    binaryReadBytes(file, (unsigned char*)s, len); /* TODO: check return value */
+    if (!s) {
+        printf("ERROR: format-ofm.c ofmReadClass(), unable to allocate memory for s\n");
+        return 0;
+    }
+    binaryReadBytes(file, (unsigned char*)s, len);
+    /* TODO: check return value */
     s[len] = '\0';
-    if (strcmp(s, "CExpStitch") == 0)
-            return 0x809C;
-    if (strcmp(s, "CColorChange") == 0)
-            return 0xFFFF;
+    if (strcmp(s, "CExpStitch") == 0) {
+        return 0x809C;
+    }
+    if (strcmp(s, "CColorChange") == 0) {
+        return 0xFFFF;
+    }
     return 0;
 }
 
@@ -4368,9 +4377,13 @@ static void ofmReadBlockHeader(FILE* file)
     unsigned short short1;
     short unknown1, unknown2;
     /* TODO: determine what the unknown variables represent */
-    int unknown3;   /* TODO: determine what this represents */
+    int unknown3;
+    /* TODO: determine what this represents */
     
-    if (!file) { printf("ERROR: format-ofm.c ofmReadBlockHeader(), file argument is null\n"); return; }
+    if (!file) {
+        printf("ERROR: format-ofm.c ofmReadBlockHeader(), file argument is null\n");
+        return;
+    }
 
     unknown1 = fread_int16(file);
     unknown2 = (short)fread_int32(file);
@@ -4382,7 +4395,8 @@ static void ofmReadBlockHeader(FILE* file)
     len = binaryReadByte(file);
     s = (char*)malloc(2 * len);
     if (!s) { printf("ERROR: format-ofm.c ofmReadBlockHeader(), unable to allocate memory for s\n"); return; }
-    binaryReadBytes(file, (unsigned char *)s, 2 * len); /* TODO: check return value */
+    binaryReadBytes(file, (unsigned char *)s, 2 * len);
+    /* TODO: check return value */
     /* 0, 0, 0, 0, 1, 1, 1, 0, 64, 64 */
     for (i=0; i<10; i++) {
         val[i] = fread_int32(file);
@@ -4408,8 +4422,14 @@ static void ofmReadThreads(FILE* file, EmbPattern* p)
     char* primaryLibraryName = 0;
     char* expandedString = 0;
 
-    if (!file) { printf("ERROR: format-ofm.c ofmReadThreads(), file argument is null\n"); return; }
-    if (!p) { printf("ERROR: format-ofm.c ofmReadThreads(), p argument is null\n"); return; }
+    if (!file) {
+        printf("ERROR: format-ofm.c ofmReadThreads(), file argument is null\n");
+        return;
+    }
+    if (!p) {
+        printf("ERROR: format-ofm.c ofmReadThreads(), p argument is null\n");
+        return;
+    }
 
     /* FF FE FF 00 */
     fread_int32(file);
@@ -4421,36 +4441,27 @@ static void ofmReadThreads(FILE* file, EmbPattern* p)
     stringLen = fread_int16(file);
     expandedString = (char*)malloc(stringLen);
     if (!expandedString) { printf("ERROR: format-ofm.c ofmReadThreads(), unable to allocate memory for expandedString\n"); return; }
-    binaryReadBytes(file, (unsigned char*)expandedString, stringLen); /* TODO: check return value */
-    for (i = 0; i < numberOfColors; i++)
-    {
+    binaryReadBytes(file, (unsigned char*)expandedString, stringLen);
+    /* TODO: check return value */
+    for (i = 0; i < numberOfColors; i++) {
         EmbThread thread;
-        char colorNumberText[10];
-        int threadLibrary = 0, colorNameLength, colorNumber;
-        char* colorName = 0;
-        int r = binaryReadByte(file);
-        int g = binaryReadByte(file);
-        int b = binaryReadByte(file);
-        binaryReadByte(file);
+        char colorNumberText[11], colorName[512];
+        int threadLibrary, colorNameLength, colorNumber;
+        embColor_read(file, &(thread.color), 4);
         threadLibrary = fread_int16(file);
-        fread_int16(file);
+        fseek(file, 2, SEEK_CUR);
         colorNumber = fread_int32(file);
-        binaryReadByte(file);
-        fread_int16(file);
+        fseek(file, 3, SEEK_CUR);
         colorNameLength = binaryReadByte(file);
-        colorName = (char*)malloc(colorNameLength * 2);
-        if (!colorName) { printf("ERROR: format-ofm.c ofmReadThreads(), unable to allocate memory for colorName\n"); return; }
-        binaryReadBytes(file, (unsigned char*)colorName, colorNameLength*2); /* TODO: check return value */
-        fread_int16(file);
-     /* itoa(colorNumber, colorNumberText, 10); TODO: never use itoa, it's non-standard, use sprintf: http://stackoverflow.com/questions/5242524/converting-int-to-string-in-c */
-        thread.color.r = (unsigned char)r;
-        thread.color.g = (unsigned char)g;
-        thread.color.b = (unsigned char)b;
-        thread.catalogNumber = colorNumberText;
-        thread.description = colorName;
+        fread(colorName, 1, colorNameLength*2, file);
+        /* TODO: check return value */
+        fseek(file, 2, SEEK_CUR);
+        sprintf(colorNumberText, "%10d", colorNumber);
+        strcpy(thread.catalogNumber, colorNumberText);
+        strcpy(thread.description, colorName);
         embPattern_addThread(p, thread);
     }
-    fread_int16(file);
+    fseek(file, 2, SEEK_CUR);
     primaryLibraryName = ofmReadLibrary(file);
     numberOfLibraries = fread_int16(file);
     for (i = 0; i < numberOfLibraries; i++)
@@ -4458,7 +4469,6 @@ static void ofmReadThreads(FILE* file, EmbPattern* p)
         /*libraries.Add( TODO: review */
         char* libName = ofmReadLibrary(file);
         free(libName);
-        libName = 0;
     }
 }
 
@@ -4619,12 +4629,7 @@ char readPcd(EmbPattern* pattern, const char* fileName) {
     unsigned short colorCount = 0;
     FILE* file = 0;
 
-    if (!pattern) {
-        printf("ERROR: format-pcd.c readPcd(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        printf("ERROR: format-pcd.c readPcd(), fileName argument is null\n");
+    if (!validateReadPattern(pattern, fileName, "readPcd")) {
         return 0;
     }
 
@@ -4633,23 +4638,23 @@ char readPcd(EmbPattern* pattern, const char* fileName) {
         return 0;
     }
     version = binaryReadByte(file);
-    /* 0 for PCD, 1 for PCQ (MAXI), 2 for PCS with small hoop(80x80), */
-    /* and 3 for PCS with large hoop (115x120) */
+    /* 0 for PCD
+     * 1 for PCQ (MAXI)
+     * 2 for PCS with small hoop(80x80)
+     * 3 for PCS with large hoop (115x120)
+     */
     hoopSize = binaryReadByte(file);
     colorCount = fread_uint16(file);
 
     for (i = 0; i < colorCount; i++) {
         EmbThread t;
-        t.color.r = (unsigned char)fgetc(file);
-        t.color.g = (unsigned char)fgetc(file);
-        t.color.b = (unsigned char)fgetc(file);
+        embColor_read(file, &(t.color), 4);
         t.catalogNumber = "";
         t.description = "";
         if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
         embPattern_addThread(pattern, t);
-        fgetc(file);
     }
     if (allZeroColor) {
         embPattern_loadExternalColorFile(pattern, fileName);
@@ -4698,13 +4703,8 @@ char writePcd(EmbPattern* pattern, const char* fileName) {
     binaryWriteByte(file, 3);
     binaryWriteUShort(file, (unsigned short)pattern->threads->count);
     for (i = 0; i < pattern->threads->count; i++) {
-        unsigned char out[4];
         EmbColor color = pattern->threads->thread[i].color;
-        out[0] = color.r;
-        out[1] = color.g;
-        out[2] = color.b;
-        out[3] = 0;
-        fwrite(out, 1, 4, file);
+        embColor_write(file, color, 4);
     }
 
     fpad(file, 0, 4*(16-i));
@@ -4822,28 +4822,26 @@ static double pcqDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 
 static void pcqEncode(FILE* file, int dx, int dy, int flags)
 {
-    unsigned char flagsToWrite = 0;
+    unsigned char b[9];
 
-    if (!file) { printf("ERROR: format-pcq.c pcqEncode(), file argument is null\n"); return; }
+    b[0] = 0;
+    b[1] = (unsigned char)(dx & 0xFF);
+    b[2] = (unsigned char)((dx >> 8) & 0xFF);
+    b[3] = (unsigned char)((dx >> 16) & 0xFF);
 
-    binaryWriteByte(file, (unsigned char)0);
-    binaryWriteByte(file, (unsigned char)(dx & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dx >> 8) & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dx >> 16) & 0xFF));
+    b[4] = 0;
+    b[5] = (unsigned char)(dy & 0xFF);
+    b[6] = (unsigned char)((dy >> 8) & 0xFF);
+    b[7] = (unsigned char)((dy >> 16) & 0xFF);
 
-    binaryWriteByte(file, (unsigned char)0);
-    binaryWriteByte(file, (unsigned char)(dy & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dy >> 8) & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dy >> 16) & 0xFF));
-    if (flags & STOP)
-    {
-        flagsToWrite |= 0x01;
+    b[8] = 0;
+    if (flags & STOP) {
+        b[8] |= 0x01;
     }
-    if (flags & TRIM)
-    {
-        flagsToWrite |= 0x04;
+    if (flags & TRIM) {
+        b[8] |= 0x04;
     }
-    binaryWriteByte(file, flagsToWrite);
+    fwrite(b, 1, 9, file);
 }
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
@@ -4859,52 +4857,56 @@ char readPcq(EmbPattern* pattern, const char* fileName)
     unsigned short colorCount;
     FILE* file = 0;
 
-    if (!pattern) { printf("ERROR: format-pcq.c readPcq(), pattern argument is null\n"); return 0; }
-    if (!fileName) { printf("ERROR: format-pcq.c readPcq(), fileName argument is null\n"); return 0; }
+    if (!validateReadPattern(pattern, fileName, "readPcq")) {
+        return 0;
+    }
 
     file = fopen(fileName, "rb");
-    if (!file) return 0;
+    if (!file) {
+        return 0;
+    }
 
     version = binaryReadByte(file);
-    hoopSize = binaryReadByte(file);  /* 0 for PCD, 1 for PCQ (MAXI), 2 for PCS with small hoop(80x80), */
-                                      /* and 3 for PCS with large hoop (115x120) */
+    hoopSize = binaryReadByte(file);
+    /* 0 for PCD
+     * 1 for PCQ (MAXI)
+     * 2 for PCS with small hoop(80x80)
+     * 3 for PCS with large hoop (115x120)
+     */
     colorCount = fread_uint16(file);
 
-    for (i = 0; i < colorCount; i++)
-    {
+    for (i = 0; i < colorCount; i++) {
+        unsigned char b[4];
         EmbThread t;
-        t.color.r = (unsigned char)fgetc(file);
-        t.color.g = (unsigned char)fgetc(file);
-        t.color.b = (unsigned char)fgetc(file);
+        fread(b, 1, 4, file);
+        t.color.r = b[0];
+        t.color.g = b[1];
+        t.color.b = b[2];
         t.catalogNumber = "";
         t.description = "";
-        if (t.color.r || t.color.g || t.color.b)
-        {
+        if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
         embPattern_addThread(pattern, t);
-        fgetc(file);
     }
-    if (allZeroColor)
+    if (allZeroColor) {
         embPattern_loadExternalColorFile(pattern, fileName);
+    }
     st = fread_uint16(file);
     /* READ STITCH RECORDS */
-    for (i = 0; i < st; i++)
-    {
+    for (i = 0; i < st; i++) {
         flags = NORMAL;
-        if (fread(b, 1, 9, file) != 9)
+        if (fread(b, 1, 9, file) != 9) {
             break;
+        }
 
-        if (b[8] & 0x01)
-        {
+        if (b[8] & 0x01) {
             flags = STOP;
         }
-        else if (b[8] & 0x04)
-        {
+        else if (b[8] & 0x04) {
             flags = TRIM;
         }
-        else if (b[8] != 0)
-        {
+        else if (b[8] != 0) {
             /* TODO: ONLY INTERESTED IN THIS CASE TO LEARN MORE ABOUT THE FORMAT */
         }
         dx = pcqDecode(b[1], b[2], b[3]);
@@ -4936,22 +4938,22 @@ char writePcq(EmbPattern* pattern, const char* fileName)
     binaryWriteUShort(file, (unsigned short)pattern->threads->count);
     for (i = 0; i < pattern->threads->count; i++) {
         EmbColor color = pattern->threads->thread[i].color;
-        binaryWriteByte(file, color.r);
-        binaryWriteByte(file, color.g);
-        binaryWriteByte(file, color.b);
-        binaryWriteByte(file, 0);
+        unsigned char b[4];
+        b[0] = color.r;
+        b[1] = color.g;
+        b[2] = color.b;
+        b[3] = 0;
+        fread(b, 1, 4, file);
     }
 
-    for (; i < 16; i++)
-    {
-        binaryWriteUInt(file, 0); /* write remaining colors to reach 16 */
-    }
+    /* write remaining colors to reach 16 */
+    fpad(file, 0, (16-i)*4);
 
     binaryWriteUShort(file, (unsigned short)pattern->stitchList->count);
     /* write stitches */
     for (i = 0; i < pattern->stitchList->count; i++) {
         EmbStitch st = pattern->stitchList->stitch[i];
-        pcqEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags);
+        pcqEncode(file, (int)round(st.x * 10.0), (int)round(st.y * 10.0), st.flags);
     }
     fclose(file);
     return 1;

@@ -2382,8 +2382,14 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName) {
     char hasRead = 0;
     char extractName[200], *dotPos;
 
-    if (!p) { printf("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), p argument is null\n"); return; }
-    if (!fileName) { printf("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), fileName argument is null\n"); return; }
+    if (!p) {
+        printf("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), p argument is null\n");
+        return;
+    }
+    if (!fileName) {
+        printf("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), fileName argument is null\n");
+        return;
+    }
 
     strcat(extractName, fileName);
     dotPos = strrchr(extractName, '.');
@@ -2529,8 +2535,14 @@ void embPattern_addPolygonObjectAbs(EmbPattern* p, EmbPolygonObject* obj) {
         printf("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), p argument is null\n");
         return;
     }
-    if (!obj) { printf("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), obj argument is null\n"); return; }
-    if (!obj->pointList) { printf("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), obj->pointList is empty\n"); return; }
+    if (!obj) {
+        printf("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), obj argument is null\n");
+        return;
+    }
+    if (!obj->pointList) {
+        printf("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), obj->pointList is empty\n");
+        return;
+    }
 
     if (!p->polygons) {
         p->polygons = embArray_create(EMB_POLYGON);
@@ -3090,11 +3102,6 @@ int emb_readline(FILE* file, char *line, int maxLength) {
     }
     *line = 0;
     return i;
-}
-
-/*! Rounds a double (\a src) and returns it as an \c int. */
-int roundDouble(double src) {
-    return (int)round(src);
 }
 
 /*! Returns \c true if string (\a str) begins with substring (\a pre), otherwise returns \c false. */

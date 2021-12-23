@@ -587,7 +587,7 @@ emb_floor:
  * We assume that the source is within.
  *
  * (float src) return int */
-roundDouble:
+round:
 	if (src < 0.0) {
 		return emb_ceil(src - 0.5)
 	}
@@ -5017,10 +5017,10 @@ char writeDst(EmbPattern* pattern, int file, const char* fileName):
 	for (i = 0; i < pattern->stitchList->length; i++) {
 		embArray_get(pattern->stitchList, &st, i)
 		/* convert from mm to 0.1mm for file format */
-		dx[0] = roundDouble(st.x * 10.0) - pos[0]
-		dx[1] = roundDouble(st.y * 10.0) - pos[1]
-		pos[0] = roundDouble(st.x * 10.0)
-		pos[1] = roundDouble(st.y * 10.0)
+		dx[0] = round(st.x * 10.0) - pos[0]
+		dx[1] = round(st.y * 10.0) - pos[1]
+		pos[0] = round(st.x * 10.0)
+		pos[1] = round(st.y * 10.0)
 		encode_record(file, dx, st.flags)
 	}
 	/* finish file with a terminator character */
@@ -5471,7 +5471,7 @@ writeExp:
 		dy = st.y * 10.0 - yy
 		xx = st.x * 10.0
 		yy = st.y * 10.0
-		expEncode(embBuffer, (char)roundDouble(dx), (char)roundDouble(dy), st.flags)
+		expEncode(embBuffer, (char)round(dx), (char)round(dy), st.flags)
 		if ((embBuffer[0] == 0x80) &&
 			((embBuffer[1] == 1) || (embBuffer[1] == 2) || (embBuffer[1] == 4) || (embBuffer[1] == 0x10))) {
 			fwrite(embBuffer, 1, 4, file)
@@ -5632,7 +5632,7 @@ char husDecodeByte(unsigned char b):
 
 
 unsigned char husEncodeByte(float f):
-	return (unsigned char)(int)roundDouble(f)
+	return (unsigned char)(int)round(f)
 	ret
 
 
@@ -5752,10 +5752,10 @@ char writeHus(EmbPattern* pattern, int file, const char* fileName):
 	binaryWriteUInt(file, minColors)
 
 	boundingRect = embPattern_calcBoundingBox(pattern)
-	binaryWriteShort(file, (short)roundDouble(boundingRect.right * 10.0))
-	binaryWriteShort(file, (short)-roundDouble(boundingRect.top * 10.0 - 1.0))
-	binaryWriteShort(file, (short)roundDouble(boundingRect.left * 10.0))
-	binaryWriteShort(file, (short)-roundDouble(boundingRect.bottom * 10.0 - 1.0))
+	binaryWriteShort(file, (short)round(boundingRect.right * 10.0))
+	binaryWriteShort(file, (short)-round(boundingRect.top * 10.0 - 1.0))
+	binaryWriteShort(file, (short)round(boundingRect.left * 10.0))
+	binaryWriteShort(file, (short)-round(boundingRect.bottom * 10.0 - 1.0))
 
 	binaryWriteUInt(file, 0x2A + 2 * minColors)
 
@@ -6195,7 +6195,7 @@ char writeJef(EmbPattern* pattern, int file, const char* fileName):
 		dy = st.y * 10.0 - yy
 		xx = st.x * 10.0
 		yy = st.y * 10.0
-		jefEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), st.flags)
+		jefEncode(b, (char)round(dx), (char)round(dy), st.flags)
 		if ((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10))) {
 			fwrite(b, 1, 4, file)
 		} else {
@@ -6336,8 +6336,8 @@ char writeMax(EmbPattern* pattern, int file, const char* fileName):
 		float x, y
 		EmbStitch st
 		embArray_get(pattern->stitchList, &st, i)
-		x = roundDouble(st.x * 10.0)
-		y = roundDouble(st.y * 10.0)
+		x = round(st.x * 10.0)
+		y = round(st.y * 10.0)
 		maxEncode(file, x, y)
 	}
 	return 1
@@ -6725,7 +6725,7 @@ char writePcd(EmbPattern* pattern, int file, const char* fileName):
 	for (i = 0; i < pattern->stitchList->length; i++) {
 		EmbStitch st
 		embArray_get(pattern->stitchList, &st, i)
-		pcEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags)
+		pcEncode(file, round(st.x * 10.0), round(st.y * 10.0), st.flags)
 	}
 	return 1
 	ret
@@ -6861,7 +6861,7 @@ char writePcq(EmbPattern* pattern, int file, const char* fileName):
 	for (i = 0; i < pattern->stitchList->length; i++) {
 		EmbStitch st
 		embArray_get(pattern->stitchList, &st, i)
-		pcEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags)
+		pcEncode(file, round(st.x * 10.0), round(st.y * 10.0), st.flags)
 	}
 	return 1
 	ret
@@ -7024,7 +7024,7 @@ char writePcs(EmbPattern* pattern, int file, const char* fileName):
 	for (i = 0; i < sh; i++) {
 		EmbStitch st
 		embArray_get(pattern->stitchList, &st, i)
-		pcEncode(file, roundDouble(st.x * 10.0), roundDouble(st.y * 10.0), st.flags)
+		pcEncode(file, round(st.x * 10.0), round(st.y * 10.0), st.flags)
 	}
 	return 1
 	ret
@@ -7162,8 +7162,8 @@ pecEncode(int file, EmbPattern* p):
 	for (i = 0; i < p->stitchList->length; i++) {
 		embArray_get(p->stitchList, &s, i)
 
-		deltaX = roundDouble(s.x - thisX)
-		deltaY = roundDouble(s.y - thisY)
+		deltaX = round(s.x - thisX)
+		deltaY = round(s.y - thisY)
 		thisX += (float)deltaX
 		thisY += (float)deltaY
 
@@ -7275,8 +7275,8 @@ writePecStitches(EmbPattern* pattern, int file, const char* fileName):
 
 	bounds = embPattern_calcBoundingBox(pattern)
 
-	height = roundDouble(embRect_height(bounds))
-	width = roundDouble(embRect_width(bounds))
+	height = round(embRect_height(bounds))
+	width = round(embRect_width(bounds))
 	/* write 2 byte x size */
 	binaryWriteShort(file, (short)width)
 	/* write 2 byte y size */
@@ -7286,9 +7286,9 @@ writePecStitches(EmbPattern* pattern, int file, const char* fileName):
 	binaryWriteShort(file, (short)0x1E0)
 	binaryWriteShort(file, (short)0x1B0)
 
-	short sh = (unsigned short)(0x9000 | -roundDouble(bounds.left))
+	short sh = (unsigned short)(0x9000 | -round(bounds.left))
 	fwriteInt_be(file, &sh, 2)
-	sh = (unsigned short)(0x9000 | -roundDouble(bounds.top))
+	sh = (unsigned short)(0x9000 | -round(bounds.top))
 	fwriteInt_be(file, &sh, 2)
 
 	pecEncode(file, pattern)
@@ -7309,8 +7309,8 @@ writePecStitches(EmbPattern* pattern, int file, const char* fileName):
 	for (i = 0; i < pattern->stitchList->length; i++) {
 		int x, y
 		embArray_get(pattern->stitchList, &st, i)
-		x = roundDouble((st.x - bounds.left) * xFactor) + 3
-		y = roundDouble((st.y - bounds.top) * yFactor) + 3
+		x = round((st.x - bounds.left) * xFactor) + 3
+		y = round((st.y - bounds.top) * yFactor) + 3
 		image[y][x] = 1
 	}
 	writeImage(file, image)
@@ -7320,8 +7320,8 @@ writePecStitches(EmbPattern* pattern, int file, const char* fileName):
 		clearImage(image)
 		for (i = 0; i < pattern->stitchList->length; i++) {
 			embArray_get(pattern->stitchList, &st, i)
-			x = roundDouble((st.x - bounds.left) * xFactor) + 3
-			y = roundDouble((st.y - bounds.top) * yFactor) + 3
+			x = round((st.x - bounds.left) * xFactor) + 3
+			y = round((st.y - bounds.top) * yFactor) + 3
 			if (st.flags & STOP) {
 				break
 			}
@@ -8161,7 +8161,7 @@ char writeSew(EmbPattern* pattern, int file, const char* fileName):
 		dy = st.y * 10.0 - yy
 		xx = st.x * 10.0
 		yy = st.y * 10.0
-		sewEncode(b, (char)roundDouble(dx), (char)roundDouble(dy), st.flags)
+		sewEncode(b, (char)round(dx), (char)round(dy), st.flags)
 		if ((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10))) {
 			fwrite(b, 1, 4, file)
 		} else {
@@ -8572,10 +8572,10 @@ char writeT01(EmbPattern* pattern, int file, const char* fileName):
 		EmbStitch st
 		embArray_get(pattern->stitchList, &st, i)
 		/* convert from mm to 0.1mm for file format */
-		dx[0] = roundDouble(st.x * 10.0) - pos[0]
-		dx[1] = roundDouble(st.y * 10.0) - pos[1]
-		pos[0] = roundDouble(st.x * 10.0)
-		pos[1] = roundDouble(st.y * 10.0)
+		dx[0] = round(st.x * 10.0) - pos[0]
+		dx[1] = round(st.y * 10.0) - pos[1]
+		pos[0] = round(st.x * 10.0)
+		pos[1] = round(st.y * 10.0)
 		
 		encode_dst_ternary(dx, b)
 
@@ -8801,10 +8801,10 @@ char writeTap(EmbPattern* pattern, int file, const char* fileName):
 		EmbStitch st
 		embArray_get(pattern->stitchList, &st, i)
 		/* convert from mm to 0.1mm for file format */
-		dx[0] = roundDouble(st.x * 10.0) - pos[0]
-		dx[1] = roundDouble(st.y * 10.0) - pos[1]
-		pos[0] = roundDouble(st.x * 10.0)
-		pos[1] = roundDouble(st.y * 10.0)
+		dx[0] = round(st.x * 10.0) - pos[0]
+		dx[1] = round(st.y * 10.0) - pos[1]
+		pos[0] = round(st.x * 10.0)
+		pos[1] = round(st.y * 10.0)
 
 		encode_dst_ternary(dx, b)
 
@@ -9024,8 +9024,8 @@ char writeTxt(EmbPattern* pattern, int file, const char* fileName):
 
 encode_u00_stitch(EmbStitch st, unsigned char *data):
 	char dx, dy
-	dx = (char)roundDouble(10.0*st.x)
-	dy = (char)roundDouble(10.0*st.y)
+	dx = (char)round(10.0*st.x)
+	dy = (char)round(10.0*st.y)
 	data[2] = dx
 	data[1] = dy
 	data[0] = 0
@@ -9270,7 +9270,7 @@ char readVip(EmbPattern* pattern, int file, const char* fileName):
 
 vipEncodeByte:
 	/* (float f) return unsigned char */
-	return (unsigned char)(int)roundDouble(f)
+	return (unsigned char)(int)round(f)
 	ret
 
 unsigned char vipEncodeStitchType(int st):
@@ -9319,10 +9319,10 @@ char writeVip(EmbPattern* pattern, int file, const char* fileName):
 	binaryWriteUInt(file, minColors)
 
 	boundingRect = embPattern_calcBoundingBox(pattern)
-	binaryWriteShort(file, (short)roundDouble(boundingRect.right * 10.0))
-	binaryWriteShort(file, (short)-roundDouble(boundingRect.top * 10.0 - 1.0))
-	binaryWriteShort(file, (short)roundDouble(boundingRect.left * 10.0))
-	binaryWriteShort(file, (short)-roundDouble(boundingRect.bottom * 10.0 - 1.0))
+	binaryWriteShort(file, (short)round(boundingRect.right * 10.0))
+	binaryWriteShort(file, (short)-round(boundingRect.top * 10.0 - 1.0))
+	binaryWriteShort(file, (short)round(boundingRect.left * 10.0))
+	binaryWriteShort(file, (short)-round(boundingRect.bottom * 10.0 - 1.0))
 
 	binaryWriteUInt(file, 0x38 + (minColors << 3))
 
@@ -9967,8 +9967,8 @@ xxxEncodeStitch(int file, float deltaX, float deltaY, int flags):
 		binaryWriteShort(file, (short)deltaY)
 	} else {
 		/* TODO: Verify this works after changing this to unsigned char */
-		binaryWriteByte(file, (unsigned char)roundDouble(deltaX))
-		binaryWriteByte(file, (unsigned char)roundDouble(deltaY))
+		binaryWriteByte(file, (unsigned char)round(deltaX))
+		binaryWriteByte(file, (unsigned char)round(deltaY))
 	}
 	ret
 
@@ -10297,9 +10297,9 @@ EmbColor svgColorToEmbColor(char* colorStr):
 		c = embColor_fromHexStr(colorStr)
 	} else if (percent) {
 		/* Float functional - rgb(R%, G%, B%), by now it is stored in r, g and b */
-		c.r = (unsigned char)roundDouble(255.0 / 100.0 * emb_array_to_float((char*)r))
-		c.g = (unsigned char)roundDouble(255.0 / 100.0 * emb_array_to_float((char*)g))
-		c.b = (unsigned char)roundDouble(255.0 / 100.0 * emb_array_to_float((char*)b))
+		c.r = (unsigned char)round(255.0 / 100.0 * emb_array_to_float((char*)r))
+		c.g = (unsigned char)round(255.0 / 100.0 * emb_array_to_float((char*)g))
+		c.b = (unsigned char)round(255.0 / 100.0 * emb_array_to_float((char*)b))
 	} else if (intfunc) {
 		/* Integer functional - rgb(rrr, ggg, bbb), by now it is stored in r, g and b. */
 		c.r = (unsigned char)emb_array_to_int((char*)r)

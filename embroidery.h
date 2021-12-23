@@ -779,7 +779,6 @@ void binaryWriteFloat(FILE* file, float data);
 extern void charReplace(char *s, const char *from, const char *to);
 extern int stringInArray(const char *s, const char **array);
 
-int roundDouble(double src);
 char startsWith(const char* pre, const char* str);
 
 void fpad(FILE *f, char c, int n);

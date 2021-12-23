@@ -1696,8 +1696,8 @@ void embPattern_fixColorCount(EmbPattern* p) {
     if (p->threads->count == 0 || maxColorIndex == 0) {
         EmbThread t;
         t.color = black;
-        t.description = "Black";
-        t.catalogNumber = "000";
+        strcpy(t.description, "Black");
+        strcpy(t.catalogNumber, "000");
         embPattern_addThread(p, t);
     }
     else {
@@ -1803,9 +1803,9 @@ void embPattern_copyPolylinesToStitchList(EmbPattern* p) {
             return;
         }
 
-        thread.catalogNumber = 0;
+        strcpy(thread.catalogNumber, "");
         thread.color = currentPoly->color;
-        thread.description = 0;
+        strcpy(thread.description, "");
         embPattern_addThread(p, thread);
 
         if (!firstObject) {
@@ -2906,8 +2906,8 @@ EmbThread embThread_getRandom(void) {
     c.color.r = rand()%256;
     c.color.g = rand()%256;
     c.color.b = rand()%256;
-    c.description = "random";
-    c.catalogNumber = "";
+    strcpy(c.description, "random");
+    strcpy(c.catalogNumber, "");
     return c;
 }
 

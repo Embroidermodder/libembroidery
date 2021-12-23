@@ -422,14 +422,15 @@ typedef struct EmbStitch_
     int flags; /* uses codes defined above */
     double x; /* absolute position (not relative) */
     double y; /* positive is up, units are in mm  */
-    int color; /* color number for this stitch */ /* TODO: this should be called colorIndex since it is not an EmbColor */
+    int color; /* color number for this stitch */
+    /* TODO: this should be called colorIndex since it is not an EmbColor */
 } EmbStitch;
 
 typedef struct EmbThread_
 {
     EmbColor color;
-    const char* description;
-    const char* catalogNumber;
+    char description[50];
+    char catalogNumber[30];
 } EmbThread;
 
 typedef struct EmbHoop_

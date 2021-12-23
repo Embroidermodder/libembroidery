@@ -398,8 +398,8 @@ char readCol(EmbPattern* pattern, const char* fileName) {
         t.color.r = (unsigned char)red;
         t.color.g = (unsigned char)green;
         t.color.b = (unsigned char)blue;
-        t.catalogNumber = "";
-        t.description = "";
+        strcpy(t.catalogNumber, "");
+        strcpy(t.description, "");
         embPattern_addThread(pattern, t);
     }
     fclose(file);
@@ -548,8 +548,8 @@ char readCsd(EmbPattern* pattern, const char* fileName) {
         thread.color.r = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
         thread.color.g = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
         thread.color.b = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
-        thread.catalogNumber = "";
-        thread.description = "";
+        strcpy(thread.catalogNumber, "");
+        strcpy(thread.description, "");
         embPattern_addThread(pattern, thread);
     }
     unknown1 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
@@ -789,8 +789,8 @@ char readCsv(EmbPattern* pattern, const char* fileName) {
                         t.color.r = r;
                         t.color.g = g;
                         t.color.b = b;
-                        t.description = "TODO:DESCRIPTION";
-                        t.catalogNumber = "TODO:CATALOG_NUMBER";
+                        strcpy(t.description, "TODO:DESCRIPTION");
+                        strcpy(t.catalogNumber, "TODO:CATALOG_NUMBER");
                         embPattern_addThread(pattern, t);
                         csvMode = CSV_MODE_NULL;
                         cellNum = 0;
@@ -1716,8 +1716,8 @@ static void set_dst_variable(EmbPattern* pattern, char* var, char* val) {
         catalog_number=split_cell_str(val,3);
         */
         t.color = embColor_fromHexStr(val);
-        t.description = "";
-        t.catalogNumber = "";
+        strcpy(t.description, "");
+        strcpy(t.catalogNumber, "");
         embPattern_addThread(pattern, t);
         break;
     default:
@@ -2589,7 +2589,6 @@ char writeDxf(EmbPattern* pattern, const char* fileName)
 char readEdr(EmbPattern* pattern, const char* fileName) {
     int numberOfColors, i;
     FILE* file;
-    EmbThread t;
 
     if (!validateReadPattern(pattern, fileName, "readEdr")) {
         return 0;
@@ -2607,13 +2606,10 @@ char readEdr(EmbPattern* pattern, const char* fileName) {
     embArray_free(pattern->threads);
 
     for (i = 0; i < numberOfColors; i++) {
-        unsigned char color[4];
-        fread(color, 1, 4, file);
-        t.color.r = color[0];
-        t.color.g = color[1];
-        t.color.b = color[2];
-        t.catalogNumber = "";
-        t.description = "";
+        EmbThread t;
+        embColor_read(file, &(t.color), 4);
+        strcpy(t.catalogNumber, "");
+        strcpy(t.description, "");
         embPattern_addThread(pattern, t);
     }
     fclose(file);
@@ -2624,7 +2620,6 @@ char readEdr(EmbPattern* pattern, const char* fileName) {
  *  Returns \c true if successful, otherwise returns \c false. */
 char writeEdr(EmbPattern* pattern, const char* fileName) {
     FILE* file;
-    EmbColor c;
     int i;
 
     if (!validateWritePattern(pattern, fileName, "writeEdr")) {
@@ -2637,13 +2632,7 @@ char writeEdr(EmbPattern* pattern, const char* fileName) {
     }
 
     for (i = 0; i < pattern->threads->count; i++) {
-        unsigned char output[4];
-        c = pattern->threads->thread[i].color;
-        output[0] = c.r;
-        output[1] = c.g;
-        output[2] = c.b;
-        output[3] = 0;
-        fwrite(output, 1, 4, file);
+        embColor_write(file, pattern->threads->thread[i].color, 4);
     }
     fclose(file);
     return 1;
@@ -3298,15 +3287,12 @@ char readHus(EmbPattern* pattern, const char* fileName)
 char writeHus(EmbPattern* pattern, const char* fileName)
 {
     EmbRect boundingRect;
-    int stitchCount, minColors, patternColor;
-    int attributeSize, xCompressedSize, yCompressedSize, i;
+    int stitchCount, minColors, patternColor, attributeSize, xCompressedSize, yCompressedSize, i;
     double previousX, previousY;
     short right, top, bottom, left;
-    unsigned int code;
-    unsigned int colors;
-    unsigned int offset1, offset2;
-    unsigned char* xValues = 0, *yValues = 0, *attributeValues = 0;
-    unsigned char* attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
+    unsigned int code, colors, offset1, offset2;
+    unsigned char *xValues = 0, *yValues = 0, *attributeValues = 0,
+        *attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
     EmbStitch st;
     FILE* file;
 
@@ -3517,24 +3503,19 @@ char readInf(EmbPattern* pattern, const char* fileName)
     if (!file) {
         return 0;
     }
-    fread_uint32_be(file);
-    fread_uint32_be(file);
-    fread_uint32_be(file);
+    fseek(file, 12, SEEK_CUR);
     numberOfColors = fread_uint32_be(file);
 
     embArray_free(pattern->threads);
     pattern->threads = embArray_create(EMB_THREAD);
 
     for (i = 0; i < numberOfColors; i++) {
-        fread_uint16(file);
-        fread_uint16(file);
-        t.color.r = binaryReadByte(file);
-        t.color.g = binaryReadByte(file);
-        t.color.b = binaryReadByte(file);
-        t.catalogNumber = "";
-        t.description = "";
+        fseek(file, 4, SEEK_CUR);
+        embColor_read(file, &(t.color), 3);
+        strcpy(t.catalogNumber, "");
+        strcpy(t.description, "");
         embPattern_addThread(pattern, t);
-        fread_uint16(file);
+        fseek(file, 2, SEEK_CUR);
         binaryReadString(file, colorType, 50);
         binaryReadString(file, colorDescription, 50);
     }
@@ -3569,14 +3550,15 @@ char writeInf(EmbPattern* pattern, const char* fileName) {
         /* record length */
         binaryWriteUShortBE(file, (unsigned short)(14 + strlen(buffer))); 
         binaryWriteUShortBE(file, (unsigned short)i); /* record number */
-        binaryWriteByte(file, c.r);
-        binaryWriteByte(file, c.g);
-        binaryWriteByte(file, c.b);
+        embColor_write(file, c, 3);
         binaryWriteUShortBE(file, (unsigned short)i); /* needle number */
         fwrite("RGB\0", 1, 4, file);
         fprintf(file, buffer);
         fwrite("\0", 1, 1, file);
     }
+    /* It appears that there should be a pad here otherwise it clips into
+     * the color description. */
+    fpad(file, 0, 8);
     fseek(file, -8, SEEK_END);
     bytesRemaining = ftell(file);
     fseek(file, 8, SEEK_SET);
@@ -4649,8 +4631,8 @@ char readPcd(EmbPattern* pattern, const char* fileName) {
     for (i = 0; i < colorCount; i++) {
         EmbThread t;
         embColor_read(file, &(t.color), 4);
-        t.catalogNumber = "";
-        t.description = "";
+        strcpy(t.catalogNumber, "");
+        strcpy(t.description, "");
         if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
@@ -4876,14 +4858,10 @@ char readPcq(EmbPattern* pattern, const char* fileName)
     colorCount = fread_uint16(file);
 
     for (i = 0; i < colorCount; i++) {
-        unsigned char b[4];
         EmbThread t;
-        fread(b, 1, 4, file);
-        t.color.r = b[0];
-        t.color.g = b[1];
-        t.color.b = b[2];
-        t.catalogNumber = "";
-        t.description = "";
+        embColor_read(file, &(t.color), 4);
+        strcpy(t.catalogNumber, "");
+        strcpy(t.description, "");
         if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
@@ -5032,23 +5010,19 @@ char readPcs(EmbPattern* pattern, const char* fileName)
 
     colorCount = fread_uint16(file);
 
-    for (i = 0; i < colorCount; i++)
-    {
+    for (i = 0; i < colorCount; i++) {
         EmbThread t;
-        t.color.r = binaryReadByte(file);
-        t.color.g = binaryReadByte(file);
-        t.color.b = binaryReadByte(file);
-        t.catalogNumber = "";
-        t.description = "";
-        if (t.color.r || t.color.g || t.color.b)
-        {
+        embColor_read(file, &(t.color), 4);
+        strcpy(t.catalogNumber, "");
+        strcpy(t.description, "");
+        if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
         embPattern_addThread(pattern, t);
-        binaryReadByte(file);
     }
-    if (allZeroColor)
+    if (allZeroColor) {
         embPattern_loadExternalColorFile(pattern, fileName);
+    }
     st = fread_uint16(file);
     /* READ STITCH RECORDS */
     for (i = 0; i < st; i++)
@@ -6383,14 +6357,10 @@ char readRgb(EmbPattern* pattern, const char* fileName) {
 
     fseek(file, 0x00, SEEK_SET);
     for (i = 0; i < numberOfColors; i++) {
-        unsigned char b[4];
         EmbThread t;
-        fread(b, 1, 4, file);
-        t.color.r = b[0];
-        t.color.g = b[1];
-        t.color.b = b[2];
-        t.catalogNumber = "";
-        t.description = "";
+        embColor_read(file, &(t.color), 4);
+        strcpy(t.catalogNumber, "");
+        strcpy(t.description, "");
         embPattern_addThread(pattern, t);
     }
     fclose(file);
@@ -7021,11 +6991,9 @@ char readStx(EmbPattern* pattern, const char* fileName)
         StxThread st;
         stxReadThread(&st, file);
 
-        t.color.r = st.stxColor.r;
-        t.color.g = st.stxColor.g;
-        t.color.b = st.stxColor.b;
-        t.description = st.colorName;
-        t.catalogNumber = st.colorCode;
+        t.color = st.stxColor;
+        strcpy(t.description, st.colorName);
+        strcpy(t.catalogNumber, st.colorCode);
         embPattern_addThread(pattern, t);
         stxThreads[i] = st;
     }
@@ -7215,8 +7183,8 @@ char readThr(EmbPattern* pattern, const char* fileName) {
     }
     for (i = 0; i < 16; i++) {
         EmbThread thread;
-        thread.description = NULL;
-        thread.catalogNumber = NULL;
+        strcpy(thread.description, "NULL");
+        strcpy(thread.catalogNumber, "NULL");
         embColor_read(file, &(thread.color), 4);
         embPattern_addThread(pattern, thread);
     }
@@ -7335,11 +7303,9 @@ char readU00(EmbPattern* pattern, const char* fileName) {
     fseek(file, 0x08, SEEK_SET);
     for (i = 0; i < 16; i++) {
         EmbThread t;
-        t.color.r = fgetc(file);
-        t.color.g = fgetc(file);
-        t.color.b = fgetc(file);
-        t.catalogNumber = 0;
-        t.description = 0;
+        embColor_read(file, &(t.color), 3);
+        strcpy(t.catalogNumber, "");
+        strcpy(t.description, "");
         embPattern_addThread(pattern, t);
     }
 
@@ -7990,8 +7956,8 @@ char readVp3(EmbPattern* pattern, const char* fileName) {
         unsigned char* threadColorNumber, *colorName, *threadVendor;
         int unknownThreadString, numberOfBytesInColor;
 
-        t.catalogNumber = 0;
-        t.description = 0;
+        strcpy(t.catalogNumber, "");
+        strcpy(t.description, "");
         fseek(file, colorSectionOffset, SEEK_SET);
         printf("ERROR: format-vp3.c Color Check Byte #1: 0 == %d\n", binaryReadByte(file));
         printf("ERROR: format-vp3.c Color Check Byte #2: 5 == %d\n", binaryReadByte(file));
@@ -8342,8 +8308,8 @@ char readXxx(EmbPattern* pattern, const char* fileName) {
 
     for (i = 0; i < numberOfColors; i++) {
         EmbThread thread;
-        thread.catalogNumber = 0;
-        thread.description = 0;
+        strcpy(thread.catalogNumber, "NULL");
+        strcpy(thread.description, "NULL");
         binaryReadByte(file);
         thread.color.r = binaryReadByte(file);
         thread.color.g = binaryReadByte(file);
@@ -8537,8 +8503,8 @@ char readZsk(EmbPattern* pattern, const char* fileName) {
         t.color.r = fgetc(file);
         t.color.g = fgetc(file);
         t.color.b = fgetc(file);
-        t.catalogNumber = "";
-        t.description = "";
+        strcpy(t.catalogNumber, "");
+        strcpy(t.description, "");
         embPattern_addThread(pattern, t);
         fseek(file, 0x48, SEEK_CUR);
         colorNumber = fgetc(file);

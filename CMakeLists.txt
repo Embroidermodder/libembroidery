@@ -9,6 +9,8 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+option( EMBROIDERY_BUILD_SHARED_LIBS "Build shared libary." ON )
+
 set(CMAKE_C_FLAGS "-fPIC")
 set(LIBRARY_SOURCE_FILES
     compress.c
@@ -26,9 +28,7 @@ set(LIBRARY_SOURCE_FILES
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -g -O2")
 
-add_library(embroidery_static STATIC
-    ${LIBRARY_SOURCE_FILES}
-)
+if(EMBROIDERY_BUILD_SHARED_LIBS)
 add_library(embroidery SHARED
     ${LIBRARY_SOURCE_FILES}
 )
@@ -41,6 +41,12 @@ target_include_directories(embroidery
         include
 )
 target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
+endif()
+
+add_library(embroidery_static STATIC
+    ${LIBRARY_SOURCE_FILES}
+)
+
 target_include_directories(embroidery_static
     INTERFACE
         $<INSTALL_INTERFACE:include>
@@ -53,6 +59,7 @@ add_executable(embroider
     embroider-main.c
 )
 
+if(EMBROIDERY_BUILD_SHARED_LIBS)
 target_include_directories(embroider
     INTERFACE
         $<INSTALL_INTERFACE:include>
@@ -60,6 +67,7 @@ target_include_directories(embroider
     PRIVATE
         include
 )
+endif()
 
 # These link against the static libraries
 # so we know that it is the current build that they're
@@ -70,6 +78,7 @@ else(WIN32)
 target_link_libraries(embroider PRIVATE embroidery_static m)
 endif (WIN32)
 
+if(EMBROIDERY_BUILD_SHARED_LIBS)
 install(
     TARGETS
        embroidery
@@ -79,3 +88,4 @@ install(
     ARCHIVE DESTINATION /usr/lib
     RUNTIME DESTINATION /usr/bin
 )
+endif()

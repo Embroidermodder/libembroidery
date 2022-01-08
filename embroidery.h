@@ -212,10 +212,39 @@ extern "C" {
 #define QUADTOCONTROL    256
 #define QUADTOEND        512
 
-#define CHUNK_SIZE 128
+#define CHUNK_SIZE                  128
 
-#define EMBFORMAT_MAXEXT 3  /* maximum length of extension without dot */
-#define EMBFORMAT_MAXDESC 50  /* the longest possible description string length */
+#define EMBFORMAT_MAXEXT              3
+/* maximum length of extension without dot */
+#define EMBFORMAT_MAXDESC            50
+/* the longest possible description string length */
+
+#define HOOP_126X110                  0
+#define HOOP_110X110                  1
+#define HOOP_50X50                    2
+#define HOOP_140X200                  3
+#define HOOP_230X200                  4
+
+/* DXF Version Identifiers */
+#define DXF_VERSION_R10 "AC1006"
+#define DXF_VERSION_R11 "AC1009"
+#define DXF_VERSION_R12 "AC1009"
+#define DXF_VERSION_R13 "AC1012"
+#define DXF_VERSION_R14 "AC1014"
+#define DXF_VERSION_R15 "AC1015"
+#define DXF_VERSION_R18 "AC1018"
+#define DXF_VERSION_R21 "AC1021"
+#define DXF_VERSION_R24 "AC1024"
+#define DXF_VERSION_R27 "AC1027"
+
+#define DXF_VERSION_2000 "AC1015"
+#define DXF_VERSION_2002 "AC1015"
+#define DXF_VERSION_2004 "AC1018"
+#define DXF_VERSION_2006 "AC1018"
+#define DXF_VERSION_2007 "AC1021"
+#define DXF_VERSION_2009 "AC1021"
+#define DXF_VERSION_2010 "AC1024"
+#define DXF_VERSION_2013 "AC1027"
 
 /**
 Type of sector
@@ -698,8 +727,6 @@ typedef struct EmbFormatList_
     char reader_state;
     char writer_state;
     int type;
-    char (*reader)(EmbPattern*, const char*);
-    char (*writer)(EmbPattern*, const char*);
 } EmbFormatList;
 
 /* Function Declarations
@@ -948,134 +975,33 @@ EMB_PUBLIC void embPattern_copyPolylinesToStitchList(EmbPattern* pattern);
 EMB_PUBLIC void embPattern_moveStitchListToPolylines(EmbPattern* pattern);
 EMB_PUBLIC void embPattern_movePolylinesToStitchList(EmbPattern* pattern);
 
-EMB_PUBLIC int embPattern_read(EmbPattern* pattern, const char* fileName);
-EMB_PUBLIC int embPattern_write(EmbPattern* pattern, const char* fileName);
+EMB_PUBLIC char embPattern_read(EmbPattern *pattern, const char* fileName, int format);
+EMB_PUBLIC char embPattern_write(EmbPattern *pattern, const char* fileName, int format);
 
-EMB_PUBLIC char read100(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char write100(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char read10o(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char write10o(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readArt(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeArt(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readBmc(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeBmc(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readBro(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeBro(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readCnd(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeCnd(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readCol(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeCol(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readCsd(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeCsd(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readCsv(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeCsv(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readDat(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeDat(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readDem(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeDem(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readDsb(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeDsb(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readDst(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeDst(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readDsz(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeDsz(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readDxf(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeDxf(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readEdr(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeEdr(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readEmd(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeEmd(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readExp(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeExp(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readExy(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeExy(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readEys(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeEys(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readFxy(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeFxy(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readGc(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeGc(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readGnc(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeGnc(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readGt(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeGt(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readHus(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeHus(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readInb(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeInb(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readInf(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeInf(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readJef(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeJef(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readKsm(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeKsm(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readMax(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeMax(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readMit(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeMit(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readNew(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeNew(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readOfm(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeOfm(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readPcd(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writePcd(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readPcm(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writePcm(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readPcq(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writePcq(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readPcs(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writePcs(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readPec(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writePec(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readPel(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writePel(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readPem(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writePem(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readPes(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writePes(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readPhb(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writePhb(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readPhc(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writePhc(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readPlt(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writePlt(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readRgb(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeRgb(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readSew(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeSew(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readShv(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeShv(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readSst(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeSst(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readStx(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeStx(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readSvg(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeSvg(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readT01(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeT01(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readT09(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeT09(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readTap(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeTap(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readThr(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeThr(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readTxt(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeTxt(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readU00(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeU00(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readU01(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeU01(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readVip(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeVip(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readVp3(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeVp3(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readXxx(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeXxx(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char readZsk(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char writeZsk(EmbPattern *pattern, const char* fileName);
+EMB_PUBLIC char embPattern_readAuto(EmbPattern *pattern, const char* fileName);
+EMB_PUBLIC char embPattern_writeAuto(EmbPattern *pattern, const char* fileName);
 
 void readPecStitches(EmbPattern* pattern, FILE* file);
 void writePecStitches(EmbPattern* pattern, FILE* file, const char* filename);
+
+int emb_readline(FILE* file, char *line, int maxLength);
+
+int decodeNewStitch(unsigned char value);
+
+void maxEncode(FILE* file, int x, int y);
+double maxDecode(unsigned char a1, unsigned char a2, unsigned char a3);
+
+unsigned char mitEncodeStitch(double value);
+int mitDecodeStitch(unsigned char value);
+
+void pcdEncode(FILE* file, int dx, int dy, int flags);
+double pcdDecode(unsigned char a1, unsigned char a2, unsigned char a3);
+
+int encode_tajima_ternary(unsigned char b[3], int x, int y);
+void decode_tajima_ternary(unsigned char b[3], int *x, int *y);
+
+void encode_t01_record(unsigned char b[3], int x, int y, int flags);
+int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags);
 
 /* NON-MACRO CONSTANTS
  ******************************************************************************/
@@ -1084,19 +1010,15 @@ void writePecStitches(EmbPattern* pattern, FILE* file, const char* filename);
 EMB_PUBLIC extern EmbFormatList formatTable[];
 extern const unsigned int NumberOfDifatEntriesInHeader;
 extern const int pecThreadCount;
-extern const EmbThread pecThreads[];
 extern const char imageWithFrame[38][48];
-extern const EmbThread jefThreads[];
 extern const int shvThreadCount;
-extern const EmbThread shvThreads[];
 extern const double embConstantPi;
-
-int emb_readline(FILE* file, char *line, int maxLength);
-
-int encode_tajima_ternary(unsigned char b[3], int x, int y);
-void decode_tajima_ternary(unsigned char b[3], int *x, int *y);
-void encode_t01_record(unsigned char b[3], int x, int y, int flags);
-int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags);
+extern const EmbThread husThreads[];
+extern const EmbThread jefThreads[];
+extern const EmbThread shvThreads[];
+extern const EmbThread pcmThreads[];
+extern const EmbThread pecThreads[];
+extern const unsigned char _dxfColorTable[][3] ;
 
 #else
 

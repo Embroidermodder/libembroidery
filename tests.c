@@ -342,7 +342,7 @@ int create_test_file_1(const char* outf, int mode) {
     embPattern_addThread(p, black_thread);
     embPattern_end(p);
 
-    if (!formatTable[mode].writer(p, outf)) {
+    if (!embPattern_write(p, outf, EMB_FORMAT_CSV)) {
         return 16;
     }
 
@@ -373,7 +373,7 @@ int create_test_file_2(const char* outf, int mode) {
     embPattern_addThread(p, black_thread);
     embPattern_end(p);
 
-    if (!formatTable[mode].writer(p, outf)) {
+    if (!embPattern_write(p, outf, EMB_FORMAT_CSV)) {
         return 16;
     }
 

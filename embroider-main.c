@@ -8,6 +8,8 @@
 /* the only function needed to run the test suite */
 void testMain(int level);
 
+#define ENDIANNESS          0
+
 /* same order as flag_list, to use in jump table */
 #define FLAG_TO             0
 #define FLAG_TO_SHORT       1

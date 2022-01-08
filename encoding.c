@@ -237,3 +237,85 @@ void decode_tajima_ternary(unsigned char b[3], int *x, int *y)
     }
 }
 
+double maxDecode(unsigned char a1, unsigned char a2, unsigned char a3) {
+    int res = a1 + (a2 << 8) + (a3 << 16);
+    if (res > 0x7FFFFF) {
+        return (-((~(res) & 0x7FFFFF) - 1));
+    }
+    return res;
+}
+
+void maxEncode(FILE* file, int x, int y) {
+    unsigned char out[8];
+    if (!file) {
+        printf("ERROR: format-max.c maxEncode(), file argument is null\n");
+        return;
+    }
+
+    out[0] = 0;
+    out[1] = (unsigned char)(x & 0xFF);
+    out[2] = (unsigned char)((x >> 8) & 0xFF);
+    out[3] = (unsigned char)((x >> 16) & 0xFF);
+
+    out[4] = 0;
+    out[5] = (unsigned char)(y & 0xFF);
+    out[6] = (unsigned char)((y >> 8) & 0xFF);
+    out[7] = (unsigned char)((y >> 16) & 0xFF);
+    
+    fwrite(out, 1, 8, file);
+}
+
+unsigned char mitEncodeStitch(double value) {
+    if (value < 0) {
+        return 0x80 | (unsigned char)(-value);
+    }
+    return (unsigned char)value;
+}
+
+int mitDecodeStitch(unsigned char value) {
+    if (value & 0x80) {
+        return -(value & 0x1F);
+    }
+    return value;
+}
+
+int decodeNewStitch(unsigned char value) {
+    return (int)value;
+}
+
+double pcdDecode(unsigned char a1, unsigned char a2, unsigned char a3) {
+    int res = a1 + (a2 << 8) + (a3 << 16);
+    if (res > 0x7FFFFF) {
+        return (-((~(res) & 0x7FFFFF) - 1));
+    }
+    return res;
+}
+
+void pcdEncode(FILE* file, int dx, int dy, int flags) {
+    unsigned char b[9];
+
+    if (!file) {
+        printf("ERROR: format-pcd.c pcdEncode(), file argument is null\n");
+        return;
+    }
+
+    b[0] = 0;
+    b[1] = (unsigned char)(dx & 0xFF);
+    b[2] = (unsigned char)((dx >> 8) & 0xFF);
+    b[3] = (unsigned char)((dx >> 16) & 0xFF);
+
+    b[4] = 0;
+    b[5] = (unsigned char)(dy & 0xFF);
+    b[6] = (unsigned char)((dy >> 8) & 0xFF);
+    b[7] = (unsigned char)((dy >> 16) & 0xFF);
+
+    b[8] = 0;
+    if (flags & STOP) {
+        b[8] |= 0x01;
+    }
+    if (flags & TRIM) {
+        b[8] |= 0x04;
+    }
+    fwrite(b, 1, 9, file);
+}
+

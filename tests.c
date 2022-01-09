@@ -342,7 +342,7 @@ int create_test_file_1(const char* outf, int mode) {
     embPattern_addThread(p, black_thread);
     embPattern_end(p);
 
-    if (!embPattern_write(p, outf, EMB_FORMAT_CSV)) {
+    if (!embPattern_writeAuto(p, outf)) {
         return 16;
     }
 
@@ -373,7 +373,7 @@ int create_test_file_2(const char* outf, int mode) {
     embPattern_addThread(p, black_thread);
     embPattern_end(p);
 
-    if (!embPattern_write(p, outf, EMB_FORMAT_CSV)) {
+    if (!embPattern_writeAuto(p, outf)) {
         return 16;
     }
 
@@ -430,11 +430,11 @@ int full_test_matrix(char *fname) {
     }
 
     success = 0;
-    ntests = (numberOfFormats - 4)*(numberOfFormats - 5);
+    ntests = (numberOfFormats - 1)*(numberOfFormats - 5);
     for (i = 0; i < numberOfFormats; i++) {
         char fname[100];
         if (i == EMB_FORMAT_COL || i == EMB_FORMAT_RGB ||
-            i == EMB_FORMAT_INF || i == EMB_FORMAT_EDR) {
+            i == EMB_FORMAT_INF || i == EMB_FORMAT_EDR || i==EMB_FORMAT_THR) {
             continue;
         }
         snprintf(fname, 30, "test01%s", formatTable[i].extension);
@@ -443,13 +443,13 @@ int full_test_matrix(char *fname) {
         for (j=0; j < numberOfFormats; j++) {
             char fname_converted[100];
             int result;
-            if (i == j || j == EMB_FORMAT_COL || j == EMB_FORMAT_RGB ||
-                j == EMB_FORMAT_INF || j == EMB_FORMAT_EDR) {
+            if (i == j) {
                 continue;
             }
             printf("\n");
             snprintf(fname_converted, 30, "test01_%02d_converted%s",
                     i, formatTable[j].extension);
+            printf("Attempting: %s %s\n", fname, fname_converted);
             result = convert(fname, fname_converted);
             /* p3_render(b); */
             /*

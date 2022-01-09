@@ -2345,6 +2345,7 @@ void embPattern_center(EmbPattern* p) {
 /*TODO: Description needed. */
 void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName) {
     char hasRead = 0;
+    int stub_len, format;
     char extractName[200], *dotPos;
 
     if (!p) {
@@ -2357,22 +2358,23 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName) {
     }
 
     strcat(extractName, fileName);
-    dotPos = strrchr(extractName, '.');
-    *dotPos = 0;
+    format = emb_identify_format(fileName);
+    stub_len = strlen(fileName) - strlen(formatTable[format].extension);
+    extractName[stub_len] = 0;
     strcat(extractName, ".edr");
     hasRead = embPattern_read(p, extractName, EMB_FORMAT_EDR);
     if (!hasRead) {
-        *dotPos = 0;
+        extractName[stub_len] = 0;
         strcat(extractName,".rgb");
         hasRead = embPattern_read(p, extractName, EMB_FORMAT_RGB);
     }
     if (!hasRead) {
-        *dotPos = 0;
+        extractName[stub_len] = 0;
         strcat(extractName,".col");
         hasRead = embPattern_read(p, extractName, EMB_FORMAT_COL);
     }
     if (!hasRead) {
-        *dotPos = 0;
+        extractName[stub_len] = 0;
         strcat(extractName,".inf");
         hasRead = embPattern_read(p, extractName, EMB_FORMAT_INF);
     }

@@ -17,6 +17,8 @@
 #include <ctype.h>
 #include <math.h>
 
+#define MAX_STITCHES             1000000
+
 char read100(EmbPattern *pattern, const char* fileName);
 char write100(EmbPattern *pattern, const char* fileName);
 char read10o(EmbPattern *pattern, const char* fileName);
@@ -678,7 +680,7 @@ char readBro(EmbPattern* pattern, const char* fileName) {
 
     fseek(file, 0x100, SEEK_SET);
 
-    while (1) {
+    while (!feof(file)) {
         short b1, b2;
         stitchType = NORMAL;
         b1 = (unsigned char)fgetc(file);
@@ -1912,6 +1914,9 @@ char readDxf(EmbPattern* pattern, const char* fileName)
     char firstStitch = 1;
     char bulgeFlag = 0;
     int fileLength = 0;
+    
+    puts("overriding dxf. Unimplimented for now.");
+    return 0;
 
     if (!validateReadPattern(pattern, fileName, "readDxf"))
         return 0;
@@ -2257,12 +2262,8 @@ static char emdDecode(unsigned char inputByte) {
 
 char readEmd(EmbPattern* pattern, const char* fileName) {
     unsigned char b[2];
-    char dx = 0, dy = 0;
-    int flags = NORMAL;
-    char endOfStream = 0;
     unsigned char jemd0[6]; /* TODO: more descriptive name */
-    int width, height, colors;
-    int i;
+    int width, height, colors, length;
     FILE* file;
 
     if (!validateReadPattern(pattern, fileName, "readEmd")) {
@@ -2274,6 +2275,14 @@ char readEmd(EmbPattern* pattern, const char* fileName) {
     }
     embPattern_loadExternalColorFile(pattern, fileName);
 
+    fseek(file, 0, SEEK_END);
+    length = ftell(file);
+    if (length < 0x30) {
+        puts("File invalid: shorter than the header.");
+        return 0;
+    }
+    fseek(file, 0, SEEK_SET);
+
     fread(jemd0, 1, 6, file); /* TODO: check return value */
     width = fread_int16(file);
     height = fread_int16(file);
@@ -2283,9 +2292,10 @@ char readEmd(EmbPattern* pattern, const char* fileName) {
 
     fseek(file, 0x30, SEEK_SET);
 
-    for (i = 0; !endOfStream; i++) {
-            flags = NORMAL;
-            fread(b, 1, 2, file);
+    while (!feof(file)) {
+        char dx, dy;
+        int flags = NORMAL;
+        fread(b, 1, 2, file);
 
             if (b[0] == 0x80) {
                 if (b[1] == 0x2A) {
@@ -2530,7 +2540,7 @@ char readFxy(EmbPattern* pattern, const char* fileName) {
         to be the only difference from the GT format. */
     fseek(file, 0x100, SEEK_SET);
 
-    while (1) {
+    while (!feof(file)) {
         int stitchType = NORMAL;
         int b1 = (int)binaryReadByte(file);
         int b2 = (int)binaryReadByte(file);
@@ -2630,7 +2640,7 @@ char readGt(EmbPattern* pattern, const char* fileName) {
         to be the only difference from the FXY format. */
     fseek(file, 0x200, SEEK_SET);
 
-    while (1) {
+    while (!feof(file)) {
         int stitchType = NORMAL;
         int b1 = (int)binaryReadByte(file);
         int b2 = (int)binaryReadByte(file);
@@ -2756,6 +2766,9 @@ char readHus(EmbPattern* pattern, const char* fileName)
         return 0;
     }
 
+    puts("Overridden. readHus is not implemented for now.");
+    return 0;
+
     fseek(file, 0x00, SEEK_END);
     fileLength = ftell(file);
     fseek(file, 0x00, SEEK_SET);
@@ -2856,7 +2869,6 @@ char writeHus(EmbPattern* pattern, const char* fileName)
     unsigned int code, colors, offset1, offset2;
     unsigned char *xValues = 0, *yValues = 0, *attributeValues = 0,
         *attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
-    EmbStitch st;
     FILE* file;
 
     if (!validateWritePattern(pattern, fileName, "writeHus")) return 0;
@@ -2909,6 +2921,8 @@ char writeHus(EmbPattern* pattern, const char* fileName)
     previousX = 0.0;
     previousY = 0.0;
     for (i = 0; i < pattern->stitchList->count; i++) {
+        EmbStitch st;
+        st = pattern->stitchList->stitch[i];
         xValues[i] = husEncodeByte((st.x - previousX) * 10.0);
         previousX = st.x;
         yValues[i] = husEncodeByte((st.y - previousY) * 10.0);
@@ -2927,7 +2941,7 @@ char writeHus(EmbPattern* pattern, const char* fileName)
     fpad(file, 0, 10);
 
     for (i = 0; i < patternColor; i++) {
-        short color_index = (short)embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, husThreads, 29);
+        short color_index = (short)embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, (EmbThread*)husThreads, 29);
         fwrite_nbytes(file, &color_index, 2);
     }
 
@@ -3205,17 +3219,12 @@ void read_hoop(FILE *file, struct hoop_padding *hoop, char *label)
 
 char readJef(EmbPattern* pattern, const char* fileName) {
     int stitchOffset, formatFlags, numberOfColors, numberOfStitchs;
-    int hoopSize, i;
+    int hoopSize, i, stitchCount;
     struct hoop_padding bounds, rectFrom110x110;
     struct hoop_padding rectFrom50x50, rectFrom200x140, rect_from_custom;
-    int stitchCount;
     char date[8], time[8];
 
     FILE* file = 0;
-
-    unsigned char b0 = 0, b1 = 0;
-    char dx = 0, dy = 0;
-    int flags = 0;
 
     if (!validateReadPattern(pattern, fileName, "readJef")) {
         return 0;
@@ -3235,6 +3244,16 @@ char readJef(EmbPattern* pattern, const char* fileName) {
     numberOfStitchs = fread_int32(file);
     hoopSize = fread_int32(file);
     jefSetHoopFromId(pattern, hoopSize);
+    if (numberOfStitchs > MAX_STITCHES) {
+        numberOfStitchs = MAX_STITCHES;
+        puts("ERROR: this file is corrupted or has too many stitches.");
+        return 0;
+    }
+    if (EMB_DEBUG) {
+        printf("format flags = %d\n", formatFlags);
+        printf("number of colors = %d\n", numberOfColors);
+        printf("number of stitches = %d\n", numberOfStitchs);
+    }
 
     read_hoop(file, &bounds, "bounds");
     read_hoop(file, &rectFrom110x110, "rectFrom110x110");
@@ -3248,44 +3267,35 @@ char readJef(EmbPattern* pattern, const char* fileName) {
     fseek(file, stitchOffset, SEEK_SET);
     stitchCount = 0;
     while (stitchCount < numberOfStitchs + 100) {
-        flags = NORMAL;
-        b0 = (unsigned char)fgetc(file);
-        if (feof(file)) {
+        unsigned char b[2];
+        char dx = 0, dy = 0;
+        int flags = NORMAL;
+        if (fread(b, 1, 2, file) != 2) {
             break;
         }
-        b1 = (unsigned char)fgetc(file);
-        if (feof(file)) {
-            break;
-        }
-        if (b0 == 0x80) {
-            if (b1 & 1) {
-                b0 = (unsigned char)fgetc(file);
-                if (feof(file))
+        
+        if (b[0] == 0x80) {
+            if (b[1] & 1) {
+                if (fread(b, 1, 2, file) != 2) {
                     break;
-                b1 = (unsigned char)fgetc(file);
-                if (feof(file))
-                    break;
+                }
                 flags = STOP;
             }
-            else if ((b1 == 2) || (b1 == 4) || b1 == 6) {
+            else if ((b[1] == 2) || (b[1] == 4) || b[1] == 6) {
+                if (fread(b, 1, 2, file) != 2) {
+                    break;
+                }
                 flags = TRIM;
-                b0 = (unsigned char)fgetc(file);
-                if (feof(file)) {
-                    break;
-                }
-                b1 = (unsigned char)fgetc(file);
-                if (feof(file)) {
-                    break;
-                }
             }
-            else if (b1 == 0x10) {
+            else if (b[1] == 0x10) {
                 embPattern_addStitchRel(pattern, 0.0, 0.0, END, 1);
                 break;
             }
         }
-        dx = jefDecode(b0);
-        dy = jefDecode(b1);
+        dx = jefDecode(b[0]);
+        dy = jefDecode(b[1]);
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        stitchCount++;
     }
     fclose(file);
 
@@ -3326,6 +3336,7 @@ char writeJef(EmbPattern* pattern, const char* fileName)
     FILE* file = 0;
     EmbTime time;
     EmbStitch st;
+    int data;
     double dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
     unsigned char b[4];
 
@@ -3350,7 +3361,7 @@ char writeJef(EmbPattern* pattern, const char* fileName)
             (int)(time.minute), (int)(time.second));
     fpad(file, 0, 2);
     fwrite_nbytes(file, &(pattern->threads->count), 4);
-    int data = pattern->stitchList->count + embMaxInt(0, (6 - colorlistSize) * 2) + 1;
+    data = pattern->stitchList->count + embMaxInt(0, (6 - colorlistSize) * 2) + 1;
     fwrite_nbytes(file, &data, 4);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
@@ -3534,8 +3545,8 @@ char writeKsm(EmbPattern* pattern, const char* fileName) {
 /* Pfaff MAX embroidery file format */
 
 char readMax(EmbPattern* pattern, const char* fileName) {
-    int i, flags, stitchCount;
     FILE* file;
+    unsigned char b[8];
 
     if (!validateReadPattern(pattern, fileName, "readMax")) {
         return 0;
@@ -3545,15 +3556,12 @@ char readMax(EmbPattern* pattern, const char* fileName) {
         return 0;
     }
     fseek(file, 0xD5, SEEK_SET);
-    stitchCount = fread_uint32(file);
+    /* stitchCount = fread_uint32(file); CHECK IF THIS IS PRESENT */
     /* READ STITCH RECORDS */
-    for (i = 0; i < stitchCount; i++) {
-        unsigned char b[8];
+    while (fread(b, 1, 8, file) == 8) {
         double dx, dy;
+        int flags;
         flags = NORMAL;
-        if (fread(b, 1, 8, file) != 8) {
-            break;
-        }
         dx = maxDecode(b[0], b[1], b[2]);
         dy = maxDecode(b[4], b[5], b[6]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
@@ -3680,6 +3688,9 @@ char readNew(EmbPattern* pattern, const char* fileName) {
     }
     embPattern_loadExternalColorFile(pattern, fileName);
     stitchCount = fread_uint16(file);
+    if (EMB_DEBUG) {
+        printf("stitch count = %d\n", stitchCount);
+    }
     while (fread(data, 1, 3, file) == 3) {
         int x = decodeNewStitch(data[0]);
         int y = decodeNewStitch(data[1]);
@@ -3798,6 +3809,11 @@ static void ofmReadBlockHeader(FILE* file)
     unknown1 = fread_int16(file);
     unknown2 = (short)fread_int32(file);
     unknown3 = fread_int32(file);
+    if (EMB_DEBUG) {
+        printf("unknown1 = %d\n", unknown1);
+        printf("unknown2 = %d\n", unknown2);
+        printf("unknown3 = %d\n", unknown3);
+    }
 
     /* int v = binaryReadBytes(3); TODO: review */
     fread_int16(file);
@@ -3815,6 +3831,9 @@ static void ofmReadBlockHeader(FILE* file)
         }
     }
     short1 = fread_int16(file); /*  0 */
+    if (EMB_DEBUG) {
+        printf("short1 = %d\n", short1);
+    }
 }
 
 static void ofmReadColorChange(FILE* file, EmbPattern* pattern)
@@ -3864,6 +3883,10 @@ static void ofmReadThreads(FILE* file, EmbPattern* p)
         fseek(file, 3, SEEK_CUR);
         colorNameLength = binaryReadByte(file);
         fread(colorName, 1, colorNameLength*2, file);
+        if (EMB_DEBUG) {
+            printf("threadLibrary = %d\n", threadLibrary);
+            printf("colorNumber = %d\n", colorNumber);
+        }
         /* TODO: check return value */
         fseek(file, 2, SEEK_CUR);
         sprintf(colorNumberText, "%10d", colorNumber);
@@ -3915,8 +3938,7 @@ static void ofmReadExpanded(FILE* file, EmbPattern* p)
 
 char readOfm(EmbPattern* pattern, const char* fileName)
 {
-    int unknownCount = 0;
-    int key = 0, classNameLength;
+    int unknownCount, key = 0, classNameLength;
     char* s = 0;
     FILE* fileCompound = 0;
     FILE* file = 0;
@@ -3943,7 +3965,11 @@ char readOfm(EmbPattern* pattern, const char* fileName)
     s = (char*)malloc(sizeof(char) * classNameLength);
     if (!s) { printf("ERROR: format-ofm.c readOfm(), unable to allocate memory for s\n"); return 0; }
     binaryReadBytes(file, (unsigned char*)s, classNameLength); /* TODO: check return value */
-    unknownCount = fread_int16(file); /* TODO: determine what unknown count represents */
+    unknownCount = fread_int16(file);
+    /* TODO: determine what unknown count represents */
+    if (EMB_DEBUG) {
+        printf("unknownCount = %d\n", unknownCount);
+    }
 
     fread_int16(file);
     key = ofmReadClass(file);
@@ -4058,8 +4084,6 @@ char readPcd(EmbPattern* pattern, const char* fileName) {
 char writePcd(EmbPattern* pattern, const char* fileName) {
     FILE* file = 0;
     int i;
-    unsigned char colorCount;
-    double xx = 0.0, yy = 0.0;
 
     if (!validateWritePattern(pattern, fileName, "writePcd")) {
         return 0;
@@ -4504,21 +4528,20 @@ const char imageWithFrame[38][48] = {
 
 void readPecStitches(EmbPattern* pattern, FILE* file) {
     FILE *f = file;
-    int stitchNumber = 0;
+    unsigned char b[2];
 
-    while (!feof(f)) {
-        int val1 = (int)(unsigned char)fgetc(f);
-        int val2 = (int)(unsigned char)fgetc(f);
+    while (fread(b, 1, 2, f)==2) {
+        int val1 = (int)b[0];
+        int val2 = (int)b[1];
 
         int stitchType = NORMAL;
-        if (val1 == 0xFF && val2 == 0x00) {
+        if (b[0] == 0xFF && b[1] == 0x00) {
             embPattern_end(pattern);
-            break;
+            return;
         }
-        if (val1 == 0xFE && val2 == 0xB0) {
+        if (b[0] == 0xFE && b[1] == 0xB0) {
             (void)fgetc(f);
             embPattern_addStitchRel(pattern, 0.0, 0.0, STOP, 1);
-            stitchNumber++;
             continue;
         }
         /* High bit set means 12-bit offset, otherwise 7-bit signed delta */
@@ -4531,9 +4554,8 @@ void readPecStitches(EmbPattern* pattern, FILE* file) {
             if (val1 & 0x800) {
                 val1 -= 0x1000;
             }
-
-            val2 = fgetc(file);
-        } else if (val1 >= 0x40) {
+        }
+        else if (val1 >= 0x40) {
             val1 -= 0x80;
         }
         if (val2 & 0x80) {
@@ -4545,12 +4567,13 @@ void readPecStitches(EmbPattern* pattern, FILE* file) {
             if (val2 & 0x800) {
                 val2 -= 0x1000;
             }
-        } else if (val2 >= 0x40) {
+        }
+        else if (val2 >= 0x40) {
             val2 -= 0x80;
         }
+
         embPattern_addStitchRel(pattern, val1 / 10.0,
                 val2 / 10.0, stitchType, 1);
-        stitchNumber++;
     }
 }
 
@@ -4912,8 +4935,7 @@ char readPes(EmbPattern* pattern, const char* fileName) {
     fseek(file, pecstart + 48, SEEK_SET);
     numColors = fgetc(file) + 1;
     for (x = 0; x < numColors; x++) {
-        embPattern_addThread(pattern, pecThreads[
-                (unsigned char) fgetc(file)]);
+        embPattern_addThread(pattern, pecThreads[(unsigned char) fgetc(file)]);
     }
 
     fseek(file, pecstart + 528, SEEK_SET);
@@ -5234,12 +5256,17 @@ static void pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
     int colorInfoIndex = 0;
     int i, j;
     EmbRect bounds = embPattern_calcBoundingBox(pattern);
-    EmbColor color;
 
     for (i = 0; i < pattern->stitchList->count; i++) {
+        EmbColor color;
         EmbStitch st = pattern->stitchList->stitch[i];
         flag = st.flags;
-        color = pattern->threads->thread[st.color].color;
+        if (st.color < pattern->threads->count) {
+            color = pattern->threads->thread[st.color].color;
+        }
+        else {
+            color = pecThreads[0].color;
+        }
         newColorCode = embThread_findNearestColor_fromThread(color, (EmbThread*)pecThreads, pecThreadCount);
         if (newColorCode != colorCode) {
             colorCount++;
@@ -5259,11 +5286,17 @@ static void pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
 
     binaryWriteShort(file, 0x07); /* string length */
     binaryWriteBytes(file, "CSewSeg", 7);
+    
+    if (colorCount > 1000) {
+        puts("Color count exceeds 1000 this is likely an error. Trucating to 1000.");
+        colorCount = 1000;
+    }
 
     colorInfo = (short *) calloc(colorCount * 2, sizeof(short));
     colorCode = -1;
     blockCount = 0;
     for (i = 0; i < pattern->stitchList->count; i++) {
+        EmbColor color;
         EmbStitch st;
         st = pattern->stitchList->stitch[i];
         j = i;
@@ -5271,6 +5304,10 @@ static void pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
         color = pattern->threads->thread[st.color].color;
         newColorCode = embThread_findNearestColor_fromThread(color, (EmbThread*)pecThreads, pecThreadCount);
         if (newColorCode != colorCode) {
+            if (colorInfoIndex+2 > colorCount) {
+                puts("Ran out of memory for color info.");
+                break;
+            }
             colorInfo[colorInfoIndex++] = (short)blockCount;
             colorInfo[colorInfoIndex++] = (short)newColorCode;
             colorCode = newColorCode;
@@ -5693,9 +5730,11 @@ char readSew(EmbPattern* pattern, const char* fileName) {
     fseek(file, 0x00, SEEK_SET);
     numberOfColors = fgetc(file);
     numberOfColors += (fgetc(file) << 8);
+    
 
     for (i = 0; i < numberOfColors; i++) {
-        embPattern_addThread(pattern, jefThreads[fread_int16(file)]);
+        int color = fread_int16(file);
+        embPattern_addThread(pattern, jefThreads[color%78]);
     }
     fseek(file, 0x1D78, SEEK_SET);
 
@@ -6990,7 +7029,12 @@ char readVip(EmbPattern* pattern, const char* fileName)
 
     fseek(file, 0x0, SEEK_END);
     fileLength = ftell(file);
+    if (fileLength < 32) {
+        printf("ERROR: file shorter than header.");
+        return 0;
+    }
     fseek(file, 0x00, SEEK_SET);
+
     header.magicCode = fread_int32(file);
     header.numberOfStitches = fread_int32(file);
     header.numberOfColors = fread_int32(file);
@@ -7127,6 +7171,10 @@ char writeVip(EmbPattern* pattern, const char* fileName) {
     if (!file) {
         return 0;
     }
+
+    puts("VIP not yet implemented.");
+    return 0;
+
     stitchCount = pattern->stitchList->count;
     minColors = pattern->threads->count;
     decodedColors = (unsigned char*)malloc(minColors << 2);
@@ -7761,6 +7809,11 @@ char readXxx(EmbPattern* pattern, const char* fileName) {
         return 0;
     }
 
+    if (EMB_DEBUG) {
+        puts("readXxx has been overridden.");
+        return 0;
+    }
+
     fseek(file, 0x27, SEEK_SET);
     numberOfColors = fread_int16(file);
     fseek(file, 0xFC, SEEK_SET);
@@ -7952,6 +8005,12 @@ char readZsk(EmbPattern* pattern, const char* fileName) {
     if (!file) {
         return 0;
     }
+    
+    fseek(file, 0, SEEK_END);
+    if (ftell(file) < 0x230) {
+        return 0;
+    }
+    
     fseek(file, 0x230, SEEK_SET);
     colorNumber = fgetc(file);
     while (colorNumber != 0) {

@@ -11,7 +11,7 @@
 
 void testTangentPoints(EmbCircle c,
     double px, double py,
-    EmbPoint *t0, EmbPoint *t1);
+    EmbVector *t0, EmbVector *t1);
 void printArcResults(double bulge,
                      double startX,    double startY,
                      double endX,      double endY,
@@ -30,7 +30,7 @@ int testEmbCircle_2(void);
 int testGeomArc(void);
 int testThreadColor(void);
 int testEmbFormat(void);
-double distance(EmbPoint p, EmbPoint q);
+double distance(EmbVector p, EmbVector q);
 int full_test_matrix(char *fname);
 
 EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
@@ -81,7 +81,7 @@ void testMain(int level)
 
 void testTangentPoints(EmbCircle c,
     double px, double py,
-    EmbPoint *t0, EmbPoint *t1) {
+    EmbVector *t0, EmbVector *t1) {
     double tx0 = 0.0, tx1 = 0.0, ty0 = 0.0, ty1 = 0.0;
     if (!getCircleTangentPoints(c, px, py,
                                &tx0, &ty0,
@@ -103,7 +103,7 @@ void testTangentPoints(EmbCircle c,
     }
 }
 
-double distance(EmbPoint p, EmbPoint q) {
+double distance(EmbVector p, EmbVector q) {
     double x2 = (p.x - q.x)*(p.x - q.x);
     double y2 = (p.y - q.y)*(p.y - q.y);
     return sqrt(x2+y2);
@@ -112,12 +112,12 @@ double distance(EmbPoint p, EmbPoint q) {
 int testEmbCircle(void) {
     double error;
     double epsilon = 1e-3;
-    EmbPoint p0, p1;
+    EmbVector p0, p1;
     /* Problem */
     EmbCircle c1 = {0.0, 0.0, 3.0};
     /* Solution */
-    EmbPoint t0 = {2.2500, 1.9843};
-    EmbPoint t1 = {2.2500, -1.9843};
+    EmbVector t0 = {2.2500, 1.9843};
+    EmbVector t1 = {2.2500, -1.9843};
     /* Test */
     testTangentPoints(c1, 4.0, 0.0, &p0, &p1);
     error = distance(p0, t0) + distance(p1, t1);
@@ -132,11 +132,11 @@ int testEmbCircle(void) {
 int testEmbCircle_2(void) {
     double error;
     double epsilon = 1e-3;
-    EmbPoint p0, p1;
+    EmbVector p0, p1;
     EmbCircle c2 = {20.1762, 10.7170, 6.8221};
     /* Solution */
-    EmbPoint s0 = {19.0911, 17.4522};
-    EmbPoint s1 = {26.4428, 13.4133};
+    EmbVector s0 = {19.0911, 17.4522};
+    EmbVector s1 = {26.4428, 13.4133};
     /* Test */
     testTangentPoints(c2, 24.3411, 18.2980, &p0, &p1);
     error = distance(p0, s0) + distance(p1, s1);
@@ -433,8 +433,7 @@ int full_test_matrix(char *fname) {
     ntests = (numberOfFormats - 1)*(numberOfFormats - 5);
     for (i = 0; i < numberOfFormats; i++) {
         char fname[100];
-        if (i == EMB_FORMAT_COL || i == EMB_FORMAT_RGB ||
-            i == EMB_FORMAT_INF || i == EMB_FORMAT_EDR || i==EMB_FORMAT_THR) {
+        if (formatTable[i].color_only) {
             continue;
         }
         snprintf(fname, 30, "test01%s", formatTable[i].extension);

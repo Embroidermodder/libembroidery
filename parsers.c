@@ -1793,22 +1793,11 @@ void svgProcess(int c, const char* buff)
     }
 }
 
-/*! Reads a file with the given \a fileName and loads the data into \a pattern.
- *  Returns \c true if successful, otherwise returns \c false. */
-char readSvg(EmbPattern* pattern, const char* fileName) {
-    FILE* file = 0;
+char readSvg(EmbPattern* pattern, FILE* file) {
     int size = 1024;
     int pos, c, i;
     char* buff = 0;
 
-    if (!pattern) {
-        printf("ERROR: format-svg.c readSvg(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        printf("ERROR: format-svg.c readSvg(), fileName argument is null\n");
-        return 0;
-    }
     buff = (char*)malloc(size);
     if (!buff) {
         printf("ERROR: format-svg.c readSvg(), cannot allocate memory for buff\n");
@@ -1830,8 +1819,6 @@ char readSvg(EmbPattern* pattern, const char* fileName) {
     /* Pre-flip incase of multiple reads on the same pattern */
     embPattern_flipVertical(pattern);
 
-    file = fopen(fileName, "r");
-    if (file) {
         pos = 0;
         do {
             c = fgetc(file);
@@ -1874,8 +1861,7 @@ char readSvg(EmbPattern* pattern, const char* fileName) {
             }
         }
         while(c != EOF);
-        fclose(file);
-    }
+
     free(buff);
     free(currentAttribute);
     free(currentValue);
@@ -1902,7 +1888,7 @@ char readSvg(EmbPattern* pattern, const char* fileName) {
     }
     if (pattern->points) {
         for (i = 0; i < pattern->points->count; i++) {
-            EmbPoint po = pattern->points->point[i].point;
+            EmbVector po = pattern->points->point[i].point;
             printf("point %f %f\n", po.x, po.y);
         }
     }
@@ -1933,24 +1919,14 @@ char readSvg(EmbPattern* pattern, const char* fileName) {
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-char writeSvg(EmbPattern* pattern, const char* fileName) {
-    FILE* file = 0;
+char writeSvg(EmbPattern* pattern, FILE *file) {
     EmbRect boundingRect;
-    EmbPoint point;
+    EmbVector point;
     EmbRect rect;
     EmbColor color;
     int i, j;
     char isNormal, tmpX[32], tmpY[32];
 
-    if (!validateWritePattern(pattern, fileName, "writeSvg")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "w");
-    if (!file) {
-        puts("ERROR: failed to open file.");
-        return 0;
-    }
     /* Pre-flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
     embPattern_flipVertical(pattern);
     boundingRect = embPattern_calcBoundingBox(pattern);
@@ -2130,7 +2106,6 @@ char writeSvg(EmbPattern* pattern, const char* fileName) {
             }
     }
     fprintf(file, "\n</g>\n</svg>\n");
-    fclose(file);
 
     /* Reset the pattern so future writes(regardless of format)
      * are not flipped.

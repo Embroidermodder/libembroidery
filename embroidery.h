@@ -401,7 +401,6 @@ typedef struct EmbVector_
     double y;
 } EmbVector;
 
-typedef struct EmbVector_ EmbPoint;
 typedef struct EmbArray_ EmbArray;
 
 /**
@@ -409,7 +408,7 @@ typedef struct EmbArray_ EmbArray;
  */
 typedef struct EmbPointObject_
 {
-    EmbPoint point;
+    EmbVector point;
     int lineType;
     EmbColor color;
 } EmbPointObject;
@@ -645,7 +644,7 @@ typedef struct EmbPolylineObject_
 
 typedef struct EmbSettings_ {
     unsigned int dstJumpsPerTrim;
-    EmbPoint home;
+    EmbVector home;
 } EmbSettings;
 
 typedef struct EmbBezier_ {
@@ -727,6 +726,9 @@ typedef struct EmbFormatList_
     char reader_state;
     char writer_state;
     int type;
+    int color_only;
+    int check_for_color_file;
+    int write_external_color_file;
 } EmbFormatList;
 
 /* Function Declarations
@@ -865,9 +867,6 @@ EMB_PUBLIC double embEllipse_height(EmbEllipse ellipse);
 
 EMB_PUBLIC EmbEllipseObject embEllipseObject_make(double cx, double cy, double rx, double ry);
 
-int validateWritePattern(EmbPattern* pattern, const char* fileName, const char *function);
-int validateReadPattern(EmbPattern* pattern, const char* fileName, const char *function);
-
 EMB_PUBLIC short fread_int16(FILE* f);
 EMB_PUBLIC unsigned short fread_uint16(FILE* f);
 EMB_PUBLIC int fread_int32(FILE* f);
@@ -907,15 +906,13 @@ const char* threadColorName(unsigned int color, int brand);
 EMB_PUBLIC void embTime_initNow(EmbTime* t);
 EMB_PUBLIC EmbTime embTime_time(EmbTime* t);
 
-EMB_PUBLIC EmbPoint embPoint_make(double x, double y);
-
 EMB_PUBLIC EmbPointObject embPointObject_make(double x, double y);
 EMB_PUBLIC EmbPointObject* embPointObject_create(double x, double y);
 
 EMB_PUBLIC EmbSettings embSettings_init(void);
 
-EMB_PUBLIC EmbPoint embSettings_home(EmbSettings* settings);
-EMB_PUBLIC void embSettings_setHome(EmbSettings* settings, EmbPoint point);
+EMB_PUBLIC EmbVector embSettings_home(EmbSettings* settings);
+EMB_PUBLIC void embSettings_setHome(EmbSettings* settings, EmbVector point);
 
 EMB_PUBLIC EmbPolygonObject* embPolygonObject_create(
     EmbArray* pointList, EmbColor color, int lineType);

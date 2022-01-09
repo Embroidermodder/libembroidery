@@ -19,387 +19,565 @@
 
 #define MAX_STITCHES             1000000
 
-char read100(EmbPattern *pattern, const char* fileName);
-char write100(EmbPattern *pattern, const char* fileName);
-char read10o(EmbPattern *pattern, const char* fileName);
-char write10o(EmbPattern *pattern, const char* fileName);
-char readArt(EmbPattern *pattern, const char* fileName);
-char writeArt(EmbPattern *pattern, const char* fileName);
-char readBmc(EmbPattern *pattern, const char* fileName);
-char writeBmc(EmbPattern *pattern, const char* fileName);
-char readBro(EmbPattern *pattern, const char* fileName);
-char writeBro(EmbPattern *pattern, const char* fileName);
-char readCnd(EmbPattern *pattern, const char* fileName);
-char writeCnd(EmbPattern *pattern, const char* fileName);
-char readCol(EmbPattern *pattern, const char* fileName);
-char writeCol(EmbPattern *pattern, const char* fileName);
-char readCsd(EmbPattern *pattern, const char* fileName);
-char writeCsd(EmbPattern *pattern, const char* fileName);
-char readCsv(EmbPattern *pattern, const char* fileName);
-char writeCsv(EmbPattern *pattern, const char* fileName);
-char readDat(EmbPattern *pattern, const char* fileName);
-char writeDat(EmbPattern *pattern, const char* fileName);
-char readDem(EmbPattern *pattern, const char* fileName);
-char writeDem(EmbPattern *pattern, const char* fileName);
-char readDsb(EmbPattern *pattern, const char* fileName);
-char writeDsb(EmbPattern *pattern, const char* fileName);
-char readDst(EmbPattern *pattern, const char* fileName);
-char writeDst(EmbPattern *pattern, const char* fileName);
-char readDsz(EmbPattern *pattern, const char* fileName);
-char writeDsz(EmbPattern *pattern, const char* fileName);
-char readDxf(EmbPattern *pattern, const char* fileName);
-char writeDxf(EmbPattern *pattern, const char* fileName);
-char readEdr(EmbPattern *pattern, const char* fileName);
-char writeEdr(EmbPattern *pattern, const char* fileName);
-char readEmd(EmbPattern *pattern, const char* fileName);
-char writeEmd(EmbPattern *pattern, const char* fileName);
-char readExp(EmbPattern *pattern, const char* fileName);
-char writeExp(EmbPattern *pattern, const char* fileName);
-char readExy(EmbPattern *pattern, const char* fileName);
-char writeExy(EmbPattern *pattern, const char* fileName);
-char readEys(EmbPattern *pattern, const char* fileName);
-char writeEys(EmbPattern *pattern, const char* fileName);
-char readFxy(EmbPattern *pattern, const char* fileName);
-char writeFxy(EmbPattern *pattern, const char* fileName);
-char readGc(EmbPattern *pattern, const char* fileName);
-char writeGc(EmbPattern *pattern, const char* fileName);
-char readGnc(EmbPattern *pattern, const char* fileName);
-char writeGnc(EmbPattern *pattern, const char* fileName);
-char readGt(EmbPattern *pattern, const char* fileName);
-char writeGt(EmbPattern *pattern, const char* fileName);
-char readHus(EmbPattern *pattern, const char* fileName);
-char writeHus(EmbPattern *pattern, const char* fileName);
-char readInb(EmbPattern *pattern, const char* fileName);
-char writeInb(EmbPattern *pattern, const char* fileName);
-char readInf(EmbPattern *pattern, const char* fileName);
-char writeInf(EmbPattern *pattern, const char* fileName);
-char readJef(EmbPattern *pattern, const char* fileName);
-char writeJef(EmbPattern *pattern, const char* fileName);
-char readKsm(EmbPattern *pattern, const char* fileName);
-char writeKsm(EmbPattern *pattern, const char* fileName);
-char readMax(EmbPattern *pattern, const char* fileName);
-char writeMax(EmbPattern *pattern, const char* fileName);
-char readMit(EmbPattern *pattern, const char* fileName);
-char writeMit(EmbPattern *pattern, const char* fileName);
-char readNew(EmbPattern *pattern, const char* fileName);
-char writeNew(EmbPattern *pattern, const char* fileName);
-char readOfm(EmbPattern *pattern, const char* fileName);
-char writeOfm(EmbPattern *pattern, const char* fileName);
-char readPcd(EmbPattern *pattern, const char* fileName);
-char writePcd(EmbPattern *pattern, const char* fileName);
-char readPcm(EmbPattern *pattern, const char* fileName);
-char writePcm(EmbPattern *pattern, const char* fileName);
-char readPcq(EmbPattern *pattern, const char* fileName);
-char writePcq(EmbPattern *pattern, const char* fileName);
-char readPcs(EmbPattern *pattern, const char* fileName);
-char writePcs(EmbPattern *pattern, const char* fileName);
-char readPec(EmbPattern *pattern, const char* fileName);
-char writePec(EmbPattern *pattern, const char* fileName);
-char readPel(EmbPattern *pattern, const char* fileName);
-char writePel(EmbPattern *pattern, const char* fileName);
-char readPem(EmbPattern *pattern, const char* fileName);
-char writePem(EmbPattern *pattern, const char* fileName);
-char readPes(EmbPattern *pattern, const char* fileName);
-char writePes(EmbPattern *pattern, const char* fileName);
-char readPhb(EmbPattern *pattern, const char* fileName);
-char writePhb(EmbPattern *pattern, const char* fileName);
-char readPhc(EmbPattern *pattern, const char* fileName);
-char writePhc(EmbPattern *pattern, const char* fileName);
-char readPlt(EmbPattern *pattern, const char* fileName);
-char writePlt(EmbPattern *pattern, const char* fileName);
-char readRgb(EmbPattern *pattern, const char* fileName);
-char writeRgb(EmbPattern *pattern, const char* fileName);
-char readSew(EmbPattern *pattern, const char* fileName);
-char writeSew(EmbPattern *pattern, const char* fileName);
-char readShv(EmbPattern *pattern, const char* fileName);
-char writeShv(EmbPattern *pattern, const char* fileName);
-char readSst(EmbPattern *pattern, const char* fileName);
-char writeSst(EmbPattern *pattern, const char* fileName);
-char readStx(EmbPattern *pattern, const char* fileName);
-char writeStx(EmbPattern *pattern, const char* fileName);
-char readSvg(EmbPattern *pattern, const char* fileName);
-char writeSvg(EmbPattern *pattern, const char* fileName);
-char readT01(EmbPattern *pattern, const char* fileName);
-char writeT01(EmbPattern *pattern, const char* fileName);
-char readT09(EmbPattern *pattern, const char* fileName);
-char writeT09(EmbPattern *pattern, const char* fileName);
-char readTap(EmbPattern *pattern, const char* fileName);
-char writeTap(EmbPattern *pattern, const char* fileName);
-char readThr(EmbPattern *pattern, const char* fileName);
-char writeThr(EmbPattern *pattern, const char* fileName);
-char readTxt(EmbPattern *pattern, const char* fileName);
-char writeTxt(EmbPattern *pattern, const char* fileName);
-char readU00(EmbPattern *pattern, const char* fileName);
-char writeU00(EmbPattern *pattern, const char* fileName);
-char readU01(EmbPattern *pattern, const char* fileName);
-char writeU01(EmbPattern *pattern, const char* fileName);
-char readVip(EmbPattern *pattern, const char* fileName);
-char writeVip(EmbPattern *pattern, const char* fileName);
-char readVp3(EmbPattern *pattern, const char* fileName);
-char writeVp3(EmbPattern *pattern, const char* fileName);
-char readXxx(EmbPattern *pattern, const char* fileName);
-char writeXxx(EmbPattern *pattern, const char* fileName);
-char readZsk(EmbPattern *pattern, const char* fileName);
-char writeZsk(EmbPattern *pattern, const char* fileName);
+char read100(EmbPattern *pattern, FILE* file);
+char write100(EmbPattern *pattern, FILE* file);
+char read10o(EmbPattern *pattern, FILE* file);
+char write10o(EmbPattern *pattern, FILE* file);
+char readArt(EmbPattern *pattern, FILE* file);
+char writeArt(EmbPattern *pattern, FILE* file);
+char readBmc(EmbPattern *pattern, FILE* file);
+char writeBmc(EmbPattern *pattern, FILE* file);
+char readBro(EmbPattern *pattern, FILE* file);
+char writeBro(EmbPattern *pattern, FILE* file);
+char readCnd(EmbPattern *pattern, FILE* file);
+char writeCnd(EmbPattern *pattern, FILE* file);
+char readCol(EmbPattern *pattern, FILE* file);
+char writeCol(EmbPattern *pattern, FILE* file);
+char readCsd(EmbPattern *pattern, FILE* file);
+char writeCsd(EmbPattern *pattern, FILE* file);
+char readCsv(EmbPattern *pattern, FILE* file);
+char writeCsv(EmbPattern *pattern, FILE* file);
+char readDat(EmbPattern *pattern, FILE* file);
+char writeDat(EmbPattern *pattern, FILE* file);
+char readDem(EmbPattern *pattern, FILE* file);
+char writeDem(EmbPattern *pattern, FILE* file);
+char readDsb(EmbPattern *pattern, FILE* file);
+char writeDsb(EmbPattern *pattern, FILE* file);
+char readDst(EmbPattern *pattern, FILE* file);
+char writeDst(EmbPattern *pattern, FILE* file);
+char readDsz(EmbPattern *pattern, FILE* file);
+char writeDsz(EmbPattern *pattern, FILE* file);
+char readDxf(EmbPattern *pattern, FILE* file);
+char writeDxf(EmbPattern *pattern, FILE* file);
+char readEdr(EmbPattern *pattern, FILE* file);
+char writeEdr(EmbPattern *pattern, FILE* file);
+char readEmd(EmbPattern *pattern, FILE* file);
+char writeEmd(EmbPattern *pattern, FILE* file);
+char readExp(EmbPattern *pattern, FILE* file);
+char writeExp(EmbPattern *pattern, FILE* file);
+char readExy(EmbPattern *pattern, FILE* file);
+char writeExy(EmbPattern *pattern, FILE* file);
+char readEys(EmbPattern *pattern, FILE* file);
+char writeEys(EmbPattern *pattern, FILE* file);
+char readFxy(EmbPattern *pattern, FILE* file);
+char writeFxy(EmbPattern *pattern, FILE* file);
+char readGc(EmbPattern *pattern, FILE* file);
+char writeGc(EmbPattern *pattern, FILE* file);
+char readGnc(EmbPattern *pattern, FILE* file);
+char writeGnc(EmbPattern *pattern, FILE* file);
+char readGt(EmbPattern *pattern, FILE* file);
+char writeGt(EmbPattern *pattern, FILE* file);
+char readHus(EmbPattern *pattern, FILE* file);
+char writeHus(EmbPattern *pattern, FILE* file);
+char readInb(EmbPattern *pattern, FILE* file);
+char writeInb(EmbPattern *pattern, FILE* file);
+char readInf(EmbPattern *pattern, FILE* file);
+char writeInf(EmbPattern *pattern, FILE* file);
+char readJef(EmbPattern *pattern, FILE* file);
+char writeJef(EmbPattern *pattern, FILE* file);
+char readKsm(EmbPattern *pattern, FILE* file);
+char writeKsm(EmbPattern *pattern, FILE* file);
+char readMax(EmbPattern *pattern, FILE* file);
+char writeMax(EmbPattern *pattern, FILE* file);
+char readMit(EmbPattern *pattern, FILE* file);
+char writeMit(EmbPattern *pattern, FILE* file);
+char readNew(EmbPattern *pattern, FILE* file);
+char writeNew(EmbPattern *pattern, FILE* file);
+char readOfm(EmbPattern *pattern, FILE* file);
+char writeOfm(EmbPattern *pattern, FILE* file);
+char readPcd(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePcd(EmbPattern *pattern, FILE* file);
+char readPcm(EmbPattern *pattern, FILE* file);
+char writePcm(EmbPattern *pattern, FILE* file);
+char readPcq(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePcq(EmbPattern *pattern, FILE* file);
+char readPcs(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePcs(EmbPattern *pattern, FILE* file);
+char readPec(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePec(EmbPattern *pattern, const char *fileName,  FILE* file);
+char readPel(EmbPattern *pattern, FILE* file);
+char writePel(EmbPattern *pattern, FILE* file);
+char readPem(EmbPattern *pattern, FILE* file);
+char writePem(EmbPattern *pattern, FILE* file);
+char readPes(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePes(EmbPattern *pattern, const char *fileName, FILE* file);
+char readPhb(EmbPattern *pattern, FILE* file);
+char writePhb(EmbPattern *pattern, FILE* file);
+char readPhc(EmbPattern *pattern, FILE* file);
+char writePhc(EmbPattern *pattern, FILE* file);
+char readPlt(EmbPattern *pattern, FILE* file);
+char writePlt(EmbPattern *pattern, FILE* file);
+char readRgb(EmbPattern *pattern, FILE* file);
+char writeRgb(EmbPattern *pattern, FILE* file);
+char readSew(EmbPattern *pattern, FILE* file);
+char writeSew(EmbPattern *pattern, FILE* file);
+char readShv(EmbPattern *pattern, FILE* file);
+char writeShv(EmbPattern *pattern, FILE* file);
+char readSst(EmbPattern *pattern, FILE* file);
+char writeSst(EmbPattern *pattern, FILE* file);
+char readStx(EmbPattern *pattern, FILE* file);
+char writeStx(EmbPattern *pattern, FILE* file);
+char readSvg(EmbPattern *pattern, FILE* file);
+char writeSvg(EmbPattern *pattern, FILE* file);
+char readT01(EmbPattern *pattern, FILE* file);
+char writeT01(EmbPattern *pattern, FILE* file);
+char readT09(EmbPattern *pattern, FILE* file);
+char writeT09(EmbPattern *pattern, FILE* file);
+char readTap(EmbPattern *pattern, FILE* file);
+char writeTap(EmbPattern *pattern, FILE* file);
+char readThr(EmbPattern *pattern, FILE* file);
+char writeThr(EmbPattern *pattern, FILE* file);
+char readTxt(EmbPattern *pattern, FILE* file);
+char writeTxt(EmbPattern *pattern, FILE* file);
+char readU00(EmbPattern *pattern, FILE* file);
+char writeU00(EmbPattern *pattern, FILE* file);
+char readU01(EmbPattern *pattern, FILE* file);
+char writeU01(EmbPattern *pattern, FILE* file);
+char readVip(EmbPattern *pattern, FILE* file);
+char writeVip(EmbPattern *pattern, FILE* file);
+char readVp3(EmbPattern *pattern, FILE* file);
+char writeVp3(EmbPattern *pattern, FILE* file);
+char readXxx(EmbPattern *pattern, FILE* file);
+char writeXxx(EmbPattern *pattern, FILE* file);
+char readZsk(EmbPattern *pattern, FILE* file);
+char writeZsk(EmbPattern *pattern, FILE* file);
 
-char embPattern_read(EmbPattern* pattern, const char* fileName, int format) {
+char embPattern_read(EmbPattern* pattern, const char *fileName, int format) {
+    int result;
+    FILE *file;
+    result = 0;
+    if (!pattern) {
+        printf("ERROR: embPattern_read(), pattern argument is null.\n");
+        return 0;
+    }
+    if (!fileName) {
+        printf("ERROR: embPattern_read(), fileName argument is null.\n");
+        return 0;
+    }
+    file = fopen(fileName, "rb");
+    if (!file) {
+        printf("Failed to open file with name: %s.", fileName);
+        return 0;
+    }
+    if (formatTable[format].check_for_color_file) {
+        embPattern_loadExternalColorFile(pattern, fileName);
+    }
     switch (format) {
     case EMB_FORMAT_100:
-        return read100(pattern, fileName);
+        result = read100(pattern, file);
+        break;
     case EMB_FORMAT_10O:
-        return read10o(pattern, fileName);
+        result = read10o(pattern, file);
+        break;
     case EMB_FORMAT_ART:
-        return readArt(pattern, fileName);
+        result = readArt(pattern, file);
+        break;
     case EMB_FORMAT_BMC:
-        return readBmc(pattern, fileName);
+        result = readBmc(pattern, file);
+        break;
     case EMB_FORMAT_BRO:
-        return readBro(pattern, fileName);
+        result = readBro(pattern, file);
+        break;
     case EMB_FORMAT_CND:
-        return readCnd(pattern, fileName);
+        result = readCnd(pattern, file);
+        break;
     case EMB_FORMAT_COL:
-        return readCol(pattern, fileName);
+        result = readCol(pattern, file);
+        break;
     case EMB_FORMAT_CSD:
-        return readCsd(pattern, fileName);
+        result = readCsd(pattern, file);
+        break;
     case EMB_FORMAT_CSV:
-        return readCsv(pattern, fileName);
+        result = readCsv(pattern, file);
+        break;
     case EMB_FORMAT_DAT:
-        return readDat(pattern, fileName);
+        result = readDat(pattern, file);
+        break;
     case EMB_FORMAT_DEM:
-        return readDem(pattern, fileName);
+        result = readDem(pattern, file);
+        break;
     case EMB_FORMAT_DSB:
-        return readDsb(pattern, fileName);
+        result = readDsb(pattern, file);
+        break;
     case EMB_FORMAT_DST:
-        return readDst(pattern, fileName);
+        result = readDst(pattern, file);
+        break;
     case EMB_FORMAT_DSZ:
-        return readDsz(pattern, fileName);
+        result = readDsz(pattern, file);
+        break;
     case EMB_FORMAT_DXF:
-        return readDxf(pattern, fileName);
+        result = readDxf(pattern, file);
+        break;
     case EMB_FORMAT_EDR:
-        return readEdr(pattern, fileName);
+        result = readEdr(pattern, file);
+        break;
     case EMB_FORMAT_EMD:
-        return readEmd(pattern, fileName);
+        result = readEmd(pattern, file);
+        break;
     case EMB_FORMAT_EXP:
-        return readExp(pattern, fileName);
+        result = readExp(pattern, file);
+        break;
     case EMB_FORMAT_EXY:
-        return readExy(pattern, fileName);
+        result = readExy(pattern, file);
+        break;
     case EMB_FORMAT_EYS:
-        return readEys(pattern, fileName);
+        result = readEys(pattern, file);
+        break;
     case EMB_FORMAT_FXY:
-        return readFxy(pattern, fileName);
+        result = readFxy(pattern, file);
+        break;
     case EMB_FORMAT_GC:
-        return readGc(pattern, fileName);
+        result = readGc(pattern, file);
+        break;
     case EMB_FORMAT_GNC:
-        return readGnc(pattern, fileName);
+        result = readGnc(pattern, file);
+        break;
     case EMB_FORMAT_GT:
-        return readGt(pattern, fileName);
+        result = readGt(pattern, file);
+        break;
     case EMB_FORMAT_HUS:
-        return readHus(pattern, fileName);
+        result = readHus(pattern, file);
+        break;
     case EMB_FORMAT_INB:
-        return readInb(pattern, fileName);
+        result = readInb(pattern, file);
+        break;
     case EMB_FORMAT_INF:
-        return readInf(pattern, fileName);
+        result = readInf(pattern, file);
+        break;
     case EMB_FORMAT_JEF:
-        return readJef(pattern, fileName);
+        result = readJef(pattern, file);
+        break;
     case EMB_FORMAT_KSM:
-        return readKsm(pattern, fileName);
+        result = readKsm(pattern, file);
+        break;
     case EMB_FORMAT_MAX:
-        return readMax(pattern, fileName);
+        result = readMax(pattern, file);
+        break;
     case EMB_FORMAT_MIT:
-        return readMit(pattern, fileName);
+        result = readMit(pattern, file);
+        break;
     case EMB_FORMAT_NEW:
-        return readNew(pattern, fileName);
+        result = readNew(pattern, file);
+        break;
     case EMB_FORMAT_OFM:
-        return readOfm(pattern, fileName);
+        result = readOfm(pattern, file);
+        break;
     case EMB_FORMAT_PCD:
-        return readPcd(pattern, fileName);
+        result = readPcd(pattern, fileName, file);
+        break;
     case EMB_FORMAT_PCM:
-        return readPcm(pattern, fileName);
+        result = readPcm(pattern, file);
+        break;
     case EMB_FORMAT_PCQ:
-        return readPcq(pattern, fileName);
+        result = readPcq(pattern, fileName, file);
+        break;
     case EMB_FORMAT_PCS:
-        return readPcs(pattern, fileName);
+        result = readPcs(pattern, fileName, file);
+        break;
     case EMB_FORMAT_PEC:
-        return readPec(pattern, fileName);
+        result = readPec(pattern, fileName, file);
+        break;
     case EMB_FORMAT_PEL:
-        return readPel(pattern, fileName);
+        result = readPel(pattern, file);
+        break;
     case EMB_FORMAT_PEM:
-        return readPem(pattern, fileName);
+        result = readPem(pattern, file);
+        break;
     case EMB_FORMAT_PES:
-        return readPes(pattern, fileName);
+        result = readPes(pattern, fileName, file);
+        break;
     case EMB_FORMAT_PHB:
-        return readPhb(pattern, fileName);
+        result = readPhb(pattern, file);
+        break;
     case EMB_FORMAT_PHC:
-        return readPhc(pattern, fileName);
+        result = readPhc(pattern, file);
+        break;
     case EMB_FORMAT_PLT:
-        return readPlt(pattern, fileName);
+        result = readPlt(pattern, file);
+        break;
     case EMB_FORMAT_RGB:
-        return readRgb(pattern, fileName);
+        result = readRgb(pattern, file);
+        break;
     case EMB_FORMAT_SEW:
-        return readSew(pattern, fileName);
+        result = readSew(pattern, file);
+        break;
     case EMB_FORMAT_SHV:
-        return readShv(pattern, fileName);
+        result = readShv(pattern, file);
+        break;
     case EMB_FORMAT_SST:
-        return readSst(pattern, fileName);
+        result = readSst(pattern, file);
+        break;
     case EMB_FORMAT_STX:
-        return readStx(pattern, fileName);
+        result = readStx(pattern, file);
+        break;
     case EMB_FORMAT_SVG:
-        return readSvg(pattern, fileName);
+        result = readSvg(pattern, file);
+        break;
     case EMB_FORMAT_T01:
-        return readT01(pattern, fileName);
+        result = readT01(pattern, file);
+        break;
     case EMB_FORMAT_T09:
-        return readT09(pattern, fileName);
+        result = readT09(pattern, file);
+        break;
     case EMB_FORMAT_TAP:
-        return readTap(pattern, fileName);
+        result = readTap(pattern, file);
+        break;
     case EMB_FORMAT_THR:
-        return readThr(pattern, fileName);
+        result = readThr(pattern, file);
+        break;
     case EMB_FORMAT_TXT:
-        return readTxt(pattern, fileName);
+        result = readTxt(pattern, file);
+        break;
     case EMB_FORMAT_U00:
-        return readU00(pattern, fileName);
+        result = readU00(pattern, file);
+        break;
     case EMB_FORMAT_U01:
-        return readU01(pattern, fileName);
+        result = readU01(pattern, file);
+        break;
     case EMB_FORMAT_VIP:
-        return readVip(pattern, fileName);
+        result = readVip(pattern, file);
+        break;
     case EMB_FORMAT_VP3:
-        return readVp3(pattern, fileName);
+        result = readVp3(pattern, file);
+        break;
     case EMB_FORMAT_XXX:
-        return readXxx(pattern, fileName);
+        result = readXxx(pattern, file);
+        break;
     case EMB_FORMAT_ZSK:
-        return readZsk(pattern, fileName);
+        result = readZsk(pattern, file);
+        break;
     default:
         break;
     }
-    return 0;
+    fclose(file);
+    if (!formatTable[format].color_only) {
+        embPattern_end(pattern);
+    }
+    return result;
 }
 
-char embPattern_write(EmbPattern* pattern, const char* fileName, int format) {
+char embPattern_write(EmbPattern* pattern, const char *fileName, int format) {
+    FILE *file;
+    int result = 0;
+    if (!pattern) {
+        printf("ERROR: embPattern_write(), pattern argument is null\n");
+        return 0;
+    }
+    if (!fileName) {
+        printf("ERROR: embPattern_write(), fileName argument is null\n");
+        return 0;
+    }
+    if (pattern->stitchList->count == 0) {
+        printf("ERROR: embPattern_write(), pattern contains no stitches\n");
+        return 0;
+    }
+    if (!formatTable[format].color_only) {
+        embPattern_end(pattern);
+    }
+
+    file = fopen(fileName, "wb");
+    if (!file) {
+        printf("Failed to open file with name: %s.", fileName);
+        return 0;
+    }
     switch (format) {
     case EMB_FORMAT_100:
-        return write100(pattern, fileName);
+        result = write100(pattern, file);
+        break;
     case EMB_FORMAT_10O:
-        return write10o(pattern, fileName);
+        result = write10o(pattern, file);
+        break;
     case EMB_FORMAT_ART:
-        return writeArt(pattern, fileName);
+        result = writeArt(pattern, file);
+        break;
     case EMB_FORMAT_BMC:
-        return writeBmc(pattern, fileName);
+        result = writeBmc(pattern, file);
+        break;
     case EMB_FORMAT_BRO:
-        return writeBro(pattern, fileName);
+        result = writeBro(pattern, file);
+        break;
     case EMB_FORMAT_CND:
-        return writeCnd(pattern, fileName);
+        result = writeCnd(pattern, file);
+        break;
     case EMB_FORMAT_COL:
-        return writeCol(pattern, fileName);
+        result = writeCol(pattern, file);
+        break;
     case EMB_FORMAT_CSD:
-        return writeCsd(pattern, fileName);
+        result = writeCsd(pattern, file);
+        break;
     case EMB_FORMAT_CSV:
-        return writeCsv(pattern, fileName);
+        result = writeCsv(pattern, file);
+        break;
     case EMB_FORMAT_DAT:
-        return writeDat(pattern, fileName);
+        result = writeDat(pattern, file);
+        break;
     case EMB_FORMAT_DEM:
-        return writeDem(pattern, fileName);
+        result = writeDem(pattern, file);
+        break;
     case EMB_FORMAT_DSB:
-        return writeDsb(pattern, fileName);
+        result = writeDsb(pattern, file);
+        break;
     case EMB_FORMAT_DST:
-        return writeDst(pattern, fileName);
+        result = writeDst(pattern, file);
+        break;
     case EMB_FORMAT_DSZ:
-        return writeDsz(pattern, fileName);
+        result = writeDsz(pattern, file);
+        break;
     case EMB_FORMAT_DXF:
-        return writeDxf(pattern, fileName);
+        result = writeDxf(pattern, file);
+        break;
     case EMB_FORMAT_EDR:
-        return writeEdr(pattern, fileName);
+        result = writeEdr(pattern, file);
+        break;
     case EMB_FORMAT_EMD:
-        return writeEmd(pattern, fileName);
+        result = writeEmd(pattern, file);
+        break;
     case EMB_FORMAT_EXP:
-        return writeExp(pattern, fileName);
+        result = writeExp(pattern, file);
+        break;
     case EMB_FORMAT_EXY:
-        return writeExy(pattern, fileName);
+        result = writeExy(pattern, file);
+        break;
     case EMB_FORMAT_EYS:
-        return writeEys(pattern, fileName);
+        result = writeEys(pattern, file);
+        break;
     case EMB_FORMAT_FXY:
-        return writeFxy(pattern, fileName);
+        result = writeFxy(pattern, file);
+        break;
     case EMB_FORMAT_GC:
-        return writeGc(pattern, fileName);
+        result = writeGc(pattern, file);
+        break;
     case EMB_FORMAT_GNC:
-        return writeGnc(pattern, fileName);
+        result = writeGnc(pattern, file);
+        break;
     case EMB_FORMAT_GT:
-        return writeGt(pattern, fileName);
+        result = writeGt(pattern, file);
+        break;
     case EMB_FORMAT_HUS:
-        return writeHus(pattern, fileName);
+        result = writeHus(pattern, file);
+        break;
     case EMB_FORMAT_INB:
-        return writeInb(pattern, fileName);
+        result = writeInb(pattern, file);
+        break;
     case EMB_FORMAT_INF:
-        return writeInf(pattern, fileName);
+        result = writeInf(pattern, file);
+        break;
     case EMB_FORMAT_JEF:
-        return writeJef(pattern, fileName);
+        result = writeJef(pattern, file);
+        break;
     case EMB_FORMAT_KSM:
-        return writeKsm(pattern, fileName);
+        result = writeKsm(pattern, file);
+        break;
     case EMB_FORMAT_MAX:
-        return writeMax(pattern, fileName);
+        result = writeMax(pattern, file);
+        break;
     case EMB_FORMAT_MIT:
-        return writeMit(pattern, fileName);
+        result = writeMit(pattern, file);
+        break;
     case EMB_FORMAT_NEW:
-        return writeNew(pattern, fileName);
+        result = writeNew(pattern, file);
+        break;
     case EMB_FORMAT_OFM:
-        return writeOfm(pattern, fileName);
+        result = writeOfm(pattern, file);
+        break;
     case EMB_FORMAT_PCD:
-        return writePcd(pattern, fileName);
+        result = writePcd(pattern, file);
+        break;
     case EMB_FORMAT_PCM:
-        return writePcm(pattern, fileName);
+        result = writePcm(pattern, file);
+        break;
     case EMB_FORMAT_PCQ:
-        return writePcq(pattern, fileName);
+        result = writePcq(pattern, file);
+        break;
     case EMB_FORMAT_PCS:
-        return writePcs(pattern, fileName);
+        result = writePcs(pattern, file);
+        break;
     case EMB_FORMAT_PEC:
-        return writePec(pattern, fileName);
+        result = writePec(pattern, fileName, file);
+        break;
     case EMB_FORMAT_PEL:
-        return writePel(pattern, fileName);
+        result = writePel(pattern, file);
+        break;
     case EMB_FORMAT_PEM:
-        return writePem(pattern, fileName);
+        result = writePem(pattern, file);
+        break;
     case EMB_FORMAT_PES:
-        return writePes(pattern, fileName);
+        result = writePes(pattern, fileName, file);
+        break;
     case EMB_FORMAT_PHB:
-        return writePhb(pattern, fileName);
+        result = writePhb(pattern, file);
+        break;
     case EMB_FORMAT_PHC:
-        return writePhc(pattern, fileName);
+        result = writePhc(pattern, file);
+        break;
     case EMB_FORMAT_PLT:
-        return writePlt(pattern, fileName);
+        result = writePlt(pattern, file);
+        break;
     case EMB_FORMAT_RGB:
-        return writeRgb(pattern, fileName);
+        result = writeRgb(pattern, file);
+        break;
     case EMB_FORMAT_SEW:
-        return writeSew(pattern, fileName);
+        result = writeSew(pattern, file);
+        break;
     case EMB_FORMAT_SHV:
-        return writeShv(pattern, fileName);
+        result = writeShv(pattern, file);
+        break;
     case EMB_FORMAT_SST:
-        return writeSst(pattern, fileName);
+        result = writeSst(pattern, file);
+        break;
     case EMB_FORMAT_STX:
-        return writeStx(pattern, fileName);
+        result = writeStx(pattern, file);
+        break;
     case EMB_FORMAT_SVG:
-        return writeSvg(pattern, fileName);
+        result = writeSvg(pattern, file);
+        break;
     case EMB_FORMAT_T01:
-        return writeT01(pattern, fileName);
+        result = writeT01(pattern, file);
+        break;
     case EMB_FORMAT_T09:
-        return writeT09(pattern, fileName);
+        result = writeT09(pattern, file);
+        break;
     case EMB_FORMAT_TAP:
-        return writeTap(pattern, fileName);
+        result = writeTap(pattern, file);
+        break;
     case EMB_FORMAT_THR:
-        return writeThr(pattern, fileName);
+        result = writeThr(pattern, file);
+        break;
     case EMB_FORMAT_TXT:
-        return writeTxt(pattern, fileName);
+        result = writeTxt(pattern, file);
+        break;
     case EMB_FORMAT_U00:
-        return writeU00(pattern, fileName);
+        result = writeU00(pattern, file);
+        break;
     case EMB_FORMAT_U01:
-        return writeU01(pattern, fileName);
+        result = writeU01(pattern, file);
+        break;
     case EMB_FORMAT_VIP:
-        return writeVip(pattern, fileName);
+        result = writeVip(pattern, file);
+        break;
     case EMB_FORMAT_VP3:
-        return writeVp3(pattern, fileName);
+        result = writeVp3(pattern, file);
+        break;
     case EMB_FORMAT_XXX:
-        return writeXxx(pattern, fileName);
+        result = writeXxx(pattern, file);
+        break;
     case EMB_FORMAT_ZSK:
-        return writeZsk(pattern, fileName);
+        result = writeZsk(pattern, file);
+        break;
     default:
         break;
     }
-    return 0;
+    if (formatTable[format].write_external_color_file) {
+        char externalFileName[1000];
+        int stub_length;
+        strcpy(externalFileName, fileName);
+        stub_length = strlen(fileName)-strlen(formatTable[format].extension);
+        externalFileName[stub_length] = 0;
+        strcat(externalFileName, ".rgb");
+        embPattern_write(pattern, externalFileName, EMB_FORMAT_RGB);
+    }
+    fclose(file);
+    return result;
 }
 
 char embPattern_readAuto(EmbPattern* pattern, const char* fileName) {
@@ -425,19 +603,9 @@ char embPattern_writeAuto(EmbPattern* pattern, const char* fileName) {
 /* ---------------------------------------------------------------- */
 /* 100 format */
 
-char read100(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
+char read100(EmbPattern* pattern, FILE* file) {
     unsigned char b[4];
 
-    if (!validateReadPattern(pattern, fileName, "read100")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        printf("Failed to open file with name: %s.", fileName);
-        return 0;
-    }
-    embPattern_loadExternalColorFile(pattern, fileName);
     while (fread(b, 1, 4, file) == 4) {
         int x, y;
         int stitchType;
@@ -449,31 +617,15 @@ char read100(EmbPattern* pattern, const char* fileName) {
         if (b[0] == 0x1F) stitchType = END;
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char write100(EmbPattern* pattern, const char* fileName) {
-    FILE *file;
+char write100(EmbPattern* pattern, FILE* file) {
     /*
     int x, y;
     int stitchType;
     unsigned char b[4];
-    */
 
-    if (!validateWritePattern(pattern, fileName, "write100")) {
-        printf("Failed to validate file with name: %s.", fileName);
-        return 0;
-    }
-
-    file = fopen(fileName, "wb");
-    if (!file) {
-        printf("Failed to open file with name: %s.", fileName);
-        return 0;
-    }
-
-    /*
     TODO:
     while (1) {
         stitchType = NORMAL;
@@ -495,25 +647,14 @@ char write100(EmbPattern* pattern, const char* fileName) {
         fwrite(b, 1, 4, file);
     }
     */
-    fclose(file);
     return 1;
 }
 
 /* ---------------------------------------------------------------- */
 /* 10o format */
 
-char read10o(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
-    if (!validateReadPattern(pattern, fileName, "read10o")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        printf("Failed to open file with name: %s.", fileName);
-        return 0;
-    }
-    embPattern_loadExternalColorFile(pattern, fileName);
-    while (1) {
+char read10o(EmbPattern* pattern, FILE* file) {
+    while (!feof(file)) {
         int x, y;
         int stitchType = NORMAL;
         unsigned char ctrl = (unsigned char)fgetc(file);
@@ -546,22 +687,10 @@ char read10o(EmbPattern* pattern, const char* fileName) {
         }
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char write10o(EmbPattern* pattern, const char* fileName) {
-    FILE *file;
-    if (!validateWritePattern(pattern, fileName, "write10o")) {
-        printf("Failed to validate file with name: %s.", fileName);
-        return 0;
-    }
-    file = fopen(fileName, "wb");
-    if (!file) {
-        printf("Failed to open file with name: %s.", fileName);
-        return 0;
-    }
+char write10o(EmbPattern* pattern, FILE* file) {
 
     /*
     TODO:
@@ -596,7 +725,6 @@ char write10o(EmbPattern* pattern, const char* fileName) {
         fwrite(b, 1, 4, file);
     }
     */
-    fclose(file);
     puts("Write10o is not supported currently.");
     return 0; /*TODO: finish write10o */
 }
@@ -604,22 +732,14 @@ char write10o(EmbPattern* pattern, const char* fileName) {
 /* ---------------------------------------------------------------- */
 /* art format */
 
-char readArt(EmbPattern* pattern, const char* fileName)
+char readArt(EmbPattern* pattern, FILE* file)
 {
-    if (!validateReadPattern(pattern, fileName, "readArt")) return 0;
-
-    embPattern_end(pattern);
-
     puts("readArt is not implimented");
     return 0; /*TODO: finish readArt */
 }
 
-char writeArt(EmbPattern* pattern, const char* fileName)
+char writeArt(EmbPattern* pattern, FILE* file)
 {
-    if (!validateWritePattern(pattern, fileName, "writeArt")) return 0;
-
-    /* TODO: fopen() needs to occur here after the check for no stitches */
-
     puts("writeArt is not implimented");
     return 0; /*TODO: finish writeArt */
 }
@@ -627,21 +747,12 @@ char writeArt(EmbPattern* pattern, const char* fileName)
 /* ---------------------------------------------------------------- */
 /* bmc format */
 
-char readBmc(EmbPattern* pattern, const char* fileName) {
-    if (!validateReadPattern(pattern, fileName, "readBmc")) {
-        return 0;
-    }
-    embPattern_end(pattern);
+char readBmc(EmbPattern* pattern, FILE* file) {
     puts("readBmc is not implimented");
     return 0; /*TODO: finish readBmc */
 }
 
-char writeBmc(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeBmc")) {
-        return 0;
-    }
-    /* TODO: fopen() needs to occur here 
-        after the check for no stitches */
+char writeBmc(EmbPattern* pattern, FILE* file) {
     puts("writeBmc is not implimented");
     return 0; /*TODO: finish writeBmc */
 }
@@ -649,22 +760,11 @@ char writeBmc(EmbPattern* pattern, const char* fileName) {
 /* ---------------------------------------------------------------- */
 /* bro format */
 
-char readBro(EmbPattern* pattern, const char* fileName) {
+char readBro(EmbPattern* pattern, FILE* file) {
     unsigned char x55;
     short unknown1, unknown2, unknown3, unknown4, moreBytesToEnd;
     char name[8];
     int stitchType;
-    FILE* file;
-
-    if (!validateReadPattern(pattern, fileName, "readBro")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        printf("Failed to open file with name: %s.", fileName);
-        return 0;
-    }
-    embPattern_loadExternalColorFile(pattern, fileName);
     fread(&x55, 1, 1, file);
     /* TODO: determine what this unknown data is */
     fread(&unknown1, 2, 1, file);
@@ -700,18 +800,10 @@ char readBro(EmbPattern* pattern, const char* fileName) {
         }
         embPattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeBro(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeBro")) {
-        return 0;
-    }
-    /* TODO: fopen() needs to occur here 
-        after the check for no stitches */
-
+char writeBro(EmbPattern* pattern, FILE* file) {
     puts("writeBro is not implimented");
     return 0; /*TODO: finish writeBro */
 }
@@ -719,21 +811,12 @@ char writeBro(EmbPattern* pattern, const char* fileName) {
 /* ---------------------------------------------------------------- */
 /* cnd format */
 
-char readCnd(EmbPattern* pattern, const char* fileName) {
-    if (!validateReadPattern(pattern, fileName, "readCnd")) {
-        return 0;
-    }
+char readCnd(EmbPattern* pattern, FILE* file) {
     puts("readCnd is not implimented");
     return 0; /*TODO: finish readCnd */
 }
 
-char writeCnd(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeCnd")) {
-        return 0;
-    }
-    /* TODO: fopen() needs to occur here 
-        after the check for no stitches */
-
+char writeCnd(EmbPattern* pattern, FILE* file) {
     puts("writeCnd is not implimented");
     return 0; /*TODO: finish writeCnd */
 }
@@ -741,20 +824,12 @@ char writeCnd(EmbPattern* pattern, const char* fileName) {
 /* ---------------------------------------------------------------- */
 /* col format */
 
-char readCol(EmbPattern* pattern, const char* fileName) {
+char readCol(EmbPattern* pattern, FILE* file) {
     int numberOfColors, i;
-    FILE* file;
     int num, blue, green, red;
     EmbThread t;
     char line[30];
 
-    if (!validateReadPattern(pattern, fileName, "readCol")) {
-        return 0;
-    }
-    file = fopen(fileName, "r");
-    if (!file) {
-        return 0;
-    }
     embArray_free(pattern->threads);
     pattern->threads = embArray_create(EMB_THREAD);
 
@@ -781,30 +856,19 @@ char readCol(EmbPattern* pattern, const char* fileName) {
         strcpy(t.description, "");
         embPattern_addThread(pattern, t);
     }
-    fclose(file);
     return 1;
 }
 
-char writeCol(EmbPattern* pattern, const char* fileName)
+char writeCol(EmbPattern* pattern, FILE* file)
 {
-    FILE* file = 0;
     int i;
-    EmbColor c;
 
-    if (!validateWritePattern(pattern, fileName, "writeCol")) return 0;
-
-    file = fopen(fileName, "w");
-    if (!file) {
-        printf("ERROR: format-col.c writeCol(), ");
-        printf("cannot open %s for writing\n", fileName);
-        return 0;
-    }
     fprintf(file, "%d\r\n", pattern->threads->count);
     for (i = 0; i < pattern->threads->count; i++) {
+        EmbColor c;
         c = pattern->threads->thread[i].color;
         fprintf(file, "%d,%d,%d,%d\r\n", i, (int)c.r, (int)c.g, (int)c.b);
     }
-    fclose(file);
     return 1;
 }
 
@@ -887,7 +951,7 @@ static unsigned char DecodeCsdByte(long fileOffset,
             _subMask[newOffset%CsdSubMaskSize]));
 }
 
-char readCsd(EmbPattern* pattern, const char* fileName) {
+char readCsd(EmbPattern* pattern, FILE* file) {
     int i, type = 0;
     unsigned char identifier[8];
     unsigned char unknown1, unknown2;
@@ -895,17 +959,8 @@ char readCsd(EmbPattern* pattern, const char* fileName) {
     int colorChange = -1;
     int flags;
     char endOfStream = 0;
-    FILE* file;
     unsigned char colorOrder[14];
 
-    if (!validateReadPattern(pattern, fileName, "readCsd")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        puts("Error: failed to open file.");
-        return 0;
-    }
     fread(identifier, 1, 8, file);
     /* TODO: check return value */
 
@@ -936,7 +991,7 @@ char readCsd(EmbPattern* pattern, const char* fileName) {
     for (i = 0; i < 14; i++) {
         colorOrder[i] = (unsigned char) DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
     }
-    for (i = 0; !endOfStream; i++) {
+    for (i = 0; !feof(file); i++) {
         char negativeX, negativeY;
         unsigned char b0 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
         unsigned char b1 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
@@ -977,27 +1032,10 @@ char readCsd(EmbPattern* pattern, const char* fileName) {
             embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
         }
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeCsd(EmbPattern* pattern, const char* fileName) {
-    FILE *file;
-
-    if (!validateWritePattern(pattern, fileName, "writeCsd")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        puts("ERROR: Failed to open file.");
-        return 0;
-    }
-
-
-    fclose(file);
-
+char writeCsd(EmbPattern* pattern, FILE* file) {
     puts("writeCsd is not implimented.");
     return 0; /*TODO: finish writeCsd */
 }
@@ -1050,8 +1088,7 @@ static int csvStrToStitchFlag(const char* str)
     return -1;
 }
 
-char readCsv(EmbPattern* pattern, const char* fileName) {
-    FILE* file = 0;
+char readCsv(EmbPattern* pattern, FILE* file) {
     int numColorChanges = 0;
     int size = 1024;
     int pos = 0;
@@ -1066,19 +1103,10 @@ char readCsv(EmbPattern* pattern, const char* fileName) {
     unsigned char r = 0, g = 0, b = 0;
     char* buff = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readCsv")) return 0;
-
     buff = (char*)malloc(size);
     if (!buff) {
         printf("ERROR: format-csv.c readCsv(), ");
         printf("unable to allocate memory for buff\n");
-        return 0;
-    }
-
-    file = fopen(fileName, "r");
-    if (!file) {
-        printf("ERROR: failed to open file with name %s.", fileName);
-        free(buff);
         return 0;
     }
 
@@ -1201,29 +1229,15 @@ char readCsv(EmbPattern* pattern, const char* fileName) {
             }
         }
         while(c != EOF);
-        fclose(file);
     free(buff);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeCsv(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
+char writeCsv(EmbPattern* pattern, FILE* file) {
     EmbRect boundingRect;
     int i;
 
-    if (!validateWritePattern(pattern, fileName, "writeCsv")) {
-        printf("ERROR: Failed to validate pattern.");
-        return 0;
-    }
-
     boundingRect = embPattern_calcBoundingBox(pattern);
-
-    file = fopen(fileName, "w");
-    if (!file) {
-        printf("Failed to open file with name: %s.", fileName);
-        return 0;
-    }
 
     /* write header */
     fprintf(file, "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n");
@@ -1284,28 +1298,17 @@ char writeCsv(EmbPattern* pattern, const char* fileName) {
         fprintf(file, "\"*\",\"%s\",\"%f\",\"%f\"\n",
             csvStitchFlagToStr(s.flags), s.x, s.y);
     }
-    fclose(file);
     return 1;
 }
 
 /* ---------------------------------------------------------------- */
 /* dat format */
 
-char readDat(EmbPattern* pattern, const char* fileName)
+char readDat(EmbPattern* pattern, FILE* file)
 {
     unsigned char b0;
     int fileLength, stitchesRemaining, b1, b2, stitchType;
-    FILE* file;
 
-    if (!validateReadPattern(pattern, fileName, "readDat")) return 0;
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        puts("ERROR: cannot open file.");
-        return 0;
-    }
-
-    embPattern_loadExternalColorFile(pattern, fileName);
     fseek(file, 0x00, SEEK_END);
     fileLength = ftell(file);
     fseek(file, 0x02, SEEK_SET);
@@ -1341,19 +1344,12 @@ char readDat(EmbPattern* pattern, const char* fileName)
         }
         embPattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
     }
-    fclose(file);
-
-    embPattern_end(pattern);
 
     return 1;
 }
 
-char writeDat(EmbPattern* pattern, const char* fileName)
+char writeDat(EmbPattern* pattern, FILE* file)
 {
-    if (!validateWritePattern(pattern, fileName, "writeDat")) return 0;
-
-    /* TODO: fopen() needs to occur here after the check for no stitches */
-
     puts("writeDat is not implimented.");
     return 0; /*TODO: finish writeDat */
 }
@@ -1361,25 +1357,14 @@ char writeDat(EmbPattern* pattern, const char* fileName)
 /* ---------------------------------------------------------------- */
 /* format dem */
 
-char readDem(EmbPattern* pattern, const char* fileName)
+char readDem(EmbPattern* pattern, FILE* file)
 {
-    if (!validateReadPattern(pattern, fileName, "readDem"))
-        return 0;
-
-    embPattern_end(pattern);
-
     puts("readDem is not implimented.");
     return 0; /*TODO: finish readDem */
 }
 
-char writeDem(EmbPattern* pattern, const char* fileName)
+char writeDem(EmbPattern* pattern, FILE* file)
 {
-    if (!validateWritePattern(pattern, fileName, "writeDem"))
-        return 0;
-
-    /* TODO: fopen() needs to occur here after the check for no
-    stitches */
-
     puts("writeDem is not implimented.");
     return 0; /*TODO: finish writeDem */
 }
@@ -1387,20 +1372,10 @@ char writeDem(EmbPattern* pattern, const char* fileName)
 /* ---------------------------------------------------------------- */
 /* format dsb */
 
-char readDsb(EmbPattern* pattern, const char* fileName) {
-    FILE* file = 0;
+char readDsb(EmbPattern* pattern, FILE* file) {
     char header[512+1];
     unsigned char buffer[3];
 
-    if (!validateReadPattern(pattern, fileName, "readDsb")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        puts("ERROR: failed to open file.");
-        return 0;
-    }
-    embPattern_loadExternalColorFile(pattern, fileName);
     fread(header, 1, 512, file);
 
     while (fread(buffer, 1, 3, file) == 3) {
@@ -1425,28 +1400,16 @@ char readDsb(EmbPattern* pattern, const char* fileName) {
         }
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
     }
-    fclose(file);
     return 1;
 }
 
-char writeDsb(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
-    if (!validateWritePattern(pattern, fileName, "writeDsb")) {
-        return 0;
-    }
-    file = fopen(fileName, "wb");
-    if (!file) {
-        puts("ERROR: failed to open file.");
-        return 0;
-    }
-    fclose(file);
+char writeDsb(EmbPattern* pattern, FILE* file) {
     puts("writeDsb is not implimented");
     return 0; /*TODO: finish writeDsb */
 }
 
 /* ---------------------------------------------------------------- */
 /* format dst */
-
 
 /* .DST (Tajima) embroidery file read/write routines
  * Format comments are thanks to tspilman@dalcoathletic.com who's
@@ -1670,13 +1633,12 @@ static void set_dst_variable(EmbPattern* pattern, char* var, char* val) {
     *
     * char PD[9+1];   PD is also storing some information for multi-volume design.
     */
-char readDst(EmbPattern* pattern, const char* fileName) {
+char readDst(EmbPattern* pattern, FILE* file) {
     char var[3];   /* temporary storage variable name */
     char val[512]; /* temporary storage variable value */
     int valpos;
     unsigned char b[3];
     char header[512 + 1];
-    FILE* file = 0;
     int i = 0, flags;
 
     /* TODO: review commented code below
@@ -1684,14 +1646,6 @@ char readDst(EmbPattern* pattern, const char* fileName) {
     pattern->set_variable("file_name",filename);
     */
 
-    if (!validateReadPattern(pattern, fileName, "readDst")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
-    embPattern_loadExternalColorFile(pattern, fileName);
     fread(header, 1, 512, file);
 
     /*TODO:It would probably be a good idea to 
@@ -1730,26 +1684,16 @@ char readDst(EmbPattern* pattern, const char* fileName) {
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
     }
 
-    fclose(file);
-    embPattern_end(pattern);
     /* combineJumpStitches(pattern, 5); */
     return 1;
 }
 
-char writeDst(EmbPattern* pattern, const char* fileName) {
+char writeDst(EmbPattern* pattern, FILE* file) {
     EmbRect boundingRect;
-    FILE* file;
     int xx, yy, i, ax, ay, mx, my;
     char pd[10];
     EmbStitch st;
 
-    if (!validateWritePattern(pattern, fileName, "writeDst")) {
-        return 0;
-    }
-    file = fopen(fileName, "wb");
-    if (!file) {
-        return 0;
-    }
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
     /* TODO: make sure that pattern->threads->count
@@ -1820,24 +1764,14 @@ char writeDst(EmbPattern* pattern, const char* fileName) {
      * keep the post header part a multiple of three.
      */
     fwrite("\xa1\0\0", 1, 3, file);
-    fclose(file);
     return 1;
 }
 
 /* ---------------------------------------------------------------- */
 /* format dsz */
 
-char readDsz(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
+char readDsz(EmbPattern* pattern, FILE* file) {
     unsigned char b[3];
-    if (!validateReadPattern(pattern, fileName, "readDsz")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
-    embPattern_loadExternalColorFile(pattern, fileName);
 
     fseek(file, 0x200, SEEK_SET);
     while (fread(b, 1, 3, file) == 3) {
@@ -1870,18 +1804,10 @@ char readDsz(EmbPattern* pattern, const char* fileName) {
         }
         embPattern_addStitchRel(pattern, x  / 10.0, y  / 10.0, stitchType, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeDsz(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeDsz")) {
-        return 0;
-    }
-    /* TODO: fopen() needs to occur here 
-        after the check for no stitches */
-
+char writeDsz(EmbPattern* pattern, FILE* file) {
     puts("writeDsz is not implimented.");
     return 0; /*TODO: finish writeDsz */
 }
@@ -1897,9 +1823,8 @@ char* readLine(FILE* file)
     return lTrim(str, ' ');
 }
 
-char readDxf(EmbPattern* pattern, const char* fileName)
+char readDxf(EmbPattern* pattern, FILE* file)
 {
-    FILE* file = 0;
     char* buff = "";
     char* dxfVersion = "";
     char* section = "";
@@ -1917,16 +1842,6 @@ char readDxf(EmbPattern* pattern, const char* fileName)
     
     puts("overriding dxf. Unimplimented for now.");
     return 0;
-
-    if (!validateReadPattern(pattern, fileName, "readDxf"))
-        return 0;
-
-    file = fopen(fileName, "r");
-    if (!file)
-    {
-        printf("ERROR: format-dxf.c readDxf(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
 
     fseek(file, 0L, SEEK_END);
 
@@ -2172,7 +2087,6 @@ char readDxf(EmbPattern* pattern, const char* fileName)
         } /* end ENTITIES section */
     } /* end while loop */
 
-    fclose(file);
 
     /*
     EmbColor* testColor = 0;
@@ -2189,29 +2103,16 @@ char readDxf(EmbPattern* pattern, const char* fileName)
     return eof;
 }
 
-char writeDxf(EmbPattern* pattern, const char* fileName)
+char writeDxf(EmbPattern* pattern, FILE* file)
 {
-    if (!validateWritePattern(pattern, fileName, "writeDxf"))
-        return 0;
-
     return 0; /*TODO: finish writeDxf */
 }
 
 /* ---------------------------------------------------------------- */
 /* format edr */
 
-char readEdr(EmbPattern* pattern, const char* fileName) {
+char readEdr(EmbPattern* pattern, FILE* file) {
     int numberOfColors, i;
-    FILE* file;
-
-    if (!validateReadPattern(pattern, fileName, "readEdr")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
 
     fseek(file, 0x00, SEEK_END);
     numberOfColors = ftell(file) / 4;
@@ -2226,27 +2127,14 @@ char readEdr(EmbPattern* pattern, const char* fileName) {
         strcpy(t.description, "");
         embPattern_addThread(pattern, t);
     }
-    fclose(file);
     return 1;
 }
 
-char writeEdr(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
+char writeEdr(EmbPattern* pattern, FILE* file) {
     int i;
-
-    if (!validateWritePattern(pattern, fileName, "writeEdr")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "wb");
-    if (!file) {
-        return 0;
-    }
-
     for (i = 0; i < pattern->threads->count; i++) {
         embColor_write(file, pattern->threads->thread[i].color, 4);
     }
-    fclose(file);
     return 1;
 }
 
@@ -2260,20 +2148,10 @@ static char emdDecode(unsigned char inputByte) {
     return inputByte;
 }
 
-char readEmd(EmbPattern* pattern, const char* fileName) {
+char readEmd(EmbPattern* pattern, FILE* file) {
     unsigned char b[2];
     unsigned char jemd0[6]; /* TODO: more descriptive name */
     int width, height, colors, length;
-    FILE* file;
-
-    if (!validateReadPattern(pattern, fileName, "readEmd")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
-    embPattern_loadExternalColorFile(pattern, fileName);
 
     fseek(file, 0, SEEK_END);
     length = ftell(file);
@@ -2315,22 +2193,10 @@ char readEmd(EmbPattern* pattern, const char* fileName) {
             dy = emdDecode(b[1]);
             embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeEmd(EmbPattern* pattern, const char* fileName) {
-    FILE *file;
-    if (!validateWritePattern(pattern, fileName, "writeEmd")) {
-        return 0;
-    }
-    file = fopen(fileName, "wb");
-    if (!file) {
-        puts("ERROR: Failed to open file.");
-        return 0;
-    }
-    fclose(file);
+char writeEmd(EmbPattern* pattern, FILE* file) {
     puts("writeEmd not implimented.");
     return 0; /*TODO: finish writeEmd */
 }
@@ -2342,18 +2208,8 @@ static char expDecode(unsigned char a1) {
     return (a1 > 0x80) ? ((-~a1) - 1) : a1;
 }
 
-char readExp(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
+char readExp(EmbPattern* pattern, FILE* file) {
     unsigned char b[2];
-
-    if (!validateReadPattern(pattern, fileName, "readExp")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
-    embPattern_loadExternalColorFile(pattern, fileName);
 
     while (fread(b, 1, 2, file) == 2) {
         char dx = 0, dy = 0;
@@ -2382,26 +2238,13 @@ char readExp(EmbPattern* pattern, const char* fileName) {
         dy = expDecode(b[1]);
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    fclose(file);
-
-    embPattern_end(pattern);
-
     return 1;
 }
 
-char writeExp(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
+char writeExp(EmbPattern* pattern, FILE* file) {
     double xx, yy;
     int i;
 
-    if (!validateWritePattern(pattern, fileName, "writeExp")) {
-        return 0;
-    }
-    file = fopen(fileName, "wb");
-    if (!file) {
-        puts("ERROR: writeExp failed to open file.");
-        return 0;
-    }
     /* write stitches */
     xx = 0.0;
     yy = 0.0;
@@ -2443,7 +2286,6 @@ char writeExp(EmbPattern* pattern, const char* fileName) {
         }
     }
     fprintf(file, "\x1a");
-    fclose(file);
     return 1;
 }
 
@@ -2467,18 +2309,9 @@ int decode_exy_flags(unsigned char b2) {
     return returnCode;
 }
 
-char readExy(EmbPattern* pattern, const char* fileName) {
+char readExy(EmbPattern* pattern, FILE* file) {
     unsigned char b[3];
-    FILE* file;
 
-    if (!validateReadPattern(pattern, fileName, "readExy")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
-    embPattern_loadExternalColorFile(pattern, fileName);
     fseek(file, 0x100, SEEK_SET);
     while (fread(b, 1, 3, file) == 3) {
         int flags, x, y;
@@ -2490,52 +2323,28 @@ char readExy(EmbPattern* pattern, const char* fileName) {
         }
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeExy(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeExy")) {
-        return 0;
-    }
-    /* TODO: fopen() needs to occur here 
-        after the check for no stitches */
+char writeExy(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish writeExy */
 }
 
 /* ---------------------------------------------------------------- */
 /* format eys */
 
-char readEys(EmbPattern* pattern, const char* fileName) {
-    if (!validateReadPattern(pattern, fileName, "readEys")) {
-        return 0;
-    }
+char readEys(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish readEys */
 }
 
-char writeEys(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeEys")) {
-        return 0;
-    }
-    /* TODO: fopen() needs to occur here 
-        after the check for no stitches */
+char writeEys(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish writeEys */
 }
 
 /* ---------------------------------------------------------------- */
 /* format fxy */
 
-char readFxy(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
-    if (!validateReadPattern(pattern, fileName, "readFxy")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
-    embPattern_loadExternalColorFile(pattern, fileName);
+char readFxy(EmbPattern* pattern, FILE* file) {
     /* TODO: review for combining code. This line appears 
         to be the only difference from the GT format. */
     fseek(file, 0x100, SEEK_SET);
@@ -2560,19 +2369,10 @@ char readFxy(EmbPattern* pattern, const char* fileName) {
             b2 = -b2;
         embPattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
     }
-    fclose(file);
-
-    embPattern_end(pattern);
-
     return 1;
 }
 
-char writeFxy(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeFxy")) return 0;
-
-    /* TODO: fopen() needs to occur here
-        after the check for no stitches */
-
+char writeFxy(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish writeFxy */
 }
 
@@ -2581,61 +2381,31 @@ char writeFxy(EmbPattern* pattern, const char* fileName) {
 
 /* Smoothie G-Code */
 
-char readGc(EmbPattern* pattern, const char* fileName) {
-    if (!validateReadPattern(pattern, fileName, "readGc")) {
-        return 0;
-    }
-    embPattern_end(pattern);
+char readGc(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish readGc */
 }
 
-char writeGc(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeGc")) {
-        return 0;
-    }
-    /* TODO: fopen() needs to occur here after the check for no stitches */
+char writeGc(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish writeGc */
 }
 
 /* ---------------------------------------------------------------- */
 /* format gnc */
 
-char readGnc(EmbPattern* pattern, const char* fileName)
+char readGnc(EmbPattern* pattern, FILE* file)
 {
-    if (!validateReadPattern(pattern, fileName, "readGnc")) {
-        return 0;
-    }
-
-    embPattern_end(pattern);
-
     return 0; /*TODO: finish readGnc */
 }
 
-char writeGnc(EmbPattern* pattern, const char* fileName)
+char writeGnc(EmbPattern* pattern, FILE* file)
 {
-    if (!validateWritePattern(pattern, fileName, "writeGnc")) {
-        return 0;
-    }
-
-    /* TODO: fopen() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writeGnc */
 }
 
 /* ---------------------------------------------------------------- */
 /* format gt */
 
-char readGt(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
-
-    if (!validateReadPattern(pattern, fileName, "readGt")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
-    embPattern_loadExternalColorFile(pattern, fileName);
+char readGt(EmbPattern* pattern, FILE* file) {
     /* TODO: review for combining code. This line appears 
         to be the only difference from the FXY format. */
     fseek(file, 0x200, SEEK_SET);
@@ -2664,18 +2434,10 @@ char readGt(EmbPattern* pattern, const char* fileName) {
         }
         embPattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeGt(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeGt")) {
-        return 0;
-    }
-    /* TODO: fopen() needs to occur 
-        here after the check for no stitches */
-
+char writeGt(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish writeGt */
 }
 
@@ -2743,7 +2505,7 @@ static unsigned char husEncodeStitchType(int st)
     }
 }
 
-char readHus(EmbPattern* pattern, const char* fileName)
+char readHus(EmbPattern* pattern, FILE* file)
 {
     int fileLength;
     int magicCode, numberOfStitches, numberOfColors;
@@ -2756,15 +2518,6 @@ char readHus(EmbPattern* pattern, const char* fileName)
     unsigned char* stringVal = 0;
 
     int unknown, i = 0;
-    FILE* file = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readHus")) return 0;
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        puts("ERROR: Failed to open file.");
-        return 0;
-    }
 
     puts("Overridden. readHus is not implemented for now.");
     return 0;
@@ -2853,14 +2606,10 @@ char readHus(EmbPattern* pattern, const char* fileName)
     free(attributeData);
     if (attributeDataDecompressed) { free(attributeDataDecompressed); }
 
-    fclose(file);
-
-    embPattern_end(pattern);
-
     return 1;
 }
 
-char writeHus(EmbPattern* pattern, const char* fileName)
+char writeHus(EmbPattern* pattern, FILE* file)
 {
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor, attributeSize, xCompressedSize, yCompressedSize, i;
@@ -2869,15 +2618,6 @@ char writeHus(EmbPattern* pattern, const char* fileName)
     unsigned int code, colors, offset1, offset2;
     unsigned char *xValues = 0, *yValues = 0, *attributeValues = 0,
         *attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
-    FILE* file;
-
-    if (!validateWritePattern(pattern, fileName, "writeHus")) return 0;
-
-    file = fopen(fileName, "wb");
-    if (!file) {
-        puts("ERROR: Failed to open file.");
-        return 0;
-    }
     
     stitchCount = pattern->stitchList->count;
     /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
@@ -2956,32 +2696,20 @@ char writeHus(EmbPattern* pattern, const char* fileName)
     free(attributeValues);
     free(attributeCompressed);
 
-    fclose(file);
     return 1;
 }
 
 /* ---------------------------------------------------------------- */
 /* format inb */
 
-char readInb(EmbPattern* pattern, const char* fileName)
+char readInb(EmbPattern* pattern, FILE* file)
 {
-    FILE* file;
     /* TODO: determine what this represents */
     unsigned char fileDescription[8], nullVal, bytesUnknown[300];
     int stitchCount, x, y, i, fileLength;
     short width, height, colorCount, unknown3, unknown2,
         nullbyte, left, right, top, bottom, imageWidth, imageHeight;
 
-    if (!validateReadPattern(pattern, fileName, "readInb")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
-
-    embPattern_loadExternalColorFile(pattern, fileName);
     fseek(file, 0, SEEK_END);
     fileLength = ftell(file);
     binaryReadBytes(file, fileDescription, 8); /* TODO: check return value */
@@ -3038,26 +2766,13 @@ char readInb(EmbPattern* pattern, const char* fileName)
             stitch = TRIM;
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitch, 1);
     }
-    fclose(file);
-
-    embPattern_end(pattern);
     embPattern_flipVertical(pattern);
 
     return 1;
 }
 
-char writeInb(EmbPattern* pattern, const char* fileName)
+char writeInb(EmbPattern* pattern, FILE* file)
 {
-    FILE *file;
-
-    if (!validateWritePattern(pattern, fileName, "writeInb"))
-        return 0;
-
-    file = fopen(fileName, "w");
-    if (!file) return 0;
-
-    fclose(file);
-
     puts("writeInb not implimented.");
     return 0; /*TODO: finish writeInb */
 }
@@ -3065,21 +2780,13 @@ char writeInb(EmbPattern* pattern, const char* fileName)
 /* ---------------------------------------------------------------- */
 /* format inf */
 
-char readInf(EmbPattern* pattern, const char* fileName)
+char readInf(EmbPattern* pattern, FILE* file)
 {
     int numberOfColors, i;
-    FILE* file;
     char colorType[50];
     char colorDescription[50];
     EmbThread t;
 
-    if (!validateReadPattern(pattern, fileName, "readInf")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     fseek(file, 12, SEEK_CUR);
     numberOfColors = fread_uint32_be(file);
 
@@ -3096,21 +2803,12 @@ char readInf(EmbPattern* pattern, const char* fileName)
         binaryReadString(file, colorType, 50);
         binaryReadString(file, colorDescription, 50);
     }
-    fclose(file);
     return 1;
 }
 
-char writeInf(EmbPattern* pattern, const char* fileName) {
+char writeInf(EmbPattern* pattern, FILE* file) {
     int i, bytesRemaining;
-    FILE* file;
-
-    if (!validateWritePattern(pattern, fileName, "writeInf")) {
-        return 0;
-    }
-    file = fopen(fileName, "wb");
-    if (!file) {
-        return 0;
-    }
+    
     binaryWriteUIntBE(file, 0x01);
     binaryWriteUIntBE(file, 0x08);
     /* write place holder offset */
@@ -3138,7 +2836,6 @@ char writeInf(EmbPattern* pattern, const char* fileName) {
     bytesRemaining = ftell(file);
     fseek(file, 8, SEEK_SET);
     binaryWriteUIntBE(file, bytesRemaining);
-    fclose(file);
     return 1;
 }
 
@@ -3217,23 +2914,12 @@ void read_hoop(FILE *file, struct hoop_padding *hoop, char *label)
     }
 }
 
-char readJef(EmbPattern* pattern, const char* fileName) {
+char readJef(EmbPattern* pattern, FILE* file) {
     int stitchOffset, formatFlags, numberOfColors, numberOfStitchs;
     int hoopSize, i, stitchCount;
     struct hoop_padding bounds, rectFrom110x110;
     struct hoop_padding rectFrom50x50, rectFrom200x140, rect_from_custom;
     char date[8], time[8];
-
-    FILE* file = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readJef")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
 
     stitchOffset = fread_int32(file);
     formatFlags = fread_int32(file); /* TODO: find out what this means */
@@ -3297,9 +2983,6 @@ char readJef(EmbPattern* pattern, const char* fileName) {
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
         stitchCount++;
     }
-    fclose(file);
-
-    embPattern_end(pattern);
     return 1;
 }
 
@@ -3329,23 +3012,15 @@ static void jefEncode(unsigned char* b, char dx, char dy, int flags) {
     }
 }
 
-char writeJef(EmbPattern* pattern, const char* fileName)
+char writeJef(EmbPattern* pattern, FILE* file)
 {
     int colorlistSize, minColors, designWidth, designHeight, i;
     EmbRect boundingRect;
-    FILE* file = 0;
     EmbTime time;
     EmbStitch st;
     int data;
     double dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
     unsigned char b[4];
-
-    if (!validateWritePattern(pattern, fileName, "writeJef")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "wb");
-    if (!file) return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 12.7, 12.7);
 
@@ -3442,7 +3117,6 @@ char writeJef(EmbPattern* pattern, const char* fileName)
             fwrite(b, 1, 2, file);
         }
     }
-    fclose(file);
     return 1;
 }
 
@@ -3472,18 +3146,9 @@ static void ksmEncode(unsigned char* b, char dx, char dy, int flags) {
     }
 }
 
-char readKsm(EmbPattern* pattern, const char* fileName) {
+char readKsm(EmbPattern* pattern, FILE* file) {
     int prevStitchType = NORMAL;
     char b[3];
-    FILE* file;
-    if (!validateReadPattern(pattern, fileName, "readKsm")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        puts("ERROR: cannot open file.");
-        return 0;
-    }
     fseek(file, 0x200, SEEK_SET);
     while (fread(b, 1, 3, file) == 3) {
         int flags = NORMAL;
@@ -3502,25 +3167,14 @@ char readKsm(EmbPattern* pattern, const char* fileName) {
         }
         embPattern_addStitchRel(pattern, b[1] / 10.0, b[0] / 10.0, flags, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeKsm(EmbPattern* pattern, const char* fileName) {
-    FILE* file = 0;
+char writeKsm(EmbPattern* pattern, FILE* file) {
     double xx, yy;
     int i;
     unsigned char b[4];
 
-    if (!validateWritePattern(pattern, fileName, "writeKsm")) {
-        return 0;
-    }
-    file = fopen(fileName, "wb");
-    if (!file) {
-        puts("ERROR: cannot open file.");
-        return 0;
-    }
     fpad(file, 0, 0x200);
     /* write stitches */
     xx = yy = 0;
@@ -3535,7 +3189,6 @@ char writeKsm(EmbPattern* pattern, const char* fileName) {
         fprintf(file, "%c%c", b[0], b[1]);
     }
     fprintf(file, "\x1a");
-    fclose(file);
     return 1;
 }
 
@@ -3544,17 +3197,9 @@ char writeKsm(EmbPattern* pattern, const char* fileName) {
 
 /* Pfaff MAX embroidery file format */
 
-char readMax(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
+char readMax(EmbPattern* pattern, FILE* file) {
     unsigned char b[8];
 
-    if (!validateReadPattern(pattern, fileName, "readMax")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     fseek(file, 0xD5, SEEK_SET);
     /* stitchCount = fread_uint32(file); CHECK IF THIS IS PRESENT */
     /* READ STITCH RECORDS */
@@ -3566,14 +3211,11 @@ char readMax(EmbPattern* pattern, const char* fileName) {
         dy = maxDecode(b[4], b[5], b[6]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     embPattern_flipVertical(pattern);
     return 1;
 }
 
-char writeMax(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
+char writeMax(EmbPattern* pattern, FILE* file) {
     int i;
     unsigned char header[] = {
         0x56,0x43,0x53,0x4D,0xFC,0x03,0x00,0x00,0x01,0x00,0x00,0x00,0x01,0x00,0x00,0x00,
@@ -3593,14 +3235,6 @@ char writeMax(EmbPattern* pattern, const char* fileName) {
     double x, y;
     EmbStitch st;
 
-    if (!validateWritePattern(pattern, fileName, "writeMax"))
-        return 0;
-
-    file = fopen(fileName, "wb");
-    if (!file) {
-        return 0;
-    }
-
     fwrite(header, 1, 0xD5, file);
     for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
@@ -3608,52 +3242,27 @@ char writeMax(EmbPattern* pattern, const char* fileName) {
         y = (int)round(st.y * 10.0);
         maxEncode(file, x, y);
     }
-    fclose(file);
     return 1;
 }
 
 /* ---------------------------------------------------------------- */
 /* format mit */
 
-char readMit(EmbPattern* pattern, const char* fileName) {
+char readMit(EmbPattern* pattern, FILE* file) {
     unsigned char data[2];
-    FILE* file = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readMit")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        puts("ERROR: Failed to open file.");
-        return 0;
-    }
-
-    embPattern_loadExternalColorFile(pattern, fileName);
 
     while (fread(data, 1, 2, file) == 2) {
         int x = mitDecodeStitch(data[0]);
         int y = mitDecodeStitch(data[1]);
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, NORMAL, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeMit(EmbPattern* pattern, const char* fileName) {
-    FILE* file = 0;
+char writeMit(EmbPattern* pattern, FILE* file) {
     double xx, yy;
     int i;
 
-    if (!validateWritePattern(pattern, fileName, "writeMit")) {
-        return 0;
-    }
-    file = fopen(fileName, "wb");
-    if (!file) {
-        puts("ERROR: Failed to open file.");
-        return 0;
-    }
     embPattern_correctForMaxStitchLength(pattern, 0x1F, 0x1F);
     xx = 0;
     yy = 0;
@@ -3666,27 +3275,16 @@ char writeMit(EmbPattern* pattern, const char* fileName) {
         yy = st.y;
         fwrite(b, 1, 2, file);
     }
-    fclose(file);
     return 1;
 }
 
 /* ---------------------------------------------------------------- */
 /* format new */
 
-char readNew(EmbPattern* pattern, const char* fileName) {
+char readNew(EmbPattern* pattern, FILE* file) {
     unsigned int stitchCount;
     unsigned char data[3];
-    FILE* file = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readNew")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
-    embPattern_loadExternalColorFile(pattern, fileName);
     stitchCount = fread_uint16(file);
     if (EMB_DEBUG) {
         printf("stitch count = %d\n", stitchCount);
@@ -3723,20 +3321,10 @@ char readNew(EmbPattern* pattern, const char* fileName) {
         embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flag, 1);
     }
 
-    fclose(file);
-    embPattern_end(pattern);
-
     return 1;
 }
 
-char writeNew(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeNew")) {
-        return 0;
-    }
-
-    /* TODO: fopen() needs to occur 
-    here after the check for no stitches */
-
+char writeNew(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish writeNew */
 }
 
@@ -3936,20 +3524,17 @@ static void ofmReadExpanded(FILE* file, EmbPattern* p)
     }
 }
 
-char readOfm(EmbPattern* pattern, const char* fileName)
+char readOfm(EmbPattern* pattern, FILE* fileCompound)
 {
     int unknownCount, key = 0, classNameLength;
     char* s = 0;
-    FILE* fileCompound = 0;
-    FILE* file = 0;
+    FILE *file;
     bcf_file* bcfFile = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readOfm")) {
+    if (EMB_DEBUG) {
+        puts("Overridden during development.");
         return 0;
     }
-
-    fileCompound = fopen(fileName, "rb");
-    if (!fileCompound) return 0;
 
     bcfFile = (bcf_file*)malloc(sizeof(bcf_file));
     if (!bcfFile) { printf("ERROR: format-ofm.c readOfm(), unable to allocate memory for bcfFile\n"); return 0; }
@@ -3994,30 +3579,20 @@ char readOfm(EmbPattern* pattern, const char* fileName)
         }
     }
 
-    fclose(fileCompound);
-    fclose(file);
-
-    embPattern_end(pattern);
     embPattern_flip(pattern, 1, 1);
 
     return 1;
 }
 
-char writeOfm(EmbPattern* pattern, const char* fileName)
+char writeOfm(EmbPattern* pattern, FILE* file)
 {
-    if (!validateWritePattern(pattern, fileName, "writeOfm")) {
-        return 0;
-    }
-
-    /* TODO: fopen() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writeOfm */
 }
 
 /* ---------------------------------------------------------------- */
 /* format pcd */
 
-char readPcd(EmbPattern* pattern, const char* fileName) {
+char readPcd(EmbPattern* pattern, const char *fileName, FILE* file) {
     char allZeroColor = 1;
     int i = 0;
     unsigned char b[9];
@@ -4025,16 +3600,7 @@ char readPcd(EmbPattern* pattern, const char* fileName) {
     int flags = 0, st = 0;
     unsigned char version, hoopSize;
     unsigned short colorCount = 0;
-    FILE* file = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readPcd")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     version = binaryReadByte(file);
     /* 0 for PCD
      * 1 for PCQ (MAXI)
@@ -4075,23 +3641,12 @@ char readPcd(EmbPattern* pattern, const char* fileName) {
         dy = pcdDecode(b[5], b[6], b[7]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
-
     return 1;
 }
 
-char writePcd(EmbPattern* pattern, const char* fileName) {
-    FILE* file = 0;
+char writePcd(EmbPattern* pattern, FILE* file) {
     int i;
 
-    if (!validateWritePattern(pattern, fileName, "writePcd")) {
-        return 0;
-    }
-    file = fopen(fileName, "wb");
-    if (!file) {
-        return 0;
-    }
     binaryWriteByte(file, (unsigned char)'2');
     /* TODO: select hoop size defaulting to Large PCS hoop */
     binaryWriteByte(file, 3);
@@ -4110,7 +3665,6 @@ char writePcd(EmbPattern* pattern, const char* fileName) {
         EmbStitch st = pattern->stitchList->stitch[i];
         pcdEncode(file, (int)round(st.x * 10.0), (int)round(st.y * 10.0), st.flags);
     }
-    fclose(file);
     return 1;
 }
 
@@ -4125,21 +3679,12 @@ static double pcmDecode(unsigned char a1, unsigned char a2, unsigned char a3) {
     return res;
 }
 
-char readPcm(EmbPattern* pattern, const char* fileName) {
+char readPcm(EmbPattern* pattern, FILE* file) {
     int i = 0;
     unsigned char b[9];
     double dx = 0, dy = 0;
     int flags = 0, st = 0;
-    FILE* file = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readPcm")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     fseek(file, 4, SEEK_SET);
     for (i = 0; i < 16; i++) {
         int colorNumber;
@@ -4165,19 +3710,10 @@ char readPcm(EmbPattern* pattern, const char* fileName) {
         dy = pcmDecode(b[6], b[5], b[4]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
-
     return 1;
 }
 
-char writePcm(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writePcm")) {
-        return 0;
-    }
-
-/* TODO: fopen() needs to occur here after the check for no stitches */
-
+char writePcm(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish writePcm */
 }
 
@@ -4218,7 +3754,7 @@ static void pcqEncode(FILE* file, int dx, int dy, int flags)
     fwrite(b, 1, 9, file);
 }
 
-char readPcq(EmbPattern* pattern, const char* fileName)
+char readPcq(EmbPattern* pattern, const char* fileName, FILE* file)
 {
     char allZeroColor = 1;
     int i = 0;
@@ -4227,16 +3763,6 @@ char readPcq(EmbPattern* pattern, const char* fileName)
     int flags = 0, st = 0;
     unsigned char version, hoopSize;
     unsigned short colorCount;
-    FILE* file = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readPcq")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
 
     version = binaryReadByte(file);
     hoopSize = binaryReadByte(file);
@@ -4281,35 +3807,19 @@ char readPcq(EmbPattern* pattern, const char* fileName)
         dy = pcqDecode(b[5], b[6], b[7]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
-
     return 1;
 }
 
-char writePcq(EmbPattern* pattern, const char* fileName)
+char writePcq(EmbPattern* pattern, FILE* file)
 {
-    FILE* file = 0;
     int i;
-
-    if (!validateWritePattern(pattern, fileName, "writePcq")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "wb");
-    if (!file) return 0;
 
     binaryWriteByte(file, (unsigned char)'2');
     binaryWriteByte(file, 3); /* TODO: select hoop size defaulting to Large PCS hoop */
     binaryWriteUShort(file, (unsigned short)pattern->threads->count);
     for (i = 0; i < pattern->threads->count; i++) {
         EmbColor color = pattern->threads->thread[i].color;
-        unsigned char b[4];
-        b[0] = color.r;
-        b[1] = color.g;
-        b[2] = color.b;
-        b[3] = 0;
-        fread(b, 1, 4, file);
+        embColor_write(file, color, 4);
     }
 
     /* write remaining colors to reach 16 */
@@ -4321,7 +3831,6 @@ char writePcq(EmbPattern* pattern, const char* fileName)
         EmbStitch st = pattern->stitchList->stitch[i];
         pcqEncode(file, (int)round(st.x * 10.0), (int)round(st.y * 10.0), st.flags);
     }
-    fclose(file);
     return 1;
 }
 
@@ -4365,7 +3874,7 @@ static void pcsEncode(FILE* file, int dx, int dy, int flags)
     binaryWriteByte(file, flagsToWrite);
 }
 
-char readPcs(EmbPattern* pattern, const char* fileName)
+char readPcs(EmbPattern* pattern, const char* fileName, FILE* file)
 {
     char allZeroColor = 1;
     int i = 0;
@@ -4374,13 +3883,6 @@ char readPcs(EmbPattern* pattern, const char* fileName)
     int flags = 0, st = 0;
     unsigned char version, hoopSize;
     unsigned short colorCount;
-    FILE* file = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readPcs")) return 0;
-
-    file = fopen(fileName, "rb");
-    if (!file)
-        return 0;
 
     version = binaryReadByte(file);
     hoopSize = binaryReadByte(file);  /* 0 for PCD, 1 for PCQ (MAXI), 2 for PCS with small hoop(80x80), */
@@ -4437,34 +3939,20 @@ char readPcs(EmbPattern* pattern, const char* fileName)
         dy = pcsDecode(b[5], b[6], b[7]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
 
     return 1;
 }
 
-char writePcs(EmbPattern* pattern, const char* fileName)
+char writePcs(EmbPattern* pattern, FILE* file)
 {
-    FILE* file = 0;
     int i;
-
-    if (!validateWritePattern(pattern, fileName, "writePcs")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "wb");
-    if (!file)
-        return 0;
 
     binaryWriteByte(file, (unsigned char)'2');
     binaryWriteByte(file, 3); /* TODO: select hoop size defaulting to Large PCS hoop */
     binaryWriteUShort(file, (unsigned short)pattern->threads->count);
     for (i = 0; i < pattern->threads->count; i++) {
         EmbColor color = pattern->threads->thread[i].color;
-        binaryWriteByte(file, color.r);
-        binaryWriteByte(file, color.g);
-        binaryWriteByte(file, color.b);
-        binaryWriteByte(file, 0);
+        embColor_write(file, color, 4);
     }
 
     for (; i < 16; i++)
@@ -4478,7 +3966,6 @@ char writePcs(EmbPattern* pattern, const char* fileName)
         EmbStitch st = pattern->stitchList->stitch[i];
         pcsEncode(file, (int)round(st.x * 10.0), (int)round(st.y * 10.0), st.flags);
     }
-    fclose(file);
     return 1;
 }
 
@@ -4610,20 +4097,11 @@ static void pecEncodeStop(FILE* file, unsigned char val)
     binaryWriteByte(file, val);
 }
 
-char readPec(EmbPattern* pattern, const char* fileName) {
+char readPec(EmbPattern* pattern, const char *fileName, FILE* file) {
     unsigned int graphicsOffset;
     unsigned char colorChanges;
     int i;
-    FILE* file = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readPec")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     fseek(file, 0x38, SEEK_SET);
     colorChanges = (unsigned char)binaryReadByte(file);
     for (i = 0; i <= colorChanges; i++) {
@@ -4654,8 +4132,6 @@ char readPec(EmbPattern* pattern, const char* fileName) {
     /* 0x21C */
     /*unsigned int end = graphicsOffset + 0x208; */
     readPecStitches(pattern, file);
-    fclose(file);
-    embPattern_end(pattern);
     embPattern_flipVertical(pattern);
     return 1;
 }
@@ -4740,8 +4216,7 @@ static void writeImage(FILE* file, unsigned char image[][48]) {
     }
 }
 
-void writePecStitches(EmbPattern* pattern,
-    FILE* file, const char* fileName) {
+void writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName) {
     EmbRect bounds;
     unsigned char image[38][48];
     int i, j, flen, currentThreadCount, graphicsOffsetLocation;
@@ -4846,15 +4321,7 @@ void writePecStitches(EmbPattern* pattern,
     }
 }
 
-char writePec(EmbPattern* pattern, const char* fileName) {
-    FILE* file = 0;
-    if (!validateWritePattern(pattern, fileName, "writePec")) {
-        return 0;
-    }
-    file = fopen(fileName, "wb");
-    if (!file) {
-        return 0;
-    }
+char writePec(EmbPattern* pattern, const char* fileName, FILE* file) {
     /* TODO: There needs to be a matching flipVertical() call after the write 
         to ensure multiple writes from the same pattern work properly */
     embPattern_flipVertical(pattern); 
@@ -4863,7 +4330,6 @@ char writePec(EmbPattern* pattern, const char* fileName) {
     embPattern_scale(pattern, 10.0);
     fwrite("#PEC0001", 1, 8, file);
     writePecStitches(pattern, file, fileName);
-    fclose(file);
     return 1;
 }
 
@@ -4871,64 +4337,32 @@ char writePec(EmbPattern* pattern, const char* fileName) {
 /* ---------------------------------------------------------------- */
 /* format pel */
 
-char readPel(EmbPattern* pattern, const char* fileName) {
-    if (!pattern) {
-        printf("ERROR: format-pel.c readPel(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        printf("ERROR: format-pel.c readPel(), fileName argument is null\n");
-        return 0;
-    }
+char readPel(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish readPel */
 }
 
-char writePel(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writePel")) {
-        return 0;
-    }
-    /* TODO: fopen() needs to occur here 
-        after the check for no stitches */
+char writePel(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish writePel */
 }
 
 /* ---------------------------------------------------------------- */
 /* format pem */
 
-char readPem(EmbPattern* pattern, const char* fileName)
+char readPem(EmbPattern* pattern, FILE* file)
 {
-    if (!validateReadPattern(pattern, fileName, "readPem")) {
-        return 0;
-    }
     return 0; /*TODO: finish ReadPem */
 }
 
-char writePem(EmbPattern* pattern, const char* fileName)
+char writePem(EmbPattern* pattern, FILE* file)
 {
-    if (!validateWritePattern(pattern, fileName, "writePem")) {
-        return 0;
-    }
-
-    /* TODO: fopen() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writePem */
 }
 
 /* ---------------------------------------------------------------- */
 /* format pes */
 
-char readPes(EmbPattern* pattern, const char* fileName) {
+char readPes(EmbPattern* pattern, const char *fileName, FILE* file) {
     int pecstart, numColors, x;
-    FILE* file = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readPes")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     fseek(file, 8, SEEK_SET);
     pecstart = fread_int32(file);
 
@@ -4941,8 +4375,6 @@ char readPes(EmbPattern* pattern, const char* fileName) {
     fseek(file, pecstart + 528, SEEK_SET);
     readPecStitches(pattern, file);
 
-    fclose(file);
-    embPattern_end(pattern);
     embPattern_flipVertical(pattern);
 
     return 1;
@@ -5390,18 +4822,8 @@ static void pesWriteEmbOneSection(EmbPattern* pattern, FILE* file) {
     /*WriteSubObjects(br, pes, SubBlocks); */
 }
 
-char writePes(EmbPattern* pattern, const char* fileName) {
+char writePes(EmbPattern* pattern,  const char *fileName, FILE* file) {
     int pecLocation;
-    FILE* file = 0;
-
-    if (!validateWritePattern(pattern, fileName, "writePes")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "wb");
-    if (!file) {
-        return 0;
-    }
     embPattern_flipVertical(pattern);
     embPattern_scale(pattern, 10.0);
     binaryWriteBytes(file, "#PES0001", 8);
@@ -5426,7 +4848,6 @@ char writePes(EmbPattern* pattern, const char* fileName) {
     binaryWriteByte(file, (unsigned char)(pecLocation >> 16) & 0xFF);
     fseek(file, 0x00, SEEK_END);
     writePecStitches(pattern, file, fileName);
-    fclose(file);
     return 1;
 }
 
@@ -5434,19 +4855,11 @@ char writePes(EmbPattern* pattern, const char* fileName) {
 /* ---------------------------------------------------------------- */
 /* format phb */
 
-char readPhb(EmbPattern* pattern, const char* fileName)
+char readPhb(EmbPattern* pattern, FILE* file)
 {
     unsigned int fileOffset;
     short colorCount;
-    FILE* file = 0;
     int i;
-
-    if (!pattern) { printf("ERROR: format-phb.c readPhb(), pattern argument is null\n"); return 0; }
-    if (!fileName) { printf("ERROR: format-phb.c readPhb(), fileName argument is null\n"); return 0; }
-
-    file = fopen(fileName, "rb");
-    if (!file)
-        return 0;
 
     fseek(file, 0x71, SEEK_SET);
     colorCount = fread_int16(file);
@@ -5486,40 +4899,25 @@ char readPhb(EmbPattern* pattern, const char* fileName)
     fread_int16(file);
     fread_int16(file);
     readPecStitches(pattern, file);
-    fclose(file);
 
-    embPattern_end(pattern);
     embPattern_flipVertical(pattern);
     return 1; /*TODO: finish ReadPhb */
 }
 
-char writePhb(EmbPattern* pattern, const char* fileName)
+char writePhb(EmbPattern* pattern, FILE* file)
 {
-    if (!validateWritePattern(pattern, fileName, "writePhb")) {
-        return 0;
-    }
-
-    /* TODO: fopen() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writePhb */
 }
 
 /* ---------------------------------------------------------------- */
 /* format phc */
 
-char readPhc(EmbPattern* pattern, const char* fileName)
+char readPhc(EmbPattern* pattern, FILE* file)
 {
     int colorChanges, version, bytesInSection2;
     unsigned short pecOffset, bytesInSection, bytesInSection3;
     char pecAdd;
-    FILE* file = 0;
     int i;
-
-    if (!pattern) { printf("ERROR: format-phc.c readPhc(), pattern argument is null\n"); return 0; }
-    if (!fileName) { printf("ERROR: format-phc.c readPhc(), fileName argument is null\n"); return 0; }
-
-    file = fopen(fileName, "rb");
-    if (!file) return 0;
 
     fseek(file, 0x07, SEEK_SET);
     version = binaryReadByte(file) - 0x30; /* converting from ansi number */
@@ -5544,44 +4942,24 @@ char readPhc(EmbPattern* pattern, const char* fileName)
     fseek(file, bytesInSection3 + 0x12, SEEK_CUR);
 
     readPecStitches(pattern, file);
-    fclose(file);
-    embPattern_end(pattern);
 
     embPattern_flipVertical(pattern);
     return 1; /*TODO: finish ReadPhc */
 }
 
-char writePhc(EmbPattern* pattern, const char* fileName)
+char writePhc(EmbPattern* pattern, FILE* file)
 {
-    if (!validateWritePattern(pattern, fileName, "writePhc")) {
-        return 0;
-    }
-
-    /* TODO: fopen() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writePhc */
 }
 
 /* ---------------------------------------------------------------- */
 /* format plt */
 
-char readPlt(EmbPattern* pattern, const char* fileName) {
+char readPlt(EmbPattern* pattern, FILE* file) {
     double x, y;
     double scalingFactor = 40;
     char input[512];
-    FILE* file = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readPlt")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        printf("ERROR: format-plt.c readPlt(), ");
-        printf("cannot open %s for reading\n", fileName);
-        return 0;
-    }
-
-    embPattern_loadExternalColorFile(pattern, fileName);
     /* TODO: replace all scanf code */
     while (emb_readline(file, input, 511)) {
         if (input[0] == 'P' && input[1] == 'D') {
@@ -5600,25 +4978,15 @@ char readPlt(EmbPattern* pattern, const char* fileName) {
                     y / scalingFactor, STOP, 1);
         }
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writePlt(EmbPattern* pattern, const char* fileName) {
+char writePlt(EmbPattern* pattern, FILE* file) {
     /* TODO: pointer safety */
     double scalingFactor = 40;
     char firstStitchOfBlock = 1;
-    FILE* file;
     int i;
 
-    if (!validateWritePattern(pattern, fileName, "writePlt")) {
-        return 0;
-    }
-    file = fopen(fileName, "w");
-    if (!file) {
-        return 0;
-    }
     fprintf(file, "IN;");
     fprintf(file, "ND;");
 
@@ -5645,24 +5013,15 @@ char writePlt(EmbPattern* pattern, const char* fileName) {
     }
     fprintf(file, "PU0.0,0.0;");
     fprintf(file, "PU0.0,0.0;");
-    fclose(file);
     return 1; /*TODO: finish WritePlt */
 }
 
 /* ---------------------------------------------------------------- */
 /* format rgb */
 
-char readRgb(EmbPattern* pattern, const char* fileName) {
+char readRgb(EmbPattern* pattern, FILE* file) {
     int i, numberOfColors;
-    FILE* file = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readRgb")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     fseek(file, 0x00, SEEK_END);
     numberOfColors = ftell(file) / 4;
 
@@ -5677,20 +5036,11 @@ char readRgb(EmbPattern* pattern, const char* fileName) {
         strcpy(t.description, "");
         embPattern_addThread(pattern, t);
     }
-    fclose(file);
     return 1;
 }
 
-char writeRgb(EmbPattern* pattern, const char* fileName) {
+char writeRgb(EmbPattern* pattern, FILE* file) {
     int i;
-    FILE* file = 0;
-
-    if (!validateWritePattern(pattern, fileName, "readRgb"))
-        return 0;
-
-    file = fopen(fileName, "wb");
-    if (!file)
-        return 0;
 
     for (i = 0; i < pattern->threads->count; i++) {
         unsigned char b[4];
@@ -5701,7 +5051,6 @@ char writeRgb(EmbPattern* pattern, const char* fileName) {
         b[3] = 0;
         fwrite(b, 1, 4, file);
     }
-    fclose(file);
     return 1;
 }
 
@@ -5713,18 +5062,10 @@ static char sewDecode(unsigned char inputByte) {
     return (inputByte >= 0x80) ? (char) (-~(inputByte - 1)) : (char) inputByte;
 }
 
-char readSew(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
+char readSew(EmbPattern* pattern, FILE* file) {
     int i, flags, numberOfColors, fileLength;
     char dx, dy, thisStitchIsJump = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readSew")) {
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     fseek(file, 0x00, SEEK_END);
     fileLength = ftell(file);
     fseek(file, 0x00, SEEK_SET);
@@ -5768,8 +5109,6 @@ char readSew(EmbPattern* pattern, const char* fileName) {
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     printf("current position: %ld\n", ftell(file));
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
@@ -5801,21 +5140,13 @@ static void sewEncode(unsigned char* b, char dx, char dy, int flags) {
     }
 }
 
-char writeSew(EmbPattern* pattern, const char* fileName) {
+char writeSew(EmbPattern* pattern, FILE* file) {
     int colorlistSize, minColors, i, thr;
-    FILE* file;
     EmbStitch st;
     EmbColor col;
     double dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
     unsigned char b[4];
 
-    if (!validateWritePattern(pattern, fileName, "writeSew")) {
-        return 0;
-    }
-    file = fopen(fileName, "wb");
-    if (!file) {
-        return 0;
-    }
     colorlistSize = pattern->threads->count;
 
     minColors = embMaxInt(pattern->threads->count, 6);
@@ -5847,7 +5178,6 @@ char writeSew(EmbPattern* pattern, const char* fileName) {
             fwrite(b, 1, 2, file);
         }
     }
-    fclose(file);
     return 1;
 }
 
@@ -5872,9 +5202,8 @@ static short shvDecodeShort(unsigned short inputByte)
     return ((short)inputByte);
 }
 
-char readShv(EmbPattern* pattern, const char* fileName)
+char readShv(EmbPattern* pattern, FILE* file)
 {
-    FILE* file = 0;
     int i;
     char inJump = 0;
     unsigned char fileNameLength, designWidth, designHeight;
@@ -5890,12 +5219,6 @@ char readShv(EmbPattern* pattern, const char* fileName)
     int stitchesSinceChange = 0;
     int currColorIndex = 0;
     unsigned short sx, sy;
-
-    if (!validateReadPattern(pattern, fileName, "readShv"))
-        return 0;
-
-    file = fopen(fileName, "rb");
-    if (!file) return 0;
 
     fseek(file, strlen(headerText), SEEK_SET);
     fileNameLength = fgetc(file);
@@ -5989,39 +5312,23 @@ char readShv(EmbPattern* pattern, const char* fileName)
     stitchesSinceChange++;
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     embPattern_flipVertical(pattern);
 
     return 1;
 }
 
-char writeShv(EmbPattern* pattern, const char* fileName)
+char writeShv(EmbPattern* pattern, FILE* file)
 {
-    if (!validateWritePattern(pattern, fileName, "writeShv"))
-        return 0;
-
-    /* TODO: fopen() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writeShv */
 }
 
 /* ---------------------------------------------------------------- */
 /* format sst */
 
-char readSst(EmbPattern* pattern, const char* fileName)
+char readSst(EmbPattern* pattern, FILE* file)
 {
     int fileLength;
-    FILE* file = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readSst"))
-        return 0;
-
-    file = fopen(fileName, "rb");
-    if (!file)
-        return 0;
-
-    embPattern_loadExternalColorFile(pattern, fileName);
     fseek(file, 0, SEEK_END);
     fileLength = ftell(file);
     fseek(file, 0xA0, SEEK_SET); /* skip the all zero header */
@@ -6050,19 +5357,11 @@ char readSst(EmbPattern* pattern, const char* fileName)
         embPattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
     }
 
-    fclose(file);
-    embPattern_end(pattern);
-
     return 1; /*TODO: finish readSst */
 }
 
-char writeSst(EmbPattern* pattern, const char* fileName)
+char writeSst(EmbPattern* pattern, FILE* file)
 {
-    if (!validateWritePattern(pattern, fileName, "writeSst"))
-        return 0;
-
-    /* TODO: fopen() needs to occur here after the check for no stitches */
-
     return 0; /*TODO: finish writeSst */
 }
 
@@ -6174,7 +5473,7 @@ static int stxReadThread(StxThread* thread, FILE* file)
     return 1;
 }
 
-char readStx(EmbPattern* pattern, const char* fileName)
+char readStx(EmbPattern* pattern, FILE* file)
 {
     int i, threadCount;
     unsigned char* gif = 0;
@@ -6187,20 +5486,7 @@ char readStx(EmbPattern* pattern, const char* fileName)
     int threadDescriptionOffset, stitchCount, left, right, colors;
     int val[12];
     int bottom, top;
-    FILE* file = 0;
 
-    if (!pattern) {
-        printf("ERROR: format-stx.c readStx(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        printf("ERROR: format-stx.c readStx(), fileName argument is null\n");
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     binaryReadBytes(file, headerBytes, 7); /* TODO: check return value */
     header = (char*)headerBytes;
 
@@ -6315,20 +5601,11 @@ char readStx(EmbPattern* pattern, const char* fileName)
             i++;
         }
     }
-    fclose(file);
-    embPattern_end(pattern);
     embPattern_flipVertical(pattern);
     return 1;
 }
 
-char writeStx(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeStx")) {
-        return 0;
-    }
-
-    /* TODO: fopen() needs to occur 
-        here after the check for no stitches */
-
+char writeStx(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish writeStx */
 }
 
@@ -6339,26 +5616,8 @@ char writeStx(EmbPattern* pattern, const char* fileName) {
 /* ---------------------------------------------------------------- */
 /* t01 format */
 
-char readT01(EmbPattern* pattern, const char* fileName) {
+char readT01(EmbPattern* pattern, FILE* file) {
     unsigned char b[3];
-    FILE* file;
-
-    if (!pattern) {
-        printf("ERROR: format-t01.c readt01(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        printf("ERROR: format-t01.c readt01(), fileName argument is null\n");
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        puts("ERROR: cannot open file.");
-        return 0;
-    }
-
-    embPattern_loadExternalColorFile(pattern, fileName);
 
     while (fread(b, 1, 3, file) == 3) {
         int flags, x, y;
@@ -6368,24 +5627,13 @@ char readT01(EmbPattern* pattern, const char* fileName) {
             break;
         }
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeT01(EmbPattern* pattern, const char* fileName) {
+char writeT01(EmbPattern* pattern, FILE* file) {
     EmbRect boundingRect;
-    FILE* file;
     int xx, yy, i;
 
-    if (!validateWritePattern(pattern, fileName, "writeT01")) {
-        return 0;
-    }
-    file = fopen(fileName, "wb");
-    if (!file) {
-        puts("ERROR: failed to open file.");
-        return 0;
-    }
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
@@ -6406,25 +5654,15 @@ char writeT01(EmbPattern* pattern, const char* fileName) {
         encode_t01_record(b, dx, dy, st.flags);
         fwrite(b, 1, 3, file);
     }
-    fclose(file);
     return 1;
 }
 
 /* ---------------------------------------------------------------- */
 /* t09 format */
 
-char readT09(EmbPattern* pattern, const char* fileName) {
+char readT09(EmbPattern* pattern, FILE* file) {
     unsigned char b[3];
-    FILE* file;
 
-    if (!validateReadPattern(pattern, fileName, "readT09")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     fseek(file, 0x0C, SEEK_SET);
 
     while (fread(b, 1, 3, file) == 3) {
@@ -6446,18 +5684,10 @@ char readT09(EmbPattern* pattern, const char* fileName) {
         }
         embPattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeT09(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeT09")) {
-        return 0;
-    }
-    /* TODO: fopen() needs to occur here 
-        after the check for no stitches */
-
+char writeT09(EmbPattern* pattern, FILE* file) {
     puts("writeT09 is not implimented.");
     return 0; /*TODO: finish writeT09 */
 }
@@ -6499,26 +5729,8 @@ int decode_tap_record_flags(unsigned char b2) {
     }
 }
 
-char readTap(EmbPattern* pattern, const char* fileName) {
+char readTap(EmbPattern* pattern, FILE* file) {
     unsigned char b[3];
-    FILE* file = 0;
-
-    if (!pattern) {
-        puts("ERROR: format-tap.c readTap(), pattern argument is null.");
-        return 0;
-    }
-    if (!fileName) {
-        puts("ERROR: format-tap.c readTap(), fileName argument is null.");
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        puts("ERROR: format-tap.c cannot open file for reading.");
-        return 0;
-    }
-
-    embPattern_loadExternalColorFile(pattern, fileName);
 
     while (fread(b, 1, 3, file) == 3) {
         int flags, x, y;
@@ -6529,23 +5741,11 @@ char readTap(EmbPattern* pattern, const char* fileName) {
             break;
         }
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeTap(EmbPattern* pattern, const char* fileName) {
-    FILE* file;
+char writeTap(EmbPattern* pattern, FILE* file) {
     int xx, yy, dx, dy, i;
-    if (!validateWritePattern(pattern, fileName, "writeTap")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "wb");
-    if (!file) {
-        puts("ERROR: writeTap failed to open file.");
-        return 0;
-    }
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
@@ -6559,7 +5759,6 @@ char writeTap(EmbPattern* pattern, const char* fileName) {
         yy = (int)round(st.y * 10.0);
         encode_tap_record(file, dx, dy, st.flags);
     }
-    fclose(file);
     return 1;
 }
 
@@ -6609,25 +5808,11 @@ typedef struct ThredExtension_  /* thred v1.0 file header extension */
  * 31      set for user edited stitches
  */
 
-char readThr(EmbPattern* pattern, const char* fileName) {
+char readThr(EmbPattern* pattern, FILE* file) {
     ThredHeader header;
     unsigned char r, g, b;
     int currentColor;
     int i;
-    FILE* file = 0;
-
-    if (!pattern) {
-        printf("ERROR: format-thr.c readThr(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        printf("ERROR: format-thr.c readThr(), fileName argument is null\n");
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file)
-        return 0;
 
     header.sigVersion  = fread_uint32(file);
     header.length      = fread_uint32(file);
@@ -6687,29 +5872,18 @@ char readThr(EmbPattern* pattern, const char* fileName) {
     }
     /*  64 bytes of rgbx(4 bytes) colors (16 custom colors) */
     /*  16 bytes of thread size (ascii representation ie. '4') */
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeThr(EmbPattern* pattern, const char* fileName) {
+char writeThr(EmbPattern* pattern, FILE* file) {
     int i, stitchCount;
     unsigned char version = 0;
     ThredHeader header;
     ThredExtension extension;
     char bitmapName[16];
-    FILE* file = 0;
-
-    if (!validateWritePattern(pattern, fileName, "writeThr")) {
-        return 0;
-    }
 
     stitchCount = pattern->stitchList->count;
 
-    file = fopen(fileName, "wb");
-    if (!file) {
-        return 0;
-    }
     memset(&header, 0, sizeof(ThredHeader));
     header.sigVersion = 0x746872 | (version << 24);
     header.length = stitchCount * 12 + 16;
@@ -6767,30 +5941,18 @@ char writeThr(EmbPattern* pattern, const char* fileName) {
     fpad(file, 0, 4*(16-i));
 
     fpad(file, '4', 16);
-    fclose(file);
     return 1;
 }
 
 /* ---------------------------------------------------------------- */
 /* format txt */
 
-char readTxt(EmbPattern* pattern, const char* fileName) {
-    if (!validateReadPattern(pattern, fileName, "readTxt")) {
-        return 0;
-    }
+char readTxt(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish readTxt */
 }
 
-char writeTxt(EmbPattern* pattern, const char* fileName) {
+char writeTxt(EmbPattern* pattern, FILE* file) {
     int i;
-    FILE* file = 0;
-    if (!validateWritePattern(pattern, fileName, "writeTxt")) {
-        return 0;
-    }
-    file = fopen(fileName, "w");
-    if (!file) {
-        return 0;
-    }
     fprintf(file, "%u\n", (unsigned int) pattern->stitchList->count);
 
     for (i = 0; i < pattern->stitchList->count; i++) {
@@ -6798,7 +5960,6 @@ char writeTxt(EmbPattern* pattern, const char* fileName) {
         fprintf(file, "%.1f,%.1f color:%i flags:%i\n", 
                 s.x, s.y, s.color, s.flags);
     }
-    fclose(file);
     return 1;
 }
 
@@ -6806,21 +5967,12 @@ char writeTxt(EmbPattern* pattern, const char* fileName) {
 /* ---------------------------------------------------------------- */
 /* format u00 */
 
-char readU00(EmbPattern* pattern, const char* fileName) {
+char readU00(EmbPattern* pattern, FILE* file) {
     int i;
     char dx = 0, dy = 0;
     int flags = NORMAL;
     char endOfStream = 0;
-    FILE* file = 0;
 
-    if (!validateReadPattern(pattern, fileName, "readU00")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     /* 16 3byte RGB's start @ 0x08 followed by 14 bytes between 
         0 and 15 with index of color for each color change */
     fseek(file, 0x08, SEEK_SET);
@@ -6862,17 +6014,10 @@ char readU00(EmbPattern* pattern, const char* fileName) {
         }
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeU00(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeU00")) {
-        return 0;
-    }
-    /* TODO: fopen() needs to occur here 
-        after the check for no stitches */
+char writeU00(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish WriteU00 */
 }
 
@@ -6881,16 +6026,11 @@ char writeU00(EmbPattern* pattern, const char* fileName) {
 
 /* TODO: AFAIK this is a duplicate of U00. Review for differences and merge files and handle accordingly. */
 
-char readU01(EmbPattern* pattern, const char* fileName) {
+char readU01(EmbPattern* pattern, FILE* file) {
     int fileLength, negativeX = 0, negativeY = 0, flags = NORMAL;
     char dx, dy;
     unsigned char data[3];
-    FILE* file = 0;
 
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     fseek(file, 0, SEEK_END);
     fileLength = ftell(file);
     fseek(file, 0x100, SEEK_SET);
@@ -6918,17 +6058,10 @@ char readU01(EmbPattern* pattern, const char* fileName) {
         }
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
-char writeU01(EmbPattern* pattern, const char* fileName) {
-    if (!validateWritePattern(pattern, fileName, "writeU01")) {
-        return 0;
-    }
-    /* TODO: fopen() needs to occur here 
-        after the check for no stitches */
+char writeU01(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish writeU01 */
 }
 
@@ -7009,7 +6142,7 @@ typedef struct VipHeader_ {
     int colorLength;
 } VipHeader;
 
-char readVip(EmbPattern* pattern, const char* fileName)
+char readVip(EmbPattern* pattern, FILE* file)
 {
     int fileLength;
     int i;
@@ -7018,14 +6151,6 @@ char readVip(EmbPattern* pattern, const char* fileName)
     unsigned char *attributeDataDecompressed = 0;
     unsigned char *xData = 0, *xDecompressed = 0, *yData = 0, *yDecompressed = 0;
     VipHeader header;
-    FILE* file = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readVip")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) return 0;
 
     fseek(file, 0x0, SEEK_END);
     fileLength = ftell(file);
@@ -7105,8 +6230,6 @@ char readVip(EmbPattern* pattern, const char* fileName)
     }
     embPattern_addStitchRel(pattern, 0, 0, END, 1);
 
-    fclose(file);
-
     free(attributeData);
     free(xData);
     free(yData);
@@ -7146,7 +6269,7 @@ static unsigned char vipEncodeStitchType(int st) {
     }
 }
 
-char writeVip(EmbPattern* pattern, const char* fileName) {
+char writeVip(EmbPattern* pattern, FILE* file) {
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor;
     int attributeSize = 0;
@@ -7162,15 +6285,6 @@ char writeVip(EmbPattern* pattern, const char* fileName) {
     unsigned char* attributeCompressed = 0, *xCompressed = 0;
     unsigned char* yCompressed = 0, *decodedColors = 0, *encodedColors = 0;
     unsigned char prevByte = 0;
-    FILE* file = 0;
-
-    if (!validateWritePattern(pattern, fileName, "writeVip")) {
-        return 0;
-    }
-    file = fopen(fileName, "wb");
-    if (!file) {
-        return 0;
-    }
 
     puts("VIP not yet implemented.");
     return 0;
@@ -7276,7 +6390,6 @@ char writeVip(EmbPattern* pattern, const char* fileName) {
     }
     free(decodedColors);
     free(encodedColors);
-    fclose(file);
     return 1;
 }
 
@@ -7407,7 +6520,7 @@ static vp3Hoop vp3ReadHoopSection(FILE* file)
     return hoop;
 }
 
-char readVp3(EmbPattern* pattern, const char* fileName) {
+char readVp3(EmbPattern* pattern, FILE* file) {
     unsigned char magicString[5];
     unsigned char some;
     unsigned char* softwareVendorString = 0;
@@ -7423,15 +6536,6 @@ char readVp3(EmbPattern* pattern, const char* fileName) {
     unsigned char* anotherCommentString = 0;
     int i;
 
-    FILE* file = 0;
-    if (!validateReadPattern(pattern, fileName, "readVp3")) { 
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     binaryReadBytes(file, magicString, 5); /* %vsm% */ /* TODO: check return value */
     some = binaryReadByte(file); /* 0 */
     softwareVendorString = vp3ReadString(file);
@@ -7528,8 +6632,6 @@ char readVp3(EmbPattern* pattern, const char* fileName) {
             embPattern_addStitchRel(pattern, 0, 0, STOP, 1);
         }
     }
-    fclose(file);
-    embPattern_end(pattern);
     embPattern_flipVertical(pattern);
     return 1;
 }
@@ -7551,9 +6653,8 @@ void vp3PatchByteCount(FILE* file, int offset, int adjustment) {
     fseek(file, currentPos, SEEK_SET);
 }
 
-char writeVp3(EmbPattern* pattern, const char* fileName) {
+char writeVp3(EmbPattern* pattern, FILE* file) {
 #if 0
-    EmbFile *file = 0;
     EmbRect bounds;
     int remainingBytesPos, remainingBytesPos2;
     int colorSectionStitchBytes;
@@ -7562,14 +6663,7 @@ char writeVp3(EmbPattern* pattern, const char* fileName) {
     EmbColor color = embColor_make(0xFE, 0xFE, 0xFE);
     EmbStitchList *mainPointer = 0, *pointer = 0;
 
-    if (!validateWritePattern(pattern, fileName, "writeVp3")) {
-        return 0;
-    }
-
     bounds = embPattern_calcBoundingBox(pattern);
-
-    file = fopen(fileName, "wb");
-    if (!file) return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 3200.0, 3200.0); /* VP3 can encode signed 16bit deltas */
 
@@ -7702,11 +6796,8 @@ char writeVp3(EmbPattern* pattern, const char* fileName) {
         binaryWriteByte(file, 0);
 
         printf("format-vp3.c writeVp3(), switching to color (%d, %d, %d)\n", color.r, color.g, color.b);
-        binaryWriteByte(file, color.r);
-        binaryWriteByte(file, color.g);
-        binaryWriteByte(file, color.b);
+        embColor_write(file, color, 4);
 
-        binaryWriteByte(file, 0);
         binaryWriteByte(file, 0);
         binaryWriteByte(file, 0);
         binaryWriteByte(file, 5);
@@ -7776,8 +6867,6 @@ char writeVp3(EmbPattern* pattern, const char* fileName) {
     vp3PatchByteCount(file, remainingBytesPos2, -4);
     vp3PatchByteCount(file, remainingBytesPos, -4);
 
-    fclose(file);
-
     embPattern_flipVertical(pattern);
 #endif
     puts("ERROR: vp3 format is not supported.");
@@ -7794,20 +6883,10 @@ static char xxxDecodeByte(unsigned char inputByte) {
     return ((char) inputByte);
 }
 
-char readXxx(EmbPattern* pattern, const char* fileName) {
-    FILE* file = 0;
+char readXxx(EmbPattern* pattern, FILE* file) {
     int dx = 0, dy = 0, numberOfColors, paletteOffset, i;
     char endOfStream = 0;
     char thisStitchJump = 0;
-
-    if (!validateReadPattern(pattern, fileName, "readXxx")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
 
     if (EMB_DEBUG) {
         puts("readXxx has been overridden.");
@@ -7825,9 +6904,7 @@ char readXxx(EmbPattern* pattern, const char* fileName) {
         strcpy(thread.catalogNumber, "NULL");
         strcpy(thread.description, "NULL");
         binaryReadByte(file);
-        thread.color.r = binaryReadByte(file);
-        thread.color.g = binaryReadByte(file);
-        thread.color.b = binaryReadByte(file);
+        embColor_read(file, &(thread.color), 3);
         embPattern_addThread(pattern, thread);
     }
     fseek(file, 0x100, SEEK_SET);
@@ -7869,8 +6946,6 @@ char readXxx(EmbPattern* pattern, const char* fileName) {
         embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     /* TODO: check end of pattern for multiple STOPs */
-    fclose(file);
-    embPattern_end(pattern);
     return 1;
 }
 
@@ -7919,19 +6994,11 @@ static void xxxEncodeDesign(FILE* file, EmbPattern* p) {
     }
 }
 
-char writeXxx(EmbPattern* pattern, const char* fileName) {
-    FILE* file = 0;
+char writeXxx(EmbPattern* pattern, FILE* file) {
     int i;
     EmbRect rect;
     int endOfStitches;
     int curColor = 0;
-
-    if (!validateWritePattern(pattern, fileName, "writeXxx")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "wb");
-    if (!file) return 0;
 
     embPattern_correctForMaxStitchLength(pattern, 124, 127);
 
@@ -7985,26 +7052,16 @@ char writeXxx(EmbPattern* pattern, const char* fileName) {
     }
     binaryWriteByte(file, 0x00);
     binaryWriteByte(file, 0x01);
-    fclose(file);
     return 1;
 }
 
 /* ---------------------------------------------------------------- */
 /* format zsk */
 
-char readZsk(EmbPattern* pattern, const char* fileName) {
+char readZsk(EmbPattern* pattern, FILE* file) {
     char b[3];
-    FILE* file = 0;
     int stitchType;
     unsigned char colorNumber;
-    if (!validateReadPattern(pattern, fileName, "readZsk")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "rb");
-    if (!file) {
-        return 0;
-    }
     
     fseek(file, 0, SEEK_END);
     if (ftell(file) < 0x230) {
@@ -8015,9 +7072,7 @@ char readZsk(EmbPattern* pattern, const char* fileName) {
     colorNumber = fgetc(file);
     while (colorNumber != 0) {
         EmbThread t;
-        t.color.r = fgetc(file);
-        t.color.g = fgetc(file);
-        t.color.b = fgetc(file);
+        embColor_read(file, &(t.color), 3);
         strcpy(t.catalogNumber, "");
         strcpy(t.description, "");
         embPattern_addThread(pattern, t);
@@ -8056,25 +7111,11 @@ char readZsk(EmbPattern* pattern, const char* fileName) {
         embPattern_addStitchRel(pattern, b[1] / 10.0,
             b[2] / 10.0, stitchType, 0);
     }
-    fclose(file);
-    embPattern_end(pattern);
 
     return 1;
 }
 
-char writeZsk(EmbPattern* pattern, const char* fileName) {
-    FILE *file;
-    if (!validateWritePattern(pattern, fileName, "writeZsk")) {
-        return 0;
-    }
-
-    file = fopen(fileName, "wb");
-    if (!file) {
-        return 0;
-    }
-
-    fclose(file);
-
+char writeZsk(EmbPattern* pattern, FILE* file) {
     return 0; /*TODO: finish writeZsk */
 }
 

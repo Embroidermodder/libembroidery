@@ -672,6 +672,14 @@ typedef struct LSYSTEM {
     char **rules;
 } L_system;
 
+typedef struct EmbImage_ {
+    int pixel_width;
+    int pixel_height;
+    float width;
+    float height;
+    EmbColor *color;
+} EmbImage;
+
 /**
  * Only one of the pointers is used at a time so this should be a union.
  */
@@ -737,7 +745,7 @@ EMB_PUBLIC double embMinDouble(double, double);
 EMB_PUBLIC double embMaxDouble(double, double);
 
 EMB_PUBLIC int lindenmayer_system(L_system L, char* state, int iteration, int complete);
-EMB_PUBLIC int hilbert_curve(int iterations);
+EMB_PUBLIC int hilbert_curve(EmbPattern *pattern, int iterations);
 
 EMB_PUBLIC int embMinInt(int, int);
 EMB_PUBLIC int embMaxInt(int, int);
@@ -783,6 +791,13 @@ EMB_PUBLIC void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result
 EMB_PUBLIC double embVector_dot(EmbVector v1, EmbVector v2);
 EMB_PUBLIC void embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC double embVector_getLength(EmbVector vector);
+
+EMB_PUBLIC int read_ppm_image(char *fname, EmbImage *a);
+EMB_PUBLIC void write_ppm_image(char *fname, EmbImage *a);
+EMB_PUBLIC float image_diff(EmbImage *, EmbImage *);
+EMB_PUBLIC int render_line(EmbLine, EmbImage *, EmbColor);
+EMB_PUBLIC int render(EmbPattern *pattern, EmbImage *image, char *fname);
+EMB_PUBLIC int render_postscript(EmbPattern *pattern, EmbImage *image);
 
 EMB_PUBLIC void testMain(int level);
 EMB_PUBLIC int convert(const char *inf, const char *outf);
@@ -985,14 +1000,11 @@ int emb_readline(FILE* file, char *line, int maxLength);
 
 int decodeNewStitch(unsigned char value);
 
-void maxEncode(FILE* file, int x, int y);
-double maxDecode(unsigned char a1, unsigned char a2, unsigned char a3);
+void pfaffEncode(FILE* file, int x, int y, int flags);
+double pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3);
 
 unsigned char mitEncodeStitch(double value);
 int mitDecodeStitch(unsigned char value);
-
-void pcdEncode(FILE* file, int dx, int dy, int flags);
-double pcdDecode(unsigned char a1, unsigned char a2, unsigned char a3);
 
 int encode_tajima_ternary(unsigned char b[3], int x, int y);
 void decode_tajima_ternary(unsigned char b[3], int *x, int *y);

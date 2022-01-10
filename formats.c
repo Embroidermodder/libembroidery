@@ -19,6 +19,9 @@
 
 #define MAX_STITCHES             1000000
 
+void write_24bit(FILE* file, int);
+int check_header_present(FILE* file, int minimum_header_length);
+
 char read100(EmbPattern *pattern, FILE* file);
 char write100(EmbPattern *pattern, FILE* file);
 char read10o(EmbPattern *pattern, FILE* file);
@@ -3207,8 +3210,8 @@ char readMax(EmbPattern* pattern, FILE* file) {
         double dx, dy;
         int flags;
         flags = NORMAL;
-        dx = maxDecode(b[0], b[1], b[2]);
-        dy = maxDecode(b[4], b[5], b[6]);
+        dx = pfaffDecode(b[0], b[1], b[2]);
+        dy = pfaffDecode(b[4], b[5], b[6]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     embPattern_flipVertical(pattern);
@@ -3240,7 +3243,8 @@ char writeMax(EmbPattern* pattern, FILE* file) {
         st = pattern->stitchList->stitch[i];
         x = (int)round(st.x * 10.0);
         y = (int)round(st.y * 10.0);
-        maxEncode(file, x, y);
+        write_24bit(file, x);
+        write_24bit(file, y);
     }
     return 1;
 }
@@ -3597,7 +3601,7 @@ char readPcd(EmbPattern* pattern, const char *fileName, FILE* file) {
     int i = 0;
     unsigned char b[9];
     double dx = 0, dy = 0;
-    int flags = 0, st = 0;
+    int st = 0;
     unsigned char version, hoopSize;
     unsigned short colorCount = 0;
 
@@ -3626,10 +3630,11 @@ char readPcd(EmbPattern* pattern, const char *fileName, FILE* file) {
     st = fread_uint16(file);
     /* READ STITCH RECORDS */
     for (i = 0; i < st; i++) {
-        flags = NORMAL;
+        int flags;
         if (fread(b, 1, 9, file) != 9) {
             break;
         }
+        flags = NORMAL;
         if (b[8] & 0x01) {
             flags = STOP;
         } else if (b[8] & 0x04) {
@@ -3637,8 +3642,8 @@ char readPcd(EmbPattern* pattern, const char *fileName, FILE* file) {
         } else if (b[8] != 0) {
         /* TODO: ONLY INTERESTED IN THIS CASE TO LEARN MORE ABOUT THE FORMAT */
         }
-        dx = pcdDecode(b[1], b[2], b[3]);
-        dy = pcdDecode(b[5], b[6], b[7]);
+        dx = pfaffDecode(b[1], b[2], b[3]);
+        dy = pfaffDecode(b[5], b[6], b[7]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     return 1;
@@ -3663,7 +3668,7 @@ char writePcd(EmbPattern* pattern, FILE* file) {
     /* write stitches */
     for (i = 0; i < pattern->stitchList->count; i++) {
         EmbStitch st = pattern->stitchList->stitch[i];
-        pcdEncode(file, (int)round(st.x * 10.0), (int)round(st.y * 10.0), st.flags);
+        pfaffEncode(file, (int)round(st.x * 10.0), (int)round(st.y * 10.0), st.flags);
     }
     return 1;
 }
@@ -3671,19 +3676,10 @@ char writePcd(EmbPattern* pattern, FILE* file) {
 /* ---------------------------------------------------------------- */
 /* format pcm */
 
-static double pcmDecode(unsigned char a1, unsigned char a2, unsigned char a3) {
-    int res = a1 + (a2 << 8) + (a3 << 16);
-    if (res > 0x7FFFFF) {
-        return (-((~(res) & 0x7FFFFF) - 1));
-    }
-    return res;
-}
-
 char readPcm(EmbPattern* pattern, FILE* file) {
-    int i = 0;
-    unsigned char b[9];
+    int i = 0, st;
     double dx = 0, dy = 0;
-    int flags = 0, st = 0;
+    int header_size = 16*2+6;
 
     fseek(file, 4, SEEK_SET);
     for (i = 0; i < 16; i++) {
@@ -3695,6 +3691,8 @@ char readPcm(EmbPattern* pattern, FILE* file) {
     st = fread_uint16_be(file);
     /* READ STITCH RECORDS */
     for (i = 0; i < st; i++) {
+        int flags;
+        unsigned char b[9];
         flags = NORMAL;
         if (fread(b, 1, 9, file) != 9) {
             break;
@@ -3706,8 +3704,8 @@ char readPcm(EmbPattern* pattern, FILE* file) {
         } else if (b[8] != 0) {
         /* TODO: ONLY INTERESTED IN THIS CASE TO LEARN MORE ABOUT THE FORMAT */
         }
-        dx = pcmDecode(b[2], b[1], b[0]);
-        dy = pcmDecode(b[6], b[5], b[4]);
+        dx = pfaffDecode(b[2], b[1], b[0]);
+        dy = pfaffDecode(b[6], b[5], b[4]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     return 1;
@@ -3719,40 +3717,6 @@ char writePcm(EmbPattern* pattern, FILE* file) {
 
 /* ---------------------------------------------------------------- */
 /* format pcq */
-
-static double pcqDecode(unsigned char a1, unsigned char a2, unsigned char a3)
-{
-    int res = a1 + (a2 << 8) + (a3 << 16);
-    if (res > 0x7FFFFF)
-    {
-        return (-((~(res) & 0x7FFFFF) - 1));
-    }
-    return res;
-}
-
-static void pcqEncode(FILE* file, int dx, int dy, int flags)
-{
-    unsigned char b[9];
-
-    b[0] = 0;
-    b[1] = (unsigned char)(dx & 0xFF);
-    b[2] = (unsigned char)((dx >> 8) & 0xFF);
-    b[3] = (unsigned char)((dx >> 16) & 0xFF);
-
-    b[4] = 0;
-    b[5] = (unsigned char)(dy & 0xFF);
-    b[6] = (unsigned char)((dy >> 8) & 0xFF);
-    b[7] = (unsigned char)((dy >> 16) & 0xFF);
-
-    b[8] = 0;
-    if (flags & STOP) {
-        b[8] |= 0x01;
-    }
-    if (flags & TRIM) {
-        b[8] |= 0x04;
-    }
-    fwrite(b, 1, 9, file);
-}
 
 char readPcq(EmbPattern* pattern, const char* fileName, FILE* file)
 {
@@ -3803,8 +3767,8 @@ char readPcq(EmbPattern* pattern, const char* fileName, FILE* file)
         else if (b[8] != 0) {
             /* TODO: ONLY INTERESTED IN THIS CASE TO LEARN MORE ABOUT THE FORMAT */
         }
-        dx = pcqDecode(b[1], b[2], b[3]);
-        dy = pcqDecode(b[5], b[6], b[7]);
+        dx = pfaffDecode(b[1], b[2], b[3]);
+        dy = pfaffDecode(b[5], b[6], b[7]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     return 1;
@@ -3829,7 +3793,7 @@ char writePcq(EmbPattern* pattern, FILE* file)
     /* write stitches */
     for (i = 0; i < pattern->stitchList->count; i++) {
         EmbStitch st = pattern->stitchList->stitch[i];
-        pcqEncode(file, (int)round(st.x * 10.0), (int)round(st.y * 10.0), st.flags);
+        pfaffEncode(file, (int)round(st.x * 10.0), (int)round(st.y * 10.0), st.flags);
     }
     return 1;
 }
@@ -3837,42 +3801,6 @@ char writePcq(EmbPattern* pattern, FILE* file)
 
 /* ---------------------------------------------------------------- */
 /* format pcs */
-
-static double pcsDecode(unsigned char a1, unsigned char a2, unsigned char a3)
-{
-    int res = a1 + (a2 << 8) + (a3 << 16);
-    if (res > 0x7FFFFF)
-    {
-        return (-((~(res) & 0x7FFFFF) - 1));
-    }
-    return res;
-}
-
-static void pcsEncode(FILE* file, int dx, int dy, int flags)
-{
-    unsigned char flagsToWrite = 0;
-
-    if (!file) { printf("ERROR: format-pcs.c pcsEncode(), file argument is null\n"); return; }
-
-    binaryWriteByte(file, (unsigned char)0);
-    binaryWriteByte(file, (unsigned char)(dx & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dx >> 8) & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dx >> 16) & 0xFF));
-
-    binaryWriteByte(file, (unsigned char)0);
-    binaryWriteByte(file, (unsigned char)(dy & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dy >> 8) & 0xFF));
-    binaryWriteByte(file, (unsigned char)((dy >> 16) & 0xFF));
-    if (flags & STOP)
-    {
-        flagsToWrite |= 0x01;
-    }
-    if (flags & TRIM)
-    {
-        flagsToWrite |= 0x04;
-    }
-    binaryWriteByte(file, flagsToWrite);
-}
 
 char readPcs(EmbPattern* pattern, const char* fileName, FILE* file)
 {
@@ -3935,8 +3863,8 @@ char readPcs(EmbPattern* pattern, const char* fileName, FILE* file)
         {
             /* TODO: ONLY INTERESTED IN THIS CASE TO LEARN MORE ABOUT THE FORMAT */
         }
-        dx = pcsDecode(b[1], b[2], b[3]);
-        dy = pcsDecode(b[5], b[6], b[7]);
+        dx = pfaffDecode(b[1], b[2], b[3]);
+        dy = pfaffDecode(b[5], b[6], b[7]);
         embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
 
@@ -3955,16 +3883,14 @@ char writePcs(EmbPattern* pattern, FILE* file)
         embColor_write(file, color, 4);
     }
 
-    for (; i < 16; i++)
-    {
-        binaryWriteUInt(file, 0); /* write remaining colors to reach 16 */
-    }
+    /* write remaining colors to reach 16 */
+    fpad(file, 0, 4*(16-i));
 
     binaryWriteUShort(file, (unsigned short)pattern->stitchList->count);
     /* write stitches */
     for (i = 0; i < pattern->stitchList->count; i++) {
         EmbStitch st = pattern->stitchList->stitch[i];
-        pcsEncode(file, (int)round(st.x * 10.0), (int)round(st.y * 10.0), st.flags);
+        pfaffEncode(file, (int)round(st.x * 10.0), (int)round(st.y * 10.0), st.flags);
     }
     return 1;
 }
@@ -4101,6 +4027,9 @@ char readPec(EmbPattern* pattern, const char *fileName, FILE* file) {
     unsigned int graphicsOffset;
     unsigned char colorChanges;
     int i;
+
+    if (!check_header_present(file, 0x20A))
+        return 0;
 
     fseek(file, 0x38, SEEK_SET);
     colorChanges = (unsigned char)binaryReadByte(file);
@@ -5220,6 +5149,10 @@ char readShv(EmbPattern* pattern, FILE* file)
     int currColorIndex = 0;
     unsigned short sx, sy;
 
+    if (!check_header_present(file, 25)) {
+        return 0;
+    }
+
     fseek(file, strlen(headerText), SEEK_SET);
     fileNameLength = fgetc(file);
     fseek(file, fileNameLength, SEEK_CUR);
@@ -5487,14 +5420,24 @@ char readStx(EmbPattern* pattern, FILE* file)
     int val[12];
     int bottom, top;
 
+    if (!check_header_present(file, 15)) {
+        puts("ERROR: header is not present.");
+        return 0;
+    }
+
+    /* bytes 0-6 */
     binaryReadBytes(file, headerBytes, 7); /* TODO: check return value */
     header = (char*)headerBytes;
 
-    memcpy(filetype, &header[0], 3);
+    /* bytes 7-9 */
+    memcpy(filetype, &header[0], 3); 
+    /* bytes 10-13 */
     memcpy(version, &header[3], 4);
     filetype[3] = '\0';
     version[4] = '\0';
+    /* byte 14 */
     binaryReadByte(file);
+    /* bytes 15- */
     paletteLength = fread_int32(file);
     imageLength = fread_int32(file);
     something1 = fread_int32(file);
@@ -5973,6 +5916,10 @@ char readU00(EmbPattern* pattern, FILE* file) {
     int flags = NORMAL;
     char endOfStream = 0;
 
+    if (!check_header_present(file, 0x100)) {
+        return 0;
+    }
+
     /* 16 3byte RGB's start @ 0x08 followed by 14 bytes between 
         0 and 15 with index of color for each color change */
     fseek(file, 0x08, SEEK_SET);
@@ -6030,6 +5977,10 @@ char readU01(EmbPattern* pattern, FILE* file) {
     int fileLength, negativeX = 0, negativeY = 0, flags = NORMAL;
     char dx, dy;
     unsigned char data[3];
+
+    if (!check_header_present(file, 0x100)) {
+        return 0;
+    }
 
     fseek(file, 0, SEEK_END);
     fileLength = ftell(file);
@@ -6152,13 +6103,11 @@ char readVip(EmbPattern* pattern, FILE* file)
     unsigned char *xData = 0, *xDecompressed = 0, *yData = 0, *yDecompressed = 0;
     VipHeader header;
 
-    fseek(file, 0x0, SEEK_END);
-    fileLength = ftell(file);
-    if (fileLength < 32) {
+    fileLength = check_header_present(file, 32);
+    if (!fileLength) {
         printf("ERROR: file shorter than header.");
         return 0;
     }
-    fseek(file, 0x00, SEEK_SET);
 
     header.magicCode = fread_int32(file);
     header.numberOfStitches = fread_int32(file);

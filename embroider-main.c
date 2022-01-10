@@ -177,6 +177,8 @@ static void formats(void)
 
 int main(int argc, const char* argv[])
 {
+    EmbPattern *current_pattern;
+    EmbImage *current_image;
     int i, j, flags, result;
     if (argc == 1) {
         usage();
@@ -225,12 +227,17 @@ int main(int argc, const char* argv[])
         case FLAG_FILL:
             puts("This flag is not implimented.");
             break;
+        case FLAG_RENDER:
+        case FLAG_RENDER_SHORT:
+            render(current_pattern, current_image, "output.ppm");
+            break;
         case FLAG_VERSION:
         case FLAG_VERSION_SHORT:
             puts(version_string);
             break;
         case FLAG_HILBERT_CURVE:
-            hilbert_curve(3);
+            current_pattern = embPattern_create();
+            hilbert_curve(current_pattern, 3);
             break;
         case FLAG_TEST:
             testMain(0);
@@ -248,6 +255,7 @@ int main(int argc, const char* argv[])
     if (!flags) {
         convert(argv[1], argv[2]);
     }
+    embPattern_free(current_pattern);
 
     return 0;
 

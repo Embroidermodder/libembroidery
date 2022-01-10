@@ -67,17 +67,17 @@ Potential reference:
     return 0;
 }
 
-int hilbert_curve(int iterations)
+int hilbert_curve(EmbPattern *pattern, int iterations)
 {
     /*
     https://en.wikipedia.org/wiki/Hilbert_curve
 
     Using the Lindenmayer System, so we can save work across
-    different functions
+    different functions.
     */
     char *state;
     int i, position[2], direction;
-    FILE *f;
+    double scale = 1.0;
 
     /* Make the n-th iteration. */
     state = malloc(max_stitches*10);
@@ -87,10 +87,6 @@ int hilbert_curve(int iterations)
     position[0] = 0;
     position[1] = 0;
     direction = 0;
-
-    f = fopen("plot.py", "w");
-    fprintf(f, "#!/usr/bin/env python3\n");
-    fprintf(f, "A = [\n    0, 0");
 
     for (i = 0; i < strlen(state); i++) {
         if (state[i] == '+') {
@@ -102,6 +98,7 @@ int hilbert_curve(int iterations)
             continue;
         }
         if (state[i] == 'F') {
+            int flags = NORMAL;
             switch (direction) {
             case 0:
             default:
@@ -117,17 +114,11 @@ int hilbert_curve(int iterations)
                 position[1]--;
                 break;
             }
-            fprintf(f, ",\n    %d, %d", position[0], position[1]);
+            embPattern_addStitchAbs(pattern, position[0]*scale, position[1]*scale, flags, 0);
         }
     }
-    fprintf(f, "]\n");
-
-    fprintf(f, "import matplotlib.pyplot as plt\n"
-           "plt.plot(A[0::2], A[1::2])\n"
-           "plt.show()\n");
-
-    fclose(f);
     free(state);
+    embPattern_end(pattern);
     return 0;
 }
 

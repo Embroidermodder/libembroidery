@@ -306,6 +306,24 @@ void MainWindow::designDetails()
 }
 */
 
+/* Checks that there are enough bytes to interpret the header,
+ * stops possible segfaults when reading in the header bytes.
+ *
+ * Returns 0 if there aren't enough, or the length of the file
+ * if there are.
+ */
+int check_header_present(FILE* file, int minimum_header_length)
+{
+    int length;
+    fseek(file, 0, SEEK_END);
+    length = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    if (length < minimum_header_length) {
+        return 0;
+    }
+    return length;
+}
+
 /* Returns an EmbArcObject. It is created on the stack. */
 EmbArcObject embArcObject_make(double sx, double sy, double mx,
                                 double my, double ex, double ey) {
@@ -2757,6 +2775,14 @@ EmbVector embSettings_home(EmbSettings* settings) {
 /*! Sets the home position stored in (\a settings) to EmbPoint (\a point). You will rarely ever need to use this. */
 void embSettings_setHome(EmbSettings* settings, EmbVector point) {
     settings->home = point;
+}
+
+void write_24bit(FILE* file, int x)
+{
+    binaryWriteByte(file, (unsigned char)0);
+    binaryWriteByte(file, (unsigned char)(x & 0xFF));
+    binaryWriteByte(file, (unsigned char)((x >> 8) & 0xFF));
+    binaryWriteByte(file, (unsigned char)((x >> 16) & 0xFF));
 }
 
 int embColor_distance(EmbColor a, EmbColor b)

@@ -869,6 +869,61 @@ int embArray_resize(EmbArray *p) {
     return 1;
 }
 
+void embArray_copy(EmbArray *dst, EmbArray *src)
+{
+    dst = (EmbArray*)malloc(sizeof(EmbArray));
+    dst->type = src->type;
+    dst->length = src->length;
+    dst->count = src->count;
+    embArray_resize(dst);
+    switch (src->type) {
+    case EMB_ARC:
+        memcpy(dst->arc, src->arc, sizeof(EmbArcObject)*src->count);
+        break;
+    case EMB_CIRCLE:
+        memcpy(dst->circle, src->circle, sizeof(EmbCircleObject)*src->count);
+        break;
+    case EMB_ELLIPSE:
+        memcpy(dst->ellipse, src->ellipse, sizeof(EmbEllipseObject)*src->count);
+        break;
+    case EMB_FLAG:
+        memcpy(dst->flag, src->flag, sizeof(int)*src->count);
+        break;
+    case EMB_PATH:
+        memcpy(dst->path, src->path, sizeof(EmbPathObject)*src->count);
+        break;
+    case EMB_POINT:
+        memcpy(dst->point, src->point, sizeof(EmbPointObject)*src->count);
+        break;
+    case EMB_LINE:
+        memcpy(dst->line, src->line, sizeof(EmbLineObject)*src->count);
+        break;
+    case EMB_POLYGON:
+        memcpy(dst->polygon, src->polygon, sizeof(int)*src->count);
+        break;
+    case EMB_POLYLINE:
+        memcpy(dst->polyline, src->polyline, sizeof(int)*src->count);
+        break;
+    case EMB_RECT:
+        memcpy(dst->rect, src->rect, sizeof(int)*src->count);
+        break;
+    case EMB_SPLINE:
+        memcpy(dst->spline, src->spline, sizeof(int)*src->count);
+        break;
+    case EMB_STITCH:
+        memcpy(dst->stitch, src->stitch, sizeof(int)*src->count);
+        break;
+    case EMB_THREAD:
+        memcpy(dst->thread, src->thread, sizeof(int)*src->count);
+        break;
+    case EMB_VECTOR:
+        memcpy(dst->vector, src->vector, sizeof(int)*src->count);
+        break;
+    default:
+        break;
+    }
+}
+
 int embArray_addArc(EmbArray* p, EmbArc arc, int lineType, EmbColor color) {
     p->count++;
     if (!embArray_resize(p)) {
@@ -2734,7 +2789,7 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density
             embVector_average(result->side1->vector[j+1], result->side2->vector[j+1], &midRight);
 
             embVector_subtract(midLeft, midRight, &midDiff);
-            midLength = embVector_getLength(midDiff);
+            midLength = embVector_length(midDiff);
 
             numberOfSteps = (int)(midLength * density / 200);
             embVector_multiply(topDiff, 1.0/numberOfSteps, &topStep);
@@ -3203,7 +3258,7 @@ divideByZero = divideByZero/divideByZero; /*TODO: wrap time() from time.h and ve
  * Finds the unit length vector \a result in the same direction as \a vector.
  */
 void embVector_normalize(EmbVector vector, EmbVector* result) {
-    double length = embVector_getLength(vector);
+    double length = embVector_length(vector);
 
     if (!result) {
         printf("ERROR: emb-vector.c embVector_normalize(), result argument is null\n");
@@ -3269,8 +3324,21 @@ void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result) {
  * (x)   (a) = xa+yb
  * (y) . (b)
  */
-double embVector_dot(EmbVector v1, EmbVector v2) {
+float embVector_dot(EmbVector v1, EmbVector v2) {
     return v1.x * v2.x + v1.y * v2.y;
+}
+
+/**
+ * The "cross product" as vectors \a v1 and \a v2 returned as a float.
+ * Technically, this is one component only of a cross product, but in
+ * our 2 dimensional framework we can use this as a scalar rather than
+ * a vector in calculations.
+ *
+ * (a) x (c) = ad-bc
+ * (b)   (d)
+ */
+float embVector_cross(EmbVector v1, EmbVector v2) {
+    return v1.x * v2.y - v1.y * v2.x;
 }
 
 /**
@@ -3294,11 +3362,43 @@ void embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result) 
 /**
  * The length or absolute value of the vector \a vector. 
  */
-double embVector_getLength(EmbVector vector) {
+float embVector_length(EmbVector vector) {
     return sqrt(vector.x * vector.x + vector.y * vector.y);
 }
 
+/*
+ *  
+ */
+float embVector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3)
+{
+    EmbVector b, c;
+    embVector_subtract(a1, a2, &b);
+    embVector_subtract(a3, a2, &c);
+    return embVector_dot(b, c);
+}
 
+/*
+ *  
+ */
+float embVector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3)
+{
+    EmbVector b, c;
+    embVector_subtract(a1, a2, &b);
+    embVector_subtract(a3, a2, &c);
+    return embVector_cross(b, c);
+}
+
+/*
+ * The angle, measured anti-clockwise from the x-axis, of a vector v.
+ */
+float embVector_angle(EmbVector v)
+{
+    return atan2(v.x, v.y);
+}
+
+/*
+ *
+ */
 int convert(const char *inf, const char *outf) {
     EmbPattern* p = 0;
     int reader, writer;

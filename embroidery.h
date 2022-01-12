@@ -678,6 +678,7 @@ typedef struct EmbImage_ {
     float width;
     float height;
     EmbColor *color;
+    EmbVector offset;
 } EmbImage;
 
 /**
@@ -754,6 +755,7 @@ EMB_PUBLIC int emb_identify_format(const char *ending);
 
 EMB_PUBLIC EmbArray* embArray_create(int type);
 EMB_PUBLIC int embArray_resize(EmbArray *g);
+EMB_PUBLIC void embArray_copy(EmbArray *dst, EmbArray *src);
 EMB_PUBLIC int embArray_addArc(EmbArray* g, EmbArc arc, int lineType, EmbColor color);
 EMB_PUBLIC int embArray_addCircle(EmbArray* g, EmbCircle circle, int lineType, EmbColor color);
 EMB_PUBLIC int embArray_addEllipse(EmbArray* g, EmbEllipse circle, double rotation, int lineType, EmbColor color);
@@ -788,15 +790,20 @@ EMB_PUBLIC void embVector_multiply(EmbVector vector, double magnitude, EmbVector
 EMB_PUBLIC void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result);
-EMB_PUBLIC double embVector_dot(EmbVector v1, EmbVector v2);
+EMB_PUBLIC float embVector_dot(EmbVector v1, EmbVector v2);
+EMB_PUBLIC float embVector_cross(EmbVector v1, EmbVector v2);
 EMB_PUBLIC void embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result);
-EMB_PUBLIC double embVector_getLength(EmbVector vector);
+EMB_PUBLIC float embVector_length(EmbVector vector);
+EMB_PUBLIC float embVector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3);
+EMB_PUBLIC float embVector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3);
+EMB_PUBLIC float embVector_angle(EmbVector v);
 
 EMB_PUBLIC int read_ppm_image(char *fname, EmbImage *a);
 EMB_PUBLIC void write_ppm_image(char *fname, EmbImage *a);
 EMB_PUBLIC float image_diff(EmbImage *, EmbImage *);
 EMB_PUBLIC int render_line(EmbLine, EmbImage *, EmbColor);
-EMB_PUBLIC int render(EmbPattern *pattern, EmbImage *image, char *fname);
+EMB_PUBLIC int embImage_render(EmbPattern *pattern, float width, float height, char *fname);
+EMB_PUBLIC int embImage_simulate(EmbPattern *pattern, float width, float height, char *fname);
 EMB_PUBLIC int render_postscript(EmbPattern *pattern, EmbImage *image);
 
 EMB_PUBLIC void testMain(int level);
@@ -872,8 +879,11 @@ EMB_PUBLIC EmbColor embColor_make(unsigned char r, unsigned char g, unsigned cha
 EMB_PUBLIC EmbColor* embColor_create(unsigned char r, unsigned char g, unsigned char b);
 EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
 EMB_PUBLIC int embColor_distance(EmbColor a, EmbColor b);
-void embColor_read(FILE *file, EmbColor *c, int toRead);
-void embColor_write(FILE *file, EmbColor c, int toWrite);
+EMB_PUBLIC void embColor_read(FILE *file, EmbColor *c, int toRead);
+EMB_PUBLIC void embColor_write(FILE *file, EmbColor c, int toWrite);
+
+EMB_PUBLIC EmbImage *embImage_create(int, int);
+EMB_PUBLIC void embImage_free(EmbImage *image);
 
 EMB_PUBLIC double embEllipse_diameterX(EmbEllipse ellipse);
 EMB_PUBLIC double embEllipse_diameterY(EmbEllipse ellipse);

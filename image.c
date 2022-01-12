@@ -16,15 +16,15 @@
  * of the stitching process.
  */
 
-EmbImage * create_image(int width, int height, EmbColor background)
+EmbImage * embImage_create(int width, int height)
 {
     int i;
     EmbImage *image;
     image = (EmbImage*)malloc(sizeof(EmbImage));
-    image->width = 10.0;
-    image->height = 10.0;
     image->pixel_width = width;
     image->pixel_height = height;
+    image->offset.x = 0.0;
+    image->offset.y = 0.0;
     image->color = (EmbColor*)malloc(sizeof(EmbColor)*width*height);
     for (i=0; i<width*height; i++) {
         image->color[i].r = 255;
@@ -32,6 +32,12 @@ EmbImage * create_image(int width, int height, EmbColor background)
         image->color[i].b = 255;
     }
     return image;
+}
+
+void embImage_free(EmbImage *image)
+{
+    free(image->color);
+    free(image);
 }
 
 /*
@@ -119,18 +125,19 @@ float image_diff(EmbImage *a, EmbImage* b)
  */
 
 int render_line(EmbLine line, EmbImage *image, EmbColor color) {
-    EmbVector diff;
-    EmbVector pos;
+    EmbVector diff, pos, offset;
     int i;
     float pix_w, pix_h;
+    offset.x = 10.0;
+    offset.y = 0.0;
     diff.x = line.x2-line.x1;
     diff.y = line.y2-line.y1;
     pix_w = image->width / image->pixel_width;
     pix_h = image->height / image->pixel_height;
     for (i = 0; i < 1000; i++) {
         int x, y;
-        pos.x = line.x1 + 0.001*i*diff.x + 10.0;
-        pos.y = line.y1 + 0.001*i*diff.y;
+        pos.x = line.x1 + 0.001*i*diff.x + offset.x;
+        pos.y = line.y1 + 0.001*i*diff.y + offset.y;
         x = (int)round(pos.x / pix_w);
         y = (int)round(pos.y / pix_h);
         if (x >= 0 && x < image->pixel_width)
@@ -146,14 +153,16 @@ int render_line(EmbLine line, EmbImage *image, EmbColor color) {
  * This is a simple algorithm that steps through the stitches and
  * then for each line calls render_line.
  *
- * The caller is responsible for the memory in p and image.
+ * The caller is responsible for the memory in p.
  */
 
-int render(EmbPattern *p, EmbImage *image, char *fname) {
+int embImage_render(EmbPattern *p, float width, float height, char *fname) {
     int i;
+    EmbImage *image;
     EmbColor black = {0, 0, 0};
-    EmbColor white = {255, 255, 255};
-    image = create_image(100, 100, white);
+    image = embImage_create(100, 100);
+    image->width = width;
+    image->height = height;
     for (i=1; i < p->stitchList->count; i++)  {
         EmbLine line;
         line.x1 = p->stitchList->stitch[i-1].x;
@@ -163,8 +172,8 @@ int render(EmbPattern *p, EmbImage *image, char *fname) {
         render_line(line, image, black); /* HACK: st.color); */
     }
     write_ppm_image(fname, image);
-    free(image);
-    return 1;
+    embImage_free(image);
+    return 0;
 }
 
 /* EPS style render
@@ -174,5 +183,13 @@ int render(EmbPattern *p, EmbImage *image, char *fname) {
 
 int render_postscript(EmbPattern *pattern, EmbImage *image) {
     return 1;
+}
+
+/* Simulate the stitching of a pattern, using the image for rendering
+ * hints about how to represent the pattern.
+ */
+int embImage_simulate(EmbPattern *pattern, float width, float height, char *fname) {
+    embImage_render(pattern, width, height, "output.ppm");
+    return 0;
 }
 

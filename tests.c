@@ -49,6 +49,8 @@ report(int result, char *label)
 
 void testMain(int level)
 {
+    EmbPattern *pattern = embPattern_create();
+    EmbImage *image = embImage_create(100, 100);
     int circleResult = testEmbCircle();
     int threadResult = testThreadColor();
     int formatResult = testEmbFormat();
@@ -59,6 +61,9 @@ void testMain(int level)
     int svg2Result = convert("test02.csv", "test02.svg");
     int dst1Result = convert("test01.csv", "test01.dst");
     int dst2Result = convert("test02.csv", "test02.dst");
+    int hilbertCurveResult = hilbert_curve(pattern, 3);
+    int renderResult = embImage_render(pattern, 20.0, 20.0, "hilbert_level_3.ppm");
+    int simulateResult = embImage_simulate(pattern, 20.0, 20.0, "hilbert_level_3.avi");
 
     puts("SUMMARY OF RESULTS");
     puts("------------------");
@@ -72,7 +77,12 @@ void testMain(int level)
     report(svg2Result, "Convert CSV-SVG 2");
     report(dst1Result, "Convert CSV-DST 1");
     report(dst2Result, "Convert CSV-DST 2");
+    report(hilbertCurveResult, "Generating Hilbert Curve");
+    report(renderResult, "Rendering Hilbert Curve");
+    report(simulateResult, "Simulating Hilbert Curve");
     
+    embImage_free(image);
+    embPattern_free(pattern);
     if (level > 0) {
         puts("More expensive tests.");
         full_test_matrix("test_matrix.txt");

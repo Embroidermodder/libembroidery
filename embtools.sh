@@ -77,6 +77,10 @@ cmake --build . 2> error.txt
 cd ..
 }
 
+#display hilbert_level_3.ppm
+#
+#avconv -i %%06d.ppm -vcodec huffyuv output.avi
+
 function full_test_suite () {
 main_tests
 cd build

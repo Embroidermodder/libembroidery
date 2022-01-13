@@ -337,8 +337,11 @@ int main(int argc, const char* argv[])
     }
 
     /* No flags set: default to simple from-to conversion. */
-    if (!flags) {
+    if (!flags && argc == 3) {
         convert(argv[1], argv[2]);
+    }
+    else {
+        puts("Please enter an output format for your file, see --help.");
     }
     embPattern_free(current_pattern);
     return 0;

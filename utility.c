@@ -2381,7 +2381,7 @@ void embPattern_center(EmbPattern* p) {
 void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName) {
     char hasRead = 0;
     int stub_len, format;
-    char extractName[200], *dotPos;
+    char extractName[200];
 
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), p argument is null\n");
@@ -3212,16 +3212,6 @@ char* emb_optOut(double num, char* str) {
     /* Remove the decimal point if it happens to be an integer */
     rTrim(str, '.');
     return str;
-}
-
-/*! Duplicates the string (\a src) and returns it. It is created on the heap. The caller is responsible for freeing the allocated memory. */
-char* emb_strdup(const char* src) {
-    char* dest = 0;
-    if (!src) { printf("ERROR: helpers-misc.c emb_strdup(), src argument is null\n"); return 0; }
-    dest = (char*)malloc(strlen(src) + 1);
-    if (!dest) { printf("ERROR: helpers-misc.c emb_strdup(), cannot allocate memory\n"); }
-    else { strcpy(dest, src); }
-    return dest;
 }
 
 void embTime_initNow(EmbTime* t) {

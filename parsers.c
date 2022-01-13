@@ -15,6 +15,62 @@
 #include <string.h>
 #include <math.h>
 
+#define ELEMENT_XML               0
+#define ELEMENT_A                 1
+#define ELEMENT_ANIMATE           2
+#define ELEMENT_ANIMATE_COLOR     3
+#define ELEMENT_ANIMATE_MOTION    4
+#define ELEMENT_ANIMATE_TRANSFORM 5
+#define ELEMENT_ANIMATION         6
+#define ELEMENT_AUDIO             7
+#define ELEMENT_CIRCLE            8
+#define ELEMENT_DEFS              9
+#define ELEMENT_DESC              10
+#define ELEMENT_DISCARD           11
+#define ELEMENT_ELLIPSE           12
+#define ELEMENT_FONT              13
+#define ELEMENT_FONT_FACE         14
+#define ELEMENT_FONT_FACE_SRC     15
+#define ELEMENT_FONT_FACE_URI     16
+#define ELEMENT_FOREIGN_OBJECT    17
+#define ELEMENT_G                 18
+#define ELEMENT_GLYPH             19
+#define ELEMENT_HANDLER           20
+#define ELEMENT_HKERN             21
+#define ELEMENT_IMAGE             22
+#define ELEMENT_LINE              23
+#define ELEMENT_LINEAR_GRADIENT   24
+#define ELEMENT_LISTENER          25
+#define ELEMENT_METADATA          26
+#define ELEMENT_MISSING_GLYPH     27
+#define ELEMENT_MPATH             28
+#define ELEMENT_PATH              29
+#define ELEMENT_POLYGON           30
+#define ELEMENT_POLYLINE          31
+#define ELEMENT_PREFETCH          32
+#define ELEMENT_RADIAL_GRADIENT   33
+#define ELEMENT_RECT              34
+#define ELEMENT_SCRIPT            35
+#define ELEMENT_SET               36
+#define ELEMENT_SOLID_COLOR       37
+#define ELEMENT_STOP              38
+#define ELEMENT_SVG               39
+#define ELEMENT_SWITCH            40
+#define ELEMENT_TBREAK            41
+#define ELEMENT_TEXT              42
+#define ELEMENT_TEXT_AREA         43
+#define ELEMENT_TITLE             44
+#define ELEMENT_TSPAN             45
+#define ELEMENT_USE               46
+#define ELEMENT_VIDEO             47
+#define ELEMENT_UNKNOWN           48
+
+typedef struct SvgAttribute_
+{
+    char* name;
+    char* value;
+} SvgAttribute;
+
 int svg_parser(char *s, char **token_table)
 {
     return 0;
@@ -25,9 +81,13 @@ int svgCreator;
 int svgExpect;
 int svgMultiValue;
 
-SvgElement* currentElement;
-char* currentAttribute;
-char* currentValue;
+int current_element_id;
+SvgAttribute attributeList[1000];
+int n_attributes = 0;
+char currentAttribute[1000];
+char currentValue[1000];
+
+int svg_identify_element(char *buff);
 
 const char *svg_element_tokens[] = {
     "a", "animate", "animateColor", "animateMotion", "animateTransform", "animation",
@@ -146,94 +206,12 @@ int svgPathCmdToEmbPathFlag(char cmd)
     return LINETO;
 }
 
-SvgAttribute svgAttribute_create(const char* name, const char* value) {
-    SvgAttribute attribute;
-    char* modValue = 0;
-    modValue = emb_strdup(value);
-    charReplace(modValue, "\"'/,", "    ");
-    attribute.name = emb_strdup(name);
-    attribute.value = modValue;
-    return attribute;
-}
-
-void svgElement_addAttribute(SvgElement* element, SvgAttribute data) {
-    if (!element) {
-        printf("ERROR: format-svg.c svgElement_addAttribute(), element argument is null\n");
-        return;
-    }
-    if (!(element->attributeList)) {
-        element->attributeList = (SvgAttributeList*)malloc(sizeof(SvgAttributeList));
-        if (!(element->attributeList)) { printf("ERROR: format-svg.c svgElement_addAttribute(), cannot allocate memory for element->attributeList\n"); return; }
-        element->attributeList->attribute = data;
-        element->attributeList->next = 0;
-        element->lastAttribute = element->attributeList;
-        element->lastAttribute->next = 0;
-    } else {
-        SvgAttributeList* pointerLast = element->lastAttribute;
-        SvgAttributeList* list = (SvgAttributeList*)malloc(sizeof(SvgAttributeList));
-        if (!list) { printf("ERROR: format-svg.c svgElement_addAttribute(), cannot allocate memory for list\n"); return; }
-        list->attribute = data;
-        list->next = 0;
-        pointerLast->next = list;
-        element->lastAttribute = list;
-    }
-}
-
-void svgElement_free(SvgElement* element) {
-    SvgAttributeList* list;
-    SvgAttributeList* nextList;
-    if (!element) {
-        return;
-    }
-    list = element->attributeList;
-    while (list) {
-        free(list->attribute.name);
-        free(list->attribute.value);
-        nextList = list->next;
-        free(list);
-        list = nextList;
-    }
-
-    element->lastAttribute = 0;
-    free(element->name);
-    free(element);
-}
-
-SvgElement* svgElement_create(const char* name) {
-    SvgElement* element = 0;
-    element = (SvgElement*)malloc(sizeof(SvgElement));
-    if (!element) {
-        printf("ERROR: format-svg.c svgElement_create(), cannot allocate memory for element\n");
-        return 0;
-    }
-    element->name = emb_strdup(name);
-    if (!element->name) {
-        printf("ERROR: format-svg.c svgElement_create(), element->name is null\n");
-        return 0;
-    }
-    element->attributeList = 0;
-    element->lastAttribute = 0;
-    return element;
-}
-
-char* svgAttribute_getValue(SvgElement* element, const char* name) {
-    SvgAttributeList* pointer = 0;
-    if (!element) { 
-        printf("ERROR: format-svg.c svgAttribute_getValue(), element argument is null\n"); 
-        return (char *)"none"; 
-    }
-    if (!name) { 
-        printf("ERROR: format-svg.c svgAttribute_getValue(), name argument is null\n");
-        return (char *)"none"; 
-    }
-    if (!element->attributeList) { 
-        /* TODO: error */ 
-        return (char *)"none"; 
-    }
-    pointer = element->attributeList;
-    while (pointer) {
-        if (!strcmp(pointer->attribute.name, name)) { return pointer->attribute.value; }
-        pointer = pointer->next;
+char* svgAttribute_getValue(const char* name) {
+    int i;
+    for (i=0; i<n_attributes; i++) {
+        if (!strcmp(attributeList[i].name, name)) {
+            return attributeList[i].value;
+        }
     }
     return "none";
 }
@@ -244,51 +222,25 @@ void svgAddToPattern(EmbPattern* p) {
         printf("ERROR: format-svg.c svgAddToPattern(), p argument is null\n");
         return;
     }
-    if (!currentElement) {
-        return;
-    }
-    buff = currentElement->name;
-    if (!buff) {
-        return;
-    }
-    if (!strcmp(buff, "?xml")) { }
-    else if (!strcmp(buff, "a"))                {  }
-    else if (!strcmp(buff, "animate"))          {  }
-    else if (!strcmp(buff, "animateColor"))     {  }
-    else if (!strcmp(buff, "animateMotion"))    {  }
-    else if (!strcmp(buff, "animateTransform")) {  }
-    else if (!strcmp(buff, "animation"))        {  }
-    else if (!strcmp(buff, "audio"))            {  }
-    else if (!strcmp(buff, "circle")) {
-        embPattern_addCircleObjectAbs(p, atof(svgAttribute_getValue(currentElement, "cx")),
-                                         atof(svgAttribute_getValue(currentElement, "cy")),
-                                         atof(svgAttribute_getValue(currentElement, "r")));
-    } else if (!strcmp(buff, "defs")) {
-
-    } else if (!strcmp(buff, "desc"))             {  
-
-    } else if (!strcmp(buff, "discard"))          {  }
-    else if (!strcmp(buff, "ellipse")) {
-        embPattern_addEllipseObjectAbs(p, atof(svgAttribute_getValue(currentElement, "cx")),
-                                          atof(svgAttribute_getValue(currentElement, "cy")),
-                                          atof(svgAttribute_getValue(currentElement, "rx")),
-                                          atof(svgAttribute_getValue(currentElement, "ry")));
-    } else if (!strcmp(buff, "font"))             {  
-
-    } else if (!strcmp(buff, "font-face"))        {  }
-    else if (!strcmp(buff, "font-face-src"))    {  }
-    else if (!strcmp(buff, "font-face-uri"))    {  }
-    else if (!strcmp(buff, "foreignObject"))    {  }
-    else if (!strcmp(buff, "g"))                {  }
-    else if (!strcmp(buff, "glyph"))            {  }
-    else if (!strcmp(buff, "handler"))          {  }
-    else if (!strcmp(buff, "hkern"))            {  }
-    else if (!strcmp(buff, "image"))            {  }
-    else if (!strcmp(buff, "line")) {
-        char* x1 = svgAttribute_getValue(currentElement, "x1");
-        char* y1 = svgAttribute_getValue(currentElement, "y1");
-        char* x2 = svgAttribute_getValue(currentElement, "x2");
-        char* y2 = svgAttribute_getValue(currentElement, "y2");
+    switch (current_element_id) {
+    case ELEMENT_CIRCLE:
+        embPattern_addCircleObjectAbs(p,
+            atof(svgAttribute_getValue("cx")),
+            atof(svgAttribute_getValue("cy")),
+            atof(svgAttribute_getValue("r")));
+        break;
+    case ELEMENT_ELLIPSE:
+        embPattern_addEllipseObjectAbs(p,
+            atof(svgAttribute_getValue("cx")),
+            atof(svgAttribute_getValue("cy")),
+            atof(svgAttribute_getValue("rx")),
+            atof(svgAttribute_getValue("ry")));
+        break;
+    case ELEMENT_LINE:
+        char* x1 = svgAttribute_getValue("x1");
+        char* y1 = svgAttribute_getValue("y1");
+        char* x2 = svgAttribute_getValue("x2");
+        char* y2 = svgAttribute_getValue("y2");
 
         /* If the starting and ending points are the same, it is a point */
         if (!strcmp(x1, x2) && !strcmp(y1, y2)) {
@@ -296,17 +248,12 @@ void svgAddToPattern(EmbPattern* p) {
         } else {
             embPattern_addLineObjectAbs(p, atof(x1), atof(y1), atof(x2), atof(y2));
         }
-    } else if (!strcmp(buff, "linearGradient"))   {  }
-    else if (!strcmp(buff, "listener"))         {  }
-    else if (!strcmp(buff, "metadata"))         {  }
-    else if (!strcmp(buff, "missing-glyph"))    {  }
-    else if (!strcmp(buff, "mpath"))            {  }
-    else if (!strcmp(buff, "path"))
-    {
+        break;
+    case ELEMENT_PATH: {
         /* TODO: finish */
 
-        char* pointStr = svgAttribute_getValue(currentElement, "d");
-        char* mystrok = svgAttribute_getValue(currentElement, "stroke");
+        char* pointStr = svgAttribute_getValue("d");
+        char* mystrok = svgAttribute_getValue("stroke");
 
         int last = strlen(pointStr);
         int size = 32;
@@ -582,7 +529,7 @@ void svgAddToPattern(EmbPattern* p) {
 
         /* TODO: subdivide numMoves > 1 */
 
-        color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
+        color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
         
         path = (EmbPathObject *)malloc(sizeof(EmbPathObject));
         path->pointList = pointList;
@@ -590,9 +537,11 @@ void svgAddToPattern(EmbPattern* p) {
         path->color = color;
         path->lineType = 1;
         embPattern_addPathObjectAbs(p, path);
-    } else if (!strcmp(buff, "polygon") ||
-            !strcmp(buff, "polyline")) {
-        char* pointStr = svgAttribute_getValue(currentElement, "points");
+    }
+    case ELEMENT_POLYGON:
+    case ELEMENT_POLYLINE:
+    {
+        char* pointStr = svgAttribute_getValue("points");
         int last = strlen(pointStr);
         int size = 32;
         int i = 0;
@@ -655,54 +604,57 @@ void svgAddToPattern(EmbPattern* p) {
             EmbPolygonObject* polygonObj;
             polygonObj = (EmbPolygonObject*)malloc(sizeof(EmbPolygonObject));
             polygonObj->pointList = pointList;
-            polygonObj->color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
+            polygonObj->color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
             polygonObj->lineType = 1; /* TODO: use lineType enum */
             embPattern_addPolygonObjectAbs(p, polygonObj);
         } else { /* polyline */
             EmbPolylineObject* polylineObj;
             polylineObj = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
             polylineObj->pointList = pointList;
-            polylineObj->color = svgColorToEmbColor(svgAttribute_getValue(currentElement, "stroke"));
+            polylineObj->color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
             polylineObj->lineType = 1; /* TODO: use lineType enum */
             embPattern_addPolylineObjectAbs(p, polylineObj);
         }
     }
-    else if (!strcmp(buff, "prefetch")) {
-
-    } else if (!strcmp(buff, "radialGradient")) {
-
-    } else if (!strcmp(buff, "rect")) {
+        break;
+    case ELEMENT_RECT:
         embPattern_addRectObjectAbs(p, 
-            atof(svgAttribute_getValue(currentElement, "x")),
-            atof(svgAttribute_getValue(currentElement, "y")),
-            atof(svgAttribute_getValue(currentElement, "width")),
-            atof(svgAttribute_getValue(currentElement, "height")));
-    } else if (!strcmp(buff, "script"))           {  
+            atof(svgAttribute_getValue("x")),
+            atof(svgAttribute_getValue("y")),
+            atof(svgAttribute_getValue("width")),
+            atof(svgAttribute_getValue("height")));
+        break;
+    default:
+        break;
+    }
+}
 
-    } else if (!strcmp(buff, "set")) {  }
-    else if (!strcmp(buff, "solidColor")) {  }
-    else if (!strcmp(buff, "stop"))             {  }
-    else if (!strcmp(buff, "svg"))              {  }
-    else if (!strcmp(buff, "switch"))           {  }
-    else if (!strcmp(buff, "tbreak"))           {  }
-    else if (!strcmp(buff, "text"))             {  }
-    else if (!strcmp(buff, "textArea"))         {  }
-    else if (!strcmp(buff, "title"))            {  }
-    else if (!strcmp(buff, "tspan"))            {  }
-    else if (!strcmp(buff, "use"))              {  }
-    else if (!strcmp(buff, "video"))            {  }
-
-    svgElement_free(currentElement);
+int svg_identify_element(char *buff)
+{
+    int i;
+    for (i=0; svg_element_tokens[i][0]; i++) {
+        if (!strcmp(buff, svg_element_tokens[i])) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 int svgIsElement(const char* buff) {
     if (stringInArray(buff, svg_element_tokens)) {
         return SVG_ELEMENT;
     }
-    /* Attempt to identify the program that created the SVG file. This should be in a comment at that occurs before the svg element. */
-    else if (!strcmp(buff, "Embroidermodder"))     { svgCreator = SVG_CREATOR_EMBROIDERMODDER; }
-    else if (!strcmp(buff, "Illustrator"))         { svgCreator = SVG_CREATOR_ILLUSTRATOR; }
-    else if (!strcmp(buff, "Inkscape"))            { svgCreator = SVG_CREATOR_INKSCAPE; }
+    /* Attempt to identify the program that created the SVG file.
+     * This should be in a comment at that occurs before the svg element. */
+    else if (!strcmp(buff, "Embroidermodder")) {
+        svgCreator = SVG_CREATOR_EMBROIDERMODDER;
+    }
+    else if (!strcmp(buff, "Illustrator")) {
+        svgCreator = SVG_CREATOR_ILLUSTRATOR;
+    }
+    else if (!strcmp(buff, "Inkscape")) {
+        svgCreator = SVG_CREATOR_INKSCAPE;
+    }
 
     return SVG_NULL;
 }
@@ -1586,170 +1538,212 @@ void svgProcess(int c, const char* buff)
         if (advance) {
             printf("ELEMENT:\n");
             svgExpect = SVG_EXPECT_ATTRIBUTE;
-            currentElement = svgElement_create(buff);
+            current_element_id = svg_identify_element(buff);
         } else {
             return;
         }
     } else if (svgExpect == SVG_EXPECT_ATTRIBUTE) {
         char advance = 0;
-        const char* name = 0;
-        if (!currentElement) {
-            /* TODO: error */
-            return;
-        }
-        name = currentElement->name;
-        if (!strcmp(name, "?xml")) {
+        switch (current_element_id) {
+        case ELEMENT_XML:
             if (!advance) {
                 advance = (char)svgIsXmlAttribute(buff);
             }
-        } else if (!strcmp(name, "a")) {
+            break;
+        case ELEMENT_A:
             if (!advance) {
                 advance = (char)svgIsProperty(buff);
             }
             if (!advance) {
                 advance = (char)svgIsLinkAttribute(buff);
             }
-        } else if (!strcmp(name, "animate")) {
+            break;
+        case ELEMENT_ANIMATE:
             if (!advance) {
                 advance = (char)svgIsAnimateAttribute(buff);
             }
-        } else if (!strcmp(name, "animateColor")) {
+            break;
+        case ELEMENT_ANIMATE_COLOR:
             if (!advance) {
                 advance = (char)svgIsAnimateColorAttribute(buff);
             }
-        } else if (!strcmp(name, "animateMotion")) {
+            break;
+        case ELEMENT_ANIMATE_MOTION:
             if (!advance) {
                 advance = (char)svgIsAnimateMotionAttribute(buff);
             }
-        } else if (!strcmp(name, "animateTransform")) {
+            break;
+        case ELEMENT_ANIMATE_TRANSFORM:
             if (!advance) {
                 advance = (char)svgIsAnimateTransformAttribute(buff);
             }
-        } else if (!strcmp(name, "animation")) {
+            break;
+        case ELEMENT_ANIMATION:
             if (!advance) {
                 advance = (char)svgIsMediaProperty(buff);
             }
             if (!advance) {
                 advance = (char)svgIsAnimationAttribute(buff);
             }
-        } else if (!strcmp(name, "audio")) {
+            break;
+        case ELEMENT_AUDIO:
             if (!advance) { advance = (char)svgIsMediaProperty(buff); }
             if (!advance) { advance = (char)svgIsAudioAttribute(buff); }
-        } else if (!strcmp(name, "circle")) {
+            break;
+        case ELEMENT_CIRCLE:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsCircleAttribute(buff); }
-        } else if (!strcmp(name, "defs")) {
+            break;
+        case ELEMENT_DEFS:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsDefsAttribute(buff); }
-        } else if (!strcmp(name, "desc")) {
+            break;
+        case ELEMENT_DESC:
             if (!advance) { advance = (char)svgIsMediaProperty(buff); }
             if (!advance) { advance = (char)svgIsDescAttribute(buff); }
-        }
-        else if (!strcmp(name, "discard")) {
+            break;
+        case ELEMENT_DISCARD:
             if (!advance) { advance = (char)svgIsDiscardAttribute(buff); }
-        } else if (!strcmp(name, "ellipse")) {
+            break;
+        case ELEMENT_ELLIPSE:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsEllipseAttribute(buff); }
-        } else if (!strcmp(name, "font")) {
+            break;
+        case ELEMENT_FONT:
             if (!advance) { advance = (char)svgIsFontAttribute(buff); }
-        } else if (!strcmp(name, "font-face")) {
+            break;
+        case ELEMENT_FONT_FACE:
             if (!advance) { advance = (char)svgIsFontFaceAttribute(buff); }
-        } else if (!strcmp(name, "font-face-src")) {
+            break;
+        case ELEMENT_FONT_FACE_SRC:
             if (!advance) { advance = (char)svgIsFontFaceSrcAttribute(buff); }
-        } else if (!strcmp(name, "font-face-uri")) {
+            break;
+        case ELEMENT_FONT_FACE_URI:
             if (!advance) { advance = (char)svgIsFontFaceUriAttribute(buff); }
-        } else if (!strcmp(name, "foreignObject")) {
+            break;
+        case ELEMENT_FOREIGN_OBJECT:
             if (!advance) {
                 advance = (char)svgIsProperty(buff); }
             if (!advance) {
                 advance = (char)svgIsForeignObjectAttribute(buff); }
-        } else if (!strcmp(name, "g")) {
+            break;
+        case ELEMENT_G:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsGroupAttribute(buff); }
-        } else if (!strcmp(name, "glyph")) {
+            break;
+        case ELEMENT_GLYPH:
             if (!advance) { advance = (char)svgIsGlyphAttribute(buff); }
-        } else if (!strcmp(name, "handler")) {
+            break;
+        case ELEMENT_HANDLER:
             if (!advance) { advance = (char)svgIsHandlerAttribute(buff); }
-        } else if (!strcmp(name, "hkern")) {
+            break;
+        case ELEMENT_HKERN:
             if (!advance) { advance = (char)svgIsHKernAttribute(buff); }
-        } else if (!strcmp(name, "image")) {
+            break;
+        case ELEMENT_IMAGE:
             if (!advance) { advance = (char)svgIsMediaProperty(buff); }
             if (!advance) { advance = (char)svgIsImageAttribute(buff); }
-        } else if (!strcmp(name, "line")) {
+            break;
+        case ELEMENT_LINE:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsLineAttribute(buff); }
-        } else if (!strcmp(name, "linearGradient")) {
+            break;
+        case ELEMENT_LINEAR_GRADIENT:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsLinearGradientAttribute(buff); }
-        } else if (!strcmp(name, "listener")) {
+            break;
+        case ELEMENT_LISTENER:
             if (!advance) { advance = (char)svgIsListenerAttribute(buff); }
-        } else if (!strcmp(name, "metadata")) {
+            break;
+        case ELEMENT_METADATA:
             if (!advance) { advance = (char)svgIsMediaProperty(buff); }
             if (!advance) { advance = (char)svgIsMetadataAttribute(buff); }
-        } else if (!strcmp(name, "missing-glyph")) {
+            break;
+        case ELEMENT_MISSING_GLYPH:
             if (!advance) { advance = (char)svgIsMissingGlyphAttribute(buff); }
-        } else if (!strcmp(name, "mpath")) {
+            break;
+        case ELEMENT_MPATH:
             if (!advance) { advance = (char)svgIsMPathAttribute(buff); }
-        } else if (!strcmp(name, "path")) {
+            break;
+        case ELEMENT_PATH:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsPathAttribute(buff); }
-        } else if (!strcmp(name, "polygon")) {
+            break;
+        case ELEMENT_POLYGON:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsPolygonAttribute(buff); }
-        } else if (!strcmp(name, "polyline")) {
+            break;
+        case ELEMENT_POLYLINE:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsPolylineAttribute(buff); }
-        } else if (!strcmp(name, "prefetch")) {
+            break;
+        case ELEMENT_PREFETCH:
             if (!advance) { advance = (char)svgIsPrefetchAttribute(buff); }
-        } else if (!strcmp(name, "radialGradient")) {
+            break;
+        case ELEMENT_RADIAL_GRADIENT:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsRadialGradientAttribute(buff); }
-        } else if (!strcmp(name, "rect")) {
+            break;
+        case ELEMENT_RECT:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsRectAttribute(buff); }
-        } else if (!strcmp(name, "script")) {
+            break;
+        case ELEMENT_SCRIPT:
             if (!advance) { advance = (char)svgIsScriptAttribute(buff); }
-        } else if (!strcmp(name, "set")) {
+            break;
+        case ELEMENT_SET:
             if (!advance) { advance = (char)svgIsSetAttribute(buff); }
-        } else if (!strcmp(name, "solidColor")) {
+            break;
+        case ELEMENT_SOLID_COLOR:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsSolidColorAttribute(buff); }
-        } else if (!strcmp(name, "stop")) {
+            break;
+        case ELEMENT_STOP:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsStopAttribute(buff); }
-        } else if (!strcmp(name, "svg")) {
+            break;
+        case ELEMENT_SVG:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsSvgAttribute(buff); }
-        } else if (!strcmp(name, "switch")) {
+            break;
+        case ELEMENT_SWITCH:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsSwitchAttribute(buff); }
-        } else if (!strcmp(name, "tbreak")) {
+            break;
+        case ELEMENT_TBREAK:
             if (!advance) { advance = (char)svgIsTBreakAttribute(buff); }
-        } else if (!strcmp(name, "text")) {
+            break;
+        case ELEMENT_TEXT:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsTextAttribute(buff); }
-        } else if (!strcmp(name, "textArea")) {
+            break;
+        case ELEMENT_TEXT_AREA:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsTextAreaAttribute(buff); }
-        } else if (!strcmp(name, "title")) {
+            break;
+        case ELEMENT_TITLE:
             if (!advance) { advance = (char)svgIsMediaProperty(buff); }
             if (!advance) { advance = (char)svgIsTitleAttribute(buff); }
-        } else if (!strcmp(name, "tspan")) {
+            break;
+        case ELEMENT_TSPAN:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsTSpanAttribute(buff); }
-        } else if (!strcmp(name, "use")) {
+            break;
+        case ELEMENT_USE:
             if (!advance) { advance = (char)svgIsProperty(buff); }
             if (!advance) { advance = (char)svgIsUseAttribute(buff); }
-        } else if (!strcmp(name, "video")) {
+            break;
+        case ELEMENT_VIDEO:
             if (!advance) { advance = (char)svgIsMediaProperty(buff); }
             if (!advance) { advance = (char)svgIsVideoAttribute(buff); }
+            break;
+        default:
+            break;
         }
         if (advance) {
             printf("ATTRIBUTE:\n");
             svgExpect = SVG_EXPECT_VALUE;
-            free(currentAttribute);
-            currentAttribute = 0;
-            currentAttribute = emb_strdup(buff);
+            strcpy(currentAttribute, buff);
         }
     } else if (svgExpect == SVG_EXPECT_VALUE) {
         int last = strlen(buff) - 1;
@@ -1758,30 +1752,24 @@ void svgProcess(int c, const char* buff)
         /* single-value */
         if ((buff[0] == '"' || buff[0] == '\'') && (buff[last] == '/' || buff[last] == '"' || buff[last] == '\'') && !svgMultiValue) {
             svgExpect = SVG_EXPECT_ATTRIBUTE;
-            svgElement_addAttribute(currentElement, svgAttribute_create(currentAttribute, buff));
+            strcpy(attributeList[n_attributes].name, currentAttribute);
+            strcpy(attributeList[n_attributes].value, buff);
+            n_attributes++;
         } else { /* multi-value */
             svgMultiValue = 1;
-            if (!currentValue) {
-                currentValue = emb_strdup(buff);
-                if (!currentValue) { /*TODO: error */ return; }
-            } else {
-                char* tmp = 0;
-                tmp = emb_strdup(currentValue);
-                free(currentValue);
-                currentValue = 0;
-                currentValue = (char*)malloc(strlen(buff) + strlen(tmp) + 2);
-                if (!currentValue) { printf("ERROR: format-svg.c svgProcess(), cannot allocate memory for currentValue\n"); return; }
-                if (currentValue) memset(currentValue, 0, strlen(buff) + strlen(tmp) + 2);
-                strcat(currentValue, tmp);
+            if (strlen(currentValue)==0) {
+                strcpy(currentValue, buff);
+            }
+            else {
                 strcat(currentValue, " ");
                 strcat(currentValue, buff);
-                free(tmp);
             }
             if (buff[last] == '/' || buff[last] == '"' || buff[last] == '\'') {
                 svgMultiValue = 0;
                 svgExpect = SVG_EXPECT_ATTRIBUTE;
-                svgElement_addAttribute(currentElement, svgAttribute_create(currentAttribute, currentValue));
-                free(currentValue);
+                strcpy(attributeList[n_attributes].name, currentAttribute);
+                strcpy(attributeList[n_attributes].value, currentValue);
+                n_attributes++;
             }
         }
     }
@@ -1795,8 +1783,14 @@ void svgProcess(int c, const char* buff)
 
 char readSvg(EmbPattern* pattern, FILE* file) {
     int size = 1024;
-    int pos, c, i;
-    char* buff = 0;
+    int pos;
+    char* buff = 0, c;
+        int i;
+
+    for (i=0; i<1000; i++) {
+        attributeList[i].name = (char*)malloc(size);
+        attributeList[i].value = (char*)malloc(size);
+    }
 
     buff = (char*)malloc(size);
     if (!buff) {
@@ -1807,110 +1801,105 @@ char readSvg(EmbPattern* pattern, FILE* file) {
     svgExpect = SVG_EXPECT_NULL;
     svgMultiValue = 0;
 
-    currentElement = 0;
-    currentAttribute = 0;
-    currentValue = 0;
+    currentAttribute[0] = 0;
+    currentValue[0] = 0;
     
-    if (EMB_DEBUG) {
-        puts("OVERRIDDEN: readSvg is disabled during testing");
-        return 1;
-    }
-
     /* Pre-flip incase of multiple reads on the same pattern */
     embPattern_flipVertical(pattern);
 
-        pos = 0;
-        do {
-            c = fgetc(file);
-            switch (c) {
-                case '<':
-                    if (svgExpect == SVG_EXPECT_NULL) {
-                        svgAddToPattern(pattern);
-                        svgExpect = SVG_EXPECT_ELEMENT;
-                    }
-                case '>':
-                    if (pos == 0) /* abnormal case that may occur in svg element where '>' is all by itself */
-                    {
-                        /*TODO: log a warning about this absurdity! */
-                        svgExpect = SVG_EXPECT_ELEMENT;
-                        break;
-                    }
-                case ' ':
-                case '\t':
-                case '\r':
-                case '\n':
-                case '=':
-                    if (pos == 0)
-                        break;
-                    buff[pos] = 0;
-                    pos = 0;
-                    svgProcess(c, buff);
-                    break;
-                default:
-                    buff[pos++] = (char)c;
-                    break;
+    pos = 0;
+    while (fread(&c, 1, 1, file)) {
+        switch (c) {
+        case '<':
+            if (svgExpect == SVG_EXPECT_NULL) {
+                svgAddToPattern(pattern);
+                svgExpect = SVG_EXPECT_ELEMENT;
             }
-            if (pos >= size - 1) {
-                /* increase buff length - leave room for 0 */
-                size *= 2;
-                buff = (char*)realloc(buff, size);
-                if (!buff) {
-                    printf("ERROR: format-svg.c readSvg(), cannot re-allocate memory for buff\n");
-                    return 0;
-                }
+        case '>':
+            /* abnormal case that may occur in svg element where '>' is all by itself */
+            if (pos == 0) {
+                /*TODO: log a warning about this absurdity! */
+                svgExpect = SVG_EXPECT_ELEMENT;
+                break;
+            }
+        case ' ':
+        case '\t':
+        case '\r':
+        case '\n':
+        case '=':
+            if (pos == 0)
+                break;
+            buff[pos] = 0;
+            pos = 0;
+            svgProcess(c, buff);
+            break;
+        default:
+            buff[pos++] = (char)c;
+            break;
+        }
+        if (pos >= size - 1) {
+            /* increase buff length - leave room for 0 */
+            size *= 2;
+            buff = (char*)realloc(buff, size);
+            if (!buff) {
+                printf("ERROR: format-svg.c readSvg(), cannot re-allocate memory for buff\n");
+                return 0;
             }
         }
-        while(c != EOF);
+    }
 
     free(buff);
-    free(currentAttribute);
-    free(currentValue);
 
-    /*TODO: remove this summary after testing is complete */
-    printf("OBJECT SUMMARY:\n");
-    if (pattern->circles) {
-        for (i = 0; i < pattern->circles->count; i++) {
-            EmbCircle c = pattern->circles->circle[i].circle;
-            printf("circle %f %f %f\n", c.centerX, c.centerY, c.radius);
+    if (EMB_DEBUG) {
+        printf("OBJECT SUMMARY:\n");
+        if (pattern->circles) {
+            for (i = 0; i < pattern->circles->count; i++) {
+                EmbCircle c = pattern->circles->circle[i].circle;
+                printf("circle %f %f %f\n", c.centerX, c.centerY, c.radius);
+            }
         }
-    }
-    if (pattern->ellipses) {
-        for (i = 0; i < pattern->ellipses->count; i++) {
-            EmbEllipse e = pattern->ellipses->ellipse[i].ellipse;
-            printf("ellipse %f %f %f %f\n", e.centerX, e.centerY, e.radiusX, e.radiusY);
+        if (pattern->ellipses) {
+            for (i = 0; i < pattern->ellipses->count; i++) {
+                EmbEllipse e = pattern->ellipses->ellipse[i].ellipse;
+                printf("ellipse %f %f %f %f\n", e.centerX, e.centerY, e.radiusX, e.radiusY);
+            }
         }
-    }
-    if (pattern->lines) {
-        for (i = 0; i < pattern->lines->count; i++) {
-            EmbLine li = pattern->lines->line[i].line;
-            printf("line %f %f %f %f\n", li.x1, li.y1, li.x2, li.y2);
+        if (pattern->lines) {
+            for (i = 0; i < pattern->lines->count; i++) {
+                EmbLine li = pattern->lines->line[i].line;
+                printf("line %f %f %f %f\n", li.x1, li.y1, li.x2, li.y2);
+            }
         }
-    }
-    if (pattern->points) {
-        for (i = 0; i < pattern->points->count; i++) {
-            EmbVector po = pattern->points->point[i].point;
-            printf("point %f %f\n", po.x, po.y);
+        if (pattern->points) {
+            for (i = 0; i < pattern->points->count; i++) {
+                EmbVector po = pattern->points->point[i].point;
+                printf("point %f %f\n", po.x, po.y);
+            }
         }
-    }
-    if (pattern->polygons) {
-        for (i = 0; i < pattern->polylines->count; i++) {
-            int vertices = pattern->polygons->polygon[i]->pointList->count;
-            printf("polygon %d\n", vertices);
+        if (pattern->polygons) {
+            for (i = 0; i < pattern->polylines->count; i++) {
+                int vertices = pattern->polygons->polygon[i]->pointList->count;
+                printf("polygon %d\n", vertices);
+            }
         }
-    }
-    if (pattern->polylines) {
-        for (i = 0; i < pattern->polylines->count; i++) {
-            int vertices = pattern->polylines->polyline[i]->pointList->count;
-            printf("polyline %d\n", vertices);
+        if (pattern->polylines) {
+            for (i = 0; i < pattern->polylines->count; i++) {
+                int vertices = pattern->polylines->polyline[i]->pointList->count;
+                printf("polyline %d\n", vertices);
+            }
         }
-    }
-    if (pattern->rects) {
-        for (i = 0; i < pattern->rects->count; i++) {
-            EmbRect r = pattern->rects->rect[i].rect;
-            printf("rect %f %f %f %f\n", embRect_x(r), embRect_y(r), embRect_width(r), embRect_height(r));
+        if (pattern->rects) {
+            for (i = 0; i < pattern->rects->count; i++) {
+                EmbRect r = pattern->rects->rect[i].rect;
+                printf("rect %f %f %f %f\n", embRect_x(r), embRect_y(r), embRect_width(r), embRect_height(r));
+            }
         }
     }
 
+    for (i=0; i<1000; i++) {
+        free(attributeList[i].name);
+        free(attributeList[i].value);
+    }
     /* Flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
     embPattern_flipVertical(pattern);
 

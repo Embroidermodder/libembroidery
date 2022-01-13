@@ -93,56 +93,6 @@ extern "C" {
 #define EMB_FORMAT_XXX          59
 #define EMB_FORMAT_ZSK          60
 
-#define ELEMENT_XML               0
-#define ELEMENT_A                 1
-#define ELEMENT_ANIMATE           2
-#define ELEMENT_ANIMATE_COLOR     3
-#define ELEMENT_ANIMATE_MOTION    4
-#define ELEMENT_ANIMATE_TRANSFORM 5
-#define ELEMENT_ANIMATION         6
-#define ELEMENT_AUDIO             7
-#define ELEMENT_CIRCLE            8
-#define ELEMENT_DEFS              9
-#define ELEMENT_DESC              10
-#define ELEMENT_DISCARD           11
-#define ELEMENT_ELLIPSE           12
-#define ELEMENT_FONT              13
-#define ELEMENT_FONT_FACE         14
-#define ELEMENT_FONT_FACE_SRC     15
-#define ELEMENT_FONT_FACE_URI     16
-#define ELEMENT_FOREIGN_OBJECT    17
-#define ELEMENT_G                 18
-#define ELEMENT_GLYPH             19
-#define ELEMENT_HANDLER           20
-#define ELEMENT_HKERN             21
-#define ELEMENT_IMAGE             22
-#define ELEMENT_LINE              23
-#define ELEMENT_LINEAR_GRADIENT   24
-#define ELEMENT_LISTENER          25
-#define ELEMENT_METADATA          26
-#define ELEMENT_MISSING_GLYPH     27
-#define ELEMENT_MPATH             28
-#define ELEMENT_PATH              29
-#define ELEMENT_POLYGON           30
-#define ELEMENT_POLYLINE          31
-#define ELEMENT_PREFETCH          32
-#define ELEMENT_RADIAL_GRADIENT   33
-#define ELEMENT_RECT              34
-#define ELEMENT_SCRIPT            35
-#define ELEMENT_SET               36
-#define ELEMENT_SOLID_COLOR       37
-#define ELEMENT_STOP              38
-#define ELEMENT_SVG               39
-#define ELEMENT_SWITCH            40
-#define ELEMENT_TBREAK            41
-#define ELEMENT_TEXT              42
-#define ELEMENT_TEXT_AREA         43
-#define ELEMENT_TITLE             44
-#define ELEMENT_TSPAN             45
-#define ELEMENT_USE               46
-#define ELEMENT_VIDEO             47
-#define ELEMENT_UNKNOWN           48
-
 /* Thread color */
 #define Arc_Polyester           0
 #define Arc_Rayon               1
@@ -343,25 +293,6 @@ Special values for Stream Identifiers
 
 /* STRUCTS
 *****************************************************************************/
-
-typedef struct SvgAttribute_
-{
-    char* name;
-    char* value;
-} SvgAttribute;
-
-typedef struct SvgAttributeList_
-{
-    SvgAttribute attribute;
-    struct SvgAttributeList_* next;
-} SvgAttributeList;
-
-typedef struct SvgElement_
-{
-    char* name;
-    SvgAttributeList* attributeList;
-    SvgAttributeList* lastAttribute;
-} SvgElement;
 
 typedef enum
 {
@@ -838,7 +769,6 @@ char* lTrim(char* const str, char junk);
 char *copy_trim(char const *s);
 void inplace_trim(char *s);
 char* emb_optOut(double num, char* str);
-char* emb_strdup(const char* src);
 
 int hus_compress(char* input, int size, char* output, int *out_size);
 int hus_decompress(char* input, int size, char* output, int *out_size);

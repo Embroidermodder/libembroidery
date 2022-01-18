@@ -719,7 +719,7 @@ void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise) {
  */
 unsigned char embLine_intersectionPoint(EmbLine line1,
         EmbLine line2, EmbVector* result) {
-    double tolerence = 1e-10;
+    double tolerance = 1e-10;
     double A2 = line1.y2 - line1.y1;
     double B2 = line1.x1 - line1.x2;
     double C2 = A2 * line1.x1 + B2 * line1.y1;
@@ -737,7 +737,7 @@ unsigned char embLine_intersectionPoint(EmbLine line1,
     }
     /*TODO: The code below needs revised 
         since division by zero can still occur */
-    if (fabs(det) < tolerence) {
+    if (fabs(det) < tolerance) {
         printf("ERROR: Intersecting lines cannot be parallel.\n");
         return 0;
     }

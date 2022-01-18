@@ -356,15 +356,15 @@ void svgAddToPattern(EmbPattern* p) {
 
                     /**** Compose Point List ****/
 
-                    /* below "while" is for avoid loosing last 'z'
-                     * command that maybe never accomodated.
+                    /* below "while" is for avoid losing last 'z'
+                     * command that maybe never accommodated.
                      */
                     pendingTask = 1; if (i==last-1) {pendingTask = 2;}
 
                     while (pendingTask > 0) {
                         pendingTask -= 1;
 
-                    /* Check wether prior command need to be saved */
+                    /* Check whether prior command need to be saved */
                     if (trip>=0) {
                         EmbPointObject test;
                         trip = -1;
@@ -509,7 +509,7 @@ void svgAddToPattern(EmbPattern* p) {
                             reset = -1;
                         }
                     }
-                    /* avoid loosing 'z' command that maybe never accomodated. */
+                    /* avoid losing 'z' command that maybe never accommodated. */
                         if (i==last-1) {
                             trip = 2;
                         }
@@ -1804,7 +1804,7 @@ char readSvg(EmbPattern* pattern, FILE* file) {
     currentAttribute[0] = 0;
     currentValue[0] = 0;
     
-    /* Pre-flip incase of multiple reads on the same pattern */
+    /* Pre-flip in case of multiple reads on the same pattern */
     embPattern_flipVertical(pattern);
 
     pos = 0;

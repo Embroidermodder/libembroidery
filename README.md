@@ -1104,7 +1104,7 @@ An example for building for use in C\#
 One problem to the problem of supporting both systems with abundant memory
 (such as a 2010s or later desktop) and with scarce memory (such as embedded
 systems) is that they don't share the same assembly language. To deal with
-this: there will be two equivalent softwares which are hand engineered to be
+this: there will be two equivalent software which are hand engineered to be
 similar but one will be in C and the other in the assembly dialects we support.
 
 All assembly will be intended for embedded systems only, since a slightly
@@ -1136,7 +1136,7 @@ This is the main website and documentation hub for the Embroidermodder project.
 
 For a list of what we're currently working on please see [to-do.md](to-do.md).
 
-For specifics about the embedded systems development see [embedded.md](embdedded.md).
+For specifics about the embedded systems development see [embedded.md](embedded.md).
 
 The documentation is licensed under the terms of the GNU Free Documentation
 License v1.3 see [LICENSE.md](LICENSE.md).
@@ -1311,7 +1311,7 @@ We currently need help with:
 3. Finding resources for each geometric algorithm used (along with a
    full citation for documentation).
 4. Completing the full `--full-test-suite`  with no segfaults and at least
-   a clear error message (for example "not implimented yet").
+   a clear error message (for example "not implemented yet").
 5. Identifying "best guesses" for filling in missing information when going
    from, say `.csv` to a late `.pes` version. What should the default be when
    the data doesn't clarify?

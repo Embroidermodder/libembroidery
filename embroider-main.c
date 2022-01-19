@@ -203,7 +203,7 @@ int main(int argc, const char* argv[])
         switch (result) {
         case FLAG_TO:
             /* the next argument is the format we're converting to */
-            puts("This flag is not implimented.");
+            puts("This flag is not implemented.");
             break;
         case FLAG_HELP:
         case FLAG_HELP_SHORT:
@@ -215,45 +215,45 @@ int main(int argc, const char* argv[])
             break;
         case FLAG_QUIET:
         case FLAG_QUIET_SHORT:
-            puts("This flag is not implimented.");
+            puts("This flag is not implemented.");
             break;
         case FLAG_VERBOSE:
         case FLAG_VERBOSE_SHORT:
-            puts("This flag is not implimented.");
+            puts("This flag is not implemented.");
             break;
         case FLAG_CIRCLE:
         case FLAG_CIRCLE_SHORT:
-            puts("This flag is not implimented.");
+            puts("This flag is not implemented.");
             break;
         case FLAG_ELLIPSE:
         case FLAG_ELLIPSE_SHORT:
-            puts("This flag is not implimented.");
+            puts("This flag is not implemented.");
             break;
         case FLAG_LINE:
         case FLAG_LINE_SHORT:
-            puts("This flag is not implimented.");
+            puts("This flag is not implemented.");
             break;
         case FLAG_POLYGON:
         case FLAG_POLYGON_SHORT:
-            puts("This flag is not implimented.");
+            puts("This flag is not implemented.");
             break;
         case FLAG_POLYLINE:
         case FLAG_POLYLINE_SHORT:
-            puts("This flag is not implimented.");
+            puts("This flag is not implemented.");
             break;
         case FLAG_SATIN:
         case FLAG_SATIN_SHORT:
-            puts("This flag is not implimented.");
+            puts("This flag is not implemented.");
             break;
         case FLAG_STITCH:
         case FLAG_STITCH_SHORT:
-            puts("This flag is not implimented.");
+            puts("This flag is not implemented.");
             break;
         case FLAG_SIERPINSKI_TRIANGLE:
-            puts("This flag is not implimented.");
+            puts("This flag is not implemented.");
             break;
         case FLAG_FILL:
-            puts("This flag is not implimented.");
+            puts("This flag is not implemented.");
             break;
         case FLAG_IMAGE_WIDTH:
             if (i + 1 < argc) {

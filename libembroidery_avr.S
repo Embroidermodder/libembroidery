@@ -7,7 +7,7 @@
  * ----------------------------------------------------------------
  *
  * GAS assembly comments are C-style.
- * The .S extention means "run through C preprocessor first".
+ * The .S extension means "run through C preprocessor first".
  *
  * The arduino assembly code.
  */

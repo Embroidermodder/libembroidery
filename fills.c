@@ -16,7 +16,7 @@ int max_stitches = 100000;
 int lindenmayer_system(L_system L, char *state, int iterations, int complete)
 {
     /* We know that the full length of the curve has to fit within
-     * the number of stitches and we can cancel consequtive +-, -+
+     * the number of stitches and we can cancel consecutive +-, -+
      * etc.
      *
 

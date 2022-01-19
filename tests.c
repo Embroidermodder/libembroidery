@@ -132,7 +132,7 @@ int testEmbCircle(void) {
     testTangentPoints(c1, 4.0, 0.0, &p0, &p1);
     error = distance(p0, t0) + distance(p1, t1);
     if (error > epsilon) {
-        printf("Error larger than tolerence, circle test 1: %f.\n\n", error);
+        printf("Error larger than tolerance, circle test 1: %f.\n\n", error);
         return 16;
     }
 
@@ -151,7 +151,7 @@ int testEmbCircle_2(void) {
     testTangentPoints(c2, 24.3411, 18.2980, &p0, &p1);
     error = distance(p0, s0) + distance(p1, s1);
     if (error > epsilon) {
-        printf("Error larger than tolerence, circle test 2: %f.\n\n", error);
+        printf("Error larger than tolerance, circle test 2: %f.\n\n", error);
         return 17;
     }
 

@@ -544,7 +544,7 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1,
 
        TODO: using == in floating point arithmetic
        doesn't account for the machine accuracy, having
-       a stated (double) tolerence value would help.
+       a stated (double) tolerance value would help.
     */
     if (d == (c0.radius + c1.radius)) {
         *px3 = *py4 = px2;
@@ -719,7 +719,7 @@ void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise) {
  */
 unsigned char embLine_intersectionPoint(EmbLine line1,
         EmbLine line2, EmbVector* result) {
-    double tolerence = 1e-10;
+    double tolerance = 1e-10;
     double A2 = line1.y2 - line1.y1;
     double B2 = line1.x1 - line1.x2;
     double C2 = A2 * line1.x1 + B2 * line1.y1;
@@ -737,7 +737,7 @@ unsigned char embLine_intersectionPoint(EmbLine line1,
     }
     /*TODO: The code below needs revised 
         since division by zero can still occur */
-    if (fabs(det) < tolerence) {
+    if (fabs(det) < tolerance) {
         printf("ERROR: Intersecting lines cannot be parallel.\n");
         return 0;
     }
@@ -3073,7 +3073,7 @@ void charReplace(char *s, const char *from, const char *to) {
 }
 
 /**
- * Tests for the presense of a string \a s in the supplied
+ * Tests for the presence of a string \a s in the supplied
  * \a array.
  *
  * The end of the array is marked by an empty string.
@@ -3259,7 +3259,7 @@ void embVector_normalize(EmbVector vector, EmbVector* result) {
 }
 
 /**
- * The scalar multiple \a magnatude of a vector \a vector. Returned as
+ * The scalar multiple \a magnitude of a vector \a vector. Returned as
  * \a result.
  */
 void embVector_multiply(EmbVector vector, double magnitude, EmbVector* result) {

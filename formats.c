@@ -737,13 +737,13 @@ char write10o(EmbPattern* pattern, FILE* file) {
 
 char readArt(EmbPattern* pattern, FILE* file)
 {
-    puts("readArt is not implimented");
+    puts("readArt is not implemented");
     return 0; /*TODO: finish readArt */
 }
 
 char writeArt(EmbPattern* pattern, FILE* file)
 {
-    puts("writeArt is not implimented");
+    puts("writeArt is not implemented");
     return 0; /*TODO: finish writeArt */
 }
 
@@ -751,12 +751,12 @@ char writeArt(EmbPattern* pattern, FILE* file)
 /* bmc format */
 
 char readBmc(EmbPattern* pattern, FILE* file) {
-    puts("readBmc is not implimented");
+    puts("readBmc is not implemented");
     return 0; /*TODO: finish readBmc */
 }
 
 char writeBmc(EmbPattern* pattern, FILE* file) {
-    puts("writeBmc is not implimented");
+    puts("writeBmc is not implemented");
     return 0; /*TODO: finish writeBmc */
 }
 
@@ -807,7 +807,7 @@ char readBro(EmbPattern* pattern, FILE* file) {
 }
 
 char writeBro(EmbPattern* pattern, FILE* file) {
-    puts("writeBro is not implimented");
+    puts("writeBro is not implemented");
     return 0; /*TODO: finish writeBro */
 }
 
@@ -815,12 +815,12 @@ char writeBro(EmbPattern* pattern, FILE* file) {
 /* cnd format */
 
 char readCnd(EmbPattern* pattern, FILE* file) {
-    puts("readCnd is not implimented");
+    puts("readCnd is not implemented");
     return 0; /*TODO: finish readCnd */
 }
 
 char writeCnd(EmbPattern* pattern, FILE* file) {
-    puts("writeCnd is not implimented");
+    puts("writeCnd is not implemented");
     return 0; /*TODO: finish writeCnd */
 }
 
@@ -1039,7 +1039,7 @@ char readCsd(EmbPattern* pattern, FILE* file) {
 }
 
 char writeCsd(EmbPattern* pattern, FILE* file) {
-    puts("writeCsd is not implimented.");
+    puts("writeCsd is not implemented.");
     return 0; /*TODO: finish writeCsd */
 }
 
@@ -1353,7 +1353,7 @@ char readDat(EmbPattern* pattern, FILE* file)
 
 char writeDat(EmbPattern* pattern, FILE* file)
 {
-    puts("writeDat is not implimented.");
+    puts("writeDat is not implemented.");
     return 0; /*TODO: finish writeDat */
 }
 
@@ -1362,13 +1362,13 @@ char writeDat(EmbPattern* pattern, FILE* file)
 
 char readDem(EmbPattern* pattern, FILE* file)
 {
-    puts("readDem is not implimented.");
+    puts("readDem is not implemented.");
     return 0; /*TODO: finish readDem */
 }
 
 char writeDem(EmbPattern* pattern, FILE* file)
 {
-    puts("writeDem is not implimented.");
+    puts("writeDem is not implemented.");
     return 0; /*TODO: finish writeDem */
 }
 
@@ -1407,7 +1407,7 @@ char readDsb(EmbPattern* pattern, FILE* file) {
 }
 
 char writeDsb(EmbPattern* pattern, FILE* file) {
-    puts("writeDsb is not implimented");
+    puts("writeDsb is not implemented");
     return 0; /*TODO: finish writeDsb */
 }
 
@@ -1811,7 +1811,7 @@ char readDsz(EmbPattern* pattern, FILE* file) {
 }
 
 char writeDsz(EmbPattern* pattern, FILE* file) {
-    puts("writeDsz is not implimented.");
+    puts("writeDsz is not implemented.");
     return 0; /*TODO: finish writeDsz */
 }
 
@@ -1843,7 +1843,7 @@ char readDxf(EmbPattern* pattern, FILE* file)
     char bulgeFlag = 0;
     int fileLength = 0;
     
-    puts("overriding dxf. Unimplimented for now.");
+    puts("overriding dxf. Unimplemented for now.");
     return 0;
 
     fseek(file, 0L, SEEK_END);
@@ -2200,7 +2200,7 @@ char readEmd(EmbPattern* pattern, FILE* file) {
 }
 
 char writeEmd(EmbPattern* pattern, FILE* file) {
-    puts("writeEmd not implimented.");
+    puts("writeEmd not implemented.");
     return 0; /*TODO: finish writeEmd */
 }
 
@@ -2776,7 +2776,7 @@ char readInb(EmbPattern* pattern, FILE* file)
 
 char writeInb(EmbPattern* pattern, FILE* file)
 {
-    puts("writeInb not implimented.");
+    puts("writeInb not implemented.");
     return 0; /*TODO: finish writeInb */
 }
 
@@ -4649,7 +4649,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
     binaryWriteBytes(file, "CSewSeg", 7);
     
     if (colorCount > 1000) {
-        puts("Color count exceeds 1000 this is likely an error. Trucating to 1000.");
+        puts("Color count exceeds 1000 this is likely an error. Truncating to 1000.");
         colorCount = 1000;
     }
 
@@ -5532,7 +5532,7 @@ char readStx(EmbPattern* pattern, FILE* file)
                     i++;
                     break;
                 case -94:
-                    /* TODO: Is this a syncronize? 
+                    /* TODO: Is this a synchronize? 
                         If so document it in the comments. */
                     break;
                 default:
@@ -5631,7 +5631,7 @@ char readT09(EmbPattern* pattern, FILE* file) {
 }
 
 char writeT09(EmbPattern* pattern, FILE* file) {
-    puts("writeT09 is not implimented.");
+    puts("writeT09 is not implemented.");
     return 0; /*TODO: finish writeT09 */
 }
 
@@ -5726,7 +5726,7 @@ typedef struct ThredExtension_  /* thred v1.0 file header extension */
     float stitchGranularity;    /* stitches per millimeter--not implemented */
     char creatorName[50];       /* name of the file creator */
     char modifierName[50];      /* name of last file modifier */
-    char auxFormat;             /* auxillary file format, 0=PCS,1=DST,2=PES */
+    char auxFormat;             /* auxiliary file format, 0=PCS,1=DST,2=PES */
     char reserved[31];          /* reserved for expansion */
 } ThredExtension;
 
@@ -5780,7 +5780,7 @@ char readThr(EmbPattern* pattern, FILE* file) {
                 fseek(file, 144, SEEK_CUR); 
                 break;
             default:
-                return 0; /* unsuported version */
+                return 0; /* unsupported version */
         }
     }
     currentColor = -1;

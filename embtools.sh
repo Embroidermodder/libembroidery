@@ -12,66 +12,23 @@ function docs () {
 pandoc README.md -o README.pdf
 }
 
-function build_datafile () {
-gcc -c -Wa,-adhln -g libembroidery_data.S > libembroidery_data.lst
-gcc -c libembroidery_data.S -o libembroidery_data.bin
-}
+function debug () {
+rm -fr debug
+mkdir debug
+cd debug
+cmake -DCMAKE_BUILD_TYPE=DEBUG ..
+cmake --build . --config=DEBUG
 
-function build_x86 () {
-gcc -nostdlib -no-pie -m32 -o embroider_x86 libembroidery_x86.S
-}
-
-function build_arm () {
-gcc -E libembroidery_arm.S -o embroidery_arm.s
-arm-none-eabi-as -o embroider_arm.o embroidery_arm.s
-arm-none-eabi-ld -o embroider_arm embroider_arm.o
-}
-
-function build_avr () {
-gcc -E libembroidery_avr.S -o embroidery_avr.s
-avr-as -o embroider_avr.o embroidery_avr.s
-avr-ld -o embroider_avr embroider_avr.o
-}
-
-function asm_clean () {
-rm -f embroider*.o
-rm -f libembroidery_data.lst
-}
-
-function build_asm () {
-# Assumes that the host is linux, otherwise skips.
-# Requires gcc multilib:
-# $ apt install build-essential gcc-multilib
-
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-
-build_datafile
-build_x86
-build_arm
-build_avr
-
-asm_clean
-
-./embroider_x86 --test
-
-else
-
-cat <<EOF
-Building libembroidery embedded version is only supported
-on Linux. This is due to using Linux syscalls on x86, gcc-multilib
-for cross-compiling to avr and arm and emulation software that
-may not be cross-platform.
-EOF
-
-fi
+valgrind ./embroider --full-test-suite
+cd ..
 }
 
 function main_tests () {
 rm -fr build
 mkdir build
 cd build
-cmake ..
-cmake --build . 2> error.txt
+cmake -DCMAKE_BUILD_TYPE=RELEASE ..
+cmake --build .
 
 ./embroider --test
 cd ..
@@ -135,6 +92,10 @@ do
       ;;
     docs)
       docs
+      shift
+      ;;
+    debug)
+      debug
       shift
       ;;
     *)

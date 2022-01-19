@@ -11,7 +11,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 option( EMBROIDERY_BUILD_SHARED_LIBS "Build shared library." ON )
 
-set(CMAKE_C_FLAGS "-fPIC")
+add_compile_options(
+    -fPIC
+    -pedantic
+    -Wall
+    -O2
+    $<$<CONFIG:DEBUG>:-g2>
+    $<$<CONFIG:DEBUG>:-Wextra>
+    $<$<CONFIG:DEBUG>:-ansi>
+    $<$<CONFIG:DEBUG>:-Werror>
+)
+
 set(LIBRARY_SOURCE_FILES
     compress.c
     fills.c
@@ -25,8 +35,6 @@ set(LIBRARY_SOURCE_FILES
     generators.c
     utility.c
 )
-
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -g -O2")
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
 add_library(embroidery SHARED

@@ -218,7 +218,7 @@ join us on GitHub. This document is written as developer training as well
 helping new users (see the last sections) so this is the place to learn how
 to start changing the code.
 
-Copyright (c) 2013-2021 The EmbroiderModder Team
+Copyright (c) 2013-2022 The EmbroiderModder Team
 
 Permission is granted to copy, distribute and/or modify this document under the
 terms of the GNU Free Documentation License, Version 1.3 or any later version
@@ -357,57 +357,43 @@ Embroidermodder 2 as well for consistency.
 
 ## Formats
 
+### Overview of Work for V1.0
+
+| Format | Basic Read | Basic Write | Specialised Tests | Documentation |
+|---|---|---|---|---|
+| `.100` | X | | | |
+| `.10o` | | | | |
+| `.art` | | | | |
+| `.bmc` | | | | |
+| `.bro` | X | | | |
+| `.cnd` | | | | |
+| `.col` | | | | |
+| `.cnd` | | | | |
+| `.cnd` | | | | |
+
 ### Toyota Embroidery Format (.100)
 
-  * Stitch Only Format.
-  * Uses an external color file.
-  * [X] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Toyota 100 format is a stitch-only format that uses an external color file.
 
 The stitch encoding is in 4 byte chunks.
 
 ## Toyota Embroidery Format (.10o)
 
-  * Stitch Only Format.
-  * Uses an external color file.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Toyota 10o format is a stitch-only format that uses an external color file.
 
 The stitch encoding is in 3 byte chunks.
 
-
-
 ### Bernina Embroidery Format (.art)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
-
 We don't know much about this format. TODO: Find a source.
-## Bitmap Cache Embroidery Format (.bmc)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+## Bitmap Cache Embroidery Format (.bmc)
 
 We don't know much about this format. TODO: Find a source.
 
 ## Bits and Volts Embroidery Format (.bro)
 
-  * Stitch Only Format.
-  * Uses an external color file.
-  * [X] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Bits and Volts bro format is a stitch-only format that uses an external color file.
 
 The header is 256 bytes. There's a series of unknown variables in the
 header.
@@ -417,11 +403,7 @@ stitch
 
 ## Melco Embroidery Format (.cnd)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Melco cnd format is a stitch-only format.
 
 We don't know much about this format. TODO: Find a source.
 
@@ -442,7 +424,7 @@ We don't know much about this format. TODO: Find a source.
   * [ ] Well Tested Write
 
 
-### Comma Separated Values (.csv)}
+### Comma Separated Values (.csv)
 
   * Stitch Only Format.
   * [X] Basic Read Support
@@ -451,7 +433,7 @@ We don't know much about this format. TODO: Find a source.
   * [ ] Well Tested Write
 
 
-### Barudan Embroidery Format (.dat)}
+### Barudan Embroidery Format (.dat)
 
   * Stitch Only Format.
   * [X] Basic Read Support
@@ -467,8 +449,7 @@ We don't know much about this format. TODO: Find a source.
   * [ ] Well Tested Read
   * [ ] Well Tested Write
 
-
-### Barudan Embroidery Format (.dsb)}
+### Barudan Embroidery Format (.dsb)
 
   * Stitch Only Format.
   * [X] Basic Read Support
@@ -476,8 +457,7 @@ We don't know much about this format. TODO: Find a source.
   * [ ] Well Tested Read
   * [ ] Well Tested Write
 
-## Tajima Embroidery Format (.dst)}
-\index{Tajima}\index{dst}
+## Tajima Embroidery Format (.dst)
 
   * Stitch Only Format.
   * [X] Basic Read Support
@@ -540,181 +520,85 @@ Note that:
   2. The coordinate system is right handed.
 
 
-### ZSK USA Embroidery Format (.dsz)}
+### ZSK USA Embroidery Format (.dsz)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The ZSK USA dsz format is stitch-only.
 
-### Drawing Exchange Format (.dxf)}
+### Drawing Exchange Format (.dxf)
 
-  * Graphics format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+Graphics format.
 
+### Embird Embroidery Format (.edr)
 
-### Embird Embroidery Format (.edr)}
+Stitch Only Format
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+### Elna Embroidery Format (.emd)
 
+Stitch Only Format.
 
-### Elna Embroidery Format (.emd)}
+### Melco Embroidery Format (.exp)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+Stitch Only Format.
 
+### Eltac Embroidery Format (.exy)
 
-### Melco Embroidery Format (.exp)}
+Stitch Only Format.
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+### Sierra Expanded Embroidery Format (.eys)
 
-
-### Eltac Embroidery Format (.exy)}
-
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
-
-
-### Sierra Expanded Embroidery Format (.eys)}
-
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+Stitch Only Format.
 
 Smoothie G-Code Embroidery Format (.fxy)?
 
+### Fortron Embroidery Format (.fxy)
 
-### Fortron Embroidery Format (.fxy)}
+Stitch Only Format.
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+### Great Notions Embroidery Format (.gnc)
 
-
-### Great Notions Embroidery Format (.gnc)}
-
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+Stitch Only Format.
 
 ## Gold Thread Embroidery Format (.gt)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
-
+Stitch Only Format.
 
 ### Husqvarna Viking Embroidery Format (.hus)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+Stitch Only Format.
 
+### Inbro Embroidery Format (.inb)
 
-### Inbro Embroidery Format (.inb)}
+Stitch Only Format.
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+### Embroidery Color Format (.inf)
 
-
-### Embroidery Color Format (.inf)}
-
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
-
-
+Stitch Only Format.
 
 ## Janome Embroidery Format (.jef)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+Stitch Only Format.
 
 ## Pfaff professional Design format (.ksm)
 
-[Back](overview.md)
-
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
-
+Stitch Only Format.
 
 ## Pfaff Embroidery Format (.max)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+Stitch Only Format.
 
-## Mitsubishi Embroidery Format (.mit)}
+## Mitsubishi Embroidery Format (.mit)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+Stitch Only Format.
 
+### Ameco Embroidery Format (.new)
 
+Stitch Only Format.
 
-### Ameco Embroidery Format (.new)}
+### Melco Embroidery Format (.ofm)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
-
-
-### Melco Embroidery Format (.ofm)}
-
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+Stitch Only Format.
 
 ## Pfaff PCD File Format
-
-[Back](overview.md)
 
   * Stitch Only Format.
   * [ ] Basic Read Support
@@ -728,66 +612,33 @@ See the description here[5](#5) for the overview of the format.
 
 For an example of the format see[11](#11).
 
-### Pfaff Embroidery Format (.pcm)}
+### Pfaff Embroidery Format (.pcm)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Pfaff pcm format is stitch-only.
 
+### Pfaff Embroidery Format (.pcq)
 
-### Pfaff Embroidery Format (.pcq)}
+The Pfaff pcq format is stitch-only.
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+### Pfaff Embroidery Format (.pcs)
 
+The Pfaff pcs format is stitch-only.
 
-### Pfaff Embroidery Format (.pcs)}
-
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
 ## Brother Embroidery Format (.pec)
 
-[Back](overview.md)
-
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
-
+The Brother pec format is stitch-only.
 
 ## Brother Embroidery Format (.pel)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
-
+The Brother pel format is stitch-only.
 
 ## Brother Embroidery Format (.pem)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Brother pem format is stitch-only.
 
 ## Brother Embroidery Format (.pes)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Brother pes format is stitch-only.
 
 ```
 struct PEShdr
@@ -799,168 +650,84 @@ DWORD PECOffset;
 
 ## Brother Embroidery Format (.phb)
 
-[Back](overview.md)
+The Brother phb format is stitch-only.
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+## Brother Embroidery Format (.phc)
 
-## Brother Embroidery Format (.phc)}
-
-[Back](overview.md)
-
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Brother phc format is stitch-only.
 
 ## AutoCAD Embroidery Format (.plt)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The AutoCAD plt format is stitch-only.
 
-### RGB Embroidery Format (.rgb)}
+### RGB Embroidery Format (.rgb)
 
-  * Color only format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The RGB format is a color-only format to act as an external color file for other formats.
 
-### Janome Embroidery Format (.sew)}
+### Janome Embroidery Format (.sew)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Janome sew format is stitch-only.
 
-### Husqvarna Viking Embroidery Format (.shv)}
+### Husqvarna Viking Embroidery Format (.shv)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Husqvarna Viking shv format is stitch-only.
 
-### Sunstar Embroidery Format (.sst)}
+### Sunstar Embroidery Format (.sst)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
-  
+The Sunstar sst format is stitch-only.
 
-### Data Stitch Embroidery Format (.stx)}
+### Data Stitch Embroidery Format (.stx)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Data Stitch stx format is stitch-only.
 
-### Scalable Vector Graphics (.svg)}
+### Scalable Vector Graphics (.svg)
 
-  * Graphics format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The scalable vector graphics (SVG) format is a graphics format
+maintained by ...
 
-## Pfaff Embroidery Format (.t01)}
+## Pfaff Embroidery Format (.t01)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Pfaff t01 format is stitch-only.
 
-## Pfaff Embroidery Format (.t09)}
+## Pfaff Embroidery Format (.t09)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Pfaff t09 format is stitch-only.
 
-## Happy Embroidery Format (.tap)}
+## Happy Embroidery Format (.tap)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Happy tap format is stitch-only.
 
-## ThredWorks Embroidery Format (.thr)}
+## ThredWorks Embroidery Format (.thr)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The ThreadWorks thr format is stitch-only.
 
 ## Text File (.txt)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The txt format is stitch-only and isn't associated with a specific company.
 
 ## Barudan Embroidery Format (.u00)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Barudan u00 format is stitch-only.
 
 ## Barudan Embroidery Format (.u01)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Barudan u01 format is stitch-only.
 
 ## Pfaff Embroidery Format (.vip)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Pfaff vip format is stitch-only.
 
-## Pfaff Embroidery Format (.vp3)}
+## Pfaff Embroidery Format (.vp3)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Pfaff vp3 format is stitch-only.
 
-## Singer Embroidery Format (.xxx)}
+## Singer Embroidery Format (.xxx)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The Singer xxx format is stitch-only.
 
-## ZSK USA Embroidery Format (.zsk)}
+## ZSK USA Embroidery Format (.zsk)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+The ZSK USA zsk format is stitch-only.
   
 ## On Embedded Systems
 

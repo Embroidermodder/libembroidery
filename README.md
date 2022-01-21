@@ -14,67 +14,6 @@
   * [Comments](#comments)
 * [Wrapper Functions](#wrapper-functions)
 * [Formats](#formats)
-  * [Toyota Embroidery Format (.100)](100_format.md)
-  * [Toyota Embroidery Format (.10o)](10o_format.md)
-  * [Bernina Embroidery Format (.art)](art_format.md)
-  * [Bitmap Cache Embroidery Format (.bmc)](bmc_format.md)
-  * [Bits and Volts Embroidery Format (.bro)](bro_format.md)
-  * [Melco Embroidery Format (.cnd)](cnd_format.md)
-  * [Embroidery Thread Color Format (.col)](col_format.md)
-  * [Singer Embroidery Format (.csd)](csd_format.md)
-  * [Comma Separated Values (.csv)](csv_format.md)
-  * [Barudan Embroidery Format (.dat)](dat_format.md)
-  * [Melco Embroidery Format (.dem)](dem_format.md)
-  * [Barudan Embroidery Format (.dsb)](dsb_format.md)
-  * [Tajima Embroidery Format (.dst)](dst_format.md)
-  * [ZSK USA Embroidery Format (.dsz)](dsz_format.md)
-  * [Drawing Exchange Format (.dxf)](dxf_format.md)
-  * [Embird Embroidery Format (.edr)](edr_format.md)
-  * [Elna Embroidery Format (.emd)](emd_format.md)
-  * [Melco Embroidery Format (.exp)](exp_format.md)
-  * [Eltac Embroidery Format (.exy)](exy_format.md)
-  * [Sierra Expanded Embroidery Format (.eys)](eys_format.md)
-  * [Fortron Embroidery Format (.fxy)](fxy_format.md)
-  * [Smoothie G-Code Embroidery Format (.fxy)](fxy_format.md)
-  * [Great Notions Embroidery Format (.gnc)](gnc_format.md)
-  * [Gold Thread Embroidery Format (.gt)](gt_format.md)
-  * [Husqvarna Viking Embroidery Format (.hus)](hus_format.md)
-  * [Inbro Embroidery Format (.inb)](inb_format.md)
-  * [Embroidery Color Format (.inf)](inf_format.md)
-  * [Janome Embroidery Format (.jef)](jef_format.md)
-  * [Pfaff Embroidery Format (.ksm)](ksm_format.md)
-  * [Pfaff Embroidery Format (.max)](max_format.md)
-  * [Mitsubishi Embroidery Format (.mit)](mit_format.md)
-  * [Ameco Embroidery Format (.new)](new_format.md)
-  * [Melco Embroidery Format (.ofm)](ofm_format.md)
-  * [Pfaff Embroidery Format (.pcd)](pcd_format.md)
-  * [Pfaff Embroidery Format (.pcm)](pcm_format.md)
-  * [Pfaff Embroidery Format (.pcq)](pcq_format.md)
-  * [Pfaff Embroidery Format (.pcs)](pcs_format.md)
-  * [Brother Embroidery Format (.pec)](pec_format.md)
-  * [Brother Embroidery Format (.pel)](pel_format.md)
-  * [Brother Embroidery Format (.pem)](pem_format.md)
-  * [Brother Embroidery Format (.pes)](pes_format.md)
-  * [Brother Embroidery Format (.phb)](phb_format.md)
-  * [Brother Embroidery Format (.phc)](phc_format.md)
-  * [AutoCAD Embroidery Format (.plt)](plt_format.md)
-  * [RGB Embroidery Format (.rgb)](rgb_format.md)
-  * [Janome Embroidery Format (.sew)](sew_format.md)
-  * [Husqvarna Viking Embroidery Format (.shv)](shv_format.md)
-  * [Sunstar Embroidery Format (.sst)](sst_format.md)
-  * [Data Stitch Embroidery Format (.stx)](stx_format.md)
-  * [Scalable Vector Graphics (.svg)](svg_format.md)
-  * [Pfaff Embroidery Format (.t01)](t01_format.md)
-  * [Pfaff Embroidery Format (.t09)](t09_format.md)
-  * [Happy Embroidery Format (.tap)](tap_format.md)
-  * [ThredWorks Embroidery Format (.thr)](thr_format.md)
-  * [Text File (.txt)](txt_format.md)
-  * [Barudan Embroidery Format (.u00)](u00_format.md)
-  * [Barudan Embroidery Format (.u01)](u01_format.md)
-  * [Pfaff Embroidery Format (.vip)](vip_format.md)
-  * [Pfaff Embroidery Format (.vp3)](vp3_format.md)
-  * [Singer Embroidery Format (.xxx)](#singer_embroidery_format_(.xxx))
-  * [ZSK USA Embroidery Format (.zsk)](#zsk_usa_embroidery_format_(.zsk))
 * [Features](#features)
   * [Bindings](#bindings)
 * [On Embedded Systems](#on-embedded-systems)
@@ -357,6 +296,70 @@ Embroidermodder 2 as well for consistency.
 
 ## Formats
 
+For more information on a specific format:
+
+  * [Toyota Embroidery Format (.100)](100_format.md)
+  * [Toyota Embroidery Format (.10o)](10o_format.md)
+  * [Bernina Embroidery Format (.art)](art_format.md)
+  * [Bitmap Cache Embroidery Format (.bmc)](bmc_format.md)
+  * [Bits and Volts Embroidery Format (.bro)](bro_format.md)
+  * [Melco Embroidery Format (.cnd)](cnd_format.md)
+  * [Embroidery Thread Color Format (.col)](col_format.md)
+  * [Singer Embroidery Format (.csd)](csd_format.md)
+  * [Comma Separated Values (.csv)](csv_format.md)
+  * [Barudan Embroidery Format (.dat)](dat_format.md)
+  * [Melco Embroidery Format (.dem)](dem_format.md)
+  * [Barudan Embroidery Format (.dsb)](dsb_format.md)
+  * [Tajima Embroidery Format (.dst)](dst_format.md)
+  * [ZSK USA Embroidery Format (.dsz)](dsz_format.md)
+  * [Drawing Exchange Format (.dxf)](dxf_format.md)
+  * [Embird Embroidery Format (.edr)](edr_format.md)
+  * [Elna Embroidery Format (.emd)](emd_format.md)
+  * [Melco Embroidery Format (.exp)](exp_format.md)
+  * [Eltac Embroidery Format (.exy)](exy_format.md)
+  * [Sierra Expanded Embroidery Format (.eys)](eys_format.md)
+  * [Fortron Embroidery Format (.fxy)](fxy_format.md)
+  * [Smoothie G-Code Embroidery Format (.fxy)](fxy_format.md)
+  * [Great Notions Embroidery Format (.gnc)](gnc_format.md)
+  * [Gold Thread Embroidery Format (.gt)](gt_format.md)
+  * [Husqvarna Viking Embroidery Format (.hus)](hus_format.md)
+  * [Inbro Embroidery Format (.inb)](inb_format.md)
+  * [Embroidery Color Format (.inf)](inf_format.md)
+  * [Janome Embroidery Format (.jef)](jef_format.md)
+  * [Pfaff Embroidery Format (.ksm)](ksm_format.md)
+  * [Pfaff Embroidery Format (.max)](max_format.md)
+  * [Mitsubishi Embroidery Format (.mit)](mit_format.md)
+  * [Ameco Embroidery Format (.new)](new_format.md)
+  * [Melco Embroidery Format (.ofm)](ofm_format.md)
+  * [Pfaff Embroidery Format (.pcd)](pcd_format.md)
+  * [Pfaff Embroidery Format (.pcm)](pcm_format.md)
+  * [Pfaff Embroidery Format (.pcq)](pcq_format.md)
+  * [Pfaff Embroidery Format (.pcs)](pcs_format.md)
+  * [Brother Embroidery Format (.pec)](pec_format.md)
+  * [Brother Embroidery Format (.pel)](pel_format.md)
+  * [Brother Embroidery Format (.pem)](pem_format.md)
+  * [Brother Embroidery Format (.pes)](pes_format.md)
+  * [Brother Embroidery Format (.phb)](phb_format.md)
+  * [Brother Embroidery Format (.phc)](phc_format.md)
+  * [AutoCAD Embroidery Format (.plt)](plt_format.md)
+  * [RGB Embroidery Format (.rgb)](rgb_format.md)
+  * [Janome Embroidery Format (.sew)](sew_format.md)
+  * [Husqvarna Viking Embroidery Format (.shv)](shv_format.md)
+  * [Sunstar Embroidery Format (.sst)](sst_format.md)
+  * [Data Stitch Embroidery Format (.stx)](stx_format.md)
+  * [Scalable Vector Graphics (.svg)](svg_format.md)
+  * [Pfaff Embroidery Format (.t01)](t01_format.md)
+  * [Pfaff Embroidery Format (.t09)](t09_format.md)
+  * [Happy Embroidery Format (.tap)](tap_format.md)
+  * [ThredWorks Embroidery Format (.thr)](thr_format.md)
+  * [Text File (.txt)](txt_format.md)
+  * [Barudan Embroidery Format (.u00)](u00_format.md)
+  * [Barudan Embroidery Format (.u01)](u01_format.md)
+  * [Pfaff Embroidery Format (.vip)](vip_format.md)
+  * [Pfaff Embroidery Format (.vp3)](vp3_format.md)
+  * [Singer Embroidery Format (.xxx)](#singer_embroidery_format_(.xxx))
+  * [ZSK USA Embroidery Format (.zsk)](#zsk_usa_embroidery_format_(.zsk))
+
 ### Overview of Work for V1.0
 
 | Format | Basic Read | Basic Write | Specialised Tests | Documentation |
@@ -377,7 +380,7 @@ The Toyota 100 format is a stitch-only format that uses an external color file.
 
 The stitch encoding is in 4 byte chunks.
 
-## Toyota Embroidery Format (.10o)
+### Toyota Embroidery Format (.10o)
 
 The Toyota 10o format is a stitch-only format that uses an external color file.
 
@@ -387,11 +390,11 @@ The stitch encoding is in 3 byte chunks.
 
 We don't know much about this format. TODO: Find a source.
 
-## Bitmap Cache Embroidery Format (.bmc)
+### Bitmap Cache Embroidery Format (.bmc)
 
 We don't know much about this format. TODO: Find a source.
 
-## Bits and Volts Embroidery Format (.bro)
+### Bits and Volts Embroidery Format (.bro)
 
 The Bits and Volts bro format is a stitch-only format that uses an external color file.
 
@@ -401,53 +404,31 @@ header.
 The stitch list uses a variable length encoding which is 2 bytes for any
 stitch
 
-## Melco Embroidery Format (.cnd)
+### Melco Embroidery Format (.cnd)
 
 The Melco cnd format is a stitch-only format.
 
 We don't know much about this format. TODO: Find a source.
 
-## Embroidery Thread Color Format (.col)
+### Embroidery Thread Color Format (.col)
 
-  * Stitch Only Format.
-  * [X] Basic Read Support
-  * [X] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+Stitch Only Format.
+  
+### Singer Embroidery Format (.csd)
 
-## Singer Embroidery Format (.csd)
-
-  * Stitch Only Format.
-  * [X] Basic Read Support
-  * [X] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
-
+Stitch Only Format
 
 ### Comma Separated Values (.csv)
 
-  * Stitch Only Format.
-  * [X] Basic Read Support
-  * [X] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
-
+Stitch Only Format.
 
 ### Barudan Embroidery Format (.dat)
 
-  * Stitch Only Format.
-  * [X] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+Stitch Only Format
 
-## Melco Embroidery Format (.dem)
+### Melco Embroidery Format (.dem)
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+Stitch Only Format
 
 ### Barudan Embroidery Format (.dsb)
 
@@ -457,7 +438,7 @@ We don't know much about this format. TODO: Find a source.
   * [ ] Well Tested Read
   * [ ] Well Tested Write
 
-## Tajima Embroidery Format (.dst)
+### Tajima Embroidery Format (.dst)
 
   * Stitch Only Format.
   * [X] Basic Read Support
@@ -574,19 +555,19 @@ Stitch Only Format.
 
 Stitch Only Format.
 
-## Janome Embroidery Format (.jef)
+### Janome Embroidery Format (.jef)
 
 Stitch Only Format.
 
-## Pfaff professional Design format (.ksm)
+### Pfaff professional Design format (.ksm)
 
 Stitch Only Format.
 
-## Pfaff Embroidery Format (.max)
+### Pfaff Embroidery Format (.max)
 
 Stitch Only Format.
 
-## Mitsubishi Embroidery Format (.mit)
+### Mitsubishi Embroidery Format (.mit)
 
 Stitch Only Format.
 
@@ -598,13 +579,9 @@ Stitch Only Format.
 
 Stitch Only Format.
 
-## Pfaff PCD File Format
+### Pfaff PCD File Format
 
-  * Stitch Only Format.
-  * [ ] Basic Read Support
-  * [ ] Basic Write Support
-  * [ ] Well Tested Read
-  * [ ] Well Tested Write
+Stitch Only Format.
 
 The format uses a signed 3 byte-length number type.
 
@@ -624,19 +601,19 @@ The Pfaff pcq format is stitch-only.
 
 The Pfaff pcs format is stitch-only.
 
-## Brother Embroidery Format (.pec)
+### Brother Embroidery Format (.pec)
 
 The Brother pec format is stitch-only.
 
-## Brother Embroidery Format (.pel)
+### Brother Embroidery Format (.pel)
 
 The Brother pel format is stitch-only.
 
-## Brother Embroidery Format (.pem)
+### Brother Embroidery Format (.pem)
 
 The Brother pem format is stitch-only.
 
-## Brother Embroidery Format (.pes)
+### Brother Embroidery Format (.pes)
 
 The Brother pes format is stitch-only.
 
@@ -648,15 +625,15 @@ DWORD PECOffset;
 };
 ```
 
-## Brother Embroidery Format (.phb)
+### Brother Embroidery Format (.phb)
 
 The Brother phb format is stitch-only.
 
-## Brother Embroidery Format (.phc)
+### Brother Embroidery Format (.phc)
 
 The Brother phc format is stitch-only.
 
-## AutoCAD Embroidery Format (.plt)
+### AutoCAD Embroidery Format (.plt)
 
 The AutoCAD plt format is stitch-only.
 
@@ -685,47 +662,47 @@ The Data Stitch stx format is stitch-only.
 The scalable vector graphics (SVG) format is a graphics format
 maintained by ...
 
-## Pfaff Embroidery Format (.t01)
+### Pfaff Embroidery Format (.t01)
 
 The Pfaff t01 format is stitch-only.
 
-## Pfaff Embroidery Format (.t09)
+### Pfaff Embroidery Format (.t09)
 
 The Pfaff t09 format is stitch-only.
 
-## Happy Embroidery Format (.tap)
+### Happy Embroidery Format (.tap)
 
 The Happy tap format is stitch-only.
 
-## ThredWorks Embroidery Format (.thr)
+### ThredWorks Embroidery Format (.thr)
 
 The ThreadWorks thr format is stitch-only.
 
-## Text File (.txt)
+### Text File (.txt)
 
 The txt format is stitch-only and isn't associated with a specific company.
 
-## Barudan Embroidery Format (.u00)
+### Barudan Embroidery Format (.u00)
 
 The Barudan u00 format is stitch-only.
 
-## Barudan Embroidery Format (.u01)
+### Barudan Embroidery Format (.u01)
 
 The Barudan u01 format is stitch-only.
 
-## Pfaff Embroidery Format (.vip)
+### Pfaff Embroidery Format (.vip)
 
 The Pfaff vip format is stitch-only.
 
-## Pfaff Embroidery Format (.vp3)
+### Pfaff Embroidery Format (.vp3)
 
 The Pfaff vp3 format is stitch-only.
 
-## Singer Embroidery Format (.xxx)
+### Singer Embroidery Format (.xxx)
 
 The Singer xxx format is stitch-only.
 
-## ZSK USA Embroidery Format (.zsk)
+### ZSK USA Embroidery Format (.zsk)
 
 The ZSK USA zsk format is stitch-only.
   
@@ -813,30 +790,6 @@ https://arduino.github.io/arduino-cli/0.19/sketch-build-process/
 
 libembroidery relies on the Arduino SD library for reading files. See
 the ino-file source and header files for more information.
-
-### Experimental Projects
-
-Anything contained within the experimental/ folder is unstable and
-unsupported. Items in here may eventually be moved elsewhere or may not.
-If you have an interesting concept or prototype that you would like us
-to add, contact us and we may add it here.
-
-### Dependencies
-
-To build additional language bindings for libembroidery from source you
-will need at least:
-
-Ubuntu repository packages:
-
-    sudo apt-get install swig python-dev
-
-Mac
-
-    brew install swig
-
-An example for building for use in C\#
-
-    swig -csharp -o ./csharp/binding/swig_wrap.c -I../ swig.i
 
 ## The Assembly Split
 

@@ -23,8 +23,8 @@ void printArcResults(double bulge,
                      double sagitta,   double apothem,
                      double incAngle,  char   clockwise);
 static void report(int result, char *label);
-int create_test_file_1(const char* outf, int mode);
-int create_test_file_2(const char* outf, int mode);
+int create_test_file_1(const char* outf);
+int create_test_file_2(const char* outf);
 int testEmbCircle(void);
 int testEmbCircle_2(void);
 int testGeomArc(void);
@@ -55,8 +55,8 @@ void testMain(int level)
     int threadResult = testThreadColor();
     int formatResult = testEmbFormat();
     int arcResult = testGeomArc();
-    int create1Result = create_test_file_1("test01.csv", EMB_FORMAT_CSV);
-    int create2Result = create_test_file_2("test02.csv", EMB_FORMAT_CSV);
+    int create1Result = create_test_file_1("test01.csv");
+    int create2Result = create_test_file_2("test02.csv");
     int svg1Result = convert("test01.csv", "test01.svg");
     int svg2Result = convert("test02.csv", "test02.svg");
     int dst1Result = convert("test01.csv", "test01.dst");
@@ -326,7 +326,7 @@ int testEmbFormat(void) {
     return 0;
 }
 
-int create_test_file_1(const char* outf, int mode) {
+int create_test_file_1(const char* outf) {
     int i;
     EmbPattern* p;
     EmbStitch st;
@@ -360,7 +360,7 @@ int create_test_file_1(const char* outf, int mode) {
     return 0;
 }
 
-int create_test_file_2(const char* outf, int mode) {
+int create_test_file_2(const char* outf) {
     int i;
     EmbPattern* p;
     EmbStitch st;
@@ -447,7 +447,7 @@ int full_test_matrix(char *fname) {
             continue;
         }
         snprintf(fname, 30, "test01%s", formatTable[i].extension);
-        create_test_file_1(fname, i);
+        create_test_file_1(fname);
         /* p3_render(b); */
         for (j=0; j < numberOfFormats; j++) {
             char fname_converted[100];

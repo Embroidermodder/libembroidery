@@ -182,6 +182,8 @@ int embImage_render(EmbPattern *p, float width, float height, char *fname) {
  */
 
 int render_postscript(EmbPattern *pattern, EmbImage *image) {
+    puts("Postscript rendering not supported, defaulting to ppm.");
+    embImage_render(pattern, image->width, image->height, "default.ppm");
     return 1;
 }
 
@@ -189,7 +191,7 @@ int render_postscript(EmbPattern *pattern, EmbImage *image) {
  * hints about how to represent the pattern.
  */
 int embImage_simulate(EmbPattern *pattern, float width, float height, char *fname) {
-    embImage_render(pattern, width, height, "output.ppm");
+    embImage_render(pattern, width, height, fname);
     return 0;
 }
 

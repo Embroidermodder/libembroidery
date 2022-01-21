@@ -71,10 +71,12 @@ typedef struct SvgAttribute_
     char* value;
 } SvgAttribute;
 
+/*
 int svg_parser(char *s, char **token_table)
 {
     return 0;
 }
+*/
 
 int svgCreator;
 

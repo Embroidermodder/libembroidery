@@ -45,7 +45,7 @@ Potential reference:
     new_state[0] = 0;
 
     /* replace letters using rules by copying to new_state */
-    for (j=0; j < strlen(state); j++) {
+    for (j=0; j < (int)strlen(state); j++) {
         if (state[j] >= 'A' && state[j] < 'F') {
             strcat(new_state, L.rules[state[j]-'A']);
         }
@@ -88,7 +88,7 @@ int hilbert_curve(EmbPattern *pattern, int iterations)
     position[1] = 0;
     direction = 0;
 
-    for (i = 0; i < strlen(state); i++) {
+    for (i = 0; i < (int)strlen(state); i++) {
         if (state[i] == '+') {
             direction = (direction + 1) % 4;
             continue;
@@ -146,7 +146,15 @@ void generate_dragon_curve(char *state, int iterations)
 
 int dragon_curve(int iterations)
 {
-    return 0;
+    char *state;
+    if (iterations > 10) {
+        puts("The dragon curve is only supported up to 10 iterations.");
+        return 0;
+    }
+    state = malloc(1<<(iterations+1));
+    generate_dragon_curve(state, iterations);
+    free(state);
+    return 1;
 }
 
 #if 0
@@ -606,7 +614,7 @@ void embPolygon_reduceByDistance(EmbArray *vertices, EmbArray *simplified, float
     }
 
     for (i = 0; i < vertices->count; i++) {
-        EmbVector delta, dist;
+        EmbVector delta;
         int nextId = (i + 1) % vertices->count;
 
         embVector_subtract(vertices->vector[nextId], vertices->vector[i], &delta);

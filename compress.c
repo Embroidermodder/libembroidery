@@ -85,7 +85,7 @@ void huffman_init(huffman *h, int lengths, int value)
     /* these mallocs are guessing for now */
     h->default_value = value;
     h->lengths = malloc(1000);
-    h->nlengths = 0;
+    h->nlengths = lengths;
     h->table = malloc(1000);
     h->ntable = 0;
     h->table_width = 0;

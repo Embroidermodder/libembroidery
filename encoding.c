@@ -1,7 +1,7 @@
 /*
  * This file is part of libembroidery.
  *
- * Copyright 2021 The Embroidermodder Team
+ * Copyright 2021-2022 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
  * The functions in this file are grouped together to aid the developer's
@@ -15,6 +15,8 @@
 #include "embroidery.h"
 
 #include <stdio.h>
+
+void write_24bit(FILE *file, int dx);
 
 int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags) {
     decode_tajima_ternary(b, x, y);

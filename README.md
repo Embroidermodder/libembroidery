@@ -127,9 +127,11 @@ as the command line program `embroider`.
 
 ### Debug
 
-If you wish to help with development, [run this debug script](https://gist.githubusercontent.com/robin-swift/c475972eb7faa6408bb1417e55c26867/raw/637bff9a1bbcd60e06e05486e3081ef11f31d85f/libembroidery_debugger.sh) and send us the error log.
-(Note: this is maintained outside of the repository because it gives us a oneliner for new systems with a stable URL:
-`curl https://gist.githubusercontent.com/robin-swift/c475972eb7faa6408bb1417e55c26867/raw/637bff9a1bbcd60e06e05486e3081ef11f31d85f/libembroidery_debugger.sh | sh`. TODO: This should be shifted to embroidermodder.org.)
+If you wish to help with development, [run this debug script](https://embroidermodder.org/libembroidery_debugger.sh) and send us the error log.
+Note: this is maintained outside of the repository because it gives us a oneliner for new systems with a stable URL:
+```
+curl https://embroidermodder.org/libembroidery_debugger.sh | sh
+```
 
 While we will attempt to maintain good results from this script as part of normal development
 it should be the first point of failure on any system we haven't tested or format we understand less.

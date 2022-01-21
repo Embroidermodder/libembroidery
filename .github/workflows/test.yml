@@ -1,39 +1,20 @@
 name: Test Suite
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ master ]
+on: [push]
 
 jobs:
-  test-linux64:
-    runs-on: ubuntu-latest
-
+  nightly:
+    name: Tests the build on all major systems.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-    - name: Run test script on Linux.
+    - name: Attempt build.
       run: |
         git clone https://github.com/Embroidermodder/libembroidery
         cd libembroidery
-        ./embtools.sh build
+        cmake .
+        cmake --build .
 
-  test-macOS:
-    runs-on: macOS-latest
-    
-    steps:
-    - name: Run test script on macOS.
-      run: |
-        git clone https://github.com/Embroidermodder/libembroidery
-        cd libembroidery
-        ./embtools.sh build
-
-  test-windows:
-    runs-on: windows-latest
-
-    steps:
-    - name: Run test script on Windows.
-      run: |
-        git clone https://github.com/Embroidermodder/libembroidery
-        cd libembroidery
-        .\embtools.bat build

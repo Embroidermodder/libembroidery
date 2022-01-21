@@ -5,10 +5,9 @@
 extern "C" {
 #endif
 
+#include <stdio.h>
+
 /* MACROS
- * ------
- * This first section is shared between the assembly versions and the
- * portable C version.
  *****************************************************************************/
 
 #define EMB_DEBUG               1
@@ -270,10 +269,6 @@ Special values for Stream Identifiers
 
 /*  EmbPoint has... */
 #define EmbPoint_size      (EmbVector_size + 1 + EmbColor_size)
-
-#ifndef __LIBEMBROIDERY_ASM__
-
-#include <stdio.h>
 
 #if defined(_WIN32) && !defined(WIN32)
 #define WIN32
@@ -968,180 +963,6 @@ extern const EmbThread shvThreads[];
 extern const EmbThread pcmThreads[];
 extern const EmbThread pecThreads[];
 extern const unsigned char _dxfColorTable[][3] ;
-
-#else
-
-/*
- * Flag Defines
- * ------------
- * These mirror the first table in libembroidery_data.asm.
- */
-#define svg_property_token_table   0*4
-#define svg_attribute_token_table  1*4
-#define svg_token_lists            2*4
-#define brand_codes                3*4
-#define image_frame                4*4
-#define csv_header                 5*4
-#define max_header                 6*4
-#define csd_decoding_table         7*4
-#define vip_decoding_table         8*4
-#define format_list                9*4
-#define svg_token_table            10*4
-#define inkscape_token_table       11*4
-#define svg_element_token_table    12*4
-#define svg_media_property_token_table    13*4
-#define stitch_labels              14*4
-#define dxf_version_r              15*4
-#define table_lengths              16*4
-
-#define error_emb_sqrt             17
-#define error_emb_atan2            18
-#define error_hus_expand           19
-#define error_hus_compress         20
-#define error_arc_data             21
-#define error_format_not_supported 22
-#define error_line_intersection    23
-#define error_line_parallel        24
-#define error_normalize            25
-#define error_pattern_no_stitches  26
-#define error_pattern_open_file    27
-#define error_vector_add           28
-#define error_vector_average       29
-#define error_vector_component_product    30
-#define error_vector_multiply      31
-#define error_vector_normal        32
-#define error_vector_subtract      33
-#define error_hide_stitches_no_pattern    35
-#define error_fix_color_count_no_pattern    36
-#define error_copy_stitch_list_no_pattern    37
-#define error_copy_polylines_no_point_list    38
-#define error_move_stitch_list_no_pattern    39
-#define error_add_stitch_abs_no_pattern    40
-#define error_add_stitch_abs_multiple_end    41
-#define error_add_stitch_rel_no_pattern    42
-#define error_change_color_no_pattern    43
-#define error_pattern_read_unsupported    44
-#define error_pattern_write_unsupported    45
-#define error_pattern_scale    46
-#define error_bounding_box_no_pattern    47
-#define error_flip_horizontal_no_pattern    48
-#define error_flip_vertical_no_pattern    49
-#define error_flip_no_pattern    50
-#define error_combine_jump_stitches    51
-#define error_pattern_max_stitch_length    52
-#define error_pattern_center    53
-#define error_add_circle    54
-#define error_add_ellipse    55
-#define error_add_line    56
-#define error_add_path    57
-#define error_add_path_obj    58
-#define error_add_path_obj_empty    59
-#define error_add_point    60
-#define error_add_polygon_abs    61
-#define error_add_polygon_abs_obj    62
-#define error_add_polygon_abs_empty    63
-#define error_add_polyline_abs    64
-#define error_add_polyline_abs_obj    65
-#define error_add_polyline_abs_empty    66
-#define error_add_rect    67
-#define error_generate_satin_array_create    68
-#define error_generate_satin_result_memory    69
-#define error_render_stitches_result_memory    70
-#define error_read_no_pattern    71
-#define error_read_no_filename    72
-#define error_read_cannot_open    73
-#define error_cannot_open    74
-#define error_bcf_difat_sector_value    76
-#define error_read_sector_value    77
-#define error_bcf_fat_create    78
-#define error_col_empty_line    79
-#define error_compound_unexpected_object_type    82
-#define error_csv_string    83
-#define error_format_get_extension    84
-#define error_no_colors 85
-#define error_read_dxf  86
-#define error_unsupported   87
-#define error_hus_decompress_data 88
-#define error_hus_compress_data   89
-#define error_read_hus  90
-#define error_write_hus 91
-#define error_jef_hoop_no_pattern 92
-#define error_max_encode_no_file  93
-#define error_ofm_threads_library_name   94
-#define error_ofm_threads_color_name  95
-#define error_stx_thread_no_thread    97
-#define error_stx_thread_no_file  98
-#define error_encode_dst_x_out_of_range  102
-#define error_encode_dst_y_out_of_range  103
-#define error_encode_tap_x  104
-#define error_encode_tap_y  105
-#define error_vp3_read_string_file    113
-#define error_vp3_read_hoop_no_file   115
-#define error_number_of_colors 116
-#define error_check_color_byte_1  117
-#define error_check_color_byte_2  118
-#define error_check_color_byte_3  119
-#define error_format_vp3_cannot_read  120
-#define error_svg_add_attribute_no_element  121
-#define error_svg_create_element_null 125
-#define error_svg_get_value_no_element   126
-#define error_svg_get_value_no_name    127
-#define error_svg_add_no_pattern    128
-#define error_svg_add_invalid_path    130
-#define error_svg_add_realloc 131
-#define error_read_svg        133
-#define error_write_csv_0     134
-#define error_read_csv_0      135
-#define error_read_csv_1      136
-#define error_read_csv_2      137
-
-#define brand_codes_length    24
-#define thread_type_length    35
-#define thread_color_offset   30
-#define thread_code           33
-
-#define CSV_EXPECT_NULL       0
-#define CSV_EXPECT_QUOTE1     1
-#define CSV_EXPECT_QUOTE2     2
-#define CSV_EXPECT_COMMA      3
-
-#define CSV_MODE_NULL         0
-#define CSV_MODE_COMMENT      '#'
-#define CSV_MODE_VARIABLE     '>'
-#define CSV_MODE_THREAD       '$'
-#define CSV_MODE_STITCH       '*'
-
-/* DXF Version Identifiers */
-#define DXF_VERSION_R10       0
-#define DXF_VERSION_R11       1
-#define DXF_VERSION_R12       2
-#define DXF_VERSION_R13       3
-#define DXF_VERSION_R14       4
-#define DXF_VERSION_R15       5
-#define DXF_VERSION_R18       6
-#define DXF_VERSION_R21       7
-#define DXF_VERSION_R24       8
-#define DXF_VERSION_R27       9
-
-#define DXF_VERSION_2000      0
-#define DXF_VERSION_2002      1
-#define DXF_VERSION_2004      2
-#define DXF_VERSION_2006      3
-#define DXF_VERSION_2007      4
-#define DXF_VERSION_2009      5
-#define DXF_VERSION_2010      6
-#define DXF_VERSION_2013      7
-
-#define MAX_LAYERS            16
-#define MAX_LAYER_NAME_LENGTH 30
-
-#define HOOP_126X110          0
-#define HOOP_110X110          1
-#define HOOP_50X50            2
-#define HOOP_140X200          3
-#define HOOP_230X200          4
-
-#endif
 
 #ifdef __cplusplus
 }

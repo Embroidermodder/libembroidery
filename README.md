@@ -118,26 +118,15 @@ of the manual.
 libembroidery and EmbroiderModder 2 use CMake builds
 so if you are building the project to use as a library we recommend
 you run:
-
-#### Linux or MacOS
  
 ```
 git clone https://github.com/Embroidermodder/libembroidery
 cd libembroidery
-./embtools.sh build
+cmake .
+cmake --build .
 ```
 
-#### Windows (or any system without Bash)
-
-(IN DEVELOPMENT)
- 
-```
-git clone https://github.com/Embroidermodder/libembroidery
-cd libembroidery
-embtools.bat build
-```
-
-These builds both the static and shared versions of the library as well
+This builds both the static and shared versions of the library as well
 as the command line program `embroider`.
 
 ## Usage

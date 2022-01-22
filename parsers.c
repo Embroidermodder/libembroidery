@@ -503,7 +503,7 @@ EmbArray *parse_pointlist(EmbPattern *p)
     polybuff = (char*)malloc(size);
     if (!polybuff) {
         printf("ERROR: format-svg.c svgAddToPattern(), cannot allocate memory for polybuff\n");
-        return;
+        return pointList;
     }
     for (i = 0; i < last; i++) {
         char c = pointStr[i];
@@ -540,7 +540,10 @@ EmbArray *parse_pointlist(EmbPattern *p)
              /* increase polybuff length - leave room for 0 */
              size *= 2;
              polybuff = (char*)realloc(polybuff, size);
-             if (!polybuff) { printf("ERROR: format-svg.c svgAddToPattern(), cannot re-allocate memory for polybuff\n"); return; }
+             if (!polybuff) {
+                 printf("ERROR: format-svg.c svgAddToPattern(), cannot re-allocate memory for polybuff\n");
+                 return NULL;
+             }
         }
     }
     free(polybuff);

@@ -1840,7 +1840,7 @@ char readSvg(EmbPattern* pattern, FILE* file) {
         if (pattern->circles) {
             for (i = 0; i < pattern->circles->count; i++) {
                 EmbCircle c = pattern->circles->circle[i].circle;
-                printf("circle %f %f %f\n", c.centerX, c.centerY, c.radius);
+                printf("circle %f %f %f\n", c.center.x, c.center.y, c.radius);
             }
         }
         if (pattern->ellipses) {
@@ -1852,7 +1852,7 @@ char readSvg(EmbPattern* pattern, FILE* file) {
         if (pattern->lines) {
             for (i = 0; i < pattern->lines->count; i++) {
                 EmbLine li = pattern->lines->line[i].line;
-                printf("line %f %f %f %f\n", li.x1, li.y1, li.x2, li.y2);
+                printf("line %f %f %f %f\n", li.start.x, li.start.y, li.end.x, li.end.y);
             }
         }
         if (pattern->points) {
@@ -1941,8 +1941,8 @@ char writeSvg(EmbPattern* pattern, FILE *file) {
                         color.r,
                         color.g,
                         color.b,
-                        circle.centerX,
-                        circle.centerY,
+                        circle.center.x,
+                        circle.center.y,
                         circle.radius);
         }
     }
@@ -1973,7 +1973,7 @@ char writeSvg(EmbPattern* pattern, FILE *file) {
             fprintf(file,
                 "\n<line stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
                 color.r, color.g, color.b,
-                line.x1, line.y1, line.x2, line.y2);
+                line.start.x, line.start.y, line.end.x, line.end.y);
         }
     }
 

@@ -2879,7 +2879,7 @@ static char writeInf(EmbPattern* pattern, FILE* file) {
         embColor_write(file, c, 3);
         binaryWriteUShortBE(file, (unsigned short)i); /* needle number */
         fwrite("RGB\0", 1, 4, file);
-        fprintf(file, buffer);
+        fprintf(file, "%s", buffer);
         fwrite("\0", 1, 1, file);
     }
     /* It appears that there should be a pad here otherwise it clips into

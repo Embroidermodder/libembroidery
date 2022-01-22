@@ -215,15 +215,10 @@ typedef struct EmbPointObject_
     EmbColor color;
 } EmbPointObject;
 
-/**
- * TODO: convert to EmbVector start, end;
- */
 typedef struct EmbLine_
 {
-    double x1;
-    double y1;
-    double x2;
-    double y2;
+    EmbVector start;
+    EmbVector end;
 } EmbLine;
 
 typedef struct EmbLineObject_
@@ -320,8 +315,7 @@ typedef struct EmbRect_
 
 typedef struct EmbCircle_
 {
-    double centerX;
-    double centerY;
+    EmbVector center;
     double radius;
 } EmbCircle;
 

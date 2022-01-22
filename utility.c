@@ -474,8 +474,8 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1,
                                  /* Intersection Point */
                                  double* px4, double* py4) {
     double a, h, px2, py2, mx, my;
-    double dx = c1.centerX-c0.centerX;
-    double dy = c1.centerY-c0.centerY;
+    double dx = c1.center.x-c0.center.x;
+    double dy = c1.center.y-c0.center.y;
     double d = sqrt(dx*dx + dy*dy); /* Distance between centers */
 
     /*Circles share centers. This results in division by zero,
@@ -520,8 +520,8 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1,
     h = sqrt((c0.radius*c0.radius) - (a*a));
 
     /*Find point p2 by adding the a offset in relation to line d to point p0 */
-    px2 = c0.centerX + (dx * a/d);
-    py2 = c0.centerY + (dy * a/d);
+    px2 = c0.center.x + (dx * a/d);
+    py2 = c0.center.y + (dy * a/d);
 
     /* Tangent circles have only one intersection
 
@@ -562,14 +562,14 @@ int getCircleTangentPoints(EmbCircle c,
                            /* Tangent Point 1 */
                            double* tx1, double* ty1) {
     double pr;
-    double dx  = px-c.centerX;
-    double dy  = py-c.centerY;
+    double dx  = px-c.center.x;
+    double dy  = py-c.center.y;
     double hyp = sqrt(dx*dx + dy*dy); /* Distance to center of circle */
     EmbCircle p;
     /* Point is inside the circle */
     if (hyp < c.radius) {
         return 0;
-    } else if (hyp == c.centerY) {
+    } else if (hyp == c.center.y) {
         /* Point is lies on the circle, so there is only one tangent point */
         *tx0 = *tx1 = px;
         *ty0 = *ty1 = py;
@@ -580,9 +580,9 @@ int getCircleTangentPoints(EmbCircle c,
      * we can use the Pythagorean theorem to solve for the missing side */
     pr = sqrt((hyp*hyp) - (c.radius*c.radius));
 
-    p.centerX = px;
-    p.centerY = py;
-       p.radius = pr;
+    p.center.x = px;
+    p.center.y = py;
+    p.radius = pr;
     return getCircleCircleIntersections(c, p,
                                         tx0, ty0,
                                         tx1, ty1);
@@ -668,10 +668,10 @@ EmbEllipseObject embEllipseObject_make(double cx, double cy,
 /* Returns an EmbLine. It is created on the stack. */
 EmbLine embLine_make(double x1, double y1, double x2, double y2) {
     EmbLine line;
-    line.x1 = x1;
-    line.y1 = y1;
-    line.x2 = x2;
-    line.y2 = y2;
+    line.start.x = x1;
+    line.start.y = y1;
+    line.end.x = x2;
+    line.end.y = y2;
     return line;
 }
 
@@ -684,8 +684,7 @@ void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise) {
         printf("result argument is null\n");
         return;
     }
-    result->x = line.x2 - line.x1;
-    result->y = line.y2 - line.y1;
+    embVector_subtract(line.end, line.start, result);
     embVector_normalize(*result, result);
     temp = result->x;
     result->x = result->y;
@@ -703,13 +702,13 @@ void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise) {
 unsigned char embLine_intersectionPoint(EmbLine line1,
         EmbLine line2, EmbVector* result) {
     double tolerance = 1e-10;
-    double A2 = line1.y2 - line1.y1;
-    double B2 = line1.x1 - line1.x2;
-    double C2 = A2 * line1.x1 + B2 * line1.y1;
+    double A2 = line1.end.y - line1.start.y;
+    double B2 = line1.start.x - line1.end.x;
+    double C2 = A2 * line1.start.x + B2 * line1.start.y;
 
-    double A1 = line2.y2 - line2.y1;
-    double B1 = line2.x1 - line2.x2;
-    double C1 = A1 * line2.x1 + B1 * line2.y1;
+    double A1 = line2.end.y - line2.start.y;
+    double B1 = line2.start.x - line2.end.x;
+    double C1 = A1 * line2.start.x + B1 * line2.end.y;
 
     double det = A1 * B2 - A2 * B1;
 
@@ -2029,10 +2028,10 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p) {
     if (p->circles) {
         for (i = 0; i < p->circles->count; i++) {
             circle = p->circles->circle[i].circle;
-            r.left = embMinDouble(r.left, circle.centerX - circle.radius);
-            r.top = embMinDouble(r.top, circle.centerY - circle.radius);
-            r.right = embMaxDouble(r.right, circle.centerX + circle.radius);
-            r.bottom = embMaxDouble(r.bottom, circle.centerY + circle.radius);
+            r.left = embMinDouble(r.left, circle.center.x - circle.radius);
+            r.top = embMinDouble(r.top, circle.center.y - circle.radius);
+            r.right = embMaxDouble(r.right, circle.center.x + circle.radius);
+            r.bottom = embMaxDouble(r.bottom, circle.center.y + circle.radius);
         }
     }
 
@@ -2050,14 +2049,14 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p) {
     if (p->lines) {
         for (i = 0; i < p->lines->count; i++) {
             line = p->lines->line[i].line;
-            r.left = embMinDouble(r.left, line.x1);
-            r.left = embMinDouble(r.left, line.x2);
-            r.top = embMinDouble(r.top, line.y1);
-            r.top = embMinDouble(r.top, line.y2);
-            r.right = embMaxDouble(r.right, line.x1);
-            r.right = embMaxDouble(r.right, line.x2);
-            r.bottom = embMaxDouble(r.bottom, line.y1);
-            r.bottom = embMaxDouble(r.bottom, line.y2);
+            r.left = embMinDouble(r.left, line.start.x);
+            r.left = embMinDouble(r.left, line.end.x);
+            r.top = embMinDouble(r.top, line.start.y);
+            r.top = embMinDouble(r.top, line.end.y);
+            r.right = embMaxDouble(r.right, line.start.x);
+            r.right = embMaxDouble(r.right, line.end.x);
+            r.bottom = embMaxDouble(r.bottom, line.start.y);
+            r.bottom = embMaxDouble(r.bottom, line.end.y);
         }
     }
 
@@ -2166,8 +2165,8 @@ void embPattern_flip(EmbPattern* p, int horz, int vert) {
 
     if (p->circles) {
         for (i = 0; i < p->circles->count; i++) {
-            if (horz) { p->circles->circle[i].circle.centerX *= -1.0; }
-            if (vert) { p->circles->circle[i].circle.centerY *= -1.0; }
+            if (horz) { p->circles->circle[i].circle.center.x *= -1.0; }
+            if (vert) { p->circles->circle[i].circle.center.y *= -1.0; }
         }
     }
 
@@ -2181,12 +2180,12 @@ void embPattern_flip(EmbPattern* p, int horz, int vert) {
     if (p->lines) {
         for (i = 0; i < p->lines->count; i++) {
             if (horz) {
-                p->lines->line[i].line.x1 *= -1.0;
-                p->lines->line[i].line.x2 *= -1.0;
+                p->lines->line[i].line.start.x *= -1.0;
+                p->lines->line[i].line.end.x *= -1.0;
             }
             if (vert) {
-                p->lines->line[i].line.y1 *= -1.0;
-                p->lines->line[i].line.y2 *= -1.0;
+                p->lines->line[i].line.start.y *= -1.0;
+                p->lines->line[i].line.end.y *= -1.0;
             }
         }
     }
@@ -2424,8 +2423,8 @@ void embPattern_free(EmbPattern* p) {
  * Units are in millimeters. */
 void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r) {
     EmbCircle circle;
-    circle.centerX = cx;
-    circle.centerY = cy;
+    circle.center.x = cx;
+    circle.center.y = cy;
     circle.radius = r;
 
     if (!p) {
@@ -2682,10 +2681,8 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
     }
 
     for (i = 1; i < lines->count; i++) {
-        line.x1 = lines->vector[i - 1].x;
-        line.y1 = lines->vector[i - 1].y;
-        line.x2 = lines->vector[i].x;
-        line.y2 = lines->vector[i].y;
+        line.start = lines->vector[i - 1];
+        line.end = lines->vector[i];
 
         embLine_normalVector(line, &v1, 1);
 
@@ -2721,25 +2718,17 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
     embArray_addVector(result->side2, outline.side2->vector[0]);
 
     for (i = 3; i < intermediateOutlineCount; i += 2) {
-        line1.x1 = outline.side1->vector[i - 3].x;
-        line1.y1 = outline.side1->vector[i - 3].y;
-        line1.x2 = outline.side1->vector[i - 2].x;
-        line1.y2 = outline.side1->vector[i - 2].y;
-        line2.x1 = outline.side1->vector[i - 1].x;
-        line2.y1 = outline.side1->vector[i - 1].y;
-        line2.x2 = outline.side1->vector[i].x;
-        line2.y2 = outline.side1->vector[i].y;
+        line1.start = outline.side1->vector[i - 3];
+        line1.end = outline.side1->vector[i - 2];
+        line2.start = outline.side1->vector[i - 1];
+        line2.end = outline.side1->vector[i];
         embLine_intersectionPoint(line1, line2, &out);
         embArray_addVector(result->side1, out);
 
-        line1.x1 = outline.side2->vector[i - 3].x;
-        line1.y1 = outline.side2->vector[i - 3].y;
-        line1.x2 = outline.side2->vector[i - 2].x;
-        line1.y2 = outline.side2->vector[i - 2].y;
-        line2.x1 = outline.side2->vector[i - 1].x;
-        line2.y1 = outline.side2->vector[i - 1].y;
-        line2.x2 = outline.side2->vector[i].x;
-        line2.y2 = outline.side2->vector[i].y;
+        line1.start = outline.side2->vector[i - 3];
+        line1.end = outline.side2->vector[i - 2];
+        line2.start = outline.side2->vector[i - 1];
+        line2.end = outline.side2->vector[i];
         embLine_intersectionPoint(line1, line2, &out);
         embArray_addVector(result->side2, out);
     }

@@ -3,9 +3,6 @@
  *
  * Copyright 2021-2022 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
- *
- * This file contains parsers for the more complex markup languages
- * dealt with by the library.
  */
 
 #include "embroidery.h"
@@ -1521,14 +1518,13 @@ int render_line(EmbLine line, EmbImage *image, EmbColor color) {
     float pix_w, pix_h;
     offset.x = 10.0;
     offset.y = 0.0;
-    diff.x = line.x2-line.x1;
-    diff.y = line.y2-line.y1;
+    embVector_subtract(line.end, line.start, &diff);
     pix_w = image->width / image->pixel_width;
     pix_h = image->height / image->pixel_height;
     for (i = 0; i < 1000; i++) {
         int x, y;
-        pos.x = line.x1 + 0.001*i*diff.x + offset.x;
-        pos.y = line.y1 + 0.001*i*diff.y + offset.y;
+        pos.x = line.start.x + 0.001*i*diff.x + offset.x;
+        pos.y = line.start.y + 0.001*i*diff.y + offset.y;
         x = (int)round(pos.x / pix_w);
         y = (int)round(pos.y / pix_h);
         if (x >= 0 && x < image->pixel_width)
@@ -1556,10 +1552,10 @@ int embImage_render(EmbPattern *p, float width, float height, char *fname) {
     image->height = height;
     for (i=1; i < p->stitchList->count; i++)  {
         EmbLine line;
-        line.x1 = p->stitchList->stitch[i-1].x;
-        line.y1 = p->stitchList->stitch[i-1].y;
-        line.x2 = p->stitchList->stitch[i].x;
-        line.y2 = p->stitchList->stitch[i].y;
+        line.start.x = p->stitchList->stitch[i-1].x;
+        line.start.y = p->stitchList->stitch[i-1].y;
+        line.end.x = p->stitchList->stitch[i].x;
+        line.end.y = p->stitchList->stitch[i].y;
         render_line(line, image, black); /* HACK: st.color); */
     }
     write_ppm_image(fname, image);
@@ -1664,7 +1660,7 @@ void testTangentPoints(EmbCircle c,
                "Point  : px=%f, py=%f\n"
                "Tangent: tx0=%f, ty0=%f\n"
                "Tangent: tx1=%f, ty1=%f\n\n",
-               c.radius, c.centerX, c.centerY,
+               c.radius, c.center.x, c.center.y,
                px, py,
                tx0, ty0,
                tx1, ty1);

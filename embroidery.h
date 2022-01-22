@@ -5,21 +5,10 @@
 extern "C" {
 #endif
 
-#include <stdio.h>
-
 /* MACROS
  *****************************************************************************/
 
 #define EMB_DEBUG               1
-
-#define EMB_BIT_0            0x01
-#define EMB_BIT_1            0x02
-#define EMB_BIT_2            0x04
-#define EMB_BIT_3            0x08
-#define EMB_BIT_4            0x10
-#define EMB_BIT_5            0x20
-#define EMB_BIT_6            0x40
-#define EMB_BIT_7            0x80
 
 /* Machine codes for stitch flags */
 #define NORMAL                  0 /* stitch to (x, y) */
@@ -174,102 +163,6 @@ extern "C" {
 #define HOOP_140X200                  3
 #define HOOP_230X200                  4
 
-/* DXF Version Identifiers */
-#define DXF_VERSION_R10 "AC1006"
-#define DXF_VERSION_R11 "AC1009"
-#define DXF_VERSION_R12 "AC1009"
-#define DXF_VERSION_R13 "AC1012"
-#define DXF_VERSION_R14 "AC1014"
-#define DXF_VERSION_R15 "AC1015"
-#define DXF_VERSION_R18 "AC1018"
-#define DXF_VERSION_R21 "AC1021"
-#define DXF_VERSION_R24 "AC1024"
-#define DXF_VERSION_R27 "AC1027"
-
-#define DXF_VERSION_2000 "AC1015"
-#define DXF_VERSION_2002 "AC1015"
-#define DXF_VERSION_2004 "AC1018"
-#define DXF_VERSION_2006 "AC1018"
-#define DXF_VERSION_2007 "AC1021"
-#define DXF_VERSION_2009 "AC1021"
-#define DXF_VERSION_2010 "AC1024"
-#define DXF_VERSION_2013 "AC1027"
-
-/**
-Type of sector
-*/
-#define CompoundFileSector_MaxRegSector 0xFFFFFFFA
-#define CompoundFileSector_DIFAT_Sector 0xFFFFFFFC
-#define CompoundFileSector_FAT_Sector   0xFFFFFFFD
-#define CompoundFileSector_EndOfChain   0xFFFFFFFE
-#define CompoundFileSector_FreeSector   0xFFFFFFFF
-
-/**
-Type of directory object
-*/
-#define ObjectTypeUnknown   0x00 /*!< Probably unallocated    */
-#define ObjectTypeStorage   0x01 /*!< a directory type object */
-#define ObjectTypeStream    0x02 /*!< a file type object      */
-#define ObjectTypeRootEntry 0x05 /*!< the root entry          */
-
-/**
-Special values for Stream Identifiers
-*/
-#define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /*!< All real stream Ids are less than this */
-#define CompoundFileStreamId_NoStream           0xFFFFFFFF /*!< There is no valid stream Id            */
-
-#define SVG_CREATOR_NULL              0
-#define SVG_CREATOR_EMBROIDERMODDER   1
-#define SVG_CREATOR_ILLUSTRATOR       2
-#define SVG_CREATOR_INKSCAPE          3
-
-#define SVG_EXPECT_NULL               0
-#define SVG_EXPECT_ELEMENT            1
-#define SVG_EXPECT_ATTRIBUTE          2
-#define SVG_EXPECT_VALUE              3
-
-/*  SVG_TYPES
- *  ---------
- */
-#define SVG_NULL                      0
-#define SVG_ELEMENT                   1
-#define SVG_PROPERTY                  2
-#define SVG_MEDIA_PROPERTY            3
-#define SVG_ATTRIBUTE                 4
-#define SVG_CATCH_ALL                 5
-
-/*
- *  Structure sizes
- *  These can be obtained by calling sizeof in C, but for assembly we need these
- *  to be explicitly calculated.
- *  ---------------------------------------------------------------------------
- *
- *  EmbTime uses 6 unsigned ints, 1 for each of (year, month, day, hour, minute,
- *  second) in that order.
- */
-#define EmbTime_size      (6*8)
-
-/*  EmbArray uses 3 of the integers used as pointers for a file_id, size and
- *  and 1 unsigned char for a type.
- */
-#define EmbArray_size     (3*8+1)
-
-/* EmbColor uses the light primaries: red, green, blue in that order.
- * unsigned char[3];
- */
-#define EmbColor_size      3
-
-/*  The basic type to represent points absolutely or represent directions.
- *
- *  Positive y is up, units are in mm.
- *
- *  EmbVector (float x, y);
- */
-#define EmbVector_size     (2*4)
-
-/*  EmbPoint has... */
-#define EmbPoint_size      (EmbVector_size + 1 + EmbColor_size)
-
 #if defined(_WIN32) && !defined(WIN32)
 #define WIN32
 #endif
@@ -288,23 +181,6 @@ Special values for Stream Identifiers
 
 /* STRUCTS
 *****************************************************************************/
-
-typedef enum
-{
-    CSV_EXPECT_NULL,
-    CSV_EXPECT_QUOTE1,
-    CSV_EXPECT_QUOTE2,
-    CSV_EXPECT_COMMA
-} CSV_EXPECT;
-
-typedef enum
-{
-    CSV_MODE_NULL,
-    CSV_MODE_COMMENT,
-    CSV_MODE_VARIABLE,
-    CSV_MODE_THREAD,
-    CSV_MODE_STITCH
-} CSV_MODE;
 
 /**
  * EmbColor uses the light primaries: red, green, blue in that order.
@@ -489,78 +365,6 @@ typedef struct EmbEllipseObject_
     EmbColor color;
 } EmbEllipseObject;
 
-/* double-indirection file allocation table references */
-typedef struct _bcf_file_difat
-{
-    unsigned int fatSectorCount;
-    unsigned int fatSectorEntries[109];
-    unsigned int sectorSize;
-} bcf_file_difat;
-
-typedef struct _bcf_file_fat
-{
-    int          fatEntryCount;
-    unsigned int fatEntries[255]; /* maybe make this dynamic */
-    unsigned int numberOfEntriesInFatSector;
-} bcf_file_fat;
-
-typedef struct _bcf_directory_entry
-{
-    char                         directoryEntryName[32];
-    unsigned short               directoryEntryNameLength;
-    unsigned char                objectType;
-    unsigned char                colorFlag;
-    unsigned int                 leftSiblingId;
-    unsigned int                 rightSiblingId;
-    unsigned int                 childId;
-    unsigned char                CLSID[16];
-    unsigned int                 stateBits;
-    EmbTime                      creationTime;
-    EmbTime                      modifiedTime;
-    unsigned int                 startingSectorLocation;
-    unsigned long                streamSize; /* should be long long but in our case we shouldn't need it, and hard to support on c89 cross platform */
-    unsigned int                 streamSizeHigh; /* store the high int of streamsize */
-    struct _bcf_directory_entry* next;
-} bcf_directory_entry;
-
-typedef struct _bcf_directory
-{
-    bcf_directory_entry* dirEntries;
-    unsigned int         maxNumberOfDirectoryEntries;
-    /* TODO: possibly add a directory tree in the future */
-
-} bcf_directory;
-
-typedef struct _bcf_file_header
-{
-    unsigned char  signature[8];
-    unsigned char  CLSID[16]; /* TODO: this should be a separate type */
-    unsigned short minorVersion;
-    unsigned short majorVersion;
-    unsigned short byteOrder;
-    unsigned short sectorShift;
-    unsigned short miniSectorShift;
-    unsigned short reserved1;
-    unsigned int   reserved2;
-    unsigned int   numberOfDirectorySectors;
-    unsigned int   numberOfFATSectors;
-    unsigned int   firstDirectorySectorLocation;
-    unsigned int   transactionSignatureNumber;
-    unsigned int   miniStreamCutoffSize;
-    unsigned int   firstMiniFATSectorLocation;
-    unsigned int   numberOfMiniFatSectors;
-    unsigned int   firstDifatSectorLocation;
-    unsigned int   numberOfDifatSectors;
-} bcf_file_header;
-
-typedef struct _bcf_file
-{
-    bcf_file_header header;   /*! The header for the CompoundFile */
-    bcf_file_difat* difat;    /*! The "Double Indirect FAT" for the CompoundFile */
-    bcf_file_fat* fat;        /*! The File Allocation Table for the Compound File */
-    bcf_directory* directory; /*! The directory for the CompoundFile */
-} bcf_file;
-
 typedef struct EmbPolylineObject_
 {
     EmbArray* pointList;
@@ -735,36 +539,6 @@ EMB_PUBLIC int render_postscript(EmbPattern *pattern, EmbImage *image);
 EMB_PUBLIC void testMain(int level);
 EMB_PUBLIC int convert(const char *inf, const char *outf);
 
-char binaryReadByte(FILE* file);
-int binaryReadBytes(FILE* file, unsigned char* destination, int count);
-float binaryReadFloat(FILE* file);
-void binaryReadString(FILE* file, char *buffer, int maxLength);
-void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength);
-
-void binaryWriteByte(FILE* file, unsigned char data);
-void binaryWriteBytes(FILE* file, const char* data, int size);
-void binaryWriteShort(FILE* file, short data);
-void binaryWriteShortBE(FILE* file, short data);
-void binaryWriteUShort(FILE* file, unsigned short data);
-void binaryWriteUShortBE(FILE* file, unsigned short data);
-void binaryWriteInt(FILE* file, int data);
-void binaryWriteIntBE(FILE* file, int data);
-void binaryWriteUInt(FILE* file, unsigned int data);
-void binaryWriteUIntBE(FILE* file, unsigned int data);
-void binaryWriteFloat(FILE* file, float data);
-
-extern void charReplace(char *s, const char *from, const char *to);
-extern int stringInArray(const char *s, const char **array);
-
-char startsWith(const char* pre, const char* str);
-
-void fpad(FILE *f, char c, int n);
-char* rTrim(char* const str, char junk);
-char* lTrim(char* const str, char junk);
-char *copy_trim(char const *s);
-void inplace_trim(char *s);
-char* emb_optOut(double num, char* str);
-
 int hus_compress(char* input, int size, char* output, int *out_size);
 int hus_decompress(char* input, int size, char* output, int *out_size);
 
@@ -804,8 +578,6 @@ EMB_PUBLIC EmbColor embColor_make(unsigned char r, unsigned char g, unsigned cha
 EMB_PUBLIC EmbColor* embColor_create(unsigned char r, unsigned char g, unsigned char b);
 EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
 EMB_PUBLIC int embColor_distance(EmbColor a, EmbColor b);
-EMB_PUBLIC void embColor_read(FILE *file, EmbColor *c, int toRead);
-EMB_PUBLIC void embColor_write(FILE *file, EmbColor c, int toWrite);
 
 EMB_PUBLIC EmbImage *embImage_create(int, int);
 EMB_PUBLIC void embImage_free(EmbImage *image);
@@ -816,38 +588,6 @@ EMB_PUBLIC double embEllipse_width(EmbEllipse ellipse);
 EMB_PUBLIC double embEllipse_height(EmbEllipse ellipse);
 
 EMB_PUBLIC EmbEllipseObject embEllipseObject_make(double cx, double cy, double rx, double ry);
-
-EMB_PUBLIC short fread_int16(FILE* f);
-EMB_PUBLIC unsigned short fread_uint16(FILE* f);
-EMB_PUBLIC int fread_int32(FILE* f);
-EMB_PUBLIC unsigned int fread_uint32(FILE* f);
-EMB_PUBLIC short fread_int16_be(FILE* f);
-EMB_PUBLIC unsigned short fread_uint16_be(FILE* f);
-EMB_PUBLIC int fread_int32_be(FILE* f);
-EMB_PUBLIC unsigned int fread_uint32_be(FILE* f);
-EMB_PUBLIC void fwrite_nbytes(FILE* f, void *p, int bytes);
-EMB_PUBLIC void fwrite_nbytes_be(FILE* f, void *p, int bytes);
-
-bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize);
-unsigned int readFullSector(FILE* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
-unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
-void bcf_file_difat_free(bcf_file_difat* difat);
-
-bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
-void loadFatFromSector(bcf_file_fat* fat, FILE* file);
-void bcf_file_fat_free(bcf_file_fat** fat);
-
-bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file);
-bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
-void readNextSector(FILE* file, bcf_directory* dir);
-void bcf_directory_free(bcf_directory** dir);
-
-bcf_file_header bcfFileHeader_read(FILE* file);
-int bcfFileHeader_isValid(bcf_file_header header);
-
-int bcfFile_read(FILE* file, bcf_file* bcfFile);
-FILE* GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind);
-void bcf_file_free(bcf_file* bcfFile);
 
 int threadColor(const char*, int brand);
 int threadColorNum(unsigned int color, int brand);
@@ -928,31 +668,11 @@ EMB_PUBLIC char embPattern_write(EmbPattern *pattern, const char* fileName, int 
 EMB_PUBLIC char embPattern_readAuto(EmbPattern *pattern, const char* fileName);
 EMB_PUBLIC char embPattern_writeAuto(EmbPattern *pattern, const char* fileName);
 
-void readPecStitches(EmbPattern* pattern, FILE* file);
-void writePecStitches(EmbPattern* pattern, FILE* file, const char* filename);
-
-int emb_readline(FILE* file, char *line, int maxLength);
-
-int decodeNewStitch(unsigned char value);
-
-void pfaffEncode(FILE* file, int x, int y, int flags);
-double pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3);
-
-unsigned char mitEncodeStitch(double value);
-int mitDecodeStitch(unsigned char value);
-
-int encode_tajima_ternary(unsigned char b[3], int x, int y);
-void decode_tajima_ternary(unsigned char b[3], int *x, int *y);
-
-void encode_t01_record(unsigned char b[3], int x, int y, int flags);
-int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags);
-
 /* NON-MACRO CONSTANTS
  ******************************************************************************/
 
 /*! Constant representing the number of Double Indirect FAT entries in a single header */
 EMB_PUBLIC extern EmbFormatList formatTable[];
-extern const unsigned int NumberOfDifatEntriesInHeader;
 extern const int pecThreadCount;
 extern const char imageWithFrame[38][48];
 extern const int shvThreadCount;

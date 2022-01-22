@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
 
-#include(GNUInstallDirs)
-
 project(libembroidery VERSION 1.0.0 LANGUAGES C CXX)
 
 set(CMAKE_C_STANDARD 90)
@@ -10,80 +8,47 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 option( EMBROIDERY_BUILD_SHARED_LIBS "Build shared library." ON )
+option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
 
-add_compile_options(
-    -fPIC
-    -pedantic
-    -Wall
-    -O2
-    $<$<CONFIG:DEBUG>:-g2>
-    $<$<CONFIG:DEBUG>:-Wextra>
-    $<$<CONFIG:DEBUG>:-ansi>
-    $<$<CONFIG:DEBUG>:-Werror>
-)
-
-set(LIBRARY_SOURCE_FILES
-    compress.c
-    fills.c
-    image.c
-    embroidery.h
-    encoding.c
-    formats.c
-    tests.c
-    thread-color.c
-    parsers.c
-    generators.c
-    utility.c
-)
+add_library(embroidery_static STATIC embroidery.h embroidery.c)
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
-add_library(embroidery SHARED
-    ${LIBRARY_SOURCE_FILES}
-)
+add_library(embroidery SHARED embroidery.h embroidery.c)
 
-target_include_directories(embroidery
-    INTERFACE
-        $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    PRIVATE
-        include
-)
 target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
+
+target_include_directories(embroidery INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
-add_library(embroidery_static STATIC
-    ${LIBRARY_SOURCE_FILES}
-)
+if(EMBROIDERY_BUILD_CLI)
+add_executable(embroider embroidery.c embroidery.h)
 
-target_include_directories(embroidery_static
-    INTERFACE
-        $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    PRIVATE
-        include
-)
-
-add_executable(embroider
-    embroider-main.c
-)
-
-if(EMBROIDERY_BUILD_SHARED_LIBS)
-target_include_directories(embroider
-    INTERFACE
-        $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    PRIVATE
-        include
-)
+target_compile_definitions(embroider PUBLIC LIBEMBROIDERY_CLI)
 endif()
 
-# These link against the static libraries
-# so we know that it is the current build that they're
-# linked against.
 if (WIN32)
-target_link_libraries(embroider PRIVATE embroidery_static)
+add_compile_options(
+	-fPIC
+	-pedantic
+	-Wall
+	$<$<CONFIG:DEBUG>:-g>
+	$<$<CONFIG:DEBUG>:-Wextra>
+	$<$<CONFIG:DEBUG>:-ansi>
+	$<$<CONFIG:DEBUG>:-Werror>
+)
 else(WIN32)
-target_link_libraries(embroider PRIVATE embroidery_static m)
+add_compile_options(
+	-fPIC
+	-pedantic
+	-Wall
+	-O2
+	$<$<CONFIG:DEBUG>:-g>
+	$<$<CONFIG:DEBUG>:-Wextra>
+	$<$<CONFIG:DEBUG>:-ansi>
+	$<$<CONFIG:DEBUG>:-Werror>
+)
+
+target_link_libraries(embroider PRIVATE m)
 endif (WIN32)
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)

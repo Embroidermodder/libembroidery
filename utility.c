@@ -1,20 +1,3 @@
-#include "embroidery.h"
-
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <math.h>
-#include <time.h>
-
-#define EMB_BIG_ENDIAN                          0
-#define EMB_LITTLE_ENDIAN                       1
-
-#define ENDIAN_HOST                             EMB_LITTLE_ENDIAN
-
-static EmbColor black = {0,0,0};
-
 /* TODO: This list needs reviewed in case some stitch 
     formats also can contain object data (EMBFORMAT_STCHANDOBJ). */
 
@@ -82,8 +65,8 @@ EmbFormatList formatTable[numberOfFormats] = {
     {".zsk", "ZSK USA Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY, 0, 0, 0}
 };
 
-const unsigned int NumberOfDifatEntriesInHeader = 109;
-const unsigned int sizeOfFatEntry = sizeof(unsigned int);
+static const unsigned int NumberOfDifatEntriesInHeader = 109;
+static const unsigned int sizeOfFatEntry = sizeof(unsigned int);
 static const unsigned int sizeOfDifatEntry = 4;
 static const unsigned int sizeOfChainingEntryAtEndOfDifatSector = 4;
 static const unsigned int sizeOfDirectoryEntry = 128;
@@ -312,7 +295,7 @@ void MainWindow::designDetails()
  * Returns 0 if there aren't enough, or the length of the file
  * if there are.
  */
-int check_header_present(FILE* file, int minimum_header_length)
+static int check_header_present(FILE* file, int minimum_header_length)
 {
     int length;
     fseek(file, 0, SEEK_END);
@@ -1295,7 +1278,7 @@ static void parseDIFATSectors(FILE* file, bcf_file* bcfFile) {
     }
 }
 
-int bcfFile_read(FILE* file, bcf_file* bcfFile) {
+static int bcfFile_read(FILE* file, bcf_file* bcfFile) {
     unsigned int i, numberOfDirectoryEntriesPerSector;
     unsigned int directorySectorToReadFrom;
 
@@ -1329,7 +1312,7 @@ int bcfFile_read(FILE* file, bcf_file* bcfFile) {
     return 1;
 }
 
-FILE* GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind) {
+static FILE* GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind) {
     int filesize, sectorSize, currentSector;
     int sizeToWrite, currentSize, totalSectors, i, j;
     FILE* fileOut = tmpfile();
@@ -1361,18 +1344,16 @@ FILE* GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind) {
     return fileOut;
 }
 
-void bcf_file_free(bcf_file* bcfFile) {
+static void bcf_file_free(bcf_file* bcfFile)
+{
     bcf_file_difat_free(bcfFile->difat);
-    bcfFile->difat = 0;
     bcf_file_fat_free(&bcfFile->fat);
-    bcfFile->fat = 0;
     bcf_directory_free(&bcfFile->directory);
-    bcfFile->directory = 0;
     free(bcfFile);
-    bcfFile = 0;
 }
 
-bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize) {
+static bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize)
+{
     unsigned int i;
     bcf_file_difat* difat = 0;
     unsigned int sectorRef;
@@ -1489,7 +1470,7 @@ EmbTime parseTime(FILE* file)
     return returnVal;
 }
 
-bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file)
+static bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file)
 {
     bcf_directory_entry* dir = malloc(sizeof(bcf_directory_entry));
     if (dir == NULL) {
@@ -1520,7 +1501,7 @@ bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file)
     return dir;
 }
 
-void readNextSector(FILE* file, bcf_directory* dir) {
+static void readNextSector(FILE* file, bcf_directory* dir) {
     unsigned int i;
     for (i = 0; i < dir->maxNumberOfDirectoryEntries; ++i) {
         bcf_directory_entry* dirEntry = CompoundFileDirectoryEntry(file);
@@ -1539,7 +1520,7 @@ void readNextSector(FILE* file, bcf_directory* dir) {
     }
 }
 
-void bcf_directory_free(bcf_directory** dir) {
+static void bcf_directory_free(bcf_directory** dir) {
     bcf_directory *dirptr;
     bcf_directory_entry* pointer;
     if (dir == NULL){
@@ -1559,7 +1540,7 @@ void bcf_directory_free(bcf_directory** dir) {
     }
 }
 
-bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize) {
+static bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize) {
     bcf_file_fat* fat = (bcf_file_fat*)malloc(sizeof(bcf_file_fat));
     if (!fat) {
         printf("ERROR: compound-file-fat.c bcfFileFat_create(), ");
@@ -1571,7 +1552,7 @@ bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize) {
     return fat;
 }
 
-void loadFatFromSector(bcf_file_fat* fat, FILE* file) {
+static void loadFatFromSector(bcf_file_fat* fat, FILE* file) {
     unsigned int i;
     unsigned int currentNumberOfFatEntries = fat->fatEntryCount;
     unsigned int newSize = currentNumberOfFatEntries + fat->numberOfEntriesInFatSector;
@@ -1582,12 +1563,12 @@ void loadFatFromSector(bcf_file_fat* fat, FILE* file) {
     fat->fatEntryCount = newSize;
 }
 
-void bcf_file_fat_free(bcf_file_fat** fat) {
+static void bcf_file_fat_free(bcf_file_fat** fat) {
     free(*fat);
     *fat = NULL;
 }
 
-bcf_file_header bcfFileHeader_read(FILE* file) {
+static bcf_file_header bcfFileHeader_read(FILE* file) {
     bcf_file_header header;
     fread(header.signature, 1, 8, file);
     fread(header.CLSID, 1, 16, file);
@@ -1610,7 +1591,8 @@ bcf_file_header bcfFileHeader_read(FILE* file) {
     return header;
 }
 
-int bcfFileHeader_isValid(bcf_file_header header) {
+static int bcfFileHeader_isValid(bcf_file_header header)
+{
     if (memcmp(header.signature, "\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1", 8) != 0) {
         printf("bad header signature\n");
         return 0;

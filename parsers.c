@@ -10,67 +10,6 @@
 
 #include "embroidery.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-
-#define ELEMENT_XML               0
-#define ELEMENT_A                 1
-#define ELEMENT_ANIMATE           2
-#define ELEMENT_ANIMATE_COLOR     3
-#define ELEMENT_ANIMATE_MOTION    4
-#define ELEMENT_ANIMATE_TRANSFORM 5
-#define ELEMENT_ANIMATION         6
-#define ELEMENT_AUDIO             7
-#define ELEMENT_CIRCLE            8
-#define ELEMENT_DEFS              9
-#define ELEMENT_DESC              10
-#define ELEMENT_DISCARD           11
-#define ELEMENT_ELLIPSE           12
-#define ELEMENT_FONT              13
-#define ELEMENT_FONT_FACE         14
-#define ELEMENT_FONT_FACE_SRC     15
-#define ELEMENT_FONT_FACE_URI     16
-#define ELEMENT_FOREIGN_OBJECT    17
-#define ELEMENT_G                 18
-#define ELEMENT_GLYPH             19
-#define ELEMENT_HANDLER           20
-#define ELEMENT_HKERN             21
-#define ELEMENT_IMAGE             22
-#define ELEMENT_LINE              23
-#define ELEMENT_LINEAR_GRADIENT   24
-#define ELEMENT_LISTENER          25
-#define ELEMENT_METADATA          26
-#define ELEMENT_MISSING_GLYPH     27
-#define ELEMENT_MPATH             28
-#define ELEMENT_PATH              29
-#define ELEMENT_POLYGON           30
-#define ELEMENT_POLYLINE          31
-#define ELEMENT_PREFETCH          32
-#define ELEMENT_RADIAL_GRADIENT   33
-#define ELEMENT_RECT              34
-#define ELEMENT_SCRIPT            35
-#define ELEMENT_SET               36
-#define ELEMENT_SOLID_COLOR       37
-#define ELEMENT_STOP              38
-#define ELEMENT_SVG               39
-#define ELEMENT_SWITCH            40
-#define ELEMENT_TBREAK            41
-#define ELEMENT_TEXT              42
-#define ELEMENT_TEXT_AREA         43
-#define ELEMENT_TITLE             44
-#define ELEMENT_TSPAN             45
-#define ELEMENT_USE               46
-#define ELEMENT_VIDEO             47
-#define ELEMENT_UNKNOWN           48
-
-typedef struct SvgAttribute_
-{
-    char* name;
-    char* value;
-} SvgAttribute;
-
 /*
 int svg_parser(char *s, char **token_table)
 {
@@ -258,42 +197,43 @@ void parse_line(EmbPattern *p)
 void parse_path(EmbPattern *p)
 {
     /* TODO: finish */
+    EmbVector position, f_point, l_point, c1_point, c2_point;
+    int cmd, i, pos, reset, trip;
+    double pathData[7];
+    unsigned int numMoves;
+    EmbColor color;
+    EmbArray* flagList;
+    EmbPathObject *path;
+    char* pointStr = svgAttribute_getValue("d");
+    char* mystrok = svgAttribute_getValue("stroke");
 
-        char* pointStr = svgAttribute_getValue("d");
-        char* mystrok = svgAttribute_getValue("stroke");
-
-        int last = strlen(pointStr);
-        int size = 32;
-        int i = 0;
-        int pos = 0;
-        /* An odometer aka 'tripometer' used for stepping thru the pathData */
-        int trip = -1;
-        /* count of float[] that has been filled.
-         * 0 = first item of array
-         * -1 = not filled = empty array
-         */
-        int reset = -1;
-        EmbVector position, f_point, l_point, c1_point, c2_point;
-        position.x = 0.0;
-        position.y = 0.0;
-        f_point.x = 0.0;
-        f_point.y = 0.0;
-        l_point.x = 0.0;
-        l_point.y = 0.0;
-        c1_point.x = 0.0;
-        c1_point.y = 0.0;
-        c2_point.x = 0.0;
-        c2_point.y = 0.0;
-        int cmd = 0;
-        double pathData[7];
-        unsigned int numMoves = 0;
+    int last = strlen(pointStr);
+    int size = 32;
+    i = 0;
+    pos = 0;
+    /* An odometer aka 'tripometer' used for stepping thru the pathData */
+    trip = -1;
+    /* count of float[] that has been filled.
+     * 0 = first item of array
+     * -1 = not filled = empty array
+     */
+    reset = -1;
+    position.x = 0.0;
+    position.y = 0.0;
+    f_point.x = 0.0;
+    f_point.y = 0.0;
+    l_point.x = 0.0;
+    l_point.y = 0.0;
+    c1_point.x = 0.0;
+    c1_point.y = 0.0;
+    c2_point.x = 0.0;
+    c2_point.y = 0.0;
+    cmd = 0;
+    numMoves = 0;
         int pendingTask = 0;
         int relative = 0;
 
-        EmbColor color;
         EmbArray* pointList = 0;
-        EmbArray* flagList;
-        EmbPathObject *path;
 
         char* pathbuff = 0;
         pathbuff = (char*)malloc(size);
@@ -531,19 +471,19 @@ void parse_path(EmbPattern *p)
                 pathbuff = (char*)realloc(pathbuff, size);
                 if (!pathbuff) { printf("ERROR: format-svg.c svgAddToPattern(), cannot re-allocate memory for pathbuff\n"); return; }
             }
-        }
-        free(pathbuff);
+    }
+    free(pathbuff);
 
-        /* TODO: subdivide numMoves > 1 */
+    /* TODO: subdivide numMoves > 1 */
 
-        color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
+    color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
         
-        path = (EmbPathObject *)malloc(sizeof(EmbPathObject));
-        path->pointList = pointList;
-        path->flagList = flagList;
-        path->color = color;
-        path->lineType = 1;
-        embPattern_addPathObjectAbs(p, path);
+    path = (EmbPathObject *)malloc(sizeof(EmbPathObject));
+    path->pointList = pointList;
+    path->flagList = flagList;
+    path->color = color;
+    path->lineType = 1;
+    embPattern_addPathObjectAbs(p, path);
 }
 
 EmbArray *parse_pointlist(EmbPattern *p)

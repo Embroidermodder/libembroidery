@@ -288,14 +288,12 @@ typedef struct EmbEllipse_
     double radiusY;
 } EmbEllipse;
 
+/* absolute position (not relative) */
 typedef struct EmbArc_
 {
-    double startX;  /* absolute position (not relative) */
-    double startY;
-    double midX;    /* absolute position (not relative) */
-    double midY;
-    double endX;    /* absolute position (not relative) */
-    double endY;
+    EmbVector start;
+    EmbVector mid;
+    EmbVector end;
 } EmbArc;
 
 typedef struct EmbArcObject_
@@ -521,6 +519,7 @@ EMB_PUBLIC float embVector_length(EmbVector vector);
 EMB_PUBLIC float embVector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3);
 EMB_PUBLIC float embVector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3);
 EMB_PUBLIC float embVector_angle(EmbVector v);
+EMB_PUBLIC EmbVector embVector_unit(float angle);
 
 EMB_PUBLIC int read_ppm_image(char *fname, EmbImage *a);
 EMB_PUBLIC void write_ppm_image(char *fname, EmbImage *a);
@@ -542,10 +541,7 @@ EMB_PUBLIC EmbArcObject* embArcObject_create(double sx, double sy, double mx, do
 char isArcClockwise(EmbArc arc);
 void getArcCenter(EmbArc arc, EmbVector *arcCenter);
 char getArcDataFromBulge(double bulge,
-                         double arcStartX,          double arcStartY,
-                         double arcEndX,            double arcEndY,
-                         /* returned data */
-                         double* arcMidX,           double* arcMidY,
+                         EmbArc *arc,
                          double* arcCenterX,        double* arcCenterY,
                          double* radius,            double* diameter,
                          double* chord,
@@ -665,8 +661,7 @@ EMB_PUBLIC char embPattern_writeAuto(EmbPattern *pattern, const char* fileName);
 /* NON-MACRO CONSTANTS
  ******************************************************************************/
 
-/*! Constant representing the number of Double Indirect FAT entries in a single header */
-EMB_PUBLIC extern EmbFormatList formatTable[];
+extern EmbFormatList formatTable[];
 extern const int pecThreadCount;
 extern const char imageWithFrame[38][48];
 extern const int shvThreadCount;

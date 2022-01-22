@@ -65,6 +65,7 @@ EmbFormatList formatTable[numberOfFormats] = {
     {".zsk", "ZSK USA Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY, 0, 0, 0}
 };
 
+/*! Constant representing the number of Double Indirect FAT entries in a single header */
 static const unsigned int NumberOfDifatEntriesInHeader = 109;
 static const unsigned int sizeOfFatEntry = sizeof(unsigned int);
 static const unsigned int sizeOfDifatEntry = 4;
@@ -311,12 +312,12 @@ static int check_header_present(FILE* file, int minimum_header_length)
 EmbArcObject embArcObject_make(double sx, double sy, double mx,
                                 double my, double ex, double ey) {
     EmbArcObject stackArcObj;
-    stackArcObj.arc.startX = sx;
-    stackArcObj.arc.startY = sy;
-    stackArcObj.arc.midX   = mx;
-    stackArcObj.arc.midY   = my;
-    stackArcObj.arc.endX   = ex;
-    stackArcObj.arc.endY   = ey;
+    stackArcObj.arc.start.x = sx;
+    stackArcObj.arc.start.y = sy;
+    stackArcObj.arc.mid.x   = mx;
+    stackArcObj.arc.mid.y   = my;
+    stackArcObj.arc.end.x   = ex;
+    stackArcObj.arc.end.y   = ey;
     return stackArcObj;
 }
 
@@ -331,9 +332,9 @@ double degrees(double radian) {
 /* Calculus based approach at determining whether a polygon is clockwise or counterclockwise.
  * Returns true if arc is clockwise. */
 char isArcClockwise(EmbArc arc) {
-    double edge1 = (arc.midX-arc.startX)*(arc.midY+arc.startY);
-    double edge2 = (arc.endX-arc.midX)*(arc.endY+arc.midY);
-    double edge3 = (arc.startX-arc.endX)*(arc.startY+arc.endY);
+    double edge1 = (arc.mid.x-arc.start.x)*(arc.mid.y+arc.start.y);
+    double edge2 = (arc.end.x-arc.mid.x)*(arc.end.y+arc.mid.y);
+    double edge3 = (arc.start.x-arc.end.x)*(arc.start.y+arc.end.y);
     if (edge1 + edge2 + edge3 >= 0.0) {
         return 1;
     }
@@ -342,44 +343,34 @@ char isArcClockwise(EmbArc arc) {
 
 /* Calculates the CenterPoint of the Arc */
 void getArcCenter(EmbArc arc, EmbVector* arcCenter) {
-    double ax = arc.midX - arc.startX;
-    double ay = arc.midY - arc.startY;
-    double aAngleInRadians = atan2(ay, ax);
-    double aMidX = (arc.midX + arc.startX)/2.0;
-    double aMidY = (arc.midY + arc.startY)/2.0;
+    EmbVector a_vec, b_vec, aMid_vec, bMid_vec, aPerp_vec, bPerp_vec, pa, pb;
+    EmbLine line1, line2;
+    double paAngleInRadians, pbAngleInRadians;
+    embVector_subtract(arc.mid, arc.start, &a_vec);
+    embVector_average(arc.mid, arc.start, &aMid_vec);
 
-    double paAngleInRadians = aAngleInRadians + radians(90.0);
-    double pax = cos(paAngleInRadians);
-    double pay = sin(paAngleInRadians);
-    double aPerpX = aMidX + pax;
-    double aPerpY = aMidY + pay;
+    paAngleInRadians = embVector_angle(a_vec) + radians(90.0);
+    pa = embVector_unit(paAngleInRadians);
+    embVector_add(aMid_vec, pa, &aPerp_vec);
 
-    double bx = arc.endX - arc.midX;
-    double by = arc.endY - arc.midY;
-    double bAngleInRadians = atan2(by, bx);
-    double bMidX = (arc.endX + arc.midX)/2.0;
-    double bMidY = (arc.endY + arc.midY)/2.0;
+    embVector_subtract(arc.end, arc.mid, &b_vec);
+    embVector_average(arc.end, arc.mid, &bMid_vec);
 
-    double pbAngleInRadians = bAngleInRadians + radians(90.0);
-    double pbx = cos(pbAngleInRadians);
-    double pby = sin(pbAngleInRadians);
-    double bPerpX = bMidX + pbx;
-    double bPerpY = bMidY + pby;
+    pbAngleInRadians = embVector_angle(b_vec) + radians(90.0);
+    pb = embVector_unit(pbAngleInRadians);
+    embVector_add(bMid_vec, pb, &bPerp_vec);
 
-    EmbLine line1;
-    EmbLine line2;
-    line1 = embLine_make(aMidX, aMidY, aPerpX, aPerpY);
-    line2 = embLine_make(bMidX, bMidY, bPerpX, bPerpY);
+    line1.start = aMid_vec;
+    line1.end = aPerp_vec;
+    line2.start = bMid_vec;
+    line2.end = bPerp_vec;
     embLine_intersectionPoint(line1, line2, arcCenter);
 }
 
 /* Calculates Arc Geometry from Bulge Data.
  * Returns false if there was an error calculating the data. */
 char getArcDataFromBulge(double bulge,
-                         double arcStartX,          double arcStartY,
-                         double arcEndX,            double arcEndY,
-                         /* returned data */
-                         double* arcMidX,           double* arcMidY,
+                         EmbArc *arc,
                          double* arcCenterX,        double* arcCenterY,
                          double* radius,            double* diameter,
                          double* chord,
@@ -390,7 +381,6 @@ char getArcDataFromBulge(double bulge,
     double chordAngleInRadians;
     double sagittaAngleInRadians;
     double w, h, fx ,fy, dx, dy;
-    EmbArc arc;
     EmbVector arcCenter;
 
     /* Confirm the direction of the Bulge */
@@ -404,8 +394,8 @@ char getArcDataFromBulge(double bulge,
     incAngleInRadians = atan(bulge)*4.0;
 
     /* Calculate the Chord */
-    w = fabs(arcStartX-arcEndX);
-    h = fabs(arcStartY-arcEndY);
+    w = fabs(arc->start.x - arc->end.x);
+    h = fabs(arc->start.y - arc->end.y);
     *chord = sqrt(w*w + h*h);
 
     /* Calculate the Radius */
@@ -421,12 +411,12 @@ char getArcDataFromBulge(double bulge,
     *apothem = fabs(*radius - *sagitta);
 
     /* Calculate the Chord MidPoint */
-    *chordMidX = (arcStartX + arcEndX) / 2.0;
-    *chordMidY = (arcStartY + arcEndY) / 2.0;
+    *chordMidX = (arc->start.x + arc->end.x) / 2.0;
+    *chordMidY = (arc->start.y + arc->end.y) / 2.0;
 
     /* Calculate the Chord Angle (from arcStart to arcEnd) */
-    dx = arcEndX - arcStartX;
-    dy = arcEndY - arcStartY;
+    dx = arc->end.x - arc->start.x;
+    dy = arc->end.y - arc->start.y;
     chordAngleInRadians = atan2(dy, dx);
 
     /* Calculate the Sagitta Angle (from chordMid to arcMid) */
@@ -436,16 +426,10 @@ char getArcDataFromBulge(double bulge,
     /* Calculate the Arc MidPoint */
     fx = *sagitta * cos(sagittaAngleInRadians);
     fy = *sagitta * sin(sagittaAngleInRadians);
-    *arcMidX = *chordMidX + fx;
-    *arcMidY = *chordMidY + fy;
+    arc->mid.x = *chordMidX + fx;
+    arc->mid.y = *chordMidY + fy;
 
-    arc.startX = arcStartX;
-    arc.startY = arcStartY;
-    arc.midX = *arcMidX;
-    arc.midY = *arcMidY;
-    arc.endX = arcEndX;
-    arc.endY = arcEndY;
-    getArcCenter(arc, &arcCenter);
+    getArcCenter(*arc, &arcCenter);
     *arcCenterX = arcCenter.x;
     *arcCenterY = arcCenter.y;
 
@@ -453,7 +437,7 @@ char getArcDataFromBulge(double bulge,
     *incAngleInDegrees = degrees(incAngleInRadians);
 
     /* Confirm the direction of the Arc, it should match the Bulge */
-    if (*clockwise != isArcClockwise(arc)) {
+    if (*clockwise != isArcClockwise(*arc)) {
         fprintf(stderr, "Arc and Bulge direction do not match.\n");
         return 0;
     }
@@ -2018,10 +2002,10 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p) {
             for now just checks the start point */
         for (i = 0; i < p->arcs->count; i++) {
             arc = p->arcs->arc[i].arc;
-            r.left = embMinDouble(r.left, arc.startX);
-            r.top = embMinDouble(r.top, arc.startY);
-            r.right = embMaxDouble(r.right, arc.startX);
-            r.bottom = embMaxDouble(r.bottom, arc.startY);
+            r.left = embMinDouble(r.left, arc.start.x);
+            r.top = embMinDouble(r.top, arc.start.y);
+            r.right = embMaxDouble(r.right, arc.start.x);
+            r.bottom = embMaxDouble(r.bottom, arc.start.y);
         }
     }
 
@@ -2151,14 +2135,14 @@ void embPattern_flip(EmbPattern* p, int horz, int vert) {
     if (p->arcs) {
         for (i = 0; i < p->arcs->count; i++) {
             if (horz) {
-                p->arcs->arc[i].arc.startX *= -1.0;
-                p->arcs->arc[i].arc.midX *= -1.0;
-                p->arcs->arc[i].arc.endX *= -1.0;
+                p->arcs->arc[i].arc.start.x *= -1.0;
+                p->arcs->arc[i].arc.mid.x *= -1.0;
+                p->arcs->arc[i].arc.end.x *= -1.0;
             }
             if (vert) {
-                p->arcs->arc[i].arc.startY *= -1.0;
-                p->arcs->arc[i].arc.midY *= -1.0;
-                p->arcs->arc[i].arc.endY *= -1.0;
+                p->arcs->arc[i].arc.start.y *= -1.0;
+                p->arcs->arc[i].arc.mid.y *= -1.0;
+                p->arcs->arc[i].arc.end.y *= -1.0;
             }
         }
     }
@@ -3354,7 +3338,18 @@ float embVector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3)
  */
 float embVector_angle(EmbVector v)
 {
-    return atan2(v.x, v.y);
+    return atan2(v.y, v.x);
+}
+
+/*
+ *  
+ */
+EmbVector embVector_unit(float angle)
+{
+    EmbVector a;
+    a.x = cos(angle);
+    a.y = sin(angle);
+    return a;
 }
 
 /*

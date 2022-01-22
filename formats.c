@@ -1862,11 +1862,18 @@ static char readDxf(EmbPattern* pattern, FILE* file)
 
     int eof = 0; /* End Of File */
 
-    double bulge = 0.0, firstX = 0.0, firstY = 0.0, x = 0.0, y, prevX = 0.0, prevY = 0.0;
+    EmbVector prev, pos, first;
+    double bulge = 0.0;
     char firstStitch = 1;
     char bulgeFlag = 0;
     int fileLength = 0;
-    
+    first.x = 0.0;
+    first.y = 0.0;
+    pos.x = 0.0;
+    pos.y = 0.0;
+    prev.x = 0.0;
+    prev.y = 0.0;
+   
     puts("overriding dxf. Unimplemented for now.");
     puts("Overridden, defaulting to dst.");
     readDst(pattern, file);
@@ -2017,10 +2024,7 @@ static char readDxf(EmbPattern* pattern, FILE* file)
                 continue;
             }
 
-            if (!strcmp(entityType,"LWPOLYLINE"))
-            {
-                double* arcMidX = 0;
-                double* arcMidY = 0;
+            if (!strcmp(entityType,"LWPOLYLINE")) {
                 /* The not so important group codes */
                 if (!strcmp(buff, "90")) /* Vertices */
                 {
@@ -2058,53 +2062,50 @@ static char readDxf(EmbPattern* pattern, FILE* file)
                 else if (!strcmp(buff,"10")) /* X */
                 {
                     buff = readLine(file);
-                    x = atof(buff);
+                    pos.x = atof(buff);
                 }
                 else if (!strcmp(buff,"20")) /* Y */
                 {
                     buff = readLine(file);
-                    y = atof(buff);
+                    pos.y = atof(buff);
 
-                    if (bulgeFlag)
-                    {
+                    if (bulgeFlag) {
+                        EmbArc arc;
                         bulgeFlag = 0;
-                        if (!getArcDataFromBulge(bulge, prevX, prevY, x, y, arcMidX, arcMidY, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
-                        {
+                        arc.start = prev;
+                        arc.end = pos;
+                        if (!getArcDataFromBulge(bulge, &arc, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)) {
                             /*TODO: error */
                             return 0;
                         }
-                        if (firstStitch)
-                        {
+                        if (firstStitch) {
                             /* embPattern_addStitchAbs(pattern, x, y, TRIM, 1); TODO: Add moveTo point to embPath pointList */
                         }
                         /* embPattern_addStitchAbs(pattern, x, y, ARC, 1); TODO: Add arcTo point to embPath pointList */
                     }
-                    else
-                    {
+                    else {
                         /*if (firstStitch) embPattern_addStitchAbs(pattern, x, y, TRIM, 1); TODO: Add moveTo point to embPath pointList */
                         /*else            embPattern_addStitchAbs(pattern, x, y, NORMAL, 1); TODO: Add lineTo point to embPath pointList */
                     }
-                    prevX = x;
-                    prevY = y;
-                    if (firstStitch)
-                    {
-                        firstX = x;
-                        firstY = y;
+                    prev = pos;
+                    if (firstStitch) {
+                        first = pos;
                         firstStitch = 0;
                     }
                 }
-                else if (!strcmp(buff,"0"))
-                {
+                else if (!strcmp(buff,"0")) {
                     entityType = NULL;
                     firstStitch = 1;
-                    if (bulgeFlag)
-                    {
+                    if (bulgeFlag) {
+                        EmbArc arc;
                         bulgeFlag = 0;
-                        if (!getArcDataFromBulge(bulge, prevX, prevY, firstX, firstY, arcMidX, arcMidY, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
-                        {
+                        arc.start = prev;
+                        arc.end = first;
+                        if (!getArcDataFromBulge(bulge, &arc, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)) {
                             /*TODO: error */
                             return 0;
                         }
+                        prev = arc.start;
                         /* embPattern_addStitchAbs(pattern, prevX, prevY, ARC, 1); TODO: Add arcTo point to embPath pointList */
                     }
                     else

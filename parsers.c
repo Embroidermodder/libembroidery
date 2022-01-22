@@ -8,8 +8,6 @@
  * dealt with by the library.
  */
 
-#include "embroidery.h"
-
 /*
 int svg_parser(char *s, char **token_table)
 {

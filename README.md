@@ -1,18 +1,37 @@
 # Libembroidery v0.1 Manual
 
+## What is libembroidery?
+
+libembroidery is a low-level library for reading, writing, 
+and altering digital embroidery files in C.
+
+libembroidery is the underlying library that is used by [Embroidermodder 2](http://embroidermodder.github.io)
+and is developed by [The Embroidermodder Team](#the-embroidermodder-team).
+It handles over 45 different embroidery specific formats as well
+as several non-embroidery specific vector formats.
+
+It also includes a CLI called `embroider` that allows for better automation of
+changes to embroidery files and will be more up-to date than
+the Embroidermodder 2 GUI.
+
+If you want to find a simple fix to contribute see the *Development* section
+of the manual.
+
+Copyright (c) 2013-2022 The EmbroiderModder Team
+
 ## Table of Contents
 
-* [Abstract](#abstract)
+* [What is libembroidery?](#what-is-libembroidery)
+* [Table of Contents](#table-of-contents)
+* [License](#license)
 * [The Embroidermodder Team](#the-embroidermodder-team)
-  * [Credits](#credits)
-* [Introduction](#introduction)
-  * [Build](#build)
-  * [License](#license)
+* [Build](#build)
+  * [Debug](#debug)
+* [Usage](#usage)
 * [Coding Standards](#coding-standards)
   * [Naming Conventions](#naming-conventions)
   * [Braces](#braces)
   * [Comments](#comments)
-* [Wrapper Functions](#wrapper-functions)
 * [Formats](#formats)
 * [Features](#features)
   * [Bindings](#bindings)
@@ -32,21 +51,25 @@
 * [Bibliography](#bibliography)
 * [GNU Free Documentation License](#gnu-free-documentation-license)
 
-## What is libembroidery ?
+### License
 
-libembroidery is the underlying library that is used by [Embroidermodder 2](http://embroidermodder.github.io)
-and is developed by the Embroidermodder team.
-It handles over 45 different embroidery specific formats as well
-as several non-embroidery specific vector formats.
+Libembroidery is distributed under the permissive zlib licence, see the LICENSE
+file.
 
-It also includes a CLI called `embroider` that allows for better automation of
-changes to embroidery files and will be more up-to date than
-the Embroidermodder 2 GUI.
+Permission is granted to copy, distribute and/or modify this document under the
+terms of the GNU Free Documentation License, Version 1.3 or any later version
+published by the Free Software Foundation; with no Invariant Sections, no
+Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included
+in the section entitled "GNU Free Documentation License".
 
-Libembroidery is distributed under the permissive zlib licence, see the LICENSE file.
+### The Embroidermodder Team
 
-If you want to find a simple fix to contribute see the *To Do* section
-of the manual. 
+The Embroidermodder Team is the collection of people who've submitted
+patches, artwork and documentation to our three projects.
+The team was established by Jonathan Greig and Josh Varga.
+For a full list of members please see the
+[Embroidermodder github page](https://github.com/Embroidermodder/Embroidermodder)
+where it is actively maintained.
 
 ## Build
 
@@ -157,79 +180,6 @@ join us on GitHub. This document is written as developer training as well
 helping new users (see the last sections) so this is the place to learn how
 to start changing the code.
 
-Copyright (c) 2013-2022 The EmbroiderModder Team
-
-Permission is granted to copy, distribute and/or modify this document under the
-terms of the GNU Free Documentation License, Version 1.3 or any later version
-published by the Free Software Foundation; with no Invariant Sections, no
-Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included
-in the section entitled "GNU Free Documentation License".
-
-The code is licenced under the terms of the zlib license and will be quoted in
-this document.
-
-## The Embroidermodder Team
-
-Credits for Embroidermodder 2, libembroidery and all other related code
-
-Please note that this file in not in alphabetical order. If you have contributed
-and wish to be added to this list, create a new credit section and increment the
-number. Fill it in with your information and submit it to us.
-
-Here is a summary of the values used:
-
-  * Name: The full name of the contributor starting with first name.
-  * GitHub: The GitHub account name of the contributor (in parentheses).
-  * CoreDeveloper: This is reserved for long term contributors.
-  * Documentation: If you have contributed changes to README files or help files, set this to true.
-  * Artwork: If you have contributed artwork or related changes, set this to true
-  * BugFixes: If you have contributed bug fixes or added new features, set this to true.
-  * Translation: If you have provided language translations, set this to true.
-  * Designs: If you have contributed an embroidery design sample, set this to true.
-  * Bindings: If you have contributed programming language bindings for libembroidery, set this to true.
-  * Commands: If you have contributed a command for Embroidermodder 2, set this to true.
-
-### Credits
-
-  1. Jonathan Greig (`redteam316`) CoreDeveloper, Artwork, Documentation, Designs, Commands
-  2. Josh Varga (`JoshVarga`) CoreDeveloper
-  3. Jens Diemer (`jedie`) Documentation
-  4. Kim Howard (`turbokim`) BugFixes
-  5. Martin Schneider (`craftoid`) Documentation
-  6. Edward Greig (`Metallicow`) Artwork, BugFixes, Commands
-  7. Sonia Entzinger Translation
-  8. SushiTee (`SushiTee`) BugFixes
-  9. Vathonie Lufh (`x2nie`) BugFixes, Bindings
-  10. Nina Paley Designs
-  11. Theodore Gray Designs
-  12. Jens-Wolfhard Schicke-Uffmann (`Drahflow`) BugFixes
-  13. Emmett Lauren Garlitz - Some Little Sandy Rd, Elkview, West by GOD Virginia (\texttt{Oll Em})
-  14. Robin Swift (`robin-swift`) CoreDeveloper, Documentation
-
-## Introduction
-
-libembroidery aims to be a low-level library for reading, writing, 
-and programmatically manipulating digital embroidery files, 
-available to in many different programming languages.
-
-Currently, libembroidery is the underlying library that is used 
-by [Embroidermodder 2](http://embroidermodder.github.io)
-and is developed by the Embroidermodder team.
-It handles over 45 different embroidery specific formats as well 
-as several non-embroidery specific vector formats.
-
-It also includes a CLI called `embroider` that allows for better automation of
-changes to embroidery files and will be more up-to date than
-the Embroidermodder 2 GUI.
-
-### License
-
-Libembroidery is distributed under the permissive zlib licence, see the LICENSE
-file.
-
-This documentation (that is, just this file) is distributed under the terms
-of the GNU Free Documentation License v1.3, see []().
-
 ## Coding Standards
 
 A basic set of guidelines to use when submitting code.
@@ -286,13 +236,6 @@ gcc. In any C code, you must use:
     /* HACK: This code shouldn't be written this way or I don't feel right about it. There may a better solution */
     /* WARNING: Think twice (or more times) before changing this code. I put this here for a good reason. */
     /* NOTE: This comment is much more important than lesser comments. */
-
-We advise you also use these style of comments in C++ code in
-Embroidermodder 2 as well for consistency.
-
-## Wrapper Functions
-
-.
 
 ## Formats
 

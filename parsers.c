@@ -218,41 +218,46 @@ char* svgAttribute_getValue(const char* name) {
     return "none";
 }
 
-void svgAddToPattern(EmbPattern* p) {
-    const char* buff = 0;
-    if (!p) {
-        printf("ERROR: format-svg.c svgAddToPattern(), p argument is null\n");
-        return;
-    }
-    switch (current_element_id) {
-    case ELEMENT_CIRCLE:
-        embPattern_addCircleObjectAbs(p,
-            atof(svgAttribute_getValue("cx")),
-            atof(svgAttribute_getValue("cy")),
-            atof(svgAttribute_getValue("r")));
-        break;
-    case ELEMENT_ELLIPSE:
-        embPattern_addEllipseObjectAbs(p,
-            atof(svgAttribute_getValue("cx")),
-            atof(svgAttribute_getValue("cy")),
-            atof(svgAttribute_getValue("rx")),
-            atof(svgAttribute_getValue("ry")));
-        break;
-    case ELEMENT_LINE:
-        char* x1 = svgAttribute_getValue("x1");
-        char* y1 = svgAttribute_getValue("y1");
-        char* x2 = svgAttribute_getValue("x2");
-        char* y2 = svgAttribute_getValue("y2");
+void parse_circle(EmbPattern *p)
+{
+    float cx, cy, r;
+    cx = atof(svgAttribute_getValue("cx"));
+    cy = atof(svgAttribute_getValue("cy"));
+    r = atof(svgAttribute_getValue("r"));
+    embPattern_addCircleObjectAbs(p, cx, cy, r);
+}
 
-        /* If the starting and ending points are the same, it is a point */
-        if (!strcmp(x1, x2) && !strcmp(y1, y2)) {
-            embPattern_addPointObjectAbs(p, atof(x1), atof(y1));
-        } else {
-            embPattern_addLineObjectAbs(p, atof(x1), atof(y1), atof(x2), atof(y2));
-        }
-        break;
-    case ELEMENT_PATH: {
-        /* TODO: finish */
+void parse_ellipse(EmbPattern *p)
+{
+    float cx, cy, rx, ry;
+    cx = atof(svgAttribute_getValue("cx"));
+    cy = atof(svgAttribute_getValue("cy"));
+    rx = atof(svgAttribute_getValue("rx"));
+    ry = atof(svgAttribute_getValue("ry"));
+    embPattern_addEllipseObjectAbs(p, cx, cy, rx, ry);
+}
+
+void parse_line(EmbPattern *p)
+{
+    char *x1, *x2, *y1, *y2;
+    x1 = svgAttribute_getValue("x1");
+    y1 = svgAttribute_getValue("y1");
+    x2 = svgAttribute_getValue("x2");
+    y2 = svgAttribute_getValue("y2");
+
+    /* If the starting and ending points are the same, it is a point */
+    if (!strcmp(x1, x2) && !strcmp(y1, y2)) {
+        embPattern_addPointObjectAbs(p, atof(x1), atof(y1));
+    }
+    else {
+        embPattern_addLineObjectAbs(p, atof(x1), atof(y1), atof(x2), atof(y2));
+    }
+
+}
+
+void parse_path(EmbPattern *p)
+{
+    /* TODO: finish */
 
         char* pointStr = svgAttribute_getValue("d");
         char* mystrok = svgAttribute_getValue("stroke");
@@ -539,92 +544,127 @@ void svgAddToPattern(EmbPattern* p) {
         path->color = color;
         path->lineType = 1;
         embPattern_addPathObjectAbs(p, path);
+}
+
+EmbArray *parse_pointlist(EmbPattern *p)
+{
+    char* pointStr = svgAttribute_getValue("points");
+    int last = strlen(pointStr);
+    int size = 32;
+    int i = 0;
+    int pos = 0;
+    unsigned char odd = 1;
+    double xx = 0.0;
+    double yy = 0.0;
+
+    EmbArray* pointList = 0;
+
+    char* polybuff = 0;
+    polybuff = (char*)malloc(size);
+    if (!polybuff) {
+        printf("ERROR: format-svg.c svgAddToPattern(), cannot allocate memory for polybuff\n");
+        return;
     }
+    for (i = 0; i < last; i++) {
+        char c = pointStr[i];
+        switch (c) {
+            case ' ':
+                if (pos == 0)
+                    break;
+                polybuff[pos] = 0;
+                pos = 0;
+                /*Compose Point List */
+                if (odd) {
+                    odd = 0;
+                    xx = atof(polybuff);
+                }
+                else {
+                    EmbPointObject a;
+                    odd = 1;
+                    yy = atof(polybuff);
+
+                    if (!pointList) {
+                        pointList = embArray_create(EMB_POINT);
+                    }
+                    a.point.x = xx;
+                    a.point.y = yy;
+                    embArray_addPoint(pointList, &a);
+                }
+
+                break;
+            default:
+                polybuff[pos++] = (char)c;
+                break;
+        }
+        if (pos >= size - 1) {
+             /* increase polybuff length - leave room for 0 */
+             size *= 2;
+             polybuff = (char*)realloc(polybuff, size);
+             if (!polybuff) { printf("ERROR: format-svg.c svgAddToPattern(), cannot re-allocate memory for polybuff\n"); return; }
+        }
+    }
+    free(polybuff);
+    return pointList;
+
+}
+
+void parse_polygon(EmbPattern *p)
+{
+    EmbPolygonObject* polygonObj;
+    polygonObj = (EmbPolygonObject*)malloc(sizeof(EmbPolygonObject));
+    polygonObj->pointList = parse_pointlist(p);
+    polygonObj->color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
+    polygonObj->lineType = 1; /* TODO: use lineType enum */
+    embPattern_addPolygonObjectAbs(p, polygonObj);
+}
+
+void parse_polyline(EmbPattern *p)
+{
+    EmbPolylineObject* polylineObj;
+    polylineObj = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
+    polylineObj->pointList = parse_pointlist(p);
+    polylineObj->color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
+    polylineObj->lineType = 1; /* TODO: use lineType enum */
+    embPattern_addPolylineObjectAbs(p, polylineObj);
+}
+
+void parse_rect(EmbPattern *p)
+{
+    float x, y, width, height;
+    x = atof(svgAttribute_getValue("x"));
+    y = atof(svgAttribute_getValue("y"));
+    width = atof(svgAttribute_getValue("width"));
+    height = atof(svgAttribute_getValue("height"));
+    embPattern_addRectObjectAbs(p, x, y, width, height);
+}
+
+void svgAddToPattern(EmbPattern* p) {
+    const char* buff = 0;
+    if (!p) {
+        printf("ERROR: format-svg.c svgAddToPattern(), p argument is null\n");
+        return;
+    }
+    switch (current_element_id) {
+    case ELEMENT_CIRCLE:
+        parse_circle(p);
+        break;
+    case ELEMENT_ELLIPSE:
+        parse_ellipse(p);
+        break;
+    case ELEMENT_LINE:
+        parse_line(p);
+        break;
+    case ELEMENT_PATH:
+        parse_path(p);
+        break;
     case ELEMENT_POLYGON:
+        parse_polygon(p);
+        break;
     case ELEMENT_POLYLINE:
-    {
-        char* pointStr = svgAttribute_getValue("points");
-        int last = strlen(pointStr);
-        int size = 32;
-        int i = 0;
-        int pos = 0;
-        unsigned char odd = 1;
-        double xx = 0.0;
-        double yy = 0.0;
-
-        EmbArray* pointList = 0;
-
-        char* polybuff = 0;
-        polybuff = (char*)malloc(size);
-        if (!polybuff) {
-            printf("ERROR: format-svg.c svgAddToPattern(), cannot allocate memory for polybuff\n");
-            return;
-        }
-        for (i = 0; i < last; i++) {
-            char c = pointStr[i];
-            switch (c) {
-                case ' ':
-                    if (pos == 0)
-                        break;
-                    polybuff[pos] = 0;
-                    pos = 0;
-                    /*Compose Point List */
-                    if (odd)
-                    {
-                        odd = 0;
-                        xx = atof(polybuff);
-                    }
-                    else
-                    {
-                        EmbPointObject a;
-                        odd = 1;
-                        yy = atof(polybuff);
-
-                        if (!pointList) {
-                            pointList = embArray_create(EMB_POINT);
-                        }
-                        a.point.x = xx;
-                        a.point.y = yy;
-                        embArray_addPoint(pointList, &a);
-                    }
-
-                    break;
-                default:
-                    polybuff[pos++] = (char)c;
-                    break;
-            }
-            if (pos >= size - 1) {
-                /* increase polybuff length - leave room for 0 */
-                size *= 2;
-                polybuff = (char*)realloc(polybuff, size);
-                if (!polybuff) { printf("ERROR: format-svg.c svgAddToPattern(), cannot re-allocate memory for polybuff\n"); return; }
-            }
-        }
-        free(polybuff);
-
-        if (!strcmp(buff, "polygon")) {
-            EmbPolygonObject* polygonObj;
-            polygonObj = (EmbPolygonObject*)malloc(sizeof(EmbPolygonObject));
-            polygonObj->pointList = pointList;
-            polygonObj->color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
-            polygonObj->lineType = 1; /* TODO: use lineType enum */
-            embPattern_addPolygonObjectAbs(p, polygonObj);
-        } else { /* polyline */
-            EmbPolylineObject* polylineObj;
-            polylineObj = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
-            polylineObj->pointList = pointList;
-            polylineObj->color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
-            polylineObj->lineType = 1; /* TODO: use lineType enum */
-            embPattern_addPolylineObjectAbs(p, polylineObj);
-        }
-    }
+        parse_polygon(p);
         break;
     case ELEMENT_RECT:
-        embPattern_addRectObjectAbs(p, 
-            atof(svgAttribute_getValue("x")),
-            atof(svgAttribute_getValue("y")),
-            atof(svgAttribute_getValue("width")),
-            atof(svgAttribute_getValue("height")));
+        parse_rect(p);
         break;
     default:
         break;

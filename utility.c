@@ -1154,7 +1154,7 @@ unsigned int fread_uint32(FILE* f) {
 short fread_int16_be(FILE* f) {
     unsigned char b[3];
     fread(b, 1, 2, f);
-    if (ENDIAN_HOST == LITTLE_ENDIAN) {
+    if (ENDIAN_HOST == EMB_LITTLE_ENDIAN) {
         b[2] = b[0];
         b[0] = b[1];
         b[1] = b[2];
@@ -1165,7 +1165,7 @@ short fread_int16_be(FILE* f) {
 unsigned short fread_uint16_be(FILE* f) {
     unsigned char b[3];
     fread(b, 1, 2, f);
-    if (ENDIAN_HOST == LITTLE_ENDIAN) {
+    if (ENDIAN_HOST == EMB_LITTLE_ENDIAN) {
         b[2] = b[0];
         b[0] = b[1];
         b[1] = b[2];
@@ -1176,7 +1176,7 @@ unsigned short fread_uint16_be(FILE* f) {
 int fread_int32_be(FILE* f) {
     unsigned char b[5];
     fread(b, 1, 4, f);
-    if (ENDIAN_HOST == LITTLE_ENDIAN) {
+    if (ENDIAN_HOST == EMB_LITTLE_ENDIAN) {
         b[4] = b[0];
         b[0] = b[3];
         b[3] = b[4];
@@ -1190,7 +1190,7 @@ int fread_int32_be(FILE* f) {
 unsigned int fread_uint32_be(FILE* f) {
     unsigned char b[5];
     fread(b, 1, 4, f);
-    if (ENDIAN_HOST == LITTLE_ENDIAN) {
+    if (ENDIAN_HOST == EMB_LITTLE_ENDIAN) {
         b[4] = b[0];
         b[0] = b[3];
         b[3] = b[4];

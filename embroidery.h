@@ -497,7 +497,7 @@ EMB_PUBLIC void embArray_free(EmbArray* p);
 EMB_PUBLIC EmbLine embLine_make(double x1, double y1, double x2, double y2);
 
 EMB_PUBLIC void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise);
-EMB_PUBLIC unsigned char embLine_intersectionPoint(EmbLine line1, EmbLine line2, EmbVector* result);
+EMB_PUBLIC EmbVector embLine_intersectionPoint(EmbLine line1, EmbLine line2);
 
 EMB_PUBLIC EmbPathObject* embPathObject_create(
     EmbArray* pointList, EmbArray* flagList, EmbColor color, int lineType);
@@ -519,11 +519,12 @@ EMB_PUBLIC float embVector_length(EmbVector vector);
 EMB_PUBLIC float embVector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3);
 EMB_PUBLIC float embVector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3);
 EMB_PUBLIC float embVector_angle(EmbVector v);
+EMB_PUBLIC float embVector_distance(EmbVector a, EmbVector b);
 EMB_PUBLIC EmbVector embVector_unit(float angle);
 
 EMB_PUBLIC int read_ppm_image(char *fname, EmbImage *a);
 EMB_PUBLIC void write_ppm_image(char *fname, EmbImage *a);
-EMB_PUBLIC float image_diff(EmbImage *, EmbImage *);
+EMB_PUBLIC float image_diff(EmbImage *image1, EmbImage *image2);
 EMB_PUBLIC int render_line(EmbLine, EmbImage *, EmbColor);
 EMB_PUBLIC int embImage_render(EmbPattern *pattern, float width, float height, char *fname);
 EMB_PUBLIC int embImage_simulate(EmbPattern *pattern, float width, float height, char *fname);
@@ -550,19 +551,9 @@ char getArcDataFromBulge(double bulge,
                          double* incAngleInDegrees, char*   clockwise);
 
 EMB_PUBLIC int getCircleCircleIntersections(
-      EmbCircle c0, EmbCircle c1,
-      /* Intersection Point */
-      double* px3, double* py3,
-      /* Intersection Point */
-      double* px4, double* py4);
+     EmbCircle c0, EmbCircle c1, EmbVector *v0, EmbVector *v1);
 EMB_PUBLIC int getCircleTangentPoints(
-     EmbCircle c,
-     /* Point to determine tangency */
-     double  px,  double  py,
-     /* Tangent Point 0 */
-     double* tx0, double* ty0,
-     /* Tangent Point 1 */
-     double* tx1, double* ty1);
+     EmbCircle c, EmbVector p, EmbVector *v0, EmbVector *v1);
 
 EMB_PUBLIC EmbColor embColor_make(unsigned char r, unsigned char g, unsigned char b);
 EMB_PUBLIC EmbColor* embColor_create(unsigned char r, unsigned char g, unsigned char b);
@@ -671,7 +662,12 @@ extern const EmbThread jefThreads[];
 extern const EmbThread shvThreads[];
 extern const EmbThread pcmThreads[];
 extern const EmbThread pecThreads[];
-extern const unsigned char _dxfColorTable[][3] ;
+extern const unsigned char _dxfColorTable[][3];
+
+/* VARIABLES
+ ******************************************************************************/
+ 
+extern int emb_error;
 
 #ifdef __cplusplus
 }

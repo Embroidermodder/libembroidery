@@ -375,9 +375,7 @@ static int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags);
 static void embColor_read(FILE *file, EmbColor *c, int toRead);
 static void embColor_write(FILE *file, EmbColor c, int toWrite);
 
-void testTangentPoints(EmbCircle c,
-    double px, double py,
-    EmbVector *t0, EmbVector *t1);
+void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1);
 void printArcResults(double bulge, EmbArc arc,
                      double centerX,   double centerY,
                      double radius,    double diameter,
@@ -393,7 +391,6 @@ int testEmbCircle_2(void);
 int testGeomArc(void);
 int testThreadColor(void);
 int testEmbFormat(void);
-double distance(EmbVector p, EmbVector q);
 int full_test_matrix(char *fname);
 
 /* DATA 
@@ -1643,34 +1640,34 @@ void testMain(int level)
     }
 }
 
-void testTangentPoints(EmbCircle c,
-    double px, double py,
-    EmbVector *t0, EmbVector *t1) {
-    double tx0 = 0.0, tx1 = 0.0, ty0 = 0.0, ty1 = 0.0;
-    if (!getCircleTangentPoints(c, px, py,
-                               &tx0, &ty0,
-                               &tx1, &ty1)) {
+void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
+{
+    emb_error = 0;
+    t0->x = 0.0;
+    t0->y = 0.0;
+    t1->x = 0.0;
+    t1->y = 0.0;
+    if (!getCircleTangentPoints(c, p, t0, t1)) {
         printf("Error calculating tangent points.\n");
-    } else {
+        emb_error = 1;
+    }
+    else {
         printf("Circle : cr=%f, cx=%f, cy=%f\n"
                "Point  : px=%f, py=%f\n"
                "Tangent: tx0=%f, ty0=%f\n"
                "Tangent: tx1=%f, ty1=%f\n\n",
                c.radius, c.center.x, c.center.y,
-               px, py,
-               tx0, ty0,
-               tx1, ty1);
-        t0->x = tx0;
-        t0->y = ty0;
-        t1->x = tx1;
-        t1->y = ty1;
+               p.x, p.y,
+               t0->x, t0->y,
+               t1->x, t1->y);
     }
 }
 
-double distance(EmbVector p, EmbVector q) {
-    double x2 = (p.x - q.x)*(p.x - q.x);
-    double y2 = (p.y - q.y)*(p.y - q.y);
-    return sqrt(x2+y2);
+float embVector_distance(EmbVector p, EmbVector q)
+{
+    EmbVector delta;
+    embVector_subtract(p, q, &delta);
+    return embVector_length(delta);
 }
 
 int testEmbCircle(void) {
@@ -1682,9 +1679,10 @@ int testEmbCircle(void) {
     /* Solution */
     EmbVector t0 = {2.2500, 1.9843};
     EmbVector t1 = {2.2500, -1.9843};
+    EmbVector p = {4.0, 0.0};
     /* Test */
-    testTangentPoints(c1, 4.0, 0.0, &p0, &p1);
-    error = distance(p0, t0) + distance(p1, t1);
+    testTangentPoints(c1, p, &p0, &p1);
+    error = embVector_distance(p0, t0) + embVector_distance(p1, t1);
     if (error > epsilon) {
         printf("Error larger than tolerance, circle test 1: %f.\n\n", error);
         return 16;
@@ -1701,9 +1699,10 @@ int testEmbCircle_2(void) {
     /* Solution */
     EmbVector s0 = {19.0911, 17.4522};
     EmbVector s1 = {26.4428, 13.4133};
+    EmbVector p = {24.3411, 18.2980};
     /* Test */
-    testTangentPoints(c2, 24.3411, 18.2980, &p0, &p1);
-    error = distance(p0, s0) + distance(p1, s1);
+    testTangentPoints(c2, p, &p0, &p1);
+    error = embVector_distance(p0, s0) + embVector_distance(p1, s1);
     if (error > epsilon) {
         printf("Error larger than tolerance, circle test 2: %f.\n\n", error);
         return 17;

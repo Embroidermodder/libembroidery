@@ -1,3 +1,16 @@
+int emb_error = 0;
+
+static size_t object_sizes[] = {
+    sizeof(EmbArcObject),
+    sizeof(EmbCircleObject),
+    sizeof(EmbEllipseObject),
+    sizeof(int),
+    sizeof(EmbPathObject),
+    sizeof(EmbPointObject),
+    sizeof(EmbLineObject),
+    sizeof(EmbPolygonObject*)
+};
+
 /* TODO: This list needs reviewed in case some stitch 
     formats also can contain object data (EMBFORMAT_STCHANDOBJ). */
 
@@ -364,7 +377,10 @@ void getArcCenter(EmbArc arc, EmbVector* arcCenter) {
     line1.end = aPerp_vec;
     line2.start = bMid_vec;
     line2.end = bPerp_vec;
-    embLine_intersectionPoint(line1, line2, arcCenter);
+    *arcCenter = embLine_intersectionPoint(line1, line2);
+    if (emb_error) {
+        puts("ERROR: no intersection, cannot find arcCenter.");
+    }
 }
 
 /* Calculates Arc Geometry from Bulge Data.
@@ -453,14 +469,13 @@ char getArcDataFromBulge(double bulge,
  * Returns false if the circles do not intersect.
  ****************************************************************/
 int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1,
-                                 /* Intersection Point */
-                                 double* px3, double* py3,
-                                 /* Intersection Point */
-                                 double* px4, double* py4) {
-    double a, h, px2, py2, mx, my;
-    double dx = c1.center.x-c0.center.x;
-    double dy = c1.center.y-c0.center.y;
-    double d = sqrt(dx*dx + dy*dy); /* Distance between centers */
+                                 EmbVector *p0, EmbVector *p1)
+{
+    EmbVector delta;
+    double a, h, px2, py2, mx, my, d;
+    /* Distance between centers */
+    embVector_subtract(c1.center, c0.center, &delta);
+    d = embVector_length(delta);
 
     /*Circles share centers. This results in division by zero,
       infinite solutions or one circle being contained within the other. */
@@ -504,8 +519,8 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1,
     h = sqrt((c0.radius*c0.radius) - (a*a));
 
     /*Find point p2 by adding the a offset in relation to line d to point p0 */
-    px2 = c0.center.x + (dx * a/d);
-    py2 = c0.center.y + (dy * a/d);
+    px2 = c0.center.x + (delta.x * a/d);
+    py2 = c0.center.y + (delta.y * a/d);
 
     /* Tangent circles have only one intersection
 
@@ -514,21 +529,23 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1,
        a stated (double) tolerance value would help.
     */
     if (d == (c0.radius + c1.radius)) {
-        *px3 = *py4 = px2;
-        *py3 = *py4 = py2;
+        p0->x = px2;
+        p0->y = py2;
+        p1->x = px2;
+        p1->y = py2;
         return 1;
     }
 
     /* Get the perpendicular slope by multiplying by the negative reciprocal
      * Then multiply by the h offset in relation to d to get the actual offsets */
-    mx = -(dy * h/d);
-    my =  (dx * h/d);
+    mx = -(delta.y * h/d);
+    my =  (delta.x * h/d);
 
     /* Add the offsets to point p2 to obtain the intersection points */
-    *px3 = px2 + mx;
-    *py3 = py2 + my;
-    *px4 = px2 - mx;
-    *py4 = py2 - my;
+    p0->x = px2 + mx;
+    p0->y = py2 + my;
+    p1->x = px2 - mx;
+    p1->y = py2 - my;
 
     return 1;
 }
@@ -538,38 +555,27 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1,
  * Returns true if the given point lies outside the circle.
  * Returns false if the given point is inside the circle.
  ****************************************************************/
-int getCircleTangentPoints(EmbCircle c,
-                           /* Point to determine tangency */
-                           double  px,  double  py,
-                           /* Tangent Point 0 */
-                           double* tx0, double* ty0,
-                           /* Tangent Point 1 */
-                           double* tx1, double* ty1) {
-    double pr;
-    double dx  = px-c.center.x;
-    double dy  = py-c.center.y;
-    double hyp = sqrt(dx*dx + dy*dy); /* Distance to center of circle */
+int getCircleTangentPoints(EmbCircle c, EmbVector point, EmbVector *t0, EmbVector *t1)
+{
     EmbCircle p;
+    double hyp;
+    /* Distance to center of circle */
+    hyp = embVector_distance(point, c.center);
     /* Point is inside the circle */
     if (hyp < c.radius) {
         return 0;
     } else if (hyp == c.center.y) {
         /* Point is lies on the circle, so there is only one tangent point */
-        *tx0 = *tx1 = px;
-        *ty0 = *ty1 = py;
+        *t0 = point;
+        *t1 = point;
         return 1;
     }
 
     /* Since the tangent lines are always perpendicular to the radius, so
      * we can use the Pythagorean theorem to solve for the missing side */
-    pr = sqrt((hyp*hyp) - (c.radius*c.radius));
-
-    p.center.x = px;
-    p.center.y = py;
-    p.radius = pr;
-    return getCircleCircleIntersections(c, p,
-                                        tx0, ty0,
-                                        tx1, ty1);
+    p.center = point;
+    p.radius = sqrt((hyp*hyp) - (c.radius*c.radius));
+    return getCircleCircleIntersections(c, p, t0, t1);
 }
 
 /* Returns an EmbColor. It is created on the stack. */
@@ -679,37 +685,37 @@ void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise) {
     }
 }
 
-/**
+EmbVector embLine_toVector(EmbLine line)
+{
+    EmbVector v;
+    embVector_subtract(line.end, line.start, &v);
+    return v;
+}
+
+/*
  * Finds the intersection of two lines given by v1->v2 and v3->v4
  * and sets the value in the result variable.
  */
-unsigned char embLine_intersectionPoint(EmbLine line1,
-        EmbLine line2, EmbVector* result) {
-    double tolerance = 1e-10;
-    double A2 = line1.end.y - line1.start.y;
-    double B2 = line1.start.x - line1.end.x;
-    double C2 = A2 * line1.start.x + B2 * line1.start.y;
+EmbVector embLine_intersectionPoint(EmbLine line1, EmbLine line2)
+{
+    double det, C2, C1, tolerance;
+    EmbVector vec1, vec2, result;
+    emb_error = 0;
+    vec1 = embLine_toVector(line1);
+    vec2 = embLine_toVector(line2);
+    C2 = embVector_cross(line1.start, vec1);
+    C1 = embVector_cross(line2.start, vec2);
 
-    double A1 = line2.end.y - line2.start.y;
-    double B1 = line2.start.x - line2.end.x;
-    double C1 = A1 * line2.start.x + B1 * line2.end.y;
+    tolerance = 1e-10;
+    det = embVector_cross(vec2, vec1);
 
-    double det = A1 * B2 - A2 * B1;
-
-    if (!result) {
-        printf("ERROR: emb-line.c embLine_intersectionPoint(), ");
-        printf("result argument is null\n");
-        return 0;
-    }
-    /*TODO: The code below needs revised 
-        since division by zero can still occur */
     if (fabs(det) < tolerance) {
-        printf("ERROR: Intersecting lines cannot be parallel.\n");
-        return 0;
+        emb_error = 1;
+        return result;
     }
-    result->x = (B2 * C1 - B1 * C2) / det;
-    result->y = (A1 * C2 - A2 * C1) / det;
-    return 1;
+    result.x = (vec2.x * C2 - vec1.x * C1) / det;
+    result.y = (vec2.y * C2 - vec1.y * C1) / det;
+    return result;
 }
 
 EmbArray* embArray_create(int type) {
@@ -2706,14 +2712,20 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
         line1.end = outline.side1->vector[i - 2];
         line2.start = outline.side1->vector[i - 1];
         line2.end = outline.side1->vector[i];
-        embLine_intersectionPoint(line1, line2, &out);
+        out = embLine_intersectionPoint(line1, line2);
+        if (emb_error) {
+            puts("No intersection point.");
+        }
         embArray_addVector(result->side1, out);
 
         line1.start = outline.side2->vector[i - 3];
         line1.end = outline.side2->vector[i - 2];
         line2.start = outline.side2->vector[i - 1];
         line2.end = outline.side2->vector[i];
-        embLine_intersectionPoint(line1, line2, &out);
+        out = embLine_intersectionPoint(line1, line2);
+        if (emb_error) {
+            puts("No intersection point.");
+        }
         embArray_addVector(result->side2, out);
     }
 

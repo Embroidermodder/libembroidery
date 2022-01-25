@@ -4391,7 +4391,11 @@ static char readPes(EmbPattern* pattern, const char *fileName, FILE* file) {
     fseek(file, pecstart + 48, SEEK_SET);
     numColors = fgetc(file) + 1;
     for (x = 0; x < numColors; x++) {
-        embPattern_addThread(pattern, pecThreads[(unsigned char) fgetc(file)]);
+        unsigned int color_index = fgetc(file);
+        if (color_index >= pecThreadCount) {
+            color_index = 0;
+        }
+        embPattern_addThread(pattern, pecThreads[color_index]);
     }
 
     fseek(file, pecstart + 528, SEEK_SET);
@@ -4739,7 +4743,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
     binaryWriteShort(file, 0x00);
 
     binaryWriteShort(file, 0x07); /* string length */
-    binaryWriteBytes(file, "CSewSeg", 7);
+    fwrite("CSewSeg", 1, 7, file);
     
     if (colorCount > 1000) {
         puts("Color count exceeds 1000 this is likely an error. Truncating to 1000.");
@@ -4811,7 +4815,7 @@ static void pesWriteEmbOneSection(EmbPattern* pattern, FILE* file) {
     int hoopHeight = 1800, hoopWidth = 1300;
     EmbRect bounds;
     binaryWriteShort(file, 0x07); /* string length */
-    binaryWriteBytes(file, "CEmbOne", 7);
+    fwrite("CEmbOne", 1, 7, file);
     bounds = embPattern_calcBoundingBox(pattern);
 
     binaryWriteShort(file, 0);
@@ -4848,7 +4852,7 @@ static char writePes(EmbPattern* pattern,  const char *fileName, FILE* file) {
     int pecLocation;
     embPattern_flipVertical(pattern);
     embPattern_scale(pattern, 10.0);
-    binaryWriteBytes(file, "#PES0001", 8);
+    fwrite("#PES0001", 1, 8, file);
     /* WRITE PECPointer 32 bit int */
     binaryWriteInt(file, 0x00);
 
@@ -5180,11 +5184,21 @@ static char writeSew(EmbPattern* pattern, FILE* file) {
     binaryWriteInt(file, 0x74 + (minColors * 4));
     binaryWriteInt(file, 0x0A);
 
+    if (EMB_DEBUG) {
+        printf("Debugging Information\n");
+        printf("number of colors = %d\n", pattern->threads->count);
+        printf("number of stitches = %d\n", pattern->stitchList->count);
+    }
+
     for (i = 0; i < pattern->threads->count; i++) {
         EmbColor col;
         col = pattern->threads->thread[i].color;
         thr = embThread_findNearestColor_fromThread(col, (EmbThread *)jefThreads, 79);
         binaryWriteInt(file, thr);
+        
+        if (EMB_DEBUG) {
+            printf("Color: %d %d\n", i, thr);
+        }
     }
 
     for (i = 0; i < (minColors - colorlistSize); i++) {
@@ -5305,7 +5319,7 @@ static char readShv(EmbPattern* pattern, FILE* file)
         colorNumber = fgetc(file);
         embPattern_addThread(pattern, shvThreads[colorNumber % 43]);
         stitchesPerColor[i] = stitchCount;
-    fseek(file, 9, SEEK_CUR);
+        fseek(file, 9, SEEK_CUR);
     }
 
     fseek(file, -2, SEEK_CUR);
@@ -6455,9 +6469,9 @@ static char writeVip(EmbPattern* pattern, FILE* file) {
         }
         binaryWriteUInt(file, 0); /* string length */
         binaryWriteShort(file, 0);
-        binaryWriteBytes(file, (char*) attributeCompressed, attributeSize);
-        binaryWriteBytes(file, (char*) xCompressed, xCompressedSize);
-        binaryWriteBytes(file, (char*) yCompressed, yCompressedSize);
+        fwrite((char*) attributeCompressed, 1, attributeSize, file);
+        fwrite((char*) xCompressed, 1, xCompressedSize, file);
+        fwrite((char*) yCompressed, 1, yCompressedSize, file);
     }
 
     if (attributeCompressed) {
@@ -6755,7 +6769,7 @@ static char readVp3(EmbPattern* pattern, FILE* file) {
 
 void vp3WriteStringLen(FILE* file, const char* str, int len) {
     binaryWriteUShortBE(file, len);
-    binaryWriteBytes(file, str, len);
+    fwrite(str, 1, len, file);
 }
 
 void vp3WriteString(FILE* file, const char* str) {
@@ -6788,7 +6802,7 @@ static char writeVp3(EmbPattern* pattern, FILE* file) {
 
     embPattern_flipVertical(pattern);
 
-    binaryWriteBytes(file, "%vsm%", 5);
+    fwrite("%vsm%", 1, 5, file);
     binaryWriteByte(file, 0);
     vp3WriteString(file, "Embroidermodder");
     binaryWriteByte(file, 0);
@@ -6867,7 +6881,7 @@ static char writeVp3(EmbPattern* pattern, FILE* file) {
     binaryWriteIntBE(file, 0);
     binaryWriteIntBE(file, 4096);
 
-    binaryWriteBytes(file, "xxPP\x01\0", 6);
+    fwrite("xxPP\x01\0", 1, 6, file);
     vp3WriteString(file, "");
     binaryWriteShortBE(file, numberOfColors);
 

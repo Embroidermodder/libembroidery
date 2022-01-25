@@ -5177,12 +5177,8 @@ static char writeSew(EmbPattern* pattern, FILE* file) {
     EmbStitch st;
     double dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
     unsigned char b[4];
-
     colorlistSize = pattern->threads->count;
-
-    minColors = embMaxInt(pattern->threads->count, 6);
-    binaryWriteInt(file, 0x74 + (minColors * 4));
-    binaryWriteInt(file, 0x0A);
+    binaryWriteShort(file, pattern->threads->count);
 
     if (EMB_DEBUG) {
         printf("Debugging Information\n");
@@ -5194,18 +5190,9 @@ static char writeSew(EmbPattern* pattern, FILE* file) {
         EmbColor col;
         col = pattern->threads->thread[i].color;
         thr = embThread_findNearestColor_fromThread(col, (EmbThread *)jefThreads, 79);
-        binaryWriteInt(file, thr);
-        
-        if (EMB_DEBUG) {
-            printf("Color: %d %d\n", i, thr);
-        }
+        binaryWriteShort(file, thr);
     }
-
-    for (i = 0; i < (minColors - colorlistSize); i++) {
-        binaryWriteInt(file, 0x0D);
-    }
-
-    fpad(file, ' ', 7536);
+    fpad(file, 0, 0x1D78 - 2 - colorlistSize * 2);
 
     for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];

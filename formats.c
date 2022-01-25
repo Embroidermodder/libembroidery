@@ -156,7 +156,7 @@ char embPattern_read(EmbPattern* pattern, const char *fileName, int format) {
     }
     file = fopen(fileName, "rb");
     if (!file) {
-        printf("Failed to open file with name: %s.", fileName);
+        printf("ERROR: Failed to open file with name: %s.\n", fileName);
         return 0;
     }
     if (formatTable[format].check_for_color_file) {
@@ -4385,7 +4385,8 @@ static char readPes(EmbPattern* pattern, const char *fileName, FILE* file) {
     pecstart = fread_int32(file);
     
     if (EMB_DEBUG) {
-        puts(fileName);
+        printf("debug information for reading fileName: %s\n", fileName);
+        printf("pecstart = %d\n", pecstart);
     }
 
     fseek(file, pecstart + 48, SEEK_SET);

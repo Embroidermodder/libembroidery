@@ -2350,8 +2350,7 @@ void embPattern_center(EmbPattern* p) {
 
 /*TODO: Description needed. */
 void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName) {
-    char hasRead = 0;
-    int stub_len, format;
+    int hasRead, stub_len, format;
     char extractName[200];
 
     if (!p) {
@@ -2363,7 +2362,7 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName) {
         return;
     }
 
-    strcat(extractName, fileName);
+    strcpy(extractName, fileName);
     format = emb_identify_format(fileName);
     stub_len = strlen(fileName) - strlen(formatTable[format].extension);
     extractName[stub_len] = 0;

@@ -1781,7 +1781,7 @@ static char writeDst(EmbPattern* pattern, FILE* file) {
         dy = (int)round(st.y * 10.0) - yy;
         xx = (int)round(st.x * 10.0);
         yy = (int)round(st.y * 10.0);
-        printf("%d %f %f %d %d %d %d\n", i, st.x, st.y, dx, dy, xx, yy);
+        printf("%d %f %f %d %d %d %d %d\n", i, st.x, st.y, dx, dy, xx, yy, st.flags);
         encode_record(file, dx, dy, st.flags);
     }
 
@@ -5150,17 +5150,17 @@ static void sewEncode(unsigned char* b, char dx, char dy, int flags) {
         printf("ERROR: format-exp.c expEncode(), b argument is null\n");
         return;
     }
-    if (flags == STOP) {
+    if (flags | STOP) {
         b[0] = 0x80;
         b[1] = 1;
         b[2] = dx;
         b[3] = dy;
-    } else if (flags == END) {
+    } else if (flags | END) {
         b[0] = 0x80;
         b[1] = 0x10;
         b[2] = 0;
         b[3] = 0;
-    } else if (flags == TRIM || flags == JUMP) {
+    } else if ((flags | TRIM )|| (flags | JUMP)) {
         b[0] = 0x80;
         b[1] = 2;
         b[2] = dx;

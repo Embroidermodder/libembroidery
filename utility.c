@@ -303,6 +303,39 @@ void MainWindow::designDetails()
 }
 */
 
+void embVector_print(EmbVector v, char *prefix, int spacing)
+{
+    int i;
+    printf("%sX", prefix);
+    for (i=0; i<spacing-strlen(prefix)-1; i++) {
+        printf(" ");
+    }
+    printf("= %f\n", v.x);
+    printf("%sY", prefix);
+    for (i=0; i<spacing-strlen(prefix)-1; i++) {
+        printf(" ");
+    }
+    printf("= %f\n", v.y);
+}
+
+static void reverse_byte_order(void *b, int bytes)
+{
+    char swap;
+    if (bytes == 2) {
+        swap = *((char*)b+0);
+        *((char*)b+0) = *((char*)b+1);
+        *((char*)b+1) = swap;
+    }
+    else {
+        swap = *((char*)b+0);
+        *((char*)b+0) = *((char*)b+3);
+        *((char*)b+3) = swap;
+        swap = *((char*)b+1);
+        *((char*)b+1) = *((char*)b+2);
+        *((char*)b+2) = swap;
+    }
+}
+
 /* Checks that there are enough bytes to interpret the header,
  * stops possible segfaults when reading in the header bytes.
  *

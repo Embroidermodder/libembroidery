@@ -4358,17 +4358,113 @@ static char writePem(void)
 /* ---------------------------------------------------------------- */
 /* format pes */
 
+#define PES0001         0
+#define PES0020         1
+#define PES0022         2
+#define PES0030         3
+#define PES0040         4
+#define PES0050         5
+#define PES0055         6
+#define PES0056         7
+#define PES0060         8
+#define PES0070         9
+#define PES0080        10
+#define PES0090        11
+#define PES0100        12
+#define N_PES_VERSIONS 13
+
+static char *pes_version_strings[] = {
+    "#PES0001",
+    "#PES0020",
+    "#PES0022",
+    "#PES0030",
+    "#PES0040",
+    "#PES0050",
+    "#PES0055",
+    "#PES0056",
+    "#PES0060",
+    "#PES0070",
+    "#PES0080",
+    "#PES0090",
+    "#PES0100",
+};
+
+static int pes_version = PES0001;
+
+static void readPESHeaderV5(FILE* file, EmbPattern* pattern);
+static void readPESHeaderV6(FILE* file, EmbPattern* pattern);
+static void readPESHeaderV7(FILE* file, EmbPattern* pattern);
+static void readPESHeaderV8(FILE* file, EmbPattern* pattern);
+static void readPESHeaderV9(FILE* file, EmbPattern* pattern);
+static void readPESHeaderV10(FILE* file, EmbPattern* pattern);
+
+static void readDescriptions(FILE* file, EmbPattern* pattern);
+static void readHoopName(FILE* file, EmbPattern* pattern);
+static void readImageString(FILE* file, EmbPattern* pattern);
+static void readProgrammableFills(FILE* file, EmbPattern* pattern);
+static void readMotifPatterns(FILE* file, EmbPattern* pattern);
+static void readFeatherPatterns(FILE* file, EmbPattern* pattern);
+static void readThreads(FILE* file, EmbPattern* pattern);
+
+static void fskip(FILE* file, int n)
+{
+    fseek(file, n, SEEK_CUR);
+}
+
 static char readPes(EmbPattern* pattern, const char *fileName, FILE* file) {
-    int pecstart, numColors, x;
-    fseek(file, 8, SEEK_SET);
+    int pecstart, numColors, x, version, i;
+    char signature[9];
+    fread(signature, 1, 8, file);
+    signature[8] = 0;
     pecstart = fread_int32(file);
-    
+
+    version = 0;
+    for (i=0; i<N_PES_VERSIONS; i++) {
+        if (!strcmp(signature, pes_version_strings[i])) {
+            version = i;
+            break;
+        }
+    }
+
+    if (version >= PES0040) {
+        fskip(file, 4);
+        readDescriptions(file, pattern);
+    }
+
+    switch (version) {
+    case PES0100:
+        readPESHeaderV10(file, pattern);
+        break;
+    case PES0090:
+        readPESHeaderV9(file, pattern);
+        break;
+    case PES0080:
+        readPESHeaderV8(file, pattern);
+        break;
+    case PES0070:
+        readPESHeaderV7(file, pattern);
+        break;
+    case PES0060:
+        readPESHeaderV6(file, pattern);
+        break;
+    case PES0056:
+    case PES0055:
+    case PES0050:
+        readPESHeaderV5(file, pattern);
+        break;
+    default:
+        break;
+    }
+
     if (EMB_DEBUG) {
         printf("debug information for reading fileName: %s\n", fileName);
         printf("pecstart = %d\n", pecstart);
     }
 
-    fseek(file, pecstart + 48, SEEK_SET);
+    /* fseek(file, pecstart + 48, SEEK_SET);
+     * This seems wrong based on the readPESHeader functions. */
+    fseek(file, pecstart, SEEK_SET);
+
     numColors = fgetc(file) + 1;
     for (x = 0; x < numColors; x++) {
         unsigned int color_index = fgetc(file);
@@ -4386,300 +4482,175 @@ static char readPes(EmbPattern* pattern, const char *fileName, FILE* file) {
     return 1;
 }
 
-/* static void readPESHeader(FILE* file, EmbPattern* pattern) {
-       char* signature = readString(8);
-            if (strcmp(signature, "#PES0100") {
-                readPESHeaderV10();
-            } else if (strcmp(signature, "#PES0090") {
-                readPESHeaderV9();
-            } else if (strcmp(signature, "#PES0080") {
-                readPESHeaderV8();
-            } else if (strcmp(signature, "#PES0070") {
-                readPESHeaderV7();
-            } else if (strcmp(signature, "#PES0060") {
-                readPESHeaderV6();
-            } else if (strcmp(signature, "#PES0056"){
-                readPESHeaderV5();
-            } else if (strcmp(signature, "#PES0055") {
-               readPESHeaderV5();
-                 } else if (strcmp(signature, "#PES0050") {
-                readPESHeaderV5();
-                 } else if (strcmp(signature, "#PES0040") {
-                readPESHeaderV4();
-                 } else if (strcmp(signature, "#PES0030") {
-                readPESHeaderDefault();
-                 } else if (strcmp(signature, "#PES0022") {
-                readPESHeaderDefault();
-                 } else if (strcmp(signature, "#PES0020") {
-                readPESHeaderDefault();
-                 } else if (strcmp(signature, "#PES0001") {
-                readPESHeaderDefault();
-                 } else
-            if (strcmp(signature, "#PEC0001") {
-                //PEC needs to go straight to reading, no default.
-            } else {
-                readPESHeaderDefault();
-            }
-        }
-    }
+static void readDescriptions(FILE *file, EmbPattern* pattern)
+{
+    int DesignStringLength;
+    int categoryStringLength;
+    int authorStringLength;
+    int keywordsStringLength;
+    int commentsStringLength;
+    /*
+    DesignStringLength = fgetc();
+    String DesignName = readString(DesignStringLength);
+    pattern.setName(DesignName);
+    categoryStringLength = fgetc();
+    String Category = readString(categoryStringLength);
+    pattern.setCategory(Category);
+    authorStringLength = fgetc();
+    String Author = readString(authorStringLength);
+    pattern.setAuthor(Author);
+    keywordsStringLength = fgetc();
+    String keywords = readString(keywordsStringLength);
+    pattern.setKeywords(keywords);
+    commentsStringLength = fgetc();
+    String Comments = readString(commentsStringLength);
+    pattern.setComments(Comments);
+    */
+}
 
-    static void readPESHeaderDefault()  {
-        int pecStart = readInt32LE();
-        skip(pecStart - readPosition);
-    }
+static void readPESHeaderV5(FILE *file, EmbPattern* pattern)
+{
+    int fromImageStringLength;
+    fseek(file, 24, SEEK_CUR);
+    fromImageStringLength = fgetc(file);
+    fseek(file, fromImageStringLength, SEEK_CUR);
+    fseek(file, 24, SEEK_CUR);
+    readProgrammableFills(file, pattern);
+    readMotifPatterns(file, pattern);
+    readFeatherPatterns(file, pattern);
+    readThreads(file, pattern);
+}
 
-    static void readDescriptions()  {
-        int DesignStringLength = readInt8();
-        String DesignName = readString(DesignStringLength);
-        pattern.setName(DesignName);
-        int categoryStringLength = readInt8();
-        String Category = readString(categoryStringLength);
-        pattern.setCategory(Category);
-        int authorStringLength = readInt8();
-        String Author = readString(authorStringLength);
-        pattern.setAuthor(Author);
-        int keywordsStringLength = readInt8();
-        String keywords = readString(keywordsStringLength);
-        pattern.setKeywords(keywords);
-        int commentsStringLength = readInt8();
-        String Comments = readString(commentsStringLength);
-        pattern.setComments(Comments);
-    }
+static void readPESHeaderV6(FILE *file, EmbPattern* pattern)
+{
+    fseek(file, 36, SEEK_CUR);
+    readImageString(file, pattern);
+    fseek(file, 24, SEEK_CUR);
+    readProgrammableFills(file, pattern);
+    readMotifPatterns(file, pattern);
+    readFeatherPatterns(file, pattern);
+    readThreads(file, pattern);
+}
 
-    static void readPESHeaderV4()  {
-        int pecStart = readInt32LE();
-        skip(4);
-        readDescriptions();
-        skip(pecStart - readPosition);
-    }
-
-    static void readPESHeaderV5()  {
-        int pecStart = readInt32LE();
-        skip(4);
-        readDescriptions();
-        skip(24);//36 v6
-        int fromImageStringLength = readInt8();
-        skip(fromImageStringLength);
-        skip(24);
-        int numberOfProgrammableFillPatterns = readInt16LE();
-        if (numberOfProgrammableFillPatterns != 0) {
-            seek(pecStart);
-            return;
-        }
-        int numberOfMotifPatterns = readInt16LE();
-        if (numberOfMotifPatterns != 0) {
-            seek(pecStart);
-            return;
-        }
-        int featherPatternCount = readInt16LE();
-        if (featherPatternCount != 0) {
-            seek(pecStart);
-            return;
-        }
-        int numberOfColors = readInt16LE();
-        for (int i = 0; i < numberOfColors; i++) {
-            readThread();
-        }
-        seek(pecStart);
-    }
-
-    static void readPESHeaderV6()  {
-        int pecStart = readInt32LE();
-        skip(4);
-        readDescriptions();
-        skip(36);
-        int fromImageStringLength = readInt8();
-        String fromImageString = readString(fromImageStringLength);
-        if (fromImageString.length() != 0) {
-            pattern.setMetadata("image_file", fromImageString);
-        }
-        skip(24);
-        int numberOfProgrammableFillPatterns = readInt16LE();
-        if (numberOfProgrammableFillPatterns != 0) {
-            seek(pecStart);
-            return;
-        }
-        int numberOfMotifPatterns = readInt16LE();
-        if (numberOfMotifPatterns != 0) {
-            seek(pecStart);
-            return;
-        }
-        int featherPatternCount = readInt16LE();
-        if (featherPatternCount != 0) {
-            seek(pecStart);
-            return;
-        }
-        int numberOfColors = readInt16LE();
-        for (int i = 0; i < numberOfColors; i++) {
-            readThread();
-        }
-        seek(pecStart);
-    }
+static void readPESHeaderV7(FILE *file, EmbPattern* pattern)
+{
+    fseek(file, 36, SEEK_CUR);
+    readImageString(file, pattern);
+    fseek(file, 24, SEEK_CUR);
+    readProgrammableFills(file, pattern);
+    readMotifPatterns(file, pattern);
+    readFeatherPatterns(file, pattern);
+    readThreads(file, pattern);
+}
     
-    static void readPESHeaderV7()  {
-        int pecStart = readInt32LE();
-        skip(4);
-        readDescriptions();
-        skip(36);
-        int fromImageStringLength = readInt8();
-        String fromImageString = readString(fromImageStringLength);
-        if (fromImageString.length() != 0) {
-            pattern.setMetadata("image_file", fromImageString);
-        }
-        skip(24);
-        int numberOfProgrammableFillPatterns = readInt16LE();
-        if (numberOfProgrammableFillPatterns != 0) {
-            seek(pecStart);
-            return;
-        }
-        int numberOfMotifPatterns = readInt16LE();
-        if (numberOfMotifPatterns != 0) {
-            seek(pecStart);
-            return;
-        }
-        int featherPatternCount = readInt16LE();
-        if (featherPatternCount != 0) {
-            seek(pecStart);
-            return;
-        }
-        int numberOfColors = readInt16LE();
-        for (int i = 0; i < numberOfColors; i++) {
-            readThread();
-        }
-        seek(pecStart);
+static void readPESHeaderV8(FILE *file, EmbPattern* pattern)
+{
+    fseek(file, 38, SEEK_CUR);
+    readImageString(file, pattern);
+    fseek(file, 26, SEEK_CUR);
+    readProgrammableFills(file, pattern);
+    readMotifPatterns(file, pattern);
+    readFeatherPatterns(file, pattern);
+    readThreads(file, pattern);
+}
+
+static void readPESHeaderV9(FILE *file, EmbPattern* pattern)
+{
+    fseek(file, 14, SEEK_CUR);
+    readHoopName(file, pattern);
+    fseek(file, 30, SEEK_CUR);
+    readImageString(file, pattern);
+    fseek(file, 34, SEEK_CUR);
+    readProgrammableFills(file, pattern);
+    readMotifPatterns(file, pattern);
+    readFeatherPatterns(file, pattern);
+    readThreads(file, pattern);
+}
+
+static void readPESHeaderV10(FILE *file, EmbPattern* pattern)
+{
+    fseek(file, 14, SEEK_CUR);
+    readHoopName(file, pattern);
+    fseek(file, 38, SEEK_CUR);
+    readImageString(file, pattern);
+    fseek(file, 34, SEEK_CUR);
+    readProgrammableFills(file, pattern);
+    readMotifPatterns(file, pattern);
+    readFeatherPatterns(file, pattern);
+    readThreads(file, pattern);
+}
+
+static void readHoopName(FILE* file, EmbPattern* pattern)
+{
+    int hoopNameStringLength = fgetc(file);
+    /*
+    String hoopNameString = readString(hoopNameStringLength);
+    if (hoopNameString.length() != 0) {
+        pattern.setMetadata("hoop_name", hoopNameString);
     }
+    */
+}
+
+static void readImageString(FILE* file, EmbPattern* pattern)
+{
+    int fromImageStringLength = fgetc(file);
+    /*
+    String fromImageString = readString(fromImageStringLength);
+    if (fromImageString.length() != 0) {
+        pattern.setMetadata("image_file", fromImageString);
+    }
+    */
+}
+
+static void readProgrammableFills(FILE* file, EmbPattern* pattern) {
+    int numberOfProgrammableFillPatterns = fread_int16(file);
+    if (numberOfProgrammableFillPatterns != 0) {
+        return;
+    }
+}
+
+static void readMotifPatterns(FILE* file, EmbPattern* pattern) {
+    int numberOfMotifPatterns = fread_int16(file);
+    if (numberOfMotifPatterns != 0) {
+        return;
+    }
+}
+
+static void readFeatherPatterns(FILE* file, EmbPattern* pattern) {
+    int featherPatternCount = fread_int16(file);
+    if (featherPatternCount != 0) {
+        return;
+    }
+}
     
-    static void readPESHeaderV8()  {
-        int pecStart = readInt32LE();
-        skip(4);
-        readDescriptions();
-        skip(38);
-        int fromImageStringLength = readInt8();
-        String fromImageString = readString(fromImageStringLength);
-        if (fromImageString.length() != 0) {
-            pattern.setMetadata("image_file", fromImageString);
-        }
-        skip(26);
-        int numberOfProgrammableFillPatterns = readInt16LE();
-        if (numberOfProgrammableFillPatterns != 0) {
-            seek(pecStart);
-            return;
-        }
-        int numberOfMotifPatterns = readInt16LE();
-        if (numberOfMotifPatterns != 0) {
-            seek(pecStart);
-            return;
-        }
-        int featherPatternCount = readInt16LE();
-        if (featherPatternCount != 0) {
-            seek(pecStart);
-            return;
-        }
-        int numberOfColors = readInt16LE();
-        for (int i = 0; i < numberOfColors; i++) {
-            readThread();
-        }
-        seek(pecStart);
+static void readThreads(FILE* file, EmbPattern* pattern) {
+    int numberOfColors, i;
+    numberOfColors = fread_int16(file);
+    for (i=0; i<numberOfColors; i++) {
+        EmbThread thread;
+        int color_code_length;
+        int descriptionStringLength;
+        int brandStringLength;
+        int threadChartStringLength;
+        color_code_length = fgetc(file);
+        /* strcpy(thread.color_code, readString(color_code_length)); */
+        thread.color.r = fgetc(file);
+        thread.color.g = fgetc(file);
+        thread.color.b = fgetc(file);
+        fskip(file, 5);
+        descriptionStringLength = fgetc(file);
+        /* strcpy(thread.description, readString(descriptionStringLength)); */
+
+        brandStringLength = fgetc(file);
+        /* strcpy(thread.brand, readString(brandStringLength)); */
+
+        threadChartStringLength = fgetc(file);
+        /* strcpy(thread.threadChart, readString(threadChartStringLength)); */
+
+        embPattern_addThread(pattern, thread);
     }
+}
 
-    static void readPESHeaderV9()  {
-        int pecStart = readInt32LE();
-        skip(4);
-        readDescriptions();
-        skip(14);
-        int hoopNameStringLength = readInt8();
-        String hoopNameString = readString(hoopNameStringLength);
-        if (hoopNameString.length() != 0) {
-            pattern.setMetadata("hoop_name", hoopNameString);
-        }
-        skip(30);
-        int fromImageStringLength = readInt8();
-        String fromImageString = readString(fromImageStringLength);
-        if (fromImageString.length() != 0) {
-            pattern.setMetadata("image_file", fromImageString);
-        }
-        skip(34);
-        int numberOfProgrammableFillPatterns = readInt16LE();
-        if (numberOfProgrammableFillPatterns != 0) {
-            seek(pecStart);
-            return;
-        }
-        int numberOfMotifPatterns = readInt16LE();
-        if (numberOfMotifPatterns != 0) {
-            seek(pecStart);
-            return;
-        }
-        int featherPatternCount = readInt16LE();
-        if (featherPatternCount != 0) {
-            seek(pecStart);
-            return;
-        }
-        int numberOfColors = readInt16LE();
-        for (int i = 0; i < numberOfColors; i++) {
-            readThread();
-        }
-        seek(pecStart);
-    }
-
-    static void readPESHeaderV10()  {
-        int pecStart = readInt32LE();
-        skip(4);
-        readDescriptions();
-        skip(14);
-        int hoopNameStringLength = readInt8();
-        String hoopNameString = readString(hoopNameStringLength);
-        if (hoopNameString.length() != 0) {
-            pattern.setMetadata("hoop_name", hoopNameString);
-        }
-        skip(38);
-        int fromImageStringLength = readInt8();
-        String fromImageString = readString(fromImageStringLength);
-        if (fromImageString.length() != 0) {
-            pattern.setMetadata("image_file", fromImageString);
-        }
-        skip(34);
-        int numberOfProgrammableFillPatterns = readInt16LE();
-        if (numberOfProgrammableFillPatterns != 0) {
-            seek(pecStart);
-            return;
-        }
-        int numberOfMotifPatterns = readInt16LE();
-        if (numberOfMotifPatterns != 0) {
-            seek(pecStart);
-            return;
-        }
-        int featherPatternCount = readInt16LE();
-        if (featherPatternCount != 0) {
-            seek(pecStart);
-            return;
-        }
-        int numberOfColors = readInt16LE();
-        for (int i = 0; i < numberOfColors; i++) {
-            readThread();
-        }
-        seek(pecStart);
-    }
-    
-    static void readThread() {
-        int color_code_length = readInt8();
-        String color_code = readString(color_code_length);
-        int red = readInt8();
-        int green = readInt8();
-        int blue = readInt8();
-        skip(5);
-        int descriptionStringLength = readInt8();
-        String description = readString(descriptionStringLength);
-
-        int brandStringLength = readInt8();
-        String brand = readString(brandStringLength);
-
-        int threadChartStringLength = readInt8();
-        String threadChart = readString(threadChartStringLength);
-
-        int color = (red & 0xFF) << 16 | (green & 0xFF) << 8 | (blue & 0xFF);
-        pattern.add(new EmbThread(color, description, color_code, brand, threadChart));
-    }
-*/
 
 static void pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
     /* TODO: pointer safety */

@@ -1118,17 +1118,10 @@ static char readCsv(EmbPattern* pattern, FILE* file) {
     double xx = 0.0;
     double yy = 0.0;
     unsigned char r = 0, g = 0, b = 0;
-    char* buff = 0;
-
-    buff = (char*)malloc(size);
-    if (!buff) {
-        printf("ERROR: format-csv.c readCsv(), ");
-        printf("unable to allocate memory for buff\n");
-        return 0;
-    }
+    char buff[100];
 
     pos = 0;
-    do {
+    while (!feof(file)) {
         c = fgetc(file);
         switch(c) {
             case '"':
@@ -1155,15 +1148,6 @@ static char readCsv(EmbPattern* pattern, FILE* file) {
                 break;
             default:
                 break;
-        }
-        if (pos >= size - 1) {
-            size *= 2;
-            buff = (char*)realloc(buff, size);
-            if (!buff) {
-                printf("ERROR: format-csv.c readCsv(), ");
-                printf("cannot re-allocate memory for buff\n");
-                return 0;
-            }
         }
 
         if (process) {
@@ -1244,9 +1228,8 @@ static char readCsv(EmbPattern* pattern, FILE* file) {
                     buff[pos++] = (char)c;
                 }
             }
-        }
-        while(c != EOF);
-    free(buff);
+    }
+
     return 1;
 }
 
@@ -1443,20 +1426,16 @@ static char writeDsb(EmbPattern* pattern, FILE* file) {
 
 static int decode_record_flags(unsigned char b2)
 {
-    int returnCode = 0;
-    if (b2 == 0xF3)
-    {
+    if (b2 == 0xF3) {
         return END;
     }
-    if (b2 & 0x80)
-    {
-        returnCode |= JUMP;
+    if (b2 & 0x40) {
+        return STOP;
     }
-    if (b2 & 0x40)
-    {
-        returnCode |= STOP;
+    if (b2 & 0x80) {
+        return JUMP;
     }
-    return returnCode;
+    return NORMAL;
 }
 
 /* TODO: review this then remove since emb-pattern.c has a similar function */
@@ -5145,40 +5124,9 @@ static char readSew(EmbPattern* pattern, FILE* file) {
     return 1;
 }
 
-static void sewEncode(unsigned char* b, char dx, char dy, int flags) {
-    if (!b) {
-        printf("ERROR: format-exp.c expEncode(), b argument is null\n");
-        return;
-    }
-    if (flags | STOP) {
-        b[0] = 0x80;
-        b[1] = 1;
-        b[2] = dx;
-        b[3] = dy;
-    } else if (flags | END) {
-        b[0] = 0x80;
-        b[1] = 0x10;
-        b[2] = 0;
-        b[3] = 0;
-    } else if ((flags | TRIM )|| (flags | JUMP)) {
-        b[0] = 0x80;
-        b[1] = 2;
-        b[2] = dx;
-        b[3] = dy;
-    } else {
-        b[0] = dx;
-        b[1] = dy;
-        b[2] = 0;
-        b[3] = 0;
-    }
-}
-
 static char writeSew(EmbPattern* pattern, FILE* file) {
-    int colorlistSize, minColors, i, thr;
-    EmbStitch st;
-    double dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
-    unsigned char b[4];
-    colorlistSize = pattern->threads->count;
+    int i;
+    double xx = 0.0, yy = 0.0;
     binaryWriteShort(file, pattern->threads->count);
 
     if (EMB_DEBUG) {
@@ -5188,23 +5136,44 @@ static char writeSew(EmbPattern* pattern, FILE* file) {
     }
 
     for (i = 0; i < pattern->threads->count; i++) {
+        short thr;
         EmbColor col;
         col = pattern->threads->thread[i].color;
         thr = embThread_findNearestColor_fromThread(col, (EmbThread *)jefThreads, 79);
         binaryWriteShort(file, thr);
     }
-    fpad(file, 0, 0x1D78 - 2 - colorlistSize * 2);
+    fpad(file, 0, 0x1D78 - 2 - pattern->threads->count * 2);
 
     for (i = 0; i < pattern->stitchList->count; i++) {
+        EmbStitch st;
+        unsigned char b[4];
+        double dx, dy;
         st = pattern->stitchList->stitch[i];
         dx = st.x * 10.0 - xx;
         dy = st.y * 10.0 - yy;
         xx = st.x * 10.0;
         yy = st.y * 10.0;
-        sewEncode(b, (char)round(dx), (char)round(dy), st.flags);
-        if ((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10))) {
+        if (st.flags & STOP) {
+            b[0] = 0x80;
+            b[1] = 0x01;
+            b[2] = (char)round(dx);
+            b[3] = (char)round(dy);
+            fwrite(b, 1, 4, file);
+        } else if (st.flags & END) {
+            b[0] = 0x80;
+            b[1] = 0x10;
+            b[2] = 0;
+            b[3] = 0;
+            fwrite(b, 1, 4, file);
+        } else if ((st.flags & TRIM) || (st.flags & JUMP)) {
+            b[0] = 0x80;
+            b[1] = 2;
+            b[2] = (char)round(dx);
+            b[3] = (char)round(dy);
             fwrite(b, 1, 4, file);
         } else {
+            b[0] = (char)round(dx);
+            b[1] = (char)round(dy);
             fwrite(b, 1, 2, file);
         }
     }

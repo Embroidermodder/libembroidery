@@ -1100,7 +1100,7 @@ static int csvStrToStitchFlag(const char* str)
     } else if (!strcmp(str, "END")) {
         return END;
     } else if (!strcmp(str, "UNKNOWN")) {
-        return -1;
+        return STOP;
     }
     return -1;
 }

@@ -1821,26 +1821,46 @@ static char writeDsz(EmbPattern* pattern, FILE* file) {
 /* ---------------------------------------------------------------- */
 /* format dxf */
 
-static char* readLine(FILE* file)
+static void readLine(FILE* file, char *str)
 {
-    char str[255];
-    /* TODO: replace all scanf code */
-    fscanf(file, "%s", str);
-    return lTrim(str, ' ');
+    int i;
+    int past_leading_spaces;
+
+    /* Remove leading spaces. */
+    past_leading_spaces = 0;
+    for (i=0; i<254; i++) {
+        if (feof(file)) {
+            str[i] = 0;
+            break;
+        }
+        str[i] = fgetc(file);
+        if (str[i] == '\n' || str[i] == '\r') {
+            str[i] = 0;
+            break;
+        }
+        if (str[i] == ' ') {
+            if (!past_leading_spaces) {
+                i--;
+            }
+        }
+        else {
+            past_leading_spaces = 0;
+        }
+    }
 }
 
 static char readDxf(EmbPattern* pattern, FILE* file)
 {
-    char* buff = "";
-    char* dxfVersion = "";
-    char* section = "";
-    char* tableName = "";
-    char* layerName = "";
-    char* entityType = "";
+    char dxfVersion[255];
+    char section[255];
+    char tableName[255];
+    char layerName[255];
+    char entityType[255];
     /*char layerColorHash[100][8]; */ /* hash <layerName, EmbColor> */
 
     int eof = 0; /* End Of File */
 
+    char buff[255];
     EmbVector prev, pos, first;
     double bulge = 0.0;
     char firstStitch = 1;
@@ -1865,7 +1885,7 @@ static char readDxf(EmbPattern* pattern, FILE* file)
 
     while(ftell(file) < fileLength)
     {
-        buff = readLine(file);
+        readLine(file, buff);
         /*printf("%s\n", buff);*/
         if ( (!strcmp(buff, "HEADER"))   ||
             (!strcmp(buff, "CLASSES"))  ||
@@ -1875,12 +1895,12 @@ static char readDxf(EmbPattern* pattern, FILE* file)
             (!strcmp(buff, "OBJECTS"))  ||
             (!strcmp(buff, "THUMBNAILIMAGE")))
         {
-            section = buff;
+            strcpy(section, buff);
             printf("SECTION:%s\n", buff);
         }
         if (!strcmp(buff, "ENDSEC"))
         {
-            section = "";
+            strcpy(section, "");
             printf("ENDSEC:%s\n", buff);
         }
         if ( (!strcmp(buff, "ARC"))        ||
@@ -1890,7 +1910,7 @@ static char readDxf(EmbPattern* pattern, FILE* file)
             (!strcmp(buff, "LWPOLYLINE")) ||
             (!strcmp(buff, "POINT")))
         {
-            entityType = buff;
+            strcpy(entityType, buff);
         }
         if (!strcmp(buff, "EOF"))
         {
@@ -1901,28 +1921,26 @@ static char readDxf(EmbPattern* pattern, FILE* file)
         {
             if (!strcmp(buff, "$ACADVER"))
             {
-                buff = readLine(file);
-                dxfVersion = readLine(file);
+                readLine(file, buff);
+                readLine(file, dxfVersion);
                 /* TODO: Allow these versions when POLYLINE is handled. */
                 if ((!strcmp(dxfVersion, DXF_VERSION_R10))
                 || (!strcmp(dxfVersion, DXF_VERSION_R11))
                 || (!strcmp(dxfVersion, DXF_VERSION_R12))
-                || (!strcmp(dxfVersion, DXF_VERSION_R13)))
+                || (!strcmp(dxfVersion, DXF_VERSION_R13))) {
                     return 0;
+                }
             }
         }
         else if (!strcmp(section,"TABLES"))
         {
-            if (!strcmp(buff,"ENDTAB"))
-            {
-                tableName = NULL;
+            if (!strcmp(buff,"ENDTAB")) {
+                tableName[0] = 0;
             }
 
-            if (tableName == NULL)
-            {
-                if (!strcmp(buff,"2")) /* Table Name */
-                {
-                    tableName = readLine(file);
+            if (tableName[0] == 0) {
+                if (!strcmp(buff,"2")) { /* Table Name */
+                    readLine(file, tableName);
                 }
             }
             else if (!strcmp(tableName, "LAYER"))
@@ -1930,35 +1948,35 @@ static char readDxf(EmbPattern* pattern, FILE* file)
                 /* Common Group Codes for Tables */
                 if (!strcmp(buff,"5")) /* Handle */
                 {
-                    buff = readLine(file);
+                    readLine(file, buff);
                     continue;
                 }
                 else if (!strcmp(buff,"330")) /* Soft Pointer */
                 {
-                    buff = readLine(file);
+                    readLine(file, buff);
                     continue;
                 }
                 else if (!strcmp(buff,"100")) /* Subclass Marker */
                 {
-                    buff = readLine(file);
+                    readLine(file, buff);
                     continue;
                 }
                 else if (!strcmp(buff,"70")) /* Number of Entries in Table */
                 {
-                    buff = readLine(file);
+                    readLine(file, buff);
                     continue;
                 }
                 /* The meaty stuff */
                 else if (!strcmp(buff,"2")) /* Layer Name */
                 {
-                    layerName = readLine(file);
+                    readLine(file, layerName);
                 }
                 else if (!strcmp(buff,"62")) /* Color Number */
                 {
                     unsigned char colorNum;
                     EmbColor* co;
 
-                    buff = readLine(file);
+                    readLine(file, buff);
                     colorNum = atoi(buff);
 
                     colorNum = atoi(buff);
@@ -1974,7 +1992,7 @@ static char readDxf(EmbPattern* pattern, FILE* file)
                          TODO: log error: failed inserting into layerColorHash
                     }
                 */
-                    layerName = NULL;
+                    layerName[0] = 0;
                 }
             }
         }
@@ -1983,22 +2001,22 @@ static char readDxf(EmbPattern* pattern, FILE* file)
             /* Common Group Codes for Entities */
             if (!strcmp(buff, "5")) /* Handle */
             {
-                buff = readLine(file);
+                readLine(file, buff);
                 continue;
             }
             else if (!strcmp(buff, "330")) /* Soft Pointer */
             {
-                buff = readLine(file);
+                readLine(file, buff);
                 continue;
             }
             else if (!strcmp(buff, "100")) /* Subclass Marker */
             {
-                buff = readLine(file);
+                readLine(file, buff);
                 continue;
             }
             else if (!strcmp(buff, "8")) /* Layer Name */
             {
-                buff = readLine(file);
+                readLine(file, buff);
                 /* embPattern_changeColor(pattern, colorIndexMap[buff]); TODO: port to C */
                 continue;
             }
@@ -2007,45 +2025,45 @@ static char readDxf(EmbPattern* pattern, FILE* file)
                 /* The not so important group codes */
                 if (!strcmp(buff, "90")) /* Vertices */
                 {
-                    buff = readLine(file);
+                    readLine(file, buff);
                     continue;
                 }
                 else if (!strcmp(buff,"70")) /* Polyline Flag */
                 {
-                    buff = readLine(file);
+                    readLine(file, buff);
                     continue;
                 }
                 /* TODO: Try to use the widths at some point */
                 else if (!strcmp(buff,"40")) /* Starting Width */
                 {
-                    buff = readLine(file);
+                    readLine(file, buff);
                     continue;
                 }
                 else if (!strcmp(buff,"41")) /* Ending Width */
                 {
-                    buff = readLine(file);
+                    readLine(file, buff);
                     continue;
                 }
                 else if (!strcmp(buff,"43")) /* Constant Width */
                 {
-                    buff = readLine(file);
+                    readLine(file, buff);
                     continue;
                 }
                 /* The meaty stuff */
                 else if (!strcmp(buff,"42")) /* Bulge */
                 {
-                    buff = readLine(file);
+                    readLine(file, buff);
                     bulge = atof(buff);
                     bulgeFlag = 1;
                 }
                 else if (!strcmp(buff,"10")) /* X */
                 {
-                    buff = readLine(file);
+                    readLine(file, buff);
                     pos.x = atof(buff);
                 }
                 else if (!strcmp(buff,"20")) /* Y */
                 {
-                    buff = readLine(file);
+                    readLine(file, buff);
                     pos.y = atof(buff);
 
                     if (bulgeFlag) {
@@ -2073,7 +2091,7 @@ static char readDxf(EmbPattern* pattern, FILE* file)
                     }
                 }
                 else if (!strcmp(buff,"0")) {
-                    entityType = NULL;
+                    entityType[0] = 0;
                     firstStitch = 1;
                     if (bulgeFlag) {
                         EmbArc arc;
@@ -2585,7 +2603,7 @@ static char readHus(EmbPattern* pattern, FILE* file)
         printf("ERROR: format-hus.c readHus(), cannot allocate memory for stringVal\n");
         return 0;
     }
-    binaryReadBytes(file, stringVal, 8); /* TODO: check return value */
+    fread(stringVal, 1, 8, file); /* TODO: check return value */
 
     unknown = fread_int16(file);
     if (EMB_DEBUG) {
@@ -2743,7 +2761,7 @@ static char readInb(EmbPattern* pattern, FILE* file)
 
     fseek(file, 0, SEEK_END);
     fileLength = ftell(file);
-    binaryReadBytes(file, fileDescription, 8); /* TODO: check return value */
+    fread(fileDescription, 1, 8, file); /* TODO: check return value */
     nullVal = binaryReadByte(file);
     fread_int16(file);
     stitchCount = fread_int32(file);
@@ -2754,7 +2772,7 @@ static char readInb(EmbPattern* pattern, FILE* file)
     unknown2 = fread_int16(file);
     imageWidth = fread_int16(file);
     imageHeight = fread_int16(file);
-    binaryReadBytes(file, bytesUnknown, 300); /* TODO: check return value */
+    fread(bytesUnknown, 1, 300, file); /* TODO: check return value */
     nullbyte = fread_int16(file);
     left = fread_int16(file);
     right = fread_int16(file);
@@ -3696,9 +3714,8 @@ static char readPcd(EmbPattern* pattern, const char *fileName, FILE* file) {
 static char writePcd(EmbPattern* pattern, FILE* file) {
     int i;
 
-    binaryWriteByte(file, (unsigned char)'2');
     /* TODO: select hoop size defaulting to Large PCS hoop */
-    binaryWriteByte(file, 3);
+    fwrite("2\x03", 1, 2, file);
     binaryWriteUShort(file, (unsigned short)pattern->threads->count);
     for (i = 0; i < pattern->threads->count; i++) {
         EmbColor color = pattern->threads->thread[i].color;
@@ -3833,8 +3850,8 @@ static char writePcq(EmbPattern* pattern, FILE* file)
 {
     int i;
 
-    binaryWriteByte(file, (unsigned char)'2');
-    binaryWriteByte(file, 3); /* TODO: select hoop size defaulting to Large PCS hoop */
+    /* TODO: select hoop size defaulting to Large PCS hoop */
+    fwrite("2\x03", 1, 2, file);
     binaryWriteUShort(file, (unsigned short)pattern->threads->count);
     for (i = 0; i < pattern->threads->count; i++) {
         EmbColor color = pattern->threads->thread[i].color;
@@ -3935,8 +3952,8 @@ static char writePcs(EmbPattern* pattern, FILE* file)
 {
     int i;
 
-    binaryWriteByte(file, (unsigned char)'2');
-    binaryWriteByte(file, 3); /* TODO: select hoop size defaulting to Large PCS hoop */
+    /* TODO: select hoop size defaulting to Large PCS hoop */
+    fwrite("2\x03", 1, 2, file);
     binaryWriteUShort(file, (unsigned short)pattern->threads->count);
     for (i = 0; i < pattern->threads->count; i++) {
         EmbColor color = pattern->threads->thread[i].color;
@@ -4053,6 +4070,7 @@ void readPecStitches(EmbPattern* pattern, FILE* file) {
 static void pecEncodeJump(FILE* file, int x, int types) {
     int outputVal = abs(x) & 0x7FF;
     unsigned int orPart = 0x80;
+    unsigned char toWrite;
 
     if (!file) { 
         printf("ERROR: format-pec.c pecEncodeJump(), file argument is null\n");
@@ -4068,8 +4086,10 @@ static void pecEncodeJump(FILE* file, int x, int types) {
         outputVal = (x + 0x1000) & 0x7FF;
         outputVal |= 0x800;
     }
-    binaryWriteByte(file, (unsigned char)(((outputVal >> 8) & 0x0F) | orPart));
-    binaryWriteByte(file, (unsigned char)(outputVal & 0xFF));
+    toWrite = (unsigned char)(((outputVal >> 8) & 0x0F) | orPart);
+    fwrite(&toWrite, 1, 1, file);
+    toWrite = (unsigned char)(outputVal & 0xFF);
+    fwrite(&toWrite, 1, 1, file);
 }
 
 static void pecEncodeStop(FILE* file, unsigned char val)
@@ -4078,9 +4098,8 @@ static void pecEncodeStop(FILE* file, unsigned char val)
         printf("ERROR: format-pec.c pecEncodeStop(), file argument is null\n");
         return;
     }
-    binaryWriteByte(file, 0xFE);
-    binaryWriteByte(file, 0xB0);
-    binaryWriteByte(file, val);
+    fwrite("\xFE\xB0", 1, 2, file);
+    fwrite(&val, 1, 1, file);
 }
 
 static char readPec(EmbPattern* pattern, const char *fileName, FILE* file) {
@@ -4161,7 +4180,7 @@ static void pecEncode(FILE* file, EmbPattern* p) {
                 stopCode = (unsigned char)2;
             }
         } else if (s.flags & END) {
-            binaryWriteByte(file, 0xFF);
+            fwrite("\xFF", 1, 1, file);
             break;
         } else if (deltaX < 63 && deltaX > -64 && deltaY < 63 && deltaY > -64 && (!(s.flags & (JUMP | TRIM)))) {
             unsigned char out[2];
@@ -4211,8 +4230,8 @@ static void writeImage(FILE* file, unsigned char image[][48]) {
 
 void writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName) {
     EmbRect bounds;
-    unsigned char image[38][48];
-    int i, j, flen, currentThreadCount, graphicsOffsetLocation;
+    unsigned char image[38][48], toWrite;
+    int i, j, flen, graphicsOffsetLocation;
     int graphicsOffsetValue, height, width;
     double xFactor, yFactor;
     const char* forwardSlashPos = strrchr(fileName, '/');
@@ -4231,26 +4250,26 @@ void writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName) {
     flen = (int)(dotPos - start);
 
     while (start < dotPos) {
-        binaryWriteByte(file, (unsigned char)*start);
+        fwrite(start, 1, 1, file);
         start++;
     }
     fpad(file, 0x20, 16-flen);
-    binaryWriteByte(file, 0x0D);
+    fwrite("\x0D", 1, 1, file);
     fpad(file, 0x20, 12);
     fwrite("\xff\x00\x06\x26", 1, 4, file);
 
     fpad(file, 0x20, 12);
-    currentThreadCount = pattern->threads->count;
-    binaryWriteByte(file, (unsigned char)(currentThreadCount-1));
+    toWrite = (unsigned char)(pattern->threads->count-1);
+    fwrite(&toWrite, 1, 1, file);
 
-    for (i = 0; i < currentThreadCount; i++) {
+    for (i = 0; i < pattern->threads->count; i++) {
         EmbColor thr = pattern->threads->thread[i].color;
         unsigned char color = (unsigned char)
             embThread_findNearestColor_fromThread(thr, 
             (EmbThread*)pecThreads, pecThreadCount);
         fwrite(&color, 1, 1, file);
     }
-    fpad(file, 0x20, (int)(0x1CF - currentThreadCount));
+    fpad(file, 0x20, (int)(0x1CF - pattern->threads->count));
     fpad(file, 0x00, 2);
 
     graphicsOffsetLocation = ftell(file);
@@ -4299,7 +4318,7 @@ void writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName) {
 
     /* Writing each individual color */
     j = 0;
-    for (i = 0; i < currentThreadCount; i++) {
+    for (i = 0; i < pattern->threads->count; i++) {
         memcpy(image, imageWithFrame, 48*38);
         for (; j < pattern->stitchList->count; j++) {
             EmbStitch st = pattern->stitchList->stitch[j];

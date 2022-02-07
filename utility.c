@@ -303,19 +303,17 @@ void MainWindow::designDetails()
 }
 */
 
-void embVector_print(EmbVector v, char *prefix, int spacing)
+void embVector_print(EmbVector v, char *label)
 {
-    int i;
-    printf("%sX", prefix);
-    for (i=0; i<spacing-strlen(prefix)-1; i++) {
-        printf(" ");
-    }
-    printf("= %f\n", v.x);
-    printf("%sY", prefix);
-    for (i=0; i<spacing-strlen(prefix)-1; i++) {
-        printf(" ");
-    }
-    printf("= %f\n", v.y);
+    fprintf(stdout, "%sX = %f\n", v.x);
+    fprintf(stdout, "%sY = %f\n", v.y);
+}
+
+void embArc_print(EmbArc arc)
+{
+    embVector_print(arc.start, "start");
+    embVector_print(arc.mid, "middle");
+    embVector_print(arc.end, "end");
 }
 
 static void reverse_byte_order(void *b, int bytes)
@@ -3137,29 +3135,6 @@ char startsWith(const char* pre, const char* str) {
     return 0;
 }
 
-/*! Removes all characters from the right end of the string (\a str) that match (\a junk), moving left until a mismatch occurs. */
-char* rTrim(char* const str, char junk) {
-    char* original = str + strlen(str);
-    while(*--original == junk);
-    *(original + 1) = '\0';
-    return str;
-}
-
-/*! Removes all characters from the left end of the string (\a str) that match (\a junk), moving right until a mismatch occurs. */
-char* lTrim(char* const str, char junk) {
-    char* original = str;
-    char* p = original;
-    int trimmed = 0;
-    do {
-        if (*original != junk || trimmed) {
-            trimmed = 1;
-            *p++ = *original;
-        }
-    }
-    while(*original++ != '\0');
-    return str;
-}
-
 /* TODO: trimming function should handle any character, not just whitespace */
 static char const WHITESPACE[] = " \t\n\r";
 
@@ -3204,12 +3179,17 @@ void inplace_trim(char* s) {
 
 /*! Optimizes the number (\a num) for output to a text file and returns it as a string (\a str). */
 char* emb_optOut(double num, char* str) {
+    char *str_end;
     /* Convert the number to a string */
     sprintf(str, "%.10f", num);
     /* Remove trailing zeroes */
-    rTrim(str, '0');
+    str_end = str + strlen(str);
+    while (*--str_end == '0');
+    str_end[1] = 0;
     /* Remove the decimal point if it happens to be an integer */
-    rTrim(str, '.');
+    if (*str_end == '.') {
+        *str_end = 0;
+    }
     return str;
 }
 

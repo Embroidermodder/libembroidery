@@ -312,8 +312,6 @@ static int stringInArray(const char *s, const char **array);
 static char startsWith(const char* pre, const char* str);
 
 static void fpad(FILE *f, char c, int n);
-static char* rTrim(char* const str, char junk);
-static char* lTrim(char* const str, char junk);
 static char *copy_trim(char const *s);
 static void inplace_trim(char *s);
 static char* emb_optOut(double num, char* str);

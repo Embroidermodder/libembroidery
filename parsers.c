@@ -76,7 +76,10 @@ EmbColor svgColorToEmbColor(char* colorString)
     /* SVGTiny1.2 Spec Section 11.13.1 syntax for color values */
     if (length == 7 && colorStr[0] == '#') /* Six digit hex — #rrggbb */
     {
-        c = embColor_fromHexStr(lTrim(colorStr, '#'));
+        while (*colorStr=='#' && *colorStr!=0) {
+            colorStr++;
+        }
+        c = embColor_fromHexStr(colorStr);
     }
     else if (length == 4 && colorStr[0] == '#') /* Three digit hex — #rgb */
     {

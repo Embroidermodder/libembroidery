@@ -6733,6 +6733,8 @@ static char writeVp3(EmbPattern* pattern, FILE* file) {
     puts("Overridden, defaulting to dst.");
     writeDst(pattern, file);
 #if 0
+    short a;
+    int a_int;
     EmbRect bounds;
     int remainingBytesPos, remainingBytesPos2;
     int colorSectionStitchBytes;
@@ -6748,11 +6750,11 @@ static char writeVp3(EmbPattern* pattern, FILE* file) {
     embPattern_flipVertical(pattern);
 
     fwrite("%vsm%", 1, 5, file);
-    fputc(0);
+    fputc(0, file);
     vp3WriteString(file, "Embroidermodder");
-    fputc(0);
-    fputc(2);
-    fputc(0);
+    fputc(0, file);
+    fputc(2, file);
+    fputc(0, file);
 
     remainingBytesPos = ftell(file);
     binaryWriteInt(file, 0); /* placeholder */
@@ -6795,21 +6797,19 @@ static char writeVp3(EmbPattern* pattern, FILE* file) {
     }
 
     fputc(numberOfColors);
-    fputc(12);
-    fputc(0);
-    fputc(1);
-    fputc(0);
-    fputc(3);
-    fputc(0);
+    fputc(12, file);
+    fputc(0, file);
+    fputc(1, file);
+    fputc(0, file);
+    fputc(3, file);
+    fputc(0, file);
 
     remainingBytesPos2 = ftell(file);
     binaryWriteInt(file, 0); /* placeholder */
 
     binaryWriteIntBE(file, 0); /* origin X */
     binaryWriteIntBE(file, 0); /* origin Y */
-    fputc(0);
-    fputc(0);
-    fputc(0);
+    fpad(file, 0, 3);
 
     binaryWriteIntBE(file, bounds.right * 1000);
     binaryWriteIntBE(file, bounds.bottom * 1000);
@@ -6820,15 +6820,19 @@ static char writeVp3(EmbPattern* pattern, FILE* file) {
     binaryWriteIntBE(file, (bounds.bottom - bounds.top) * 1000);
 
     vp3WriteString(file, "");
-    binaryWriteShortBE(file, 25700);
-    binaryWriteIntBE(file, 4096);
-    binaryWriteIntBE(file, 0);
-    binaryWriteIntBE(file, 0);
-    binaryWriteIntBE(file, 4096);
+    a = 25700;
+    fwrite_nbytes_be(file, &a, 2);
+    a_int = 4096;
+    fwrite_nbytes_be(file, &a_int, 4);
+    a_int = 0;
+    fwrite_nbytes_be(file, &a_int, 4);
+    fwrite_nbytes_be(file, &a_int, 4);
+    a_int = 4096;
+    fwrite_nbytes_be(file, &a_int, 4);
 
     fwrite("xxPP\x01\0", 1, 6, file);
     vp3WriteString(file, "");
-    binaryWriteShortBE(file, numberOfColors);
+    fwrite_nbytes_be(file, &numberOfColors, 2);
 
     mainPointer = pattern->stitchList;
     while(mainPointer)
@@ -6841,11 +6845,11 @@ static char writeVp3(EmbPattern* pattern, FILE* file) {
 
         if (!first)
         {
-            fputc(0);
+            fputc(0, file);
         }
-        fputc(0);
-        fputc(5);
-        fputc(0);
+        fputc(0, file);
+        fputc(5, file);
+        fputc(0, file);
 
         colorSectionLengthPos = ftell(file);
         binaryWriteInt(file, 0); /* placeholder */
@@ -6922,8 +6926,8 @@ static char writeVp3(EmbPattern* pattern, FILE* file) {
             {
                 fputc(128);
                 fputc(1);
-                binaryWriteShortBE(file, dx);
-                binaryWriteShortBE(file, dy);
+                fwrite_nbytes_be(file, &dx, 2);
+                fwrite_nbytes_be(file, &dy, 2);
                 fputc(128);
                 fputc(2);
             }

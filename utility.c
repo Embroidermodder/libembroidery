@@ -2967,10 +2967,6 @@ void binaryWriteShort(FILE* file, short data) {
     fwrite_nbytes(file, &data, 2);
 }
 
-void binaryWriteShortBE(FILE* file, short data) {
-    fwrite_nbytes_be(file, &data, 2);
-}
-
 void binaryWriteUShort(FILE* file, unsigned short data) {
     fwrite_nbytes(file, &data, 2);
 }

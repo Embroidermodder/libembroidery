@@ -293,7 +293,6 @@ static void binaryReadString(FILE* file, char *buffer, int maxLength);
 static void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength);
 
 static void binaryWriteShort(FILE* file, short data);
-static void binaryWriteShortBE(FILE* file, short data);
 static void binaryWriteUShort(FILE* file, unsigned short data);
 static void binaryWriteUShortBE(FILE* file, unsigned short data);
 static void binaryWriteInt(FILE* file, int data);

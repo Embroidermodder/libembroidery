@@ -1524,7 +1524,7 @@ void svgProcess(int c, const char* buff)
         if (advance) {
             printf("ELEMENT:\n");
             svgExpect = SVG_EXPECT_ATTRIBUTE;
-            current_element_id = svg_identify_element(buff);
+            current_element_id = svg_identify_element((char*)buff);
         } else {
             return;
         }

@@ -287,15 +287,11 @@ typedef struct SvgAttribute_
 
 /* INTERNAL FUNCTION PROTOTYPES
  *******************************************************************/
- 
-static char binaryReadByte(FILE* file);
-static int binaryReadBytes(FILE* file, unsigned char* destination, int count);
+
 static float binaryReadFloat(FILE* file);
 static void binaryReadString(FILE* file, char *buffer, int maxLength);
 static void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength);
 
-static void binaryWriteByte(FILE* file, unsigned char data);
-static void binaryWriteBytes(FILE* file, const char* data, int size);
 static void binaryWriteShort(FILE* file, short data);
 static void binaryWriteShortBE(FILE* file, short data);
 static void binaryWriteUShort(FILE* file, unsigned short data);
@@ -704,7 +700,7 @@ void pfaffEncode(FILE* file, int dx, int dy, int flags)
     {
         flagsToWrite |= 0x04;
     }
-    binaryWriteByte(file, flagsToWrite);
+    fwrite(&flagsToWrite, 1, 1, file);
 }
 
 double pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3) {

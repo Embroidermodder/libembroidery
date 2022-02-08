@@ -2831,10 +2831,12 @@ void embSettings_setHome(EmbSettings* settings, EmbVector point) {
 
 void write_24bit(FILE* file, int x)
 {
-    binaryWriteByte(file, (unsigned char)0);
-    binaryWriteByte(file, (unsigned char)(x & 0xFF));
-    binaryWriteByte(file, (unsigned char)((x >> 8) & 0xFF));
-    binaryWriteByte(file, (unsigned char)((x >> 16) & 0xFF));
+    unsigned char a[4];
+    a[0] = (unsigned char)0;
+    a[1] = (unsigned char)(x & 0xFF);
+    a[2] = (unsigned char)((x >> 8) & 0xFF);
+    a[3] = (unsigned char)((x >> 16) & 0xFF);
+    fwrite(a, 1, 4, file);
 }
 
 int embColor_distance(EmbColor a, EmbColor b)
@@ -2930,14 +2932,6 @@ EmbThread embThread_getRandom(void) {
     return c;
 }
 
-char binaryReadByte(FILE* file) {
-    return (char)fgetc(file);
-}
-
-int binaryReadBytes(FILE* file, unsigned char* destination, int count) {
-    return (int) fread((char*) destination, 1, count, file);
-}
-
 void binaryReadString(FILE* file, char* buffer, int maxLength) {
     int i = 0;
     while(i < maxLength) {
@@ -2967,14 +2961,6 @@ float binaryReadFloat(FILE* file) {
     float_int_u.u32 |= fgetc(file) << 16;
     float_int_u.u32 |= fgetc(file) << 24;
     return float_int_u.f32;
-}
-
-void binaryWriteByte(FILE* file, unsigned char data) {
-    fputc(data, file);
-}
-
-void binaryWriteBytes(FILE* file, const char* data, int size) {
-    fwrite((char*)data, 1, size, file);
 }
 
 void binaryWriteShort(FILE* file, short data) {

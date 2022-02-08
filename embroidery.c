@@ -301,14 +301,9 @@ static void binaryWriteUInt(FILE* file, unsigned int data);
 static void binaryWriteUIntBE(FILE* file, unsigned int data);
 static void binaryWriteFloat(FILE* file, float data);
 
-static void charReplace(char *s, const char *from, const char *to);
 static int stringInArray(const char *s, const char **array);
-
-static char startsWith(const char* pre, const char* str);
-
 static void fpad(FILE *f, char c, int n);
 static char *copy_trim(char const *s);
-static void inplace_trim(char *s);
 static char* emb_optOut(double num, char* str);
 
 static void write_24bit(FILE* file, int);

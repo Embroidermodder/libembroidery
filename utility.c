@@ -3031,27 +3031,6 @@ int embMaxInt(int a, int b)
 }
 
 /**
- * Function is similar to the Unix utility tr.
- *
- * Character for character replacement in strings.
- * Takes a string \a s and for every character in the
- * \a from string replace with the corresponding character
- * in the \a to string.
- *
- * For example: ("test", "tb", "..") -> ".es."
- */
-void charReplace(char *s, const char *from, const char *to) {
-    int i;
-    for (; *s; s++) {
-        for (i = 0; from[i]; i++) {
-            if (*s == from[i]) {
-                *s = to[i];
-            }
-        }
-    }
-}
-
-/**
  * Tests for the presence of a string \a s in the supplied
  * \a array.
  *
@@ -3093,30 +3072,6 @@ int emb_readline(FILE* file, char *line, int maxLength) {
     return i;
 }
 
-/*! Returns \c true if string (\a str) begins with substring (\a pre), otherwise returns \c false. */
-char startsWith(const char* pre, const char* str) {
-    char result = 0;
-    size_t lenpre;
-    size_t lenstr;
-    if (!pre) {
-        printf("ERROR: helpers-misc.c startsWith(), pre argument is null\n");
-        return 0;
-    }
-    if (!str) {
-        printf("ERROR: helpers-misc.c startsWith(), str argument is null\n");
-        return 0;
-    }
-    lenpre = strlen(pre);
-    lenstr = strlen(str);
-    if (lenstr < lenpre) {
-        return 0;
-    }
-    result = (char)strncmp(pre, str, lenpre);
-    if (result == 0)
-        return 1;
-    return 0;
-}
-
 /* TODO: trimming function should handle any character, not just whitespace */
 static char const WHITESPACE[] = " \t\n\r";
 
@@ -3145,18 +3100,6 @@ char* copy_trim(char const *s) {
     memcpy(result, firstWord, newLength);
     result[newLength] = '\0';
     return result;
-}
-
-/* TODO: description */
-void inplace_trim(char* s) {
-    char const *firstWord = 0, *trailingSpace = 0;
-    size_t newLength;
-
-    get_trim_bounds(s, &firstWord, &trailingSpace);
-    newLength = trailingSpace - firstWord;
-
-    memmove(s, firstWord, newLength);
-    s[newLength] = '\0';
 }
 
 /*! Optimizes the number (\a num) for output to a text file and returns it as a string (\a str). */

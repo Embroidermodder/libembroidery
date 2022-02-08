@@ -92,14 +92,28 @@ EmbColor svgColorToEmbColor(char* colorString)
     }
     else if (strstr(colorStr, "%")) /* Float functional — rgb(R%, G%, B%) */
     {
-        charReplace(colorStr, "rgb,()%", "      ");
+        char *s = colorStr;
+        /* replace characters we aren't using with spaces */
+        for (; *s; s++) {
+            if (*s == 'r' || *s == 'g' || *s == 'b' || *s == ','
+                || *s = '(' || *s == ')' || *s == '%') {
+                *s = ' ';
+            }
+        }
         c.r = (unsigned char)round(255.0/100.0 * strtod(colorStr, &pEnd));
         c.g = (unsigned char)round(255.0/100.0 * strtod(pEnd,     &pEnd));
         c.b = (unsigned char)round(255.0/100.0 * strtod(pEnd,     &pEnd));
     }
-    else if (length > 3 && startsWith("rgb", colorStr)) /* Integer functional — rgb(rrr, ggg, bbb) */
+    else if (length > 3 && colorStr[0] == 'r' && colorStr[1] == 'g' && colorStr[2] == 'b') /* Integer functional — rgb(rrr, ggg, bbb) */
     {
-        charReplace(colorStr, "rgb,()", "     ");
+        char *s = colorStr;
+        /* replace characters we aren't using with spaces */
+        for (; *s; s++) {
+            if (*s == 'r' || *s == 'g' || *s == 'b' || *s == ','
+                || *s = '(' || *s == ')') {
+                *s = ' ';
+            }
+        }
         c.r = (unsigned char)strtol(colorStr, &pEnd, 10);
         c.g = (unsigned char)strtol(pEnd,     &pEnd, 10);
         c.b = (unsigned char)strtol(pEnd,     &pEnd, 10);

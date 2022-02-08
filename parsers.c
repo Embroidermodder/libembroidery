@@ -1,7 +1,7 @@
 /*
  * This file is part of libembroidery.
  *
- * Copyright 2021 The Embroidermodder Team
+ * Copyright 2018-2022 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
  * This file contains parsers for the more complex markup languages
@@ -96,7 +96,7 @@ EmbColor svgColorToEmbColor(char* colorString)
         /* replace characters we aren't using with spaces */
         for (; *s; s++) {
             if (*s == 'r' || *s == 'g' || *s == 'b' || *s == ','
-                || *s = '(' || *s == ')' || *s == '%') {
+                || *s == '(' || *s == ')' || *s == '%') {
                 *s = ' ';
             }
         }
@@ -110,7 +110,7 @@ EmbColor svgColorToEmbColor(char* colorString)
         /* replace characters we aren't using with spaces */
         for (; *s; s++) {
             if (*s == 'r' || *s == 'g' || *s == 'b' || *s == ','
-                || *s = '(' || *s == ')') {
+                || *s == '(' || *s == ')') {
                 *s = ' ';
             }
         }

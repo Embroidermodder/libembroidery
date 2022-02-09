@@ -522,21 +522,13 @@ static char write100(void) {
 /* 10o format */
 
 static char read10o(EmbPattern* pattern, FILE* file) {
-    while (!feof(file)) {
+    unsigned char b[3];
+    while (fread(b, 1, 3, file) == 3) {
         int x, y;
         int stitchType = NORMAL;
-        unsigned char ctrl = (unsigned char)fgetc(file);
-        if (feof(file)) {
-            break;
-        }
-        y = fgetc(file);
-        if (feof(file)) {
-            break;
-        }
-        x = fgetc(file);
-        if (feof(file)) {
-            break;
-        }
+        unsigned char ctrl = b[0];
+        y = b[1];
+        x = b[2];
         if (ctrl & 0x20) {
             x = -x;
         }
@@ -2540,22 +2532,22 @@ static char writeHus(EmbPattern* pattern, FILE* file)
     patternColor = minColors;
     if (minColors > 24) minColors = 24;
     code = 0x00C8AF5B;
-    fwrite_nbytes(file, &code, 4);
-    fwrite_nbytes(file, &stitchCount, 4);
-    fwrite_nbytes(file, &minColors, 4);
+    fwrite_int(file, &code, EMB_INT32_LITTLE);
+    fwrite_int(file, &stitchCount, EMB_INT32_LITTLE);
+    fwrite_int(file, &minColors, EMB_INT32_LITTLE);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
     right = (short) round(boundingRect.right * 10.0);
     top = (short) -round(boundingRect.top * 10.0);
     left = (short) round(boundingRect.left * 10.0);
     bottom = (short) -round(boundingRect.bottom * 10.0);
-    fwrite_nbytes(file, &right, 2);
-    fwrite_nbytes(file, &top, 2);
-    fwrite_nbytes(file, &left, 2);
-    fwrite_nbytes(file, &bottom, 2);
+    fwrite_int(file, &right, EMB_INT16_LITTLE);
+    fwrite_int(file, &top, EMB_INT16_LITTLE);
+    fwrite_int(file, &left, EMB_INT16_LITTLE);
+    fwrite_int(file, &bottom, EMB_INT16_LITTLE);
 
     colors = 0x2A + 2 * minColors;
-    fwrite_nbytes(file, &colors, 4);
+    fwrite_int(file, &colors, EMB_INT32_LITTLE);
 
     xValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
     if (!xValues) {
@@ -2591,13 +2583,13 @@ static char writeHus(EmbPattern* pattern, FILE* file)
 
     offset1 = (unsigned int) (0x2A + 2 * patternColor + attributeSize);
     offset2 = (unsigned int) (0x2A + 2 * patternColor + attributeSize + xCompressedSize);
-    fwrite_nbytes(file, &offset1, 4);
-    fwrite_nbytes(file, &offset2, 4);
+    fwrite_int(file, &offset1, EMB_INT32_LITTLE);
+    fwrite_int(file, &offset2, EMB_INT32_LITTLE);
     fpad(file, 0, 10);
 
     for (i = 0; i < patternColor; i++) {
         short color_index = (short)embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, (EmbThread*)husThreads, 29);
-        fwrite_nbytes(file, &color_index, 2);
+        fwrite_int(file, &color_index, EMB_INT16_LITTLE);
     }
 
     fwrite(attributeCompressed, 1, attributeSize, file);
@@ -2952,9 +2944,9 @@ static char writeJef(EmbPattern* pattern, FILE* file)
             (int)(time.month + 1), (int)(time.day), (int)(time.hour),
             (int)(time.minute), (int)(time.second));
     fpad(file, 0, 2);
-    fwrite_nbytes(file, &(pattern->threads->count), 4);
+    fwrite_int(file, &(pattern->threads->count), EMB_INT32_LITTLE);
     data = pattern->stitchList->count + embMaxInt(0, (6 - colorlistSize) * 2) + 1;
-    fwrite_nbytes(file, &data, 4);
+    fwrite_int(file, &data, EMB_INT32_LITTLE);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
 
@@ -4648,6 +4640,7 @@ static void pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
 static void pesWriteEmbOneSection(EmbPattern* pattern, FILE* file) {
     /* TODO: pointer safety */
     int i;
+    float x;
     int hoopHeight = 1800, hoopWidth = 1300;
     EmbRect bounds;
     binaryWriteShort(file, 0x07); /* string length */
@@ -4665,12 +4658,18 @@ static void pesWriteEmbOneSection(EmbPattern* pattern, FILE* file) {
     binaryWriteShort(file, 0);
 
     /* AffineTransform */
-    binaryWriteFloat(file, 1.0f);
-    binaryWriteFloat(file, 0.0f);
-    binaryWriteFloat(file, 0.0f);
-    binaryWriteFloat(file, 1.0f);
-    binaryWriteFloat(file, (float)((embRect_width(bounds) - hoopWidth) / 2));
-    binaryWriteFloat(file, (float)((embRect_height(bounds) + hoopHeight) / 2));
+    x = 1.0;
+    fwrite_int(file, &x, EMB_INT32_LITTLE);
+    x = 0.0;
+    fwrite_int(file, &x, EMB_INT32_LITTLE);
+    x = 0.0;
+    fwrite_int(file, &x, EMB_INT32_LITTLE);
+    x = 1.0;
+    fwrite_int(file, &x, EMB_INT32_LITTLE);
+    x = (float)((embRect_width(bounds) - hoopWidth) / 2);
+    fwrite_int(file, &x, EMB_INT32_LITTLE);
+    x = (float)((embRect_height(bounds) + hoopHeight) / 2);
+    fwrite_int(file, &x, EMB_INT32_LITTLE);
 
     binaryWriteShort(file, 1);
     binaryWriteShort(file, 0); /* Translate X */
@@ -5742,9 +5741,13 @@ static char readThr(EmbPattern* pattern, FILE* file) {
     currentColor = -1;
     for (i = 0; i < header.numStiches; i++) {
         int type = NORMAL;
-        float x = binaryReadFloat(file) / 10.0f;
-        float y = binaryReadFloat(file) / 10.0f;
-        unsigned int color = fread_uint32(file);
+        float x, y;
+        unsigned int color;
+        fread_int(file, &x, EMB_INT32_LITTLE);
+        fread_int(file, &y, EMB_INT32_LITTLE);
+        fread_int(file, &color, EMB_INT32_LITTLE);
+        x /= 10.0;
+        y /= 10.0;
 
         if ((int)(color & 0xF) != currentColor) {
             currentColor = (int)color & 0xF;
@@ -5810,9 +5813,9 @@ static char writeThr(EmbPattern* pattern, FILE* file) {
         extension.hoopX = 640;
         extension.hoopY = 640;
 
-        binaryWriteFloat(file, extension.hoopX);
-        binaryWriteFloat(file, extension.hoopY);
-        binaryWriteFloat(file, extension.stitchGranularity);
+        fwrite_int(file, &(extension.hoopX), EMB_INT32_LITTLE);
+        fwrite_int(file, &(extension.hoopY), EMB_INT32_LITTLE);
+        fwrite_int(file, &(extension.stitchGranularity), EMB_INT32_LITTLE);
         fwrite(extension.creatorName, 1, 50, file);
         fwrite(extension.modifierName, 1, 50, file);
         fputc(extension.auxFormat, file);
@@ -5822,8 +5825,11 @@ static char writeThr(EmbPattern* pattern, FILE* file) {
     /* write stitches */
     for (i = 0; i < pattern->stitchList->count; i++) {
         EmbStitch st = pattern->stitchList->stitch[i];
-        binaryWriteFloat(file, (float)(st.x * 10.0));
-        binaryWriteFloat(file, (float)(st.y * 10.0));
+        float x, y;
+        x = (float)(st.x * 10.0);
+        y = (float)(st.y * 10.0);
+        fwrite_int(file, &x, EMB_INT32_LITTLE);
+        fwrite_int(file, &y, EMB_INT32_LITTLE);
         binaryWriteUInt(file, NOTFRM | (st.color & 0x0F));
     }
     fwrite(bitmapName, 1, 16, file);
@@ -6315,10 +6321,10 @@ static char writeVip(EmbPattern* pattern, FILE* file) {
 
 static unsigned char* vp3ReadString(FILE* file)
 {
-    int stringLength = 0;
+    short stringLength;
     unsigned char* charString = 0;
     if (!file) { printf("ERROR: format-vp3.c vp3ReadString(), file argument is null\n"); return 0; }
-    stringLength = fread_int16_be(file);
+    fread_int(file, &stringLength, EMB_INT16_BIG);
     charString = (unsigned char*)malloc(stringLength);
     if (!charString) { printf("ERROR: format-vp3.c vp3ReadString(), cannot allocate memory for charString\n"); return 0; }
     fread(charString, 1, stringLength, file); /* TODO: check return value */
@@ -6413,12 +6419,12 @@ static vp3Hoop vp3ReadHoopSection(FILE* file)
     hoop.threadLength = fread_int32(file); /* yes, it seems this is _not_ big endian */
     hoop.unknown2 = (char)fgetc(file);
     hoop.numberOfColors = (char)fgetc(file);
-    hoop.unknown3 = fread_int16_be(file);
-    hoop.unknown4 = fread_int32_be(file);
-    hoop.numberOfBytesRemaining = fread_int32_be(file);
+    fread_int(file, &(hoop.unknown3), EMB_INT16_BIG);
+    fread_int(file, &(hoop.unknown4), EMB_INT32_BIG);
+    fread_int(file, &(hoop.numberOfBytesRemaining), EMB_INT32_BIG);
 
-    hoop.xOffset = fread_int32_be(file);
-    hoop.yOffset = fread_int32_be(file);
+    fread_int(file, &(hoop.xOffset), EMB_INT32_BIG);
+    fread_int(file, &(hoop.yOffset), EMB_INT32_BIG);
 
     hoop.byte1 = (char)fgetc(file);
     hoop.byte2 = (char)fgetc(file);
@@ -6687,18 +6693,18 @@ static char writeVp3(EmbPattern* pattern, FILE* file) {
 
     vp3WriteString(file, "");
     a = 25700;
-    fwrite_nbytes_be(file, &a, 2);
+    fwrite_int(file, &a, EMB_INT16_BIG);
     a_int = 4096;
-    fwrite_nbytes_be(file, &a_int, 4);
+    fwrite_int(file, &a_int, EMB_INT32_BIG);
     a_int = 0;
-    fwrite_nbytes_be(file, &a_int, 4);
-    fwrite_nbytes_be(file, &a_int, 4);
+    fwrite_int(file, &a_int, EMB_INT32_BIG);
+    fwrite_int(file, &a_int, EMB_INT32_BIG);
     a_int = 4096;
-    fwrite_nbytes_be(file, &a_int, 4);
+    fwrite_int(file, &a_int, EMB_INT32_BIG);
 
     fwrite("xxPP\x01\0", 1, 6, file);
     vp3WriteString(file, "");
-    fwrite_nbytes_be(file, &numberOfColors, 2);
+    fwrite_int(file, &numberOfColors, EMB_INT16_BIG);
 
     mainPointer = pattern->stitchList;
     while(mainPointer)
@@ -6772,7 +6778,7 @@ static char writeVp3(EmbPattern* pattern, FILE* file) {
 
         while(pointer)
         {
-            int dx, dy;
+            short dx, dy;
 
             EmbStitch s = pointer->stitch;
             if (s.color != lastColor)
@@ -6792,15 +6798,17 @@ static char writeVp3(EmbPattern* pattern, FILE* file) {
             {
                 fputc(128);
                 fputc(1);
-                fwrite_nbytes_be(file, &dx, 2);
-                fwrite_nbytes_be(file, &dy, 2);
+                fwrite_int(file, &dx, EMB_INT16_BIG);
+                fwrite_int(file, &dy, EMB_INT16_BIG);
                 fputc(128);
                 fputc(2);
             }
             else
             {
-                fputc(dx);
-                fputc(dy);
+                char b[2];
+                b[0] = dx;
+                b[1] = dy;
+                fwrite(b, 1, 2, file);
             }
 
             pointer = pointer->next;

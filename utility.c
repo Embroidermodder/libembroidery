@@ -100,7 +100,7 @@ const double embConstantPi = 3.1415926535;
 
 //TODO: Move majority of this code into libembroidery
 /*
-void MainWindow::designDetails()
+void embPattern_designDetails(EmbPattern *pattern)
 {
     QApplication::setOverrideCursor(Qt::ArrowCursor);
     debug_message("designDetails()");
@@ -1128,144 +1128,71 @@ void embArray_free(EmbArray* p) {
     free(p);
 }
 
-short fread_int16(FILE* f) {
-    unsigned char b[3];
-    fread(b, 1, 2, f);
-    if (ENDIAN_HOST == EMB_BIG_ENDIAN) {
-        b[2] = b[0];
-        b[0] = b[1];
-        b[1] = b[2];
+static void fread_int(FILE* f, void *b, int mode)
+{
+    int endian = mode & 0x01;
+    int length = mode - endian;
+    fread(b, 1, length, f);
+    if (endian != ENDIAN_HOST) {
+        reverse_byte_order(b, length);
     }
-    return *((short*)b);
+}
+
+static void fwrite_int(FILE* f, void *b, int mode) {
+    int endian = mode & 0x01;
+    int length = mode - endian;
+    if (endian != ENDIAN_HOST) {
+        reverse_byte_order(b, length);
+    }
+    fwrite(b, 1, length, f);
+}
+
+short fread_int16(FILE* f) {
+    short x;
+    fread_int(f, &x, EMB_INT16_LITTLE);
+    return x;
 }
 
 unsigned short fread_uint16(FILE* f) {
-    unsigned char b[3];
-    fread(b, 1, 2, f);
-    if (ENDIAN_HOST == EMB_BIG_ENDIAN) {
-        b[2] = b[0];
-        b[0] = b[1];
-        b[1] = b[2];
-    }
-    return *((unsigned short*)b);
+    unsigned short x;
+    fread_int(f, &x, EMB_INT16_LITTLE);
+    return x;
 }
 
 int fread_int32(FILE* f) {
-    unsigned char b[5];
-    fread(b, 1, 2, f);
-    if (ENDIAN_HOST == EMB_BIG_ENDIAN) {
-        b[4] = b[0];
-        b[0] = b[3];
-        b[3] = b[4];
-        b[4] = b[1];
-        b[1] = b[2];
-        b[2] = b[4];
-    }
-    return *((int*)b);
+    int x;
+    fread_int(f, &x, EMB_INT32_LITTLE);
+    return x;
 }
 
 unsigned int fread_uint32(FILE* f) {
-    unsigned char b[5];
-    fread(b, 1, 2, f);
-    if (ENDIAN_HOST == EMB_BIG_ENDIAN) {
-        b[4] = b[0];
-        b[0] = b[3];
-        b[3] = b[4];
-        b[4] = b[1];
-        b[1] = b[2];
-        b[2] = b[4];
-    }
-    return *((unsigned int*)b);
+    unsigned int x;
+    fread_int(f, &x, EMB_INT32_LITTLE);
+    return x;
 }
 
 short fread_int16_be(FILE* f) {
-    unsigned char b[3];
-    fread(b, 1, 2, f);
-    if (ENDIAN_HOST == EMB_LITTLE_ENDIAN) {
-        b[2] = b[0];
-        b[0] = b[1];
-        b[1] = b[2];
-    }
-    return *((short*)b);
+    short x;
+    fread_int(f, &x, EMB_INT16_BIG);
+    return x;
 }
 
 unsigned short fread_uint16_be(FILE* f) {
-    unsigned char b[3];
-    fread(b, 1, 2, f);
-    if (ENDIAN_HOST == EMB_LITTLE_ENDIAN) {
-        b[2] = b[0];
-        b[0] = b[1];
-        b[1] = b[2];
-    }
-    return *((unsigned short*)b);
+    unsigned short x;
+    fread_int(f, &x, EMB_INT16_BIG);
+    return x;
 }
 
 int fread_int32_be(FILE* f) {
-    unsigned char b[5];
-    fread(b, 1, 4, f);
-    if (ENDIAN_HOST == EMB_LITTLE_ENDIAN) {
-        b[4] = b[0];
-        b[0] = b[3];
-        b[3] = b[4];
-        b[4] = b[1];
-        b[1] = b[2];
-        b[2] = b[4];
-    }
-    return *((int*)b);
+    int x;
+    fread_int(f, &x, EMB_INT32_BIG);
+    return x;
 }
 
 unsigned int fread_uint32_be(FILE* f) {
-    unsigned char b[5];
-    fread(b, 1, 4, f);
-    if (ENDIAN_HOST == EMB_LITTLE_ENDIAN) {
-        b[4] = b[0];
-        b[0] = b[3];
-        b[3] = b[4];
-        b[4] = b[1];
-        b[1] = b[2];
-        b[2] = b[4];
-    }
-    return *((unsigned int*)b);
-}
-
-void fwrite_nbytes(FILE* f, void *b, int bytes) {
-    char swap;
-    if (ENDIAN_HOST == EMB_BIG_ENDIAN) {
-        if (bytes == 2) {
-            swap = *((char*)b+0);
-            *((char*)b+0) = *((char*)b+1);
-            *((char*)b+1) = swap;
-        }
-        else {
-            swap = *((char*)b+0);
-            *((char*)b+0) = *((char*)b+3);
-            *((char*)b+3) = swap;
-            swap = *((char*)b+1);
-            *((char*)b+1) = *((char*)b+2);
-            *((char*)b+2) = swap;
-        }
-    }
-    fwrite(b, 1, bytes, f);
-}
-
-void fwrite_nbytes_be(FILE* f, void *b, int bytes) {
-    char swap;
-    if (ENDIAN_HOST == EMB_LITTLE_ENDIAN) {
-        if (bytes == 2) {
-            swap = *((char*)b+0);
-            *((char*)b+0) = *((char*)b+1);
-            *((char*)b+1) = swap;
-        }
-        else {
-            swap = *((char*)b+0);
-            *((char*)b+0) = *((char*)b+3);
-            *((char*)b+3) = swap;
-            swap = *((char*)b+1);
-            *((char*)b+1) = *((char*)b+2);
-            *((char*)b+2) = swap;
-        }
-    }
-    fwrite(b, 1, bytes, f);
+    unsigned int x;
+    fread_int(f, &x, EMB_INT32_BIG);
+    return x;
 }
 
 void fpad(FILE* file, char c, int n) {
@@ -1453,20 +1380,10 @@ static void parseDirectoryEntryName(FILE* file, bcf_directory_entry* dir) {
     int i;
     for (i = 0; i < 32; ++i) {
         unsigned short unicodechar;
-        unicodechar = fread_uint16(file);
+        fread_int(file, &unicodechar, EMB_INT16_LITTLE);
         if (unicodechar != 0x0000) {
             dir->directoryEntryName[i] = (char)unicodechar;
         }
-    }
-}
-
-static void readCLSID(FILE* file, bcf_directory_entry* dir) {
-    int i;
-    const int guidSize = 16;
-    for (i = 0; i < guidSize; ++i) {
-        unsigned char scratch;
-        scratch = (unsigned char)fgetc(file);
-        dir->CLSID[i] = scratch;
     }
 }
 
@@ -1499,6 +1416,7 @@ EmbTime parseTime(FILE* file)
 
 static bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file)
 {
+    const int guidSize = 16;
     bcf_directory_entry* dir = malloc(sizeof(bcf_directory_entry));
     if (dir == NULL) {
         printf("ERROR: compound-file-directory.c CompoundFileDirectoryEntry(), cannot allocate memory for dir\n");
@@ -1515,14 +1433,14 @@ static bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file)
         return 0;
     }
     dir->colorFlag = (unsigned char)fgetc(file);
-    dir->leftSiblingId = fread_uint32(file);
-    dir->rightSiblingId = fread_uint32(file);
-    dir->childId = fread_uint32(file);
-    readCLSID(file, dir);
-    dir->stateBits = fread_uint32(file);
+    fread_int(file, &(dir->leftSiblingId), EMB_INT32_LITTLE);
+    fread_int(file, &(dir->rightSiblingId), EMB_INT32_LITTLE);
+    fread_int(file, &(dir->childId), EMB_INT32_LITTLE);
+    fread(dir->CLSID, 1, guidSize, file);
+    fread_int(file, &(dir->stateBits), EMB_INT32_LITTLE);
     dir->creationTime = parseTime(file);
     dir->modifiedTime = parseTime(file);
-    dir->startingSectorLocation = fread_uint32(file);
+    fread_int(file, &(dir->startingSectorLocation), EMB_INT32_LITTLE);
     dir->streamSize = fread_uint32(file); /* This should really be __int64 or long long, but for our uses we should never run into an issue */
     dir->streamSizeHigh = fread_uint32(file); /* top portion of int64 */
     return dir;
@@ -2958,54 +2876,32 @@ void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength) {
     }
 }
 
-float binaryReadFloat(FILE* file) {
-    union {
-        float f32;
-        unsigned int u32;
-    } float_int_u;
-    float_int_u.u32 = fgetc(file);
-    float_int_u.u32 |= fgetc(file) << 8;
-    float_int_u.u32 |= fgetc(file) << 16;
-    float_int_u.u32 |= fgetc(file) << 24;
-    return float_int_u.f32;
-}
-
 void binaryWriteShort(FILE* file, short data) {
-    fwrite_nbytes(file, &data, 2);
+    fwrite_int(file, &data, EMB_INT16_LITTLE);
 }
 
 void binaryWriteUShort(FILE* file, unsigned short data) {
-    fwrite_nbytes(file, &data, 2);
+    fwrite_int(file, &data, EMB_INT16_LITTLE);
 }
 
 void binaryWriteUShortBE(FILE* file, unsigned short data) {
-    fwrite_nbytes_be(file, &data, 2);
+    fwrite_int(file, &data, EMB_INT16_BIG);
 }
 
 void binaryWriteInt(FILE* file, int data) {
-    fwrite_nbytes(file, &data, 4);
+    fwrite_int(file, &data, EMB_INT32_LITTLE);
 }
 
 void binaryWriteIntBE(FILE* file, int data) {
-    fwrite_nbytes_be(file, &data, 4);
+    fwrite_int(file, &data, EMB_INT32_BIG);
 }
 
 void binaryWriteUInt(FILE* file, unsigned int data) {
-    fwrite_nbytes(file, &data, 4);
+    fwrite_int(file, &data, EMB_INT32_LITTLE);
 }
 
 void binaryWriteUIntBE(FILE* file, unsigned int data) {
-    fwrite_nbytes_be(file, &data, 4);
-}
-
-void binaryWriteFloat(FILE* file, float data) {
-    union {
-        float f32;
-        unsigned int u32;
-    } float_int_u;
-    float_int_u.f32 = data;
-
-    fwrite_nbytes(file, &(float_int_u.u32), 4);
+    fwrite_int(file, &data, EMB_INT32_BIG);
 }
 
 double embMinDouble(double a, double b) {

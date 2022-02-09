@@ -22,14 +22,10 @@
 
 #define ENDIAN_HOST                             EMB_LITTLE_ENDIAN
 
-#define EMB_BIT_0            0x01
-#define EMB_BIT_1            0x02
-#define EMB_BIT_2            0x04
-#define EMB_BIT_3            0x08
-#define EMB_BIT_4            0x10
-#define EMB_BIT_5            0x20
-#define EMB_BIT_6            0x40
-#define EMB_BIT_7            0x80
+#define EMB_INT16_BIG                           2
+#define EMB_INT16_LITTLE                        3
+#define EMB_INT32_BIG                           4
+#define EMB_INT32_LITTLE                        5
 
 #define ELEMENT_XML               0
 #define ELEMENT_A                 1
@@ -291,7 +287,6 @@ typedef struct SvgAttribute_
 /* INTERNAL FUNCTION PROTOTYPES
  *******************************************************************/
 
-static float binaryReadFloat(FILE* file);
 static void binaryReadString(FILE* file, char *buffer, int maxLength);
 static void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength);
 
@@ -302,7 +297,6 @@ static void binaryWriteInt(FILE* file, int data);
 static void binaryWriteIntBE(FILE* file, int data);
 static void binaryWriteUInt(FILE* file, unsigned int data);
 static void binaryWriteUIntBE(FILE* file, unsigned int data);
-static void binaryWriteFloat(FILE* file, float data);
 
 static int stringInArray(const char *s, const char **array);
 static void fpad(FILE *f, char c, int n);
@@ -312,6 +306,8 @@ static char* emb_optOut(double num, char* str);
 static void write_24bit(FILE* file, int);
 static int check_header_present(FILE* file, int minimum_header_length);
 
+static void fread_int(FILE* f, void *b, int mode);
+static void fwrite_int(FILE* f, void *b, int mode);
 static short fread_int16(FILE* f);
 static unsigned short fread_uint16(FILE* f);
 static int fread_int32(FILE* f);
@@ -320,8 +316,6 @@ static short fread_int16_be(FILE* f);
 static unsigned short fread_uint16_be(FILE* f);
 static int fread_int32_be(FILE* f);
 static unsigned int fread_uint32_be(FILE* f);
-static void fwrite_nbytes(FILE* f, void *p, int bytes);
-static void fwrite_nbytes_be(FILE* f, void *p, int bytes);
 
 static bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize);
 static unsigned int readFullSector(FILE* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
@@ -645,43 +639,43 @@ int encode_tajima_ternary(unsigned char b[3], int x, int y)
     }
 
     if (x >= +41) {
-        b[2] |= EMB_BIT_2;
+        b[2] |= 0x04;
         x -= 81;
     }
     if (x <= -41) {
-        b[2] |= EMB_BIT_3;
+        b[2] |= 0x08;
         x += 81;
     }
     if (x >= +14) {
-        b[1] |= EMB_BIT_2;
+        b[1] |= 0x04;
         x -= 27;
     }
     if (x <= -14) {
-        b[1] |= EMB_BIT_3;
+        b[1] |= 0x08;
         x += 27;
     }
     if (x >= +5) {
-        b[0] |= EMB_BIT_2;
+        b[0] |= 0x04;
         x -= 9;
     }
     if (x <= -5) {
-        b[0] |= EMB_BIT_3;
+        b[0] |= 0x08;
         x += 9;
     }
     if (x >= +2) {
-        b[1] |= EMB_BIT_0;
+        b[1] |= 0x01;
         x -= 3;
     }
     if (x <= -2) {
-        b[1] |= EMB_BIT_1;
+        b[1] |= 0x02;
         x += 3;
     }
     if (x >= +1) {
-        b[0] |= EMB_BIT_0;
+        b[0] |= 0x01;
         x -= 1;
     }
     if (x <= -1) {
-        b[0] |= EMB_BIT_1;
+        b[0] |= 0x02;
         x += 1;
     }
     if (x != 0) {
@@ -690,43 +684,43 @@ int encode_tajima_ternary(unsigned char b[3], int x, int y)
         return 0;
     }
     if (y >= +41) {
-        b[2] |= EMB_BIT_5;
+        b[2] |= 0x20;
         y -= 81;
     }
     if (y <= -41) {
-        b[2] |= EMB_BIT_4;
+        b[2] |= 0x10;
         y += 81;
     }
     if (y >= +14) {
-        b[1] |= EMB_BIT_5;
+        b[1] |= 0x20;
         y -= 27;
     }
     if (y <= -14) {
-        b[1] |= EMB_BIT_4;
+        b[1] |= 0x10;
         y += 27;
     }
     if (y >= +5) {
-        b[0] |= EMB_BIT_5;
+        b[0] |= 0x20;
         y -= 9;
     }
     if (y <= -5) {
-        b[0] |= EMB_BIT_4;
+        b[0] |= 0x10;
         y += 9;
     }
     if (y >= +2) {
-        b[1] |= EMB_BIT_7;
+        b[1] |= 0x80;
         y -= 3;
     }
     if (y <= -2) {
-        b[1] |= EMB_BIT_6;
+        b[1] |= 0x40;
         y += 3;
     }
     if (y >= +1) {
-        b[0] |= EMB_BIT_7;
+        b[0] |= 0x80;
         y -= 1;
     }
     if (y <= -1) {
-        b[0] |= EMB_BIT_6;
+        b[0] |= 0x40;
         y += 1;
     }
     if (y != 0) {
@@ -741,64 +735,64 @@ void decode_tajima_ternary(unsigned char b[3], int *x, int *y)
 {
     *x = 0;
     *y = 0;
-    if (b[0] & EMB_BIT_0) {
+    if (b[0] & 0x01) {
         *x += 1;
     }
-    if (b[0] & EMB_BIT_1) {
+    if (b[0] & 0x02) {
         *x -= 1;
     }
-    if (b[0] & EMB_BIT_2) {
+    if (b[0] & 0x04) {
         *x += 9;
     }
-    if (b[0] & EMB_BIT_3) {
+    if (b[0] & 0x08) {
         *x -= 9;
     }
-    if (b[0] & EMB_BIT_7) {
+    if (b[0] & 0x80) {
         *y += 1;
     }
-    if (b[0] & EMB_BIT_6) {
+    if (b[0] & 0x40) {
         *y -= 1;
     }
-    if (b[0] & EMB_BIT_5) {
+    if (b[0] & 0x20) {
         *y += 9;
     }
-    if (b[0] & EMB_BIT_4) {
+    if (b[0] & 0x10) {
         *y -= 9;
     }
-    if (b[1] & EMB_BIT_0) {
+    if (b[1] & 0x01) {
         *x += 3;
     }
-    if (b[1] & EMB_BIT_1) {
+    if (b[1] & 0x02) {
         *x -= 3;
     }
-    if (b[1] & EMB_BIT_2) {
+    if (b[1] & 0x04) {
         *x += 27;
     }
-    if (b[1] & EMB_BIT_3) {
+    if (b[1] & 0x08) {
         *x -= 27;
     }
-    if (b[1] & EMB_BIT_7) {
+    if (b[1] & 0x80) {
         *y += 3;
     }
-    if (b[1] & EMB_BIT_6) {
+    if (b[1] & 0x40) {
         *y -= 3;
     }
-    if (b[1] & EMB_BIT_5) {
+    if (b[1] & 0x20) {
         *y += 27;
     }
-    if (b[1] & EMB_BIT_4) {
+    if (b[1] & 0x10) {
         *y -= 27;
     }
-    if (b[2] & EMB_BIT_2) {
+    if (b[2] & 0x04) {
         *x += 81;
     }
-    if (b[2] & EMB_BIT_3) {
+    if (b[2] & 0x08) {
         *x -= 81;
     }
-    if (b[2] & EMB_BIT_5) {
+    if (b[2] & 0x20) {
         *y += 81;
     }
-    if (b[2] & EMB_BIT_4) {
+    if (b[2] & 0x10) {
         *y -= 81;
     }
 }
@@ -858,8 +852,6 @@ L_system hilbert_curve_l_system = {
     'A', "AB", "F+-", (char**)rules
 };
 
-int max_stitches = 100000;
-
 /* This is a slow generation algorithm */
 int lindenmayer_system(L_system L, char *state, int iterations, int complete)
 {
@@ -888,7 +880,7 @@ Potential reference:
         return 0;
     }
 
-    new_state = state + max_stitches*5;
+    new_state = state + MAX_STITCHES*5;
 
     new_state[0] = 0;
 
@@ -928,7 +920,7 @@ int hilbert_curve(EmbPattern *pattern, int iterations)
     double scale = 1.0;
 
     /* Make the n-th iteration. */
-    state = malloc(max_stitches*10);
+    state = malloc(MAX_STITCHES*10);
     lindenmayer_system(hilbert_curve_l_system, state, iterations, 0);
 
     /* Convert to an embroidery pattern. */

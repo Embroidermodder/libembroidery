@@ -1760,7 +1760,8 @@ void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
         emb_error = 1;
     }
     else {
-        printf("Circle : cr=%f, cx=%f, cy=%f\n"
+        if (emb_verbose) {
+            printf("Circle : cr=%f, cx=%f, cy=%f\n"
                "Point  : px=%f, py=%f\n"
                "Tangent: tx0=%f, ty0=%f\n"
                "Tangent: tx1=%f, ty1=%f\n\n",
@@ -1768,6 +1769,7 @@ void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
                p.x, p.y,
                t0->x, t0->y,
                t1->x, t1->y);
+        }
     }
 }
 
@@ -1871,7 +1873,6 @@ int testGeomArc(void) {
     double bulge, radius, diameter, chord, sagitta, apothem, incAngle;
     char clockwise;
 
-    fprintf(stdout, "Clockwise Test:\n");
     bulge = -0.414213562373095;
     arc.start.x = 1.0;
     arc.start.y = 0.0;
@@ -1884,15 +1885,17 @@ int testGeomArc(void) {
                            &(chordMid.x), &(chordMid.y),
                            &sagitta,   &apothem,
                            &incAngle,  &clockwise)) {
-        printArcResults(bulge, arc, center.x, center.y,
+        if (emb_verbose) {
+            fprintf(stdout, "Clockwise Test:\n");
+            printArcResults(bulge, arc, center.x, center.y,
                         radius, diameter,
                         chord,
                         chordMid.x, chordMid.y,
                         sagitta,   apothem,
                         incAngle,  clockwise);
+        }
     }
 
-    fprintf(stdout, "Counter-Clockwise Test:\n");
     bulge  = 2.414213562373095;
     arc.start.x = 4.0;
     arc.start.y = 0.0;
@@ -1905,12 +1908,15 @@ int testGeomArc(void) {
                            &(chordMid.x), &(chordMid.y),
                            &sagitta,   &apothem,
                            &incAngle,  &clockwise)) {
-        printArcResults(bulge, arc, center.x, center.y,
+        if (emb_verbose) {
+            fprintf(stdout, "Counter-Clockwise Test:\n");
+            printArcResults(bulge, arc, center.x, center.y,
                         radius,    diameter,
                         chord,
                         chordMid.x, chordMid.y,
                         sagitta,   apothem,
                         incAngle,  clockwise);
+        }
     }
 
     return 0;
@@ -1922,7 +1928,8 @@ int testThreadColor(void) {
     int          tNum   = threadColorNum(tColor, tBrand);
     const char*  tName  = threadColorName(tColor, tBrand);
 
-    printf("Color : 0x%X\n"
+    if (emb_verbose) {
+        printf("Color : 0x%X\n"
            "Brand : %d\n"
            "Num   : %d\n"
            "Name  : %s\n\n",
@@ -1930,6 +1937,7 @@ int testThreadColor(void) {
             tBrand,
             tNum, /* Solution: 1833 */
             tName); /* Solution: Pumpkin Pie */
+    }
     return 0;
 }
 
@@ -1937,7 +1945,8 @@ int testEmbFormat(void) {
     const char*  tName = "example.zsk";
     int format = emb_identify_format(tName);
 
-    printf("Filename   : %s\n"
+    if (emb_verbose) {
+        printf("Filename   : %s\n"
            "Extension  : %s\n"
            "Description: %s\n"
            "Reader     : %c\n"
@@ -1949,6 +1958,7 @@ int testEmbFormat(void) {
             formatTable[format].reader_state,
             formatTable[format].writer_state,
             formatTable[format].type);
+    }
 
     if (strcmp(formatTable[format].extension, ".zsk")) return 20;
     if (strcmp(formatTable[format].description, "ZSK USA Embroidery Format")) {
@@ -2233,11 +2243,11 @@ static int command_line_interface(int argc, char* argv[])
             break;
         case FLAG_QUIET:
         case FLAG_QUIET_SHORT:
-            puts("This flag is not implemented.");
+            emb_verbose = 0;
             break;
         case FLAG_VERBOSE:
         case FLAG_VERBOSE_SHORT:
-            puts("This flag is not implemented.");
+            emb_verbose = 1;
             break;
         case FLAG_CIRCLE:
         case FLAG_CIRCLE_SHORT:

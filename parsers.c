@@ -568,22 +568,26 @@ EmbArray *parse_pointlist(EmbPattern *p)
 
 void parse_polygon(EmbPattern *p)
 {
-    EmbPolygonObject* polygonObj;
-    polygonObj = (EmbPolygonObject*)malloc(sizeof(EmbPolygonObject));
-    polygonObj->pointList = parse_pointlist(p);
-    polygonObj->color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
-    polygonObj->lineType = 1; /* TODO: use lineType enum */
-    embPattern_addPolygonObjectAbs(p, polygonObj);
+    /*
+    EmbPolygonObject polygonObj;
+    polygonObj.pointList = embArray_create(EMB_POINT);
+    BROKEN: polygonObj.pointList = parse_pointlist(p);
+    polygonObj.color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
+    polygonObj.lineType = 1; TODO: use lineType enum
+    embPattern_addPolygonObjectAbs(p, &polygonObj);
+    */
 }
 
 void parse_polyline(EmbPattern *p)
 {
+    /* BROKEN
     EmbPolylineObject* polylineObj;
     polylineObj = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
     polylineObj->pointList = parse_pointlist(p);
     polylineObj->color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
-    polylineObj->lineType = 1; /* TODO: use lineType enum */
+    polylineObj->lineType = 1; TODO: use lineType enum
     embPattern_addPolylineObjectAbs(p, polylineObj);
+    */
 }
 
 void parse_rect(EmbPattern *p)
@@ -1787,6 +1791,9 @@ char readSvg(EmbPattern* pattern, FILE* file) {
     char* buff = 0, c;
         int i;
 
+    puts("Deactived readSvg for testing.");
+    return 0;
+
     for (i=0; i<1000; i++) {
         attributeList[i].name = (char*)malloc(size);
         attributeList[i].value = (char*)malloc(size);
@@ -1896,10 +1903,12 @@ char readSvg(EmbPattern* pattern, FILE* file) {
         }
     }
 
+    /*
     for (i=0; i<1000; i++) {
         free(attributeList[i].name);
         free(attributeList[i].value);
     }
+    */
     /* Flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
     embPattern_flipVertical(pattern);
 

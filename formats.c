@@ -1217,12 +1217,31 @@ static char writeDat(EmbPattern* pattern, FILE* file)
     fpad(file, 0x00, 0x100);
     for (i=0; i<pattern->stitchList->count; i++) {
         unsigned char b[3];
+        EmbStitch st = pattern->stitchList->stitch[i];
         b[0] = 0;
         b[1] = 0;
         b[2] = 0;
+        if (st.flags == STOP) {
+            b[2] = 0x87;
+        }
+        if (st.flags == END) {
+            b[2] |= 0xF8;
+        }
+        else {
+            if (st.flags != TRIM) {
+                b[2] |= 0x02;
+            }
+        }
+        /* TODO: check that this works */
+        if (st.x < 0) {
+            b[0] = st.x+0xFF;
+        }
+        if (st.y < 0) {
+            b[1] = st.y+0xFF;
+        }
         fwrite(b, 1, 3, file);
     }
-    return 0; /*TODO: finish writeDat */
+    return 1; /*TODO: finish writeDat */
 }
 
 /* ---------------------------------------------------------------- */
@@ -1629,7 +1648,7 @@ static char writeDst(EmbPattern* pattern, FILE* file) {
         dy = (int)round(st.y * 10.0) - yy;
         xx = (int)round(st.x * 10.0);
         yy = (int)round(st.y * 10.0);
-        if (emb_verbose) {
+        if (emb_verbose > 0) {
             printf("%d %f %f %d %d %d %d %d\n", i, st.x, st.y, dx, dy, xx, yy, st.flags);
         }
         encode_record(file, dx, dy, st.flags);

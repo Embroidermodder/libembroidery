@@ -1710,6 +1710,7 @@ void testMain(int level)
 {
     EmbPattern *pattern = embPattern_create();
     EmbImage *image = embImage_create(100, 100);
+    int overall = 0;
     int circleResult = testEmbCircle();
     int threadResult = testThreadColor();
     int formatResult = testEmbFormat();
@@ -1724,27 +1725,46 @@ void testMain(int level)
     int renderResult = embImage_render(pattern, 20.0, 20.0, "hilbert_level_3.ppm");
     int simulateResult = embImage_simulate(pattern, 20.0, 20.0, "hilbert_level_3.avi");
 
-    puts("SUMMARY OF RESULTS");
-    puts("------------------");
-    report(circleResult, "Tangent Point");
-    report(threadResult, "Thread");
-    report(formatResult, "Format");
-    report(arcResult, "Arc");
-    report(create1Result, "Create CSV 1");
-    report(create2Result, "Create CSV 2");
-    report(svg1Result, "Convert CSV-SVG 1");
-    report(svg2Result, "Convert CSV-SVG 2");
-    report(dst1Result, "Convert CSV-DST 1");
-    report(dst2Result, "Convert CSV-DST 2");
-    report(hilbertCurveResult, "Generating Hilbert Curve");
-    report(renderResult, "Rendering Hilbert Curve");
-    report(simulateResult, "Simulating Hilbert Curve");
+    overall += circleResult;
+    overall += threadResult;
+    overall += formatResult;
+    overall += arcResult;
+    overall += create1Result;
+    overall += create2Result;
+    overall += svg1Result;
+    overall += svg2Result;
+    overall += dst1Result;
+    overall += dst2Result;
+
+    if (emb_verbose >= 0) {
+        puts("SUMMARY OF RESULTS");
+        puts("------------------");
+        report(circleResult, "Tangent Point");
+        report(threadResult, "Thread");
+        report(formatResult, "Format");
+        report(arcResult, "Arc");
+        report(create1Result, "Create CSV 1");
+        report(create2Result, "Create CSV 2");
+        report(svg1Result, "Convert CSV-SVG 1");
+        report(svg2Result, "Convert CSV-SVG 2");
+        report(dst1Result, "Convert CSV-DST 1");
+        report(dst2Result, "Convert CSV-DST 2");
+        report(hilbertCurveResult, "Generating Hilbert Curve");
+        report(renderResult, "Rendering Hilbert Curve");
+        report(simulateResult, "Simulating Hilbert Curve");
+    }
     
     embImage_free(image);
     embPattern_free(pattern);
     if (level > 0) {
         puts("More expensive tests.");
         full_test_matrix("test_matrix.txt");
+    }
+    if (overall == 0) {
+        puts("PASS");
+    }
+    else {
+        puts("FAIL");
     }
 }
 
@@ -1760,7 +1780,7 @@ void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
         emb_error = 1;
     }
     else {
-        if (emb_verbose) {
+        if (emb_verbose > 0) {
             printf("Circle : cr=%f, cx=%f, cy=%f\n"
                "Point  : px=%f, py=%f\n"
                "Tangent: tx0=%f, ty0=%f\n"
@@ -1885,7 +1905,7 @@ int testGeomArc(void) {
                            &(chordMid.x), &(chordMid.y),
                            &sagitta,   &apothem,
                            &incAngle,  &clockwise)) {
-        if (emb_verbose) {
+        if (emb_verbose > 0) {
             fprintf(stdout, "Clockwise Test:\n");
             printArcResults(bulge, arc, center.x, center.y,
                         radius, diameter,
@@ -1908,7 +1928,7 @@ int testGeomArc(void) {
                            &(chordMid.x), &(chordMid.y),
                            &sagitta,   &apothem,
                            &incAngle,  &clockwise)) {
-        if (emb_verbose) {
+        if (emb_verbose > 0) {
             fprintf(stdout, "Counter-Clockwise Test:\n");
             printArcResults(bulge, arc, center.x, center.y,
                         radius,    diameter,
@@ -1928,7 +1948,7 @@ int testThreadColor(void) {
     int          tNum   = threadColorNum(tColor, tBrand);
     const char*  tName  = threadColorName(tColor, tBrand);
 
-    if (emb_verbose) {
+    if (emb_verbose > 0) {
         printf("Color : 0x%X\n"
            "Brand : %d\n"
            "Num   : %d\n"
@@ -1945,7 +1965,7 @@ int testEmbFormat(void) {
     const char*  tName = "example.zsk";
     int format = emb_identify_format(tName);
 
-    if (emb_verbose) {
+    if (emb_verbose > 0) {
         printf("Filename   : %s\n"
            "Extension  : %s\n"
            "Description: %s\n"
@@ -2243,7 +2263,7 @@ static int command_line_interface(int argc, char* argv[])
             break;
         case FLAG_QUIET:
         case FLAG_QUIET_SHORT:
-            emb_verbose = 0;
+            emb_verbose = -1;
             break;
         case FLAG_VERBOSE:
         case FLAG_VERBOSE_SHORT:
@@ -2369,7 +2389,9 @@ static int command_line_interface(int argc, char* argv[])
         convert(argv[1], argv[2]);
     }
     else {
-        puts("Please enter an output format for your file, see --help.");
+        if (!flags) {
+            puts("Please enter an output format for your file, see --help.");
+        }
     }
     embPattern_free(current_pattern);
     return 0;

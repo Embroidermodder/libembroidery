@@ -506,6 +506,8 @@ static char writeZsk(EmbPattern *pattern, FILE* file);
 
 EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
 
+static int emb_verbose = 0;
+
 static const char *flag_list[] = {
     "--to",
     "-t",

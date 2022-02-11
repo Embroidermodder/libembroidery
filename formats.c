@@ -658,6 +658,9 @@ static char readBro(EmbPattern* pattern, FILE* file) {
             fread(&b1, 2, 1, file);
             fread(&b2, 2, 1, file);
             if (bCode == 2) {
+            if ((bCode & 0xE1) != 0)
+                
+                
                 stitchType = STOP;
             } else if (bCode == 3) {
                 stitchType = TRIM;

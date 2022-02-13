@@ -657,10 +657,8 @@ static char readBro(EmbPattern* pattern, FILE* file) {
             unsigned char bCode = (unsigned char)fgetc(file);
             fread(&b1, 2, 1, file);
             fread(&b2, 2, 1, file);
-            if (bCode == 2) {
-            if ((bCode & 0xE1) != 0)
-                
-                
+            /* Embird uses 0x02 and Wilcom uses 0xE1 */
+            if (bCode == 0x02 || bCode == 0xE1) {
                 stitchType = STOP;
             } else if (bCode == 3) {
                 stitchType = TRIM;

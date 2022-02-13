@@ -248,10 +248,10 @@ char embPattern_write(EmbPattern* pattern, const char *fileName, int format) {
     }
     switch (format) {
     case EMB_FORMAT_100:
-        result = write100();
+        result = write100(pattern, file);
         break;
     case EMB_FORMAT_10O:
-        result = write10o();
+        result = write10o(pattern, file);
         break;
     case EMB_FORMAT_ART:
         result = writeArt(pattern, file);
@@ -486,35 +486,40 @@ static char read100(EmbPattern* pattern, FILE* file) {
     return 1;
 }
 
-static char write100(void) {
-    puts("ERROR: write100 is not implemented.");
-    
-    /*
-    int x, y;
-    int stitchType;
-    unsigned char b[4];
+static char write100(EmbPattern* pattern, FILE* file) {
+    int i;
+    EmbVector delta, position;
 
-    TODO:
-    while (1) {
-        stitchType = NORMAL;
-        x = (b[2] > 0x80) ? -(b[2] - 0x80) : b[2];
-        y = (b[3] > 0x80) ? -(b[3] - 0x80) : b[3];
-        if (st.flags & JUMP) {
-            ?
+    position = pattern->settings.home;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        unsigned char b[4];
+        EmbStitch st = pattern->stitchList->stitch[i];
+        delta.x = st.x - position.x;
+        delta.y = st.y - position.y;
+        position.x = st.x;
+        position.y = st.y;
+        b[0] = 0;
+        b[1] = 0;
+        if (delta.x < 0.0) {
+            b[2] = -round(10.0*delta.x);
         }
-        if (st.flags & STOP) {
-            ?
+        else {
+            b[2] = round(10.0*delta.x);
+        }
+        if (delta.y < 0.0) {
+            b[3] = -round(10.0*delta.y);
+        }
+        else {
+            b[3] = round(10.0*delta.y);
+        }
+        if (!(st.flags & STOP)) {
+            b[0] |= 0x01;
         }
         if (st.flags & END) {
-            ?
+            b[0] = 0x1F;
         }
-        // if (!(b[0] & 0xFC)) stitchType = JUMP; TODO: review & fix
-        if (!(b[0] & 0x01)) stitchType = STOP;
-        if (b[0] == 0x1F) stitchType = END;
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
         fwrite(b, 1, 4, file);
     }
-    */
     return 1;
 }
 
@@ -550,43 +555,40 @@ static char read10o(EmbPattern* pattern, FILE* file) {
     return 1;
 }
 
-static char write10o(void) {
-    puts("ERROR: write10o is not implemented.");
-    /*
-    TODO:
-    while (1) {
-        int x, y;
-        int stitchType = NORMAL;
-        unsigned char ctrl = (unsigned char)fgetc(file);
-        if (feof(file))
-            break;
-        y = fgetc(file);
-        if (feof(file))
-            break;
-        x = fgetc(file);
-        if (feof(file))
-            break;
-        if (ctrl & 0x20)
-            x = -x;
-        if (ctrl & 0x40)
-            y = -y;
-        if (ctrl & 0x01)
-            stitchType = TRIM;
-        if ((ctrl & 0x5) == 5)
-        {
-            stitchType = STOP;
+static char write10o(EmbPattern* pattern, FILE* file) {
+    int i;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        unsigned char b[3];
+        EmbStitch st = pattern->stitchList->stitch[i];
+        b[0] = 0;
+        b[1] = 0;
+        b[2] = 0;
+        if (st.x < 0) {
+            b[2] |= 0x20;
+            b[0] = -st.x;
         }
-        if (ctrl == 0xF8 || ctrl == 0x91 || ctrl == 0x87)
-        {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
-            break;
+        else {
+            b[0] = st.x;
         }
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
-        fwrite(b, 1, 4, file);
+        if (st.y < 0) {
+            b[2] |= 0x40;
+            b[1] = -st.y;
+        }
+        else {
+            b[1] = st.y;
+        }
+        if (st.flags == TRIM) {
+            b[2] |= 1;
+        }
+        if (st.flags == STOP) {
+            b[2] |= 5;
+        }
+        if (st.flags == END) {
+            b[2] = 0xF8;
+        }
+        fwrite(b, 1, 3, file);    
     }
-    */
-    puts("Write10o is not supported currently.");
-    return 0; /*TODO: finish write10o */
+    return 1;
 }
 
 /* ---------------------------------------------------------------- */

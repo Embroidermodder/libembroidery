@@ -379,9 +379,9 @@ int testEmbFormat(void);
 int full_test_matrix(char *fname);
 
 static char read100(EmbPattern *pattern, FILE* file);
-static char write100(void);
+static char write100(EmbPattern *pattern, FILE* file);
 static char read10o(EmbPattern *pattern, FILE* file);
-static char write10o(void);
+static char write10o(EmbPattern *pattern, FILE* file);
 static char readArt(EmbPattern *pattern, FILE* file);
 static char writeArt(EmbPattern *pattern, FILE* file);
 static char readBmc(EmbPattern *pattern, FILE* file);
@@ -2112,30 +2112,27 @@ int full_test_matrix(char *fname) {
         }
         snprintf(fname, 30, "test01%s", formatTable[i].extension);
         create_test_file_1(fname);
-        /* p3_render(b); */
         for (j=0; j < numberOfFormats; j++) {
+            EmbPattern *pattern;
             char fname_converted[100];
+            char fname_image[100];
             int result;
-            if (i == j) {
-                continue;
-            }
-            printf("\n");
-            snprintf(fname_converted, 30, "test01_%02d_converted%s",
-                    i, formatTable[j].extension);
+            snprintf(fname_converted, 30, "test01_%s_converted_to%s",
+                formatTable[i].extension+1, formatTable[j].extension);
+            snprintf(fname_image, 30, "test01_%s_converted_to%s.ppm",
+                formatTable[i].extension+1, formatTable[j].extension+1);
             printf("Attempting: %s %s\n", fname, fname_converted);
             result = convert(fname, fname_converted);
-            /* p3_render(b); */
-            /*
-            int d = image_distance(a, b);
-            fprintf(f, "%d %d ", i, j);
-            */
+            embPattern_read(pattern, fname_converted, j);
+            embImage_render(pattern, 20.0, 20.0, fname_image);
+            embPattern_free(pattern);
+            fprintf(f, "%d %d %f%% ", i, j, 100*success/(1.0*ntests));
             if (!result) {
-                fprintf(f, "PASS");
+                fprintf(f, "PASS\n");
                 success++;
             } else {
-                fprintf(f, "FAIL");
+                fprintf(f, "FAIL\n");
             }
-            fprintf(f, " %d %d\n%f%%\n", i, j, 100*success/(1.0*ntests));
         }
     }
 

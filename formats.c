@@ -7124,10 +7124,10 @@ static char readZsk(EmbPattern* pattern, FILE* file) {
 
     while (fread(b, 1, 3, file) == 3) {
         stitchType = NORMAL;
-        if (b[0] & 0x4) {
+        if (b[0] & 0x04) {
             b[2] = -b[2];
         }
-        if (b[0] & 0x8) {
+        if (b[0] & 0x08) {
             b[1] = -b[1];
         }
         if (b[0] & 0x02) {
@@ -7156,10 +7156,61 @@ static char readZsk(EmbPattern* pattern, FILE* file) {
     return 1;
 }
 
+/* based on the readZsk function */
 static char writeZsk(EmbPattern* pattern, FILE* file) {
-    puts("Overridden, defaulting to dst.");
-    writeDst(pattern, file);
-    return 0; /*TODO: finish writeZsk */
+    int i;
+
+    fpad(file, 0x00, 0x230);
+
+    fprintf(file, "%c", pattern->threads->count);
+    for (i=pattern->threads->count; i>0; i--) {
+        EmbThread t;
+        t = pattern->threads->thread[i-1];
+        embColor_write(file, t.color, 3);
+        fpad(file, 0x00, 0x48);
+        fprintf(file, "%c", i-1);
+    }
+
+    fpad(file, 0x00, 0x2E);
+
+    for (i=0; i<pattern->stitchList->count; i++) {
+        EmbStitch st;
+        st = pattern->stitchList->stitch[i];
+        unsigned char b[3];
+        b[0] = 0;
+        b[1] = st.x;
+        b[2] = st.y;
+        if (st.flags & JUMP) {
+            b[0] |= 0x02;
+        }
+        if (st.x < 0) {
+            b[0] |= 0x08;
+            b[1] = -st.x;
+        }
+        if (st.y < 0) {
+            b[0] |= 0x04;
+            b[2] = -st.y;
+        }
+        if (st.flags & TRIM) {
+            b[0] |= 0x20;
+            b[1] = 0x00;
+            b[2] = 0x00;
+        }
+        if (st.flags & STOP) {
+            b[0] |= 0x20;
+            b[1] = 0x00;
+            b[2] = st.color;
+        }
+        if (st.flags & END) {
+            b[0] |= 0x20;
+            b[1] = 0x80;
+            b[2] = 0x00;
+            fwrite(b, 1, 3, file);
+            break;
+        }
+        fwrite(b, 1, 3, file);
+    }
+    return 1;
 }
 
 /* ---------------------------------------------------------------- */

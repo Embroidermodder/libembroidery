@@ -496,8 +496,7 @@ static char write100(EmbPattern* pattern, FILE* file) {
         EmbStitch st = pattern->stitchList->stitch[i];
         delta.x = st.x - position.x;
         delta.y = st.y - position.y;
-        position.x = st.x;
-        position.y = st.y;
+        embVector_add(position, delta, &position);
         b[0] = 0;
         b[1] = 0;
         if (delta.x < 0.0) {
@@ -1585,9 +1584,9 @@ static char readDst(EmbPattern* pattern, FILE* file) {
 
 static char writeDst(EmbPattern* pattern, FILE* file) {
     EmbRect boundingRect;
-    int xx, yy, i, ax, ay, mx, my;
+    int i, ax, ay, mx, my;
+    EmbVector pos;
     char pd[10];
-    EmbStitch st;
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
@@ -1642,17 +1641,19 @@ static char writeDst(EmbPattern* pattern, FILE* file) {
     fpad(file, ' ', 512-125);
 
     /* write stitches */
-    xx = yy = 0;
+    pos.x = 0.0;
+    pos.y = 0.0;
     for (i = 0; i < pattern->stitchList->count; i++) {
+        EmbStitch st;
         int dx, dy;
         st = pattern->stitchList->stitch[i];
         /* convert from mm to 0.1mm for file format */
-        dx = (int)round(st.x * 10.0) - xx;
-        dy = (int)round(st.y * 10.0) - yy;
-        xx = (int)round(st.x * 10.0);
-        yy = (int)round(st.y * 10.0);
+        dx = (int)round(10.0*(st.x - pos.x));
+        dy = (int)round(10.0*(st.y - pos.y));
+        pos.x += 0.1*dx;
+        pos.y += 0.1*dy;
         if (emb_verbose > 0) {
-            printf("%d %f %f %d %d %d %d %d\n", i, st.x, st.y, dx, dy, xx, yy, st.flags);
+            printf("%d %f %f %d %d %f %f %d\n", i, st.x, st.y, dx, dy, pos.x, pos.y, st.flags);
         }
         encode_record(file, dx, dy, st.flags);
     }
@@ -2166,20 +2167,20 @@ static char readExp(EmbPattern* pattern, FILE* file) {
 }
 
 static char writeExp(EmbPattern* pattern, FILE* file) {
-    double xx, yy;
+    EmbVector pos;
     int i;
 
     /* write stitches */
-    xx = 0.0;
-    yy = 0.0;
+    pos.x = 0.0;
+    pos.y = 0.0;
     for (i = 0; i < pattern->stitchList->count; i++) {
         char b[4];
         char dx, dy;
         EmbStitch st = pattern->stitchList->stitch[i];
-        dx = (char)round(st.x * 10.0 - xx);
-        dy = (char)round(st.y * 10.0 - yy);
-        xx = st.x * 10.0;
-        yy = st.y * 10.0;
+        dx = (char)round(10.0*(st.x - pos.x));
+        dy = (char)round(10.0*(st.y - pos.y));
+        pos.x += 0.1*dx;
+        pos.y += 0.1*dy;
         switch (st.flags) {
             case STOP:
                 b[0] = (char)(0x80);
@@ -2961,10 +2962,8 @@ static char writeJef(EmbPattern* pattern, FILE* file)
     int colorlistSize, minColors, designWidth, designHeight, i;
     EmbRect boundingRect;
     EmbTime time;
-    EmbStitch st;
     int data;
-    double dx = 0.0, dy = 0.0, xx = 0.0, yy = 0.0;
-    unsigned char b[4];
+    EmbVector pos;
 
     embPattern_correctForMaxStitchLength(pattern, 12.7, 12.7);
 
@@ -3044,17 +3043,22 @@ static char writeJef(EmbPattern* pattern, FILE* file)
         binaryWriteInt(file, 0x0D);
     }
 
+    pos.x = 0.0;
+    pos.y = 0.0;
     for (i = 0; i < pattern->stitchList->count; i++) {
+        unsigned char b[4];
+        EmbStitch st;
+        char dx, dy;
         b[0] = 0;
         b[1] = 0;
         b[2] = 0;
         b[3] = 0;
         st = pattern->stitchList->stitch[i];
-        dx = st.x * 10.0 - xx;
-        dy = st.y * 10.0 - yy;
-        xx = st.x * 10.0;
-        yy = st.y * 10.0;
-        jefEncode(b, (char)round(dx), (char)round(dy), st.flags);
+        dx = (char)round(10.0*(st.x - pos.x));
+        dy = (char)round(10.0*(st.y - pos.y));
+        pos.x += 0.1*dx;
+        pos.y += 0.1*dy;
+        jefEncode(b, dx, dy, st.flags);
         if ((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10))) {
             fwrite(b, 1, 4, file);
         } else {
@@ -3115,21 +3119,22 @@ static char readKsm(EmbPattern* pattern, FILE* file) {
 }
 
 static char writeKsm(EmbPattern* pattern, FILE* file) {
-    double xx, yy;
+    EmbVector pos;
     int i;
-    unsigned char b[4];
 
     fpad(file, 0, 0x200);
     /* write stitches */
-    xx = yy = 0;
+    pos.x = 0.0;
+    pos.y = 0.0;
     for (i = 0; i < pattern->stitchList->count; i++) {
-        double dx, dy;
+        unsigned char b[4];
+        char dx, dy;
         EmbStitch st = pattern->stitchList->stitch[i];
-        dx = st.x - xx;
-        dy = st.y - yy;
-        xx = st.x;
-        yy = st.y;
-        ksmEncode(b, (char)(dx * 10.0), (char)(dy * 10.0), st.flags);
+        dx = (char)(10.0*(st.x - pos.x));
+        dy = (char)(10.0*(st.y - pos.y));
+        pos.x += 0.1*dx;
+        pos.y += 0.1*dy;
+        ksmEncode(b, dx, dy, st.flags);
         fprintf(file, "%c%c", b[0], b[1]);
     }
     fprintf(file, "\x1a");
@@ -5040,17 +5045,17 @@ static char writeSew(EmbPattern* pattern, FILE* file) {
     for (i = 0; i < pattern->stitchList->count; i++) {
         EmbStitch st;
         unsigned char b[4];
-        double dx, dy;
+        char dx, dy;
         st = pattern->stitchList->stitch[i];
-        dx = st.x * 10.0 - xx;
-        dy = st.y * 10.0 - yy;
-        xx = st.x * 10.0;
-        yy = st.y * 10.0;
+        dx = (char)round(10.0*(st.x - xx));
+        dy = (char)round(10.0*(st.y - yy));
+        xx += 0.1*dx;
+        yy += 0.1*dy;
         if (st.flags & STOP) {
             b[0] = 0x80;
             b[1] = 0x01;
-            b[2] = (char)round(dx);
-            b[3] = (char)round(dy);
+            b[2] = dx;
+            b[3] = dy;
             fwrite(b, 1, 4, file);
         } else if (st.flags & END) {
             b[0] = 0x80;
@@ -5061,12 +5066,12 @@ static char writeSew(EmbPattern* pattern, FILE* file) {
         } else if ((st.flags & TRIM) || (st.flags & JUMP)) {
             b[0] = 0x80;
             b[1] = 2;
-            b[2] = (char)round(dx);
-            b[3] = (char)round(dy);
+            b[2] = dx;
+            b[3] = dy;
             fwrite(b, 1, 4, file);
         } else {
-            b[0] = (char)round(dx);
-            b[1] = (char)round(dy);
+            b[0] = dx;
+            b[1] = dy;
             fwrite(b, 1, 2, file);
         }
     }
@@ -5568,7 +5573,8 @@ static char readT01(EmbPattern* pattern, FILE* file) {
 
 static char writeT01(EmbPattern* pattern, FILE* file) {
     EmbRect boundingRect;
-    int xx, yy, i;
+    int i;
+    EmbVector pos;
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
@@ -5577,16 +5583,17 @@ static char writeT01(EmbPattern* pattern, FILE* file) {
         printf("bounding rectangle with top %f not used ", boundingRect.top);
         printf("in the function writeT01\n");
     }
-    xx = yy = 0;
+    pos.x = 0.0;
+    pos.y = 0.0;
     for (i = 0; i < pattern->stitchList->count; i++) {
         unsigned char b[3];
         int dx, dy;
         EmbStitch st = pattern->stitchList->stitch[i];
         /* convert from mm to 0.1mm for file format */
-        dx = (int)round(st.x * 10.0) - xx;
-        dy = (int)round(st.y * 10.0) - yy;
-        xx = (int)round(st.x * 10.0);
-        yy = (int)round(st.y * 10.0);
+        dx = (int)round(10.0*(st.x - pos.x));
+        dy = (int)round(10.0*(st.y - pos.y));
+        pos.x += 0.1*dx;
+        pos.y += 0.1*dy;
         encode_t01_record(b, dx, dy, st.flags);
         fwrite(b, 1, 3, file);
     }
@@ -5624,18 +5631,21 @@ static char readT09(EmbPattern* pattern, FILE* file) {
 }
 
 static char writeT09(EmbPattern* pattern, FILE* file) {
-    int i, xx, yy;
+    int i;
+    EmbVector pos;
     fpad(file, 0x00, 0x0C);
 
+    pos.x = 0.0;
+    pos.y = 0.0;
     for (i = 0; i < pattern->stitchList->count; i++) {
         unsigned char b[3];
         int dx, dy;
         EmbStitch st = pattern->stitchList->stitch[i];
         /* convert from mm to 0.1mm for file format */
-        dx = (int)round(st.x * 10.0) - xx;
-        dy = (int)round(st.y * 10.0) - yy;
-        xx = (int)round(st.x * 10.0);
-        yy = (int)round(st.y * 10.0);
+        dx = (int)round(10.0*(st.x - pos.x));
+        dy = (int)round(10.0*(st.y - pos.y));
+        pos.x += 0.1*dx;
+        pos.y += 0.1*dy;
 
         b[0] = dx;
         b[1] = dy;
@@ -5648,11 +5658,11 @@ static char writeT09(EmbPattern* pattern, FILE* file) {
         if (st.flags & STOP) {
             b[2] |= 0x10;
         }
-        if (xx < 0) {
+        if (dx < 0) {
             b[0] = -dx;
             b[2] |= 0x20;
         }
-        if (yy < 0) {
+        if (dy < 0) {
             b[0] = -dy;
             b[2] |= 0x40;
         }
@@ -5714,18 +5724,21 @@ static char readTap(EmbPattern* pattern, FILE* file) {
 }
 
 static char writeTap(EmbPattern* pattern, FILE* file) {
-    int xx, yy, dx, dy, i;
+    int dx, dy, i;
+    EmbVector pos;
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
-    xx = yy = 0;
+    pos.x = 0.0;
+    pos.y = 0.0;
     for (i = 0; i < pattern->stitchList->count; i++) {
+        int dx, dy;
         EmbStitch st = pattern->stitchList->stitch[i];
         /* convert from mm to 0.1mm for file format */
-        dx = (int)round(st.x * 10.0) - xx;
-        dy = (int)round(st.y * 10.0) - yy;
-        xx = (int)round(st.x * 10.0);
-        yy = (int)round(st.y * 10.0);
+        dx = (int)round(10.0*(st.x - pos.x));
+        dy = (int)round(10.0*(st.y - pos.y));
+        pos.x += 0.1*dx;
+        pos.y += 0.1*dy;
         encode_tap_record(file, dx, dy, st.flags);
     }
     return 1;

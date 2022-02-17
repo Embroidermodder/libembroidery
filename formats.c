@@ -2312,7 +2312,13 @@ static char writeFxy(EmbPattern* pattern, FILE* file) {
 /* ---------------------------------------------------------------- */
 /* format gc */
 
-/* Smoothie G-Code */
+/* Smoothie G-Code
+ *
+ * Main Reference:
+ *     Machinery's Handbook Guide
+ *     A Guide to Tables, Formulas, & More in the 31st Edition
+ *     by John Milton Amiss, Franklin D. Jones and Henry Ryffel
+ */
 
 static char readGc(EmbPattern* pattern, FILE* file) {
     puts("Overridden, defaulting to dst.");
@@ -3860,7 +3866,7 @@ static char writePcs(EmbPattern* pattern, FILE* file)
     }
 
     /* write remaining colors to reach 16 */
-    fpad(file, 0, 4*(16-i));
+    /* fpad(file, 0, 4*(16-i)); */
 
     binaryWriteUShort(file, (unsigned short)pattern->stitchList->count);
     /* write stitches */

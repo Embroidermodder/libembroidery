@@ -115,7 +115,8 @@
 #define FLAG_IMAGE_WIDTH             34
 #define FLAG_IMAGE_HEIGHT            35
 #define FLAG_SIMULATE                36
-#define NUM_FLAGS                    37
+#define FLAG_COMBINE                 37
+#define NUM_FLAGS                    38
 
 /* DXF Version Identifiers */
 #define DXF_VERSION_R10 "AC1006"
@@ -545,7 +546,8 @@ static const char *flag_list[] = {
     "-f",
     "--image-width",
     "--image-height",
-    "--simulate"
+    "--simulate",
+    "--combine"
 };
 
 static const char *version_string = "embroider v0.1";
@@ -1490,6 +1492,12 @@ void embPolygon_reduceByNth(EmbArray *vertices, EmbArray *out, int nth)
     }
 }
 
+EmbPattern *embPattern_combine(EmbPattern *p1, EmbPattern *p2)
+{
+    EmbPattern *out = embPattern_create();
+    return out;
+}
+
 /* IMAGES
  *******************************************************************/
 
@@ -1617,8 +1625,8 @@ int render_line(EmbLine line, EmbImage *image, EmbColor color) {
     EmbVector diff, pos, offset;
     int i;
     float pix_w, pix_h;
-    offset.x = 10.0;
-    offset.y = 0.0;
+    offset.x = -10.0;
+    offset.y = -10.0;
     embVector_subtract(line.end, line.start, &diff);
     pix_w = image->width / image->pixel_width;
     pix_h = image->height / image->pixel_height;
@@ -2165,6 +2173,12 @@ static void usage(void)
     puts("    -V, --verbose    Print everything that has reporting.");
     puts("    -v, --version    Print the version.");
     puts("");
+    puts("Modify patterns:");
+    puts("    --combine        takes 3 arguments and combines the first");
+    puts("                     two by placing them atop each other and");
+    puts("                     outputs to the third");
+    puts("                        $ embroider --combine a.dst b.dst output.dst");
+    puts("");
     puts("Graphics:");
     puts("    -c, --circle     Add a circle defined by the arguments given to the current pattern.");
     puts("    -e, --ellipse    Add a circle defined by the arguments given to the current pattern.");
@@ -2231,8 +2245,8 @@ static int command_line_interface(int argc, char* argv[])
         return 0;
     }
 
-    width = 10.0;
-    height = 10.0;
+    width = 20.0;
+    height = 20.0;
 
     flags = argc-1;
     for (i=1; i < argc; i++) {
@@ -2359,6 +2373,23 @@ static int command_line_interface(int argc, char* argv[])
             else {
                 puts("Defaulting to the output name 'output.avi'.");
                 embImage_simulate(current_pattern, width, height, "output.avi");
+            }
+            break;
+        case FLAG_COMBINE:
+            if (i + 3 < argc) {
+                EmbPattern *out;
+                EmbPattern *p1 = embPattern_create();
+                EmbPattern *p2 = embPattern_create();
+                embPattern_readAuto(p1, argv[i+1]);
+                embPattern_readAuto(p2, argv[i+2]);
+                out = embPattern_combine(p1, p2);
+                embPattern_writeAuto(out, argv[i+3]);
+                embPattern_free(p1);
+                embPattern_free(p2);
+                embPattern_free(out);
+            }
+            else {
+                puts("--combine takes 3 arguments and you have supplied <3.");
             }
             break;
         case FLAG_VERSION:

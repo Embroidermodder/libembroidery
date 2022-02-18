@@ -1,5 +1,21 @@
 ## Ideas
 
+#### Rendering system
+
+There are two forms of render that will be produced.
+
+1. A raster format as ppm so we can have a pixel for pixel output (for example extracting the embedded images in some formats).
+2. The SVG format that will be fairly similar to InkStitch's format.
+
+We have an EmbImage struct to store the raster format.
+
+```
+embroider test01.csv --render
+```
+
+currently creates a blank image. Previously the Hilbert curve test managed to
+create a correctly rendered version.
+
 #### Identify the meaning of these TODO items
 
 * Saving CSV/SVG (rt) + CSV read/write UNKNOWN interpreted as COLOR bug #179 

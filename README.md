@@ -200,7 +200,8 @@ create a correctly rendered version.
 
 #### Identify the meaning of these TODO items
 
-* Saving CSV/SVG (rt) + CSV read/write UNKNOWN interpreted as COLOR bug #179 
+* Saving CSV/SVG (rt) + CSV read/write UNKNOWN interpreted as COLOR bug #179
+* Lego Mindstorms NXT/EV3 ports and/or commands
 
 #### Progress Chart
 

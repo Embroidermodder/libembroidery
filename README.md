@@ -5,7 +5,7 @@
 libembroidery is a low-level library for reading, writing, 
 and altering digital embroidery files in C.
 
-libembroidery is the underlying library that is used by [Embroidermodder 2](http://embroidermodder.github.io)
+libembroidery is the underlying library that is used by [Embroidermodder 2](http://embroidermodder.org)
 and is developed by [The Embroidermodder Team](#the-embroidermodder-team).
 It handles over 45 different embroidery specific formats as well
 as several non-embroidery specific vector formats.
@@ -16,6 +16,8 @@ the Embroidermodder 2 GUI.
 
 If you want to find a simple fix to contribute see the *Development* section
 of the manual.
+
+https://embroidermodder.org
 
 Copyright (c) 2013-2022 The EmbroiderModder Team
 
@@ -827,19 +829,6 @@ The arctan2 function in the source is calculated using Euler's series for the in
     \begin{equation}
     \tan^{-1}(x) = \sum_{n=0}^{\infty} \frac{2^{2n}(n!)^{2}}{(2n+1)!} \frac{x^{2n+1}}{(1+x^{2})^{n+1}}
     \end{equation}
-
-# Embroidermodder Website
-
-https://embroidermodder.org
-
-This is the main website and documentation hub for the Embroidermodder project.
-
-For a list of what we're currently working on please see [to-do.md](to-do.md).
-
-For specifics about the embedded systems development see [embedded.md](embedded.md).
-
-The documentation is licensed under the terms of the GNU Free Documentation
-License v1.3 see [LICENSE.md](LICENSE.md).
 
 ## Build
 

@@ -198,6 +198,11 @@ embroider test01.csv --render
 currently creates a blank image. Previously the Hilbert curve test managed to
 create a correctly rendered version.
 
+#### Binary download
+
+We need a current `embroider` command line program download, so people can update
+without building.
+
 #### Identify the meaning of these TODO items
 
 * Saving CSV/SVG (rt) + CSV read/write UNKNOWN interpreted as COLOR bug #179

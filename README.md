@@ -62,6 +62,29 @@ published by the Free Software Foundation; with no Invariant Sections, no
 Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included
 in the section entitled "GNU Free Documentation License".
 
+### The Embroidermodder Project
+
+The _Embroidermodder 2_ project is a collection of small software utilities for
+manipulating, converting and creating embroidery files in all major embroidery
+machine formats. The program _Embroidermodder 2_ itself is a larger graphical
+user interface (GUI) which is at the heart of the project.
+
+This manual, the website (`embroidermodder.org`), mobile embroidery format viewers
+and tools (`iMobileViewer`, `MobileViewer`), the core library of functions
+(`libembroidery`) and CLI (`embroider`) are all tools to make the standard
+user experience of working with an embroidery machine better without expensive
+software which is locked to specific manufacturers and formats. But ultimately
+we hope that the core _Embroidermodder 2_ is a practical, ever-present tool in
+larger workshops, small cottage industry workshops and personal hobbyist's
+bedrooms.
+
+Embroidermodder 2 is licensed under the zlib license and we aim to keep all of
+our tools open source and free of charge. If you would like to support the
+project check out our Open Collective group. If you would like to help, please
+join us on GitHub. This document is written as developer training as well
+helping new users (see the last sections) so this is the place to learn how
+to start changing the code.
+
 ### The Embroidermodder Team
 
 The Embroidermodder Team is the collection of people who've submitted
@@ -156,29 +179,6 @@ straight into the rest of this manual.
         -test       Run the test suite.
 
 For each of the flags described here we will go into greater detail in this manual.
-
-## Abstract
-
-The _Embroidermodder 2_ project is a collection of small software utilities for
-manipulating, converting and creating embroidery files in all major embroidery
-machine formats. The program _Embroidermodder 2_ itself is a larger graphical
-user interface (GUI) which is at the heart of the project.
-
-This manual, the website (`embroidermodder.org`), mobile embroidery format viewers
-and tools (`iMobileViewer`, `MobileViewer`), the core library of functions
-(`libembroidery`) and CLI (`embroider`) are all tools to make the standard
-user experience of working with an embroidery machine better without expensive
-software which is locked to specific manufacturers and formats. But ultimately
-we hope that the core _Embroidermodder 2_ is a practical, ever-present tool in
-larger workshops, small cottage industry workshops and personal hobbyist's
-bedrooms.
-
-Embroidermodder 2 is licensed under the zlib license and we aim to keep all of
-our tools open source and free of charge. If you would like to support the
-project check out our Open Collective group. If you would like to help, please
-join us on GitHub. This document is written as developer training as well
-helping new users (see the last sections) so this is the place to learn how
-to start changing the code.
 
 ## Ideas
 

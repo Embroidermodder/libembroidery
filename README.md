@@ -1,4 +1,4 @@
-# Libembroidery v0.1 Manual
+# Libembroidery v1.0-alpha Manual
 
 ## What is libembroidery?
 
@@ -308,69 +308,115 @@ gcc. In any C code, you must use:
 
 ### Overview
 
-| Format | Read Support | Write Support | Specialised Tests | Documentation |
-|---|---|---|---|---|
-| [Toyota Embroidery Format (.100)](#toyota-embroidery-format-100) | Basic | Basic | None | None |
-| [Toyota Embroidery Format (.10o)](#toyota-embroidery-format-10o) | None | None | None | None |
-| [Bernina Embroidery Format (.art)](#bernina-embroidery-format-art) | None | None | None | None |
-| [Bitmap Cache Embroidery Format (.bmc)](#bitmap-cache-embroidery-format-bmc) | None | None | None | None |
-| [Bits and Volts Embroidery Format (.bro)](#bits-and-volts-embroidery-format-bro) | None | None | None | None |
-| [Melco Embroidery Format (.cnd)](#melco-embroidery-format-cnd) | None | None | None | None |
-| [Embroidery Thread Color Format (.col)](#embroidery-thread-color-format-col) | None | None | None | None |
-| [Singer Embroidery Format (.csd)](csd) | None | None | None | None |
-| [Comma Separated Values (.csv)](csv) | None | None | None | None |
-| [Barudan Embroidery Format (.dat)](dat) | None | None | None | None |
-| [Melco Embroidery Format (.dem)](dem) | None | None | None | None |
-| [Barudan Embroidery Format (.dsb)](dsb) | None | None | None | None |
-| [Tajima Embroidery Format (.dst)](dst) | None | None | None | None |
-| [ZSK USA Embroidery Format (.dsz)](dsz) | None | None | None | None |
-| [Drawing Exchange Format (.dxf)](dxf) | None | None | None | None |
-| [Embird Embroidery Format (.edr)](edr) | None | None | None | None |
-| [Elna Embroidery Format (.emd)](emd) | None | None | None | None |
-| [Melco Embroidery Format (.exp)](exp) | None | None | None | None |
-| [Eltac Embroidery Format (.exy)](exy) | None | None | None | None |
-| [Sierra Expanded Embroidery Format (.eys)](eys) | None | None | None | None |
-| [Fortron Embroidery Format (.fxy)](fxy_format.md) | None | None | None | None |
-| [Smoothie G-Code Embroidery Format (.gc)](gc_format.md) | None | None | None | None |
-| [Great Notions Embroidery Format (.gnc)](gnc_format.md) | None | None | None | None |
-| [Gold Thread Embroidery Format (.gt)](gt_format.md) | None | None | None | None |
-| [Husqvarna Viking Embroidery Format (.hus)](hus_format.md) | None | None | None | None |
-| [Inbro Embroidery Format (.inb)](inb_format.md) | None | None | None | None |
-| [Embroidery Color Format (.inf)](inf_format.md) | None | None | None | None |
-| [Janome Embroidery Format (.jef)](jef_format.md) | None | None | None | None |
-| [Pfaff Embroidery Format (.ksm)](ksm_format.md) | None | None | None | None |
-| [Pfaff Embroidery Format (.max)](max_format.md) | None | None | None | None |
-| [Mitsubishi Embroidery Format (.mit)](mit_format.md) | None | None | None | None |
-| [Ameco Embroidery Format (.new)](new_format.md) | None | None | None | None |
-| [Melco Embroidery Format (.ofm)](ofm_format.md) | None | None | None | None |
-| [Pfaff Embroidery Format (.pcd)](pcd_format.md) |  None | None | None | None |
-| [Pfaff Embroidery Format (.pcm)](pcm_format.md) | None | None | None | None |
-| [Pfaff Embroidery Format (.pcq)](pcq_format.md) | None | None | None | None |
-| [Pfaff Embroidery Format (.pcs)](pcs_format.md) | None | None | None | None |
-| [Brother Embroidery Format (.pec)](pec_format.md) | None | None | None | None |
-| [Brother Embroidery Format (.pel)](pel_format.md) | None | None | None | None |
-| [Brother Embroidery Format (.pem)](pem_format.md) | None | None | None | None |
-| [Brother Embroidery Format (.pes)](pes_format.md) | None | None | None | None |
-| [Brother Embroidery Format (.phb)](phb_format.md) | None | None | None | None |
-| [Brother Embroidery Format (.phc)](phc_format.md) | None | None | None | None |
-| [AutoCAD Embroidery Format (.plt)](plt_format.md) | None | None | None | None |
-| [RGB Embroidery Format (.rgb)](rgb_format.md) | None | None | None | None |
-| [Janome Embroidery Format (.sew)](sew_format.md) | None | None | None | None |
-| [Husqvarna Viking Embroidery Format (.shv)](shv_format.md) | None | None | None | None |
-| [Sunstar Embroidery Format (.sst)](sst_format.md) | None | None | None | None |
-| [Data Stitch Embroidery Format (.stx)](stx_format.md) | None | None | None | None |
-| [Scalable Vector Graphics (.svg)](#scalable-vector-graphics-svg) | None | None | None | None |
-| [Pfaff Embroidery Format (.t01)](#pfaff-embroidery-format-t01) | None | None | None | None |
-| [Pfaff Embroidery Format (.t09)](#pfaff-embroidery-format-t09) | None | None | None | None |
-| [Happy Embroidery Format (.tap)](#happy-embroidery-format-tap) | None | None | None | None |
-| [ThredWorks Embroidery Format (.thr)](#thredworks-embroidery-format-thr) | None | None | None | None |
-| [Text File (.txt)](#text_file_txt) | None | None | None | None |
-| [Barudan Embroidery Format (.u00)](#barudan-embroidery-format-u00) | None | None | None | None |
-| [Barudan Embroidery Format (.u01)](#barudan-embroidery-format-u01) | None | None | None | None |
-| [Pfaff Embroidery Format (.vip)](#pfaff-embroidery-format-vip) | None | None | None | None |
-| [Pfaff Embroidery Format (.vp3)](#pfaff-embroidery-format-vp3) | None | None | None | None |
-| [Singer Embroidery Format (.xxx)](#singer-embroidery-format-xxx) | None | None | None | None |
-| [ZSK USA Embroidery Format (.zsk)](#zsk_usa_embroidery_format_zsk) | None | | None | None | None |
+#### Read/Write Support Levels
+
+The table of read/write format support levels uses the status levels described here:
+
+| Status | Description |
+|---|---|
+| None (0) | Either the format produces no output, reporting an error. Or it produces a Tajima dst file as an alternative. |
+| Poor (1) | A file somewhat similar to our examples is produced. We don't know how well it runs on machines in practice as we don't have any user reports or personal tests. |
+| Basic (2) | Simple files in this format run well on machines that use this format. |
+| Standard (3) | Files with non-standard features work on machines and we have good documentation on the format. |
+| Reliable (4) | All known features don't cause crashes. Almost all work as expected. |
+| Good (5) | All known features of the format work on machines that use this format. Translations from and to this format preserve all features present in both. |
+
+So all formats can, in principle, have good read and good write support, because it's defined in relation to files that we have described the formats for.
+
+#### Test Support Levels
+
+| Status | Description |
+|---|---|
+| None (0) | No tests have been written to test the specifics of the format. |
+| Basic (1) | Stitch Lists and/or colors have read/write tests. |
+| Thorough (2) | All features of that format has at least one test. |
+| Fuzz (2) | Can test the format for uses of features that we haven't thought of by feeding in nonsense that is designed to push possibly dangerous weaknesses to reveal themselves. |
+| Complete (3) | Both thorough and fuzz testing is covered. |
+
+So all formats can, in principle, have complete testing support, because it's defined in relation to files that we have described the formats for.
+
+#### Documentation Support Levels
+
+| Status | Description |
+|---|---|
+| None (0) | We haven't researched this beyond finding example files. |
+| Basic (1) | We have a rough sketch of the size and contents of the header if there is one. We know the basic stitch encoding (if there is one), but not necessarily all stitch features. |
+| Standard (2) | We know some good sources and/or have tested all the features that appear to exist. They mostly work the way we have described. |
+| Good (3) | All features that were described somewhere have been covered here or we have thoroughly tested our ideas against other softwares and hardwares and they work as expected. |
+| Complete (4) | There is a known official description and our description covers all the same features. |
+
+Not all formats can have complete documentation because it's based on what 
+information is publically available. So the total score is reported in the table
+below based on what level we think is available.
+
+#### Table of Format Support Levels
+
+| *Format* | *Read Support* | *Write Support* | *Specialised Tests* | *Documentation* | *Score* | *Available Score* |
+|---|---|---|---|---|---|---|
+| [Toyota Embroidery Format (.100)](#toyota-embroidery-format-100) | Basic | Basic | None | None | 0 | 11 |
+| [Toyota Embroidery Format (.10o)](#toyota-embroidery-format-10o) | None | None | None | None | 0 | 11 |
+| [Bernina Embroidery Format (.art)](#bernina-embroidery-format-art) | None | None | None | None | 0 | 11 |
+| [Bitmap Cache Embroidery Format (.bmc)](#bitmap-cache-embroidery-format-bmc) | None | None | None | None | 0 | 11 |
+| [Bits and Volts Embroidery Format (.bro)](#bits-and-volts-embroidery-format-bro) | None | None | None | None | 0 | 11 |
+| [Melco Embroidery Format (.cnd)](#melco-embroidery-format-cnd) | None | None | None | None | 0 | 11 |
+| [Embroidery Thread Color Format (.col)](#embroidery-thread-color-format-col) | None | None | None | None | 0 | 11 |
+| [Singer Embroidery Format (.csd)](#singer-embroidery-format-csd) | None | None | None | None | 0 | 11 |
+| [Comma Separated Values (.csv)](#comma-seperated-values-csv) | None | None | None | None | 0 | 11 |
+| [Barudan Embroidery Format (.dat)](#barudan-embroidery-format-dat) | None | None | None | None | 0 | 11 |
+| [Melco Embroidery Format (.dem)](dem) | None | None | None | None | 0 | 11 |
+| [Barudan Embroidery Format (.dsb)](dsb) | None | None | None | None | 0 | 11 |
+| [Tajima Embroidery Format (.dst)](dst) | None | None | None | None | 0 | 11 |
+| [ZSK USA Embroidery Format (.dsz)](dsz) | None | None | None | None | 0 | 11 |
+| [Drawing Exchange Format (.dxf)](dxf) | None | None | None | None | 0 | 11 |
+| [Embird Embroidery Format (.edr)](edr) | None | None | None | None | 0 | 11 |
+| [Elna Embroidery Format (.emd)](emd) | None | None | None | None | 0 | 11 |
+| [Melco Embroidery Format (.exp)](exp) | None | None | None | None | 0 | 11 |
+| [Eltac Embroidery Format (.exy)](exy) | None | None | None | None | 0 | 11 |
+| [Sierra Expanded Embroidery Format (.eys)](eys) | None | None | None | None | 0 | 11 |
+| [Fortron Embroidery Format (.fxy)](fxy_format.md) | None | None | None | None | 0 | 11 |
+| [Smoothie G-Code Embroidery Format (.gc)](gc_format.md) | None | None | None | None | 0 | 11 |
+| [Great Notions Embroidery Format (.gnc)](gnc_format.md) | None | None | None | None | 0 | 11 |
+| [Gold Thread Embroidery Format (.gt)](gt_format.md) | None | None | None | None | 0 | 11 |
+| [Husqvarna Viking Embroidery Format (.hus)](hus_format.md) | None | None | None | None | 0 | 11 |
+| [Inbro Embroidery Format (.inb)](inb_format.md) | None | None | None | None | 0 | 11 |
+| [Embroidery Color Format (.inf)](inf_format.md) | None | None | None | None | 0 | 11 |
+| [Janome Embroidery Format (.jef)](jef_format.md) | None | None | None | None | 0 | 11 |
+| [Pfaff Embroidery Format (.ksm)](ksm_format.md) | None | None | None | None | 0 | 11 |
+| [Pfaff Embroidery Format (.max)](max_format.md) | None | None | None | None | 0 | 11 |
+| [Mitsubishi Embroidery Format (.mit)](mit_format.md) | None | None | None | None | 0 | 11 |
+| [Ameco Embroidery Format (.new)](new_format.md) | None | None | None | None | 0 | 11 |
+| [Melco Embroidery Format (.ofm)](ofm_format.md) | None | None | None | None | 0 | 11 |
+| [Pfaff Embroidery Format (.pcd)](pcd_format.md) |  None | None | None | None | 0 | 11 |
+| [Pfaff Embroidery Format (.pcm)](pcm_format.md) | None | None | None | None | 0 | 11 |
+| [Pfaff Embroidery Format (.pcq)](pcq_format.md) | None | None | None | None | 0 | 11 |
+| [Pfaff Embroidery Format (.pcs)](pcs_format.md) | None | None | None | None | 0 | 11 |
+| [Brother Embroidery Format (.pec)](pec_format.md) | None | None | None | None | 0 | 11 |
+| [Brother Embroidery Format (.pel)](pel_format.md) | None | None | None | None | 0 | 11 |
+| [Brother Embroidery Format (.pem)](pem_format.md) | None | None | None | None | 0 | 11 |
+| [Brother Embroidery Format (.pes)](pes_format.md) | None | None | None | None | 0 | 11 |
+| [Brother Embroidery Format (.phb)](phb_format.md) | None | None | None | None | 0 | 11 |
+| [Brother Embroidery Format (.phc)](phc_format.md) | None | None | None | None | 0 | 11 |
+| [AutoCAD Embroidery Format (.plt)](plt_format.md) | None | None | None | None | 0 | 11 |
+| [RGB Embroidery Format (.rgb)](rgb_format.md) | None | None | None | None | 0 | 11 |
+| [Janome Embroidery Format (.sew)](sew_format.md) | None | None | None | None | 0 | 11 |
+| [Husqvarna Viking Embroidery Format (.shv)](shv_format.md) | None | None | None | None | 0 | 11 |
+| [Sunstar Embroidery Format (.sst)](sst_format.md) | None | None | None | None | 0 | 11 |
+| [Data Stitch Embroidery Format (.stx)](stx_format.md) | None | None | None | None | 0 | 11 |
+| [Scalable Vector Graphics (.svg)](#scalable-vector-graphics-svg) | None | None | None | None | 0 | 12 |
+| [Pfaff Embroidery Format (.t01)](#pfaff-embroidery-format-t01) | None | None | None | None | 0 | 11 |
+| [Pfaff Embroidery Format (.t09)](#pfaff-embroidery-format-t09) | None | None | None | None | 0 | 11 |
+| [Happy Embroidery Format (.tap)](#happy-embroidery-format-tap) | None | None | None | None | 0 | 11 |
+| [ThredWorks Embroidery Format (.thr)](#thredworks-embroidery-format-thr) | None | None | None | None | 0 | 11 |
+| [Text File (.txt)](#text_file_txt) | None | None | None | None | 0 | 11 |
+| [Barudan Embroidery Format (.u00)](#barudan-embroidery-format-u00) | None | None | None | None | 0 | 11 |
+| [Barudan Embroidery Format (.u01)](#barudan-embroidery-format-u01) | None | None | None | None | 0 | 11 |
+| [Pfaff Embroidery Format (.vip)](#pfaff-embroidery-format-vip) | None | None | None | None | 0 | 11 |
+| [Pfaff Embroidery Format (.vp3)](#pfaff-embroidery-format-vp3) | None | None | None | None | 0 | 11 |
+| [Singer Embroidery Format (.xxx)](#singer-embroidery-format-xxx) | None | None | None | None | 0 | 11 |
+| [ZSK USA Embroidery Format (.zsk)](#zsk_usa_embroidery_format_zsk) | None | | None | None | None | 0 | 11 |
+| *Total* | - | - | - | - | 0 | 671 |
+
+For a total of 0% coverage.
 
 ### Toyota Embroidery Format (.100)
 

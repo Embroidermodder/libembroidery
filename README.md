@@ -629,9 +629,9 @@ Stitch Only Format.
 
 The format uses a signed 3 byte-length number type.
 
-See the description here[5](#5) for the overview of the format.
+See the description here ([5](#5)) for the overview of the format.
 
-For an example of the format see[11](#11).
+For an example of the format see ([11](#11)).
 
 ### Pfaff Embroidery Format (.pcm)
 
@@ -1129,18 +1129,29 @@ in that order then writes them to the output file `output.pes`.
 
 ## Bibliography
 
-  1. Rudolf _Technical Info_ [http://www.achatina.de/sewing/main/TECHNICL.HTM](http://www.achatina.de/sewing/main/TECHNICL.HTM)
-   (Accessed 25 November 2021)
-  2. \cite{fineEmbStudio2021}
-  3. Edutech format description\cite{eduTechWikiDST},
-  4. KDE Liberty Description\cite{libertyTajima
-  5. The Sewing Witch _PCD2FMT_ [http://www.sewingwitch.com/sewing/bin/pcd2fmt.html](http://www.sewingwitch.com/sewing/bin/pcd2fmt.html) (Accessed November 2021)
-  6. [http://steve-jansen.github.io/guides/windows-batch-scripting/part-7-functions.html](http://steve-jansen.github.io/guides/windows-batch-scripting/part-7-functions.html)
-  7. [https://stackoverflow.com/questions/16286134/imagemagick-how-can-i-work-with-histogram-result](https://stackoverflow.com/questions/16286134/imagemagick-how-can-i-work-with-histogram-result)
-  8. Fritzing [https://github.com/fritzing/fritzing-app](https://github.com/fritzing/fritzing-app)
-  9. Sahoo, P., Wilkins, C., and Yeager, J., “Threshold selection using Renyi's entropy”, _Pattern Recognition_, vol. 30, no. 1, pp. 71–84, 1997. doi:10.1016/S0031-3203(96)00065-9.
-  10. [http://www.fmwconcepts.com/imagemagick/sahoothresh/index.php](http://www.fmwconcepts.com/imagemagick/sahoothresh/index.php) (Accessed 12 Dec 2021)
-  11. FINDME
+##### 1
+Rudolf _Technical Info_ [http://www.achatina.de/sewing/main/TECHNICL.HTM](http://www.achatina.de/sewing/main/TECHNICL.HTM)
+(Accessed 25 November 2021)
+##### 2
+fineEmbStudio2021
+##### 3
+Edutech format description (eduTechWikiDST)
+##### 4
+KDE Liberty Description (libertyTajima)
+##### 5
+The Sewing Witch _PCD2FMT_ [http://www.sewingwitch.com/sewing/bin/pcd2fmt.html](http://www.sewingwitch.com/sewing/bin/pcd2fmt.html) (Accessed November 2021)
+##### 6
+[http://steve-jansen.github.io/guides/windows-batch-scripting/part-7-functions.html](http://steve-jansen.github.io/guides/windows-batch-scripting/part-7-functions.html)
+##### 7
+ [https://stackoverflow.com/questions/16286134/imagemagick-how-can-i-work-with-histogram-result](https://stackoverflow.com/questions/16286134/imagemagick-how-can-i-work-with-histogram-result)
+##### 8
+Fritzing [https://github.com/fritzing/fritzing-app](https://github.com/fritzing/fritzing-app)
+##### 9
+Sahoo, P., Wilkins, C., and Yeager, J., “Threshold selection using Renyi's entropy”, _Pattern Recognition_, vol. 30, no. 1, pp. 71–84, 1997. doi:10.1016/S0031-3203(96)00065-9.
+##### 10
+[http://www.fmwconcepts.com/imagemagick/sahoothresh/index.php](http://www.fmwconcepts.com/imagemagick/sahoothresh/index.php) (Accessed 12 Dec 2021)
+##### 11
+FINDME
 
 ## Appendix
 

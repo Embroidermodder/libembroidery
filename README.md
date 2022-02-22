@@ -181,6 +181,56 @@ straight into the rest of this manual.
 
 For each of the flags described here we will go into greater detail in this manual.
 
+### To Flag
+
+### Circle Flag
+
+### Ellipse Flag
+
+### Line Flag
+
+### Polyline Flag
+
+### Polygon Flag
+
+### Satin Flag
+
+### Stitch Flag
+
+### 
+
+### Basic Test Suite
+
+The flag `--test` runs the tests that take the least time and have the
+most utility. If you're submitting a patch for review, please run:
+
+    $ embroider --test | tail -n 1
+
+You'll be presented with an overall PASS or FAIL for your build,
+if your build fails you can try and trace the error with:
+
+    $ valgrind embroider --verbose --test
+
+or
+
+    $ gdb --args embroider --verbose --test
+
+depending on your preferred debugging approach. Passing this test
+will be required for us to accept your patch.
+
+### Full Test Suite
+
+The flag `--full-test-suite` runs all the tests that have been written.
+Since this results in a lot of output the details are both to stdout
+and to a text file called `test_matrix.txt`.
+
+Patches that strictly improve the results in the `test_matrix.txt` over
+the current version will likely be accepted and it'll be a good place
+to go digging for contributions. (Note: strictly improve means that
+the testing result for each test is as good a result, if not better.
+Sacrificing one critera for another would require some design work
+before we would consider it.)
+
 ## Ideas
 
 #### Rendering system
@@ -273,8 +323,6 @@ For control statements: please put the first brace on the same line.
     
     }
 
-Use exceptions sparingly.
-
 Do not use ternary operator (?:) in place of if/else.
 
 Do not repeat a variable name that already occurs in an outer scope.
@@ -290,14 +338,7 @@ easily see which areas of the code need more love.
 
 libembroidery is written in C and adheres to C89 standards. This means
 that any C99 or C++ comments will show up as errors when compiling with
-gcc. In any C code, you must use:
-
-    /* C Style Comments */
-    /* TODO: This code clearly needs more work or further review. */
-    /* BUG: This code is definitely wrong. It needs fixed. */
-    /* HACK: This code shouldn't be written this way or I don't feel right about it. There may a better solution */
-    /* WARNING: Think twice (or more times) before changing this code. I put this here for a good reason. */
-    /* NOTE: This comment is much more important than lesser comments. */
+gcc.
 
 ## Formats
 
@@ -877,20 +918,6 @@ smaller set of features will be supported. However, we will write a
 That way the work that has been done to simplify the C code can be applied to
 the assembly versions.
 
-## Utility Functions
-
-### Avoiding the use of libc
-
-### Avoiding the use of libm
-
-The $\cos$ and $\sin$ functions are calculated using 
-
-The arctan2 function in the source is calculated using Euler's series for the inverse tangent\cite{Chien-Lih2005}:
-
-    \begin{equation}
-    \tan^{-1}(x) = \sum_{n=0}^{\infty} \frac{2^{2n}(n!)^{2}}{(2n+1)!} \frac{x^{2n+1}}{(1+x^{2})^{n+1}}
-    \end{equation}
-
 ## Build
 
 To build the documentation run `make`. This should run no problem on a normal Unix-like environment
@@ -916,9 +943,6 @@ responsibility of other teams using the library.
 
 So libembroidery is going to be supported on:
 
-    * x86 systems as assembly (to aid writing assembly for other systems)
-    * avr systems as assembly (for arduino)
-    * arm systems as assembly (for other embedded systems)
     * C (by default)
     * C++ (also by default)
     * Java (for the Android application MobileViewer)
@@ -933,32 +957,23 @@ see this StackOverflow discussion [for help](https://stackoverflow.com/questions
 
 For Python you can do the same using [ctypes](https://www.geeksforgeeks.org/how-to-call-a-c-function-in-python/).
 
-## To Flag
+## Threads
 
-## Circle Flag
+* [DXF Color Table](#dxf_color_table)
+* [HUS Color Table](#hus_color_table)
+* [JEF Color Table](#jef_color_table)
+* [PCM Color Table](#pcm_color_table)
+* [PEC Color Table](#pec_color_table)
 
-## Ellipse Flag
+### DXF color table
 
-## Line Flag
+### HUS color table
 
-## Polyline Flag
+### JEF color table
 
-## Polygon Flag
+### PCM color table
 
-## Satin Flag
-
-## Stitch Flag
-
-## Test Suite
-
-
-# Threads
-
-* [DXF Color Table](dxf_color_table.md)
-* [HUS Color Table](hus_color_table.md)
-* [JEF Color Table](jef_color_table.md)
-* [PCM Color Table](pcm_color_table.md)
-* [PEC Color Table](pec_color_table.md)
+### PEC color table
 
 ## Other Supported Thread Brands
 
@@ -999,16 +1014,7 @@ switching between graphics formats and stitch formats we need to use a vertical
 flip (`embPattern_flip`).
 
 `0x20` is the space symbol, so when padding either 0 or space is preferred and
-in the case of space use the literal ' '. Use the macros:
-
-```
-    #define PAD_SPACE(n) \
-        embFile_pad(currentFile, ' ', n)
-    #define PAD_ZERO(n) \
-        embFile_pad(currentFile, 0, n)
-```
-
-to save writing functions that may not inline.
+in the case of space use the literal ' '.
 
 ### Design Philosophy and Coding Standards
 
@@ -1029,27 +1035,6 @@ to save writing functions that may not inline.
 
 A currently unsolved problem in development that warrants further research is
 the scenario where a user wants to feed embroider an image that can then be .
-
-### Finding fixes
-
-To find jobs marked within the source code rather than the list above, use:
-
-```
-    grep "TODO" *.c *.h
-```
-
-### Testing
-
-Build `embroider` then run:
-
-```
-    ./embroider -test &> report.txt
-```
-
-If any of the tests return a fail in the summary (see `tail report.txt`) then
-it would help the project to send us an issue attaching the file to your message
-along with a description of the system you ran the program on.
-
 
 ## To Do
 

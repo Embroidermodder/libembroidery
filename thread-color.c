@@ -1,5 +1,9 @@
-#include "embroidery.h"
-#include <string.h>
+/*
+ * This file is part of libembroidery.
+ *
+ * Copyright 2018-2022 The Embroidermodder Team
+ * Licensed under the terms of the zlib license.
+ */
 
 /* Based on the DraftSight color table */
 const unsigned char _dxfColorTable[][3] = {

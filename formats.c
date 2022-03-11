@@ -6793,10 +6793,15 @@ int svgIsTextAreaAttribute(const char* buff) {
     return SVG_NULL;
 }
 
-int svgIsCatchAllAttribute(const char* buff) {
-    if (stringInArray(buff, catch_all_tokens)) {
-        return SVG_CATCH_ALL;
+char svg_in_table_by_index(const char *buff, const int table[], const char *error, int element_id)
+{
+    int i;
+    for (i=0; table[i] >= 0; i++) {
+        if (!strcmp(buff, svg_attributes_tokens[table[i]])) {
+            return SVG_ATTRIBUTE;
+        }
     }
+    printf("ERROR %s not found in %s[%d].\n", buff, error, element_id);
     return SVG_NULL;
 }
 
@@ -6818,15 +6823,49 @@ void svgProcess(int c, const char* buff)
     } else if (svgExpect == SVG_EXPECT_ATTRIBUTE) {
         char advance = 0;
         switch (current_element_id) {
-        case ELEMENT_XML:
-            advance = svg_in_attribute_table(buff, xml_attribute_tokens,
-                "xml_attribute_tokens");
-            break;
         case ELEMENT_A:
+        case ELEMENT_CIRCLE:
+        case ELEMENT_DEFS:
+        case ELEMENT_ELLIPSE:
+        case ELEMENT_FOREIGN_OBJECT:
+        case ELEMENT_G:
+        case ELEMENT_LINE:
+        case ELEMENT_LINEAR_GRADIENT:
+        case ELEMENT_PATH:
+        case ELEMENT_POLYGON:
+        case ELEMENT_POLYLINE:
+        case ELEMENT_RADIAL_GRADIENT:
+        case ELEMENT_RECT:
+        case ELEMENT_SOLID_COLOR:
+        case ELEMENT_STOP:
+        case ELEMENT_SVG:
+        case ELEMENT_SWITCH:
+        case ELEMENT_TEXT:
+        case ELEMENT_TEXT_AREA:
+        case ELEMENT_TSPAN:
+        case ELEMENT_USE:
             advance = (char)svgIsProperty(buff);
-            if (advance) break;
-            advance = svg_in_attribute_table(buff, link_attribute_tokens,
-                "link_attribute_tokens");
+            break;
+        case ELEMENT_ANIMATION:
+        case ELEMENT_AUDIO:
+        case ELEMENT_DESC:
+        case ELEMENT_IMAGE:
+        case ELEMENT_METADATA:
+        case ELEMENT_TITLE:
+        case ELEMENT_VIDEO:
+            advance = (char)svgIsMediaProperty(buff);
+            break;
+            default: break;
+        }
+        if (!advance) {
+            if (current_element_id < 1) {
+                advance = svg_in_table_by_index(buff, svg_attribute_table[current_element_id], "svg_attributes_table", current_element_id);
+            }
+        }
+        else {
+        switch (current_element_id) {
+        case ELEMENT_A:
+            advance = svg_in_attribute_table(buff, link_attribute_tokens, "link_attribute_tokens");
             break;
         case ELEMENT_ANIMATE:
             advance = svg_in_attribute_table(buff, animate_attribute_tokens,
@@ -6837,207 +6876,148 @@ void svgProcess(int c, const char* buff)
                 "animate_color_attribute_tokens");
             break;
         case ELEMENT_ANIMATE_MOTION:
-            if (!advance) {
-                advance = svg_in_attribute_table(buff,
-                    animate_motion_attribute_tokens,
-                    "animate_motion_attribute_tokens");
-            }
+            advance = svg_in_attribute_table(buff,
+                animate_motion_attribute_tokens,
+                "animate_motion_attribute_tokens");
             break;
         case ELEMENT_ANIMATE_TRANSFORM:
-            if (!advance) {
-                advance = svg_in_attribute_table(buff,
-                    animate_transform_attribute_tokens,
-                    "animate_transform_attribute_tokens");
-            }
+            advance = svg_in_attribute_table(buff,
+                animate_transform_attribute_tokens,
+                "animate_transform_attribute_tokens");
             break;
         case ELEMENT_ANIMATION:
-            if (!advance) {
-                advance = (char)svgIsMediaProperty(buff);
-            }
-            if (!advance) {
-                advance = (char)svgIsAnimationAttribute(buff);
-            }
+            advance = (char)svgIsAnimationAttribute(buff);
             break;
         case ELEMENT_AUDIO:
-            if (!advance) {
-                advance = (char)svgIsMediaProperty(buff);
-            }
-            if (!advance) {
-                advance = (char)svgIsAudioAttribute(buff);
-            }
+            advance = (char)svgIsAudioAttribute(buff);
             break;
         case ELEMENT_CIRCLE:
-            if (!advance) {
-                advance = (char)svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = (char)svgIsCircleAttribute(buff);
-            }
+            advance = (char)svgIsCircleAttribute(buff);
             break;
         case ELEMENT_DEFS:
-            if (!advance) {
-                advance = (char)svgIsProperty(buff);
-            }
-            if (!advance) { advance = (char)svgIsDefsAttribute(buff); }
+            advance = (char)svgIsDefsAttribute(buff);
             break;
         case ELEMENT_DESC:
-            if (!advance) { advance = (char)svgIsMediaProperty(buff); }
-            if (!advance) { advance = (char)svgIsDescAttribute(buff); }
+            advance = (char)svgIsDescAttribute(buff);
             break;
         case ELEMENT_DISCARD:
-            if (!advance) { advance = (char)svgIsDiscardAttribute(buff); }
+            advance = (char)svgIsDiscardAttribute(buff);
             break;
         case ELEMENT_ELLIPSE:
-            if (!advance) { advance = (char)svgIsProperty(buff); }
-            if (!advance) { advance = (char)svgIsEllipseAttribute(buff); }
+            advance = (char)svgIsEllipseAttribute(buff);
             break;
         case ELEMENT_FONT:
-            if (!advance) { advance = (char)svgIsFontAttribute(buff); }
+            advance = (char)svgIsFontAttribute(buff);
             break;
         case ELEMENT_FONT_FACE:
-            if (!advance) { advance = (char)svgIsFontFaceAttribute(buff); }
+            advance = (char)svgIsFontFaceAttribute(buff);
             break;
         case ELEMENT_FONT_FACE_SRC:
-            if (!advance) { advance = (char)svgIsFontFaceSrcAttribute(buff); }
+            advance = (char)svgIsFontFaceSrcAttribute(buff);
             break;
         case ELEMENT_FONT_FACE_URI:
-            if (!advance) { advance = (char)svgIsFontFaceUriAttribute(buff); }
+            advance = (char)svgIsFontFaceUriAttribute(buff);
             break;
         case ELEMENT_FOREIGN_OBJECT:
-            if (!advance) {
-                advance = (char)svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = (char)svgIsForeignObjectAttribute(buff);
-            }
+            advance = (char)svgIsForeignObjectAttribute(buff);
             break;
         case ELEMENT_G:
-            if (!advance) {
-                advance = (char)svgIsProperty(buff);
-            }
-            if (!advance) {
-                advance = (char)svgIsGroupAttribute(buff);
-            }
+            advance = (char)svgIsGroupAttribute(buff);
             break;
         case ELEMENT_GLYPH:
-            if (!advance) {
-                advance = (char)svgIsGlyphAttribute(buff);
-            }
+            advance = (char)svgIsGlyphAttribute(buff);
             break;
         case ELEMENT_HANDLER:
-            if (!advance) { advance = (char)svgIsHandlerAttribute(buff); }
+            advance = (char)svgIsHandlerAttribute(buff);
             break;
         case ELEMENT_HKERN:
-            if (!advance) { advance = (char)svgIsHKernAttribute(buff); }
+            advance = (char)svgIsHKernAttribute(buff);
             break;
         case ELEMENT_IMAGE:
-            if (!advance) { advance = (char)svgIsMediaProperty(buff); }
-            if (!advance) { advance = (char)svgIsImageAttribute(buff); }
+            advance = (char)svgIsImageAttribute(buff);
             break;
         case ELEMENT_LINE:
-            if (!advance) { advance = (char)svgIsProperty(buff); }
-            if (!advance) { advance = (char)svgIsLineAttribute(buff); }
+            advance = (char)svgIsLineAttribute(buff);
             break;
         case ELEMENT_LINEAR_GRADIENT:
-            if (!advance) { advance = (char)svgIsProperty(buff); }
-            if (!advance) { advance = (char)svgIsLinearGradientAttribute(buff); }
+            advance = (char)svgIsLinearGradientAttribute(buff);
             break;
         case ELEMENT_LISTENER:
-            if (!advance) { advance = (char)svgIsListenerAttribute(buff); }
+            advance = (char)svgIsListenerAttribute(buff);
             break;
         case ELEMENT_METADATA:
-            if (!advance) { advance = (char)svgIsMediaProperty(buff); }
-            if (!advance) { advance = (char)svgIsMetadataAttribute(buff); }
+            advance = (char)svgIsMetadataAttribute(buff);
             break;
         case ELEMENT_MISSING_GLYPH:
-            if (!advance) { advance = (char)svgIsMissingGlyphAttribute(buff); }
+            advance = (char)svgIsMissingGlyphAttribute(buff);
             break;
         case ELEMENT_MPATH:
-            if (!advance) { advance = (char)svgIsMPathAttribute(buff); }
+            advance = (char)svgIsMPathAttribute(buff);
             break;
         case ELEMENT_PATH:
-            if (!advance) { advance = (char)svgIsProperty(buff); }
-            if (!advance) { advance = (char)svgIsPathAttribute(buff); }
+            advance = (char)svgIsPathAttribute(buff);
             break;
         case ELEMENT_POLYGON:
-            if (!advance) { advance = (char)svgIsProperty(buff); }
-            if (!advance) { advance = (char)svgIsPolygonAttribute(buff); }
+            advance = (char)svgIsPolygonAttribute(buff);
             break;
         case ELEMENT_POLYLINE:
-            if (!advance) { advance = (char)svgIsProperty(buff); }
-            if (!advance) { advance = (char)svgIsPolylineAttribute(buff); }
+            advance = (char)svgIsPolylineAttribute(buff);
             break;
         case ELEMENT_PREFETCH:
-            if (!advance) { advance = (char)svgIsPrefetchAttribute(buff); }
+            advance = (char)svgIsPrefetchAttribute(buff);
             break;
         case ELEMENT_RADIAL_GRADIENT:
-            if (!advance) { advance = (char)svgIsProperty(buff); }
-            if (!advance) { advance = (char)svgIsRadialGradientAttribute(buff); }
+            advance = (char)svgIsRadialGradientAttribute(buff);
             break;
         case ELEMENT_RECT:
-            if (!advance) { advance = (char)svgIsProperty(buff); }
-            if (!advance) { advance = (char)svgIsRectAttribute(buff); }
+            advance = (char)svgIsRectAttribute(buff);
             break;
         case ELEMENT_SCRIPT:
-            if (!advance) { advance = (char)svgIsScriptAttribute(buff); }
+            advance = (char)svgIsScriptAttribute(buff);
             break;
         case ELEMENT_SET:
-            if (!advance) { advance = (char)svgIsSetAttribute(buff); }
+            advance = (char)svgIsSetAttribute(buff);
             break;
         case ELEMENT_SOLID_COLOR:
-            if (!advance) { advance = (char)svgIsProperty(buff); }
-            if (!advance) { advance = (char)svgIsSolidColorAttribute(buff); }
+            advance = (char)svgIsSolidColorAttribute(buff);
             break;
         case ELEMENT_STOP:
-            if (!advance) { advance = (char)svgIsProperty(buff); }
-            if (!advance) { advance = (char)svgIsStopAttribute(buff); }
+            advance = (char)svgIsStopAttribute(buff);
             break;
         case ELEMENT_SVG:
-            if (!advance) { advance = (char)svgIsProperty(buff); }
-            if (!advance) { advance = (char)svgIsSvgAttribute(buff); }
+            advance = (char)svgIsSvgAttribute(buff);
             break;
         case ELEMENT_SWITCH:
-            if (!advance) { advance = (char)svgIsProperty(buff); }
-            if (!advance) { advance = (char)svgIsSwitchAttribute(buff); }
+            advance = (char)svgIsSwitchAttribute(buff);
             break;
         case ELEMENT_TBREAK:
             advance = (char)svgIsTBreakAttribute(buff);
             break;
         case ELEMENT_TEXT:
-            advance = (char)svgIsProperty(buff);
-            if (!advance) { advance = (char)svgIsTextAttribute(buff); }
+            advance = (char)svgIsTextAttribute(buff);
             break;
         case ELEMENT_TEXT_AREA:
-            advance = (char)svgIsProperty(buff);
-            if (advance) break;
             advance = (char)svgIsTextAreaAttribute(buff);
             break;
         case ELEMENT_TITLE:
-            advance = (char)svgIsMediaProperty(buff);
-            if (advance) break;
             advance = svg_in_attribute_table(buff, title_attribute_tokens,
                 "title_attribute_tokens");
             break;
         case ELEMENT_TSPAN:
-            advance = (char)svgIsProperty(buff);
-            if (advance) break;
             advance = svg_in_attribute_table(buff, tspan_attribute_tokens,
                 "tspan_attribute_tokens");
             break;
         case ELEMENT_USE:
-            advance = (char)svgIsProperty(buff);
-            if (advance) break;
             advance = svg_in_attribute_table(buff, use_attribute_tokens,
                 "use_attribute_tokens");
             break;
         case ELEMENT_VIDEO:
-            advance = (char)svgIsMediaProperty(buff);
-            if (advance) break;
             advance = svg_in_attribute_table(buff, video_attribute_tokens,
                 "video_attribute_tokens");
             break;
         default:
             break;
+        }
         }
         if (advance) {
             printf("ATTRIBUTE:\n");
@@ -7216,6 +7196,7 @@ char writeSvg(EmbPattern* pattern, FILE *file) {
     EmbColor color;
     int i, j;
     char isNormal, tmpX[32], tmpY[32];
+    EmbRect border;
 
     /* Pre-flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
     embPattern_flipVertical(pattern);
@@ -7228,11 +7209,22 @@ char writeSvg(EmbPattern* pattern, FILE *file) {
     /* TODO: See the SVG Tiny Version 1.2 Specification Section 7.14.
     *       Until all of the formats and API is stable, the width, height and viewBox attributes need to be left unspecified.
     *       If the attribute values are incorrect, some applications wont open it at all.
+    */
+    
+    /* Add a margin of 10%. */
+    border = boundingRect;
+    border.left *= 10.0;
+    border.right *= 10.0;
+    border.top *= 10.0;
+    border.bottom *= 10.0;
+    border.left -= 0.1*embRect_width(border);
+    border.right += 0.1*embRect_width(border);
+    border.top -= 0.1*embRect_height(border);
+    border.bottom += 0.1*embRect_height(border);
+    /* Sanity check here? */
     fprintf(file, "viewBox=\"%f %f %f %f\" ",
-            boundingRect.left,
-            boundingRect.top,
-            embRect_width(boundingRect),
-            embRect_height(boundingRect)); */
+            border.left, border.top,
+            embRect_width(border), embRect_height(border));
 
     fprintf(file, "xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\">");
     fprintf(file, "\n<g transform=\"scale(10)\">");

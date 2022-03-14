@@ -11,8 +11,6 @@ extern "C" {
 /* MACROS
  *****************************************************************************/
 
-#define EMB_DEBUG               1
-
 /* Machine codes for stitch flags */
 #define NORMAL                  0 /* stitch to (x, y) */
 #define JUMP                    1 /* move to (x, y) */
@@ -781,28 +779,6 @@ EMB_PUBLIC char embPattern_write(EmbPattern *pattern, const char* fileName, int 
 EMB_PUBLIC char embPattern_readAuto(EmbPattern *pattern, const char* fileName);
 EMB_PUBLIC char embPattern_writeAuto(EmbPattern *pattern, const char* fileName);
 
-/* NON-MACRO CONSTANTS
- ******************************************************************************/
-
-extern EmbFormatList formatTable[];
-extern const int pecThreadCount;
-extern const char imageWithFrame[38][48];
-extern const int shvThreadCount;
-extern const double embConstantPi;
-extern const EmbThread husThreads[];
-extern const EmbThread jefThreads[];
-extern const EmbThread shvThreads[];
-extern const EmbThread pcmThreads[];
-extern const EmbThread pecThreads[];
-extern const unsigned char _dxfColorTable[][3];
-
-/* VARIABLES
- ******************************************************************************/
- 
-extern int emb_error;
-
-
-
 /* INTERNAL FUNCTION PROTOTYPES
  *******************************************************************/
 void huffman_init(huffman *h, int lengths, int value);
@@ -908,11 +884,26 @@ int testThreadColor(void);
 int testEmbFormat(void);
 int full_test_matrix(char *fname);
 
-/* Global variables within library scope
- ****************************************
- */
+/* NON-MACRO CONSTANTS
+ ******************************************************************************/
 
+extern EmbFormatList formatTable[];
+extern const int pecThreadCount;
+extern const char imageWithFrame[38][48];
+extern const int shvThreadCount;
+extern const double embConstantPi;
+extern const EmbThread husThreads[];
+extern const EmbThread jefThreads[];
+extern const EmbThread shvThreads[];
+extern const EmbThread pcmThreads[];
+extern const EmbThread pecThreads[];
+extern const unsigned char _dxfColorTable[][3];
 extern EmbThread black_thread;
+
+/* VARIABLES
+ ******************************************************************************/
+
+extern int emb_error;
 extern int emb_verbose;
 
 #ifdef __cplusplus

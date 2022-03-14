@@ -1710,7 +1710,6 @@ char writeCol(EmbPattern* pattern, FILE* file)
 
 #define CsdSubMaskSize  479
 #define CsdXorMaskSize  501
-#define DEBUG 0
 
 char _subMask[CsdSubMaskSize];
 char _xorMask[CsdXorMaskSize];
@@ -1816,7 +1815,7 @@ char readCsd(EmbPattern* pattern, FILE* file) {
     }
     unknown1 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
     unknown2 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
-    if (DEBUG) {
+    if (emb_verbose>1) {
         printf("unknown bytes to decode: %c %c", unknown1, unknown2);
     }
 
@@ -2134,7 +2133,7 @@ char readDat(EmbPattern* pattern, FILE* file)
     }
     fseek(file, 0x02, SEEK_SET);
     stitchesRemaining = fread_uint16(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("stitchesRemaining: %d", stitchesRemaining);
     }
     fseek(file, 0x100, SEEK_SET);
@@ -3433,7 +3432,7 @@ char readHus(EmbPattern* pattern, FILE* file)
     fseek(file, 0x00, SEEK_SET);
 
     fread_int(file, &magicCode, EMB_INT32_LITTLE);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("magicCode: %d\n", magicCode);
     }
     fread_int(file, &numberOfStitches, EMB_INT32_LITTLE);
@@ -3443,7 +3442,7 @@ char readHus(EmbPattern* pattern, FILE* file)
     positiveYHoopSize = fread_int16(file);
     negativeXHoopSize = fread_int16(file);
     negativeYHoopSize = fread_int16(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("these should be put in the EmbPattern:\n");
         printf("%d\n", positiveXHoopSize);
         printf("%d\n", positiveYHoopSize);
@@ -3463,7 +3462,7 @@ char readHus(EmbPattern* pattern, FILE* file)
     fread(stringVal, 1, 8, file); /* TODO: check return value */
 
     unknown = fread_int16(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("TODO: identify this unknown variable: %d\n", unknown);
     }
     for (i = 0; i < numberOfColors; i++)
@@ -3635,7 +3634,7 @@ char readInb(EmbPattern* pattern, FILE* file)
     right = fread_int16(file);
     top = fread_int16(file);
     bottom = fread_int16(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("nullVal:                 %c\n", nullVal);
         printf("stitchCount:             %d\n", stitchCount);
         printf("width:                   %d\n", width);
@@ -3813,7 +3812,7 @@ void read_hoop(FILE *file, struct hoop_padding *hoop, char *label)
     hoop->top = fread_int32(file);
     hoop->right = fread_int32(file);
     hoop->bottom = fread_int32(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("%s\n", label);
         printf("    left:      %d\n", hoop->left);
         printf("    top:       %d\n", hoop->top);
@@ -3843,7 +3842,7 @@ char readJef(EmbPattern* pattern, FILE* file) {
         puts("ERROR: this file is corrupted or has too many stitches.");
         return 0;
     }
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("format flags = %d\n", formatFlags);
         printf("number of colors = %d\n", numberOfColors);
         printf("number of stitches = %d\n", numberOfStitchs);
@@ -4199,7 +4198,7 @@ char readNew(EmbPattern* pattern, FILE* file) {
     unsigned char data[3];
 
     stitchCount = fread_uint16(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("stitch count = %d\n", stitchCount);
     }
     while (fread(data, 1, 3, file) == 3) {
@@ -4312,7 +4311,7 @@ void ofmReadBlockHeader(FILE* file)
     unknown1 = fread_int16(file);
     unknown2 = (short)fread_int32(file);
     unknown3 = fread_int32(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("unknown1 = %d\n", unknown1);
         printf("unknown2 = %d\n", unknown2);
         printf("unknown3 = %d\n", unknown3);
@@ -4329,12 +4328,12 @@ void ofmReadBlockHeader(FILE* file)
     /* 0, 0, 0, 0, 1, 1, 1, 0, 64, 64 */
     for (i=0; i<10; i++) {
         val[i] = fread_int32(file);
-        if (EMB_DEBUG) {
+        if (emb_verbose>1) {
             printf("val[%d] = %d\n", i, val[i]);
         }
     }
     short1 = fread_int16(file); /*  0 */
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("short1 = %d\n", short1);
     }
 }
@@ -4386,7 +4385,7 @@ void ofmReadThreads(FILE* file, EmbPattern* p)
         fseek(file, 3, SEEK_CUR);
         colorNameLength = (char)fgetc(file);
         fread(colorName, 1, colorNameLength*2, file);
-        if (EMB_DEBUG) {
+        if (emb_verbose>1) {
             printf("threadLibrary = %d\n", threadLibrary);
             printf("colorNumber = %d\n", colorNumber);
         }
@@ -4401,7 +4400,7 @@ void ofmReadThreads(FILE* file, EmbPattern* p)
     primaryLibraryName = ofmReadLibrary(file);
     numberOfLibraries = fread_int16(file);
 
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("primary library name: %s\n", primaryLibraryName);
     }
 
@@ -4451,7 +4450,7 @@ char readOfm(EmbPattern* pattern, FILE* fileCompound)
     FILE *file;
     bcf_file* bcfFile = 0;
 
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         puts("Overridden during development.");
         return 0;
     }
@@ -4472,7 +4471,7 @@ char readOfm(EmbPattern* pattern, FILE* fileCompound)
     fread((unsigned char*)s, 1, classNameLength, file); /* TODO: check return value */
     unknownCount = fread_int16(file);
     /* TODO: determine what unknown count represents */
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("unknownCount = %d\n", unknownCount);
     }
 
@@ -4531,7 +4530,7 @@ char readPcd(EmbPattern* pattern, const char *fileName, FILE* file) {
      */
     hoopSize = (char)fgetc(file);
     colorCount = fread_uint16(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("version: %d\n", version);
         printf("hoop size: %d\n", hoopSize);
         printf("color count: %d\n", colorCount);
@@ -4603,7 +4602,7 @@ char readPcm(EmbPattern* pattern, FILE* file) {
     double dx = 0, dy = 0;
     int header_size = 16*2+6;
 
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("TODO: check header_size %d\n", header_size);
     }
 
@@ -4665,7 +4664,7 @@ char readPcq(EmbPattern* pattern, const char* fileName, FILE* file)
      * 3 for PCS with large hoop (115x120)
      */
     colorCount = fread_uint16(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("version: %d\n", version);
         printf("hoop size: %d\n", hoopSize);
         printf("color count: %d\n", colorCount);
@@ -4763,7 +4762,7 @@ char readPcs(EmbPattern* pattern, const char* fileName, FILE* file)
     }
 
     colorCount = fread_uint16(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("version: %d\n", version);
         printf("hoop size: %d\n", hoopSize);
         printf("color count: %d\n", colorCount);
@@ -4969,7 +4968,7 @@ char readPec(EmbPattern* pattern, const char *fileName, FILE* file) {
     unsigned char colorChanges;
     int i;
 
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("fileName: %s\n", fileName);
     }
 
@@ -5341,7 +5340,7 @@ char readPes(EmbPattern* pattern, const char *fileName, FILE* file) {
         break;
     }
 
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("debug information for reading fileName: %s\n", fileName);
         printf("pecstart = %d\n", pecstart);
     }
@@ -5809,7 +5808,7 @@ char readPhc(EmbPattern* pattern, FILE* file)
     bytesInSection3 = fread_uint16(file);
     fseek(file, bytesInSection3 + 0x12, SEEK_CUR);
 
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("version: %d\n", version);
     }
 
@@ -5990,7 +5989,7 @@ char writeSew(EmbPattern* pattern, FILE* file) {
     double xx = 0.0, yy = 0.0;
     binaryWriteShort(file, pattern->threads->count);
 
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("Debugging Information\n");
         printf("number of colors = %d\n", pattern->threads->count);
         printf("number of stitches = %d\n", pattern->stitchList->count);
@@ -6114,7 +6113,7 @@ char readShv(EmbPattern* pattern, FILE* file)
     numberOfSections = fgetc(file);
     something3 = (char)fgetc(file);
     
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("magicCode: %d\n", magicCode);
         printf("something: %d\n", something);
         printf("halfDesignWidth: %d\n", halfDesignWidth);
@@ -6307,7 +6306,7 @@ int stxReadThread(StxThread* thread, FILE* file)
     col.g = fgetc(file);
 
     whatIsthis = fgetc(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("col red: %d\n", col.r);
         printf("col green: %d\n", col.g);
         printf("col blue: %d\n", col.b);
@@ -6327,7 +6326,7 @@ int stxReadThread(StxThread* thread, FILE* file)
     somethingSomething2 = fread_int32(file);
     somethingElse = fread_int32(file);
     numberOfOtherDescriptors = fread_int16(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("somethingSomething: %d", somethingSomething);
         printf("somethingSomething2: %d", somethingSomething2);
         printf("somethingElse: %d", somethingElse);
@@ -6410,7 +6409,7 @@ char readStx(EmbPattern* pattern, FILE* file)
     left = fread_int16(file);
     bottom = fread_int16(file);
     top = fread_int16(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("paletteLength:           %d\n", paletteLength);
         printf("imageLength:             %d\n", imageLength);
         printf("something1:              %d\n", something1);
@@ -6461,11 +6460,11 @@ char readStx(EmbPattern* pattern, FILE* file)
 
     for (i = 0; i < 12; i++) {
         val[i] = fread_int16(file);
-        if (EMB_DEBUG) {
+        if (emb_verbose>1) {
             printf("identify val[%d] = %d", i, val[i]);
         }
     }
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         puts("val[4] == val[5] == 0");
         puts("val[10] == val[11] == 0");
     }
@@ -8088,7 +8087,7 @@ char readSvg(EmbPattern* pattern, FILE* file) {
 
     free(buff);
 
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("OBJECT SUMMARY:\n");
         if (pattern->circles) {
             for (i = 0; i < pattern->circles->count; i++) {
@@ -8379,7 +8378,7 @@ char writeT01(EmbPattern* pattern, FILE* file) {
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("bounding rectangle with top %f not used ", boundingRect.top);
         printf("in the function writeT01\n");
     }
@@ -8643,7 +8642,7 @@ char readThr(EmbPattern* pattern, FILE* file) {
     fseek(file, 16, SEEK_CUR); /* skip bitmap name (16 chars) */
 
     embColor_read(file, &background, 4);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("background: %c %c %c\n", background.r, background.g, background.b);
     }
     for (i = 0; i < 16; i++) {
@@ -8863,7 +8862,7 @@ char readU01(EmbPattern* pattern, FILE* file) {
     fileLength = ftell(file);
     fseek(file, 0x100, SEEK_SET);
     
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("file length: %d\n", fileLength);
     }
 
@@ -9134,7 +9133,7 @@ char writeVip(EmbPattern* pattern, FILE* file) {
     /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
 
     patternColor = minColors;
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         printf("patternColor: %d\n", patternColor);
     }
     if (minColors > 24) {
@@ -9387,7 +9386,7 @@ char readVp3(EmbPattern* pattern, FILE* file) {
     for (i = 0; i < 18; i++) {
         unsigned char v1;
         v1 = (char)fgetc(file);
-        if (EMB_DEBUG) {
+        if (emb_verbose>1) {
             printf("v%d = %d\n", i, v1);
         }
     }
@@ -9398,7 +9397,7 @@ char readVp3(EmbPattern* pattern, FILE* file) {
 
     fread_int(file, &numberOfColors, EMB_INT16_BIG);
     colorSectionOffset = (int)ftell(file);
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         puts("LIBEMBROIDERY DEBUG");
         puts("Format vp3");
         printf("    some: %d\n", some);
@@ -9450,7 +9449,7 @@ char readVp3(EmbPattern* pattern, FILE* file) {
         numberOfBytesInColor = fread_int32_be(file);
         fseek(file, 0x3, SEEK_CUR);
         
-        if (EMB_DEBUG) {
+        if (emb_verbose>1) {
             printf("number of bytes in color: %d\n", numberOfBytesInColor);
             printf("thread color number: %s\n", threadColorNumber);
             printf("offset to next color x: %d\n", offsetToNextColorX);
@@ -9741,7 +9740,7 @@ char readXxx(EmbPattern* pattern, FILE* file) {
     int dx = 0, dy = 0, numberOfColors, paletteOffset, i;
     char thisStitchJump = 0;
 
-    if (EMB_DEBUG) {
+    if (emb_verbose>1) {
         puts("readXxx has been overridden.");
         return 0;
     }

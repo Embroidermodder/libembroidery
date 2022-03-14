@@ -38,28 +38,19 @@ add_executable(embroider ${C_SOURCES})
 target_compile_definitions(embroider PUBLIC LIBEMBROIDERY_CLI)
 endif()
 
-if (WIN32)
 add_compile_options(
-	-fPIC
-	-pedantic
-	-Wall
-	$<$<CONFIG:DEBUG>:-g>
-	$<$<CONFIG:DEBUG>:-Wextra>
-	$<$<CONFIG:DEBUG>:-ansi>
-	$<$<CONFIG:DEBUG>:-Werror>
-)
-else(WIN32)
-add_compile_options(
-	-fPIC
-	-pedantic
-	-Wall
+	-g
 	-O2
-	$<$<CONFIG:DEBUG>:-g>
-	$<$<CONFIG:DEBUG>:-Wextra>
-	$<$<CONFIG:DEBUG>:-ansi>
-	$<$<CONFIG:DEBUG>:-Werror>
+	-fPIC
+	-ansi
+	-pedantic
+	-Wall
+	-Wextra
+	-Werror
 )
 
+if (WIN32)
+else (WIN32)
 target_link_libraries(embroider PRIVATE m)
 endif (WIN32)
 

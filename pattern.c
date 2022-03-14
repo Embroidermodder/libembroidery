@@ -124,11 +124,7 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p) {
         return;
     }
 
-#ifdef EMB_DEBUG_JUMP
-    breakAtFlags = (STOP | TRIM);
-#else /* EMB_DEBUG_JUMP */
     breakAtFlags = (STOP | JUMP | TRIM);
-#endif /* EMB_DEBUG_JUMP */
 
     for (i = 0; i < p->stitchList->count; i++) {
         EmbArray *pointList = 0;

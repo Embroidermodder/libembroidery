@@ -7,6 +7,11 @@
  * The array management for libembroidery's arrays.
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "embroidery.h"
 #include "embroidery-internal.h"
 
 EmbArray* embArray_create(int type) {

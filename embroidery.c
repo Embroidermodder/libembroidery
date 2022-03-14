@@ -5,7 +5,80 @@
  * Licensed under the terms of the zlib license.
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <limits.h>
+#include <ctype.h>
+#include <math.h>
+#include <time.h>
+
+#include "embroidery.h"
 #include "embroidery-internal.h"
+
+/**
+Type of sector
+*/
+#define CompoundFileSector_MaxRegSector 0xFFFFFFFA
+#define CompoundFileSector_DIFAT_Sector 0xFFFFFFFC
+#define CompoundFileSector_FAT_Sector   0xFFFFFFFD
+#define CompoundFileSector_EndOfChain   0xFFFFFFFE
+#define CompoundFileSector_FreeSector   0xFFFFFFFF
+
+/**
+Type of directory object
+*/
+#define ObjectTypeUnknown   0x00 /*!< Probably unallocated    */
+#define ObjectTypeStorage   0x01 /*!< a directory type object */
+#define ObjectTypeStream    0x02 /*!< a file type object      */
+#define ObjectTypeRootEntry 0x05 /*!< the root entry          */
+
+/**
+Special values for Stream Identifiers
+*/
+#define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /*!< All real stream Ids are less than this */
+#define CompoundFileStreamId_NoStream           0xFFFFFFFF /*!< There is no valid stream Id            */
+
+/* same order as flag_list, to use in jump table */
+#define FLAG_TO                       0
+#define FLAG_TO_SHORT                 1
+#define FLAG_HELP                     2
+#define FLAG_HELP_SHORT               3
+#define FLAG_FORMATS                  4
+#define FLAG_FORMATS_SHORT            5
+#define FLAG_QUIET                    6
+#define FLAG_QUIET_SHORT              7
+#define FLAG_VERBOSE                  8
+#define FLAG_VERBOSE_SHORT            9
+#define FLAG_VERSION                 10
+#define FLAG_VERSION_SHORT           11
+#define FLAG_CIRCLE                  12
+#define FLAG_CIRCLE_SHORT            13
+#define FLAG_ELLIPSE                 14
+#define FLAG_ELLIPSE_SHORT           15
+#define FLAG_LINE                    16
+#define FLAG_LINE_SHORT              17
+#define FLAG_POLYGON                 18
+#define FLAG_POLYGON_SHORT           19
+#define FLAG_POLYLINE                20
+#define FLAG_POLYLINE_SHORT          21
+#define FLAG_RENDER                  22
+#define FLAG_RENDER_SHORT            23
+#define FLAG_SATIN                   24
+#define FLAG_SATIN_SHORT             25
+#define FLAG_STITCH                  26
+#define FLAG_STITCH_SHORT            27
+#define FLAG_TEST                    28
+#define FLAG_FULL_TEST_SUITE         29
+#define FLAG_HILBERT_CURVE           30
+#define FLAG_SIERPINSKI_TRIANGLE     31
+#define FLAG_FILL                    32
+#define FLAG_FILL_SHORT              33
+#define FLAG_IMAGE_WIDTH             34
+#define FLAG_IMAGE_HEIGHT            35
+#define FLAG_SIMULATE                36
+#define FLAG_COMBINE                 37
+#define NUM_FLAGS                    38
 
 /* DATA 
  *******************************************************************/

@@ -8,7 +8,424 @@
  * library.
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#include "embroidery.h"
 #include "embroidery-internal.h"
+
+/* DXF Version Identifiers */
+#define DXF_VERSION_R10 "AC1006"
+#define DXF_VERSION_R11 "AC1009"
+#define DXF_VERSION_R12 "AC1009"
+#define DXF_VERSION_R13 "AC1012"
+#define DXF_VERSION_R14 "AC1014"
+#define DXF_VERSION_R15 "AC1015"
+#define DXF_VERSION_R18 "AC1018"
+#define DXF_VERSION_R21 "AC1021"
+#define DXF_VERSION_R24 "AC1024"
+#define DXF_VERSION_R27 "AC1027"
+
+#define DXF_VERSION_2000 "AC1015"
+#define DXF_VERSION_2002 "AC1015"
+#define DXF_VERSION_2004 "AC1018"
+#define DXF_VERSION_2006 "AC1018"
+#define DXF_VERSION_2007 "AC1021"
+#define DXF_VERSION_2009 "AC1021"
+#define DXF_VERSION_2010 "AC1024"
+#define DXF_VERSION_2013 "AC1027"
+
+#define SVG_CREATOR_NULL              0
+#define SVG_CREATOR_EMBROIDERMODDER   1
+#define SVG_CREATOR_ILLUSTRATOR       2
+#define SVG_CREATOR_INKSCAPE          3
+
+#define SVG_EXPECT_NULL               0
+#define SVG_EXPECT_ELEMENT            1
+#define SVG_EXPECT_ATTRIBUTE          2
+#define SVG_EXPECT_VALUE              3
+
+/*  SVG_TYPES
+ *  ---------
+ */
+#define SVG_NULL                      0
+#define SVG_ELEMENT                   1
+#define SVG_PROPERTY                  2
+#define SVG_MEDIA_PROPERTY            3
+#define SVG_ATTRIBUTE                 4
+#define SVG_CATCH_ALL                 5
+
+#define ELEMENT_XML               0
+#define ELEMENT_A                 1
+#define ELEMENT_ANIMATE           2
+#define ELEMENT_ANIMATE_COLOR     3
+#define ELEMENT_ANIMATE_MOTION    4
+#define ELEMENT_ANIMATE_TRANSFORM 5
+#define ELEMENT_ANIMATION         6
+#define ELEMENT_AUDIO             7
+#define ELEMENT_CIRCLE            8
+#define ELEMENT_DEFS              9
+#define ELEMENT_DESC              10
+#define ELEMENT_DISCARD           11
+#define ELEMENT_ELLIPSE           12
+#define ELEMENT_FONT              13
+#define ELEMENT_FONT_FACE         14
+#define ELEMENT_FONT_FACE_SRC     15
+#define ELEMENT_FONT_FACE_URI     16
+#define ELEMENT_FOREIGN_OBJECT    17
+#define ELEMENT_G                 18
+#define ELEMENT_GLYPH             19
+#define ELEMENT_HANDLER           20
+#define ELEMENT_HKERN             21
+#define ELEMENT_IMAGE             22
+#define ELEMENT_LINE              23
+#define ELEMENT_LINEAR_GRADIENT   24
+#define ELEMENT_LISTENER          25
+#define ELEMENT_METADATA          26
+#define ELEMENT_MISSING_GLYPH     27
+#define ELEMENT_MPATH             28
+#define ELEMENT_PATH              29
+#define ELEMENT_POLYGON           30
+#define ELEMENT_POLYLINE          31
+#define ELEMENT_PREFETCH          32
+#define ELEMENT_RADIAL_GRADIENT   33
+#define ELEMENT_RECT              34
+#define ELEMENT_SCRIPT            35
+#define ELEMENT_SET               36
+#define ELEMENT_SOLID_COLOR       37
+#define ELEMENT_STOP              38
+#define ELEMENT_SVG               39
+#define ELEMENT_SWITCH            40
+#define ELEMENT_TBREAK            41
+#define ELEMENT_TEXT              42
+#define ELEMENT_TEXT_AREA         43
+#define ELEMENT_TITLE             44
+#define ELEMENT_TSPAN             45
+#define ELEMENT_USE               46
+#define ELEMENT_VIDEO             47
+#define ELEMENT_UNKNOWN           48
+
+#define PROP_AUDIO_LEVEL          0
+#define PROP_BUFFERED_RENDERING   1
+#define PROP_COLOR                2
+#define PROP_COLOR_RENDERING      3
+#define PROP_DIRECTION            4
+#define PROP_DISPLAY              5
+#define PROP_DISPLAY_ALIGN        6
+#define PROP_PROPERTIES_FILL      7
+#define PROP_FILL_OPACITY         8
+#define PROP_FILL_RULE            9
+#define PROP_FONT_FAMILY          10
+#define PROP_FONT_SIZE            11
+#define PROP_FONT_STYLE           12
+#define PROP_FONT_VARIANT         13
+#define PROP_FONT_WEIGHT          14
+#define PROP_IMAGE_RENDERING      15
+#define PROP_LINE_INCREMENT       16
+#define PROP_OPACITY              17
+#define PROP_POINTER_EVENTS       18
+#define PROP_SHAPE_RENDERING      19
+#define PROP_SOLID_COLOR          20
+#define PROP_SOLID_OPACITY        21
+#define PROP_STOP_COLOR           22
+#define PROP_STOP_OPACITY         23
+#define PROP_STROKE               24
+#define PROP_STROKE_DASHARRAY     25
+#define PROP_STROKE_LINECAP       26
+#define PROP_STROKE_LINEJOIN      27
+#define PROP_STROKE_MITERLIMIT    28
+#define PROP_STROKE_OPACITY       29
+#define PROP_STROKE_WIDTH         30
+#define PROP_TEXT_ALIGN           31
+#define PROP_TEXT_ANCHOR          32
+#define PROP_TEXT_RENDERING       33
+#define PROP_UNICODE_BIDI         34
+#define PROP_VECTOR_EFFECT        35
+#define PROP_VIEWPORT_FILL        36
+#define PROP_VIEWPORT_FILL_OPACITY 37
+#define PROP_VISIBILITY           38
+
+#define ATTR_ABOUT                0
+#define ATTR_ACCENT_HEIGHT        1
+#define ATTR_ACCUMULATE           2
+#define ATTR_ADDITIVE             3
+#define ATTR_ALPHABETIC           4
+#define ATTR_ARABIC_FORM          5
+#define ATTR_ASCENT               6
+#define ATTR_ATTRIBUTENAME        7
+#define ATTR_ATTRIBUTETYPE        8
+#define ATTR_BANDWIDTH            9
+#define ATTR_BASEPROFILE          10
+#define ATTR_BBOX                 11
+#define ATTR_BEGIN                12
+#define ATTR_BY                   13
+#define ATTR_CALCMODE             14
+#define ATTR_CAP_HEIGHT           15
+#define ATTR_CLASS                16
+#define ATTR_CONTENT              17
+#define ATTR_CONTENTSCRIPTTYPE    18
+#define ATTR_CX                   19
+#define ATTR_CY                   20
+#define ATTR_D                    21
+#define ATTR_DATATYPE             22
+#define ATTR_DEFAULTACTION        23
+#define ATTR_DESCENT              24
+#define ATTR_DUR                  25
+#define ATTR_EDITABLE             26
+#define ATTR_END                  27
+#define ATTR_EV_EVENT             28
+#define ATTR_EVENT                29
+#define ATTR_EXTERNALRESOURCESREQUIRED 30
+#define ATTR_FOCUSHIGHLIGHT       31
+#define ATTR_FOCUSABLE            32
+#define ATTR_FONT_FAMILY          33
+#define ATTR_FONT_STRETCH         34
+#define ATTR_FONT_STYLE           35
+#define ATTR_FONT_VARIANT         36
+#define ATTR_FONT_WEIGHT          37
+#define ATTR_FROM                 38
+#define ATTR_G1                   39
+#define ATTR_G2                   40
+#define ATTR_GLYPH_NAME           41
+#define ATTR_GRADIENTUNITS        42
+#define ATTR_HANDLER              43
+#define ATTR_HANGING              44
+#define ATTR_HEIGHT               45
+#define ATTR_HORIZ_ADV_X          46
+#define ATTR_HORIZ_ORIGIN_X       47
+#define ATTR_ID                   48
+#define ATTR_IDEOGRAPHIC          49
+#define ATTR_INITIALVISIBILITY    50
+#define ATTR_K                    51
+#define ATTR_KEYPOINTS            52
+#define ATTR_KEYSPLINES           53
+#define ATTR_KEYTIMES             54
+#define ATTR_LANG                 55
+#define ATTR_MATHEMATICAL         56
+#define ATTR_MAX                  57
+#define ATTR_MEDIACHARACTERENCODING 58
+#define ATTR_MEDIACONTENTENCODINGS 59
+#define ATTR_MEDIASIZE            60
+#define ATTR_MEDIATIME            61
+#define ATTR_MIN                  62
+#define ATTR_NAV_DOWN             63
+#define ATTR_NAV_DOWN_LEFT        64
+#define ATTR_NAV_DOWN_RIGHT       65
+#define ATTR_NAV_LEFT             66
+#define ATTR_NAV_NEXT             67
+#define ATTR_NAV_PREV             68
+#define ATTR_NAV_RIGHT            69
+#define ATTR_NAV_UP               70
+#define ATTR_NAV_UP_LEFT          71
+#define ATTR_NAV_UP_RIGHT         72
+#define ATTR_OBSERVER             73
+#define ATTR_OFFSET               74
+#define ATTR_ORIGIN               75
+#define ATTR_OVERLAY              76
+#define ATTR_OVERLINE_POSITION    77
+#define ATTR_OVERLINE_THICKNESS   78
+#define ATTR_PANOSE_1             79
+#define ATTR_PATH                 80
+#define ATTR_PATHLENGTH           81
+#define ATTR_PHASE                82
+#define ATTR_PLAYBACKORDER        83
+#define ATTR_POINTS               84
+#define ATTR_PRESERVEASPECTRATIO  85
+#define ATTR_PROPAGATE            86
+#define ATTR_PROPERTY             87
+#define ATTR_R                    88
+#define ATTR_REL                  89
+#define ATTR_REPEATCOUNT          90
+#define ATTR_REPEATDUR            91
+#define ATTR_REQUIREDEXTENSIONS   92
+#define ATTR_REQUIREDFEATURES     93
+#define ATTR_REQUIREDFONTS        94
+#define ATTR_REQUIREDFORMATS      95
+#define ATTR_RESOURCE             96
+#define ATTR_RESTART              97
+#define ATTR_REV                  98
+#define ATTR_ROLE                 99
+#define ATTR_ROTATE               100
+#define ATTR_RX                   101
+#define ATTR_RY                   102
+#define ATTR_SLOPE                103
+#define ATTR_SNAPSHOTTIME         104
+#define ATTR_STEMH                105
+#define ATTR_STEMV                106
+#define ATTR_STRIKETHROUGH_POSITION 107
+#define ATTR_STRIKETHROUGH_THICKNESS 108
+#define ATTR_SYNCBEHAVIOR         109
+#define ATTR_SYNCBEHAVIORDEFAULT  110
+#define ATTR_SYNCMASTER           111
+#define ATTR_SYNCTOLERANCE        112
+#define ATTR_SYNCTOLERANCEDEFAULT 113
+#define ATTR_SYSTEMLANGUAGE       114
+#define ATTR_TARGET               115
+#define ATTR_TIMELINEBEGIN        116
+#define ATTR_TO                   117
+#define ATTR_TRANSFORM            118
+#define ATTR_TRANSFORMBEHAVIOR    119
+#define ATTR_TYPE                 120
+#define ATTR_TYPEOF               121
+#define ATTR_U1                   122
+#define ATTR_U2                   123
+#define ATTR_UNDERLINE_POSITION   124
+#define ATTR_UNDERLINE_THICKNESS  125
+#define ATTR_UNICODE              126
+#define ATTR_UNICODE_RANGE        127
+#define ATTR_UNITS_PER_EM         128
+#define ATTR_VALUES               129
+#define ATTR_VERSION              130
+#define ATTR_VIEWBOX              131
+#define ATTR_WIDTH                132
+#define ATTR_WIDTHS               133
+#define ATTR_X                    134
+#define ATTR_X_HEIGHT             135
+#define ATTR_X1                   136
+#define ATTR_X2                   137
+#define ATTR_XLINK_ACTUATE        138
+#define ATTR_XLINK_ARCROLE        139
+#define ATTR_XLINK_HREF           140
+#define ATTR_XLINK_ROLE           141
+#define ATTR_XLINK_SHOW           142
+#define ATTR_XLINK_TITLE          143
+#define ATTR_XLINK_TYPE           144
+#define ATTR_XML_BASE             145
+#define ATTR_XML_ID               146
+#define ATTR_XML_LANG             147
+#define ATTR_XML_SPACE            148
+#define ATTR_Y                    149
+#define ATTR_Y1                   150
+#define ATTR_Y2                   151
+#define ATTR_ZOOMANDPAN           152
+#define ATTR_SLASH                153
+#define ATTR_ENCODING             154
+#define ATTR_STANDALONE           155
+
+char read100(EmbPattern *pattern, FILE* file);
+char write100(EmbPattern *pattern, FILE* file);
+char read10o(EmbPattern *pattern, FILE* file);
+char write10o(EmbPattern *pattern, FILE* file);
+char readArt(EmbPattern *pattern, FILE* file);
+char writeArt(EmbPattern *pattern, FILE* file);
+char readBmc(EmbPattern *pattern, FILE* file);
+char writeBmc(EmbPattern *pattern, FILE* file);
+char readBro(EmbPattern *pattern, FILE* file);
+char writeBro(EmbPattern *pattern, FILE* file);
+char readCnd(EmbPattern *pattern, FILE* file);
+char writeCnd(EmbPattern *pattern, FILE* file);
+char readCol(EmbPattern *pattern, FILE* file);
+char writeCol(EmbPattern *pattern, FILE* file);
+char readCsd(EmbPattern *pattern, FILE* file);
+char writeCsd(EmbPattern *pattern, FILE* file);
+char readCsv(EmbPattern *pattern, FILE* file);
+char writeCsv(EmbPattern *pattern, FILE* file);
+char readDat(EmbPattern *pattern, FILE* file);
+char writeDat(EmbPattern *pattern, FILE* file);
+char readDem(EmbPattern *pattern, FILE* file);
+char writeDem(EmbPattern *pattern, FILE* file);
+char readDsb(EmbPattern *pattern, FILE* file);
+char writeDsb(EmbPattern *pattern, FILE* file);
+char readDst(EmbPattern *pattern, FILE* file);
+char writeDst(EmbPattern *pattern, FILE* file);
+char readDsz(EmbPattern *pattern, FILE* file);
+char writeDsz(EmbPattern *pattern, FILE* file);
+char readDxf(EmbPattern *pattern, FILE* file);
+char writeDxf(EmbPattern *pattern, FILE* file);
+char readEdr(EmbPattern *pattern, FILE* file);
+char writeEdr(EmbPattern *pattern, FILE* file);
+char readEmd(EmbPattern *pattern, FILE* file);
+char writeEmd(EmbPattern *pattern, FILE* file);
+char readExp(EmbPattern *pattern, FILE* file);
+char writeExp(EmbPattern *pattern, FILE* file);
+char readExy(EmbPattern *pattern, FILE* file);
+char writeExy(EmbPattern *pattern, FILE* file);
+char readEys(EmbPattern *pattern, FILE* file);
+char writeEys(EmbPattern *pattern, FILE* file);
+char readFxy(EmbPattern *pattern, FILE* file);
+char writeFxy(EmbPattern *pattern, FILE* file);
+char readGc(EmbPattern *pattern, FILE* file);
+char writeGc(EmbPattern *pattern, FILE* file);
+char readGnc(EmbPattern *pattern, FILE* file);
+char writeGnc(EmbPattern *pattern, FILE* file);
+char readGt(EmbPattern *pattern, FILE* file);
+char writeGt(EmbPattern *pattern, FILE* file);
+char readHus(EmbPattern *pattern, FILE* file);
+char writeHus(EmbPattern *pattern, FILE* file);
+char readInb(EmbPattern *pattern, FILE* file);
+char writeInb(EmbPattern *pattern, FILE* file);
+char readInf(EmbPattern *pattern, FILE* file);
+char writeInf(EmbPattern *pattern, FILE* file);
+char readJef(EmbPattern *pattern, FILE* file);
+char writeJef(EmbPattern *pattern, FILE* file);
+char readKsm(EmbPattern *pattern, FILE* file);
+char writeKsm(EmbPattern *pattern, FILE* file);
+char readMax(EmbPattern *pattern, FILE* file);
+char writeMax(EmbPattern *pattern, FILE* file);
+char readMit(EmbPattern *pattern, FILE* file);
+char writeMit(EmbPattern *pattern, FILE* file);
+char readNew(EmbPattern *pattern, FILE* file);
+char writeNew(EmbPattern *pattern, FILE* file);
+char readOfm(EmbPattern *pattern, FILE* file);
+char writeOfm(EmbPattern *pattern, FILE* file);
+char readPcd(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePcd(EmbPattern *pattern, FILE* file);
+char readPcm(EmbPattern *pattern, FILE* file);
+char writePcm(EmbPattern *pattern, FILE* file);
+char readPcq(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePcq(EmbPattern *pattern, FILE* file);
+char readPcs(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePcs(EmbPattern *pattern, FILE* file);
+char readPec(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePec(EmbPattern *pattern, const char *fileName,  FILE* file);
+char readPel(void);
+char writePel(void);
+char readPem(void);
+char writePem(void);
+char readPes(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePes(EmbPattern *pattern, const char *fileName, FILE* file);
+char readPhb(EmbPattern *pattern, FILE* file);
+char writePhb(void);
+char readPhc(EmbPattern *pattern, FILE* file);
+char writePhc(void);
+char readPlt(EmbPattern *pattern, FILE* file);
+char writePlt(EmbPattern *pattern, FILE* file);
+char readRgb(EmbPattern *pattern, FILE* file);
+char writeRgb(EmbPattern *pattern, FILE* file);
+char readSew(EmbPattern *pattern, FILE* file);
+char writeSew(EmbPattern *pattern, FILE* file);
+char readShv(EmbPattern *pattern, FILE* file);
+char writeShv(void);
+char readSst(EmbPattern *pattern, FILE* file);
+char writeSst(void);
+char readStx(EmbPattern *pattern, FILE* file);
+char writeStx(void);
+char readSvg(EmbPattern *pattern, FILE* file);
+char writeSvg(EmbPattern *pattern, FILE* file);
+char readT01(EmbPattern *pattern, FILE* file);
+char writeT01(EmbPattern *pattern, FILE* file);
+char readT09(EmbPattern *pattern, FILE* file);
+char writeT09(EmbPattern *pattern, FILE* file);
+char readTap(EmbPattern *pattern, FILE* file);
+char writeTap(EmbPattern *pattern, FILE* file);
+char readThr(EmbPattern *pattern, FILE* file);
+char writeThr(EmbPattern *pattern, FILE* file);
+char readTxt(EmbPattern *pattern, FILE* file);
+char writeTxt(EmbPattern *pattern, FILE* file);
+char readU00(EmbPattern *pattern, FILE* file);
+char writeU00(void);
+char readU01(EmbPattern *pattern, FILE* file);
+char writeU01(void);
+char readVip(EmbPattern *pattern, FILE* file);
+char writeVip(EmbPattern *pattern, FILE* file);
+char readVp3(EmbPattern *pattern, FILE* file);
+char writeVp3(EmbPattern *pattern, FILE* file);
+char readXxx(EmbPattern *pattern, FILE* file);
+char writeXxx(EmbPattern *pattern, FILE* file);
+char readZsk(EmbPattern *pattern, FILE* file);
+char writeZsk(EmbPattern *pattern, FILE* file);
 
 const char *svg_element_tokens[] = {
     "a", "animate", "animateColor", "animateMotion", "animateTransform", "animation",

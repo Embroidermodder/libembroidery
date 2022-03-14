@@ -465,14 +465,8 @@ typedef struct EmbFormatList_
 
 /* Function Declarations
 *****************************************************************************/
-EMB_PUBLIC double embMinDouble(double, double);
-EMB_PUBLIC double embMaxDouble(double, double);
-
 EMB_PUBLIC int lindenmayer_system(L_system L, char* state, int iteration, int complete);
 EMB_PUBLIC int hilbert_curve(EmbPattern *pattern, int iterations);
-
-EMB_PUBLIC int embMinInt(int, int);
-EMB_PUBLIC int embMaxInt(int, int);
 
 EMB_PUBLIC int emb_identify_format(const char *ending);
 

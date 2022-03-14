@@ -9,13 +9,16 @@ option( EMBROIDERY_BUILD_SHARED_LIBS "Build shared library." ON )
 option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
 
 set(C_SOURCES
-	embroidery.c
+	main.c
 	embroidery.h
 	embroidery-internal.h
 	array.c
 	testing.c
 	formats.c
+	pattern.c
 	image.c
+	fill.c
+	geometry.c
 	compress.c
 	thread-color.c
 )

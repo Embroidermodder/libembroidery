@@ -8,6 +8,9 @@
 #ifndef __EMBROIDERY_INTERNAL_HEADER__
 #define __EMBROIDERY_INTERNAL_HEADER__
 
+#define EMB_MIN(A, B) (((A) < (B)) ? (A) : (B))
+#define EMB_MAX(A, B) (((A) > (B)) ? (A) : (B))
+
 #define MAX_STITCHES             1000000
 
 #define EMB_BIG_ENDIAN                          0

@@ -3932,7 +3932,7 @@ char writeJef(EmbPattern* pattern, FILE* file)
     embPattern_correctForMaxStitchLength(pattern, 12.7, 12.7);
 
     colorlistSize = pattern->threads->count;
-    minColors = embMaxInt(colorlistSize, 6);
+    minColors = EMB_MAX(colorlistSize, 6);
     binaryWriteInt(file, 0x74 + (minColors * 4));
     binaryWriteInt(file, 0x0A);
 
@@ -3943,7 +3943,7 @@ char writeJef(EmbPattern* pattern, FILE* file)
             (int)(time.minute), (int)(time.second));
     fpad(file, 0, 2);
     fwrite_int(file, &(pattern->threads->count), EMB_INT32_LITTLE);
-    data = pattern->stitchList->count + embMaxInt(0, (6 - colorlistSize) * 2) + 1;
+    data = pattern->stitchList->count + EMB_MAX(0, (6 - colorlistSize) * 2) + 1;
     fwrite_int(file, &data, EMB_INT32_LITTLE);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
@@ -3960,11 +3960,11 @@ char writeJef(EmbPattern* pattern, FILE* file)
     binaryWriteInt(file, (int) (designHeight / 2)); /* bottom */
 
     /* Distance from default 110 x 110 Hoop */
-    if (embMinDouble(550 - designWidth / 2, 550 - designHeight / 2) >= 0) {
-        binaryWriteInt(file, embMaxInt(-1, 550 - designWidth / 2));  /* left */
-        binaryWriteInt(file, embMaxInt(-1, 550 - designHeight / 2)); /* top */
-        binaryWriteInt(file, embMaxInt(-1, 550 - designWidth / 2));  /* right */
-        binaryWriteInt(file, embMaxInt(-1, 550 - designHeight / 2)); /* bottom */
+    if (EMB_MIN(550 - designWidth / 2, 550 - designHeight / 2) >= 0) {
+        binaryWriteInt(file, EMB_MAX(-1, 550 - designWidth / 2));  /* left */
+        binaryWriteInt(file, EMB_MAX(-1, 550 - designHeight / 2)); /* top */
+        binaryWriteInt(file, EMB_MAX(-1, 550 - designWidth / 2));  /* right */
+        binaryWriteInt(file, EMB_MAX(-1, 550 - designHeight / 2)); /* bottom */
     } else {
         binaryWriteInt(file, -1);
         binaryWriteInt(file, -1);
@@ -3973,11 +3973,11 @@ char writeJef(EmbPattern* pattern, FILE* file)
     }
 
     /* Distance from default 50 x 50 Hoop */
-    if (embMinDouble(250 - designWidth / 2, 250 - designHeight / 2) >= 0) {
-        binaryWriteInt(file, (int) embMaxInt(-1, 250 - designWidth / 2));  /* left */
-        binaryWriteInt(file, (int) embMaxInt(-1, 250 - designHeight / 2)); /* top */
-        binaryWriteInt(file, (int) embMaxInt(-1, 250 - designWidth / 2));  /* right */
-        binaryWriteInt(file, (int) embMaxInt(-1, 250 - designHeight / 2)); /* bottom */
+    if (EMB_MIN(250 - designWidth / 2, 250 - designHeight / 2) >= 0) {
+        binaryWriteInt(file, (int) EMB_MAX(-1, 250 - designWidth / 2));  /* left */
+        binaryWriteInt(file, (int) EMB_MAX(-1, 250 - designHeight / 2)); /* top */
+        binaryWriteInt(file, (int) EMB_MAX(-1, 250 - designWidth / 2));  /* right */
+        binaryWriteInt(file, (int) EMB_MAX(-1, 250 - designHeight / 2)); /* bottom */
     } else {
         binaryWriteInt(file, -1);
         binaryWriteInt(file, -1);
@@ -4616,7 +4616,7 @@ char readPcm(EmbPattern* pattern, FILE* file) {
         embPattern_addThread(pattern, pcmThreads[colorNumber]);
     }
     st = fread_uint16_be(file);
-    st = embMinInt(st, MAX_STITCHES);
+    st = EMB_MIN(st, MAX_STITCHES);
     /* READ STITCH RECORDS */
     for (i = 0; i < st; i++) {
         int flags;

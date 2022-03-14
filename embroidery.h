@@ -446,8 +446,6 @@ typedef struct EmbPattern_
     EmbArray* splines;
 
     int currentColorIndex;
-    double lastX;
-    double lastY;
 } EmbPattern;
 
 typedef struct EmbFormatList_
@@ -558,6 +556,8 @@ EMB_PUBLIC int getCircleTangentPoints(
 EMB_PUBLIC EmbColor embColor_make(unsigned char r, unsigned char g, unsigned char b);
 EMB_PUBLIC EmbColor* embColor_create(unsigned char r, unsigned char g, unsigned char b);
 EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
+EMB_PUBLIC void embColor_read(FILE *f, EmbColor *c, int toRead);
+EMB_PUBLIC void embColor_write(FILE *f, EmbColor c, int toWrite);
 EMB_PUBLIC int embColor_distance(EmbColor a, EmbColor b);
 
 EMB_PUBLIC EmbImage *embImage_create(int, int);
@@ -627,6 +627,8 @@ EMB_PUBLIC void embPattern_combineJumpStitches(EmbPattern* p);
 EMB_PUBLIC void embPattern_correctForMaxStitchLength(EmbPattern* p, double maxStitchLength, double maxJumpLength);
 EMB_PUBLIC void embPattern_center(EmbPattern* p);
 EMB_PUBLIC void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName);
+EMB_PUBLIC void embPattern_convertGeometry(EmbPattern* p);
+EMB_PUBLIC void embPattern_designDetails(EmbPattern *p);
 EMB_PUBLIC void embPattern_end(EmbPattern* p);
 
 EMB_PUBLIC void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r);

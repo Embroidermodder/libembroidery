@@ -5,743 +5,15 @@
  * Licensed under the terms of the zlib license.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
-#include <ctype.h>
-#include <math.h>
-#include <time.h>
-
-#include "embroidery.h"
-
-#define MAX_STITCHES             1000000
-
-#define EMB_BIG_ENDIAN                          0
-#define EMB_LITTLE_ENDIAN                       1
-
-#define ENDIAN_HOST                             EMB_LITTLE_ENDIAN
-
-#define EMB_INT16_BIG                           2
-#define EMB_INT16_LITTLE                        3
-#define EMB_INT32_BIG                           4
-#define EMB_INT32_LITTLE                        5
-
-#define ELEMENT_XML               0
-#define ELEMENT_A                 1
-#define ELEMENT_ANIMATE           2
-#define ELEMENT_ANIMATE_COLOR     3
-#define ELEMENT_ANIMATE_MOTION    4
-#define ELEMENT_ANIMATE_TRANSFORM 5
-#define ELEMENT_ANIMATION         6
-#define ELEMENT_AUDIO             7
-#define ELEMENT_CIRCLE            8
-#define ELEMENT_DEFS              9
-#define ELEMENT_DESC              10
-#define ELEMENT_DISCARD           11
-#define ELEMENT_ELLIPSE           12
-#define ELEMENT_FONT              13
-#define ELEMENT_FONT_FACE         14
-#define ELEMENT_FONT_FACE_SRC     15
-#define ELEMENT_FONT_FACE_URI     16
-#define ELEMENT_FOREIGN_OBJECT    17
-#define ELEMENT_G                 18
-#define ELEMENT_GLYPH             19
-#define ELEMENT_HANDLER           20
-#define ELEMENT_HKERN             21
-#define ELEMENT_IMAGE             22
-#define ELEMENT_LINE              23
-#define ELEMENT_LINEAR_GRADIENT   24
-#define ELEMENT_LISTENER          25
-#define ELEMENT_METADATA          26
-#define ELEMENT_MISSING_GLYPH     27
-#define ELEMENT_MPATH             28
-#define ELEMENT_PATH              29
-#define ELEMENT_POLYGON           30
-#define ELEMENT_POLYLINE          31
-#define ELEMENT_PREFETCH          32
-#define ELEMENT_RADIAL_GRADIENT   33
-#define ELEMENT_RECT              34
-#define ELEMENT_SCRIPT            35
-#define ELEMENT_SET               36
-#define ELEMENT_SOLID_COLOR       37
-#define ELEMENT_STOP              38
-#define ELEMENT_SVG               39
-#define ELEMENT_SWITCH            40
-#define ELEMENT_TBREAK            41
-#define ELEMENT_TEXT              42
-#define ELEMENT_TEXT_AREA         43
-#define ELEMENT_TITLE             44
-#define ELEMENT_TSPAN             45
-#define ELEMENT_USE               46
-#define ELEMENT_VIDEO             47
-#define ELEMENT_UNKNOWN           48
-
-#define PROP_AUDIO_LEVEL          0
-#define PROP_BUFFERED_RENDERING   1
-#define PROP_COLOR                2
-#define PROP_COLOR_RENDERING      3
-#define PROP_DIRECTION            4
-#define PROP_DISPLAY              5
-#define PROP_DISPLAY_ALIGN        6
-#define PROP_PROPERTIES_FILL      7
-#define PROP_FILL_OPACITY         8
-#define PROP_FILL_RULE            9
-#define PROP_FONT_FAMILY          10
-#define PROP_FONT_SIZE            11
-#define PROP_FONT_STYLE           12
-#define PROP_FONT_VARIANT         13
-#define PROP_FONT_WEIGHT          14
-#define PROP_IMAGE_RENDERING      15
-#define PROP_LINE_INCREMENT       16
-#define PROP_OPACITY              17
-#define PROP_POINTER_EVENTS       18
-#define PROP_SHAPE_RENDERING      19
-#define PROP_SOLID_COLOR          20
-#define PROP_SOLID_OPACITY        21
-#define PROP_STOP_COLOR           22
-#define PROP_STOP_OPACITY         23
-#define PROP_STROKE               24
-#define PROP_STROKE_DASHARRAY     25
-#define PROP_STROKE_LINECAP       26
-#define PROP_STROKE_LINEJOIN      27
-#define PROP_STROKE_MITERLIMIT    28
-#define PROP_STROKE_OPACITY       29
-#define PROP_STROKE_WIDTH         30
-#define PROP_TEXT_ALIGN           31
-#define PROP_TEXT_ANCHOR          32
-#define PROP_TEXT_RENDERING       33
-#define PROP_UNICODE_BIDI         34
-#define PROP_VECTOR_EFFECT        35
-#define PROP_VIEWPORT_FILL        36
-#define PROP_VIEWPORT_FILL_OPACITY 37
-#define PROP_VISIBILITY           38
-
-#define ATTR_ABOUT                0
-#define ATTR_ACCENT_HEIGHT        1
-#define ATTR_ACCUMULATE           2
-#define ATTR_ADDITIVE             3
-#define ATTR_ALPHABETIC           4
-#define ATTR_ARABIC_FORM          5
-#define ATTR_ASCENT               6
-#define ATTR_ATTRIBUTENAME        7
-#define ATTR_ATTRIBUTETYPE        8
-#define ATTR_BANDWIDTH            9
-#define ATTR_BASEPROFILE          10
-#define ATTR_BBOX                 11
-#define ATTR_BEGIN                12
-#define ATTR_BY                   13
-#define ATTR_CALCMODE             14
-#define ATTR_CAP_HEIGHT           15
-#define ATTR_CLASS                16
-#define ATTR_CONTENT              17
-#define ATTR_CONTENTSCRIPTTYPE    18
-#define ATTR_CX                   19
-#define ATTR_CY                   20
-#define ATTR_D                    21
-#define ATTR_DATATYPE             22
-#define ATTR_DEFAULTACTION        23
-#define ATTR_DESCENT              24
-#define ATTR_DUR                  25
-#define ATTR_EDITABLE             26
-#define ATTR_END                  27
-#define ATTR_EV_EVENT             28
-#define ATTR_EVENT                29
-#define ATTR_EXTERNALRESOURCESREQUIRED 30
-#define ATTR_FOCUSHIGHLIGHT       31
-#define ATTR_FOCUSABLE            32
-#define ATTR_FONT_FAMILY          33
-#define ATTR_FONT_STRETCH         34
-#define ATTR_FONT_STYLE           35
-#define ATTR_FONT_VARIANT         36
-#define ATTR_FONT_WEIGHT          37
-#define ATTR_FROM                 38
-#define ATTR_G1                   39
-#define ATTR_G2                   40
-#define ATTR_GLYPH_NAME           41
-#define ATTR_GRADIENTUNITS        42
-#define ATTR_HANDLER              43
-#define ATTR_HANGING              44
-#define ATTR_HEIGHT               45
-#define ATTR_HORIZ_ADV_X          46
-#define ATTR_HORIZ_ORIGIN_X       47
-#define ATTR_ID                   48
-#define ATTR_IDEOGRAPHIC          49
-#define ATTR_INITIALVISIBILITY    50
-#define ATTR_K                    51
-#define ATTR_KEYPOINTS            52
-#define ATTR_KEYSPLINES           53
-#define ATTR_KEYTIMES             54
-#define ATTR_LANG                 55
-#define ATTR_MATHEMATICAL         56
-#define ATTR_MAX                  57
-#define ATTR_MEDIACHARACTERENCODING 58
-#define ATTR_MEDIACONTENTENCODINGS 59
-#define ATTR_MEDIASIZE            60
-#define ATTR_MEDIATIME            61
-#define ATTR_MIN                  62
-#define ATTR_NAV_DOWN             63
-#define ATTR_NAV_DOWN_LEFT        64
-#define ATTR_NAV_DOWN_RIGHT       65
-#define ATTR_NAV_LEFT             66
-#define ATTR_NAV_NEXT             67
-#define ATTR_NAV_PREV             68
-#define ATTR_NAV_RIGHT            69
-#define ATTR_NAV_UP               70
-#define ATTR_NAV_UP_LEFT          71
-#define ATTR_NAV_UP_RIGHT         72
-#define ATTR_OBSERVER             73
-#define ATTR_OFFSET               74
-#define ATTR_ORIGIN               75
-#define ATTR_OVERLAY              76
-#define ATTR_OVERLINE_POSITION    77
-#define ATTR_OVERLINE_THICKNESS   78
-#define ATTR_PANOSE_1             79
-#define ATTR_PATH                 80
-#define ATTR_PATHLENGTH           81
-#define ATTR_PHASE                82
-#define ATTR_PLAYBACKORDER        83
-#define ATTR_POINTS               84
-#define ATTR_PRESERVEASPECTRATIO  85
-#define ATTR_PROPAGATE            86
-#define ATTR_PROPERTY             87
-#define ATTR_R                    88
-#define ATTR_REL                  89
-#define ATTR_REPEATCOUNT          90
-#define ATTR_REPEATDUR            91
-#define ATTR_REQUIREDEXTENSIONS   92
-#define ATTR_REQUIREDFEATURES     93
-#define ATTR_REQUIREDFONTS        94
-#define ATTR_REQUIREDFORMATS      95
-#define ATTR_RESOURCE             96
-#define ATTR_RESTART              97
-#define ATTR_REV                  98
-#define ATTR_ROLE                 99
-#define ATTR_ROTATE               100
-#define ATTR_RX                   101
-#define ATTR_RY                   102
-#define ATTR_SLOPE                103
-#define ATTR_SNAPSHOTTIME         104
-#define ATTR_STEMH                105
-#define ATTR_STEMV                106
-#define ATTR_STRIKETHROUGH_POSITION 107
-#define ATTR_STRIKETHROUGH_THICKNESS 108
-#define ATTR_SYNCBEHAVIOR         109
-#define ATTR_SYNCBEHAVIORDEFAULT  110
-#define ATTR_SYNCMASTER           111
-#define ATTR_SYNCTOLERANCE        112
-#define ATTR_SYNCTOLERANCEDEFAULT 113
-#define ATTR_SYSTEMLANGUAGE       114
-#define ATTR_TARGET               115
-#define ATTR_TIMELINEBEGIN        116
-#define ATTR_TO                   117
-#define ATTR_TRANSFORM            118
-#define ATTR_TRANSFORMBEHAVIOR    119
-#define ATTR_TYPE                 120
-#define ATTR_TYPEOF               121
-#define ATTR_U1                   122
-#define ATTR_U2                   123
-#define ATTR_UNDERLINE_POSITION   124
-#define ATTR_UNDERLINE_THICKNESS  125
-#define ATTR_UNICODE              126
-#define ATTR_UNICODE_RANGE        127
-#define ATTR_UNITS_PER_EM         128
-#define ATTR_VALUES               129
-#define ATTR_VERSION              130
-#define ATTR_VIEWBOX              131
-#define ATTR_WIDTH                132
-#define ATTR_WIDTHS               133
-#define ATTR_X                    134
-#define ATTR_X_HEIGHT             135
-#define ATTR_X1                   136
-#define ATTR_X2                   137
-#define ATTR_XLINK_ACTUATE        138
-#define ATTR_XLINK_ARCROLE        139
-#define ATTR_XLINK_HREF           140
-#define ATTR_XLINK_ROLE           141
-#define ATTR_XLINK_SHOW           142
-#define ATTR_XLINK_TITLE          143
-#define ATTR_XLINK_TYPE           144
-#define ATTR_XML_BASE             145
-#define ATTR_XML_ID               146
-#define ATTR_XML_LANG             147
-#define ATTR_XML_SPACE            148
-#define ATTR_Y                    149
-#define ATTR_Y1                   150
-#define ATTR_Y2                   151
-#define ATTR_ZOOMANDPAN           152
-#define ATTR_SLASH                153
-#define ATTR_ENCODING             154
-#define ATTR_STANDALONE           155
-
-/* same order as flag_list, to use in jump table */
-#define FLAG_TO                       0
-#define FLAG_TO_SHORT                 1
-#define FLAG_HELP                     2
-#define FLAG_HELP_SHORT               3
-#define FLAG_FORMATS                  4
-#define FLAG_FORMATS_SHORT            5
-#define FLAG_QUIET                    6
-#define FLAG_QUIET_SHORT              7
-#define FLAG_VERBOSE                  8
-#define FLAG_VERBOSE_SHORT            9
-#define FLAG_VERSION                 10
-#define FLAG_VERSION_SHORT           11
-#define FLAG_CIRCLE                  12
-#define FLAG_CIRCLE_SHORT            13
-#define FLAG_ELLIPSE                 14
-#define FLAG_ELLIPSE_SHORT           15
-#define FLAG_LINE                    16
-#define FLAG_LINE_SHORT              17
-#define FLAG_POLYGON                 18
-#define FLAG_POLYGON_SHORT           19
-#define FLAG_POLYLINE                20
-#define FLAG_POLYLINE_SHORT          21
-#define FLAG_RENDER                  22
-#define FLAG_RENDER_SHORT            23
-#define FLAG_SATIN                   24
-#define FLAG_SATIN_SHORT             25
-#define FLAG_STITCH                  26
-#define FLAG_STITCH_SHORT            27
-#define FLAG_TEST                    28
-#define FLAG_FULL_TEST_SUITE         29
-#define FLAG_HILBERT_CURVE           30
-#define FLAG_SIERPINSKI_TRIANGLE     31
-#define FLAG_FILL                    32
-#define FLAG_FILL_SHORT              33
-#define FLAG_IMAGE_WIDTH             34
-#define FLAG_IMAGE_HEIGHT            35
-#define FLAG_SIMULATE                36
-#define FLAG_COMBINE                 37
-#define NUM_FLAGS                    38
-
-/* DXF Version Identifiers */
-#define DXF_VERSION_R10 "AC1006"
-#define DXF_VERSION_R11 "AC1009"
-#define DXF_VERSION_R12 "AC1009"
-#define DXF_VERSION_R13 "AC1012"
-#define DXF_VERSION_R14 "AC1014"
-#define DXF_VERSION_R15 "AC1015"
-#define DXF_VERSION_R18 "AC1018"
-#define DXF_VERSION_R21 "AC1021"
-#define DXF_VERSION_R24 "AC1024"
-#define DXF_VERSION_R27 "AC1027"
-
-#define DXF_VERSION_2000 "AC1015"
-#define DXF_VERSION_2002 "AC1015"
-#define DXF_VERSION_2004 "AC1018"
-#define DXF_VERSION_2006 "AC1018"
-#define DXF_VERSION_2007 "AC1021"
-#define DXF_VERSION_2009 "AC1021"
-#define DXF_VERSION_2010 "AC1024"
-#define DXF_VERSION_2013 "AC1027"
-
-/**
-Type of sector
-*/
-#define CompoundFileSector_MaxRegSector 0xFFFFFFFA
-#define CompoundFileSector_DIFAT_Sector 0xFFFFFFFC
-#define CompoundFileSector_FAT_Sector   0xFFFFFFFD
-#define CompoundFileSector_EndOfChain   0xFFFFFFFE
-#define CompoundFileSector_FreeSector   0xFFFFFFFF
-
-/**
-Type of directory object
-*/
-#define ObjectTypeUnknown   0x00 /*!< Probably unallocated    */
-#define ObjectTypeStorage   0x01 /*!< a directory type object */
-#define ObjectTypeStream    0x02 /*!< a file type object      */
-#define ObjectTypeRootEntry 0x05 /*!< the root entry          */
-
-/**
-Special values for Stream Identifiers
-*/
-#define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /*!< All real stream Ids are less than this */
-#define CompoundFileStreamId_NoStream           0xFFFFFFFF /*!< There is no valid stream Id            */
-
-#define SVG_CREATOR_NULL              0
-#define SVG_CREATOR_EMBROIDERMODDER   1
-#define SVG_CREATOR_ILLUSTRATOR       2
-#define SVG_CREATOR_INKSCAPE          3
-
-#define SVG_EXPECT_NULL               0
-#define SVG_EXPECT_ELEMENT            1
-#define SVG_EXPECT_ATTRIBUTE          2
-#define SVG_EXPECT_VALUE              3
-
-/*  SVG_TYPES
- *  ---------
- */
-#define SVG_NULL                      0
-#define SVG_ELEMENT                   1
-#define SVG_PROPERTY                  2
-#define SVG_MEDIA_PROPERTY            3
-#define SVG_ATTRIBUTE                 4
-#define SVG_CATCH_ALL                 5
-
-#define RED_TERM_COLOR      "\x1B[0;31m"
-#define GREEN_TERM_COLOR    "\x1B[0;32m"
-#define YELLOW_TERM_COLOR   "\x1B[1;33m"
-#define RESET_TERM_COLOR       "\033[0m"
-
-/* INTERNAL STRUCTS AND ENUMS
- *******************************************************************/
-
-/* double-indirection file allocation table references */
-typedef struct _bcf_file_difat
-{
-    unsigned int fatSectorCount;
-    unsigned int fatSectorEntries[109];
-    unsigned int sectorSize;
-} bcf_file_difat;
-
-typedef struct _bcf_file_fat
-{
-    int          fatEntryCount;
-    unsigned int fatEntries[255]; /* maybe make this dynamic */
-    unsigned int numberOfEntriesInFatSector;
-} bcf_file_fat;
-
-typedef struct _bcf_directory_entry
-{
-    char                         directoryEntryName[32];
-    unsigned short               directoryEntryNameLength;
-    unsigned char                objectType;
-    unsigned char                colorFlag;
-    unsigned int                 leftSiblingId;
-    unsigned int                 rightSiblingId;
-    unsigned int                 childId;
-    unsigned char                CLSID[16];
-    unsigned int                 stateBits;
-    EmbTime                      creationTime;
-    EmbTime                      modifiedTime;
-    unsigned int                 startingSectorLocation;
-    unsigned long                streamSize; /* should be long long but in our case we shouldn't need it, and hard to support on c89 cross platform */
-    unsigned int                 streamSizeHigh; /* store the high int of streamsize */
-    struct _bcf_directory_entry* next;
-} bcf_directory_entry;
-
-typedef struct _bcf_directory
-{
-    bcf_directory_entry* dirEntries;
-    unsigned int         maxNumberOfDirectoryEntries;
-    /* TODO: possibly add a directory tree in the future */
-
-} bcf_directory;
-
-typedef struct _bcf_file_header
-{
-    unsigned char  signature[8];
-    unsigned char  CLSID[16]; /* TODO: this should be a separate type */
-    unsigned short minorVersion;
-    unsigned short majorVersion;
-    unsigned short byteOrder;
-    unsigned short sectorShift;
-    unsigned short miniSectorShift;
-    unsigned short reserved1;
-    unsigned int   reserved2;
-    unsigned int   numberOfDirectorySectors;
-    unsigned int   numberOfFATSectors;
-    unsigned int   firstDirectorySectorLocation;
-    unsigned int   transactionSignatureNumber;
-    unsigned int   miniStreamCutoffSize;
-    unsigned int   firstMiniFATSectorLocation;
-    unsigned int   numberOfMiniFatSectors;
-    unsigned int   firstDifatSectorLocation;
-    unsigned int   numberOfDifatSectors;
-} bcf_file_header;
-
-typedef struct _bcf_file
-{
-    bcf_file_header header;   /*! The header for the CompoundFile */
-    bcf_file_difat* difat;    /*! The "Double Indirect FAT" for the CompoundFile */
-    bcf_file_fat* fat;        /*! The File Allocation Table for the Compound File */
-    bcf_directory* directory; /*! The directory for the CompoundFile */
-} bcf_file;
-
-typedef enum
-{
-    CSV_EXPECT_NULL,
-    CSV_EXPECT_QUOTE1,
-    CSV_EXPECT_QUOTE2,
-    CSV_EXPECT_COMMA
-} CSV_EXPECT;
-
-typedef enum
-{
-    CSV_MODE_NULL,
-    CSV_MODE_COMMENT,
-    CSV_MODE_VARIABLE,
-    CSV_MODE_THREAD,
-    CSV_MODE_STITCH
-} CSV_MODE;
-
-typedef struct SvgAttribute_
-{
-    char* name;
-    char* value;
-} SvgAttribute;
-
-typedef struct Huffman {
-    int default_value;
-    int *lengths;
-    int nlengths;
-    int *table;
-    int table_width;
-    int ntable;
-} huffman;
-
-typedef struct Compress {
-    int bit_position;
-    char *input_data;
-    int input_length;
-    int bits_total;
-    int block_elements;
-    huffman *character_length_huffman;
-    huffman *character_huffman;
-    huffman *distance_huffman;
-} compress;
-
-
-/* INTERNAL FUNCTION PROTOTYPES
- *******************************************************************/
-static void huffman_init(huffman *h, int lengths, int value);
-static void huffman_build_table(huffman *h);
-static void huffman_table_lookup(huffman *h, int byte_lookup, int *value, int *lengths);
-static void huffman_free(huffman *h);
-
-static int compress_get_bits(compress *c, int length);
-static int compress_pop(compress *c, int bit_count);
-static int compress_read_variable_length(compress *c);
-static int compress_load_character_length_huffman(compress *c);
-static void compress_load_character_huffman(compress *c);
-static void compress_load_distance_huffman(compress *c);
-static void compress_load_block(compress *c);
-static int compress_get_token(compress *c);
-static int compress_get_position(compress *c);
-
-static void binaryReadString(FILE* file, char *buffer, int maxLength);
-static void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength);
-
-static void binaryWriteShort(FILE* file, short data);
-static void binaryWriteUShort(FILE* file, unsigned short data);
-static void binaryWriteUShortBE(FILE* file, unsigned short data);
-static void binaryWriteInt(FILE* file, int data);
-static void binaryWriteIntBE(FILE* file, int data);
-static void binaryWriteUInt(FILE* file, unsigned int data);
-static void binaryWriteUIntBE(FILE* file, unsigned int data);
-
-static int stringInArray(const char *s, const char **array);
-static void fpad(FILE *f, char c, int n);
-static char *copy_trim(char const *s);
-static char* emb_optOut(double num, char* str);
-
-static void write_24bit(FILE* file, int);
-static int check_header_present(FILE* file, int minimum_header_length);
-
-static void fread_int(FILE* f, void *b, int mode);
-static void fwrite_int(FILE* f, void *b, int mode);
-static short fread_int16(FILE* f);
-static unsigned short fread_uint16(FILE* f);
-static int fread_int32(FILE* f);
-static unsigned int fread_uint32(FILE* f);
-static short fread_int16_be(FILE* f);
-static unsigned short fread_uint16_be(FILE* f);
-static int fread_int32_be(FILE* f);
-static unsigned int fread_uint32_be(FILE* f);
-
-static bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize);
-static unsigned int readFullSector(FILE* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
-static unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
-static void bcf_file_difat_free(bcf_file_difat* difat);
-
-static bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
-static void loadFatFromSector(bcf_file_fat* fat, FILE* file);
-static void bcf_file_fat_free(bcf_file_fat** fat);
-
-static bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file);
-static bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
-static void readNextSector(FILE* file, bcf_directory* dir);
-static void bcf_directory_free(bcf_directory** dir);
-
-static bcf_file_header bcfFileHeader_read(FILE* file);
-static int bcfFileHeader_isValid(bcf_file_header header);
-
-static int bcfFile_read(FILE* file, bcf_file* bcfFile);
-static FILE* GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind);
-static void bcf_file_free(bcf_file* bcfFile);
-
-static void readPecStitches(EmbPattern* pattern, FILE* file);
-static void writePecStitches(EmbPattern* pattern, FILE* file, const char* filename);
-
-static int emb_readline(FILE* file, char *line, int maxLength);
-
-static int decodeNewStitch(unsigned char value);
-
-static void pfaffEncode(FILE* file, int x, int y, int flags);
-static double pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3);
-
-static unsigned char mitEncodeStitch(double value);
-static int mitDecodeStitch(unsigned char value);
-
-static int encode_tajima_ternary(unsigned char b[3], int x, int y);
-static void decode_tajima_ternary(unsigned char b[3], int *x, int *y);
-
-static void encode_t01_record(unsigned char b[3], int x, int y, int flags);
-static int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags);
-
-static void embColor_read(FILE *file, EmbColor *c, int toRead);
-static void embColor_write(FILE *file, EmbColor c, int toWrite);
-
-void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1);
-void printArcResults(double bulge, EmbArc arc,
-                     double centerX,   double centerY,
-                     double radius,    double diameter,
-                     double chord,
-                     double chordMidX, double chordMidY,
-                     double sagitta,   double apothem,
-                     double incAngle,  char   clockwise);
-static void report(int result, char *label);
-int create_test_file_1(const char* outf);
-int create_test_file_2(const char* outf);
-int testEmbCircle(void);
-int testEmbCircle_2(void);
-int testGeomArc(void);
-int testThreadColor(void);
-int testEmbFormat(void);
-int full_test_matrix(char *fname);
-
-static char read100(EmbPattern *pattern, FILE* file);
-static char write100(EmbPattern *pattern, FILE* file);
-static char read10o(EmbPattern *pattern, FILE* file);
-static char write10o(EmbPattern *pattern, FILE* file);
-static char readArt(EmbPattern *pattern, FILE* file);
-static char writeArt(EmbPattern *pattern, FILE* file);
-static char readBmc(EmbPattern *pattern, FILE* file);
-static char writeBmc(EmbPattern *pattern, FILE* file);
-static char readBro(EmbPattern *pattern, FILE* file);
-static char writeBro(EmbPattern *pattern, FILE* file);
-static char readCnd(EmbPattern *pattern, FILE* file);
-static char writeCnd(EmbPattern *pattern, FILE* file);
-static char readCol(EmbPattern *pattern, FILE* file);
-static char writeCol(EmbPattern *pattern, FILE* file);
-static char readCsd(EmbPattern *pattern, FILE* file);
-static char writeCsd(EmbPattern *pattern, FILE* file);
-static char readCsv(EmbPattern *pattern, FILE* file);
-static char writeCsv(EmbPattern *pattern, FILE* file);
-static char readDat(EmbPattern *pattern, FILE* file);
-static char writeDat(EmbPattern *pattern, FILE* file);
-static char readDem(EmbPattern *pattern, FILE* file);
-static char writeDem(EmbPattern *pattern, FILE* file);
-static char readDsb(EmbPattern *pattern, FILE* file);
-static char writeDsb(EmbPattern *pattern, FILE* file);
-static char readDst(EmbPattern *pattern, FILE* file);
-static char writeDst(EmbPattern *pattern, FILE* file);
-static char readDsz(EmbPattern *pattern, FILE* file);
-static char writeDsz(EmbPattern *pattern, FILE* file);
-static char readDxf(EmbPattern *pattern, FILE* file);
-static char writeDxf(EmbPattern *pattern, FILE* file);
-static char readEdr(EmbPattern *pattern, FILE* file);
-static char writeEdr(EmbPattern *pattern, FILE* file);
-static char readEmd(EmbPattern *pattern, FILE* file);
-static char writeEmd(EmbPattern *pattern, FILE* file);
-static char readExp(EmbPattern *pattern, FILE* file);
-static char writeExp(EmbPattern *pattern, FILE* file);
-static char readExy(EmbPattern *pattern, FILE* file);
-static char writeExy(EmbPattern *pattern, FILE* file);
-static char readEys(EmbPattern *pattern, FILE* file);
-static char writeEys(EmbPattern *pattern, FILE* file);
-static char readFxy(EmbPattern *pattern, FILE* file);
-static char writeFxy(EmbPattern *pattern, FILE* file);
-static char readGc(EmbPattern *pattern, FILE* file);
-static char writeGc(EmbPattern *pattern, FILE* file);
-static char readGnc(EmbPattern *pattern, FILE* file);
-static char writeGnc(EmbPattern *pattern, FILE* file);
-static char readGt(EmbPattern *pattern, FILE* file);
-static char writeGt(EmbPattern *pattern, FILE* file);
-static char readHus(EmbPattern *pattern, FILE* file);
-static char writeHus(EmbPattern *pattern, FILE* file);
-static char readInb(EmbPattern *pattern, FILE* file);
-static char writeInb(EmbPattern *pattern, FILE* file);
-static char readInf(EmbPattern *pattern, FILE* file);
-static char writeInf(EmbPattern *pattern, FILE* file);
-static char readJef(EmbPattern *pattern, FILE* file);
-static char writeJef(EmbPattern *pattern, FILE* file);
-static char readKsm(EmbPattern *pattern, FILE* file);
-static char writeKsm(EmbPattern *pattern, FILE* file);
-static char readMax(EmbPattern *pattern, FILE* file);
-static char writeMax(EmbPattern *pattern, FILE* file);
-static char readMit(EmbPattern *pattern, FILE* file);
-static char writeMit(EmbPattern *pattern, FILE* file);
-static char readNew(EmbPattern *pattern, FILE* file);
-static char writeNew(EmbPattern *pattern, FILE* file);
-static char readOfm(EmbPattern *pattern, FILE* file);
-static char writeOfm(EmbPattern *pattern, FILE* file);
-static char readPcd(EmbPattern *pattern, const char *fileName, FILE* file);
-static char writePcd(EmbPattern *pattern, FILE* file);
-static char readPcm(EmbPattern *pattern, FILE* file);
-static char writePcm(EmbPattern *pattern, FILE* file);
-static char readPcq(EmbPattern *pattern, const char *fileName, FILE* file);
-static char writePcq(EmbPattern *pattern, FILE* file);
-static char readPcs(EmbPattern *pattern, const char *fileName, FILE* file);
-static char writePcs(EmbPattern *pattern, FILE* file);
-static char readPec(EmbPattern *pattern, const char *fileName, FILE* file);
-static char writePec(EmbPattern *pattern, const char *fileName,  FILE* file);
-static char readPel(void);
-static char writePel(void);
-static char readPem(void);
-static char writePem(void);
-static char readPes(EmbPattern *pattern, const char *fileName, FILE* file);
-static char writePes(EmbPattern *pattern, const char *fileName, FILE* file);
-static char readPhb(EmbPattern *pattern, FILE* file);
-static char writePhb(void);
-static char readPhc(EmbPattern *pattern, FILE* file);
-static char writePhc(void);
-static char readPlt(EmbPattern *pattern, FILE* file);
-static char writePlt(EmbPattern *pattern, FILE* file);
-static char readRgb(EmbPattern *pattern, FILE* file);
-static char writeRgb(EmbPattern *pattern, FILE* file);
-static char readSew(EmbPattern *pattern, FILE* file);
-static char writeSew(EmbPattern *pattern, FILE* file);
-static char readShv(EmbPattern *pattern, FILE* file);
-static char writeShv(void);
-static char readSst(EmbPattern *pattern, FILE* file);
-static char writeSst(void);
-static char readStx(EmbPattern *pattern, FILE* file);
-static char writeStx(void);
-static char readSvg(EmbPattern *pattern, FILE* file);
-static char writeSvg(EmbPattern *pattern, FILE* file);
-static char readT01(EmbPattern *pattern, FILE* file);
-static char writeT01(EmbPattern *pattern, FILE* file);
-static char readT09(EmbPattern *pattern, FILE* file);
-static char writeT09(EmbPattern *pattern, FILE* file);
-static char readTap(EmbPattern *pattern, FILE* file);
-static char writeTap(EmbPattern *pattern, FILE* file);
-static char readThr(EmbPattern *pattern, FILE* file);
-static char writeThr(EmbPattern *pattern, FILE* file);
-static char readTxt(EmbPattern *pattern, FILE* file);
-static char writeTxt(EmbPattern *pattern, FILE* file);
-static char readU00(EmbPattern *pattern, FILE* file);
-static char writeU00(void);
-static char readU01(EmbPattern *pattern, FILE* file);
-static char writeU01(void);
-static char readVip(EmbPattern *pattern, FILE* file);
-static char writeVip(EmbPattern *pattern, FILE* file);
-static char readVp3(EmbPattern *pattern, FILE* file);
-static char writeVp3(EmbPattern *pattern, FILE* file);
-static char readXxx(EmbPattern *pattern, FILE* file);
-static char writeXxx(EmbPattern *pattern, FILE* file);
-static char readZsk(EmbPattern *pattern, FILE* file);
-static char writeZsk(EmbPattern *pattern, FILE* file);
+#include "embroidery-internal.h"
 
 /* DATA 
  *******************************************************************/
 
 EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
+int emb_verbose = 0;
 
-static int emb_verbose = 0;
-
-static const char *flag_list[] = {
+const char *flag_list[] = {
     "--to",
     "-t",
     "--help",
@@ -782,8 +54,8 @@ static const char *flag_list[] = {
     "--combine"
 };
 
-static const char *version_string = "embroider v0.1";
-static const char *welcome_message = "EMBROIDER\n"
+const char *version_string = "embroider v0.1";
+const char *welcome_message = "EMBROIDER\n"
     "    A command line program for machine embroidery.\n"
     "    Copyright 2013-2022 The Embroidermodder Team\n"
     "    Licensed under the terms of the zlib license.\n"
@@ -791,7 +63,7 @@ static const char *welcome_message = "EMBROIDER\n"
     "    https://github.com/Embroidermodder/libembroidery\n"
     "    https://embroidermodder.org\n";
 
-static EmbColor black = {0,0,0};
+EmbColor black = {0,0,0};
 
 int emb_error = 0;
 
@@ -863,451 +135,17 @@ EmbFormatList formatTable[numberOfFormats] = {
 };
 
 /*! Constant representing the number of Double Indirect FAT entries in a single header */
-static const unsigned int NumberOfDifatEntriesInHeader = 109;
-static const unsigned int sizeOfFatEntry = sizeof(unsigned int);
-static const unsigned int sizeOfDifatEntry = 4;
-static const unsigned int sizeOfChainingEntryAtEndOfDifatSector = 4;
-static const unsigned int sizeOfDirectoryEntry = 128;
+const unsigned int NumberOfDifatEntriesInHeader = 109;
+const unsigned int sizeOfFatEntry = sizeof(unsigned int);
+const unsigned int sizeOfDifatEntry = 4;
+const unsigned int sizeOfChainingEntryAtEndOfDifatSector = 4;
+const unsigned int sizeOfDirectoryEntry = 128;
 /*
-static const int supportedMinorVersion = 0x003E;
-static const int littleEndianByteOrderMark = 0xFFFE;
+const int supportedMinorVersion = 0x003E;
+const int littleEndianByteOrderMark = 0xFFFE;
 */
 
 const double embConstantPi = 3.1415926535;
-
-static const char *svg_element_tokens[] = {
-    "a", "animate", "animateColor", "animateMotion", "animateTransform", "animation",
-    "audio", "circle", "defs", "desc", "discard", "ellipse",
-    "font", "font-face", "font-face-src", "font-face-uri", "foreignObject",
-    "g", "glyph", "handler", "hkern", "image", "line", "linearGradient", "listener",
-    "metadata", "missing-glyph", "mpath", "path", "polygon", "polyline", "prefetch",
-    "radialGradient", "rect", "script", "set", "solidColor", "stop", "svg", "switch",
-    "tbreak", "text", "textArea", "title", "tspan", "use", "video", "\0"
-    /* "altGlyph", "altGlyphDef", "altGlyphItem", "clipPath", "color-profile", "cursor",
-     * "feBlend", "feColorMatrix", "feComponentTransfer", "feComposite", "feConvolveMatrix",
-     * "feDiffuseLighting", "feDisplacementMap", "feDistantLight", "feFlood",
-     * "feFuncA", "feFuncB", "feFuncG", "feFuncR", "feGaussianBlur", "feImage",
-     * "feMerge", "feMergeNode", "feMorphology", "feOffset", "fePointLight",
-     * "feSpecularLighting", "feSpotLight", "feTile", "feTurbulence", "filter",
-     * "font-face-format", "font-face-name", "glyphRef", "marker", "mask",
-     * "pattern", "style", "symbol", "textPath", "tref", "view", "vkern"
-     * TODO: not implemented SVG Full 1.1 Spec Elements */
-};
-
-static const char *svg_property_tokens[] = {
-    "audio-level", "buffered-rendering", "color", "color-rendering", "direction",
-    "display", "display-align", "fill", "fill-opacity", "fill-rule",
-    "font-family", "font-size", "font-style", "font-variant", "font-weight",
-    "image-rendering", "line-increment", "opacity", "pointer-events",
-    "shape-rendering", "solid-color", "solid-opacity", "stop-color",
-    "stop-opacity", "stroke", "stroke-dasharray", "stroke-linecap", "stroke-linejoin",
-    "stroke-miterlimit", "stroke-opacity", "stroke-width", "text-align",
-    "text-anchor", "text-rendering", "unicode-bidi", "vector-effect",
-    "viewport-fill", "viewport-fill-opacity", "visibility", "\0"
-};
-
-static const char *svg_attributes_tokens[] = {
-    "about", "accent-height", "accumulate", "additive",
-    "alphabetic", "arabic-form", "ascent", "attributeName", "attributeType",
-    "bandwidth", "baseProfile", "bbox", "begin", "by", "calcMode",
-    "cap-height", "class", "content", "contentScriptType", "cx", "cy",
-    "d", "datatype", "defaultAction", "descent", "dur", "editable",
-    "end", "ev:event", "event", "externalResourcesRequired",
-    "focusHighlight", "focusable", "font-family", "font-stretch",
-    "font-style", "font-variant", "font-weight", "from", "g1", "g2",
-    "glyph-name", "gradientUnits", "handler", "hanging", "height",
-    "horiz-adv-x", "horiz-origin-x", "id", "ideographic",
-    "initialVisibility", "k", "keyPoints", "keySplines", "keyTimes",
-    "lang", "mathematical", "max", "mediaCharacterEncoding",
-    "mediaContentEncodings", "mediaSize", "mediaTime", "min",
-    "nav-down", "nav-down-left", "nav-down-right", "nav-left", "nav-next",
-    "nav-prev", "nav-right", "nav-up", "nav-up-left", "nav-up-right",
-    "observer", "offset", "origin", "overlay", "overline-position",
-    "overline-thickness", "panose-1", "path", "pathLength", "phase",
-    "playbackOrder", "points", "preserveAspectRatio", "propagate",
-    "property", "r", "rel", "repeatCount", "repeatDur",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "restart", "rev", "role", "rotate",
-    "rx", "ry", "slope", "snapshotTime", "stemh", "stemv",
-    "strikethrough-position", "strikethrough-thickness", "syncBehavior",
-    "syncBehaviorDefault", "syncMaster", "syncTolerance",
-    "syncToleranceDefault", "systemLanguage", "target", "timelineBegin",
-    "to", "transform", "transformBehavior", "type", "typeof", "u1", "u2",
-    "underline-position", "underline-thickness", "unicode", "unicode-range",
-    "units-per-em", "values", "version", "viewBox", "width", "widths",
-    "x", "x-height", "x1", "x2", "xlink:actuate", "xlink:arcrole",
-    "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-    "xml:base", "xml:id", "xml:lang", "xml:space", "y", "y1", "y2",
-    "zoomAndPan", "/", "encoding", "\0"
-};
-
-static const char *svg_media_property_tokens[] = {
-    "audio-level", "buffered-rendering", "display", "image-rendering",
-    "pointer-events", "shape-rendering", "text-rendering", "viewport-fill",
-    "viewport-fill-opacity", "visibility", "\0"
-};
-
-static const int svg_attribute_table[3][80] = {
-    {1, 2, 4, -1},
-    {1, 2, 4, -1},
-    {-1}
-};
-
-#if 0
-static const int svg_attribute_table[3][80] = {
-    /* 0: xml attributes */
-    {
-        ATTR_ENCODING, ATTR_STANDALONE, ATTR_VERSION, ATTR_SLASH, -1
-    },
-    /* 1: link attribute tokens */
-    {
-        ATTR_ABOUT, ATTR_CLASS, ATTR_CONTENT, ATTR_EXTERNALRESOURCESREQUIRED,
-        ATTR_FOCUSHIGHLIGHT, ATTR_FOCUSABLE, ATTR_ID, ATTR_NAV_DOWN, ATTR_NAV_DOWN_LEFT,
-        ATTR_NAV_DOWN_RIGHT, ATTR_NAV_LEFT, ATTR_NAV_NEXT, ATTR_NAV_PREV, ATTR_NAV_RIGHT, ATTR_NAV_UP,
-        -1
-    },
-    /* 2: animate attribute tokens */
-    {
-        -1
-    },
-    /* 3: animate color attribute tokens */
-    {
-        -1
-    },
-    /* 4: animate motion attribute tokens */
-    {
-        -1
-    },
-    /* 5: animate transform attribute tokens */
-    {
-        -1
-    },
-    /* 6: animation attribute tokens */
-    {
-        -1
-    },
-    /* 7: audio attribute tokens */
-    {
-        -1
-    },
-    /* 8: animate attribute tokens */
-    {
-        -1
-    },
-    /* 9: animate attribute tokens */
-    {
-        -1
-    },
-    /* 10: animate attribute tokens */
-    {
-        -1
-    },
-    /* 11: animate attribute tokens */
-    {
-        -1
-    },
-    /* 12: animate attribute tokens */
-    {
-        -1
-    },
-    /* 13: animate attribute tokens */
-    {
-        -1
-    },
-    /* 14: animate attribute tokens */
-    {
-        -1
-    },
-    /* 15: animate attribute tokens */
-    {
-        -1
-    },
-    /* 16: animate attribute tokens */
-    {
-        -1
-    },
-    /* 17: animate attribute tokens */
-    {
-        -1
-    },
-    /* 18: animate attribute tokens */
-    {
-        -1
-    },
-    /* 19: animate attribute tokens */
-    {
-        -1
-    },
-    /* 20: animate attribute tokens */
-    {
-        -1
-    },
-    /* 21: animate attribute tokens */
-    {
-        -1
-    },
-    /* 22: animate attribute tokens */
-    {
-        -1
-    },
-    /* 23: animate attribute tokens */
-    {
-        -1
-    },
-    /* 24: animate attribute tokens */
-    {
-        -1
-    },
-    /* 25: animate attribute tokens */
-    {
-        -1
-    },
-    /* 26: animate attribute tokens */
-    {
-        -1
-    },
-    /* 27: animate attribute tokens */
-    {
-        -1
-    },
-    /* 28: animate attribute tokens */
-    {
-        -1
-    },
-    /* 29: animate attribute tokens */
-    {
-        -1
-    },
-    /* 30: animate attribute tokens */
-    {
-        -1
-    },
-    /* 31: animate attribute tokens */
-    {
-        -1
-    },
-    /* 32: animate attribute tokens */
-    {
-        -1
-    },
-    /* 33: animate attribute tokens */
-    {
-        -1
-    },
-    /* 34: animate attribute tokens */
-    {
-        -1
-    },
-    /* 35: animate attribute tokens */
-    {
-        -1
-    },
-    /* 36: animate attribute tokens */
-    {
-        -1
-    },
-    /* 37: animate attribute tokens */
-    {
-        -1
-    },
-    /* 38: animate attribute tokens */
-    {
-        -1
-    },
-    /* 39: animate attribute tokens */
-    {
-        -1
-    },
-    /* 40: animate attribute tokens */
-    {
-        -1
-    },
-    /* 41: animate attribute tokens */
-    {
-        -1
-    },
-    /* 42: animate attribute tokens */
-    {
-        -1
-    },
-    /* 43: animate attribute tokens */
-    {
-        -1
-    },
-    /* 44: animate attribute tokens */
-    {
-        -1
-    },
-    /* 45: animate attribute tokens */
-    {
-        -1
-    },
-    /* 46: animate attribute tokens */
-    {
-        -1
-    },
-    /* 47: video attribute tokens */
-    {
-        -1
-    },
-    /* 48: END */
-    {
-        -1
-    }
-};
-#endif
-
-static const char *link_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "externalResourcesRequired",
-    "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
-    "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-    "nav-up-left", "nav-up-right", "property", "rel", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats", "resource", "rev",
-    "role", "systemLanguage", "target", "transform", "typeof", "xlink:actuate",
-    "xlink:arcrole", "xlink:href", "xlink:role", "xlink:show", "xlink:title",
-    "xlink:type", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-};
-
-static const char *animate_attribute_tokens[] = {
-    "about", "accumulate", "additive", "attributeName", "attributeType",
-    "begin", "by", "calcMode", "class", "content", "datatype", "dur", "end",
-    "fill", "from", "id", "keySplines", "keyTimes", "max", "min", "property",
-    "rel", "repeatCount", "repeatDur", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-    "restart", "rev", "role", "systemLanguage", "to", "typeof", "values",
-    "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-    "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-    "xml:lang", "xml:space", "/", "\0"
-};
-
-static const char *animate_color_attribute_tokens[] = {
-    "about", "accumulate", "additive", "attributeName", "attributeType",
-    "begin", "by", "calcMode", "class", "content", "datatype", "dur",
-    "end", "fill", "from", "id", "keySplines", "keyTimes", "max", "min",
-    "property", "rel", "repeatCount", "repeatDur", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats",
-    "resource", "restart", "rev", "role", "systemLanguage",
-    "to", "typeof", "values", "xlink:actuate", "xlink:arcrole",
-    "xlink:href", "xlink:role", "xlink:show", "xlink:title",
-    "xlink:type", "xml:base", "xml:id", "xml:lang",
-    "xml:space", "/", "\0"
-};
-
-static const char *animate_motion_attribute_tokens[] = {
-    "about", "accumulate", "additive", "begin", "by", "calcMode", "class",
-    "content", "datatype", "dur", "end", "fill", "from", "id", "keyPoints",
-    "keySplines", "keyTimes", "max", "min", "origin", "path", "property",
-    "rel", "repeatCount", "repeatDur", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-    "restart", "rev", "role", "rotate", "systemLanguage", "to", "typeof",
-    "values", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-    "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-    "xml:lang", "xml:space", "/", "\0"
-};
-
-static const char *animate_transform_attribute_tokens[] = {
-    "about", "accumulate", "additive", "attributeName", "attributeType",
-    "begin", "by", "calcMode", "class", "content", "datatype", "dur", "end",
-    "fill", "from", "id", "keySplines", "keyTimes", "max", "min",
-    "property", "rel", "repeatCount", "repeatDur", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-    "restart", "rev", "role", "systemLanguage", "to", "type", "typeof",
-    "values", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-    "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-    "xml:lang", "xml:space", "/", "\0"
-};
-
-static const char *switch_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "externalResourcesRequired",
-    "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
-    "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
-    "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "rev", "role", "systemLanguage",
-    "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
-    "/", "\0"
-};
-
-static const char *tbreak_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "id", "property", "rel",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "rev", "role", "systemLanguage",
-    "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-};
-
-static const char *text_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "editable", "focusHighlight",
-    "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
-    "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-    "nav-up-left", "nav-up-right", "property", "rel", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-    "rev", "role", "rotate", "systemLanguage", "transform", "typeof", "x",
-    "xml:base", "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
-};
-
-static const char *textarea_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "editable", "focusHighlight",
-    "focusable", "height", "id", "nav-down", "nav-down-left",
-    "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
-    "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "rev", "role", "systemLanguage",
-    "transform", "typeof", "width", "x", "xml:base", "xml:id", "xml:lang",
-    "xml:space", "y", "/", "\0"
-};
-
-static const char *title_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "id", "property", "rel",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "rev", "role", "systemLanguage",
-    "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-};
-
-static const char *tspan_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "focusHighlight", "focusable",
-    "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
-    "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
-    "nav-up-right", "property", "rel", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-    "rev", "role", "systemLanguage", "typeof", "xml:base", "xml:id",
-    "xml:lang", "xml:space", "/", "\0"
-};
-
-static const char *use_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "externalResourcesRequired",
-    "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
-    "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
-    "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "rev", "role", "systemLanguage",
-    "transform", "typeof", "x", "xlink:actuate", "xlink:arcrole",
-    "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-    "xml:base", "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
-};
-
-static const char *video_attribute_tokens[] = {
-    "about", "begin", "class", "content", "datatype", "dur", "end",
-    "externalResourcesRequired", "fill", "focusHighlight", "focusable",
-    "height", "id", "initialVisibility", "max", "min", "nav-down",
-    "nav-down-left", "nav-down-right", "nav-left", "nav-next", "nav-prev",
-    "nav-right", "nav-up", "nav-up-left", "nav-up-right", "overlay",
-    "preserveAspectRatio", "property", "rel", "repeatCount", "repeatDur",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "restart", "rev", "role", "syncBehavior",
-    "syncMaster", "syncTolerance", "systemLanguage", "transform",
-    "transformBehavior", "type", "typeof", "width", "x", "xlink:actuate",
-    "xlink:arcrole", "xlink:href", "xlink:role", "xlink:show",
-    "xlink:title", "xlink:type", "xml:base", "xml:id", "xml:lang",
-    "xml:space", "y", "/", "\0"
-};
-
-
-/* CODE SECTION
- *******************************************************************/
-
-#include "formats.c"
-#include "thread-color.c"
-#include "testing.c"
 
 /* ENCODING
  *******************************************************************
@@ -2073,7 +911,7 @@ double DistancePointLine(EmbVector p, EmbVector a, EmbVector b)
 }
 
 / * From physics2d.net * /
-public static Vertices ReduceByArea(Vertices vertices, float areaTolerance)
+public Vertices ReduceByArea(Vertices vertices, float areaTolerance)
 {
     if (vertices.Count <= 3)
         return vertices;
@@ -2237,513 +1075,11 @@ EmbPattern *embPattern_combine(EmbPattern *p1, EmbPattern *p2)
     return out;
 }
 
-/* IMAGES
- *******************************************************************/
-
-/* PPM Images
- * ----------
- *
- * Basic read/write support for images, so we can convert
- * to any other format we need using imagemagick.
- *
- * We only support P3 ASCII ppm, that is the original, 8 bits per channel.
- *
- * This also allows support for making animations using ffmpeg/avconv
- * of the stitching process.
- */
-
-EmbImage * embImage_create(int width, int height)
+void embPattern_convertGeometry(EmbPattern* p)
 {
-    int i;
-    EmbImage *image;
-    image = (EmbImage*)malloc(sizeof(EmbImage));
-    image->pixel_width = width;
-    image->pixel_height = height;
-    image->offset.x = 0.0;
-    image->offset.y = 0.0;
-    image->color = (EmbColor*)malloc(sizeof(EmbColor)*width*height);
-    for (i=0; i<width*height; i++) {
-        image->color[i].r = 255;
-        image->color[i].g = 255;
-        image->color[i].b = 255;
+    if (p->circles->count > 0) {
+        
     }
-    return image;
-}
-
-void embImage_free(EmbImage *image)
-{
-    free(image->color);
-    free(image);
-}
-
-/*
- */
-int read_ppm_image(char *fname, EmbImage *a)
-{
-    int i, state;
-    FILE *f;
-    char header[2];
-    f = fopen(fname, "r");
-    if (!f) {
-        return 0;
-    }
-    a->pixel_width = 100;
-    a->pixel_height = 75;
-    state = 0;
-    while (fread(header, 1, 1, f) == 1) {
-        /* state machine for dealing with the header */
-        if (header[0] == '\n') {
-            state++;
-        }
-        if (state == 4) {
-            break;
-        }
-    }
-    for (i=0; i<a->pixel_width * a->pixel_height; i++) {
-        embColor_read(f, &(a->color[i]), 3);
-    }
-    fclose(f);
-    return 1;
-}
-
-
-/*
- * This function should work, combine with:
- *    $ convert example.ppm example.png
- */
-void write_ppm_image(char *fname, EmbImage *a)
-{
-    int i, j;
-    FILE *f;
-    char header[100];
-    f = fopen(fname, "w");
-    if (!f) {
-        printf("Failed to open file: %s\n", fname);
-        return;
-    }
-    sprintf(header, "P3\n# Generated by libembroidery 0.1\n%d %d\n%d\n", a->pixel_width, a->pixel_height, 255);
-    fputs(header, f);
-    for (i=0; i<a->pixel_height; i++) {
-        for (j=0; j<a->pixel_width; j++) {
-            fprintf(f, "%d %d %d ",
-                a->color[j+i*a->pixel_width].r,
-                a->color[j+i*a->pixel_width].g,
-                a->color[j+i*a->pixel_width].b);
-        }
-        fprintf(f, "\n");
-    }
-    fclose(f);
-}
-
-
-/*
- *
- */
-float image_diff(EmbImage *a, EmbImage* b)
-{
-    int i, j;
-    float total;
-    total = 0.0;
-    for (i=0; i<a->pixel_width; i++) {
-        for (j=0; j<a->pixel_height; j++) {
-            total += embColor_distance(
-                a->color[i+j*a->pixel_width],
-                b->color[i+j*b->pixel_width]
-            );
-        }
-    }
-    return total;
-}
-
-/* Render Line
- * -----------
- * 
- */
-
-int render_line(EmbLine line, EmbImage *image, EmbColor color) {
-    EmbVector diff, pos, offset;
-    int i;
-    float pix_w, pix_h;
-    offset.x = -10.0;
-    offset.y = -10.0;
-    embVector_subtract(line.end, line.start, &diff);
-    pix_w = image->width / image->pixel_width;
-    pix_h = image->height / image->pixel_height;
-    for (i = 0; i < 1000; i++) {
-        int x, y;
-        pos.x = line.start.x + 0.001*i*diff.x + offset.x;
-        pos.y = line.start.y + 0.001*i*diff.y + offset.y;
-        x = (int)round(pos.x / pix_w);
-        y = (int)round(pos.y / pix_h);
-        if (x >= 0 && x < image->pixel_width)
-        if (y >= 0 && y < image->pixel_height) {
-            image->color[x+y*image->pixel_width] = color;
-        }
-    }
-    return 1;
-}
-
-/* Basic Render
- * ------------
- * This is a simple algorithm that steps through the stitches and
- * then for each line calls render_line.
- *
- * The caller is responsible for the memory in p.
- */
-
-int embImage_render(EmbPattern *p, float width, float height, char *fname) {
-    int i;
-    EmbImage *image;
-    EmbColor black = {0, 0, 0};
-    image = embImage_create(100, 100);
-    image->width = width;
-    image->height = height;
-    for (i=1; i < p->stitchList->count; i++)  {
-        EmbLine line;
-        line.start.x = p->stitchList->stitch[i-1].x;
-        line.start.y = p->stitchList->stitch[i-1].y;
-        line.end.x = p->stitchList->stitch[i].x;
-        line.end.y = p->stitchList->stitch[i].y;
-        render_line(line, image, black); /* HACK: st.color); */
-    }
-    write_ppm_image(fname, image);
-    embImage_free(image);
-    return 0;
-}
-
-/* EPS style render
- *
- *
- */
-
-int render_postscript(EmbPattern *pattern, EmbImage *image) {
-    puts("Postscript rendering not supported, defaulting to ppm.");
-    embImage_render(pattern, image->width, image->height, "default.ppm");
-    return 1;
-}
-
-/* Simulate the stitching of a pattern, using the image for rendering
- * hints about how to represent the pattern.
- */
-int embImage_simulate(EmbPattern *pattern, float width, float height, char *fname) {
-    embImage_render(pattern, width, height, fname);
-    return 0;
-}
-
-/*
- *  Thanks to Jason Weiler for describing the binary formats of the HUS and
- *  VIP formats at:
- *
- *  http://www.jasonweiler.com/HUSandVIPFileFormatInfo.html
- *
- *  Further thanks to github user tatarize for solving the mystery of the
- *  compression in:
- *
- *  https://github.com/EmbroidePy/pyembroidery
- *
- *  with a description of that work here:
- *
- *  https://stackoverflow.com/questions/7852670/greenleaf-archive-library
- *
- *  This is based on their work.
- *******************************************************************************
- */
-
-/* This is a work in progress.
- * ---------------------------
- */
-
-/* This avoids the now unnecessary compression by placing a
- * minimal header of 6 bytes and using only literals in the
- * huffman compressed part (see the sources above).
- */
-int hus_compress(char *data, int length, char *output, int *output_length)
-{
-    unsigned char *a = (unsigned char*)output;
-    a[0] = length%256;
-    a[1] = (length/256)%256;
-    a[2] = 0x02;
-    a[3] = 0xA0;
-    a[4] = 0x01;
-    a[5] = 0xFE;
-    memcpy(output+6, data, length);
-    *output_length = length+6;
-    return 0;
-}
-
-/* These next 4 functions represent the Huffman class in tartarize's code.
- */
-static void huffman_init(huffman *h, int lengths, int value)
-{
-    /* these mallocs are guessing for now */
-    h->default_value = value;
-    h->lengths = malloc(1000);
-    h->nlengths = lengths;
-    h->table = malloc(1000);
-    h->ntable = 0;
-    h->table_width = 0;
-}
-
-static void huffman_build_table(huffman *h)
-{
-    int bit_length, i, max_length, size;
-    max_length = 0;
-    size = 1 << h->table_width;
-    for (i = 0; i < h->table_width; i++) {
-        if (h->lengths[i] > max_length) {
-            max_length = h->lengths[i];
-        }
-    }
-    for (bit_length=1; bit_length<=h->table_width; bit_length++) {
-        int j;
-        size /= 2;
-        for (j=0; j < h->nlengths; j++) {
-            if (h->lengths[j] == bit_length) {
-                int k;
-                for (k=0; k<size; k++) {
-                    h->table[h->ntable+k] = j;
-                    h->ntable++;
-                }
-            }
-        }
-    }
-}
-
-static void huffman_lookup(huffman *h, int* out, int byte_lookup)
-{
-    if (h->table == 0) {
-        out[0] = h->default_value;
-        out[1] = 0;
-        return;
-    }
-    out[0] = h->table[byte_lookup >> (16-h->table_width)];
-    out[1] = h->lengths[out[0]];
-}
-
-static void huffman_free(huffman *h)
-{
-    free(h->table);
-    free(h->lengths);
-}
-
-/* These functions represent the EmbCompress class. */
-static void compress_init()
-{
-
-}
-
-static int compress_get_bits(compress *c, int length)
-{
-    int i, end_pos_in_bits, start_pos_in_bytes,
-        end_pos_in_bytes, value, mask_sample_bits,
-        unused_bits, original;
-
-    end_pos_in_bits = c->bit_position + length - 1;
-    start_pos_in_bytes = c->bit_position / 8;
-    end_pos_in_bytes = end_pos_in_bits / 8;
-    value = 0;
-
-    for (i=start_pos_in_bytes; i < end_pos_in_bytes+1; i++) {
-        value <<= 8;
-        if (i > c->input_length) {
-            break;
-        }
-        value |= (c->input_data[i]) & 0xFF;
-    }
-
-    unused_bits = (7 - end_pos_in_bits) % 8;
-    mask_sample_bits = (1<<length) - 1;
-    original = (value >> unused_bits) & mask_sample_bits;
-    return original;
-}
-
-static int compress_pop(compress *c, int bit_count)
-{
-    int value = compress_get_bits(c, bit_count);
-    c->bit_position += bit_count;
-    return value;
-}
-
-static int compress_peek(compress *c, int bit_count)
-{
-    return compress_get_bits(c, bit_count);
-}
-
-static int compress_read_variable_length(compress *c)
-{
-    int q, m, s;
-    m = compress_pop(c, 3);
-    if (m!=7) {
-        return m;
-    }
-    for (q=0; q<13; q++) {
-        s = compress_pop(c, 1);
-        if (s) {
-            m++;
-        }
-        else {
-            break;
-        }
-    }
-    return m;
-}
-
-static int compress_load_character_length_huffman(compress *c)
-{
-    int count;
-    huffman h;
-    count = compress_pop(c, 5);
-    if (count == 0) {
-        /*v = compress_pop(c, 5);*/
-        /* huffman = huffman_init(huffman, v); ? */
-    }
-    else {
-        int i;
-        for (i = 0; i < count; i++) {
-            h.lengths[i] = 0;
-        }
-        for (i = 0; i < count; i++) {
-            if (i==3) {
-                i += compress_pop(c, 2);
-            }
-            h.lengths[i] = compress_read_variable_length(c);
-        }
-        h.nlengths = count;
-        h.default_value = 8;
-        huffman_build_table(&h);
-    }
-    c->character_length_huffman = &h;
-    return 1;
-}
-
-static void compress_load_character_huffman(compress *c)
-{
-    int count;
-    huffman h;
-    count = compress_pop(c, 9);
-    if (count == 0) {
-        /*
-        v = compress_pop(c, 9);
-        huffman = huffman(v);
-        */
-    }
-    else {
-        int i;
-        for (i = 0; i < count; i++) {
-            h.lengths[i] = 0;
-        }
-        i = 0;
-        while (i < count) {
-            int h[2];
-            huffman_lookup(c->character_length_huffman, h, compress_peek(c, 16));
-            c->bit_position += h[1];
-            if (h[0]==0) {
-                i += h[0];
-            }
-            else if (h[0]==1) {
-                i += 3 + compress_pop(c, 4);
-            }
-            else if (h[0]==2) {
-                i += 20 + compress_pop(c, 9);
-            }
-            else {
-                c->character_huffman->lengths[i] = h[0] - 2;
-                i++;
-            }
-        }
-        huffman_build_table(c->character_huffman);
-    }
-}
-
-static void compress_load_distance_huffman(compress *c)
-{
-    int count;
-    huffman h;
-    count = compress_pop(c, 5);
-    if (count == 0) {
-        /*
-        v = compress_pop(c, 5);
-        c->distance_huffman = Huffman(v);
-        */
-    }
-    else {
-        int i;
-        for (i = 0; i < count; i++) {
-            h.lengths[i] = 0;
-        }
-        for (i = 0; i < count; i++) {
-            h.lengths[i] = compress_read_variable_length(c);
-        }
-        huffman_build_table(&h);
-    }
-    c->distance_huffman = &h;
-}
-    
-static void compress_load_block(compress *c)
-{
-    c->block_elements = compress_pop(c, 16);
-    compress_load_character_length_huffman(c);
-    compress_load_character_huffman(c);
-    compress_load_distance_huffman(c);
-}
-
-static int compress_get_token(compress *c)
-{
-    int h[2];
-    if (c->block_elements <= 0) {
-        compress_load_block(c);
-    }
-    c->block_elements--;
-    huffman_lookup(c->character_huffman, h, compress_peek(c, 16));
-    c->bit_position += h[1];
-    return h[0];
-}
-
-static int compress_get_position(compress *c)
-{
-    int h[2];
-    int v;
-    huffman_lookup(c->distance_huffman, h, compress_peek(c, 16));
-    c->bit_position += h[1];
-    if (h[0] == 0) {
-        return 0;
-    }
-    v = h[0] - 1;
-    v = (1<<v) + compress_pop(c, v);
-    return v;
-}
-
-int hus_decompress(char *data, int length, char *output, int *output_length)
-{
-    int character, i, j;
-    compress *c = (compress*)malloc(sizeof(compress));
-    c->bit_position = 0;
-    c->input_data = data;
-    c->input_length = length;
-    c->bits_total = length*8;
-    i = 0;
-    while (c->bits_total > c->bit_position && i < *output_length) {
-        /* process token */
-        character = 0; /* fix this */
-        if (character < 0x100) {
-            output[i] = (char)character;
-            i++;
-        }
-        else if (character == 510) {
-            break;
-        }
-        else {
-            length = character - 253;
-            /* not sure about i here */
-            c->bit_position = i - compress_get_position(c) - 1;
-            for (j=c->bit_position; j < c->bit_position+length; j++) {
-                output[i] = output[j];
-                i++;
-            }
-        }
-    }
-    free(c);
-    return 0;
 }
 
 /* GENERATORS
@@ -2754,57 +1090,23 @@ int svg_generator(char *s, char **token_table)
     return 0;
 }
 
-//TODO: Move majority of this code into libembroidery
-/*
 void embPattern_designDetails(EmbPattern *pattern)
 {
-    QApplication::setOverrideCursor(Qt::ArrowCursor);
-    debug_message("designDetails()");
-    QString appName = QApplication::applicationName();
-    QString title = "Design Details";
+    int colors, num_stitches, real_stitches, jump_stitches, trim_stitches;
+    int unknown_stitches, num_colors;
+    EmbRect bounds;
 
-    EmbPattern* pattern = 0;
+    puts("Design Details");
+    bounds = embPattern_calcBoundingBox(pattern);
 
-    //TODO: This is temporary. Generate actual pattern data from the scene.
-    //======================================================
-    //embPattern_read(pattern, "/mydata/embroidery-designs/KDE.EXP"); //TODO: This convenience function is messed up.
-
-    EmbReaderWriter* reader = 0;
-    int readSuccessful;
-    QString tmpFileName = "/mydata/embroidery-designs/KDE.EXP";
-
-    pattern = embPattern_create();
-    if(!pattern) { printf("Could not allocate memory for embroidery pattern\n"); }
-
-    readSuccessful = 0;
-    reader = embReaderWriter_getByFileName(qPrintable(tmpFileName));
-    if(!reader)
-    {
-        readSuccessful = 0;
-        printf("Unsupported read file type\n");
-    }
-    else
-    {
-        readSuccessful = reader->reader(pattern, qPrintable(tmpFileName));
-        if(!readSuccessful) printf("Reading file was unsuccessful\n");
-    }
-    free(reader);
-    if(!readSuccessful)
-    {
-        embPattern_free(pattern);
-    }
-    //======================================================
-
-
-    EmbRect bounds = embPattern_calcBoundingBox(pattern);
-
-    int colors = 1;
-    int num_stitches = 0;
-    int real_stitches = 0;
-    int jump_stitches = 0;
-    int trim_stitches = 0;
-    int unknown_stitches = 0;
-    int num_colors = 0;
+    colors = 1;
+    num_stitches = pattern->stitchList->count;
+    real_stitches = 0;
+    jump_stitches = 0;
+    trim_stitches = 0;
+    unknown_stitches = 0;
+    num_colors = pattern->threads->count;
+/*
     double minx = 0.0, maxx = 0.0, miny = 0.0, maxy = 0.0;
     double min_stitchlength = 999.0;
     double max_stitchlength = 0.0;
@@ -2813,25 +1115,22 @@ void embPattern_designDetails(EmbPattern *pattern)
     int number_of_maxlength_stitches = 0;
 
     double xx = 0.0, yy = 0.0;
-    double dx = 0.0, dy = 0.0;
     double length = 0.0;
 
-    num_colors = embThreadList_count(pattern->threadList);
-    num_stitches = embStitchList_count(pattern->stitchList);
-    if(num_stitches == 0)
-    {
+    if (num_stitches == 0) {
         QMessageBox::warning(this, tr("No Design Loaded"), tr("<b>A design needs to be loaded or created before details can be determined.</b>"));
         return;
     }
     QVector<double> stitchLengths;
 
     double totalColorLength = 0.0;
-    for(int i = 0; i < num_stitches; i++)
-    {
-        dx = embStitchList_getAt(pattern->stitchList, i).xx - xx;
-        dy = embStitchList_getAt(pattern->stitchList, i).yy - yy;
-        xx = embStitchList_getAt(pattern->stitchList, i).xx;
-        yy = embStitchList_getAt(pattern->stitchList, i).yy;
+    for (int i = 0; i < num_stitches; i++) {
+        EmbStitch st = pattern->stitchList->stitch[i];
+        double dx, dy;
+        dx = st.x - xx;
+        dy = st.y - yy;
+        xx = st.x;
+        yy = st.y;
         length=sqrt(dx * dx + dy * dy);
         totalColorLength += length;
         if(i > 0 && embStitchList_getAt(pattern->stitchList, i-1).flags != NORMAL)
@@ -2853,22 +1152,18 @@ void embPattern_designDetails(EmbPattern *pattern)
             if(yy < miny) miny = yy;
             if(yy > maxy) maxy = yy;
         }
-        if(embStitchList_getAt(pattern->stitchList, i).flags & JUMP)
-        {
+        if (st.flags & JUMP) {
             jump_stitches++;
         }
-        if(embStitchList_getAt(pattern->stitchList, i).flags & TRIM)
-        {
+        if (st.flags & TRIM) {
             trim_stitches++;
         }
-        if(embStitchList_getAt(pattern->stitchList, i).flags & STOP)
-        {
+        if (st.flags & STOP) {
             stitchLengths.push_back(totalColorLength);
             totalColorLength = 0;
             colors++;
         }
-        if(embStitchList_getAt(pattern->stitchList, i).flags & END)
-        {
+        if (st.flags & END) {
             stitchLengths.push_back(totalColorLength);
         }
     }
@@ -2876,13 +1171,11 @@ void embPattern_designDetails(EmbPattern *pattern)
     //second pass to fill bins now that we know max stitch length
 #define NUMBINS 10
     int bin[NUMBINS+1];
-    for(int i = 0; i <= NUMBINS; i++)
-    {
+    for (int i = 0; i <= NUMBINS; i++) {
         bin[i]=0;
     }
 
-    for(int i = 0; i < num_stitches; i++)
-    {
+    for (int i = 0; i < num_stitches; i++) {
         dx = embStitchList_getAt(pattern->stitchList, i).xx - xx;
         dy = embStitchList_getAt(pattern->stitchList, i).yy - yy;
         xx = embStitchList_getAt(pattern->stitchList, i).xx;
@@ -2897,42 +1190,25 @@ void embPattern_designDetails(EmbPattern *pattern)
     double binSize = max_stitchlength / NUMBINS;
 
     QString str;
-    for(int i = 0; i < NUMBINS; i++)
-    {
+    for (int i = 0; i < NUMBINS; i++) {
         str += QString::number(binSize * (i), 'f', 1) + " - " + QString::number(binSize * (i+1), 'f', 1) + " mm: " +  QString::number(bin[i]) + "\n\n";
     }
 
-    QDialog dialog(this);
-
-    QGridLayout* grid = new QGridLayout(this);
-    grid->setSpacing(2);
-
-    grid->addWidget(new QLabel(tr("Stitches:")),0,0,1,1);
-    grid->addWidget(new QLabel(QString::number(num_stitches)), 0, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Colors:")),1,0,1,1);
-    grid->addWidget(new QLabel(QString::number(num_colors)), 1, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Jumps:")),2,0,1,1);
-    grid->addWidget(new QLabel(QString::number(jump_stitches)), 2, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Top:")),3,0,1,1);
-    grid->addWidget(new QLabel(QString::number(bounds.top) + " mm"), 3, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Left:")),4,0,1,1);
-    grid->addWidget(new QLabel(QString::number(bounds.left) + " mm"), 4, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Bottom:")),5,0,1,1);
-    grid->addWidget(new QLabel(QString::number(bounds.bottom) + " mm"), 5, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Right:")),6,0,1,1);
-    grid->addWidget(new QLabel(QString::number(bounds.right) + " mm"), 6, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Width:")),7,0,1,1);
-    grid->addWidget(new QLabel(QString::number((bounds.right - bounds.left)) + " mm"), 7, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Height:")),8,0,1,1);
-    grid->addWidget(new QLabel(QString::number((bounds.bottom - bounds.top)) + " mm"), 8, 1, 1, 1);
+    puts("Stitches: %d\n", num_stitches);
+    puts("Colors: %d\n", num_colors);
+    puts("Jumps: %d\n", jump_stitches);
+    puts("Top: %f mm", bounds.top);
+    puts("Left: %f mm", bounds.left);
+    puts("Bottom: %f mm", bounds.bottom);
+    puts("Right: %f mm", bounds.right);
+    puts("Width: %f mm", bounds.right - bounds.left);
+    puts("Height: %f mm", bounds.bottom - bounds.top);
     grid->addWidget(new QLabel(tr("\nStitch Distribution: \n")),9,0,1,2);
     grid->addWidget(new QLabel(str), 10, 0, 1, 1);
     grid->addWidget(new QLabel(tr("\nThread Length By Color: \n")),11,0,1,2);
     int currentRow = 12;
-*/
-/*
-    for(int i = 0; i < num_colors; i++)
-    {
+
+    for (int i = 0; i < num_colors; i++) {
         QFrame *frame = new QFrame();
         frame->setGeometry(0,0,30,30);
         QPalette palette = frame->palette();
@@ -2945,8 +1221,7 @@ void embPattern_designDetails(EmbPattern *pattern)
         grid->addWidget(new QLabel(QString::number(stitchLengths.at(i)) + " mm"), currentRow,1,1,1);
         currentRow++;
     }
-*/
-/*
+
     QDialogButtonBox buttonbox(Qt::Horizontal, &dialog);
     QPushButton button(&dialog);
     button.setText("Ok");
@@ -2955,16 +1230,8 @@ void embPattern_designDetails(EmbPattern *pattern)
     connect(&buttonbox, SIGNAL(accepted()), &dialog, SLOT(accept()));
 
     grid->addWidget(&buttonbox, currentRow, 0, 1, 2);
-
-    dialog.setWindowTitle(title);
-    dialog.setMinimumWidth(100);
-    dialog.setMinimumHeight(50);
-    dialog.setLayout(grid);
-    dialog.exec();
-    QApplication::restoreOverrideCursor();
-
-}
 */
+}
 
 void embVector_print(EmbVector v, char *label)
 {
@@ -2979,7 +1246,7 @@ void embArc_print(EmbArc arc)
     embVector_print(arc.end, "end");
 }
 
-static void reverse_byte_order(void *b, int bytes)
+void reverse_byte_order(void *b, int bytes)
 {
     char swap;
     if (bytes == 2) {
@@ -3003,7 +1270,7 @@ static void reverse_byte_order(void *b, int bytes)
  * Returns 0 if there aren't enough, or the length of the file
  * if there are.
  */
-static int check_header_present(FILE* file, int minimum_header_length)
+int check_header_present(FILE* file, int minimum_header_length)
 {
     int length;
     fseek(file, 0, SEEK_END);
@@ -3104,9 +1371,9 @@ char getArcDataFromBulge(double bulge,
     incAngleInRadians = atan(bulge)*4.0;
 
     /* Calculate the Chord */
-    w = fabs(arc->start.x - arc->end.x);
-    h = fabs(arc->start.y - arc->end.y);
-    *chord = sqrt(w*w + h*h);
+    dx = arc->end.x - arc->start.x;
+    dy = arc->end.y - arc->start.y;
+    *chord = sqrt(dx*dx + dy*dy);
 
     /* Calculate the Radius */
     *radius = fabs(*chord / (2.0 * sin(incAngleInRadians / 2.0)));
@@ -3125,8 +1392,6 @@ char getArcDataFromBulge(double bulge,
     *chordMidY = (arc->start.y + arc->end.y) / 2.0;
 
     /* Calculate the Chord Angle (from arcStart to arcEnd) */
-    dx = arc->end.x - arc->start.x;
-    dy = arc->end.y - arc->start.y;
     chordAngleInRadians = atan2(dy, dx);
 
     /* Calculate the Sagitta Angle (from chordMid to arcMid) */
@@ -3412,463 +1677,7 @@ EmbVector embLine_intersectionPoint(EmbLine line1, EmbLine line2)
     return result;
 }
 
-EmbArray* embArray_create(int type) {
-    EmbArray *p;
-    p = (EmbArray*)malloc(sizeof(EmbArray));
-    p->type = type;
-    p->length = CHUNK_SIZE;
-    p->count = 0;
-    switch (p->type) {
-    case EMB_ARC:
-        p->arc = (EmbArcObject*)malloc(CHUNK_SIZE*sizeof(EmbArcObject));
-        break;
-    case EMB_CIRCLE:
-        p->circle = (EmbCircleObject*)malloc(CHUNK_SIZE*sizeof(EmbCircleObject));
-        break;
-    case EMB_ELLIPSE:
-        p->ellipse = (EmbEllipseObject*)malloc(CHUNK_SIZE*sizeof(EmbEllipseObject));
-        break;
-    case EMB_FLAG:
-        p->flag = (int*)malloc(CHUNK_SIZE*sizeof(int));
-        break;
-    case EMB_PATH:
-        p->path = (EmbPathObject**)malloc(CHUNK_SIZE*sizeof(EmbPathObject));
-        break;
-    case EMB_POINT:
-        p->point = (EmbPointObject*)malloc(CHUNK_SIZE*sizeof(EmbPointObject));
-        break;
-    case EMB_LINE:
-        p->line = (EmbLineObject*)malloc(CHUNK_SIZE*sizeof(EmbLineObject));
-        break;
-    case EMB_POLYGON:
-        p->polygon = (EmbPolygonObject**)malloc(CHUNK_SIZE*sizeof(EmbPolygonObject*));
-        break;
-    case EMB_POLYLINE:
-        p->polyline = (EmbPolylineObject**)malloc(CHUNK_SIZE*sizeof(EmbPolylineObject*));
-        break;
-    case EMB_RECT:
-        p->rect = (EmbRectObject*)malloc(CHUNK_SIZE*sizeof(EmbRectObject));
-        break;
-    case EMB_SPLINE:
-        p->spline = (EmbSplineObject*)malloc(CHUNK_SIZE*sizeof(EmbSplineObject));
-        break;
-    case EMB_STITCH:
-        p->stitch = (EmbStitch*)malloc(CHUNK_SIZE*sizeof(EmbStitch));
-        break;
-    case EMB_THREAD:
-        p->thread = (EmbThread*)malloc(CHUNK_SIZE*sizeof(EmbThread));
-        break;
-    case EMB_VECTOR:
-        p->vector = (EmbVector*)malloc(CHUNK_SIZE*sizeof(EmbVector));
-        break;
-    default:
-        break;
-    }
-    return p;
-}
-
-int embArray_resize(EmbArray *p) {
-    if (p->count < p->length) {
-        return 1;
-    }
-    p->length += CHUNK_SIZE;
-    switch (p->type) {
-    case EMB_ARC:
-        p->arc = (EmbArcObject *)realloc(p->arc, p->length*sizeof(EmbArcObject));
-        if (!p->arc) return 0;
-        break;
-    case EMB_CIRCLE:
-        p->circle = (EmbCircleObject *)realloc(p->circle, p->length*sizeof(EmbCircleObject));
-        if (!p->circle) return 0;
-        break;
-    case EMB_ELLIPSE:
-        p->ellipse = (EmbEllipseObject *)realloc(p->ellipse, p->length*sizeof(EmbEllipseObject));
-        if (!p->ellipse) return 0;
-        break;
-    case EMB_FLAG:
-        p->flag = (int *)realloc(p->flag, p->length*sizeof(int));
-        if (!p->flag) return 0;
-        break;
-    case EMB_PATH:
-        p->path = (EmbPathObject **)realloc(p->path, p->length*sizeof(EmbPathObject*));
-        if (!p->path) return 0;
-        break;
-    case EMB_POINT:
-        p->point = (EmbPointObject *)realloc(p->point, p->length*sizeof(EmbPointObject));
-        if (!p->point) return 0;
-        break;
-    case EMB_LINE:
-        p->line = (EmbLineObject *)realloc(p->line, p->length*sizeof(EmbLineObject));
-        if (!p->line) return 0;
-        break;
-    case EMB_POLYGON:
-        p->polygon = (EmbPolygonObject **)realloc(p->polygon, p->length*sizeof(EmbPolygonObject*));
-        if (!p->polygon) return 0;
-        break;
-    case EMB_POLYLINE:
-        p->polyline = (EmbPolylineObject **)realloc(p->polyline, p->length*sizeof(EmbPolylineObject*));
-        if (!p->polyline) return 0;
-        break;
-    case EMB_RECT:
-        p->rect = (EmbRectObject *)realloc(p->rect, p->length*sizeof(EmbRectObject));
-        if (!p->rect) return 0;
-        break;
-    case EMB_SPLINE:
-        p->spline = (EmbSplineObject *)realloc(p->spline, p->length*sizeof(EmbSplineObject));
-        if (!p->spline) return 0;
-        break;
-    case EMB_STITCH:
-        p->stitch = (EmbStitch *)realloc(p->stitch, p->length*sizeof(EmbStitch));
-        if (!p->stitch) return 0;
-        break;
-    case EMB_THREAD:
-        p->thread = (EmbThread *)realloc(p->thread, p->length*sizeof(EmbThread));
-        if (!p->thread) return 0;
-        break;
-    case EMB_VECTOR:
-        p->vector = (EmbVector *)realloc(p->vector, p->length*sizeof(EmbVector));
-        if (!p->vector) return 0;
-        break;
-    default:
-        break;
-    }
-    return 1;
-}
-
-void embArray_copy(EmbArray *dst, EmbArray *src)
-{
-    dst = (EmbArray*)malloc(sizeof(EmbArray));
-    dst->type = src->type;
-    dst->length = src->length;
-    dst->count = src->count;
-    embArray_resize(dst);
-    switch (src->type) {
-    case EMB_ARC:
-        memcpy(dst->arc, src->arc, sizeof(EmbArcObject)*src->count);
-        break;
-    case EMB_CIRCLE:
-        memcpy(dst->circle, src->circle, sizeof(EmbCircleObject)*src->count);
-        break;
-    case EMB_ELLIPSE:
-        memcpy(dst->ellipse, src->ellipse, sizeof(EmbEllipseObject)*src->count);
-        break;
-    case EMB_FLAG:
-        memcpy(dst->flag, src->flag, sizeof(int)*src->count);
-        break;
-    case EMB_PATH:
-        memcpy(dst->path, src->path, sizeof(EmbPathObject)*src->count);
-        break;
-    case EMB_POINT:
-        memcpy(dst->point, src->point, sizeof(EmbPointObject)*src->count);
-        break;
-    case EMB_LINE:
-        memcpy(dst->line, src->line, sizeof(EmbLineObject)*src->count);
-        break;
-    case EMB_POLYGON:
-        memcpy(dst->polygon, src->polygon, sizeof(int)*src->count);
-        break;
-    case EMB_POLYLINE:
-        memcpy(dst->polyline, src->polyline, sizeof(int)*src->count);
-        break;
-    case EMB_RECT:
-        memcpy(dst->rect, src->rect, sizeof(int)*src->count);
-        break;
-    case EMB_SPLINE:
-        memcpy(dst->spline, src->spline, sizeof(int)*src->count);
-        break;
-    case EMB_STITCH:
-        memcpy(dst->stitch, src->stitch, sizeof(int)*src->count);
-        break;
-    case EMB_THREAD:
-        memcpy(dst->thread, src->thread, sizeof(int)*src->count);
-        break;
-    case EMB_VECTOR:
-        memcpy(dst->vector, src->vector, sizeof(int)*src->count);
-        break;
-    default:
-        break;
-    }
-}
-
-int embArray_addArc(EmbArray* p, EmbArc arc, int lineType, EmbColor color) {
-    p->count++;
-    if (!embArray_resize(p)) {
-        return 0;
-    }
-    p->arc[p->count - 1].arc = arc;
-    p->arc[p->count - 1].lineType = lineType;
-    p->arc[p->count - 1].color = color;
-    return 1;
-}
-
-int embArray_addCircle(EmbArray* p, EmbCircle circle,
-                        int lineType, EmbColor color) {
-    p->count++;
-    if (!embArray_resize(p)) {
-        return 0;
-    }
-    p->circle[p->count - 1].circle = circle;
-    p->circle[p->count - 1].lineType = lineType;
-    p->circle[p->count - 1].color = color;
-    return 1;
-}
-
-int embArray_addEllipse(EmbArray* p,
-    EmbEllipse ellipse, double rotation, int lineType, EmbColor color) {
-    p->count++;
-    if (!embArray_resize(p)) {
-        return 0;
-    }
-    p->ellipse[p->count - 1].ellipse = ellipse;
-    p->ellipse[p->count - 1].rotation = rotation;
-    p->ellipse[p->count - 1].lineType = lineType;
-    p->ellipse[p->count - 1].color = color;
-    return 1;
-}
-
-int embArray_addFlag(EmbArray* p, int flag) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->flag[p->count - 1] = flag;
-    return 1;
-}
-
-int embArray_addLine(EmbArray* p, EmbLineObject line) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->line[p->count - 1] = line;
-    return 1;
-}
-
-int embArray_addPath(EmbArray* p, EmbPathObject *path) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->path[p->count - 1] = (EmbPathObject*)malloc(sizeof(EmbPathObject));
-    if (!p->path[p->count - 1]) {
-        printf("ERROR: emb-polygon.c embArray_create(), ");
-        printf("cannot allocate memory for heapPolygonObj\n");
-        return 0;
-    }
-    p->path[p->count - 1] = path;
-    return 1;
-}
-
-int embArray_addPoint(EmbArray* p, EmbPointObject *point) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->point[p->count - 1] = *point;
-    return 1;
-}
-
-int embArray_addPolygon(EmbArray* p, EmbPolygonObject *polygon) {
-    p->count++;
-    if (!embArray_resize(p)) {
-        return 0;
-    }
-    p->polygon[p->count - 1] = (EmbPolygonObject*)malloc(sizeof(EmbPolygonObject));
-    if (!p->polygon[p->count - 1]) {
-        printf("ERROR: emb-polygon.c embArray_create(), ");
-        printf("cannot allocate memory for heapPolygonObj\n");
-        return 0;
-    }
-    p->polygon[p->count - 1] = polygon;
-    return 1;
-}
-
-int embArray_addPolyline(EmbArray* p, EmbPolylineObject *polyline) {
-    p->count++;
-    if (!embArray_resize(p)) {
-        return 0;
-    }
-    p->polyline[p->count - 1] = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
-    if (!p->polyline[p->count - 1]) {
-        printf("ERROR: emb-polyline.c embArray_create(), ");
-        printf("cannot allocate memory for heapPolylineObj\n");
-        return 0;
-    }
-    p->polyline[p->count - 1] = polyline;
-    return 1;
-}
-
-int embArray_addRect(EmbArray* p,
-    EmbRect rect, int lineType, EmbColor color) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->rect[p->count - 1].rect = rect;
-    p->rect[p->count - 1].lineType = lineType;
-    p->rect[p->count - 1].color = color;
-    return 1;
-}
-
-int embArray_addStitch(EmbArray* p, EmbStitch st) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->stitch[p->count - 1] = st;
-    return 1;
-}
-
-int embArray_addThread(EmbArray* p, EmbThread thread) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->thread[p->count - 1] = thread;
-    return 1;
-}
-
-int embArray_addVector(EmbArray* p, EmbVector vector) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->vector[p->count - 1] = vector;
-    return 1;
-}
-
-
-void embArray_free(EmbArray* p) {
-    int i;
-    if (!p) {
-        return;
-    }
-    switch (p->type) {
-    case EMB_ARC:
-        free(p->arc);
-        break;
-    case EMB_CIRCLE:
-        free(p->circle);
-        break;
-    case EMB_ELLIPSE:
-        free(p->ellipse);
-        break;
-    case EMB_FLAG:
-        free(p->flag);
-        break;
-    case EMB_LINE:
-        free(p->line);
-        break;
-    case EMB_PATH:
-        for (i = 0; i < p->count; i++) {
-            embArray_free(p->path[i]->pointList);
-        }
-        free(p->path);
-        break;
-    case EMB_POINT:
-        free(p->point);
-        break;
-    case EMB_POLYGON:
-        for (i = 0; i < p->count; i++) {
-            embArray_free(p->polygon[i]->pointList);
-        }
-        free(p->polygon);
-        break;
-    case EMB_POLYLINE:
-        for (i = 0; i < p->count; i++) {
-            embArray_free(p->polyline[i]->pointList);
-        }
-        free(p->polyline);
-        break;
-    case EMB_RECT:
-        free(p->rect);
-        break;
-    case EMB_SPLINE:
-        free(p->spline);
-        break;
-    case EMB_STITCH:
-        free(p->stitch);
-        break;
-    case EMB_THREAD:
-        free(p->thread);
-        break;
-    case EMB_VECTOR:
-        free(p->vector);
-        break;
-    default:
-        break;
-    }
-    free(p);
-}
-
-
-/* Read and write system for multiple byte types.
- *
- * The caller passes the function to read/write from, the
- * memory location as a void pointer and a mode identifier that describes
- * the type. This way we can abstract out the endianness of the
- * system running the library and don't have to maintain many functions,
- * just two.
- */
-static void fread_int(FILE* f, void *b, int mode)
-{
-    int endian = mode & 0x01;
-    int length = mode - endian;
-    fread(b, 1, length, f);
-    if (endian != ENDIAN_HOST) {
-        reverse_byte_order(b, length);
-    }
-}
-
-static void fwrite_int(FILE* f, void *b, int mode) {
-    int endian = mode & 0x01;
-    int length = mode - endian;
-    if (endian != ENDIAN_HOST) {
-        reverse_byte_order(b, length);
-    }
-    fwrite(b, 1, length, f);
-}
-
-short fread_int16(FILE* f) {
-    short x;
-    fread_int(f, &x, EMB_INT16_LITTLE);
-    return x;
-}
-
-unsigned short fread_uint16(FILE* f) {
-    unsigned short x;
-    fread_int(f, &x, EMB_INT16_LITTLE);
-    return x;
-}
-
-int fread_int32(FILE* f) {
-    int x;
-    fread_int(f, &x, EMB_INT32_LITTLE);
-    return x;
-}
-
-unsigned int fread_uint32(FILE* f) {
-    unsigned int x;
-    fread_int(f, &x, EMB_INT32_LITTLE);
-    return x;
-}
-
-short fread_int16_be(FILE* f) {
-    short x;
-    fread_int(f, &x, EMB_INT16_BIG);
-    return x;
-}
-
-unsigned short fread_uint16_be(FILE* f) {
-    unsigned short x;
-    fread_int(f, &x, EMB_INT16_BIG);
-    return x;
-}
-
-int fread_int32_be(FILE* f) {
-    int x;
-    fread_int(f, &x, EMB_INT32_BIG);
-    return x;
-}
-
-unsigned int fread_uint32_be(FILE* f) {
-    unsigned int x;
-    fread_int(f, &x, EMB_INT32_BIG);
-    return x;
-}
-
-void fpad(FILE* file, char c, int n) {
-    int i;
-    for (i = 0; i < n; i++) {
-        fwrite(&c, 1, 1, file);
-    }
-}
-
-static unsigned int sectorSize(bcf_file* bcfFile) {
+unsigned int sectorSize(bcf_file* bcfFile) {
     /* version 3 uses 512 byte */
     if (bcfFile->header.majorVersion == 3) {
         return 512;
@@ -3876,20 +1685,20 @@ static unsigned int sectorSize(bcf_file* bcfFile) {
     return 4096;
 }
 
-static int haveExtraDIFATSectors(bcf_file* file) {
+int haveExtraDIFATSectors(bcf_file* file) {
     return (int)(numberOfEntriesInDifatSector(file->difat) > 0);
 }
 
-static int seekToOffset(FILE* file, const unsigned int offset) {
+int seekToOffset(FILE* file, const unsigned int offset) {
     return fseek(file, offset, SEEK_SET);
 }
 
-static int seekToSector(bcf_file* bcfFile, FILE* file, const unsigned int sector) {
+int seekToSector(bcf_file* bcfFile, FILE* file, const unsigned int sector) {
     unsigned int offset = sector * sectorSize(bcfFile) + sectorSize(bcfFile);
     return seekToOffset(file, offset);
 }
 
-static void parseDIFATSectors(FILE* file, bcf_file* bcfFile) {
+void parseDIFATSectors(FILE* file, bcf_file* bcfFile) {
     unsigned int numberOfDifatEntriesStillToRead = bcfFile->header.numberOfFATSectors - NumberOfDifatEntriesInHeader;
     unsigned int difatSectorNumber = bcfFile->header.firstDifatSectorLocation;
     while ((difatSectorNumber != CompoundFileSector_EndOfChain) && (numberOfDifatEntriesStillToRead > 0)) {
@@ -3898,7 +1707,7 @@ static void parseDIFATSectors(FILE* file, bcf_file* bcfFile) {
     }
 }
 
-static int bcfFile_read(FILE* file, bcf_file* bcfFile) {
+int bcfFile_read(FILE* file, bcf_file* bcfFile) {
     unsigned int i, numberOfDirectoryEntriesPerSector;
     unsigned int directorySectorToReadFrom;
 
@@ -3932,7 +1741,7 @@ static int bcfFile_read(FILE* file, bcf_file* bcfFile) {
     return 1;
 }
 
-static FILE* GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind) {
+FILE* GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind) {
     int filesize, sectorSize, currentSector;
     int sizeToWrite, currentSize, totalSectors, i, j;
     FILE* fileOut = tmpfile();
@@ -3964,7 +1773,7 @@ static FILE* GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind) {
     return fileOut;
 }
 
-static void bcf_file_free(bcf_file* bcfFile)
+void bcf_file_free(bcf_file* bcfFile)
 {
     bcf_file_difat_free(bcfFile->difat);
     bcf_file_fat_free(&bcfFile->fat);
@@ -3972,7 +1781,7 @@ static void bcf_file_free(bcf_file* bcfFile)
     free(bcfFile);
 }
 
-static bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize)
+bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize)
 {
     unsigned int i;
     bcf_file_difat* difat = 0;
@@ -4042,7 +1851,7 @@ void bcf_file_difat_free(bcf_file_difat* difat) {
     difat = 0;
 }
 
-static void parseDirectoryEntryName(FILE* file, bcf_directory_entry* dir) {
+void parseDirectoryEntryName(FILE* file, bcf_directory_entry* dir) {
     int i;
     for (i = 0; i < 32; ++i) {
         unsigned short unicodechar;
@@ -4080,7 +1889,7 @@ EmbTime parseTime(FILE* file)
     return returnVal;
 }
 
-static bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file)
+bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file)
 {
     const int guidSize = 16;
     bcf_directory_entry* dir = malloc(sizeof(bcf_directory_entry));
@@ -4112,7 +1921,7 @@ static bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file)
     return dir;
 }
 
-static void readNextSector(FILE* file, bcf_directory* dir) {
+void readNextSector(FILE* file, bcf_directory* dir) {
     unsigned int i;
     for (i = 0; i < dir->maxNumberOfDirectoryEntries; ++i) {
         bcf_directory_entry* dirEntry = CompoundFileDirectoryEntry(file);
@@ -4131,7 +1940,7 @@ static void readNextSector(FILE* file, bcf_directory* dir) {
     }
 }
 
-static void bcf_directory_free(bcf_directory** dir) {
+void bcf_directory_free(bcf_directory** dir) {
     bcf_directory *dirptr;
     bcf_directory_entry* pointer;
     if (dir == NULL){
@@ -4151,7 +1960,7 @@ static void bcf_directory_free(bcf_directory** dir) {
     }
 }
 
-static bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize) {
+bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize) {
     bcf_file_fat* fat = (bcf_file_fat*)malloc(sizeof(bcf_file_fat));
     if (!fat) {
         printf("ERROR: compound-file-fat.c bcfFileFat_create(), ");
@@ -4163,7 +1972,7 @@ static bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize) {
     return fat;
 }
 
-static void loadFatFromSector(bcf_file_fat* fat, FILE* file) {
+void loadFatFromSector(bcf_file_fat* fat, FILE* file) {
     unsigned int i;
     unsigned int currentNumberOfFatEntries = fat->fatEntryCount;
     unsigned int newSize = currentNumberOfFatEntries + fat->numberOfEntriesInFatSector;
@@ -4174,12 +1983,12 @@ static void loadFatFromSector(bcf_file_fat* fat, FILE* file) {
     fat->fatEntryCount = newSize;
 }
 
-static void bcf_file_fat_free(bcf_file_fat** fat) {
+void bcf_file_fat_free(bcf_file_fat** fat) {
     free(*fat);
     *fat = NULL;
 }
 
-static bcf_file_header bcfFileHeader_read(FILE* file) {
+bcf_file_header bcfFileHeader_read(FILE* file) {
     bcf_file_header header;
     fread(header.signature, 1, 8, file);
     fread(header.CLSID, 1, 16, file);
@@ -4202,7 +2011,7 @@ static bcf_file_header bcfFileHeader_read(FILE* file) {
     return header;
 }
 
-static int bcfFileHeader_isValid(bcf_file_header header)
+int bcfFileHeader_isValid(bcf_file_header header)
 {
     if (memcmp(header.signature, "\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1", 8) != 0) {
         printf("bad header signature\n");
@@ -4269,8 +2078,6 @@ EmbPattern* embPattern_create(void) {
     p->polylines = 0;
     p->rects = 0;
     p->splines = 0;
-    p->lastX = 0.0;
-    p->lastY = 0.0;
     return p;
 }
 
@@ -4522,8 +2329,6 @@ void embPattern_addStitchAbs(EmbPattern* p, double x, double y,
     s.flags = flags;
     s.color = p->currentColorIndex;
     embArray_addStitch(p->stitchList, s);
-    p->lastX = s.x;
-    p->lastY = s.y;
 }
 
 /*! Adds a stitch to the pattern (\a p) at the relative position (\a dx,\a dy) 
@@ -4536,8 +2341,9 @@ void embPattern_addStitchRel(EmbPattern* p, double dx, double dy,
         return;
     }
     if (p->stitchList->count > 0) {
-        x = p->lastX + dx;
-        y = p->lastY + dy;
+        EmbStitch st = p->stitchList->stitch[p->stitchList->count - 1];
+        x = st.x + dx;
+        y = st.y + dy;
     } else {
         /* NOTE: The stitchList is empty, so add it to the HOME position.
          * The embStitchList_create function will ensure the first coordinate is at the HOME position. */
@@ -5542,34 +3348,6 @@ void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength) {
     }
 }
 
-void binaryWriteShort(FILE* file, short data) {
-    fwrite_int(file, &data, EMB_INT16_LITTLE);
-}
-
-void binaryWriteUShort(FILE* file, unsigned short data) {
-    fwrite_int(file, &data, EMB_INT16_LITTLE);
-}
-
-void binaryWriteUShortBE(FILE* file, unsigned short data) {
-    fwrite_int(file, &data, EMB_INT16_BIG);
-}
-
-void binaryWriteInt(FILE* file, int data) {
-    fwrite_int(file, &data, EMB_INT32_LITTLE);
-}
-
-void binaryWriteIntBE(FILE* file, int data) {
-    fwrite_int(file, &data, EMB_INT32_BIG);
-}
-
-void binaryWriteUInt(FILE* file, unsigned int data) {
-    fwrite_int(file, &data, EMB_INT32_LITTLE);
-}
-
-void binaryWriteUIntBE(FILE* file, unsigned int data) {
-    fwrite_int(file, &data, EMB_INT32_BIG);
-}
-
 double embMinDouble(double a, double b) {
     if (a<b) {
         return a;
@@ -5642,10 +3420,10 @@ int emb_readline(FILE* file, char *line, int maxLength) {
 }
 
 /* TODO: trimming function should handle any character, not just whitespace */
-static char const WHITESPACE[] = " \t\n\r";
+char const WHITESPACE[] = " \t\n\r";
 
 /* TODO: description */
-static void get_trim_bounds(char const *s,
+void get_trim_bounds(char const *s,
                             char const **firstWord,
                             char const **trailingSpace) {
     char const* lastWord = 0;
@@ -5907,7 +3685,7 @@ int convert(const char *inf, const char *outf) {
     return 0;
 }
 
-static void usage(void)
+void usage(void)
 {
     puts(welcome_message);
     /* construct from tables above somehow, like how getopt_long works,
@@ -5954,7 +3732,7 @@ static void usage(void)
     puts("        --full-test-suite  Run all tests, even those we expect to fail.");
 }
 
-static void formats(void)
+void formats(void)
 {
     const char* extension = 0;
     const char* description = 0;
@@ -5994,7 +3772,7 @@ static void formats(void)
 }
 
 /* TODO: Add capability for converting multiple files of various types to a single format. Currently, we only convert a single file to multiple formats. */
-static int command_line_interface(int argc, char* argv[])
+int command_line_interface(int argc, char* argv[])
 {
     EmbPattern *current_pattern = embPattern_create();
     float width, height;

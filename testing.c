@@ -5,8 +5,9 @@
  * Licensed under the terms of the zlib license.
  */
 
-static void
-report(int result, char *label)
+#include "embroidery-internal.h"
+
+void report(int result, char *label)
 {
     printf("%s Test...%*c", label, (int)(20-strlen(label)), ' ');
     if (result) {
@@ -28,10 +29,13 @@ void testMain(int level)
     int arcResult = testGeomArc();
     int create1Result = create_test_file_1("test01.csv");
     int create2Result = create_test_file_2("test02.csv");
+    int create3Result = create_test_file_3("test03.csv");
     int svg1Result = convert("test01.csv", "test01.svg");
     int svg2Result = convert("test02.csv", "test02.svg");
+    int svg3Result = convert("test03.csv", "test03.svg");
     int dst1Result = convert("test01.csv", "test01.dst");
     int dst2Result = convert("test02.csv", "test02.dst");
+    int dst3Result = convert("test03.csv", "test03.dst");
     int hilbertCurveResult = hilbert_curve(pattern, 3);
     int renderResult = embImage_render(pattern, 20.0, 20.0, "hilbert_level_3.ppm");
     int simulateResult = embImage_simulate(pattern, 20.0, 20.0, "hilbert_level_3.avi");
@@ -42,10 +46,13 @@ void testMain(int level)
     overall += arcResult;
     overall += create1Result;
     overall += create2Result;
+    overall += create3Result;
     overall += svg1Result;
     overall += svg2Result;
+    overall += svg3Result;
     overall += dst1Result;
     overall += dst2Result;
+    overall += dst3Result;
 
     if (emb_verbose >= 0) {
         puts("SUMMARY OF RESULTS");
@@ -56,10 +63,13 @@ void testMain(int level)
         report(arcResult, "Arc");
         report(create1Result, "Create CSV 1");
         report(create2Result, "Create CSV 2");
+        report(create3Result, "Create CSV 3");
         report(svg1Result, "Convert CSV-SVG 1");
         report(svg2Result, "Convert CSV-SVG 2");
+        report(svg3Result, "Convert CSV-SVG 3");
         report(dst1Result, "Convert CSV-DST 1");
         report(dst2Result, "Convert CSV-DST 2");
+        report(dst3Result, "Convert CSV-DST 3");
         report(hilbertCurveResult, "Generating Hilbert Curve");
         report(renderResult, "Rendering Hilbert Curve");
         report(simulateResult, "Simulating Hilbert Curve");
@@ -366,15 +376,34 @@ int create_test_file_2(const char* outf) {
     return 0;
 }
 
+int create_test_file_3(const char* outf) {
+    int i;
+    EmbPattern* p;
+    EmbStitch st;
+
+    p = embPattern_create();
+    if (!p) {
+        puts("ERROR: convert(), cannot allocate memory for p\n");
+        return 1;
+    }
+
+    embPattern_addCircleObjectAbs(p, 10.0, 1.0, 5.0);
+
+    embPattern_addThread(p, black_thread);
+    embPattern_convertGeometry(p);
+    embPattern_end(p);
+
+    if (!embPattern_writeAuto(p, outf)) {
+        return 16;
+    }
+
+    embPattern_free(p);
+    return 0;
+}
+
 
 /* TODO: Add capability for converting multiple files of various types to a single format. 
 Currently, we only convert a single file to multiple formats. */
-/* the only difference in main() between new and current is these lines
-
-    init_embroidery();
-    close_embroidery();
-*/
-
 #if 0
 int testThreadColor(void) {
     unsigned int tColor = 0xFFD25F00;

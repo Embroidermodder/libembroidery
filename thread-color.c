@@ -5,6 +5,8 @@
  * Licensed under the terms of the zlib license.
  */
 
+#include "embroidery-internal.h"
+
 /* Based on the DraftSight color table */
 const unsigned char _dxfColorTable[][3] = {
 {   0,   0,   0 }, /*   '0' (BYBLOCK)    */

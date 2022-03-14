@@ -8,10 +8,22 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 option( EMBROIDERY_BUILD_SHARED_LIBS "Build shared library." ON )
 option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
 
-add_library(embroidery_static STATIC embroidery.h embroidery.c)
+set(C_SOURCES
+	embroidery.c
+	embroidery.h
+	embroidery-internal.h
+	array.c
+	testing.c
+	formats.c
+	image.c
+	compress.c
+	thread-color.c
+)
+
+add_library(embroidery_static STATIC ${C_SOURCES})
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
-add_library(embroidery SHARED embroidery.h embroidery.c)
+add_library(embroidery SHARED ${C_SOURCES})
 
 target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
 
@@ -19,7 +31,7 @@ target_include_directories(embroidery INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
 if(EMBROIDERY_BUILD_CLI)
-add_executable(embroider embroidery.c embroidery.h)
+add_executable(embroider ${C_SOURCES})
 
 target_compile_definitions(embroider PUBLIC LIBEMBROIDERY_CLI)
 endif()

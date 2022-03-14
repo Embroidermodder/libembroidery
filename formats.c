@@ -56,253 +56,6 @@
 #define SVG_ATTRIBUTE                 4
 #define SVG_CATCH_ALL                 5
 
-#define ELEMENT_XML               0
-#define ELEMENT_A                 1
-#define ELEMENT_ANIMATE           2
-#define ELEMENT_ANIMATE_COLOR     3
-#define ELEMENT_ANIMATE_MOTION    4
-#define ELEMENT_ANIMATE_TRANSFORM 5
-#define ELEMENT_ANIMATION         6
-#define ELEMENT_AUDIO             7
-#define ELEMENT_CIRCLE            8
-#define ELEMENT_DEFS              9
-#define ELEMENT_DESC              10
-#define ELEMENT_DISCARD           11
-#define ELEMENT_ELLIPSE           12
-#define ELEMENT_FONT              13
-#define ELEMENT_FONT_FACE         14
-#define ELEMENT_FONT_FACE_SRC     15
-#define ELEMENT_FONT_FACE_URI     16
-#define ELEMENT_FOREIGN_OBJECT    17
-#define ELEMENT_G                 18
-#define ELEMENT_GLYPH             19
-#define ELEMENT_HANDLER           20
-#define ELEMENT_HKERN             21
-#define ELEMENT_IMAGE             22
-#define ELEMENT_LINE              23
-#define ELEMENT_LINEAR_GRADIENT   24
-#define ELEMENT_LISTENER          25
-#define ELEMENT_METADATA          26
-#define ELEMENT_MISSING_GLYPH     27
-#define ELEMENT_MPATH             28
-#define ELEMENT_PATH              29
-#define ELEMENT_POLYGON           30
-#define ELEMENT_POLYLINE          31
-#define ELEMENT_PREFETCH          32
-#define ELEMENT_RADIAL_GRADIENT   33
-#define ELEMENT_RECT              34
-#define ELEMENT_SCRIPT            35
-#define ELEMENT_SET               36
-#define ELEMENT_SOLID_COLOR       37
-#define ELEMENT_STOP              38
-#define ELEMENT_SVG               39
-#define ELEMENT_SWITCH            40
-#define ELEMENT_TBREAK            41
-#define ELEMENT_TEXT              42
-#define ELEMENT_TEXT_AREA         43
-#define ELEMENT_TITLE             44
-#define ELEMENT_TSPAN             45
-#define ELEMENT_USE               46
-#define ELEMENT_VIDEO             47
-#define ELEMENT_UNKNOWN           48
-
-#define PROP_AUDIO_LEVEL          0
-#define PROP_BUFFERED_RENDERING   1
-#define PROP_COLOR                2
-#define PROP_COLOR_RENDERING      3
-#define PROP_DIRECTION            4
-#define PROP_DISPLAY              5
-#define PROP_DISPLAY_ALIGN        6
-#define PROP_PROPERTIES_FILL      7
-#define PROP_FILL_OPACITY         8
-#define PROP_FILL_RULE            9
-#define PROP_FONT_FAMILY          10
-#define PROP_FONT_SIZE            11
-#define PROP_FONT_STYLE           12
-#define PROP_FONT_VARIANT         13
-#define PROP_FONT_WEIGHT          14
-#define PROP_IMAGE_RENDERING      15
-#define PROP_LINE_INCREMENT       16
-#define PROP_OPACITY              17
-#define PROP_POINTER_EVENTS       18
-#define PROP_SHAPE_RENDERING      19
-#define PROP_SOLID_COLOR          20
-#define PROP_SOLID_OPACITY        21
-#define PROP_STOP_COLOR           22
-#define PROP_STOP_OPACITY         23
-#define PROP_STROKE               24
-#define PROP_STROKE_DASHARRAY     25
-#define PROP_STROKE_LINECAP       26
-#define PROP_STROKE_LINEJOIN      27
-#define PROP_STROKE_MITERLIMIT    28
-#define PROP_STROKE_OPACITY       29
-#define PROP_STROKE_WIDTH         30
-#define PROP_TEXT_ALIGN           31
-#define PROP_TEXT_ANCHOR          32
-#define PROP_TEXT_RENDERING       33
-#define PROP_UNICODE_BIDI         34
-#define PROP_VECTOR_EFFECT        35
-#define PROP_VIEWPORT_FILL        36
-#define PROP_VIEWPORT_FILL_OPACITY 37
-#define PROP_VISIBILITY           38
-
-#define ATTR_ABOUT                0
-#define ATTR_ACCENT_HEIGHT        1
-#define ATTR_ACCUMULATE           2
-#define ATTR_ADDITIVE             3
-#define ATTR_ALPHABETIC           4
-#define ATTR_ARABIC_FORM          5
-#define ATTR_ASCENT               6
-#define ATTR_ATTRIBUTENAME        7
-#define ATTR_ATTRIBUTETYPE        8
-#define ATTR_BANDWIDTH            9
-#define ATTR_BASEPROFILE          10
-#define ATTR_BBOX                 11
-#define ATTR_BEGIN                12
-#define ATTR_BY                   13
-#define ATTR_CALCMODE             14
-#define ATTR_CAP_HEIGHT           15
-#define ATTR_CLASS                16
-#define ATTR_CONTENT              17
-#define ATTR_CONTENTSCRIPTTYPE    18
-#define ATTR_CX                   19
-#define ATTR_CY                   20
-#define ATTR_D                    21
-#define ATTR_DATATYPE             22
-#define ATTR_DEFAULTACTION        23
-#define ATTR_DESCENT              24
-#define ATTR_DUR                  25
-#define ATTR_EDITABLE             26
-#define ATTR_END                  27
-#define ATTR_EV_EVENT             28
-#define ATTR_EVENT                29
-#define ATTR_EXTERNALRESOURCESREQUIRED 30
-#define ATTR_FOCUSHIGHLIGHT       31
-#define ATTR_FOCUSABLE            32
-#define ATTR_FONT_FAMILY          33
-#define ATTR_FONT_STRETCH         34
-#define ATTR_FONT_STYLE           35
-#define ATTR_FONT_VARIANT         36
-#define ATTR_FONT_WEIGHT          37
-#define ATTR_FROM                 38
-#define ATTR_G1                   39
-#define ATTR_G2                   40
-#define ATTR_GLYPH_NAME           41
-#define ATTR_GRADIENTUNITS        42
-#define ATTR_HANDLER              43
-#define ATTR_HANGING              44
-#define ATTR_HEIGHT               45
-#define ATTR_HORIZ_ADV_X          46
-#define ATTR_HORIZ_ORIGIN_X       47
-#define ATTR_ID                   48
-#define ATTR_IDEOGRAPHIC          49
-#define ATTR_INITIALVISIBILITY    50
-#define ATTR_K                    51
-#define ATTR_KEYPOINTS            52
-#define ATTR_KEYSPLINES           53
-#define ATTR_KEYTIMES             54
-#define ATTR_LANG                 55
-#define ATTR_MATHEMATICAL         56
-#define ATTR_MAX                  57
-#define ATTR_MEDIACHARACTERENCODING 58
-#define ATTR_MEDIACONTENTENCODINGS 59
-#define ATTR_MEDIASIZE            60
-#define ATTR_MEDIATIME            61
-#define ATTR_MIN                  62
-#define ATTR_NAV_DOWN             63
-#define ATTR_NAV_DOWN_LEFT        64
-#define ATTR_NAV_DOWN_RIGHT       65
-#define ATTR_NAV_LEFT             66
-#define ATTR_NAV_NEXT             67
-#define ATTR_NAV_PREV             68
-#define ATTR_NAV_RIGHT            69
-#define ATTR_NAV_UP               70
-#define ATTR_NAV_UP_LEFT          71
-#define ATTR_NAV_UP_RIGHT         72
-#define ATTR_OBSERVER             73
-#define ATTR_OFFSET               74
-#define ATTR_ORIGIN               75
-#define ATTR_OVERLAY              76
-#define ATTR_OVERLINE_POSITION    77
-#define ATTR_OVERLINE_THICKNESS   78
-#define ATTR_PANOSE_1             79
-#define ATTR_PATH                 80
-#define ATTR_PATHLENGTH           81
-#define ATTR_PHASE                82
-#define ATTR_PLAYBACKORDER        83
-#define ATTR_POINTS               84
-#define ATTR_PRESERVEASPECTRATIO  85
-#define ATTR_PROPAGATE            86
-#define ATTR_PROPERTY             87
-#define ATTR_R                    88
-#define ATTR_REL                  89
-#define ATTR_REPEATCOUNT          90
-#define ATTR_REPEATDUR            91
-#define ATTR_REQUIREDEXTENSIONS   92
-#define ATTR_REQUIREDFEATURES     93
-#define ATTR_REQUIREDFONTS        94
-#define ATTR_REQUIREDFORMATS      95
-#define ATTR_RESOURCE             96
-#define ATTR_RESTART              97
-#define ATTR_REV                  98
-#define ATTR_ROLE                 99
-#define ATTR_ROTATE               100
-#define ATTR_RX                   101
-#define ATTR_RY                   102
-#define ATTR_SLOPE                103
-#define ATTR_SNAPSHOTTIME         104
-#define ATTR_STEMH                105
-#define ATTR_STEMV                106
-#define ATTR_STRIKETHROUGH_POSITION 107
-#define ATTR_STRIKETHROUGH_THICKNESS 108
-#define ATTR_SYNCBEHAVIOR         109
-#define ATTR_SYNCBEHAVIORDEFAULT  110
-#define ATTR_SYNCMASTER           111
-#define ATTR_SYNCTOLERANCE        112
-#define ATTR_SYNCTOLERANCEDEFAULT 113
-#define ATTR_SYSTEMLANGUAGE       114
-#define ATTR_TARGET               115
-#define ATTR_TIMELINEBEGIN        116
-#define ATTR_TO                   117
-#define ATTR_TRANSFORM            118
-#define ATTR_TRANSFORMBEHAVIOR    119
-#define ATTR_TYPE                 120
-#define ATTR_TYPEOF               121
-#define ATTR_U1                   122
-#define ATTR_U2                   123
-#define ATTR_UNDERLINE_POSITION   124
-#define ATTR_UNDERLINE_THICKNESS  125
-#define ATTR_UNICODE              126
-#define ATTR_UNICODE_RANGE        127
-#define ATTR_UNITS_PER_EM         128
-#define ATTR_VALUES               129
-#define ATTR_VERSION              130
-#define ATTR_VIEWBOX              131
-#define ATTR_WIDTH                132
-#define ATTR_WIDTHS               133
-#define ATTR_X                    134
-#define ATTR_X_HEIGHT             135
-#define ATTR_X1                   136
-#define ATTR_X2                   137
-#define ATTR_XLINK_ACTUATE        138
-#define ATTR_XLINK_ARCROLE        139
-#define ATTR_XLINK_HREF           140
-#define ATTR_XLINK_ROLE           141
-#define ATTR_XLINK_SHOW           142
-#define ATTR_XLINK_TITLE          143
-#define ATTR_XLINK_TYPE           144
-#define ATTR_XML_BASE             145
-#define ATTR_XML_ID               146
-#define ATTR_XML_LANG             147
-#define ATTR_XML_SPACE            148
-#define ATTR_Y                    149
-#define ATTR_Y1                   150
-#define ATTR_Y2                   151
-#define ATTR_ZOOMANDPAN           152
-#define ATTR_SLASH                153
-#define ATTR_ENCODING             154
-#define ATTR_STANDALONE           155
-
 char read100(EmbPattern *pattern, FILE* file);
 char write100(EmbPattern *pattern, FILE* file);
 char read10o(EmbPattern *pattern, FILE* file);
@@ -426,85 +179,6 @@ char writeXxx(EmbPattern *pattern, FILE* file);
 char readZsk(EmbPattern *pattern, FILE* file);
 char writeZsk(EmbPattern *pattern, FILE* file);
 
-const char *svg_element_tokens[] = {
-    "a", "animate", "animateColor", "animateMotion", "animateTransform", "animation",
-    "audio", "circle", "defs", "desc", "discard", "ellipse",
-    "font", "font-face", "font-face-src", "font-face-uri", "foreignObject",
-    "g", "glyph", "handler", "hkern", "image", "line", "linearGradient", "listener",
-    "metadata", "missing-glyph", "mpath", "path", "polygon", "polyline", "prefetch",
-    "radialGradient", "rect", "script", "set", "solidColor", "stop", "svg", "switch",
-    "tbreak", "text", "textArea", "title", "tspan", "use", "video", "\0"
-    /* "altGlyph", "altGlyphDef", "altGlyphItem", "clipPath", "color-profile", "cursor",
-     * "feBlend", "feColorMatrix", "feComponentTransfer", "feComposite", "feConvolveMatrix",
-     * "feDiffuseLighting", "feDisplacementMap", "feDistantLight", "feFlood",
-     * "feFuncA", "feFuncB", "feFuncG", "feFuncR", "feGaussianBlur", "feImage",
-     * "feMerge", "feMergeNode", "feMorphology", "feOffset", "fePointLight",
-     * "feSpecularLighting", "feSpotLight", "feTile", "feTurbulence", "filter",
-     * "font-face-format", "font-face-name", "glyphRef", "marker", "mask",
-     * "pattern", "style", "symbol", "textPath", "tref", "view", "vkern"
-     * TODO: not implemented SVG Full 1.1 Spec Elements */
-};
-
-const char *svg_property_tokens[] = {
-    "audio-level", "buffered-rendering", "color", "color-rendering", "direction",
-    "display", "display-align", "fill", "fill-opacity", "fill-rule",
-    "font-family", "font-size", "font-style", "font-variant", "font-weight",
-    "image-rendering", "line-increment", "opacity", "pointer-events",
-    "shape-rendering", "solid-color", "solid-opacity", "stop-color",
-    "stop-opacity", "stroke", "stroke-dasharray", "stroke-linecap", "stroke-linejoin",
-    "stroke-miterlimit", "stroke-opacity", "stroke-width", "text-align",
-    "text-anchor", "text-rendering", "unicode-bidi", "vector-effect",
-    "viewport-fill", "viewport-fill-opacity", "visibility", "\0"
-};
-
-const char *svg_attributes_tokens[] = {
-    "about", "accent-height", "accumulate", "additive",
-    "alphabetic", "arabic-form", "ascent", "attributeName", "attributeType",
-    "bandwidth", "baseProfile", "bbox", "begin", "by", "calcMode",
-    "cap-height", "class", "content", "contentScriptType", "cx", "cy",
-    "d", "datatype", "defaultAction", "descent", "dur", "editable",
-    "end", "ev:event", "event", "externalResourcesRequired",
-    "focusHighlight", "focusable", "font-family", "font-stretch",
-    "font-style", "font-variant", "font-weight", "from", "g1", "g2",
-    "glyph-name", "gradientUnits", "handler", "hanging", "height",
-    "horiz-adv-x", "horiz-origin-x", "id", "ideographic",
-    "initialVisibility", "k", "keyPoints", "keySplines", "keyTimes",
-    "lang", "mathematical", "max", "mediaCharacterEncoding",
-    "mediaContentEncodings", "mediaSize", "mediaTime", "min",
-    "nav-down", "nav-down-left", "nav-down-right", "nav-left", "nav-next",
-    "nav-prev", "nav-right", "nav-up", "nav-up-left", "nav-up-right",
-    "observer", "offset", "origin", "overlay", "overline-position",
-    "overline-thickness", "panose-1", "path", "pathLength", "phase",
-    "playbackOrder", "points", "preserveAspectRatio", "propagate",
-    "property", "r", "rel", "repeatCount", "repeatDur",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "restart", "rev", "role", "rotate",
-    "rx", "ry", "slope", "snapshotTime", "stemh", "stemv",
-    "strikethrough-position", "strikethrough-thickness", "syncBehavior",
-    "syncBehaviorDefault", "syncMaster", "syncTolerance",
-    "syncToleranceDefault", "systemLanguage", "target", "timelineBegin",
-    "to", "transform", "transformBehavior", "type", "typeof", "u1", "u2",
-    "underline-position", "underline-thickness", "unicode", "unicode-range",
-    "units-per-em", "values", "version", "viewBox", "width", "widths",
-    "x", "x-height", "x1", "x2", "xlink:actuate", "xlink:arcrole",
-    "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-    "xml:base", "xml:id", "xml:lang", "xml:space", "y", "y1", "y2",
-    "zoomAndPan", "/", "encoding", "\0"
-};
-
-const char *svg_media_property_tokens[] = {
-    "audio-level", "buffered-rendering", "display", "image-rendering",
-    "pointer-events", "shape-rendering", "text-rendering", "viewport-fill",
-    "viewport-fill-opacity", "visibility", "\0"
-};
-
-const int svg_attribute_table[3][80] = {
-    {1, 2, 4, -1},
-    {1, 2, 4, -1},
-    {-1}
-};
-
-
 /* Read and write system for multiple byte types.
  *
  * The caller passes the function to read/write from, the
@@ -541,12 +215,6 @@ short fread_int16(FILE* f) {
 unsigned short fread_uint16(FILE* f) {
     unsigned short x;
     fread_int(f, &x, EMB_INT16_LITTLE);
-    return x;
-}
-
-int fread_int32(FILE* f) {
-    int x;
-    fread_int(f, &x, EMB_INT32_LITTLE);
     return x;
 }
 
@@ -615,355 +283,6 @@ void binaryWriteUInt(FILE* file, unsigned int data) {
 void binaryWriteUIntBE(FILE* file, unsigned int data) {
     fwrite_int(file, &data, EMB_INT32_BIG);
 }
-
-
-#if 0
-const int svg_attribute_table[3][80] = {
-    /* 0: xml attributes */
-    {
-        ATTR_ENCODING, ATTR_STANDALONE, ATTR_VERSION, ATTR_SLASH, -1
-    },
-    /* 1: link attribute tokens */
-    {
-        ATTR_ABOUT, ATTR_CLASS, ATTR_CONTENT, ATTR_EXTERNALRESOURCESREQUIRED,
-        ATTR_FOCUSHIGHLIGHT, ATTR_FOCUSABLE, ATTR_ID, ATTR_NAV_DOWN, ATTR_NAV_DOWN_LEFT,
-        ATTR_NAV_DOWN_RIGHT, ATTR_NAV_LEFT, ATTR_NAV_NEXT, ATTR_NAV_PREV, ATTR_NAV_RIGHT, ATTR_NAV_UP,
-        -1
-    },
-    /* 2: animate attribute tokens */
-    {
-        -1
-    },
-    /* 3: animate color attribute tokens */
-    {
-        -1
-    },
-    /* 4: animate motion attribute tokens */
-    {
-        -1
-    },
-    /* 5: animate transform attribute tokens */
-    {
-        -1
-    },
-    /* 6: animation attribute tokens */
-    {
-        -1
-    },
-    /* 7: audio attribute tokens */
-    {
-        -1
-    },
-    /* 8: animate attribute tokens */
-    {
-        -1
-    },
-    /* 9: animate attribute tokens */
-    {
-        -1
-    },
-    /* 10: animate attribute tokens */
-    {
-        -1
-    },
-    /* 11: animate attribute tokens */
-    {
-        -1
-    },
-    /* 12: animate attribute tokens */
-    {
-        -1
-    },
-    /* 13: animate attribute tokens */
-    {
-        -1
-    },
-    /* 14: animate attribute tokens */
-    {
-        -1
-    },
-    /* 15: animate attribute tokens */
-    {
-        -1
-    },
-    /* 16: animate attribute tokens */
-    {
-        -1
-    },
-    /* 17: animate attribute tokens */
-    {
-        -1
-    },
-    /* 18: animate attribute tokens */
-    {
-        -1
-    },
-    /* 19: animate attribute tokens */
-    {
-        -1
-    },
-    /* 20: animate attribute tokens */
-    {
-        -1
-    },
-    /* 21: animate attribute tokens */
-    {
-        -1
-    },
-    /* 22: animate attribute tokens */
-    {
-        -1
-    },
-    /* 23: animate attribute tokens */
-    {
-        -1
-    },
-    /* 24: animate attribute tokens */
-    {
-        -1
-    },
-    /* 25: animate attribute tokens */
-    {
-        -1
-    },
-    /* 26: animate attribute tokens */
-    {
-        -1
-    },
-    /* 27: animate attribute tokens */
-    {
-        -1
-    },
-    /* 28: animate attribute tokens */
-    {
-        -1
-    },
-    /* 29: animate attribute tokens */
-    {
-        -1
-    },
-    /* 30: animate attribute tokens */
-    {
-        -1
-    },
-    /* 31: animate attribute tokens */
-    {
-        -1
-    },
-    /* 32: animate attribute tokens */
-    {
-        -1
-    },
-    /* 33: animate attribute tokens */
-    {
-        -1
-    },
-    /* 34: animate attribute tokens */
-    {
-        -1
-    },
-    /* 35: animate attribute tokens */
-    {
-        -1
-    },
-    /* 36: animate attribute tokens */
-    {
-        -1
-    },
-    /* 37: animate attribute tokens */
-    {
-        -1
-    },
-    /* 38: animate attribute tokens */
-    {
-        -1
-    },
-    /* 39: animate attribute tokens */
-    {
-        -1
-    },
-    /* 40: animate attribute tokens */
-    {
-        -1
-    },
-    /* 41: animate attribute tokens */
-    {
-        -1
-    },
-    /* 42: animate attribute tokens */
-    {
-        -1
-    },
-    /* 43: animate attribute tokens */
-    {
-        -1
-    },
-    /* 44: animate attribute tokens */
-    {
-        -1
-    },
-    /* 45: animate attribute tokens */
-    {
-        -1
-    },
-    /* 46: animate attribute tokens */
-    {
-        -1
-    },
-    /* 47: video attribute tokens */
-    {
-        -1
-    },
-    /* 48: END */
-    {
-        -1
-    }
-};
-#endif
-
-const char *link_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "externalResourcesRequired",
-    "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
-    "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-    "nav-up-left", "nav-up-right", "property", "rel", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats", "resource", "rev",
-    "role", "systemLanguage", "target", "transform", "typeof", "xlink:actuate",
-    "xlink:arcrole", "xlink:href", "xlink:role", "xlink:show", "xlink:title",
-    "xlink:type", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-};
-
-const char *animate_attribute_tokens[] = {
-    "about", "accumulate", "additive", "attributeName", "attributeType",
-    "begin", "by", "calcMode", "class", "content", "datatype", "dur", "end",
-    "fill", "from", "id", "keySplines", "keyTimes", "max", "min", "property",
-    "rel", "repeatCount", "repeatDur", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-    "restart", "rev", "role", "systemLanguage", "to", "typeof", "values",
-    "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-    "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-    "xml:lang", "xml:space", "/", "\0"
-};
-
-const char *animate_color_attribute_tokens[] = {
-    "about", "accumulate", "additive", "attributeName", "attributeType",
-    "begin", "by", "calcMode", "class", "content", "datatype", "dur",
-    "end", "fill", "from", "id", "keySplines", "keyTimes", "max", "min",
-    "property", "rel", "repeatCount", "repeatDur", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats",
-    "resource", "restart", "rev", "role", "systemLanguage",
-    "to", "typeof", "values", "xlink:actuate", "xlink:arcrole",
-    "xlink:href", "xlink:role", "xlink:show", "xlink:title",
-    "xlink:type", "xml:base", "xml:id", "xml:lang",
-    "xml:space", "/", "\0"
-};
-
-const char *animate_motion_attribute_tokens[] = {
-    "about", "accumulate", "additive", "begin", "by", "calcMode", "class",
-    "content", "datatype", "dur", "end", "fill", "from", "id", "keyPoints",
-    "keySplines", "keyTimes", "max", "min", "origin", "path", "property",
-    "rel", "repeatCount", "repeatDur", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-    "restart", "rev", "role", "rotate", "systemLanguage", "to", "typeof",
-    "values", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-    "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-    "xml:lang", "xml:space", "/", "\0"
-};
-
-const char *animate_transform_attribute_tokens[] = {
-    "about", "accumulate", "additive", "attributeName", "attributeType",
-    "begin", "by", "calcMode", "class", "content", "datatype", "dur", "end",
-    "fill", "from", "id", "keySplines", "keyTimes", "max", "min",
-    "property", "rel", "repeatCount", "repeatDur", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-    "restart", "rev", "role", "systemLanguage", "to", "type", "typeof",
-    "values", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-    "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-    "xml:lang", "xml:space", "/", "\0"
-};
-
-const char *switch_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "externalResourcesRequired",
-    "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
-    "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
-    "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "rev", "role", "systemLanguage",
-    "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
-    "/", "\0"
-};
-
-const char *tbreak_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "id", "property", "rel",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "rev", "role", "systemLanguage",
-    "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-};
-
-const char *text_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "editable", "focusHighlight",
-    "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
-    "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-    "nav-up-left", "nav-up-right", "property", "rel", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-    "rev", "role", "rotate", "systemLanguage", "transform", "typeof", "x",
-    "xml:base", "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
-};
-
-const char *textarea_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "editable", "focusHighlight",
-    "focusable", "height", "id", "nav-down", "nav-down-left",
-    "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
-    "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "rev", "role", "systemLanguage",
-    "transform", "typeof", "width", "x", "xml:base", "xml:id", "xml:lang",
-    "xml:space", "y", "/", "\0"
-};
-
-const char *title_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "id", "property", "rel",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "rev", "role", "systemLanguage",
-    "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-};
-
-const char *tspan_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "focusHighlight", "focusable",
-    "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
-    "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
-    "nav-up-right", "property", "rel", "requiredExtensions",
-    "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-    "rev", "role", "systemLanguage", "typeof", "xml:base", "xml:id",
-    "xml:lang", "xml:space", "/", "\0"
-};
-
-const char *use_attribute_tokens[] = {
-    "about", "class", "content", "datatype", "externalResourcesRequired",
-    "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
-    "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
-    "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "rev", "role", "systemLanguage",
-    "transform", "typeof", "x", "xlink:actuate", "xlink:arcrole",
-    "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-    "xml:base", "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
-};
-
-const char *video_attribute_tokens[] = {
-    "about", "begin", "class", "content", "datatype", "dur", "end",
-    "externalResourcesRequired", "fill", "focusHighlight", "focusable",
-    "height", "id", "initialVisibility", "max", "min", "nav-down",
-    "nav-down-left", "nav-down-right", "nav-left", "nav-next", "nav-prev",
-    "nav-right", "nav-up", "nav-up-left", "nav-up-right", "overlay",
-    "preserveAspectRatio", "property", "rel", "repeatCount", "repeatDur",
-    "requiredExtensions", "requiredFeatures", "requiredFonts",
-    "requiredFormats", "resource", "restart", "rev", "role", "syncBehavior",
-    "syncMaster", "syncTolerance", "systemLanguage", "transform",
-    "transformBehavior", "type", "typeof", "width", "x", "xlink:actuate",
-    "xlink:arcrole", "xlink:href", "xlink:role", "xlink:show",
-    "xlink:title", "xlink:type", "xml:base", "xml:id", "xml:lang",
-    "xml:space", "y", "/", "\0"
-};
 
 char embPattern_read(EmbPattern* pattern, const char *fileName, int format) {
     int result;
@@ -1733,24 +1052,6 @@ void BuildDecryptionTable(int seed) {
 
 unsigned char DecodeCsdByte(long fileOffset, 
         unsigned char val, int type) {
-    const unsigned char _decryptArray[] = {
-          0x43, 0x6E, 0x72, 0x7A, 0x76, 0x6C, 0x61, 0x6F, 0x7C, 0x29, 0x5D, 0x62, 0x60, 0x6E, 0x61, 0x62, 0x20
-        , 0x41, 0x66, 0x6A, 0x3A, 0x35, 0x5A, 0x63, 0x7C, 0x37, 0x3A, 0x2A, 0x25, 0x24, 0x2A, 0x33, 0x00, 0x10
-        , 0x14, 0x03, 0x72, 0x4C, 0x48, 0x42, 0x08, 0x7A, 0x5E, 0x0B, 0x6F, 0x45, 0x47, 0x5F, 0x40, 0x54, 0x5C
-        , 0x57, 0x55, 0x59, 0x53, 0x3A, 0x32, 0x6F, 0x53, 0x54, 0x50, 0x5C, 0x4A, 0x56, 0x2F, 0x2F, 0x62, 0x2C
-        , 0x22, 0x65, 0x25, 0x28, 0x38, 0x30, 0x38, 0x22, 0x2B, 0x25, 0x3A, 0x6F, 0x27, 0x38, 0x3E, 0x3F, 0x74
-        , 0x37, 0x33, 0x77, 0x2E, 0x30, 0x3D, 0x34, 0x2E, 0x32, 0x2B, 0x2C, 0x0C, 0x18, 0x42, 0x13, 0x16, 0x0A
-        , 0x15, 0x02, 0x0B, 0x1C, 0x1E, 0x0E, 0x08, 0x60, 0x64, 0x0D, 0x09, 0x51, 0x25, 0x1A, 0x18, 0x16, 0x19
-        , 0x1A, 0x58, 0x10, 0x14, 0x5B, 0x08, 0x15, 0x1B, 0x5F, 0xD5, 0xD2, 0xAE, 0xA3, 0xC1, 0xF0, 0xF4, 0xE8
-        , 0xF8, 0xEC, 0xA6, 0xAB, 0xCD, 0xF8, 0xFD, 0xFB, 0xE2, 0xF0, 0xFE, 0xFA, 0xF5, 0xB5, 0xF7, 0xF9, 0xFC
-        , 0xB9, 0xF5, 0xEF, 0xF4, 0xF8, 0xEC, 0xBF, 0xC3, 0xCE, 0xD7, 0xCD, 0xD0, 0xD7, 0xCF, 0xC2, 0xDB, 0xA4
-        , 0xA0, 0xB0, 0xAF, 0xBE, 0x98, 0xE2, 0xC2, 0x91, 0xE5, 0xDC, 0xDA, 0xD2, 0x96, 0xC4, 0x98, 0xF8, 0xC9
-        , 0xD2, 0xDD, 0xD3, 0x9E, 0xDE, 0xAE, 0xA5, 0xE2, 0x8C, 0xB6, 0xAC, 0xA3, 0xA9, 0xBC, 0xA8, 0xA6, 0xEB
-        , 0x8B, 0xBF, 0xA1, 0xAC, 0xB5, 0xA3, 0xBB, 0xB6, 0xA7, 0xD8, 0xDC, 0x9A, 0xAA, 0xF9, 0x82, 0xFB, 0x9D
-        , 0xB9, 0xAB, 0xB3, 0x94, 0xC1, 0xA0, 0x8C, 0x8B, 0x8E, 0x95, 0x8F, 0x87, 0x99, 0xE7, 0xE1, 0xA3, 0x83
-        , 0x8B, 0xCF, 0xA3, 0x85, 0x9D, 0x83, 0xD4, 0xB7, 0x83, 0x84, 0x91, 0x97, 0x9F, 0x88, 0x8F, 0xDD, 0xAD
-        , 0x90
-    };
     int newOffset;
 
     fileOffset = fileOffset - 1;
@@ -1763,17 +1064,17 @@ unsigned char DecodeCsdByte(long fileOffset,
         fileOffsetLow = fileOffsetHigh;
         final = fileOffsetLow%0x300;
         if (final != 0x100 && final != 0x200) {
-            newOffset = _decryptArray[newOffset] | fileOffsetHigh;
+            newOffset = csd_decryptArray[newOffset] | fileOffsetHigh;
         } else if (final != 0x100 && final == 0x200) {
             if (newOffset == 0) {
                 fileOffsetHigh = fileOffsetHigh - 0x100;
             }
-            newOffset = _decryptArray[newOffset] | fileOffsetHigh;
+            newOffset = csd_decryptArray[newOffset] | fileOffsetHigh;
         } else if (newOffset != 1 && newOffset != 0) {
-            newOffset = _decryptArray[newOffset] | fileOffsetHigh;
+            newOffset = csd_decryptArray[newOffset] | fileOffsetHigh;
         } else {
             fileOffsetHigh = fileOffsetHigh - 0x100;
-            newOffset = _decryptArray[newOffset] | fileOffsetHigh;
+            newOffset = csd_decryptArray[newOffset] | fileOffsetHigh;
         }
     } else {
         newOffset = (int) fileOffset;
@@ -2056,25 +1357,9 @@ char writeCsv(EmbPattern* pattern, FILE* file) {
     boundingRect = embPattern_calcBoundingBox(pattern);
 
     /* write header */
-    fprintf(file, "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n");
-    fprintf(file, "\"#\",\"http://embroidermodder.github.io\"\n");
-    fprintf(file, "\n");
-    fprintf(file, "\"#\",\"General Notes:\"\n");
-    fprintf(file, "\"#\",\"This file can be read by Excel or LibreOffice as CSV (Comma Separated Value) or with a text editor.\"\n");
-    fprintf(file, "\"#\",\"Lines beginning with # are comments.\"\n");
-    fprintf(file, "\"#\",\"Lines beginning with > are variables: [VAR_NAME], [VAR_VALUE]\"\n");
-    fprintf(file, "\"#\",\"Lines beginning with $ are threads: [THREAD_NUMBER], [RED], [GREEN], [BLUE], [DESCRIPTION], [CATALOG_NUMBER]\"\n");
-    fprintf(file, "\"#\",\"Lines beginning with * are stitch entries: [STITCH_TYPE], [X], [Y]\"\n");
-    fprintf(file, "\n");
-    fprintf(file, "\"#\",\"Stitch Entry Notes:\"\n");
-    fprintf(file, "\"#\",\"STITCH instructs the machine to move to the position [X][Y] and then make a stitch.\"\n");
-    fprintf(file, "\"#\",\"JUMP instructs the machine to move to the position [X][Y] without making a stitch.\"\n");
-    fprintf(file, "\"#\",\"TRIM instructs the machine to cut the thread before moving to the position [X][Y] without making a stitch.\"\n");
-    fprintf(file, "\"#\",\"COLOR instructs the machine to stop temporarily so that the user can change to a different color thread before resuming.\"\n");
-    fprintf(file, "\"#\",\"END instructs the machine that the design is completed and there are no further instructions.\"\n");
-    fprintf(file, "\"#\",\"UNKNOWN encompasses instructions that may not be supported currently.\"\n");
-    fprintf(file, "\"#\",\"[X] and [Y] are absolute coordinates in millimeters (mm).\"\n");
-    fprintf(file, "\n");
+    for (i=0; csv_header[i][0]; i++) {
+        fprintf(file, csv_header[i]);
+    }
 
     /* write variables */
     fprintf(file,"\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");
@@ -3450,9 +2735,9 @@ char readHus(EmbPattern* pattern, FILE* file)
         printf("%d\n", negativeYHoopSize);
     }
 
-    attributeOffset = fread_int32(file);
-    xOffset = fread_int32(file);
-    yOffset = fread_int32(file);
+    fread_int(file, &attributeOffset, EMB_INT32_LITTLE);
+    fread_int(file, &xOffset, EMB_INT32_LITTLE);
+    fread_int(file, &yOffset, EMB_INT32_LITTLE);
 
     stringVal = (unsigned char*)malloc(sizeof(unsigned char)*8);
     if (!stringVal) {
@@ -3620,7 +2905,7 @@ char readInb(EmbPattern* pattern, FILE* file)
     fread(fileDescription, 1, 8, file); /* TODO: check return value */
     nullVal = (char)fgetc(file);
     fread_int16(file);
-    stitchCount = fread_int32(file);
+    fread_int(file, &stitchCount, EMB_INT32_LITTLE);
     width = fread_int16(file);
     height = fread_int16(file);
     colorCount = fread_int16(file);
@@ -3808,10 +3093,10 @@ struct hoop_padding
 
 void read_hoop(FILE *file, struct hoop_padding *hoop, char *label)
 {
-    hoop->left = fread_int32(file);
-    hoop->top = fread_int32(file);
-    hoop->right = fread_int32(file);
-    hoop->bottom = fread_int32(file);
+    fread_int(file, &(hoop->left), EMB_INT32_LITTLE);
+    fread_int(file, &(hoop->top), EMB_INT32_LITTLE);
+    fread_int(file, &(hoop->right), EMB_INT32_LITTLE);
+    fread_int(file, &(hoop->bottom), EMB_INT32_LITTLE);
     if (emb_verbose>1) {
         printf("%s\n", label);
         printf("    left:      %d\n", hoop->left);
@@ -3828,14 +3113,14 @@ char readJef(EmbPattern* pattern, FILE* file) {
     struct hoop_padding rectFrom50x50, rectFrom200x140, rect_from_custom;
     char date[8], time[8];
 
-    stitchOffset = fread_int32(file);
-    formatFlags = fread_int32(file); /* TODO: find out what this means */
+    fread_int(file, &stitchOffset, EMB_INT32_LITTLE);
+    fread_int(file, &formatFlags, EMB_INT32_LITTLE); /* TODO: find out what this means */
 
     fread((unsigned char*) date, 1, 8, file); /* TODO: check return value */
     fread((unsigned char*) time, 1, 8, file); /* TODO: check return value */
-    numberOfColors = fread_int32(file);
-    numberOfStitchs = fread_int32(file);
-    hoopSize = fread_int32(file);
+    fread_int(file, &numberOfColors, EMB_INT32_LITTLE);
+    fread_int(file, &numberOfStitchs, EMB_INT32_LITTLE);
+    fread_int(file, &hoopSize, EMB_INT32_LITTLE);
     jefSetHoopFromId(pattern, hoopSize);
     if (numberOfStitchs > MAX_STITCHES) {
         numberOfStitchs = MAX_STITCHES;
@@ -3855,7 +3140,9 @@ char readJef(EmbPattern* pattern, FILE* file) {
     read_hoop(file, &rect_from_custom, "rect_from_custom");
 
     for (i = 0; i < numberOfColors; i++) {
-        embPattern_addThread(pattern, jefThreads[fread_int32(file) % 79]);
+        int thread_num;
+        fread_int(file, &thread_num, EMB_INT32_LITTLE);
+        embPattern_addThread(pattern, jefThreads[thread_num % 79]);
     }
     fseek(file, stitchOffset, SEEK_SET);
     stitchCount = 0;
@@ -4128,25 +3415,10 @@ char readMax(EmbPattern* pattern, FILE* file) {
 
 char writeMax(EmbPattern* pattern, FILE* file) {
     int i;
-    unsigned char header[] = {
-        0x56,0x43,0x53,0x4D,0xFC,0x03,0x00,0x00,0x01,0x00,0x00,0x00,0x01,0x00,0x00,0x00,
-        0xF6,0x25,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x08,0x00,0x00,0x00,0x05,0x00,0x00,0x00,
-        0x00,0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x31,0x33,0x37,0x38,
-        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x4D,0x61,0x64,0x65,0x69,0x72,0x61,0x20,
-        0x52,0x61,0x79,0x6F,0x6E,0x20,0x34,0x30,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-        0x01,0x38,0x09,0x31,0x33,0x30,0x2F,0x37,0x30,0x35,0x20,0x48,0xFA,0x00,0x00,0x00,
-        0x00,0x00,0x00,0x00,0x00 };
     double x, y;
     EmbStitch st;
 
-    fwrite(header, 1, 0xD5, file);
+    fwrite(max_header, 1, 0xD5, file);
     for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
         x = (int)round(st.x * 10.0);
@@ -4298,9 +3570,9 @@ void ofmReadBlockHeader(FILE* file)
     unsigned char len;
     char* s = 0;
     unsigned short short1;
-    short unknown1, unknown2;
+    short unknown1;
     /* TODO: determine what the unknown variables represent */
-    int unknown3;
+    int unknown3, unknown2;
     /* TODO: determine what this represents */
     
     if (!file) {
@@ -4309,8 +3581,8 @@ void ofmReadBlockHeader(FILE* file)
     }
 
     unknown1 = fread_int16(file);
-    unknown2 = (short)fread_int32(file);
-    unknown3 = fread_int32(file);
+    fread_int(file, &unknown2, EMB_INT32_LITTLE);
+    fread_int(file, &unknown3, EMB_INT32_LITTLE);
     if (emb_verbose>1) {
         printf("unknown1 = %d\n", unknown1);
         printf("unknown2 = %d\n", unknown2);
@@ -4327,7 +3599,7 @@ void ofmReadBlockHeader(FILE* file)
     /* TODO: check return value */
     /* 0, 0, 0, 0, 1, 1, 1, 0, 64, 64 */
     for (i=0; i<10; i++) {
-        val[i] = fread_int32(file);
+        fread_int(file, val+i, EMB_INT32_LITTLE);
         if (emb_verbose>1) {
             printf("val[%d] = %d\n", i, val[i]);
         }
@@ -4363,7 +3635,7 @@ void ofmReadThreads(FILE* file, EmbPattern* p)
     }
 
     /* FF FE FF 00 */
-    fread_int32(file);
+    fseek(file, 4, SEEK_CUR);
 
     numberOfColors = fread_int16(file);
 
@@ -4381,7 +3653,7 @@ void ofmReadThreads(FILE* file, EmbPattern* p)
         embColor_read(file, &(thread.color), 4);
         threadLibrary = fread_int16(file);
         fseek(file, 2, SEEK_CUR);
-        colorNumber = fread_int32(file);
+        fread_int(file, &colorNumber, EMB_INT32_LITTLE);
         fseek(file, 3, SEEK_CUR);
         colorNameLength = (char)fgetc(file);
         fread(colorName, 1, colorNameLength*2, file);
@@ -4426,7 +3698,7 @@ void ofmReadExpanded(FILE* file, EmbPattern* p)
     if (!p) { printf("ERROR: format-ofm.c ofmReadExpanded(), p argument is null\n"); return; }
 
     ofmReadBlockHeader(file);
-    numberOfStitches = fread_int32(file);
+    fread_int(file, &numberOfStitches, EMB_INT32_LITTLE);
 
     for (i = 0; i < numberOfStitches; i++)
     {
@@ -4464,7 +3736,7 @@ char readOfm(EmbPattern* pattern, FILE* fileCompound)
     fseek(file, 0x1C6, SEEK_SET);
     ofmReadThreads(file, pattern);
     fseek(file, 0x110, SEEK_CUR);
-    fread_int32(file);
+    fseek(file, 0x4, SEEK_CUR); /* EMB_INT32_LITTLE */
     classNameLength = fread_int16(file);
     s = (char*)malloc(sizeof(char) * classNameLength);
     if (!s) { printf("ERROR: format-ofm.c readOfm(), unable to allocate memory for s\n"); return 0; }
@@ -5300,7 +4572,7 @@ char readPes(EmbPattern* pattern, const char *fileName, FILE* file) {
     char signature[9];
     fread(signature, 1, 8, file);
     signature[8] = 0;
-    pecstart = fread_int32(file);
+    fread_int(file, &pecstart, EMB_INT32_LITTLE);
 
     version = 0;
     for (i=0; i<N_PES_VERSIONS; i++) {
@@ -5754,16 +5026,9 @@ char readPhb(EmbPattern* pattern, FILE* file)
     {
         (char)fgetc(file);
     }
-    fread_int32(file); /* bytes to end of file */
-    fread_int32(file);
-    (char)fgetc(file);
+    fseek(file, 4, SEEK_CUR); /* bytes to end of file */
+    fseek(file, 17, SEEK_CUR);
 
-    fread_int16(file);
-    fread_int16(file);
-    fread_int16(file);
-    fread_int16(file);
-    fread_int16(file);
-    fread_int16(file);
     readPecStitches(pattern, file);
 
     embPattern_flipVertical(pattern);
@@ -6103,7 +5368,7 @@ char readShv(EmbPattern* pattern, FILE* file)
     numberOfColors = fgetc(file);
     magicCode = fread_uint16(file);
     (char)fgetc(file);
-    something = fread_int32(file);
+    fread_int(file, &something, EMB_INT32_LITTLE);
     left = fread_int16(file);
     top = fread_int16(file);
     right = fread_int16(file);
@@ -6322,9 +5587,9 @@ int stxReadThread(StxThread* thread, FILE* file)
     fread((unsigned char*)sectionNameBuff, 1, sectionNameLength, file); /* TODO: check return value */
     thread->sectionName = sectionNameBuff;
 
-    somethingSomething = fread_int32(file);
-    somethingSomething2 = fread_int32(file);
-    somethingElse = fread_int32(file);
+    fread_int(file, &somethingSomething, EMB_INT32_LITTLE);
+    fread_int(file, &somethingSomething2, EMB_INT32_LITTLE);
+    fread_int(file, &somethingElse, EMB_INT32_LITTLE);
     numberOfOtherDescriptors = fread_int16(file);
     if (emb_verbose>1) {
         printf("somethingSomething: %d", somethingSomething);
@@ -6342,7 +5607,7 @@ int stxReadThread(StxThread* thread, FILE* file)
 
         sd.someNum = fread_int16(file);
         /* Debug.Assert(sd.someNum == 1); TODO: review */
-        sd.someInt = fread_int32(file);
+        fread_int(file, &(sd.someInt), EMB_INT32_LITTLE);
         subCodeLength = fgetc(file);
         subCodeBuff = (char*)malloc(subCodeLength);
         if (!subCodeBuff) {
@@ -6359,7 +5624,7 @@ int stxReadThread(StxThread* thread, FILE* file)
         }
         fread((unsigned char*)subColorNameBuff, 1, subColorNameLength, file); /* TODO: check return value */
         sd.colorName = subColorNameBuff;
-        sd.someOtherInt = fread_int32(file);
+        fread_int(file, &(sd.someOtherInt), EMB_INT32_LITTLE);
         thread->subDescriptors[j] = sd;
     }
     return 1;
@@ -6397,18 +5662,18 @@ char readStx(EmbPattern* pattern, FILE* file)
     /* byte 14 */
     (char)fgetc(file);
     /* bytes 15- */
-    paletteLength = fread_int32(file);
-    imageLength = fread_int32(file);
-    something1 = fread_int32(file);
-    stitchDataOffset = fread_int32(file);
-    something3 = fread_int32(file);
-    threadDescriptionOffset = fread_int32(file);
-    stitchCount = fread_int32(file);
-    colors = fread_int32(file);
-    right = fread_int16(file);
-    left = fread_int16(file);
-    bottom = fread_int16(file);
-    top = fread_int16(file);
+    fread_int(file, &paletteLength, EMB_INT32_LITTLE);
+    fread_int(file, &imageLength, EMB_INT32_LITTLE);
+    fread_int(file, &something1, EMB_INT32_LITTLE);
+    fread_int(file, &stitchDataOffset, EMB_INT32_LITTLE);
+    fread_int(file, &something3, EMB_INT32_LITTLE);
+    fread_int(file, &threadDescriptionOffset, EMB_INT32_LITTLE);
+    fread_int(file, &stitchCount, EMB_INT32_LITTLE);
+    fread_int(file, &colors, EMB_INT32_LITTLE);
+    fread_int(file, &right, EMB_INT16_LITTLE);
+    fread_int(file, &left, EMB_INT16_LITTLE);
+    fread_int(file, &bottom, EMB_INT16_LITTLE);
+    fread_int(file, &top, EMB_INT16_LITTLE);
     if (emb_verbose>1) {
         printf("paletteLength:           %d\n", paletteLength);
         printf("imageLength:             %d\n", imageLength);
@@ -6452,14 +5717,10 @@ char readStx(EmbPattern* pattern, FILE* file)
         stxThreads[i] = st;
     }
 
-    fread_int32(file);
-    fread_int32(file);
-    fread_int32(file);
-    fread_int16(file);
-    fgetc(file);
+    fseek(file, 15, SEEK_CUR);
 
     for (i = 0; i < 12; i++) {
-        val[i] = fread_int16(file);
+        fread_int(file, val+i, EMB_INT16_LITTLE);
         if (emb_verbose>1) {
             printf("identify val[%d] = %d", i, val[i]);
         }
@@ -6468,8 +5729,7 @@ char readStx(EmbPattern* pattern, FILE* file)
         puts("val[4] == val[5] == 0");
         puts("val[10] == val[11] == 0");
     }
-    fread_int32(file); /* 0 */
-    fread_int32(file); /* 0 */
+    fseek(file, 8, SEEK_CUR); /* 0 0 */
     /* br.BaseStream.Position = stitchDataOffset; TODO: review */
     for (i = 1; i < stitchCount; ) {
         char b0 = (char)fgetc(file);
@@ -6514,23 +5774,6 @@ char writeStx(void) {
 
 /* ---------------------------------------------------------------- */
 /* svg format */
-
-/*
- * This file is part of libembroidery.
- *
- * Copyright 2018-2022 The Embroidermodder Team
- * Licensed under the terms of the zlib license.
- *
- * This file contains parsers for the more complex markup languages
- * dealt with by the library.
- */
-
-/*
-int svg_parser(char *s, char **token_table)
-{
-    return 0;
-}
-*/
 
 int svgCreator;
 
@@ -7143,569 +6386,12 @@ int svgIsElement(const char* buff) {
     return SVG_NULL;
 }
 
-int svgIsMediaProperty(const char* buff) {
-    if (stringInArray(buff, svg_media_property_tokens)) {
-        return SVG_MEDIA_PROPERTY;
-    }
-    return SVG_NULL;
-}
-
-int svgIsProperty(const char* buff) {
-    if (stringInArray(buff, svg_property_tokens)) {
-        return SVG_PROPERTY;
-    }
-    return SVG_NULL;
-}
-
-char svg_in_attribute_table(const char* buff, const char *table[], const char *table_name)
-{
-    if (stringInArray(buff, table)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("ERROR %s not found in %s.\n", buff, table_name);
-    return SVG_NULL;
-}
-
-int svgIsAnimationAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "begin", "class", "content", "datatype", "dur", "end",
-        "externalResourcesRequired", "fill", "focusHighlight", "focusable",
-        "height", "id", "initialVisibility", "max", "min", "nav-down",
-        "nav-down-left", "nav-down-right", "nav-left", "nav-next", "nav-prev",
-        "nav-right", "nav-up", "nav-up-left", "nav-up-right",
-        "preserveAspectRatio", "property", "rel", "repeatCount", "repeatDur",
-        "requiredExtensions", "requiredFeatures", "requiredFonts",
-        "requiredFormats", "resource", "restart", "rev", "role", "syncBehavior",
-        "syncMaster", "syncTolerance", "systemLanguage", "transform", "typeof",
-        "width", "x", "xlink:actuate", "xlink:arcrole", "xlink:href",
-        "xlink:role", "xlink:show", "xlink:title", "xlink:type", "xml:base",
-        "xml:id", "xml:lang", "xml:space", "y", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsAnimationAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsAudioAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "begin", "class", "content", "datatype", "dur", "end",
-        "externalResourcesRequired", "fill", "id", "max", "min", "property",
-        "rel", "repeatCount", "repeatDur", "requiredExtensions",
-        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-        "restart", "rev", "role", "syncBehavior", "syncMaster", "syncTolerance",
-        "systemLanguage", "type", "typeof", "xlink:actuate", "xlink:arcrole",
-        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsAudioAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsCircleAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "cx", "cy", "datatype", "focusHighlight",
-        "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
-        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-        "nav-up-left", "nav-up-right", "property", "r", "rel",
-        "requiredExtensions", "requiredFeatures", "requiredFonts",
-        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-        "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
-        "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsCircleAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsDefsAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "id", "property", "rel",
-        "resource", "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang",
-        "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsDefsAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsDescAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "id", "property", "rel",
-        "requiredExtensions", "requiredFeatures", "requiredFonts",
-        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-        "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
-
-    printf("svgIsDescAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsDiscardAttribute(const char* buff)
-{
-    const char *tokens[] = {
-        "about", "begin", "class", "content", "datatype", "id", "property",
-        "rel", "requiredExtensions", "requiredFeatures", "requiredFonts",
-        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-        "typeof", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-        "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
-
-    printf("svgIsDiscardAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsEllipseAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "cx", "cy", "datatype", "focusHighlight",
-        "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
-        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-        "nav-up-left", "nav-up-right", "property", "rel", "requiredExtensions",
-        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-        "rev", "role", "rx", "ry", "systemLanguage", "transform", "typeof",
-        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsEllipseAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsFontAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "externalResourcesRequired",
-        "horiz-adv-x", "horiz-origin-x", "id", "property", "rel", "resource",
-        "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
-        "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsFontAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsFontFaceAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "accent-height", "alphabetic", "ascent", "bbox", "cap-height",
-        "class", "content", "datatype", "descent", "externalResourcesRequired",
-        "font-family", "font-stretch", "font-style", "font-variant",
-        "font-weight", "hanging", "id", "ideographic", "mathematical",
-        "overline-position", "overline-thickness", "panose-1", "property",
-        "rel", "resource", "rev", "role", "slope", "stemh", "stemv",
-        "strikethrough-position", "strikethrough-thickness", "typeof",
-        "underline-position", "underline-thickness", "unicode-range",
-        "units-per-em", "widths", "x-height", "xml:base", "xml:id",
-        "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens))
-        return SVG_ATTRIBUTE;
-
-    printf("svgIsFontFaceAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsFontFaceSrcAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "id", "property", "rel",
-        "resource", "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang",
-        "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsFontFaceSrcAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsFontFaceUriAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "externalResourcesRequired",
-        "id", "property", "rel", "resource", "rev", "role",
-        "typeof", "xlink:actuate", "xlink:arcrole",
-        "xlink:href", "xlink:role", "xlink:show", "xlink:title",
-        "xlink:type", "xml:base", "xml:id", "xml:lang",
-        "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsFontFaceUriAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsForeignObjectAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "externalResourcesRequired",
-        "focusHighlight", "focusable", "height", "id", "nav-down",
-        "nav-down-left", "nav-down-right", "nav-left", "nav-next",
-        "nav-prev", "nav-right", "nav-up", "nav-up-left", "nav-up-right",
-        "property", "rel", "requiredExtensions", "requiredFeatures", "requiredFonts",
-        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-        "transform", "typeof", "width", "x", "xlink:actuate",
-        "xlink:arcrole", "xlink:href", "xlink:role", "xlink:show",
-        "xlink:title", "xlink:type", "xml:base", "xml:id",
-        "xml:lang", "xml:space", "y", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsForeignObjectAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsGroupAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "externalResourcesRequired",
-        "focusHighlight", "focusable", "id", "nav-down", "nav-down-left",
-        "nav-down-right", "nav-left", "nav-next", "nav-prev", "nav-right",
-        "nav-up", "nav-up-left", "nav-up-right", "property", "rel",
-        "requiredExtensions", "requiredFeatures", "requiredFonts",
-        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-        "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
-        "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsGroupAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsGlyphAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "arabic-form", "class", "content", "d", "datatype",
-        "glyph-name", "horiz-adv-x", "id", "lang", "property", "rel",
-        "resource", "rev", "role", "typeof", "unicode", "xml:base", "xml:id",
-        "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsGlyphAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsHandlerAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "ev:event",
-        "externalResourcesRequired", "id", "property", "rel", "resource",
-        "rev", "role", "type", "typeof", "xlink:actuate", "xlink:arcrole",
-        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsHandlerAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsHKernAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "g1", "g2", "id", "k",
-        "property", "rel", "resource", "rev", "role", "typeof", "u1", "u2",
-        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsHKernAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsImageAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "externalResourcesRequired",
-        "focusHighlight", "focusable", "height", "id", "nav-down",
-        "nav-down-left", "nav-down-right", "nav-left", "nav-next", "nav-prev",
-        "nav-right", "nav-up", "nav-up-left", "nav-up-right", "opacity",
-        "preserveAspectRatio", "property", "rel", "requiredExtensions",
-        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-        "rev", "role", "systemLanguage", "transform", "type", "typeof", "width",
-        "x", "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-        "xml:lang", "xml:space", "y", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsImageAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsLineAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "focusHighlight", "focusable",
-        "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
-        "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
-        "nav-up-right", "property", "rel", "requiredExtensions",
-        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-        "rev", "role", "systemLanguage", "transform", "typeof", "x1", "x2",
-        "xml:base", "xml:id", "xml:lang", "xml:space", "y1", "y2", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsLineAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsLinearGradientAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "gradientUnits", "id",
-        "property", "rel", "resource", "rev", "role", "typeof", "x1", "x2",
-        "xml:base", "xml:id", "xml:lang", "xml:space", "y1", "y2", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsLinearGradientAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsListenerAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "defaultAction", "event",
-        "handler", "id", "observer", "phase", "propagate", "property", "rel",
-        "resource", "rev", "role", "target", "typeof", "xml:base", "xml:id",
-        "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsListenerAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsMetadataAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "id", "property", "rel",
-        "requiredExtensions", "requiredFeatures", "requiredFonts",
-        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-        "typeof", "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsMetadataAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsMissingGlyphAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "d", "datatype", "horiz-adv-x", "id",
-        "property", "rel", "resource", "rev", "role", "typeof", "xml:base",
-        "xml:id", "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsMissingGlyphAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsMPathAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "id", "property", "rel",
-        "resource", "rev", "role", "typeof", "xlink:actuate", "xlink:arcrole",
-        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsMPathAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsPathAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "d", "datatype", "focusHighlight",
-        "focusable", "id", "nav-down", "nav-down-left", "nav-down-right",
-        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-        "nav-up-left", "nav-up-right", "pathLength", "property", "rel",
-        "requiredExtensions", "requiredFeatures", "requiredFonts",
-        "requiredFormats", "resource", "rev", "role", "systemLanguage",
-        "transform", "typeof", "xml:base", "xml:id", "xml:lang", "xml:space",
-        "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsPathAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsPolygonAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "focusHighlight", "focusable",
-        "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
-        "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
-        "nav-up-right", "points", "property", "rel", "requiredExtensions",
-        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-        "rev", "role", "systemLanguage", "transform", "typeof", "xml:base",
-        "xml:id", "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsPolygonAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsPolylineAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "focusHighlight", "focusable",
-        "id", "nav-down", "nav-down-left", "nav-down-right", "nav-left",
-        "nav-next", "nav-prev", "nav-right", "nav-up", "nav-up-left",
-        "nav-up-right", "points", "property", "rel", "requiredExtensions",
-        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-        "rev", "role", "systemLanguage", "transform", "typeof", "xml:base",
-        "xml:id", "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsPolylineAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsPrefetchAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "bandwidth", "class", "content", "datatype", "id",
-        "mediaCharacterEncoding", "mediaContentEncodings", "mediaSize",
-        "mediaTime", "property", "rel", "resource", "rev", "role", "typeof",
-        "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-        "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsPrefetchAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsRadialGradientAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "cx", "cy", "datatype", "gradientUnits",
-        "id", "property", "r", "rel", "resource", "rev", "role", "typeof",
-        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsRadialGradientAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsRectAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "focusHighlight", "focusable",
-        "height", "id", "nav-down", "nav-down-left", "nav-down-right",
-        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-        "nav-up-left", "nav-up-right", "property", "rel", "requiredExtensions",
-        "requiredFeatures", "requiredFonts", "requiredFormats", "resource",
-        "rev", "role", "rx", "ry", "systemLanguage", "transform", "typeof",
-        "width", "x", "xml:base", "xml:id", "xml:lang", "xml:space", "y",
-        "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsRectAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsScriptAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "externalResourcesRequired",
-        "id", "property", "rel", "resource", "rev", "role", "type", "typeof",
-        "xlink:actuate", "xlink:arcrole", "xlink:href", "xlink:role",
-        "xlink:show", "xlink:title", "xlink:type", "xml:base", "xml:id",
-        "xml:lang", "xml:space", "/", "\0"
-    };   
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsScriptAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsSetAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "attributeName", "attributeType", "begin", "class", "content",
-        "datatype", "dur", "end", "fill", "id", "max", "min", "property", "rel",
-        "repeatCount", "repeatDur", "requiredExtensions", "requiredFeatures",
-        "requiredFonts", "requiredFormats", "resource", "rev", "role",
-        "systemLanguage", "to", "typeof", "xlink:actuate", "xlink:arcrole",
-        "xlink:href", "xlink:role", "xlink:show", "xlink:title", "xlink:type",
-        "xml:base", "xml:id", "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsSetAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsSolidColorAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "id", "property", "rel",
-        "resource", "rev", "role", "typeof", "xml:base", "xml:id", "xml:lang",
-        "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsSolidColorAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsStopAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "class", "content", "datatype", "id", "offset", "property",
-        "rel", "resource", "rev", "role", "typeof", "xml:base", "xml:id",
-        "xml:lang", "xml:space", "/", "\0"
-    };
-    if (stringInArray(buff, tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsStopAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
+/*
 int svgIsSvgAttribute(const char* buff) {
-    const char *tokens[] = {
-        "about", "baseProfile", "class", "content", "contentScriptType",
-        "datatype", "externalResourcesRequired", "focusHighlight", "focusable",
-        "height", "id", "nav-down", "nav-down-left", "nav-down-right",
-        "nav-left", "nav-next", "nav-prev", "nav-right", "nav-up",
-        "nav-up-left", "nav-up-right", "playbackOrder", "preserveAspectRatio",
-        "property", "rel", "resource", "rev", "role", "snapshotTime",
-        "syncBehaviorDefault", "syncToleranceDefault", "timelineBegin",
-        "typeof", "version", "viewBox", "width", "xml:base", "xml:id",
-        "xml:lang", "xml:space", "zoomAndPan", "/", "\0"
-    };
     const char *inkscape_tokens[] = {
         "xmlns:dc", "xmlns:cc", "xmlns:rdf", "xmlns:svg", "xmlns", "\0"
     };
-    if (stringInArray(buff, tokens)) {
+    if (stringInArray(buff, svg_attribute_tokens)) {
         return SVG_ATTRIBUTE;
     }
     if (svgCreator == SVG_CREATOR_INKSCAPE) {
@@ -7716,50 +6402,7 @@ int svgIsSvgAttribute(const char* buff) {
     printf("svgIsSvgAttribute(), unknown: %s\n", buff);
     return SVG_NULL;
 }
-
-int svgIsSwitchAttribute(const char* buff) {
-    if (stringInArray(buff, switch_attribute_tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsSwitchAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsTBreakAttribute(const char* buff) {
-    if (stringInArray(buff, tbreak_attribute_tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsTBreakAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsTextAttribute(const char* buff) {
-    if (stringInArray(buff, text_attribute_tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsTextAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-int svgIsTextAreaAttribute(const char* buff) {
-    if (stringInArray(buff, textarea_attribute_tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    printf("svgIsTextAreaAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-
-char svg_in_table_by_index(const char *buff, const int table[], const char *error, int element_id)
-{
-    int i;
-    for (i=0; table[i] >= 0; i++) {
-        if (!strcmp(buff, svg_attributes_tokens[table[i]])) {
-            return SVG_ATTRIBUTE;
-        }
-    }
-    printf("ERROR %s not found in %s[%d].\n", buff, error, element_id);
-    return SVG_NULL;
-}
+*/
 
 void svgProcess(int c, const char* buff)
 {
@@ -7800,7 +6443,9 @@ void svgProcess(int c, const char* buff)
         case ELEMENT_TEXT_AREA:
         case ELEMENT_TSPAN:
         case ELEMENT_USE:
-            advance = (char)svgIsProperty(buff);
+            if (stringInArray(buff, svg_property_tokens)) {
+                advance = SVG_PROPERTY;
+            }
             break;
         case ELEMENT_ANIMATION:
         case ELEMENT_AUDIO:
@@ -7809,171 +6454,18 @@ void svgProcess(int c, const char* buff)
         case ELEMENT_METADATA:
         case ELEMENT_TITLE:
         case ELEMENT_VIDEO:
-            advance = (char)svgIsMediaProperty(buff);
+            if (stringInArray(buff, svg_media_property_tokens)) {
+                advance = SVG_MEDIA_PROPERTY;
+            }
             break;
             default: break;
         }
         if (!advance) {
-            if (current_element_id < 1) {
-                advance = svg_in_table_by_index(buff, svg_attribute_table[current_element_id], "svg_attributes_table", current_element_id);
+            if (stringInArray(buff, svg_attribute_table[current_element_id])) {
+                advance = SVG_ATTRIBUTE;
             }
-        }
-        else {
-        switch (current_element_id) {
-        case ELEMENT_A:
-            advance = svg_in_attribute_table(buff, link_attribute_tokens, "link_attribute_tokens");
-            break;
-        case ELEMENT_ANIMATE:
-            advance = svg_in_attribute_table(buff, animate_attribute_tokens,
-                "animate_attribute_tokens");
-            break;
-        case ELEMENT_ANIMATE_COLOR:
-            advance = svg_in_attribute_table(buff, animate_color_attribute_tokens,
-                "animate_color_attribute_tokens");
-            break;
-        case ELEMENT_ANIMATE_MOTION:
-            advance = svg_in_attribute_table(buff,
-                animate_motion_attribute_tokens,
-                "animate_motion_attribute_tokens");
-            break;
-        case ELEMENT_ANIMATE_TRANSFORM:
-            advance = svg_in_attribute_table(buff,
-                animate_transform_attribute_tokens,
-                "animate_transform_attribute_tokens");
-            break;
-        case ELEMENT_ANIMATION:
-            advance = (char)svgIsAnimationAttribute(buff);
-            break;
-        case ELEMENT_AUDIO:
-            advance = (char)svgIsAudioAttribute(buff);
-            break;
-        case ELEMENT_CIRCLE:
-            advance = (char)svgIsCircleAttribute(buff);
-            break;
-        case ELEMENT_DEFS:
-            advance = (char)svgIsDefsAttribute(buff);
-            break;
-        case ELEMENT_DESC:
-            advance = (char)svgIsDescAttribute(buff);
-            break;
-        case ELEMENT_DISCARD:
-            advance = (char)svgIsDiscardAttribute(buff);
-            break;
-        case ELEMENT_ELLIPSE:
-            advance = (char)svgIsEllipseAttribute(buff);
-            break;
-        case ELEMENT_FONT:
-            advance = (char)svgIsFontAttribute(buff);
-            break;
-        case ELEMENT_FONT_FACE:
-            advance = (char)svgIsFontFaceAttribute(buff);
-            break;
-        case ELEMENT_FONT_FACE_SRC:
-            advance = (char)svgIsFontFaceSrcAttribute(buff);
-            break;
-        case ELEMENT_FONT_FACE_URI:
-            advance = (char)svgIsFontFaceUriAttribute(buff);
-            break;
-        case ELEMENT_FOREIGN_OBJECT:
-            advance = (char)svgIsForeignObjectAttribute(buff);
-            break;
-        case ELEMENT_G:
-            advance = (char)svgIsGroupAttribute(buff);
-            break;
-        case ELEMENT_GLYPH:
-            advance = (char)svgIsGlyphAttribute(buff);
-            break;
-        case ELEMENT_HANDLER:
-            advance = (char)svgIsHandlerAttribute(buff);
-            break;
-        case ELEMENT_HKERN:
-            advance = (char)svgIsHKernAttribute(buff);
-            break;
-        case ELEMENT_IMAGE:
-            advance = (char)svgIsImageAttribute(buff);
-            break;
-        case ELEMENT_LINE:
-            advance = (char)svgIsLineAttribute(buff);
-            break;
-        case ELEMENT_LINEAR_GRADIENT:
-            advance = (char)svgIsLinearGradientAttribute(buff);
-            break;
-        case ELEMENT_LISTENER:
-            advance = (char)svgIsListenerAttribute(buff);
-            break;
-        case ELEMENT_METADATA:
-            advance = (char)svgIsMetadataAttribute(buff);
-            break;
-        case ELEMENT_MISSING_GLYPH:
-            advance = (char)svgIsMissingGlyphAttribute(buff);
-            break;
-        case ELEMENT_MPATH:
-            advance = (char)svgIsMPathAttribute(buff);
-            break;
-        case ELEMENT_PATH:
-            advance = (char)svgIsPathAttribute(buff);
-            break;
-        case ELEMENT_POLYGON:
-            advance = (char)svgIsPolygonAttribute(buff);
-            break;
-        case ELEMENT_POLYLINE:
-            advance = (char)svgIsPolylineAttribute(buff);
-            break;
-        case ELEMENT_PREFETCH:
-            advance = (char)svgIsPrefetchAttribute(buff);
-            break;
-        case ELEMENT_RADIAL_GRADIENT:
-            advance = (char)svgIsRadialGradientAttribute(buff);
-            break;
-        case ELEMENT_RECT:
-            advance = (char)svgIsRectAttribute(buff);
-            break;
-        case ELEMENT_SCRIPT:
-            advance = (char)svgIsScriptAttribute(buff);
-            break;
-        case ELEMENT_SET:
-            advance = (char)svgIsSetAttribute(buff);
-            break;
-        case ELEMENT_SOLID_COLOR:
-            advance = (char)svgIsSolidColorAttribute(buff);
-            break;
-        case ELEMENT_STOP:
-            advance = (char)svgIsStopAttribute(buff);
-            break;
-        case ELEMENT_SVG:
-            advance = (char)svgIsSvgAttribute(buff);
-            break;
-        case ELEMENT_SWITCH:
-            advance = (char)svgIsSwitchAttribute(buff);
-            break;
-        case ELEMENT_TBREAK:
-            advance = (char)svgIsTBreakAttribute(buff);
-            break;
-        case ELEMENT_TEXT:
-            advance = (char)svgIsTextAttribute(buff);
-            break;
-        case ELEMENT_TEXT_AREA:
-            advance = (char)svgIsTextAreaAttribute(buff);
-            break;
-        case ELEMENT_TITLE:
-            advance = svg_in_attribute_table(buff, title_attribute_tokens,
-                "title_attribute_tokens");
-            break;
-        case ELEMENT_TSPAN:
-            advance = svg_in_attribute_table(buff, tspan_attribute_tokens,
-                "tspan_attribute_tokens");
-            break;
-        case ELEMENT_USE:
-            advance = svg_in_attribute_table(buff, use_attribute_tokens,
-                "use_attribute_tokens");
-            break;
-        case ELEMENT_VIDEO:
-            advance = svg_in_attribute_table(buff, video_attribute_tokens,
-                "video_attribute_tokens");
-            break;
-        default:
-            break;
-        }
+            printf("ERROR %d not found in svg_attribute_table[%d].\n",
+                buff, current_element_id);
         }
         if (advance) {
             printf("ATTRIBUTE:\n");
@@ -9328,7 +7820,7 @@ vp3Hoop vp3ReadHoopSection(FILE* file)
     hoop.left = fread_int32_be(file);
     hoop.top = fread_int32_be(file);
 
-    hoop.threadLength = fread_int32(file); /* yes, it seems this is _not_ big endian */
+    fread_int(file, &(hoop.threadLength), EMB_INT32_LITTLE); /* yes, it seems this is _not_ big endian */
     hoop.unknown2 = (char)fgetc(file);
     hoop.numberOfColors = (char)fgetc(file);
     fread_int(file, &(hoop.unknown3), EMB_INT16_BIG);

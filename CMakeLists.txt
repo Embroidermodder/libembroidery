@@ -14,6 +14,7 @@ set(C_SOURCES
 	array.c
 	testing.c
 	formats.c
+	format-data.c
 	pattern.c
 	image.c
 	fill.c

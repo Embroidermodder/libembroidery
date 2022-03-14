@@ -82,6 +82,55 @@ extern "C" {
 #define EMB_FORMAT_XXX          59
 #define EMB_FORMAT_ZSK          60
 
+#define ELEMENT_XML              0
+#define ELEMENT_A                1
+#define ELEMENT_ANIMATE          2
+#define ELEMENT_ANIMATECOLOR     3
+#define ELEMENT_ANIMATEMOTION    4
+#define ELEMENT_ANIMATETRANSFORM 5
+#define ELEMENT_ANIMATION        6
+#define ELEMENT_AUDIO            7
+#define ELEMENT_CIRCLE           8
+#define ELEMENT_DEFS             9
+#define ELEMENT_DESC            10
+#define ELEMENT_DISCARD         11
+#define ELEMENT_ELLIPSE         12
+#define ELEMENT_FONT            13
+#define ELEMENT_FONT_FACE       14
+#define ELEMENT_FONT_FACE_SRC   15
+#define ELEMENT_FONT_FACE_URI   16
+#define ELEMENT_FOREIGN_OBJECT  17
+#define ELEMENT_G               18
+#define ELEMENT_GLYPH           19
+#define ELEMENT_HANDLER         20
+#define ELEMENT_HKERN           21
+#define ELEMENT_IMAGE           22
+#define ELEMENT_LINE            23
+#define ELEMENT_LINEAR_GRADIENT 24
+#define ELEMENT_LISTENER        25
+#define ELEMENT_METADATA        26
+#define ELEMENT_MISSING_GLYPH   27
+#define ELEMENT_MPATH           28
+#define ELEMENT_PATH            29
+#define ELEMENT_POLYGON         30
+#define ELEMENT_POLYLINE        31
+#define ELEMENT_PREFETCH        32
+#define ELEMENT_RADIAL_GRADIENT 33
+#define ELEMENT_RECT            34
+#define ELEMENT_SCRIPT          35
+#define ELEMENT_SET             36
+#define ELEMENT_SOLID_COLOR     37
+#define ELEMENT_STOP            38
+#define ELEMENT_SVG             39
+#define ELEMENT_SWITCH          40
+#define ELEMENT_TBREAK          41
+#define ELEMENT_TEXT            42
+#define ELEMENT_TEXT_AREA       43
+#define ELEMENT_TITLE           44
+#define ELEMENT_TSPAN           45
+#define ELEMENT_USE             46
+#define ELEMENT_VIDEO           47
+
 /* Thread color */
 #define Arc_Polyester           0
 #define Arc_Rayon               1
@@ -899,6 +948,14 @@ extern const EmbThread pcmThreads[];
 extern const EmbThread pecThreads[];
 extern const unsigned char _dxfColorTable[][3];
 extern EmbThread black_thread;
+extern const char svg_attribute_table[50][100][30];
+extern const char *svg_element_tokens[];
+extern const char *svg_attribute_tokens[];
+extern const char *svg_property_tokens[];
+extern const char *svg_media_property_tokens[];
+extern const unsigned char csd_decryptArray[];
+extern const char *csv_header[];
+extern const unsigned char max_header[];
 
 /* VARIABLES
  ******************************************************************************/

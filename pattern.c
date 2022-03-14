@@ -4,10 +4,7 @@
  * Copyright 2018-2022 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
- * This file contains all the read and write functions for the
- * library.
- *
- * Management of the main struct: EmbPattern.
+ * The file is for the management of the main struct: EmbPattern.
  *******************************************************************/
 
 #include <stdlib.h>

@@ -26,7 +26,6 @@
 #include <math.h>
 
 #include "embroidery.h"
-#include "embroidery-internal.h"
 
 EmbImage * embImage_create(int width, int height)
 {

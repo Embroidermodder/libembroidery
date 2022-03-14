@@ -8,13 +8,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
-#include <ctype.h>
 #include <math.h>
 #include <time.h>
 
 #include "embroidery.h"
-#include "embroidery-internal.h"
 
 /**
 Type of sector

@@ -11,12 +11,13 @@
 #include <math.h>
 
 #include "embroidery.h"
-#include "embroidery-internal.h"
 
 #define RED_TERM_COLOR      "\x1B[0;31m"
 #define GREEN_TERM_COLOR    "\x1B[0;32m"
 #define YELLOW_TERM_COLOR   "\x1B[1;33m"
 #define RESET_TERM_COLOR       "\033[0m"
+
+int create_test_file_3(const char *);
 
 void report(int result, char *label)
 {

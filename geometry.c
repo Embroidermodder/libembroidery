@@ -11,7 +11,6 @@
 #include <math.h>
 
 #include "embroidery.h"
-#include "embroidery-internal.h"
 
 /* Returns an EmbArcObject. It is created on the stack. */
 EmbArcObject embArcObject_make(double sx, double sy, double mx,

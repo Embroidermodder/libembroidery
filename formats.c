@@ -14,7 +14,6 @@
 #include <math.h>
 
 #include "embroidery.h"
-#include "embroidery-internal.h"
 
 /* DXF Version Identifiers */
 #define DXF_VERSION_R10 "AC1006"

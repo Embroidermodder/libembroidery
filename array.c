@@ -12,7 +12,6 @@
 #include <string.h>
 
 #include "embroidery.h"
-#include "embroidery-internal.h"
 
 EmbArray* embArray_create(int type) {
     EmbArray *p;

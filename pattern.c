@@ -1091,3 +1091,41 @@ void embPattern_designDetails(EmbPattern *pattern)
 */
 }
 
+
+/*
+ *
+ */
+int convert(const char *inf, const char *outf) {
+    EmbPattern* p = 0;
+    int reader, writer;
+
+    p = embPattern_create();
+    if (!p) {
+        printf("ERROR: convert(), cannot allocate memory for p\n");
+        return 1;
+    }
+
+    if (!embPattern_readAuto(p, inf)) {
+        printf("ERROR: convert(), reading file was unsuccessful: %s\n", inf);
+        embPattern_free(p);
+        return 1;
+    }
+
+    reader = emb_identify_format(inf);
+    writer = emb_identify_format(outf);
+    if (formatTable[reader].type == EMBFORMAT_OBJECTONLY) {
+        if (formatTable[writer].type == EMBFORMAT_STITCHONLY) {
+            embPattern_movePolylinesToStitchList(p);
+        }
+    }
+
+    if (!embPattern_writeAuto(p, outf)) {
+        printf("ERROR: convert(), writing file %s was unsuccessful\n", outf);
+        embPattern_free(p);
+        return 1;
+    }
+
+    embPattern_free(p);
+    return 0;
+}
+

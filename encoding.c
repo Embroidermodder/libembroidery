@@ -25,6 +25,24 @@
  * formats and the only part that changes is the flag encoding.
  */
 
+void reverse_byte_order(void *b, int bytes)
+{
+    char swap;
+    if (bytes == 2) {
+        swap = *((char*)b+0);
+        *((char*)b+0) = *((char*)b+1);
+        *((char*)b+1) = swap;
+    }
+    else {
+        swap = *((char*)b+0);
+        *((char*)b+0) = *((char*)b+3);
+        *((char*)b+3) = swap;
+        swap = *((char*)b+1);
+        *((char*)b+1) = *((char*)b+2);
+        *((char*)b+2) = swap;
+    }
+}
+
 int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags) {
     decode_tajima_ternary(b, x, y);
 

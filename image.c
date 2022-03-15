@@ -27,6 +27,31 @@
 
 #include "embroidery.h"
 
+/* for the PES embedded */
+void writeImage(FILE* file, unsigned char image[][48]) {
+    int i, j;
+
+    if (!file) {
+        printf("ERROR: format-pec.c writeImage(), file argument is null\n");
+        return;
+    }
+    for (i = 0; i < 38; i++) {
+        for (j = 0; j < 6; j++) {
+            int offset = j * 8;
+            unsigned char output = 0;
+            output |= (unsigned char)(image[i][offset] != 0);
+            output |= (unsigned char)(image[i][offset + 1] != (unsigned char)0) << 1;
+            output |= (unsigned char)(image[i][offset + 2] != (unsigned char)0) << 2;
+            output |= (unsigned char)(image[i][offset + 3] != (unsigned char)0) << 3;
+            output |= (unsigned char)(image[i][offset + 4] != (unsigned char)0) << 4;
+            output |= (unsigned char)(image[i][offset + 5] != (unsigned char)0) << 5;
+            output |= (unsigned char)(image[i][offset + 6] != (unsigned char)0) << 6;
+            output |= (unsigned char)(image[i][offset + 7] != (unsigned char)0) << 7;
+            fwrite(&output, 1, 1, file);
+        }
+    }
+}
+
 EmbImage * embImage_create(int width, int height)
 {
     int i;

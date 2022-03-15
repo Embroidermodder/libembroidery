@@ -864,6 +864,8 @@ char* emb_optOut(double num, char* str);
 void write_24bit(FILE* file, int);
 int check_header_present(FILE* file, int minimum_header_length);
 
+void emb_read_int(FILE* f, char *label, void *b, int mode);
+void emb_write_int(FILE* f, char *label, void *b, int mode);
 void fread_int(FILE* f, void *b, int mode);
 void fwrite_int(FILE* f, void *b, int mode);
 short fread_int16(FILE* f);

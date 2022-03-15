@@ -20,6 +20,7 @@ set(C_SOURCES
 	fill.c
 	geometry.c
 	compress.c
+	encoding.c
 	thread-color.c
 )
 

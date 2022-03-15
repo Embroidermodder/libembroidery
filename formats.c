@@ -179,14 +179,6 @@ char writeXxx(EmbPattern *pattern, FILE* file);
 char readZsk(EmbPattern *pattern, FILE* file);
 char writeZsk(EmbPattern *pattern, FILE* file);
 
-/* Read and write system for multiple byte types.
- *
- * The caller passes the function to read/write from, the
- * memory location as a void pointer and a mode identifier that describes
- * the type. This way we can abstract out the endianness of the
- * system running the library and don't have to maintain many functions,
- * just two.
- */
 void fread_int(FILE* f, void *b, int mode)
 {
     int endian = mode & 0x01;

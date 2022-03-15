@@ -131,6 +131,62 @@ extern "C" {
 #define ELEMENT_USE             46
 #define ELEMENT_VIDEO           47
 
+#define PES0001         0
+#define PES0020         1
+#define PES0022         2
+#define PES0030         3
+#define PES0040         4
+#define PES0050         5
+#define PES0055         6
+#define PES0056         7
+#define PES0060         8
+#define PES0070         9
+#define PES0080        10
+#define PES0090        11
+#define PES0100        12
+#define N_PES_VERSIONS 13
+
+/* DXF Version Identifiers */
+#define DXF_VERSION_R10 "AC1006"
+#define DXF_VERSION_R11 "AC1009"
+#define DXF_VERSION_R12 "AC1009"
+#define DXF_VERSION_R13 "AC1012"
+#define DXF_VERSION_R14 "AC1014"
+#define DXF_VERSION_R15 "AC1015"
+#define DXF_VERSION_R18 "AC1018"
+#define DXF_VERSION_R21 "AC1021"
+#define DXF_VERSION_R24 "AC1024"
+#define DXF_VERSION_R27 "AC1027"
+
+#define DXF_VERSION_2000 "AC1015"
+#define DXF_VERSION_2002 "AC1015"
+#define DXF_VERSION_2004 "AC1018"
+#define DXF_VERSION_2006 "AC1018"
+#define DXF_VERSION_2007 "AC1021"
+#define DXF_VERSION_2009 "AC1021"
+#define DXF_VERSION_2010 "AC1024"
+#define DXF_VERSION_2013 "AC1027"
+
+#define SVG_CREATOR_NULL              0
+#define SVG_CREATOR_EMBROIDERMODDER   1
+#define SVG_CREATOR_ILLUSTRATOR       2
+#define SVG_CREATOR_INKSCAPE          3
+
+#define SVG_EXPECT_NULL               0
+#define SVG_EXPECT_ELEMENT            1
+#define SVG_EXPECT_ATTRIBUTE          2
+#define SVG_EXPECT_VALUE              3
+
+/*  SVG_TYPES
+ *  ---------
+ */
+#define SVG_NULL                      0
+#define SVG_ELEMENT                   1
+#define SVG_PROPERTY                  2
+#define SVG_MEDIA_PROPERTY            3
+#define SVG_ATTRIBUTE                 4
+#define SVG_CATCH_ALL                 5
+
 /* Thread color */
 #define Arc_Polyester           0
 #define Arc_Rayon               1
@@ -600,6 +656,90 @@ typedef struct _bcf_file
     bcf_directory* directory; /*! The directory for the CompoundFile */
 } bcf_file;
 
+typedef struct _vp3Hoop
+{
+    int right;
+    int bottom;
+    int left;
+    int top;
+    int threadLength;
+    char unknown2;
+    unsigned char numberOfColors;
+    unsigned short unknown3;
+    int unknown4;
+    int numberOfBytesRemaining;
+
+    int xOffset;
+    int yOffset;
+
+    unsigned char byte1;
+    unsigned char byte2;
+    unsigned char byte3;
+
+    /* Centered hoop dimensions */
+    int right2;
+    int left2;
+    int bottom2;
+    int top2;
+
+    int width;
+    int height;
+} vp3Hoop;
+
+typedef struct ThredHeader_     /* thred file header */
+{
+    unsigned int sigVersion;    /* signature and version */
+    unsigned int length;        /* length of ThredHeader + length of stitch data */
+    unsigned short numStiches;  /* number of stitches */
+    unsigned short hoopSize;    /* size of hoop */
+    unsigned short reserved[7]; /* reserved for expansion */
+} ThredHeader;
+
+typedef struct ThredExtension_  /* thred v1.0 file header extension */
+{
+    float hoopX;                /* hoop size x dimension in 1/6 mm units */
+    float hoopY;                /* hoop size y dimension in 1/6 mm units */
+    float stitchGranularity;    /* stitches per millimeter--not implemented */
+    char creatorName[50];       /* name of the file creator */
+    char modifierName[50];      /* name of last file modifier */
+    char auxFormat;             /* auxiliary file format, 0=PCS,1=DST,2=PES */
+    char reserved[31];          /* reserved for expansion */
+} ThredExtension;
+
+typedef struct SubDescriptor_
+{
+    int someNum;      /* TODO: better variable naming */
+    int someInt;      /* TODO: better variable naming */
+    int someOtherInt; /* TODO: better variable naming */
+    char* colorCode;
+    char* colorName;
+} SubDescriptor;
+
+typedef struct StxThread_
+{
+    char* colorCode;
+    char* colorName;
+    char* sectionName;
+    SubDescriptor* subDescriptors;
+    EmbColor stxColor;
+} StxThread;
+
+typedef struct VipHeader_ {
+    int magicCode;
+    int numberOfStitches;
+    int numberOfColors;
+    short postitiveXHoopSize;
+    short postitiveYHoopSize;
+    short negativeXHoopSize;
+    short negativeYHoopSize;
+    int attributeOffset;
+    int xOffset;
+    int yOffset;
+    unsigned char stringVal[8];
+    short unknown;
+    int colorLength;
+} VipHeader;
+
 typedef enum
 {
     CSV_EXPECT_NULL,
@@ -848,14 +988,6 @@ int compress_get_position(compress *c);
 void binaryReadString(FILE* file, char *buffer, int maxLength);
 void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength);
 
-void binaryWriteShort(FILE* file, short data);
-void binaryWriteUShort(FILE* file, unsigned short data);
-void binaryWriteUShortBE(FILE* file, unsigned short data);
-void binaryWriteInt(FILE* file, int data);
-void binaryWriteIntBE(FILE* file, int data);
-void binaryWriteUInt(FILE* file, unsigned int data);
-void binaryWriteUIntBE(FILE* file, unsigned int data);
-
 int stringInArray(const char *s, const char **array);
 void fpad(FILE *f, char c, int n);
 char *copy_trim(char const *s);
@@ -866,16 +998,7 @@ int check_header_present(FILE* file, int minimum_header_length);
 
 void emb_read_int(FILE* f, char *label, void *b, int mode);
 void emb_write_int(FILE* f, char *label, void *b, int mode);
-void fread_int(FILE* f, void *b, int mode);
-void fwrite_int(FILE* f, void *b, int mode);
-short fread_int16(FILE* f);
-unsigned short fread_uint16(FILE* f);
-int fread_int32(FILE* f);
-unsigned int fread_uint32(FILE* f);
-short fread_int16_be(FILE* f);
-unsigned short fread_uint16_be(FILE* f);
-int fread_int32_be(FILE* f);
-unsigned int fread_uint32_be(FILE* f);
+int emb_readline(FILE* file, char *line, int maxLength);
 
 bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize);
 unsigned int readFullSector(FILE* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
@@ -900,8 +1023,6 @@ void bcf_file_free(bcf_file* bcfFile);
 
 void readPecStitches(EmbPattern* pattern, FILE* file);
 void writePecStitches(EmbPattern* pattern, FILE* file, const char* filename);
-
-int emb_readline(FILE* file, char *line, int maxLength);
 
 int decodeNewStitch(unsigned char value);
 
@@ -958,6 +1079,8 @@ extern const char *svg_media_property_tokens[];
 extern const unsigned char csd_decryptArray[];
 extern const char *csv_header[];
 extern const unsigned char max_header[];
+extern const char imageWithFrame[38][48];
+extern const char *pes_version_strings[];
 
 /* VARIABLES
  ******************************************************************************/

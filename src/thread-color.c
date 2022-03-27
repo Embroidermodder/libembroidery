@@ -6,6 +6,7 @@
  */
 
 #include "embroidery.h"
+#include <string.h>
 
 /* Based on the DraftSight color table */
 const unsigned char _dxfColorTable[][3] = {

@@ -1372,7 +1372,7 @@ char writeCsv(EmbPattern* pattern, FILE* file) {
 
     /* write header */
     for (i=0; csv_header[i][0]; i++) {
-        fprintf(file, csv_header[i]);
+        fprintf(file, "%s", csv_header[i]);
     }
 
     /* write variables */

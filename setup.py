@@ -10,7 +10,7 @@ setuptools.setup(
     description="Official Python binding to the libembroidery library.",
     author="The Embroidermodder Team",
     author_email="embroidermodder@gmail.com",
-    headers=["include/embroidery.h"],
+    headers=["src/embroidery.h"],
     ext_modules=[Extension("libembroidery", [
         "python/extension.c",
         "src/main.c",

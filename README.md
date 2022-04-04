@@ -1,5 +1,7 @@
 # Libembroidery v1.0-alpha Manual
 
+(Under construction, please wait for v1.0 release.)
+
 ## What is libembroidery?
 
 libembroidery is a low-level library for reading, writing, 

@@ -318,7 +318,8 @@ int decodeNewStitch(unsigned char value) {
  * system running the library and don't have to maintain many functions,
  * just two.
  */
-void emb_read_int(FILE* f, char *label, void *b, int mode)
+void
+embInt_read(FILE* f, char *label, void *b, int mode)
 {
     int endian = mode & 0x01;
     int length = mode - endian;
@@ -348,7 +349,9 @@ void emb_read_int(FILE* f, char *label, void *b, int mode)
     }
 }
 
-void emb_write_int(FILE* f, char *label, void *b, int mode) {
+void
+embInt_write(FILE* f, char *label, void *b, int mode)
+{
     int endian = mode & 0x01;
     int length = mode - endian;
     if (endian != ENDIAN_HOST) {

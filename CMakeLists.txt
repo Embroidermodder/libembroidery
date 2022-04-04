@@ -24,6 +24,17 @@ set(C_SOURCES
 	src/thread-color.c
 )
 
+add_compile_options(
+	-g
+	-O2
+	-fPIC
+	-ansi
+	-pedantic
+	-Wall
+	-Wextra
+	-Werror
+)
+
 add_library(embroidery_static STATIC ${C_SOURCES})
 
 target_include_directories(embroidery_static INTERFACE src)
@@ -43,18 +54,6 @@ target_compile_definitions(embroider PUBLIC LIBEMBROIDERY_CLI)
 
 target_include_directories(embroider INTERFACE src)
 endif()
-
-add_compile_options(
-	-Iinclude
-	-g
-	-O2
-	-fPIC
-	-ansi
-	-pedantic
-	-Wall
-	-Wextra
-	-Werror
-)
 
 if (WIN32)
 else (WIN32)

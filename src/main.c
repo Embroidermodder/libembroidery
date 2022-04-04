@@ -129,15 +129,10 @@ const double embConstantPi = 3.1415926535;
 /* GENERATORS
  *******************************************************************/
 
-int svg_generator(char *s, char **token_table)
-{
-    return 0;
-}
-
 void embVector_print(EmbVector v, char *label)
 {
-    fprintf(stdout, "%sX = %f\n", v.x);
-    fprintf(stdout, "%sY = %f\n", v.y);
+    printf("%sX = %f\n", label, v.x);
+    printf("%sY = %f\n", label, v.y);
 }
 
 void embArc_print(EmbArc arc)

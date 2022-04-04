@@ -969,6 +969,7 @@ EMB_PUBLIC void embPattern_center(EmbPattern* p);
 EMB_PUBLIC void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName);
 EMB_PUBLIC void embPattern_convertGeometry(EmbPattern* p);
 EMB_PUBLIC void embPattern_designDetails(EmbPattern *p);
+EMB_PUBLIC EmbPattern *embPattern_combine(EmbPattern *p1, EmbPattern *p2);
 EMB_PUBLIC void embPattern_end(EmbPattern* p);
 
 EMB_PUBLIC void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r);
@@ -1019,8 +1020,8 @@ char* emb_optOut(double num, char* str);
 void write_24bit(FILE* file, int);
 int check_header_present(FILE* file, int minimum_header_length);
 
-void emb_read_int(FILE* f, char *label, void *b, int mode);
-void emb_write_int(FILE* f, char *label, void *b, int mode);
+void embInt_read(FILE* f, char *label, void *b, int mode);
+void embInt_write(FILE* f, char *label, void *b, int mode);
 int emb_readline(FILE* file, char *line, int maxLength);
 
 bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize);

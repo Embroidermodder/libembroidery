@@ -30,13 +30,14 @@ Copyright (c) 2013-2022 The EmbroiderModder Team
 * [Build](#build)
   * [Debug](#debug)
 * [Usage](#usage)
-* [Coding Standards](#coding-standards)
-  * [Naming Conventions](#naming-conventions)
-  * [Braces](#braces)
-  * [Comments](#comments)
-* [Formats](#formats)
-* [Features](#features)
+* [Development](#development)
+  * [Contributing](#contributing)
+    * [Style](#style)
+    * [Standard](#standard)
+  * [To Do](#to-do)
+  * [Features](#features)
   * [Bindings](#bindings)
+* [Formats](#formats)
 * [On Embedded Systems](#on-embedded-systems)
   * [Compatible Boards](#compatible-boards)
   * [Arduino Considerations](#arduino-considerations)
@@ -55,10 +56,7 @@ Copyright (c) 2013-2022 The EmbroiderModder Team
 ### License
 
 Libembroidery is distributed under the permissive zlib licence, see the 
-LICENCE file. Libembroidery consists of roughly 16k source lines of code 
-in C: `embroidery.c`, `embroidery.h`, `thread-color.c` and `formats.c`. 
-There are 3 supporting files: the `LICENCE`, this `README` and a build 
-file (`CMakeLists.txt`). The licence covers these 7 files.
+LICENCE file. This applies to all the source code in this directory.
 
 ### The Embroidermodder Project
 
@@ -287,54 +285,167 @@ software is for the intended audience.
 This is less important than getting better machine support but given the high
 social impact I think it should be a priority.
 
+## Development
 
-## Coding Standards
+### Contributing
 
-A basic set of guidelines to use when submitting code.
+If you're interested in getting involved, here's some guidance
+for new developers. Currently The Embroidermodder Team is all
+hobbyists with an interest in making embroidery machines more
+open and user friendly. If you'd like to support us in some other way
+you can donate to our Open Collective page (click the Donate button) so
+we can spend more time working on the project.
 
-### Naming Conventions
+All code written for libembroidery should be ANSI C89 compliant
+if it is C. Using other languages should only be used where
+necessary to support bindings.
 
-* Name variables and functions intelligently to minimize the need for comments.
-* It should be immediately obvious what information it represents.
-* Short names such as x and y are fine when referring to coordinates.
-* Short names such as i and j are fine when doing loops.
-* Variable names should be "camelCase", starting with a lowercase word followed by uppercase word(s).
-* C++ Class Names should be "CamelCase", using all uppercase word(s).
-* C Functions that attempt to simulate namespacing, should be "nameSpace_camelCase".
-* All files and directories shall be lowercase and contain no spaces.
-* Tabs should not be used when indenting. Setup your IDE or text editor to use 4 spaces.
+#### Style
 
-### Braces
+Rather than maintain our own standard for style, please defer to
+the Python's PEP 7 ([12](#12)) for C style.
+If it passes the linters for that we consider it well styled
+for a pull request.
 
-For functions: please put each brace on a new line.
+As for other languages we have no house style other than whatever
+"major" styles exist, for example Java in
+Google style ([13](#13))
+would be acceptable. We'll elect specific standards if it becomes
+an issue.
 
-    void function_definition(int argument)
-    {
-    
-    }
+#### Standard
 
-For control statements: please put the first brace on the same line.
+The criteria for a good Pull Request from an outside developer is,
+from most to least important:
 
-    if (condition) {
-    
-    }
+1. No regressions on testing.
+2. Add a feature, bug fix or documentation that is already agreed on
+   through GitHub issues or some other way with a core developer.
+3. No GUI specific code should be in libembroidery, that's for Embroidermodder.
+4. Pedantic/ansi C unless there's a good reason to use another language.
+5. Meet the style above (i.e. [PEP 7, Code Lay-out](https://peps.python.org/pep-0007/#code-lay-out)).
+   We'll just fix the style if the code's good and it's not a lot of work.
+6. `embroider` should be in POSIX style as a command line program.
+7. No dependancies that aren't "standard", i.e. use only the C Standard Library.
 
-Do not use ternary operator (?:) in place of if/else.
+### Image Fitting
 
-Do not repeat a variable name that already occurs in an outer scope.
+A currently unsolved problem in development that warrants further research is
+the scenario where a user wants to feed embroider an image that can then be .
 
-### Comments
+### To Place
 
-When writing code, sometimes there are items that we know can be improved,
-incomplete or need special clarification. In these cases, use the types of
-comments shown below. They are pretty standard and are highlighted by many editors to
-make reviewing code easier. We also use shell scripts to parse the code to find
-all of these occurrences so someone wanting to go on a bug hunt will be able to
-easily see which areas of the code need more love.
+A _right-handed coordinate system_ is one where up is positive and right is
+positive. Left-handed is up is positive, left is positive. Screens often use
+down is positive, right is positive, including the OpenGL standard so when
+switching between graphics formats and stitch formats we need to use a vertical
+flip (`embPattern_flip`).
 
-libembroidery is written in C and adheres to C89 standards. This means
-that any C99 or C++ comments will show up as errors when compiling with
-gcc.
+`0x20` is the space symbol, so when padding either 0 or space is preferred and
+in the case of space use the literal ' '.
+
+### To Do
+
+We currently need help with:
+
+1. Thorough descriptions of each embroidery format.
+2. Finding resources for each of the branded thread libraries
+   (along with a full citation for documentation).
+3. Finding resources for each geometric algorithm used (along with a
+   full citation for documentation).
+4. Completing the full `--full-test-suite`  with no segfaults and at least
+   a clear error message (for example "not implemented yet").
+5. Identifying "best guesses" for filling in missing information when going
+   from, say `.csv` to a late `.pes` version. What should the default be when
+   the data doesn't clarify?
+6. Improving the written documentation.
+7. Funding, see the Sponsor button above. We can treat this as "work" and put
+   far more hours in with broad support in small donations from people who
+   want specific features.
+
+Beyond this the development targets are categories sorted into:
+
+1. [Basic Features](#basic-features)
+2. [Code quality and user friendliness](#code-quality-and-user-friendliness)
+3. [embroider CLI](#embroider-cli)
+4. [Documentation](#documentation)
+5. [GUI](#gui)
+6. [electronics development](#electronics-development)
+
+#### Basic features.
+
+1. Incorporate \texttt{\#if\ 0}ed parts of \texttt{libembroidery.c}.
+2. Interpret how to write formats that have a read mode from the source
+   code and vice versa.
+3. Document the specifics of the file formats here for embroidery machine
+   specific formats. Find websites and other sources that break down the
+   binary formats we currently don't understand.
+4. Find more and better documentation of the structure of the headers for
+   the formats we do understand.
+
+#### Code quality and user friendliness
+
+1. Document all structs, macros and functions (will contribute directly
+   on the web version).
+2. Incorporate experimental code, improve support for language bindings.
+3. Make stitch x, y into an EmbVector.
+
+#### embroider CLI
+
+1. Make -circle flag to add a circle to the current pattern.
+2. Make -rect flag to add a rectangle to the current pattern.
+3. Make -fill flag to set the current satin fill algorithm for the current
+   geometry. (for example ``-fill crosses -circle 11,13,10'' fills a circle
+   with center 11mm, 13mm with radius 10mm with crosses).
+4. Make -ellipse flag to add to ellipse to the current pattern.
+5. Make -bezier flag to add a bezier curve to the current pattern.
+
+##### Embroider pipeline
+
+Adjectives apply to every following noun so
+
+```
+embroider --satin 0.3,0.6 --thickness 2 --circle 10,20,5 \
+    --border 3 --disc 30,40,10 --arc 30,50,10,60 output.pes
+```
+
+Creates:
+
+1. a circle with properties: thickness 2, satin 0.3,0.6
+2. a disc with properties: 
+3. an arc with properties:
+
+in that order then writes them to the output file `output.pes`.
+
+#### Documentation
+
+1. Create csv data files for thread tables.
+2. Convert tex to markdown, make tex an output of `build.bash`.
+3. Run `sloccount` on `extern/` and `.` (and ) so we know the current scale
+   of the project, aim to get this number low. Report the total as part of
+   the documentation.
+4. Try to get as much of the source code that we maintain into C as possible
+   so new developers don't need to learn multiple languages to have an effect.
+   This bars the embedded parts of the code. 
+
+#### GUI
+
+1. Make MobileViewer also backend to `libembroidery` with a Java wrapper.
+2. Make iMobileViewer also backend to `libembroidery` with a Swift wrapper.
+3. Share some of the MobileViewer and iMobileViewer layout with the main
+   EM2. Perhaps combine those 3 into the Embroidermodder repository so there
+   are 4 repositories total.
+4. Convert layout data to JSON format and use cJSON for parsing.
+
+#### Electronics development
+
+1. Currently experimenting with Fritzing^(*8*), upload netlists to embroiderbot
+   when they can run simulations using the asm in `libembroidery`.
+2. Create a common assembly for data that is the same across chipsets
+   `libembrodiery_data_internal.s`.
+3. Make the defines part of `embroidery.h` all systems and the function list
+   "c code only". That way we can share some development between assembly and C
+   versions.
 
 ## Formats
 
@@ -1001,140 +1112,6 @@ or fitting to images/graphics.
   * ThreaDelight Polyester
   * Z102 Isacord Polyester
 
-# Development
-
-A _right-handed coordinate system_ is one where up is positive and right is
-positive. Left-handed is up is positive, left is positive. Screens often use
-down is positive, right is positive, including the OpenGL standard so when
-switching between graphics formats and stitch formats we need to use a vertical
-flip (`embPattern_flip`).
-
-`0x20` is the space symbol, so when padding either 0 or space is preferred and
-in the case of space use the literal ' '.
-
-### Design Philosophy and Coding Standards
-
-1. No GUI code will be present in `libembroidery`.
-2. The library will be written in pedantic ANSI C/C90, aiming for no compiler
-    warnings under GCC for compatibility with the most possible platforms.
-3. The command line program `embroider` targets 32-bit and 64 bit systems that
-   comply to POSIX or current Windows/MacOS standards. Practically, this means
-   we only call C99 standard library functions.
-4. Don't use any of the C Standard Library. All interfacing should be done by
-   linux system calls or their equivalents.
-5. Never use dynamic memory allocation (malloc/free) all memory that would need
-   those functions uses temporary files instead.
-6. Share heavy memory usage between functions, for example use embBuffer for
-   buffering headers rather than having a separate `char header[]` variables.
-
-### Image Fitting
-
-A currently unsolved problem in development that warrants further research is
-the scenario where a user wants to feed embroider an image that can then be .
-
-## To Do
-
-We currently need help with:
-
-1. Thorough descriptions of each embroidery format.
-2. Finding resources for each of the branded thread libraries
-   (along with a full citation for documentation).
-3. Finding resources for each geometric algorithm used (along with a
-   full citation for documentation).
-4. Completing the full `--full-test-suite`  with no segfaults and at least
-   a clear error message (for example "not implemented yet").
-5. Identifying "best guesses" for filling in missing information when going
-   from, say `.csv` to a late `.pes` version. What should the default be when
-   the data doesn't clarify?
-6. Improving the written documentation.
-7. Funding, see the Sponsor button above. We can treat this as "work" and put
-   far more hours in with broad support in small donations from people who
-   want specific features.
-
-Beyond this the development targets are categories sorted into:
-
-1. [Basic Features](#basic-features)
-2. [Code quality and user friendliness](#code-quality-and-user-friendliness)
-3. [embroider CLI](#embroider-cli)
-4. [Documentation](#documentation)
-5. [GUI](#gui)
-6. [electronics development](#electronics-development)
-
-#### Basic features.
-
-1. Incorporate \texttt{\#if\ 0}ed parts of \texttt{libembroidery.c}.
-2. Interpret how to write formats that have a read mode from the source
-   code and vice versa.
-3. Document the specifics of the file formats here for embroidery machine
-   specific formats. Find websites and other sources that break down the
-   binary formats we currently don't understand.
-4. Find more and better documentation of the structure of the headers for
-   the formats we do understand.
-
-#### Code quality and user friendliness
-
-1. Document all structs, macros and functions (will contribute directly
-   on the web version).
-2. Incorporate experimental code, improve support for language bindings.
-3. Make stitch x, y into an EmbVector.
-
-#### embroider CLI
-
-1. Make -circle flag to add a circle to the current pattern.
-2. Make -rect flag to add a rectangle to the current pattern.
-3. Make -fill flag to set the current satin fill algorithm for the current
-   geometry. (for example ``-fill crosses -circle 11,13,10'' fills a circle
-   with center 11mm, 13mm with radius 10mm with crosses).
-4. Make -ellipse flag to add to ellipse to the current pattern.
-5. Make -bezier flag to add a bezier curve to the current pattern.
-
-##### Embroider pipeline
-
-Adjectives apply to every following noun so
-
-```
-embroider --satin 0.3,0.6 --thickness 2 --circle 10,20,5 \
-    --border 3 --disc 30,40,10 --arc 30,50,10,60 output.pes
-```
-
-Creates:
-
-1. a circle with properties: thickness 2, satin 0.3,0.6
-2. a disc with properties: 
-3. an arc with properties:
-
-in that order then writes them to the output file `output.pes`.
-
-#### Documentation
-
-1. Create csv data files for thread tables.
-2. Convert tex to markdown, make tex an output of `build.bash`.
-3. Run `sloccount` on `extern/` and `.` (and ) so we know the current scale
-   of the project, aim to get this number low. Report the total as part of
-   the documentation.
-4. Try to get as much of the source code that we maintain into C as possible
-   so new developers don't need to learn multiple languages to have an effect.
-   This bars the embedded parts of the code. 
-
-#### GUI
-
-1. Make MobileViewer also backend to `libembroidery` with a Java wrapper.
-2. Make iMobileViewer also backend to `libembroidery` with a Swift wrapper.
-3. Share some of the MobileViewer and iMobileViewer layout with the main
-   EM2. Perhaps combine those 3 into the Embroidermodder repository so there
-   are 4 repositories total.
-4. Convert layout data to JSON format and use cJSON for parsing.
-
-#### Electronics development
-
-1. Currently experimenting with Fritzing^(*8*), upload netlists to embroiderbot
-   when they can run simulations using the asm in `libembroidery`.
-2. Create a common assembly for data that is the same across chipsets
-   `libembrodiery_data_internal.s`.
-3. Make the defines part of `embroidery.h` all systems and the function list
-   "c code only". That way we can share some development between assembly and C
-   versions.
-
 ## Bibliography
 
 1. <a name="1"></a> Rudolf _Technical Info_ [http://www.achatina.de/sewing/main/TECHNICL.HTM](http://www.achatina.de/sewing/main/TECHNICL.HTM)
@@ -1149,3 +1126,5 @@ in that order then writes them to the output file `output.pes`.
 9. <a name="9"></a> Sahoo, P., Wilkins, C., and Yeager, J., “Threshold selection using Renyi's entropy”, _Pattern Recognition_, vol. 30, no. 1, pp. 71–84, 1997. doi:10.1016/S0031-3203(96)00065-9.
 10. <a name="10"></a> [http://www.fmwconcepts.com/imagemagick/sahoothresh/index.php](http://www.fmwconcepts.com/imagemagick/sahoothresh/index.php) (Accessed 12 Dec 2021)
 11. <a name="11"></a> FINDME
+12. <a name="12"></a> G. van Rossum and B. Warsaw "Python PEP 7" [https://peps.python.org/pep-0007/](https://peps.python.org/pep-0007/) (Accessed April 2020)
+13. <a name="13"></a> Google et al. "Google Java Style Guide" [https://google.github.io/styleguide/javaguide.html](https://google.github.io/styleguide/javaguide.html) (Accessed April 2022)

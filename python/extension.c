@@ -160,734 +160,705 @@ static PyObject *method_pattern_write(PyObject *self, PyObject *args);
 static PyObject *method_pattern_readAuto(PyObject *self, PyObject *args);
 static PyObject *method_pattern_writeAuto(PyObject *self, PyObject *args);
 
+PyDoc_STRVAR(
+    lyndenmayer_system_doc,
+    "lyndenmayer_system(l_system, n=4)\n"
+    "--\n"
+    "\n"
+    "Generate a fractal given the L-system description.\n"
+);
+
+static const PyMethodDef lyndenmayer_system_method = {
+    "lyndenmayer_system",
+    (PyCFunction) method_lindenmayer_system,
+    METH_VARARGS,
+    lyndenmayer_system_doc
+};
+
+PyDoc_STRVAR(
+    hilbert_curve_doc,
+    "hilbert_curve(n=4)\n"
+    "--\n"
+    "\n"
+    "Generate a hilbert curve fractal for n iterations.\n"
+);
+
+static const PyMethodDef hilbert_curve_method = {
+    "hilbert_curve",
+    (PyCFunction) method_hilbert_curve,
+    METH_VARARGS,
+    hilbert_curve_doc
+};
+
+PyDoc_STRVAR(
+    identify_format_doc,
+    "identify_format(fname)\n"
+    "--\n"
+    "\n"
+    "Return the identifier of a file given the filename.\n"
+);
+
+static const PyMethodDef identify_format_method = {
+    "identify_format",
+    (PyCFunction) method_emb_identify_format,
+    METH_VARARGS,
+    identify_format_doc
+};
+
+PyDoc_STRVAR(
+    embLine_make_doc,
+    "embLine_make(x1, y1, x2, y2)\n"
+    "--\n"
+    "\n"
+    "Build a libembroidery line.\n"
+);
+
 static PyMethodDef LibembroideryMethods[] = {
+    lyndenmayer_system_method,
+    hilbert_curve_method,
+    identify_format_method,
     {
-        "lyndenmayer_system",
-        method_lindenmayer_system,
+        "embLine_make",
+        (PyCFunction) method_embLine_make,
         METH_VARARGS,
-        "Generate a fractal given the L-system description."
+        embLine_make_doc
     },
     {
-        "hilbert_curve",
-        method_hilbert_curve,
-        METH_VARARGS | METH_KEYWORDS,
-        "Generate a hilbert curve fractal for n iterations."
-    },
-    {
-        "identify_format",
-        method_emb_identify_format,
-        METH_VARARGS,
-        "Return the identifier of a file given the filename."
-    },
-  /*
-method_embLine_make
-    {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embLine_normalVector",
+        method_embLine_normalVector,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "Find the normal to the supplied libembroidery line."
     },
-method_embLine_normalVector
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embLine_intersectionPoint",
+        method_embLine_intersectionPoint,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "Find the intersection point of two lines."
     },
-method_embLine_intersectionPoint
-
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embPathObject_create",
+        method_embPathObject_create,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embPathObject_create
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embPathObject_free",
+        method_embPathObject_free,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embPathObject_free
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embThread_findNearestColor",
+        method_embThread_findNearestColor,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embThread_findNearestColor
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embThread_findNearestColor_fromThread",
+        method_embThread_findNearestColor_fromThread,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embThread_findNearestColor_fromThread
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embThread_getRandom",
+        method_embThread_getRandom,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embThread_getRandom
-
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embVector_normalize",
+        method_embVector_normalize,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_normalize
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embVector_multiply",
+        method_embVector_multiply,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_multiply
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embVector_add",
+        method_embVector_add,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_add
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embVector_average,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_average
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embVector_subtract,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_subtract
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embVector_dot,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_dot
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embVector_cross,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_cross
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embVector_transpose_product,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_transpose_product
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embVector_length,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_length
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embVector_relativeX,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_relativeX
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embVector_relativeY,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_relativeY
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embVector_angle",
+        method_embVector_angle,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_angle
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embVector_distance,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_distance
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embVector_unit,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embVector_unit
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_read_ppm_image,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_read_ppm_image
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_write_ppm_image,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_write_ppm_image
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_image_diff,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_image_diff
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_render_line,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_render_line
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embImage_render,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embImage_render
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embImage_simulate,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embImage_simulate
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_render_postscript,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_render_postscript
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_testMain,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_testMain
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_convert,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_convert
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_hus_compress,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_hus_compress
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_hus_decompress,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_hus_decompress
-
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embArcObject_make,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embArcObject_make
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embArcObject_create,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embArcObject_create
-
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_isArcClockwise,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_isArcClockwise
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_getArcCenter,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_getArcCenter
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_getArcDataFromBulge,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_getArcDataFromBulge
-
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "getCircleCircleIntersections",
+        method_getCircleCircleIntersections,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_getCircleCircleIntersections
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "getCircleTangentPoints",
+        method_getCircleTangentPoints,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_getCircleTangentPoints
-
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embColor_make",
+        method_embColor_make,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embColor_make
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embColor_create",
+        method_embColor_create,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embColor_create
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embColor_fromHexStr",
+        method_embColor_fromHexStr,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embColor_fromHexStr
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embColor_read",
+        method_embColor_read,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embColor_read
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embColor_write",
+        method_embColor_write,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embColor_write
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embColor_distance",
+        method_embColor_distance,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embColor_distance
-
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embImage_create",
+        method_embImage_create,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embImage_create
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embImage_free",
+        method_embImage_free,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embImage_free
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embEllipse_diameterX",
+        method_embEllipse_diameterX,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embEllipse_diameterX
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embEllipse_diameterY",
+        method_embEllipse_diameterY,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embEllipse_diameterY
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embEllipse_width",
+        method_embEllipse_width,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embEllipse_width
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embEllipse_height",
+        method_embEllipse_height,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embEllipse_height
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embEllipseObject_make",
+        method_embEllipseObject_make,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embEllipseObject_make
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "threadColor",
+        method_threadColor,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_threadColor
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "threadColorNum",
+        method_threadColorNum,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_threadColorNum
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "threadColorName",
+        method_threadColorName,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_threadColorName
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embTime_initNow,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embTime_initNow
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embTime_time,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embTime_time
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embPointObject_make,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embPointObject_make
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embPointObject_create,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embPointObject_create
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embSettings_init,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embSettings_init
     {
-        "emb_identify_format",
-        method_emb_identify_format,
+        "embSettings_home",
+        method_embSettings_home,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embSettings_home
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embSettings_setHome,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embSettings_setHome
     {
         "emb_identify_format",
-        method_emb_identify_format,
+        method_embPolygonObject_create,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
-method_embPolygonObject_create
     {
         "emb_identify_format",
-method_embPolygonObject_free
+        method_embPolygonObject_free,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embPolylineObject_create
+        method_embPolylineObject_create,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embPolylineObject_free
+        method_embPolylineObject_free,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embSatinOutline_generateSatinOutline
+        method_embSatinOutline_generateSatinOutline,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embSatinOutline_renderStitches
+        method_embSatinOutline_renderStitches,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embRect_x
+        method_embRect_x,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embRect_y,
+        method_embRect_y,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embRect_width,
+        method_embRect_width,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embRect_height
+        method_embRect_height,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embRect_setX
+        method_embRect_setX,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embRect_setY
+        method_embRect_setY,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embRect_setWidth
+        method_embRect_setWidth,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embRect_setHeight
+        method_embRect_setHeight,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embRect_setCoords
+        method_embRect_setCoords,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embRect_setRect
+        method_embRect_setRect,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_embRectObject_make
+        method_embRectObject_make,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_pattern_create
+        method_pattern_create,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_pattern_hideStitchesOverLength
+        method_pattern_hideStitchesOverLength,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_pattern_fixColorCount
+        method_pattern_fixColorCount,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_pattern_addThread
+        method_pattern_addThread,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_pattern_addStitchAbs
+        method_pattern_addStitchAbs,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_pattern_addStitchRel
+        method_pattern_addStitchRel,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_pattern_changeColor
+        method_pattern_changeColor,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_pattern_free
+        method_pattern_free,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_pattern_scale
+        method_pattern_scale,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_pattern_calcBoundingBox
+        method_pattern_calcBoundingBox,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "emb_identify_format",
-method_pattern_flipHorizontal
+        method_pattern_flipHorizontal,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
-        "emb_identify_format",
-method_pattern_flipVertical
+        "pattern_flipVertical",
+        method_pattern_flipVertical,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "pattern flip vertical."
     },
     {
-        "emb_identify_format",
-method_pattern_flip
+        "pattern_flip",
+        method_pattern_flip,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "pattern flip."
     },
     {
-        "emb_identify_format",
-method_pattern_combineJumpStitches
+        "pattern_combineJumpStitches",
+        method_pattern_combineJumpStitches,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "pattern combineJump Stitches."
     },
     {
-        "emb_identify_format",
-method_pattern_correctForMaxStitchLength
+        "pattern_correctForMaxStitchLength",
+        method_pattern_correctForMaxStitchLength,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "pattern correct for max stitch length."
     },
     {
-        "emb_identify_format",
-method_pattern_center
+        "pattern_center",
+        method_pattern_center,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
-        "emb_identify_format",
-method_pattern_loadExternalColorFile
+        "pattern_loadExternalColorFile",
+        method_pattern_loadExternalColorFile,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
-        "emb_identify_format",
-method_pattern_convertGeometry,
+        "pattern_convertGeometry",
+        method_pattern_convertGeometry,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
         "pattern_details",
         method_pattern_designDetails,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "."
     },
     {
-        "emb_identify_format",
+        "pattern_end",
         method_pattern_end,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "Set the end symbol on the stitchlist, stitches after this will be ignored."
     },
     {
-        "emb_identify_format",
-method_pattern_addCircleObjectAbs,
+        "pattern_addCircleObjectAbs",
+        method_pattern_addCircleObjectAbs,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "Add a circle to the pattern."
     },
     {
-        "emb_identify_format",
-method_pattern_addEllipseObjectAbs,
+        "pattern_addEllipseObjectAbs",
+        method_pattern_addEllipseObjectAbs,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "Add an ellipse to the pattern."
     },
     {
-        "emb_identify_format",
-method_pattern_addLineObjectAbs,
+        "pattern_addLineObjectAbs",
+        method_pattern_addLineObjectAbs,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "Add a line to the pattern."
     },
     {
-        "emb_identify_format",
-method_pattern_addPathObjectAbs,
+        "pattern_addPathObjectAbs",
+        method_pattern_addPathObjectAbs,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "Add a path to the pattern."
     },
     {
-        "emb_identify_format",
-method_pattern_addPointObjectAbs,
+        "pattern_addPointObjectAbs",
+        method_pattern_addPointObjectAbs,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "Add a point to the pattern."
     },
     {
-        "emb_identify_format",
-method_pattern_addPolygonObjectAbs,
+        "pattern_addPolygonObjectAbs",
+        method_pattern_addPolygonObjectAbs,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "Add a polygon to the pattern."
     },
     {
-        "emb_identify_format",
+        "pattern_addPolylineObjectAbs",
         method_pattern_addPolylineObjectAbs,
         METH_VARARGS,
-        "Return the identifier of a file given the filename."
+        "Add a polyline to the pattern."
     },
-*/
     {
         "pattern_add_rect_abs",
         method_pattern_add_rect,
@@ -931,17 +902,26 @@ method_pattern_addPolygonObjectAbs,
         "Write a file in based on the format identifier."
     },
     {
-        "pattern_read_auto",
+        NULL,
+        NULL,
+        0,
+        NULL
+    }
+};
+
+static PyMethodDef pattern_methods[] = {
+    {
+        "read_auto",
         method_pattern_readAuto,
         METH_VARARGS,
-        "Detect the file type based on the passed filename, then read in "
+        "Detect the file type based on the passed filename,\nthen read in "
         "that format."
     },
     {
-        "pattern_write_auto",
+        "write_auto",
         method_pattern_writeAuto,
         METH_VARARGS,
-        "Detect the file type based on the passed filename, then write in "
+        "Detect the file type based on the passed filename,\nthen write in "
         "that format."
     },
     {
@@ -960,61 +940,39 @@ static struct PyModuleDef libembroiderymodule = {
     LibembroideryMethods
 };
 
-/*
-static PyTypeObject libembroidery_patternType = {
-    PyObject_HEAD_INIT(NULL
-    0, // tp_name
-    0, // tp_basicsize
-    0, // tp_itemsize
-    0, // tp_dealloc
-    0, // tp_vectorcall_offset
-    0, // (tp_getattr)
-    0, // (tp_setattr)
-    0, // tp_as_async
-    0, // tp_repr
-    0, // tp_as_number
-    0, // tp_as_sequence
-    0, // tp_as_mapping
-    0, // tp_hash
-    0, // tp_call
-    0, // tp_str
-    0, // tp_getattro
-    0, // tp_setattro
-    0, // tp_as_buffer
-    0, // tp_flags
-    0, // tp_doc
-    0, // tp_traverse
-    0, // tp_clear
-    0, // tp_richcompare
-    0, // tp_weaklistoffset
-    0, // tp_iter
-    0, // tp_iternext
-    0, // tp_methods
-    0, // tp_members
-    0, // tp_getset
-    0, // tp_base
-    0, // tp_dict
-    0, // tp_descr_get
-    0, // tp_descr_set
-    0, // tp_dictoffset
-    0, // tp_init
-    0, // tp_alloc
-    0, // tp_new
-    0, // tp_free
-    0, // tp_is_gc
-    0, // <tp_bases>
-    0, // <tp_mro>
-    0, // [tp_cache]
-    0, // [tp_subclasses]
-    0, // [tp_weaklist]
-    0, // (tp_del)
-    0, // tp_finalize
-    0, // tp_vectorcall			
-}
-*/
+typedef struct {
+    PyObject_HEAD
+    EmbPattern data;
+} EmbPattern_wrapped;
 
-PyMODINIT_FUNC PyInit_libembroidery(void) {
-    return PyModule_Create(&libembroiderymodule);
+static PyTypeObject libembroidery_pattern_type = {
+    PyVarObject_HEAD_INIT(&PyType_Type, 0)
+    .tp_name = "libembroidery.Pattern",
+    .tp_doc = "EmbPattern wrapper",
+    .tp_basicsize = sizeof(EmbPattern_wrapped),
+    .tp_itemsize = 0,
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_new = PyType_GenericNew,
+    .tp_methods = pattern_methods,
+};
+
+PyMODINIT_FUNC
+PyInit_libembroidery(void)
+{
+    PyObject *module;
+    
+    module = PyModule_Create(&libembroiderymodule);
+    if (module == NULL)
+        return NULL;
+
+    Py_INCREF(&libembroidery_pattern_type);
+    if (PyModule_AddObject(module, "Pattern", (PyObject *) &libembroidery_pattern_type) < 0) {
+        Py_DECREF(&libembroidery_pattern_type);
+        Py_DECREF(module);
+        return NULL;
+    }
+
+    return module;
 }
 
 static PyObject *
@@ -1035,7 +993,7 @@ method_hilbert_curve(PyObject *self, PyObject *args, PyObject *kwargs)
     if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|i", kwlist, &n)) {
         return NULL;
     }
-    printf("hilbert_curve(n = %d)\n", n);
+    printf("hilbert_curve(n = %ld)\n", n);
     EmbPattern *pattern = embPattern_create();
     hilbert_curve(pattern, n);
     embPattern_free(pattern);

@@ -168,13 +168,6 @@ PyDoc_STRVAR(
     "Generate a fractal given the L-system description.\n"
 );
 
-static const PyMethodDef lyndenmayer_system_method = {
-    "lyndenmayer_system",
-    (PyCFunction) method_lindenmayer_system,
-    METH_VARARGS,
-    lyndenmayer_system_doc
-};
-
 PyDoc_STRVAR(
     hilbert_curve_doc,
     "hilbert_curve(n=4)\n"
@@ -183,13 +176,6 @@ PyDoc_STRVAR(
     "Generate a hilbert curve fractal for n iterations.\n"
 );
 
-static const PyMethodDef hilbert_curve_method = {
-    "hilbert_curve",
-    (PyCFunction) method_hilbert_curve,
-    METH_VARARGS,
-    hilbert_curve_doc
-};
-
 PyDoc_STRVAR(
     identify_format_doc,
     "identify_format(fname)\n"
@@ -197,13 +183,6 @@ PyDoc_STRVAR(
     "\n"
     "Return the identifier of a file given the filename.\n"
 );
-
-static const PyMethodDef identify_format_method = {
-    "identify_format",
-    (PyCFunction) method_emb_identify_format,
-    METH_VARARGS,
-    identify_format_doc
-};
 
 PyDoc_STRVAR(
     embLine_make_doc,
@@ -214,9 +193,24 @@ PyDoc_STRVAR(
 );
 
 static PyMethodDef LibembroideryMethods[] = {
-    lyndenmayer_system_method,
-    hilbert_curve_method,
-    identify_format_method,
+    {
+        "lyndenmayer_system",
+        (PyCFunction) method_lindenmayer_system,
+        METH_VARARGS,
+        lyndenmayer_system_doc
+    },
+    {
+        "hilbert_curve",
+        (PyCFunction) method_hilbert_curve,
+        METH_VARARGS,
+        hilbert_curve_doc
+    },
+    {
+        "identify_format",
+        (PyCFunction) method_emb_identify_format,
+        METH_VARARGS,
+        identify_format_doc
+    },
     {
         "embLine_make",
         (PyCFunction) method_embLine_make,
@@ -554,31 +548,31 @@ static PyMethodDef LibembroideryMethods[] = {
         "."
     },
     {
-        "emb_identify_format",
+        "embTime_initNow",
         method_embTime_initNow,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embTime_time",
         method_embTime_time,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embPointObject_make",
         method_embPointObject_make,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embPointObject_create",
         method_embPointObject_create,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embSettings_init",
         method_embSettings_init,
         METH_VARARGS,
         "."
@@ -590,316 +584,112 @@ static PyMethodDef LibembroideryMethods[] = {
         "."
     },
     {
-        "emb_identify_format",
+        "embSettings_setHome",
         method_embSettings_setHome,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embPolygonObject_create",
         method_embPolygonObject_create,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embPolygonObject_free",
         method_embPolygonObject_free,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embPolylineObject_create",
         method_embPolylineObject_create,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embPolylineObject_free",
         method_embPolylineObject_free,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embSatinOutline_generateSatinOutline",
         method_embSatinOutline_generateSatinOutline,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embSatinOutline_renderStitches",
         method_embSatinOutline_renderStitches,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embRect_x",
         method_embRect_x,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embRect_y",
         method_embRect_y,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embRect_width",
         method_embRect_width,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embRect_height",
         method_embRect_height,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embRect_setX",
         method_embRect_setX,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embRect_setY",
         method_embRect_setY,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embRect_set_width",
         method_embRect_setWidth,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embRect_set_height",
         method_embRect_setHeight,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embRect_setCoords",
         method_embRect_setCoords,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embRect_set",
         method_embRect_setRect,
         METH_VARARGS,
         "."
     },
     {
-        "emb_identify_format",
+        "embRect_make",
         method_embRectObject_make,
         METH_VARARGS,
         "."
-    },
-    {
-        "emb_identify_format",
-        method_pattern_create,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "emb_identify_format",
-        method_pattern_hideStitchesOverLength,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "emb_identify_format",
-        method_pattern_fixColorCount,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "emb_identify_format",
-        method_pattern_addThread,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "emb_identify_format",
-        method_pattern_addStitchAbs,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "emb_identify_format",
-        method_pattern_addStitchRel,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "emb_identify_format",
-        method_pattern_changeColor,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "emb_identify_format",
-        method_pattern_free,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "emb_identify_format",
-        method_pattern_scale,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "emb_identify_format",
-        method_pattern_calcBoundingBox,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "emb_identify_format",
-        method_pattern_flipHorizontal,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "pattern_flipVertical",
-        method_pattern_flipVertical,
-        METH_VARARGS,
-        "pattern flip vertical."
-    },
-    {
-        "pattern_flip",
-        method_pattern_flip,
-        METH_VARARGS,
-        "pattern flip."
-    },
-    {
-        "pattern_combineJumpStitches",
-        method_pattern_combineJumpStitches,
-        METH_VARARGS,
-        "pattern combineJump Stitches."
-    },
-    {
-        "pattern_correctForMaxStitchLength",
-        method_pattern_correctForMaxStitchLength,
-        METH_VARARGS,
-        "pattern correct for max stitch length."
-    },
-    {
-        "pattern_center",
-        method_pattern_center,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "pattern_loadExternalColorFile",
-        method_pattern_loadExternalColorFile,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "pattern_convertGeometry",
-        method_pattern_convertGeometry,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "pattern_details",
-        method_pattern_designDetails,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "pattern_end",
-        method_pattern_end,
-        METH_VARARGS,
-        "Set the end symbol on the stitchlist, stitches after this will be ignored."
-    },
-    {
-        "pattern_addCircleObjectAbs",
-        method_pattern_addCircleObjectAbs,
-        METH_VARARGS,
-        "Add a circle to the pattern."
-    },
-    {
-        "pattern_addEllipseObjectAbs",
-        method_pattern_addEllipseObjectAbs,
-        METH_VARARGS,
-        "Add an ellipse to the pattern."
-    },
-    {
-        "pattern_addLineObjectAbs",
-        method_pattern_addLineObjectAbs,
-        METH_VARARGS,
-        "Add a line to the pattern."
-    },
-    {
-        "pattern_addPathObjectAbs",
-        method_pattern_addPathObjectAbs,
-        METH_VARARGS,
-        "Add a path to the pattern."
-    },
-    {
-        "pattern_addPointObjectAbs",
-        method_pattern_addPointObjectAbs,
-        METH_VARARGS,
-        "Add a point to the pattern."
-    },
-    {
-        "pattern_addPolygonObjectAbs",
-        method_pattern_addPolygonObjectAbs,
-        METH_VARARGS,
-        "Add a polygon to the pattern."
-    },
-    {
-        "pattern_addPolylineObjectAbs",
-        method_pattern_addPolylineObjectAbs,
-        METH_VARARGS,
-        "Add a polyline to the pattern."
-    },
-    {
-        "pattern_add_rect_abs",
-        method_pattern_add_rect,
-        METH_VARARGS,
-        "pattern_add_rect_abs."
-    },
-    {
-        "pattern_copy_polyline_to_stitchlist",
-        method_pattern_copyStitchListToPolylines,
-        METH_VARARGS,
-        "pattern_copy_polyline_to_stitchlist"
-    },
-    {
-        "pattern_copy_polyline_to_stitchlist",
-        method_pattern_copyPolylinesToStitchList,
-        METH_VARARGS,
-        "pattern_copy_polyline_to_stitchlist"
-    },
-    {
-        "pattern_stitchlist_to_polylines",
-        method_pattern_moveStitchListToPolylines,
-        METH_VARARGS,
-        "pattern_stitchlist_to_polylines"
-    },
-    {
-        "pattern_polylines_to_stitchlist",
-        method_pattern_movePolylinesToStitchList,
-        METH_VARARGS,
-        "pattern_polylines_to_stitchlist"
-    },
-    {
-        "pattern_read",
-        method_pattern_read,
-        METH_VARARGS,
-        "Read a file in based on the format identifier."
-    },
-    {
-        "pattern_write",
-        method_pattern_write,
-        METH_VARARGS,
-        "Write a file in based on the format identifier."
     },
     {
         NULL,
@@ -910,6 +700,210 @@ static PyMethodDef LibembroideryMethods[] = {
 };
 
 static PyMethodDef pattern_methods[] = {
+    {
+        "create",
+        method_pattern_create,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "hide_stitches_over_length",
+        method_pattern_hideStitchesOverLength,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "fix_color_count",
+        method_pattern_fixColorCount,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "add_thread",
+        method_pattern_addThread,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "add_stitch_abs",
+        method_pattern_addStitchAbs,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "add_stitch_rel",
+        method_pattern_addStitchRel,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "change_color",
+        method_pattern_changeColor,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "free",
+        method_pattern_free,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "scale",
+        method_pattern_scale,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "calc_bounding_box",
+        method_pattern_calcBoundingBox,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "flip_horizontal",
+        method_pattern_flipHorizontal,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "flip_vertical",
+        method_pattern_flipVertical,
+        METH_VARARGS,
+        "pattern flip vertical."
+    },
+    {
+        "flip",
+        method_pattern_flip,
+        METH_VARARGS,
+        "Flip the pattern."
+    },
+    {
+        "combineJumpStitches",
+        method_pattern_combineJumpStitches,
+        METH_VARARGS,
+        "pattern combineJump Stitches."
+    },
+    {
+        "correctForMaxStitchLength",
+        method_pattern_correctForMaxStitchLength,
+        METH_VARARGS,
+        "pattern correct for max stitch length."
+    },
+    {
+        "center",
+        method_pattern_center,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "loadExternalColorFile",
+        method_pattern_loadExternalColorFile,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "convertGeometry",
+        method_pattern_convertGeometry,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "details",
+        method_pattern_designDetails,
+        METH_VARARGS,
+        "."
+    },
+    {
+        "end",
+        method_pattern_end,
+        METH_VARARGS,
+        "Set the end symbol on the stitchlist, stitches after this will be ignored."
+    },
+    {
+        "add_circle_abs",
+        method_pattern_addCircleObjectAbs,
+        METH_VARARGS,
+        "Add a circle to the pattern."
+    },
+    {
+        "add_ellipse_abs",
+        method_pattern_addEllipseObjectAbs,
+        METH_VARARGS,
+        "Add an ellipse to the pattern."
+    },
+    {
+        "addLineObjectAbs",
+        method_pattern_addLineObjectAbs,
+        METH_VARARGS,
+        "Add a line to the pattern."
+    },
+    {
+        "addPathObjectAbs",
+        method_pattern_addPathObjectAbs,
+        METH_VARARGS,
+        "Add a path to the pattern."
+    },
+    {
+        "add_point_abs",
+        method_pattern_addPointObjectAbs,
+        METH_VARARGS,
+        "Add a point to the pattern."
+    },
+    {
+        "add_polygon_abs",
+        method_pattern_addPolygonObjectAbs,
+        METH_VARARGS,
+        "Add a polygon to the pattern."
+    },
+    {
+        "add_polyline_abs",
+        method_pattern_addPolylineObjectAbs,
+        METH_VARARGS,
+        "Add a polyline to the pattern."
+    },
+    {
+        "add_rect_abs",
+        method_pattern_add_rect,
+        METH_VARARGS,
+        "add_rect_abs."
+    },
+    {
+        "copy_polyline_to_stitchlist",
+        method_pattern_copyStitchListToPolylines,
+        METH_VARARGS,
+        "copy_polyline_to_stitchlist"
+    },
+    {
+        "copy_polyline_to_stitchlist",
+        method_pattern_copyPolylinesToStitchList,
+        METH_VARARGS,
+        "copy_polyline_to_stitchlist"
+    },
+    {
+        "stitchlist_to_polylines",
+        method_pattern_moveStitchListToPolylines,
+        METH_VARARGS,
+        "stitchlist_to_polylines"
+    },
+    {
+        "polylines_to_stitchlist",
+        method_pattern_movePolylinesToStitchList,
+        METH_VARARGS,
+        "polylines_to_stitchlist"
+    },
+    {
+        "read",
+        method_pattern_read,
+        METH_VARARGS,
+        "Read a file in based on the format identifier."
+    },
+    {
+        "write",
+        method_pattern_write,
+        METH_VARARGS,
+        "Write a file in based on the format identifier."
+    },
     {
         "read_auto",
         method_pattern_readAuto,

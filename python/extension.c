@@ -461,25 +461,25 @@ static PyMethodDef LibembroideryMethods[] = {
         "embColor_create",
         method_embColor_create,
         METH_VARARGS,
-        "."
+        "embColor_create"
     },
     {
         "embColor_fromHexStr",
         method_embColor_fromHexStr,
         METH_VARARGS,
-        "."
+        "embColor_fromHexStr"
     },
     {
         "embColor_read",
         method_embColor_read,
         METH_VARARGS,
-        "."
+        "embColor_read"
     },
     {
         "embColor_write",
         method_embColor_write,
         METH_VARARGS,
-        "."
+        "embColor_write"
     },
     {
         "embColor_distance",

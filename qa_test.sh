@@ -5,7 +5,7 @@ rm -fr build
 mkdir build
 cd build
 cmake ..
-make
+make 2> build_error.log
 ./embroider --test
 cd ..
 }

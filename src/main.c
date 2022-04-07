@@ -13,6 +13,10 @@
 
 #include "embroidery.h"
 
+unsigned short fread_uint16(FILE *file);
+unsigned int fread_uint32(FILE *file);
+void fread_int(FILE *file, void *, int);
+
 /* same order as flag_list, to use in jump table */
 #define FLAG_TO                       0
 #define FLAG_TO_SHORT                 1

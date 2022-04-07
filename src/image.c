@@ -28,7 +28,9 @@
 #include "embroidery.h"
 
 /* for the PES embedded */
-void writeImage(FILE* file, unsigned char image[][48]) {
+void
+writeImage(FILE* file, unsigned char image[][48])
+{
     int i, j;
 
     if (!file) {

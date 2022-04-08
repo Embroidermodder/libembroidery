@@ -67,8 +67,6 @@ static PyObject *method_getCircleTangentPoints(PyObject *self, PyObject *args);
 static PyObject *method_embColor_make(PyObject *self, PyObject *args);
 static PyObject *method_embColor_create(PyObject *self, PyObject *args);
 static PyObject *method_embColor_fromHexStr(PyObject *self, PyObject *args);
-static PyObject *method_embColor_read(PyObject *self, PyObject *args);
-static PyObject *method_embColor_write(PyObject *self, PyObject *args);
 static PyObject *method_embColor_distance(PyObject *self, PyObject *args);
 
 static PyObject *method_embImage_create(PyObject *self, PyObject *args);
@@ -103,21 +101,6 @@ static PyObject *method_embPolylineObject_free(PyObject *self, PyObject *args);
 
 static PyObject *method_embSatinOutline_generateSatinOutline(PyObject *self, PyObject *args);
 static PyObject *method_embSatinOutline_renderStitches(PyObject *self, PyObject *args);
-
-static PyObject *method_embRect_x(PyObject *self, PyObject *args);
-static PyObject *method_embRect_y(PyObject *self, PyObject *args);
-static PyObject *method_embRect_width(PyObject *self, PyObject *args);
-static PyObject *method_embRect_height(PyObject *self, PyObject *args);
-
-static PyObject *method_embRect_setX(PyObject *self, PyObject *args);
-static PyObject *method_embRect_setY(PyObject *self, PyObject *args);
-static PyObject *method_embRect_setWidth(PyObject *self, PyObject *args);
-static PyObject *method_embRect_setHeight(PyObject *self, PyObject *args);
-
-static PyObject *method_embRect_setCoords(PyObject *self, PyObject *args);
-static PyObject *method_embRect_setRect(PyObject *self, PyObject *args);
-
-static PyObject *method_embRectObject_make(PyObject *self, PyObject *args);
 
 static PyObject *method_pattern_create(PyObject *self, PyObject *args);
 static PyObject *method_pattern_hideStitchesOverLength(PyObject *self, PyObject *args);
@@ -470,18 +453,6 @@ static PyMethodDef LibembroideryMethods[] = {
         "embColor_fromHexStr"
     },
     {
-        "embColor_read",
-        method_embColor_read,
-        METH_VARARGS,
-        "embColor_read"
-    },
-    {
-        "embColor_write",
-        method_embColor_write,
-        METH_VARARGS,
-        "embColor_write"
-    },
-    {
         "embColor_distance",
         method_embColor_distance,
         METH_VARARGS,
@@ -622,72 +593,6 @@ static PyMethodDef LibembroideryMethods[] = {
     {
         "embSatinOutline_renderStitches",
         method_embSatinOutline_renderStitches,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "embRect_x",
-        method_embRect_x,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "embRect_y",
-        method_embRect_y,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "embRect_width",
-        method_embRect_width,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "embRect_height",
-        method_embRect_height,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "embRect_setX",
-        method_embRect_setX,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "embRect_setY",
-        method_embRect_setY,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "embRect_set_width",
-        method_embRect_setWidth,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "embRect_set_height",
-        method_embRect_setHeight,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "embRect_setCoords",
-        method_embRect_setCoords,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "embRect_set",
-        method_embRect_setRect,
-        METH_VARARGS,
-        "."
-    },
-    {
-        "embRect_make",
-        method_embRectObject_make,
         METH_VARARGS,
         "."
     },
@@ -1303,20 +1208,6 @@ method_embColor_fromHexStr(PyObject *self, PyObject *args)
 }
 
 static PyObject *
-method_embColor_read(PyObject *self, PyObject *args)
-{
-    puts("unfinished");
-    return PyLong_FromLong(1);
-}
-
-static PyObject *
-method_embColor_write(PyObject *self, PyObject *args)
-{
-    puts("unfinished");
-    return PyLong_FromLong(1);
-}
-
-static PyObject *
 method_embColor_distance(PyObject *self, PyObject *args)
 {
     puts("unfinished");
@@ -1479,83 +1370,6 @@ method_embSatinOutline_generateSatinOutline(PyObject *self, PyObject *args)
 
 static PyObject *
 method_embSatinOutline_renderStitches(PyObject *self, PyObject *args)
-{
-    puts("unfinished");
-    return PyLong_FromLong(1);
-}
-
-static PyObject *
-method_embRect_x(PyObject *self, PyObject *args)
-{
-    puts("unfinished");
-    return PyLong_FromLong(1);
-}
-
-static PyObject *
-method_embRect_y(PyObject *self, PyObject *args)
-{
-    puts("unfinished");
-    return PyLong_FromLong(1);
-}
-
-static PyObject *
-method_embRect_width(PyObject *self, PyObject *args)
-{
-    puts("unfinished");
-    return PyLong_FromLong(1);
-}
-
-static PyObject *
-method_embRect_height(PyObject *self, PyObject *args)
-{
-    puts("unfinished");
-    return PyLong_FromLong(1);
-}
-
-static PyObject *
-method_embRect_setX(PyObject *self, PyObject *args)
-{
-    puts("unfinished");
-    return PyLong_FromLong(1);
-}
-
-static PyObject *
-method_embRect_setY(PyObject *self, PyObject *args)
-{
-    puts("unfinished");
-    return PyLong_FromLong(1);
-}
-
-static PyObject *
-method_embRect_setWidth(PyObject *self, PyObject *args)
-{
-    puts("unfinished");
-    return PyLong_FromLong(1);
-}
-
-static PyObject *
-method_embRect_setHeight(PyObject *self, PyObject *args)
-{
-    puts("unfinished");
-    return PyLong_FromLong(1);
-}
-
-static PyObject *
-method_embRect_setCoords(PyObject *self, PyObject *args)
-{
-    puts("unfinished");
-    return PyLong_FromLong(1);
-}
-
-static PyObject *
-method_embRect_setRect(PyObject *self, PyObject *args)
-{
-    puts("unfinished");
-    return PyLong_FromLong(1);
-}
-
-static PyObject *
-method_embRectObject_make(PyObject *self, PyObject *args)
 {
     puts("unfinished");
     return PyLong_FromLong(1);

@@ -11,6 +11,7 @@ option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
 set(C_SOURCES
 	src/main.c
 	src/embroidery.h
+	src/internal.h
 	src/array.c
 	src/testing.c
 	src/formats.c

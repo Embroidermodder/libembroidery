@@ -15,21 +15,7 @@
 #include <ctype.h>
 
 #include "embroidery.h"
-
-void readPESHeaderV5(FILE* file, EmbPattern* pattern);
-void readPESHeaderV6(FILE* file, EmbPattern* pattern);
-void readPESHeaderV7(FILE* file, EmbPattern* pattern);
-void readPESHeaderV8(FILE* file, EmbPattern* pattern);
-void readPESHeaderV9(FILE* file, EmbPattern* pattern);
-void readPESHeaderV10(FILE* file, EmbPattern* pattern);
-
-void readDescriptions(FILE* file, EmbPattern* pattern);
-void readHoopName(FILE* file, EmbPattern* pattern);
-void readImageString(FILE* file, EmbPattern* pattern);
-void readProgrammableFills(FILE* file, EmbPattern* pattern);
-void readMotifPatterns(FILE* file, EmbPattern* pattern);
-void readFeatherPatterns(FILE* file, EmbPattern* pattern);
-void readThreads(FILE* file, EmbPattern* pattern);
+#include "internal.h"
 
 static char read100(EmbPattern *pattern, FILE* file);
 static char write100(EmbPattern *pattern, FILE* file);
@@ -1403,8 +1389,8 @@ writeCsv(EmbPattern* pattern, FILE* file) {
     fprintf(file, "\">\",\"EXTENTS_TOP:\",\"%f\"\n",    boundingRect.top);
     fprintf(file, "\">\",\"EXTENTS_RIGHT:\",\"%f\"\n",  boundingRect.right);
     fprintf(file, "\">\",\"EXTENTS_BOTTOM:\",\"%f\"\n", boundingRect.bottom);
-    fprintf(file, "\">\",\"EXTENTS_WIDTH:\",\"%f\"\n",  embRect_width(boundingRect));
-    fprintf(file, "\">\",\"EXTENTS_HEIGHT:\",\"%f\"\n", embRect_height(boundingRect));
+    fprintf(file, "\">\",\"EXTENTS_WIDTH:\",\"%f\"\n",  boundingRect.right - boundingRect.left);
+    fprintf(file, "\">\",\"EXTENTS_HEIGHT:\",\"%f\"\n", boundingRect.bottom - boundingRect.top);
     fprintf(file,"\n");
 
     /* write colors */
@@ -3244,6 +3230,7 @@ writeJef(EmbPattern* pattern, FILE* file)
     int colorlistSize, minColors, designWidth, designHeight, i;
     EmbRect boundingRect;
     EmbTime time;
+    double width, height;
     int data;
     EmbVector pos;
 
@@ -3265,9 +3252,10 @@ writeJef(EmbPattern* pattern, FILE* file)
     embInt_write(file, ".", &data, EMB_INT32_LITTLE);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
-
-    designWidth = (int)(embRect_width(boundingRect) * 10.0);
-    designHeight = (int)(embRect_width(boundingRect) * 10.0);
+    width = boundingRect.right - boundingRect.left;
+    height = boundingRect.bottom - boundingRect.top;
+    designWidth = (int)(width * 10.0);
+    designHeight = (int)(height * 10.0);
 
     binaryWriteInt(file, jefGetHoopSize(designWidth, designHeight));
 
@@ -3773,7 +3761,10 @@ readOfm(EmbPattern* pattern, FILE* fileCompound)
     }
 
     bcfFile = (bcf_file*)malloc(sizeof(bcf_file));
-    if (!bcfFile) { printf("ERROR: format-ofm.c readOfm(), unable to allocate memory for bcfFile\n"); return 0; }
+    if (!bcfFile) {
+        printf("ERROR: format-ofm.c readOfm(), unable to allocate memory for bcfFile\n");
+        return 0;
+    }
     bcfFile_read(fileCompound, bcfFile);
     file = GetFile(bcfFile, fileCompound, "EdsIV Object");
     bcf_file_free(bcfFile);
@@ -4414,8 +4405,8 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
 
     bounds = embPattern_calcBoundingBox(pattern);
 
-    height = (int)round(embRect_height(bounds));
-    width = (int)round(embRect_width(bounds));
+    height = (int)round(bounds.bottom - bounds.top);
+    width = (int)round(bounds.right - bounds.left);
     /* write 2 byte x size */
     binaryWriteShort(file, (short)width);
     /* write 2 byte y size */
@@ -4937,7 +4928,7 @@ pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
 void
 pesWriteEmbOneSection(EmbPattern* pattern, FILE* file) {
     /* TODO: pointer safety */
-    float x;
+    float x, width, height;
     int hoopHeight = 1800, hoopWidth = 1300;
     EmbRect bounds;
     binaryWriteShort(file, 0x07); /* string length */
@@ -4955,16 +4946,18 @@ pesWriteEmbOneSection(EmbPattern* pattern, FILE* file) {
     embInt_write(file, ".", &x, EMB_INT32_LITTLE);
     x = 1.0;
     embInt_write(file, ".", &x, EMB_INT32_LITTLE);
-    x = (float)((embRect_width(bounds) - hoopWidth) / 2);
+    width = bounds.right - bounds.left;
+    height = bounds.bottom - bounds.top;
+    x = (float)((width - hoopWidth) / 2);
     embInt_write(file, ".", &x, EMB_INT32_LITTLE);
-    x = (float)((embRect_height(bounds) + hoopHeight) / 2);
+    x = (float)((height + hoopHeight) / 2);
     embInt_write(file, ".", &x, EMB_INT32_LITTLE);
 
     binaryWriteShort(file, 1);
     binaryWriteShort(file, 0); /* Translate X */
     binaryWriteShort(file, 0); /* Translate Y */
-    binaryWriteShort(file, (short)embRect_width(bounds));
-    binaryWriteShort(file, (short)embRect_height(bounds));
+    binaryWriteShort(file, (short)width);
+    binaryWriteShort(file, (short)height);
 
     fpad(file, 0, 8);
     /*WriteSubObjects(br, pes, SubBlocks); */
@@ -6642,7 +6635,9 @@ readSvg(EmbPattern* pattern, FILE* file) {
         if (pattern->rects) {
             for (i = 0; i < pattern->rects->count; i++) {
                 EmbRect r = pattern->rects->rect[i].rect;
-                printf("rect %f %f %f %f\n", embRect_x(r), embRect_y(r), embRect_width(r), embRect_height(r));
+                double width = r.right - r.left;
+                double height = r.bottom - r.top;
+                printf("rect %f %f %f %f\n", r.left, r.top, width, height);
             }
         }
     }
@@ -6688,14 +6683,15 @@ writeSvg(EmbPattern* pattern, FILE *file) {
     border.right *= 10.0;
     border.top *= 10.0;
     border.bottom *= 10.0;
-    border.left -= 0.1*embRect_width(border);
-    border.right += 0.1*embRect_width(border);
-    border.top -= 0.1*embRect_height(border);
-    border.bottom += 0.1*embRect_height(border);
+    border.left -= 0.1*(border.right - border.left);
+    border.right += 0.1*(border.right - border.left);
+    border.top -= 0.1*(border.bottom - border.top);
+    border.bottom += 0.1*(border.bottom - border.top);
     /* Sanity check here? */
     fprintf(file, "viewBox=\"%f %f %f %f\" ",
             border.left, border.top,
-            embRect_width(border), embRect_height(border));
+            border.right - border.left,
+            border.bottom - border.top);
 
     fprintf(file, "xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\">");
     fprintf(file, "\n<g transform=\"scale(10)\">");
@@ -6824,7 +6820,9 @@ writeSvg(EmbPattern* pattern, FILE *file) {
              */
             fprintf(file, "\n<rect stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" />",
                 color.r, color.g, color.b,
-                embRect_x(rect), embRect_y(rect), embRect_width(rect), embRect_height(rect));
+                rect.left, rect.top,
+                rect.right - rect.left,
+                rect.bottom - rect.top);
         }
     }
 
@@ -8299,6 +8297,7 @@ writeXxx(EmbPattern* pattern, FILE* file) {
     int i;
     EmbRect rect;
     int endOfStitches;
+    double width, height;
 
     embPattern_correctForMaxStitchLength(pattern, 124, 127);
 
@@ -8309,17 +8308,19 @@ writeXxx(EmbPattern* pattern, FILE* file) {
     binaryWriteShort(file, 0x0000);
 
     rect = embPattern_calcBoundingBox(pattern);
-    binaryWriteShort(file, (short)(embRect_width(rect) * 10.0));
-    binaryWriteShort(file, (short)(embRect_height(rect) * 10.0));
+    width = rect.right - rect.left;
+    height = rect.bottom - rect.top;
+    binaryWriteShort(file, (short)(width * 10.0));
+    binaryWriteShort(file, (short)(height * 10.0));
 
     /*TODO: xEnd from start point x=0 */
-    binaryWriteShort(file, (short)(embRect_width(rect) / 2.0 * 10));
+    binaryWriteShort(file, (short)(width / 2.0 * 10));
     /*TODO: yEnd from start point y=0 */
-    binaryWriteShort(file, (short)(embRect_height(rect) / 2.0 * 10));
+    binaryWriteShort(file, (short)(height / 2.0 * 10));
     /*TODO: left from start x = 0     */
-    binaryWriteShort(file, (short)(embRect_width(rect)/2.0 * 10));
+    binaryWriteShort(file, (short)(width / 2.0 * 10));
     /*TODO: bottom from start y = 0   */
-    binaryWriteShort(file, (short)(embRect_height(rect)/2.0 * 10));
+    binaryWriteShort(file, (short)(height / 2.0 * 10));
     fpad(file, 0, 0xC5);
     binaryWriteInt(file, 0x0000); /* place holder for end of stitches */
     xxxEncodeDesign(file, pattern);

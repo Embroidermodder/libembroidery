@@ -11,15 +11,10 @@
 #include <math.h>
 
 #include "embroidery.h"
+#include "internal.h"
 
-#define RED_TERM_COLOR      "\x1B[0;31m"
-#define GREEN_TERM_COLOR    "\x1B[0;32m"
-#define YELLOW_TERM_COLOR   "\x1B[1;33m"
-#define RESET_TERM_COLOR       "\033[0m"
-
-int create_test_file_3(const char *);
-
-void report(int result, char *label)
+void
+report(int result, char *label)
 {
     printf("%s Test...%*c", label, (int)(20-strlen(label)), ' ');
     if (result) {
@@ -30,7 +25,8 @@ void report(int result, char *label)
     }
 }
 
-void testMain(int level)
+void
+testMain(int level)
 {
     EmbPattern *pattern = embPattern_create();
     EmbImage *image = embImage_create(100, 100);
@@ -101,7 +97,8 @@ void testMain(int level)
     }
 }
 
-void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
+void
+testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
 {
     emb_error = 0;
     t0->x = 0.0;
@@ -126,14 +123,17 @@ void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
     }
 }
 
-float embVector_distance(EmbVector p, EmbVector q)
+float
+embVector_distance(EmbVector p, EmbVector q)
 {
     EmbVector delta;
     embVector_subtract(p, q, &delta);
     return embVector_length(delta);
 }
 
-int testEmbCircle(void) {
+int
+testEmbCircle(void)
+{
     double error;
     double epsilon = 1e-3;
     EmbVector p0, p1;
@@ -174,13 +174,15 @@ int testEmbCircle_2(void) {
     return 0;
 }
 
-void printArcResults(double bulge, EmbArc arc,
+void
+printArcResults(double bulge, EmbArc arc,
                      double centerX,   double centerY,
                      double radius,    double diameter,
                      double chord,
                      double chordMidX, double chordMidY,
                      double sagitta,   double apothem,
-                     double incAngle,  char   clockwise) {
+                     double incAngle,  char   clockwise)
+{
     fprintf(stdout, "bulge     = %f\n"
                     "startX    = %f\n"
                     "startY    = %f\n"
@@ -220,7 +222,9 @@ void printArcResults(double bulge, EmbArc arc,
                     clockwise);
 }
 
-int testGeomArc(void) {
+int
+testGeomArc(void)
+{
     EmbArc arc;
     EmbVector center, chordMid;
     double bulge, radius, diameter, chord, sagitta, apothem, incAngle;
@@ -275,7 +279,9 @@ int testGeomArc(void) {
     return 0;
 }
 
-int testThreadColor(void) {
+int
+testThreadColor(void)
+{
     unsigned int tColor = 0xFFD25F00;
     int          tBrand = Sulky_Rayon;
     int          tNum   = threadColorNum(tColor, tBrand);
@@ -451,7 +457,9 @@ int testThreadColor(void) {
  * Add command "--full-test-suite" for this full matrix.
  */
 
-int full_test_matrix(char *fname) {
+int
+full_test_matrix(char *fname)
+{
     int i, j, success, ntests;
     FILE *f;
     f = fopen(fname, "wb");

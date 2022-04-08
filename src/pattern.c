@@ -12,6 +12,7 @@
 #include <math.h>
 
 #include "embroidery.h"
+#include "internal.h"
 
 /*! Returns a pointer to an EmbPattern. It is created on the heap.
  * The caller is responsible for freeing the allocated memory with
@@ -758,8 +759,8 @@ embPattern_center(EmbPattern* p)
     }
     boundingRect = embPattern_calcBoundingBox(p);
 
-    moveLeft = (int)(boundingRect.left - (embRect_width(boundingRect) / 2.0));
-    moveTop = (int)(boundingRect.top - (embRect_height(boundingRect) / 2.0));
+    moveLeft = (int)(boundingRect.left - (boundingRect.right- boundingRect.left) / 2.0);
+    moveTop = (int)(boundingRect.top - (boundingRect.bottom - boundingRect.top) / 2.0);
 
     for (i = 0; i < p->stitchList->count; i++) {
         p->stitchList->stitch[i].x -= moveLeft;

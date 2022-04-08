@@ -14,6 +14,7 @@
 #include <math.h>
 
 #include "embroidery.h"
+#include "internal.h"
 
 /* ENCODING
  *******************************************************************

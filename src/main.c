@@ -12,9 +12,7 @@
 #include <time.h>
 
 #include "embroidery.h"
-
-unsigned short fread_uint16(FILE *file);
-void safe_free(void *data);
+#include "internal.h"
 
 /* same order as flag_list, to use in jump table */
 #define FLAG_TO                       0
@@ -160,9 +158,6 @@ int check_header_present(FILE* file, int minimum_header_length)
     }
     return length;
 }
-
-
-unsigned int entriesInDifatSector(bcf_file_difat* fat);
 
 unsigned int
 sectorSize(bcf_file* bcfFile)
@@ -520,58 +515,6 @@ bcfFileHeader_read(FILE* file)
     embInt_read(file, "first difat Sector", &(header.firstDifatSectorLocation), EMB_INT32_LITTLE);
     embInt_read(file, "difat sectors", &(header.numberOfDifatSectors), EMB_INT32_LITTLE);
     return header;
-}
-
-double
-embRect_x(EmbRect rect)
-{
-    return rect.left;
-}
-
-double
-embRect_y(EmbRect rect)
-{
-    return rect.top;
-}
-
-double
-embRect_width(EmbRect rect)
-{
-    return rect.right - rect.left;
-}
-
-double
-embRect_height(EmbRect rect)
-{
-    return rect.bottom - rect.top;
-}
-
-/* Sets the left edge of the rect to x. The right edge is not modified. */
-void embRect_setX(EmbRect* rect, double x) {
-    rect->left = x;
-}
-
-/* Sets the top edge of the rect to y. The bottom edge is not modified. */
-void
-embRect_setY(EmbRect* rect, double y)
-{
-    rect->top = y;
-}
-
-/* Sets the width of the rect to w. The right edge is modified. 
-    The left edge is not modified. */
-void
-embRect_setWidth(EmbRect* rect, double w)
-{
-    rect->right = rect->left + w;
-}
-
-/* Sets the height of the rect to h. The bottom edge is modified. 
-    The top edge is not modified. */
-void
-embRect_setHeight(EmbRect* rect, double h)
-{
-    rect->bottom = rect->top + h;
 }
 
 void

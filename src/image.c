@@ -26,6 +26,7 @@
 #include <math.h>
 
 #include "embroidery.h"
+#include "internal.h"
 
 /* for the PES embedded */
 void

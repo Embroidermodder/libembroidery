@@ -14,7 +14,6 @@
 #include "embroidery.h"
 
 unsigned short fread_uint16(FILE *file);
-unsigned int fread_uint32(FILE *file);
 void safe_free(void *data);
 
 /* same order as flag_list, to use in jump table */
@@ -513,13 +512,13 @@ bcfFileHeader_read(FILE* file)
     embInt_read(file, "reserved2", &(header.reserved2), EMB_INT32_LITTLE);
     embInt_read(file, "numberOfDirectorySectors", &(header.numberOfDirectorySectors), EMB_INT32_LITTLE);
     embInt_read(file, "numberOfFATSectors", &(header.numberOfFATSectors), EMB_INT32_LITTLE);
-    header.firstDirectorySectorLocation = (unsigned int)fread_uint32(file);
-    header.transactionSignatureNumber = (unsigned int)fread_uint32(file);
-    header.miniStreamCutoffSize = (unsigned int)fread_uint32(file);
-    header.firstMiniFATSectorLocation = (unsigned int)fread_uint32(file);
-    header.numberOfMiniFatSectors = (unsigned int)fread_uint32(file);
-    header.firstDifatSectorLocation = (unsigned int)fread_uint32(file);
-    header.numberOfDifatSectors = (unsigned int)fread_uint32(file);
+    embInt_read(file, "first dir sector loaction", &(header.firstDirectorySectorLocation), EMB_INT32_LITTLE);
+    embInt_read(file, "transaction signature number", &(header.transactionSignatureNumber), EMB_INT32_LITTLE);
+    embInt_read(file, "mini stream cutoff sector", &(header.miniStreamCutoffSize), EMB_INT32_LITTLE);
+    embInt_read(file, "first mini fat sector", &(header.firstMiniFATSectorLocation), EMB_INT32_LITTLE);
+    embInt_read(file, "mini fat sectors", &(header.numberOfMiniFatSectors), EMB_INT32_LITTLE);
+    embInt_read(file, "first difat Sector", &(header.firstDifatSectorLocation), EMB_INT32_LITTLE);
+    embInt_read(file, "difat sectors", &(header.numberOfDifatSectors), EMB_INT32_LITTLE);
     return header;
 }
 

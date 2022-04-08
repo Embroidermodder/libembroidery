@@ -15,7 +15,7 @@
 
 unsigned short fread_uint16(FILE *file);
 unsigned int fread_uint32(FILE *file);
-void fread_int(FILE *file, void *, int);
+void safe_free(void *data);
 
 /* same order as flag_list, to use in jump table */
 #define FLAG_TO                       0
@@ -63,6 +63,7 @@ void fread_int(FILE *file, void *, int);
 
 EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
 int emb_verbose = 0;
+int emb_error = 0;
 
 const char *flag_list[] = {
     "--to",
@@ -114,10 +115,8 @@ const char *welcome_message = "EMBROIDER\n"
     "    https://github.com/Embroidermodder/libembroidery\n"
     "    https://embroidermodder.org\n";
 
-int emb_error = 0;
-
 /*! Constant representing the number of Double Indirect FAT entries in a single header */
-const unsigned int NumberOfDifatEntriesInHeader = 109;
+const unsigned int difatEntriesInHeader = 109;
 const unsigned int sizeOfFatEntry = sizeof(unsigned int);
 const unsigned int sizeOfDifatEntry = 4;
 const unsigned int sizeOfChainingEntryAtEndOfDifatSector = 4;
@@ -128,7 +127,6 @@ const int littleEndianByteOrderMark = 0xFFFE;
 */
 
 const double embConstantPi = 3.1415926535;
-
 
 /* GENERATORS
  *******************************************************************/
@@ -165,7 +163,11 @@ int check_header_present(FILE* file, int minimum_header_length)
 }
 
 
-unsigned int sectorSize(bcf_file* bcfFile) {
+unsigned int entriesInDifatSector(bcf_file_difat* fat);
+
+unsigned int
+sectorSize(bcf_file* bcfFile)
+{
     /* version 3 uses 512 byte */
     if (bcfFile->header.majorVersion == 3) {
         return 512;
@@ -173,34 +175,39 @@ unsigned int sectorSize(bcf_file* bcfFile) {
     return 4096;
 }
 
-int haveExtraDIFATSectors(bcf_file* file) {
-    return (int)(numberOfEntriesInDifatSector(file->difat) > 0);
+int
+haveExtraDIFATSectors(bcf_file* file)
+{
+    return (int)(entriesInDifatSector(file->difat) > 0);
 }
 
-int seekToOffset(FILE* file, const unsigned int offset) {
+int
+seekToSector(bcf_file* bcfFile, FILE* file, const unsigned int sector)
+{
+    unsigned int offset = sector * sectorSize(bcfFile) + sectorSize(bcfFile);
     return fseek(file, offset, SEEK_SET);
 }
 
-int seekToSector(bcf_file* bcfFile, FILE* file, const unsigned int sector) {
-    unsigned int offset = sector * sectorSize(bcfFile) + sectorSize(bcfFile);
-    return seekToOffset(file, offset);
-}
-
-void parseDIFATSectors(FILE* file, bcf_file* bcfFile) {
-    unsigned int numberOfDifatEntriesStillToRead = bcfFile->header.numberOfFATSectors - NumberOfDifatEntriesInHeader;
+void
+parseDIFATSectors(FILE* file, bcf_file* bcfFile)
+{
+    unsigned int difatEntriesToRead = bcfFile->header.numberOfFATSectors - difatEntriesInHeader;
     unsigned int difatSectorNumber = bcfFile->header.firstDifatSectorLocation;
-    while ((difatSectorNumber != CompoundFileSector_EndOfChain) && (numberOfDifatEntriesStillToRead > 0)) {
+    while ((difatSectorNumber != CompoundFileSector_EndOfChain) && (difatEntriesToRead > 0)) {
         seekToSector(bcfFile, file, difatSectorNumber);
-        difatSectorNumber = readFullSector(file, bcfFile->difat, &numberOfDifatEntriesStillToRead);
+        difatSectorNumber = readFullSector(file, bcfFile->difat, &difatEntriesToRead);
     }
 }
 
-int bcfFile_read(FILE* file, bcf_file* bcfFile) {
+int
+bcfFile_read(FILE* file, bcf_file* bcfFile)
+{
     unsigned int i, numberOfDirectoryEntriesPerSector;
     unsigned int directorySectorToReadFrom;
 
     bcfFile->header = bcfFileHeader_read(file);
-    if (!bcfFileHeader_isValid(bcfFile->header)) {
+    if (memcmp(bcfFile->header.signature, "\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1", 8) != 0) {
+        printf("bad header signature\n");
         printf("Failed to parse header\n");
         return 0;
     }
@@ -229,7 +236,9 @@ int bcfFile_read(FILE* file, bcf_file* bcfFile) {
     return 1;
 }
 
-FILE* GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind) {
+FILE*
+GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind)
+{
     int filesize, sectorSize, currentSector;
     int sizeToWrite, currentSize, totalSectors, i, j;
     FILE* fileOut = tmpfile();
@@ -261,15 +270,17 @@ FILE* GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind) {
     return fileOut;
 }
 
-void bcf_file_free(bcf_file* bcfFile)
+void
+bcf_file_free(bcf_file* bcfFile)
 {
-    bcf_file_difat_free(bcfFile->difat);
-    bcf_file_fat_free(&bcfFile->fat);
+    safe_free(bcfFile->difat);
+    safe_free(bcfFile->fat);
     bcf_directory_free(&bcfFile->directory);
     free(bcfFile);
 }
 
-bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize)
+bcf_file_difat*
+bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize)
 {
     unsigned int i;
     bcf_file_difat* difat = 0;
@@ -282,17 +293,17 @@ bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsi
     }
 
     difat->sectorSize = sectorSize;
-    if (fatSectors > NumberOfDifatEntriesInHeader) {
-        fatSectors = NumberOfDifatEntriesInHeader;
+    if (fatSectors > difatEntriesInHeader) {
+        fatSectors = difatEntriesInHeader;
     }
 
     for (i = 0; i < fatSectors; ++i) {
-        sectorRef = fread_uint32(file);
+        embInt_read(file, "sectorRef", &sectorRef, EMB_INT32_LITTLE);
         difat->fatSectorEntries[i] = sectorRef;
     }
     difat->fatSectorCount = fatSectors;
-    for (i = fatSectors; i < NumberOfDifatEntriesInHeader; ++i) {
-        sectorRef = fread_uint32(file);
+    for (i = fatSectors; i < difatEntriesInHeader; ++i) {
+        embInt_read(file, "sectorRef", &sectorRef, EMB_INT32_LITTLE);
         if (sectorRef != CompoundFileSector_FreeSector) {
             printf("ERROR: compound-file-difat.c bcf_difat_create(), Unexpected sector value %x at DIFAT[%d]\n", sectorRef, i);
         }
@@ -300,57 +311,61 @@ bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsi
     return difat;
 }
 
-unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat) {
+unsigned int
+entriesInDifatSector(bcf_file_difat* fat)
+{
     return (fat->sectorSize - sizeOfChainingEntryAtEndOfDifatSector) / sizeOfDifatEntry;
 }
 
-unsigned int readFullSector(FILE* file, bcf_file_difat* bcfFile, 
-                            unsigned int* numberOfDifatEntriesStillToRead) {
+unsigned int
+readFullSector(FILE* file, bcf_file_difat* bcfFile, 
+                            unsigned int* difatEntriesToRead)
+{
     unsigned int i;
     unsigned int sectorRef;
     unsigned int nextDifatSectorInChain;
     unsigned int entriesToReadInThisSector = 0;
-    if (*numberOfDifatEntriesStillToRead > numberOfEntriesInDifatSector(bcfFile)) {
-        entriesToReadInThisSector = numberOfEntriesInDifatSector(bcfFile);
-        *numberOfDifatEntriesStillToRead -= entriesToReadInThisSector;
-    } else {
-        entriesToReadInThisSector = *numberOfDifatEntriesStillToRead;
-        *numberOfDifatEntriesStillToRead = 0;
+    if (*difatEntriesToRead > entriesInDifatSector(bcfFile)) {
+        entriesToReadInThisSector = entriesInDifatSector(bcfFile);
+        *difatEntriesToRead -= entriesToReadInThisSector;
+    }
+    else {
+        entriesToReadInThisSector = *difatEntriesToRead;
+        *difatEntriesToRead = 0;
     }
 
     for (i = 0; i < entriesToReadInThisSector; ++i) {
-        sectorRef = fread_uint32(file);
+        embInt_read(file, "sectorRef", &sectorRef, EMB_INT32_LITTLE);
         bcfFile->fatSectorEntries[bcfFile->fatSectorCount] = sectorRef;
         bcfFile->fatSectorCount++;
     }
-    for (i = entriesToReadInThisSector; i < numberOfEntriesInDifatSector(bcfFile); ++i) {
-        sectorRef = fread_uint32(file);
+    for (i = entriesToReadInThisSector; i < entriesInDifatSector(bcfFile); ++i) {
+        embInt_read(file, "sectorRef", &sectorRef, EMB_INT32_LITTLE);
         if (sectorRef != CompoundFileSector_FreeSector) {
             printf("ERROR: compound-file-difat.c readFullSector(), ");
             printf("Unexpected sector value %x at DIFAT[%d]]\n", sectorRef, i);
         }
     }
-    nextDifatSectorInChain = fread_uint32(file);
+    embInt_read(file, "nextDifatSectorInChain", &nextDifatSectorInChain, EMB_INT32_LITTLE);
     return nextDifatSectorInChain;
 }
 
-void bcf_file_difat_free(bcf_file_difat* difat) {
-    free(difat);
-    difat = 0;
-}
-
-void parseDirectoryEntryName(FILE* file, bcf_directory_entry* dir) {
+void
+parseDirectoryEntryName(FILE* file, bcf_directory_entry* dir)
+{
     int i;
     for (i = 0; i < 32; ++i) {
         unsigned short unicodechar;
-        fread_int(file, &unicodechar, EMB_INT16_LITTLE);
+        embInt_read(file, "unicode char", &unicodechar, EMB_INT16_LITTLE);
         if (unicodechar != 0x0000) {
             dir->directoryEntryName[i] = (char)unicodechar;
         }
     }
 }
 
-bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries) {
+bcf_directory*
+CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries)
+{
     bcf_directory* dir = (bcf_directory*)malloc(sizeof(bcf_directory));
     if (!dir) {
         printf("ERROR: compound-file-directory.c CompoundFileDirectory(), cannot allocate memory for dir\n");
@@ -360,13 +375,14 @@ bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntr
     return dir;
 }
 
-EmbTime parseTime(FILE* file)
+EmbTime
+parseTime(FILE* file)
 {
     EmbTime returnVal;
     unsigned int ft_low, ft_high;
     /*embTime_time(&returnVal); TODO: use embTime_time() rather than time(). */
-    fread_int(file, &ft_low, EMB_INT32_LITTLE);
-    fread_int(file, &ft_high, EMB_INT32_LITTLE);
+    embInt_read(file, "ft_low", &ft_low, EMB_INT32_LITTLE);
+    embInt_read(file, "ft_high", &ft_high, EMB_INT32_LITTLE);
     /* TODO: translate to actual date time */
     returnVal.day = 1;
     returnVal.hour = 2;
@@ -377,7 +393,8 @@ EmbTime parseTime(FILE* file)
     return returnVal;
 }
 
-bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file)
+bcf_directory_entry*
+CompoundFileDirectoryEntry(FILE* file)
 {
     const int guidSize = 16;
     bcf_directory_entry* dir = malloc(sizeof(bcf_directory_entry));
@@ -396,27 +413,33 @@ bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file)
         return 0;
     }
     dir->colorFlag = (unsigned char)fgetc(file);
-    fread_int(file, &(dir->leftSiblingId), EMB_INT32_LITTLE);
-    fread_int(file, &(dir->rightSiblingId), EMB_INT32_LITTLE);
-    fread_int(file, &(dir->childId), EMB_INT32_LITTLE);
+    embInt_read(file, "left sibling id", &(dir->leftSiblingId), EMB_INT32_LITTLE);
+    embInt_read(file, "right sibling id", &(dir->rightSiblingId), EMB_INT32_LITTLE);
+    embInt_read(file, "child id", &(dir->childId), EMB_INT32_LITTLE);
     fread(dir->CLSID, 1, guidSize, file);
-    fread_int(file, &(dir->stateBits), EMB_INT32_LITTLE);
+    embInt_read(file, "state bits", &(dir->stateBits), EMB_INT32_LITTLE);
     dir->creationTime = parseTime(file);
     dir->modifiedTime = parseTime(file);
-    fread_int(file, &(dir->startingSectorLocation), EMB_INT32_LITTLE);
-    dir->streamSize = fread_uint32(file); /* This should really be __int64 or long long, but for our uses we should never run into an issue */
-    dir->streamSizeHigh = fread_uint32(file); /* top portion of int64 */
+    embInt_read(file, "starting sector location", &(dir->startingSectorLocation), EMB_INT32_LITTLE);
+    /* StreamSize should really be __int64 or long long,
+     * but for our uses we should never run into an issue */
+    embInt_read(file, "dir->streamSize", &(dir->streamSize), EMB_INT32_LITTLE);
+    /* top portion of int64 */
+    embInt_read(file, "dir->streamSizeHigh", &(dir->streamSizeHigh), EMB_INT32_LITTLE);
     return dir;
 }
 
-void readNextSector(FILE* file, bcf_directory* dir) {
+void
+readNextSector(FILE* file, bcf_directory* dir)
+{
     unsigned int i;
     for (i = 0; i < dir->maxNumberOfDirectoryEntries; ++i) {
         bcf_directory_entry* dirEntry = CompoundFileDirectoryEntry(file);
         bcf_directory_entry* pointer = dir->dirEntries;
         if (!pointer) {
             dir->dirEntries = dirEntry;
-        } else {
+        }
+        else {
             while (pointer) {
                 if (!pointer->next) {
                     pointer->next = dirEntry;
@@ -428,7 +451,9 @@ void readNextSector(FILE* file, bcf_directory* dir) {
     }
 }
 
-void bcf_directory_free(bcf_directory** dir) {
+void
+bcf_directory_free(bcf_directory** dir)
+{
     bcf_directory *dirptr;
     bcf_directory_entry* pointer;
     if (dir == NULL){
@@ -442,13 +467,12 @@ void bcf_directory_free(bcf_directory** dir) {
         pointer = pointer->next;
         free(entryToFree);
     }
-    if (*dir) {
-        free(*dir);
-        *dir = NULL;
-    }
+    safe_free(*dir);
 }
 
-bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize) {
+bcf_file_fat*
+bcfFileFat_create(const unsigned int sectorSize)
+{
     bcf_file_fat* fat = (bcf_file_fat*)malloc(sizeof(bcf_file_fat));
     if (!fat) {
         printf("ERROR: compound-file-fat.c bcfFileFat_create(), ");
@@ -460,23 +484,23 @@ bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize) {
     return fat;
 }
 
-void loadFatFromSector(bcf_file_fat* fat, FILE* file) {
+void
+loadFatFromSector(bcf_file_fat* fat, FILE* file)
+{
     unsigned int i;
-    unsigned int currentNumberOfFatEntries = fat->fatEntryCount;
-    unsigned int newSize = currentNumberOfFatEntries + fat->numberOfEntriesInFatSector;
-    for (i = currentNumberOfFatEntries; i < newSize; ++i) {
-        unsigned int fatEntry = fread_uint32(file);
+    unsigned int current_fat_entries = fat->fatEntryCount;
+    unsigned int newSize = current_fat_entries + fat->numberOfEntriesInFatSector;
+    for (i = current_fat_entries; i < newSize; ++i) {
+        int fatEntry;
+        embInt_read(file, "fatEntry", &fatEntry, EMB_INT32_LITTLE);
         fat->fatEntries[i] = fatEntry;
     }
     fat->fatEntryCount = newSize;
 }
 
-void bcf_file_fat_free(bcf_file_fat** fat) {
-    free(*fat);
-    *fat = NULL;
-}
-
-bcf_file_header bcfFileHeader_read(FILE* file) {
+bcf_file_header
+bcfFileHeader_read(FILE* file)
+{
     bcf_file_header header;
     fread(header.signature, 1, 8, file);
     fread(header.CLSID, 1, 16, file);
@@ -486,9 +510,9 @@ bcf_file_header bcfFileHeader_read(FILE* file) {
     header.sectorShift = fread_uint16(file);
     header.miniSectorShift = fread_uint16(file);
     header.reserved1 = fread_uint16(file);
-    header.reserved2 = (unsigned int)fread_uint32(file);
-    header.numberOfDirectorySectors = (unsigned int)fread_uint32(file);
-    header.numberOfFATSectors = (unsigned int)fread_uint32(file);
+    embInt_read(file, "reserved2", &(header.reserved2), EMB_INT32_LITTLE);
+    embInt_read(file, "numberOfDirectorySectors", &(header.numberOfDirectorySectors), EMB_INT32_LITTLE);
+    embInt_read(file, "numberOfFATSectors", &(header.numberOfFATSectors), EMB_INT32_LITTLE);
     header.firstDirectorySectorLocation = (unsigned int)fread_uint32(file);
     header.transactionSignatureNumber = (unsigned int)fread_uint32(file);
     header.miniStreamCutoffSize = (unsigned int)fread_uint32(file);
@@ -499,28 +523,27 @@ bcf_file_header bcfFileHeader_read(FILE* file) {
     return header;
 }
 
-int bcfFileHeader_isValid(bcf_file_header header)
+double
+embRect_x(EmbRect rect)
 {
-    if (memcmp(header.signature, "\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1", 8) != 0) {
-        printf("bad header signature\n");
-        return 0;
-    }
-    return 1;
-}
-
-double embRect_x(EmbRect rect) {
     return rect.left;
 }
 
-double embRect_y(EmbRect rect) {
+double
+embRect_y(EmbRect rect)
+{
     return rect.top;
 }
 
-double embRect_width(EmbRect rect) {
+double
+embRect_width(EmbRect rect)
+{
     return rect.right - rect.left;
 }
 
-double embRect_height(EmbRect rect) {
+double
+embRect_height(EmbRect rect)
+{
     return rect.bottom - rect.top;
 }
 
@@ -530,30 +553,40 @@ void embRect_setX(EmbRect* rect, double x) {
 }
 
 /* Sets the top edge of the rect to y. The bottom edge is not modified. */
-void embRect_setY(EmbRect* rect, double y) {
+void
+embRect_setY(EmbRect* rect, double y)
+{
     rect->top = y;
 }
 
 /* Sets the width of the rect to w. The right edge is modified. 
     The left edge is not modified. */
-void embRect_setWidth(EmbRect* rect, double w) {
+void
+embRect_setWidth(EmbRect* rect, double w)
+{
     rect->right = rect->left + w;
 }
 
 /* Sets the height of the rect to h. The bottom edge is modified. 
     The top edge is not modified. */
-void embRect_setHeight(EmbRect* rect, double h) {
+void
+embRect_setHeight(EmbRect* rect, double h)
+{
     rect->bottom = rect->top + h;
 }
 
-void embRect_setCoords(EmbRect* rect, double x1, double y1, double x2, double y2) {
+void
+embRect_setCoords(EmbRect* rect, double x1, double y1, double x2, double y2)
+{
     rect->left = x1;
     rect->top = y1;
     rect->right = x2;
     rect->bottom = y2;
 }
 
-void embRect_setRect(EmbRect* rect, double x, double y, double w, double h) {
+void
+embRect_setRect(EmbRect* rect, double x, double y, double w, double h)
+{
     rect->left = x;
     rect->top = y;
     rect->right = x + w;
@@ -561,7 +594,9 @@ void embRect_setRect(EmbRect* rect, double x, double y, double w, double h) {
 }
 
 /* Returns an EmbRectObject. It is created on the stack. */
-EmbRectObject embRectObject_make(double x, double y, double w, double h) {
+EmbRectObject
+embRectObject_make(double x, double y, double w, double h)
+{
     EmbRectObject stackRectObj;
     stackRectObj.rect.left = x;
     stackRectObj.rect.top = y;
@@ -576,7 +611,9 @@ EmbRectObject embRectObject_make(double x, double y, double w, double h) {
     return stackRectObj;
 }
 
-void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, EmbSatinOutline* result) {
+void
+embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, EmbSatinOutline* result)
+{
     int i;
     EmbLine line1, line2;
     EmbSatinOutline outline;
@@ -662,7 +699,9 @@ void embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, Emb
     result->length = lines->count;
 }
 
-EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density) {
+EmbArray*
+embSatinOutline_renderStitches(EmbSatinOutline* result, double density)
+{
     int i, j;
     EmbVector currTop, currBottom, topDiff, bottomDiff, midDiff;
     EmbVector midLeft, midRight, topStep, bottomStep;
@@ -709,7 +748,9 @@ EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density
 }
 
 /*! Initializes and returns an EmbSettings */
-EmbSettings embSettings_init(void) {
+EmbSettings
+embSettings_init(void)
+{
     EmbSettings settings;
     settings.dstJumpsPerTrim = 6;
     settings.home.x = 0.0;
@@ -718,16 +759,21 @@ EmbSettings embSettings_init(void) {
 }
 
 /*! Returns the home position stored in (\a settings) as an EmbPoint (\a point). */
-EmbVector embSettings_home(EmbSettings* settings) {
+EmbVector
+embSettings_home(EmbSettings* settings)
+{
     return settings->home;
 }
 
 /*! Sets the home position stored in (\a settings) to EmbPoint (\a point). You will rarely ever need to use this. */
-void embSettings_setHome(EmbSettings* settings, EmbVector point) {
+void
+embSettings_setHome(EmbSettings* settings, EmbVector point)
+{
     settings->home = point;
 }
 
-void write_24bit(FILE* file, int x)
+void
+write_24bit(FILE* file, int x)
 {
     unsigned char a[4];
     a[0] = (unsigned char)0;
@@ -737,7 +783,8 @@ void write_24bit(FILE* file, int x)
     fwrite(a, 1, 4, file);
 }
 
-int embColor_distance(EmbColor a, EmbColor b)
+int
+embColor_distance(EmbColor a, EmbColor b)
 {
     int t;
     t = (a.r-b.r)*(a.r-b.r);
@@ -746,7 +793,8 @@ int embColor_distance(EmbColor a, EmbColor b)
     return t;
 }
 
-void embColor_read(FILE *f, EmbColor *c, int toRead)
+void
+embColor_read(FILE *f, EmbColor *c, int toRead)
 {
     unsigned char b[4];
     fread(b, 1, toRead, f);
@@ -755,7 +803,8 @@ void embColor_read(FILE *f, EmbColor *c, int toRead)
     c->b = b[2];
 }
 
-void embColor_write(FILE *f, EmbColor c, int toWrite)
+void
+embColor_write(FILE *f, EmbColor c, int toWrite)
 {
     unsigned char b[4];
     b[0] = c.r;
@@ -778,7 +827,9 @@ void embColor_write(FILE *f, EmbColor c, int toWrite)
  * @param mode   Is the argument an array of threads (0) or colors (1)?
  * @return closestIndex The entry in the ThreadList that matches.
  */
-int embThread_findNearestColor(EmbColor color, EmbArray* a, int mode) {
+int
+embThread_findNearestColor(EmbColor color, EmbArray* a, int mode)
+{
     int currentClosestValue = 256*256*3;
     int closestIndex = -1, i;
     for (i = 0; i < a->count; i++) {
@@ -797,7 +848,9 @@ int embThread_findNearestColor(EmbColor color, EmbArray* a, int mode) {
     return closestIndex;
 }
 
-int embThread_findNearestColor_fromThread(EmbColor color, EmbThread* a, int length) {
+int
+embThread_findNearestColor_fromThread(EmbColor color, EmbThread* a, int length)
+{
     int currentClosestValue = 256*256*3;
     int closestIndex = -1, i;
 
@@ -820,7 +873,9 @@ int embThread_findNearestColor_fromThread(EmbColor color, EmbThread* a, int leng
  *
  * @return c The resulting color.
  */
-EmbThread embThread_getRandom(void) {
+EmbThread
+embThread_getRandom(void)
+{
     EmbThread c;
     c.color.r = rand()%256;
     c.color.g = rand()%256;
@@ -830,7 +885,9 @@ EmbThread embThread_getRandom(void) {
     return c;
 }
 
-void binaryReadString(FILE* file, char* buffer, int maxLength) {
+void
+binaryReadString(FILE* file, char* buffer, int maxLength)
+{
     int i = 0;
     while(i < maxLength) {
         buffer[i] = (char)fgetc(file);
@@ -839,7 +896,9 @@ void binaryReadString(FILE* file, char* buffer, int maxLength) {
     }
 }
 
-void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength) {
+void
+binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength)
+{
     int i = 0;
     for (i = 0; i < stringLength * 2; i++) {
         char input = (char)fgetc(file);
@@ -857,7 +916,9 @@ void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength) {
  *
  * @return 0 if not present 1 if present.
  */
-int stringInArray(const char *s, const char **array) {
+int
+stringInArray(const char *s, const char **array)
+{
     int i;
     for (i = 0; strlen(array[i]); i++) {
         if (!strcmp(s, array[i])) {
@@ -867,7 +928,9 @@ int stringInArray(const char *s, const char **array) {
     return 0;
 }
 
-int emb_readline(FILE* file, char *line, int maxLength) {
+int
+emb_readline(FILE* file, char *line, int maxLength)
+{
     int i;
     char c;
     for (i = 0; i < maxLength-1; i++) {
@@ -895,9 +958,9 @@ int emb_readline(FILE* file, char *line, int maxLength) {
 char const WHITESPACE[] = " \t\n\r";
 
 /* TODO: description */
-void get_trim_bounds(char const *s,
-                            char const **firstWord,
-                            char const **trailingSpace) {
+void
+get_trim_bounds(char const *s, char const **firstWord, char const **trailingSpace)
+{
     char const* lastWord = 0;
     *firstWord = lastWord = s + strspn(s, WHITESPACE);
     do {
@@ -907,7 +970,9 @@ void get_trim_bounds(char const *s,
 }
 
 /* TODO: description */
-char* copy_trim(char const *s) {
+char*
+copy_trim(char const *s)
+{
     char const *firstWord = 0, *trailingSpace = 0;
     char* result = 0;
     size_t newLength;
@@ -922,7 +987,9 @@ char* copy_trim(char const *s) {
 }
 
 /*! Optimizes the number (\a num) for output to a text file and returns it as a string (\a str). */
-char* emb_optOut(double num, char* str) {
+char*
+emb_optOut(double num, char* str)
+{
     char *str_end;
     /* Convert the number to a string */
     sprintf(str, "%.10f", num);
@@ -937,7 +1004,9 @@ char* emb_optOut(double num, char* str) {
     return str;
 }
 
-void embTime_initNow(EmbTime* t) {
+void
+embTime_initNow(EmbTime* t)
+{
 #ifdef ARDUINO
 /*TODO: arduino embTime_initNow */
 #else
@@ -955,7 +1024,9 @@ void embTime_initNow(EmbTime* t) {
 #endif /* ARDUINO */
 }
 
-EmbTime embTime_time(EmbTime* t) {
+EmbTime
+embTime_time(EmbTime* t)
+{
 #ifdef ARDUINO
 /*TODO: arduino embTime_time */
 #else
@@ -967,7 +1038,8 @@ divideByZero = divideByZero/divideByZero; /*TODO: wrap time() from time.h and ve
     return *t;
 }
 
-void usage(void)
+void
+usage(void)
 {
     puts(welcome_message);
     /* construct from tables above somehow, like how getopt_long works,
@@ -1014,7 +1086,8 @@ void usage(void)
     puts("        --full-test-suite  Run all tests, even those we expect to fail.");
 }
 
-void formats(void)
+void
+formats(void)
 {
     const char* extension = 0;
     const char* description = 0;
@@ -1054,7 +1127,8 @@ void formats(void)
 }
 
 /* TODO: Add capability for converting multiple files of various types to a single format. Currently, we only convert a single file to multiple formats. */
-int command_line_interface(int argc, char* argv[])
+int
+command_line_interface(int argc, char* argv[])
 {
     EmbPattern *current_pattern = embPattern_create();
     float width, height;

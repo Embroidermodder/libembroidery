@@ -16,7 +16,9 @@
 /*! Returns a pointer to an EmbPattern. It is created on the heap.
  * The caller is responsible for freeing the allocated memory with
  * embPattern_free(). */
-EmbPattern* embPattern_create(void) {
+EmbPattern*
+embPattern_create(void)
+{
     EmbPattern* p = 0;
     p = (EmbPattern*)malloc(sizeof(EmbPattern));
     if (!p) { 
@@ -43,7 +45,9 @@ EmbPattern* embPattern_create(void) {
     return p;
 }
 
-void embPattern_hideStitchesOverLength(EmbPattern* p, int length) {
+void
+embPattern_hideStitchesOverLength(EmbPattern* p, int length)
+{
     double prevX = 0;
     double prevY = 0;
     int i;
@@ -64,7 +68,9 @@ void embPattern_hideStitchesOverLength(EmbPattern* p, int length) {
     }
 }
 
-int embPattern_addThread(EmbPattern* p, EmbThread thread) {
+int
+embPattern_addThread(EmbPattern* p, EmbThread thread)
+{
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_addThread(), ");
         printf("p argument is null\n");
@@ -77,7 +83,9 @@ int embPattern_addThread(EmbPattern* p, EmbThread thread) {
     return 1;
 }
 
-void embPattern_fixColorCount(EmbPattern* p) {
+void
+embPattern_fixColorCount(EmbPattern* p)
+{
     /* fix color count to be max of color index. */
     int maxColorIndex = 0, i;
 
@@ -110,7 +118,9 @@ void embPattern_fixColorCount(EmbPattern* p) {
 
 /*! Copies all of the EmbStitchList data to 
     EmbPolylineObjectList data for pattern (\a p). */
-void embPattern_copyStitchListToPolylines(EmbPattern* p) {
+void
+embPattern_copyStitchListToPolylines(EmbPattern* p)
+{
     int breakAtFlags, i;
     EmbPointObject point;
     EmbColor color;
@@ -163,7 +173,9 @@ void embPattern_copyStitchListToPolylines(EmbPattern* p) {
 }
 
 /*! Copies all of the EmbPolylineObjectList data to EmbStitchList data for pattern (\a p). */
-void embPattern_copyPolylinesToStitchList(EmbPattern* p) {
+void
+embPattern_copyPolylinesToStitchList(EmbPattern* p)
+{
     int firstObject = 1, i, j;
     /*int currentColor = polyList->polylineObj->color TODO: polyline color */
 
@@ -212,7 +224,9 @@ void embPattern_copyPolylinesToStitchList(EmbPattern* p) {
 }
 
 /*! Moves all of the EmbStitchList data to EmbPolylineObjectList data for pattern (\a p). */
-void embPattern_moveStitchListToPolylines(EmbPattern* p) {
+void
+embPattern_moveStitchListToPolylines(EmbPattern* p)
+{
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_moveStitchListToPolylines(), p argument is null\n");
         return;
@@ -224,7 +238,9 @@ void embPattern_moveStitchListToPolylines(EmbPattern* p) {
 }
 
 /*! Moves all of the EmbPolylineObjectList data to EmbStitchList data for pattern (\a p). */
-void embPattern_movePolylinesToStitchList(EmbPattern* p) {
+void
+embPattern_movePolylinesToStitchList(EmbPattern* p)
+{
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_movePolylinesToStitchList(), p argument is null\n");
         return;
@@ -234,8 +250,10 @@ void embPattern_movePolylinesToStitchList(EmbPattern* p) {
 }
 
 /*! Adds a stitch to the pattern (\a p) at the absolute position (\a x,\a y). Positive y is up. Units are in millimeters. */
-void embPattern_addStitchAbs(EmbPattern* p, double x, double y, 
-                            int flags, int isAutoColorIndex) {
+void
+embPattern_addStitchAbs(EmbPattern* p, double x, double y, 
+                            int flags, int isAutoColorIndex)
+{
     EmbStitch s;
 
     if (!p) {
@@ -287,8 +305,10 @@ void embPattern_addStitchAbs(EmbPattern* p, double x, double y,
 
 /*! Adds a stitch to the pattern (\a p) at the relative position (\a dx,\a dy) 
     to the previous stitch. Positive y is up. Units are in millimeters. */
-void embPattern_addStitchRel(EmbPattern* p, double dx, double dy, 
-                            int flags, int isAutoColorIndex) {
+void
+embPattern_addStitchRel(EmbPattern* p, double dx, double dy, 
+                            int flags, int isAutoColorIndex)
+{
     double x, y;
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_addStitchRel(), p argument is null\n");
@@ -308,7 +328,8 @@ void embPattern_addStitchRel(EmbPattern* p, double dx, double dy,
     embPattern_addStitchAbs(p, x, y, flags, isAutoColorIndex);
 }
 
-void embPattern_changeColor(EmbPattern* p, int index)
+void
+embPattern_changeColor(EmbPattern* p, int index)
 {
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_changeColor(), p argument is null\n");
@@ -319,7 +340,9 @@ void embPattern_changeColor(EmbPattern* p, int index)
 
 /* Very simple scaling of the x and y axis for every point.
 * Doesn't insert or delete stitches to preserve density. */
-void embPattern_scale(EmbPattern* p, double scale) {
+void
+embPattern_scale(EmbPattern* p, double scale)
+{
     int i;
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_scale(), p argument is null\n");
@@ -333,7 +356,9 @@ void embPattern_scale(EmbPattern* p, double scale) {
 }
 
 /*! Returns an EmbRect that encapsulates all stitches and objects in the pattern (\a p). */
-EmbRect embPattern_calcBoundingBox(EmbPattern* p) {
+EmbRect
+embPattern_calcBoundingBox(EmbPattern* p)
+{
     EmbRect r;
     EmbStitch pt;
     EmbArc arc;
@@ -482,7 +507,9 @@ EmbRect embPattern_calcBoundingBox(EmbPattern* p) {
 }
 
 /*! Flips the entire pattern (\a p) horizontally about the y-axis. */
-void embPattern_flipHorizontal(EmbPattern* p) {
+void
+embPattern_flipHorizontal(EmbPattern* p)
+{
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_flipHorizontal(), ");
         printf("p argument is null\n");
@@ -492,7 +519,9 @@ void embPattern_flipHorizontal(EmbPattern* p) {
 }
 
 /*! Flips the entire pattern (\a p) vertically about the x-axis. */
-void embPattern_flipVertical(EmbPattern* p) {
+void
+embPattern_flipVertical(EmbPattern* p)
+{
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_flipVertical(), ");
         printf("p argument is null\n");
@@ -503,7 +532,9 @@ void embPattern_flipVertical(EmbPattern* p) {
 
 /*! Flips the entire pattern (\a p) horizontally about the x-axis if (\a horz) is true.
  *  Flips the entire pattern (\a p) vertically about the y-axis if (\a vert) is true. */
-void embPattern_flip(EmbPattern* p, int horz, int vert) {
+void
+embPattern_flip(EmbPattern* p, int horz, int vert)
+{
     int i, j;
 
     if (!p) {
@@ -629,7 +660,9 @@ void embPattern_flip(EmbPattern* p, int horz, int vert) {
     }
 }
 
-void embPattern_combineJumpStitches(EmbPattern* p) {
+void
+embPattern_combineJumpStitches(EmbPattern* p)
+{
     int jumpCount = 0, i;
     EmbArray *newList;
     EmbStitch j;
@@ -663,8 +696,10 @@ void embPattern_combineJumpStitches(EmbPattern* p) {
 
 /*TODO: The params determine the max XY movement rather than the length. 
     They need renamed or clarified further. */
-void embPattern_correctForMaxStitchLength(EmbPattern* p, 
-                        double maxStitchLength, double maxJumpLength) {
+void
+embPattern_correctForMaxStitchLength(EmbPattern* p, 
+                        double maxStitchLength, double maxJumpLength)
+{
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_correctForMaxStitchLength(), ");
         printf("p argument is null\n");
@@ -710,7 +745,9 @@ void embPattern_correctForMaxStitchLength(EmbPattern* p,
     embPattern_end(p);
 }
 
-void embPattern_center(EmbPattern* p) {
+void
+embPattern_center(EmbPattern* p)
+{
     /* TODO: review this. currently not used in anywhere. 
         Also needs to handle various design objects */
     int moveLeft, moveTop, i;
@@ -731,7 +768,9 @@ void embPattern_center(EmbPattern* p) {
 }
 
 /*TODO: Description needed. */
-void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName) {
+void
+embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
+{
     int hasRead, stub_len, format;
     char extractName[200];
 
@@ -768,7 +807,9 @@ void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName) {
 }
 
 /*! Frees all memory allocated in the pattern (\a p). */
-void embPattern_free(EmbPattern* p) {
+void
+embPattern_free(EmbPattern* p)
+{
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_free(), p argument is null\n");
         return;
@@ -792,7 +833,9 @@ void embPattern_free(EmbPattern* p) {
 /*! Adds a circle object to pattern (\a p) with its center at the absolute
  * position (\a cx,\a cy) with a radius of (\a r). Positive y is up.
  * Units are in millimeters. */
-void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r) {
+void
+embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r)
+{
     EmbCircle circle;
     circle.center.x = cx;
     circle.center.y = cy;
@@ -811,8 +854,10 @@ void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r
 /*! Adds an ellipse object to pattern (\a p) with its center at the
  * absolute position (\a cx,\a cy) with radii of (\a rx,\a ry). Positive y is up.
  * Units are in millimeters. */
-void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy,
-                                    double rx, double ry) {
+void
+embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy,
+                               double rx, double ry)
+{
     EmbEllipse ellipse;
     ellipse.centerX = cx;
     ellipse.centerY = cy;
@@ -904,11 +949,20 @@ void embPattern_addPolygonObjectAbs(EmbPattern* p, EmbPolygonObject* obj) {
     embArray_addPolygon(p->polygons, obj);
 }
 
-void embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj) {
-    if (!p) { printf("ERROR: emb-pattern.c embPattern_addPolylineObjectAbs(), p argument is null\n"); return; }
-    if (!obj) { printf("ERROR: emb-pattern.c embPattern_addPolylineObjectAbs(), obj argument is null\n"); return; }
+void
+embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj)
+{
+    if (!p) {
+        printf("ERROR: emb-pattern.c embPattern_addPolylineObjectAbs(), p argument is null\n");
+        return;
+    }
+    if (!obj) {
+        printf("ERROR: emb-pattern.c embPattern_addPolylineObjectAbs(), obj argument is null\n");
+        return;
+    }
     if (!obj->pointList) {
-        printf("ERROR: emb-pattern.c embPattern_addPolylineObjectAbs(), obj->pointList is empty\n"); return;
+        printf("ERROR: emb-pattern.c embPattern_addPolylineObjectAbs(), obj->pointList is empty\n");
+        return;
     }
     if (!p->polylines) {
         p->polylines = embArray_create(EMB_POLYLINE);
@@ -921,7 +975,9 @@ void embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj) {
  * (\a x,\a y) with a width of (\a w) and a height of (\a h).
  * Positive y is up. Units are in millimeters.
  */
-void embPattern_addRectObjectAbs(EmbPattern* p, double x, double y, double w, double h) {
+void
+embPattern_addRectObjectAbs(EmbPattern* p, double x, double y, double w, double h)
+{
     EmbRect rect;
     rect.left = x;
     rect.top = y;
@@ -937,7 +993,9 @@ void embPattern_addRectObjectAbs(EmbPattern* p, double x, double y, double w, do
     embArray_addRect(p->rects, rect, 0, black_thread.color);
 }
 
-void embPattern_end(EmbPattern *p) {
+void
+embPattern_end(EmbPattern *p)
+{
     if (p->stitchList->count == 0) {
         return;
     }
@@ -948,7 +1006,8 @@ void embPattern_end(EmbPattern *p) {
 }
 
 
-void embPattern_designDetails(EmbPattern *pattern)
+void
+embPattern_designDetails(EmbPattern *pattern)
 {
     int colors, num_stitches, real_stitches, jump_stitches, trim_stitches;
     int unknown_stitches, num_colors;
@@ -964,6 +1023,21 @@ void embPattern_designDetails(EmbPattern *pattern)
     trim_stitches = 0;
     unknown_stitches = 0;
     num_colors = pattern->threads->count;
+    bounds = embPattern_calcBoundingBox(pattern);
+    
+    if (emb_verbose > 1) {
+        printf("colors: %d\n", colors);
+        printf("num_stitches: %d\n", num_stitches);
+        printf("real_stitches: %d\n", real_stitches);
+        printf("jump_stitches: %d\n", jump_stitches);
+        printf("trim_stitches: %d\n", trim_stitches);
+        printf("unknown_stitches: %d\n", unknown_stitches);
+        printf("num_colors: %d\n", num_colors);
+        printf("bounds.left: %f\n", bounds.left);
+        printf("bounds.right: %f\n", bounds.right);
+        printf("bounds.top: %f\n", bounds.top);
+        printf("bounds.bottom: %f\n", bounds.bottom);
+    }
 /*
     double minx = 0.0, maxx = 0.0, miny = 0.0, maxy = 0.0;
     double min_stitchlength = 999.0;
@@ -1095,7 +1169,9 @@ void embPattern_designDetails(EmbPattern *pattern)
 /*
  *
  */
-int convert(const char *inf, const char *outf) {
+int
+convert(const char *inf, const char *outf)
+{
     EmbPattern* p = 0;
     int reader, writer;
 

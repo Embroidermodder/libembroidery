@@ -29,9 +29,9 @@ add_compile_options(
 	-O2
 	-fPIC
 	-ansi
-#	-pedantic
+	-pedantic
 	-Wall
-#	-Wextra
+	-Wextra
 #	-Werror
 )
 

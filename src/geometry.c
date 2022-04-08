@@ -87,7 +87,7 @@ char getArcDataFromBulge(double bulge,
     double incAngleInRadians;
     double chordAngleInRadians;
     double sagittaAngleInRadians;
-    double w, h, fx ,fy, dx, dy;
+    double fx ,fy, dx, dy;
     EmbVector arcCenter;
 
     /* Confirm the direction of the Bulge */

@@ -161,6 +161,7 @@ safe_free(void *data)
 {
     if (data) {
         free(data);
+        data = 0;
     }
 }
 
@@ -207,28 +208,6 @@ emb_identify_format(const char *fileName)
         }
     }
     return -1;
-}
-
-void
-fread_int(FILE* f, void *b, int mode)
-{
-    int endian = mode & 0x01;
-    int length = mode - endian;
-    fread(b, 1, length, f);
-    if (endian != ENDIAN_HOST) {
-        reverse_byte_order(b, length);
-    }
-}
-
-void
-fwrite_int(FILE* f, void *b, int mode)
-{
-    int endian = mode & 0x01;
-    int length = mode - endian;
-    if (endian != ENDIAN_HOST) {
-        reverse_byte_order(b, length);
-    }
-    fwrite(b, 1, length, f);
 }
 
 short
@@ -556,7 +535,8 @@ embPattern_read(EmbPattern* pattern, const char *fileName, int format)
 }
 
 char
-embPattern_write(EmbPattern* pattern, const char *fileName, int format) {
+embPattern_write(EmbPattern* pattern, const char *fileName, int format)
+{
     FILE *file;
     int result = 0;
     if (!pattern) {
@@ -2881,12 +2861,13 @@ readHus(EmbPattern* pattern, FILE* file)
     fread(yData, 1, fileLength - yOffset, file); /* TODO: check return value */
     yDecompressed = husDecompressData(yData, fileLength - yOffset, numberOfStitches);
 
-    for (i = 0; i < numberOfStitches; i++)
-    {
-        embPattern_addStitchRel(pattern,
-                                husDecodeByte(xDecompressed[i]) / 10.0,
-                                husDecodeByte(yDecompressed[i]) / 10.0,
-                                husDecodeStitchType(attributeDataDecompressed[i]), 1);
+    for (i = 0; i < numberOfStitches; i++) {
+        int flag;
+        EmbVector v;
+        v.x = husDecodeByte(xDecompressed[i]) / 10.0;
+        v.y = husDecodeByte(yDecompressed[i]) / 10.0;
+        flag = husDecodeStitchType(attributeDataDecompressed[i]);
+        embPattern_addStitchRel(pattern, v.x, v.y, flag, 1);
     }
 
     safe_free(stringVal);
@@ -2917,22 +2898,22 @@ writeHus(EmbPattern* pattern, FILE* file)
     patternColor = minColors;
     if (minColors > 24) minColors = 24;
     code = 0x00C8AF5B;
-    fwrite_int(file, &code, EMB_INT32_LITTLE);
-    fwrite_int(file, &stitchCount, EMB_INT32_LITTLE);
-    fwrite_int(file, &minColors, EMB_INT32_LITTLE);
+    embInt_write(file, "code", &code, EMB_INT32_LITTLE);
+    embInt_write(file, "stitchCount", &stitchCount, EMB_INT32_LITTLE);
+    embInt_write(file, "minColors", &minColors, EMB_INT32_LITTLE);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
     right = (short) round(boundingRect.right * 10.0);
     top = (short) -round(boundingRect.top * 10.0);
     left = (short) round(boundingRect.left * 10.0);
     bottom = (short) -round(boundingRect.bottom * 10.0);
-    fwrite_int(file, &right, EMB_INT16_LITTLE);
-    fwrite_int(file, &top, EMB_INT16_LITTLE);
-    fwrite_int(file, &left, EMB_INT16_LITTLE);
-    fwrite_int(file, &bottom, EMB_INT16_LITTLE);
+    embInt_write(file, "right", &right, EMB_INT16_LITTLE);
+    embInt_write(file, "top", &top, EMB_INT16_LITTLE);
+    embInt_write(file, "left", &left, EMB_INT16_LITTLE);
+    embInt_write(file, "bottom", &bottom, EMB_INT16_LITTLE);
 
     colors = 0x2A + 2 * minColors;
-    fwrite_int(file, &colors, EMB_INT32_LITTLE);
+    embInt_write(file, ".", &colors, EMB_INT32_LITTLE);
 
     xValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
     if (!xValues) {
@@ -2968,13 +2949,13 @@ writeHus(EmbPattern* pattern, FILE* file)
 
     offset1 = (unsigned int) (0x2A + 2 * patternColor + attributeSize);
     offset2 = (unsigned int) (0x2A + 2 * patternColor + attributeSize + xCompressedSize);
-    fwrite_int(file, &offset1, EMB_INT32_LITTLE);
-    fwrite_int(file, &offset2, EMB_INT32_LITTLE);
+    embInt_write(file, "offset1", &offset1, EMB_INT32_LITTLE);
+    embInt_write(file, "offset2", &offset2, EMB_INT32_LITTLE);
     fpad(file, 0, 10);
 
     for (i = 0; i < patternColor; i++) {
         short color_index = (short)embThread_findNearestColor_fromThread(pattern->threads->thread[i].color, (EmbThread*)husThreads, 29);
-        fwrite_int(file, &color_index, EMB_INT16_LITTLE);
+        embInt_write(file, ".", &color_index, EMB_INT16_LITTLE);
     }
 
     fwrite(attributeCompressed, 1, attributeSize, file);
@@ -3019,10 +3000,10 @@ readInb(EmbPattern* pattern, FILE* file)
     imageHeight = fread_int16(file);
     fread(bytesUnknown, 1, 300, file); /* TODO: check return value */
     nullbyte = fread_int16(file);
-    left = fread_int16(file);
-    right = fread_int16(file);
-    top = fread_int16(file);
-    bottom = fread_int16(file);
+    embInt_read(file, "left", &left, EMB_INT16_LITTLE);
+    embInt_read(file, "right", &right, EMB_INT16_LITTLE);
+    embInt_read(file, "top", &top, EMB_INT16_LITTLE);
+    embInt_read(file, "bottom", &bottom, EMB_INT16_LITTLE);
     if (emb_verbose>1) {
         printf("nullVal:                 %c\n", nullVal);
         printf("colorCount:              %d\n", colorCount);
@@ -3032,10 +3013,6 @@ readInb(EmbPattern* pattern, FILE* file)
         printf("imageWidth:              %d\n", imageWidth);
         printf("imageHeight:             %d\n", imageHeight);
         printf("This should be null:     %d\n", nullbyte);
-        printf("right:                   %d\n", right);
-        printf("left:                    %d\n", left);
-        printf("bottom:                  %d\n", bottom);
-        printf("top:                     %d\n", top);
     }
 
     fseek(file, 0x2000, SEEK_SET);
@@ -3334,9 +3311,9 @@ writeJef(EmbPattern* pattern, FILE* file)
             (int)(time.month + 1), (int)(time.day), (int)(time.hour),
             (int)(time.minute), (int)(time.second));
     fpad(file, 0, 2);
-    fwrite_int(file, &(pattern->threads->count), EMB_INT32_LITTLE);
+    embInt_write(file, ".", &(pattern->threads->count), EMB_INT32_LITTLE);
     data = pattern->stitchList->count + EMB_MAX(0, (6 - colorlistSize) * 2) + 1;
-    fwrite_int(file, &data, EMB_INT32_LITTLE);
+    embInt_write(file, ".", &data, EMB_INT32_LITTLE);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
 
@@ -3507,7 +3484,8 @@ writeKsm(EmbPattern* pattern, FILE* file) {
 /* Pfaff MAX embroidery file format */
 
 static char
-readMax(EmbPattern* pattern, FILE* file) {
+readMax(EmbPattern* pattern, FILE* file)
+{
     unsigned char b[8];
 
     fseek(file, 0xD5, SEEK_SET);
@@ -3526,7 +3504,8 @@ readMax(EmbPattern* pattern, FILE* file) {
 }
 
 static char
-writeMax(EmbPattern* pattern, FILE* file) {
+writeMax(EmbPattern* pattern, FILE* file)
+{
     int i;
     double x, y;
     EmbStitch st;
@@ -3546,7 +3525,8 @@ writeMax(EmbPattern* pattern, FILE* file) {
 /* format mit */
 
 static char
-readMit(EmbPattern* pattern, FILE* file) {
+readMit(EmbPattern* pattern, FILE* file)
+{
     unsigned char data[2];
 
     while (fread(data, 1, 2, file) == 2) {
@@ -3558,7 +3538,8 @@ readMit(EmbPattern* pattern, FILE* file) {
 }
 
 static char
-writeMit(EmbPattern* pattern, FILE* file) {
+writeMit(EmbPattern* pattern, FILE* file)
+{
     double xx, yy;
     int i;
 
@@ -3585,10 +3566,7 @@ readNew(EmbPattern* pattern, FILE* file) {
     unsigned int stitchCount;
     unsigned char data[3];
 
-    stitchCount = fread_uint16(file);
-    if (emb_verbose>1) {
-        printf("stitch count = %d\n", stitchCount);
-    }
+    embInt_read(file, "stitchCount", &stitchCount, EMB_INT16_LITTLE);
     while (fread(data, 1, 3, file) == 3) {
         int x = decodeNewStitch(data[0]);
         int y = decodeNewStitch(data[1]);
@@ -3625,7 +3603,8 @@ readNew(EmbPattern* pattern, FILE* file) {
 }
 
 static char
-writeNew(EmbPattern* pattern, FILE* file) {
+writeNew(EmbPattern* pattern, FILE* file)
+{
     puts("Overridden, defaulting to dst.");
     writeDst(pattern, file);
     return 0; /*TODO: finish writeNew */
@@ -3634,7 +3613,8 @@ writeNew(EmbPattern* pattern, FILE* file) {
 /* ---------------------------------------------------------------- */
 /* format ofm */
 
-char* ofmReadLibrary(FILE* file)
+static char*
+ofmReadLibrary(FILE* file)
 {
     int stringLength = 0;
     char* libraryName = 0;
@@ -3651,7 +3631,8 @@ char* ofmReadLibrary(FILE* file)
     return libraryName;
 }
 
-int ofmReadClass(FILE* file)
+static int
+ofmReadClass(FILE* file)
 {
     int len;
     char* s = 0;
@@ -4872,9 +4853,6 @@ readThreads(FILE* file, EmbPattern* pattern)
         int brandStringLength;
         int threadChartStringLength;
         color_code_length = fgetc(file);
-        if (emb_verbose > 1) {
-            printf("color_code_length: %d", color_code_length);
-        }
         /* strcpy(thread.color_code, readString(color_code_length)); */
         thread.color.r = fgetc(file);
         thread.color.g = fgetc(file);
@@ -4889,6 +4867,12 @@ readThreads(FILE* file, EmbPattern* pattern)
         threadChartStringLength = fgetc(file);
         /* strcpy(thread.threadChart, readString(threadChartStringLength)); */
 
+        if (emb_verbose > 1) {
+            printf("color code length: %d\n", color_code_length);
+            printf("description string length: %d\n", descriptionStringLength);
+            printf("brand string length: %d\n", brandStringLength);
+            printf("thread chart string length: %d\n", threadChartStringLength);
+        }
         embPattern_addThread(pattern, thread);
     }
 }
@@ -5023,17 +5007,17 @@ pesWriteEmbOneSection(EmbPattern* pattern, FILE* file) {
 
     /* AffineTransform */
     x = 1.0;
-    fwrite_int(file, &x, EMB_INT32_LITTLE);
+    embInt_write(file, ".", &x, EMB_INT32_LITTLE);
     x = 0.0;
-    fwrite_int(file, &x, EMB_INT32_LITTLE);
+    embInt_write(file, ".", &x, EMB_INT32_LITTLE);
     x = 0.0;
-    fwrite_int(file, &x, EMB_INT32_LITTLE);
+    embInt_write(file, ".", &x, EMB_INT32_LITTLE);
     x = 1.0;
-    fwrite_int(file, &x, EMB_INT32_LITTLE);
+    embInt_write(file, ".", &x, EMB_INT32_LITTLE);
     x = (float)((embRect_width(bounds) - hoopWidth) / 2);
-    fwrite_int(file, &x, EMB_INT32_LITTLE);
+    embInt_write(file, ".", &x, EMB_INT32_LITTLE);
     x = (float)((embRect_height(bounds) + hoopHeight) / 2);
-    fwrite_int(file, &x, EMB_INT32_LITTLE);
+    embInt_write(file, ".", &x, EMB_INT32_LITTLE);
 
     binaryWriteShort(file, 1);
     binaryWriteShort(file, 0); /* Translate X */
@@ -5467,7 +5451,7 @@ readShv(EmbPattern* pattern, FILE* file)
     }
     numberOfColors = fgetc(file);
     magicCode = fread_uint16(file);
-    (char)fgetc(file);
+    fseek(file, 1, SEEK_CUR);
     embInt_read(file, "something", &something, EMB_INT32_LITTLE);
     left = fread_int16(file);
     top = fread_int16(file);
@@ -5668,9 +5652,9 @@ int stxReadThread(StxThread* thread, FILE* file)
     fread((unsigned char*)sectionNameBuff, 1, sectionNameLength, file); /* TODO: check return value */
     thread->sectionName = sectionNameBuff;
 
-    fread_int(file, &somethingSomething, EMB_INT32_LITTLE);
-    fread_int(file, &somethingSomething2, EMB_INT32_LITTLE);
-    fread_int(file, &somethingElse, EMB_INT32_LITTLE);
+    embInt_read(file, ".", &somethingSomething, EMB_INT32_LITTLE);
+    embInt_read(file, ".", &somethingSomething2, EMB_INT32_LITTLE);
+    embInt_read(file, ".", &somethingElse, EMB_INT32_LITTLE);
     numberOfOtherDescriptors = fread_int16(file);
     if (emb_verbose>1) {
         printf("somethingSomething: %d", somethingSomething);
@@ -5691,7 +5675,7 @@ int stxReadThread(StxThread* thread, FILE* file)
 
         sd.someNum = fread_int16(file);
         /* Debug.Assert(sd.someNum == 1); TODO: review */
-        fread_int(file, &(sd.someInt), EMB_INT32_LITTLE);
+        embInt_read(file, ".", &(sd.someInt), EMB_INT32_LITTLE);
         subCodeLength = fgetc(file);
         subCodeBuff = (char*)malloc(subCodeLength);
         if (!subCodeBuff) {
@@ -5708,7 +5692,7 @@ int stxReadThread(StxThread* thread, FILE* file)
         }
         fread((unsigned char*)subColorNameBuff, 1, subColorNameLength, file); /* TODO: check return value */
         sd.colorName = subColorNameBuff;
-        fread_int(file, &(sd.someOtherInt), EMB_INT32_LITTLE);
+        embInt_read(file, ".", &(sd.someOtherInt), EMB_INT32_LITTLE);
         thread->subDescriptors[j] = sd;
     }
     return 1;
@@ -5747,18 +5731,18 @@ readStx(EmbPattern* pattern, FILE* file)
     /* byte 14 */
     (char)fgetc(file);
     /* bytes 15- */
-    fread_int(file, &paletteLength, EMB_INT32_LITTLE);
-    fread_int(file, &imageLength, EMB_INT32_LITTLE);
-    fread_int(file, &something1, EMB_INT32_LITTLE);
-    fread_int(file, &stitchDataOffset, EMB_INT32_LITTLE);
-    fread_int(file, &something3, EMB_INT32_LITTLE);
-    fread_int(file, &threadDescriptionOffset, EMB_INT32_LITTLE);
-    fread_int(file, &stitchCount, EMB_INT32_LITTLE);
-    fread_int(file, &colors, EMB_INT32_LITTLE);
-    fread_int(file, &right, EMB_INT16_LITTLE);
-    fread_int(file, &left, EMB_INT16_LITTLE);
-    fread_int(file, &bottom, EMB_INT16_LITTLE);
-    fread_int(file, &top, EMB_INT16_LITTLE);
+    embInt_read(file, ".", &paletteLength, EMB_INT32_LITTLE);
+    embInt_read(file, ".", &imageLength, EMB_INT32_LITTLE);
+    embInt_read(file, ".", &something1, EMB_INT32_LITTLE);
+    embInt_read(file, ".", &stitchDataOffset, EMB_INT32_LITTLE);
+    embInt_read(file, ".", &something3, EMB_INT32_LITTLE);
+    embInt_read(file, ".", &threadDescriptionOffset, EMB_INT32_LITTLE);
+    embInt_read(file, ".", &stitchCount, EMB_INT32_LITTLE);
+    embInt_read(file, ".", &colors, EMB_INT32_LITTLE);
+    embInt_read(file, ".", &right, EMB_INT16_LITTLE);
+    embInt_read(file, ".", &left, EMB_INT16_LITTLE);
+    embInt_read(file, ".", &bottom, EMB_INT16_LITTLE);
+    embInt_read(file, ".", &top, EMB_INT16_LITTLE);
     if (emb_verbose>1) {
         printf("paletteLength:           %d\n", paletteLength);
         printf("imageLength:             %d\n", imageLength);
@@ -5805,7 +5789,7 @@ readStx(EmbPattern* pattern, FILE* file)
     fseek(file, 15, SEEK_CUR);
 
     for (i = 0; i < 12; i++) {
-        fread_int(file, val+i, EMB_INT16_LITTLE);
+        embInt_read(file, ".", val+i, EMB_INT16_LITTLE);
         if (emb_verbose>1) {
             printf("identify val[%d] = %d", i, val[i]);
         }
@@ -6040,10 +6024,13 @@ parse_path(EmbPattern *p)
     EmbPathObject *path;
     char* pointStr = svgAttribute_getValue("d");
     char* mystrok = svgAttribute_getValue("stroke");
-
     int last = strlen(pointStr);
     int size = 32;
-    i = 0;
+    int pendingTask = 0;
+    int relative = 0;
+    char* pathbuff = 0;
+
+    EmbArray* pointList = 0;
     pos = 0;
     /* An odometer aka 'tripometer' used for stepping thru the pathData */
     trip = -1;
@@ -6064,64 +6051,58 @@ parse_path(EmbPattern *p)
     c2_point.y = 0.0;
     cmd = 0;
     numMoves = 0;
-        int pendingTask = 0;
-        int relative = 0;
 
-        EmbArray* pointList = 0;
+    pathbuff = (char*)malloc(size);
+    if (!pathbuff) {
+        printf("ERROR: svgAddToPattern(), cannot allocate memory for pathbuff\n");
+        return;
+    }
 
-        char* pathbuff = 0;
-        pathbuff = (char*)malloc(size);
-        if (!pathbuff) {
-            printf("ERROR: svgAddToPattern(), cannot allocate memory for pathbuff\n");
-            return;
-        }
+    printf("stroke:%s\n", mystrok);
 
-        printf("stroke:%s\n", mystrok);
+    for (i = 0; i < last; i++) {
+        char c = pointStr[i];
+        switch (c) {
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+            case '.':
+                pathbuff[pos++] = (char)c;                  /* add a more char */
+                break;
 
-        /* M44.219,26.365c0,10.306-8.354,18.659-18.652,18.659c-10.299,0-18.663-8.354-18.663-18.659c0-10.305,8.354-18.659,18.659-18.659C35.867,7.707,44.219,16.06,44.219,26.365z */
-        for (i = 0; i < last; i++) {
-            char c = pointStr[i];
-            switch (c) {
-                case '0':
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                case '.':
-                    pathbuff[pos++] = (char)c;                  /* add a more char */
-                    break;
+            case ' ':
+            case ',':
 
-                case ' ':
-                case ',':
+                /*printf("    ,'%s'    ~POS=%d  ~TRIP=%d  ~[pos]=%d\n", pathbuff,pos,trip, pathbuff[pos]);*/
+                if (pos > 0) {         /* append float to array, if it not yet stored */
+                    pathbuff[pos] = 0;
+                    pos = 0;
+                    printf("    ,val:%s\n", pathbuff);
+                    pathData[++trip] = atof(pathbuff);
+                }
+                break;
 
-                    /*printf("    ,'%s'    ~POS=%d  ~TRIP=%d  ~[pos]=%d\n", pathbuff,pos,trip, pathbuff[pos]);*/
-                    if (pos > 0) {         /* append float to array, if it not yet stored */
-                        pathbuff[pos] = 0;
-                        pos = 0;
-                        printf("    ,val:%s\n", pathbuff);
-                        pathData[++trip] = atof(pathbuff);
-                    }
-                    break;
+            case '-':
 
-                case '-':
+                if (pos > 0) {
+                    /* append float to array, if it not yet stored */
+                    pathbuff[pos] = 0;
+                    pos = 0;
+                    printf("    -val:%s\n", pathbuff);
+                    pathData[++trip] = atof(pathbuff);
+                }
+                pathbuff[pos++] = (char)c;
+                /* add a more char */
+                break;
 
-                    if (pos > 0) {
-                        /* append float to array, if it not yet stored */
-                        pathbuff[pos] = 0;
-                        pos = 0;
-                        printf("    -val:%s\n", pathbuff);
-                        pathData[++trip] = atof(pathbuff);
-                    }
-                    pathbuff[pos++] = (char)c;
-                    /* add a more char */
-                    break;
-
-                default:
+            default:
                     /*** ASSUMED ANY COMMAND FOUND ***/
 
 
@@ -6248,8 +6229,7 @@ parse_path(EmbPattern *p)
                     }
 
                     /* assign new command */
-                    if (trip == -1 && reset == -1)
-                    {
+                    if (trip == -1 && reset == -1) {
                         /* set the command for compare */
                         pathbuff[0] = (char)c;
                         pathbuff[1] = 0;
@@ -6298,13 +6278,16 @@ parse_path(EmbPattern *p)
 
 
                     break;
+        }
+        if (pos >= size - 1) {
+            /* increase pathbuff length - leave room for 0 */
+            size *= 2;
+            pathbuff = (char*)realloc(pathbuff, size);
+            if (!pathbuff) {
+                printf("ERROR: svgAddToPattern(), cannot re-allocate memory for pathbuff\n");
+                return;
             }
-            if (pos >= size - 1) {
-                /* increase pathbuff length - leave room for 0 */
-                size *= 2;
-                pathbuff = (char*)realloc(pathbuff, size);
-                if (!pathbuff) { printf("ERROR: svgAddToPattern(), cannot re-allocate memory for pathbuff\n"); return; }
-            }
+        }
     }
     safe_free(pathbuff);
 
@@ -7287,9 +7270,9 @@ writeThr(EmbPattern* pattern, FILE* file) {
         extension.hoopX = 640;
         extension.hoopY = 640;
 
-        fwrite_int(file, &(extension.hoopX), EMB_INT32_LITTLE);
-        fwrite_int(file, &(extension.hoopY), EMB_INT32_LITTLE);
-        fwrite_int(file, &(extension.stitchGranularity), EMB_INT32_LITTLE);
+        embInt_write(file, ".", &(extension.hoopX), EMB_INT32_LITTLE);
+        embInt_write(file, ".", &(extension.hoopY), EMB_INT32_LITTLE);
+        embInt_write(file, ".", &(extension.stitchGranularity), EMB_INT32_LITTLE);
         fwrite(extension.creatorName, 1, 50, file);
         fwrite(extension.modifierName, 1, 50, file);
         fputc(extension.auxFormat, file);
@@ -7303,8 +7286,8 @@ writeThr(EmbPattern* pattern, FILE* file) {
         float x, y;
         x = (float)(st.x * 10.0);
         y = (float)(st.y * 10.0);
-        fwrite_int(file, &x, EMB_INT32_LITTLE);
-        fwrite_int(file, &y, EMB_INT32_LITTLE);
+        embInt_write(file, ".", &x, EMB_INT32_LITTLE);
+        embInt_write(file, ".", &y, EMB_INT32_LITTLE);
         binaryWriteUInt(file, NOTFRM | (st.color & 0x0F));
     }
     fwrite(bitmapName, 1, 16, file);
@@ -7559,21 +7542,21 @@ readVip(EmbPattern* pattern, FILE* file)
 
     embInt_read(file, "magicCode", &(header.magicCode), EMB_INT32_LITTLE);
     embInt_read(file, "numberOfStitches", &(header.numberOfStitches), EMB_INT32_LITTLE);
-    fread_int(file, &(header.numberOfColors), EMB_INT32_LITTLE);
+    embInt_read(file, ".", &(header.numberOfColors), EMB_INT32_LITTLE);
 
-    fread_int(file, &(header.postitiveXHoopSize), EMB_INT16_LITTLE);
-    fread_int(file, &(header.postitiveYHoopSize), EMB_INT16_LITTLE);
-    fread_int(file, &(header.negativeXHoopSize), EMB_INT16_LITTLE);
-    fread_int(file, &(header.negativeYHoopSize), EMB_INT16_LITTLE);
-    fread_int(file, &(header.attributeOffset), EMB_INT32_LITTLE);
-    fread_int(file, &(header.xOffset), EMB_INT32_LITTLE);
-    fread_int(file, &(header.yOffset), EMB_INT32_LITTLE);
+    embInt_read(file, ".", &(header.postitiveXHoopSize), EMB_INT16_LITTLE);
+    embInt_read(file, ".", &(header.postitiveYHoopSize), EMB_INT16_LITTLE);
+    embInt_read(file, ".", &(header.negativeXHoopSize), EMB_INT16_LITTLE);
+    embInt_read(file, ".", &(header.negativeYHoopSize), EMB_INT16_LITTLE);
+    embInt_read(file, ".", &(header.attributeOffset), EMB_INT32_LITTLE);
+    embInt_read(file, ".", &(header.xOffset), EMB_INT32_LITTLE);
+    embInt_read(file, ".", &(header.yOffset), EMB_INT32_LITTLE);
 
     fread(header.stringVal, 1, 8, file); /* TODO: check return value */
 
-    fread_int(file, &(header.unknown), EMB_INT16_LITTLE);
+    embInt_read(file, ".", &(header.unknown), EMB_INT16_LITTLE);
 
-    fread_int(file, &(header.colorLength), EMB_INT32_LITTLE);
+    embInt_read(file, ".", &(header.colorLength), EMB_INT32_LITTLE);
     decodedColors = (unsigned char*)malloc(header.numberOfColors*4);
     if (!decodedColors) {
         printf("ERROR: format-vip.c readVip(), ");
@@ -7636,7 +7619,9 @@ readVip(EmbPattern* pattern, FILE* file)
     return 1;
 }
 
-unsigned char* vipCompressData(unsigned char* input, int decompressedInputSize, int* compressedSize) {
+unsigned char*
+vipCompressData(unsigned char* input, int decompressedInputSize, int* compressedSize)
+{
     unsigned char* compressedData = (unsigned char*)malloc(decompressedInputSize*2);
     if (!compressedData) {
         printf("ERROR: format-vip.c vipCompressData(), cannot allocate memory for compressedData\n");
@@ -7646,11 +7631,15 @@ unsigned char* vipCompressData(unsigned char* input, int decompressedInputSize, 
     return compressedData;
 }
 
-unsigned char vipEncodeByte(double f) {
+unsigned char
+vipEncodeByte(double f)
+{
     return (unsigned char)(int)round(f);
 }
 
-unsigned char vipEncodeStitchType(int st) {
+unsigned char
+vipEncodeStitchType(int st)
+{
     switch (st) {
         case NORMAL:
             return (0x80);
@@ -7667,7 +7656,8 @@ unsigned char vipEncodeStitchType(int st) {
 }
 
 static char
-writeVip(EmbPattern* pattern, FILE* file) {
+writeVip(EmbPattern* pattern, FILE* file)
+{
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor;
     int attributeSize = 0;
@@ -7785,21 +7775,21 @@ writeVip(EmbPattern* pattern, FILE* file) {
 /* ---------------------------------------------------------------- */
 /* format vp3 */
 
-
-
-unsigned char* vp3ReadString(FILE* file)
+unsigned char*
+vp3ReadString(FILE* file)
 {
     short stringLength;
     unsigned char* charString = 0;
     if (!file) { printf("ERROR: format-vp3.c vp3ReadString(), file argument is null\n"); return 0; }
-    fread_int(file, &stringLength, EMB_INT16_BIG);
+    embInt_read(file, ".", &stringLength, EMB_INT16_BIG);
     charString = (unsigned char*)malloc(stringLength);
     if (!charString) { printf("ERROR: format-vp3.c vp3ReadString(), cannot allocate memory for charString\n"); return 0; }
     fread(charString, 1, stringLength, file); /* TODO: check return value */
     return charString;
 }
 
-int vp3Decode(unsigned char inputByte)
+int
+vp3Decode(unsigned char inputByte)
 {
     if (inputByte > 0x80) {
         return (int)-((unsigned char)((~inputByte) + 1));
@@ -7807,7 +7797,8 @@ int vp3Decode(unsigned char inputByte)
     return ((int)inputByte);
 }
 
-short vp3DecodeInt16(unsigned short inputByte)
+short
+vp3DecodeInt16(unsigned short inputByte)
 {
     if (inputByte > 0x8000) {
         return -((short) ((~inputByte) + 1));
@@ -7815,7 +7806,8 @@ short vp3DecodeInt16(unsigned short inputByte)
     return ((short)inputByte);
 }
 
-vp3Hoop vp3ReadHoopSection(FILE* file)
+vp3Hoop
+vp3ReadHoopSection(FILE* file)
 {
     vp3Hoop hoop;
 
@@ -7847,30 +7839,31 @@ vp3Hoop vp3ReadHoopSection(FILE* file)
         return hoop; 
     }
 
-    hoop.right = fread_int32_be(file);
-    hoop.bottom = fread_int32_be(file);
-    hoop.left = fread_int32_be(file);
-    hoop.top = fread_int32_be(file);
+    embInt_read(file, "hoop right", &(hoop.right), EMB_INT32_BIG);
+    embInt_read(file, "hoop bottom", &(hoop.bottom), EMB_INT32_BIG);
+    embInt_read(file, "hoop left", &(hoop.left), EMB_INT32_BIG);
+    embInt_read(file, "hoop top", &(hoop.top), EMB_INT32_BIG);
 
-    fread_int(file, &(hoop.threadLength), EMB_INT32_LITTLE); /* yes, it seems this is _not_ big endian */
+    /* yes, it seems this is _not_ big endian */
+    embInt_read(file, "thread length", &(hoop.threadLength), EMB_INT32_LITTLE);
     hoop.unknown2 = (char)fgetc(file);
     hoop.numberOfColors = (char)fgetc(file);
-    fread_int(file, &(hoop.unknown3), EMB_INT16_BIG);
-    fread_int(file, &(hoop.unknown4), EMB_INT32_BIG);
-    fread_int(file, &(hoop.numberOfBytesRemaining), EMB_INT32_BIG);
+    embInt_read(file, "unknown3", &(hoop.unknown3), EMB_INT16_BIG);
+    embInt_read(file, "unknown4", &(hoop.unknown4), EMB_INT32_BIG);
+    embInt_read(file, "bytes remaining", &(hoop.numberOfBytesRemaining), EMB_INT32_BIG);
 
-    fread_int(file, &(hoop.xOffset), EMB_INT32_BIG);
-    fread_int(file, &(hoop.yOffset), EMB_INT32_BIG);
+    embInt_read(file, "x offset", &(hoop.xOffset), EMB_INT32_BIG);
+    embInt_read(file, "y offset", &(hoop.yOffset), EMB_INT32_BIG);
 
     hoop.byte1 = (char)fgetc(file);
     hoop.byte2 = (char)fgetc(file);
     hoop.byte3 = (char)fgetc(file);
 
     /* Centered hoop dimensions */
-    hoop.right2 = fread_int32_be(file);
-    hoop.left2 = fread_int32_be(file);
-    hoop.bottom2 = fread_int32_be(file);
-    hoop.top2 = fread_int32_be(file);
+    embInt_read(file, "hoop right2", &(hoop.right2), EMB_INT32_BIG);
+    embInt_read(file, "hoop left2", &(hoop.left2), EMB_INT32_BIG);
+    embInt_read(file, "hoop bottom2", &(hoop.bottom2), EMB_INT32_BIG);
+    embInt_read(file, "hoop top2", &(hoop.top2), EMB_INT32_BIG);
 
     hoop.width = fread_int32_be(file);
     hoop.height = fread_int32_be(file);
@@ -7878,7 +7871,8 @@ vp3Hoop vp3ReadHoopSection(FILE* file)
 }
 
 static char
-readVp3(EmbPattern* pattern, FILE* file) {
+readVp3(EmbPattern* pattern, FILE* file)
+{
     unsigned char magicString[5];
     unsigned char some;
     unsigned char* softwareVendorString = 0;
@@ -7899,7 +7893,7 @@ readVp3(EmbPattern* pattern, FILE* file) {
     softwareVendorString = vp3ReadString(file);
     embInt_read(file, "someShort", &someShort, EMB_INT16_LITTLE);
     someByte = (char)fgetc(file);
-    fread_int(file, &bytesRemainingInFile, EMB_INT32_LITTLE);
+    embInt_read(file, ".", &bytesRemainingInFile, EMB_INT32_LITTLE);
     fileCommentString = vp3ReadString(file);
     hoopConfigurationOffset = (int)ftell(file);
 
@@ -7920,7 +7914,7 @@ readVp3(EmbPattern* pattern, FILE* file) {
 
     anotherSoftwareVendorString = vp3ReadString(file);
 
-    fread_int(file, &numberOfColors, EMB_INT16_BIG);
+    embInt_read(file, ".", &numberOfColors, EMB_INT16_BIG);
     colorSectionOffset = (int)ftell(file);
     if (emb_verbose>1) {
         puts("LIBEMBROIDERY DEBUG");
@@ -7949,10 +7943,10 @@ readVp3(EmbPattern* pattern, FILE* file) {
         printf("ERROR: format-vp3.c Color Check Byte #1: 0 == %d\n", (char)fgetc(file));
         printf("ERROR: format-vp3.c Color Check Byte #2: 5 == %d\n", (char)fgetc(file));
         printf("ERROR: format-vp3.c Color Check Byte #3: 0 == %d\n", (char)fgetc(file));
-        fread_int(file, &colorSectionOffset, EMB_INT32_BIG);
+        embInt_read(file, ".", &colorSectionOffset, EMB_INT32_BIG);
         colorSectionOffset += ftell(file);
-        fread_int(file, &startX, EMB_INT32_BIG);
-        fread_int(file, &startY, EMB_INT32_BIG);
+        embInt_read(file, ".", &startX, EMB_INT32_BIG);
+        embInt_read(file, ".", &startY, EMB_INT32_BIG);
         embPattern_addStitchAbs(pattern, startX / 1000.0, -startY / 1000.0, JUMP, 1);
 
         tableSize = (char)fgetc(file);
@@ -8019,18 +8013,21 @@ readVp3(EmbPattern* pattern, FILE* file) {
 }
 
 void
-vp3WriteStringLen(FILE* file, const char* str, int len) {
+vp3WriteStringLen(FILE* file, const char* str, int len)
+{
     binaryWriteUShortBE(file, len);
     fwrite(str, 1, len, file);
 }
 
 void
-vp3WriteString(FILE* file, const char* str) {
+vp3WriteString(FILE* file, const char* str)
+{
     vp3WriteStringLen(file, str, strlen(str));
 }
 
 void
-vp3PatchByteCount(FILE* file, int offset, int adjustment) {
+vp3PatchByteCount(FILE* file, int offset, int adjustment)
+{
     int currentPos = ftell(file);
     fseek(file, offset, SEEK_SET);
     printf("Patching byte count: %d\n", currentPos - offset + adjustment);
@@ -8039,7 +8036,8 @@ vp3PatchByteCount(FILE* file, int offset, int adjustment) {
 }
 
 static char
-writeVp3(EmbPattern* pattern, FILE* file) {
+writeVp3(EmbPattern* pattern, FILE* file)
+{
     puts("Overridden, defaulting to dst.");
     writeDst(pattern, file);
 #if 0
@@ -8117,18 +8115,18 @@ writeVp3(EmbPattern* pattern, FILE* file) {
 
     vp3WriteString(file, "");
     a = 25700;
-    fwrite_int(file, &a, EMB_INT16_BIG);
+    embInt_write(file, ".", &a, EMB_INT16_BIG);
     a_int = 4096;
-    fwrite_int(file, &a_int, EMB_INT32_BIG);
+    embInt_write(file, ".", &a_int, EMB_INT32_BIG);
     a_int = 0;
-    fwrite_int(file, &a_int, EMB_INT32_BIG);
-    fwrite_int(file, &a_int, EMB_INT32_BIG);
+    embInt_write(file, ".", &a_int, EMB_INT32_BIG);
+    embInt_write(file, ".", &a_int, EMB_INT32_BIG);
     a_int = 4096;
-    fwrite_int(file, &a_int, EMB_INT32_BIG);
+    embInt_write(file, ".", &a_int, EMB_INT32_BIG);
 
     fwrite("xxPP\x01\0", 1, 6, file);
     vp3WriteString(file, "");
-    fwrite_int(file, &numberOfColors, EMB_INT16_BIG);
+    embInt_write(file, ".", &numberOfColors, EMB_INT16_BIG);
 
     mainPointer = pattern->stitchList;
     while(mainPointer)
@@ -8215,8 +8213,8 @@ writeVp3(EmbPattern* pattern, FILE* file) {
             if (dx < -127 || dx > 127 || dy < -127 || dy > 127) {
                 fputc(128);
                 fputc(1);
-                fwrite_int(file, &dx, EMB_INT16_BIG);
-                fwrite_int(file, &dy, EMB_INT16_BIG);
+                embInt_write(file, ".", &dx, EMB_INT16_BIG);
+                embInt_write(file, ".", &dy, EMB_INT16_BIG);
                 fputc(128);
                 fputc(2);
             }
@@ -8267,9 +8265,9 @@ readXxx(EmbPattern* pattern, FILE* file) {
     }
 
     fseek(file, 0x27, SEEK_SET);
-    fread_int(file, &numberOfColors, EMB_INT16_LITTLE);
+    embInt_read(file, ".", &numberOfColors, EMB_INT16_LITTLE);
     fseek(file, 0xFC, SEEK_SET);
-    fread_int(file, &paletteOffset, EMB_INT32_LITTLE);
+    embInt_read(file, ".", &paletteOffset, EMB_INT32_LITTLE);
     fseek(file, paletteOffset + 6, SEEK_SET);
 
     for (i = 0; i < numberOfColors; i++) {

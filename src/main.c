@@ -518,42 +518,6 @@ bcfFileHeader_read(FILE* file)
 }
 
 void
-embRect_setCoords(EmbRect* rect, double x1, double y1, double x2, double y2)
-{
-    rect->left = x1;
-    rect->top = y1;
-    rect->right = x2;
-    rect->bottom = y2;
-}
-
-void
-embRect_setRect(EmbRect* rect, double x, double y, double w, double h)
-{
-    rect->left = x;
-    rect->top = y;
-    rect->right = x + w;
-    rect->bottom = y + h;
-}
-
-/* Returns an EmbRectObject. It is created on the stack. */
-EmbRectObject
-embRectObject_make(double x, double y, double w, double h)
-{
-    EmbRectObject stackRectObj;
-    stackRectObj.rect.left = x;
-    stackRectObj.rect.top = y;
-    stackRectObj.rect.right = x + w;
-    stackRectObj.rect.bottom = y + h;
-    stackRectObj.rotation = 0.0;
-    stackRectObj.color.r = 0;
-    stackRectObj.color.g = 0;
-    stackRectObj.color.b = 0;
-    stackRectObj.lineType = 0;
-    stackRectObj.radius = 0;
-    return stackRectObj;
-}
-
-void
 embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, EmbSatinOutline* result)
 {
     int i;

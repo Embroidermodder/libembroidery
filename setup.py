@@ -11,7 +11,7 @@ setuptools.setup(
     author="The Embroidermodder Team",
     author_email="embroidermodder@gmail.com",
     headers=["src/embroidery.h"],
-    ext_modules=[Extension("libembroidery", [
+    ext_modules=[Extension("libembcore", [
         "python/extension.c",
         "src/main.c",
         "src/array.c",
@@ -26,6 +26,7 @@ setuptools.setup(
         "src/encoding.c",
         "src/thread-color.c"
     ])],
+    py_modules=["libembroidery"],
     python_requires=">=3.6"
 )
 

@@ -144,22 +144,6 @@ extern "C" {
 
 #define MAX_STITCHES             1000000
 
-#define EMB_BIG_ENDIAN                          0
-#define EMB_LITTLE_ENDIAN                       1
-
-#define ENDIAN_HOST                             EMB_LITTLE_ENDIAN
-
-#define EMB_INT16_BIG                           2
-#define EMB_INT16_LITTLE                        3
-#define EMB_INT32_BIG                           4
-#define EMB_INT32_LITTLE                        5
-
-/**
-Special values for Stream Identifiers
-*/
-#define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /*!< All real stream Ids are less than this */
-#define CompoundFileStreamId_NoStream           0xFFFFFFFF /*!< There is no valid stream Id            */
-
 #if defined(_WIN32) && !defined(WIN32)
 #define WIN32
 #endif
@@ -291,14 +275,9 @@ typedef struct EmbArc_
     EmbVector start;
     EmbVector mid;
     EmbVector end;
-} EmbArc;
-
-typedef struct EmbArcObject_
-{
-    EmbArc arc;
     int lineType;
     EmbColor color;
-} EmbArcObject;
+} EmbArc;
 
 typedef struct EmbRect_
 {
@@ -404,7 +383,7 @@ typedef struct EmbImage_ {
  * Only one of the pointers is used at a time so this should be a union.
  */
 struct EmbArray_ {
-    EmbArcObject *arc;
+    EmbArc *arc;
     EmbCircleObject *circle;
     EmbColor *color;
     EmbEllipseObject *ellipse;
@@ -467,7 +446,7 @@ EMB_PUBLIC int emb_identify_format(const char *ending);
 EMB_PUBLIC EmbArray* embArray_create(int type);
 EMB_PUBLIC int embArray_resize(EmbArray *g);
 EMB_PUBLIC void embArray_copy(EmbArray *dst, EmbArray *src);
-EMB_PUBLIC int embArray_addArc(EmbArray* g, EmbArc arc, int lineType, EmbColor color);
+EMB_PUBLIC int embArray_addArc(EmbArray* g, EmbArc arc);
 EMB_PUBLIC int embArray_addCircle(EmbArray* g, EmbCircle circle, int lineType, EmbColor color);
 EMB_PUBLIC int embArray_addEllipse(EmbArray* g, EmbEllipse circle, double rotation, int lineType, EmbColor color);
 EMB_PUBLIC int embArray_addFlag(EmbArray* g, int flag);
@@ -517,9 +496,6 @@ EMB_PUBLIC int render_postscript(EmbPattern *pattern, EmbImage *image);
 
 EMB_PUBLIC void testMain(int level);
 EMB_PUBLIC int convert(const char *inf, const char *outf);
-
-int hus_compress(char* input, int size, char* output, int *out_size);
-int hus_decompress(char* input, int size, char* output, int *out_size);
 
 EMB_PUBLIC char isArcClockwise(EmbArc arc);
 EMB_PUBLIC void getArcCenter(EmbArc arc, EmbVector *arcCenter);

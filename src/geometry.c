@@ -14,29 +14,37 @@
 #include "embroidery.h"
 
 /* Returns an EmbArcObject. It is created on the stack. */
-EmbArcObject embArcObject_make(double sx, double sy, double mx,
-                                double my, double ex, double ey) {
-    EmbArcObject stackArcObj;
-    stackArcObj.arc.start.x = sx;
-    stackArcObj.arc.start.y = sy;
-    stackArcObj.arc.mid.x   = mx;
-    stackArcObj.arc.mid.y   = my;
-    stackArcObj.arc.end.x   = ex;
-    stackArcObj.arc.end.y   = ey;
+EmbArc
+embArcObject_make(double sx, double sy, double mx,
+                  double my, double ex, double ey)
+{
+    EmbArc stackArcObj;
+    stackArcObj.start.x = sx;
+    stackArcObj.start.y = sy;
+    stackArcObj.mid.x   = mx;
+    stackArcObj.mid.y   = my;
+    stackArcObj.end.x   = ex;
+    stackArcObj.end.y   = ey;
     return stackArcObj;
 }
 
-double radians(double degree) {
+double
+radians(double degree)
+{
     return degree*embConstantPi/180.0;
 }
 
-double degrees(double radian) {
+double
+degrees(double radian)
+{
     return radian*180.0/embConstantPi;
 }
 
 /* Calculus based approach at determining whether a polygon is clockwise or counterclockwise.
  * Returns true if arc is clockwise. */
-char isArcClockwise(EmbArc arc) {
+char
+isArcClockwise(EmbArc arc)
+{
     double edge1 = (arc.mid.x-arc.start.x)*(arc.mid.y+arc.start.y);
     double edge2 = (arc.end.x-arc.mid.x)*(arc.end.y+arc.mid.y);
     double edge3 = (arc.start.x-arc.end.x)*(arc.start.y+arc.end.y);
@@ -47,7 +55,9 @@ char isArcClockwise(EmbArc arc) {
 }
 
 /* Calculates the CenterPoint of the Arc */
-void getArcCenter(EmbArc arc, EmbVector* arcCenter) {
+void
+getArcCenter(EmbArc arc, EmbVector* arcCenter)
+{
     EmbVector a_vec, b_vec, aMid_vec, bMid_vec, aPerp_vec, bPerp_vec, pa, pb;
     EmbLine line1, line2;
     double paAngleInRadians, pbAngleInRadians;
@@ -77,14 +87,16 @@ void getArcCenter(EmbArc arc, EmbVector* arcCenter) {
 
 /* Calculates Arc Geometry from Bulge Data.
  * Returns false if there was an error calculating the data. */
-char getArcDataFromBulge(double bulge,
+char
+getArcDataFromBulge(double bulge,
                          EmbArc *arc,
                          double* arcCenterX,        double* arcCenterY,
                          double* radius,            double* diameter,
                          double* chord,
                          double* chordMidX,         double* chordMidY,
                          double* sagitta,           double* apothem,
-                         double* incAngleInDegrees, char*   clockwise) {
+                         double* incAngleInDegrees, char*   clockwise)
+{
     double incAngleInRadians;
     double chordAngleInRadians;
     double sagittaAngleInRadians;
@@ -158,8 +170,9 @@ char getArcDataFromBulge(double bulge,
  * Returns true if the circles intersect.
  * Returns false if the circles do not intersect.
  ****************************************************************/
-int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1,
-                                 EmbVector *p0, EmbVector *p1)
+int
+getCircleCircleIntersections(EmbCircle c0, EmbCircle c1,
+                             EmbVector *p0, EmbVector *p1)
 {
     EmbVector delta;
     double a, h, px2, py2, mx, my, d;

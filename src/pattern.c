@@ -415,7 +415,7 @@ embPattern_calcBoundingBox(EmbPattern* p)
         /* TODO: embPattern_calcBoundingBox for arcs, 
             for now just checks the start point */
         for (i = 0; i < p->arcs->count; i++) {
-            arc = p->arcs->arc[i].arc;
+            arc = p->arcs->arc[i];
             r.left = EMB_MIN(r.left, arc.start.x);
             r.top = EMB_MIN(r.top, arc.start.y);
             r.right = EMB_MAX(r.right, arc.start.x);
@@ -555,14 +555,14 @@ embPattern_flip(EmbPattern* p, int horz, int vert)
     if (p->arcs) {
         for (i = 0; i < p->arcs->count; i++) {
             if (horz) {
-                p->arcs->arc[i].arc.start.x *= -1.0;
-                p->arcs->arc[i].arc.mid.x *= -1.0;
-                p->arcs->arc[i].arc.end.x *= -1.0;
+                p->arcs->arc[i].start.x *= -1.0;
+                p->arcs->arc[i].mid.x *= -1.0;
+                p->arcs->arc[i].end.x *= -1.0;
             }
             if (vert) {
-                p->arcs->arc[i].arc.start.y *= -1.0;
-                p->arcs->arc[i].arc.mid.y *= -1.0;
-                p->arcs->arc[i].arc.end.y *= -1.0;
+                p->arcs->arc[i].start.y *= -1.0;
+                p->arcs->arc[i].mid.y *= -1.0;
+                p->arcs->arc[i].end.y *= -1.0;
             }
         }
     }

@@ -35,6 +35,25 @@ Type of directory object
 #define ObjectTypeStream    0x02 /*!< a file type object      */
 #define ObjectTypeRootEntry 0x05 /*!< the root entry          */
 
+/**
+Special values for Stream Identifiers
+*/
+#define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /*!< All real stream Ids are less than this */
+#define CompoundFileStreamId_NoStream           0xFFFFFFFF /*!< There is no valid stream Id            */
+
+/* Libembroidery's handling of integer types.
+ */
+#define EMB_BIG_ENDIAN                          0
+#define EMB_LITTLE_ENDIAN                       1
+
+#define ENDIAN_HOST                             EMB_LITTLE_ENDIAN
+
+#define EMB_INT16_BIG                           2
+#define EMB_INT16_LITTLE                        3
+#define EMB_INT32_BIG                           4
+#define EMB_INT32_LITTLE                        5
+
+
 #define ELEMENT_XML              0
 #define ELEMENT_A                1
 #define ELEMENT_ANIMATE          2
@@ -466,6 +485,9 @@ int bcfFileHeader_isValid(bcf_file_header header);
 
 void embColor_read(FILE *f, EmbColor *c, int toRead);
 void embColor_write(FILE *f, EmbColor c, int toWrite);
+
+int hus_compress(char* input, int size, char* output, int *out_size);
+int hus_decompress(char* input, int size, char* output, int *out_size);
 
 /* DATA */
 

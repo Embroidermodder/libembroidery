@@ -21,7 +21,7 @@ EmbArray* embArray_create(int type) {
     p->count = 0;
     switch (p->type) {
     case EMB_ARC:
-        p->arc = (EmbArcObject*)malloc(CHUNK_SIZE*sizeof(EmbArcObject));
+        p->arc = (EmbArc*)malloc(CHUNK_SIZE*sizeof(EmbArc));
         break;
     case EMB_CIRCLE:
         p->circle = (EmbCircleObject*)malloc(CHUNK_SIZE*sizeof(EmbCircleObject));
@@ -75,7 +75,7 @@ int embArray_resize(EmbArray *p) {
     p->length += CHUNK_SIZE;
     switch (p->type) {
     case EMB_ARC:
-        p->arc = (EmbArcObject *)realloc(p->arc, p->length*sizeof(EmbArcObject));
+        p->arc = (EmbArc *)realloc(p->arc, p->length*sizeof(EmbArc));
         if (!p->arc) return 0;
         break;
     case EMB_CIRCLE:
@@ -145,7 +145,7 @@ void embArray_copy(EmbArray *dst, EmbArray *src)
     embArray_resize(dst);
     switch (src->type) {
     case EMB_ARC:
-        memcpy(dst->arc, src->arc, sizeof(EmbArcObject)*src->count);
+        memcpy(dst->arc, src->arc, sizeof(EmbArc)*src->count);
         break;
     case EMB_CIRCLE:
         memcpy(dst->circle, src->circle, sizeof(EmbCircleObject)*src->count);
@@ -191,19 +191,20 @@ void embArray_copy(EmbArray *dst, EmbArray *src)
     }
 }
 
-int embArray_addArc(EmbArray* p, EmbArc arc, int lineType, EmbColor color) {
+int
+embArray_addArc(EmbArray* p, EmbArc arc)
+{
     p->count++;
     if (!embArray_resize(p)) {
         return 0;
     }
-    p->arc[p->count - 1].arc = arc;
-    p->arc[p->count - 1].lineType = lineType;
-    p->arc[p->count - 1].color = color;
+    p->arc[p->count - 1] = arc;
     return 1;
 }
 
-int embArray_addCircle(EmbArray* p, EmbCircle circle,
-                        int lineType, EmbColor color) {
+int
+embArray_addCircle(EmbArray* p, EmbCircle circle, int lineType, EmbColor color)
+{
     p->count++;
     if (!embArray_resize(p)) {
         return 0;
@@ -214,8 +215,10 @@ int embArray_addCircle(EmbArray* p, EmbCircle circle,
     return 1;
 }
 
-int embArray_addEllipse(EmbArray* p,
-    EmbEllipse ellipse, double rotation, int lineType, EmbColor color) {
+int
+embArray_addEllipse(EmbArray* p,
+    EmbEllipse ellipse, double rotation, int lineType, EmbColor color)
+{
     p->count++;
     if (!embArray_resize(p)) {
         return 0;

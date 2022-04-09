@@ -142,15 +142,6 @@ extern "C" {
 #define EMBFORMAT_MAXDESC            50
 /* the longest possible description string length */
 
-#define HOOP_126X110                  0
-#define HOOP_110X110                  1
-#define HOOP_50X50                    2
-#define HOOP_140X200                  3
-#define HOOP_230X200                  4
-
-#define EMB_MIN(A, B) (((A) < (B)) ? (A) : (B))
-#define EMB_MAX(A, B) (((A) > (B)) ? (A) : (B))
-
 #define MAX_STITCHES             1000000
 
 #define EMB_BIG_ENDIAN                          0
@@ -254,7 +245,7 @@ typedef struct EmbLineObject_
 typedef struct EmbLayer_
 {
     EmbColor color;
-    const char* name;
+    const char name[100];
 } EmbLayer;
 
 typedef struct EmbPathObject_
@@ -503,7 +494,7 @@ EMB_PUBLIC int embArray_addPath(EmbArray* g, EmbPathObject *p);
 EMB_PUBLIC int embArray_addPoint(EmbArray* g, EmbPointObject *p);
 EMB_PUBLIC int embArray_addPolygon(EmbArray* g, EmbPolygonObject *p);
 EMB_PUBLIC int embArray_addPolyline(EmbArray* g, EmbPolylineObject *p);
-EMB_PUBLIC int embArray_addSpline(EmbArray* g, EmbSplineObject *p);
+/* EMB_PUBLIC int embArray_addSpline(EmbArray* g, EmbSplineObject *p); */
 EMB_PUBLIC int embArray_addStitch(EmbArray* g, EmbStitch st);
 EMB_PUBLIC int embArray_addThread(EmbArray* g, EmbThread p);
 EMB_PUBLIC int embArray_addVector(EmbArray* g, EmbVector);
@@ -513,10 +504,6 @@ EMB_PUBLIC EmbLine embLine_make(double x1, double y1, double x2, double y2);
 
 EMB_PUBLIC void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise);
 EMB_PUBLIC EmbVector embLine_intersectionPoint(EmbLine line1, EmbLine line2);
-
-EMB_PUBLIC EmbPathObject* embPathObject_create(
-    EmbArray* pointList, EmbArray* flagList, EmbColor color, int lineType);
-EMB_PUBLIC void embPathObject_free(EmbPathObject* pointer);
 
 EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbArray* colors, int mode);
 EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, EmbThread* colors, int length);
@@ -550,9 +537,6 @@ EMB_PUBLIC int convert(const char *inf, const char *outf);
 
 int hus_compress(char* input, int size, char* output, int *out_size);
 int hus_decompress(char* input, int size, char* output, int *out_size);
-
-EMB_PUBLIC EmbArcObject embArcObject_make(double sx, double sy, double mx, double my, double ex, double ey);
-EMB_PUBLIC EmbArcObject* embArcObject_create(double sx, double sy, double mx, double my, double ex, double ey);
 
 EMB_PUBLIC char isArcClockwise(EmbArc arc);
 EMB_PUBLIC void getArcCenter(EmbArc arc, EmbVector *arcCenter);
@@ -592,28 +576,13 @@ EMB_PUBLIC const char* threadColorName(unsigned int color, int brand);
 EMB_PUBLIC void embTime_initNow(EmbTime* t);
 EMB_PUBLIC EmbTime embTime_time(EmbTime* t);
 
-EMB_PUBLIC EmbPointObject embPointObject_make(double x, double y);
-EMB_PUBLIC EmbPointObject* embPointObject_create(double x, double y);
-
 EMB_PUBLIC EmbSettings embSettings_init(void);
 
 EMB_PUBLIC EmbVector embSettings_home(EmbSettings* settings);
 EMB_PUBLIC void embSettings_setHome(EmbSettings* settings, EmbVector point);
 
-EMB_PUBLIC EmbPolygonObject* embPolygonObject_create(
-    EmbArray* pointList, EmbColor color, int lineType);
-EMB_PUBLIC void embPolygonObject_free(EmbPolygonObject* pointer);
-EMB_PUBLIC EmbPolylineObject* embPolylineObject_create(
-    EmbArray* pointList, EmbColor color, int lineType);
-EMB_PUBLIC void embPolylineObject_free(EmbPolylineObject* pointer);
-
 EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbArray* lines, double thickness, EmbSatinOutline* result);
 EMB_PUBLIC EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density);
-
-EMB_PUBLIC void embRect_setCoords(EmbRect* rect, double x1, double y1, double x2, double y2);
-EMB_PUBLIC void embRect_setRect(EmbRect* rect, double x, double y, double w, double h);
-
-EMB_PUBLIC EmbRectObject embRectObject_make(double x, double y, double w, double h);
 
 EMB_PUBLIC EmbPattern* embPattern_create(void);
 EMB_PUBLIC void embPattern_hideStitchesOverLength(EmbPattern* p, int length);
@@ -663,9 +632,8 @@ EMB_PUBLIC int full_test_matrix(char *fname);
 /* NON-MACRO CONSTANTS
  ******************************************************************************/
 
-extern EmbFormatList formatTable[];
+extern EmbFormatList formatTable[numberOfFormats];
 extern const int pecThreadCount;
-extern const char imageWithFrame[38][48];
 extern const int shvThreadCount;
 extern const double embConstantPi;
 extern const EmbThread husThreads[];
@@ -675,16 +643,9 @@ extern const EmbThread pcmThreads[];
 extern const EmbThread pecThreads[];
 extern const unsigned char _dxfColorTable[][3];
 extern EmbThread black_thread;
-extern const char svg_attribute_table[50][100][30];
-extern const char *svg_element_tokens[];
-extern const char *svg_attribute_tokens[];
-extern const char *svg_property_tokens[];
-extern const char *svg_media_property_tokens[];
 extern const unsigned char csd_decryptArray[];
-extern const char *csv_header[];
 extern const unsigned char max_header[];
 extern const char imageWithFrame[38][48];
-extern const char *pes_version_strings[];
 extern const unsigned char vipDecodingTable[];
 
 /* VARIABLES

@@ -9,6 +9,15 @@
 #define YELLOW_TERM_COLOR   "\x1B[1;33m"
 #define RESET_TERM_COLOR       "\033[0m"
 
+#define HOOP_126X110                  0
+#define HOOP_110X110                  1
+#define HOOP_50X50                    2
+#define HOOP_140X200                  3
+#define HOOP_230X200                  4
+
+#define EMB_MIN(A, B) (((A) < (B)) ? (A) : (B))
+#define EMB_MAX(A, B) (((A) > (B)) ? (A) : (B))
+
 #define ELEMENT_XML              0
 #define ELEMENT_A                1
 #define ELEMENT_ANIMATE          2
@@ -440,5 +449,15 @@ int bcfFileHeader_isValid(bcf_file_header header);
 
 void embColor_read(FILE *f, EmbColor *c, int toRead);
 void embColor_write(FILE *f, EmbColor c, int toWrite);
+
+/* DATA */
+
+extern const char *csv_header[];
+extern const char *pes_version_strings[];
+extern const char svg_attribute_table[50][100][30];
+extern const char *svg_element_tokens[];
+extern const char *svg_attribute_tokens[];
+extern const char *svg_property_tokens[];
+extern const char *svg_media_property_tokens[];
 
 #endif

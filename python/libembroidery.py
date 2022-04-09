@@ -62,153 +62,278 @@ class _SwigNonDynamicMeta(type):
 
 
 NORMAL = _libembroidery.NORMAL
+
 JUMP = _libembroidery.JUMP
+
 TRIM = _libembroidery.TRIM
+
 STOP = _libembroidery.STOP
+
 SEQUIN = _libembroidery.SEQUIN
+
 END = _libembroidery.END
+
 EMB_FORMAT_100 = _libembroidery.EMB_FORMAT_100
+
 EMB_FORMAT_10O = _libembroidery.EMB_FORMAT_10O
+
 EMB_FORMAT_ART = _libembroidery.EMB_FORMAT_ART
+
 EMB_FORMAT_BMC = _libembroidery.EMB_FORMAT_BMC
+
 EMB_FORMAT_BRO = _libembroidery.EMB_FORMAT_BRO
+
 EMB_FORMAT_CND = _libembroidery.EMB_FORMAT_CND
+
 EMB_FORMAT_COL = _libembroidery.EMB_FORMAT_COL
+
 EMB_FORMAT_CSD = _libembroidery.EMB_FORMAT_CSD
+
 EMB_FORMAT_CSV = _libembroidery.EMB_FORMAT_CSV
+
 EMB_FORMAT_DAT = _libembroidery.EMB_FORMAT_DAT
+
 EMB_FORMAT_DEM = _libembroidery.EMB_FORMAT_DEM
+
 EMB_FORMAT_DSB = _libembroidery.EMB_FORMAT_DSB
+
 EMB_FORMAT_DST = _libembroidery.EMB_FORMAT_DST
+
 EMB_FORMAT_DSZ = _libembroidery.EMB_FORMAT_DSZ
+
 EMB_FORMAT_DXF = _libembroidery.EMB_FORMAT_DXF
+
 EMB_FORMAT_EDR = _libembroidery.EMB_FORMAT_EDR
+
 EMB_FORMAT_EMD = _libembroidery.EMB_FORMAT_EMD
+
 EMB_FORMAT_EXP = _libembroidery.EMB_FORMAT_EXP
+
 EMB_FORMAT_EXY = _libembroidery.EMB_FORMAT_EXY
+
 EMB_FORMAT_EYS = _libembroidery.EMB_FORMAT_EYS
+
 EMB_FORMAT_FXY = _libembroidery.EMB_FORMAT_FXY
+
 EMB_FORMAT_GC = _libembroidery.EMB_FORMAT_GC
+
 EMB_FORMAT_GNC = _libembroidery.EMB_FORMAT_GNC
+
 EMB_FORMAT_GT = _libembroidery.EMB_FORMAT_GT
+
 EMB_FORMAT_HUS = _libembroidery.EMB_FORMAT_HUS
+
 EMB_FORMAT_INB = _libembroidery.EMB_FORMAT_INB
+
 EMB_FORMAT_INF = _libembroidery.EMB_FORMAT_INF
+
 EMB_FORMAT_JEF = _libembroidery.EMB_FORMAT_JEF
+
 EMB_FORMAT_KSM = _libembroidery.EMB_FORMAT_KSM
+
 EMB_FORMAT_MAX = _libembroidery.EMB_FORMAT_MAX
+
 EMB_FORMAT_MIT = _libembroidery.EMB_FORMAT_MIT
+
 EMB_FORMAT_NEW = _libembroidery.EMB_FORMAT_NEW
+
 EMB_FORMAT_OFM = _libembroidery.EMB_FORMAT_OFM
+
 EMB_FORMAT_PCD = _libembroidery.EMB_FORMAT_PCD
+
 EMB_FORMAT_PCM = _libembroidery.EMB_FORMAT_PCM
+
 EMB_FORMAT_PCQ = _libembroidery.EMB_FORMAT_PCQ
+
 EMB_FORMAT_PCS = _libembroidery.EMB_FORMAT_PCS
+
 EMB_FORMAT_PEC = _libembroidery.EMB_FORMAT_PEC
+
 EMB_FORMAT_PEL = _libembroidery.EMB_FORMAT_PEL
+
 EMB_FORMAT_PEM = _libembroidery.EMB_FORMAT_PEM
+
 EMB_FORMAT_PES = _libembroidery.EMB_FORMAT_PES
+
 EMB_FORMAT_PHB = _libembroidery.EMB_FORMAT_PHB
+
 EMB_FORMAT_PHC = _libembroidery.EMB_FORMAT_PHC
+
 EMB_FORMAT_PLT = _libembroidery.EMB_FORMAT_PLT
+
 EMB_FORMAT_RGB = _libembroidery.EMB_FORMAT_RGB
+
 EMB_FORMAT_SEW = _libembroidery.EMB_FORMAT_SEW
+
 EMB_FORMAT_SHV = _libembroidery.EMB_FORMAT_SHV
+
 EMB_FORMAT_SST = _libembroidery.EMB_FORMAT_SST
+
 EMB_FORMAT_STX = _libembroidery.EMB_FORMAT_STX
+
 EMB_FORMAT_SVG = _libembroidery.EMB_FORMAT_SVG
+
 EMB_FORMAT_T01 = _libembroidery.EMB_FORMAT_T01
+
 EMB_FORMAT_T09 = _libembroidery.EMB_FORMAT_T09
+
 EMB_FORMAT_TAP = _libembroidery.EMB_FORMAT_TAP
+
 EMB_FORMAT_THR = _libembroidery.EMB_FORMAT_THR
+
 EMB_FORMAT_TXT = _libembroidery.EMB_FORMAT_TXT
+
 EMB_FORMAT_U00 = _libembroidery.EMB_FORMAT_U00
+
 EMB_FORMAT_U01 = _libembroidery.EMB_FORMAT_U01
+
 EMB_FORMAT_VIP = _libembroidery.EMB_FORMAT_VIP
+
 EMB_FORMAT_VP3 = _libembroidery.EMB_FORMAT_VP3
+
 EMB_FORMAT_XXX = _libembroidery.EMB_FORMAT_XXX
+
 EMB_FORMAT_ZSK = _libembroidery.EMB_FORMAT_ZSK
+
 Arc_Polyester = _libembroidery.Arc_Polyester
+
 Arc_Rayon = _libembroidery.Arc_Rayon
+
 CoatsAndClark_Rayon = _libembroidery.CoatsAndClark_Rayon
+
 Exquisite_Polyester = _libembroidery.Exquisite_Polyester
+
 Fufu_Polyester = _libembroidery.Fufu_Polyester
+
 Fufu_Rayon = _libembroidery.Fufu_Rayon
+
 Hemingworth_Polyester = _libembroidery.Hemingworth_Polyester
+
 Isacord_Polyester = _libembroidery.Isacord_Polyester
+
 Isafil_Rayon = _libembroidery.Isafil_Rayon
+
 Marathon_Polyester = _libembroidery.Marathon_Polyester
+
 Marathon_Rayon = _libembroidery.Marathon_Rayon
+
 Madeira_Polyester = _libembroidery.Madeira_Polyester
+
 Madeira_Rayon = _libembroidery.Madeira_Rayon
+
 Metro_Polyester = _libembroidery.Metro_Polyester
+
 Pantone = _libembroidery.Pantone
+
 RobisonAnton_Polyester = _libembroidery.RobisonAnton_Polyester
+
 RobisonAnton_Rayon = _libembroidery.RobisonAnton_Rayon
+
 Sigma_Polyester = _libembroidery.Sigma_Polyester
+
 Sulky_Rayon = _libembroidery.Sulky_Rayon
+
 ThreadArt_Rayon = _libembroidery.ThreadArt_Rayon
+
 ThreadArt_Polyester = _libembroidery.ThreadArt_Polyester
+
 ThreaDelight_Polyester = _libembroidery.ThreaDelight_Polyester
+
 Z102_Isacord_Polyester = _libembroidery.Z102_Isacord_Polyester
+
 SVG_Colors = _libembroidery.SVG_Colors
+
 hus_thread = _libembroidery.hus_thread
+
 jef_thread = _libembroidery.jef_thread
+
 pcm_thread = _libembroidery.pcm_thread
+
 pec_thread = _libembroidery.pec_thread
+
 shv_thread = _libembroidery.shv_thread
+
 dxf_color = _libembroidery.dxf_color
+
 EMB_ARC = _libembroidery.EMB_ARC
+
 EMB_CIRCLE = _libembroidery.EMB_CIRCLE
+
 EMB_ELLIPSE = _libembroidery.EMB_ELLIPSE
+
 EMB_FLAG = _libembroidery.EMB_FLAG
+
 EMB_LINE = _libembroidery.EMB_LINE
+
 EMB_PATH = _libembroidery.EMB_PATH
+
 EMB_POINT = _libembroidery.EMB_POINT
+
 EMB_POLYGON = _libembroidery.EMB_POLYGON
+
 EMB_POLYLINE = _libembroidery.EMB_POLYLINE
+
 EMB_RECT = _libembroidery.EMB_RECT
+
 EMB_SPLINE = _libembroidery.EMB_SPLINE
+
 EMB_STITCH = _libembroidery.EMB_STITCH
+
 EMB_THREAD = _libembroidery.EMB_THREAD
+
 EMB_VECTOR = _libembroidery.EMB_VECTOR
+
 EMB_CHAR = _libembroidery.EMB_CHAR
+
 EMB_ARRAY = _libembroidery.EMB_ARRAY
+
 EMBFORMAT_UNSUPPORTED = _libembroidery.EMBFORMAT_UNSUPPORTED
+
 EMBFORMAT_STITCHONLY = _libembroidery.EMBFORMAT_STITCHONLY
+
 EMBFORMAT_OBJECTONLY = _libembroidery.EMBFORMAT_OBJECTONLY
+
 EMBFORMAT_STCHANDOBJ = _libembroidery.EMBFORMAT_STCHANDOBJ
+
 numberOfFormats = _libembroidery.numberOfFormats
+
 CHUNK_SIZE = _libembroidery.CHUNK_SIZE
+
 EMBFORMAT_MAXEXT = _libembroidery.EMBFORMAT_MAXEXT
+
 EMBFORMAT_MAXDESC = _libembroidery.EMBFORMAT_MAXDESC
+
 MAX_STITCHES = _libembroidery.MAX_STITCHES
+
 EMB_BIG_ENDIAN = _libembroidery.EMB_BIG_ENDIAN
+
 EMB_LITTLE_ENDIAN = _libembroidery.EMB_LITTLE_ENDIAN
+
 ENDIAN_HOST = _libembroidery.ENDIAN_HOST
+
 EMB_INT16_BIG = _libembroidery.EMB_INT16_BIG
+
 EMB_INT16_LITTLE = _libembroidery.EMB_INT16_LITTLE
+
 EMB_INT32_BIG = _libembroidery.EMB_INT32_BIG
+
 EMB_INT32_LITTLE = _libembroidery.EMB_INT32_LITTLE
-CompoundFileSector_MaxRegSector = _libembroidery.CompoundFileSector_MaxRegSector
-CompoundFileSector_DIFAT_Sector = _libembroidery.CompoundFileSector_DIFAT_Sector
-CompoundFileSector_FAT_Sector = _libembroidery.CompoundFileSector_FAT_Sector
-CompoundFileSector_EndOfChain = _libembroidery.CompoundFileSector_EndOfChain
-CompoundFileSector_FreeSector = _libembroidery.CompoundFileSector_FreeSector
-ObjectTypeUnknown = _libembroidery.ObjectTypeUnknown
-ObjectTypeStorage = _libembroidery.ObjectTypeStorage
-ObjectTypeStream = _libembroidery.ObjectTypeStream
-ObjectTypeRootEntry = _libembroidery.ObjectTypeRootEntry
+
 CompoundFileStreamId_MaxRegularStreamId = _libembroidery.CompoundFileStreamId_MaxRegularStreamId
+
 CompoundFileStreamId_NoStream = _libembroidery.CompoundFileStreamId_NoStream
+
 class EmbColor(object):
+    r"""Proxy of C EmbColor_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    r = property(_libembroidery.EmbColor_r_get, _libembroidery.EmbColor_r_set)
-    g = property(_libembroidery.EmbColor_g_get, _libembroidery.EmbColor_g_set)
-    b = property(_libembroidery.EmbColor_b_get, _libembroidery.EmbColor_b_set)
+    r = property(_libembroidery.EmbColor_r_get, _libembroidery.EmbColor_r_set, doc=r"""r""")
+    g = property(_libembroidery.EmbColor_g_get, _libembroidery.EmbColor_g_set, doc=r"""g""")
+    b = property(_libembroidery.EmbColor_b_get, _libembroidery.EmbColor_b_set, doc=r"""b""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbColor"""
         _libembroidery.EmbColor_swiginit(self, _libembroidery.new_EmbColor())
     __swig_destroy__ = _libembroidery.delete_EmbColor
 
@@ -216,12 +341,15 @@ class EmbColor(object):
 _libembroidery.EmbColor_swigregister(EmbColor)
 
 class EmbVector(object):
+    r"""Proxy of C EmbVector_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    x = property(_libembroidery.EmbVector_x_get, _libembroidery.EmbVector_x_set)
-    y = property(_libembroidery.EmbVector_y_get, _libembroidery.EmbVector_y_set)
+    x = property(_libembroidery.EmbVector_x_get, _libembroidery.EmbVector_x_set, doc=r"""x""")
+    y = property(_libembroidery.EmbVector_y_get, _libembroidery.EmbVector_y_set, doc=r"""y""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbVector"""
         _libembroidery.EmbVector_swiginit(self, _libembroidery.new_EmbVector())
     __swig_destroy__ = _libembroidery.delete_EmbVector
 
@@ -229,13 +357,16 @@ class EmbVector(object):
 _libembroidery.EmbVector_swigregister(EmbVector)
 
 class EmbPointObject(object):
+    r"""Proxy of C EmbPointObject_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    point = property(_libembroidery.EmbPointObject_point_get, _libembroidery.EmbPointObject_point_set)
-    lineType = property(_libembroidery.EmbPointObject_lineType_get, _libembroidery.EmbPointObject_lineType_set)
-    color = property(_libembroidery.EmbPointObject_color_get, _libembroidery.EmbPointObject_color_set)
+    point = property(_libembroidery.EmbPointObject_point_get, _libembroidery.EmbPointObject_point_set, doc=r"""point""")
+    lineType = property(_libembroidery.EmbPointObject_lineType_get, _libembroidery.EmbPointObject_lineType_set, doc=r"""lineType""")
+    color = property(_libembroidery.EmbPointObject_color_get, _libembroidery.EmbPointObject_color_set, doc=r"""color""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbPointObject"""
         _libembroidery.EmbPointObject_swiginit(self, _libembroidery.new_EmbPointObject())
     __swig_destroy__ = _libembroidery.delete_EmbPointObject
 
@@ -243,12 +374,15 @@ class EmbPointObject(object):
 _libembroidery.EmbPointObject_swigregister(EmbPointObject)
 
 class EmbLine(object):
+    r"""Proxy of C EmbLine_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    start = property(_libembroidery.EmbLine_start_get, _libembroidery.EmbLine_start_set)
-    end = property(_libembroidery.EmbLine_end_get, _libembroidery.EmbLine_end_set)
+    start = property(_libembroidery.EmbLine_start_get, _libembroidery.EmbLine_start_set, doc=r"""start""")
+    end = property(_libembroidery.EmbLine_end_get, _libembroidery.EmbLine_end_set, doc=r"""end""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbLine"""
         _libembroidery.EmbLine_swiginit(self, _libembroidery.new_EmbLine())
     __swig_destroy__ = _libembroidery.delete_EmbLine
 
@@ -256,13 +390,16 @@ class EmbLine(object):
 _libembroidery.EmbLine_swigregister(EmbLine)
 
 class EmbLineObject(object):
+    r"""Proxy of C EmbLineObject_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    line = property(_libembroidery.EmbLineObject_line_get, _libembroidery.EmbLineObject_line_set)
-    lineType = property(_libembroidery.EmbLineObject_lineType_get, _libembroidery.EmbLineObject_lineType_set)
-    color = property(_libembroidery.EmbLineObject_color_get, _libembroidery.EmbLineObject_color_set)
+    line = property(_libembroidery.EmbLineObject_line_get, _libembroidery.EmbLineObject_line_set, doc=r"""line""")
+    lineType = property(_libembroidery.EmbLineObject_lineType_get, _libembroidery.EmbLineObject_lineType_set, doc=r"""lineType""")
+    color = property(_libembroidery.EmbLineObject_color_get, _libembroidery.EmbLineObject_color_set, doc=r"""color""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbLineObject"""
         _libembroidery.EmbLineObject_swiginit(self, _libembroidery.new_EmbLineObject())
     __swig_destroy__ = _libembroidery.delete_EmbLineObject
 
@@ -270,12 +407,15 @@ class EmbLineObject(object):
 _libembroidery.EmbLineObject_swigregister(EmbLineObject)
 
 class EmbLayer(object):
+    r"""Proxy of C EmbLayer_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    color = property(_libembroidery.EmbLayer_color_get, _libembroidery.EmbLayer_color_set)
-    name = property(_libembroidery.EmbLayer_name_get)
+    color = property(_libembroidery.EmbLayer_color_get, _libembroidery.EmbLayer_color_set, doc=r"""color""")
+    name = property(_libembroidery.EmbLayer_name_get, doc=r"""name""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbLayer"""
         _libembroidery.EmbLayer_swiginit(self, _libembroidery.new_EmbLayer())
     __swig_destroy__ = _libembroidery.delete_EmbLayer
 
@@ -283,14 +423,17 @@ class EmbLayer(object):
 _libembroidery.EmbLayer_swigregister(EmbLayer)
 
 class EmbPathObject(object):
+    r"""Proxy of C EmbPathObject_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    pointList = property(_libembroidery.EmbPathObject_pointList_get, _libembroidery.EmbPathObject_pointList_set)
-    flagList = property(_libembroidery.EmbPathObject_flagList_get, _libembroidery.EmbPathObject_flagList_set)
-    lineType = property(_libembroidery.EmbPathObject_lineType_get, _libembroidery.EmbPathObject_lineType_set)
-    color = property(_libembroidery.EmbPathObject_color_get, _libembroidery.EmbPathObject_color_set)
+    pointList = property(_libembroidery.EmbPathObject_pointList_get, _libembroidery.EmbPathObject_pointList_set, doc=r"""pointList""")
+    flagList = property(_libembroidery.EmbPathObject_flagList_get, _libembroidery.EmbPathObject_flagList_set, doc=r"""flagList""")
+    lineType = property(_libembroidery.EmbPathObject_lineType_get, _libembroidery.EmbPathObject_lineType_set, doc=r"""lineType""")
+    color = property(_libembroidery.EmbPathObject_color_get, _libembroidery.EmbPathObject_color_set, doc=r"""color""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbPathObject"""
         _libembroidery.EmbPathObject_swiginit(self, _libembroidery.new_EmbPathObject())
     __swig_destroy__ = _libembroidery.delete_EmbPathObject
 
@@ -298,14 +441,17 @@ class EmbPathObject(object):
 _libembroidery.EmbPathObject_swigregister(EmbPathObject)
 
 class EmbStitch(object):
+    r"""Proxy of C EmbStitch_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    flags = property(_libembroidery.EmbStitch_flags_get, _libembroidery.EmbStitch_flags_set)
-    x = property(_libembroidery.EmbStitch_x_get, _libembroidery.EmbStitch_x_set)
-    y = property(_libembroidery.EmbStitch_y_get, _libembroidery.EmbStitch_y_set)
-    color = property(_libembroidery.EmbStitch_color_get, _libembroidery.EmbStitch_color_set)
+    flags = property(_libembroidery.EmbStitch_flags_get, _libembroidery.EmbStitch_flags_set, doc=r"""flags""")
+    x = property(_libembroidery.EmbStitch_x_get, _libembroidery.EmbStitch_x_set, doc=r"""x""")
+    y = property(_libembroidery.EmbStitch_y_get, _libembroidery.EmbStitch_y_set, doc=r"""y""")
+    color = property(_libembroidery.EmbStitch_color_get, _libembroidery.EmbStitch_color_set, doc=r"""color""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbStitch"""
         _libembroidery.EmbStitch_swiginit(self, _libembroidery.new_EmbStitch())
     __swig_destroy__ = _libembroidery.delete_EmbStitch
 
@@ -313,13 +459,16 @@ class EmbStitch(object):
 _libembroidery.EmbStitch_swigregister(EmbStitch)
 
 class EmbThread(object):
+    r"""Proxy of C EmbThread_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    color = property(_libembroidery.EmbThread_color_get, _libembroidery.EmbThread_color_set)
-    description = property(_libembroidery.EmbThread_description_get, _libembroidery.EmbThread_description_set)
-    catalogNumber = property(_libembroidery.EmbThread_catalogNumber_get, _libembroidery.EmbThread_catalogNumber_set)
+    color = property(_libembroidery.EmbThread_color_get, _libembroidery.EmbThread_color_set, doc=r"""color""")
+    description = property(_libembroidery.EmbThread_description_get, _libembroidery.EmbThread_description_set, doc=r"""description""")
+    catalogNumber = property(_libembroidery.EmbThread_catalogNumber_get, _libembroidery.EmbThread_catalogNumber_set, doc=r"""catalogNumber""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbThread"""
         _libembroidery.EmbThread_swiginit(self, _libembroidery.new_EmbThread())
     __swig_destroy__ = _libembroidery.delete_EmbThread
 
@@ -327,12 +476,15 @@ class EmbThread(object):
 _libembroidery.EmbThread_swigregister(EmbThread)
 
 class EmbHoop(object):
+    r"""Proxy of C EmbHoop_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    width = property(_libembroidery.EmbHoop_width_get, _libembroidery.EmbHoop_width_set)
-    height = property(_libembroidery.EmbHoop_height_get, _libembroidery.EmbHoop_height_set)
+    width = property(_libembroidery.EmbHoop_width_get, _libembroidery.EmbHoop_width_set, doc=r"""width""")
+    height = property(_libembroidery.EmbHoop_height_get, _libembroidery.EmbHoop_height_set, doc=r"""height""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbHoop"""
         _libembroidery.EmbHoop_swiginit(self, _libembroidery.new_EmbHoop())
     __swig_destroy__ = _libembroidery.delete_EmbHoop
 
@@ -340,13 +492,16 @@ class EmbHoop(object):
 _libembroidery.EmbHoop_swigregister(EmbHoop)
 
 class thread_color(object):
+    r"""Proxy of C thread_color_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    name = property(_libembroidery.thread_color_name_get, _libembroidery.thread_color_name_set)
-    hex_code = property(_libembroidery.thread_color_hex_code_get, _libembroidery.thread_color_hex_code_set)
-    manufacturer_code = property(_libembroidery.thread_color_manufacturer_code_get, _libembroidery.thread_color_manufacturer_code_set)
+    name = property(_libembroidery.thread_color_name_get, _libembroidery.thread_color_name_set, doc=r"""name""")
+    hex_code = property(_libembroidery.thread_color_hex_code_get, _libembroidery.thread_color_hex_code_set, doc=r"""hex_code""")
+    manufacturer_code = property(_libembroidery.thread_color_manufacturer_code_get, _libembroidery.thread_color_manufacturer_code_set, doc=r"""manufacturer_code""")
 
     def __init__(self):
+        r"""__init__(self) -> thread_color"""
         _libembroidery.thread_color_swiginit(self, _libembroidery.new_thread_color())
     __swig_destroy__ = _libembroidery.delete_thread_color
 
@@ -354,16 +509,19 @@ class thread_color(object):
 _libembroidery.thread_color_swigregister(thread_color)
 
 class EmbTime(object):
+    r"""Proxy of C EmbTime_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    year = property(_libembroidery.EmbTime_year_get, _libembroidery.EmbTime_year_set)
-    month = property(_libembroidery.EmbTime_month_get, _libembroidery.EmbTime_month_set)
-    day = property(_libembroidery.EmbTime_day_get, _libembroidery.EmbTime_day_set)
-    hour = property(_libembroidery.EmbTime_hour_get, _libembroidery.EmbTime_hour_set)
-    minute = property(_libembroidery.EmbTime_minute_get, _libembroidery.EmbTime_minute_set)
-    second = property(_libembroidery.EmbTime_second_get, _libembroidery.EmbTime_second_set)
+    year = property(_libembroidery.EmbTime_year_get, _libembroidery.EmbTime_year_set, doc=r"""year""")
+    month = property(_libembroidery.EmbTime_month_get, _libembroidery.EmbTime_month_set, doc=r"""month""")
+    day = property(_libembroidery.EmbTime_day_get, _libembroidery.EmbTime_day_set, doc=r"""day""")
+    hour = property(_libembroidery.EmbTime_hour_get, _libembroidery.EmbTime_hour_set, doc=r"""hour""")
+    minute = property(_libembroidery.EmbTime_minute_get, _libembroidery.EmbTime_minute_set, doc=r"""minute""")
+    second = property(_libembroidery.EmbTime_second_get, _libembroidery.EmbTime_second_set, doc=r"""second""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbTime"""
         _libembroidery.EmbTime_swiginit(self, _libembroidery.new_EmbTime())
     __swig_destroy__ = _libembroidery.delete_EmbTime
 
@@ -371,14 +529,17 @@ class EmbTime(object):
 _libembroidery.EmbTime_swigregister(EmbTime)
 
 class EmbEllipse(object):
+    r"""Proxy of C EmbEllipse_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    centerX = property(_libembroidery.EmbEllipse_centerX_get, _libembroidery.EmbEllipse_centerX_set)
-    centerY = property(_libembroidery.EmbEllipse_centerY_get, _libembroidery.EmbEllipse_centerY_set)
-    radiusX = property(_libembroidery.EmbEllipse_radiusX_get, _libembroidery.EmbEllipse_radiusX_set)
-    radiusY = property(_libembroidery.EmbEllipse_radiusY_get, _libembroidery.EmbEllipse_radiusY_set)
+    centerX = property(_libembroidery.EmbEllipse_centerX_get, _libembroidery.EmbEllipse_centerX_set, doc=r"""centerX""")
+    centerY = property(_libembroidery.EmbEllipse_centerY_get, _libembroidery.EmbEllipse_centerY_set, doc=r"""centerY""")
+    radiusX = property(_libembroidery.EmbEllipse_radiusX_get, _libembroidery.EmbEllipse_radiusX_set, doc=r"""radiusX""")
+    radiusY = property(_libembroidery.EmbEllipse_radiusY_get, _libembroidery.EmbEllipse_radiusY_set, doc=r"""radiusY""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbEllipse"""
         _libembroidery.EmbEllipse_swiginit(self, _libembroidery.new_EmbEllipse())
     __swig_destroy__ = _libembroidery.delete_EmbEllipse
 
@@ -386,13 +547,16 @@ class EmbEllipse(object):
 _libembroidery.EmbEllipse_swigregister(EmbEllipse)
 
 class EmbArc(object):
+    r"""Proxy of C EmbArc_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    start = property(_libembroidery.EmbArc_start_get, _libembroidery.EmbArc_start_set)
-    mid = property(_libembroidery.EmbArc_mid_get, _libembroidery.EmbArc_mid_set)
-    end = property(_libembroidery.EmbArc_end_get, _libembroidery.EmbArc_end_set)
+    start = property(_libembroidery.EmbArc_start_get, _libembroidery.EmbArc_start_set, doc=r"""start""")
+    mid = property(_libembroidery.EmbArc_mid_get, _libembroidery.EmbArc_mid_set, doc=r"""mid""")
+    end = property(_libembroidery.EmbArc_end_get, _libembroidery.EmbArc_end_set, doc=r"""end""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbArc"""
         _libembroidery.EmbArc_swiginit(self, _libembroidery.new_EmbArc())
     __swig_destroy__ = _libembroidery.delete_EmbArc
 
@@ -400,13 +564,16 @@ class EmbArc(object):
 _libembroidery.EmbArc_swigregister(EmbArc)
 
 class EmbArcObject(object):
+    r"""Proxy of C EmbArcObject_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    arc = property(_libembroidery.EmbArcObject_arc_get, _libembroidery.EmbArcObject_arc_set)
-    lineType = property(_libembroidery.EmbArcObject_lineType_get, _libembroidery.EmbArcObject_lineType_set)
-    color = property(_libembroidery.EmbArcObject_color_get, _libembroidery.EmbArcObject_color_set)
+    arc = property(_libembroidery.EmbArcObject_arc_get, _libembroidery.EmbArcObject_arc_set, doc=r"""arc""")
+    lineType = property(_libembroidery.EmbArcObject_lineType_get, _libembroidery.EmbArcObject_lineType_set, doc=r"""lineType""")
+    color = property(_libembroidery.EmbArcObject_color_get, _libembroidery.EmbArcObject_color_set, doc=r"""color""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbArcObject"""
         _libembroidery.EmbArcObject_swiginit(self, _libembroidery.new_EmbArcObject())
     __swig_destroy__ = _libembroidery.delete_EmbArcObject
 
@@ -414,14 +581,17 @@ class EmbArcObject(object):
 _libembroidery.EmbArcObject_swigregister(EmbArcObject)
 
 class EmbRect(object):
+    r"""Proxy of C EmbRect_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    top = property(_libembroidery.EmbRect_top_get, _libembroidery.EmbRect_top_set)
-    left = property(_libembroidery.EmbRect_left_get, _libembroidery.EmbRect_left_set)
-    bottom = property(_libembroidery.EmbRect_bottom_get, _libembroidery.EmbRect_bottom_set)
-    right = property(_libembroidery.EmbRect_right_get, _libembroidery.EmbRect_right_set)
+    top = property(_libembroidery.EmbRect_top_get, _libembroidery.EmbRect_top_set, doc=r"""top""")
+    left = property(_libembroidery.EmbRect_left_get, _libembroidery.EmbRect_left_set, doc=r"""left""")
+    bottom = property(_libembroidery.EmbRect_bottom_get, _libembroidery.EmbRect_bottom_set, doc=r"""bottom""")
+    right = property(_libembroidery.EmbRect_right_get, _libembroidery.EmbRect_right_set, doc=r"""right""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbRect"""
         _libembroidery.EmbRect_swiginit(self, _libembroidery.new_EmbRect())
     __swig_destroy__ = _libembroidery.delete_EmbRect
 
@@ -429,12 +599,15 @@ class EmbRect(object):
 _libembroidery.EmbRect_swigregister(EmbRect)
 
 class EmbCircle(object):
+    r"""Proxy of C EmbCircle_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    center = property(_libembroidery.EmbCircle_center_get, _libembroidery.EmbCircle_center_set)
-    radius = property(_libembroidery.EmbCircle_radius_get, _libembroidery.EmbCircle_radius_set)
+    center = property(_libembroidery.EmbCircle_center_get, _libembroidery.EmbCircle_center_set, doc=r"""center""")
+    radius = property(_libembroidery.EmbCircle_radius_get, _libembroidery.EmbCircle_radius_set, doc=r"""radius""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbCircle"""
         _libembroidery.EmbCircle_swiginit(self, _libembroidery.new_EmbCircle())
     __swig_destroy__ = _libembroidery.delete_EmbCircle
 
@@ -442,15 +615,18 @@ class EmbCircle(object):
 _libembroidery.EmbCircle_swigregister(EmbCircle)
 
 class EmbCircleObject(object):
+    r"""Proxy of C EmbCircleObject_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    circle = property(_libembroidery.EmbCircleObject_circle_get, _libembroidery.EmbCircleObject_circle_set)
-    lineType = property(_libembroidery.EmbCircleObject_lineType_get, _libembroidery.EmbCircleObject_lineType_set)
-    color = property(_libembroidery.EmbCircleObject_color_get, _libembroidery.EmbCircleObject_color_set)
-    count = property(_libembroidery.EmbCircleObject_count_get, _libembroidery.EmbCircleObject_count_set)
-    length = property(_libembroidery.EmbCircleObject_length_get, _libembroidery.EmbCircleObject_length_set)
+    circle = property(_libembroidery.EmbCircleObject_circle_get, _libembroidery.EmbCircleObject_circle_set, doc=r"""circle""")
+    lineType = property(_libembroidery.EmbCircleObject_lineType_get, _libembroidery.EmbCircleObject_lineType_set, doc=r"""lineType""")
+    color = property(_libembroidery.EmbCircleObject_color_get, _libembroidery.EmbCircleObject_color_set, doc=r"""color""")
+    count = property(_libembroidery.EmbCircleObject_count_get, _libembroidery.EmbCircleObject_count_set, doc=r"""count""")
+    length = property(_libembroidery.EmbCircleObject_length_get, _libembroidery.EmbCircleObject_length_set, doc=r"""length""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbCircleObject"""
         _libembroidery.EmbCircleObject_swiginit(self, _libembroidery.new_EmbCircleObject())
     __swig_destroy__ = _libembroidery.delete_EmbCircleObject
 
@@ -458,15 +634,18 @@ class EmbCircleObject(object):
 _libembroidery.EmbCircleObject_swigregister(EmbCircleObject)
 
 class EmbRectObject(object):
+    r"""Proxy of C EmbRectObject_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    rect = property(_libembroidery.EmbRectObject_rect_get, _libembroidery.EmbRectObject_rect_set)
-    rotation = property(_libembroidery.EmbRectObject_rotation_get, _libembroidery.EmbRectObject_rotation_set)
-    radius = property(_libembroidery.EmbRectObject_radius_get, _libembroidery.EmbRectObject_radius_set)
-    lineType = property(_libembroidery.EmbRectObject_lineType_get, _libembroidery.EmbRectObject_lineType_set)
-    color = property(_libembroidery.EmbRectObject_color_get, _libembroidery.EmbRectObject_color_set)
+    rect = property(_libembroidery.EmbRectObject_rect_get, _libembroidery.EmbRectObject_rect_set, doc=r"""rect""")
+    rotation = property(_libembroidery.EmbRectObject_rotation_get, _libembroidery.EmbRectObject_rotation_set, doc=r"""rotation""")
+    radius = property(_libembroidery.EmbRectObject_radius_get, _libembroidery.EmbRectObject_radius_set, doc=r"""radius""")
+    lineType = property(_libembroidery.EmbRectObject_lineType_get, _libembroidery.EmbRectObject_lineType_set, doc=r"""lineType""")
+    color = property(_libembroidery.EmbRectObject_color_get, _libembroidery.EmbRectObject_color_set, doc=r"""color""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbRectObject"""
         _libembroidery.EmbRectObject_swiginit(self, _libembroidery.new_EmbRectObject())
     __swig_destroy__ = _libembroidery.delete_EmbRectObject
 
@@ -474,13 +653,16 @@ class EmbRectObject(object):
 _libembroidery.EmbRectObject_swigregister(EmbRectObject)
 
 class EmbPolygonObject(object):
+    r"""Proxy of C EmbPolygonObject_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    pointList = property(_libembroidery.EmbPolygonObject_pointList_get, _libembroidery.EmbPolygonObject_pointList_set)
-    lineType = property(_libembroidery.EmbPolygonObject_lineType_get, _libembroidery.EmbPolygonObject_lineType_set)
-    color = property(_libembroidery.EmbPolygonObject_color_get, _libembroidery.EmbPolygonObject_color_set)
+    pointList = property(_libembroidery.EmbPolygonObject_pointList_get, _libembroidery.EmbPolygonObject_pointList_set, doc=r"""pointList""")
+    lineType = property(_libembroidery.EmbPolygonObject_lineType_get, _libembroidery.EmbPolygonObject_lineType_set, doc=r"""lineType""")
+    color = property(_libembroidery.EmbPolygonObject_color_get, _libembroidery.EmbPolygonObject_color_set, doc=r"""color""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbPolygonObject"""
         _libembroidery.EmbPolygonObject_swiginit(self, _libembroidery.new_EmbPolygonObject())
     __swig_destroy__ = _libembroidery.delete_EmbPolygonObject
 
@@ -488,13 +670,16 @@ class EmbPolygonObject(object):
 _libembroidery.EmbPolygonObject_swigregister(EmbPolygonObject)
 
 class EmbSatinOutline(object):
+    r"""Proxy of C EmbSatinOutline_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    length = property(_libembroidery.EmbSatinOutline_length_get, _libembroidery.EmbSatinOutline_length_set)
-    side1 = property(_libembroidery.EmbSatinOutline_side1_get, _libembroidery.EmbSatinOutline_side1_set)
-    side2 = property(_libembroidery.EmbSatinOutline_side2_get, _libembroidery.EmbSatinOutline_side2_set)
+    length = property(_libembroidery.EmbSatinOutline_length_get, _libembroidery.EmbSatinOutline_length_set, doc=r"""length""")
+    side1 = property(_libembroidery.EmbSatinOutline_side1_get, _libembroidery.EmbSatinOutline_side1_set, doc=r"""side1""")
+    side2 = property(_libembroidery.EmbSatinOutline_side2_get, _libembroidery.EmbSatinOutline_side2_set, doc=r"""side2""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbSatinOutline"""
         _libembroidery.EmbSatinOutline_swiginit(self, _libembroidery.new_EmbSatinOutline())
     __swig_destroy__ = _libembroidery.delete_EmbSatinOutline
 
@@ -502,14 +687,17 @@ class EmbSatinOutline(object):
 _libembroidery.EmbSatinOutline_swigregister(EmbSatinOutline)
 
 class EmbEllipseObject(object):
+    r"""Proxy of C EmbEllipseObject_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    ellipse = property(_libembroidery.EmbEllipseObject_ellipse_get, _libembroidery.EmbEllipseObject_ellipse_set)
-    rotation = property(_libembroidery.EmbEllipseObject_rotation_get, _libembroidery.EmbEllipseObject_rotation_set)
-    lineType = property(_libembroidery.EmbEllipseObject_lineType_get, _libembroidery.EmbEllipseObject_lineType_set)
-    color = property(_libembroidery.EmbEllipseObject_color_get, _libembroidery.EmbEllipseObject_color_set)
+    ellipse = property(_libembroidery.EmbEllipseObject_ellipse_get, _libembroidery.EmbEllipseObject_ellipse_set, doc=r"""ellipse""")
+    rotation = property(_libembroidery.EmbEllipseObject_rotation_get, _libembroidery.EmbEllipseObject_rotation_set, doc=r"""rotation""")
+    lineType = property(_libembroidery.EmbEllipseObject_lineType_get, _libembroidery.EmbEllipseObject_lineType_set, doc=r"""lineType""")
+    color = property(_libembroidery.EmbEllipseObject_color_get, _libembroidery.EmbEllipseObject_color_set, doc=r"""color""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbEllipseObject"""
         _libembroidery.EmbEllipseObject_swiginit(self, _libembroidery.new_EmbEllipseObject())
     __swig_destroy__ = _libembroidery.delete_EmbEllipseObject
 
@@ -517,13 +705,16 @@ class EmbEllipseObject(object):
 _libembroidery.EmbEllipseObject_swigregister(EmbEllipseObject)
 
 class EmbPolylineObject(object):
+    r"""Proxy of C EmbPolylineObject_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    pointList = property(_libembroidery.EmbPolylineObject_pointList_get, _libembroidery.EmbPolylineObject_pointList_set)
-    lineType = property(_libembroidery.EmbPolylineObject_lineType_get, _libembroidery.EmbPolylineObject_lineType_set)
-    color = property(_libembroidery.EmbPolylineObject_color_get, _libembroidery.EmbPolylineObject_color_set)
+    pointList = property(_libembroidery.EmbPolylineObject_pointList_get, _libembroidery.EmbPolylineObject_pointList_set, doc=r"""pointList""")
+    lineType = property(_libembroidery.EmbPolylineObject_lineType_get, _libembroidery.EmbPolylineObject_lineType_set, doc=r"""lineType""")
+    color = property(_libembroidery.EmbPolylineObject_color_get, _libembroidery.EmbPolylineObject_color_set, doc=r"""color""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbPolylineObject"""
         _libembroidery.EmbPolylineObject_swiginit(self, _libembroidery.new_EmbPolylineObject())
     __swig_destroy__ = _libembroidery.delete_EmbPolylineObject
 
@@ -531,12 +722,15 @@ class EmbPolylineObject(object):
 _libembroidery.EmbPolylineObject_swigregister(EmbPolylineObject)
 
 class EmbSettings(object):
+    r"""Proxy of C EmbSettings_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    dstJumpsPerTrim = property(_libembroidery.EmbSettings_dstJumpsPerTrim_get, _libembroidery.EmbSettings_dstJumpsPerTrim_set)
-    home = property(_libembroidery.EmbSettings_home_get, _libembroidery.EmbSettings_home_set)
+    dstJumpsPerTrim = property(_libembroidery.EmbSettings_dstJumpsPerTrim_get, _libembroidery.EmbSettings_dstJumpsPerTrim_set, doc=r"""dstJumpsPerTrim""")
+    home = property(_libembroidery.EmbSettings_home_get, _libembroidery.EmbSettings_home_set, doc=r"""home""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbSettings"""
         _libembroidery.EmbSettings_swiginit(self, _libembroidery.new_EmbSettings())
     __swig_destroy__ = _libembroidery.delete_EmbSettings
 
@@ -544,18 +738,21 @@ class EmbSettings(object):
 _libembroidery.EmbSettings_swigregister(EmbSettings)
 
 class EmbBezier(object):
+    r"""Proxy of C EmbBezier_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    startX = property(_libembroidery.EmbBezier_startX_get, _libembroidery.EmbBezier_startX_set)
-    startY = property(_libembroidery.EmbBezier_startY_get, _libembroidery.EmbBezier_startY_set)
-    control1X = property(_libembroidery.EmbBezier_control1X_get, _libembroidery.EmbBezier_control1X_set)
-    control1Y = property(_libembroidery.EmbBezier_control1Y_get, _libembroidery.EmbBezier_control1Y_set)
-    control2X = property(_libembroidery.EmbBezier_control2X_get, _libembroidery.EmbBezier_control2X_set)
-    control2Y = property(_libembroidery.EmbBezier_control2Y_get, _libembroidery.EmbBezier_control2Y_set)
-    endX = property(_libembroidery.EmbBezier_endX_get, _libembroidery.EmbBezier_endX_set)
-    endY = property(_libembroidery.EmbBezier_endY_get, _libembroidery.EmbBezier_endY_set)
+    startX = property(_libembroidery.EmbBezier_startX_get, _libembroidery.EmbBezier_startX_set, doc=r"""startX""")
+    startY = property(_libembroidery.EmbBezier_startY_get, _libembroidery.EmbBezier_startY_set, doc=r"""startY""")
+    control1X = property(_libembroidery.EmbBezier_control1X_get, _libembroidery.EmbBezier_control1X_set, doc=r"""control1X""")
+    control1Y = property(_libembroidery.EmbBezier_control1Y_get, _libembroidery.EmbBezier_control1Y_set, doc=r"""control1Y""")
+    control2X = property(_libembroidery.EmbBezier_control2X_get, _libembroidery.EmbBezier_control2X_set, doc=r"""control2X""")
+    control2Y = property(_libembroidery.EmbBezier_control2Y_get, _libembroidery.EmbBezier_control2Y_set, doc=r"""control2Y""")
+    endX = property(_libembroidery.EmbBezier_endX_get, _libembroidery.EmbBezier_endX_set, doc=r"""endX""")
+    endY = property(_libembroidery.EmbBezier_endY_get, _libembroidery.EmbBezier_endY_set, doc=r"""endY""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbBezier"""
         _libembroidery.EmbBezier_swiginit(self, _libembroidery.new_EmbBezier())
     __swig_destroy__ = _libembroidery.delete_EmbBezier
 
@@ -563,14 +760,17 @@ class EmbBezier(object):
 _libembroidery.EmbBezier_swigregister(EmbBezier)
 
 class EmbSplineObject(object):
+    r"""Proxy of C EmbSplineObject_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    bezier = property(_libembroidery.EmbSplineObject_bezier_get, _libembroidery.EmbSplineObject_bezier_set)
-    next = property(_libembroidery.EmbSplineObject_next_get, _libembroidery.EmbSplineObject_next_set)
-    lineType = property(_libembroidery.EmbSplineObject_lineType_get, _libembroidery.EmbSplineObject_lineType_set)
-    color = property(_libembroidery.EmbSplineObject_color_get, _libembroidery.EmbSplineObject_color_set)
+    bezier = property(_libembroidery.EmbSplineObject_bezier_get, _libembroidery.EmbSplineObject_bezier_set, doc=r"""bezier""")
+    next = property(_libembroidery.EmbSplineObject_next_get, _libembroidery.EmbSplineObject_next_set, doc=r"""next""")
+    lineType = property(_libembroidery.EmbSplineObject_lineType_get, _libembroidery.EmbSplineObject_lineType_set, doc=r"""lineType""")
+    color = property(_libembroidery.EmbSplineObject_color_get, _libembroidery.EmbSplineObject_color_set, doc=r"""color""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbSplineObject"""
         _libembroidery.EmbSplineObject_swiginit(self, _libembroidery.new_EmbSplineObject())
     __swig_destroy__ = _libembroidery.delete_EmbSplineObject
 
@@ -578,14 +778,17 @@ class EmbSplineObject(object):
 _libembroidery.EmbSplineObject_swigregister(EmbSplineObject)
 
 class L_system(object):
+    r"""Proxy of C LSYSTEM struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    axiom = property(_libembroidery.L_system_axiom_get, _libembroidery.L_system_axiom_set)
-    alphabet = property(_libembroidery.L_system_alphabet_get, _libembroidery.L_system_alphabet_set)
-    constants = property(_libembroidery.L_system_constants_get, _libembroidery.L_system_constants_set)
-    rules = property(_libembroidery.L_system_rules_get, _libembroidery.L_system_rules_set)
+    axiom = property(_libembroidery.L_system_axiom_get, _libembroidery.L_system_axiom_set, doc=r"""axiom""")
+    alphabet = property(_libembroidery.L_system_alphabet_get, _libembroidery.L_system_alphabet_set, doc=r"""alphabet""")
+    constants = property(_libembroidery.L_system_constants_get, _libembroidery.L_system_constants_set, doc=r"""constants""")
+    rules = property(_libembroidery.L_system_rules_get, _libembroidery.L_system_rules_set, doc=r"""rules""")
 
     def __init__(self):
+        r"""__init__(self) -> L_system"""
         _libembroidery.L_system_swiginit(self, _libembroidery.new_L_system())
     __swig_destroy__ = _libembroidery.delete_L_system
 
@@ -593,16 +796,19 @@ class L_system(object):
 _libembroidery.L_system_swigregister(L_system)
 
 class EmbImage(object):
+    r"""Proxy of C EmbImage_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    pixel_width = property(_libembroidery.EmbImage_pixel_width_get, _libembroidery.EmbImage_pixel_width_set)
-    pixel_height = property(_libembroidery.EmbImage_pixel_height_get, _libembroidery.EmbImage_pixel_height_set)
-    width = property(_libembroidery.EmbImage_width_get, _libembroidery.EmbImage_width_set)
-    height = property(_libembroidery.EmbImage_height_get, _libembroidery.EmbImage_height_set)
-    color = property(_libembroidery.EmbImage_color_get, _libembroidery.EmbImage_color_set)
-    offset = property(_libembroidery.EmbImage_offset_get, _libembroidery.EmbImage_offset_set)
+    pixel_width = property(_libembroidery.EmbImage_pixel_width_get, _libembroidery.EmbImage_pixel_width_set, doc=r"""pixel_width""")
+    pixel_height = property(_libembroidery.EmbImage_pixel_height_get, _libembroidery.EmbImage_pixel_height_set, doc=r"""pixel_height""")
+    width = property(_libembroidery.EmbImage_width_get, _libembroidery.EmbImage_width_set, doc=r"""width""")
+    height = property(_libembroidery.EmbImage_height_get, _libembroidery.EmbImage_height_set, doc=r"""height""")
+    color = property(_libembroidery.EmbImage_color_get, _libembroidery.EmbImage_color_set, doc=r"""color""")
+    offset = property(_libembroidery.EmbImage_offset_get, _libembroidery.EmbImage_offset_set, doc=r"""offset""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbImage"""
         _libembroidery.EmbImage_swiginit(self, _libembroidery.new_EmbImage())
     __swig_destroy__ = _libembroidery.delete_EmbImage
 
@@ -610,28 +816,31 @@ class EmbImage(object):
 _libembroidery.EmbImage_swigregister(EmbImage)
 
 class EmbArray_(object):
+    r"""Proxy of C EmbArray_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    arc = property(_libembroidery.EmbArray__arc_get, _libembroidery.EmbArray__arc_set)
-    circle = property(_libembroidery.EmbArray__circle_get, _libembroidery.EmbArray__circle_set)
-    color = property(_libembroidery.EmbArray__color_get, _libembroidery.EmbArray__color_set)
-    ellipse = property(_libembroidery.EmbArray__ellipse_get, _libembroidery.EmbArray__ellipse_set)
-    flag = property(_libembroidery.EmbArray__flag_get, _libembroidery.EmbArray__flag_set)
-    path = property(_libembroidery.EmbArray__path_get, _libembroidery.EmbArray__path_set)
-    point = property(_libembroidery.EmbArray__point_get, _libembroidery.EmbArray__point_set)
-    line = property(_libembroidery.EmbArray__line_get, _libembroidery.EmbArray__line_set)
-    polygon = property(_libembroidery.EmbArray__polygon_get, _libembroidery.EmbArray__polygon_set)
-    polyline = property(_libembroidery.EmbArray__polyline_get, _libembroidery.EmbArray__polyline_set)
-    rect = property(_libembroidery.EmbArray__rect_get, _libembroidery.EmbArray__rect_set)
-    spline = property(_libembroidery.EmbArray__spline_get, _libembroidery.EmbArray__spline_set)
-    stitch = property(_libembroidery.EmbArray__stitch_get, _libembroidery.EmbArray__stitch_set)
-    thread = property(_libembroidery.EmbArray__thread_get, _libembroidery.EmbArray__thread_set)
-    vector = property(_libembroidery.EmbArray__vector_get, _libembroidery.EmbArray__vector_set)
-    count = property(_libembroidery.EmbArray__count_get, _libembroidery.EmbArray__count_set)
-    length = property(_libembroidery.EmbArray__length_get, _libembroidery.EmbArray__length_set)
-    type = property(_libembroidery.EmbArray__type_get, _libembroidery.EmbArray__type_set)
+    arc = property(_libembroidery.EmbArray__arc_get, _libembroidery.EmbArray__arc_set, doc=r"""arc""")
+    circle = property(_libembroidery.EmbArray__circle_get, _libembroidery.EmbArray__circle_set, doc=r"""circle""")
+    color = property(_libembroidery.EmbArray__color_get, _libembroidery.EmbArray__color_set, doc=r"""color""")
+    ellipse = property(_libembroidery.EmbArray__ellipse_get, _libembroidery.EmbArray__ellipse_set, doc=r"""ellipse""")
+    flag = property(_libembroidery.EmbArray__flag_get, _libembroidery.EmbArray__flag_set, doc=r"""flag""")
+    path = property(_libembroidery.EmbArray__path_get, _libembroidery.EmbArray__path_set, doc=r"""path""")
+    point = property(_libembroidery.EmbArray__point_get, _libembroidery.EmbArray__point_set, doc=r"""point""")
+    line = property(_libembroidery.EmbArray__line_get, _libembroidery.EmbArray__line_set, doc=r"""line""")
+    polygon = property(_libembroidery.EmbArray__polygon_get, _libembroidery.EmbArray__polygon_set, doc=r"""polygon""")
+    polyline = property(_libembroidery.EmbArray__polyline_get, _libembroidery.EmbArray__polyline_set, doc=r"""polyline""")
+    rect = property(_libembroidery.EmbArray__rect_get, _libembroidery.EmbArray__rect_set, doc=r"""rect""")
+    spline = property(_libembroidery.EmbArray__spline_get, _libembroidery.EmbArray__spline_set, doc=r"""spline""")
+    stitch = property(_libembroidery.EmbArray__stitch_get, _libembroidery.EmbArray__stitch_set, doc=r"""stitch""")
+    thread = property(_libembroidery.EmbArray__thread_get, _libembroidery.EmbArray__thread_set, doc=r"""thread""")
+    vector = property(_libembroidery.EmbArray__vector_get, _libembroidery.EmbArray__vector_set, doc=r"""vector""")
+    count = property(_libembroidery.EmbArray__count_get, _libembroidery.EmbArray__count_set, doc=r"""count""")
+    length = property(_libembroidery.EmbArray__length_get, _libembroidery.EmbArray__length_set, doc=r"""length""")
+    type = property(_libembroidery.EmbArray__type_get, _libembroidery.EmbArray__type_set, doc=r"""type""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbArray_"""
         _libembroidery.EmbArray__swiginit(self, _libembroidery.new_EmbArray_())
     __swig_destroy__ = _libembroidery.delete_EmbArray_
 
@@ -639,25 +848,28 @@ class EmbArray_(object):
 _libembroidery.EmbArray__swigregister(EmbArray_)
 
 class EmbPattern(object):
+    r"""Proxy of C EmbPattern_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    settings = property(_libembroidery.EmbPattern_settings_get, _libembroidery.EmbPattern_settings_set)
-    hoop = property(_libembroidery.EmbPattern_hoop_get, _libembroidery.EmbPattern_hoop_set)
-    stitchList = property(_libembroidery.EmbPattern_stitchList_get, _libembroidery.EmbPattern_stitchList_set)
-    threads = property(_libembroidery.EmbPattern_threads_get, _libembroidery.EmbPattern_threads_set)
-    arcs = property(_libembroidery.EmbPattern_arcs_get, _libembroidery.EmbPattern_arcs_set)
-    circles = property(_libembroidery.EmbPattern_circles_get, _libembroidery.EmbPattern_circles_set)
-    ellipses = property(_libembroidery.EmbPattern_ellipses_get, _libembroidery.EmbPattern_ellipses_set)
-    lines = property(_libembroidery.EmbPattern_lines_get, _libembroidery.EmbPattern_lines_set)
-    paths = property(_libembroidery.EmbPattern_paths_get, _libembroidery.EmbPattern_paths_set)
-    points = property(_libembroidery.EmbPattern_points_get, _libembroidery.EmbPattern_points_set)
-    polygons = property(_libembroidery.EmbPattern_polygons_get, _libembroidery.EmbPattern_polygons_set)
-    polylines = property(_libembroidery.EmbPattern_polylines_get, _libembroidery.EmbPattern_polylines_set)
-    rects = property(_libembroidery.EmbPattern_rects_get, _libembroidery.EmbPattern_rects_set)
-    splines = property(_libembroidery.EmbPattern_splines_get, _libembroidery.EmbPattern_splines_set)
-    currentColorIndex = property(_libembroidery.EmbPattern_currentColorIndex_get, _libembroidery.EmbPattern_currentColorIndex_set)
+    settings = property(_libembroidery.EmbPattern_settings_get, _libembroidery.EmbPattern_settings_set, doc=r"""settings""")
+    hoop = property(_libembroidery.EmbPattern_hoop_get, _libembroidery.EmbPattern_hoop_set, doc=r"""hoop""")
+    stitchList = property(_libembroidery.EmbPattern_stitchList_get, _libembroidery.EmbPattern_stitchList_set, doc=r"""stitchList""")
+    threads = property(_libembroidery.EmbPattern_threads_get, _libembroidery.EmbPattern_threads_set, doc=r"""threads""")
+    arcs = property(_libembroidery.EmbPattern_arcs_get, _libembroidery.EmbPattern_arcs_set, doc=r"""arcs""")
+    circles = property(_libembroidery.EmbPattern_circles_get, _libembroidery.EmbPattern_circles_set, doc=r"""circles""")
+    ellipses = property(_libembroidery.EmbPattern_ellipses_get, _libembroidery.EmbPattern_ellipses_set, doc=r"""ellipses""")
+    lines = property(_libembroidery.EmbPattern_lines_get, _libembroidery.EmbPattern_lines_set, doc=r"""lines""")
+    paths = property(_libembroidery.EmbPattern_paths_get, _libembroidery.EmbPattern_paths_set, doc=r"""paths""")
+    points = property(_libembroidery.EmbPattern_points_get, _libembroidery.EmbPattern_points_set, doc=r"""points""")
+    polygons = property(_libembroidery.EmbPattern_polygons_get, _libembroidery.EmbPattern_polygons_set, doc=r"""polygons""")
+    polylines = property(_libembroidery.EmbPattern_polylines_get, _libembroidery.EmbPattern_polylines_set, doc=r"""polylines""")
+    rects = property(_libembroidery.EmbPattern_rects_get, _libembroidery.EmbPattern_rects_set, doc=r"""rects""")
+    splines = property(_libembroidery.EmbPattern_splines_get, _libembroidery.EmbPattern_splines_set, doc=r"""splines""")
+    currentColorIndex = property(_libembroidery.EmbPattern_currentColorIndex_get, _libembroidery.EmbPattern_currentColorIndex_set, doc=r"""currentColorIndex""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbPattern"""
         _libembroidery.EmbPattern_swiginit(self, _libembroidery.new_EmbPattern())
     __swig_destroy__ = _libembroidery.delete_EmbPattern
 
@@ -665,18 +877,21 @@ class EmbPattern(object):
 _libembroidery.EmbPattern_swigregister(EmbPattern)
 
 class EmbFormatList(object):
+    r"""Proxy of C EmbFormatList_ struct."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    extension = property(_libembroidery.EmbFormatList_extension_get, _libembroidery.EmbFormatList_extension_set)
-    description = property(_libembroidery.EmbFormatList_description_get, _libembroidery.EmbFormatList_description_set)
-    reader_state = property(_libembroidery.EmbFormatList_reader_state_get, _libembroidery.EmbFormatList_reader_state_set)
-    writer_state = property(_libembroidery.EmbFormatList_writer_state_get, _libembroidery.EmbFormatList_writer_state_set)
-    type = property(_libembroidery.EmbFormatList_type_get, _libembroidery.EmbFormatList_type_set)
-    color_only = property(_libembroidery.EmbFormatList_color_only_get, _libembroidery.EmbFormatList_color_only_set)
-    check_for_color_file = property(_libembroidery.EmbFormatList_check_for_color_file_get, _libembroidery.EmbFormatList_check_for_color_file_set)
-    write_external_color_file = property(_libembroidery.EmbFormatList_write_external_color_file_get, _libembroidery.EmbFormatList_write_external_color_file_set)
+    extension = property(_libembroidery.EmbFormatList_extension_get, _libembroidery.EmbFormatList_extension_set, doc=r"""extension""")
+    description = property(_libembroidery.EmbFormatList_description_get, _libembroidery.EmbFormatList_description_set, doc=r"""description""")
+    reader_state = property(_libembroidery.EmbFormatList_reader_state_get, _libembroidery.EmbFormatList_reader_state_set, doc=r"""reader_state""")
+    writer_state = property(_libembroidery.EmbFormatList_writer_state_get, _libembroidery.EmbFormatList_writer_state_set, doc=r"""writer_state""")
+    type = property(_libembroidery.EmbFormatList_type_get, _libembroidery.EmbFormatList_type_set, doc=r"""type""")
+    color_only = property(_libembroidery.EmbFormatList_color_only_get, _libembroidery.EmbFormatList_color_only_set, doc=r"""color_only""")
+    check_for_color_file = property(_libembroidery.EmbFormatList_check_for_color_file_get, _libembroidery.EmbFormatList_check_for_color_file_set, doc=r"""check_for_color_file""")
+    write_external_color_file = property(_libembroidery.EmbFormatList_write_external_color_file_get, _libembroidery.EmbFormatList_write_external_color_file_set, doc=r"""write_external_color_file""")
 
     def __init__(self):
+        r"""__init__(self) -> EmbFormatList"""
         _libembroidery.EmbFormatList_swiginit(self, _libembroidery.new_EmbFormatList())
     __swig_destroy__ = _libembroidery.delete_EmbFormatList
 
@@ -685,351 +900,1424 @@ _libembroidery.EmbFormatList_swigregister(EmbFormatList)
 
 
 def lindenmayer_system(L, state, iteration, complete):
+    r"""
+    lindenmayer_system(L, state, iteration, complete) -> int
+
+    Parameters
+    ----------
+    L: L_system
+    state: char *
+    iteration: int
+    complete: int
+
+    """
     return _libembroidery.lindenmayer_system(L, state, iteration, complete)
 
 def hilbert_curve(pattern, iterations):
+    r"""
+    hilbert_curve(pattern, iterations) -> int
+
+    Parameters
+    ----------
+    pattern: EmbPattern *
+    iterations: int
+
+    """
     return _libembroidery.hilbert_curve(pattern, iterations)
 
-def emb_identify_format(ending):
-    return _libembroidery.emb_identify_format(ending)
+def identify_format(ending):
+    r"""
+    identify_format(ending) -> int
 
-def embArray_create(type):
-    return _libembroidery.embArray_create(type)
+    Parameters
+    ----------
+    ending: char const *
 
-def embArray_resize(g):
-    return _libembroidery.embArray_resize(g)
+    """
+    return _libembroidery.identify_format(ending)
 
-def embArray_copy(dst, src):
-    return _libembroidery.embArray_copy(dst, src)
+def array_create(type):
+    r"""
+    array_create(type) -> EmbArray_
 
-def embArray_addArc(g, arc, lineType, color):
-    return _libembroidery.embArray_addArc(g, arc, lineType, color)
+    Parameters
+    ----------
+    type: int
 
-def embArray_addCircle(g, circle, lineType, color):
-    return _libembroidery.embArray_addCircle(g, circle, lineType, color)
+    """
+    return _libembroidery.array_create(type)
 
-def embArray_addEllipse(g, circle, rotation, lineType, color):
-    return _libembroidery.embArray_addEllipse(g, circle, rotation, lineType, color)
+def array_resize(g):
+    r"""
+    array_resize(g) -> int
 
-def embArray_addFlag(g, flag):
-    return _libembroidery.embArray_addFlag(g, flag)
+    Parameters
+    ----------
+    g: EmbArray *
 
-def embArray_addLine(g, line):
-    return _libembroidery.embArray_addLine(g, line)
+    """
+    return _libembroidery.array_resize(g)
 
-def embArray_addRect(g, rect, lineType, color):
-    return _libembroidery.embArray_addRect(g, rect, lineType, color)
+def array_copy(dst, src):
+    r"""
+    array_copy(dst, src)
 
-def embArray_addPath(g, p):
-    return _libembroidery.embArray_addPath(g, p)
+    Parameters
+    ----------
+    dst: EmbArray *
+    src: EmbArray *
 
-def embArray_addPoint(g, p):
-    return _libembroidery.embArray_addPoint(g, p)
+    """
+    return _libembroidery.array_copy(dst, src)
 
-def embArray_addPolygon(g, p):
-    return _libembroidery.embArray_addPolygon(g, p)
+def array_add_arc(g, arc, lineType, color):
+    r"""
+    array_add_arc(g, arc, lineType, color) -> int
 
-def embArray_addPolyline(g, p):
-    return _libembroidery.embArray_addPolyline(g, p)
+    Parameters
+    ----------
+    g: EmbArray *
+    arc: EmbArc
+    lineType: int
+    color: EmbColor
 
-def embArray_addStitch(g, st):
-    return _libembroidery.embArray_addStitch(g, st)
+    """
+    return _libembroidery.array_add_arc(g, arc, lineType, color)
 
-def embArray_addThread(g, p):
-    return _libembroidery.embArray_addThread(g, p)
+def array_add_circle(g, circle, lineType, color):
+    r"""
+    array_add_circle(g, circle, lineType, color) -> int
 
-def embArray_addVector(g, arg2):
-    return _libembroidery.embArray_addVector(g, arg2)
+    Parameters
+    ----------
+    g: EmbArray *
+    circle: EmbCircle
+    lineType: int
+    color: EmbColor
 
-def embArray_free(p):
-    return _libembroidery.embArray_free(p)
+    """
+    return _libembroidery.array_add_circle(g, circle, lineType, color)
 
-def embLine_make(x1, y1, x2, y2):
-    return _libembroidery.embLine_make(x1, y1, x2, y2)
+def array_add_ellipse(g, circle, rotation, lineType, color):
+    r"""
+    array_add_ellipse(g, circle, rotation, lineType, color) -> int
 
-def embLine_normalVector(line, result, clockwise):
-    return _libembroidery.embLine_normalVector(line, result, clockwise)
+    Parameters
+    ----------
+    g: EmbArray *
+    circle: EmbEllipse
+    rotation: double
+    lineType: int
+    color: EmbColor
 
-def embLine_intersectionPoint(line1, line2):
-    return _libembroidery.embLine_intersectionPoint(line1, line2)
+    """
+    return _libembroidery.array_add_ellipse(g, circle, rotation, lineType, color)
 
-def embThread_findNearestColor(color, colors, mode):
-    return _libembroidery.embThread_findNearestColor(color, colors, mode)
+def array_add_flag(g, flag):
+    r"""
+    array_add_flag(g, flag) -> int
 
-def embThread_findNearestColor_fromThread(color, colors, length):
-    return _libembroidery.embThread_findNearestColor_fromThread(color, colors, length)
+    Parameters
+    ----------
+    g: EmbArray *
+    flag: int
 
-def embThread_getRandom():
-    return _libembroidery.embThread_getRandom()
+    """
+    return _libembroidery.array_add_flag(g, flag)
 
-def embVector_normalize(vector, result):
-    return _libembroidery.embVector_normalize(vector, result)
+def array_add_line(g, line):
+    r"""
+    array_add_line(g, line) -> int
 
-def embVector_multiply(vector, magnitude, result):
-    return _libembroidery.embVector_multiply(vector, magnitude, result)
+    Parameters
+    ----------
+    g: EmbArray *
+    line: EmbLineObject
 
-def embVector_add(v1, v2, result):
-    return _libembroidery.embVector_add(v1, v2, result)
+    """
+    return _libembroidery.array_add_line(g, line)
 
-def embVector_average(v1, v2, result):
-    return _libembroidery.embVector_average(v1, v2, result)
+def array_add_rect(g, rect, lineType, color):
+    r"""
+    array_add_rect(g, rect, lineType, color) -> int
 
-def embVector_subtract(v1, v2, result):
-    return _libembroidery.embVector_subtract(v1, v2, result)
+    Parameters
+    ----------
+    g: EmbArray *
+    rect: EmbRect
+    lineType: int
+    color: EmbColor
 
-def embVector_dot(v1, v2):
-    return _libembroidery.embVector_dot(v1, v2)
+    """
+    return _libembroidery.array_add_rect(g, rect, lineType, color)
 
-def embVector_cross(v1, v2):
-    return _libembroidery.embVector_cross(v1, v2)
+def array_add_path(g, p):
+    r"""
+    array_add_path(g, p) -> int
 
-def embVector_transpose_product(v1, v2, result):
-    return _libembroidery.embVector_transpose_product(v1, v2, result)
+    Parameters
+    ----------
+    g: EmbArray *
+    p: EmbPathObject *
 
-def embVector_length(vector):
-    return _libembroidery.embVector_length(vector)
+    """
+    return _libembroidery.array_add_path(g, p)
 
-def embVector_relativeX(a1, a2, a3):
-    return _libembroidery.embVector_relativeX(a1, a2, a3)
+def array_add_point(g, p):
+    r"""
+    array_add_point(g, p) -> int
 
-def embVector_relativeY(a1, a2, a3):
-    return _libembroidery.embVector_relativeY(a1, a2, a3)
+    Parameters
+    ----------
+    g: EmbArray *
+    p: EmbPointObject *
 
-def embVector_angle(v):
-    return _libembroidery.embVector_angle(v)
+    """
+    return _libembroidery.array_add_point(g, p)
 
-def embVector_distance(a, b):
-    return _libembroidery.embVector_distance(a, b)
+def array_add_polygon(g, p):
+    r"""
+    array_add_polygon(g, p) -> int
 
-def embVector_unit(angle):
-    return _libembroidery.embVector_unit(angle)
+    Parameters
+    ----------
+    g: EmbArray *
+    p: EmbPolygonObject *
+
+    """
+    return _libembroidery.array_add_polygon(g, p)
+
+def array_add_polyline(g, p):
+    r"""
+    array_add_polyline(g, p) -> int
+
+    Parameters
+    ----------
+    g: EmbArray *
+    p: EmbPolylineObject *
+
+    """
+    return _libembroidery.array_add_polyline(g, p)
+
+def array_add_stitch(g, st):
+    r"""
+    array_add_stitch(g, st) -> int
+
+    Parameters
+    ----------
+    g: EmbArray *
+    st: EmbStitch
+
+    """
+    return _libembroidery.array_add_stitch(g, st)
+
+def array_add_thread(g, p):
+    r"""
+    array_add_thread(g, p) -> int
+
+    Parameters
+    ----------
+    g: EmbArray *
+    p: EmbThread
+
+    """
+    return _libembroidery.array_add_thread(g, p)
+
+def array_add_vector(g, arg2):
+    r"""
+    array_add_vector(g, arg2) -> int
+
+    Parameters
+    ----------
+    g: EmbArray *
+    arg2: EmbVector
+
+    """
+    return _libembroidery.array_add_vector(g, arg2)
+
+def array_free(p):
+    r"""
+    array_free(p)
+
+    Parameters
+    ----------
+    p: EmbArray *
+
+    """
+    return _libembroidery.array_free(p)
+
+def line_make(x1, y1, x2, y2):
+    r"""
+    line_make(x1, y1, x2, y2) -> EmbLine
+
+    Parameters
+    ----------
+    x1: double
+    y1: double
+    x2: double
+    y2: double
+
+    """
+    return _libembroidery.line_make(x1, y1, x2, y2)
+
+def line_normal(line, result, clockwise):
+    r"""
+    line_normal(line, result, clockwise)
+
+    Parameters
+    ----------
+    line: EmbLine
+    result: EmbVector *
+    clockwise: int
+
+    """
+    return _libembroidery.line_normal(line, result, clockwise)
+
+def line_intersection(line1, line2):
+    r"""
+    line_intersection(line1, line2) -> EmbVector
+
+    Parameters
+    ----------
+    line1: EmbLine
+    line2: EmbLine
+
+    """
+    return _libembroidery.line_intersection(line1, line2)
+
+def thread_find_nearest_color(color, colors, mode):
+    r"""
+    thread_find_nearest_color(color, colors, mode) -> int
+
+    Parameters
+    ----------
+    color: EmbColor
+    colors: EmbArray *
+    mode: int
+
+    """
+    return _libembroidery.thread_find_nearest_color(color, colors, mode)
+
+def thread_find_nearest_thread(color, colors, length):
+    r"""
+    thread_find_nearest_thread(color, colors, length) -> int
+
+    Parameters
+    ----------
+    color: EmbColor
+    colors: EmbThread *
+    length: int
+
+    """
+    return _libembroidery.thread_find_nearest_thread(color, colors, length)
+
+def thread_random():
+    r"""thread_random() -> EmbThread"""
+    return _libembroidery.thread_random()
+
+def vector_normalize(vector, result):
+    r"""
+    vector_normalize(vector, result)
+
+    Parameters
+    ----------
+    vector: EmbVector
+    result: EmbVector *
+
+    """
+    return _libembroidery.vector_normalize(vector, result)
+
+def vector_multiply(vector, magnitude, result):
+    r"""
+    vector_multiply(vector, magnitude, result)
+
+    Parameters
+    ----------
+    vector: EmbVector
+    magnitude: double
+    result: EmbVector *
+
+    """
+    return _libembroidery.vector_multiply(vector, magnitude, result)
+
+def vector_add(v1, v2, result):
+    r"""
+    vector_add(v1, v2, result)
+
+    Parameters
+    ----------
+    v1: EmbVector
+    v2: EmbVector
+    result: EmbVector *
+
+    """
+    return _libembroidery.vector_add(v1, v2, result)
+
+def vector_average(v1, v2, result):
+    r"""
+    vector_average(v1, v2, result)
+
+    Parameters
+    ----------
+    v1: EmbVector
+    v2: EmbVector
+    result: EmbVector *
+
+    """
+    return _libembroidery.vector_average(v1, v2, result)
+
+def vector_subtract(v1, v2, result):
+    r"""
+    vector_subtract(v1, v2, result)
+
+    Parameters
+    ----------
+    v1: EmbVector
+    v2: EmbVector
+    result: EmbVector *
+
+    """
+    return _libembroidery.vector_subtract(v1, v2, result)
+
+def vector_dot(v1, v2):
+    r"""
+    vector_dot(v1, v2) -> float
+
+    Parameters
+    ----------
+    v1: EmbVector
+    v2: EmbVector
+
+    """
+    return _libembroidery.vector_dot(v1, v2)
+
+def vector_cross(v1, v2):
+    r"""
+    vector_cross(v1, v2) -> float
+
+    Parameters
+    ----------
+    v1: EmbVector
+    v2: EmbVector
+
+    """
+    return _libembroidery.vector_cross(v1, v2)
+
+def vector_transpose_product(v1, v2, result):
+    r"""
+    vector_transpose_product(v1, v2, result)
+
+    Parameters
+    ----------
+    v1: EmbVector
+    v2: EmbVector
+    result: EmbVector *
+
+    """
+    return _libembroidery.vector_transpose_product(v1, v2, result)
+
+def vector_length(vector):
+    r"""
+    vector_length(vector) -> float
+
+    Parameters
+    ----------
+    vector: EmbVector
+
+    """
+    return _libembroidery.vector_length(vector)
+
+def vector_relative_x(a1, a2, a3):
+    r"""
+    vector_relative_x(a1, a2, a3) -> float
+
+    Parameters
+    ----------
+    a1: EmbVector
+    a2: EmbVector
+    a3: EmbVector
+
+    """
+    return _libembroidery.vector_relative_x(a1, a2, a3)
+
+def vector_relative_y(a1, a2, a3):
+    r"""
+    vector_relative_y(a1, a2, a3) -> float
+
+    Parameters
+    ----------
+    a1: EmbVector
+    a2: EmbVector
+    a3: EmbVector
+
+    """
+    return _libembroidery.vector_relative_y(a1, a2, a3)
+
+def vector_angle(v):
+    r"""
+    vector_angle(v) -> float
+
+    Parameters
+    ----------
+    v: EmbVector
+
+    """
+    return _libembroidery.vector_angle(v)
+
+def vector_distance(a, b):
+    r"""
+    vector_distance(a, b) -> float
+
+    Parameters
+    ----------
+    a: EmbVector
+    b: EmbVector
+
+    """
+    return _libembroidery.vector_distance(a, b)
+
+def vector_unit(angle):
+    r"""
+    vector_unit(angle) -> EmbVector
+
+    Parameters
+    ----------
+    angle: float
+
+    """
+    return _libembroidery.vector_unit(angle)
 
 def read_ppm_image(fname, a):
+    r"""
+    read_ppm_image(fname, a) -> int
+
+    Parameters
+    ----------
+    fname: char *
+    a: EmbImage *
+
+    """
     return _libembroidery.read_ppm_image(fname, a)
 
 def write_ppm_image(fname, a):
+    r"""
+    write_ppm_image(fname, a)
+
+    Parameters
+    ----------
+    fname: char *
+    a: EmbImage *
+
+    """
     return _libembroidery.write_ppm_image(fname, a)
 
 def image_diff(image1, image2):
+    r"""
+    image_diff(image1, image2) -> float
+
+    Parameters
+    ----------
+    image1: EmbImage *
+    image2: EmbImage *
+
+    """
     return _libembroidery.image_diff(image1, image2)
 
 def render_line(arg1, arg2, arg3):
+    r"""
+    render_line(arg1, arg2, arg3) -> int
+
+    Parameters
+    ----------
+    arg1: EmbLine
+    arg2: EmbImage *
+    arg3: EmbColor
+
+    """
     return _libembroidery.render_line(arg1, arg2, arg3)
 
-def embImage_render(pattern, width, height, fname):
-    return _libembroidery.embImage_render(pattern, width, height, fname)
+def image_render(pattern, width, height, fname):
+    r"""
+    image_render(pattern, width, height, fname) -> int
 
-def embImage_simulate(pattern, width, height, fname):
-    return _libembroidery.embImage_simulate(pattern, width, height, fname)
+    Parameters
+    ----------
+    pattern: EmbPattern *
+    width: float
+    height: float
+    fname: char *
+
+    """
+    return _libembroidery.image_render(pattern, width, height, fname)
+
+def image_simulate(pattern, width, height, fname):
+    r"""
+    image_simulate(pattern, width, height, fname) -> int
+
+    Parameters
+    ----------
+    pattern: EmbPattern *
+    width: float
+    height: float
+    fname: char *
+
+    """
+    return _libembroidery.image_simulate(pattern, width, height, fname)
 
 def render_postscript(pattern, image):
+    r"""
+    render_postscript(pattern, image) -> int
+
+    Parameters
+    ----------
+    pattern: EmbPattern *
+    image: EmbImage *
+
+    """
     return _libembroidery.render_postscript(pattern, image)
 
 def testMain(level):
+    r"""
+    testMain(level)
+
+    Parameters
+    ----------
+    level: int
+
+    """
     return _libembroidery.testMain(level)
 
 def convert(inf, outf):
+    r"""
+    convert(inf, outf) -> int
+
+    Parameters
+    ----------
+    inf: char const *
+    outf: char const *
+
+    """
     return _libembroidery.convert(inf, outf)
 
 def hus_compress(input, size, output, out_size):
+    r"""
+    hus_compress(input, size, output, out_size) -> int
+
+    Parameters
+    ----------
+    input: char *
+    size: int
+    output: char *
+    out_size: int *
+
+    """
     return _libembroidery.hus_compress(input, size, output, out_size)
 
 def hus_decompress(input, size, output, out_size):
+    r"""
+    hus_decompress(input, size, output, out_size) -> int
+
+    Parameters
+    ----------
+    input: char *
+    size: int
+    output: char *
+    out_size: int *
+
+    """
     return _libembroidery.hus_decompress(input, size, output, out_size)
 
 def isArcClockwise(arc):
+    r"""
+    isArcClockwise(arc) -> char
+
+    Parameters
+    ----------
+    arc: EmbArc
+
+    """
     return _libembroidery.isArcClockwise(arc)
 
 def getArcCenter(arc, arcCenter):
+    r"""
+    getArcCenter(arc, arcCenter)
+
+    Parameters
+    ----------
+    arc: EmbArc
+    arcCenter: EmbVector *
+
+    """
     return _libembroidery.getArcCenter(arc, arcCenter)
 
 def getArcDataFromBulge(bulge, arc, arcCenterX, arcCenterY, radius, diameter, chord, chordMidX, chordMidY, sagitta, apothem, incAngleInDegrees, clockwise):
+    r"""
+    getArcDataFromBulge(bulge, arc, arcCenterX, arcCenterY, radius, diameter, chord, chordMidX, chordMidY, sagitta, apothem, incAngleInDegrees, clockwise) -> char
+
+    Parameters
+    ----------
+    bulge: double
+    arc: EmbArc *
+    arcCenterX: double *
+    arcCenterY: double *
+    radius: double *
+    diameter: double *
+    chord: double *
+    chordMidX: double *
+    chordMidY: double *
+    sagitta: double *
+    apothem: double *
+    incAngleInDegrees: double *
+    clockwise: char *
+
+    """
     return _libembroidery.getArcDataFromBulge(bulge, arc, arcCenterX, arcCenterY, radius, diameter, chord, chordMidX, chordMidY, sagitta, apothem, incAngleInDegrees, clockwise)
 
 def getCircleCircleIntersections(c0, c1, v0, v1):
+    r"""
+    getCircleCircleIntersections(c0, c1, v0, v1) -> int
+
+    Parameters
+    ----------
+    c0: EmbCircle
+    c1: EmbCircle
+    v0: EmbVector *
+    v1: EmbVector *
+
+    """
     return _libembroidery.getCircleCircleIntersections(c0, c1, v0, v1)
 
 def getCircleTangentPoints(c, p, v0, v1):
+    r"""
+    getCircleTangentPoints(c, p, v0, v1) -> int
+
+    Parameters
+    ----------
+    c: EmbCircle
+    p: EmbVector
+    v0: EmbVector *
+    v1: EmbVector *
+
+    """
     return _libembroidery.getCircleTangentPoints(c, p, v0, v1)
 
-def embColor_make(r, g, b):
-    return _libembroidery.embColor_make(r, g, b)
+def color_make(r, g, b):
+    r"""
+    color_make(r, g, b) -> EmbColor
 
-def embColor_create(r, g, b):
-    return _libembroidery.embColor_create(r, g, b)
+    Parameters
+    ----------
+    r: unsigned char
+    g: unsigned char
+    b: unsigned char
 
-def embColor_fromHexStr(val):
-    return _libembroidery.embColor_fromHexStr(val)
+    """
+    return _libembroidery.color_make(r, g, b)
 
-def embColor_distance(a, b):
-    return _libembroidery.embColor_distance(a, b)
+def color_create(r, g, b):
+    r"""
+    color_create(r, g, b) -> EmbColor
 
-def embImage_create(arg1, arg2):
-    return _libembroidery.embImage_create(arg1, arg2)
+    Parameters
+    ----------
+    r: unsigned char
+    g: unsigned char
+    b: unsigned char
 
-def embImage_free(image):
-    return _libembroidery.embImage_free(image)
+    """
+    return _libembroidery.color_create(r, g, b)
 
-def embEllipse_diameterX(ellipse):
-    return _libembroidery.embEllipse_diameterX(ellipse)
+def color_from_hex(val):
+    r"""
+    color_from_hex(val) -> EmbColor
 
-def embEllipse_diameterY(ellipse):
-    return _libembroidery.embEllipse_diameterY(ellipse)
+    Parameters
+    ----------
+    val: char *
 
-def embEllipse_width(ellipse):
-    return _libembroidery.embEllipse_width(ellipse)
+    """
+    return _libembroidery.color_from_hex(val)
 
-def embEllipse_height(ellipse):
-    return _libembroidery.embEllipse_height(ellipse)
+def color_from_distance(a, b):
+    r"""
+    color_from_distance(a, b) -> int
+
+    Parameters
+    ----------
+    a: EmbColor
+    b: EmbColor
+
+    """
+    return _libembroidery.color_from_distance(a, b)
+
+def image_create(arg1, arg2):
+    r"""
+    image_create(arg1, arg2) -> EmbImage
+
+    Parameters
+    ----------
+    arg1: int
+    arg2: int
+
+    """
+    return _libembroidery.image_create(arg1, arg2)
+
+def image_free(image):
+    r"""
+    image_free(image)
+
+    Parameters
+    ----------
+    image: EmbImage *
+
+    """
+    return _libembroidery.image_free(image)
+
+def ellipse_diameter_x(ellipse):
+    r"""
+    ellipse_diameter_x(ellipse) -> double
+
+    Parameters
+    ----------
+    ellipse: EmbEllipse
+
+    """
+    return _libembroidery.ellipse_diameter_x(ellipse)
+
+def ellipse_diameter_y(ellipse):
+    r"""
+    ellipse_diameter_y(ellipse) -> double
+
+    Parameters
+    ----------
+    ellipse: EmbEllipse
+
+    """
+    return _libembroidery.ellipse_diameter_y(ellipse)
+
+def ellipse_width(ellipse):
+    r"""
+    ellipse_width(ellipse) -> double
+
+    Parameters
+    ----------
+    ellipse: EmbEllipse
+
+    """
+    return _libembroidery.ellipse_width(ellipse)
+
+def ellipse_height(ellipse):
+    r"""
+    ellipse_height(ellipse) -> double
+
+    Parameters
+    ----------
+    ellipse: EmbEllipse
+
+    """
+    return _libembroidery.ellipse_height(ellipse)
 
 def embEllipseObject_make(cx, cy, rx, ry):
+    r"""
+    embEllipseObject_make(cx, cy, rx, ry) -> EmbEllipseObject
+
+    Parameters
+    ----------
+    cx: double
+    cy: double
+    rx: double
+    ry: double
+
+    """
     return _libembroidery.embEllipseObject_make(cx, cy, rx, ry)
 
 def threadColor(arg1, brand):
+    r"""
+    threadColor(arg1, brand) -> int
+
+    Parameters
+    ----------
+    arg1: char const *
+    brand: int
+
+    """
     return _libembroidery.threadColor(arg1, brand)
 
 def threadColorNum(color, brand):
+    r"""
+    threadColorNum(color, brand) -> int
+
+    Parameters
+    ----------
+    color: unsigned int
+    brand: int
+
+    """
     return _libembroidery.threadColorNum(color, brand)
 
 def threadColorName(color, brand):
+    r"""
+    threadColorName(color, brand) -> char const *
+
+    Parameters
+    ----------
+    color: unsigned int
+    brand: int
+
+    """
     return _libembroidery.threadColorName(color, brand)
 
 def embTime_initNow(t):
+    r"""
+    embTime_initNow(t)
+
+    Parameters
+    ----------
+    t: EmbTime *
+
+    """
     return _libembroidery.embTime_initNow(t)
 
 def embTime_time(t):
+    r"""
+    embTime_time(t) -> EmbTime
+
+    Parameters
+    ----------
+    t: EmbTime *
+
+    """
     return _libembroidery.embTime_time(t)
 
 def embSettings_init():
+    r"""embSettings_init() -> EmbSettings"""
     return _libembroidery.embSettings_init()
 
 def embSettings_home(settings):
+    r"""
+    embSettings_home(settings) -> EmbVector
+
+    Parameters
+    ----------
+    settings: EmbSettings *
+
+    """
     return _libembroidery.embSettings_home(settings)
 
 def embSettings_setHome(settings, point):
+    r"""
+    embSettings_setHome(settings, point)
+
+    Parameters
+    ----------
+    settings: EmbSettings *
+    point: EmbVector
+
+    """
     return _libembroidery.embSettings_setHome(settings, point)
 
 def embSatinOutline_generateSatinOutline(lines, thickness, result):
+    r"""
+    embSatinOutline_generateSatinOutline(lines, thickness, result)
+
+    Parameters
+    ----------
+    lines: EmbArray *
+    thickness: double
+    result: EmbSatinOutline *
+
+    """
     return _libembroidery.embSatinOutline_generateSatinOutline(lines, thickness, result)
 
 def embSatinOutline_renderStitches(result, density):
+    r"""
+    embSatinOutline_renderStitches(result, density) -> EmbArray_
+
+    Parameters
+    ----------
+    result: EmbSatinOutline *
+    density: double
+
+    """
     return _libembroidery.embSatinOutline_renderStitches(result, density)
 
-def embPattern_create():
-    return _libembroidery.embPattern_create()
+def pattern_create():
+    r"""pattern_create() -> EmbPattern"""
+    return _libembroidery.pattern_create()
 
-def embPattern_hideStitchesOverLength(p, length):
-    return _libembroidery.embPattern_hideStitchesOverLength(p, length)
+def pattern_hide_stitches_over(p, length):
+    r"""
+    pattern_hide_stitches_over(p, length)
 
-def embPattern_fixColorCount(p):
-    return _libembroidery.embPattern_fixColorCount(p)
+    Parameters
+    ----------
+    p: EmbPattern *
+    length: int
 
-def embPattern_addThread(p, thread):
-    return _libembroidery.embPattern_addThread(p, thread)
+    """
+    return _libembroidery.pattern_hide_stitches_over(p, length)
 
-def embPattern_addStitchAbs(p, x, y, flags, isAutoColorIndex):
-    return _libembroidery.embPattern_addStitchAbs(p, x, y, flags, isAutoColorIndex)
+def pattern_fix_color_count(p):
+    r"""
+    pattern_fix_color_count(p)
 
-def embPattern_addStitchRel(p, dx, dy, flags, isAutoColorIndex):
-    return _libembroidery.embPattern_addStitchRel(p, dx, dy, flags, isAutoColorIndex)
+    Parameters
+    ----------
+    p: EmbPattern *
 
-def embPattern_changeColor(p, index):
-    return _libembroidery.embPattern_changeColor(p, index)
+    """
+    return _libembroidery.pattern_fix_color_count(p)
 
-def embPattern_free(p):
-    return _libembroidery.embPattern_free(p)
+def pattern_add_thread(p, thread):
+    r"""
+    pattern_add_thread(p, thread) -> int
 
-def embPattern_scale(p, scale):
-    return _libembroidery.embPattern_scale(p, scale)
+    Parameters
+    ----------
+    p: EmbPattern *
+    thread: EmbThread
 
-def embPattern_calcBoundingBox(p):
-    return _libembroidery.embPattern_calcBoundingBox(p)
+    """
+    return _libembroidery.pattern_add_thread(p, thread)
 
-def embPattern_flipHorizontal(p):
-    return _libembroidery.embPattern_flipHorizontal(p)
+def pattern_add_stitch_abs(p, x, y, flags, isAutoColorIndex):
+    r"""
+    pattern_add_stitch_abs(p, x, y, flags, isAutoColorIndex)
 
-def embPattern_flipVertical(p):
-    return _libembroidery.embPattern_flipVertical(p)
+    Parameters
+    ----------
+    p: EmbPattern *
+    x: double
+    y: double
+    flags: int
+    isAutoColorIndex: int
 
-def embPattern_flip(p, horz, vert):
-    return _libembroidery.embPattern_flip(p, horz, vert)
+    """
+    return _libembroidery.pattern_add_stitch_abs(p, x, y, flags, isAutoColorIndex)
 
-def embPattern_combineJumpStitches(p):
-    return _libembroidery.embPattern_combineJumpStitches(p)
+def pattern_add_stitch_rel(p, dx, dy, flags, isAutoColorIndex):
+    r"""
+    pattern_add_stitch_rel(p, dx, dy, flags, isAutoColorIndex)
 
-def embPattern_correctForMaxStitchLength(p, maxStitchLength, maxJumpLength):
-    return _libembroidery.embPattern_correctForMaxStitchLength(p, maxStitchLength, maxJumpLength)
+    Parameters
+    ----------
+    p: EmbPattern *
+    dx: double
+    dy: double
+    flags: int
+    isAutoColorIndex: int
 
-def embPattern_center(p):
-    return _libembroidery.embPattern_center(p)
+    """
+    return _libembroidery.pattern_add_stitch_rel(p, dx, dy, flags, isAutoColorIndex)
 
-def embPattern_loadExternalColorFile(p, fileName):
-    return _libembroidery.embPattern_loadExternalColorFile(p, fileName)
+def pattern_change_color(p, index):
+    r"""
+    pattern_change_color(p, index)
 
-def embPattern_convertGeometry(p):
-    return _libembroidery.embPattern_convertGeometry(p)
+    Parameters
+    ----------
+    p: EmbPattern *
+    index: int
 
-def embPattern_designDetails(p):
-    return _libembroidery.embPattern_designDetails(p)
+    """
+    return _libembroidery.pattern_change_color(p, index)
 
-def embPattern_combine(p1, p2):
-    return _libembroidery.embPattern_combine(p1, p2)
+def pattern_free(p):
+    r"""
+    pattern_free(p)
 
-def embPattern_end(p):
-    return _libembroidery.embPattern_end(p)
+    Parameters
+    ----------
+    p: EmbPattern *
 
-def embPattern_addCircleObjectAbs(p, cx, cy, r):
-    return _libembroidery.embPattern_addCircleObjectAbs(p, cx, cy, r)
+    """
+    return _libembroidery.pattern_free(p)
 
-def embPattern_addEllipseObjectAbs(p, cx, cy, rx, ry):
-    return _libembroidery.embPattern_addEllipseObjectAbs(p, cx, cy, rx, ry)
+def pattern_scale(p, scale):
+    r"""
+    pattern_scale(p, scale)
 
-def embPattern_addLineObjectAbs(p, x1, y1, x2, y2):
-    return _libembroidery.embPattern_addLineObjectAbs(p, x1, y1, x2, y2)
+    Parameters
+    ----------
+    p: EmbPattern *
+    scale: double
 
-def embPattern_addPathObjectAbs(p, obj):
-    return _libembroidery.embPattern_addPathObjectAbs(p, obj)
+    """
+    return _libembroidery.pattern_scale(p, scale)
 
-def embPattern_addPointObjectAbs(p, x, y):
-    return _libembroidery.embPattern_addPointObjectAbs(p, x, y)
+def pattern_bounding_box(p):
+    r"""
+    pattern_bounding_box(p) -> EmbRect
 
-def embPattern_addPolygonObjectAbs(p, obj):
-    return _libembroidery.embPattern_addPolygonObjectAbs(p, obj)
+    Parameters
+    ----------
+    p: EmbPattern *
 
-def embPattern_addPolylineObjectAbs(p, obj):
-    return _libembroidery.embPattern_addPolylineObjectAbs(p, obj)
+    """
+    return _libembroidery.pattern_bounding_box(p)
 
-def embPattern_addRectObjectAbs(p, x, y, w, h):
-    return _libembroidery.embPattern_addRectObjectAbs(p, x, y, w, h)
+def pattern_flip_hor(p):
+    r"""
+    pattern_flip_hor(p)
 
-def embPattern_copyStitchListToPolylines(pattern):
-    return _libembroidery.embPattern_copyStitchListToPolylines(pattern)
+    Parameters
+    ----------
+    p: EmbPattern *
 
-def embPattern_copyPolylinesToStitchList(pattern):
-    return _libembroidery.embPattern_copyPolylinesToStitchList(pattern)
+    """
+    return _libembroidery.pattern_flip_hor(p)
 
-def embPattern_moveStitchListToPolylines(pattern):
-    return _libembroidery.embPattern_moveStitchListToPolylines(pattern)
+def pattern_flip_ver(p):
+    r"""
+    pattern_flip_ver(p)
 
-def embPattern_movePolylinesToStitchList(pattern):
-    return _libembroidery.embPattern_movePolylinesToStitchList(pattern)
+    Parameters
+    ----------
+    p: EmbPattern *
 
-def embPattern_read(pattern, fileName, format):
-    return _libembroidery.embPattern_read(pattern, fileName, format)
+    """
+    return _libembroidery.pattern_flip_ver(p)
 
-def embPattern_write(pattern, fileName, format):
-    return _libembroidery.embPattern_write(pattern, fileName, format)
+def pattern_flip(p, horz, vert):
+    r"""
+    pattern_flip(p, horz, vert)
 
-def embPattern_readAuto(pattern, fileName):
-    return _libembroidery.embPattern_readAuto(pattern, fileName)
+    Parameters
+    ----------
+    p: EmbPattern *
+    horz: int
+    vert: int
 
-def embPattern_writeAuto(pattern, fileName):
-    return _libembroidery.embPattern_writeAuto(pattern, fileName)
+    """
+    return _libembroidery.pattern_flip(p, horz, vert)
+
+def pattern_combine_jump_stitches(p):
+    r"""
+    pattern_combine_jump_stitches(p)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+
+    """
+    return _libembroidery.pattern_combine_jump_stitches(p)
+
+def pattern_correct_for_max_stitch_length(p, maxStitchLength, maxJumpLength):
+    r"""
+    pattern_correct_for_max_stitch_length(p, maxStitchLength, maxJumpLength)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+    maxStitchLength: double
+    maxJumpLength: double
+
+    """
+    return _libembroidery.pattern_correct_for_max_stitch_length(p, maxStitchLength, maxJumpLength)
+
+def pattern_center(p):
+    r"""
+    pattern_center(p)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+
+    """
+    return _libembroidery.pattern_center(p)
+
+def pattern_load_external_color_file(p, fileName):
+    r"""
+    pattern_load_external_color_file(p, fileName)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+    fileName: char const *
+
+    """
+    return _libembroidery.pattern_load_external_color_file(p, fileName)
+
+def pattern_convert_geometry(p):
+    r"""
+    pattern_convert_geometry(p)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+
+    """
+    return _libembroidery.pattern_convert_geometry(p)
+
+def pattern_design_details(p):
+    r"""
+    pattern_design_details(p)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+
+    """
+    return _libembroidery.pattern_design_details(p)
+
+def pattern_combine(p1, p2):
+    r"""
+    pattern_combine(p1, p2) -> EmbPattern
+
+    Parameters
+    ----------
+    p1: EmbPattern *
+    p2: EmbPattern *
+
+    """
+    return _libembroidery.pattern_combine(p1, p2)
+
+def pattern_color_count(pattern, startColor):
+    r"""
+    pattern_color_count(pattern, startColor) -> int
+
+    Parameters
+    ----------
+    pattern: EmbPattern *
+    startColor: EmbColor
+
+    """
+    return _libembroidery.pattern_color_count(pattern, startColor)
+
+def pattern_end(p):
+    r"""
+    pattern_end(p)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+
+    """
+    return _libembroidery.pattern_end(p)
+
+def pattern_add_circle(p, cx, cy, r):
+    r"""
+    pattern_add_circle(p, cx, cy, r)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+    cx: double
+    cy: double
+    r: double
+
+    """
+    return _libembroidery.pattern_add_circle(p, cx, cy, r)
+
+def pattern_add_ellipse(p, cx, cy, rx, ry):
+    r"""
+    pattern_add_ellipse(p, cx, cy, rx, ry)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+    cx: double
+    cy: double
+    rx: double
+    ry: double
+
+    """
+    return _libembroidery.pattern_add_ellipse(p, cx, cy, rx, ry)
+
+def pattern_add_line(p, x1, y1, x2, y2):
+    r"""
+    pattern_add_line(p, x1, y1, x2, y2)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+    x1: double
+    y1: double
+    x2: double
+    y2: double
+
+    """
+    return _libembroidery.pattern_add_line(p, x1, y1, x2, y2)
+
+def pattern_add_path(p, obj):
+    r"""
+    pattern_add_path(p, obj)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+    obj: EmbPathObject *
+
+    """
+    return _libembroidery.pattern_add_path(p, obj)
+
+def pattern_add_point(p, x, y):
+    r"""
+    pattern_add_point(p, x, y)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+    x: double
+    y: double
+
+    """
+    return _libembroidery.pattern_add_point(p, x, y)
+
+def pattern_add_polygon(p, obj):
+    r"""
+    pattern_add_polygon(p, obj)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+    obj: EmbPolygonObject *
+
+    """
+    return _libembroidery.pattern_add_polygon(p, obj)
+
+def pattern_add_polyline(p, obj):
+    r"""
+    pattern_add_polyline(p, obj)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+    obj: EmbPolylineObject *
+
+    """
+    return _libembroidery.pattern_add_polyline(p, obj)
+
+def pattern_add_rect(p, x, y, w, h):
+    r"""
+    pattern_add_rect(p, x, y, w, h)
+
+    Parameters
+    ----------
+    p: EmbPattern *
+    x: double
+    y: double
+    w: double
+    h: double
+
+    """
+    return _libembroidery.pattern_add_rect(p, x, y, w, h)
+
+def pattern_copy_stitchlist_to_polylines(pattern):
+    r"""
+    pattern_copy_stitchlist_to_polylines(pattern)
+
+    Parameters
+    ----------
+    pattern: EmbPattern *
+
+    """
+    return _libembroidery.pattern_copy_stitchlist_to_polylines(pattern)
+
+def pattern_copy_polylines_to_stitchlist(pattern):
+    r"""
+    pattern_copy_polylines_to_stitchlist(pattern)
+
+    Parameters
+    ----------
+    pattern: EmbPattern *
+
+    """
+    return _libembroidery.pattern_copy_polylines_to_stitchlist(pattern)
+
+def pattern_move_stitchlist_to_polylines(pattern):
+    r"""
+    pattern_move_stitchlist_to_polylines(pattern)
+
+    Parameters
+    ----------
+    pattern: EmbPattern *
+
+    """
+    return _libembroidery.pattern_move_stitchlist_to_polylines(pattern)
+
+def pattern_move_polylines_to_stitchlist(pattern):
+    r"""
+    pattern_move_polylines_to_stitchlist(pattern)
+
+    Parameters
+    ----------
+    pattern: EmbPattern *
+
+    """
+    return _libembroidery.pattern_move_polylines_to_stitchlist(pattern)
+
+def pattern_read(pattern, fileName, format):
+    r"""
+    pattern_read(pattern, fileName, format) -> char
+
+    Parameters
+    ----------
+    pattern: EmbPattern *
+    fileName: char const *
+    format: int
+
+    """
+    return _libembroidery.pattern_read(pattern, fileName, format)
+
+def pattern_write(pattern, fileName, format):
+    r"""
+    pattern_write(pattern, fileName, format) -> char
+
+    Parameters
+    ----------
+    pattern: EmbPattern *
+    fileName: char const *
+    format: int
+
+    """
+    return _libembroidery.pattern_write(pattern, fileName, format)
+
+def pattern_read_auto(pattern, fileName):
+    r"""
+    pattern_read_auto(pattern, fileName) -> char
+
+    Parameters
+    ----------
+    pattern: EmbPattern *
+    fileName: char const *
+
+    """
+    return _libembroidery.pattern_read_auto(pattern, fileName)
+
+def pattern_write_auto(pattern, fileName):
+    r"""
+    pattern_write_auto(pattern, fileName) -> char
+
+    Parameters
+    ----------
+    pattern: EmbPattern *
+    fileName: char const *
+
+    """
+    return _libembroidery.pattern_write_auto(pattern, fileName)
 
 def report(result, label):
+    r"""
+    report(result, label)
+
+    Parameters
+    ----------
+    result: int
+    label: char *
+
+    """
     return _libembroidery.report(result, label)
 
 def full_test_matrix(fname):
+    r"""
+    full_test_matrix(fname) -> int
+
+    Parameters
+    ----------
+    fname: char *
+
+    """
     return _libembroidery.full_test_matrix(fname)
 
 cvar = _libembroidery.cvar

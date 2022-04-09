@@ -6885,7 +6885,8 @@ readT01(EmbPattern* pattern, FILE* file) {
 }
 
 static char
-writeT01(EmbPattern* pattern, FILE* file) {
+writeT01(EmbPattern* pattern, FILE* file)
+{
     EmbRect boundingRect;
     int i;
     EmbVector pos;
@@ -6918,7 +6919,8 @@ writeT01(EmbPattern* pattern, FILE* file) {
 /* t09 format */
 
 static char
-readT09(EmbPattern* pattern, FILE* file) {
+readT09(EmbPattern* pattern, FILE* file)
+{
     unsigned char b[3];
 
     fseek(file, 0x0C, SEEK_SET);
@@ -6946,7 +6948,8 @@ readT09(EmbPattern* pattern, FILE* file) {
 }
 
 static char
-writeT09(EmbPattern* pattern, FILE* file) {
+writeT09(EmbPattern* pattern, FILE* file)
+{
     int i;
     EmbVector pos;
     fpad(file, 0x00, 0x0C);
@@ -6989,8 +6992,10 @@ writeT09(EmbPattern* pattern, FILE* file) {
 
 /* ---------------------------------------------------------------- */
 /* tap format */
+
 void
-encode_tap_record(FILE* file, int x, int y, int flags) {
+encode_tap_record(FILE* file, int x, int y, int flags)
+{
     unsigned char b[3];
     encode_tajima_ternary(b, x, y);
 
@@ -7009,7 +7014,9 @@ encode_tap_record(FILE* file, int x, int y, int flags) {
     fwrite(b, 1, 3, file);
 }
 
-int decode_tap_record_flags(unsigned char b2) {
+int
+decode_tap_record_flags(unsigned char b2)
+{
     if (b2 == 0xF3) {
         return END;
     }
@@ -7042,7 +7049,8 @@ readTap(EmbPattern* pattern, FILE* file) {
 }
 
 static char
-writeTap(EmbPattern* pattern, FILE* file) {
+writeTap(EmbPattern* pattern, FILE* file)
+{
     int i;
     EmbVector pos;
 
@@ -7088,7 +7096,8 @@ writeTap(EmbPattern* pattern, FILE* file) {
  */
 
 static char
-readThr(EmbPattern* pattern, FILE* file) {
+readThr(EmbPattern* pattern, FILE* file)
+{
     ThredHeader header;
     EmbColor background;
     int currentColor;
@@ -7098,13 +7107,9 @@ readThr(EmbPattern* pattern, FILE* file) {
     embInt_read(file, "length", &(header.length), EMB_INT32_LITTLE);
     embInt_read(file, "number of stitches", &(header.numStiches), EMB_INT16_LITTLE);
     header.hoopSize    = fread_uint16(file);
-    header.reserved[0] = fread_uint16(file);
-    header.reserved[1] = fread_uint16(file);
-    header.reserved[2] = fread_uint16(file);
-    header.reserved[3] = fread_uint16(file);
-    header.reserved[4] = fread_uint16(file);
-    header.reserved[5] = fread_uint16(file);
-    header.reserved[6] = fread_uint16(file);
+    for (i=0; i<7; i++) {
+        header.reserved[i] = fread_uint16(file);
+    }
 
     if ((header.sigVersion & 0xffffff) == 0x746872) {
         unsigned int verVar = (header.sigVersion & 0xff000000) >> 24;
@@ -7157,7 +7162,8 @@ readThr(EmbPattern* pattern, FILE* file) {
 }
 
 static char
-writeThr(EmbPattern* pattern, FILE* file) {
+writeThr(EmbPattern* pattern, FILE* file)
+{
     int i, stitchCount;
     unsigned char version = 0;
     ThredHeader header;
@@ -7179,13 +7185,9 @@ writeThr(EmbPattern* pattern, FILE* file) {
     binaryWriteUInt(file, header.length);
     binaryWriteUShort(file, header.numStiches);
     binaryWriteUShort(file, header.hoopSize);
-    binaryWriteUShort(file, header.reserved[0]);
-    binaryWriteUShort(file, header.reserved[1]);
-    binaryWriteUShort(file, header.reserved[2]);
-    binaryWriteUShort(file, header.reserved[3]);
-    binaryWriteUShort(file, header.reserved[4]);
-    binaryWriteUShort(file, header.reserved[5]);
-    binaryWriteUShort(file, header.reserved[6]);
+    for (i=0; i<7; i++) {
+        binaryWriteUShort(file, header.reserved[i]);
+    }
 
     if (version == 1 || version == 2) {
         memset(&extension, 0, sizeof(ThredExtension));
@@ -7234,7 +7236,8 @@ writeThr(EmbPattern* pattern, FILE* file) {
 /* format txt */
 
 static char
-readTxt(EmbPattern* pattern, FILE* file) {
+readTxt(EmbPattern* pattern, FILE* file)
+{
     char line[100];
     int stated_count, i;
     emb_readline(file, line, 99);
@@ -7275,7 +7278,8 @@ readTxt(EmbPattern* pattern, FILE* file) {
 }
 
 static char
-writeTxt(EmbPattern* pattern, FILE* file) {
+writeTxt(EmbPattern* pattern, FILE* file)
+{
     int i;
     fprintf(file, "%u\n", (unsigned int) pattern->stitchList->count);
 
@@ -7292,7 +7296,8 @@ writeTxt(EmbPattern* pattern, FILE* file) {
 /* format u00 */
 
 static char
-readU00(EmbPattern* pattern, FILE* file) {
+readU00(EmbPattern* pattern, FILE* file)
+{
     int i;
     char dx = 0, dy = 0;
     int flags = NORMAL;
@@ -7416,12 +7421,16 @@ writeU01(EmbPattern* pattern, FILE* file)
 /* ---------------------------------------------------------------- */
 /* format vip */
 
-int vipDecodeByte(unsigned char b) {
+int
+vipDecodeByte(unsigned char b)
+{
     if (b >= 0x80) return (-(unsigned char) (~b + 1));
     return b;
 }
 
-int vipDecodeStitchType(unsigned char b) {
+int
+vipDecodeStitchType(unsigned char b)
+{
     switch (b) {
         case 0x80:
             return NORMAL;
@@ -7436,7 +7445,9 @@ int vipDecodeStitchType(unsigned char b) {
     }
 }
 
-unsigned char* vipDecompressData(unsigned char* input, int compressedInputLength, int decompressedContentLength) {
+unsigned char*
+vipDecompressData(unsigned char* input, int compressedInputLength, int decompressedContentLength)
+{
     unsigned char* decompressedData = (unsigned char*)malloc(decompressedContentLength);
     if (!decompressedData) {
         printf("ERROR: format-vip.c vipDecompressData(), cannot allocate memory for decompressedData\n");
@@ -7964,18 +7975,11 @@ vp3PatchByteCount(FILE* file, int offset, int adjustment)
 static char
 writeVp3(EmbPattern* pattern, FILE* file)
 {
-    puts("Overridden, defaulting to dst.");
-    writeDst(pattern, file);
-#if 0
     short a;
-    int a_int;
     EmbRect bounds;
-    int remainingBytesPos, remainingBytesPos2;
-    int colorSectionStitchBytes;
-    int first = 1;
-    int numberOfColors = 0;
+    int a_int, remainingBytesPos, remainingBytesPos2;
+    int colorSectionStitchBytes, first = 1, i, numberOfColors;
     EmbColor color = embColor_make(0xFE, 0xFE, 0xFE);
-    EmbStitchList *mainPointer = 0, *pointer = 0;
 
     bounds = embPattern_calcBoundingBox(pattern);
 
@@ -7995,33 +7999,10 @@ writeVp3(EmbPattern* pattern, FILE* file)
     binaryWriteIntBE(file, bounds.left * 1000);
     binaryWriteIntBE(file, bounds.top * 1000);
     binaryWriteInt(file, 0); /* this would be some (unknown) function of thread length */
-    fputc(0);
+    fputc(0, file);
 
-    numberOfColors = 0;
-
-    mainPointer = pattern->stitchList;
-    while (mainPointer) {
-        int flag;
-        EmbColor newColor;
-
-        pointer = mainPointer;
-        flag = pointer->stitch.flags;
-        newColor = pattern->threads->thread[pointer->stitch.color].color;
-        if (embColor_distance(newColor, color) != 0) {
-            numberOfColors++;
-            color = newColor;
-        }
-        else if (flag & END || flag & STOP) {
-            numberOfColors++;
-        }
-
-        while (pointer && (flag == pointer->stitch.flags)) {
-            pointer = pointer->next;
-        }
-        mainPointer = pointer;
-    }
-
-    fputc(numberOfColors);
+    numberOfColors = embPattern_color_count(pattern, color);
+    fputc(numberOfColors, file);
     fwrite("\x0C\x00\x01\x00\x03\x00", 1, 6, file);
 
     remainingBytesPos2 = ftell(file);
@@ -8054,11 +8035,10 @@ writeVp3(EmbPattern* pattern, FILE* file)
     vp3WriteString(file, "");
     embInt_write(file, ".", &numberOfColors, EMB_INT16_BIG);
 
-    mainPointer = pattern->stitchList;
-    while (mainPointer) {
+    for (i=0; i<pattern->stitchList->count; i++) {
         char colorName[8] = { 0 };
         double lastX, lastY;
-        int colorSectionLengthPos;
+        int colorSectionLengthPos, j;
         EmbStitch s;
         int lastColor;
 
@@ -8072,6 +8052,7 @@ writeVp3(EmbPattern* pattern, FILE* file)
         colorSectionLengthPos = ftell(file);
         binaryWriteInt(file, 0); /* placeholder */
 
+        /*
         pointer = mainPointer;
         color = pattern->threads->thread[pointer->stitch.color].color;
 
@@ -8080,10 +8061,11 @@ writeVp3(EmbPattern* pattern, FILE* file)
         }
 
         s = pointer->stitch;
+        */
         printf("format-vp3.c DEBUG %d, %lf, %lf\n", s.flags, s.x, s.y);
         binaryWriteIntBE(file, s.x * 1000);
         binaryWriteIntBE(file, -s.y * 1000);
-        pointer = pointer->next;
+        /* pointer = pointer->next; */
 
         first = 0;
 
@@ -8097,7 +8079,7 @@ writeVp3(EmbPattern* pattern, FILE* file)
         embColor_write(file, color, 4);
 
         fwrite("\x00\x00\x05", 1, 3, file);
-        fputc(40);
+        fputc(40, file);
 
         vp3WriteString(file, "");
 
@@ -8114,10 +8096,12 @@ writeVp3(EmbPattern* pattern, FILE* file)
         colorSectionStitchBytes = ftell(file);
         binaryWriteInt(file, 0); /* placeholder */
 
-        fputc(10);
-        fputc(246);
-        fputc(0);
+        fputc(10, file);
+        fputc(246, file);
+        fputc(0, file);
 
+        /*
+        for (j=i; j<pattern->stitchList->count; j++) {
         while (pointer) {
             short dx, dy;
 
@@ -8130,16 +8114,17 @@ writeVp3(EmbPattern* pattern, FILE* file)
             }
             dx = (s.x - lastX) * 10;
             dy = (s.y - lastY) * 10;
-            lastX = lastX + dx / 10.0; /* output is in ints, ensure rounding errors do not sum up */
+            // output is in ints, ensure rounding errors do not sum up.
+            lastX = lastX + dx / 10.0;
             lastY = lastY + dy / 10.0;
 
             if (dx < -127 || dx > 127 || dy < -127 || dy > 127) {
-                fputc(128);
-                fputc(1);
+                fputc(128, file);
+                fputc(1, file);
                 embInt_write(file, ".", &dx, EMB_INT16_BIG);
                 embInt_write(file, ".", &dy, EMB_INT16_BIG);
-                fputc(128);
-                fputc(2);
+                fputc(128, file);
+                fputc(2, file);
             }
             else {
                 char b[2];
@@ -8150,19 +8135,18 @@ writeVp3(EmbPattern* pattern, FILE* file)
 
             pointer = pointer->next;
         }
+        */
 
         vp3PatchByteCount(file, colorSectionStitchBytes, -4);
         vp3PatchByteCount(file, colorSectionLengthPos, -3);
 
-        mainPointer = pointer;
+        /* mainPointer = pointer; */
     }
 
     vp3PatchByteCount(file, remainingBytesPos2, -4);
     vp3PatchByteCount(file, remainingBytesPos, -4);
 
     embPattern_flipVertical(pattern);
-#endif
-    puts("ERROR: vp3 format is not supported.");
     return 0;
 }
 
@@ -8170,7 +8154,8 @@ writeVp3(EmbPattern* pattern, FILE* file)
 /* format xxx */
 
 static char
-xxxDecodeByte(unsigned char inputByte) {
+xxxDecodeByte(unsigned char inputByte)
+{
     if (inputByte >= 0x80) {
         return (char) ((-~inputByte) - 1);
     }
@@ -8178,7 +8163,8 @@ xxxDecodeByte(unsigned char inputByte) {
 }
 
 static char
-readXxx(EmbPattern* pattern, FILE* file) {
+readXxx(EmbPattern* pattern, FILE* file)
+{
     int dx = 0, dy = 0, numberOfColors, paletteOffset, i;
     char thisStitchJump = 0;
 
@@ -8244,14 +8230,15 @@ readXxx(EmbPattern* pattern, FILE* file) {
 }
 
 void
-xxxEncodeStop(FILE* file, EmbStitch s) {
+xxxEncodeStop(FILE* file, EmbStitch s)
+{
     fputc((unsigned char)0x7F, file);
     fputc((unsigned char)(s.color + 8), file);
 }
 
 void
-xxxEncodeStitch(FILE* file, 
-        double deltaX, double deltaY, int flags) {
+xxxEncodeStitch(FILE* file, double deltaX, double deltaY, int flags)
+{
     if ((flags & (JUMP | TRIM)) && (fabs(deltaX) > 124 || fabs(deltaY) > 124)) {
         fputc(0x7E, file);
         /* Does this cast work right? */
@@ -8265,7 +8252,8 @@ xxxEncodeStitch(FILE* file,
 }
 
 void
-xxxEncodeDesign(FILE* file, EmbPattern* p) {
+xxxEncodeDesign(FILE* file, EmbPattern* p)
+{
     int i;
     double thisX = 0.0f;
     double thisY = 0.0f;
@@ -8293,36 +8281,53 @@ xxxEncodeDesign(FILE* file, EmbPattern* p) {
 }
 
 static char
-writeXxx(EmbPattern* pattern, FILE* file) {
+writeXxx(EmbPattern* pattern, FILE* file)
+{
     int i;
     EmbRect rect;
     int endOfStitches;
     double width, height;
+    short to_write;
+    unsigned int n_stitches;
+    unsigned short n_threads;
 
     embPattern_correctForMaxStitchLength(pattern, 124, 127);
 
     fpad(file, 0, 0x17);
-    binaryWriteUInt(file, (unsigned int)pattern->stitchList->count);
+    n_stitches = (unsigned int)pattern->stitchList->count;
+    embInt_write(file, "n_stitches", &n_stitches, EMB_INT32_LITTLE);
+
     fpad(file, 0, 0x0C);
-    binaryWriteUShort(file, (unsigned short)pattern->threads->count);
-    binaryWriteShort(file, 0x0000);
+    n_threads = (unsigned short)pattern->threads->count;
+    embInt_write(file, "n_threads", &n_threads, EMB_INT16_LITTLE);
+
+    fpad(file, 0, 0x02);
 
     rect = embPattern_calcBoundingBox(pattern);
     width = rect.right - rect.left;
     height = rect.bottom - rect.top;
-    binaryWriteShort(file, (short)(width * 10.0));
-    binaryWriteShort(file, (short)(height * 10.0));
+    to_write = (short)(width * 10.0);
+    embInt_write(file, "width", &to_write, EMB_INT16_LITTLE);
+    to_write = (short)(height * 10.0);
+    embInt_write(file, "height", &to_write, EMB_INT16_LITTLE);
 
     /*TODO: xEnd from start point x=0 */
-    binaryWriteShort(file, (short)(width / 2.0 * 10));
+    to_write = (short)(width / 2.0 * 10);
+    embInt_write(file, "xEnd from start", &to_write, EMB_INT16_LITTLE);
     /*TODO: yEnd from start point y=0 */
-    binaryWriteShort(file, (short)(height / 2.0 * 10));
+    to_write = (short)(height / 2.0 * 10);
+    embInt_write(file, "yEnd from start", &to_write, EMB_INT16_LITTLE);
     /*TODO: left from start x = 0     */
-    binaryWriteShort(file, (short)(width / 2.0 * 10));
+    to_write = (short)(width / 2.0 * 10);
+    embInt_write(file, "left from start", &to_write, EMB_INT16_LITTLE);
     /*TODO: bottom from start y = 0   */
-    binaryWriteShort(file, (short)(height / 2.0 * 10));
+    to_write = (short)(height / 2.0 * 10);
+    embInt_write(file, "bottom from start", &to_write, EMB_INT16_LITTLE);
+
     fpad(file, 0, 0xC5);
-    binaryWriteInt(file, 0x0000); /* place holder for end of stitches */
+
+    /* place holder for end of stitches */
+    binaryWriteInt(file, 0x0000); 
     xxxEncodeDesign(file, pattern);
     endOfStitches = ftell(file);
     fseek(file, 0xFC, SEEK_SET);
@@ -8337,7 +8342,8 @@ writeXxx(EmbPattern* pattern, FILE* file) {
         embColor_write(file, c, 3);
     }
     for (i = 0; i < (22 - pattern->threads->count); i++) {
-        binaryWriteUInt(file, 0x01000000);
+        unsigned int padder = 0x01000000;
+        embInt_write(file, "padder", &padder, EMB_INT32_LITTLE);
     }
     fwrite("\x00\x01", 1, 2, file);
     return 1;
@@ -8347,7 +8353,8 @@ writeXxx(EmbPattern* pattern, FILE* file) {
 /* format zsk */
 
 static char
-readZsk(EmbPattern* pattern, FILE* file) {
+readZsk(EmbPattern* pattern, FILE* file)
+{
     char b[3];
     int stitchType;
     unsigned char colorNumber;
@@ -8406,7 +8413,8 @@ readZsk(EmbPattern* pattern, FILE* file) {
 
 /* based on the readZsk function */
 static char
-writeZsk(EmbPattern* pattern, FILE* file) {
+writeZsk(EmbPattern* pattern, FILE* file)
+{
     int i;
 
     fpad(file, 0x00, 0x230);

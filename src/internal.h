@@ -18,6 +18,23 @@
 #define EMB_MIN(A, B) (((A) < (B)) ? (A) : (B))
 #define EMB_MAX(A, B) (((A) > (B)) ? (A) : (B))
 
+/**
+Type of sector
+*/
+#define CompoundFileSector_MaxRegSector 0xFFFFFFFA
+#define CompoundFileSector_DIFAT_Sector 0xFFFFFFFC
+#define CompoundFileSector_FAT_Sector   0xFFFFFFFD
+#define CompoundFileSector_EndOfChain   0xFFFFFFFE
+#define CompoundFileSector_FreeSector   0xFFFFFFFF
+
+/**
+Type of directory object
+*/
+#define ObjectTypeUnknown   0x00 /*!< Probably unallocated    */
+#define ObjectTypeStorage   0x01 /*!< a directory type object */
+#define ObjectTypeStream    0x02 /*!< a file type object      */
+#define ObjectTypeRootEntry 0x05 /*!< the root entry          */
+
 #define ELEMENT_XML              0
 #define ELEMENT_A                1
 #define ELEMENT_ANIMATE          2

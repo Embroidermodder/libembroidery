@@ -1007,6 +1007,37 @@ embPattern_end(EmbPattern *p)
 }
 
 
+int
+embPattern_color_count(EmbPattern *pattern, EmbColor startColor)
+{
+    int numberOfColors = 0, i;
+    EmbColor color = startColor;
+    for (i=0; i<pattern->stitchList->count; i++) {
+        EmbColor newColor;
+        EmbStitch st;
+
+        st = pattern->stitchList->stitch[i];
+
+        newColor = pattern->threads->thread[st.color].color;
+        if (embColor_distance(newColor, color) != 0) {
+            numberOfColors++;
+            color = newColor;
+        }
+        else if (st.flags & END || st.flags & STOP) {
+            numberOfColors++;
+        }
+
+        while (pattern->stitchList->stitch[i+1].flags == st.flags) {
+            i++;
+            if (i >= pattern->stitchList->count-2) {
+                break;
+            }
+        }
+    }
+    return numberOfColors;
+}
+
+
 void
 embPattern_designDetails(EmbPattern *pattern)
 {

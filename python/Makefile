@@ -6,4 +6,4 @@ all:
 
 clean:
 	rm -fr build dist libembroidery.egg-info __pycache__
-	rm -fr libembroidery.py embroidery_wrap.c
+	rm -fr libembroidery_core.py embroidery_wrap.c

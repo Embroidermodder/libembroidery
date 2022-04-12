@@ -8,18 +8,96 @@ Licensed under the terms of the zlib licence.
 
 The test suite for the libembroidery Python bindings.
 
-Similar to, although not a replica of, the internal
-tests. This cannot replace them because some systems
-that will run the library won't support Python.
+Similar to, although not a replica of, the internal tests. This
+cannot replace them because some systems that will run the library
+won't support Python.
 
-(Libembroidery may need to include some truly
-ancient PC in order to deal with the older
-embroidery machines that they may talk to.)
+(Libembroidery may need to include some truly ancient PC in order
+to deal with the older embroidery machines that they may talk to.)
 """
 
 import math
 import unittest
 import libembroidery as emb
+
+def create_test_file_1(outf="test01.csv"):
+    """
+    """
+    emb.create()
+
+    # 10mm circle
+    for i in range(20):
+        x = 0.0
+        y = 1.0*(i+1)
+        emb.addStitch(x, y, emb.JUMP, 0)
+
+    for i in range(200):
+        x = 10 + 10 * math.sin(i * 0.01 * math.pi)
+        y = 10 + 10 * math.cos(i * 0.01 * math.pi)
+        flags = emb.NORMAL
+        color = 0
+        emb.addStitch(x, y, flags, color)
+
+    #emb.addThread(emb.black_thread)
+    emb.end()
+
+    emb.write(outf)
+    emb.free()
+
+
+def create_test_file_2(outf="test02.csv"):
+    """
+    """
+    emb.create()
+
+    # sin wave
+    for i in range(100):
+        x = 10 + 10 * math.sin(i * (0.5 / math.pi))
+        y = 10 + i * 0.1
+        flags = emb.NORMAL
+        color = 0
+        emb.addStitch(x, y, flags, color)
+
+    #emb.add_thread(emb.black_thread)
+    emb.end()
+
+    emb.write(outf)
+    emb.free()
+
+
+def create_test_file_3(outf="test03.csv"):
+    """
+    """
+    emb.create()
+    emb.addCircle(10.0, 1.0, 5.0)
+    #emb.addThread(emb.black_thread)
+    emb.convertGeometry()
+    emb.end()
+
+    emb.write(outf)
+    emb.free()
+
+
+def convert_test(t, from_f, to_f):
+    """
+    """
+    inf = "test%02d.%s" % (t, from_f)
+    outf = "test%02d_convert_from_%s.%s" % (t, from_f, to_f)
+    if t == 1:
+        create_test_file_1(inf)
+    elif t == 2:
+        create_test_file_2(inf)
+    else:
+        create_test_file_3(inf)
+    return emb.convert(inf, outf)
+
+
+def convert_test_all(from_f, to_f):
+    for i in range(1, 4):
+        if convert_test(i, from_f, to_f) != 0:
+            return 1
+    return 0
+
 
 class TestLibembroidery(unittest.TestCase):
     r"""
@@ -50,33 +128,52 @@ class TestLibembroidery(unittest.TestCase):
     def test_path(self):
         " . "
         path = emb.path()
-        path.x = 3.0
-        path.y = 4.0
         self.assertAlmostEqual(5.0, 5.0)
 
-    def test_main(level):
-        #svg1Result = convert("test01.csv", "test01.svg")
-        #svg2Result = convert("test02.csv", "test02.svg")
-        #svg3Result = convert("test03.csv", "test03.svg")
-        #dst1Result = convert("test01.csv", "test01.dst")
-        #dst2Result = convert("test02.csv", "test02.dst")
-        #dst3Result = convert("test03.csv", "test03.dst")
-        pattern = emb.pattern_create()
-        image = emb.embImage_create(100, 100)
+    def test_main(self):
+        """
+        """
+        emb.create()
+        image = emb.image(100, 100)
         hilbertCurveResult = emb.hilbert_curve(pattern, 3)
-        renderResult = emb.embImage_render(pattern, 20.0, 20.0, "hilbert_level_3.ppm")
-        simulateResult = emb.embImage_simulate(pattern, 20.0, 20.0, "hilbert_level_3.avi")
-        emb.image_free(image)
-        emb.pattern_free(pattern)
+        renderResult = image.render(pattern, 20.0, 20.0, "hilbert_level_3.ppm")
+        simulateResult = image.simulate(pattern, 20.0, 20.0, "hilbert_level_3.avi")
+        
+        self.assertEqual(renderResult, 0)
+        self.assertEqual(simulateResult, 0)
+        emb.free()
+
+    def test_convert_csv_svg(self):
+        " Test conversion from csv to svg. "
+        self.assertEqual(convert_test_all("csv", "svg"), 1)
+
+    def test_convert_csv_dst(self):
+        " Test conversion from csv to dst. "
+        self.assertEqual(convert_test_all("csv", "dst"), 1)
+
+    def test_convert_csv_pes(self):
+        " Test conversion from csv to pes. "
+        self.assertEqual(convert_test_all("csv", "pes"), 1)
+
+    def test_convert_svg_csv(self):
+        " Test conversion from svg to csv. "
+        self.assertEqual(convert_test_all("svg", "csv"), 1)
+
+    def test_convert_dst_csv(self):
+        " Test conversion from dst to csv. "
+        self.assertEqual(convert_test_all("dst", "csv"), 1)
+
+    def test_convert_pes_csv(self):
+        " Test conversion from pes to csv. "
+        self.assertEqual(convert_test_all("pes", "csv"), 1)
 
     def test_circle_tangent(self):
-        # Declare memory without allocating.
-        t0 = emb.EmbCircle()
-        t1 = emb.EmbCircle()
-        # Problem definition
+        """
+        """
+        t0 = emb.vector(0.0, 0.0)
+        t1 = emb.vector(0.0, 0.0)
         c = emb.circle(0.0, 0.0, 3.0)
         p = emb.vector(4.0, 0.0)
-        # Test
         emb.getCircleTangentPoints(c, p, t0, t1)
         self.assertAlmostEqual(t0.x, 2.2500)
         self.assertAlmostEqual(t0.y, 1.9843)
@@ -84,13 +181,12 @@ class TestLibembroidery(unittest.TestCase):
         self.assertAlmostEqual(t1.y, -1.9843)
 
     def test_circle_tangent_2(self):
-        # Declare memory without allocating.
-        t0 = emb.EmbVector()
-        t1 = emb.EmbVector()
-        # Problem definition
+        """
+        """
+        t0 = emb.vector(0.0, 0.0)
+        t1 = emb.vector(0.0, 0.0)
         c = emb.circle(20.1762, 10.7170, 6.8221)
         p = emb.vector(24.3411, 18.2980)
-        # Test
         emb.getCircleTangentPoints(c, p, t0, t1)
         self.assertAlmostEqual(t0.x, 19.0911)
         self.assertAlmostEqual(t0.y, 17.4522)
@@ -105,7 +201,7 @@ class TestLibembroidery(unittest.TestCase):
         Currently, we only convert a single file to multiple formats.
         """
         tColor = 0xFFD25F00
-        c = emb.EmbColor(0xD2, 0x5F, 0x00)
+        c = emb.color(rgb=(0xD2, 0x5F, 0x00))
         tBrand = emb.Sulky_Rayon
         tNum = emb.threadColorNum(c, tBrand)
         tName = ""
@@ -123,9 +219,10 @@ Name  : %s
         return 0
 
     def test_format_table(self):
-        " . "
+        """
+        """
         tName = "example.zsk"
-        f_format = emb.identify_format(tName)
+        f_format = emb.emb_identify_format(tName)
         table = emb.formatTable[f_format]
 
         self.assertEqual(table.extension, ".zsk")
@@ -134,110 +231,6 @@ Name  : %s
         self.assertEqual(table.writer_state, ' ')
         self.assertEqual(table.type, 1)
 
-    def test_create_test_file_1(self):
-        """
-        """
-        outf = "test1.csv"
-        p = emb.pattern_create()
-        self.assertNotEqual(p, 0)
-
-        # 10mm circle
-        for i in range(20):
-            emb.pattern_addStitchRel(p, 0.0, 1.0, emb.JUMP, 0)
-
-        for i in range(200):
-            st = emb.EmbStitch()
-            st.x = 10 + 10 * math.sin(i * 0.01 * math.pi)
-            st.y = 10 + 10 * math.cos(i * 0.01 * math.pi)
-            st.flags = emb.NORMAL
-            st.color = 0
-            emb.pattern_addStitchAbs(p, st.x, st.y, st.flags, st.color)
-
-        emb.pattern_addThread(p, emb.black_thread)
-        emb.pattern_end(p)
-
-        self.assertEqual(emb.pattern_writeAuto(p, outf), 1)
-
-        emb.pattern_free(p)
-
-    def test_create_test_file_2(self):
-        """
-        """
-        outf = "test2.csv"
-        p = emb.pattern_create()
-        self.assertNotEqual(p, 0)
-
-        # sin wave
-        for i in range(100):
-            st = emb.EmbStitch()
-            st.x = 10 + 10 * math.sin(i * (0.5 / math.pi))
-            st.y = 10 + i * 0.1
-            st.flags = emb.NORMAL
-            st.color = 0
-            emb.pattern_addStitchAbs(p, st.x, st.y, st.flags, st.color)
-
-        emb.pattern_add_thread(p, emb.black_thread)
-        emb.pattern_end(p)
-
-        self.assertEqual(emb.pattern_writeAuto(p, outf), 1)
-        emb.pattern_free(p)
-
-    def test_create_test_file_3(self):
-        """
-        """
-        outf = "test3.csv"
-        p = emb.pattern_create()
-        self.assertNotEqual(p, 0)
-
-        emb.pattern_addCircleObjectAbs(p, 10.0, 1.0, 5.0)
-
-        emb.pattern_addThread(p, emb.black_thread)
-        emb.pattern_convertGeometry(p)
-        emb.pattern_end(p)
-
-        self.assertEqual(emb.pattern_writeAuto(p, outf), 1)
-        emb.pattern_free(p)
-
-    def test_full_matrix(self):
-        r"""
-        Table of from/to for formats. What conversions after a
-        from A to B conversion leave a file with the same render?
-
-        Add command "--full-test-suite" for this full matrix.
-        """
-        f = open("full_matrix.txt", "wb")
-        self.assertNotEqual(f, 0)
-        nformats = emb.numberOfFormats
-
-        success = 0
-        ntests = (nformats - 1)*(nformats - 5)
-        for i in range(nformats):
-            table = emb.formatTable
-            if table.color_only:
-                continue
-
-            fname = "test01%s" % table.extension
-            self.create_test_file_1(fname)
-            for j in range(nformats):
-                pattern = emb.EmbPattern()
-                fname_converted = ("test01_%s_converted_to%s" % 
-                    (table[i].extension+1, table[j].extension))
-                fname_image = ("test01_%s_converted_to%s.ppm" %
-                    (table[i].extension+1, table[j].extension+1))
-                print("Attempting: %s %s\n" % (fname, fname_converted))
-                result = emb.convert(fname, fname_converted)
-                emb.pattern_read(pattern, fname_converted, j)
-                emb.image_render(pattern, 20.0, 20.0, fname_image)
-                emb.pattern_free(pattern)
-                f.write(f, "%d %d %f%% " % (i, j, 100*success/(1.0*ntests)))
-                if not result:
-                    f.write(f, "PASS\n")
-                    success += 1
-                else:
-                    f.write(f, "FAIL\n")
-
-        f.close()
-        return 0
 
 if __name__ == '__main__':
     unittest.main()

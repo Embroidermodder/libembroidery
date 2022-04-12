@@ -24,7 +24,8 @@ setuptools.setup(
         "../src/geometry.c",
         "../src/compress.c",
         "../src/encoding.c",
-        "../src/thread-color.c"
+        "../src/thread-color.c",
+        "../src/current.c"
     ])],
     py_modules=["libembroidery", "libembroidery_core"],
     python_requires=">=3.6"

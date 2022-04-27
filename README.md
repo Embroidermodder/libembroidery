@@ -1,8 +1,8 @@
-# Libembroidery v1.0-alpha Manual
+# 1. Libembroidery v1.0-alpha Manual
 
 (Under construction, please wait for v1.0 release.)
 
-## What is libembroidery?
+## 1.1. What is libembroidery?
 
 libembroidery is a low-level library for reading, writing, 
 and altering digital embroidery files in C.
@@ -23,44 +23,142 @@ https://embroidermodder.org
 
 Copyright (c) 2013-2022 The EmbroiderModder Team
 
-## Table of Contents
+## 1.2. Table of Contents
 
-* [What is libembroidery?](#what-is-libembroidery)
-* [Table of Contents](#table-of-contents)
-* [License](#license)
-* [The Embroidermodder Team](#the-embroidermodder-team)
-* [Build](#build)
-  * [Debug](#debug)
-* [Usage](#usage)
-* [Development](#development)
-  * [Contributing](#contributing)
-    * [Style](#style)
-    * [Standard](#standard)
-  * [To Do](#to-do)
-  * [Features](#features)
-  * [Bindings](#bindings)
-* [Formats](#formats)
-* [On Embedded Systems](#on-embedded-systems)
-  * [Compatible Boards](#compatible-boards)
-  * [Arduino Considerations](#arduino-considerations)
-  * [Space](#space)
-  * [Tables](#tables)
-  * Current Pattern Memory Management
-  * Special Notes
-  * Experimental Projects
-  * Dependencies
-* The Assembly Split
-  * Utility Functions
-  * Avoiding the use of libc
-  * Avoiding the use of libm
-* [Bibliography](#bibliography)
+- [1. Libembroidery v1.0-alpha Manual](#1-libembroidery-v10-alpha-manual)
+  - [1.1. What is libembroidery?](#11-what-is-libembroidery)
+  - [1.2. Table of Contents](#12-table-of-contents)
+    - [1.2.1. License](#121-license)
+    - [1.2.2. The Embroidermodder Project](#122-the-embroidermodder-project)
+    - [1.2.3. The Embroidermodder Team](#123-the-embroidermodder-team)
+  - [1.3. Build](#13-build)
+    - [1.3.1. Debug](#131-debug)
+  - [1.4. Usage](#14-usage)
+    - [1.4.1. To Flag](#141-to-flag)
+    - [1.4.2. Circle Flag](#142-circle-flag)
+    - [1.4.3. Ellipse Flag](#143-ellipse-flag)
+    - [1.4.4. Line Flag](#144-line-flag)
+    - [1.4.5. Polyline Flag](#145-polyline-flag)
+    - [1.4.6. Polygon Flag](#146-polygon-flag)
+    - [1.4.7. Satin Flag](#147-satin-flag)
+    - [1.4.8. Stitch Flag](#148-stitch-flag)
+    - [1.4.9.](#149)
+    - [1.4.10. Basic Test Suite](#1410-basic-test-suite)
+    - [1.4.11. Full Test Suite](#1411-full-test-suite)
+  - [1.5. Ideas](#15-ideas)
+      - [1.5.0.1. Rendering system](#1501-rendering-system)
+      - [1.5.0.2. Binary download](#1502-binary-download)
+      - [1.5.0.3. Identify the meaning of these TODO items](#1503-identify-the-meaning-of-these-todo-items)
+      - [1.5.0.4. Progress Chart](#1504-progress-chart)
+      - [1.5.0.5. Tactile art and braille support](#1505-tactile-art-and-braille-support)
+  - [1.6. Development](#16-development)
+    - [1.6.1. Contributing](#161-contributing)
+      - [1.6.1.1. Style](#1611-style)
+      - [1.6.1.2. Standard](#1612-standard)
+    - [1.6.2. Image Fitting](#162-image-fitting)
+    - [1.6.3. To Place](#163-to-place)
+    - [1.6.4. To Do](#164-to-do)
+      - [1.6.4.1. Basic features.](#1641-basic-features)
+      - [1.6.4.2. Code quality and user friendliness](#1642-code-quality-and-user-friendliness)
+      - [1.6.4.3. embroider CLI](#1643-embroider-cli)
+        - [1.6.4.3.1. Embroider pipeline](#16431-embroider-pipeline)
+      - [1.6.4.4. Documentation](#1644-documentation)
+      - [1.6.4.5. GUI](#1645-gui)
+      - [1.6.4.6. Electronics development](#1646-electronics-development)
+  - [1.7. Formats](#17-formats)
+    - [1.7.1. Overview](#171-overview)
+      - [1.7.1.1. Read/Write Support Levels](#1711-readwrite-support-levels)
+      - [1.7.1.2. Test Support Levels](#1712-test-support-levels)
+      - [1.7.1.3. Documentation Support Levels](#1713-documentation-support-levels)
+      - [1.7.1.4. Table of Format Support Levels](#1714-table-of-format-support-levels)
+    - [1.7.2. Toyota Embroidery Format (.100)](#172-toyota-embroidery-format-100)
+    - [1.7.3. Toyota Embroidery Format (.10o)](#173-toyota-embroidery-format-10o)
+    - [1.7.4. Bernina Embroidery Format (.art)](#174-bernina-embroidery-format-art)
+    - [1.7.5. Bitmap Cache Embroidery Format (.bmc)](#175-bitmap-cache-embroidery-format-bmc)
+    - [1.7.6. Bits and Volts Embroidery Format (.bro)](#176-bits-and-volts-embroidery-format-bro)
+    - [1.7.7. Melco Embroidery Format (.cnd)](#177-melco-embroidery-format-cnd)
+    - [1.7.8. Embroidery Thread Color Format (.col)](#178-embroidery-thread-color-format-col)
+      - [1.7.8.1. Example](#1781-example)
+    - [1.7.9. Singer Embroidery Format (.csd)](#179-singer-embroidery-format-csd)
+    - [1.7.10. Comma Separated Values (.csv)](#1710-comma-separated-values-csv)
+    - [1.7.11. Barudan Embroidery Format (.dat)](#1711-barudan-embroidery-format-dat)
+    - [1.7.12. Melco Embroidery Format (.dem)](#1712-melco-embroidery-format-dem)
+    - [1.7.13. Barudan Embroidery Format (.dsb)](#1713-barudan-embroidery-format-dsb)
+    - [1.7.14. Tajima Embroidery Format (.dst)](#1714-tajima-embroidery-format-dst)
+      - [1.7.14.1. Header](#17141-header)
+    - [1.7.15. ZSK USA Embroidery Format (.dsz)](#1715-zsk-usa-embroidery-format-dsz)
+    - [1.7.16. Drawing Exchange Format (.dxf)](#1716-drawing-exchange-format-dxf)
+    - [1.7.17. Embird Embroidery Format (.edr)](#1717-embird-embroidery-format-edr)
+    - [1.7.18. Elna Embroidery Format (.emd)](#1718-elna-embroidery-format-emd)
+    - [1.7.19. Melco Embroidery Format (.exp)](#1719-melco-embroidery-format-exp)
+    - [1.7.20. Eltac Embroidery Format (.exy)](#1720-eltac-embroidery-format-exy)
+    - [1.7.21. Sierra Expanded Embroidery Format (.eys)](#1721-sierra-expanded-embroidery-format-eys)
+    - [1.7.22. Fortron Embroidery Format (.fxy)](#1722-fortron-embroidery-format-fxy)
+    - [1.7.23. Great Notions Embroidery Format (.gnc)](#1723-great-notions-embroidery-format-gnc)
+    - [1.7.24. Gold Thread Embroidery Format (.gt)](#1724-gold-thread-embroidery-format-gt)
+    - [1.7.25. Husqvarna Viking Embroidery Format (.hus)](#1725-husqvarna-viking-embroidery-format-hus)
+    - [1.7.26. Inbro Embroidery Format (.inb)](#1726-inbro-embroidery-format-inb)
+    - [1.7.27. Embroidery Color Format (.inf)](#1727-embroidery-color-format-inf)
+    - [1.7.28. Janome Embroidery Format (.jef)](#1728-janome-embroidery-format-jef)
+    - [1.7.29. Pfaff professional Design format (.ksm)](#1729-pfaff-professional-design-format-ksm)
+    - [1.7.30. Pfaff Embroidery Format (.max)](#1730-pfaff-embroidery-format-max)
+    - [1.7.31. Mitsubishi Embroidery Format (.mit)](#1731-mitsubishi-embroidery-format-mit)
+    - [1.7.32. Ameco Embroidery Format (.new)](#1732-ameco-embroidery-format-new)
+    - [1.7.33. Melco Embroidery Format (.ofm)](#1733-melco-embroidery-format-ofm)
+    - [1.7.34. Pfaff PCD File Format](#1734-pfaff-pcd-file-format)
+    - [1.7.35. Pfaff Embroidery Format (.pcm)](#1735-pfaff-embroidery-format-pcm)
+    - [1.7.36. Pfaff Embroidery Format (.pcq)](#1736-pfaff-embroidery-format-pcq)
+    - [1.7.37. Pfaff Embroidery Format (.pcs)](#1737-pfaff-embroidery-format-pcs)
+    - [1.7.38. Brother Embroidery Format (.pec)](#1738-brother-embroidery-format-pec)
+    - [1.7.39. Brother Embroidery Format (.pel)](#1739-brother-embroidery-format-pel)
+    - [1.7.40. Brother Embroidery Format (.pem)](#1740-brother-embroidery-format-pem)
+    - [1.7.41. Brother Embroidery Format (.pes)](#1741-brother-embroidery-format-pes)
+    - [1.7.42. Brother Embroidery Format (.phb)](#1742-brother-embroidery-format-phb)
+    - [1.7.43. Brother Embroidery Format (.phc)](#1743-brother-embroidery-format-phc)
+    - [1.7.44. AutoCAD Embroidery Format (.plt)](#1744-autocad-embroidery-format-plt)
+    - [1.7.45. RGB Embroidery Format (.rgb)](#1745-rgb-embroidery-format-rgb)
+    - [1.7.46. Janome Embroidery Format (.sew)](#1746-janome-embroidery-format-sew)
+    - [1.7.47. Husqvarna Viking Embroidery Format (.shv)](#1747-husqvarna-viking-embroidery-format-shv)
+    - [1.7.48. Sunstar Embroidery Format (.sst)](#1748-sunstar-embroidery-format-sst)
+    - [1.7.49. Data Stitch Embroidery Format (.stx)](#1749-data-stitch-embroidery-format-stx)
+    - [1.7.50. Scalable Vector Graphics (.svg)](#1750-scalable-vector-graphics-svg)
+    - [1.7.51. Pfaff Embroidery Format (.t01)](#1751-pfaff-embroidery-format-t01)
+    - [1.7.52. Pfaff Embroidery Format (.t09)](#1752-pfaff-embroidery-format-t09)
+    - [1.7.53. Happy Embroidery Format (.tap)](#1753-happy-embroidery-format-tap)
+    - [1.7.54. ThredWorks Embroidery Format (.thr)](#1754-thredworks-embroidery-format-thr)
+    - [1.7.55. Text File (.txt)](#1755-text-file-txt)
+    - [1.7.56. Barudan Embroidery Format (.u00)](#1756-barudan-embroidery-format-u00)
+    - [1.7.57. Barudan Embroidery Format (.u01)](#1757-barudan-embroidery-format-u01)
+    - [1.7.58. Pfaff Embroidery Format (.vip)](#1758-pfaff-embroidery-format-vip)
+    - [1.7.59. Pfaff Embroidery Format (.vp3)](#1759-pfaff-embroidery-format-vp3)
+    - [1.7.60. Singer Embroidery Format (.xxx)](#1760-singer-embroidery-format-xxx)
+    - [1.7.61. ZSK USA Embroidery Format (.zsk)](#1761-zsk-usa-embroidery-format-zsk)
+  - [1.8. On Embedded Systems](#18-on-embedded-systems)
+    - [1.8.1. Compatible Boards](#181-compatible-boards)
+    - [1.8.2. Arduino Considerations](#182-arduino-considerations)
+    - [1.8.3. Space](#183-space)
+    - [1.8.4. Tables](#184-tables)
+    - [1.8.5. Current Pattern Memory Management](#185-current-pattern-memory-management)
+    - [1.8.6. Special Notes](#186-special-notes)
+  - [1.9. The Assembly Split](#19-the-assembly-split)
+  - [1.10. Build](#110-build)
+  - [1.11. Features](#111-features)
+    - [1.11.1. Bindings](#1111-bindings)
+  - [1.12. Threads](#112-threads)
+    - [1.12.1. DXF color table](#1121-dxf-color-table)
+    - [1.12.2. HUS color table](#1122-hus-color-table)
+    - [1.12.3. JEF color table](#1123-jef-color-table)
+    - [1.12.4. PCM color table](#1124-pcm-color-table)
+    - [1.12.5. PEC color table](#1125-pec-color-table)
+  - [1.13. Other Supported Thread Brands](#113-other-supported-thread-brands)
+  - [1.14. Bibliography](#114-bibliography)
 
-### License
+### 1.2.1. License
 
 Libembroidery is distributed under the permissive zlib licence, see the 
 LICENCE file. This applies to all the source code in this directory.
 
-### The Embroidermodder Project
+### 1.2.2. The Embroidermodder Project
 
 The _Embroidermodder 2_ project is a collection of small software utilities for
 manipulating, converting and creating embroidery files in all major embroidery
@@ -83,7 +181,7 @@ join us on GitHub. This document is written as developer training as well
 helping new users (see the last sections) so this is the place to learn how
 to start changing the code.
 
-### The Embroidermodder Team
+### 1.2.3. The Embroidermodder Team
 
 The Embroidermodder Team is the collection of people who've submitted
 patches, artwork and documentation to our three projects.
@@ -92,7 +190,7 @@ For a full list of members please see the
 [Embroidermodder github page](https://github.com/Embroidermodder/Embroidermodder)
 where it is actively maintained.
 
-## Build
+## 1.3. Build
 
 libembroidery and EmbroiderModder 2 use CMake builds
 so if you are building the project to use as a library we recommend
@@ -109,7 +207,7 @@ cmake --install .
 This builds both the static and shared versions of the library as well
 as the command line program `embroider`.
 
-### Debug
+### 1.3.1. Debug
 
 If you wish to help with development, [run this debug script](https://embroidermodder.org/libembroidery_debugger.sh) and send us the error log.
 Note: this is maintained outside of the repository because it gives us a oneliner for new systems with a stable URL:
@@ -120,7 +218,7 @@ curl https://embroidermodder.org/libembroidery_debugger.sh | sh
 While we will attempt to maintain good results from this script as part of normal development
 it should be the first point of failure on any system we haven't tested or format we understand less.
 
-## Usage
+## 1.4. Usage
 
 For basic use, we recommend you build as above, then run without arguments:
 
@@ -177,25 +275,25 @@ straight into the rest of this manual.
 
 For each of the flags described here we will go into greater detail in this manual.
 
-### To Flag
+### 1.4.1. To Flag
 
-### Circle Flag
+### 1.4.2. Circle Flag
 
-### Ellipse Flag
+### 1.4.3. Ellipse Flag
 
-### Line Flag
+### 1.4.4. Line Flag
 
-### Polyline Flag
+### 1.4.5. Polyline Flag
 
-### Polygon Flag
+### 1.4.6. Polygon Flag
 
-### Satin Flag
+### 1.4.7. Satin Flag
 
-### Stitch Flag
+### 1.4.8. Stitch Flag
 
-### 
+### 1.4.9. 
 
-### Basic Test Suite
+### 1.4.10. Basic Test Suite
 
 The flag `--test` runs the tests that take the least time and have the
 most utility. If you're submitting a patch for review, please run:
@@ -214,7 +312,7 @@ or
 depending on your preferred debugging approach. Passing this test
 will be required for us to accept your patch.
 
-### Full Test Suite
+### 1.4.11. Full Test Suite
 
 The flag `--full-test-suite` runs all the tests that have been written.
 Since this results in a lot of output the details are both to stdout
@@ -227,9 +325,9 @@ the testing result for each test is as good a result, if not better.
 Sacrificing one critera for another would require some design work
 before we would consider it.)
 
-## Ideas
+## 1.5. Ideas
 
-#### Rendering system
+#### 1.5.0.1. Rendering system
 
 There are two forms of render that will be produced.
 
@@ -243,22 +341,22 @@ We have an EmbImage struct to store the raster format.
 currently creates a blank image. Previously the Hilbert curve test managed to
 create a correctly rendered version.
 
-#### Binary download
+#### 1.5.0.2. Binary download
 
 We need a current `embroider` command line program download, so people can update
 without building.
 
-#### Identify the meaning of these TODO items
+#### 1.5.0.3. Identify the meaning of these TODO items
 
 * Saving CSV/SVG (rt) + CSV read/write UNKNOWN interpreted as COLOR bug #179
 * Lego Mindstorms NXT/EV3 ports and/or commands
 
-#### Progress Chart
+#### 1.5.0.4. Progress Chart
 
 The chart of successful from-to conversions (previously a separate issue)
 is something that should appear in the README.
 
-#### Tactile art and braille support
+#### 1.5.0.5. Tactile art and braille support
 
 One application I'd like to leave a reminder here for is automating embroidery
 for blind and partially sighted people.
@@ -287,9 +385,9 @@ software is for the intended audience.
 This is less important than getting better machine support but given the high
 social impact I think it should be a priority.
 
-## Development
+## 1.6. Development
 
-### Contributing
+### 1.6.1. Contributing
 
 If you're interested in getting involved, here's some guidance
 for new developers. Currently The Embroidermodder Team is all
@@ -302,7 +400,7 @@ All code written for libembroidery should be ANSI C89 compliant
 if it is C. Using other languages should only be used where
 necessary to support bindings.
 
-#### Style
+#### 1.6.1.1. Style
 
 Rather than maintain our own standard for style, please defer to
 the Python's PEP 7 ([12](#12)) for C style.
@@ -315,7 +413,7 @@ Google style ([13](#13))
 would be acceptable. We'll elect specific standards if it becomes
 an issue.
 
-#### Standard
+#### 1.6.1.2. Standard
 
 The criteria for a good Pull Request from an outside developer is,
 from most to least important:
@@ -330,12 +428,12 @@ from most to least important:
 6. `embroider` should be in POSIX style as a command line program.
 7. No dependancies that aren't "standard", i.e. use only the C Standard Library.
 
-### Image Fitting
+### 1.6.2. Image Fitting
 
 A currently unsolved problem in development that warrants further research is
 the scenario where a user wants to feed embroider an image that can then be .
 
-### To Place
+### 1.6.3. To Place
 
 A _right-handed coordinate system_ is one where up is positive and right is
 positive. Left-handed is up is positive, left is positive. Screens often use
@@ -346,7 +444,7 @@ flip (`embPattern_flip`).
 `0x20` is the space symbol, so when padding either 0 or space is preferred and
 in the case of space use the literal ' '.
 
-### To Do
+### 1.6.4. To Do
 
 We currently need help with:
 
@@ -374,7 +472,7 @@ Beyond this the development targets are categories sorted into:
 5. [GUI](#gui)
 6. [electronics development](#electronics-development)
 
-#### Basic features.
+#### 1.6.4.1. Basic features.
 
 1. Incorporate \texttt{\#if\ 0}ed parts of \texttt{libembroidery.c}.
 2. Interpret how to write formats that have a read mode from the source
@@ -385,14 +483,14 @@ Beyond this the development targets are categories sorted into:
 4. Find more and better documentation of the structure of the headers for
    the formats we do understand.
 
-#### Code quality and user friendliness
+#### 1.6.4.2. Code quality and user friendliness
 
 1. Document all structs, macros and functions (will contribute directly
    on the web version).
 2. Incorporate experimental code, improve support for language bindings.
 3. Make stitch x, y into an EmbVector.
 
-#### embroider CLI
+#### 1.6.4.3. embroider CLI
 
 1. Make -circle flag to add a circle to the current pattern.
 2. Make -rect flag to add a rectangle to the current pattern.
@@ -402,7 +500,7 @@ Beyond this the development targets are categories sorted into:
 4. Make -ellipse flag to add to ellipse to the current pattern.
 5. Make -bezier flag to add a bezier curve to the current pattern.
 
-##### Embroider pipeline
+##### 1.6.4.3.1. Embroider pipeline
 
 Adjectives apply to every following noun so
 
@@ -419,7 +517,7 @@ Creates:
 
 in that order then writes them to the output file `output.pes`.
 
-#### Documentation
+#### 1.6.4.4. Documentation
 
 1. Create csv data files for thread tables.
 2. Convert tex to markdown, make tex an output of `build.bash`.
@@ -430,7 +528,7 @@ in that order then writes them to the output file `output.pes`.
    so new developers don't need to learn multiple languages to have an effect.
    This bars the embedded parts of the code. 
 
-#### GUI
+#### 1.6.4.5. GUI
 
 1. Make MobileViewer also backend to `libembroidery` with a Java wrapper.
 2. Make iMobileViewer also backend to `libembroidery` with a Swift wrapper.
@@ -439,7 +537,7 @@ in that order then writes them to the output file `output.pes`.
    are 4 repositories total.
 4. Convert layout data to JSON format and use cJSON for parsing.
 
-#### Electronics development
+#### 1.6.4.6. Electronics development
 
 1. Currently experimenting with Fritzing^(*8*), upload netlists to embroiderbot
    when they can run simulations using the asm in `libembroidery`.
@@ -449,11 +547,11 @@ in that order then writes them to the output file `output.pes`.
    "c code only". That way we can share some development between assembly and C
    versions.
 
-## Formats
+## 1.7. Formats
 
-### Overview
+### 1.7.1. Overview
 
-#### Read/Write Support Levels
+#### 1.7.1.1. Read/Write Support Levels
 
 The table of read/write format support levels uses the status levels described here:
 
@@ -468,7 +566,7 @@ The table of read/write format support levels uses the status levels described h
 
 So all formats can, in principle, have good read and good write support, because it's defined in relation to files that we have described the formats for.
 
-#### Test Support Levels
+#### 1.7.1.2. Test Support Levels
 
 | Status | Description |
 |---|---|
@@ -480,7 +578,7 @@ So all formats can, in principle, have good read and good write support, because
 
 So all formats can, in principle, have complete testing support, because it's defined in relation to files that we have described the formats for.
 
-#### Documentation Support Levels
+#### 1.7.1.3. Documentation Support Levels
 
 | Status | Description |
 |---|---|
@@ -494,7 +592,7 @@ Not all formats can have complete documentation because it's based on what
 information is publically available. So the total score is reported in the table
 below based on what level we think is available.
 
-#### Table of Format Support Levels
+#### 1.7.1.4. Table of Format Support Levels
 
 | *Format* | *Read Support* | *Write Support* | *Specialised Tests* | *Documentation* | *Score* |
 |---|---|---|---|---|---|
@@ -563,27 +661,27 @@ below based on what level we think is available.
 
 For a total of 0% coverage.
 
-### Toyota Embroidery Format (.100)
+### 1.7.2. Toyota Embroidery Format (.100)
 
 The Toyota 100 format is a stitch-only format that uses an external color file.
 
 The stitch encoding is in 4 byte chunks.
 
-### Toyota Embroidery Format (.10o)
+### 1.7.3. Toyota Embroidery Format (.10o)
 
 The Toyota 10o format is a stitch-only format that uses an external color file.
 
 The stitch encoding is in 3 byte chunks.
 
-### Bernina Embroidery Format (.art)
+### 1.7.4. Bernina Embroidery Format (.art)
 
 We don't know much about this format. TODO: Find a source.
 
-### Bitmap Cache Embroidery Format (.bmc)
+### 1.7.5. Bitmap Cache Embroidery Format (.bmc)
 
 We don't know much about this format. TODO: Find a source.
 
-### Bits and Volts Embroidery Format (.bro)
+### 1.7.6. Bits and Volts Embroidery Format (.bro)
 
 The Bits and Volts bro format is a stitch-only format that uses an external color file.
 
@@ -593,13 +691,13 @@ header.
 The stitch list uses a variable length encoding which is 2 bytes for any
 stitch
 
-### Melco Embroidery Format (.cnd)
+### 1.7.7. Melco Embroidery Format (.cnd)
 
 The Melco cnd format is a stitch-only format.
 
 We don't know much about this format. TODO: Find a source.
 
-### Embroidery Thread Color Format (.col)
+### 1.7.8. Embroidery Thread Color Format (.col)
 
 An external color file format for formats that do not record their own colors. 
 
@@ -610,7 +708,7 @@ Then the rest of the file is a comma seperated value list of all threads with
 4 values per line: the index of the thread then the red, green and blue channels
 of the color in that order.
 
-#### Example
+#### 1.7.8.1. Example
 
 If we had a pattern called "example" with four colors: black, red, magenta and 
 cyan in that order then the file is (with the white space written out):
@@ -623,11 +721,11 @@ example.col
     2,0,255,0\r\n
     3,0,0,255\r\n
 
-### Singer Embroidery Format (.csd)
+### 1.7.9. Singer Embroidery Format (.csd)
 
 Stitch Only Format
 
-### Comma Separated Values (.csv)
+### 1.7.10. Comma Separated Values (.csv)
 
 Comma Seperated Values files aren't a universal system, here we aim to
 offer a broad support.
@@ -643,15 +741,15 @@ offer a broad support.
 | `*` | END | To end a pattern. |
 | `*` | UNKNOWN | For any feature that we can't identify. |
 
-### Barudan Embroidery Format (.dat)
+### 1.7.11. Barudan Embroidery Format (.dat)
 
 Stitch Only Format
 
-### Melco Embroidery Format (.dem)
+### 1.7.12. Melco Embroidery Format (.dem)
 
 Stitch Only Format
 
-### Barudan Embroidery Format (.dsb)
+### 1.7.13. Barudan Embroidery Format (.dsb)
 
   * Stitch Only Format.
   * [X] Basic Read Support
@@ -659,7 +757,7 @@ Stitch Only Format
   * [ ] Well Tested Read
   * [ ] Well Tested Write
 
-### Tajima Embroidery Format (.dst)
+### 1.7.14. Tajima Embroidery Format (.dst)
 
   * Stitch Only Format.
   * [X] Basic Read Support
@@ -671,7 +769,7 @@ Stitch Only Format
 Format comments are thanks to tspilman@dalcoathletic.com who's
 notes appeared at \url{http://www.wotsit.org} under Tajima Format.
 
-#### Header
+#### 1.7.14.1. Header
 
 The header seems to contain information about the design.
 Seems to be ASCII text delimited by 0x0D (carriage returns).
@@ -722,85 +820,85 @@ Note that:
   2. The coordinate system is right handed.
 
 
-### ZSK USA Embroidery Format (.dsz)
+### 1.7.15. ZSK USA Embroidery Format (.dsz)
 
 The ZSK USA dsz format is stitch-only.
 
-### Drawing Exchange Format (.dxf)
+### 1.7.16. Drawing Exchange Format (.dxf)
 
 Graphics format.
 
-### Embird Embroidery Format (.edr)
+### 1.7.17. Embird Embroidery Format (.edr)
 
 Stitch Only Format
 
-### Elna Embroidery Format (.emd)
+### 1.7.18. Elna Embroidery Format (.emd)
 
 Stitch Only Format.
 
-### Melco Embroidery Format (.exp)
+### 1.7.19. Melco Embroidery Format (.exp)
 
 Stitch Only Format.
 
-### Eltac Embroidery Format (.exy)
+### 1.7.20. Eltac Embroidery Format (.exy)
 
 Stitch Only Format.
 
-### Sierra Expanded Embroidery Format (.eys)
+### 1.7.21. Sierra Expanded Embroidery Format (.eys)
 
 Stitch Only Format.
 
 Smoothie G-Code Embroidery Format (.fxy)?
 
-### Fortron Embroidery Format (.fxy)
+### 1.7.22. Fortron Embroidery Format (.fxy)
 
 Stitch Only Format.
 
-### Great Notions Embroidery Format (.gnc)
+### 1.7.23. Great Notions Embroidery Format (.gnc)
 
 Stitch Only Format.
 
-## Gold Thread Embroidery Format (.gt)
+### 1.7.24. Gold Thread Embroidery Format (.gt)
 
 Stitch Only Format.
 
-### Husqvarna Viking Embroidery Format (.hus)
+### 1.7.25. Husqvarna Viking Embroidery Format (.hus)
 
 Stitch Only Format.
 
-### Inbro Embroidery Format (.inb)
+### 1.7.26. Inbro Embroidery Format (.inb)
 
 Stitch Only Format.
 
-### Embroidery Color Format (.inf)
+### 1.7.27. Embroidery Color Format (.inf)
 
 Stitch Only Format.
 
-### Janome Embroidery Format (.jef)
+### 1.7.28. Janome Embroidery Format (.jef)
 
 Stitch Only Format.
 
-### Pfaff professional Design format (.ksm)
+### 1.7.29. Pfaff professional Design format (.ksm)
 
 Stitch Only Format.
 
-### Pfaff Embroidery Format (.max)
+### 1.7.30. Pfaff Embroidery Format (.max)
 
 Stitch Only Format.
 
-### Mitsubishi Embroidery Format (.mit)
+### 1.7.31. Mitsubishi Embroidery Format (.mit)
 
 Stitch Only Format.
 
-### Ameco Embroidery Format (.new)
+### 1.7.32. Ameco Embroidery Format (.new)
 
 Stitch Only Format.
 
-### Melco Embroidery Format (.ofm)
+### 1.7.33. Melco Embroidery Format (.ofm)
 
 Stitch Only Format.
 
-### Pfaff PCD File Format
+### 1.7.34. Pfaff PCD File Format
 
 Stitch Only Format.
 
@@ -810,31 +908,31 @@ See the description here ([5](#5)) for the overview of the format.
 
 For an example of the format see ([11](#11)).
 
-### Pfaff Embroidery Format (.pcm)
+### 1.7.35. Pfaff Embroidery Format (.pcm)
 
 The Pfaff pcm format is stitch-only.
 
-### Pfaff Embroidery Format (.pcq)
+### 1.7.36. Pfaff Embroidery Format (.pcq)
 
 The Pfaff pcq format is stitch-only.
 
-### Pfaff Embroidery Format (.pcs)
+### 1.7.37. Pfaff Embroidery Format (.pcs)
 
 The Pfaff pcs format is stitch-only.
 
-### Brother Embroidery Format (.pec)
+### 1.7.38. Brother Embroidery Format (.pec)
 
 The Brother pec format is stitch-only.
 
-### Brother Embroidery Format (.pel)
+### 1.7.39. Brother Embroidery Format (.pel)
 
 The Brother pel format is stitch-only.
 
-### Brother Embroidery Format (.pem)
+### 1.7.40. Brother Embroidery Format (.pem)
 
 The Brother pem format is stitch-only.
 
-### Brother Embroidery Format (.pes)
+### 1.7.41. Brother Embroidery Format (.pes)
 
 The Brother pes format is stitch-only.
 
@@ -846,93 +944,93 @@ DWORD PECOffset;
 };
 ```
 
-### Brother Embroidery Format (.phb)
+### 1.7.42. Brother Embroidery Format (.phb)
 
 The Brother phb format is stitch-only.
 
-### Brother Embroidery Format (.phc)
+### 1.7.43. Brother Embroidery Format (.phc)
 
 The Brother phc format is stitch-only.
 
-### AutoCAD Embroidery Format (.plt)
+### 1.7.44. AutoCAD Embroidery Format (.plt)
 
 The AutoCAD plt format is stitch-only.
 
-### RGB Embroidery Format (.rgb)
+### 1.7.45. RGB Embroidery Format (.rgb)
 
 The RGB format is a color-only format to act as an external color file for other formats.
 
-### Janome Embroidery Format (.sew)
+### 1.7.46. Janome Embroidery Format (.sew)
 
 The Janome sew format is stitch-only.
 
-### Husqvarna Viking Embroidery Format (.shv)
+### 1.7.47. Husqvarna Viking Embroidery Format (.shv)
 
 The Husqvarna Viking shv format is stitch-only.
 
-### Sunstar Embroidery Format (.sst)
+### 1.7.48. Sunstar Embroidery Format (.sst)
 
 The Sunstar sst format is stitch-only.
 
-### Data Stitch Embroidery Format (.stx)
+### 1.7.49. Data Stitch Embroidery Format (.stx)
 
 The Data Stitch stx format is stitch-only.
 
-### Scalable Vector Graphics (.svg)
+### 1.7.50. Scalable Vector Graphics (.svg)
 
 The scalable vector graphics (SVG) format is a graphics format
 maintained by ...
 
-### Pfaff Embroidery Format (.t01)
+### 1.7.51. Pfaff Embroidery Format (.t01)
 
 The Pfaff t01 format is stitch-only.
 
-### Pfaff Embroidery Format (.t09)
+### 1.7.52. Pfaff Embroidery Format (.t09)
 
 The Pfaff t09 format is stitch-only.
 
-### Happy Embroidery Format (.tap)
+### 1.7.53. Happy Embroidery Format (.tap)
 
 The Happy tap format is stitch-only.
 
-### ThredWorks Embroidery Format (.thr)
+### 1.7.54. ThredWorks Embroidery Format (.thr)
 
 The ThreadWorks thr format is stitch-only.
 
-### Text File (.txt)
+### 1.7.55. Text File (.txt)
 
 The txt format is stitch-only and isn't associated with a specific company.
 
-### Barudan Embroidery Format (.u00)
+### 1.7.56. Barudan Embroidery Format (.u00)
 
 The Barudan u00 format is stitch-only.
 
-### Barudan Embroidery Format (.u01)
+### 1.7.57. Barudan Embroidery Format (.u01)
 
 The Barudan u01 format is stitch-only.
 
-### Pfaff Embroidery Format (.vip)
+### 1.7.58. Pfaff Embroidery Format (.vip)
 
 The Pfaff vip format is stitch-only.
 
-### Pfaff Embroidery Format (.vp3)
+### 1.7.59. Pfaff Embroidery Format (.vp3)
 
 The Pfaff vp3 format is stitch-only.
 
-### Singer Embroidery Format (.xxx)
+### 1.7.60. Singer Embroidery Format (.xxx)
 
 The Singer xxx format is stitch-only.
 
-### ZSK USA Embroidery Format (.zsk)
+### 1.7.61. ZSK USA Embroidery Format (.zsk)
 
 The ZSK USA zsk format is stitch-only.
   
-## On Embedded Systems
+## 1.8. On Embedded Systems
 
 The library is designed to support embedded environments, so it can
 be used in CNC applications.
 
-### Compatible Boards
+### 1.8.1. Compatible Boards
 
 We recommend using an Arduino Mega 2560 or another board with equal or
 greater specs. That being said, we have had success using an Arduino Uno
@@ -940,7 +1038,7 @@ R3 but this will likely require further optimization and other
 improvements to ensure continued compatibility with the Uno. See below
 for more information.
 
-### Arduino Considerations
+### 1.8.2. Arduino Considerations
 
 There are two main concerns here: Flash Storage \& SRAM.
 
@@ -964,7 +1062,7 @@ There is also an excellent article by Bill Earl on the Adafruit Learning
 System which covers these topics in more depth:
 \url{http://learn.adafruit.com/memories-of-an-arduino?view=all}.
 
-### Space
+### 1.8.3. Space
 
 Since a stitch takes 3 bytes of storage and many patterns use more than
 10k stitches, we can't assume that the pattern will fit in memory. Therefore
@@ -979,7 +1077,7 @@ the arrays lie in storage.
 
 TODO: Replace EmbArray functions with embPattern load functions.
 
-### Tables
+### 1.8.4. Tables
 
 All thread tables and large text blocks are too big to compile directly
 into the source code. Instead we can package the library with a data packet
@@ -992,7 +1090,7 @@ needs to be loaded on the pattern USB/SD card or the program won't function.
 TODO: Start file with a list of offsets to data with a corresponding table
 to load into with macro constants for each label needed.
 
-### Current Pattern Memory Management
+### 1.8.5. Current Pattern Memory Management
 
 It will be simpler to make one file per EmbArray so we keep an EmbFile*
 and a length, so no malloc call is necessary. So there needs to be a consistent
@@ -1002,7 +1100,7 @@ TODO: For each pattern generate a random string of hexadecimal and append it
 to the filenames like \texttt{stitchList$\_$A16F.dat}. Need to check for a file
 which indicates that this string has been used already.
 
-### Special Notes
+### 1.8.6. Special Notes
 
 Due to historical reasons and to remain compatible with the Arduino 1.0
 IDE, this folder must be called ``utility''. Refer to the arduino build
@@ -1012,7 +1110,7 @@ https://arduino.github.io/arduino-cli/0.19/sketch-build-process/
 libembroidery relies on the Arduino SD library for reading files. See
 the ino-file source and header files for more information.
 
-## The Assembly Split
+## 1.9. The Assembly Split
 
 One problem to the problem of supporting both systems with abundant memory
 (such as a 2010s or later desktop) and with scarce memory (such as embedded
@@ -1027,7 +1125,7 @@ smaller set of features will be supported. However, we will write a
 That way the work that has been done to simplify the C code can be applied to
 the assembly versions.
 
-## Build
+## 1.10. Build
 
 To build the documentation run `make`. This should run no problem on a normal Unix-like environment
 assuming pandoc is available.
@@ -1042,9 +1140,9 @@ This way:
   3. We control the styling of each version independently of our editing (Markdown) version
   4. The printer-friendly documentation can have nicely rendered fonts and well placed figures.
 
-## Features
+## 1.11. Features
 
-### Bindings
+### 1.11.1. Bindings
 
 Bindings for libembroidery are maintained for the languages we use
 internally in the project, for other languages we consider that the
@@ -1066,7 +1164,7 @@ see this StackOverflow discussion [for help](https://stackoverflow.com/questions
 
 For Python you can do the same using [ctypes](https://www.geeksforgeeks.org/how-to-call-a-c-function-in-python/).
 
-## Threads
+## 1.12. Threads
 
 * [DXF Color Table](#dxf_color_table)
 * [HUS Color Table](#hus_color_table)
@@ -1074,17 +1172,17 @@ For Python you can do the same using [ctypes](https://www.geeksforgeeks.org/how-
 * [PCM Color Table](#pcm_color_table)
 * [PEC Color Table](#pec_color_table)
 
-### DXF color table
+### 1.12.1. DXF color table
 
-### HUS color table
+### 1.12.2. HUS color table
 
-### JEF color table
+### 1.12.3. JEF color table
 
-### PCM color table
+### 1.12.4. PCM color table
 
-### PEC color table
+### 1.12.5. PEC color table
 
-## Other Supported Thread Brands
+## 1.13. Other Supported Thread Brands
 
 The thread lists that aren't preprogrammed into formats but
 are indexed in the data file for the purpose of conversion
@@ -1114,7 +1212,7 @@ or fitting to images/graphics.
   * ThreaDelight Polyester
   * Z102 Isacord Polyester
 
-## Bibliography
+## 1.14. Bibliography
 
 1. <a name="1"></a> Rudolf _Technical Info_ [http://www.achatina.de/sewing/main/TECHNICL.HTM](http://www.achatina.de/sewing/main/TECHNICL.HTM)
 (Accessed 25 November 2021)

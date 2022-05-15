@@ -15,9 +15,9 @@ r"""
 
 import math
 
-from embroidermodder.geometry.tools import Pen, Vector
-
-from embroidermodder.utility import (clear_selection, set_prompt_prefix, translate)
+from libembroidery.tools import (
+    Pen, Vector, clear_selection, set_prompt_prefix, translate
+)
 
 
 class Text():

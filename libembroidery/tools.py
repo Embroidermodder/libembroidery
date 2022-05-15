@@ -15,8 +15,7 @@ r"""
 """
 
 import math
-
-from embroidermodder.utility import debug_message
+import os
 
 
 class Vector():
@@ -166,3 +165,7 @@ def path_from_command(command):
             path += ["close_path", []]
         index += 1
     return path
+
+def convert(src, dst):
+    r"Convert a file to another file."
+    os.system(f"embroider {src} {dst}")

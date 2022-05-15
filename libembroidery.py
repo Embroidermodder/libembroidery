@@ -16,7 +16,7 @@ NORMAL = 0
 JUMP = 1
 END = 16
 numberOfFormats = 61
-#formatTable = core.formatTable
+# formatTable = core.formatTable
 
 # functions
 convert = core.convert

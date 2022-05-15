@@ -12,13 +12,10 @@ that calls the generated bindings.
 All of the object orientation happens here.
 """
 
-import libembroidery_core as core
-
-# Symbols we want to be passed to the interface unchanged.
-NORMAL = core.NORMAL
-JUMP = core.JUMP
-END = core.END
-numberOfFormats = core.numberOfFormats
+NORMAL = 0
+JUMP = 1
+END = 16
+numberOfFormats = 61
 #formatTable = core.formatTable
 
 # functions
@@ -30,7 +27,7 @@ hilbert_curve = core.hilbert_curve
 #black_thread = core.black_thread
 Sulky_Rayon = core.Sulky_Rayon
 
-class array():
+class Array():
     def __init__(self):
         self.data = core.EmbArray()
 

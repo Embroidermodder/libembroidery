@@ -56,3 +56,35 @@ bound functions. Also writing good documentation is helped by
 that generation step. Calling conventions may be different between
 languages and we'd rather have a human make sure that the documentation
 is written with an awareness of the language being written for.
+
+    all:
+        swig -Wall -python embroidery.i
+        python3 setup.py build
+        python3 setup.py install --user
+        python3 test.py
+
+    clean:
+        rm -fr build dist libembroidery.egg-info __pycache__
+        rm -fr libembroidery_core.py embroidery_wrap.c
+
+# Emscripten Version
+
+https://www.sitepoint.com/getting-started-emscripten-transpiling-c-c-javascript-html5/
+
+# Java Version
+
+## Ideas
+
+To support Java perhaps the best approach would be an interface similar
+to the command line like a labelled pipe that Java sends instructions
+to.
+
+Then when the java program needs to know the current state of the pattern
+in RAM it's spit out in a Java byte-code friendly way?
+
+# Swift bindings
+
+Find a source for making the binding.
+
+    # Libembroidery 1.0 binding for Swift
+    # Copyright 2022 The Embroidermodder Team

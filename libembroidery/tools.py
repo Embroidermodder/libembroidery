@@ -166,6 +166,17 @@ def path_from_command(command):
         index += 1
     return path
 
+
 def convert(src, dst):
     r"Convert a file to another file."
     os.system(f"embroider {src} {dst}")
+
+
+def translate(message):
+    r"Placeholder function"
+    return message
+
+
+def alert(message, message2)
+    r"placeholder function"
+    return message, message2

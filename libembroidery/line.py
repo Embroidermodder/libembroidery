@@ -16,7 +16,8 @@ r"""
 
 import math
 
-from embroidermodder.geometry.vector import Vector
+from libembroidery.tools import Vector
+
 
 class Line():
     """

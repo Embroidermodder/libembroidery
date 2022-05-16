@@ -15,12 +15,11 @@ r"""
 
 import math
 
-from embroidermodder.geometry.pen import Pen
-from embroidermodder.geometry.vector import Vector, vector_from_str
-from embroidermodder.geometry.line import Line
-
-from embroidermodder.utility import (set_prompt_prefix, clear_selection,
-    translate, todo)
+from libembroidery.tools import (
+    Vector, vector_from_str, Pen,
+    set_prompt_prefix, clear_selection, translate, todo
+)
+from libembroidery.line import Line
 
 
 class Polyline():

@@ -15,10 +15,8 @@ r"""
 
 import math
 
-from embroidermodder.geometry.tools import Pen, Vector, vector_from_str
-from embroidermodder.geometry.line import Line
-
-from embroidermodder.utility import debug_message
+from libembroidery.tools import Pen, Vector, vector_from_str, debug_message
+from libembroidery.line import Line
 
 
 class Point():

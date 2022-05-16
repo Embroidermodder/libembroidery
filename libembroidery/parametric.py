@@ -16,9 +16,9 @@ r"""
 
 import math
 
-from embroidermodder.geometry.pen import Pen
-from embroidermodder.geometry.vector import Vector
-from embroidermodder.geometry.line import Line
+from libembroidery.tools import Pen, Vector
+from libembroidery.line import Line
+
 
 class Parametric():
     r"""

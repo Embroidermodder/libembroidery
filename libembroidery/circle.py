@@ -15,12 +15,12 @@ r"""
 
 import math
 
-from embroidermodder.geometry.pen import Pen
-from embroidermodder.geometry.vector import Vector
-from embroidermodder.geometry.line import Line
+from libembroidery.tools import (
+    clear_selection, debug_message,
+    set_prompt_prefix, translate, Pen, Vector
+)
+from libembroidery.line import Line
 
-from embroidermodder.utility import (clear_selection, debug_message,
-    set_prompt_prefix, translate)
 
 class Circle():
     """

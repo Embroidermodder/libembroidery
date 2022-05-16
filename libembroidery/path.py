@@ -15,12 +15,9 @@ r"""
 
 import math
 
-from embroidermodder.geometry.pen import Pen
-from embroidermodder.geometry.vector import Vector
-
-from embroidermodder.utility import (
+from libembroidery.tools import (
     translate, clear_selection, debug_message, error, alert,
-    set_prompt_prefix
+    set_prompt_prefix, Pen, Vector
 )
 
 

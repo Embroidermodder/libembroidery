@@ -15,14 +15,13 @@ r"""
 
 import math
 
-from embroidermodder.geometry.path import Path
-from embroidermodder.geometry.tools import (Pen, Vector, vector_from_str,
-                                            closest_vector)
-from embroidermodder.geometry.line import Line
-
-from embroidermodder.utility import (translate, clear_selection,
-                                     set_prompt_prefix, alert, debug_message, 
-                                     add_rubber, append_prompt_history)
+from libembroidery.path import Path
+from libembroidery.tools import (
+    Pen, Vector, vector_from_str, closest_vector,
+    translate, clear_selection, set_prompt_prefix, alert, debug_message,
+    add_rubber, append_prompt_history
+)
+from libembroidery.line import Line
 
 
 class DimLeader():

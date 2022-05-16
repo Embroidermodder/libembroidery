@@ -15,11 +15,9 @@ r"""
 
 from math import radians, degrees
 
-from embroidermodder.geometry.path import Path
-from embroidermodder.geometry.tools import Pen, Vector, closest_vector
-from embroidermodder.geometry.line import Line
-
-from embroidermodder.utility import debug_message
+from libembroidery.path import Path
+from libembroidery.tools import Pen, Vector, closest_vector, debug_message
+from libembroidery.line import Line
 
 
 class Arc():
@@ -27,9 +25,7 @@ class Arc():
     The Arc class definition.
     """
     def __init__(self, start, mid, end,
-                 pen=Pen(rgb="#FFFFFF", line_type="solid", line_weight=0.35),
-                 path=Path(),
-                 rotation=0.0):
+                 pen=Pen(), path=Path(), rotation=0.0):
         " ."
         self.pen = pen
         self.lwt_pen = pen

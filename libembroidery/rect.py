@@ -15,14 +15,11 @@ r"""
 
 import math
 
-from embroidermodder.geometry.pen import Pen
-from embroidermodder.geometry.path import Path
-from embroidermodder.geometry.vector import Vector, vector_from_str
-from embroidermodder.geometry.line import Line
-
-from embroidermodder.utility import (
+from libembroidery.path import Path
+from libembroidery.line import Line
+from libembroidery.tools import (
     translate, clear_selection, todo, debug_message, set_prompt_prefix,
-    alert
+    alert, Pen, Vector, vector_from_str
 )
 
 

@@ -15,10 +15,8 @@ r"""
 
 import math
 
-from embroidermodder.geometry.tools import Pen, Vector
-from embroidermodder.geometry.line import Line
-
-from embroidermodder.utility import translate
+from libembroidery.tools import Pen, Vector, translate
+from libembroidery.line import Line
 
 class TextSingle():
     """

@@ -16,16 +16,11 @@ r"""
 
 import math
 
-from idna import valid_contexto
-
-from embroidermodder.geometry.pen import Pen
-from embroidermodder.geometry.vector import Vector
-from embroidermodder.geometry.line import Line
-
-from embroidermodder.utility import (
-    clear_selection, translate, todo, error,
-    append_prompt_history, set_prompt_prefix
+from libembroidery.tools import (
+    clear_selection, translate, todo, error, append_prompt_history,
+    set_prompt_prefix, Pen, Vector
 )
+from libembroidery.line import Line
 
 
 class Ellipse():

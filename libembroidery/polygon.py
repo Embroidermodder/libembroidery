@@ -16,13 +16,12 @@ r"""
 
 import math
 
-from embroidermodder.geometry.tools import Vector, Pen
-from embroidermodder.geometry.line import Line
-from embroidermodder.geometry.path import Path
-
-from embroidermodder.utility import (
+from libembroidery.tools import (
+    Vector, Pen,
     set_prompt_prefix, clear_selection, translate
 )
+from libembroidery.line import Line
+from libembroidery.path import Path
 
 
 class Polygon():

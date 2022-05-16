@@ -13,12 +13,10 @@ r"""
 
 """
 
-from embroidermodder.geometry.pen import Pen
-from embroidermodder.geometry.line import Line
-from embroidermodder.geometry.path import Path
-from embroidermodder.geometry.rect import Rect
-
-from embroidermodder.utility import (debug_message)
+from libembroider.tools import Pen, debug_message
+from libembroidery.line import Line
+from libembroidery.path import Path
+from libembroidery.rect import Rect
 
 
 class Image():

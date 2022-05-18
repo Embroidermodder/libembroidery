@@ -177,6 +177,16 @@ def translate(message):
     return message
 
 
-def alert(message, message2)
+def alert(message, message2):
     r"placeholder function"
     return message, message2
+
+
+def clear_selection():
+    r"To clear what the user has selected in the scene."
+    return
+
+
+def debug_message(message):
+    r"To clear what the user has selected in the scene."
+    print(message)

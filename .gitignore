@@ -3,6 +3,8 @@ embroider
 embroider_autogen/
 embroidery_autogen/
 embroidery_static_autogen/
+dist/
+libembroidery.egg-info/
 
 # C++ objects and libs
 *.slo

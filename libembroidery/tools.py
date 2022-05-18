@@ -190,3 +190,8 @@ def clear_selection():
 def debug_message(message):
     r"To clear what the user has selected in the scene."
     print(message)
+
+
+def error(*message):
+    r"Placeholder."
+    print(message)

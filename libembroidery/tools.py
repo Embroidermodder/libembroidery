@@ -195,3 +195,23 @@ def debug_message(message):
 def error(*message):
     r"Placeholder."
     print(message)
+
+
+def set_prompt_prefix(*message):
+    r"Placeholder."
+    print(message)
+
+
+def todo(*message):
+    r"Placeholder."
+    print(message)
+
+
+def add_rubber(*message):
+    r"Placeholder."
+    print(message)
+
+
+def append_prompt_history(*message):
+    r"Placeholder."
+    print(message)

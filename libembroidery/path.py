@@ -17,7 +17,7 @@ import math
 
 from libembroidery.tools import (
     translate, clear_selection, debug_message, error, alert,
-    set_prompt_prefix, Pen, Vector
+    set_prompt_prefix, Pen, Vector, path_from_command
 )
 
 
@@ -33,7 +33,7 @@ class Path():
                  pen=Pen(rgb="#FFFFFF", line_type="solid", line_weight=0.35)):
         "."
         self.type = "Path"
-        self.normal_path = 0
+        self.normal_path = []
         self.pen = pen
 
         clear_selection()
@@ -45,7 +45,7 @@ class Path():
             self.data = data
         elif command != "":
             self.data = path_from_command(command)
-        self.update(p)
+        self.update()
 
     def copy(self):
         " . "
@@ -55,10 +55,9 @@ class Path():
 
     def update(self, p):
         " . "
-        normal_path = p
-        reverse_path = normal_path.to_reversed()
-        reverse_path.connect_path(normal_path)
-        self.setPath(reverse_path)
+        self.normal_path.reverse()
+        #reverse_path.connect_path(normal_path)
+        #self.setPath(reverse_path)
 
     def paint(self, painter, option, widget):
         " . "

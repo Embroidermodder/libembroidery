@@ -5,6 +5,7 @@ embroidery_autogen/
 embroidery_static_autogen/
 dist/
 libembroidery.egg-info/
+__pycache__/
 
 # C++ objects and libs
 *.slo

@@ -53,7 +53,7 @@ class Path():
         # TODO: getCurrentLineType
         return Path(data=self.data, pen=self.pen)
 
-    def update(self, p):
+    def update(self):
         " . "
         self.normal_path.reverse()
         #reverse_path.connect_path(normal_path)

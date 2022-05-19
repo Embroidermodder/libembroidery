@@ -59,7 +59,7 @@ class Vector():
         Find the 2D version of a cross product for this and the supplied vector.
         """
         output = self.x * vector.y
-        ouptut -= self.y * vector.x
+        output -= self.y * vector.x
         return output
 
     def __neg__(self):

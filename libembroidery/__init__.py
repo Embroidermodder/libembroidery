@@ -13,7 +13,8 @@ All of the object orientation happens here.
 """
 
 from libembroidery.tools import (
-    Pen, Vector, vector_from_str, closest_vector
+    Pen, Vector, vector_from_str, closest_vector,
+    load_data
 )
 from libembroidery.line import Line
 from libembroidery.rect import Rect
@@ -31,5 +32,5 @@ from libembroidery.polylinearray import PolylineArray
 NORMAL = 0
 JUMP = 1
 END = 16
-numberOfFormats = 61
-# formatTable = formatTable
+format_table = load_data("formats.json")
+number_of_formats = len(format_table)

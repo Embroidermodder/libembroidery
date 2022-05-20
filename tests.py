@@ -1,23 +1,35 @@
 #!/usr/bin/env python3
 
 r"""
-Part of libembroidery
+    Libembroidery.
 
-Copyright 2022 The Embroidermodder Team
-Licensed under the terms of the zlib licence.
+    -----
 
-The test suite for the libembroidery Python bindings.
+    Copyright 2018-2022 The Embroidermodder Team
+    Libembroidery is Open Source Software.
+    See LICENSE for licensing terms.
 
-Similar to, although not a replica of, the internal tests. This
-cannot replace them because some systems that will run the library
-won't support Python.
+    -----
 
-(Libembroidery may need to include some truly ancient PC in order
-to deal with the older embroidery machines that they may talk to.)
+    Part of libembroidery
+
+    Copyright 2022 The Embroidermodder Team
+    Licensed under the terms of the zlib licence.
+
+    The test suite for the libembroidery Python bindings.
+
+    Similar to, although not a replica of, the internal tests. This
+    cannot replace them because some systems that will run the library
+    won't support Python.
+
+    (Libembroidery may need to include some truly ancient PC in order
+    to deal with the older embroidery machines that they may talk to.)
 """
 
-import math
 import unittest
+import math
+
+from libembroidery.parser import list_processor
 import libembroidery as emb
 
 def create_test_file_1(outf="test01.csv"):
@@ -232,6 +244,13 @@ Name  : %s
         self.assertEqual(table.type, 1)
 
 
+class TestLibembroidery(unittest.TestCase):
+    def test_list_processor():
+        print(list_processor("(+ (* 4 6) 3)"))
+        print(list_processor("(+ (/ 6 4) (* 3 2))"))
+        example = "(* (/ 8 11) (sin (- (/ 10 9) (* 56 t))))"
+        print(list_processor(example.replace("t", "0.04")))
+
+
 if __name__ == '__main__':
     unittest.main()
-

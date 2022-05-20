@@ -1,23 +1,25 @@
 #!/usr/bin/env python3
 
 r"""
-    Embroidermodder 2.
+    Libembroidery.
 
-    ------------------------------------------------------------
+    -----
 
-    Copyright 2013-2022 The Embroidermodder Team
-    Embroidermodder 2 is Open Source Software.
+    Copyright 2018-2022 The Embroidermodder Team
+    Libembroidery is Open Source Software.
     See LICENSE for licensing terms.
 
-    ------------------------------------------------------------
+    -----
 
+    The Path structure, needs to suport SVG path features.
 """
 
 import math
 
 from libembroidery.tools import (
     translate, clear_selection, debug_message, error, alert,
-    set_prompt_prefix, Pen, Vector, path_from_command
+    set_prompt_prefix, Pen, Vector, path_from_command,
+    append_prompt_history, todo
 )
 
 
@@ -28,13 +30,12 @@ class Path():
     TODO: make paths similar to polylines.
     Review and implement any missing functions/members.
     """
-
-    def __init__(self, command="", data=[],
-                 pen=Pen(rgb="#FFFFFF", line_type="solid", line_weight=0.35)):
-        "."
+    def __init__(self, command="", data=[], pen=Pen()):
+        r"."
         self.type = "Path"
         self.normal_path = []
         self.pen = pen
+        self.lwt_pen = pen
 
         clear_selection()
         self.first_run = True
@@ -56,8 +57,8 @@ class Path():
     def update(self):
         " . "
         self.normal_path.reverse()
-        #reverse_path.connect_path(normal_path)
-        #self.setPath(reverse_path)
+        # reverse_path.connect_path(normal_path)
+        # self.setPath(reverse_path)
 
     def paint(self, painter, option, widget):
         " . "
@@ -71,7 +72,7 @@ class Path():
         if "State_Selected" in option.state:
             paint_pen.set_style("dashed")
         if obj_scene.property("ENABLE_LWT"):
-            paint_pen = lineWeightPen()
+            paint_pen = self.lwt_pen
         painter.set_pen(paint_pen)
 
         painter.draw_path(objectPath())
@@ -90,18 +91,20 @@ class Path():
 
         self.rubber_mode = "RUBBER_OFF"
 
-        if not normalPath.element_count():
-            error(0,
-                  translate("Empty Path Error"),
-                  translate("The path added contains no points. The command that created this object has flawed logic."))
+        if not self.normal_path.element_count():
+            details = translate(
+                "The path added contains no points. "
+                + "The command that created this object has flawed logic."
+            )
+            error(0, translate("Empty Path Error"), details)
 
     def mouse_snap_point(self, mouse_point):
         " Returns the closest snap point to the mouse point. "
-        return self.scenePos()
+        return self.scene_pos()
 
     def all_grip_points(self):
         " TODO: loop thru all path Elements and return their points. "
-        gripPoints = [self.scenePos()]
+        gripPoints = [self.scene_pos()]
         return gripPoints
 
     def grip_edit(before, after):
@@ -110,15 +113,15 @@ class Path():
 
     def copy_path(self):
         " . "
-        return normalPath
+        return self.normal_path
 
     def save_path(self):
         " . "
         s = self.scale
         trans = 0
         trans.rotate(self.rotation)
-        trans.scale(s,s)
-        return trans.map(normalPath)
+        trans.scale(s, s)
+        return trans.map(self.normal_path)
 
     def click(self, x, y):
         " . "
@@ -126,12 +129,12 @@ class Path():
             self.first_run = False
             self.first = Vector(x, y)
             self.prev = Vector(x, y)
-            addPath(x,y)
+            addPath(x, y)
             append_prompt_history()
             set_prompt_prefix(translate("Specify next point or [Arc/Undo]: "))
         else:
             append_prompt_history()
-            appendline_toPath(x, y)
+            append_line_to_path(x, y)
             self.prev = Vector(x, y)
 
     def prompt(self, cmd):
@@ -148,7 +151,8 @@ class Path():
             strList = str.split(",")
             if math.math.isnan(strList[0]) or math.math.isnan(strList[1]):
                 alert(translate("Point or option keyword required."))
-                set_prompt_prefix(translate("Specify next point or [Arc/Undo]: "))
+                prefix = translate("Specify next point or [Arc/Undo]: ")
+                set_prompt_prefix(prefix)
 
             else:
                 x = float(strList[0])
@@ -160,9 +164,9 @@ class Path():
                     addPath(x, y)
                     set_prompt_prefix(translate("Specify next point or [Arc/Undo]: "))
                 else:
-                    appendline_toPath(x,y)
+                    append_line_to_path(x, y)
                     self.prev = Vector(x, y)
 
-    def setObjectPos(self, point):
+    def set_object_pos(self, point):
         " . "
         self.position = point

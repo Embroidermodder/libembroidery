@@ -14,9 +14,8 @@ r"""
 """
 
 from libembroider.tools import Pen, debug_message
-from libembroidery.line import Line
-from libembroidery.path import Path
 from libembroidery.rect import Rect
+from libembroidery.tools import closest_vector
 
 
 class Image():
@@ -63,16 +62,17 @@ class Image():
         considered part of the rectangle.
         """
         r = self.rect
-        self.path = Path()
-        self.path.move_to(r.bottom_left())
-        self.path.line_to(r.bottom_right())
-        self.path.line_to(r.top_right())
-        self.path.line_to(r.top_left())
-        self.path.line_to(r.bottom_left())
-        self.path.line_to(r.top_left())
-        self.path.line_to(r.top_right())
-        self.path.line_to(r.bottom_right())
-        self.path.move_to(r.bottom_left())
+        self.path = [
+            ["move_to", r.bottom_left()],
+            ["line_to", r.bottom_right()],
+            ["line_to", r.top_right()],
+            ["line_to", r.top_left()],
+            ["line_to", r.bottom_left()],
+            ["line_to", r.top_left()],
+            ["line_to", r.top_right()],
+            ["line_to", r.bottom_right()],
+            ["move_to", r.bottom_left()]
+        ]
 
     def paint(self, painter, option, widget):
         " . "
@@ -80,16 +80,16 @@ class Image():
         if not obj_scene:
             return
 
-        paintPen = Pen()
-        painter.set_pen(paintPen)
+        paint_pen = Pen()
+        painter.pen = paint_pen
         self.update_rubber(painter)
-        if "QStyle_State_Selected" in option.state:
-            paintPen.set_style("dashed")
-        if obj_scene.property("ENABLE_LWT").toBool():
-            paintPen = self.lwt_pen()
-        painter.set_pen(paintPen)
+        if obj_scene.property("ENABLE_LWT"):
+            paint_pen = self.lwt_pen()
+        if "State_Selected" in option.state:
+            paint_pen.set_style("dashed")
+        painter.pen = paint_pen
 
-        painter.drawRect(self.rect)
+        painter.draw_rect(self.rect)
 
     def update_rubber(self, painter):
         " . "
@@ -97,11 +97,7 @@ class Image():
             debug_message("IMAGE")
             scene_start_point = self.rubber_points["IMAGE_START"]
             scene_end_point = self.rubber_points["IMAGE_END"]
-            x = scene_start_point.x()
-            y = scene_start_point.y()
-            w = scene_end_point.x() - scene_start_point.x()
-            h = scene_end_point.y() - scene_start_point.y()
-            self.rect = Rect(x, y, w, h)
+            self.rect = Rect(scene_start_point, scene_end_point)
             self.update_path()
 
         elif self.rubber_mode == "GRIP":

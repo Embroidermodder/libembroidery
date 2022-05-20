@@ -55,7 +55,7 @@ class DimLeader():
     line_style_length
     """
     def __init__(self, x1=math.nan, y1=math.nan, x2=math.nan, y2=math.nan,
-                 pen=Pen(rgb="#000000", line_type="solid", line_weight=0.35)):
+                 pen=Pen()):
         self.point1 = Vector(x1, y1)
         self.point2 = Vector(x2, y2)
         self.type = "DimLeader"

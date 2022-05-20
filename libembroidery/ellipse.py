@@ -17,10 +17,12 @@ r"""
 import math
 
 from libembroidery.tools import (
-    clear_selection, translate, todo, error, append_prompt_history,
-    set_prompt_prefix, Pen, Vector
+    alert, clear_selection, debug_message, translate, todo, error,
+    append_prompt_history, set_prompt_prefix, Pen, Vector, vector_from_str,
+    add_rubber, closest_vector
 )
 from libembroidery.line import Line
+from libembroidery.rect import Rect
 
 
 class Ellipse():
@@ -43,8 +45,8 @@ class Ellipse():
     def set_DiameterMajor(diameter)
     def set_diameter_minor(diameter)
     """
-    def __init__(self, center, width, height,
-                 pen=Pen(rgb="#FFFFFF", line_type="solid", line_weight=0.35)):
+    def __init__(self, center, width, height, pen=Pen()):
+        r"."
         self.type = "Ellipse"
         self.selectable = 1
         self.width = width
@@ -52,7 +54,7 @@ class Ellipse():
         self.position = center
         self.pen = pen
         self.update_path()
-        self.rubberPoints = {}
+        self.rubber_points = {}
 
         clear_selection()
         self.mode = "MAJORDIAMETER_MINORRADIUS"
@@ -65,204 +67,196 @@ class Ellipse():
 
     def click(self, point):
         if self.mode == "MAJORDIAMETER_MINORRADIUS":
-            if math.isnan(self.x1):
+            if math.isnan(self.point1.x):
                 self.point1 = point
                 add_rubber("ELLIPSE")
                 self.rubber_mode = "ELLIPSE_LINE"
-                self.rubberPoints["ELLIPSE_LINE_POINT1"] = point
+                self.rubber_points["ELLIPSE_LINE_POINT1"] = point
                 append_prompt_history()
                 set_prompt_prefix(translate("Specify first axis end point: "))
 
-            elif math.isnan(self.x2):
+            elif math.isnan(self.point2.x):
                 self.point2 = point
                 self.cx = (self.x1 + self.x2)/2.0
                 self.cy = (self.y1 + self.y2)/2.0
-                self.width = calculateDistance(self.x1, self.y1, self.x2, self.y2)
-                self.rot = calculate_angle(self.x1, self.y1, self.x2, self.y2)
+                self.width = Line(self.point1, self.point2).length()
+                self.rot = Line(self.point1, self.point2).angle()
                 self.rubber_mode = "MAJORDIAMETER_MINORRADIUS"
-                self.rubberPoints["ELLIPSE_AXIS1_POINT1"] = Vector(self.x1, self.y1)
-                self.rubberPoints["ELLIPSE_AXIS1_POINT2"] = Vector(self.x2, self.y2)
-                self.rubberPoints["ELLIPSE_CENTER"] = Vector(self.cx, self.cy)
-                self.rubberPoints["ELLIPSE_WIDTH"] = Vector(self.width, 0)
-                self.rubberPoints["ELLIPSE_ROT"] = Vector(self.rot, 0)
+                self.rubber_points["ELLIPSE_AXIS1_POINT1"] = self.point1
+                self.rubber_points["ELLIPSE_AXIS1_POINT2"] = self.point2
+                self.rubber_points["ELLIPSE_CENTER"] = Vector(self.cx, self.cy)
+                self.rubber_points["ELLIPSE_WIDTH"] = Vector(self.width, 0)
+                self.rubber_points["ELLIPSE_ROT"] = Vector(self.rot, 0)
                 append_prompt_history()
                 set_prompt_prefix(translate("Specify second axis end point or [Rotation]: "))
 
-            elif math.isnan(self.x3):
-                self.x3 = x
-                self.y3 = y
-                self.height = perpendicularDistance(self.x3, self.y3, self.x1, self.y1, self.x2, self.y2)*2.0
-                self.rubberPoints["ELLIPSE_AXIS2_POINT2"] = Vector(self.x3, self.y3)
+            elif math.isnan(self.point3.x):
+                self.point3 = point
+                self.height = perpendicular_distance(self.point3, self.point1, self.point2)*2.0
+                self.rubber_points["ELLIPSE_AXIS2_POINT2"] = point
                 self.vulcanize()
                 append_prompt_history()
-                return
 
             else:
                 error("ELLIPSE", translate("This should never happen."))
 
         elif self.mode == "MAJORRADIUS_MINORRADIUS":
-            if math.isnan(self.x1):
-                self.x1 = x
-                self.y1 = y
-                self.cx = self.x1
-                self.cy = self.y1
-                addRubber("ELLIPSE")
-                set_rubber_mode("ELLIPSE_LINE")
-                self.rubberPoints["ELLIPSE_LINE_POINT1"] = Vector(self.x1, self.y1)
-                self.rubberPoints["ELLIPSE_CENTER"] = Vector(self.cx, self.cy)
+            if math.isnan(self.point1.x):
+                self.point1 = point
+                self.center = point
+                add_rubber("ELLIPSE")
+                self.rubber_mode = "ELLIPSE_LINE"
+                self.rubber_points["ELLIPSE_LINE_POINT1"] = point
+                self.rubber_points["ELLIPSE_CENTER"] = self.center
                 append_prompt_history()
                 set_prompt_prefix(translate("Specify first axis end point: "))
 
-            elif math.isnan(self.x2):
-                self.x2 = x
-                self.y2 = y
-                self.width = calculateDistance(self.cx, self.cy, self.x2, self.y2)*2.0
-                self.rot = calculate_angle(self.x1, self.y1, self.x2, self.y2)
+            elif math.isnan(self.point2.x):
+                self.point2 = point
+                self.width = Line(self.center, self.point2).length()*2.0
+                self.rot = Line(self.point1, self.point2).angle()
                 self.rubber_mode = "MAJORRADIUS_MINORRADIUS"
-                self.rubberPoints["ELLIPSE_AXIS1_POINT2"] = Vector(self.x2, self.y2)
-                self.rubberPoints["ELLIPSE_WIDTH"] = Vector(self.width, 0)
-                self.rubberPoints["ELLIPSE_ROT"] = Vector(self.rot, 0)
+                self.rubber_points["ELLIPSE_AXIS1_POINT2"] = self.point2
+                self.rubber_points["ELLIPSE_WIDTH"] = Vector(self.width, 0)
+                self.rubber_points["ELLIPSE_ROT"] = Vector(self.rot, 0)
                 append_prompt_history()
-                set_prompt_prefix(translate("Specify second axis end point or [Rotation]: "))
+                prefix = translate("Specify second axis end point or [Rotation]: ")
+                set_prompt_prefix(prefix)
 
-            elif math.isnan(self.x3):
-                self.x3 = x
-                self.y3 = y
-                self.height = perpendicularDistance(self.x3, self.y3, self.cx, self.cy, self.x2, self.y2)*2.0
-                self.rubberPoints["ELLIPSE_AXIS2_POINT2"] = Vector(self.x3, self.y3)
+            elif math.isnan(self.point3.x):
+                self.point3 = point
+                self.height = perpendicular_distance(self.point3, self.center, self.point2)*2.0
+                self.rubber_points["ELLIPSE_AXIS2_POINT2"] = point
                 self.vulcanize()
                 append_prompt_history()
-                return
 
             else:
                 error("ELLIPSE", translate("This should never happen."))
 
         elif self.mode == "ELLIPSE_ROTATION":
-            if math.isnan(self.x1):
+            if math.isnan(self.point1.x):
                 error("ELLIPSE", translate("This should never happen."))
 
-            elif math.isnan(self.x2):
+            elif math.isnan(self.point2.x):
                 error("ELLIPSE", translate("This should never happen."))
 
-            elif math.isnan(self.x3):
-                angle = calculate_angle(self.cx, self.cy, x, y)
-                self.height = cos(angle*math.pi/180.0)*self.width
-                addEllipse(self.cx, self.cy, self.width, self.height, self.rot, false)
+            elif math.isnan(self.point3.x):
+                angle = calculate_angle(self.center, point)
+                self.height = math.cos(angle*math.pi/180.0)*self.width
+                add_ellipse(self.center, self.width, self.height, self.rot, False)
                 append_prompt_history()
-                return
 
     def prompt(self, cmd):
         if self.mode == "MAJORDIAMETER_MINORRADIUS":
-            if math.isnan(self.x1):
-                if str == "C" or cmd == "CENTER":
-                    #TODO: Probably should add additional qsTr calls here.
+            if math.isnan(self.point1.x):
+                if cmd == "C" or cmd == "CENTER":
+                    # TODO: Probably should add additional qsTr calls here.
                     self.mode = self.mode_MAJORRADIUS_MINORRADIUS
                     set_prompt_prefix(translate("Specify center point: "))
                 else:
-                    strList = str.split(",")
-                    if math.isnan(strList[0]) or math.isnan(strList[1]):
+                    vector = vector_from_str(cmd)
+                    if not vector:
                         alert(translate("Point or option keyword required."))
-                        set_prompt_prefix(translate("Specify first axis start point or [Center]: "))
+                        prefix = translate("Specify first axis start point or [Center]: ")
+                        set_prompt_prefix(prefix)
  
                     else:
-                        self.x1 = float(strList[0])
-                        self.y1 = float(strList[1])
-                        addRubber("ELLIPSE")
-                        set_rubber_mode("ELLIPSE_LINE")
-                        self.rubberPoints["ELLIPSE_LINE_POINT1"] = Vector(self.x1, self.y1)
+                        self.point1 = vector
+                        add_rubber("ELLIPSE")
+                        self.rubber_mode = "ELLIPSE_LINE"
+                        self.rubber_points["ELLIPSE_LINE_POINT1"] = self.point1
                         set_prompt_prefix(translate("Specify first axis end point: "))
 
-            elif math.isnan(self.x2):
-                strList = str.split(",")
-                if math.isnan(strList[0]) or math.isnan(strList[1]):
+            elif math.isnan(self.point2.x):
+                vector = vector_from_str(cmd)
+                if not vector:
                     alert(translate("Invalid point."))
-                    set_prompt_prefix(translate("Specify first axis end point: "))
+                    prefix = translate("Specify first axis end point: ")
+                    set_prompt_prefix(prefix)
 
                 else:
-                    self.x2 = float(strList[0])
-                    self.y2 = float(strList[1])
+                    self.point2 = vector
                     self.cx = (self.x1 + self.x2)/2.0
                     self.cy = (self.y1 + self.y2)/2.0
-                    self.width = calculateDistance(self.x1, self.y1, self.x2, self.y2)
-                    self.rot = calculate_angle(self.x1, self.y1, self.x2, self.y2)
-                    set_rubber_mode("ELLIPSE_MAJORDIAMETER_MINORRADIUS")
-                    self.rubberPoints["ELLIPSE_AXIS1_POINT1"] = Vector(self.x1, self.y1)
-                    self.rubberPoints["ELLIPSE_AXIS1_POINT2"] = Vector(self.x2, self.y2)
-                    self.rubberPoints["ELLIPSE_CENTER"] = Vector(self.cx, self.cy)
-                    self.rubberPoints["ELLIPSE_WIDTH"] = Vector(self.width, 0)
-                    self.rubberPoints["ELLIPSE_ROT"] = Vector(self.rot, 0)
-                    set_prompt_prefix(translate("Specify second axis end point or [Rotation]: "))
+                    self.width = Line(self.point1, self.point2).length()
+                    self.rot = Line(self.point1, self.point2).angle()
+                    self.rubber_mode = "ELLIPSE_MAJORDIAMETER_MINORRADIUS"
+                    self.rubber_points["ELLIPSE_AXIS1_POINT1"] = self.point1
+                    self.rubber_points["ELLIPSE_AXIS1_POINT2"] = self.point2
+                    self.rubber_points["ELLIPSE_CENTER"] = self.center
+                    self.rubber_points["ELLIPSE_WIDTH"] = Vector(self.width, 0)
+                    self.rubber_points["ELLIPSE_ROT"] = Vector(self.rot, 0)
+                    prefix = translate("Specify second axis end point or [Rotation]: ")
+                    set_prompt_prefix(prefix)
 
             elif math.isnan(self.x3):
-                if str == "R" or cmd == "ROTATION":
-                    #TODO: Probably should add additional qsTr calls here.
-                    self.mode = self.mode_ELLIPSE_ROTATION
+                if cmd == "R" or cmd == "ROTATION":
+                    # TODO: Probably should add additional qsTr calls here.
+                    self.mode = "ROTATION"
                     set_prompt_prefix(translate("Specify rotation: "))
                 else:
-                    strList = str.split(",")
-                    if math.isnan(strList[0]) or math.isnan(strList[1]):
+                    vector = vector_from_str(cmd)
+                    if not vector:
                         alert(translate("Point or option keyword required."))
                         set_prompt_prefix(translate("Specify second axis end point or [Rotation]: "))
  
                     else:
-                        self.x3 = float(strList[0])
-                        self.y3 = float(strList[1])
-                        self.height = perpendicularDistance(self.x3, self.y3, self.x1, self.y1, self.x2, self.y2)*2.0
-                        self.rubberPoints["ELLIPSE_AXIS2_POINT2"] = Vector(self.x3, self.y3)
-                        vulcanize()
-                        return
+                        self.x3 = vector.x
+                        self.y3 = vector.y
+                        self.height = perpendicular_distance(self.x3, self.y3, self.x1, self.y1, self.x2, self.y2)*2.0
+                        self.rubber_points["ELLIPSE_AXIS2_POINT2"] = Vector(self.x3, self.y3)
+                        self.vulcanize()
 
         elif self.mode == "MAJORRADIUS_MINORRADIUS":
             if math.isnan(self.x1):
-                strList = str.split(",")
-                if math.isnan(strList[0]) or math.isnan(strList[1]):
+                vector = vector_from_str(cmd)
+                if not vector:
                     alert(translate("Invalid point."))
                     set_prompt_prefix(translate("Specify center point: "))
                 else:
-                    self.x1 = float(strList[0])
-                    self.y1 = float(strList[1])
+                    self.x1 = vector.x
+                    self.y1 = vector.y
                     self.cx = self.x1
                     self.cy = self.y1
-                    addRubber("ELLIPSE")
+                    add_rubber("ELLIPSE")
                     self.rubber_mode = "ELLIPSE_LINE"
-                    self.rubberPoints["ELLIPSE_LINE_POINT1"] = Vector(self.x1, self.y1)
-                    self.rubberPoints["ELLIPSE_CENTER"] = Vector(self.cx, self.cy)
+                    self.rubber_points["ELLIPSE_LINE_POINT1"] = Vector(self.x1, self.y1)
+                    self.rubber_points["ELLIPSE_CENTER"] = Vector(self.cx, self.cy)
                     set_prompt_prefix(translate("Specify first axis end point: "))
 
             elif math.isnan(self.x2):
-                strList = str.split(",")
-                if math.isnan(strList[0]) or math.isnan(strList[1]):
+                vector = vector_from_str(cmd)
+                if not vector:
                     alert(translate("Invalid point."))
                     set_prompt_prefix(translate("Specify first axis end point: "))
 
                 else:
-                    self.x2 = float(strList[0])
-                    self.y2 = float(strList[1])
-                    self.width = calculateDistance(self.x1, self.y1, self.x2, self.y2)*2.0
-                    self.rot = calculate_angle(self.x1, self.y1, self.x2, self.y2)
-                    set_rubber_mode("ELLIPSE_MAJORRADIUS_MINORRADIUS")
-                    self.rubberPoints["ELLIPSE_AXIS1_POINT2"] = Vector(self.x2, self.y2)
-                    self.rubberPoints["ELLIPSE_WIDTH"] = Vector(self.width, 0)
-                    self.rubberPoints["ELLIPSE_ROT"] = Vector(self.rot, 0)
+                    self.point2 = vector
+                    line = Line(self.point1, self.point2)
+                    self.width = line.length()*2.0
+                    self.rot = line.angle()
+                    self.rubber_mode = "ELLIPSE_MAJORRADIUS_MINORRADIUS"
+                    self.rubber_points["ELLIPSE_AXIS1_POINT2"] = Vector(self.x2, self.y2)
+                    self.rubber_points["ELLIPSE_WIDTH"] = Vector(self.width, 0)
+                    self.rubber_points["ELLIPSE_ROT"] = Vector(self.rot, 0)
                     set_prompt_prefix(translate("Specify second axis end point or [Rotation]: "))
 
             elif math.isnan(self.x3):
-                if str == "R" or cmd == "ROTATION":
+                if cmd == "R" or cmd == "ROTATION":
                     # TODO: Probably should add additional qsTr calls here.
                     self.mode = self.mode_ELLIPSE_ROTATION
                     set_prompt_prefix(translate("Specify ellipse rotation: "))
                 else:
-                    strList = str.split(",")
-                    if math.isnan(strList[0]) or math.isnan(strList[1]):
+                    vector = vector_from_str(cmd)
+                    if not vector:
                         alert(translate("Point or option keyword required."))
                         set_prompt_prefix(translate("Specify second axis end point or [Rotation]: "))
                     else:
-                        self.x3 = float(strList[0])
-                        self.y3 = float(strList[1])
-                        self.height = perpendicularDistance(self.x3, self.y3, self.x1, self.y1, self.x2, self.y2)*2.0
-                        self.rubberPoints["ELLIPSE_AXIS2_POINT2"] = Vector(self.x3, self.y3)
-                        vulcanize()
-                        return
+                        self.x3 = vector.x
+                        self.y3 = vector.y
+                        self.height = perpendicular_distance(self.x3, self.y3, self.x1, self.y1, self.x2, self.y2)*2.0
+                        self.rubber_points["ELLIPSE_AXIS2_POINT2"] = Vector(self.x3, self.y3)
+                        self.vulcanize()
 
         elif self.mode == "ELLIPSE_ROTATION":
             if math.isnan(self.x1):
@@ -276,29 +270,32 @@ class Ellipse():
                 else:
                     angle = float(cmd)
                     self.height = math.cos(angle*math.pi/180.0)*self.width
-                    addEllipse(self.cx, self.cy, self.width, self.height, self.rot, False)
+                    add_ellipse(self.cx, self.cy, self.width, self.height, self.rot, False)
 
-    def copy(self, obj, parent):
+    def copy(self):
         " TODO: getCurrentLineType "
         debug_message("Ellipse Constructor()")
-        ellipse = Ellipse(self.objectCenter().x(), self.objectCenter().y(), self.objectWidth(), self.objectHeight(), self.objectColorRGB(), Qt_SolidLine)
-        setRotation(self.rotation())
-        return ellipse
+        return Ellipse(self.center, self.width, self.height,
+                       pen=self.pen, rotation=self.rotation)
 
     def set_Size(self, width, height):
+        r"."
         elRect = Rect()
         elRect.setWidth(width)
         elRect.setHeight(height)
-        elRect.move_center(Vector(0,0))
+        elRect.move_center(Vector(0, 0))
         setRect(elRect)
 
-    def set_RadiusMajor(radius):
-        set_DiameterMajor(radius*2.0)
+    def set_RadiusMajor(self, radius):
+        r"."
+        self.set_DiameterMajor(radius*2.0)
 
-    def set_RadiusMinor(radius):
-        set_diameter_minor(radius*2.0)
+    def set_RadiusMinor(self, radius):
+        r"."
+        self.set_diameter_minor(radius*2.0)
 
-    def set_DiameterMajor(diameter):
+    def set_DiameterMajor(self, diameter):
+        r"."
         elRect = Rect()
         if elRect.width() > elRect.height():
             elRect.setWidth(diameter)
@@ -308,40 +305,24 @@ class Ellipse():
         elRect.move_center(Vector(0, 0))
         setRect(elRect)
 
-    def set_diameter_minor(diameter):
+    def set_diameter_minor(self, diameter):
+        r"."
         elRect = Rect()
-        if elRect.width() < elRect.height():
+        if elRect.width < elRect.height:
             elRect.setWidth(diameter)
         else:
             elRect.setHeight(diameter)
         elRect.move_center(Vector(0, 0))
         setRect(elRect)
 
-    def Quadrant0(self):
-        v.x = self.width()/2.0
-        v.y = 0.0
-        v = rotate_vector(v, radians(self.rotation))
-        return self.center + v
-
-    def Quadrant90(self):
-        v.x = Height()/2.0
-        v.y = 0.0
-        v = rotate_vector(v, radians(self.rotation+90.0))
-        return self.center + v
-
-    def Quadrant180():
-        v.x = Width()/2.0
-        v.y = 0.0
-        v = rotate_vector(v, radians(self.rotation+180.0))
-        return self.center + v
-
-    def Quadrant270():
-        v.x = Height()/2.0
-        v.y = 0.0
-        v = rotate_vector(v, radians(self.rotation+270.0))
+    def quadrant(self, angle):
+        r"."
+        v = Vector(self.width()/2.0, 0.0)
+        v.rotate(math.radians(self.rotation+angle))
         return self.center + v
 
     def update_path(self):
+        r"."
         path = []
         r = Rect()
         path += ["arc_move_to", Vector(r, 0)]
@@ -352,31 +333,33 @@ class Ellipse():
         self.data = path
 
     def paint(self, painter, option, widget):
+        r"."
         obj_scene = scene()
         if not obj_scene:
             return
 
-        paint_pen = pen()
+        paint_pen = Pen()
         painter.set_pen(paint_pen)
-        update_rubber(painter)
+        self.update_rubber(painter)
         if option.state == "State Selected":
             paint_pen.set_style("dashed")
-        if obj_scene.property("ENABLE_LWT").toBool():
-            paint_pen = lineWeightPen()
+        if obj_scene.property("ENABLE_LWT").to_bool():
+            paint_pen = self.lwt_pen
         painter.set_pen(paint_pen)
 
-        painter.drawEllipse(Rect())
+        painter.draw_ellipse(Rect())
 
     def update_rubber(self, painter):
+        r"."
         if self.rubber_mode == "LINE":
-            sceneLinePoint1 = self.rubberPoint("ELLIPSE_LINE_POINT1")
-            sceneLinePoint2 = self.rubberPoint("ELLIPSE_LINE_POINT2")
-            itemLinePoint1 = map_from_scene(sceneLinePoint1)
-            itemLinePoint2 = map_from_scene(sceneLinePoint2)
+            scene_line_point_1 = self.rubber_points["ELLIPSE_LINE_POINT1"]
+            scene_line_point_2 = self.rubber_points["ELLIPSE_LINE_POINT2"]
+            itemLinePoint1 = map_from_scene(scene_line_point_1)
+            itemLinePoint2 = map_from_scene(scene_line_point_2)
             itemLine = Line(itemLinePoint1, itemLinePoint2)
             if painter:
                 drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
-            update_path()
+            self.update_path()
 
         elif self.rubber_mode == "MAJORDIAMETER_MINORRADIUS":
             sceneAxis1Point1 = self.rubberPoint("ELLIPSE_AXIS1_POINT1")
@@ -386,7 +369,7 @@ class Ellipse():
             ellipseWidth = self.rubberPoint("ELLIPSE_WIDTH").x()
             ellipseRot = self.rubberPoint("ELLIPSE_ROT").x()
 
-            # TODO: incorporate perpendicularDistance() into libembroidery.
+            # TODO: incorporate perpendicular_distance() into libembroidery.
             px = sceneAxis2Point2.x()
             py = sceneAxis2Point2.y()
             x1 = sceneAxis1Point1.x()
@@ -403,14 +386,14 @@ class Ellipse():
 
             setPos(sceneCenterPoint)
             set_Size(ellipseWidth, ellipseHeight)
-            setRotation(-ellipseRot)
+            self.rotation = -ellipseRot
 
             itemCenterPoint = map_from_scene(sceneCenterPoint)
             itemAxis2Point2 = map_from_scene(sceneAxis2Point2)
             itemLine = Line(itemCenterPoint, itemAxis2Point2)
             if painter:
                 drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
-            update_path()
+            self.update_path()
 
         elif self.rubber_mode == "MAJORRADIUS_MINORRADIUS":
             sceneAxis1Point2 = self.rubberPoint("ELLIPSE_AXIS1_POINT2")
@@ -419,7 +402,7 @@ class Ellipse():
             ellipseWidth = self.rubberPoint("ELLIPSE_WIDTH").x()
             ellipseRot = self.rubberPoint("ELLIPSE_ROT").x()
 
-            # TODO: incorporate perpendicularDistance() into libembroidery.
+            # TODO: incorporate perpendicular_distance() into libembroidery.
             px = sceneAxis2Point2.x()
             py = sceneAxis2Point2.y()
             x1 = sceneCenterPoint.x()
@@ -436,7 +419,7 @@ class Ellipse():
 
             setPos(sceneCenterPoint)
             set_Size(ellipseWidth, ellipseHeight)
-            setRotation(-ellipseRot)
+            self.rotation = -ellipseRot
 
             itemCenterPoint = map_from_scene(sceneCenterPoint)
             itemAxis2Point2 = map_from_scene(sceneAxis2Point2)
@@ -463,10 +446,10 @@ class Ellipse():
         " . "
         return [
             self.center(),
-            self.quadrant0(),
-            self.quadrant90(),
-            self.quadrant180(),
-            self.quadrant270()
+            self.quadrant(0),
+            self.quadrant(90),
+            self.quadrant(180),
+            self.quadrant(270)
         ]
 
     def grip_edit(self, before, after):
@@ -480,5 +463,5 @@ class Ellipse():
         s = self.scale
         trans = 0
         trans.rotate(self.rotation)
-        trans.scale(s,s)
+        trans.scale(s, s)
         return trans.map(path)

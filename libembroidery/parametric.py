@@ -16,8 +16,9 @@ r"""
 
 import math
 
-from libembroidery.tools import Pen, Vector
+from libembroidery.tools import Pen, Vector, clear_selection
 from libembroidery.line import Line
+from libembroidery.parser import list_processor
 
 
 class Parametric():
@@ -28,14 +29,14 @@ class Parametric():
 
     dolphin = Parametric(settings["objects"]["dolphin"])
     """
-    def __init__(self, desc, center_x=math.nan, center_y=math.nan,
+    def __init__(self, desc, center=Vector(math.nan, math.nan),
                  mode="NUM_POINTS"):
         r" Create an object. "
-        clearSelection()
+        clear_selection()
         self.desc = desc
         self.num_points = desc["num_points"]
         # min:64 max:8192
-        self.center = Vector(center_x, center_y)
+        self.center = center
         self.scale = Vector(desc["scale"][0], desc["scale"][1])
         self.mode = mode
         self.rubber_points = {

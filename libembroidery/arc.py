@@ -13,9 +13,11 @@ r"""
 
 """
 
+import math
 from math import radians, degrees
 
 from libembroidery.path import Path
+from libembroidery.rect import Rect
 from libembroidery.tools import Pen, Vector, closest_vector, debug_message
 from libembroidery.line import Line
 
@@ -50,10 +52,10 @@ class Arc():
         self.radius = self.get_radius()
         self.center = self.get_center()
 
-        self.set_position(center)
+        self.set_position(self.center)
 
         self.radius = Line(self.center, self.mid).length()
-        self.update_rect(radius)
+        self.update_rect(self.radius)
         self.updatePath()
 
     def center(self):
@@ -62,7 +64,7 @@ class Arc():
 
     def get_radius(self):
         " ."
-        return Rect().width()/2.0*self.scale
+        return self.rect().width()/2.0*self.scale
 
     def set_start_angle(self, angle):
         " Alter the start angle. "
@@ -102,15 +104,15 @@ class Arc():
         """
         debug_message("Arc copy()")
         return Arc(self.start, self.mid, self.end,
-            pen=self.pen, rotation=self.rotation)
+                   pen=self.pen, rotation=self.rotation)
 
     def update_rect(self, radius):
         " . "
         arc_rect = Rect()
         arc_rect.set_width(radius*2.0)
         arc_rect.set_height(radius*2.0)
-        arc_rect.move_center(Vector(0,0))
-        set_rect(arc_rect)
+        arc_rect.move_center(Vector(0, 0))
+        self.set_rect(arc_rect)
 
     def set_radius(self, radius):
         " . "
@@ -143,28 +145,34 @@ class Arc():
 
     def start_point(self):
         " The start point from the perspective of the render. "
-        rot = scale_and_rotate(self.start, self.scale, radians(self.rotation))
-        return self.scene_position + rot
+        v = self.start
+        v.scale(self.scale)
+        v.rotate(radians(self.rotation))
+        return self.scene_position + v
 
     def mid_point(self):
         " The mid point from the perspective of the render. "
-        rot = scale_and_rotate(self.middle, self.scale, radians(self.rotation))
-        return self.scene_position + rot
+        v = self.mid
+        v.scale(self.scale)
+        v.rotate(radians(self.rotation))
+        return self.scene_position + v
 
     def end_point(self):
         " The end point from the perspective of the render. "
-        rot = scale_and_rotate(self.end, self.scale, radians(self.rotation))
-        return self.scene_position + rot
+        v = self.end
+        v.scale(self.scale)
+        v.rotate(radians(self.rotation))
+        return self.scene_position + v
 
-    def area():
+    def area(self):
         " Area of a circular segment. "
-        r = Radius()
-        theta = radians(IncludedAngle())
-        return ((r*r)/2)*(theta - sin(theta))
+        r = self.radius()
+        theta = radians(self.included_angle())
+        return ((r*r)/2)*(theta - math.sin(theta))
 
     def arc_length(self):
         " . "
-        return radians(self.included_angle())*Radius()
+        return radians(self.included_angle())*self.radius()
 
     def chord(self):
         " . "
@@ -193,10 +201,10 @@ class Arc():
         NOTE: 0 rather than -1 since we are enforcing a positive chord
         and radius.
         """
-        return degrees(2.0*asin(quotient))
+        return degrees(2.0*math.asin(quotient))
         # Properties of a Circle - Get the Included Angle - Reference: ASD9.
 
-    def clockwise():
+    def clockwise(self):
         " . "
         arc = Arc(
             self.start.x, -self.start.y,
@@ -221,12 +229,13 @@ class Arc():
             ["arc_to", rect, self.start_angle, self.span_angle],
             # NOTE: Reverse the path so that the inside area
             # isn't considered part of the arc.
-            ["arc_to", rect, self.start_angle+self.span_angle, -self.span_angle]
+            ["arc_to", rect, self.start_angle+self.span_angle,
+             -self.span_angle]
         ]
 
     def paint(self, painter, option, widget):
         " . "
-        obj_scene = scene()
+        obj_scene = self.scene()
         if not obj_scene:
             return
 
@@ -239,7 +248,7 @@ class Arc():
             paint_pen = self.lwt_pen
         painter.set_pen(paint_pen)
 
-        start_angle = (start_angle() + self.rotation)*16
+        start_angle = (self.start_angle() + self.rotation)*16
         span_angle = self.included_angle()*16
 
         if self.clockwise():

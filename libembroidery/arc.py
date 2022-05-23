@@ -36,7 +36,6 @@ class Arc():
         self.end = end
         self.type = "Arc"
         self.rotation = rotation
-        self.scale = 1.0
         self.center = Vector(0.0, 0.0)
         self.rubber_mode = "RUBBER_OFF"
         self.start_angle = 0.0

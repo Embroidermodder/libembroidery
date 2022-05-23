@@ -133,7 +133,7 @@ class DimLeader():
         return math.fmod(angle, 360.0)
 
     def update_leader(self):
-        "todo make all these constants customizable"
+        r"TODO: make all these constants customizable."
         arrow_style = "Closed"
         arrow_style_angle = 15.0
         arrow_style_length = 1.0

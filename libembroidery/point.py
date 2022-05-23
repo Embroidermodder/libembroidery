@@ -151,12 +151,12 @@ class Point():
         " . "
         if self.first_run:
             if str == "M" or cmd == "MODE":
-                #TODO: Probably should add additional qsTr calls here.
-                todo("POINT", "prompt() for PDMODE")
+                # TODO: Probably should add additional qsTr calls here.
+                debug_message("POINT prompt() for PDMODE")
 
             elif str == "S" or cmd == "SIZE":
-                #TODO: Probably should add additional qsTr calls here.
-                todo("POINT", "prompt() for PDSIZE")
+                # TODO: Probably should add additional qsTr calls here.
+                debug_message("POINT prompt() for PDSIZE")
 
             vector = vector_from_str(cmd)
             if not vector:

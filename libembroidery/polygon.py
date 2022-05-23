@@ -17,7 +17,7 @@ r"""
 import math
 
 from libembroidery.tools import (
-    Vector, Pen,
+    Vector, Pen, debug_message,
     set_prompt_prefix, clear_selection, translate
 )
 from libembroidery.line import Line
@@ -326,7 +326,7 @@ class Polygon():
             debug_message("mode DISTANCE")
 
         elif self.mode == "SIDE_LEN":
-            todo("POLYGON", "Sidelength mode")
+            debug_message("POLYGON Sidelength mode")
             debug_message("mode SIDE LEN")
 
     def prompt(self, cmd):
@@ -402,7 +402,8 @@ class Polygon():
                     self.rubber_points["POLYGON_NUM_SIDES"] = (self.num_sides, 0)
 
                 else:
-                    error("POLYGON", translate("Polygon type is not Inscribed or Circumscribed."))
+                    message = "POLYGON" + translate("Polygon type is not Inscribed or Circumscribed.")
+                    debug_message(message, msgtype="ERROR")
 
             else:
                 alert(translate("Invalid option keyword."))
@@ -461,11 +462,11 @@ class Polygon():
                     self.vulcanize()
 
                 else:
-                    description = translate("Polygon type is not Inscribed or Circumscribed.")
-                    error("POLYGON", description)
+                    description = "POLYGON" + translate("Polygon type is not Inscribed or Circumscribed.")
+                    debug_message(description, msgtype="ERROR")
 
         elif self.mode == "SIDE_LEN":
-            todo("POLYGON", "Sidelength mode")
+            debug_message("POLYGON Sidelength mode")
 
     def find_center(self):
         r"Loop over all points and add the supplied offset."

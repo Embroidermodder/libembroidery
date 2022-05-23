@@ -17,7 +17,7 @@ import math
 import time
 
 import libembroidery.tools as tools
-from libembroidery.tools import Vector
+from libembroidery.tools import Vector, debug_message
 from libembroidery.rect import Rect
 from libembroidery.line import Line
 
@@ -484,7 +484,8 @@ class Circle():
 
         elif self.mode == "1P_DIA":
             if math.isnan(self.point1.x):
-                error("CIRCLE", translate("This should never happen."))
+                message = "CIRCLE" + translate("This should never happen.")
+                debug_message(message, msgtype="ERROR")
             else:
                 self.point2 = vector
                 set_rubber_point("CIRCLE_DIAMETER", self.point2.x, self.point2.y)
@@ -507,7 +508,8 @@ class Circle():
                 append_prompt_history()
 
             else:
-                error("CIRCLE", translate("This should never happen."))
+                message = "CIRCLE" + translate("This should never happen.")
+                debug_message(message, msgtype="ERROR")
 
         elif self.mode == "3P":
             if math.isnan(self.point1.x):
@@ -532,7 +534,8 @@ class Circle():
                 return
 
             else:
-                error("CIRCLE", translate("This should never happen."))
+                message = "CIRCLE" + translate("This should never happen.")
+                debug_message(message, msgtype="ERROR")
 
         elif self.mode == "TTR":
             if math.isnan(self.point1.x):
@@ -551,7 +554,7 @@ class Circle():
                 set_prompt_prefix(translate("Specify second point: "))
 
             else:
-                todo("CIRCLE", "click() for TTR")
+                debug_message("CIRCLE click() for TTR")
 
     def prompt(self, args, cmd):
         if self.mode == "1P_RAD":
@@ -609,7 +612,8 @@ class Circle():
 
         elif self.mode == "1P_DIA":
             if math.isnan(self.point1.x):
-                error("CIRCLE", translate("This should never happen."))
+                message = "CIRCLE" + translate("This should never happen.")
+                debug_message(message, msgtype="ERROR")
 
             if math.isnan(self.point2.x):
                 num = float(cmd)
@@ -624,7 +628,8 @@ class Circle():
                     set_rubber_point("CIRCLE_DIAMETER", self.point2.x, self.point2.y)
                     self.vulcanize()
             else:
-                error("CIRCLE", translate("This should never happen."))
+                message = "CIRCLE" + translate("This should never happen.")
+                debug_message(message, msgtype="ERROR")
 
         elif self.mode == "2P":
             if math.isnan(self.point1.x):
@@ -648,7 +653,8 @@ class Circle():
                     set_rubber_point("CIRCLE_TAN2", self.point2)
                     self.vulcanize()
             else:
-                error("CIRCLE", translate("This should never happen."))
+                message = "CIRCLE" + translate("This should never happen.")
+                debug_message(message, msgtype="ERROR")
 
         elif self.mode == "3P":
             vector = vector_from_str(cmd)
@@ -676,7 +682,8 @@ class Circle():
                     self.rubber_points["CIRCLE_TAN3"] = self.point3
                     self.vulcanize()
                 else:
-                    error("CIRCLE", translate("This should never happen."))
+                    message = "CIRCLE" + translate("This should never happen.")
+                    debug_message(message, msgtype="ERROR")
 
         elif self.mode == "TTR":
-            todo("CIRCLE", "prompt() for TTR")
+            debug_message("CIRCLE prompt() for TTR")

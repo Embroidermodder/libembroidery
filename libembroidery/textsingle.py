@@ -13,10 +13,9 @@ r"""
 
 """
 
-import math
-
-from libembroidery.tools import Pen, Vector, translate
+from libembroidery.tools import Pen, Vector, debug_message
 from libembroidery.line import Line
+
 
 class TextSingle():
     """
@@ -29,42 +28,37 @@ class TextSingle():
 
     QStringList objectTextJustifyList() const
 
-    def setObjectText(self, str)
-    def setObjectTextFont(self, font)
+    def set_object_text(self, str)
+    def set_object_textFont(self, font)
     def set_object_text_justify(self, justify):
         return
 
     def set_object_text_size(size):
         return
 
-    def setObjectTextStyle(bold, italic, under, strike, over):
+    def set_object_textStyle(bold, italic, under, strike, over):
         return
 
-    def setObjectTextBold(val):
+    def set_object_textBold(val):
         return
 
-    def setObjectTextItalic(self, val):
+    def set_object_textItalic(self, val):
         return
 
-    def setObjectTextUnderline(self, val):
+    def set_object_textUnderline(self, val):
         return
 
-    def setObjectTextStrikeOut(self, val):
+    def set_object_textStrikeOut(self, val):
         return
 
-    def setObjectTextOverline(self, val):
+    def set_object_textOverline(self, val):
         return
 
-    def setObjectTextBackward(self, val):
+    def set_object_textBackward(self, val):
         return
 
-    def setObjectTextUpsideDown(self, val):
+    def set_object_textUpsideDown(self, val):
         return
-
-    def update_rubber(QPainter* painter = 0)
-    def vulcanize()
-    mouse_snap_point(mouse_point)
-    QList<Vector> all_grip_points()
     def grip_edit(before, after)
     def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
     """
@@ -107,10 +101,10 @@ class TextSingle():
 
     def set_text(self):
         " . "
-        objText = str
+        obj_text = str
         text_path = Path()
         font = Font()
-        font.setFamily(objTextFont)
+        font.setFamily(obj_textFont)
         font.setPointSizeF(obj_text.size)
         font.setBold(obj_text.bold)
         font.setItalic(obj_text.italic)
@@ -129,11 +123,11 @@ class TextSingle():
             text_path.translate(-jRect.right(), 0)
         elif self.justify == "Aligned":
             # TODO: TextSingleObject Aligned Justification
-            todo(".")
+            debug_message("TODO.")
         elif self.justify == "Middle":
             text_path.translate(-jRect.center())
         elif self.justify == "Fit":
-            todo("TODO: TextSingleObject Fit Justification.")
+            debug_message("TODO: TextSingleObject Fit Justification.")
         elif self.justify == "Top Left":
             text_path.translate(-jRect.top_left())
         elif self.justify == "Top Center":
@@ -190,21 +184,21 @@ class TextSingle():
                                         horiz * P4.x, vert * P4.y)
 
 
-            objTextPath = flipped_path
+            obj_text_path = flipped_path
 
         else:
-            objTextPath = text_path
+            obj_text_path = text_path
 
         # Add the grip point to the shape path
-        grip_path = objTextPath
-        grip_path.connect_path(objTextPath)
+        grip_path = obj_text_path
+        grip_path.connect_path(obj_text_path)
         grip_path.add_rect(-0.00000001, -0.00000001, 0.00000002, 0.00000002)
         setObjectPath(grip_path)
 
     def set_font(self, font):
         " . "
         self.font = font
-        setObjectText(objText)
+        set_object_text(obj_text)
 
     def set_object_text_justify(self, justify):
         " Verify the string is a valid option. "
@@ -213,47 +207,47 @@ class TextSingle():
         else:
             # Default
             self.justify = "Left"
-        setObjectText(objText)
+        set_object_text(obj_text)
 
     def set_object_text_size(size):
         " . "
         obj_text.size = size
-        setObjectText(objText)
+        set_object_text(obj_text)
 
-    def setObjectTextBold(self, val):
+    def set_object_textBold(self, val):
         " . "
         obj_text.bold = val
-        setObjectText(objText)
+        set_object_text(obj_text)
 
-    def setObjectTextItalic(self, val):
+    def set_object_textItalic(self, val):
         " . "
         obj_text.italic = val
-        setObjectText(objText)
+        set_object_text(obj_text)
 
-    def setObjectTextUnderline(self, val):
+    def set_object_textUnderline(self, val):
         " . "
         obj_text.underline = val
-        setObjectText(objText)
+        set_object_text(obj_text)
 
-    def setObjectTextStrikeOut(self, val):
+    def set_object_textStrikeOut(self, val):
         " . "
         obj_text.strikeout = val
-        setObjectText(objText)
+        set_object_text(obj_text)
 
-    def setObjectTextOverline(self, val):
+    def set_object_textOverline(self, val):
         " . "
         obj_text.overline = val
-        setObjectText(objText)
+        set_object_text(obj_text)
 
-    def setObjectTextBackward(self, val):
+    def set_object_text_backward(self, val):
         " . "
         obj_text.backward = val
-        setObjectText(objText)
+        set_object_text(obj_text)
 
-    def setObjectTextUpsideDown(self, val):
+    def set_object_textUpsideDown(self, val):
         " . "
         obj_text.upsidedown = val
-        setObjectText(objText)
+        set_object_text(obj_text)
 
     def paint(self, painter, option, widget):
         obj_scene = scene()
@@ -262,14 +256,14 @@ class TextSingle():
 
         paintPen = Pen()
         painter.set_pen(paintPen)
-        update_rubber(painter)
+        self.update_rubber(painter)
         if "QStyle_State_Selected" in option.state:
             paintPen.set_style(Qt_DashLine)
         if obj_scene.property("ENABLE_LWT").toBool():
             paintPen = lineWeightPen()
         painter.set_pen(paintPen)
 
-        painter.drawPath(objTextPath)
+        painter.drawPath(obj_text_path)
 
     def update_rubber(self, painter):
         if self.rubber_mode == "TEXTSINGLE":
@@ -279,7 +273,7 @@ class TextSingle():
             hr = objectRubberPoint("TEXT_HEIGHT_ROTATION")
             set_object_text_size(hr.x())
             setRotation(hr.y())
-            setObjectText(objectRubberText("TEXT_RAPID"))
+            set_object_text(objectRubberText("TEXT_RAPID"))
 
         elif self.rubber_mode == "GRIP":
             if painter:
@@ -290,7 +284,7 @@ class TextSingle():
                 rubLine = Line(map_from_scene(gripPoint), map_from_scene(objectRubberPoint("")))
                 drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
 
-    def vulcanize():
+    def vulcanize(self):
         debug_message("TextSingleObject vulcanize()")
         self.update_rubber()
 
@@ -300,11 +294,11 @@ class TextSingle():
         " Returns the closest snap point to the mouse point. "
         return scenePos()
 
-    def all_grip_points():
+    def all_grip_points(self):
         gripPoints = [scenePos()]
         return gripPoints
 
-    def grip_edit(before, after):
+    def grip_edit(self, before, after):
         if before == scenePos():
             delta = after-before
             moveBy(delta.x(), delta.y())
@@ -316,7 +310,7 @@ class TextSingle():
         trans.scale(s,s)
 
         path_list = []
-        path = objTextPath
+        path = obj_text_path
         pathMoves = []
         numMoves = 0
 
@@ -329,8 +323,8 @@ class TextSingle():
         pathMoves += [path.element_count()]
 
         for p in range(pathMoves.size()-1):
-            #if p => numMoves:
-            #    break
+            # if p => numMoves:
+            #     break
             for i in range(pathMoves.value(p), pathMoves.value(p+1)):
                 element = path.element_at(i)
                 if element.ismove_to():

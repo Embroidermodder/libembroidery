@@ -16,8 +16,8 @@ r"""
 import math
 
 from libembroidery.tools import (
-    Vector, vector_from_str, Pen,
-    set_prompt_prefix, clear_selection, translate, todo
+    Vector, debug_message, vector_from_str, Pen,
+    set_prompt_prefix, clear_selection, translate
 )
 from libembroidery.line import Line
 
@@ -272,57 +272,56 @@ class Polyline():
                 self.first = vector
                 self.prev = self.first
                 add_rubber("POLYLINE")
-                set_rubber_mode("POLYLINE")
+                self.rubber_mode = "POLYLINE"
                 set_rubber_point("POLYLINE_POINT_0", self.first)
                 set_prompt_prefix(translate("Specify next point or [Undo]: "))
 
         else:
             if cmd == "U" or cmd == "UNDO":
-                #TODO: Probably should add additional qsTr calls here.
-                todo("POLYLINE", "prompt() for UNDO")
+                # TODO: Probably should add additional qsTr calls here.
+                debug_message("POLYLINE prompt() for UNDO")
             else:
                 vector = vector_from_str(cmd)
                 if not vector:
-                    alert(translate("Point or option keyword required."))
-                    set_prompt_prefix(translate("Specify next point or [Undo]: "))
+                    debug_message("Point or option keyword required.", msgtype="ALERT")
+                    set_prompt_prefix("Specify next point or [Undo]: ")
                 else:
                     self.num += 1
                     set_rubber_point(f"POLYLINE_POINT_{num}", x, y)
                     set_rubber_text("POLYLINE_NUM_POINTS", str(num))
                     spare_rubber("POLYLINE")
                     self.prev = vector
-                    set_prompt_prefix(translate("Specify next point or [Undo]: "))
+                    set_prompt_prefix("Specify next point or [Undo]: ")
 
     def a_prompt(self, cmd):
         " . "
         if self.first_run:
             vector = vector_from_str(cmd)
             if not vector:
-                alert(translate("Invalid point."))
-                set_prompt_prefix(translate("Specify first point: "))
+                alert("Invalid point.")
+                set_prompt_prefix("Specify first point: ")
             else:
-                self.first_run = false
+                self.first_run = False
                 self.first = vector
                 self.prev = self.first
                 add_rubber("LINE")
-                set_rubber_mode("LINE")
-                set_rubber_point("LINE_START", self.first)
-                set_prompt_prefix(translate("Specify next point or [Undo]: "))
+                self.rubber_mode = "LINE"
+                self.rubber_points["LINE_START"] = self.first
+                set_prompt_prefix("Specify next point or [Undo]: ")
         else:
             if cmd == "U" or cmd == "UNDO":
-                # TODO: Probably should add additional qsTr calls here.
-                todo("LINE", "prompt() for UNDO")
+                debug_message("LINE prompt() for UNDO")
             else:
                 vector = vector_from_str(cmd)
                 if not vector:
                     alert(translate("Point or option keyword required."))
                     set_prompt_prefix(translate("Specify next point or [Undo]: "))
                 else:
-                    set_rubber_point("LINE_END", vector)
-                    vulcanize()
+                    self.rubber_points["LINE_END"] = vector
+                    self.vulcanize()
                     add_rubber("LINE")
-                    set_rubber_mode("LINE")
-                    set_rubber_point("LINE_START", vector)
+                    self.rubber_mode = "LINE"
+                    self.rubber_points["LINE_START"] = vector
                     self.prev = vector
                     set_prompt_prefix(translate("Specify next point or [Undo]: "))
 
@@ -381,7 +380,7 @@ class Polyline():
         self.rubber_points = {}
 
         if numSelected() <= 0:
-            #TODO: Prompt to select objects if nothing is preselected
+            # TODO: Prompt to select objects if nothing is preselected
             alert(translate("Preselect objects before invoking the move command."))
             return
             message_box("information", translate("Move Preselect"), translate("Preselect objects before invoking the move command."))

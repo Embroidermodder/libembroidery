@@ -18,7 +18,7 @@ import math
 from libembroidery.path import Path
 from libembroidery.line import Line
 from libembroidery.tools import (
-    translate, clear_selection, todo, debug_message, set_prompt_prefix,
+    translate, clear_selection, debug_message, set_prompt_prefix,
     alert, Pen, Vector, vector_from_str
 )
 
@@ -80,24 +80,24 @@ class Rect():
         "The prompt handler for editing rectangles."
         if cmd == "C" or cmd == "CHAMFER":
             # TODO: Probably should add additional qsTr calls here.
-            todo("RECTANGLE", "prompt() for CHAMFER")
+            debug_message("RECTANGLE prompt() for CHAMFER")
         elif cmd == "D" or cmd == "DIMENSIONS":
             # TODO: Probably should add additional qsTr calls here.
-            todo("RECTANGLE", "prompt() for DIMENSIONS")
+            debug_message("RECTANGLE prompt() for DIMENSIONS")
         elif cmd == "F" or cmd == "FILLET":
             # TODO: Probably should add additional qsTr calls here.
-            todo("RECTANGLE", "prompt() for FILLET")
+            debug_message("RECTANGLE prompt() for FILLET")
         else:
             vector = vector_from_str(cmd)
-            if math.isnan(strList[0]) or math.isnan(strList[1]):
+            if not vector:
                 alert(translate("Invalid point."))
                 set_prompt_prefix(translate("Specify first point: "))
             else:
                 if self.new_rect:
                     self.new_rect = False
                     self.position = vector
-                    addRubber("RECTANGLE")
-                    set_rubber_mode("RECTANGLE")
+                    add_rubber("RECTANGLE")
+                    self.rubber_mode = "RECTANGLE"
                     set_rubber_point("RECTANGLE_START", vector)
                     set_prompt_prefix(translate("Specify other corner point or [Dimensions]: "))
                 else:

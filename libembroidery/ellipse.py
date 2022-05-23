@@ -17,7 +17,7 @@ r"""
 import math
 
 from libembroidery.tools import (
-    alert, clear_selection, debug_message, translate, todo, error,
+    alert, clear_selection, debug_message, translate,
     append_prompt_history, set_prompt_prefix, Pen, Vector, vector_from_str,
     add_rubber, closest_vector, map_from_scene
 )
@@ -98,7 +98,8 @@ class Ellipse():
                 append_prompt_history()
 
             else:
-                error("ELLIPSE", translate("This should never happen."))
+                message = "ELLIPSE" + translate("This should never happen.")
+                debug_message(message, msgtype="ERROR")
 
         elif self.mode == "MAJORRADIUS_MINORRADIUS":
             if math.isnan(self.point1.x):
@@ -131,14 +132,17 @@ class Ellipse():
                 append_prompt_history()
 
             else:
-                error("ELLIPSE", translate("This should never happen."))
+                message = "ELLIPSE" + translate("This should never happen.")
+                debug_message(message, msgtype="ERROR")
 
         elif self.mode == "ELLIPSE_ROTATION":
             if math.isnan(self.point1.x):
-                error("ELLIPSE", translate("This should never happen."))
+                message = "ELLIPSE" + translate("This should never happen.")
+                debug_message(message, msgtype="ERROR")
 
             elif math.isnan(self.point2.x):
-                error("ELLIPSE", translate("This should never happen."))
+                message = "ELLIPSE" + translate("This should never happen.")
+                debug_message(message, msgtype="ERROR")
 
             elif math.isnan(self.point3.x):
                 angle = calculate_angle(self.center, point)
@@ -260,9 +264,11 @@ class Ellipse():
 
         elif self.mode == "ELLIPSE_ROTATION":
             if math.isnan(self.x1):
-                error("ELLIPSE", translate("This should never happen."))
+                message = "ELLIPSE" + translate("This should never happen.")
+                debug_message(message, msgtype="ERROR")
             elif math.isnan(self.x2):
-                error("ELLIPSE", translate("This should never happen."))
+                message = "ELLIPSE" + translate("This should never happen.")
+                debug_message(message, msgtype="ERROR")
             elif math.isnan(self.x3):
                 if math.isnan(cmd):
                     alert(translate("Invalid angle. Input a numeric angle or pick a point."))
@@ -429,7 +435,7 @@ class Ellipse():
             self.update_path()
 
         elif self.rubber_mode == "GRIP":
-            todo("TODO: self.update_rubber() gripping for Ellipse.")
+            debug_message("TODO: self.update_rubber() gripping for Ellipse.")
 
     def vulcanize(self):
         " . "

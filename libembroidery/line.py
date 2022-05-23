@@ -16,7 +16,7 @@ r"""
 
 import math
 
-from libembroidery.tools import Vector, Pen, map_from_scene
+from libembroidery.tools import Vector, Pen, map_from_scene, debug_message
 
 
 class Line():
@@ -189,8 +189,8 @@ class Line():
         self.factorNew = math.nan
 
         if numSelected() <= 0:
-            #TODO: Prompt to select objects if nothing is preselected
-            alert(translate("Preselect objects before invoking the scale command."))
+            # TODO: Prompt to select objects if nothing is preselected
+            debug_message(translate("Preselect objects before invoking the scale command."), msgtype="ALERT")
             messageBox("information", translate("Scale Preselect"), translate("Preselect objects before invoking the scale command."))
 
         else:
@@ -236,7 +236,7 @@ class Line():
                         self.destRX    = math.nan
                         self.destRY    = math.nan
                         self.factorRef = math.nan
-                        alert(translate("Value must be positive and nonzero."))
+                        debug_message("Value must be positive and nonzero.", msgtype="ALERT")
                         set_prompt_prefix(translate("Specify second point: "))
  
                     else:

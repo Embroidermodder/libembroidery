@@ -17,9 +17,9 @@ r"""
 import math
 
 from libembroidery.tools import (
-    translate, clear_selection, debug_message, error, alert,
+    translate, clear_selection, debug_message, alert,
     set_prompt_prefix, Pen, Vector, path_from_command,
-    append_prompt_history, todo
+    append_prompt_history
 )
 
 
@@ -96,7 +96,7 @@ class Path():
                 "The path added contains no points. "
                 + "The command that created this object has flawed logic."
             )
-            error(0, translate("Empty Path Error"), details)
+            debug_message(translate("Empty Path Error") + details, msgtype="ERROR")
 
     def mouse_snap_point(self, mouse_point):
         " Returns the closest snap point to the mouse point. "
@@ -141,11 +141,11 @@ class Path():
         " . "
         if str == "A" or cmd == "ARC":
             # TODO: Probably should add additional qsTr calls here.
-            todo("PATH", "prompt() for ARC")
+            debug_message("PATH prompt() for ARC")
 
         elif str == "U" or cmd == "UNDO":
             # TODO: Probably should add additional qsTr calls here.
-            todo("PATH", "prompt() for UNDO")
+            debug_message("PATH prompt() for UNDO")
 
         else:
             strList = str.split(",")

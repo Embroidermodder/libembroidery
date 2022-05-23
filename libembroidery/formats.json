@@ -109,7 +109,7 @@
             "color_only": 0,
             "check_for_color_file": 0,
             "write_external_color_file": 0
-        },
+        }, /* MARK */
         {
             "extension": ".art",
             "description": "Bernina Embroidery Format",

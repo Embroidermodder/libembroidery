@@ -31,63 +31,61 @@ import math
 
 from libembroidery.parser import list_processor
 import libembroidery as emb
+from libembroidery import Pattern, Vector, Arc, Circle, Ellipse
+
 
 def create_test_file_1(outf="test01.csv"):
+    r"""
+    .
     """
-    """
-    emb.create()
+    pattern = Pattern()
 
     # 10mm circle
     for i in range(20):
         x = 0.0
         y = 1.0*(i+1)
-        emb.addStitch(x, y, emb.JUMP, 0)
+        pattern.add_stitch(x, y, flags=emb.JUMP, color=0)
 
     for i in range(200):
         x = 10 + 10 * math.sin(i * 0.01 * math.pi)
         y = 10 + 10 * math.cos(i * 0.01 * math.pi)
-        flags = emb.NORMAL
-        color = 0
-        emb.addStitch(x, y, flags, color)
+        pattern.add_stitch(x, y, flags=emb.NORMAL, color=0)
 
-    #emb.addThread(emb.black_thread)
-    emb.end()
+    pattern.add_thread(emb.black_thread)
+    pattern.end()
 
-    emb.write(outf)
-    emb.free()
+    pattern.write(outf)
+    pattern.free()
 
 
 def create_test_file_2(outf="test02.csv"):
+    r"""
+    .
     """
-    """
-    emb.create()
+    pattern = Pattern()
 
     # sin wave
     for i in range(100):
         x = 10 + 10 * math.sin(i * (0.5 / math.pi))
         y = 10 + i * 0.1
-        flags = emb.NORMAL
-        color = 0
-        emb.addStitch(x, y, flags, color)
+        pattern.add_stitch(x, y, flags=emb.NORMAL, color=0)
 
-    #emb.add_thread(emb.black_thread)
-    emb.end()
+    pattern.add_thread(emb.black_thread)
+    pattern.end()
 
-    emb.write(outf)
-    emb.free()
+    pattern.write(outf)
 
 
 def create_test_file_3(outf="test03.csv"):
     """
     """
-    emb.create()
-    emb.addCircle(10.0, 1.0, 5.0)
-    #emb.addThread(emb.black_thread)
-    emb.convertGeometry()
-    emb.end()
+    pattern = Pattern()
+    pattern.add_circle(10.0, 1.0, 5.0)
+    pattern.add_thread(emb.black_thread)
+    pattern.convert_geometry()
+    pattern.end()
 
-    emb.write(outf)
-    emb.free()
+    pattern.write(outf)
 
 
 def convert_test(t, from_f, to_f):
@@ -119,41 +117,42 @@ class TestLibembroidery(unittest.TestCase):
     """
     def test_vector_length(self):
         " Tests the vector length function. "
-        v = emb.vector(3.0, 4.0)
+        v = Vector(3.0, 4.0)
         self.assertAlmostEqual(v.length(), 5.0)
 
     def test_arc(self):
         " . "
-        arc = emb.arc(1.0, 2.0, 2.0, 3.0, 4.0, 6.0)
+        arc = Arc(1.0, 2.0, 2.0, 3.0, 4.0, 6.0)
         self.assertAlmostEqual(5.0, 5.0)
 
     def test_circle(self):
         " . "
-        circle = emb.circle(3.0, 4.0, 2.0)
+        circle = Circle(3.0, 4.0, 2.0)
         self.assertAlmostEqual(5.0, 5.0)
 
     def test_ellipse(self):
         " . "
-        ellipse = emb.ellipse(3.0, 4.0, 7.0, 4.0)
+        ellipse = Ellipse(3.0, 4.0, 7.0, 4.0)
         self.assertAlmostEqual(5.0, 5.0)
 
     def test_path(self):
         " . "
-        path = emb.path()
+        path = emb.Path()
         self.assertAlmostEqual(5.0, 5.0)
 
     def test_main(self):
+        r"""
+        Tests the rendering and simulating of patterns.
         """
-        """
-        emb.create()
+        pattern = Pattern()
         image = emb.image(100, 100)
-        hilbertCurveResult = emb.hilbert_curve(pattern, 3)
-        renderResult = image.render(pattern, 20.0, 20.0, "hilbert_level_3.ppm")
-        simulateResult = image.simulate(pattern, 20.0, 20.0, "hilbert_level_3.avi")
+        hilbert_curve_result = pattern.hilbert_curve(3)
+        render_result = image.render(pattern, 20.0, 20.0, "hilbert_level_3.ppm")
+        simulate_result = image.simulate(pattern, 20.0, 20.0, "hilbert_level_3.avi")
         
-        self.assertEqual(renderResult, 0)
-        self.assertEqual(simulateResult, 0)
-        emb.free()
+        self.assertEqual(hilbert_curve_result, 0)
+        self.assertEqual(render_result, 0)
+        self.assertEqual(simulate_result, 0)
 
     def test_convert_csv_svg(self):
         " Test conversion from csv to svg. "
@@ -182,10 +181,10 @@ class TestLibembroidery(unittest.TestCase):
     def test_circle_tangent(self):
         """
         """
-        t0 = emb.vector(0.0, 0.0)
-        t1 = emb.vector(0.0, 0.0)
-        c = emb.circle(0.0, 0.0, 3.0)
-        p = emb.vector(4.0, 0.0)
+        t0 = Vector(0.0, 0.0)
+        t1 = Vector(0.0, 0.0)
+        c = emb.Circle(0.0, 0.0, 3.0)
+        p = Vector(4.0, 0.0)
         emb.getCircleTangentPoints(c, p, t0, t1)
         self.assertAlmostEqual(t0.x, 2.2500)
         self.assertAlmostEqual(t0.y, 1.9843)
@@ -195,10 +194,10 @@ class TestLibembroidery(unittest.TestCase):
     def test_circle_tangent_2(self):
         """
         """
-        t0 = emb.vector(0.0, 0.0)
-        t1 = emb.vector(0.0, 0.0)
-        c = emb.circle(20.1762, 10.7170, 6.8221)
-        p = emb.vector(24.3411, 18.2980)
+        t0 = Vector(0.0, 0.0)
+        t1 = Vector(0.0, 0.0)
+        c = emb.Circle(20.1762, 10.7170, 6.8221)
+        p = Vector(24.3411, 18.2980)
         emb.getCircleTangentPoints(c, p, t0, t1)
         self.assertAlmostEqual(t0.x, 19.0911)
         self.assertAlmostEqual(t0.y, 17.4522)
@@ -243,8 +242,6 @@ Name  : %s
         self.assertEqual(table.writer_state, ' ')
         self.assertEqual(table.type, 1)
 
-
-class TestLibembroidery(unittest.TestCase):
     def test_list_processor():
         print(list_processor("(+ (* 4 6) 3)"))
         print(list_processor("(+ (/ 6 4) (* 3 2))"))

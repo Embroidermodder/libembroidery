@@ -19,7 +19,7 @@ import math
 from libembroidery.tools import (
     alert, clear_selection, debug_message, translate, todo, error,
     append_prompt_history, set_prompt_prefix, Pen, Vector, vector_from_str,
-    add_rubber, closest_vector
+    add_rubber, closest_vector, map_from_scene
 )
 from libembroidery.line import Line
 from libembroidery.rect import Rect
@@ -354,27 +354,27 @@ class Ellipse():
         if self.rubber_mode == "LINE":
             scene_line_point_1 = self.rubber_points["ELLIPSE_LINE_POINT1"]
             scene_line_point_2 = self.rubber_points["ELLIPSE_LINE_POINT2"]
-            itemLinePoint1 = map_from_scene(scene_line_point_1)
-            itemLinePoint2 = map_from_scene(scene_line_point_2)
-            itemLine = Line(itemLinePoint1, itemLinePoint2)
+            item_linePoint1 = map_from_scene(scene_line_point_1)
+            item_linePoint2 = map_from_scene(scene_line_point_2)
+            item_line = Line(item_linePoint1, item_linePoint2)
             if painter:
-                drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
+                draw_rubber_line(item_line, painter, "VIEW_COLOR_CROSSHAIR")
             self.update_path()
 
         elif self.rubber_mode == "MAJORDIAMETER_MINORRADIUS":
-            sceneAxis1Point1 = self.rubberPoint("ELLIPSE_AXIS1_POINT1")
-            sceneAxis1Point2 = self.rubberPoint("ELLIPSE_AXIS1_POINT2")
-            sceneCenterPoint = self.rubberPoint("ELLIPSE_CENTER")
-            sceneAxis2Point2 = self.rubberPoint("ELLIPSE_AXIS2_POINT2")
-            ellipseWidth = self.rubberPoint("ELLIPSE_WIDTH").x()
-            ellipseRot = self.rubberPoint("ELLIPSE_ROT").x()
+            scene_axis_1_point_1 = self.rubber_points["ELLIPSE_AXIS1_POINT1"]
+            scene_axis_1_point_2 = self.rubber_points["ELLIPSE_AXIS1_POINT2"]
+            sceneCenterPoint = self.rubber_points["ELLIPSE_CENTER"]
+            sceneAxis2Point2 = self.rubber_points("ELLIPSE_AXIS2_POINT2")
+            ellipseWidth = self.rubber_points("ELLIPSE_WIDTH").x
+            ellipseRot = self.rubber_points("ELLIPSE_ROT").x
 
             # TODO: incorporate perpendicular_distance() into libembroidery.
             px = sceneAxis2Point2.x()
             py = sceneAxis2Point2.y()
-            x1 = sceneAxis1Point1.x()
-            y1 = sceneAxis1Point1.y()
-            line = Line(sceneAxis1Point1, sceneAxis1Point2)
+            x1 = scene_axis_1_point_1.x()
+            y1 = scene_axis_1_point_1.y()
+            line = Line(scene_axis_1_point_1, scene_axis_1_point_2)
             norm = line.normalVector()
             dx = px-x1
             dy = py-y1
@@ -390,24 +390,24 @@ class Ellipse():
 
             itemCenterPoint = map_from_scene(sceneCenterPoint)
             itemAxis2Point2 = map_from_scene(sceneAxis2Point2)
-            itemLine = Line(itemCenterPoint, itemAxis2Point2)
+            item_line = Line(itemCenterPoint, itemAxis2Point2)
             if painter:
-                drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
+                draw_rubber_line(item_line, painter, "VIEW_COLOR_CROSSHAIR")
             self.update_path()
 
         elif self.rubber_mode == "MAJORRADIUS_MINORRADIUS":
-            sceneAxis1Point2 = self.rubberPoint("ELLIPSE_AXIS1_POINT2")
-            sceneCenterPoint = self.rubberPoint("ELLIPSE_CENTER")
-            sceneAxis2Point2 = self.rubberPoint("ELLIPSE_AXIS2_POINT2")
-            ellipseWidth = self.rubberPoint("ELLIPSE_WIDTH").x()
-            ellipseRot = self.rubberPoint("ELLIPSE_ROT").x()
+            scene_axis_1_point_2 = self.rubber_points("ELLIPSE_AXIS1_POINT2")
+            sceneCenterPoint = self.rubber_points("ELLIPSE_CENTER")
+            sceneAxis2Point2 = self.rubber_points("ELLIPSE_AXIS2_POINT2")
+            ellipseWidth = self.rubber_points("ELLIPSE_WIDTH").x()
+            ellipseRot = self.rubber_points("ELLIPSE_ROT").x()
 
             # TODO: incorporate perpendicular_distance() into libembroidery.
             px = sceneAxis2Point2.x()
             py = sceneAxis2Point2.y()
             x1 = sceneCenterPoint.x()
             y1 = sceneCenterPoint.y()
-            line = Line(sceneCenterPoint, sceneAxis1Point2)
+            line = Line(sceneCenterPoint, scene_axis_1_point_2)
             norm = line.normalVector()
             dx = px-x1
             dy = py-y1
@@ -417,15 +417,15 @@ class Ellipse():
             iPoint = line.p1()
             ellipseHeight = Line(px, py, iPoint.x(), iPoint.y()).length()*2.0
 
-            setPos(sceneCenterPoint)
-            set_Size(ellipseWidth, ellipseHeight)
+            set_pos(sceneCenterPoint)
+            set_size(ellipseWidth, ellipseHeight)
             self.rotation = -ellipseRot
 
             itemCenterPoint = map_from_scene(sceneCenterPoint)
             itemAxis2Point2 = map_from_scene(sceneAxis2Point2)
-            itemLine = Line(itemCenterPoint, itemAxis2Point2)
+            item_line = Line(itemCenterPoint, itemAxis2Point2)
             if painter:
-                drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
+                draw_rubber_line(item_line, painter, "VIEW_COLOR_CROSSHAIR")
             self.update_path()
 
         elif self.rubber_mode == "GRIP":

@@ -193,25 +193,40 @@ def debug_message(message):
 
 
 def error(*message):
-    r"Placeholder."
+    r"Placeholder function."
     print(message)
 
 
 def set_prompt_prefix(*message):
-    r"Placeholder."
+    r"Placeholder function."
     print(message)
 
 
 def todo(*message):
-    r"Placeholder."
+    r"Placeholder function."
     print(message)
 
 
 def add_rubber(*message):
-    r"Placeholder."
+    r"Placeholder function."
     print(message)
 
 
 def append_prompt_history(*message):
-    r"Placeholder."
+    r"Placeholder function."
     print(message)
+
+
+def map_from_scene(vector):
+    r"Placeholder function."
+    return vector
+
+
+def map_to_scene(vector):
+    r"Placeholder function."
+    return vector
+
+
+def load_data(fname):
+    r"Placeholder function."
+    return {}

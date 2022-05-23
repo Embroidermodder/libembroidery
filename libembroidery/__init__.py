@@ -28,6 +28,8 @@ from libembroidery.text import Text
 from libembroidery.polygon import Polygon
 from libembroidery.polyline import Polyline
 from libembroidery.polylinearray import PolylineArray
+from libembroidery.pattern import Pattern
+from libembroidery.path import Path
 
 NORMAL = 0
 JUMP = 1

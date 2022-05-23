@@ -16,10 +16,11 @@ r"""
 import math
 
 from libembroidery.path import Path
+from libembroidery.rect import Rect
 from libembroidery.tools import (
     Pen, Vector, vector_from_str, closest_vector,
     translate, clear_selection, set_prompt_prefix, alert, debug_message,
-    add_rubber, append_prompt_history
+    add_rubber, append_prompt_history, map_from_scene
 )
 from libembroidery.line import Line
 
@@ -136,7 +137,7 @@ class DimLeader():
         arrow_style = "Closed"
         arrow_style_angle = 15.0
         arrow_style_length = 1.0
-        line_styleAngle = 45.0
+        line_style_angle = 45.0
         line_style_length = 1.0
 
         lyne = Line()
@@ -206,7 +207,8 @@ class DimLeader():
 
         elif arrow_style == "Dot":
             arrow_style_path = Path()
-            arrow_style_path.addEllipse(ap0, arrow_style_length, arrow_style_length)
+            arrow_style_path.addEllipse(ap0, arrow_style_length,
+                                        arrow_style_length)
 
         elif arrow_style == "Box":
             arrow_style_path = Path()
@@ -221,7 +223,7 @@ class DimLeader():
             line_stylePath.line_to(lp0)
 
     def paint(self, painter, option, widget):
-        obj_scene = scene()
+        obj_scene = self.scene()
         if not obj_scene:
             return
 
@@ -231,7 +233,7 @@ class DimLeader():
         if "QStyle_State_Selected" in option.state:
             paint_pen.set_style("dashed")
         if obj_scene.property("ENABLE_LWT").toBool():
-            paint_pen = lwt_pen()
+            paint_pen = self.lwt_pen
         painter.set_pen(paint_pen)
 
         painter.draw_path("line_stylePath")
@@ -243,20 +245,22 @@ class DimLeader():
     def update_rubber(self, painter):
         if self.rubber_mode == "DIMLEADER_LINE":
             scene_start_point = self.rubber_points["DIMLEADER_LINE_START"]
-            sceneQSnapPoint = self.rubber_points["DIMLEADER_LINE_END"]
+            scene_qsnap_point = self.rubber_points["DIMLEADER_LINE_END"]
 
-            setEndPoint1(scene_start_point)
-            setobj_end_point_2(sceneQSnapPoint)
+            self.set_end_point_1(scene_start_point)
+            self.set_end_point_2(scene_qsnap_point)
 
         elif self.rubber_mode == "Grip":
             if painter:
                 gripPoint = self.rubber_points["GRIP_POINT"]
-                if gripPoint == EndPoint1():
-                    painter.drawLine(line().p2(), map_from_scene(RubberPoint("")))
-                elif gripPoint == obj_end_point_2():
-                    painter.drawLine(line().p1(), map_from_scene(RubberPoint("")))
+                if gripPoint == end_point_1():
+                    end = map_from_scene(self.rubber_points(""))
+                    painter.drawLine(line().p2(), end)
+                elif gripPoint == end_point_2():
+                    end = map_from_scene(self.rubber_points(""))
+                    painter.drawLine(line().p1(), end)
                 elif gripPoint == MidPoint():
-                    painter.drawLine(line().translated(map_from_scene(RubberPoint(""))-map_from_scene(gripPoint)))
+                    painter.drawLine(line().translated(map_from_scene(self.rubber_points(""))-map_from_scene(gripPoint)))
 
     def vulcanize(self):
         " . "

@@ -1,293 +1,293 @@
 {
     "_dxfColorTable": [
         [0, 0, 0, "BYBLOCK"],
-        [255,   0,   0, "1 red"],
-        [255, 255,   0, "2 yellow"],
-        [  0, 255,   0, "3 green"],
-        [  0, 255, 255, "4 cyan"],
-        [  0,   0, 255, "5 blue"],
-        [255,   0, 255, "6 magenta"],
+        [255, 0, 0, "1 red"],
+        [255, 255, 0, "2 yellow"],
+        [0, 255, 0, "3 green"],
+        [0, 255, 255, "4 cyan"],
+        [0, 0, 255, "5 blue"],
+        [255, 0, 255, "6 magenta"],
         [255, 255, 255, "7 white"],
         [128, 128, 128, "8 dark gray"],
         [192, 192, 192, "9 light gray"],
-        [255,   0,   0, "10"],
+        [255, 0, 0, "10"],
         [255, 127, 127, "11"],
-        [204,   0,   0, "12"],
+        [204, 0, 0, "12"],
         [204, 102, 102, "13"],
-        [153,   0,   0, "14"],
-        [153,  76,  76, "15"],
-        [127,   0,   0, "16"],
-        [127,  63,  63, "17"],
-        [ 76,   0,   0, "18"],
-        [ 76,  38,  38, "19"],
-        [255,  63,   0, "20"],
+        [153, 0, 0, "14"],
+        [153, 76, 76, "15"],
+        [127, 0, 0, "16"],
+        [127, 63, 63, "17"],
+        [76, 0, 0, "18"],
+        [76, 38, 38, "19"],
+        [255, 63, 0, "20"],
         [255, 159, 127, "21"],
-        [204,  51,   0, "22"],
+        [204, 51, 0, "22"],
         [204, 127, 102, "23"],
-        [153,  38,   0, "24"],
-        [153,  95,  76, "25"],
-        [127,  31,   0, "26"],
-        [127,  79,  63, "27"],
-        [ 76,  19,   0, "28"],
-        [ 76,  47,  38, "29"],
-        [255, 127,   0, "30"],
+        [153, 38, 0, "24"],
+        [153, 95, 76, "25"],
+        [127, 31, 0, "26"],
+        [127, 79, 63, "27"],
+        [76, 19, 0, "28"],
+        [76, 47, 38, "29"],
+        [255, 127, 0, "30"],
         [255, 191, 127, "31"],
-        [204, 102,   0, "32"],
+        [204, 102, 0, "32"],
         [204, 153, 102, "33"],
-        [153,  76,   0, "34"],
-        [153, 114,  76, "35"],
-        [127,  63,   0, "36"],
-        [127,  95,  63, "37"],
-        [ 76,  38,   0, "38"],
-        [ 76,  57,  38, "39"],
-        [255, 191,   0, "40"],
+        [153, 76, 0, "34"],
+        [153, 114, 76, "35"],
+        [127, 63, 0, "36"],
+        [127, 95, 63, "37"],
+        [76, 38, 0, "38"],
+        [76, 57, 38, "39"],
+        [255, 191, 0, "40"],
         [255, 223, 127, "41"],
-        [204, 153,   0, "42"],
+        [204, 153, 0, "42"],
         [204, 178, 102, "43"],
-        [153, 114,   0, "44"],
-        [153, 133,  76, "45"],
-        [127,  95,   0, "46"],
-        [127, 111,  63, "47"],
-        [ 76,  57,   0, "48"],
-        [ 76,  66,  38, "49"],
-        [255, 255,   0, "50"],
+        [153, 114, 0, "44"],
+        [153, 133, 76, "45"],
+        [127, 95, 0, "46"],
+        [127, 111, 63, "47"],
+        [76, 57, 0, "48"],
+        [76, 66, 38, "49"],
+        [255, 255, 0, "50"],
         [255, 255, 127, "51"],
-        [204, 204,   0, "52"],
+        [204, 204, 0, "52"],
         [204, 204, 102, "53"],
-        [153, 153,   0, "54"],
-        [153, 153,  76, "55"],
-        [127, 127,   0, "56"],
-        [127, 127,  63, "57"],
-        [ 76,  76,   0, "58"],
-        [ 76,  76,  38, "59"],
-        [191, 255,   0, "60"],
+        [153, 153, 0, "54"],
+        [153, 153, 76, "55"],
+        [127, 127, 0, "56"],
+        [127, 127, 63, "57"],
+        [76, 76, 0, "58"],
+        [76, 76, 38, "59"],
+        [191, 255, 0, "60"],
         [223, 255, 127, "61"],
-        [153, 204,   0, "62"],
+        [153, 204, 0, "62"],
         [178, 204, 102, "63"],
-        [114, 153,   0, "64"],
-        [133, 153,  76, "65"],
-        [ 95, 127,   0, "66"],
-        [111, 127,  63, "67"],
-        [ 57,  76,   0, "68"],
-        [ 66,  76,  38, "69"],
-        [127, 255,   0, "70"],
+        [114, 153, 0, "64"],
+        [133, 153, 76, "65"],
+        [95, 127, 0, "66"],
+        [111, 127, 63, "67"],
+        [57, 76, 0, "68"],
+        [66, 76, 38, "69"],
+        [127, 255, 0, "70"],
         [191, 255, 127, "71"],
-        [102, 204,   0, "72"],
+        [102, 204, 0, "72"],
         [153, 204, 102, "73"],
-        [ 76, 153,   0, "74"],
-        [114, 153,  76, "75"],
-        [ 63, 127,   0, "76"],
-        [ 95, 127,  63, "77"],
-        [ 38,  76,   0, "78"],
-        [ 57,  76,  38, "79"],
-        [ 63, 255,   0, "80"],
+        [76, 153, 0, "74"],
+        [114, 153, 76, "75"],
+        [63, 127, 0, "76"],
+        [95, 127, 63, "77"],
+        [38, 76, 0, "78"],
+        [57, 76, 38, "79"],
+        [63, 255, 0, "80"],
         [159, 255, 127, "81"],
-        [ 51, 204,   0, "82"],
+        [51, 204, 0, "82"],
         [127, 204, 102, "83"],
-        [ 38, 153,   0, "84"],
-        [ 95, 153,  76, "85"],
-        [ 31, 127,   0, "86"],
-        [ 79, 127,  63, "87"],
-        [ 19,  76,   0, "88"],
-        [ 47,  76,  38, "89"],
-        [  0, 255,   0, "90"],
+        [38, 153, 0, "84"],
+        [95, 153, 76, "85"],
+        [31, 127, 0, "86"],
+        [79, 127, 63, "87"],
+        [19, 76, 0, "88"],
+        [47, 76, 38, "89"],
+        [0, 255, 0, "90"],
         [127, 255, 127, "91"],
-        [  0, 204,   0, "92"],
+        [0, 204, 0, "92"],
         [102, 204, 102, "93"],
-        [  0, 153,   0, "94"],
-        [ 76, 153,  76, "95"],
-        [  0, 127,   0, "96"],
-        [ 63, 127,  63, "97"],
-        [  0,  76,   0, "98"],
-        [ 38,  76,  38, "99"],
-        [  0, 255,  63, "100"],
+        [0, 153, 0, "94"],
+        [76, 153, 76, "95"],
+        [0, 127, 0, "96"],
+        [63, 127, 63, "97"],
+        [0, 76, 0, "98"],
+        [38, 76, 38, "99"],
+        [0, 255, 63, "100"],
         [127, 255, 159, "101"],
-        [  0, 204,  51, "102"],
+        [0, 204, 51, "102"],
         [102, 204, 127, "103"],
-        [  0, 153,  38, "104"],
-        [ 76, 153,  95, "105"],
-        [  0, 127,  31, "106"],
-        [ 63, 127,  79, "107"],
-        [  0,  76,  19, "108"],
-        [ 38,  76,  47, "109"],
-        [  0, 255, 127, "110"],
+        [0, 153, 38, "104"],
+        [76, 153, 95, "105"],
+        [0, 127, 31, "106"],
+        [63, 127, 79, "107"],
+        [0, 76, 19, "108"],
+        [38, 76, 47, "109"],
+        [0, 255, 127, "110"],
         [127, 255, 191, "111"],
-        [  0, 204, 102, "112"],
+        [0, 204, 102, "112"],
         [102, 204, 153, "113"],
-        [  0, 153,  76, "114"],
-        [ 76, 153, 114, "115"],
-        [  0, 127,  63, "116"],
-        [ 63, 127,  95, "117"],
-        [  0,  76,  38, "118"],
-        [ 38,  76,  57, "119"],
-        [  0, 255, 191, "120"],
+        [0, 153, 76, "114"],
+        [76, 153, 114, "115"],
+        [0, 127, 63, "116"],
+        [63, 127, 95, "117"],
+        [0, 76, 38, "118"],
+        [38, 76, 57, "119"],
+        [0, 255, 191, "120"],
         [127, 255, 223, "121"],
-        [  0, 204, 153, "122"],
+        [0, 204, 153, "122"],
         [102, 204, 178, "123"],
-        [  0, 153, 114, "124"],
-        [ 76, 153, 133, "125"],
-        [  0, 127,  95, "126"],
-        [ 63, 127, 111, "127"],
-        [  0,  76,  57, "128"],
-        [ 38,  76,  66, "129"],
-        [  0, 255, 255, "130"],
+        [0, 153, 114, "124"],
+        [76, 153, 133, "125"],
+        [0, 127, 95, "126"],
+        [63, 127, 111, "127"],
+        [0, 76, 57, "128"],
+        [38, 76, 66, "129"],
+        [0, 255, 255, "130"],
         [127, 255, 255, "131"],
-        [  0, 204, 204, "132"],
+        [0, 204, 204, "132"],
         [102, 204, 204, "133"],
-        [  0, 153, 153, "134"],
-        [ 76, 153, 153, "135"],
-        [  0, 127, 127, "136"],
-        [ 63, 127, 127, "137"],
-        [  0,  76,  76, "138"],
-        [ 38,  76,  76, "139"],
-        [  0, 191, 255, "140"],
+        [0, 153, 153, "134"],
+        [76, 153, 153, "135"],
+        [0, 127, 127, "136"],
+        [63, 127, 127, "137"],
+        [0, 76, 76, "138"],
+        [38, 76, 76, "139"],
+        [0, 191, 255, "140"],
         [127, 223, 255, "141"],
-        [  0, 153, 204, "142"],
+        [0, 153, 204, "142"],
         [102, 178, 204, "143"],
-        [  0, 114, 153, "144"],
-        [ 76, 133, 153, "145"],
-        [  0,  95, 127, "146"],
-        [ 63, 111, 127, "147"],
-        [  0,  57,  76, "148"],
-        [ 38,  66,  76, "149"],
-        [  0, 127, 255, "150"],
+        [0, 114, 153, "144"],
+        [76, 133, 153, "145"],
+        [0, 95, 127, "146"],
+        [63, 111, 127, "147"],
+        [0, 57, 76, "148"],
+        [38, 66, 76, "149"],
+        [0, 127, 255, "150"],
         [127, 191, 255, "151"],
-        [  0, 102, 204, "152"],
+        [0, 102, 204, "152"],
         [102, 153, 204, "153"],
-        [  0,  76, 153, "154"],
-        [ 76, 114, 153, "155"],
-        [  0,  63, 127, "156"],
-        [ 63,  95, 127, "157"],
-        [  0,  38,  76, "158"],
-        [ 38,  57,  76, "159"],
-        [  0,  63, 255, "160"],
+        [0, 76, 153, "154"],
+        [76, 114, 153, "155"],
+        [0, 63, 127, "156"],
+        [63, 95, 127, "157"],
+        [0, 38, 76, "158"],
+        [38, 57, 76, "159"],
+        [0, 63, 255, "160"],
         [127, 159, 255, "161"],
-        [  0,  51, 204, "162"],
+        [0, 51, 204, "162"],
         [102, 127, 204, "163"],
-        [  0,  38, 153, "164"],
-        [ 76,  95, 153, "165"],
-        [  0,  31, 127, "166"],
-        [ 63,  79, 127, "167"],
-        [  0,  19,  76, "168"],
-        [ 38,  47,  76, "169"],
-        [  0,   0, 255, "170"],
+        [0, 38, 153, "164"],
+        [76, 95, 153, "165"],
+        [0, 31, 127, "166"],
+        [63, 79, 127, "167"],
+        [0, 19, 76, "168"],
+        [38, 47, 76, "169"],
+        [0, 0, 255, "170"],
         [127, 127, 255, "171"],
-        [  0,   0, 204, "172"],
+        [0, 0, 204, "172"],
         [102, 102, 204, "173"],
-        [  0,   0, 153, "174"],
-        [ 76,  76, 153, "175"],
-        [  0,   0, 127, "176"],
-        [ 63,  63, 127, "177"],
-        [  0,   0,  76, "178"],
-        [ 38,  38,  76, "179"],
-        [ 63,   0, 255, "180"],
+        [0, 0, 153, "174"],
+        [76, 76, 153, "175"],
+        [0, 0, 127, "176"],
+        [63, 63, 127, "177"],
+        [0, 0, 76, "178"],
+        [38, 38, 76, "179"],
+        [63, 0, 255, "180"],
         [159, 127, 255, "181"],
-        [ 51,   0, 204, "182"],
+        [51, 0, 204, "182"],
         [127, 102, 204, "183"],
-        [ 38,   0, 153, "184"],
-        [ 95,  76, 153, "185"],
-        [ 31,   0, 127, "186"],
-        [ 79,  63, 127, "187"],
-        [ 19,   0,  76, "188"],
-        [ 47,  38,  76, "189"],
-        [127,   0, 255, "190"],
+        [38, 0, 153, "184"],
+        [95, 76, 153, "185"],
+        [31, 0, 127, "186"],
+        [79, 63, 127, "187"],
+        [19, 0, 76, "188"],
+        [47, 38, 76, "189"],
+        [127, 0, 255, "190"],
         [191, 127, 255, "191"],
-        [102,   0, 204, "192"],
+        [102, 0, 204, "192"],
         [153, 102, 204, "193"],
-        [ 76,   0, 153, "194"],
-        [114,  76, 153, "195"],
-        [ 63,   0, 127, "196"],
-        [ 95,  63, 127, "197"],
-        [ 38,   0,  76, "198"],
-        [ 57,  38,  76, "199"],
-        [191,   0, 255, "200"],
+        [76, 0, 153, "194"],
+        [114, 76, 153, "195"],
+        [63, 0, 127, "196"],
+        [95, 63, 127, "197"],
+        [38, 0, 76, "198"],
+        [57, 38, 76, "199"],
+        [191, 0, 255, "200"],
         [223, 127, 255, "201"],
-        [153,   0, 204, "202"],
+        [153, 0, 204, "202"],
         [178, 102, 204, "203"],
-        [114,   0, 153, "204"],
-        [133,  76, 153, "205"],
-        [ 95,   0, 127, "206"],
-        [111,  63, 127, "207"],
-        [ 57,   0,  76, "208"],
-        [ 66,  38,  76, "209"],
-        [255,   0, 255, "210"],
+        [114, 0, 153, "204"],
+        [133, 76, 153, "205"],
+        [95, 0, 127, "206"],
+        [111, 63, 127, "207"],
+        [57, 0, 76, "208"],
+        [66, 38, 76, "209"],
+        [255, 0, 255, "210"],
         [255, 127, 255, "211"],
-        [204,   0, 204, "212"],
+        [204, 0, 204, "212"],
         [204, 102, 204, "213"],
-        [153,   0, 153, "214"],
-        [153,  76, 153, "215"],
-        [127,   0, 127, "216"],
-        [127,  63, 127, "217"],
-        [ 76,   0,  76, "218"],
-        [ 76,  38,  76, "219"],
-        [255,   0, 191, "220"],
+        [153, 0, 153, "214"],
+        [153, 76, 153, "215"],
+        [127, 0, 127, "216"],
+        [127, 63, 127, "217"],
+        [76, 0, 76, "218"],
+        [76, 38, 76, "219"],
+        [255, 0, 191, "220"],
         [255, 127, 223, "221"],
-        [204,   0, 153, "222"],
+        [204, 0, 153, "222"],
         [204, 102, 178, "223"],
-        [153,   0, 114, "224"],
-        [153,  76, 133, "225"],
-        [127,   0,  95, "226"],
-        [127,  63, 111, "227"],
-        [ 76,   0,  57, "228"],
-        [ 76,  38,  66, "229"],
-        [255,   0, 127, "230"],
+        [153, 0, 114, "224"],
+        [153, 76, 133, "225"],
+        [127, 0, 95, "226"],
+        [127, 63, 111, "227"],
+        [76, 0, 57, "228"],
+        [76, 38, 66, "229"],
+        [255, 0, 127, "230"],
         [255, 127, 191, "231"],
-        [204,   0, 102, "232"],
+        [204, 0, 102, "232"],
         [204, 102, 153, "233"],
-        [153,   0,  76, "234"],
-        [153,  76, 114, "235"],
-        [127,   0,  63, "236"],
-        [127,  63,  95, "237"],
-        [ 76,   0,  38, "238"],
-        [ 76,  38,  57, "239"],
-        [255,   0,  63, "240"],
+        [153, 0, 76, "234"],
+        [153, 76, 114, "235"],
+        [127, 0, 63, "236"],
+        [127, 63, 95, "237"],
+        [76, 0, 38, "238"],
+        [76, 38, 57, "239"],
+        [255, 0, 63, "240"],
         [255, 127, 159, "241"],
-        [204,   0,  51, "242"],
+        [204, 0, 51, "242"],
         [204, 102, 127, "243"],
-        [153,   0,  38, "244"],
-        [153,  76,  95, "245"],
-        [127,   0,  31, "246"],
-        [127,  63,  79, "247"],
-        [ 76,   0,  19, "248"],
-        [ 76,  38,  47, "249"],
-        [ 51,  51,  51, "250"],
-        [ 91,  91,  91, "251"],
+        [153, 0, 38, "244"],
+        [153, 76, 95, "245"],
+        [127, 0, 31, "246"],
+        [127, 63, 79, "247"],
+        [76, 0, 19, "248"],
+        [76, 38, 47, "249"],
+        [51, 51, 51, "250"],
+        [91, 91, 91, "251"],
         [132, 132, 132, "252"],
         [173, 173, 173, "253"],
         [214, 214, 214, "254"],
         [255, 255, 255, "255"],
-        [  0,   0,   0 , "256 BYLAYER"]
+        [0, 0, 0 , "256 BYLAYER"]
     ],
     "hus_threads": [
-        [0,   0,   0, "Black",        "TODO:HUS_CATALOG_NUMBER"],
-        [  0,   0, 255, "Blue",         "TODO:HUS_CATALOG_NUMBER"],
-        [  0, 255,   0, "Light Green",  "TODO:HUS_CATALOG_NUMBER"],
-        [255,   0,   0, "Red",          "TODO:HUS_CATALOG_NUMBER"],
-        [255,   0, 255, "Purple",       "TODO:HUS_CATALOG_NUMBER"],
-        [255, 255,   0, "Yellow",       "TODO:HUS_CATALOG_NUMBER"],
-        [127, 127, 127, "Gray",         "TODO:HUS_CATALOG_NUMBER"],
-        [ 51, 154, 255, "Light Blue",   "TODO:HUS_CATALOG_NUMBER"],
-        [ 51, 204, 102, "Green",        "TODO:HUS_CATALOG_NUMBER"],
-        [255, 127,   0, "Orange",       "TODO:HUS_CATALOG_NUMBER"],
-        [255, 160, 180, "Pink",         "TODO:HUS_CATALOG_NUMBER"],
-        [153,  75,   0, "Brown",        "TODO:HUS_CATALOG_NUMBER"],
-        [255, 255, 255, "White",        "TODO:HUS_CATALOG_NUMBER"],
-        [  0,   0, 127, "Dark Blue",    "TODO:HUS_CATALOG_NUMBER"],
-        [  0, 127,   0, "Dark Green",   "TODO:HUS_CATALOG_NUMBER"],
-        [127,   0,   0, "Dark Red",     "TODO:HUS_CATALOG_NUMBER"],
-        [255, 127, 127, "Light Red",    "TODO:HUS_CATALOG_NUMBER"],
-        [127,   0, 127, "Dark Purple",  "TODO:HUS_CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:HUS_CATALOG_NUMBER"],
+        [0, 0, 255, "Blue", "TODO:HUS_CATALOG_NUMBER"],
+        [0, 255, 0, "Light Green", "TODO:HUS_CATALOG_NUMBER"],
+        [255, 0, 0, "Red", "TODO:HUS_CATALOG_NUMBER"],
+        [255, 0, 255, "Purple", "TODO:HUS_CATALOG_NUMBER"],
+        [255, 255, 0, "Yellow", "TODO:HUS_CATALOG_NUMBER"],
+        [127, 127, 127, "Gray", "TODO:HUS_CATALOG_NUMBER"],
+        [51, 154, 255, "Light Blue", "TODO:HUS_CATALOG_NUMBER"],
+        [51, 204, 102, "Green", "TODO:HUS_CATALOG_NUMBER"],
+        [255, 127, 0, "Orange", "TODO:HUS_CATALOG_NUMBER"],
+        [255, 160, 180, "Pink", "TODO:HUS_CATALOG_NUMBER"],
+        [153, 75, 0, "Brown", "TODO:HUS_CATALOG_NUMBER"],
+        [255, 255, 255, "White", "TODO:HUS_CATALOG_NUMBER"],
+        [0, 0, 127, "Dark Blue", "TODO:HUS_CATALOG_NUMBER"],
+        [0, 127, 0, "Dark Green", "TODO:HUS_CATALOG_NUMBER"],
+        [127, 0, 0, "Dark Red", "TODO:HUS_CATALOG_NUMBER"],
+        [255, 127, 127, "Light Red", "TODO:HUS_CATALOG_NUMBER"],
+        [127, 0, 127, "Dark Purple", "TODO:HUS_CATALOG_NUMBER"],
         [255, 127, 255, "Light Purple", "TODO:HUS_CATALOG_NUMBER"],
-        [200, 200,   0, "Dark Yellow",  "TODO:HUS_CATALOG_NUMBER"],
+        [200, 200, 0, "Dark Yellow", "TODO:HUS_CATALOG_NUMBER"],
         [255, 255, 153, "Light Yellow", "TODO:HUS_CATALOG_NUMBER"],
-        [ 60,  60,  60, "Dark Gray",    "TODO:HUS_CATALOG_NUMBER"],
-        [192, 192, 192, "Light Gray",   "TODO:HUS_CATALOG_NUMBER"],
-        [232,  63,   0, "Dark Orange",  "TODO:HUS_CATALOG_NUMBER"],
-        [255, 165,  65, "Light Orange", "TODO:HUS_CATALOG_NUMBER"],
-        [255, 102, 122, "Dark Pink",    "TODO:HUS_CATALOG_NUMBER"],
-        [255, 204, 204, "Light Pink",   "TODO:HUS_CATALOG_NUMBER"],
-        [115,  40,   0, "Dark Brown",   "TODO:HUS_CATALOG_NUMBER"],
-        [175,  90,  10, "Light Brown",  "TODO:HUS_CATALOG_NUMBER"]
+        [60, 60, 60, "Dark Gray", "TODO:HUS_CATALOG_NUMBER"],
+        [192, 192, 192, "Light Gray", "TODO:HUS_CATALOG_NUMBER"],
+        [232, 63, 0, "Dark Orange", "TODO:HUS_CATALOG_NUMBER"],
+        [255, 165, 65, "Light Orange", "TODO:HUS_CATALOG_NUMBER"],
+        [255, 102, 122, "Dark Pink", "TODO:HUS_CATALOG_NUMBER"],
+        [255, 204, 204, "Light Pink", "TODO:HUS_CATALOG_NUMBER"],
+        [115, 40, 0, "Dark Brown", "TODO:HUS_CATALOG_NUMBER"],
+        [175, 90, 10, "Light Brown", "TODO:HUS_CATALOG_NUMBER"]
     ],
     "jef_threads": [
         [0, 0, 0, "Placeholder", "000"],
@@ -371,49 +371,49 @@
         ["0xE3", "0xAC", "0x81", "Bamboo", "224"]
     ],
     "shv_threads": [
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [  0,   0, 255, "Blue",         "TODO:CATALOG_NUMBER"],
-        [ 51, 204, 102, "Green",        "TODO:CATALOG_NUMBER"],
-        [255,   0,   0, "Red",          "TODO:CATALOG_NUMBER"],
-        [255,   0, 255, "Purple",       "TODO:CATALOG_NUMBER"],
-        [255, 255,   0, "Yellow",       "TODO:CATALOG_NUMBER"],
-        [127, 127, 127, "Grey",         "TODO:CATALOG_NUMBER"],
-        [ 51, 154, 255, "Light Blue",   "TODO:CATALOG_NUMBER"],
-        [  0, 255,   0, "Light Green",  "TODO:CATALOG_NUMBER"],
-        [255, 127,   0, "Orange",       "TODO:CATALOG_NUMBER"],
-        [255, 160, 180, "Pink",         "TODO:CATALOG_NUMBER"],
-        [153,  75,   0, "Brown",        "TODO:CATALOG_NUMBER"],
-        [255, 255, 255, "White",        "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [255, 127, 127, "Light Red",    "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [0, 0, 255, "Blue", "TODO:CATALOG_NUMBER"],
+        [51, 204, 102, "Green", "TODO:CATALOG_NUMBER"],
+        [255, 0, 0, "Red", "TODO:CATALOG_NUMBER"],
+        [255, 0, 255, "Purple", "TODO:CATALOG_NUMBER"],
+        [255, 255, 0, "Yellow", "TODO:CATALOG_NUMBER"],
+        [127, 127, 127, "Grey", "TODO:CATALOG_NUMBER"],
+        [51, 154, 255, "Light Blue", "TODO:CATALOG_NUMBER"],
+        [0, 255, 0, "Light Green", "TODO:CATALOG_NUMBER"],
+        [255, 127, 0, "Orange", "TODO:CATALOG_NUMBER"],
+        [255, 160, 180, "Pink", "TODO:CATALOG_NUMBER"],
+        [153, 75, 0, "Brown", "TODO:CATALOG_NUMBER"],
+        [255, 255, 255, "White", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [255, 127, 127, "Light Red", "TODO:CATALOG_NUMBER"],
         [255, 127, 255, "Light Purple", "TODO:CATALOG_NUMBER"],
         [255, 255, 153, "Light Yellow", "TODO:CATALOG_NUMBER"],
-        [192, 192, 192, "Light Grey",   "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [255, 165,  65, "Light Orange", "TODO:CATALOG_NUMBER"],
-        [255, 204, 204, "Light Pink",   "TODO:CATALOG_NUMBER"],
-        [175,  90,  10, "Light Brown",  "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [  0,   0, 127, "Dark Blue",    "TODO:CATALOG_NUMBER"],
-        [  0, 127,   0, "Dark Green",   "TODO:CATALOG_NUMBER"],
-        [127,   0,   0, "Dark Red",     "TODO:CATALOG_NUMBER"],
-        [127,   0, 127, "Dark Purple",  "TODO:CATALOG_NUMBER"],
-        [200, 200,   0, "Dark Yellow",  "TODO:CATALOG_NUMBER"],
-        [ 60,  60,  60, "Dark Gray",    "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [  0,   0,   0, "Black",        "TODO:CATALOG_NUMBER"],
-        [232,  63,   0, "Dark Orange",  "TODO:CATALOG_NUMBER"],
-        [255, 102, 122, "Dark Pink",    "TODO:CATALOG_NUMBER"]
+        [192, 192, 192, "Light Grey", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [255, 165, 65, "Light Orange", "TODO:CATALOG_NUMBER"],
+        [255, 204, 204, "Light Pink", "TODO:CATALOG_NUMBER"],
+        [175, 90, 10, "Light Brown", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [0, 0, 127, "Dark Blue", "TODO:CATALOG_NUMBER"],
+        [0, 127, 0, "Dark Green", "TODO:CATALOG_NUMBER"],
+        [127, 0, 0, "Dark Red", "TODO:CATALOG_NUMBER"],
+        [127, 0, 127, "Dark Purple", "TODO:CATALOG_NUMBER"],
+        [200, 200, 0, "Dark Yellow", "TODO:CATALOG_NUMBER"],
+        [60, 60, 60, "Dark Gray", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [0, 0, 0, "Black", "TODO:CATALOG_NUMBER"],
+        [232, 63, 0, "Dark Orange", "TODO:CATALOG_NUMBER"],
+        [255, 102, 122, "Dark Pink", "TODO:CATALOG_NUMBER"]
     ],
     "pcm_threads": [
         [0, 0, 0, "PCM Color 1", ""],
@@ -433,93 +433,74 @@
         ["0xC0", "0xC0", "0xC0", "PCM Color 15", ""],
         [255, 255, 255, "PCM Color 16", ""]
     ],
-    "pecThreads": [
-        [ 0,   0,   0, "Unknown",         "0"],
-        [14,  31, 124, "Prussian Blue",   "1"],
-        [10,  85, 163, "Blue",            "2"],
-        [ 0, 135, 119, "Teal Green",      "3"],
+    "pec_threads": [
+        [0, 0, 0, "Unknown", "0"],
+        [14, 31, 124, "Prussian Blue", "1"],
+        [10, 85, 163, "Blue", "2"],
+        [0, 135, 119, "Teal Green", "3"],
         [75, 107, 175, "Cornflower Blue", "4"],
-        [237,  23,  31, "Red",             "5"],
-        [209,  92,   0, "Reddish Brown",   "6"],
-        [145,  54, 151, "Magenta",         "7"],
-        [228, 154, 203, "Light Lilac",     "8"],
-        [145,  95, 172, "Lilac",           "9"],
-        [158, 214, 125, "Mint Green",      "10"], /* Index 10 */
-        [232, 169,   0, "Deep Gold",       "11"], /* Index 11 */
-        [254, 186,  53, "Orange",          "12"], /* Index 12 */
-        [255, 255,   0, "Yellow",          ""], /* Index 13 */
-        [112, 188,  31, "Lime Green",      ""], /* Index 14 */
-        [186, 152,   0, "Brass",           ""], /* Index 15 */
-        [168, 168, 168, "Silver",          ""], /* Index 16 */
-        [125, 111,   0, "Russet Brown",    ""], /* Index 17 */
-        [255, 255, 179, "Cream Brown",     ""], /* Index 18 */
-        [79,  85,  86, "Pewter",          ""], /* Index 19 */
-        [ 0,   0,   0, "Black",           ""], /* Index 20 */
-        [11,  61, 145, "Ultramarine",     ""], /* Index 21 */
-        [119,   1, 118, "Royal Purple",    ""], /* Index 22 */
-        [41,  49,  51, "Dark Gray",       ""], /* Index 23 */
-        [42,  19,   1, "Dark Brown",      ""], /* Index 24 */
-        [246,  74, 138, "Deep Rose",       ""], /* Index 25 */
-        [178, 118,  36, "Light Brown",     ""], /* Index 26 */
-/* TODO: Verify RGB value is correct */
-        [252, 187, 197, "Salmon Pink",     ""], /* Index 27 */
-        [254,  55,  15, "Vermillion",      ""], /* Index 28 */
-        [240, 240, 240, "White",           ""], /* Index 29 */
-        [106,  28, 138, "Violet",          ""], /* Index 30 */
-        [168, 221, 196, "Seacrest",        ""], /* Index 31 */
-        [37, 132, 187, "Sky Blue",        ""], /* Index 32 */
-        [254, 179,  67, "Pumpkin",         ""], /* Index 33 */
-        [255, 243, 107, "Cream Yellow",    ""], /* Index 34 */
-        [208, 166,  96, "Khaki",           ""], /* Index 35 */
-        [209,  84,   0, "Clay Brown",      ""], /* Index 36 */
-        [102, 186,  73, "Leaf Green",      ""], /* Index 37 */
-        [19,  74,  70, "Peacock Blue",    ""], /* Index 38 */
-        [135, 135, 135, "Gray",            ""], /* Index 39 */
-/* TODO: Verify RGB value is correct */
-        [216, 204, 198, "Warm Gray",       ""], /* Index 40 */
-        [67,  86,   7, "Dark Olive",      ""], /* Index 41 */
-/* TODO: Verify RGB value is correct */
-        [253, 217, 222, "Flesh Pink",      ""], /* Index 42 */
-        [249, 147, 188, "Pink",            ""], /* Index 43 */
-        [ 0,  56,  34, "Deep Green",      ""], /* Index 44 */
-        [178, 175, 212, "Lavender",        ""], /* Index 45 */
-        [104, 106, 176, "Wisteria Violet", ""], /* Index 46 */
-        [239, 227, 185, "Beige",           ""], /* Index 47 */
-        [247,  56, 102, "Carmine",         ""], /* Index 48 */
-/* TODO: Verify RGB value is correct */
-        [181,  75, 100, "Amber Red",       ""], /* Index 49 */
-        [19,  43,  26, "Olive Green",     ""], /* Index 50 */
-/* TODO: Verify RGB value is correct */
-        [199,   1,  86, "Dark Fuschia",    ""], /* Index 51 */
-        [254, 158,  50, "Tangerine",       ""], /* Index 52 */
-        [168, 222, 235, "Light Blue",      ""], /* Index 53 */
-/* TODO: Verify RGB value is correct */
-        [ 0, 103,  62, "Emerald Green",   ""], /* Index 54 */
-        [78,  41, 144, "Purple",          ""], /* Index 55 */
-        [47, 126,  32, "Moss Green",      ""], /* Index 56 */
-/* TODO: Verify RGB value is correct */
-/* TODO: Flesh Pink is Index 42, is this Index incorrect? */
-        [255, 204, 204, "Flesh Pink",      ""], /* Index 57 */
-        [255, 217,  17, "Harvest Gold",    ""], /* Index 58 */
-        [ 9,  91, 166, "Electric Blue",   ""], /* Index 59 */
-        [240, 249, 112, "Lemon Yellow",    ""], /* Index 60 */
-        [227, 243,  91, "Fresh Green",     ""], /* Index 61 */
-/* TODO: Verify RGB value is correct */
-/* TODO: Orange is Index 12, is this Index incorrect? */
-        [255, 153,   0, "Orange",          ""], /* Index 62 */
-/* TODO: Verify RGB value is correct */
-/* TODO: Cream Yellow is Index 34, is this Index incorrect? */
-        [255, 240, 141, "Cream Yellow",    ""], /* Index 63 */
-        [255, 200, 200, "Applique",        ""}  /* Index 64 */
-};
-
-/**
- * Converted from the table at:
- *     https://www.w3.org/TR/SVGb/types.html#ColorKeywords
- * NOTE: This supports both UK and US English names, so the repeated values
- * aren't an error.
- */
-"svg_color_codes"[] = [
+        [237, 23, 31, "Red", "5"],
+        [209, 92, 0, "Reddish Brown", "6"],
+        [145, 54, 151, "Magenta", "7"],
+        [228, 154, 203, "Light Lilac", "8"],
+        [145, 95, 172, "Lilac", "9"],
+        [158, 214, 125, "Mint Green", "10"],
+        [232, 169, 0, "Deep Gold", "11"],
+        [254, 186, 53, "Orange", "12"],
+        [255, 255, 0, "Yellow", "13"],
+        [112, 188, 31, "Lime Green", "14"],
+        [186, 152, 0, "Brass", "15"],
+        [168, 168, 168, "Silver", "16"],
+        [125, 111, 0, "Russet Brown", "17"],
+        [255, 255, 179, "Cream Brown", "18"],
+        [79, 85, 86, "Pewter", "19"],
+        [0, 0, 0, "Black", "20"],
+        [11, 61, 145, "Ultramarine", "21"],
+        [119, 1, 118, "Royal Purple", "22"],
+        [41, 49, 51, "Dark Gray", "23"],
+        [42, 19, 1, "Dark Brown", "24"],
+        [246, 74, 138, "Deep Rose", "25"],
+        [178, 118, 36, "Light Brown", "26"],
+        [252, 187, 197, "Salmon Pink", "27"],
+        [254, 55, 15, "Vermillion", "28"],
+        [240, 240, 240, "White", "29"],
+        [106, 28, 138, "Violet", "30"],
+        [168, 221, 196, "Seacrest", "31"],
+        [37, 132, 187, "Sky Blue", "32"],
+        [254, 179, 67, "Pumpkin", "33"],
+        [255, 243, 107, "Cream Yellow", "34"],
+        [208, 166, 96, "Khaki", "35"],
+        [209, 84, 0, "Clay Brown", "36"],
+        [102, 186, 73, "Leaf Green", "37"],
+        [19, 74, 70, "Peacock Blue", "38"],
+        [135, 135, 135, "Gray", "39"],
+        [216, 204, 198, "Warm Gray", "40"],
+        [67, 86, 7, "Dark Olive", "41"],
+        [253, 217, 222, "Flesh Pink", "42"],
+        [249, 147, 188, "Pink", "43"],
+        [0, 56, 34, "Deep Green", "44"],
+        [178, 175, 212, "Lavender", "45"],
+        [104, 106, 176, "Wisteria Violet", "46"],
+        [239, 227, 185, "Beige", "47"],
+        [247, 56, 102, "Carmine", "48"],
+        [181, 75, 100, "Amber Red", "49"],
+        [19, 43, 26, "Olive Green", "50"],
+        [199, 1, 86, "Dark Fuschia", "51"],
+        [254, 158, 50, "Tangerine", "52"],
+        [168, 222, 235, "Light Blue", "53"],
+        [0, 103, 62, "Emerald Green", "54"],
+        [78, 41, 144, "Purple", "55"],
+        [47, 126, 32, "Moss Green", "56"],
+        [255, 204, 204, "Flesh Pink", "57"],
+        [255, 217, 17, "Harvest Gold", "58"],
+        [9, 91, 166, "Electric Blue", "59"],
+        [240, 249, 112, "Lemon Yellow", "60"],
+        [227, 243, 91, "Fresh Green", "61"],
+        [255, 153, 0, "Orange", "62"],
+        [255, 240, 141, "Cream Yellow", "63"],
+        [255, 200, 200, "Applique", "64"]
+    ],
+    "svg_color_codes": [
         ["aliceblue", "0xFFf0f8ff", 0],
         ["antiquewhite", "0xFFfaebd7", 1],
         ["aqua", "0xFF00ffff", 2],
@@ -528,75 +509,75 @@
         ["beige", "0xFFf5f5dc", 5],
         ["bisque", "0xFFffe4c4", 6],
         ["black", "0xFF000000", 7],
-        ["blanchedalmond", "0xFFffebcd, 8],
-        ["blue", "0xFF0000ff, 9],
-        ["blueviolet", "0xFF8a2be2, 10],
-        ["brown", "0xFFa52a2a, 11],
-        ["burlywood", "0xFFdeb81b, 12],
-        ["cadetblue", "0xFF5f9ea0, 13],
-        ["chartreuse", "0xFF7fff00, 14],
-        ["chocolate", "0xFFd22d1e, 15],
-        ["coral", "0xFFFF7f0e, 16],
-        ["cornflowerblue", "0xFF1c5fed, 17],
-        ["cornsilk", "0xFFfff8dc, 18],
-        ["crimson", "0xFFdc0e3c, 19],
-        ["cyan", "0xFF00ffff, 20],
-        ["darkblue", "0xFF00008b, 21],
-        ["darkcyan", "0xFF008b8b, 22],
-        ["darkgoldenrod", "0xFFb81a0b, 23],
-        ["darkgray", "0xFFa9a9a9, 24],
-        ["darkgreen", "0xFF001c00, 25],
-        ["darkgrey", "0xFFa9a9a9, 26],
-        ["darkkhaki", "0xFFbdb76b, 27],
-        ["darkmagenta", "0xFF8b008b, 28],
-        ["darkolivegreen", "0xFF0d6b2f, 29],
-        ["darkorange", "0xFFff8c00, 30],
-        ["darkorchid", "0xFF3f0ecc, 31],
-        ["darkred", "0xFF8b0000, 32],
-        ["darksalmon", "0xFFe93c7a, 33],
-        ["darkseagreen", "0xFF8fbc8f, 34],
-        ["darkslateblue", "0xFF1e3d8b, 35],
-        ["darkslategray", "0xFF2f4f4f, 36],
-        ["darkslategrey", "0xFF2f4f4f, 37],
-        ["darkturquoise", "0xFF00ced1, 38],
-        ["darkviolet", "0xFF5e00d3, 39],
-        ["deeppink", "0xFFff0e5d, 40],
-        ["deepskyblue", "0xFF00bfff, 41],
-        ["dimgray", "0xFF2d2d2d, 42],
-        ["dimgrey", "0xFF2d2d2d, 43],
-        ["dodgerblue", "0xFF1e5aff, 44],
-        ["firebrick", "0xFFb20a0a, 45],
-        ["floralwhite", "0xFFfffaf0, 46],
-        ["forestgreen", "0xFF0a8b0a, 47],
-        ["fuchsia", "0xFFff00ff, 48],
-        ["gainsboro", "0xFFdcdcdc, 49],
-        ["ghostwhite", "0xFFf8f8ff, 50],
-        ["gold", "0xFFffd700, 51],
-        ["goldenrod", "0xFFdaa50e, 52],
-        ["gray", "0xFF0e0e0e, 53],
-        ["grey", "0xFF0e0e0e, 54],
-        ["green", "0xFF000e00, 55],
-        ["greenyellow", "0xFFadff2f, 56],
-        ["honeydew", "0xFFf0fff0, 57],
-        ["hotpink", "0xFFff2db4, 58],
-        ["indianred", "0xFFcd5c5c, 59],
-        ["indigo", "0xFF4b000a, 60],
-        ["ivory", "0xFFfffff0, 61],
-        ["khaki", "0xFFf0e68c, 62],
-        ["lavender", "0xFFe6e6fa, 63],
-        ["lavenderblush", "0xFFfff0f5, 64],
-        ["lawngreen", "0xFF7cfc00, 65],
-        ["lemonchiffon", "0xFFfffacd, 66],
-        ["lightblue", "0xFFadd8e6, 67],
-        ["lightcoral", "0xFFf00e0e, 68],
-        ["lightcyan", "0xFFe0ffff, 69],
-        ["lightgoldenrodyellow", "0xFFfafad2, 70],
-        ["lightgray", "0xFFd3d3d3, 71],
-        ["lightgreen", "0xFF5aee5a, 72],
-        ["lightgrey", "0xFFd3d3d3, 73],
-        ["lightpink", "0xFFffb6c1, 74],
-        ["lightsalmon", "0xFFffa07a, 75],
-        ["lightseagreen", "0xFF0eb2aa, 76],
+        ["blanchedalmond", "0xFFffebcd", 8],
+        ["blue", "0xFF0000ff", 9],
+        ["blueviolet", "0xFF8a2be2", 10],
+        ["brown", "0xFFa52a2a", 11],
+        ["burlywood", "0xFFdeb81b", 12],
+        ["cadetblue", "0xFF5f9ea0", 13],
+        ["chartreuse", "0xFF7fff00", 14],
+        ["chocolate", "0xFFd22d1e", 15],
+        ["coral", "0xFFFF7f0e", 16],
+        ["cornflowerblue", "0xFF1c5fed", 17],
+        ["cornsilk", "0xFFfff8dc", 18],
+        ["crimson", "0xFFdc0e3c", 19],
+        ["cyan", "0xFF00ffff", 20],
+        ["darkblue", "0xFF00008b", 21],
+        ["darkcyan", "0xFF008b8b", 22],
+        ["darkgoldenrod", "0xFFb81a0b", 23],
+        ["darkgray", "0xFFa9a9a9", 24],
+        ["darkgreen", "0xFF001c00", 25],
+        ["darkgrey", "0xFFa9a9a9", 26],
+        ["darkkhaki", "0xFFbdb76b", 27],
+        ["darkmagenta", "0xFF8b008b", 28],
+        ["darkolivegreen", "0xFF0d6b2f", 29],
+        ["darkorange", "0xFFff8c00", 30],
+        ["darkorchid", "0xFF3f0ecc", 31],
+        ["darkred", "0xFF8b0000", 32],
+        ["darksalmon", "0xFFe93c7a", 33],
+        ["darkseagreen", "0xFF8fbc8f", 34],
+        ["darkslateblue", "0xFF1e3d8b", 35],
+        ["darkslategray", "0xFF2f4f4f", 36],
+        ["darkslategrey", "0xFF2f4f4f", 37],
+        ["darkturquoise", "0xFF00ced1", 38],
+        ["darkviolet", "0xFF5e00d3", 39],
+        ["deeppink", "0xFFff0e5d", 40],
+        ["deepskyblue", "0xFF00bfff", 41],
+        ["dimgray", "0xFF2d2d2d", 42],
+        ["dimgrey", "0xFF2d2d2d", 43],
+        ["dodgerblue", "0xFF1e5aff", 44],
+        ["firebrick", "0xFFb20a0a", 45],
+        ["floralwhite", "0xFFfffaf0", 46],
+        ["forestgreen", "0xFF0a8b0a", 47],
+        ["fuchsia", "0xFFff00ff", 48],
+        ["gainsboro", "0xFFdcdcdc", 49],
+        ["ghostwhite", "0xFFf8f8ff", 50],
+        ["gold", "0xFFffd700", 51],
+        ["goldenrod", "0xFFdaa50e", 52],
+        ["gray", "0xFF0e0e0e", 53],
+        ["grey", "0xFF0e0e0e", 54],
+        ["green", "0xFF000e00", 55],
+        ["greenyellow", "0xFFadff2f", 56],
+        ["honeydew", "0xFFf0fff0", 57],
+        ["hotpink", "0xFFff2db4", 58],
+        ["indianred", "0xFFcd5c5c", 59],
+        ["indigo", "0xFF4b000a", 60],
+        ["ivory", "0xFFfffff0", 61],
+        ["khaki", "0xFFf0e68c", 62],
+        ["lavender", "0xFFe6e6fa", 63],
+        ["lavenderblush", "0xFFfff0f5", 64],
+        ["lawngreen", "0xFF7cfc00", 65],
+        ["lemonchiffon", "0xFFfffacd", 66],
+        ["lightblue", "0xFFadd8e6", 67],
+        ["lightcoral", "0xFFf00e0e", 68],
+        ["lightcyan", "0xFFe0ffff", 69],
+        ["lightgoldenrodyellow", "0xFFfafad2", 70],
+        ["lightgray", "0xFFd3d3d3", 71],
+        ["lightgreen", "0xFF5aee5a", 72],
+        ["lightgrey", "0xFFd3d3d3", 73],
+        ["lightpink", "0xFFffb6c1", 74],
+        ["lightsalmon", "0xFFffa07a", 75],
+        ["lightseagreen", "0xFF0eb2aa", 76], /* MARK */
         ["lightskyblue", "0xFF1bcefa, 77],
         ["lightslategray", "0xFF4d3a3f, 78],
         ["lightslategrey", "0xFF4d3a3f, 79],
@@ -653,55 +634,48 @@
         ["slateblue", "0xFF6a5acd, 131],
         ["slategray", "0xFF2e0e5a, 132],
         ["slategrey", "0xFF2e0e5a, 133],
-        ["snow", "0xFFfffafa, 134],
-        ["springgreen", "0xFF00ff7f, 135],
-        ["steelblue", "0xFF2e0ab4, 136],
-        ["tan", "0xFFd2b48c, 137],
-        ["teal", "0xFF000e0e, 138],
-        ["thistle", "0xFFd8bfd8, 139],
-        ["tomato", "0xFFff3f2f, 140],
-        ["turquoise", "0xFF1ce0d0, 141],
-        ["violet", "0xFFee0aee, 142],
-        ["wheat", "0xFFf5deb3, 143],
-        ["white", "0xFFffffff, 144],
-        ["whitesmoke", "0xFFf5f5f5, 145],
-        ["yellow", "0xFFffff00, 146],
-        ["yellowgreen", "0xFF9acd0e, 147],
-        ["END", 0, -1}
-};
-
-thread_color Arc_Polyester_codes[] = {
-        ["END", 0, -1}
-};
-
-thread_color Arc_Rayon_codes[] = {
-        ["END", 0, -1}
-};
-
-thread_color CoatsAndClark_Rayon_codes[] = {
-        ["END", 0, -1}
-};
-
-thread_color Exquisite_Polyester_codes[] = {
-        ["END", 0, -1}
-};
-
-thread_color Fufu_Polyester_codes[] = {
-        ["END", 0, -1}
-};
-
-thread_color Fufu_Rayon_codes[] = {
-        ["END", 0, -1}
-};
-
-thread_color Hemingworth_Polyester_codes[] = {
-        ["Pure White", "0xFFFFFFFF, 1001], 
-        ["Lemon Ice", "0xFFDDE00F, 1271],
-        ["Neon Green", "0xFFC9DD03, 1272],
-        ["Brilliant Lime", "0xFF60DD49, 1273],
-        ["Mango", "0xFFFFCC1E, 1274],
-        ["Neon Yellow", "0xFFFFED38, 1275],
-        ["Tropical Orange", "0xFFFFA952, 1276],
+        ["snow", "0xFFfffafa", 134],
+        ["springgreen", "0xFF00ff7f", 135],
+        ["steelblue", "0xFF2e0ab4", 136],
+        ["tan", "0xFFd2b48c", 137],
+        ["teal", "0xFF000e0e", 138],
+        ["thistle", "0xFFd8bfd8", 139],
+        ["tomato", "0xFFff3f2f", 140],
+        ["turquoise", "0xFF1ce0d0", 141],
+        ["violet", "0xFFee0aee", 142],
+        ["wheat", "0xFFf5deb3", 143],
+        ["white", "0xFFffffff", 144],
+        ["whitesmoke", "0xFFf5f5f5", 145],
+        ["yellow", "0xFFffff00", 146],
+        ["yellowgreen", "0xFF9acd0e", 147],
+        ["END", 0, -1]
+    ],
+    "Arc_Polyester_codes": [
+        ["END", 0, -1]
+    ],
+    "Arc_Rayon_codes": [
+        ["END", 0, -1]
+    ],
+    "CoatsAndClark_Rayon_codes": [
+        ["END", 0, -1]
+    ],
+    "Exquisite_Polyester_codes": [
+        ["END", 0, -1]
+    ],
+    "Fufu_Polyester_codes": [
+        ["END", 0, -1]
+    ],
+    "Fufu_Rayon_codes": [
+        ["END", 0, -1]
+    ],
+    "Hemingworth_Polyester_codes": [
+        ["Pure White", "0xFFFFFFFF", 1001], 
+        ["Lemon Ice", "0xFFDDE00F", 1271],
+        ["Neon Green", "0xFFC9DD03", 1272],
+        ["Brilliant Lime", "0xFF60DD49", 1273],
+        ["Mango", "0xFFFFCC1E", 1274],
+        ["Neon Yellow", "0xFFFFED38", 1275],
+        ["Tropical Orange", "0xFFFFA952", 1276],
         ["Neon Orange", "0xFFFF9338, 1277],
         ["Rebel Peach", "0xFFFF585F, 1278],
         ["Shy Flamingo", "0xFFF28CA3, 1279],
@@ -877,7 +851,7 @@ thread_color Hemingworth_Polyester_codes[] = {
         ["Goldenrod", "0xFFEAAB00, 1051],
         ["Cornsilk", "0xFFDCD6B2, 1037],
         ["Macadamia", "0xFFC6BC89, 1038],
-        ["Yellow Plumeria", "0xFFF8E498, 1039], /* TODO: duplicate case value */
+        ["Yellow Plumeria", "0xFFF8E498, 1039],
         ["Maize", "0xFFF8DE6E, 1040],
         ["Dried Banana", "0xFFFADA63, 1049],
         ["Butternut", "0xFFFFCB4F, 1053],
@@ -928,59 +902,58 @@ thread_color Hemingworth_Polyester_codes[] = {
         ["Baby Peach", "0xFFFDC480, 1228],
         ["Pink Pearl", "0xFFFFC2A2, 1167],
         ["Peaches 'n Cream", "0xFFEFC5CE, 1169],
-        ["Peach Pastel", "0xFFEFBE9C, 1170],
-        ["Old Penny", "0xFF774A39, 1162],
-        ["Dusty Rose", "0xFFB26F7E, 1151],
-        ["Winter Rose", "0xFFD490A8, 1165],
-        ["Valentine Pink", "0xFFF6A3BB, 1161],
-        ["Petal Peach", "0xFFFFB7AE, 1019],
-        ["Soft Petal", "0xFFEFD6DB, 1150],
-        ["Fuchsia", "0xFF920075, 1036],
-        ["Pink Kiss", "0xFFF375C6, 1004],
-        ["Baby Pink", "0xFFF3BBCE, 1003],
-        ["Whisper Pink", "0xFFF1DBDF, 1005],
-        ["Gentle Blush", "0xFFF3C9D3, 1006],
-        ["English Rose", "0xFFF4B2C1, 1007],
-        ["Sweet Pea", "0xFFF39EBC, 1008],
-        ["Rosy Blush", "0xFFF77AB4, 1009],
-        ["Passion Pink", "0xFFD71F85, 1010],
-        ["Mulled Wine", "0xFF772059, 1035],
-        ["Primrose", "0xFFC50084, 1034],
-        ["Azalea", "0xFFA1006B, 1033],
-        ["Snowflake", "0xFFD1D4D3, 1148],
-        ["Moonlight", "0xFFCAD1E7, 1147],
-        ["Tulip", "0xFF9DABE2, 1207],
-        ["Purple Iris", "0xFF8884D5, 1206],
-        ["Grape", "0xFF1A2155, 1209],
-        ["Moon Shadow", "0xFF6459C4, 1211],
-        ["Electric Purple", "0xFF212492, 1208],
-        ["Indigo", "0xFF411244, 1210],
-        ["Royal Purple", "0xFF3B0083, 1223],
-        ["Eggplant", "0xFF151C54, 1267],
-        ["Dark Purple", "0xFF490E6F, 1269],
-        ["Pure Purple", "0xFF57068C, 1268],
-        ["Pale Orchid", "0xFFDCC7DF, 1217],
-        ["Dusty Mauve", "0xFFC2ACBE, 1219],
-        ["Orchid", "0xFFDC9DDD, 1218],
-        ["Heather", "0xFFB382C7, 1213],
-        ["Lavender", "0xFF9C5FB5, 1214],
-        ["Soft Grape", "0xFF4B08A1, 1266],
-        ["Freesia", "0xFFC1AFE5, 1221],
-        ["Lilac", "0xFFC5B9E3, 1222],
-        ["Peony", "0xFF6E2C6B, 1215],
-        ["Dark Fuschia", "0xFF7D0063, 1216],
-        ["Grape Jelly", "0xFF752864, 1220],
-        ["Deep Orchid", "0xFF55517B, 1080],
-        ["Misty Blue Gray", "0xFF5C7F92, 1075],
-        ["Iron Ore", "0xFFAFADC3, 1071],
-        ["Light Mauve", "0xFFD8AAB3, 1152],
+        ["Peach Pastel", "0xFFEFBE9C", 1170],
+        ["Old Penny", "0xFF774A39", 1162],
+        ["Dusty Rose", "0xFFB26F7E", 1151],
+        ["Winter Rose", "0xFFD490A8", 1165],
+        ["Valentine Pink", "0xFFF6A3BB", 1161],
+        ["Petal Peach", "0xFFFFB7AE", 1019],
+        ["Soft Petal", "0xFFEFD6DB", 1150],
+        ["Fuchsia", "0xFF920075", 1036],
+        ["Pink Kiss", "0xFFF375C6", 1004],
+        ["Baby Pink", "0xFFF3BBCE", 1003],
+        ["Whisper Pink", "0xFFF1DBDF", 1005],
+        ["Gentle Blush", "0xFFF3C9D3", 1006],
+        ["English Rose", "0xFFF4B2C1", 1007],
+        ["Sweet Pea", "0xFFF39EBC", 1008],
+        ["Rosy Blush", "0xFFF77AB4", 1009],
+        ["Passion Pink", "0xFFD71F85", 1010],
+        ["Mulled Wine", "0xFF772059", 1035],
+        ["Primrose", "0xFFC50084", 1034],
+        ["Azalea", "0xFFA1006B", 1033],
+        ["Snowflake", "0xFFD1D4D3", 1148],
+        ["Moonlight", "0xFFCAD1E7", 1147],
+        ["Tulip", "0xFF9DABE2", 1207],
+        ["Purple Iris", "0xFF8884D5", 1206],
+        ["Grape", "0xFF1A2155", 1209],
+        ["Moon Shadow", "0xFF6459C4", 1211],
+        ["Electric Purple", "0xFF212492", 1208],
+        ["Indigo", "0xFF411244", 1210],
+        ["Royal Purple", "0xFF3B0083", 1223],
+        ["Eggplant", "0xFF151C54", 1267],
+        ["Dark Purple", "0xFF490E6F", 1269],
+        ["Pure Purple", "0xFF57068C", 1268],
+        ["Pale Orchid", "0xFFDCC7DF", 1217],
+        ["Dusty Mauve", "0xFFC2ACBE", 1219],
+        ["Orchid", "0xFFDC9DDD", 1218],
+        ["Heather", "0xFFB382C7", 1213],
+        ["Lavender", "0xFF9C5FB5", 1214],
+        ["Soft Grape", "0xFF4B08A1", 1266],
+        ["Freesia", "0xFFC1AFE5", 1221],
+        ["Lilac", "0xFFC5B9E3", 1222],
+        ["Peony", "0xFF6E2C6B", 1215],
+        ["Dark Fuschia", "0xFF7D0063", 1216],
+        ["Grape Jelly", "0xFF752864", 1220],
+        ["Deep Orchid", "0xFF55517B", 1080],
+        ["Misty Blue Gray", "0xFF5C7F92", 1075],
+        ["Iron Ore", "0xFFAFADC3", 1071],
+        ["Light Mauve", "0xFFD8AAB3", 1152],
         ["Dark Mauve", "0xFF89687C, 1153],
         ["Wild Plum", "0xFF644459, 1154],
         ["Huckleberry", "0xFF4B306A, 1212],
-        ["END", 0, -1}
-};
-
-"Isacord_Polyester_codes"[] = {
+        ["END", 0, -1]
+    ],
+    "Isacord_Polyester_codes": [
         ["?", "0xFFFFFFFF", 10],
         ["?", "0xFFFFFFFF", 15],
         ["?", "0xFFFFFFFF", 17],
@@ -1041,7 +1014,7 @@ thread_color Hemingworth_Polyester_codes[] = {
         ["?", "0xFFF5BA5D, 811],
         ["?", "0xFFE1A23E, 821],
         ["?", "0xFFCCAB3F, 822],
-        ["?", "0xFFDFA200, 824], /* TODO: duplicate case value */
+        ["?", "0xFFDFA200, 824],
         ["?", "0xFFD0A44F, 832],
         ["?", "0xFFCD944A, 842],
         ["?", "0xFFE3BC61, 851],
@@ -1238,7 +1211,7 @@ thread_color Hemingworth_Polyester_codes[] = {
         ["?", "0xFF00A9C9, 4113],
         ["?", "0xFF0082AD, 4116],
         ["?", "0xFF00405D, 4133],
-        ["?", "0xFF192024, 4174], /* TODO: duplicate case value */
+        ["?", "0xFF192024, 4174],
         ["?", "0xFF4FB4CB, 4220],
         ["?", "0xFF8DCEE4, 4230],
         ["?", "0xFF8DCDDB, 4240],
@@ -1252,12 +1225,12 @@ thread_color Hemingworth_Polyester_codes[] = {
         ["?", "0xFF007F92, 4452],
         ["?", "0xFF002F38, 4515],
         ["?", "0xFF007389, 4531],
-        ["?", "0xFF007B8D, 4610], /* TODO: duplicate case value */
+        ["?", "0xFF007B8D, 4610],
         ["?", "0xFF00A3A0, 4620],
         ["?", "0xFF0B7F85, 4625],
         ["?", "0xFF005B63, 4643],
         ["?", "0xFF234544, 4644],
-        ["?", "0xFF005B63, 5005], /* TODO: duplicate case value */
+        ["?", "0xFF005B63, 5005],
         ["?", "0xFF00A6AD, 5010],
         ["?", "0xFFB4DCD8, 5050],
         ["?", "0xFF00876E, 5100],
@@ -1269,15 +1242,15 @@ thread_color Hemingworth_Polyester_codes[] = {
         ["?", "0xFF197E6D, 5233],
         ["?", "0xFF006E42, 5324],
         ["?", "0xFF004D3D, 5326],
-        ["?", "0xFF002F38, 5335], /* TODO: duplicate case value */
+        ["?", "0xFF002F38, 5335],
         ["?", "0xFF002D1F, 5374],
         ["?", "0xFF008663, 5411],
         ["?", "0xFF006B4E, 5415],
-        ["?", "0xFF008663, 5422], /* TODO: duplicate case value */
+        ["?", "0xFF008663, 5422],
         ["?", "0xFF52BA84, 5500],
         ["?", "0xFF14A363, 5510],
         ["?", "0xFF007848, 5513],
-        ["?", "0xFF008663, 5515], /* TODO: duplicate case value */
+        ["?", "0xFF008663, 5515],
         ["?", "0xFF52A04F, 5531],
         ["?", "0xFF94ADA1, 5552],
         ["?", "0xFF103828, 5555],
@@ -1299,24 +1272,24 @@ thread_color Hemingworth_Polyester_codes[] = {
         ["?", "0xFFBED782, 6051],
         ["?", "0xFF919600, 6133],
         ["?", "0xFF484601, 6156],
-        ["END", 0, -1}
-};
+        ["END", 0, -1]
+    ],
 
-thread_color Isafil_Rayon_codes[] = {
+    Isafil_Rayon_codes: [
         ["?", "0xFFFFFFFF, 10],
-        ["?", "0xFFFFFFFF, 15], /* TODO: duplicate case value */
-        ["?", "0xFFFFFFFF, 17], /* TODO: duplicate case value */
+        ["?", "0xFFFFFFFF, 15],
+        ["?", "0xFFFFFFFF, 17],
         ["?", "0xFF000000, 20],
         ["?", "0xFFFFFDED, 101],
         ["?", "0xFF7D7D7D, 104],
         ["?", "0xFF515B61, 107],
         ["?", "0xFF6D757B, 108],
         ["?", "0xFFACACAC, 109],
-        ["?", "0xFF515B61, 111], /* TODO: duplicate case value */
+        ["?", "0xFF515B61, 111],
         ["?", "0xFF5D5D5D, 112],
         ["?", "0xFFCFCFCF, 124],
         ["?", "0xFFA1A9B4, 131],
-        ["?", "0xFF6D757B, 141], /* TODO: duplicate case value */
+        ["?", "0xFF6D757B, 141],
         ["?", "0xFF9EA5AA, 142],
         ["?", "0xFFCFD1D5, 145],
         ["?", "0xFFC6BDB4, 150],
@@ -1343,8 +1316,8 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFF6B7E6F, 463],
         ["?", "0xFF3E4F34, 465],
         ["?", "0xFFEDEF05, 501],
-        ["?", "0xFFFAF6CC, 505], /* TODO: duplicate case value */
-        ["?", "0xFFF5D300, 506], /* TODO: duplicate case value */
+        ["?", "0xFFFAF6CC, 505],
+        ["?", "0xFFF5D300, 506],
         ["?", "0xFFFFFBD1, 510],
         ["?", "0xFFFDE896, 520],
         ["?", "0xFFD7CE8A, 532],
@@ -1356,14 +1329,14 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFFF4EE8C, 580],
         ["?", "0xFFF1EB35, 590],
         ["?", "0xFFF8D73E, 600],
-        ["?", "0xFFF8D73E, 605], /* TODO: duplicate case value */
+        ["?", "0xFFF8D73E, 605],
         ["?", "0xFFF7CB47, 610],
         ["?", "0xFFF7E400, 615],
-        ["?", "0xFFFDE896, 620], /* TODO: duplicate case value */
+        ["?", "0xFFFDE896, 620],
         ["?", "0xFFEEDB00, 625],
         ["?", "0xFFFEF09A, 630],
         ["?", "0xFFFDE1AF, 635],
-        ["?", "0xFFFDE896, 640], /* TODO: duplicate case value */
+        ["?", "0xFFFDE896, 640],
         ["?", "0xFFF5D2A6, 651],
         ["?", "0xFFFEF9EA, 660],
         ["?", "0xFFFAF6E7, 670],
@@ -1384,7 +1357,7 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFFF5BA5D, 811],
         ["?", "0xFFE1A23E, 821],
         ["?", "0xFFCCAB3F, 822],
-        ["?", "0xFFDFA200, 824], /* TODO: duplicate case value */
+        ["?", "0xFFDFA200, 824],
         ["?", "0xFFF3B044, 830],
         ["?", "0xFFD0A44F, 832],
         ["?", "0xFFCD944A, 842],
@@ -1415,7 +1388,7 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFFED873F, 1100],
         ["?", "0xFFEC870E, 1101],
         ["?", "0xFFED9206, 1102],
-        ["?", "0xFFEE9C00, 1106], /* TODO: duplicate case value */
+        ["?", "0xFFEE9C00, 1106],
         ["?", "0xFFC45331, 1113],
         ["?", "0xFFEE8751, 1114],
         ["?", "0xFFA35214, 1115],
@@ -1434,7 +1407,7 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFFEA7134, 1305],
         ["?", "0xFFE12A23, 1306],
         ["?", "0xFFC14817, 1311],
-        ["?", "0xFFC45331, 1312], /* TODO: duplicate case value */
+        ["?", "0xFFC45331, 1312],
         ["?", "0xFFD7623E, 1313],
         ["?", "0xFFED7C56, 1320],
         ["?", "0xFF92291B, 1324],
@@ -1460,12 +1433,12 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFFF6B08E, 1532],
         ["?", "0xFFF9C5B9, 1551],
         ["?", "0xFF806A61, 1565],
-        ["?", "0xFF464537, 1573], /* TODO: duplicate case value */
+        ["?", "0xFF464537, 1573],
         ["?", "0xFFE36C63, 1600],
         ["?", "0xFFF9C7B9, 1630],
         ["?", "0xFFE44733, 1701],
         ["?", "0xFFDF0032, 1703],
-        ["?", "0xFFE44733, 1705], /* TODO: duplicate case value */
+        ["?", "0xFFE44733, 1705],
         ["?", "0xFFCF0040, 1725],
         ["?", "0xFFDB686B, 1750],
         ["?", "0xFFF1CDCE, 1755],
@@ -1476,12 +1449,12 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFFD6445D, 1805],
         ["?", "0xFFF49E95, 1840],
         ["?", "0xFFB76663, 1842],
-        ["?", "0xFFE36C63, 1849], /* TODO: duplicate case value */
+        ["?", "0xFFE36C63, 1849],
         ["?", "0xFFF0887D, 1850],
         ["?", "0xFFFAC7C1, 1855],
         ["?", "0xFFFCDAD5, 1860],
         ["?", "0xFFFDE3D3, 1870],
-        ["?", "0xFF636254, 1874], /* TODO: duplicate case value */
+        ["?", "0xFF636254, 1874],
         ["?", "0xFF394535, 1876],
         ["?", "0xFFE10057, 1900],
         ["?", "0xFFBD0041, 1902],
@@ -1537,11 +1510,11 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFF820052, 2506],
         ["?", "0xFFD63C81, 2513],
         ["?", "0xFFE20078, 2520],
-        ["?", "0xFFBF006A, 2521], /* TODO: duplicate case value */
-        ["?", "0xFFEE71A1, 2524], /* TODO: duplicate case value */
+        ["?", "0xFFBF006A, 2521],
+        ["?", "0xFFEE71A1, 2524],
         ["?", "0xFFF189AF, 2550],
         ["?", "0xFFF7B4CA, 2555],
-        ["?", "0xFFF7B4CA, 2560], /* TODO: duplicate case value */
+        ["?", "0xFFF7B4CA, 2560],
         ["?", "0xFF494949, 2576],
         ["?", "0xFF394248, 2578],
         ["?", "0xFF893480, 2600],
@@ -1594,12 +1567,12 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFF171B4A, 3355],
         ["?", "0xFF959ACA, 3420],
         ["?", "0xFF6A76B5, 3430],
-        ["?", "0xFF11263C, 3443], /* TODO: duplicate case value */
+        ["?", "0xFF11263C, 3443],
         ["?", "0xFF002232, 3444],
         ["?", "0xFF2D4491, 3522],
         ["?", "0xFF261257, 3536],
         ["?", "0xFF53428A, 3540],
-        ["?", "0xFF3A2885, 3541], /* TODO: duplicate case value */
+        ["?", "0xFF3A2885, 3541],
         ["?", "0xFF233B7D, 3543],
         ["?", "0xFF273C82, 3544],
         ["?", "0xFF272651, 3554],
@@ -1615,7 +1588,7 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFF00507F, 3732],
         ["?", "0xFF12253C, 3743],
         ["?", "0xFFB7D1E3, 3750],
-        ["?", "0xFFD0DEEE, 3752], /* TODO: duplicate case value */
+        ["?", "0xFFD0DEEE, 3752],
         ["?", "0xFFAFC9E5, 3761],
         ["?", "0xFFCED2D1, 3770],
         ["?", "0xFF3D6AA1, 3810],
@@ -1641,7 +1614,7 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFF507793, 4032],
         ["?", "0xFF265674, 4033],
         ["?", "0xFF9ED4E6, 4040],
-        ["?", "0xFFEAF0F9, 4071], /* TODO: duplicate case value */
+        ["?", "0xFFEAF0F9, 4071],
         ["?", "0xFF0096C1, 4100],
         ["?", "0xFF2DB0CF, 4101],
         ["?", "0xFF0095C6, 4103],
@@ -1650,12 +1623,12 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFF00A9C9, 4113],
         ["?", "0xFF5DBFD2, 4121],
         ["?", "0xFF00405D, 4133],
-        ["?", "0xFF192024, 4174], /* TODO: duplicate case value */
-        ["?", "0xFF192024, 4175], /* TODO: duplicate case value */
+        ["?", "0xFF192024, 4174],
+        ["?", "0xFF192024, 4175],
         ["?", "0xFF4FB4CB, 4220],
         ["?", "0xFF8DCEE4, 4230],
-        ["?", "0xFF2DB0CF, 4231], /* TODO: duplicate case value */
-        ["?", "0xFF006587, 4232], /* TODO: duplicate case value */
+        ["?", "0xFF2DB0CF, 4231],
+        ["?", "0xFF006587, 4232],
         ["?", "0xFF8DCDDB, 4240],
         ["?", "0xFFD5EBF2, 4250],
         ["?", "0xFF007389, 4400],
@@ -1666,22 +1639,22 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFF007986, 4425],
         ["?", "0xFF5FBFD1, 4430],
         ["?", "0xFF004250, 4432],
-        ["?", "0xFF8DCEE4, 4440], /* TODO: duplicate case value */
+        ["?", "0xFF8DCEE4, 4440],
         ["?", "0xFF006981, 4442],
         ["?", "0xFF007F92, 4452],
         ["?", "0xFF008192, 4500],
         ["?", "0xFF007079, 4513],
         ["?", "0xFF002F38, 4515],
         ["?", "0xFF00646A, 4516],
-        ["?", "0xFF007389, 4531], /* TODO: duplicate case value */
-        ["?", "0xFF007B8D, 4610], /* TODO: duplicate case value */
+        ["?", "0xFF007389, 4531],
+        ["?", "0xFF007B8D, 4610],
         ["?", "0xFF00A3A0, 4620],
         ["?", "0xFF0B7F85, 4625],
         ["?", "0xFF005B63, 4643],
         ["?", "0xFF234544, 4644],
         ["?", "0xFF8CCDD3, 4840],
         ["?", "0xFF006F73, 5000],
-        ["?", "0xFF005B63, 5005], /* TODO: duplicate case value */
+        ["?", "0xFF005B63, 5005],
         ["?", "0xFF00A6AD, 5010],
         ["?", "0xFF49BAC0, 5020],
         ["?", "0xFFCFDDE0, 5040],
@@ -1711,7 +1684,7 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFF52BA84, 5500],
         ["?", "0xFF14A363, 5510],
         ["?", "0xFF007848, 5513],
-        ["?", "0xFF008663, 5515], /* TODO: duplicate case value */
+        ["?", "0xFF008663, 5515],
         ["?", "0xFF52A04F, 5531],
         ["?", "0xFF6EA293, 5542],
         ["?", "0xFF94ADA1, 5552],
@@ -1726,7 +1699,7 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFFC9E3C5, 5650],
         ["?", "0xFF6B9181, 5664],
         ["?", "0xFF3A6D57, 5765],
-        ["?", "0xFF103828, 5766], /* TODO: duplicate case value */
+        ["?", "0xFF103828, 5766],
         ["?", "0xFF02140C, 5776],
         ["?", "0xFFA5C278, 5822],
         ["?", "0xFFB4D383, 5832],
@@ -1744,30 +1717,30 @@ thread_color Isafil_Rayon_codes[] = {
         ["?", "0xFFDCDDD1, 6071],
         ["?", "0xFF919600, 6133],
         ["?", "0xFF484601, 6156],
-        ["END", 0, -1}
-};
+        ["END", 0, -1]
+    ],
 
-thread_color Marathon_Polyester_codes[] = {
-        ["END", 0, -1}
-};
+    Marathon_Polyester_codes: [
+        ["END", 0, -1]
+    ],
 
-thread_color Marathon_Rayon_codes[] = {
-        ["END", 0, -1}
-};
+    Marathon_Rayon_codes: [
+        ["END", 0, -1]
+    ],
 
-thread_color Madeira_Polyester_codes[] = {
-        ["END", 0, -1}
-};
+    Madeira_Polyester_codes: [
+        ["END", 0, -1]
+    ],
 
-thread_color Madeira_Rayon_codes[] = {
-        ["END", 0, -1}
-};
+    Madeira_Rayon_codes: [
+        ["END", 0, -1]
+    ],
 
-thread_color Metro_Polyester_codes[] = {
-        ["END", 0, -1}
-};
+    Metro_Polyester_codes: [
+        ["END", 0, -1]
+    ],
 
-thread_color Pantone_codes[] = {
+    Pantone_codes: [
         ["?", "0xFFFFFF7D, 100],
         ["?", "0xFFFFFF36, 101],
         ["?", "0xFFFFFC0D, 102],
@@ -2265,7 +2238,7 @@ thread_color Pantone_codes[] = {
         ["?", "0xFF8F8F8F, 423],
         ["?", "0xFF636363, 424],
         ["?", "0xFF3B3B3B, 425],
-        ["?", "0xFF000000, 426], /* TODO: duplicate case value */
+        ["?", "0xFF000000, 426],
         ["?", "0xFFE3E3E3, 427],
         ["?", "0xFFCDD1D1, 428],
         ["?", "0xFFA8ADAD, 429],
@@ -2496,7 +2469,7 @@ thread_color Pantone_codes[] = {
         ["?", "0xFF85FFB5, 570],
         ["?", "0xFFADFFCF, 571],
         ["?", "0xFFC4FFDB, 572],
-        ["?", "0xFFDBFFE8, 573], /* TODO: duplicate case value */
+        ["?", "0xFFDBFFE8, 573],
         ["?", "0xFF314A0E, 574],
         ["?", "0xFF1F2E07, 5743],
         ["?", "0xFF243600, 5747],
@@ -2534,7 +2507,7 @@ thread_color Pantone_codes[] = {
         ["?", "0xFFEBEBC0, 5875],
         ["?", "0xFFFFFFB5, 600],
         ["?", "0xFFFFFF99, 601],
-        ["?", "0xFFFFFF7D, 602], /* TODO: duplicate case value */
+        ["?", "0xFFFFFF7D, 602],
         ["?", "0xFFFCFC4E, 603],
         ["?", "0xFFF7F71E, 604],
         ["?", "0xFFEDE800, 605],
@@ -2594,7 +2567,7 @@ thread_color Pantone_codes[] = {
         ["?", "0xFF5CA6FF, 659],
         ["?", "0xFF1A6EFF, 660],
         ["?", "0xFF0048E8, 661],
-        ["?", "0xFF003BD1, 662], /* TODO: duplicate case value */
+        ["?", "0xFF003BD1, 662],
         ["?", "0xFFEDF0FF, 663],
         ["?", "0xFFE3E8FF, 664],
         ["?", "0xFFC8CFFA, 665],
@@ -2668,8 +2641,8 @@ thread_color Pantone_codes[] = {
         ["?", "0xFFFFF5D1, 7401],
         ["?", "0xFFFFF0B3, 7402],
         ["?", "0xFFFFE680, 7403],
-        ["?", "0xFFFFE833, 7404], /* TODO: duplicate case value */
-        ["?", "0xFFFFE600, 7405], /* TODO: duplicate case value */
+        ["?", "0xFFFFE833, 7404],
+        ["?", "0xFFFFE600, 7405],
         ["?", "0xFFFFD100, 7406],
         ["?", "0xFFE3B122, 7407],
         ["?", "0xFFFFBF0D, 7408],
@@ -2686,8 +2659,8 @@ thread_color Pantone_codes[] = {
         ["?", "0xFFD15473, 7419],
         ["?", "0xFFCC2976, 7420],
         ["?", "0xFF630046, 7421],
-        ["?", "0xFFFFE8F2, 7422], /* TODO: duplicate case value */
-        ["?", "0xFFFF73C7, 7423], /* TODO: duplicate case value */
+        ["?", "0xFFFFE8F2, 7422],
+        ["?", "0xFFFF73C7, 7423],
         ["?", "0xFFFF40B3, 7424],
         ["?", "0xFFED18A6, 7425],
         ["?", "0xFFD10073, 7426],
@@ -2812,21 +2785,21 @@ thread_color Pantone_codes[] = {
         ["?", "0xFF495C5E, 7545],
         ["?", "0xFF304547, 7546],
         ["?", "0xFF0A0F0F, 7547],
-        ["END", 0, -1}
-};
+        ["END", 0, -1]
+    ],
 
 /* Based on the manufacturer table at 
  *   https://help.brother-usa.com/app/answers/detail/a_id/75245/~/thread-color-conversion-chart
  * using a colour picker.
  */
-thread_color RobisonAnton_Polyester_codes[] = {
+    RobisonAnton_Polyester_codes: [
         ["Black", "0xFF000000, 5596],
         ["White", "0xFFFFFFFF, 5597],
     /* unfinished */
-        ["END", 0, -1}
-};
+        ["END", 0, -1]
+    ],
 
-thread_color RobisonAnton_Rayon_codes[] = {
+    RobisonAnton_Rayon_codes: [
         ["Light Pink", "0xFFEFCCCE, 2243],
         ["Pink", "0xFFFCBFC9, 2223],
         ["Pink Bazaar", "0xFFEFC6D3, 2599],
@@ -2837,7 +2810,7 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Carnation", "0xFFF2AFC1, 2237],
         ["Shrimp", "0xFFE5566D, 2246],
         ["Bashful Pink", "0xFFF4476B, 2248],
-        ["Begonia", "0xFFE5566D, 2228], /* TODO: duplicate case value */
+        ["Begonia", "0xFFE5566D, 2228],
         ["Azalea", "0xFFF9848E, 2412],
         ["Dusty Rose", "0xFFF26877, 2375],
         ["Rose Tint", "0xFFD8899B, 2591],
@@ -2849,12 +2822,12 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Intense Maroon", "0xFF593344, 2587],
         ["Dark Maroon", "0xFF4F213A, 2376],
         ["Carbernet", "0xFF931638, 2494],
-        ["Mountain Rose", "0xFFF9B2B7, 2495], /* TODO: duplicate case value */
+        ["Mountain Rose", "0xFFF9B2B7, 2495],
         ["Warm Wine", "0xFF661E2B, 2496],
-        ["Primrose", "0xFFE5566D, 2491], /* TODO: duplicate case value */
+        ["Primrose", "0xFFE5566D, 2491],
         ["Perfect Ruby", "0xFF8E2344, 2497],
         ["Brushed Burgundy", "0xFF6D213F, 2498],
-        ["Passion Rose", "0xFF8E2344, 2499], /* TODO: duplicate case value */
+        ["Passion Rose", "0xFF8E2344, 2499],
         ["New Berry", "0xFFAD0075, 2500],
         ["Petal Pink", "0xFFFCC9C6, 2501],
         ["Memphis Belle", "0xFFF4BFD1, 2502],
@@ -2865,29 +2838,29 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Crimson", "0xFFD60270, 2416],
         ["Ruby Glint", "0xFFE22882, 2261],
         ["Cherrystone", "0xFFAA004F, 2504],
-        ["Cherry Punch", "0xFFAA004F, 2417], /* TODO: duplicate case value */
+        ["Cherry Punch", "0xFFAA004F, 2417],
         ["Cherry Blossom", "0xFFEA0F6B, 2262],
         ["Red Berry", "0xFFAF1E2D, 2418],
         ["Jockey Red", "0xFFBF0A30, 2281],
-        ["Very Red", "0xFFBF0A30, 2419], /* TODO: duplicate case value */
-        ["Red Berry", "0xFFBF0A30, 2378], /* TODO: duplicate case value */
+        ["Very Red", "0xFFBF0A30, 2419],
+        ["Red Berry", "0xFFBF0A30, 2378],
         ["Foxy Red", "0xFFCE1126, 2263],
         ["Tuxedo Red", "0xFFD62828, 2420],
-        ["Lipstick", "0xFFBF0A30, 2233], /* TODO: duplicate case value */
+        ["Lipstick", "0xFFBF0A30, 2233],
         ["Scarlet", "0xFFC41E3A, 2219],
-        ["Radiant Red", "0xFFC41E3A, 2266], /* TODO: duplicate case value */
+        ["Radiant Red", "0xFFC41E3A, 2266],
         ["Wildfire", "0xFFA32638, 2267],
-        ["Carolina Red", "0xFF8C2633, 2268], /* TODO: duplicate case value */
-        ["Red Jubilee", "0xFF75263D, 2421], /* TODO: duplicate case value */
+        ["Carolina Red", "0xFF8C2633, 2268],
+        ["Red Jubilee", "0xFF75263D, 2421],
         ["Cranberry", "0xFF992135, 2270],
-        ["Antique Red", "0xFFA32638, 2505], /* TODO: duplicate case value */
-        ["Devil Red", "0xFFC41E3A, 2506], /* TODO: duplicate case value */
+        ["Antique Red", "0xFFA32638, 2505],
+        ["Devil Red", "0xFFC41E3A, 2506],
         ["Rosewood", "0xFFD81C3F, 2508],
         ["Bitteroot", "0xFFFC5E72, 2509],
         ["Bisque", "0xFFF2C4AF, 2377],
         ["Flesh", "0xFFF4CCAA, 2413],
         ["Flesh Pink", "0xFFF9BAAA, 2253],
-        ["Opal Mist", "0xFFF7BFBF, 2255], /* TODO: duplicate case value */
+        ["Opal Mist", "0xFFF7BFBF, 2255],
         ["Candy Apple Red", "0xFFAF003D, 2507],
         ["Tawny", "0xFFF9BF9E, 2256],
         ["Peach", "0xFFF9C6AA, 2257],
@@ -2895,9 +2868,9 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Flamingo", "0xFFF9A58C, 2258],
         ["Coral", "0xFFF98972, 2414],
         ["Persimmon", "0xFFF43F4F, 2277],
-        ["Peach Blossom", "0xFFF9C6AA, 2510], /* TODO: duplicate case value */
-        ["Illusion", "0xFFF9BAAA, 2511], /* TODO: duplicate case value */
-        ["Melonade", "0xFFF98972, 2512], /* TODO: duplicate case value */
+        ["Peach Blossom", "0xFFF9C6AA, 2510],
+        ["Illusion", "0xFFF9BAAA, 2511],
+        ["Melonade", "0xFFF98972, 2512],
         ["Honeysuckle", "0xFFE23D28, 2513],
         ["Brite Jade", "0xFF008C82, 2514],
         ["Bluestone", "0xFF00B2A0, 2515],
@@ -2921,19 +2894,19 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Baltic Blue", "0xFF008ED6, 2441],
         ["Solar Blue", "0xFF0054A0, 2442],
         ["Pacific Blue", "0xFF008ED6, 2388],
-        ["Boo Boo Blue", "0xFF00A3DD, 2730], /* TODO: duplicate case value */
+        ["Boo Boo Blue", "0xFF00A3DD, 2730],
         ["Pro Band Blue", "0xFF00709E, 2737],
         ["Pro Peacock", "0xFF007AA5, 2740],
         ["Light Blue", "0xFFC9E8DD, 2222],
         ["Royal", "0xFF1E1C77, 2210],
         ["Blue Suede", "0xFF002B7F, 2438],
         ["Imperial Blue", "0xFF335687, 2302],
-        ["Bridgeport Blue", "0xFFAFBCDB, 2522], /* TODO: duplicate case value */
-        ["China Blue", "0xFF335687, 2523], /* TODO: duplicate case value */
+        ["Bridgeport Blue", "0xFFAFBCDB, 2522],
+        ["China Blue", "0xFF335687, 2523],
         ["Pro Imperial", "0xFF26547C, 2612],
         ["Country Blue", "0xFF7796B2, 2524],
         ["Heron Blue", "0xFFC1C9DD, 2525],
-        ["Pro Saxon", "0xFF7796B2, 2624], /* TODO: duplicate case value */
+        ["Pro Saxon", "0xFF7796B2, 2624],
         ["Bright Blue", "0xFF6689CC, 2526],
         ["Soldier Blue", "0xFF5960A8, 2527],
         ["Pro Brilliance", "0xFF0051BA, 2619],
@@ -2941,7 +2914,7 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Dolphin Blue", "0xFF3A75C4, 2529],
         ["Caribbean Blue", "0xFF75AADB, 2530],
         ["Dana Blue", "0xFFC4D8E2, 2531],
-        ["Cadet Blue", "0xFFC4D8E2, 2532], /* TODO: duplicate case value */
+        ["Cadet Blue", "0xFFC4D8E2, 2532],
         ["Ozone", "0xFF60AFDD, 2533],
         ["Salem Blue", "0xFF003D6B, 2534],
         ["Blue Ribbon", "0xFF0F2B5B, 2439],
@@ -2954,7 +2927,7 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Light Navy", "0xFF112151, 2303],
         ["Flag Blue", "0xFF14213D, 2603],
         ["TH Navy", "0xFF002654, 2609],
-        ["Navy", "0xFF14213D, 2215], /* TODO: duplicate case value */
+        ["Navy", "0xFF14213D, 2215],
         ["Midnight Navy", "0xFF14213D, 2387],
         ["Pastel Blue", "0xFFC6D1D6, 2382],
         ["Blue Hint", "0xFFC1C9DD, 2598],
@@ -2964,16 +2937,16 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Sun Blue", "0xFFAFBCDB, 2269],
         ["Cristy Blue", "0xFFA5BAE0, 2383],
         ["Ultra Blue", "0xFF75B2DD, 2433],
-        ["Tropic Blue", "0xFF75AADB, 2434], /* TODO: duplicate case value */
-        ["Blue Horizon", "0xFF6689CC, 2435], /* TODO: duplicate case value */
+        ["Tropic Blue", "0xFF75AADB, 2434],
+        ["Blue Horizon", "0xFF6689CC, 2435],
         ["Oriental Blue", "0xFF7F8CBF, 2301],
-        ["Copen", "0xFF6D87A8, 2245], /* TODO: duplicate case value */
-        ["Jay Blue", "0xFF5B77CC, 2384], /* TODO: duplicate case value */
+        ["Copen", "0xFF6D87A8, 2245],
+        ["Jay Blue", "0xFF5B77CC, 2384],
         ["Blue", "0xFF2D338E, 2220],
-        ["Sapphire", "0xFF2D338E, 2280], /* TODO: duplicate case value */
+        ["Sapphire", "0xFF2D338E, 2280],
         ["Pro Royal", "0xFF00337F, 2627],
         ["Fire Blue", "0xFF003893, 2436],
-        ["Jamie Blue", "0xFF2D338E, 2385], /* TODO: duplicate case value */
+        ["Jamie Blue", "0xFF2D338E, 2385],
         ["Empire Blue", "0xFF3F2893, 2437],
         ["Enchanted Sea", "0xFF3A564F, 2535],
         ["Pro Twinkle", "0xFF8499A5, 2617],
@@ -2993,9 +2966,9 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Grape", "0xFFD3B7A3, 2272],
         ["Satin Wine", "0xFFB5939B, 2314],
         ["Ducky Mauve", "0xFF8E6877, 2422],
-        ["Pale Orchid", "0xFFFCBFC9, 2423], /* TODO: duplicate case value */
+        ["Pale Orchid", "0xFFFCBFC9, 2423],
         ["Orchid", "0xFFE5BFC6, 2379],
-        ["Lavender", "0xFFEFC6D3, 2276], /* TODO: duplicate case value */
+        ["Lavender", "0xFFEFC6D3, 2276],
         ["Violet", "0xFFEDC4DD, 2285],
         ["Cachet", "0xFFB58CB2, 2424],
         ["Tulip", "0xFFC9ADD8, 2286],
@@ -3013,41 +2986,41 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Pro Brite Star", "0xFF2B1166, 2736],
         ["Pro Violet", "0xFF38197A, 2742],
         ["Pro Purple", "0xFF35006D, 2628],
-        ["Purple", "0xFF8E47AD, 2254], /* TODO: duplicate case value */
+        ["Purple", "0xFF8E47AD, 2254],
         ["Purple Shadow", "0xFF5B027A, 2430],
         ["Dark Purple", "0xFF4C145E, 2381],
         ["Mauve", "0xFF8977BA, 2287],
         ["Purple Accent", "0xFF44235E, 2431],
         ["Hot Peony", "0xFFAA0066, 2590],
-        ["Passion", "0xFFCE007C, 2291], /* TODO: duplicate case value */
-        ["Strawberry", "0xFFAA004F, 2432], /* TODO: duplicate case value */
+        ["Passion", "0xFFCE007C, 2291],
+        ["Strawberry", "0xFFAA004F, 2432],
         ["Plum", "0xFF9E2387, 2292],
         ["Misty", "0xFF5E99AA, 2308],
         ["Mystic Teal", "0xFF609191, 2443],
         ["Teal", "0xFF609191, 2309],
-        ["Dark Teal", "0xFF003F54, 2444], /* TODO: duplicate case value */
+        ["Dark Teal", "0xFF003F54, 2444],
         ["Mint Julep", "0xFF93DDDB, 2310],
         ["Turquoise", "0xFF7FD6DB, 2204],
         ["M.D. Green", "0xFF007272, 2445],
         ["Seafoam", "0xFF70CE9B, 2311],
-        ["Isle Green", "0xFF70CE9B, 2312], /* TODO: duplicate case value */
+        ["Isle Green", "0xFF70CE9B, 2312],
         ["Peppermint", "0xFF35C4AF, 2390],
-        ["Oceanic Green", "0xFF006D75, 2446], /* TODO: duplicate case value */
+        ["Oceanic Green", "0xFF006D75, 2446],
         ["Pro Teal", "0xFF006B77, 2621],
         ["Garden Green", "0xFF006663, 2447],
         ["Pro Green", "0xFF006D66, 2735],
-        ["Pine Green", "0xFF008C82, 2391], /* TODO: duplicate case value */
+        ["Pine Green", "0xFF008C82, 2391],
         ["Greenstone", "0xFF008272, 2448],
         ["Fern Green", "0xFF006663, 2449],
-        ["Pro Hunter", "0xFF006D66, 2615], /* TODO: duplicate case value */
+        ["Pro Hunter", "0xFF006D66, 2615],
         ["Palm Leaf", "0xFFBCC1B2, 2241],
         ["Flite Green", "0xFFC6D6A0, 2282],
         ["Willow", "0xFF9EAA99, 2221],
         ["Sprite", "0xFFB2D8D8, 2313],
         ["Moss", "0xFF7AA891, 2278],
-        ["Wintergreen", "0xFF7AA891, 2594], /* TODO: duplicate case value */
+        ["Wintergreen", "0xFF7AA891, 2594],
         ["Green Forest", "0xFF006056, 2451],
-        ["Pro Forest", "0xFF006056, 2743], /* TODO: duplicate case value */
+        ["Pro Forest", "0xFF006056, 2743],
         ["Harbor Green", "0xFF4F6D5E, 2392],
         ["Evergreen", "0xFF024930, 2315],
         ["Pro Dark Green", "0xFF004438, 2734],
@@ -3058,8 +3031,8 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Olive Drab", "0xFF5E663A, 2317],
         ["Olive", "0xFF779182, 2202],
         ["Pale Green", "0xFFC9E8DD, 2318],
-        ["Green Pearl", "0xFF93DDDB, 2452], /* TODO: duplicate case value */
-        ["Sea Mist", "0xFF93DDDB, 2393], /* TODO: duplicate case value */
+        ["Green Pearl", "0xFF93DDDB, 2452],
+        ["Sea Mist", "0xFF93DDDB, 2393],
         ["Mint", "0xFFB5E8BF, 2238],
         ["Spruce", "0xFFAADD6D, 2279],
         ["Nile", "0xFFA0DB8E, 2211],
@@ -3068,21 +3041,21 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Pro Erin", "0xFF56AA1C, 2738],
         ["Emerald", "0xFF339E35, 2214],
         ["Dark Emerald", "0xFF007A3D, 2453],
-        ["Light Kelly", "0xFF007A3D, 2410], /* TODO: duplicate case value */
-        ["Kelly", "0xFF007A3D, 2240], /* TODO: duplicate case value */
+        ["Light Kelly", "0xFF007A3D, 2410],
+        ["Kelly", "0xFF007A3D, 2240],
         ["Dark Green", "0xFF008751, 2208],
         ["Fleece Green", "0xFF006B3F, 2454],
         ["TH Green", "0xFF006854, 2607],
         ["Harvest Green", "0xFF1EB53A, 2578],
         ["Vibrant Green", "0xFF009E49, 2579],
-        ["Green Grass", "0xFF009E49, 2580], /* TODO: duplicate case value */
-        ["Deep Green", "0xFF006B3F, 2284], /* TODO: duplicate case value */
+        ["Green Grass", "0xFF009E49, 2580],
+        ["Deep Green", "0xFF006B3F, 2284],
         ["Green Bay", "0xFF006B54, 2455],
         ["Jungle Green", "0xFF007C66, 2597],
         ["Peapod", "0xFFA3AF07, 2456],
         ["Pastoral Green", "0xFF7FBA00, 2321],
         ["Green Dust", "0xFF7FBA00, 2457],
-        ["Ming", "0xFF7FBA00, 2322], /* TODO: duplicate case value */
+        ["Ming", "0xFF7FBA00, 2322],
         ["Meadow", "0xFF568E14, 2226],
         ["Tamarack", "0xFF939905, 2230],
         ["Palmetto", "0xFF566314, 2229],
@@ -3093,7 +3066,7 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Green Sail", "0xFF193833, 2459],
         ["Holly", "0xFF215B33, 2323],
         ["Field Green", "0xFF265142, 2460],
-        ["Dress Green", "0xFF3F4926, 2584], /* TODO: duplicate case value */
+        ["Dress Green", "0xFF3F4926, 2584],
         ["Foliage Green", "0xFF99840A, 2542],
         ["Autumn Green", "0xFFA38205, 2543],
         ["Desert Cactus", "0xFF897719, 2544],
@@ -3102,8 +3075,8 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Pebblestone", "0xFFE2E584, 2547],
         ["Sun Shadow", "0xFF998E07, 2548],
         ["Blue Spruce", "0xFF00494F, 2549],
-        ["Newport", "0xFF4F6D5E, 2550], /* TODO: duplicate case value */
-        ["Spring Garden", "0xFF779182, 2551], /* TODO: duplicate case value */
+        ["Newport", "0xFF4F6D5E, 2550],
+        ["Spring Garden", "0xFF779182, 2551],
         ["Water Lilly", "0xFF546856, 2554],
         ["Ivy", "0xFF0C3026, 2552],
         ["Dark Army Green", "0xFF233A2D, 2553],
@@ -3116,27 +3089,27 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Moonbeam", "0xFFF9DD16, 2560],
         ["Black Eyed Susie", "0xFFC6A00C, 2561],
         ["Bullion", "0xFFA37F14, 2562],
-        ["Chinese Yellow", "0xFFF7E8AA, 2324], /* TODO: duplicate case value */
-        ["Maize", "0xFFF7E8AA, 2264], /* TODO: duplicate case value */
+        ["Chinese Yellow", "0xFFF7E8AA, 2324],
+        ["Maize", "0xFFF7E8AA, 2264],
         ["Wheat", "0xFFEADD96, 2461],
         ["Pro Maize", "0xFFF9E08C, 2732],
         ["Glow", "0xFFFFD87F, 2234],
         ["Star Gold", "0xFFFCD856, 2408],
         ["Mango", "0xFFFCA311, 2394],
         ["Yellow Mist", "0xFFFCA311, 2409],
-        ["Yellow", "0xFFFCA311, 2213], /* TODO: duplicate case value */
-        ["Sunflower", "0xFFF9DD16, 2462], /* TODO: duplicate case value */
+        ["Yellow", "0xFFFCA311, 2213],
+        ["Sunflower", "0xFFF9DD16, 2462],
         ["Lemon", "0xFFF4ED47, 2325],
         ["Daffodil", "0xFFF9E814, 2326],
         ["Merit Gold", "0xFFFCB514, 2463],
         ["Cornsilk", "0xFFFFCC49, 2395],
-        ["Nectar", "0xFFFFC61E, 2464], /* TODO: duplicate case value */
+        ["Nectar", "0xFFFFC61E, 2464],
         ["Scholastic", "0xFFFCBF49, 2465],
         ["Canary Yellow", "0xFFFCE016, 2235],
-        ["Pro Gold", "0xFFFFC61E, 2626], /* TODO: duplicate case value */
+        ["Pro Gold", "0xFFFFC61E, 2626],
         ["Manila", "0xFFFCD116, 2466],
-        ["Goldenrod", "0xFFFCD116, 2242], /* TODO: duplicate case value */
-        ["Brite Yellow", "0xFFFFCC49, 2396], /* TODO: duplicate case value */
+        ["Goldenrod", "0xFFFCD116, 2242],
+        ["Brite Yellow", "0xFFFFCC49, 2396],
         ["Honeydew", "0xFFF99B0C, 2327],
         ["Pumpkin", "0xFFF77F00, 2328],
         ["Orangeade", "0xFFF74902, 2467],
@@ -3152,24 +3125,24 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Copper", "0xFFAF7505, 2295],
         ["Light Bronze", "0xFFC18E60, 2493],
         ["Visor Gold", "0xFFFCCE87, 2398],
-        ["Goldenlite", "0xFFFFCC49, 2605], /* TODO: duplicate case value */
+        ["Goldenlite", "0xFFFFCC49, 2605],
         ["Honey", "0xFFFCBA5E, 2247],
-        ["Marigold", "0xFFFFCC49, 2216], /* TODO: duplicate case value */
-        ["Mustard", "0xFFE0AA0F, 2331], /* TODO: duplicate case value */
-        ["Sun Gold", "0xFFE0AA0F, 2212], /* TODO: duplicate case value */
-        ["Karat", "0xFFE0AA0F, 2470], /* TODO: duplicate case value */
+        ["Marigold", "0xFFFFCC49, 2216],
+        ["Mustard", "0xFFE0AA0F, 2331],
+        ["Sun Gold", "0xFFE0AA0F, 2212],
+        ["Karat", "0xFFE0AA0F, 2470],
         ["Penny", "0xFFF2BF49, 2332],
         ["New Gold", "0xFFFCCE87, 2399],
         ["Pro Beige", "0xFFE2D6B5, 2630],
-        ["Marine Gold", "0xFFC6A00C, 2596], /* TODO: duplicate case value */
-        ["Ginger", "0xFFA37F14, 2333], /* TODO: duplicate case value */
-        ["Shimmering Gold", "0xFFC6A00C, 2471], /* TODO: duplicate case value */
+        ["Marine Gold", "0xFFC6A00C, 2596],
+        ["Ginger", "0xFFA37F14, 2333],
+        ["Shimmering Gold", "0xFFC6A00C, 2471],
         ["Old Gold", "0xFFBF910C, 2201],
         ["Salmon", "0xFFEAB2B2, 2299],
         ["Dark Rust", "0xFFC13828, 2205],
         ["Terra Cotta", "0xFFA03033, 2334],
-        ["Pro Red", "0xFFAF1E2D, 2623], /* TODO: duplicate case value */
-        ["Auburn", "0xFFAF1E2D, 2472], /* TODO: duplicate case value */
+        ["Pro Red", "0xFFAF1E2D, 2623],
+        ["Auburn", "0xFFAF1E2D, 2472],
         ["Bone", "0xFFFAE6CC, 2582],
         ["Ivory", "0xFFFAE6CF, 2335],
         ["Opaline", "0xFFF7D3B5, 2473],
@@ -3179,13 +3152,13 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Cottage Beige", "0xFFEDD3B5, 2593],
         ["Rattan", "0xFFC1A875, 2474],
         ["Gold", "0xFFE2BF9B, 2203],
-        ["Mocha Cream", "0xFFD3A87C, 2475], /* TODO: duplicate case value */
-        ["Topaz", "0xFFBF910C, 2400], /* TODO: duplicate case value */
+        ["Mocha Cream", "0xFFD3A87C, 2475],
+        ["Topaz", "0xFFBF910C, 2400],
         ["Ashley Gold", "0xFFD18E54, 2401],
         ["Amber Beige", "0xFFD8B596, 2336],
         ["Seashell", "0xFFD6CCAF, 2476],
         ["Light Maize", "0xFFF2E3C4, 2604],
-        ["Beige", "0xFFAA753F, 2224], /* TODO: duplicate case value */
+        ["Beige", "0xFFAA753F, 2224],
         ["Sand Dune", "0xFF6B4714, 2477],
         ["Taupe", "0xFFD1BF91, 2298],
         ["Pro Brown", "0xFF6C463D, 2610],
@@ -3194,31 +3167,31 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Light Cocoa", "0xFF755426, 2478],
         ["Cocoa Mulch", "0xFFB28260, 2488],
         ["Brown", "0xFF593D2B, 2251],
-        ["Dark Brown", "0xFF593D2B, 2372], /* TODO: duplicate case value */
+        ["Dark Brown", "0xFF593D2B, 2372],
         ["Espresso", "0xFF3F302B, 2337],
         ["Bamboo", "0xFFC18E60, 2338],
         ["Almond", "0xFFAF7505, 2479],
         ["Toast", "0xFFBA7530, 2231],
-        ["Sienna", "0xFF755426, 2402], /* TODO: duplicate case value */
+        ["Sienna", "0xFF755426, 2402],
         ["K.A. Bronze", "0xFFB26B70, 2480],
         ["Pro Cinnamon", "0xFFA2464E, 2611],
         ["Date", "0xFF9B4F19, 2290],
-        ["Hazel", "0xFF9B4F19, 2481], /* TODO: duplicate case value */
+        ["Hazel", "0xFF9B4F19, 2481],
         ["Coffee Bean", "0xFF5B2D28, 2339],
-        ["Dogwood", "0xFF593D2B, 2563], /* TODO: duplicate case value */
-        ["Mahogany", "0xFF3F302B, 2564], /* TODO: duplicate case value */
+        ["Dogwood", "0xFF593D2B, 2563],
+        ["Mahogany", "0xFF3F302B, 2564],
         ["Best Brown", "0xFF3D3028, 2566],
         ["Mushroom", "0xFF633A11, 2567],
         ["Perfect Tan", "0xFFC1A875, 2568],
         ["Earthen Tan", "0xFF7A5B11, 2569],
-        ["Golden Tan", "0xFFC1A875, 2570], /* TODO: duplicate case value */
-        ["14 Kt. Gold", "0xFFF2BF49, 2586], /* TODO: duplicate case value */
+        ["Golden Tan", "0xFFC1A875, 2570],
+        ["14 Kt. Gold", "0xFFF2BF49, 2586],
         ["TH Gold", "0xFFF2CE68, 2606],
         ["24 Kt. Gold", "0xFFD88C02, 2602],
         ["Platinum", "0xFFC1B5A5, 2571],
         ["Pro Gray", "0xFF99897C, 2739],
         ["Grayrod", "0xFFADA07A, 2572],
-        ["Pewter", "0xFFADA07A, 2573], /* TODO: duplicate case value */
+        ["Pewter", "0xFFADA07A, 2573],
         ["Aspen White", "0xFFF5E3CC, 2574],
         ["Dark Taupe", "0xFF66594C, 2575],
         ["Egyptian Brown", "0xFF493533, 2576],
@@ -3228,17 +3201,17 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Steel Gray", "0xFFD8CCD1, 2274],
         ["Skylight", "0xFFCCC1C6, 2482],
         ["Cloud", "0xFFAFAAA3, 2483],
-        ["Silver Steel", "0xFFADAFAA, 2592], /* TODO: duplicate case value */
+        ["Silver Steel", "0xFFADAFAA, 2592],
         ["Banner Gray", "0xFF919693, 2585],
-        ["Silvery Gray", "0xFF8C8984, 2484], /* TODO: duplicate case value */
-        ["Cinder", "0xFFCCC1C6, 2404], /* TODO: duplicate case value */
-        ["Saturn Gray", "0xFFDBD3D3, 2485], /* TODO: duplicate case value */
-        ["Dover Gray", "0xFFCCC1C6, 2405], /* TODO: duplicate case value */
+        ["Silvery Gray", "0xFF8C8984, 2484],
+        ["Cinder", "0xFFCCC1C6, 2404],
+        ["Saturn Gray", "0xFFDBD3D3, 2485],
+        ["Dover Gray", "0xFFCCC1C6, 2405],
         ["Storm Gray", "0xFFB2A8B5, 2486],
         ["Sterling", "0xFFA893AD, 2406],
         ["Metal", "0xFF666D70, 2407],
         ["Twilight", "0xFF686663, 2217],
-        ["Aged Charcoal", "0xFF443D38, 2565], /* TODO: duplicate case value */
+        ["Aged Charcoal", "0xFF443D38, 2565],
         ["Charcoal", "0xFF777772, 2265],
         ["Smokey", "0xFF353842, 2487],
         ["Ash", "0xFF3A4972, 2341],
@@ -3246,11 +3219,11 @@ thread_color RobisonAnton_Rayon_codes[] = {
         ["Snow White", "0xFFF5EBE0, 2297],
         ["Natural White", "0xFFF5EDDE, 2342],
         ["Eggshell", "0xFFF0E8D6, 2343],
-        ["Jet Black", "0xFF1C2630, 2632], /* TODO: duplicate case value */
-        ["END", 0, -1}
-};
+        ["Jet Black", "0xFF1C2630, 2632],
+        ["END", 0, -1]
+    ],
 
-thread_color Sigma_Polyester_codes[] = {
+    Sigma_Polyester_codes: [
         ["White", "0xFFFFFFFF, 10],
         ["Black", "0xFF000000, 20],
         ["Light Neon Green", "0xFFEDFF50, 21],
@@ -3306,7 +3279,7 @@ thread_color Sigma_Polyester_codes[] = {
         ["Ocean Blue", "0xFF143D7A, 414],
         ["Med Navy", "0xFF113263, 415],
         ["Dark Navy", "0xFF0E1F38, 423],
-        ["Bright Sunshine", "0xFF0E1F38, 432], /* TODO: duplicate case value */
+        ["Bright Sunshine", "0xFF0E1F38, 432],
         ["Teal", "0xFF0091A5, 443],
         ["Deep Teal", "0xFF005B63, 448],
         ["Dark Teal", "0xFF00474D, 449],
@@ -3322,7 +3295,7 @@ thread_color Sigma_Polyester_codes[] = {
         ["Pale Yellow", "0xFFFDE896, 601],
         ["Pastel Yellow", "0xFFEDE55D, 602],
         ["Golden Puppy", "0xFFDFA200, 609],
-        ["Buttercup", "0xFFFDE896, 612], /* TODO: duplicate case value */
+        ["Buttercup", "0xFFFDE896, 612],
         ["Treasure Gold", "0xFFCEB24C, 616],
         ["Old Gold", "0xFFAD953E, 619],
         ["Pale Apricot", "0xFFFEF9EA, 627],
@@ -3388,7 +3361,7 @@ thread_color Sigma_Polyester_codes[] = {
         ["Dark Wine", "0xFF834455, 2250],
         ["Beige", "0xFFD0A44F, 2518],
         ["Gold", "0xFFED9206, 2519],
-        ["Med Orange", "0xFFEDEF05, 3001], /* TODO: duplicate case value */
+        ["Med Orange", "0xFFEDEF05, 3001],
         ["Dark Salmon", "0xFFC07A46, 3014],
         ["Fire Red", "0xFFB43C3C, 3015],
         ["Saddle Brown", "0xFF915F46, 3142],
@@ -3401,10 +3374,9 @@ thread_color Sigma_Polyester_codes[] = {
         ["Powder Blue", "0xFF91B9E2, 5554],
         ["Froggy Green", "0xFF429648, 5557],
         ["Stone Grey", "0xFF878C8C, 8010],
-        ["END", 0, -1}
-};
-
-thread_color Sulky_Rayon_codes[] = {
+        ["END", 0, -1]
+    ],
+    Sulky_Rayon_codes: [
         ["Cornsilk", "0xFFEFC810, 502],
         ["Deep Arctic Sky", "0xFF0C082D, 505],
         ["Nutmeg", "0xFFB26C29, 521],
@@ -3543,7 +3515,7 @@ thread_color Sulky_Rayon_codes[] = {
         ["Rust", "0xFFCB0000, 1181],
         ["Blue Black", "0xFF020114, 1182],
         ["Black Cherry", "0xFF320614, 1183],
-        ["Orange Red", "0xFFFF6600, 1184], /* TODO: duplicate case value */
+        ["Orange Red", "0xFFFF6600, 1184],
         ["Golden Yellow", "0xFFFCBE05, 1185],
         ["Sable Brown", "0xFF5B0000, 1186],
         ["Mimosa Yellow", "0xFFFFE500, 1187],
@@ -3657,7 +3629,7 @@ thread_color Sulky_Rayon_codes[] = {
         ["Mulberry", "0xFF961A32, 1311],
         ["Wine", "0xFF840000, 1312],
         ["Bittersweet", "0xFFFC8F0C, 1313],
-        ["Poppy", "0xFFFF0000, 1317], /* TODO: duplicate case value */
+        ["Poppy", "0xFFFF0000, 1317],
         ["Gray Khaki", "0xFFCBCBBD, 1321],
         ["Chartreuse", "0xFF818901, 1322],
         ["Whisper Gray", "0xFFF8F5F1, 1325],
@@ -3738,37 +3710,33 @@ thread_color Sulky_Rayon_codes[] = {
         ["Dark Forest", "0xFF36361F, 1273],
         ["Watermelon", "0xFFFA5F7F, 1303],
         ["Caribbean Mist", "0xFFA3C2D7, 1644],
-        ["END", 0, -1}
-};
-
-thread_color ThreadArt_Rayon_codes[] = {
-        ["END", 0, -1}
-};
-
-thread_color ThreadArt_Polyester_codes[] = {
-        ["END", 0, -1}
-};
-
-thread_color ThreaDelight_Polyester_codes[] = {
-        ["END", 0, -1}
-};
-
-thread_color Z102_Isacord_Polyester_codes[] = {
-        ["?", "0xFFF8FFFF, 17],
-        ["?", "0xFF000000, 20],
-        ["?", "0xFFB7BABA, 105],
-        ["?", "0xFF73787A, 108],
-        ["?", "0xFF454B58, 138],
-        ["?", "0xFF9EA9A6, 142],
-        ["?", "0xFFC8C6BD, 150],
-        ["?", "0xFFFAEE5C, 220],
-        ["?", "0xFFE5CB4F, 221],
-        ["?", "0xFFFFF46A, 230],
-        ["?", "0xFFFEF9D9, 270],
-        ["?", "0xFFFFDC00, 311],
-        ["?", "0xFF624F00, 345],
-        ["?", "0xFFB8B25A, 352],
-        ["?", "0xFF8D8F5B, 453],
+        ["END", 0, -1]
+    ],
+    "ThreadArt_Rayon_codes": [
+        ["END", 0, -1]
+    ],
+    "ThreadArt_Polyester_codes": [
+        ["END", 0, -1]
+    ],
+    "ThreaDelight_Polyester_codes": [
+        ["END", 0, -1]
+    ],
+    "Z102_Isacord_Polyester_codes": [
+        ["?", "0xFFF8FFFF", 17],
+        ["?", "0xFF000000", 20],
+        ["?", "0xFFB7BABA", 105],
+        ["?", "0xFF73787A", 108],
+        ["?", "0xFF454B58", 138],
+        ["?", "0xFF9EA9A6", 142],
+        ["?", "0xFFC8C6BD", 150],
+        ["?", "0xFFFAEE5C", 220],
+        ["?", "0xFFE5CB4F", 221],
+        ["?", "0xFFFFF46A", 230],
+        ["?", "0xFFFEF9D9", 270],
+        ["?", "0xFFFFDC00", 311],
+        ["?", "0xFF624F00", 345],
+        ["?", "0xFFB8B25A", 352],
+        ["?", "0xFF8D8F5B", 453],
         ["?", "0xFFFFF4A5, 520],
         ["?", "0xFFB98E03, 542],
         ["?", "0xFFE4C180, 651],
@@ -3790,27 +3758,27 @@ thread_color Z102_Isacord_Polyester_codes[] = {
         ["?", "0xFFB1500A, 1115],
         ["?", "0xFFC09C72, 1123],
         ["?", "0xFF843D07, 1134],
-        ["?", "0xFFD8A67D, 1141],
-        ["?", "0xFF82421B, 1154],
-        ["?", "0xFFFF7319, 1300],
-        ["?", "0xFFFF3D1E, 1305],
-        ["?", "0xFFBA4005, 1311],
-        ["?", "0xFFC73C13, 1312],
-        ["?", "0xFFE66B21, 1332],
-        ["?", "0xFF3D1C11, 1346],
-        ["?", "0xFFFFBC95, 1351],
-        ["?", "0xFFFFCC93, 1362],
-        ["?", "0xFF373732, 1375],
-        ["?", "0xFFFFAF94, 1532],
-        ["?", "0xFF5B4032, 1565],
-        ["?", "0xFFFF6046, 1600],
-        ["?", "0xFFFF6D71, 1753],
-        ["?", "0xFFEBBAAE, 1755],
-        ["?", "0xFFEB2D2B, 1805],
-        ["?", "0xFFFF988F, 1840],
-        ["?", "0xFF434331, 1874],
-        ["?", "0xFFC11914, 1902],
-        ["?", "0xFFC8100D, 1903],
+        ["?", "0xFFD8A67D", 1141],
+        ["?", "0xFF82421B", 1154],
+        ["?", "0xFFFF7319", 1300],
+        ["?", "0xFFFF3D1E", 1305],
+        ["?", "0xFFBA4005", 1311],
+        ["?", "0xFFC73C13", 1312],
+        ["?", "0xFFE66B21", 1332],
+        ["?", "0xFF3D1C11", 1346],
+        ["?", "0xFFFFBC95", 1351],
+        ["?", "0xFFFFCC93", 1362],
+        ["?", "0xFF373732", 1375],
+        ["?", "0xFFFFAF94", 1532],
+        ["?", "0xFF5B4032", 1565],
+        ["?", "0xFFFF6046", 1600],
+        ["?", "0xFFFF6D71", 1753],
+        ["?", "0xFFEBBAAE", 1755],
+        ["?", "0xFFEB2D2B", 1805],
+        ["?", "0xFFFF988F", 1840],
+        ["?", "0xFF434331", 1874],
+        ["?", "0xFFC11914", 1902],
+        ["?", "0xFFC8100D", 1903],
         ["?", "0xFFBF0A21, 1906],
         ["?", "0xFFD23C3E, 1921],
         ["?", "0xFF8F8C93, 1972],
@@ -3874,30 +3842,29 @@ thread_color Z102_Isacord_Polyester_codes[] = {
         ["?", "0xFFBCD633, 6011],
         ["?", "0xFFBBCD91, 6051],
         ["?", "0xFF978B3C, 6133],
-        ["END", 0, -1}
-};
-
+        ["END", 0, -1]
+    ],
     "brand_codes" = [
         "Arc_Polyester_codes",
-        "Arc_Rayon_codes",              /* 1 */
-        CoatsAndClark_Rayon_codes,    /* 2 */
-        Exquisite_Polyester_codes,    /* 3 */
-        Fufu_Polyester_codes,         /* 4 */
-        Fufu_Rayon_codes,             /* 5 */
-        Hemingworth_Polyester_codes,  /* 6 */
-        Isacord_Polyester_codes,      /* 7 */
-        Isafil_Rayon_codes,           /* 8 */
-        Marathon_Polyester_codes,     /* 9 */
-        Marathon_Rayon_codes,         /* 10 */
-        Madeira_Polyester_codes,      /* 11 */
-        Madeira_Rayon_codes,          /* 12 */
-        Metro_Polyester_codes,        /* 13 */
-        Pantone_codes,                /* 14 */
-        RobisonAnton_Polyester_codes, /* 15 */
-        RobisonAnton_Rayon_codes,     /* 16 */
-        Sigma_Polyester_codes,        /* 17 */
-        Sulky_Rayon_codes,            /* 18 */
-        ThreadArt_Rayon_codes,        /* 19 */
+        "Arc_Rayon_codes", /* 1 */
+        CoatsAndClark_Rayon_codes, /* 2 */
+        Exquisite_Polyester_codes, /* 3 */
+        Fufu_Polyester_codes, /* 4 */
+        Fufu_Rayon_codes, /* 5 */
+        Hemingworth_Polyester_codes, /* 6 */
+        Isacord_Polyester_codes, /* 7 */
+        Isafil_Rayon_codes, /* 8 */
+        Marathon_Polyester_codes, /* 9 */
+        Marathon_Rayon_codes, /* 10 */
+        Madeira_Polyester_codes, /* 11 */
+        Madeira_Rayon_codes, /* 12 */
+        Metro_Polyester_codes, /* 13 */
+        Pantone_codes,  /* 14 */
+        "RobisonAnton_Polyester_codes",
+        "RobisonAnton_Rayon_codes",
+        "Sigma_Polyester_codes",
+        "Sulky_Rayon_codes",
+        "ThreadArt_Rayon_codes",
         "ThreadArt_Polyester_codes",
         "ThreaDelight_Polyester_code"s,
         "Z102_Isacord_Polyester_codes",

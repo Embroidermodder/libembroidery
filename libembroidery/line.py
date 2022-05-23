@@ -16,7 +16,7 @@ r"""
 
 import math
 
-from libembroidery.tools import Vector
+from libembroidery.tools import Vector, Pen, map_from_scene
 
 
 class Line():
@@ -54,11 +54,11 @@ class Line():
     def setObjectY2(y):
         setobj_end_point_2(obj_end_point_2().x(), y)
     """
-    def __init__(self, rgb="#FFFFFF", line_type="solid", line_weight=0.35,
+    def __init__(self, pen=Pen(),
                  start=Vector(math.nan, math.nan),
                  end=Vector(math.nan, math.nan)):
         " . "
-        self.pen = Pen(rgb=rgb, line_type=line_type, line_weight=line_weight)
+        self.pen = pen
         self.type = "Line"
         self.start = start
         self.end = end
@@ -66,8 +66,7 @@ class Line():
     def copy(self):
         " . "
         debug_message("Line.copy()")
-        return Line(start=self.start, end=self.end,
-                    rgb=self.rgb, line_type=self.line_type)
+        return Line(start=self.start, end=self.end, pen=self.pen)
 
     def set_start(self, start):
         " . "

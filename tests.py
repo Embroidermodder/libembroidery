@@ -32,6 +32,7 @@ import math
 from libembroidery.parser import list_processor
 import libembroidery as emb
 from libembroidery import Pattern, Vector, Arc, Circle, Ellipse
+from libembroidery.tools import debug_message
 
 
 def create_test_file_1(outf="test01.csv"):
@@ -243,10 +244,51 @@ Name  : %s
         self.assertEqual(table.type, 1)
 
     def test_list_processor():
+        r" . "
         print(list_processor("(+ (* 4 6) 3)"))
         print(list_processor("(+ (/ 6 4) (* 3 2))"))
         example = "(* (/ 8 11) (sin (- (/ 10 9) (* 56 t))))"
         print(list_processor(example.replace("t", "0.04")))
+
+    def test_selected():
+        r"."
+        debug_message("Test what is selected")
+
+    def test_polyline_array():
+        r"Polyline & Polygon Testing"
+        pattern = Pattern()
+
+        offset = Vector(0.0, 0.0)
+
+        polyline_array = [
+            Vector(1.0, 1.0),
+            Vector(1.0, 2.0),
+            Vector(2.0, 2.0),
+            Vector(2.0, 3.0),
+            Vector(3.0, 3.0),
+            Vector(3.0, 2.0),
+            Vector(4.0, 2.0),
+            Vector(4.0, 1.0)
+        ]
+        polyline_array = [vector + offset for vector in polyline_array]
+        pattern.add_polyline(polyline_array)
+
+        offset = Vector(5.0, 0.0)
+
+        polygon_array = [
+            Vector(1.0, 1.0),
+            Vector(1.0, 2.0),
+            Vector(2.0, 2.0),
+            Vector(2.0, 3.0),
+            Vector(3.0, 3.0),
+            Vector(3.0, 2.0),
+            Vector(4.0, 2.0),
+            Vector(4.0, 1.0)
+        ]
+        polygon_array = [vector + offset for vector in polygon_array]
+        pattern.add_polygon(polygon_array)
+
+        pattern.write("output.svg")
 
 
 if __name__ == '__main__':

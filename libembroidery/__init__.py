@@ -21,23 +21,14 @@ r"""
 """
 
 from libembroidery.tools import (
-    Pen, Vector, vector_from_str, closest_vector,
-    load_data
+    Pen, Vector, vector_from_str, closest_vector, load_data
 )
-from libembroidery.line import Line
-from libembroidery.rect import Rect
-from libembroidery.arc import Arc
-from libembroidery.circle import Circle
-from libembroidery.dimleader import DimLeader
-from libembroidery.ellipse import Ellipse
+from libembroidery.geometry import (
+    Line, Rect, Arc, Circle, DimLeader, Ellipse,
+    Polygon, Polyline, PolylineArray, Path
+)
 from libembroidery.parametric import Parametric
-from libembroidery.textsingle import TextSingle
-from libembroidery.text import Text
-from libembroidery.polygon import Polygon
-from libembroidery.polyline import Polyline
-from libembroidery.polylinearray import PolylineArray
-from libembroidery.pattern import Pattern
-from libembroidery.path import Path
+from libembroidery.text import TextSingle, Text
 
 NORMAL = 0
 JUMP = 1

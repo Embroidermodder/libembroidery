@@ -16,43 +16,14 @@ r"""
 
 import math
 
-from libembroidery.tools import Vector, Pen, map_from_scene, debug_message
+from libembroidery.tools import (Vector, Pen, append_prompt_history,
+                                 map_from_scene, debug_message,
+                                 set_prompt_prefix, vector_from_str)
 
 
 class Line():
-    """
-    Path objectSavePath() const
-    def objectEndPoint1():
-        return scenePos()
-    def obj_end_point_2():
-    def objectMidPoint():
-    def objectX1():
-        return objectEndPoint1().x
-    def objectY1():
-        return objectEndPoint1().y
-    def objectX2():
-        return obj_end_point_2().x
-    def objectY2():
-        return obj_end_point_2().y
-    def objectDeltaX():
-        return (obj_end_point_2().x - objectEndPoint1().x)
-    def objectDeltaY():
-        return (obj_end_point_2().y - objectEndPoint1().y)
-    def objectAngle():
-    def objectLength():
-        return line().length()*scale()
-    def setObjectEndPoint1(endPt1)
-    def setObjectEndPoint1(x1, y1)
-    def setobj_end_point_2(endPt2)
-    def setobj_end_point_2(x2, y2)
-    def setObjectX1(x):
-        setObjectEndPoint1(x, objectEndPoint1().y())
-    def setObjectY1(y):
-        setObjectEndPoint1(objectEndPoint1().x(), y)
-    def setObjectX2(x):
-        setobj_end_point_2(x, obj_end_point_2().y())
-    def setObjectY2(y):
-        setobj_end_point_2(obj_end_point_2().x(), y)
+    r"""
+    Check for angle and length functions.
     """
     def __init__(self, pen=Pen(),
                  start=Vector(math.nan, math.nan),
@@ -63,26 +34,49 @@ class Line():
         self.start = start
         self.end = end
 
+        self.mode = "NORMAL"
+        self.first_run = True
+        self.base = self.start
+        self.dest = self.end
+        self.factor = math.nan
+        self.factorRef = math.nan
+        self.factor_new = math.nan
+
+        if num_selected <= 0:
+            # TODO: Prompt to select objects if nothing is preselected
+            debug_message(
+                "Preselect objects before invoking the scale command.",
+                msgtype="ALERT"
+            )
+            debug_message(
+                "information"
+                + "Scale Preselect"
+                + "Preselect objects before invoking the scale command."
+            )
+
+        else:
+            set_prompt_prefix("Specify base point: ")
+
     def copy(self):
         " . "
         debug_message("Line.copy()")
         return Line(start=self.start, end=self.end, pen=self.pen)
 
     def set_start(self, start):
-        " . "
-        delta = self.obj_end_point_2() - start
+        r" . "
+        delta = self.end - start
         self.rotation = 0.0
         self.scale = 1.0
-        setLine(0, 0, delta.x, delta.y)
-        setPos(x1, y1)
+        set_line(Vector(0, 0), delta)
+        set_pos(self.start)
 
     def set_end(self, end):
-        " . "
+        r" . "
         delta = end - scenePos()
         self.rotation = 0.0
         self.scale = 1.0
-        setLine(0, 0, delta.x, delta.y)
-        setPos(endPt1.x, endPt1.y)
+        set_line(Vector(0, 0), delta)
+        set_pos(self.end)
 
     def obj_end_point_2():
         " . "
@@ -100,7 +94,7 @@ class Line():
         v.rotate(radians(self.rotation))
         return scenePos() + v
 
-    def objectAngle(self):
+    def angle(self):
         " . "
         angle = line().angle() - self.rotation
         return math.fmod(angle, 360.0)
@@ -127,30 +121,31 @@ class Line():
 
     def update_rubber(self, painter):
         if self.rubber_mode == "RUBBER_LINE":
-            scene_start_point = objectRubberPoint("LINE_START")
-            sceneQSnapPoint = objectRubberPoint("LINE_END")
+            scene_start_point = self.rubber_point("LINE_START")
+            sceneQSnapPoint = self.rubber_point("LINE_END")
 
             setObjectEndPoint1(scene_start_point)
             setobj_end_point_2(sceneQSnapPoint)
 
-            drawRubberLine(line(), painter, "VIEW_COLOR_CROSSHAIR")
+            draw_rubber_line(line(), painter, "VIEW_COLOR_CROSSHAIR")
 
         elif self.rubber_mode == "RUBBER_GRIP":
             if painter:
-                gripPoint = objectRubberPoint("GRIP_POINT")
+                gripPoint = self.rubber_point("GRIP_POINT")
                 if gripPoint == objectEndPoint1():
-                    painter.drawLine(line().p2(), map_from_scene(objectRubberPoint("")))
+                    painter.drawLine(line().p2(), map_from_scene(self.rubber_point("")))
                 elif gripPoint == obj_end_point_2():
-                    painter.drawLine(line().p1(), map_from_scene(objectRubberPoint("")))
-                elif gripPoint == objectMidPoint():  painter.drawLine(line().translated(map_from_scene(objectRubberPoint(""))-map_from_scene(gripPoint)))
+                    painter.drawLine(line().p1(), map_from_scene(self.rubber_point("")))
+                elif gripPoint == self.mid_point():
+                    painter.drawLine(line().translated(map_from_scene(self.rubber_point(""))-map_from_scene(gripPoint)))
 
-                rubLine = Line(map_from_scene(gripPoint), map_from_scene(objectRubberPoint("")))
-                drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
+                rubLine = Line(map_from_scene(gripPoint), map_from_scene(self.rubber_point("")))
+                draw_rubber_line(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
 
-    def vulcanize():
+    def vulcanize(self):
+        r"."
         debug_message("LineObject vulcanize()")
         self.update_rubber()
-
         self.rubber_mode = "RUBBER_OFF"
 
     def mouse_snap_point(self, mouse_point):
@@ -159,248 +154,224 @@ class Line():
         return closest_vector(all_points, mouse_point)
 
     def all_grip_points(self):
+        r"."
         gripPoints = []
-        gripPoints << objectEndPoint1() << obj_end_point_2() << objectMidPoint()
+        gripPoints << objectEndPoint1() << obj_end_point_2() << self.mid_point()
         return gripPoints
 
     def grip_edit(self, before, after):
+        r"."
         if before == objectEndPoint1():
             setObjectEndPoint1(after.x(), after.y())
         elif before == obj_end_point_2():
             setobj_end_point_2(after.x(), after.y())
-        elif before == objectMidPoint():
+        elif before == self.mid_point():
             delta = after-before
             moveBy(delta.x(), delta.y())
 
-    def save_path():
-        path = Path()
-        path.line_to(objectDeltaX(), objectDeltaY())
+    def save_path(self):
+        r"."
+        path = []
+        delta = self.end - self.start
+        path += ["move_to", self.start]
+        path += ["line_to", delta]
         return path
 
-    def __init__(self):
-        self.mode = "NORMAL"
-        self.first_run = True
-        self.baseX  = math.nan
-        self.baseY  = math.nan
-        self.destX  = math.nan
-        self.destY  = math.nan
-        self.factor = math.nan
-        self.factorRef = math.nan
-        self.factorNew = math.nan
+    def click(self, point):
+        r"."
+        if self.mode == "NORMAL":
+            if self.first_run:
+                self.first_run = False
+                self.start = point
+                add_rubber("LINE")
+                self.rubber_mode = "LINE"
+                set_rubber_point("LINE_START", self.baseX, self.baseY)
+                previewOn("SELECTED", "SCALE", self.baseX, self.baseY, 1)
+                append_prompt_history()
+                set_prompt_prefix("Specify scale factor or [Reference]: ")
 
-        if numSelected() <= 0:
-            # TODO: Prompt to select objects if nothing is preselected
-            debug_message(translate("Preselect objects before invoking the scale command."), msgtype="ALERT")
-            messageBox("information", translate("Scale Preselect"), translate("Preselect objects before invoking the scale command."))
+            else:
+                self.end = point
+                self.factor = calculate_distance(self.start, self.end)
+                append_prompt_history()
+                scale_selected(self.start, self.factor)
+                previewOff()
 
-        else:
-            set_prompt_prefix(translate("Specify base point: "))
+        elif self.mode == "REFERENCE":
+            if math.isnan(self.baseRX):
+                self.baseRX = x
+                self.baseRY = y
+                append_prompt_history()
+                addRubber("LINE")
+                self.rubber_mode = "LINE"
+                set_rubber_point("LINE_START", self.baseRX, self.baseRY)
+                set_prompt_prefix(translate("Specify second point: "))
 
-        def click(x, y):
-            if self.mode == "NORMAL":
-                if self.first_run:
-                    self.first_run = false
-                    self.baseX = x
-                    self.baseY = y
-                    addRubber("LINE")
-                    self.rubber_mode = "LINE"
-                    set_rubber_point("LINE_START", self.baseX, self.baseY)
-                    previewOn("SELECTED", "SCALE", self.baseX, self.baseY, 1)
-                    append_prompt_history()
-                    set_prompt_prefix(translate("Specify scale factor or [Reference]: "))
-
-                else:
-                    self.destX = x
-                    self.destY = y
-                    self.factor = calculateDistance(self.baseX, self.baseY, self.destX, self.destY)
-                    append_prompt_history()
-                    scaleSelected(self.baseX, self.baseY, self.factor)
-                    previewOff()
-                    return
-
-            elif self.mode == "REFERENCE":
-                if math.isnan(self.baseRX):
-                    self.baseRX = x
-                    self.baseRY = y
-                    append_prompt_history()
-                    addRubber("LINE")
-                    self.rubber_mode = "LINE"
-                    set_rubber_point("LINE_START", self.baseRX, self.baseRY)
+            elif math.isnan(self.destRX):
+                self.destRX = x
+                self.destRY = y
+                self.factorRef = calculate_distance(self.baseRX, self.baseRY, self.destRX, self.destRY)
+                if self.factorRef <= 0.0:
+                    self.destRX = math.nan
+                    self.destRY = math.nan
+                    self.factorRef = math.nan
+                    debug_message("Value must be positive and nonzero.", msgtype="ALERT")
                     set_prompt_prefix(translate("Specify second point: "))
 
-                elif math.isnan(self.destRX):
-                    self.destRX = x
-                    self.destRY = y
-                    self.factorRef = calculateDistance(self.baseRX, self.baseRY, self.destRX, self.destRY)
-                    if self.factorRef <= 0.0:
-                        self.destRX    = math.nan
-                        self.destRY    = math.nan
-                        self.factorRef = math.nan
-                        debug_message("Value must be positive and nonzero.", msgtype="ALERT")
-                        set_prompt_prefix(translate("Specify second point: "))
- 
+                else:
+                    append_prompt_history()
+                    set_rubber_point("LINE_START", self.baseX, self.baseY)
+                    previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
+                    set_prompt_prefix("Specify new length: ")
+
+            elif math.isnan(self.factor_new):
+                self.factor_new = calculate_distance(self.baseX, self.baseY, x, y)
+                if self.factor_new <= 0.0:
+                    self.factor_new = math.nan
+                    debug_message("Value must be positive and nonzero.", msgtype="ALERT")
+                    set_prompt_prefix("Specify new length: ")
+                else:
+                    append_prompt_history()
+                    scale_selected(self.baseX, self.baseY, self.factor_new/self.factorRef)
+                    previewOff()
+
+    def prompt(self, cmd):
+        if self.mode == self.mode_NORMAL:
+            if self.first_run:
+                vector = vector_from_str(cmd)
+                if not vector:
+                    alert("Invalid point.")
+                    set_prompt_prefix("Specify base point: ")
+
+                else:
+                    self.first_run = False
+                    self.start = vector
+                    addRubber("LINE")
+                    set_rubber_mode("LINE")
+                    self.rubber_points["LINE_START"] = self.start
+                    previewOn("SELECTED", "SCALE", self.start, 1)
+                    set_prompt_prefix("Specify scale factor or [Reference]: ")
+
+            else:
+                if str == "R" or cmd == "REFERENCE":
+                    #TODO: Probably should add additional qsTr calls here.
+                    self.mode = "REFERENCE"
+                    set_prompt_prefix("Specify reference length 1}: ")
+                    clear_rubber()
+                    previewOff()
+
+                else:
+                    if math.isnan(cmd):
+                        alert("Requires valid numeric distance, second point, or option keyword.")
+                        set_prompt_prefix("Specify scale factor or [Reference]: ")
+    
                     else:
-                        append_prompt_history()
+                        self.factor = float(cmd)
+                        scale_selected(self.baseX, self.baseY, self.factor)
+                        previewOff()
+
+        elif self.mode == "REFERENCE":
+            if math.isnan(self.baseRX):
+                if math.isnan(cmd):
+                    vector = vector_from_str(cmd)
+                    if not vector:
+                        alert("Requires valid numeric distance or two points.")
+                        set_prompt_prefix("Specify reference length 1}: ")
+                    else:
+                        self.baseRX = float(strList[0])
+                        self.baseRY = float(strList[1])
+                        addRubber("LINE")
+                        set_rubber_mode("LINE")
+                        set_rubber_point("LINE_START", self.baseRX, self.baseRY)
+                        set_prompt_prefix(translate("Specify second point: "))
+                else:
+                    # The base and dest values are only set here to advance the command.
+                    self.baseRX = 0.0
+                    self.baseRY = 0.0
+                    self.destRX = 0.0
+                    self.destRY = 0.0
+                    # The reference length is what we will use later.
+                    self.factorRef = float(cmd)
+                    if self.factorRef <= 0.0:
+                        self.baseRX = math.nan
+                        self.baseRY = math.nan
+                        self.destRX = math.nan
+                        self.destRY = math.nan
+                        self.factorRef = math.nan
+                        alert("Value must be positive and nonzero.")
+                        set_prompt_prefix(translate("Specify reference length") + " 1}: ")
+                    else:
+                        addRubber("LINE")
+                        set_rubber_mode("LINE")
                         set_rubber_point("LINE_START", self.baseX, self.baseY)
                         previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
                         set_prompt_prefix(translate("Specify new length: "))
 
-                elif math.isnan(self.factorNew):
-                    self.factorNew = calculateDistance(self.baseX, self.baseY, x, y)
-                    if self.factorNew <= 0.0:
-                        self.factorNew = math.nan
-                        alert(translate("Value must be positive and nonzero."))
-                        set_prompt_prefix(translate("Specify new length: "))
+            elif math.isnan(self.destR.x):
+                if math.isnan(cmd):
+                    vector = vector_from_str(cmd)
+                    if not vector:
+                        alert("Requires valid numeric distance or two points.")
+                        set_prompt_prefix("Specify second point: ")
                     else:
-                        append_prompt_history()
-                        scaleSelected(self.baseX, self.baseY, self.factorNew/self.factorRef)
-                        previewOff()
-
-        def prompt(self, cmd):
-            if self.mode == self.mode_NORMAL:
-                if self.first_run:
-                    strList = str.split(",")
-                    if math.isnan(strList[0]) or math.isnan(strList[1]):
-                        alert(translate("Invalid point."))
-                        set_prompt_prefix(translate("Specify base point: "))
- 
-                    else:
-                        self.first_run = false
-                        self.baseX = float(strList[0])
-                        self.baseY = float(strList[1])
-                        addRubber("LINE")
-                        set_rubber_mode("LINE")
-                        set_rubber_point("LINE_START", self.baseX, self.baseY)
-                        previewOn("SELECTED", "SCALE", self.baseX, self.baseY, 1)
-                        set_prompt_prefix(translate("Specify scale factor or [Reference]: "))
+                        self.destR = vector
+                        self.factorRef = calculate_distance(self.baseR, self.destR)
+                        if self.factorRef <= 0.0:
+                            self.destR = Vector(math.nan, math.nan)
+                            self.factorRef = math.nan
+                            alert("Value must be positive and nonzero.")
+                            set_prompt_prefix("Specify second point: ")
+        
+                        else:
+                            set_rubber_point("LINE_START", self.base)
+                            previewOn("SELECTED", "SCALE", self.base, self.factorRef)
+                            set_prompt_prefix("Specify new length: ")
 
                 else:
-                    if str == "R" or cmd == "REFERENCE":
-                        #TODO: Probably should add additional qsTr calls here.
-                        self.mode = "REFERENCE"
-                        set_prompt_prefix(translate("Specify reference length") + " 1}: ")
-                        clearRubber()
+                    # The base and dest values are only set here to
+                    # advance the command.
+                    self.base_r = Vector(0.0, 0.0)
+                    self.dest_r = Vector(0.0, 0.0)
+
+                    #The reference length is what we will use later.
+                    self.factorRef = float(cmd)
+                    if self.factorRef <= 0.0:
+                        self.dest_r = Vector(math.nan, math.nan)
+                        self.factorRef = math.nan
+                        alert("Value must be positive and nonzero.")
+                        set_prompt_prefix("Specify second point: ")
+                    else:
+                        set_rubber_point("LINE_START", self.base)
+                        previewOn("SELECTED", "SCALE", self.base, self.factorRef)
+                        set_prompt_prefix("Specify new length: ")
+
+            elif math.isnan(self.factor_new):
+                if math.isnan(cmd):
+                    vector = vector_from_str(cmd)
+                    if not vector:
+                        alert("Requires valid numeric distance or second point.")
+                        set_prompt_prefix(translate("Specify new length: "))
+                    else:
+                        self.factor_new = calculate_distance(self.base, vector)
+                        if self.factor_new <= 0.0:
+                            self.factor_new = math.nan
+                            alert("Value must be positive and nonzero.")
+                            set_prompt_prefix(translate("Specify new length: "))
+        
+                        else:
+                            scaleSelected(self.baseX, self.baseY, self.factor_new/self.factorRef)
+                            previewOff()
+
+                else:
+                    self.factor_new = float(cmd)
+                    if self.factor_new <= 0.0:
+                        self.factor_new = math.nan
+                        alert(translate("Value must be positive and nonzero."))
+                        set_prompt_prefix(translate("Specify new length: "))
+    
+                    else:
+                        scaleSelected(self.baseX, self.baseY, self.factor_new/self.factorRef)
                         previewOff()
- 
-                    else:
-                        if math.isnan(cmd):
-                            alert(translate("Requires valid numeric distance, second point, or option keyword."))
-                            set_prompt_prefix(translate("Specify scale factor or [Reference]: "))
-     
-                        else:
-                            self.factor = float(cmd)
-                            scaleSelected(self.baseX, self.baseY, self.factor)
-                            previewOff()
-                            return
-
-            elif self.mode == "REFERENCE":
-                if math.isnan(self.baseRX):
-                    if math.isnan(cmd):
-                        strList = str.split(",")
-                        if math.isnan(strList[0]) or math.isnan(strList[1]):
-                            alert(translate("Requires valid numeric distance or two points."))
-                            set_prompt_prefix(translate("Specify reference length") + " 1}: ")
-                        else:
-                            self.baseRX = float(strList[0])
-                            self.baseRY = float(strList[1])
-                            addRubber("LINE")
-                            set_rubber_mode("LINE")
-                            set_rubber_point("LINE_START", self.baseRX, self.baseRY)
-                            set_prompt_prefix(translate("Specify second point: "))
-                    else:
-                        #The base and dest values are only set here to advance the command.
-                        self.baseRX = 0.0
-                        self.baseRY = 0.0
-                        self.destRX = 0.0
-                        self.destRY = 0.0
-                        #The reference length is what we will use later.
-                        self.factorRef = float(cmd)
-                        if self.factorRef <= 0.0:
-                            self.baseRX = math.nan
-                            self.baseRY = math.nan
-                            self.destRX = math.nan
-                            self.destRY = math.nan
-                            self.factorRef = math.nan
-                            alert(translate("Value must be positive and nonzero."))
-                            set_prompt_prefix(translate("Specify reference length") + " 1}: ")
-                        else:
-                            addRubber("LINE")
-                            set_rubber_mode("LINE")
-                            set_rubber_point("LINE_START", self.baseX, self.baseY)
-                            previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
-                            set_prompt_prefix(translate("Specify new length: "))
-
-                elif math.isnan(self.destRX):
-                    if math.isnan(cmd):
-                        strList = str.split(",")
-                        if math.isnan(strList[0]) or math.isnan(strList[1]):
-                            alert(translate("Requires valid numeric distance or two points."))
-                            set_prompt_prefix(translate("Specify second point: "))
-                        else:
-                            self.destRX = float(strList[0])
-                            self.destRY = float(strList[1])
-                            self.factorRef = calculateDistance(self.baseRX, self.baseRY, self.destRX, self.destRY)
-                            if self.factorRef <= 0.0:
-                                self.destRX = math.nan
-                                self.destRY = math.nan
-                                self.factorRef = math.nan
-                                alert(translate("Value must be positive and nonzero."))
-                                set_prompt_prefix(translate("Specify second point: "))
-         
-                            else:
-                                set_rubber_point("LINE_START", self.baseX, self.baseY)
-                                previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
-                                set_prompt_prefix(translate("Specify new length: "))
-
-                    else:
-                        # The base and dest values are only set here to
-                        # advance the command.
-                        self.base_r = Vector(0.0, 0.0)
-                        self.dest_r = Vector(0.0, 0.0)
-
-                        #The reference length is what we will use later.
-                        self.factorRef = float(cmd)
-                        if self.factorRef <= 0.0:
-                            self.destRX    = math.nan
-                            self.destRY    = math.nan
-                            self.factorRef = math.nan
-                            alert(translate("Value must be positive and nonzero."))
-                            set_prompt_prefix(translate("Specify second point: "))
-                        else:
-                            set_rubber_point("LINE_START", self.baseX, self.baseY)
-                            previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
-                            set_prompt_prefix(translate("Specify new length: "))
-
-                elif math.isnan(self.factorNew):
-                    if math.isnan(cmd):
-                        strList = str.split(",")
-                        if math.isnan(strList[0]) or math.isnan(strList[1]):
-                            alert(translate("Requires valid numeric distance or second point."))
-                            set_prompt_prefix(translate("Specify new length: "))
-                        else:
-                            x = float(strList[0])
-                            y = float(strList[1])
-                            self.factorNew = calculateDistance(self.baseX, self.baseY, x, y)
-                            if self.factorNew <= 0.0:
-                                self.factorNew = math.nan
-                                alert(translate("Value must be positive and nonzero."))
-                                set_prompt_prefix(translate("Specify new length: "))
-         
-                            else:
-                                scaleSelected(self.baseX, self.baseY, self.factorNew/self.factorRef)
-                                previewOff()
-                                return
-
-                    else:
-                        self.factorNew = float(cmd)
-                        if self.factorNew <= 0.0:
-                            self.factorNew = math.nan
-                            alert(translate("Value must be positive and nonzero."))
-                            set_prompt_prefix(translate("Specify new length: "))
-     
-                        else:
-                            scaleSelected(self.baseX, self.baseY, self.factorNew/self.factorRef)
-                            previewOff()
 
     def a__init__(self):
         " . "
@@ -466,7 +437,7 @@ class Line():
         dx = self.x2 - self.x1
         dy = self.y2 - self.y1
 
-        dist = calculateDistance(self.x1,self.y1,self.x2, self.y2)
+        dist = calculate_distance(self.x1,self.y1,self.x2, self.y2)
         angle = calculate_angle(self.x1,self.y1,self.x2, self.y2)
 
         set_prompt_prefix(translate("Distance") + " = " + dist.toString()

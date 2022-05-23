@@ -17,7 +17,8 @@ import math
 import time
 
 import libembroidery.tools as tools
-from libembroidery.tools import Vector, debug_message
+from libembroidery.tools import (Vector, add_rubber, append_prompt_history, debug_message, set_prompt_prefix,
+                                 vector_from_str)
 from libembroidery.rect import Rect
 from libembroidery.line import Line
 
@@ -64,9 +65,7 @@ class Circle():
         self.radius = radius
         self.center = center
         self.update_path()
-        self.promptPrefix = tools.translate(
-            "Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "
-        )
+        self.promptPrefix = "Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "
         self.pen = pen
         self.lwt_pen = pen
         self.obj_id = "OBJ"+str(time.time())
@@ -99,10 +98,6 @@ class Circle():
         p = []
         p.add_rect(x, y, w, h)
         self.set_path(p)
-
-    def line():
-        " . "
-        return self.obj_line
 
     def set_line(self, li):
         r"""
@@ -153,8 +148,8 @@ class Circle():
                 # TODO: getBlockline_weight
 
             else:
-                tools.warning(0, tools.translate("Error - Negative line_weight"),
-                              tools.translate("line_weight: %1") % line_weight)
+                tools.warning(0, "Error - Negative line_weight",
+                              "line_weight: %1" % line_weight)
                 tools.debug_message(
                     "line_weight cannot be negative! Inverting sign."
                 )
@@ -181,21 +176,21 @@ class Circle():
 
     def bounding_rect(self):
         r" If gripped, force this  to be drawn even if it is offscreen. "
-        if self.rubber_mode() == "OBJ_RUBBER_GRIP":
-            return self.scene().sceneRect()
-        return [].bounding_rect()
+        if self.rubber_mode == "OBJ_RUBBER_GRIP":
+            return self.scene().scene_rect()
+        return Rect()
 
     def draw_rubber_line(self, rubLine, painter, colorFromScene):
         " . "
         if painter:
-            obj_scene = scene()
+            obj_scene = self.scene()
             if obj_scene:
-                colorPen = self.pen
-                colorPen.set_color(
+                color_pen = self.pen
+                color_pen.set_color(
                     tools.Color(obj_scene.property(colorFromScene).toUInt())
                 )
-                painter.set_pen(colorPen)
-                painter.drawLine(rubLine)
+                painter.set_pen(color_pen)
+                painter.draw_line(rubLine)
                 painter.set_pen(self.pen)
 
     def real_render(self, painter, render_path):
@@ -251,7 +246,7 @@ class Circle():
         " . "
         return 2 * self.radius
 
-    def Area(self):
+    def area(self):
         " . "
         return math.pi * self.radius * self.radius
 
@@ -259,21 +254,11 @@ class Circle():
         " . "
         return 2 * self.radius * math.pi
 
-    def Quadrant0(self):
+    def quadrant(self, angle):
         " . "
-        return self.center + Vector(self.radius, 0)
-
-    def Quadrant90(self):
-        " . "
-        return self.center + Vector(0,-self.radius)
-
-    def Quadrant180(self):
-        " . "
-        return self.center + Vector(-self.radius,0)
-
-    def Quadrant270(self):
-        " . "
-        return self.center + Vector(0, self.radius)
+        angle = math.radians(angle)
+        vector = Vector(self.radius*math.cos(angle), self.radius*math.cos(angle))
+        return self.center + vector
 
     def set_diameter(self, diameter):
         " . "
@@ -394,51 +379,33 @@ class Circle():
     def vulcanize():
         debug_message("Circle vulcanize()")
         self.update_rubber()
+        self.rubber_mode = "RUBBER_OFF"
 
-        setrubber_mode(OBJ_RUBBER_OFF)
-
-    def mouse_snap_point(mouse_point):
+    def mouse_snap_point(self, mouse_point):
         " Returns the closest snap point to the mouse point. "
-        center = self.center
-        quad0 = Quadrant0()
-        quad90 = Quadrant90()
-        quad180 = Quadrant180()
-        quad270 = Quadrant270()
+        all_points = self.all_grip_points()
+        return closest_vector(all_points, mouse_point)
 
-        cntrDist = Line(mouse_point, center).length()
-        q0Dist = Line(mouse_point, quad0).length()
-        q90Dist = Line(mouse_point, quad90).length()
-        q180Dist = Line(mouse_point, quad180).length()
-        q270Dist = Line(mouse_point, quad270).length()
-
-        minDist = min(q0Dist, q90Dist, q180Dist, q270Dist, cntrDist)
-
-        if minDist == cntrDist:
-            return center
-        elif minDist == q0Dist:
-            return quad0
-        elif minDist == q90Dist:
-            return quad90
-        elif minDist == q180Dist:
-            return quad180
-        elif minDist == q270Dist:
-            return quad270
-
-        return scenePos()
-
-    def all_grip_points():
-        gripPoints = []
-        gripPoints << self.center << Quadrant0() << Quadrant90() << Quadrant180() << Quadrant270()
-        return gripPoints
+    def all_grip_points(self):
+        r"."
+        return [
+            self.center,
+            self.quadrant(0),
+            self.quadrant(90),
+            self.quadrant(180),
+            self.quadrant(270)
+        ]
 
     def grip_edit(self, before, after):
+        r"."
         if before == self.center:
             delta = after-before
             moveBy(delta.x(), delta.y())
         else:
             setRadius(Line(self.center(), after).length())
 
-    def SavePath(self):
+    def save_path(self):
+        r"."
         path = []
         r = Rect()
         path.arcmove_to(r, 0)
@@ -475,83 +442,82 @@ class Circle():
                 set_rubber_mode("CIRCLE_1P_RAD")
                 set_rubber_point("CIRCLE_CENTER", self.cx, self.cy)
                 append_prompt_history()
-                set_prompt_prefix(translate("Specify radius of circle or [Diameter]: "))
+                set_prompt_prefix("Specify radius of circle or [Diameter]: ")
             else:
                 self.point2 = vector
-                set_rubber_point("CIRCLE_RADIUS", self.point2.x, self.point2.y)
-                vulcanize()
+                self.rubber_points["CIRCLE_RADIUS"] = self.point2
+                self.vulcanize()
                 append_prompt_history()
 
         elif self.mode == "1P_DIA":
             if math.isnan(self.point1.x):
-                message = "CIRCLE" + translate("This should never happen.")
+                message = "CIRCLE" + "This should never happen."
                 debug_message(message, msgtype="ERROR")
             else:
                 self.point2 = vector
-                set_rubber_point("CIRCLE_DIAMETER", self.point2.x, self.point2.y)
-                vulcanize()
+                self.rubber_points["CIRCLE_DIAMETER"] = self.point2
+                self.vulcanize()
                 append_prompt_history()
 
         elif self.mode == "2P":
             if math.isnan(self.point1.x):
                 self.point1 = vector
-                addRubber("CIRCLE")
-                set_rubber_mode("CIRCLE_2P")
-                set_rubber_point("CIRCLE_TAN1", self.point1.x, self.point1.y)
+                add_rubber("CIRCLE")
+                self.rubber_mode = "CIRCLE_2P"
+                self.rubber_points["CIRCLE_TAN1"] = self.point1
                 append_prompt_history()
-                set_prompt_prefix(translate("Specify second end point of circle's diameter: "))
+                set_prompt_prefix("Specify second end point of circle's diameter: ")
 
             elif math.isnan(self.point2.x):
                 self.point2 = vector
-                set_rubber_point("CIRCLE_TAN2", self.point2.x, self.point2.y)
-                vulcanize()
+                self.rubber_points["CIRCLE_TAN2"] = self.point2
+                self.vulcanize()
                 append_prompt_history()
 
             else:
-                message = "CIRCLE" + translate("This should never happen.")
+                message = "CIRCLE This should never happen."
                 debug_message(message, msgtype="ERROR")
 
         elif self.mode == "3P":
             if math.isnan(self.point1.x):
                 self.point1 = vector
                 append_prompt_history()
-                set_prompt_prefix(translate("Specify second point on circle: "))
+                set_prompt_prefix("Specify second point on circle: ")
 
             elif math.isnan(self.point2.x):
                 self.point2 = vector
-                addRubber("CIRCLE")
-                set_rubber_mode("CIRCLE_3P")
-                set_rubber_point("CIRCLE_TAN1", self.point1.x, self.point1.y)
-                set_rubber_point("CIRCLE_TAN2", self.point2.x, self.point2.y)
+                add_rubber("CIRCLE")
+                self.rubber_mode = "CIRCLE_3P"
+                self.rubber_points["CIRCLE_TAN1"] = self.point1
+                self.rubber_points["CIRCLE_TAN2"] = self.point2
                 append_prompt_history()
-                set_prompt_prefix(translate("Specify third point on circle: "))
+                set_prompt_prefix("Specify third point on circle: ")
 
             elif math.isnan(self.point3.x):
                 self.point3 = vector
-                set_rubber_point("CIRCLE_TAN3", self.x3, self.y3)
-                vulcanize()
+                self.rubber_points["CIRCLE_TAN3"] = self.point3
+                self.vulcanize()
                 append_prompt_history()
-                return
 
             else:
-                message = "CIRCLE" + translate("This should never happen.")
+                message = "CIRCLE This should never happen."
                 debug_message(message, msgtype="ERROR")
 
         elif self.mode == "TTR":
             if math.isnan(self.point1.x):
                 self.point1 = vector
                 append_prompt_history()
-                set_prompt_prefix(translate("Specify point on  for second tangent of circle: "))
+                set_prompt_prefix("Specify point on  for second tangent of circle: ")
 
             elif math.isnan(self.point2.x):
                 self.point2 = vector
                 append_prompt_history()
-                set_prompt_prefix(translate("Specify radius of circle: "))
+                set_prompt_prefix("Specify radius of circle: ")
 
             elif math.isnan(self.point3.x):
                 self.point3 = vector
                 append_prompt_history()
-                set_prompt_prefix(translate("Specify second point: "))
+                set_prompt_prefix("Specify second point: ")
 
             else:
                 debug_message("CIRCLE click() for TTR")
@@ -562,64 +528,66 @@ class Circle():
                 # TODO: Probably should add additional qsTr calls here.
                 if cmd == "2P":
                     self.mode = "2P"
-                    set_prompt_prefix(translate("Specify first end point of circle's diameter: "))
+                    set_prompt_prefix("Specify first end point of circle's diameter: ")
 
                 # TODO: Probably should add additional qsTr calls here.
                 elif cmd == "3P":
                     self.mode = "3P"
-                    set_prompt_prefix(translate("Specify first point of circle: "))
+                    set_prompt_prefix("Specify first point of circle: ")
 
                 # TODO: Probably should add additional qsTr calls here.
                 elif cmd == "T" or cmd == "TTR":
                     self.mode = "TTR"
-                    set_prompt_prefix(translate("Specify point on  for first tangent of circle: "))
+                    set_prompt_prefix("Specify point on  for first tangent of circle: ")
 
                 else:
-                    strList = str.split(",")
-                    if math.isnan(strList[0]) or math.isnan(strList[1]):
-                        alert(translate("Point or option keyword required."))
-                        set_prompt_prefix(translate("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "))
+                    vector = vector_from_str(cmd)
+                    if not vector:
+                        debug_message("Point or option keyword required.",
+                                      msgtype="ALERT")
+                        set_prompt_prefix("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: ")
  
                     else:
-                        self.point1.x = float(strList[0])
-                        self.point1.y = float(strList[1])
-                        self.cx = self.point1.x
-                        self.cy = self.point1.y
-                        addRubber("CIRCLE")
-                        set_rubber_mode("CIRCLE_1P_RAD")
-                        set_rubber_point("CIRCLE_CENTER", self.cx, self.cy)
-                        set_prompt_prefix(translate("Specify radius of circle or [Diameter]: "))
+                        self.point1 = vector
+                        self.center = self.point1
+                        add_rubber("CIRCLE")
+                        self.rubber_mode = "CIRCLE_1P_RAD"
+                        self.rubber_points["CIRCLE_CENTER"] = self.center
+                        set_prompt_prefix("Specify radius of circle or [Diameter]: ")
 
             else:
                 # TODO: Probably should add additional qsTr calls here.
                 if str == "D" or str == "DIAMETER":
-                    self.mode = circle_mode_1P_DIA
-                    set_rubber_mode("CIRCLE_1P_DIA")
-                    set_prompt_prefix(translate("Specify diameter of circle: "))
+                    self.mode = "1P_DIA"
+                    self.rubber_mode = "CIRCLE_1P_DIA"
+                    set_prompt_prefix("Specify diameter of circle: ")
 
                 else:
                     num = float(cmd)
                     if math.isnan(num):
-                        alert(translate("Requires numeric radius, point on circumference, or \"D\"."))
-                        set_prompt_prefix(translate("Specify radius of circle or [Diameter]: "))
+                        debug_message(
+                            "Requires numeric radius, point on circumference, or \"D\".",
+                            msgtype="ALERT"
+                        )
+                        set_prompt_prefix("Specify radius of circle or [Diameter]: ")
  
                     else:
                         self.rad = num
                         self.point2.x = self.point1.x + self.rad
                         self.point2.y = self.point1.y
-                        set_rubber_point("CIRCLE_RADIUS", self.point2.x, self.point2.y)
+                        self.rubber_points["CIRCLE_RADIUS"] = self.point2
                         self.vulcanize()
 
         elif self.mode == "1P_DIA":
             if math.isnan(self.point1.x):
-                message = "CIRCLE" + translate("This should never happen.")
+                message = "CIRCLE This should never happen."
                 debug_message(message, msgtype="ERROR")
 
             if math.isnan(self.point2.x):
                 num = float(cmd)
                 if math.isnan(num):
-                    alert(translate("Requires numeric distance or second point."))
-                    set_prompt_prefix(translate("Specify diameter of circle: "))
+                    alert("Requires numeric distance or second point.")
+                    set_prompt_prefix("Specify diameter of circle: ")
 
                 else:
                     self.dia = num
@@ -628,61 +596,61 @@ class Circle():
                     set_rubber_point("CIRCLE_DIAMETER", self.point2.x, self.point2.y)
                     self.vulcanize()
             else:
-                message = "CIRCLE" + translate("This should never happen.")
+                message = "CIRCLE" + "This should never happen."
                 debug_message(message, msgtype="ERROR")
 
         elif self.mode == "2P":
             if math.isnan(self.point1.x):
                 vector = vector_from_str(cmd)
                 if not vector:
-                    alert(translate("Invalid point."))
-                    set_prompt_prefix(translate("Specify first end point of circle's diameter: "))
+                    alert("Invalid point.")
+                    set_prompt_prefix("Specify first end point of circle's diameter: ")
                 else:
                     self.point1 = vector
                     addRubber("CIRCLE")
                     self.rubber_mode = "CIRCLE_2P"
                     self.rubber_points["CIRCLE_TAN1"] = self.point1
-                    set_prompt_prefix(translate("Specify second end point of circle's diameter: "))
+                    set_prompt_prefix("Specify second end point of circle's diameter: ")
             elif math.isnan(self.point2.x):
                 vector = vector_from_str(cmd)
                 if not vector:
-                    alert(translate("Invalid point."))
-                    set_prompt_prefix(translate("Specify second end point of circle's diameter: "))
+                    alert("Invalid point.")
+                    set_prompt_prefix("Specify second end point of circle's diameter: ")
                 else:
                     self.point2 = vector
                     set_rubber_point("CIRCLE_TAN2", self.point2)
                     self.vulcanize()
             else:
-                message = "CIRCLE" + translate("This should never happen.")
+                message = "CIRCLE" + "This should never happen."
                 debug_message(message, msgtype="ERROR")
 
         elif self.mode == "3P":
             vector = vector_from_str(cmd)
             if not vector:
-                alert(translate("Invalid point."))
+                alert("Invalid point.")
                 if math.isnan(self.point1.x):
-                    set_prompt_prefix(translate("Specify first point of circle:"))
+                    set_prompt_prefix("Specify first point of circle:")
                 elif math.isnan(self.point2.x):
-                    set_prompt_prefix(translate("Specify second point of circle: "))
+                    set_prompt_prefix("Specify second point of circle: ")
                 else:
-                    set_prompt_prefix(translate("Specify third point of circle: "))
+                    set_prompt_prefix("Specify third point of circle: ")
             else:
                 if math.isnan(self.point1.x):
                     self.point1 = vector
                     self.rubber_points["CIRCLE_TAN1"] = self.point1
-                    set_prompt_prefix(translate("Specify second point of circle: "))
+                    set_prompt_prefix("Specify second point of circle: ")
                 elif math.isnan(self.point2.x):
                     self.point2 = vector
                     addRubber("CIRCLE")
                     self.rubber_mode = "CIRCLE_3P"
                     self.rubber_points["CIRCLE_TAN2"] = self.point2
-                    set_prompt_prefix(translate("Specify third point of circle: "))
+                    set_prompt_prefix("Specify third point of circle: ")
                 elif math.isnan(self.point3.x):
                     self.point3 = vector
                     self.rubber_points["CIRCLE_TAN3"] = self.point3
                     self.vulcanize()
                 else:
-                    message = "CIRCLE" + translate("This should never happen.")
+                    message = "CIRCLE" + "This should never happen."
                     debug_message(message, msgtype="ERROR")
 
         elif self.mode == "TTR":

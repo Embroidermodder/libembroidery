@@ -18,8 +18,8 @@ import math
 from libembroidery.path import Path
 from libembroidery.line import Line
 from libembroidery.tools import (
-    translate, clear_selection, debug_message, set_prompt_prefix,
-    alert, Pen, Vector, vector_from_str
+    clear_selection, debug_message, set_prompt_prefix,
+    Pen, Vector, vector_from_str
 )
 
 
@@ -45,7 +45,7 @@ class Rect():
         clear_selection()
         self.new_rect = True
         self.rubber_mode = "NOT SET"
-        set_prompt_prefix(translate("Specify first corner point or [Chamfer/Fillet]: "))
+        set_prompt_prefix("Specify first corner point or [Chamfer/Fillet]: ")
 
     def width(self):
         r"Syntactic sugar for x dimension of the Rect."
@@ -68,7 +68,7 @@ class Rect():
             addRubber("RECTANGLE")
             self.rubber_mode = "RECTANGLE"
             self.rubberPoint["RECTANGLE_START"] = Vector(x, y)
-            set_prompt_prefix(translate("Specify other corner point or [Dimensions]: "))
+            set_prompt_prefix("Specify other corner point or [Dimensions]: ")
         else:
             self.new_rect = True
             self.x2 = x
@@ -90,8 +90,8 @@ class Rect():
         else:
             vector = vector_from_str(cmd)
             if not vector:
-                alert(translate("Invalid point."))
-                set_prompt_prefix(translate("Specify first point: "))
+                debug_message("Invalid point.", msgtype="ALERT")
+                set_prompt_prefix("Specify first point: ")
             else:
                 if self.new_rect:
                     self.new_rect = False
@@ -99,7 +99,7 @@ class Rect():
                     add_rubber("RECTANGLE")
                     self.rubber_mode = "RECTANGLE"
                     set_rubber_point("RECTANGLE_START", vector)
-                    set_prompt_prefix(translate("Specify other corner point or [Dimensions]: "))
+                    set_prompt_prefix("Specify other corner point or [Dimensions]: ")
                 else:
                     self.new_rect = True
                     self.dimensions = vector - self.position

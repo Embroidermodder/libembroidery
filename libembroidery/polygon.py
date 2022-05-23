@@ -18,7 +18,7 @@ import math
 
 from libembroidery.tools import (
     Vector, Pen, debug_message,
-    set_prompt_prefix, clear_selection, translate
+    set_prompt_prefix, clear_selection, translate, vector_from_str
 )
 from libembroidery.line import Line
 from libembroidery.path import Path
@@ -46,7 +46,7 @@ class Polygon():
         self.points = []
 
         # Prompt version.
-        clearSelection()
+        clear_selection()
         self.center = Vector(math.nan, math.nan)
         self.side1 = Vector(math.nan, math.nan)
         self.side2 = Vector(math.nan, math.nan)
@@ -55,8 +55,7 @@ class Polygon():
         self.poly_type = "Inscribed"
         self.num_sides = 4
         self.mode = "NUM_SIDES"
-        set_prompt_prefix(translate("Enter int of sides")
-            + " " + str(self.num_sides) + "}: ")
+        set_prompt_prefix("Enter int of sides " + str(self.num_sides) + "}: ")
 
     def copy(self):
         " Return a copy of the object. "
@@ -217,8 +216,8 @@ class Polygon():
         set_object_rubber_mode(OBJ_RUBBER_OFF)
 
         if not self.normal_path.element_count():
-            label = translate("Empty Polygon Error")
-            description = translate("The polygon added contains no points. The command that created this object has flawed logic.")
+            label = "Empty Polygon Error"
+            description = "The polygon added contains no points. The command that created this object has flawed logic."
             critical(0, label, description)
 
     def mouse_snap_point(self, mouse_point):
@@ -303,7 +302,7 @@ class Polygon():
             self.center = vector
             self.mode = "poly_type"
             append_prompt_history()
-            set_prompt_prefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " " + self.poly_type + "}: ")
+            set_prompt_prefix("Specify polygon type [Inscribed in circle/Circumscribed around circle] " + self.poly_type + "}: ")
 
         elif self.mode == "poly_type":
             #Do nothing, the prompt controls this.
@@ -332,43 +331,43 @@ class Polygon():
     def prompt(self, cmd):
         if self.mode == "NUM_SIDES":
             if str == "" and self.num_sides >= 3 and self.num_sides <= 1024:
-                set_prompt_prefix(translate("Specify center point or [Sidelength]: "))
+                set_prompt_prefix("Specify center point or [Sidelength]: ")
                 self.mode = "CENTER_PT"
 
             else:
                 tmp = int(cmd)
                 if math.isnan(tmp) or (not isInt(tmp)) or tmp < 3 or tmp > 1024:
-                    alert(translate("Requires an integer between 3 and 1024."))
-                    set_prompt_prefix(translate("Enter number of sides") + " " + self.num_sides.toString() + "}: ")
+                    debug_message("Requires an integer between 3 and 1024.", msgtype="ALERT")
+                    set_prompt_prefix("Enter number of sides " + str(self.num_sides) + "}: ")
 
                 else:
                     self.num_sides = tmp
-                    set_prompt_prefix(translate("Specify center point or [Sidelength]: "))
+                    set_prompt_prefix("Specify center point or [Sidelength]: ")
                     self.mode = "CENTER_PT"
 
         elif self.mode == "CENTER_PT":
             if cmd[0] == "S" or cmd == "SIDELENGTH":
                 # TODO: Probably should add additional qsTr calls here.
                 self.mode = "SIDE_LEN"
-                set_prompt_prefix(translate("Specify start point: "))
+                set_prompt_prefix("Specify start point: ")
 
             else:
                 vector = vector_from_str(cmd)
                 if not vector:
-                    alert(translate("Point or option keyword required."))
-                    set_prompt_prefix(translate("Specify center point or [Sidelength]: "))
+                    debug_message("Point or option keyword required.", msgtype="ALERT")
+                    set_prompt_prefix("Specify center point or [Sidelength]: ")
 
                 else:
                     self.center = vector
                     self.mode = "poly_type"
-                    set_prompt_prefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " " + self.poly_type + "}: ")
+                    set_prompt_prefix("Specify polygon type [Inscribed in circle/Circumscribed around circle] " + self.poly_type + "}: ")
 
         elif self.mode == "poly_type":
             if cmd == "INSCRIBED"[len(cmd)]:
                 # TODO: Probably should add additional translate calls here.
                 self.mode = "INSCRIBE"
                 self.poly_type = "Inscribed"
-                set_prompt_prefix(translate("Specify polygon corner point or [Distance]: "))
+                set_prompt_prefix("Specify polygon corner point or [Distance]: ")
                 addRubber("POLYGON")
                 self.rubber_mode = "POLYGON_INSCRIBE"
                 self.rubber_points["POLYGON_CENTER"] = self.find_center()
@@ -378,7 +377,7 @@ class Polygon():
                 # TODO: Probably should add additional translate calls here.
                 self.mode = "CIRCUMSCRIBE"
                 self.poly_type = "Circumscribed"
-                set_prompt_prefix(translate("Specify polygon side point or [Distance]: "))
+                set_prompt_prefix("Specify polygon side point or [Distance]: ")
                 addRubber("POLYGON")
                 self.rubber_mode = "POLYGON_CIRCUMSCRIBE"
                 self.rubber_points["POLYGON_CENTER"] = self.find_center()
@@ -387,7 +386,7 @@ class Polygon():
             elif str == "":
                 if self.poly_type == "Inscribed":
                     self.mode = "INSCRIBE"
-                    set_prompt_prefix(translate("Specify polygon corner point or [Distance]: "))
+                    set_prompt_prefix("Specify polygon corner point or [Distance]: ")
                     addRubber("POLYGON")
                     self.rubber_mode = "POLYGON_INSCRIBE"
                     self.rubber_points["POLYGON_CENTER"] = self.find_center()
@@ -395,31 +394,31 @@ class Polygon():
 
                 elif self.poly_type == "Circumscribed":
                     self.mode = "CIRCUMSCRIBE"
-                    set_prompt_prefix(translate("Specify polygon side point or [Distance]: "))
+                    set_prompt_prefix("Specify polygon side point or [Distance]: ")
                     addRubber("POLYGON")
                     self.rubber_mode = "POLYGON_CIRCUMSCRIBE"
                     self.rubber_points["POLYGON_CENTER"] = self.center
                     self.rubber_points["POLYGON_NUM_SIDES"] = (self.num_sides, 0)
 
                 else:
-                    message = "POLYGON" + translate("Polygon type is not Inscribed or Circumscribed.")
+                    message = "POLYGON Polygon type is not Inscribed or Circumscribed."
                     debug_message(message, msgtype="ERROR")
 
             else:
-                alert(translate("Invalid option keyword."))
-                set_prompt_prefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " " + self.poly_type + "}: ")
+                debug_message("Invalid option keyword.", msgtype="ALERT")
+                set_prompt_prefix("Specify polygon type [Inscribed in circle/Circumscribed around circle] " + self.poly_type + "}: ")
 
         elif self.mode == "INSCRIBE":
             if str == "D" or cmd == "DISTANCE":
                 # TODO: Probably should add additional qsTr calls here.
                 self.mode = "DISTANCE"
-                set_prompt_prefix(translate("Specify distance: "))
+                set_prompt_prefix("Specify distance: ")
 
             else:
                 vector = vector_from_str(cmd)
                 if not vector:
-                    alert(translate("Point or option keyword required."))
-                    set_prompt_prefix(translate("Specify polygon corner point or [Distance]: "))
+                    debug_message("Point or option keyword required.", msgtype="ALERT")
+                    set_prompt_prefix("Specify polygon corner point or [Distance]: ")
 
                 else:
                     self.point_i = vector
@@ -431,12 +430,12 @@ class Polygon():
             if cmd[0] == "D" or cmd == "DISTANCE":
                 # TODO: Probably should add additional qsTr calls here.
                 self.mode = "DISTANCE"
-                set_prompt_prefix(translate("Specify distance: "))
+                set_prompt_prefix("Specify distance: ")
             else:
                 vector = vector_from_str(cmd)
                 if not vector:
-                    alert(translate("Point or option keyword required."))
-                    set_prompt_prefix(translate("Specify polygon side point or [Distance]: "))
+                    debug_message("Point or option keyword required.", msgtype="ALERT")
+                    set_prompt_prefix("Specify polygon side point or [Distance]: ")
 
                 else:
                     self.point_c = vector
@@ -445,8 +444,8 @@ class Polygon():
 
         elif self.mode == "DISTANCE":
             if math.isnan(cmd):
-                alert(translate("Requires valid numeric distance."))
-                set_prompt_prefix(translate("Specify distance: "))
+                debug_message("Requires valid numeric distance.", msgtype="ALERT")
+                set_prompt_prefix("Specify distance: ")
 
             else:
                 if self.poly_type == "Inscribed":
@@ -462,7 +461,7 @@ class Polygon():
                     self.vulcanize()
 
                 else:
-                    description = "POLYGON" + translate("Polygon type is not Inscribed or Circumscribed.")
+                    description = "POLYGON Polygon type is not Inscribed or Circumscribed."
                     debug_message(description, msgtype="ERROR")
 
         elif self.mode == "SIDE_LEN":

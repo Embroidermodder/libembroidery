@@ -15,7 +15,7 @@ r"""
 
 import math
 
-from libembroidery.tools import Pen, Vector, vector_from_str, debug_message
+from libembroidery.tools import Pen, Vector, append_prompt_history, clear_selection, set_prompt_prefix, vector_from_str, debug_message
 from libembroidery.line import Line
 
 
@@ -49,22 +49,67 @@ class Point():
         clear_selection()
         set_prompt_prefix(translate("Specify point: "))
 
+        clear_selection()
+        self.first_run = True
+        set_prompt_prefix("TODO: Current point settings: PDMODE=?  PDSIZE=?")
+        append_prompt_history()
+        set_prompt_prefix("Specify first point: ")
+
     def click(self, x, y):
         " . "
         append_prompt_history()
         set_prompt_prefix("X = " + x.toString() + ", Y = " + y.toString())
         append_prompt_history()
 
-    def prompt(self, cmd):
-        " . "
-        strList = str.split(",")
-        if math.isnan(strList[0]) or math.isnan(strList[1]):
-            alert(translate("Invalid point."))
-            set_prompt_prefix(translate("Specify point: "))
+        # Alternative version.
+        if self.first_run:
+            self.first_run = False
+            append_prompt_history()
+            set_prompt_prefix("Specify next point: ")
+            add_point(x,y)
         else:
             append_prompt_history()
-            set_prompt_prefix("X = " + strList[0].toString() + ", Y = " + strList[1].toString())
+            add_point(x,y)
+
+    def prompt(self, cmd):
+        " . "
+        vector = vector_from_str(cmd)
+        if not vector:
+            alert("Invalid point.")
+            set_prompt_prefix("Specify point: ")
+        else:
             append_prompt_history()
+            terms = cmd.split(",")
+            set_prompt_prefix("X = " + terms[0] + ", Y = " + terms[1])
+            append_prompt_history()
+
+        # Alternative version.
+        if self.first_run:
+            if str == "M" or cmd == "MODE":
+                # TODO: Probably should add additional qsTr calls here.
+                debug_message("POINT prompt() for PDMODE")
+
+            elif str == "S" or cmd == "SIZE":
+                # TODO: Probably should add additional qsTr calls here.
+                debug_message("POINT prompt() for PDSIZE")
+
+            vector = vector_from_str(cmd)
+            if not vector:
+                debug_message("Invalid point.", msgtype="ALERT")
+                set_prompt_prefix("Specify first point: ")
+            else:
+                self.first_run = False
+                set_prompt_prefix("Specify next point: ")
+                addPoint(vector)
+
+        else:
+            vector = vector_from_str(cmd)
+            if not vector:
+                alert("Invalid point.")
+                set_prompt_prefix("Specify next point: ")
+            else:
+                set_prompt_prefix("Specify next point: ")
+                addPoint(vector)
 
     def copy(self):
         " . "
@@ -101,7 +146,7 @@ class Point():
                     rubLine = Line(map_from_scene(gripPoint), map_from_scene(objectRubberPoint("")))
                     drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
 
-    def vulcanize():
+    def vulcanize(self):
         " . "
         debug_message("PointObject vulcanize()")
         self.update_rubber()
@@ -127,51 +172,3 @@ class Point():
         path = Path()
         path.add_rect(-0.00000001, -0.00000001, 0.00000002, 0.00000002)
         return path
-
-    def __init__(self):
-        " TODO: translate needed here when complete. "
-        clearSelection()
-        self.first_run = True
-        set_prompt_prefix("TODO: Current point settings: PDMODE=?  PDSIZE=?")
-        append_prompt_history()
-        set_prompt_prefix(translate("Specify first point: "))
-        return self
-
-    def click(self, x, y):
-        if self.first_run:
-            self.first_run = False
-            append_prompt_history()
-            set_prompt_prefix(translate("Specify next point: "))
-            addPoint(x,y)
-        else:
-            append_prompt_history()
-            addPoint(x,y)
-
-    def prompt(self, str):
-        " . "
-        if self.first_run:
-            if str == "M" or cmd == "MODE":
-                # TODO: Probably should add additional qsTr calls here.
-                debug_message("POINT prompt() for PDMODE")
-
-            elif str == "S" or cmd == "SIZE":
-                # TODO: Probably should add additional qsTr calls here.
-                debug_message("POINT prompt() for PDSIZE")
-
-            vector = vector_from_str(cmd)
-            if not vector:
-                alert(translate("Invalid point."))
-                set_prompt_prefix(translate("Specify first point: "))
-            else:
-                self.first_run = False
-                set_prompt_prefix(translate("Specify next point: "))
-                addPoint(vector)
-
-        else:
-            vector = vector_from_str(cmd)
-            if not vector:
-                alert(translate("Invalid point."))
-                set_prompt_prefix(translate("Specify next point: "))
-            else:
-                set_prompt_prefix(translate("Specify next point: "))
-                addPoint(vector)

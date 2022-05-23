@@ -17,9 +17,9 @@ r"""
 import math
 
 from libembroidery.tools import (
-    translate, clear_selection, debug_message, alert,
+    clear_selection, debug_message,
     set_prompt_prefix, Pen, Vector, path_from_command,
-    append_prompt_history
+    append_prompt_history, vector_from_str
 )
 
 
@@ -41,7 +41,7 @@ class Path():
         self.first_run = True
         self.first = Vector(math.nan, math.nan)
         self.prev = Vector(math.nan, math.nan)
-        self.promptPrefix = translate("Specify start point: ")
+        self.promptPrefix = "Specify start point: "
         if data != []:
             self.data = data
         elif command != "":
@@ -92,11 +92,11 @@ class Path():
         self.rubber_mode = "RUBBER_OFF"
 
         if not self.normal_path.element_count():
-            details = translate(
+            details = (
                 "The path added contains no points. "
                 + "The command that created this object has flawed logic."
             )
-            debug_message(translate("Empty Path Error") + details, msgtype="ERROR")
+            debug_message("Empty Path Error" + details, msgtype="ERROR")
 
     def mouse_snap_point(self, mouse_point):
         " Returns the closest snap point to the mouse point. "
@@ -131,7 +131,7 @@ class Path():
             self.prev = Vector(x, y)
             addPath(x, y)
             append_prompt_history()
-            set_prompt_prefix(translate("Specify next point or [Arc/Undo]: "))
+            set_prompt_prefix("Specify next point or [Arc/Undo]: ")
         else:
             append_prompt_history()
             append_line_to_path(x, y)
@@ -148,24 +148,22 @@ class Path():
             debug_message("PATH prompt() for UNDO")
 
         else:
-            strList = str.split(",")
-            if math.math.isnan(strList[0]) or math.math.isnan(strList[1]):
-                alert(translate("Point or option keyword required."))
-                prefix = translate("Specify next point or [Arc/Undo]: ")
+            vector = vector_from_str(cmd)
+            if not vector:
+                alert("Point or option keyword required.")
+                prefix = "Specify next point or [Arc/Undo]: "
                 set_prompt_prefix(prefix)
 
             else:
-                x = float(strList[0])
-                y = float(strList[1])
                 if self.first_run:
                     self.first_run = False
-                    self.first = Vector(x, y)
-                    self.prev = Vector(x, y)
-                    addPath(x, y)
-                    set_prompt_prefix(translate("Specify next point or [Arc/Undo]: "))
+                    self.first = vector
+                    self.prev = vector
+                    add_path(vector)
+                    set_prompt_prefix("Specify next point or [Arc/Undo]: ")
                 else:
-                    append_line_to_path(x, y)
-                    self.prev = Vector(x, y)
+                    append_line_to_path(vector)
+                    self.prev = vector
 
     def set_object_pos(self, point):
         " . "

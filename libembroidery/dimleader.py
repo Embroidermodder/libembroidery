@@ -18,9 +18,8 @@ import math
 from libembroidery.path import Path
 from libembroidery.rect import Rect
 from libembroidery.tools import (
-    Pen, Vector, vector_from_str, closest_vector,
-    translate, clear_selection, set_prompt_prefix, alert, debug_message,
-    add_rubber, append_prompt_history, map_from_scene
+    Pen, Vector, vector_from_str, closest_vector, clear_selection,
+    set_prompt_prefix, debug_message, add_rubber, append_prompt_history
 )
 from libembroidery.line import Line
 
@@ -73,7 +72,7 @@ class DimLeader():
 
         # TODO: Adding the text is not complete yet.
         clear_selection()
-        set_prompt_prefix(translate("Specify first point: "))
+        set_prompt_prefix("Specify first point: ")
         return self
 
     def click(self, x, y):
@@ -83,7 +82,7 @@ class DimLeader():
             self.rubber_mode = "DIMLEADER_LINE"
             self.rubber_points["DIMLEADER_LINE_START"] = self.point1
             append_prompt_history()
-            set_prompt_prefix(translate("Specify second point: "))
+            set_prompt_prefix("Specify second point: ")
         else:
             self.point2 = Vector(x, y)
             self.rubber_points["DIMLEADER_LINE_END"] = self.point2
@@ -94,20 +93,20 @@ class DimLeader():
         vector = vector_from_str(cmd)
         if math.isnan(self.point1.x):
             if not vector:
-                alert(translate("Requires two points."))
-                set_prompt_prefix(translate("Specify first point: "))
+                debug_message("Requires two points.", msgtype="ALERT")
+                set_prompt_prefix("Specify first point: ")
 
             else:
                 self.point1 = vector
                 add_rubber("DIMLEADER")
                 self.rubber_mode = "DIMLEADER_LINE"
                 self.rubber_points["DIMLEADER_LINE_START"] = vector
-                set_prompt_prefix(translate("Specify second point: "))
+                set_prompt_prefix("Specify second point: ")
 
         else:
             if not vector:
-                alert(translate("Requires two points."))
-                set_prompt_prefix(translate("Specify second point: "))
+                debug_message("Requires two points.", msgtype="ALERT")
+                set_prompt_prefix("Specify second point: ")
             else:
                 self.point2 = vector
                 self.rubber_points["DIMLEADER_LINE_END"] = self.point2
@@ -287,4 +286,4 @@ class DimLeader():
             setobj_end_point_2(after)
         elif before == MidPoint():
             delta = after-before
-            moveBy(delta.x(), delta.y())
+            moveBy(delta)

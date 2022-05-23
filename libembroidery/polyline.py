@@ -16,8 +16,7 @@ r"""
 import math
 
 from libembroidery.tools import (
-    Vector, debug_message, vector_from_str, Pen,
-    set_prompt_prefix, clear_selection, translate
+    Vector, debug_message, vector_from_str, Pen, set_prompt_prefix
 )
 from libembroidery.line import Line
 
@@ -31,8 +30,7 @@ class Polyline():
     We should be able to initialise using an existing one, maybe
     a copy() function?
     """
-    def __init__(self, x, y, rgb="black", p=0, line_weight=0.35,
-           line_type="solid"):
+    def __init__(self, x, y, pen=Pen()):
         r"""
         Needs to work with the libembroidery polyline, if that's wrapped
         in a class then this class extends that one and we call
@@ -46,7 +44,7 @@ class Polyline():
         debug_message("Polyline.__init__()")
         self.path = p
         self.position = Vector(x, y)
-        self.pen = Pen(rgb=rgb, line_type=line_type, line_weight=line_weight)
+        self.pen = pen
         self.rotation = 0.0
         self.scale = 1.0
         self.type = "Polyline"
@@ -55,12 +53,12 @@ class Polyline():
         self.update_path(p)
         self.normal_path = Path()
 
-        clearSelection()
+        clear_selection()
         self.first_run = True
         self.first = Vector(math.nan, math.nan)
         self.prev = Vector(math.nan, math.nan)
         self.num = 0
-        set_prompt_prefix(translate("Specify first point: "))
+        set_prompt_prefix("Specify first point: ")
 
     def update(self, p):
         r"""
@@ -75,30 +73,31 @@ class Polyline():
     def paint(self, painter, option, widget):
         r"""
         """
-        obj_scene = scene()
+        obj_scene = self.scene()
         if not obj_scene:
             return
-        paintPen = pen()
-        painter.pen = paintPen
+        paint_pen = Pen()
+        painter.pen = paint_pen
         painter.update_rubber()
 
-        if option.state & QStyle_State_Selected:
-            paintPen.set_style(Qt_DashLine)
-        if obj_scene.property("ENABLE_LWT").toBool():
-            paintPen = lineWeightPen()
-        painter.set_pen(paintPen)
+        if "State_Selected" in option.state:
+            paint_pen.set_style("dashed")
+        if obj_scene.property("ENABLE_LWT"):
+            paint_pen = self.lwt_pen
+        painter.set_pen(paint_pen)
 
-        painter.drawPath(normalPath)
+        painter.drawPath(normal_path)
 
-        if obj_scene.property("ENABLE_LWT").toBool() and obj_scene.property("ENABLE_REAL").toBool():
-            realRender(painter, normalPath)
+        if obj_scene.property("ENABLE_LWT") and obj_scene.property("ENABLE_REAL"):
+            realRender(painter, normal_path)
 
     def update_rubber(self, painter):
-        self.rubber_mode = objectrubber_mode()
+        r"."
+        self.rubber_mode = object_rubber_mode()
         if self.rubber_mode == "OBJ_RUBBER_POLYLINE":
-            setObjectPos(objectRubberPoint("POLYLINE_POINT_0"))
+            set_object_pos(objectRubberPoint("POLYLINE_POINT_0"))
 
-            rubberLine = Line (normalPath.currentPosition(), map_from_scene(objectRubberPoint("")))
+            rubberLine = Line (normal_path.currentPosition(), map_from_scene(objectRubberPoint("")))
             if painter:
                 drawRubberLine(rubberLine, painter, "VIEW_COLOR_CROSSHAIR")
 
@@ -125,7 +124,7 @@ class Polyline():
 
         elif self.rubber_mode == "OBJ_RUBBER_GRIP":
             if painter:
-                elemCount = normalPath.element_count()
+                elemCount = normal_path.element_count()
                 gripPoint = objectRubberPoint("GRIP_POINT")
                 if gripIndex == -1:
                     gripIndex = findIndex(gripPoint)
@@ -134,20 +133,20 @@ class Polyline():
 
                 if not gripIndex:
                     # First
-                    ef = normalPath.element_at(1)
+                    ef = normal_path.element_at(1)
                     efPoint = Vector(ef.x, ef.y)
                     painter.drawLine(efPoint, map_from_scene(objectRubberPoint("")))
 
                 elif gripIndex == elemCount-1:
                     # Last
-                    el = normalPath.element_at(gripIndex-1)
+                    el = normal_path.element_at(gripIndex-1)
                     elPoint = Vector(el.x, el.y)
                     painter.drawLine(elPoint, map_from_scene(objectRubberPoint("")))
 
                 else:
                     # Middle
-                    em = normalPath.element_at(gripIndex-1)
-                    en = normalPath.element_at(gripIndex+1)
+                    em = normal_path.element_at(gripIndex-1)
+                    en = normal_path.element_at(gripIndex+1)
                     emPoint = Vector(em.x, em.y)
                     enPoint = Vector(en.x, en.y)
                     painter.drawLine(emPoint, map_from_scene(objectRubberPoint("")))
@@ -163,17 +162,17 @@ class Polyline():
 
         setObjectrubber_mode(OBJ_RUBBER_OFF)
 
-        if not normalPath.element_count():
+        if not normal_path.element_count():
             Qmessage_box_critical(0, QObject_tr("Empty Polyline Error"), QObject_tr("The polyline added contains no points. The command that created this object has flawed logic."))
 
     def mouse_snap_point(self, mouse_point):
         " Returns the closest snap point to the mouse point. "
-        element = normalPath.element_at(0)
+        element = normal_path.element_at(0)
         closestPoint = mapToScene(Vector(element.x, element.y))
         closestDist = Line(mouse_point, closestPoint).length()
-        elemCount = normalPath.element_count()
+        elemCount = normal_path.element_count()
         for i in range(elemCount):
-            element = normalPath.element_at(i)
+            element = normal_path.element_at(i)
             elemPoint = mapToScene(element.x, element.y)
             elemDist = Line(mouse_point, elemPoint).length()
 
@@ -185,19 +184,19 @@ class Polyline():
 
     def all_grip_points(self):
         gripPoints = []
-        for i in range(normalPath.element_count()):
-            element = normalPath.element_at(i)
+        for i in range(normal_path.element_count()):
+            element = normal_path.element_at(i)
             gripPoints += [mapToScene(element.x, element.y)]
 
         return gripPoints
 
     def PolyfindIndex(self, point):
         " . "
-        elemCount = normalPath.element_count()
+        elemCount = normal_path.element_count()
         # NOTE: Points here are in item coordinates.
         itemPoint = map_from_scene(point)
         for i in range(elemCount):
-            e = normalPath.element_at(i)
+            e = normal_path.element_at(i)
             elemPoint = Vector(e.x, e.y)
             if itemPoint == elemPoint:
                 return i
@@ -209,19 +208,19 @@ class Polyline():
         if gripIndex == -1:
             return
         a = map_from_scene(after)
-        normalPath.setElementPositionAt(gripIndex, a.x(), a.y())
-        update_path(normalPath)
+        normal_path.setElementPositionAt(gripIndex, a.x(), a.y())
+        update_path(normal_path)
         gripIndex = -1
 
     def PolyobjectCopyPath():
-        return normalPath
+        return normal_path
 
     def PolyobjectSavePath():
         s = self.scale
         trans = 0
         trans.rotate(self.rotation)
         trans.scale(s,s)
-        return trans.map(normalPath)
+        return trans.map(normal_path)
 
     def click(self, x, y):
         if self.first_run:
@@ -232,7 +231,7 @@ class Polyline():
             set_rubber_mode("POLYLINE")
             set_rubber_point("POLYLINE_POINT_0", self.first)
             append_prompt_history()
-            set_prompt_prefix(translate("Specify next point or [Undo]: "))
+            set_prompt_prefix("Specify next point or [Undo]: ")
         else:
             self.num += 1
             set_rubber_point(f"POLYLINE_POINT_{num}", Vector(x, y))
@@ -249,7 +248,7 @@ class Polyline():
             set_rubber_mode("LINE")
             set_rubber_point("LINE_START", self.first)
             append_prompt_history()
-            set_prompt_prefix(translate("Specify next point or [Undo]: "))
+            set_prompt_prefix("Specify next point or [Undo]: ")
 
         else:
             set_rubber_point("LINE_END", x, y)
@@ -265,8 +264,8 @@ class Polyline():
         if self.first_run:
             vector = vector_from_str(cmd)
             if not vector:
-                alert(translate("Invalid point."))
-                set_prompt_prefix(translate("Specify first point: "))
+                debug_message("Invalid point.", msgtype="ALERT")
+                set_prompt_prefix("Specify first point: ")
             else:
                 self.first_run = false
                 self.first = vector
@@ -274,7 +273,7 @@ class Polyline():
                 add_rubber("POLYLINE")
                 self.rubber_mode = "POLYLINE"
                 set_rubber_point("POLYLINE_POINT_0", self.first)
-                set_prompt_prefix(translate("Specify next point or [Undo]: "))
+                set_prompt_prefix("Specify next point or [Undo]: ")
 
         else:
             if cmd == "U" or cmd == "UNDO":
@@ -298,7 +297,7 @@ class Polyline():
         if self.first_run:
             vector = vector_from_str(cmd)
             if not vector:
-                alert("Invalid point.")
+                debug_message("Invalid point.", msgtype="ALERT")
                 set_prompt_prefix("Specify first point: ")
             else:
                 self.first_run = False
@@ -314,8 +313,8 @@ class Polyline():
             else:
                 vector = vector_from_str(cmd)
                 if not vector:
-                    alert(translate("Point or option keyword required."))
-                    set_prompt_prefix(translate("Specify next point or [Undo]: "))
+                    debug_message("Point or option keyword required.", msgtype="ALERT")
+                    set_prompt_prefix("Specify next point or [Undo]: ")
                 else:
                     self.rubber_points["LINE_END"] = vector
                     self.vulcanize()
@@ -323,7 +322,7 @@ class Polyline():
                     self.rubber_mode = "LINE"
                     self.rubber_points["LINE_START"] = vector
                     self.prev = vector
-                    set_prompt_prefix(translate("Specify next point or [Undo]: "))
+                    set_prompt_prefix("Specify next point or [Undo]: ")
 
     def copy(self):
         " . "
@@ -381,11 +380,11 @@ class Polyline():
 
         if numSelected() <= 0:
             # TODO: Prompt to select objects if nothing is preselected
-            alert(translate("Preselect objects before invoking the move command."))
+            debug_message("Preselect objects before invoking the move command.", msgtype="ALERT")
             return
-            message_box("information", translate("Move Preselect"), translate("Preselect objects before invoking the move command."))
+            message_box("information", "Move Preselect", "Preselect objects before invoking the move command.")
         else:
-            set_prompt_prefix(translate("Specify base point: "))
+            set_prompt_prefix("Specify base point: ")
 
     def a_click(self, x, y):
         r" . "
@@ -397,7 +396,7 @@ class Polyline():
             self.rubber_points["LINE_START"] = self.base
             preview_on("SELECTED", "MOVE", self.base, 0)
             append_prompt_history()
-            set_prompt_prefix(translate("Specify destination point: "))
+            set_prompt_prefix("Specify destination point: ")
         else:
             self.dest = Vector(x, y)
             self.delta = self.dest.subtract(self.base)
@@ -409,8 +408,8 @@ class Polyline():
         if self.first_run:
             vector = vector_from_str(user_string)
             if not vector:
-                alert(translate("Invalid point."))
-                set_prompt_prefix(translate("Specify base point: "))
+                debug_message("Invalid point.", msgtype="ALERT")
+                set_prompt_prefix("Specify base point: ")
             else:
                 self.first_run = False
                 self.base = vector
@@ -418,15 +417,77 @@ class Polyline():
                 self.rubber_mode = "LINE"
                 self.rubber_points["LINE_START"] = self.base
                 preview_on("SELECTED", "MOVE", self.base, 0)
-                set_prompt_prefix(translate("Specify destination point: "))
+                set_prompt_prefix("Specify destination point: ")
 
         else:
             vector = vector_from_str(user_string)
             if not vector:
-                alert(translate("Invalid point."))
-                set_prompt_prefix(translate("Specify destination point: "))
+                debug_message("Invalid point.", msgtype="ALERT")
+                set_prompt_prefix("Specify destination point: ")
             else:
                 self.dest = vector
                 self.delta = self.dest.subtract(self.base)
                 move_selected(self.delta)
                 preview_off()
+
+
+class PolylineArray():
+    " . "
+    def __init__(self):
+        " . "
+        #Report number of pre-selected objects
+        self.test1 = 0
+        self.test2 = 0
+        set_prompt_prefix("Number of Objects Selected: " + str(numSelected()))
+        append_prompt_history()
+
+        mirror_selected(0,0,0,1)
+
+        #selectAll()
+        #rotateSelected(0,0,90)
+
+        #Polyline & Polygon Testing
+
+        offset_x = 0.0
+        offset_y = 0.0
+
+        polyline_array = []
+        polyline_array.push(1.0 + offset_x)
+        polyline_array.push(1.0 + offset_y)
+        polyline_array.push(1.0 + offset_x)
+        polyline_array.push(2.0 + offset_y)
+        polyline_array.push(2.0 + offset_x)
+        polyline_array.push(2.0 + offset_y)
+        polyline_array.push(2.0 + offset_x)
+        polyline_array.push(3.0 + offset_y)
+        polyline_array.push(3.0 + offset_x)
+        polyline_array.push(3.0 + offset_y)
+        polyline_array.push(3.0 + offset_x)
+        polyline_array.push(2.0 + offset_y)
+        polyline_array.push(4.0 + offset_x)
+        polyline_array.push(2.0 + offset_y)
+        polyline_array.push(4.0 + offset_x)
+        polyline_array.push(1.0 + offset_y)
+        add_polyline(polyline_array)
+
+        offset_x = 5.0
+        offset_y = 0.0
+
+        polygon_array = []
+        polygon_array.push(1.0 + offset_x)
+        polygon_array.push(1.0 + offset_y)
+        polygon_array.push(1.0 + offset_x)
+        polygon_array.push(2.0 + offset_y)
+        polygon_array.push(2.0 + offset_x)
+        polygon_array.push(2.0 + offset_y)
+        polygon_array.push(2.0 + offset_x)
+        polygon_array.push(3.0 + offset_y)
+        polygon_array.push(3.0 + offset_x)
+        polygon_array.push(3.0 + offset_y)
+        polygon_array.push(3.0 + offset_x)
+        polygon_array.push(2.0 + offset_y)
+        polygon_array.push(4.0 + offset_x)
+        polygon_array.push(2.0 + offset_y)
+        polygon_array.push(4.0 + offset_x)
+        polygon_array.push(1.0 + offset_y)
+        add_polygon(polygon_array)

@@ -16,7 +16,7 @@ r"""
 import math
 
 from libembroidery.tools import (
-    Pen, Vector, clear_selection, set_prompt_prefix, translate,
+    Pen, Vector, add_rubber, clear_selection, debug_message, set_prompt_prefix, translate,
     append_prompt_history
 )
 
@@ -37,30 +37,31 @@ class Text():
         self.mode = "SETGEOM"
         self.rubber_points = {}
         self.rubber_texts = {}
-        set_prompt_prefix(translate("Current font: ") + "" + self.font + "} " + translate("Text height: ") + "" +  self.height + "}")
+        set_prompt_prefix(
+            "Current font: " + self.font + "} "
+            + "Text height: " + self.height + "}"
+        )
         append_prompt_history()
         set_prompt_prefix("Specify start point of text or [Justify/Setfont]: ")
 
-    def click(self, x, y):
+    def click(self, point):
         r"."
         if self.mode == "SETGEOM":
             if math.isnan(self.textX):
-                self.textX = x
-                self.textY = y
-                addRubber("LINE")
+                self.position = point
+                add_rubber("LINE")
                 self.rubber_mode = "LINE"
-                set_rubber_point("LINE_START", self.textX, self.textY)
+                self.rubber_points["LINE_START"] = self.position
                 append_prompt_history()
-                set_prompt_prefix("Specify text height " + text_size() + "}: ")
+                set_prompt_prefix("Specify text height " + self.size() + "}: ")
 
             elif math.isnan(self.text_height):
-                self.text_height = calculate_distance(self.textX, self.textY, x, y)
-                set_text_size(self.text_height)
+                self.height = calculate_distance(self.position, point)
                 append_prompt_history()
                 set_prompt_prefix("Specify text angle " + text_angle() + "}: ")
 
             elif math.isnan(self.text_rotation):
-                self.text_rotation = calculate_angle(self.textX, self.textY, x, y)
+                self.text_rotation = calculate_angle(self.position, point)
                 set_text_angle(self.rotation)
                 append_prompt_history()
                 set_prompt_prefix(translate("Enter text: "))
@@ -69,46 +70,54 @@ class Text():
                 clear_rubber()
                 add_rubber("TEXTSINGLE")
                 self.rubber_mode = "TEXTSINGLE"
-                self.rubber_points["TEXT_POINT"] = (self.textX, self.textY)
-                self.rubber_points["TEXT_HEIGHT_ROTATION"] = (self.height, self.rotation)
-                setRubberText("TEXT_FONT", self.textFont)
-                setRubberText("TEXT_JUSTIFY", self.justify)
-                setRubberText("TEXT_RAPID", self.text)
+                self.rubber_points["TEXT_POINT"] = self.position
+                self.rubber_points["TEXT_HEIGHT_ROTATION"] = (
+                    self.height, self.rotation
+                )
+                self.rubber_texts["TEXT_FONT"] = self.font
+                self.rubber_texts["TEXT_JUSTIFY"] = self.justify
+                self.rubber_texts["TEXT_RAPID"] = self.text
 
             else:
-                #Do nothing, as we are in rapidFire mode now.
+                # Do nothing, as we are in rapidFire mode now.
                 debug_message(".")
 
-    def prompt(cmd):
+    def prompt(self, cmd):
         " . "
         if self.mode == "JUSTIFY":
             if cmd == "C" or cmd == "CENTER":
-                #TODO: Probably should add additional qsTr calls here.
+                # TODO: Probably should add additional qsTr calls here.
                 self.mode = "SETGEOM"
                 self.justify = "Center"
                 self.rubber_texts["TEXT_JUSTIFY"] = self.justify
-                set_prompt_prefix(translate("Specify center point of text or [Justify/Setfont]: "))
+                set_prompt_prefix("Specify center point of text or [Justify/Setfont]: ")
 
             elif cmd == "R" or cmd == "RIGHT":
                 # TODO: Probably should add additional qsTr calls here.
                 self.mode = "SETGEOM"
                 self.justify = "Right"
                 self.rubber_texts["TEXT_JUSTIFY"] = self.justify
-                set_prompt_prefix(translate("Specify right-end point of text or [Justify/Setfont]: "))
+                set_prompt_prefix(
+                    "Specify right-end point of text or [Justify/Setfont]: "
+                )
 
             elif str == "A" or cmd == "ALIGN":
                 # TODO: Probably should add additional qsTr calls here.
                 self.mode = "SETGEOM"
                 self.justify = "Aligned"
                 self.rubber_texts["TEXT_JUSTIFY"] = self.justify
-                set_prompt_prefix(translate("Specify start point of text or [Justify/Setfont]: "))
+                set_prompt_prefix(
+                    "Specify start point of text or [Justify/Setfont]: "
+                )
 
             elif str == "M" or cmd == "MIDDLE":
                 # TODO: Probably should add additional qsTr calls here.
                 self.mode = "SETGEOM"
                 self.justify = "Middle"
                 self.rubber_texts["TEXT_JUSTIFY"] = self.justify
-                set_prompt_prefix(translate("Specify middle point of text or [Justify/Setfont]: "))
+                set_prompt_prefix(
+                    "Specify middle point of text or [Justify/Setfont]: "
+                )
 
             elif str == "F" or cmd == "FIT":
                 # TODO: Probably should add additional qsTr calls here.
@@ -122,56 +131,72 @@ class Text():
                 self.mode = self.mode_SETGEOM
                 self.justify = "Top Left"
                 self.rubber_texts["TEXT_JUSTIFY"] = self.justify
-                set_prompt_prefix("Specify top-left point of text or [Justify/Setfont]: ")
+                set_prompt_prefix(
+                    "Specify top-left point of text or [Justify/Setfont]: "
+                )
 
             elif str == "TC" or cmd == "TOPCENTER":
                 # TODO: Probably should add additional qsTr calls here.
                 self.mode = "SETGEOM"
                 self.justify = "Top Center"
                 self.rubber_texts["TEXT_JUSTIFY"] = self.justify
-                set_prompt_prefix("Specify top-center point of text or [Justify/Setfont]: ")
+                set_prompt_prefix(
+                    "Specify top-center point of text or [Justify/Setfont]: "
+                )
 
             elif cmd == "TR" or cmd == "TOPRIGHT":
                 # TODO: Probably should add additional qsTr calls here.
                 self.mode = "SETGEOM"
                 self.justify = "Top Right"
                 self.rubber_texts["TEXT_JUSTIFY"] = self.justify
-                set_prompt_prefix("Specify top-right point of text or [Justify/Setfont]: ")
+                set_prompt_prefix(
+                    "Specify top-right point of text or [Justify/Setfont]: "
+                )
 
             elif cmd == "ML" or cmd == "MIDDLELEFT":
                 # TODO: Probably should add additional qsTr calls here.
                 self.mode = "SETGEOM"
                 self.justify = "Middle Left"
                 self.rubber_texts["TEXT_JUSTIFY"] = self.justify
-                set_prompt_prefix(translate("Specify middle-left point of text or [Justify/Setfont]: "))
+                set_prompt_prefix(
+                    "Specify middle-left point of text or [Justify/Setfont]: "
+                )
 
             elif cmd == "MC" or cmd == "MIDDLECENTER":
                 # TODO: Probably should add additional qsTr calls here.
                 self.mode = "SETGEOM"
                 self.justify = "Middle Center"
                 self.rubber_texts["TEXT_JUSTIFY"] = self.justify
-                set_prompt_prefix(translate("Specify middle-center point of text or [Justify/Setfont]: "))
+                set_prompt_prefix(
+                    "Specify middle-center point of text or [Justify/Setfont]: "
+                )
 
             elif cmd == "MR" or cmd == "MIDDLERIGHT":
                 # TODO: Probably should add additional qsTr calls here.
                 self.mode = "SETGEOM"
                 self.justify = "Middle Right"
                 self.rubber_texts["TEXT_JUSTIFY"] = self.justify
-                set_prompt_prefix("Specify middle-right point of text or [Justify/Setfont]: ")
+                set_prompt_prefix(
+                    "Specify middle-right point of text or [Justify/Setfont]: "
+                )
 
             elif str == "BL" or cmd == "BOTTOMLEFT":
                 # TODO: Probably should add additional qsTr calls here.
                 self.mode = "SETGEOM"
                 self.justify = "Bottom Left"
                 self.rubber_texts["TEXT_JUSTIFY"] = self.justify
-                set_prompt_prefix(translate("Specify bottom-left point of text or [Justify/Setfont]: "))
+                set_prompt_prefix(
+                    "Specify bottom-left point of text or [Justify/Setfont]: "
+                )
 
             elif str == "BC" or cmd == "BOTTOMCENTER":
                 #TODO: Probably should add additional qsTr calls here.
                 self.mode = "SETGEOM"
                 self.justify = "Bottom Center"
                 self.rubber_texts["TEXT_JUSTIFY"] = self.justify
-                set_prompt_prefix(translate("Specify bottom-center point of text or [Justify/Setfont]: "))
+                set_prompt_prefix(
+                    "Specify bottom-center point of text or [Justify/Setfont]: "
+                )
 
             elif str == "BR" or cmd == "BOTTOMRIGHT":
                 # TODO: Probably should add additional qsTr calls here.
@@ -187,14 +212,14 @@ class Text():
         elif self.mode == "SETFONT":
             self.mode = "SETGEOM"
             self.textFont = str
-            setRubberText("TEXT_FONT", self.textFont)
+            self.rubber_texts("TEXT_FONT", self.textFont)
             setTextFont(self.textFont)
             set_prompt_prefix(translate("Specify start point of text or [Justify/Setfont]: "))
 
         elif self.mode == "SETGEOM":
             if math.isnan(self.textX):
                 if str == "J" or cmd == "JUSTIFY":
-                    #TODO: Probably should add additional qsTr calls here.
+                    # TODO: Probably should add additional qsTr calls here.
                     self.mode = self.mode_JUSTIFY
                     set_prompt_prefix(translate("Text Justification Options [Center/Right/Align/Middle/Fit/TL/TC/TR/ML/MC/MR/BL/BC/BR]: "))
 
@@ -212,14 +237,14 @@ class Text():
                     else:
                         self.textX = float(strList[0])
                         self.textY = float(strList[1])
-                        addRubber("LINE")
+                        add_rubber("LINE")
                         set_rubber_mode("LINE")
-                        set_rubber_point("LINE_START", self.textX, self.textY)
-                        set_prompt_prefix(translate("Specify text height") + " " + textSize() + "}: ")
+                        set_rubber_point("LINE_START", self.position)
+                        set_prompt_prefix(translate("Specify text height") + " " + self.size() + "}: ")
 
             elif math.isnan(self.height):
                 if str == "":
-                    self.height = textSize()
+                    self.height = self.size()
                     set_prompt_prefix(translate("Specify text angle") + " " + textAngle() + "}: ")
 
                 elif math.isnan(cmd):
@@ -238,13 +263,13 @@ class Text():
                     self.mode = "RAPID"
                     enablePromptRapidFire()
                     clearRubber()
-                    addRubber("TEXTSINGLE")
+                    add_rubber("TEXTSINGLE")
                     set_rubber_mode("TEXTSINGLE")
-                    set_rubber_point("TEXT_POINT", self.textX, self.textY)
+                    set_rubber_point("TEXT_POINT", self.position)
                     set_rubber_point("TEXT_HEIGHT_ROTATION", self.height, self.rotation)
-                    setRubberText("TEXT_FONT", self.textFont)
-                    setRubberText("TEXT_JUSTIFY", self.justify)
-                    setRubberText("TEXT_RAPID", self.text)
+                    self.rubber_texts("TEXT_FONT", self.textFont)
+                    self.rubber_texts("TEXT_JUSTIFY", self.justify)
+                    self.rubber_texts("TEXT_RAPID", self.text)
 
                 elif math.isnan(cmd):
                     debug_message("Requires valid numeric angle or second point.", msgtype="ALERT")
@@ -257,13 +282,13 @@ class Text():
                     self.mode = self.mode_RAPID
                     enablePromptRapidFire()
                     clearRubber()
-                    addRubber("TEXTSINGLE")
+                    add_rubber("TEXTSINGLE")
                     set_rubber_mode("TEXTSINGLE")
-                    set_rubber_point("TEXT_POINT", self.textX, self.textY)
+                    set_rubber_point("TEXT_POINT", self.position)
                     set_rubber_point("TEXT_HEIGHT_ROTATION", self.height, self.rotation)
-                    setRubberText("TEXT_FONT", self.textFont)
-                    setRubberText("TEXT_JUSTIFY", self.justify)
-                    setRubberText("TEXT_RAPID", self.text)
+                    self.rubber_texts("TEXT_FONT", self.textFont)
+                    self.rubber_texts("TEXT_JUSTIFY", self.justify)
+                    self.rubber_texts("TEXT_RAPID", self.text)
 
             else:
                 #Do nothing, as we are in rapidFire mode now.
@@ -281,7 +306,7 @@ class Text():
                     return
             else:
                 self.text = str
-                setRubberText("TEXT_RAPID", self.text)
+                self.rubber_texts("TEXT_RAPID", self.text)
 
 
 class TextSingle():
@@ -546,9 +571,9 @@ class TextSingle():
             if painter:
                 gripPoint = objectRubberPoint("GRIP_POINT")
                 if gripPoint == scenePos():
-                    painter.drawPath(objectPath().translated(map_from_scene(objectRubberPoint(""))-map_from_scene(gripPoint)))
+                    painter.drawPath(objectPath().translated((objectRubberPoint(""))-(gripPoint)))
 
-                rubLine = Line(map_from_scene(gripPoint), map_from_scene(objectRubberPoint("")))
+                rubLine = Line((gripPoint), (objectRubberPoint("")))
                 drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
 
     def vulcanize(self):

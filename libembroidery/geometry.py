@@ -18,8 +18,8 @@ from math import radians, degrees
 import time
 
 from libembroidery.tools import (
-    Pen, Vector, vector_from_str, closest_vector, clear_selection,
-    set_prompt_prefix, debug_message, add_rubber, append_prompt_history
+    Pen, Vector, path_from_command, vector_from_str, closest_vector, clear_selection, set_prompt_prefix, debug_message, add_rubber,
+    append_prompt_history
 )
 
 
@@ -104,8 +104,8 @@ class Path():
 
     def all_grip_points(self):
         " TODO: loop thru all path Elements and return their points. "
-        gripPoints = [self.scene_pos()]
-        return gripPoints
+        grip_points = [self.scene_pos()]
+        return grip_points
 
     def grip_edit(before, after):
         " TODO: grip_edit() for PathObject."
@@ -150,7 +150,7 @@ class Path():
         else:
             vector = vector_from_str(cmd)
             if not vector:
-                alert("Point or option keyword required.")
+                debug_message("Point or option keyword required.", msgtype="ALERT")
                 prefix = "Specify next point or [Arc/Undo]: "
                 set_prompt_prefix(prefix)
 
@@ -240,13 +240,13 @@ class Line():
         if "State_Selected" in option.state:
             paintPen.set_style("dashed")
         if obj_scene.property("ENABLE_LWT"):
-            paintPen = lineWeightPen()
+            paintPen = self.lwt_pen
         painter.set_pen(paintPen)
 
         if self.rubber_mode != "RUBBER_LINE":
-            painter.draw_line(line())
+            painter.draw_line(Line())
 
-        if obj_scene.property("ENABLE_LWT").toBool() and obj_scene.property("ENABLE_REAL").toBool(): realRender(painter, path())
+        if obj_scene.property("ENABLE_LWT").toBool() and obj_scene.property("ENABLE_REAL").toBool(): realRender(painter, Path())
 
     def update_rubber(self, painter):
         r"."
@@ -257,19 +257,25 @@ class Line():
             setObjectEndPoint1(scene_start_point)
             setobj_end_point_2(sceneQSnapPoint)
 
-            draw_rubber_line(line(), painter, "VIEW_COLOR_CROSSHAIR")
+            draw_rubber_line(Line(), painter, "VIEW_COLOR_CROSSHAIR")
 
         elif self.rubber_mode == "RUBBER_GRIP":
             if painter:
-                gripPoint = self.rubber_point("GRIP_POINT")
-                if gripPoint == objectEndPoint1():
-                    painter.draw_line(line().p2(), map_from_scene(self.rubber_point("")))
-                elif gripPoint == obj_end_point_2():
-                    painter.draw_line(line().p1(), map_from_scene(self.rubber_point("")))
-                elif gripPoint == self.mid_point():
-                    painter.draw_line(line().translated(map_from_scene(self.rubber_point(""))-map_from_scene(gripPoint)))
+                grip_point = self.rubber_point("GRIP_POINT")
+                if grip_point == objectEndPoint1():
+                    painter.draw_line(Line().p2(),
+                                      (self.rubber_point("")))
+                elif grip_point == obj_end_point_2():
+                    painter.draw_line(Line().p1(),
+                                      (self.rubber_point("")))
+                elif grip_point == self.mid_point():
+                    painter.draw_line(
+                        Line().translated((self.rubber_point(""))
+                                          - (grip_point))
+                    )
 
-                rub_line = Line(map_from_scene(gripPoint), map_from_scene(self.rubber_point("")))
+                rub_line = Line((grip_point),
+                                (self.rubber_point("")))
                 draw_rubber_line(rub_line, painter, "VIEW_COLOR_CROSSHAIR")
 
     def vulcanize(self):
@@ -322,37 +328,35 @@ class Line():
                 self.factor = Line(self.start, self.end).length()
                 append_prompt_history()
                 scale_selected(self.start, self.factor)
-                previewOff()
+                preview_off()
 
         elif self.mode == "REFERENCE":
             if math.isnan(self.baseRX):
-                self.baseRX = x
-                self.baseRY = y
+                self.baseR = point
                 append_prompt_history()
-                addRubber("LINE")
+                add_rubber("LINE")
                 self.rubber_mode = "LINE"
-                set_rubber_point("LINE_START", self.baseRX, self.baseRY)
+                self.rubber_points["LINE_START"] = self.baseR
                 set_prompt_prefix(translate("Specify second point: "))
 
             elif math.isnan(self.destRX):
-                self.destRX = x
-                self.destRY = y
-                self.factor_ref = calculate_distance(self.baseRX, self.baseRY, self.destRX, self.destRY)
+                self.destR = point
+                self.factor_ref = calculate_distance(self.baseR, self.destR)
                 if self.factor_ref <= 0.0:
-                    self.destRX = math.nan
-                    self.destRY = math.nan
+                    self.destR = Vector(math.nan, math.nan)
                     self.factor_ref = math.nan
-                    debug_message("Value must be positive and nonzero.", msgtype="ALERT")
-                    set_prompt_prefix(translate("Specify second point: "))
+                    debug_message("Value must be positive and nonzero.",
+                                  msgtype="ALERT")
+                    set_prompt_prefix("Specify second point: ")
 
                 else:
                     append_prompt_history()
-                    set_rubber_point("LINE_START", self.baseX, self.baseY)
-                    preview_on("SELECTED", "SCALE", self.baseX, self.baseY, self.factor_ref)
+                    self.rubber_points["LINE_START"] = self.base
+                    preview_on("SELECTED", "SCALE", self.base, self.factor_ref)
                     set_prompt_prefix("Specify new length: ")
 
             elif math.isnan(self.factor_new):
-                self.factor_new = calculate_distance(self.baseX, self.baseY, x, y)
+                self.factor_new = calculate_distance(self.base, point)
                 if self.factor_new <= 0.0:
                     self.factor_new = math.nan
                     debug_message("Value must be positive and nonzero.", msgtype="ALERT")
@@ -360,10 +364,10 @@ class Line():
                 else:
                     append_prompt_history()
                     scale_selected(self.baseX, self.baseY, self.factor_new/self.factor_ref)
-                    previewOff()
+                    preview_off()
 
     def prompt(self, cmd):
-        if self.mode == self.mode_NORMAL:
+        if self.mode == "NORMAL":
             if self.first_run:
                 vector = vector_from_str(cmd)
                 if not vector:
@@ -373,7 +377,7 @@ class Line():
                 else:
                     self.first_run = False
                     self.start = vector
-                    addRubber("LINE")
+                    add_rubber("LINE")
                     set_rubber_mode("LINE")
                     self.rubber_points["LINE_START"] = self.start
                     preview_on("SELECTED", "SCALE", self.start, 1)
@@ -385,7 +389,7 @@ class Line():
                     self.mode = "REFERENCE"
                     set_prompt_prefix("Specify reference length 1}: ")
                     clear_rubber()
-                    previewOff()
+                    preview_off()
 
                 else:
                     if math.isnan(cmd):
@@ -395,7 +399,7 @@ class Line():
                     else:
                         self.factor = float(cmd)
                         scale_selected(self.baseX, self.baseY, self.factor)
-                        previewOff()
+                        preview_off()
 
         elif self.mode == "REFERENCE":
             if math.isnan(self.baseRX):
@@ -407,7 +411,7 @@ class Line():
                     else:
                         self.baseRX = float(strList[0])
                         self.baseRY = float(strList[1])
-                        addRubber("LINE")
+                        add_rubber("LINE")
                         set_rubber_mode("LINE")
                         set_rubber_point("LINE_START", self.baseRX, self.baseRY)
                         set_prompt_prefix(translate("Specify second point: "))
@@ -420,19 +424,17 @@ class Line():
                     # The reference length is what we will use later.
                     self.factor_ref = float(cmd)
                     if self.factor_ref <= 0.0:
-                        self.baseRX = math.nan
-                        self.baseRY = math.nan
-                        self.destRX = math.nan
-                        self.destRY = math.nan
+                        self.baseR = Vector(math.nan, math.nan)
+                        self.destR = Vector(math.nan, math.nan)
                         self.factor_ref = math.nan
                         alert("Value must be positive and nonzero.")
-                        set_prompt_prefix(translate("Specify reference length") + " 1}: ")
+                        set_prompt_prefix("Specify reference length" + " 1}: ")
                     else:
-                        addRubber("LINE")
+                        add_rubber("LINE")
                         set_rubber_mode("LINE")
-                        set_rubber_point("LINE_START", self.baseX, self.baseY)
-                        preview_on("SELECTED", "SCALE", self.baseX, self.baseY, self.factor_ref)
-                        set_prompt_prefix(translate("Specify new length: "))
+                        set_rubber_point("LINE_START", self.base)
+                        preview_on("SELECTED", "SCALE", self.base, self.factor_ref)
+                        set_prompt_prefix("Specify new length: ")
 
             elif math.isnan(self.destR.x):
                 if math.isnan(cmd):
@@ -460,7 +462,7 @@ class Line():
                     self.base_r = Vector(0.0, 0.0)
                     self.dest_r = Vector(0.0, 0.0)
 
-                    #The reference length is what we will use later.
+                    # The reference length is what we will use later.
                     self.factor_ref = float(cmd)
                     if self.factor_ref <= 0.0:
                         self.dest_r = Vector(math.nan, math.nan)
@@ -487,7 +489,7 @@ class Line():
         
                         else:
                             scaleSelected(self.baseX, self.baseY, self.factor_new/self.factor_ref)
-                            previewOff()
+                            preview_off()
 
                 else:
                     self.factor_new = float(cmd)
@@ -498,7 +500,7 @@ class Line():
     
                     else:
                         scaleSelected(self.baseX, self.baseY, self.factor_new/self.factor_ref)
-                        previewOff()
+                        preview_off()
 
     def a__init__(self):
         " . "
@@ -514,7 +516,7 @@ class Line():
         if math.isnan(self.x1):
             self.x1 = x
             self.y1 = y
-            addRubber("LINE")
+            add_rubber("LINE")
             set_rubber_mode("LINE")
             set_rubber_point("LINE_START", self.x1, self.y1)
             append_prompt_history()
@@ -527,23 +529,21 @@ class Line():
 
     def a_prompt(self, cmd):
         " . "
-        strList = cmd.split(",")
+        vector = vector_from_str(cmd)
         if math.isnan(self.x1):
-            if math.isnan(strList[0]) or math.isnan(strList[1]):
-                alert(translate("Requires numeric distance or two points."))
-                set_prompt_prefix(translate("Specify first point: "))
+            if not vector:
+                alert("Requires numeric distance or two points.")
+                set_prompt_prefix("Specify first point: ")
             else:
-                self.x1 = float(strList[0])
-                self.y1 = float(strList[1])
-                addRubber("LINE")
-                set_rubber_mode("LINE")
-                set_rubber_point("LINE_START", self.x1, self.y1)
-                set_prompt_prefix(translate("Specify second point: "))
+                add_rubber("LINE")
+                self.rubber_mode = "LINE"
+                self.rubber_points["LINE_START"] = vector
+                set_prompt_prefix("Specify second point: ")
 
         else:
-            if math.isnan(strList[0]) or math.isnan(strList[1]):
-                alert(translate("Requires numeric distance or two points."))
-                set_prompt_prefix(translate("Specify second point: "))
+            if not vector:
+                alert("Requires numeric distance or two points.")
+                set_prompt_prefix("Specify second point: ")
             else:
                 self.x2 = float(strList[0])
                 self.y2 = float(strList[1])
@@ -561,17 +561,14 @@ class Line():
                 270
                 (-)
         """
-        dx = self.x2 - self.x1
-        dy = self.y2 - self.y1
+        delta = self.point2 - self.point1
 
-        dist = calculate_distance(self.x1,self.y1,self.x2, self.y2)
-        angle = calculate_angle(self.x1,self.y1,self.x2, self.y2)
+        dist = delta.length()
+        angle = delta.angle()
 
-        set_prompt_prefix(translate("Distance") + " = " + dist.toString()
-            + ", " + translate("Angle") + " = " + angle.toString())
+        set_prompt_prefix(f"Distance = {dist}, Angle = {angle}")
         append_prompt_history()
-        set_prompt_prefix(translate("Delta X") + " = " + dx.toString() + ", "
-            + translate("Delta Y") + " = " + dy.toString())
+        set_prompt_prefix(f"Delta X = {delta.x}, Delta Y = {delta.y}")
         append_prompt_history()
 
 
@@ -583,15 +580,14 @@ def vector_distance(vector_a, vector_b):
 
 class Rect():
     r" The Rect class definition. "
-    def __init__(self, x, y, w, h,
-                 pen=Pen(rgb="#FFFFFF", line_type="solid", line_weight=0.35)):
+    def __init__(self, position_x, position_y, width, height, pen=Pen()):
         r" Create a new rectangle. "
         self.type = "Rect"
         self.selectable = True
         self.scale = 1.0
         self.rotation = 0.0
-        self.position = Vector(x, y)
-        self.dimensions = Vector(w, h)
+        self.position = Vector(position_x, position_y)
+        self.dimensions = Vector(width, height)
         self.pen = pen
 
         clear_selection()
@@ -611,21 +607,19 @@ class Rect():
         r"Returns the area of the rectangle."
         return self.dimensions.x * self.dimensions.y
 
-    def click(self, x, y):
+    def click(self, point):
         r"The mouse input handler for editing a Rect."
         if self.new_rect:
             self.new_rect = False
-            self.x1 = x
-            self.y1 = y
-            addRubber("RECTANGLE")
+            add_rubber("RECTANGLE")
             self.rubber_mode = "RECTANGLE"
-            self.rubberPoint["RECTANGLE_START"] = Vector(x, y)
+            self.position = point
+            self.rubber_points["RECTANGLE_START"] = point
             set_prompt_prefix("Specify other corner point or [Dimensions]: ")
         else:
             self.new_rect = True
-            self.x2 = x
-            self.y2 = y
-            self.rubberPoint["RECTANGLE_END"] = Vector(x, y)
+            self.dimensions = point - self.position
+            self.rubber_points["RECTANGLE_END"] = self.position + self.dimensions
             self.vulcanize()
 
     def prompt(self, cmd):
@@ -650,19 +644,19 @@ class Rect():
                     self.position = vector
                     add_rubber("RECTANGLE")
                     self.rubber_mode = "RECTANGLE"
-                    set_rubber_point("RECTANGLE_START", vector)
+                    self.rubber_points["RECTANGLE_START"] = vector
                     set_prompt_prefix("Specify other corner point or [Dimensions]: ")
                 else:
                     self.new_rect = True
                     self.dimensions = vector - self.position
-                    set_rubber_point("RECTANGLE_END", vector)
+                    self.rubber_points["RECTANGLE_END"] = vector
                     self.vulcanize()
 
     def copy(self):
         r" Make a copy of the rectangle. "
         debug_message("Rect copy()")
         # setRotation(self.rotation())
-        return Rect(self.x, self.y, self.w, self.h, self.rgb, self.line_type)
+        return Rect(self.x, self.y, self.w, self.h, pen=self.pen)
 
     def set_rect(self, x, y, w, h):
         r" Alter all the positional data of the rectangle. "
@@ -718,7 +712,7 @@ class Rect():
         if option.state & "State_Selected)":
             paint_pen.set_style("dashed")
         if obj_scene.property("ENABLE_LWT"):
-            paint_pen = lineWeightPen()
+            paint_pen = self.lwt_pen
         painter.set_pen(paint_pen)
 
         painter.drawRect(Rect())
@@ -726,8 +720,8 @@ class Rect():
     def update_rubber(self, painter):
         r" . "
         if self.rubber_mode == "RECTANGLE":
-            scene_start_point = self.rubberPoint["RECTANGLE_START"]
-            scene_end_point = self.rubberPoint["RECTANGLE_END"]
+            scene_start_point = self.rubber_points["RECTANGLE_START"]
+            scene_end_point = self.rubber_points["RECTANGLE_END"]
             x = scene_start_point.x()
             y = scene_start_point.y()
             w = scene_end_point.x() - scene_start_point.x()
@@ -738,26 +732,26 @@ class Rect():
         elif self.rubber_mode == "GRIP":
             if painter:
                 # TODO: Make this work with rotation & scaling.
-                gripPoint = self.rubberPoint["GRIP_POINT"]
-                after = RubberPoint("")
-                delta = after-gripPoint
-                if gripPoint == self.top_left():
-                    painter.drawPolygon(map_from_scene(Rect(after.x(), after.y(), self.width()-delta.x(), self.height()-delta.y())))
-                elif gripPoint == self.top_right():
-                    painter.drawPolygon(map_from_scene(Rect(self.top_left().x(), self.top_left().y()+delta.y(), self.width()+delta.x(), self.height()-delta.y())))
-                elif gripPoint == self.bottom_left():
-                    painter.drawPolygon(map_from_scene(Rect(self.top_left().x()+delta.x(), self.top_left().y(), self.width()-delta.x(), self.height()+delta.y())))
-                elif gripPoint == self.bottom_right():
-                    painter.drawPolygon(map_from_scene(Rect(self.top_left().x(), self.top_left().y(), self.width()+delta.x(), self.height()+delta.y())))
+                grip_point = self.rubber_points["GRIP_POINT"]
+                after = self.rubber_point("")
+                delta = after-grip_point
+                if grip_point == self.top_left():
+                    painter.draw_polygon((Rect(after.x(), after.y(), self.width()-delta.x(), self.height()-delta.y())))
+                elif grip_point == self.top_right():
+                    painter.draw_polygon((Rect(self.top_left().x(), self.top_left().y()+delta.y(), self.width()+delta.x(), self.height()-delta.y())))
+                elif grip_point == self.bottom_left():
+                    painter.draw_polygon(Rect(self.top_left().x()+delta.x(), self.top_left().y(), self.width()-delta.x(), self.height()+delta.y()))
+                elif grip_point == self.bottom_right():
+                    painter.draw_polygon(Rect(self.top_left().x(), self.top_left().y(), self.width()+delta.x(), self.height()+delta.y()))
 
-                rub_line = Line (map_from_scene(gripPoint), map_from_scene(RubberPoint("")))
+                rub_line = Line(grip_point, self.rubber_point(""))
                 draw_rubber_line(rub_line, painter, "VIEW_COLOR_CROSSHAIR")
 
-                gripPoint = RubberPoint("GRIP_POINT")
-                after = RubberPoint("")
-                delta = after-gripPoint
+                grip_point = self.rubber_point("GRIP_POINT")
+                after = self.rubber_point("")
+                delta = after-grip_point
 
-                rub_line = Line(map_from_scene(gripPoint), map_from_scene(RubberPoint("")))
+                rub_line = Line(grip_point, self.rubber_point(""))
                 draw_rubber_line(rub_line, painter, "VIEW_COLOR_CROSSHAIR")
 
     def vulcanize(self):
@@ -772,10 +766,10 @@ class Rect():
         all_points = self.all_grip_points()
         return closest_vector(all_points, mouse_point)
 
-    def all_grip_points():
+    def all_grip_points(self):
         r" . "
         return [self.top_left(), self.top_right(),
-            self.bottom_left(), self.bottom_right()]
+                self.bottom_left(), self.bottom_right()]
 
     def grip_edit(self, before, after, tolerance=0.01):
         """
@@ -798,7 +792,7 @@ class Rect():
             self.set_rect(self.top_left().x(), self.top_left().y(),
                 self.width()+delta.x(), self.height()+delta.y())
 
-    def save_path():
+    def save_path(self):
         ". "
         path = Path()
         r = Rect()
@@ -1174,13 +1168,13 @@ class Circle():
 
     def set_color_rgb(self, rgb):
         " . "
-        self.pen.set_color(tools.Color(rgb))
-        self.lwt_pen.set_color(tools.Color(rgb))
+        self.pen.set_color(rgb)
+        self.lwt_pen.set_color(rgb)
 
-    def set_line_type(self, lineType):
+    def set_line_type(self, line_type):
         " . "
-        self.pen.set_style(lineType)
-        self.lwt_pen.set_style(lineType)
+        self.pen.set_style(line_type)
+        self.lwt_pen.set_style(line_type)
 
     def set_line_weight(self, line_weight):
         r"NOTE: The self.pen will always be cosmetic. "
@@ -1196,9 +1190,9 @@ class Circle():
                 # TODO: getBlockline_weight
 
             else:
-                tools.warning(0, "Error - Negative line_weight",
-                              "line_weight: %1" % line_weight)
-                tools.debug_message(
+                warning(0, "Error - Negative line_weight",
+                        "line_weight: %1" % line_weight)
+                debug_message(
                     "line_weight cannot be negative! Inverting sign."
                 )
                 self.lwt_pen.setWidthF(-line_weight)
@@ -1360,8 +1354,8 @@ class Circle():
         if self.rubber_mode == "CIRCLE_1P_RAD":
             sceneCenterPoint = self.rubber_point("CIRCLE_CENTER")
             sceneQSnapPoint = self.rubber_point("CIRCLE_RADIUS")
-            itemCenterPoint = map_from_scene(sceneCenterPoint)
-            itemQSnapPoint = map_from_scene(sceneQSnapPoint)
+            itemCenterPoint = (sceneCenterPoint)
+            itemQSnapPoint = (sceneQSnapPoint)
             itemLine = Line(itemCenterPoint, itemQSnapPoint)
             setPos(sceneCenterPoint)
             sceneLine = Line(sceneCenterPoint, sceneQSnapPoint)
@@ -1374,8 +1368,8 @@ class Circle():
         elif self.rubber_mode == "CIRCLE_1P_DIA":
             sceneCenterPoint = self.rubber_point("CIRCLE_CENTER")
             sceneQSnapPoint = self.rubber_point("CIRCLE_DIAMETER")
-            itemCenterPoint = tools.map_from_scene(sceneCenterPoint)
-            itemQSnapPoint = tools.map_from_scene(sceneQSnapPoint)
+            itemCenterPoint = sceneCenterPoint
+            itemQSnapPoint = sceneQSnapPoint
             itemLine = Line(itemCenterPoint, itemQSnapPoint)
             self.set_position(sceneCenterPoint)
             sceneLine = Line(sceneCenterPoint, sceneQSnapPoint)
@@ -1413,15 +1407,15 @@ class Circle():
 
         elif self.rubber_mode == "GRIP":
             if painter:
-                gripPoint = self.rubber_point("GRIP_POINT")
-                if gripPoint == self.center:
-                    painter.draw_ellipse(rect().translated(map_from_scene(self.rubber_point(""))-map_from_scene(gripPoint)))
+                grip_point = self.rubber_point("GRIP_POINT")
+                if grip_point == self.center:
+                    painter.draw_ellipse(rect().translated((self.rubber_point(""))-(grip_point)))
 
                 else:
                     gripRadius = Line(self.center(), self.rubber_point("")).length()
                     painter.draw_ellipse(Vector(), gripRadius, gripRadius)
 
-                rub_line = Line(map_from_scene(gripPoint), map_from_scene(self.rubber_point("")))
+                rub_line = Line((grip_point), (self.rubber_point("")))
                 draw_rubber_line(rub_line, painter, "VIEW_COLOR_CROSSHAIR")
 
     def vulcanize():
@@ -1486,7 +1480,7 @@ class Circle():
             if math.isnan(self.point1.x):
                 self.point1 = vector
                 self.center = vector
-                addRubber("CIRCLE")
+                add_rubber("CIRCLE")
                 set_rubber_mode("CIRCLE_1P_RAD")
                 set_rubber_point("CIRCLE_CENTER", self.cx, self.cy)
                 append_prompt_history()
@@ -1655,7 +1649,7 @@ class Circle():
                     set_prompt_prefix("Specify first end point of circle's diameter: ")
                 else:
                     self.point1 = vector
-                    addRubber("CIRCLE")
+                    add_rubber("CIRCLE")
                     self.rubber_mode = "CIRCLE_2P"
                     self.rubber_points["CIRCLE_TAN1"] = self.point1
                     set_prompt_prefix("Specify second end point of circle's diameter: ")
@@ -1689,7 +1683,7 @@ class Circle():
                     set_prompt_prefix("Specify second point of circle: ")
                 elif math.isnan(self.point2.x):
                     self.point2 = vector
-                    addRubber("CIRCLE")
+                    add_rubber("CIRCLE")
                     self.rubber_mode = "CIRCLE_3P"
                     self.rubber_points["CIRCLE_TAN2"] = self.point2
                     set_prompt_prefix("Specify third point of circle: ")
@@ -1719,7 +1713,7 @@ class DimLeader():
     def DeltaX(): return (obj_end_point_2().x() - EndPoint1().x())
     def DeltaY(): return (obj_end_point_2().y() - EndPoint1().y())
     def Angle():
-    def Length(): return line().length()
+    def Length(): return Line().length()
 
     def setEndPoint1(EmbVector v)
     def setobj_end_point_2(EmbVector v)
@@ -1932,15 +1926,15 @@ class DimLeader():
 
         elif self.rubber_mode == "Grip":
             if painter:
-                gripPoint = self.rubber_points["GRIP_POINT"]
-                if gripPoint == end_point_1():
-                    end = map_from_scene(self.rubber_points(""))
-                    painter.draw_line(line().p2(), end)
-                elif gripPoint == end_point_2():
-                    end = map_from_scene(self.rubber_points(""))
-                    painter.draw_line(line().p1(), end)
-                elif gripPoint == MidPoint():
-                    painter.draw_line(line().translated(map_from_scene(self.rubber_points(""))-map_from_scene(gripPoint)))
+                grip_point = self.rubber_points["GRIP_POINT"]
+                if grip_point == end_point_1():
+                    end = (self.rubber_points(""))
+                    painter.draw_line(Line().p2(), end)
+                elif grip_point == end_point_2():
+                    end = (self.rubber_points(""))
+                    painter.draw_line(Line().p1(), end)
+                elif grip_point == MidPoint():
+                    painter.draw_line(Line().translated((self.rubber_points(""))-(grip_point)))
 
     def vulcanize(self):
         " . "
@@ -2307,8 +2301,8 @@ class Ellipse():
         if self.rubber_mode == "LINE":
             scene_line_point_1 = self.rubber_points["ELLIPSE_LINE_POINT1"]
             scene_line_point_2 = self.rubber_points["ELLIPSE_LINE_POINT2"]
-            item_linePoint1 = map_from_scene(scene_line_point_1)
-            item_linePoint2 = map_from_scene(scene_line_point_2)
+            item_linePoint1 = (scene_line_point_1)
+            item_linePoint2 = (scene_line_point_2)
             item_line = Line(item_linePoint1, item_linePoint2)
             if painter:
                 draw_rubber_line(item_line, painter, "VIEW_COLOR_CROSSHAIR")
@@ -2341,8 +2335,8 @@ class Ellipse():
             set_Size(ellipseWidth, ellipseHeight)
             self.rotation = -ellipseRot
 
-            itemCenterPoint = map_from_scene(sceneCenterPoint)
-            itemAxis2Point2 = map_from_scene(sceneAxis2Point2)
+            itemCenterPoint = (sceneCenterPoint)
+            itemAxis2Point2 = (sceneAxis2Point2)
             item_line = Line(itemCenterPoint, itemAxis2Point2)
             if painter:
                 draw_rubber_line(item_line, painter, "VIEW_COLOR_CROSSHAIR")
@@ -2374,8 +2368,8 @@ class Ellipse():
             set_size(ellipseWidth, ellipseHeight)
             self.rotation = -ellipseRot
 
-            itemCenterPoint = map_from_scene(sceneCenterPoint)
-            itemAxis2Point2 = map_from_scene(sceneAxis2Point2)
+            itemCenterPoint = (sceneCenterPoint)
+            itemAxis2Point2 = (sceneAxis2Point2)
             item_line = Line(itemCenterPoint, itemAxis2Point2)
             if painter:
                 draw_rubber_line(item_line, painter, "VIEW_COLOR_CROSSHAIR")
@@ -2528,11 +2522,11 @@ class Polygon():
                 return
 
             rubber_path = Path()
-            point0 = map_from_scene(object_rubber_point("POLYGON_POINT_0"))
+            point0 = (object_rubber_point("POLYGON_POINT_0"))
             rubber_path.move_to(point0)
             for i in range(1, num+1):
                 appendStr = "POLYGON_POINT_" + str(i)
-                appendPoint = map_from_scene(object_rubber_point(appendStr))
+                appendPoint = (object_rubber_point(appendStr))
                 rubber_path.line_to(appendPoint)
 
             # rubber_path.line_to(0,0)
@@ -2546,7 +2540,7 @@ class Polygon():
 
             num_sides = object_rubber_point("POLYGON_NUM_SIDES").x()
 
-            inscribe_point = map_from_scene(object_rubber_point("POLYGON_INSCRIBE_POINT"))
+            inscribe_point = (object_rubber_point("POLYGON_INSCRIBE_POINT"))
             inscribe_line = Line(Vector(0,0), inscribe_point)
             inscribe_angle = inscribe_line.angle()
             inscribe_inc = 360.0/num_sides
@@ -2569,7 +2563,7 @@ class Polygon():
 
             num_sides = object_rubber_point("POLYGON_NUM_SIDES").x()
 
-            circumscribe_point = map_from_scene(object_rubber_point("POLYGON_CIRCUMSCRIBE_POINT"))
+            circumscribe_point = (object_rubber_point("POLYGON_CIRCUMSCRIBE_POINT"))
             circumscribe_line = Line(Vector(0,0), circumscribe_point)
             circumscribe_angle = circumscribe_line.angle()
             circumscribe_inc = 360.0/num_sides
@@ -2623,11 +2617,11 @@ class Polygon():
                 en = self.normal_path.element_at(n)
                 emPoint = Vector(em.x, em.y)
                 enPoint = Vector(en.x, en.y)
-                painter.draw_line(emPoint, map_from_scene(object_rubber_point("")))
-                painter.draw_line(enPoint, map_from_scene(object_rubber_point("")))
+                painter.draw_line(emPoint, (object_rubber_point("")))
+                painter.draw_line(enPoint, (object_rubber_point("")))
 
-                rub_line = Line(map_from_scene(grip_point),
-                                map_from_scene(object_rubber_point("")))
+                rub_line = Line((grip_point),
+                                (object_rubber_point("")))
                 draw_rubber_line(rub_line, painter, "VIEW_COLOR_CROSSHAIR")
 
     def vulcanize(self):
@@ -2645,12 +2639,12 @@ class Polygon():
     def mouse_snap_point(self, mouse_point):
         " Returns the closest snap point to the mouse point. "
         element = self.normal_path.element_at(0)
-        closest_point = map_to_scene(Vector(element.x, element.y))
+        closest_point = element
         closest_dist = Line(mouse_point, closest_point).length()
         elem_count = self.normal_path.element_count()
         for i in range(elem_count):
             element = self.normal_path.element_at(i)
-            elem_point = map_to_scene(element.x, element.y)
+            elem_point = element
             elem_dist = Line(mouse_point, elem_point).length()
             if elem_dist < closest_dist:
                 closest_point = elem_point
@@ -2663,7 +2657,7 @@ class Polygon():
         grip_points = []
         for i in range(normal_path.element_count()):
             element = self.normal_path.element_at(i)
-            grip_points += [map_to_scene(element.x, element.y)]
+            grip_points += [(element.x, element.y)]
 
         return grip_points
 
@@ -2671,7 +2665,7 @@ class Polygon():
         r"Find the closest index to the supplied point."
         elem_count = self.normal_path.element_count()
         # NOTE: Points here are in item coordinates.
-        item_point = map_from_scene(point)
+        item_point = (point)
         for i in range(elem_count):
             e = self.normal_path.element_at(i)
             elem_point = Vector(e.x, e.y)
@@ -2695,7 +2689,7 @@ class Polygon():
         self.grip_index = self.find_index(before)
         if self.grip_index == -1:
             return
-        a_vector = map_from_scene(after)
+        a_vector = (after)
         self.normal_path.set_element_position_at(self.grip_index, a_vector)
         self.update_path(normal_path)
         self.grip_index = -1
@@ -2790,7 +2784,7 @@ class Polygon():
                 self.mode = "INSCRIBE"
                 self.poly_type = "Inscribed"
                 set_prompt_prefix("Specify polygon corner point or [Distance]: ")
-                addRubber("POLYGON")
+                add_rubber("POLYGON")
                 self.rubber_mode = "POLYGON_INSCRIBE"
                 self.rubber_points["POLYGON_CENTER"] = self.find_center()
                 self.rubber_points["POLYGON_NUM_SIDES"] = (self.num_sides, 0)
@@ -2800,7 +2794,7 @@ class Polygon():
                 self.mode = "CIRCUMSCRIBE"
                 self.poly_type = "Circumscribed"
                 set_prompt_prefix("Specify polygon side point or [Distance]: ")
-                addRubber("POLYGON")
+                add_rubber("POLYGON")
                 self.rubber_mode = "POLYGON_CIRCUMSCRIBE"
                 self.rubber_points["POLYGON_CENTER"] = self.find_center()
                 self.rubber_points["POLYGON_NUM_SIDES"] = (self.num_sides, 0)
@@ -2809,7 +2803,7 @@ class Polygon():
                 if self.poly_type == "Inscribed":
                     self.mode = "INSCRIBE"
                     set_prompt_prefix("Specify polygon corner point or [Distance]: ")
-                    addRubber("POLYGON")
+                    add_rubber("POLYGON")
                     self.rubber_mode = "POLYGON_INSCRIBE"
                     self.rubber_points["POLYGON_CENTER"] = self.find_center()
                     self.rubber_points["POLYGON_NUM_SIDES"] = (self.num_sides, 0)
@@ -2817,7 +2811,7 @@ class Polygon():
                 elif self.poly_type == "Circumscribed":
                     self.mode = "CIRCUMSCRIBE"
                     set_prompt_prefix("Specify polygon side point or [Distance]: ")
-                    addRubber("POLYGON")
+                    add_rubber("POLYGON")
                     self.rubber_mode = "POLYGON_CIRCUMSCRIBE"
                     self.rubber_points["POLYGON_CENTER"] = self.center
                     self.rubber_points["POLYGON_NUM_SIDES"] = (self.num_sides, 0)
@@ -2923,7 +2917,7 @@ from libembroidery.tools import (
 )
 
 
-class Polyline():
+class PolyLine():
     r"""
     This is necessarily a class because we need the same
     functions for other geometry objects and supporting SVG means
@@ -2999,7 +2993,7 @@ class Polyline():
         if self.rubber_mode == "OBJ_RUBBER_POLYLINE":
             set_object_pos(self.rubber_point("POLYLINE_POINT_0"))
 
-            rubber_line = Line(normal_path.currentPosition(), map_from_scene(self.rubber_point("")))
+            rubber_line = Line(normal_path.currentPosition(), (self.rubber_point("")))
             if painter:
                 draw_rubber_line(rubber_line, painter, "VIEW_COLOR_CROSSHAIR")
 
@@ -3015,7 +3009,7 @@ class Polyline():
             rubberPath = Path()
             for i in range(1, num+1):
                 appendStr = "POLYLINE_POINT_" + "".setNum(i)
-                appendPoint = map_from_scene(self.rubber_point(appendStr))
+                appendPoint = (self.rubber_point(appendStr))
                 rubberPath.line_to(appendPoint)
 
             update_path(rubberPath)
@@ -3027,9 +3021,9 @@ class Polyline():
         elif self.rubber_mode == "OBJ_RUBBER_GRIP":
             if painter:
                 elemCount = normal_path.element_count()
-                gripPoint = self.rubber_point("GRIP_POINT")
+                grip_point = self.rubber_point("GRIP_POINT")
                 if gripIndex == -1:
-                    gripIndex = find_index(gripPoint)
+                    gripIndex = find_index(grip_point)
                 if gripIndex == -1:
                     return
 
@@ -3037,13 +3031,13 @@ class Polyline():
                     # First
                     ef = normal_path.element_at(1)
                     efPoint = Vector(ef.x, ef.y)
-                    painter.draw_line(efPoint, map_from_scene(self.rubber_point("")))
+                    painter.draw_line(efPoint, (self.rubber_point("")))
 
                 elif gripIndex == elemCount-1:
                     # Last
                     el = normal_path.element_at(gripIndex-1)
                     elPoint = Vector(el.x, el.y)
-                    painter.draw_line(elPoint, map_from_scene(self.rubber_point("")))
+                    painter.draw_line(elPoint, (self.rubber_point("")))
 
                 else:
                     # Middle
@@ -3051,10 +3045,10 @@ class Polyline():
                     en = normal_path.element_at(gripIndex+1)
                     emPoint = Vector(em.x, em.y)
                     enPoint = Vector(en.x, en.y)
-                    painter.draw_line(emPoint, map_from_scene(self.rubber_point("")))
-                    painter.draw_line(enPoint, map_from_scene(self.rubber_point("")))
+                    painter.draw_line(emPoint, (self.rubber_point("")))
+                    painter.draw_line(enPoint, (self.rubber_point("")))
 
-                rub_line = Line(map_from_scene(gripPoint), map_from_scene(self.rubber_point("")))
+                rub_line = Line((grip_point), (self.rubber_point("")))
                 draw_rubber_line(rub_line, painter, "VIEW_COLOR_CROSSHAIR")
 
     def vulcanize(self):
@@ -3085,18 +3079,18 @@ class Polyline():
         return closestPoint
 
     def all_grip_points(self):
-        gripPoints = []
+        grip_points = []
         for i in range(normal_path.element_count()):
             element = normal_path.element_at(i)
-            gripPoints += [mapToScene(element.x, element.y)]
+            grip_points += [mapToScene(element.x, element.y)]
 
-        return gripPoints
+        return grip_points
 
     def Polyfind_index(self, point):
         " . "
         elemCount = normal_path.element_count()
         # NOTE: Points here are in item coordinates.
-        itemPoint = map_from_scene(point)
+        itemPoint = (point)
         for i in range(elemCount):
             e = normal_path.element_at(i)
             elemPoint = Vector(e.x, e.y)
@@ -3110,7 +3104,7 @@ class Polyline():
         gripIndex = find_index(before)
         if gripIndex == -1:
             return
-        a = map_from_scene(after)
+        a = (after)
         normal_path.setElementPositionAt(gripIndex, a)
         update_path(normal_path)
         gripIndex = -1
@@ -3233,7 +3227,7 @@ class Polyline():
 
     def copy(self):
         " . "
-        return Polyline()
+        return PolyLine()
 
     def copy_path(self):
         " . "
@@ -3619,9 +3613,9 @@ class Point():
         self.rubber_mode = objectrubber_mode()
         if self.rubber_mode == "GRIP":
             if painter:
-                gripPoint = self.rubber_point["GRIP_POINT"]
-                if gripPoint == scenePos():
-                    rub_line = Line(map_from_scene(gripPoint), map_from_scene(self.rubber_point("")))
+                grip_point = self.rubber_point["GRIP_POINT"]
+                if grip_point == scenePos():
+                    rub_line = Line((grip_point), (self.rubber_point("")))
                     draw_rubber_line(rub_line, painter, "VIEW_COLOR_CROSSHAIR")
 
     def vulcanize(self):

@@ -3,13 +3,13 @@
 r"""
     Libembroidery.
 
-    -----
+    --------------------------------------------------
 
     Copyright 2018-2022 The Embroidermodder Team
     Libembroidery is Open Source Software.
     See LICENSE for licensing terms.
 
-    -----
+    --------------------------------------------------
 
     Part of libembroidery
 
@@ -31,7 +31,7 @@ import math
 
 from libembroidery.parser import list_processor
 import libembroidery as emb
-from libembroidery import Pattern, Vector, Arc, Circle, Ellipse
+from libembroidery import Pattern, Vector, Circle
 from libembroidery.tools import debug_message
 
 
@@ -122,23 +122,31 @@ class TestLibembroidery(unittest.TestCase):
         self.assertAlmostEqual(v.length(), 5.0)
 
     def test_arc(self):
-        " . "
-        arc = Arc(1.0, 2.0, 2.0, 3.0, 4.0, 6.0)
+        r"Adds an arc to the pattern, then checked that it saves in SVG."
+        pattern = Pattern()
+        pattern.add_arc(1.0, 2.0, 2.0, 3.0, 4.0, 6.0)
+        pattern.write("out.svg")
         self.assertAlmostEqual(5.0, 5.0)
 
     def test_circle(self):
-        " . "
-        circle = Circle(3.0, 4.0, 2.0)
+        r"Adds a circle to the pattern, then checked that it saves in SVG."
+        pattern = Pattern()
+        pattern.add_circle(3.0, 4.0, 2.0)
+        pattern.write("out.svg")
         self.assertAlmostEqual(5.0, 5.0)
 
     def test_ellipse(self):
-        " . "
-        ellipse = Ellipse(3.0, 4.0, 7.0, 4.0)
+        r"Adds an ellipse to the pattern, then checked that it saves in SVG."
+        pattern = Pattern()
+        pattern.add_ellipse(3.0, 4.0, 7.0, 4.0)
+        pattern.write("out.svg")
         self.assertAlmostEqual(5.0, 5.0)
 
     def test_path(self):
-        " . "
-        path = emb.Path()
+        r"Adds a path to the pattern, then checked that it saves in SVG."
+        pattern = Pattern()
+        pattern.add_path([])
+        pattern.write("out.svg")
         self.assertAlmostEqual(5.0, 5.0)
 
     def test_main(self):
@@ -146,7 +154,7 @@ class TestLibembroidery(unittest.TestCase):
         Tests the rendering and simulating of patterns.
         """
         pattern = Pattern()
-        image = emb.image(100, 100)
+        image = emb.Image(100, 100)
         hilbert_curve_result = pattern.hilbert_curve(3)
         render_result = image.render(pattern, 20.0, 20.0, "hilbert_level_3.ppm")
         simulate_result = image.simulate(pattern, 20.0, 20.0, "hilbert_level_3.avi")
@@ -184,7 +192,7 @@ class TestLibembroidery(unittest.TestCase):
         """
         t0 = Vector(0.0, 0.0)
         t1 = Vector(0.0, 0.0)
-        c = emb.Circle(0.0, 0.0, 3.0)
+        c = Circle(0.0, 0.0, 3.0)
         p = Vector(4.0, 0.0)
         emb.getCircleTangentPoints(c, p, t0, t1)
         self.assertAlmostEqual(t0.x, 2.2500)
@@ -197,7 +205,7 @@ class TestLibembroidery(unittest.TestCase):
         """
         t0 = Vector(0.0, 0.0)
         t1 = Vector(0.0, 0.0)
-        c = emb.Circle(20.1762, 10.7170, 6.8221)
+        c = Circle(20.1762, 10.7170, 6.8221)
         p = Vector(24.3411, 18.2980)
         emb.getCircleTangentPoints(c, p, t0, t1)
         self.assertAlmostEqual(t0.x, 19.0911)

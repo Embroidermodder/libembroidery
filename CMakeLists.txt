@@ -63,6 +63,12 @@ endif (WIN32)
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
 install(
+    FILES
+        src/embroidery.h
+    DESTINATION /usr/include
+)
+
+install(
     TARGETS
        embroidery
        embroidery_static

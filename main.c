@@ -53,7 +53,8 @@
 #define FLAG_IMAGE_HEIGHT            35
 #define FLAG_SIMULATE                36
 #define FLAG_COMBINE                 37
-#define NUM_FLAGS                    38
+#define FLAG_CROSS_STITCH            38
+#define NUM_FLAGS                    39
 
 /* DATA 
  *******************************************************************/
@@ -100,7 +101,8 @@ const char *flag_list[] = {
     "--image-width",
     "--image-height",
     "--simulate",
-    "--combine"
+    "--combine",
+    "--cross-stitch"
 };
 
 const char *version_string = "embroider v0.1";
@@ -1214,6 +1216,20 @@ command_line_interface(int argc, char* argv[])
             break;
         case FLAG_FULL_TEST_SUITE:
             testMain(1);
+            break;
+        case FLAG_CROSS_STITCH:
+            if (i + 3 < argc) {
+                EmbImage *image;
+                /* the user appears to have entered the needed arguments */
+                i++;
+                image = embImage_create(1000, 1000);
+                embImage_read(argv[i], image, 1000, 1000);
+                i++;
+                embPattern_crossstitch(current_pattern, image, atoi(argv[i]));
+                embImage_free(image);
+                i++;
+                embPattern_writeAuto(current_pattern, argv[i]);
+            }
             break;
         default:
             flags--;

@@ -102,7 +102,7 @@ embImage_read(char *fname, EmbImage *a, int width, int height)
         if (header[0] == '\n') {
             state++;
         }
-        if (state == 4) {
+        if (state == 3) {
             break;
         }
     }

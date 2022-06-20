@@ -486,8 +486,8 @@ EMB_PUBLIC float embVector_angle(EmbVector v);
 EMB_PUBLIC float embVector_distance(EmbVector a, EmbVector b);
 EMB_PUBLIC EmbVector embVector_unit(float angle);
 
-EMB_PUBLIC int read_ppm_image(char *fname, EmbImage *a);
-EMB_PUBLIC void write_ppm_image(char *fname, EmbImage *a);
+EMB_PUBLIC int embImage_read(char *fname, EmbImage *a, int width, int height);
+EMB_PUBLIC void embImage_write(char *fname, EmbImage *a);
 EMB_PUBLIC float image_diff(EmbImage *image1, EmbImage *image2);
 EMB_PUBLIC int render_line(EmbLine, EmbImage *, EmbColor);
 EMB_PUBLIC int embImage_render(EmbPattern *pattern, float width, float height, char *fname);
@@ -585,52 +585,6 @@ EMB_PUBLIC char embPattern_write(EmbPattern *pattern, const char* fileName, int 
 
 EMB_PUBLIC char embPattern_readAuto(EmbPattern *pattern, const char* fileName);
 EMB_PUBLIC char embPattern_writeAuto(EmbPattern *pattern, const char* fileName);
-
-/* Easier to bind functions that only act on the current pattern.
- *
- * Could be changed to an index.
- */
-EMB_PUBLIC void embCurrent_create(void);
-EMB_PUBLIC void embCurrent_hideStitchesOverLength(int length);
-EMB_PUBLIC void embCurrent_fixColorCount();
-EMB_PUBLIC int embCurrent_addThread(EmbThread thread);
-EMB_PUBLIC void embCurrent_addStitchAbs(double x, double y, int flags, int isAutoColorIndex);
-EMB_PUBLIC void embCurrent_addStitchRel(double dx, double dy, int flags, int isAutoColorIndex);
-EMB_PUBLIC void embCurrent_changeColor(int index);
-EMB_PUBLIC void embCurrent_free();
-EMB_PUBLIC void embCurrent_scale(double scale);
-EMB_PUBLIC EmbRect embCurrent_calcBoundingBox(void);
-EMB_PUBLIC void embCurrent_flipHorizontal();
-EMB_PUBLIC void embCurrent_flipVertical();
-EMB_PUBLIC void embCurrent_flip(int horz, int vert);
-EMB_PUBLIC void embCurrent_combineJumpStitches(void);
-EMB_PUBLIC void embCurrent_correctForMaxStitchLength(double maxStitchLength, double maxJumpLength);
-EMB_PUBLIC void embCurrent_center(void);
-EMB_PUBLIC void embCurrent_loadExternalColorFile(const char* fileName);
-EMB_PUBLIC void embCurrent_convertGeometry(void);
-EMB_PUBLIC void embCurrent_designDetails();
-EMB_PUBLIC int embCurrent_color_count(EmbColor startColor);
-EMB_PUBLIC void embCurrent_end(void);
-
-EMB_PUBLIC void embCurrent_addCircleObjectAbs(double cx, double cy, double r);
-EMB_PUBLIC void embCurrent_addEllipseObjectAbs(double cx, double cy, double rx, double ry); /* TODO: ellipse rotation */
-EMB_PUBLIC void embCurrent_addLineObjectAbs(double x1, double y1, double x2, double y2);
-EMB_PUBLIC void embCurrent_addPathObjectAbs(EmbPathObject* obj);
-EMB_PUBLIC void embCurrent_addPointObjectAbs(double x, double y);
-EMB_PUBLIC void embCurrent_addPolygonObjectAbs(EmbPolygonObject* obj);
-EMB_PUBLIC void embCurrent_addPolylineObjectAbs(EmbPolylineObject* obj);
-EMB_PUBLIC void embCurrent_addRectObjectAbs(double x, double y, double w, double h);
-
-EMB_PUBLIC void embCurrent_copyStitchListToPolylines(void);
-EMB_PUBLIC void embCurrent_copyPolylinesToStitchList(void);
-EMB_PUBLIC void embCurrent_moveStitchListToPolylines(void);
-EMB_PUBLIC void embCurrent_movePolylinesToStitchList(void);
-
-EMB_PUBLIC char embCurrent_read(const char* fileName, int format);
-EMB_PUBLIC char embCurrent_write(const char* fileName, int format);
-
-EMB_PUBLIC char embCurrent_readAuto(const char* fileName);
-EMB_PUBLIC char embCurrent_writeAuto(const char* fileName);
 
 EMB_PUBLIC void report(int result, char *label);
 EMB_PUBLIC int full_test_matrix(char *fname);

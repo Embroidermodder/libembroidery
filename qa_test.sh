@@ -10,8 +10,10 @@ make 2> build_error.log
 cd ..
 }
 
-python3 -m build
-python3 -m pip install dist/*.whl 
-python3 tests.py
+c_build
 
-rm -fr build dist libembroidery/__pycache__ libembroidery/libembroidery.egg-info
+#python3 -m build
+#python3 -m pip install dist/*.whl 
+#python3 tests.py
+
+#rm -fr build dist libembroidery/__pycache__ libembroidery/libembroidery.egg-info

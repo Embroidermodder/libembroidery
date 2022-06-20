@@ -15,7 +15,7 @@
  * Basic read/write support for images, so we can convert
  * to any other format we need using imagemagick.
  *
- * We only support P3 ASCII ppm, that is the original, 8 bits per channel.
+ * We only support P6 ppm, that is the original, 8 bits per channel, 3 channels.
  *
  * This also allows support for making animations using ffmpeg/avconv
  * of the stitching process.
@@ -79,9 +79,10 @@ void embImage_free(EmbImage *image)
     free(image);
 }
 
-/*
+/* TODO: Parse header properly.
  */
-int read_ppm_image(char *fname, EmbImage *a)
+int
+embImage_read(char *fname, EmbImage *a, int width, int height)
 {
     int i, state;
     FILE *f;
@@ -90,8 +91,8 @@ int read_ppm_image(char *fname, EmbImage *a)
     if (!f) {
         return 0;
     }
-    a->pixel_width = 100;
-    a->pixel_height = 75;
+    a->pixel_width = width;
+    a->pixel_height = height;
     state = 0;
     while (fread(header, 1, 1, f) == 1) {
         /* state machine for dealing with the header */
@@ -114,7 +115,8 @@ int read_ppm_image(char *fname, EmbImage *a)
  * This function should work, combine with:
  *    $ convert example.ppm example.png
  */
-void write_ppm_image(char *fname, EmbImage *a)
+void
+embImage_write(char *fname, EmbImage *a)
 {
     int i, j;
     FILE *f;
@@ -163,7 +165,9 @@ float image_diff(EmbImage *a, EmbImage* b)
  * 
  */
 
-int render_line(EmbLine line, EmbImage *image, EmbColor color) {
+int
+render_line(EmbLine line, EmbImage *image, EmbColor color)
+{
     EmbVector diff, pos, offset;
     int i;
     float pix_w, pix_h;
@@ -193,8 +197,9 @@ int render_line(EmbLine line, EmbImage *image, EmbColor color) {
  *
  * The caller is responsible for the memory in p.
  */
-
-int embImage_render(EmbPattern *p, float width, float height, char *fname) {
+int
+embImage_render(EmbPattern *p, float width, float height, char *fname)
+{
     int i;
     EmbImage *image;
     EmbColor black = {0, 0, 0};
@@ -209,7 +214,7 @@ int embImage_render(EmbPattern *p, float width, float height, char *fname) {
         line.end.y = p->stitchList->stitch[i].y;
         render_line(line, image, black); /* HACK: st.color); */
     }
-    write_ppm_image(fname, image);
+    embImage_write(fname, image);
     embImage_free(image);
     return 0;
 }

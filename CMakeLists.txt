@@ -9,20 +9,20 @@ option( EMBROIDERY_BUILD_SHARED_LIBS "Build shared library." ON )
 option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
 
 set(C_SOURCES
-	src/main.c
-	src/embroidery.h
-	src/internal.h
-	src/array.c
-	src/testing.c
-	src/formats.c
-	src/format-data.c
-	src/pattern.c
-	src/image.c
-	src/fill.c
-	src/geometry.c
-	src/compress.c
-	src/encoding.c
-	src/thread-color.c
+	main.c
+	embroidery.h
+	internal.h
+	array.c
+	testing.c
+	formats.c
+	format-data.c
+	pattern.c
+	image.c
+	fill.c
+	geometry.c
+	compress.c
+	encoding.c
+	thread-color.c
 )
 
 add_compile_options(
@@ -64,7 +64,7 @@ endif (WIN32)
 if(EMBROIDERY_BUILD_SHARED_LIBS)
 install(
     FILES
-        src/embroidery.h
+        embroidery.h
     DESTINATION /usr/include
 )
 

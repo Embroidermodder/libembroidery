@@ -77,7 +77,35 @@ Potential reference:
     return 0;
 }
 
-int hilbert_curve(EmbPattern *pattern, int iterations)
+/* Uses a threshhold method to determine where to put
+ * crosses in the fill.
+ */
+void
+embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
+{
+    int i, j, index;
+    /* Size of the crosses in millimeters. */
+    double scale = 1.0;
+    int subsample = 10;
+
+    for (i=0; i<image->pixel_width/subsample; i++)
+    for (j=0; j<image->pixel_height/subsample; j++) {
+        EmbColor color;
+        index = subsample*j*image->pixel_width+subsample*i;
+        color = image->color[index];
+        if (color.r+color.g+color.b > threshhold) {
+            embPattern_addStitchAbs(pattern, scale*i, scale*j, NORMAL, 0);
+            embPattern_addStitchAbs(pattern, scale*(i+1), scale*(j+1), NORMAL, 0);
+            embPattern_addStitchAbs(pattern, scale*i, scale*(j+1), NORMAL, 0);
+            embPattern_addStitchAbs(pattern, scale*(i+1), scale*j, NORMAL, 0);
+        }
+    }
+
+    embPattern_end(pattern);
+}
+
+int
+hilbert_curve(EmbPattern *pattern, int iterations)
 {
     /*
     https://en.wikipedia.org/wiki/Hilbert_curve

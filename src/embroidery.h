@@ -565,6 +565,7 @@ EMB_PUBLIC void embPattern_designDetails(EmbPattern *p);
 EMB_PUBLIC EmbPattern *embPattern_combine(EmbPattern *p1, EmbPattern *p2);
 EMB_PUBLIC int embPattern_color_count(EmbPattern *pattern, EmbColor startColor);
 EMB_PUBLIC void embPattern_end(EmbPattern* p);
+EMB_PUBLIC void embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold);
 
 EMB_PUBLIC void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r);
 EMB_PUBLIC void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy, double rx, double ry); /* TODO: ellipse rotation */

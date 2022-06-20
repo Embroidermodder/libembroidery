@@ -79,6 +79,10 @@ Potential reference:
 
 /* Uses a threshhold method to determine where to put
  * crosses in the fill.
+ *
+ * To improve this, we can remove the vertical stitches when two crosses
+ * neighbour. Currently the simple way to do this is to chain crosses
+ * that are neighbours exactly one ahead.
  */
 void
 embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)

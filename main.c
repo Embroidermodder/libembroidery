@@ -1134,44 +1134,54 @@ command_line_interface(int argc, char* argv[])
             }
             break;
         case FLAG_RENDER:
-        case FLAG_RENDER_SHORT:
+        case FLAG_RENDER_SHORT: {
+            EmbImage *image = embImage_create(1000, 1000);
+            image->width = width;
+            image->height = height;
             if (i + 1 < argc) {
                 /* the user appears to have entered a filename after render */
                 i++;
                 if (argv[i][0] == '-') {
                     /* they haven't, use the default name */
                     puts("Defaulting to the output name 'output.ppm'.");
-                    embImage_render(current_pattern, width, height, "output.ppm");
+                    embPattern_render(current_pattern, image, "output.ppm");
                     i--;
                 }
                 else {
                     /* they have, use the user-supplied name */
-                    embImage_render(current_pattern, width, height, argv[i]);
+                    embPattern_render(current_pattern, image, argv[i]);
                 }
             }
             else {
                 puts("Defaulting to the output name 'output.ppm'.");
-                embImage_render(current_pattern, width, height, "output.ppm");
+                embPattern_render(current_pattern, image, "output.ppm");
+            }
+            embImage_free(image);
             }
             break;
-        case FLAG_SIMULATE:
+        case FLAG_SIMULATE: {
+            EmbImage *image = embImage_create(1000, 1000);
+            image->width = width;
+            image->height = height;
             if (i + 1 < argc) {
                 /* the user appears to have entered a filename after render */
                 i++;
                 if (argv[i][0] == '-') {
                     /* they haven't, use the default name */
                     puts("Defaulting to the output name 'output.avi'.");
-                    embImage_simulate(current_pattern, width, height, "output.avi");
+                    embPattern_simulate(current_pattern, image, "output.avi");
                     i--;
                 }
                 else {
                     /* they have, use the user-supplied name */
-                    embImage_simulate(current_pattern, width, height, argv[i]);
+                    embPattern_simulate(current_pattern, image, argv[i]);
                 }
             }
             else {
                 puts("Defaulting to the output name 'output.avi'.");
-                embImage_simulate(current_pattern, width, height, "output.avi");
+                embPattern_simulate(current_pattern, image, "output.avi");
+            }
+            embImage_free(image);
             }
             break;
         case FLAG_COMBINE:

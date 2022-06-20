@@ -490,8 +490,6 @@ EMB_PUBLIC int embImage_read(char *fname, EmbImage *a, int width, int height);
 EMB_PUBLIC void embImage_write(char *fname, EmbImage *a);
 EMB_PUBLIC float image_diff(EmbImage *image1, EmbImage *image2);
 EMB_PUBLIC int render_line(EmbLine, EmbImage *, EmbColor);
-EMB_PUBLIC int embImage_render(EmbPattern *pattern, float width, float height, char *fname);
-EMB_PUBLIC int embImage_simulate(EmbPattern *pattern, float width, float height, char *fname);
 EMB_PUBLIC int render_postscript(EmbPattern *pattern, EmbImage *image);
 
 EMB_PUBLIC void testMain(int level);
@@ -566,6 +564,8 @@ EMB_PUBLIC EmbPattern *embPattern_combine(EmbPattern *p1, EmbPattern *p2);
 EMB_PUBLIC int embPattern_color_count(EmbPattern *pattern, EmbColor startColor);
 EMB_PUBLIC void embPattern_end(EmbPattern* p);
 EMB_PUBLIC void embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold);
+EMB_PUBLIC int embPattern_render(EmbPattern *pattern, EmbImage *image, char *fname);
+EMB_PUBLIC int embPattern_simulate(EmbPattern *pattern, EmbImage *image, char *fname);
 
 EMB_PUBLIC void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r);
 EMB_PUBLIC void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy, double rx, double ry); /* TODO: ellipse rotation */

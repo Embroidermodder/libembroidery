@@ -19,6 +19,9 @@
  *
  * This also allows support for making animations using ffmpeg/avconv
  * of the stitching process.
+ *******************************************************************
+ *
+ * Use Python PEP7 for coding style.
  */
 
 #include <stdio.h>
@@ -198,14 +201,10 @@ render_line(EmbLine line, EmbImage *image, EmbColor color)
  * The caller is responsible for the memory in p.
  */
 int
-embImage_render(EmbPattern *p, float width, float height, char *fname)
+embPattern_render(EmbPattern *p, EmbImage *image, char *fname)
 {
     int i;
-    EmbImage *image;
     EmbColor black = {0, 0, 0};
-    image = embImage_create(100, 100);
-    image->width = width;
-    image->height = height;
     for (i=1; i < p->stitchList->count; i++)  {
         EmbLine line;
         line.start.x = p->stitchList->stitch[i-1].x;
@@ -215,7 +214,6 @@ embImage_render(EmbPattern *p, float width, float height, char *fname)
         render_line(line, image, black); /* HACK: st.color); */
     }
     embImage_write(fname, image);
-    embImage_free(image);
     return 0;
 }
 
@@ -223,18 +221,22 @@ embImage_render(EmbPattern *p, float width, float height, char *fname)
  *
  *
  */
-
-int render_postscript(EmbPattern *pattern, EmbImage *image) {
+int
+render_postscript(EmbPattern *pattern, EmbImage *image)
+{
     puts("Postscript rendering not supported, defaulting to ppm.");
-    embImage_render(pattern, image->width, image->height, "default.ppm");
+    embPattern_render(pattern, image, "default.ppm");
     return 1;
 }
 
 /* Simulate the stitching of a pattern, using the image for rendering
  * hints about how to represent the pattern.
  */
-int embImage_simulate(EmbPattern *pattern, float width, float height, char *fname) {
-    embImage_render(pattern, width, height, fname);
+int
+embPattern_simulate(EmbPattern *pattern, EmbImage *image, char *fname)
+{
+
+    embPattern_render(pattern, image, fname);
     return 0;
 }
 

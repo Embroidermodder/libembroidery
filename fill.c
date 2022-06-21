@@ -77,61 +77,51 @@ Potential reference:
     return 0;
 }
 
-/* Uses a threshhold method to determine where to put
- * lines in the fill.
- *
- * Needs to pass a "donut test", i.e. an image with black pixels where:
- *     10 < x*x + y*y < 20
- * over the area (-30, 30) x (-30, 30).
- * 
- * Use render then image difference to see how well it passes.
+/* Identify darker pixels to put stitches in.
  */
-void
-embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
+static int *
+threshold_method(EmbImage *image, int *n_points,
+    int subsample_width, int subsample_height, int threshold)
 {
     int i, j;
-    /* Size of the crosses in millimeters. */
-    double scale = 1.0;
-    int subsample_width = 5;
-    int subsample_height = 5;
-    double bias = 1.2;
     int *points;
-    int n_points;
-
-    /* find stitch points */
     points = (int *)malloc((image->pixel_height/subsample_height)
         *(image->pixel_width/subsample_width) * sizeof(int));
-    n_points = 0;
+    *n_points = 0;
     for (i=0; i<image->pixel_height/subsample_height; i++)
     for (j=0; j<image->pixel_width/subsample_width; j++) {
         EmbColor color;
         int index = subsample_height*i*image->pixel_width+subsample_width*j;
         color = image->color[index];
-        if (color.r+color.g+color.b < threshhold) {
-            points[n_points] = index;
-            n_points++;
+        if (color.r+color.g+color.b < threshold) {
+            points[*n_points] = index;
+            (*n_points)++;
         }
     }
+    return points;
+}
 
-    /* Greedy Algorithm
-     * ----------------
-     * For each point in the list find the shortest distance to
-     * any possible neighbour, then perform a swap to make that
-     * neighbour the next item in the list.
-     * 
-     * To make the stitches lie more on one axis than the other
-     * bias the distance operator to prefer horizontal direction.
-     */
+/* Greedy Algorithm
+* ----------------
+* For each point in the list find the shortest distance to
+* any possible neighbour, then perform a swap to make that
+* neighbour the next item in the list.
+* 
+* To make the stitches lie more on one axis than the other
+* bias the distance operator to prefer horizontal direction.
+*/
+static void
+greedy_algorithm(int *points, int n_points, int width, double bias)
+{
+    int i, j;
     for (i=0; i<n_points-1; i++) {
         int stor;
         double shortest = 1.0e20;
         int next = i+1;
         /* Find nearest neighbour. */
         for (j=i+1; j<n_points; j++) {
-            int x = (points[i]%image->pixel_width)
-                  - (points[j]%image->pixel_width);
-            int y = (points[i]/image->pixel_width)
-                  - (points[j]/image->pixel_width);
+            int x = (points[i]%width) - (points[j]%width);
+            int y = (points[i]/width) - (points[j]/width);
             double distance = x*x + bias*y*y;
             if (distance < shortest) {
                 next = j;
@@ -144,14 +134,44 @@ embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
         points[next] = points[i+1];
         points[i+1] = stor;
     }
+}
 
-    /* Store result in pattern. */
+static void
+save_points_to_pattern(
+    EmbPattern *pattern, int *points, int n_points, double scale, int width)
+{
+    int i;
     for (i=0; i<n_points; i++) {
         int x, y;
-        x = points[i]%image->pixel_width;
-        y = points[i]/image->pixel_width;
+        x = points[i]%width;
+        y = points[i]/width;
         embPattern_addStitchAbs(pattern, scale*x, scale*y, NORMAL, 0);
     }
+}
+
+/* Uses a threshhold method to determine where to put
+ * lines in the fill.
+ *
+ * Needs to pass a "donut test", i.e. an image with black pixels where:
+ *     10 < x*x + y*y < 20
+ * over the area (-30, 30) x (-30, 30).
+ * 
+ * Use render then image difference to see how well it passes.
+ */
+void
+embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
+{
+    /* Size of the crosses in millimeters. */
+    double scale = 0.1;
+    int sample_w = 5;
+    int sample_h = 5;
+    double bias = 1.2;
+    int *points;
+    int n_points;
+
+    points = threshold_method(image, &n_points, sample_w, sample_h, threshhold);
+    greedy_algorithm(points, n_points, image->pixel_width, bias);
+    save_points_to_pattern(pattern, points, n_points, scale, image->pixel_width);
 
     embPattern_end(pattern);
     free(points);
@@ -167,22 +187,27 @@ embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
 void
 embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
 {
-    int i, j, index;
+    int i;
     /* Size of the crosses in millimeters. */
-    double scale = 1.0;
-    int subsample = 10;
+    double scale = 0.1;
+    int sample_w = 5;
+    int sample_h = 5;
+    double bias = 1.0;
+    int *points;
+    int n_points;
 
-    for (i=0; i<image->pixel_height/subsample; i++)
-    for (j=0; j<image->pixel_width/subsample; j++) {
-        EmbColor color;
-        index = subsample*(i*image->pixel_width+j);
-        color = image->color[index];
-        if (color.r+color.g+color.b < threshhold) {
-            embPattern_addStitchAbs(pattern, scale*i, scale*j, NORMAL, 0);
-            embPattern_addStitchAbs(pattern, scale*(i+1), scale*(j+1), NORMAL, 0);
-            embPattern_addStitchAbs(pattern, scale*i, scale*(j+1), NORMAL, 0);
-            embPattern_addStitchAbs(pattern, scale*(i+1), scale*j, NORMAL, 0);
-        }
+    points = threshold_method(image, &n_points, sample_w, sample_h, threshhold);
+    greedy_algorithm(points, n_points, image->pixel_width, bias);
+
+    for (i=0; i<n_points; i++) {
+        double x, y;
+        x = points[i]%image->pixel_width;
+        y = points[i]/image->pixel_width;
+        printf("%f %f\n", x, y);
+        embPattern_addStitchAbs(pattern, scale*x, scale*y, NORMAL, 0);
+        embPattern_addStitchAbs(pattern, scale*(x+sample_w), scale*(y+sample_h), NORMAL, 0);
+        embPattern_addStitchAbs(pattern, scale*x, scale*(y+sample_h), NORMAL, 0);
+        embPattern_addStitchAbs(pattern, scale*(x+sample_w), scale*y, NORMAL, 0);
     }
 
     embPattern_end(pattern);

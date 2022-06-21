@@ -78,6 +78,86 @@ Potential reference:
 }
 
 /* Uses a threshhold method to determine where to put
+ * lines in the fill.
+ *
+ * Needs to pass a "donut test", i.e. an image with black pixels where:
+ *     10 < x*x + y*y < 20
+ * over the area (-30, 30) x (-30, 30).
+ * 
+ * Use render then image difference to see how well it passes.
+ */
+void
+embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
+{
+    int i, j;
+    /* Size of the crosses in millimeters. */
+    double scale = 1.0;
+    int subsample_width = 5;
+    int subsample_height = 5;
+    double bias = 1.2;
+    int *points;
+    int n_points;
+
+    /* find stitch points */
+    points = (int *)malloc((image->pixel_height/subsample_height)
+        *(image->pixel_width/subsample_width) * sizeof(int));
+    n_points = 0;
+    for (i=0; i<image->pixel_height/subsample_height; i++)
+    for (j=0; j<image->pixel_width/subsample_width; j++) {
+        EmbColor color;
+        int index = subsample_height*i*image->pixel_width+subsample_width*j;
+        color = image->color[index];
+        if (color.r+color.g+color.b < threshhold) {
+            points[n_points] = index;
+            n_points++;
+        }
+    }
+
+    /* Greedy Algorithm
+     * ----------------
+     * For each point in the list find the shortest distance to
+     * any possible neighbour, then perform a swap to make that
+     * neighbour the next item in the list.
+     * 
+     * To make the stitches lie more on one axis than the other
+     * bias the distance operator to prefer horizontal direction.
+     */
+    for (i=0; i<n_points-1; i++) {
+        int stor;
+        double shortest = 1.0e20;
+        int next = i+1;
+        /* Find nearest neighbour. */
+        for (j=i+1; j<n_points; j++) {
+            int x = (points[i]%image->pixel_width)
+                  - (points[j]%image->pixel_width);
+            int y = (points[i]/image->pixel_width)
+                  - (points[j]/image->pixel_width);
+            double distance = x*x + bias*y*y;
+            if (distance < shortest) {
+                next = j;
+                shortest = distance;
+            }
+        }
+        printf("%d %d %f\n", i, next, shortest);
+        /* swap points */
+        stor = points[next];
+        points[next] = points[i+1];
+        points[i+1] = stor;
+    }
+
+    /* Store result in pattern. */
+    for (i=0; i<n_points; i++) {
+        int x, y;
+        x = points[i]%image->pixel_width;
+        y = points[i]/image->pixel_width;
+        embPattern_addStitchAbs(pattern, scale*x, scale*y, NORMAL, 0);
+    }
+
+    embPattern_end(pattern);
+    free(points);
+}
+
+/* Uses a threshhold method to determine where to put
  * crosses in the fill.
  *
  * To improve this, we can remove the vertical stitches when two crosses

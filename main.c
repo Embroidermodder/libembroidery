@@ -1113,7 +1113,18 @@ command_line_interface(int argc, char* argv[])
             puts("This flag is not implemented.");
             break;
         case FLAG_FILL:
-            puts("This flag is not implemented.");
+            if (i + 3 < argc) {
+                EmbImage *image;
+                /* the user appears to have entered the needed arguments */
+                i++;
+                image = embImage_create(1000, 1000);
+                embImage_read(argv[i], image, 1000, 1000);
+                i++;
+                embPattern_horizontal_fill(current_pattern, image, atoi(argv[i]));
+                embImage_free(image);
+                i++;
+                embPattern_writeAuto(current_pattern, argv[i]);
+            }
             break;
         case FLAG_IMAGE_WIDTH:
             if (i + 1 < argc) {

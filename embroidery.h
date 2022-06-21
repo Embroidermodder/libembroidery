@@ -564,6 +564,7 @@ EMB_PUBLIC EmbPattern *embPattern_combine(EmbPattern *p1, EmbPattern *p2);
 EMB_PUBLIC int embPattern_color_count(EmbPattern *pattern, EmbColor startColor);
 EMB_PUBLIC void embPattern_end(EmbPattern* p);
 EMB_PUBLIC void embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold);
+EMB_PUBLIC void embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold);
 EMB_PUBLIC int embPattern_render(EmbPattern *pattern, EmbImage *image, char *fname);
 EMB_PUBLIC int embPattern_simulate(EmbPattern *pattern, EmbImage *image, char *fname);
 

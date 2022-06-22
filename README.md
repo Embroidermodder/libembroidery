@@ -20,3 +20,13 @@ the Embroidermodder 2 GUI.
 
 If you want to learn more about building, using and developing this software read the
 manual (included as the file [embroidermodder_manual.pdf](embroidermodder_manual.pdf)).
+
+## Demos
+
+We're currently trying out some fill techniques which will be demonstrated here and in the script `qa_test.sh`.
+
+<img width="100%" src="demos/logo-spirals.png"></img>
+
+Converts to:
+
+<img width="100%" src="demos/logo_spirals_cross_stitch.png"></img>

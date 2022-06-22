@@ -77,6 +77,37 @@ Potential reference:
     return 0;
 }
 
+/* Remove points that lie in the middle of two short stitches that could
+ * be one longer stitch. Repeat until none are found.
+ */
+static void
+join_short_stitches(int *points, int *n_points, int width, int tolerence)
+{
+    int found = 1;
+    while (found > 0) {
+        int i;
+        found = 0;
+        for (i=*n_points-2; i>=0; i--) {
+            int st1 = points[i+1]%width - points[i]%width;
+            int st2 = points[i+2]%width - points[i+1]%width;
+            int same_line = (points[i+1]/width == points[i]/width)
+                            && (points[i+2]/width == points[i+1]/width);
+            if (st1 < tolerence && st2 < tolerence && same_line) {
+                found++;
+                break;
+            }
+        }
+        if (found) {
+            /* Remove the point. */
+            i++;
+            for (; i<*n_points; i++) {
+                points[i] = points[i+1];
+            }
+            (*n_points)--;
+        }
+    }
+}
+
 /* Identify darker pixels to put stitches in.
  */
 static int *
@@ -163,14 +194,15 @@ embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
 {
     /* Size of the crosses in millimeters. */
     double scale = 0.1;
-    int sample_w = 5;
-    int sample_h = 5;
+    int sample_w = 3;
+    int sample_h = 3;
     double bias = 1.2;
     int *points;
     int n_points;
 
     points = threshold_method(image, &n_points, sample_w, sample_h, threshhold);
     greedy_algorithm(points, n_points, image->pixel_width, bias);
+    join_short_stitches(points, &n_points, image->pixel_width, 40);
     save_points_to_pattern(pattern, points, n_points, scale, image->pixel_width);
 
     embPattern_end(pattern);

@@ -49,12 +49,10 @@
 #define FLAG_SIERPINSKI_TRIANGLE     31
 #define FLAG_FILL                    32
 #define FLAG_FILL_SHORT              33
-#define FLAG_IMAGE_WIDTH             34
-#define FLAG_IMAGE_HEIGHT            35
-#define FLAG_SIMULATE                36
-#define FLAG_COMBINE                 37
-#define FLAG_CROSS_STITCH            38
-#define NUM_FLAGS                    39
+#define FLAG_SIMULATE                34
+#define FLAG_COMBINE                 35
+#define FLAG_CROSS_STITCH            36
+#define NUM_FLAGS                    37
 
 /* DATA 
  *******************************************************************/
@@ -98,8 +96,6 @@ const char *flag_list[] = {
     "--sierpinski-triangle",
     "--fill",
     "-f",
-    "--image-width",
-    "--image-height",
     "--simulate",
     "--combine",
     "--cross-stitch"
@@ -1039,15 +1035,11 @@ int
 command_line_interface(int argc, char* argv[])
 {
     EmbPattern *current_pattern = embPattern_create();
-    float width, height;
     int i, j, flags, result;
     if (argc == 1) {
         usage();
         return 0;
     }
-
-    width = 20.0;
-    height = 20.0;
 
     flags = argc-1;
     for (i=1; i < argc; i++) {
@@ -1126,33 +1118,16 @@ command_line_interface(int argc, char* argv[])
                 embPattern_writeAuto(current_pattern, argv[i]);
             }
             break;
-        case FLAG_IMAGE_WIDTH:
-            if (i + 1 < argc) {
-                i++;
-                width = atof(argv[i]);
-            }
-            else {
-                puts("The image width flag requires an argument.");
-                break;
-            }
-            break;
-        case FLAG_IMAGE_HEIGHT:
-            if (i + 1 < argc) {
-                i++;
-                height = atof(argv[i]);
-            }
-            else {
-                puts("The image width flag requires an argument.");
-                break;
-            }
-            break;
         case FLAG_RENDER:
         case FLAG_RENDER_SHORT: {
             EmbImage *image = embImage_create(1000, 1000);
-            image->width = width;
-            image->height = height;
-            if (i + 1 < argc) {
-                /* the user appears to have entered a filename after render */
+            if (i + 2 < argc) {
+                /* the user appears to have entered filenames after render */
+                embPattern_readAuto(current_pattern, argv[i+1]);
+                printf("%d\n", current_pattern->stitchList->count);
+                embPattern_render(current_pattern, image, argv[i+2]);
+                i += 2;
+                break;
                 i++;
                 if (argv[i][0] == '-') {
                     /* they haven't, use the default name */
@@ -1174,8 +1149,6 @@ command_line_interface(int argc, char* argv[])
             break;
         case FLAG_SIMULATE: {
             EmbImage *image = embImage_create(1000, 1000);
-            image->width = width;
-            image->height = height;
             if (i + 1 < argc) {
                 /* the user appears to have entered a filename after render */
                 i++;

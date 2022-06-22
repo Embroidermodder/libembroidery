@@ -488,9 +488,6 @@ EMB_PUBLIC EmbVector embVector_unit(float angle);
 
 EMB_PUBLIC int embImage_read(char *fname, EmbImage *a, int width, int height);
 EMB_PUBLIC void embImage_write(char *fname, EmbImage *a);
-EMB_PUBLIC float image_diff(EmbImage *image1, EmbImage *image2);
-EMB_PUBLIC int render_line(EmbLine, EmbImage *, EmbColor);
-EMB_PUBLIC int render_postscript(EmbPattern *pattern, EmbImage *image);
 
 EMB_PUBLIC void testMain(int level);
 EMB_PUBLIC int convert(const char *inf, const char *outf);

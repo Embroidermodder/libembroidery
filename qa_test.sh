@@ -23,7 +23,7 @@ rm -fr build
 mkdir build
 cd build
 cmake ..
-make 2> build_error.log
+cmake --build .
 cd ..
 }
 
@@ -48,6 +48,7 @@ cross_stitch demos/wizard
 }
 
 function logo_test() {
+convert demos/logo-spirals.png -resize 1000x1000 -depth 8 demos/logo-spirals_1000.ppm
 png2ppm demos/logo-spirals_1000
 straight_stitch demos/logo-spirals_1000
 cross_stitch demos/logo-spirals_1000

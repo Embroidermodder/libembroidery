@@ -827,13 +827,31 @@ void embPolygon_reduceByNth(EmbArray *vertices, EmbArray *out, int nth)
     }
 }
 
-EmbPattern *embPattern_combine(EmbPattern *p1, EmbPattern *p2)
+/* .
+ */
+EmbPattern *
+embPattern_combine(EmbPattern *p1, EmbPattern *p2)
 {
+    int i;
     EmbPattern *out = embPattern_create();
+    for (i=0; i<p1->stitchList->count; i++) {
+        embArray_addStitch(out->stitchList, p1->stitchList->stitch[i]);
+    }
+    for (i=0; i<p2->stitchList->count; i++) {
+        embArray_addStitch(out->stitchList, p2->stitchList->stitch[i]);
+    }
+    /* These need to be merged, not appended. */
+    for (i=0; i<p1->threads->count; i++) {
+        embArray_addThread(out->threads, p1->threads->thread[i]);
+    }
+    for (i=0; i<p2->threads->count; i++) {
+        embArray_addThread(out->threads, p2->threads->thread[i]);
+    }
     return out;
 }
 
-void embPattern_convertGeometry(EmbPattern* p)
+void
+embPattern_convertGeometry(EmbPattern* p)
 {
     if (p->circles->count > 0) {
         

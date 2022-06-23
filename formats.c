@@ -4586,7 +4586,7 @@ readPes(EmbPattern* pattern, const char *fileName, FILE* file)
 
     numColors = fgetc(file) + 1;
     for (x = 0; x < numColors; x++) {
-        unsigned int color_index = fgetc(file);
+        int color_index = fgetc(file);
         if (color_index >= pecThreadCount) {
             color_index = 0;
         }
@@ -5031,7 +5031,11 @@ readPhb(EmbPattern* pattern, FILE* file)
 
     colorCount = (short)(char)fgetc(file);
     for (i = 0; i <  colorCount; i++) {
-        (char)fgetc(file);
+        char stor;
+        stor = (char)fgetc(file);
+        if (emb_verbose>1) {
+            printf("stor: %d\n", stor);
+        }
     }
     fseek(file, 4, SEEK_CUR); /* bytes to end of file */
     fseek(file, 17, SEEK_CUR);
@@ -5519,6 +5523,14 @@ readSst(EmbPattern* pattern, FILE* file)
 static char
 writeSst(EmbPattern* pattern, FILE* file)
 {
+    int i;
+    int head_length = 0xA0;
+    for (i=0; i<head_length; i++) {
+        fprintf(file, " ");
+    }
+    for (i=0; i<pattern->stitchList->count; i++) {
+        printf(".");
+    }
     return 0; /*TODO: finish writeSst */
 }
 
@@ -5630,6 +5642,7 @@ readStx(EmbPattern* pattern, FILE* file)
     StxThread* stxThreads = 0;
     unsigned char headerBytes[7];
     char* header = 0;
+    char stor;
     char filetype[4], version[5];
     int paletteLength, imageLength, something1, stitchDataOffset, something3;
     int threadDescriptionOffset, stitchCount, left, right, colors;
@@ -5652,7 +5665,10 @@ readStx(EmbPattern* pattern, FILE* file)
     filetype[3] = '\0';
     version[4] = '\0';
     /* byte 14 */
-    (char)fgetc(file);
+    stor = (char)fgetc(file);
+    if (emb_verbose>1) {
+        printf("stor: %d\n", stor);
+    }
     /* bytes 15- */
     embInt_read(file, ".", &paletteLength, EMB_INT32_LITTLE);
     embInt_read(file, ".", &imageLength, EMB_INT32_LITTLE);
@@ -5856,12 +5872,21 @@ EmbColor svgColorToEmbColor(char* colorString)
     return c;
 }
 
+int
+toUpper(char cmd)
+{
+    if (cmd >= 'a' && cmd <= 'z') {
+        return cmd - 'a' + 'A';
+    }
+    return cmd;
+}
+
 int svgPathCmdToEmbPathFlag(char cmd)
 {
     /* TODO: This function needs some work */
-    /*
     if     (toUpper(cmd) == 'M') return MOVETO;
     else if (toUpper(cmd) == 'L') return LINETO;
+    /*
     else if (toUpper(cmd) == 'C') return CUBICTOCONTROL1;
     else if (toUpper(cmd) == 'CC') return CUBICTOCONTROL2;
     else if (toUpper(cmd) == 'CCC') return CUBICTOEND;
@@ -5980,6 +6005,11 @@ parse_path(EmbPattern *p)
 
     for (i = 0; i < last; i++) {
         char c = pointStr[i];
+        if (emb_verbose>1) {
+            printf("relative %d\n", relative);
+            printf("c1.x %f\n", c1_point.x);
+            printf("c2.x %f\n", c2_point.x);
+        }
         switch (c) {
             case '0':
             case '1':
@@ -8042,6 +8072,12 @@ writeVp3(EmbPattern* pattern, FILE* file)
         EmbStitch s;
         int lastColor;
 
+        j = 0;
+        s.x = 0.0;
+        s.y = 0.0;
+        s.color = 0;
+        s.flags = 0;
+
         if (!first) {
             fputc(0, file);
         }
@@ -8062,7 +8098,10 @@ writeVp3(EmbPattern* pattern, FILE* file)
 
         s = pointer->stitch;
         */
-        printf("format-vp3.c DEBUG %d, %lf, %lf\n", s.flags, s.x, s.y);
+        if (emb_verbose>1) {
+            printf("%d\n", j);
+            printf("format-vp3.c DEBUG %d, %f, %f\n", s.flags, s.x, s.y);
+        }
         binaryWriteIntBE(file, s.x * 1000);
         binaryWriteIntBE(file, -s.y * 1000);
         /* pointer = pointer->next; */
@@ -8072,6 +8111,9 @@ writeVp3(EmbPattern* pattern, FILE* file)
         lastX = s.x;
         lastY = s.y;
         lastColor = s.color;
+        if (emb_verbose>1) {
+            printf("last %f %f %d\n", lastX, lastY, lastColor);
+        }
 
         fwrite("\x01\x00", 1, 2, file);
 

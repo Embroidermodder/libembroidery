@@ -476,17 +476,22 @@ full_test_matrix(char *fname)
         if (formatTable[i].color_only) {
             continue;
         }
-        snprintf(fname, 30, "test01%s", formatTable[i].extension);
+        strcpy(fname, "test01");
+        strcat(fname, formatTable[i].extension);
         create_test_file_1(fname);
         for (j=0; j < numberOfFormats; j++) {
             EmbPattern *pattern = 0;
             char fname_converted[100];
             char fname_image[100];
             int result;
-            snprintf(fname_converted, 30, "test01_%s_converted_to%s",
-                formatTable[i].extension+1, formatTable[j].extension);
-            snprintf(fname_image, 30, "test01_%s_converted_to%s.ppm",
-                formatTable[i].extension+1, formatTable[j].extension+1);
+            strcpy(fname_converted, "test01_");
+            strcat(fname_converted, formatTable[i].extension+1);
+            strcat(fname_converted, formatTable[j].extension);
+            strcpy(fname_image, "test01_");
+            strcat(fname_image, formatTable[i].extension+1);
+            strcat(fname_image, "_");
+            strcat(fname_image, formatTable[j].extension+1);
+            strcat(fname_image, ".ppm");
             printf("Attempting: %s %s\n", fname, fname_converted);
             result = convert(fname, fname_converted);
             embPattern_read(pattern, fname_converted, j);

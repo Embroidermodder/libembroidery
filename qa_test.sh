@@ -61,6 +61,3 @@ rose_test
 wizard_test
 logo_test
 }
-
-#cmake_build
-logo_test

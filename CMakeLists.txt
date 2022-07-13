@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 
 project(libembroidery VERSION 1.0.0 LANGUAGES C)
 
-set(CMAKE_C_STANDARD 90)
-set(CMAKE_C_STANDARD_REQUIRED True)
+#set(CMAKE_C_STANDARD 90)
+#set(CMAKE_C_STANDARD_REQUIRED True)
 
 option( EMBROIDERY_BUILD_SHARED_LIBS "Build shared library." ON )
 option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
@@ -23,16 +23,17 @@ set(C_SOURCES
 	compress.c
 	encoding.c
 	thread-color.c
+	interface.c
 )
 
 add_compile_options(
 	-g
 	-O2
 	-fPIC
-	-ansi
-	-pedantic
-	-Wall
-	-Wextra
+#	-ansi
+#	-pedantic
+#	-Wall
+#	-Wextra
 #	-Werror
 )
 

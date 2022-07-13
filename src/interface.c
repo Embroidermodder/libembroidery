@@ -10,6 +10,6 @@
  */
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "extern/stb/stb_image.h"
-#include "extern/nanosvg/src/nanosvg.h"
-#include "extern/minilisp/minilisp.h"
+#include "../extern/stb/stb_image.h"
+#include "../extern/nanosvg/src/nanosvg.h"
+#include "../extern/minilisp/minilisp.h"

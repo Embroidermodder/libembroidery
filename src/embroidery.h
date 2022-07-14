@@ -370,15 +370,6 @@ typedef struct LSYSTEM {
     char **rules;
 } L_system;
 
-typedef struct EmbImage_ {
-    int pixel_width;
-    int pixel_height;
-    float width;
-    float height;
-    EmbColor *color;
-    EmbVector offset;
-} EmbImage;
-
 /**
  * Only one of the pointers is used at a time so this should be a union.
  */
@@ -486,9 +477,6 @@ EMB_PUBLIC float embVector_angle(EmbVector v);
 EMB_PUBLIC float embVector_distance(EmbVector a, EmbVector b);
 EMB_PUBLIC EmbVector embVector_unit(float angle);
 
-EMB_PUBLIC int embImage_read(char *fname, EmbImage *a, int width, int height);
-EMB_PUBLIC void embImage_write(char *fname, EmbImage *a);
-
 EMB_PUBLIC void testMain(int level);
 EMB_PUBLIC int convert(const char *inf, const char *outf);
 
@@ -512,9 +500,6 @@ EMB_PUBLIC EmbColor embColor_make(unsigned char r, unsigned char g, unsigned cha
 EMB_PUBLIC EmbColor* embColor_create(unsigned char r, unsigned char g, unsigned char b);
 EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
 EMB_PUBLIC int embColor_distance(EmbColor a, EmbColor b);
-
-EMB_PUBLIC EmbImage *embImage_create(int, int);
-EMB_PUBLIC void embImage_free(EmbImage *image);
 
 EMB_PUBLIC double embEllipse_diameterX(EmbEllipse ellipse);
 EMB_PUBLIC double embEllipse_diameterY(EmbEllipse ellipse);
@@ -560,10 +545,10 @@ EMB_PUBLIC void embPattern_designDetails(EmbPattern *p);
 EMB_PUBLIC EmbPattern *embPattern_combine(EmbPattern *p1, EmbPattern *p2);
 EMB_PUBLIC int embPattern_color_count(EmbPattern *pattern, EmbColor startColor);
 EMB_PUBLIC void embPattern_end(EmbPattern* p);
-EMB_PUBLIC void embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold);
-EMB_PUBLIC void embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold);
-EMB_PUBLIC int embPattern_render(EmbPattern *pattern, EmbImage *image, char *fname);
-EMB_PUBLIC int embPattern_simulate(EmbPattern *pattern, EmbImage *image, char *fname);
+EMB_PUBLIC void embPattern_crossstitch(EmbPattern *pattern, int *, int threshhold);
+EMB_PUBLIC void embPattern_horizontal_fill(EmbPattern *pattern, int *, int threshhold);
+EMB_PUBLIC int embPattern_render(EmbPattern *pattern, char *fname);
+EMB_PUBLIC int embPattern_simulate(EmbPattern *pattern, char *fname);
 
 EMB_PUBLIC void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r);
 EMB_PUBLIC void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy, double rx, double ry); /* TODO: ellipse rotation */

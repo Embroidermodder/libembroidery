@@ -16,6 +16,8 @@
 #include "embroidery.h"
 #include "internal.h"
 
+typedef int EmbImage;
+
 const char *rules[] = {"+BF-AFA-FB+", "-AF+BFB+FA-"};
 
 L_system hilbert_curve_l_system = {
@@ -114,6 +116,7 @@ static int *
 threshold_method(EmbImage *image, int *n_points,
     int subsample_width, int subsample_height, int threshold)
 {
+    /*
     int i, j;
     int *points;
     points = (int *)malloc((image->pixel_height/subsample_height)
@@ -130,6 +133,8 @@ threshold_method(EmbImage *image, int *n_points,
         }
     }
     return points;
+    */
+    return n_points;
 }
 
 /* Greedy Algorithm
@@ -144,12 +149,13 @@ threshold_method(EmbImage *image, int *n_points,
 static void
 greedy_algorithm(int *points, int n_points, int width, double bias)
 {
+    /*
     int i, j;
     for (i=0; i<n_points-1; i++) {
         int stor;
         double shortest = 1.0e20;
-        int next = i+1;
-        /* Find nearest neighbour. */
+        int next = i+1; */
+        /* Find nearest neighbour. */ /*
         for (j=i+1; j<n_points; j++) {
             int x = (points[i]%width) - (points[j]%width);
             int y = (points[i]/width) - (points[j]/width);
@@ -159,12 +165,12 @@ greedy_algorithm(int *points, int n_points, int width, double bias)
                 shortest = distance;
             }
         }
-        printf("%d %d %f\n", i, next, shortest);
-        /* swap points */
+        printf("%d %d %f\n", i, next, shortest); */
+        /* swap points */ /*
         stor = points[next];
         points[next] = points[i+1];
         points[i+1] = stor;
-    }
+    } */
 }
 
 static void
@@ -193,6 +199,7 @@ void
 embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
 {
     /* Size of the crosses in millimeters. */
+    /*
     double scale = 0.1;
     int sample_w = 3;
     int sample_h = 3;
@@ -207,6 +214,7 @@ embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
 
     embPattern_end(pattern);
     free(points);
+    */
 }
 
 /* Uses a threshhold method to determine where to put
@@ -227,6 +235,7 @@ embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
     double bias = 1.0;
     int *points;
     int n_points;
+    /*
 
     points = threshold_method(image, &n_points, sample_w, sample_h, threshhold);
     greedy_algorithm(points, n_points, image->pixel_width, bias);
@@ -243,6 +252,7 @@ embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
     }
 
     embPattern_end(pattern);
+    */
 }
 
 int
@@ -857,3 +867,4 @@ embPattern_convertGeometry(EmbPattern* p)
         
     }
 }
+

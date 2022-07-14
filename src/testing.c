@@ -29,7 +29,6 @@ void
 testMain(int level)
 {
     EmbPattern *pattern = embPattern_create();
-    EmbImage *image = embImage_create(100, 100);
     int overall = 0;
     int circleResult = testEmbCircle();
     int threadResult = testThreadColor();
@@ -45,8 +44,8 @@ testMain(int level)
     int dst2Result = convert("test02.csv", "test02.dst");
     int dst3Result = convert("test03.csv", "test03.dst");
     int hilbertCurveResult = hilbert_curve(pattern, 3);
-    int renderResult = embPattern_render(pattern, image, "hilbert_level_3.ppm");
-    int simulateResult = embPattern_simulate(pattern, image, "hilbert_level_3.avi");
+    int renderResult = embPattern_render(pattern, "hilbert_level_3.png");
+    int simulateResult = embPattern_simulate(pattern, "hilbert_level_3.avi");
 
     overall += circleResult;
     overall += threadResult;
@@ -83,7 +82,6 @@ testMain(int level)
         report(simulateResult, "Simulating Hilbert Curve");
     }
     
-    embImage_free(image);
     embPattern_free(pattern);
     if (level > 0) {
         puts("More expensive tests.");
@@ -462,7 +460,6 @@ full_test_matrix(char *fname)
 {
     int i, j, success, ntests;
     FILE *f;
-    EmbImage *image = embImage_create(100, 100);
     f = fopen(fname, "wb");
     if (!f) {
         puts("ERROR: full_test_matrix(fname) failed to open file.");
@@ -495,7 +492,7 @@ full_test_matrix(char *fname)
             printf("Attempting: %s %s\n", fname, fname_converted);
             result = convert(fname, fname_converted);
             embPattern_read(pattern, fname_converted, j);
-            embPattern_render(pattern, image, fname_image);
+            embPattern_render(pattern, fname_image);
             embPattern_free(pattern);
             fprintf(f, "%d %d %f%% ", i, j, 100*success/(1.0*ntests));
             if (!result) {
@@ -507,7 +504,6 @@ full_test_matrix(char *fname)
         }
     }
 
-    embImage_free(image);
     fclose(f);
     return 0;
 }

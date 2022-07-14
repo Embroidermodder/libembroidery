@@ -9,7 +9,6 @@
  * functions without dumping them all in the public API.
  */
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "../extern/stb/stb_image.h"
-#include "../extern/nanosvg/src/nanosvg.h"
+#include "embroidery.h"
+
 #include "../extern/minilisp/minilisp.h"

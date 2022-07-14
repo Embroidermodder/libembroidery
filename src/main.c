@@ -980,7 +980,7 @@ usage(void)
     puts("    -l, --line       Add a line defined by the arguments given to the current pattern.");
     puts("    -P, --polyline   Add a polyline.");
     puts("    -p, --polygon    Add a polygon.");
-    puts("    -r, --render     Create an image in PPM format of what the embroidery should look like.");
+    puts("    -r, --render     Create an image in PNG format of what the embroidery should look like.");
     puts("    -s, --satin      Fill the current geometry with satin stitches according");
     puts("                     to the defined algorithm.");
     puts("    -S, --stitch     Add a stitch defined by the arguments given to the current pattern.");
@@ -1106,9 +1106,9 @@ command_line_interface(int argc, char* argv[])
             break;
         case FLAG_FILL:
             if (i + 3 < argc) {
-                EmbImage *image;
                 /* the user appears to have entered the needed arguments */
                 i++;
+                /* to stb command
                 image = embImage_create(1000, 1000);
                 embImage_read(argv[i], image, 1000, 1000);
                 i++;
@@ -1116,58 +1116,53 @@ command_line_interface(int argc, char* argv[])
                 embImage_free(image);
                 i++;
                 embPattern_writeAuto(current_pattern, argv[i]);
+                */
             }
             break;
         case FLAG_RENDER:
-        case FLAG_RENDER_SHORT: {
-            EmbImage *image = embImage_create(1000, 1000);
+        case FLAG_RENDER_SHORT:
             if (i + 2 < argc) {
                 /* the user appears to have entered filenames after render */
                 embPattern_readAuto(current_pattern, argv[i+1]);
                 printf("%d\n", current_pattern->stitchList->count);
-                embPattern_render(current_pattern, image, argv[i+2]);
+                embPattern_render(current_pattern, argv[i+2]);
                 i += 2;
                 break;
                 i++;
                 if (argv[i][0] == '-') {
                     /* they haven't, use the default name */
                     puts("Defaulting to the output name 'output.ppm'.");
-                    embPattern_render(current_pattern, image, "output.ppm");
+                    embPattern_render(current_pattern, "output.ppm");
                     i--;
                 }
                 else {
                     /* they have, use the user-supplied name */
-                    embPattern_render(current_pattern, image, argv[i]);
+                    embPattern_render(current_pattern, argv[i]);
                 }
             }
             else {
                 puts("Defaulting to the output name 'output.ppm'.");
-                embPattern_render(current_pattern, image, "output.ppm");
-            }
-            embImage_free(image);
+                embPattern_render(current_pattern, "output.ppm");
             }
             break;
-        case FLAG_SIMULATE: {
-            EmbImage *image = embImage_create(1000, 1000);
+        case FLAG_SIMULATE:
             if (i + 1 < argc) {
                 /* the user appears to have entered a filename after render */
                 i++;
                 if (argv[i][0] == '-') {
                     /* they haven't, use the default name */
                     puts("Defaulting to the output name 'output.avi'.");
-                    embPattern_simulate(current_pattern, image, "output.avi");
+                    embPattern_simulate(current_pattern, "output.avi");
                     i--;
                 }
                 else {
                     /* they have, use the user-supplied name */
-                    embPattern_simulate(current_pattern, image, argv[i]);
+                    embPattern_simulate(current_pattern, argv[i]);
                 }
             }
             else {
                 puts("Defaulting to the output name 'output.avi'.");
-                embPattern_simulate(current_pattern, image, "output.avi");
-            }
-            embImage_free(image);
+                embPattern_simulate(current_pattern, "output.avi");
             }
             break;
         case FLAG_COMBINE:
@@ -1203,16 +1198,16 @@ command_line_interface(int argc, char* argv[])
             break;
         case FLAG_CROSS_STITCH:
             if (i + 3 < argc) {
-                EmbImage *image;
                 /* the user appears to have entered the needed arguments */
                 i++;
-                image = embImage_create(1000, 1000);
+                /* to stb command
                 embImage_read(argv[i], image, 1000, 1000);
                 i++;
                 embPattern_crossstitch(current_pattern, image, atoi(argv[i]));
                 embImage_free(image);
                 i++;
                 embPattern_writeAuto(current_pattern, argv[i]);
+                */
             }
             break;
         default:

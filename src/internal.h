@@ -489,10 +489,6 @@ void embColor_write(FILE *f, EmbColor c, int toWrite);
 int hus_compress(char* input, int size, char* output, int *out_size);
 int hus_decompress(char* input, int size, char* output, int *out_size);
 
-float image_diff(EmbImage *image1, EmbImage *image2);
-int render_line(EmbLine, EmbImage *, EmbColor, EmbVector);
-int render_postscript(EmbPattern *pattern, EmbImage *image);
-
 /* DATA */
 
 extern const char *csv_header[];

@@ -13,7 +13,10 @@
 
 #include "embroidery.h"
 
-EmbArray* embArray_create(int type) {
+EmbArray*
+embArray_create(int type)
+{
+    int i;
     EmbArray *p;
     p = (EmbArray*)malloc(sizeof(EmbArray));
     p->type = type;
@@ -24,34 +27,45 @@ EmbArray* embArray_create(int type) {
         p->arc = (EmbArc*)malloc(CHUNK_SIZE*sizeof(EmbArc));
         break;
     case EMB_CIRCLE:
-        p->circle = (EmbCircleObject*)malloc(CHUNK_SIZE*sizeof(EmbCircleObject));
+        p->circle = (EmbCircle*)malloc(CHUNK_SIZE*sizeof(EmbCircle));
         break;
     case EMB_ELLIPSE:
-        p->ellipse = (EmbEllipseObject*)malloc(CHUNK_SIZE*sizeof(EmbEllipseObject));
+        p->ellipse = (EmbEllipse*)malloc(CHUNK_SIZE*sizeof(EmbEllipse));
         break;
     case EMB_FLAG:
         p->flag = (int*)malloc(CHUNK_SIZE*sizeof(int));
         break;
     case EMB_PATH:
-        p->path = (EmbPathObject**)malloc(CHUNK_SIZE*sizeof(EmbPathObject));
+        p->path = (EmbPath*)malloc(CHUNK_SIZE*sizeof(EmbPath));
+        for (i=0; i<CHUNK_SIZE; i++) {
+            p->path[i].pointList = embArray_create(EMB_POINT);
+        }
         break;
     case EMB_POINT:
-        p->point = (EmbPointObject*)malloc(CHUNK_SIZE*sizeof(EmbPointObject));
+        p->point = (EmbPoint*)malloc(CHUNK_SIZE*sizeof(EmbPoint));
         break;
     case EMB_LINE:
-        p->line = (EmbLineObject*)malloc(CHUNK_SIZE*sizeof(EmbLineObject));
+        p->line = (EmbLine*)malloc(CHUNK_SIZE*sizeof(EmbLine));
         break;
     case EMB_POLYGON:
-        p->polygon = (EmbPolygonObject**)malloc(CHUNK_SIZE*sizeof(EmbPolygonObject*));
+        p->polygon = (EmbPolygon*)malloc(CHUNK_SIZE*sizeof(EmbPolygon));
+        for (i=0; i<CHUNK_SIZE; i++) {
+            p->polygon[i].pointList = embArray_create(EMB_POINT);
+            p->polygon[i].flagList = embArray_create(EMB_FLAG);
+        }
         break;
     case EMB_POLYLINE:
-        p->polyline = (EmbPolylineObject**)malloc(CHUNK_SIZE*sizeof(EmbPolylineObject*));
+        p->polyline = (EmbPolyline*)malloc(CHUNK_SIZE*sizeof(EmbPolyline));
+        for (i=0; i<CHUNK_SIZE; i++) {
+            p->polyline[i].pointList = embArray_create(EMB_POINT);
+            p->polyline[i].flagList = embArray_create(EMB_FLAG);
+        }
         break;
     case EMB_RECT:
-        p->rect = (EmbRectObject*)malloc(CHUNK_SIZE*sizeof(EmbRectObject));
+        p->rect = (EmbRect*)malloc(CHUNK_SIZE*sizeof(EmbRect));
         break;
     case EMB_SPLINE:
-        p->spline = (EmbSplineObject*)malloc(CHUNK_SIZE*sizeof(EmbSplineObject));
+        p->spline = (EmbSpline*)malloc(CHUNK_SIZE*sizeof(EmbSpline));
         break;
     case EMB_STITCH:
         p->stitch = (EmbStitch*)malloc(CHUNK_SIZE*sizeof(EmbStitch));
@@ -68,7 +82,10 @@ EmbArray* embArray_create(int type) {
     return p;
 }
 
-int embArray_resize(EmbArray *p) {
+int
+embArray_resize(EmbArray *p)
+{
+    int i;
     if (p->count < p->length) {
         return 1;
     }
@@ -79,11 +96,11 @@ int embArray_resize(EmbArray *p) {
         if (!p->arc) return 0;
         break;
     case EMB_CIRCLE:
-        p->circle = (EmbCircleObject *)realloc(p->circle, p->length*sizeof(EmbCircleObject));
+        p->circle = (EmbCircle *)realloc(p->circle, p->length*sizeof(EmbCircle));
         if (!p->circle) return 0;
         break;
     case EMB_ELLIPSE:
-        p->ellipse = (EmbEllipseObject *)realloc(p->ellipse, p->length*sizeof(EmbEllipseObject));
+        p->ellipse = (EmbEllipse *)realloc(p->ellipse, p->length*sizeof(EmbEllipse));
         if (!p->ellipse) return 0;
         break;
     case EMB_FLAG:
@@ -91,31 +108,38 @@ int embArray_resize(EmbArray *p) {
         if (!p->flag) return 0;
         break;
     case EMB_PATH:
-        p->path = (EmbPathObject **)realloc(p->path, p->length*sizeof(EmbPathObject*));
+        p->path = (EmbPath *)realloc(p->path, p->length*sizeof(EmbPath*));
         if (!p->path) return 0;
         break;
     case EMB_POINT:
-        p->point = (EmbPointObject *)realloc(p->point, p->length*sizeof(EmbPointObject));
+        p->point = (EmbPoint *)realloc(p->point, p->length*sizeof(EmbPoint));
         if (!p->point) return 0;
         break;
     case EMB_LINE:
-        p->line = (EmbLineObject *)realloc(p->line, p->length*sizeof(EmbLineObject));
+        p->line = (EmbLine *)realloc(p->line, p->length*sizeof(EmbLine));
         if (!p->line) return 0;
         break;
     case EMB_POLYGON:
-        p->polygon = (EmbPolygonObject **)realloc(p->polygon, p->length*sizeof(EmbPolygonObject*));
-        if (!p->polygon) return 0;
+        p->polygon = (EmbPolygon *)realloc(p->polygon, p->length*sizeof(EmbPolygon));
+        if (p->polygon == NULL) {
+            return 0;
+        }
         break;
     case EMB_POLYLINE:
-        p->polyline = (EmbPolylineObject **)realloc(p->polyline, p->length*sizeof(EmbPolylineObject*));
+        p->polyline = (EmbPolyline *)realloc(p->polyline, p->length*sizeof(EmbPolyline));
         if (!p->polyline) return 0;
+        for (i=0; i<CHUNK_SIZE; i++) {
+            p->polyline[i].pointList = embArray_create(EMB_POINT);
+            if (!p->polyline) return 0;
+            p->polyline[i].flagList = embArray_create(EMB_FLAG);
+        }
         break;
     case EMB_RECT:
-        p->rect = (EmbRectObject *)realloc(p->rect, p->length*sizeof(EmbRectObject));
+        p->rect = (EmbRect *)realloc(p->rect, p->length*sizeof(EmbRect));
         if (!p->rect) return 0;
         break;
     case EMB_SPLINE:
-        p->spline = (EmbSplineObject *)realloc(p->spline, p->length*sizeof(EmbSplineObject));
+        p->spline = (EmbSpline *)realloc(p->spline, p->length*sizeof(EmbSpline));
         if (!p->spline) return 0;
         break;
     case EMB_STITCH:
@@ -148,22 +172,22 @@ void embArray_copy(EmbArray *dst, EmbArray *src)
         memcpy(dst->arc, src->arc, sizeof(EmbArc)*src->count);
         break;
     case EMB_CIRCLE:
-        memcpy(dst->circle, src->circle, sizeof(EmbCircleObject)*src->count);
+        memcpy(dst->circle, src->circle, sizeof(EmbCircle)*src->count);
         break;
     case EMB_ELLIPSE:
-        memcpy(dst->ellipse, src->ellipse, sizeof(EmbEllipseObject)*src->count);
+        memcpy(dst->ellipse, src->ellipse, sizeof(EmbEllipse)*src->count);
         break;
     case EMB_FLAG:
         memcpy(dst->flag, src->flag, sizeof(int)*src->count);
         break;
     case EMB_PATH:
-        memcpy(dst->path, src->path, sizeof(EmbPathObject)*src->count);
+        memcpy(dst->path, src->path, sizeof(EmbPath)*src->count);
         break;
     case EMB_POINT:
-        memcpy(dst->point, src->point, sizeof(EmbPointObject)*src->count);
+        memcpy(dst->point, src->point, sizeof(EmbPoint)*src->count);
         break;
     case EMB_LINE:
-        memcpy(dst->line, src->line, sizeof(EmbLineObject)*src->count);
+        memcpy(dst->line, src->line, sizeof(EmbLine)*src->count);
         break;
     case EMB_POLYGON:
         memcpy(dst->polygon, src->polygon, sizeof(int)*src->count);
@@ -191,140 +215,31 @@ void embArray_copy(EmbArray *dst, EmbArray *src)
     }
 }
 
-int
-embArray_addArc(EmbArray* p, EmbArc arc)
-{
-    p->count++;
-    if (!embArray_resize(p)) {
-        return 0;
+#define addGeometry(A, B) \
+    int \
+    embArray_add##A(EmbArray *a, Emb##A B) \
+    { \
+        a->count++; \
+        if (!embArray_resize(a)) { \
+            return 0; \
+        } \
+        a->B[a->count - 1] = B; \
+        return 1; \
     }
-    p->arc[p->count - 1] = arc;
-    return 1;
-}
 
-int
-embArray_addCircle(EmbArray* p, EmbCircle circle, int lineType, EmbColor color)
-{
-    p->count++;
-    if (!embArray_resize(p)) {
-        return 0;
-    }
-    p->circle[p->count - 1].circle = circle;
-    p->circle[p->count - 1].lineType = lineType;
-    p->circle[p->count - 1].color = color;
-    return 1;
-}
-
-int
-embArray_addEllipse(EmbArray* p,
-    EmbEllipse ellipse, double rotation, int lineType, EmbColor color)
-{
-    p->count++;
-    if (!embArray_resize(p)) {
-        return 0;
-    }
-    p->ellipse[p->count - 1].ellipse = ellipse;
-    p->ellipse[p->count - 1].rotation = rotation;
-    p->ellipse[p->count - 1].lineType = lineType;
-    p->ellipse[p->count - 1].color = color;
-    return 1;
-}
-
-int embArray_addFlag(EmbArray* p, int flag) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->flag[p->count - 1] = flag;
-    return 1;
-}
-
-int embArray_addLine(EmbArray* p, EmbLineObject line) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->line[p->count - 1] = line;
-    return 1;
-}
-
-int embArray_addPath(EmbArray* p, EmbPathObject *path) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->path[p->count - 1] = (EmbPathObject*)malloc(sizeof(EmbPathObject));
-    if (!p->path[p->count - 1]) {
-        printf("ERROR: emb-polygon.c embArray_create(), ");
-        printf("cannot allocate memory for heapPolygonObj\n");
-        return 0;
-    }
-    p->path[p->count - 1] = path;
-    return 1;
-}
-
-int embArray_addPoint(EmbArray* p, EmbPointObject *point) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->point[p->count - 1] = *point;
-    return 1;
-}
-
-int embArray_addPolygon(EmbArray* p, EmbPolygonObject *polygon) {
-    p->count++;
-    if (!embArray_resize(p)) {
-        return 0;
-    }
-    p->polygon[p->count - 1] = (EmbPolygonObject*)malloc(sizeof(EmbPolygonObject));
-    if (!p->polygon[p->count - 1]) {
-        printf("ERROR: emb-polygon.c embArray_create(), ");
-        printf("cannot allocate memory for heapPolygonObj\n");
-        return 0;
-    }
-    p->polygon[p->count - 1] = polygon;
-    return 1;
-}
-
-int embArray_addPolyline(EmbArray* p, EmbPolylineObject *polyline) {
-    p->count++;
-    if (!embArray_resize(p)) {
-        return 0;
-    }
-    p->polyline[p->count - 1] = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
-    if (!p->polyline[p->count - 1]) {
-        printf("ERROR: emb-polyline.c embArray_create(), ");
-        printf("cannot allocate memory for heapPolylineObj\n");
-        return 0;
-    }
-    p->polyline[p->count - 1] = polyline;
-    return 1;
-}
-
-int embArray_addRect(EmbArray* p,
-    EmbRect rect, int lineType, EmbColor color) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->rect[p->count - 1].rect = rect;
-    p->rect[p->count - 1].lineType = lineType;
-    p->rect[p->count - 1].color = color;
-    return 1;
-}
-
-int embArray_addStitch(EmbArray* p, EmbStitch st) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->stitch[p->count - 1] = st;
-    return 1;
-}
-
-int embArray_addThread(EmbArray* p, EmbThread thread) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->thread[p->count - 1] = thread;
-    return 1;
-}
-
-int embArray_addVector(EmbArray* p, EmbVector vector) {
-    p->count++;
-    if (!embArray_resize(p)) return 0;
-    p->vector[p->count - 1] = vector;
-    return 1;
-}
-
+addGeometry(Arc, arc)
+addGeometry(Circle, circle)
+addGeometry(Ellipse, ellipse)
+addGeometry(Flag, flag)
+addGeometry(Line, line)
+addGeometry(Path, path)
+addGeometry(Point, point)
+addGeometry(Polygon, polygon)
+addGeometry(Polyline, polyline)
+addGeometry(Rect, rect)
+addGeometry(Stitch, stitch)
+addGeometry(Thread, thread)
+addGeometry(Vector, vector)
 
 void embArray_free(EmbArray* p) {
     int i;
@@ -349,7 +264,7 @@ void embArray_free(EmbArray* p) {
         break;
     case EMB_PATH:
         for (i = 0; i < p->count; i++) {
-            embArray_free(p->path[i]->pointList);
+            embArray_free(p->path[i].pointList);
         }
         free(p->path);
         break;
@@ -358,13 +273,13 @@ void embArray_free(EmbArray* p) {
         break;
     case EMB_POLYGON:
         for (i = 0; i < p->count; i++) {
-            embArray_free(p->polygon[i]->pointList);
+            embArray_free(p->polygon[i].pointList);
         }
         free(p->polygon);
         break;
     case EMB_POLYLINE:
         for (i = 0; i < p->count; i++) {
-            embArray_free(p->polyline[i]->pointList);
+            embArray_free(p->polyline[i].pointList);
         }
         free(p->polyline);
         break;

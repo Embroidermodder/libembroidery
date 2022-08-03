@@ -13,21 +13,6 @@
 
 #include "embroidery.h"
 
-/* Returns an EmbArcObject. It is created on the stack. */
-EmbArc
-embArcObject_make(double sx, double sy, double mx,
-                  double my, double ex, double ey)
-{
-    EmbArc stackArcObj;
-    stackArcObj.start.x = sx;
-    stackArcObj.start.y = sy;
-    stackArcObj.mid.x   = mx;
-    stackArcObj.mid.y   = my;
-    stackArcObj.end.x   = ex;
-    stackArcObj.end.y   = ey;
-    return stackArcObj;
-}
-
 double
 radians(double degree)
 {
@@ -258,7 +243,8 @@ getCircleCircleIntersections(EmbCircle c0, EmbCircle c1,
  * Returns true if the given point lies outside the circle.
  * Returns false if the given point is inside the circle.
  ****************************************************************/
-int getCircleTangentPoints(EmbCircle c, EmbVector point, EmbVector *t0, EmbVector *t1)
+int
+getCircleTangentPoints(EmbCircle c, EmbVector point, EmbVector *t0, EmbVector *t1)
 {
     EmbCircle p;
     double hyp;
@@ -279,30 +265,6 @@ int getCircleTangentPoints(EmbCircle c, EmbVector point, EmbVector *t0, EmbVecto
     p.center = point;
     p.radius = sqrt((hyp*hyp) - (c.radius*c.radius));
     return getCircleCircleIntersections(c, p, t0, t1);
-}
-
-/* Returns an EmbColor. It is created on the stack. */
-EmbColor embColor_make(unsigned char r, unsigned char g, unsigned char b) {
-    EmbColor stackColor;
-    stackColor.r = r;
-    stackColor.g = g;
-    stackColor.b = b;
-    return stackColor;
-}
-
-/* Returns a pointer to an EmbColor. It is created on the heap. 
-The caller is responsible for freeing the allocated memory. */
-EmbColor* embColor_create(unsigned char r, unsigned char g, unsigned char b) {
-    EmbColor* heapColor = (EmbColor*)malloc(sizeof(EmbColor));
-    if (!heapColor) {
-        printf("ERROR: emb-color.c embColor_create(), ");
-        printf("cannot allocate memory for heapColor\n");
-        return 0;
-    }
-    heapColor->r = r;
-    heapColor->g = g;
-    heapColor->b = b;
-    return heapColor;
 }
 
 /* Converts a 6 digit hex string (I.E. "00FF00") 
@@ -331,42 +293,85 @@ EmbColor embColor_fromHexStr(char* val) {
     return color;
 }
 
-double embEllipse_diameterX(EmbEllipse ellipse) {
-    return ellipse.radiusX * 2.0;
+double
+embEllipse_diameterX(EmbEllipse ellipse)
+{
+    return ellipse.radius.x * 2.0;
 }
 
-double embEllipse_diameterY(EmbEllipse ellipse) {
-    return ellipse.radiusY * 2.0;
+double
+embEllipse_diameterY(EmbEllipse ellipse)
+{
+    return ellipse.radius.y * 2.0;
 }
 
-double embEllipse_width(EmbEllipse ellipse) {
-    return ellipse.radiusX * 2.0;
+double
+embEllipse_width(EmbEllipse ellipse)
+{
+    return ellipse.radius.x * 2.0;
 }
 
-double embEllipse_height(EmbEllipse ellipse) {
-    return ellipse.radiusY * 2.0;
+double
+embEllipse_height(EmbEllipse ellipse)
+{
+    return ellipse.radius.y * 2.0;
 }
 
-/* Returns an EmbEllipseObject. It is created on the stack. */
-EmbEllipseObject embEllipseObject_make(double cx, double cy, 
-                                        double rx, double ry) {
-    EmbEllipseObject stackEllipseObj;
-    stackEllipseObj.ellipse.centerX = cx;
-    stackEllipseObj.ellipse.centerY = cy;
-    stackEllipseObj.ellipse.radiusX = rx;
-    stackEllipseObj.ellipse.radiusY = ry;
-    return stackEllipseObj;
+/* Returns an EmbArcObject. It is created on the stack. */
+EmbArc
+embArc_create(void)
+{
+    EmbArc arc;
+    arc.start.x = 0;
+    arc.start.y = 0;
+    arc.mid.x   = 1;
+    arc.mid.y   = 1;
+    arc.end.x   = 2;
+    arc.end.y   = 2;
+    arc.lineType = 0;
+    arc.color = black_thread.color;
+    return arc;
 }
 
-/* Returns an EmbLine. It is created on the stack. */
-EmbLine embLine_make(double x1, double y1, double x2, double y2) {
-    EmbLine line;
-    line.start.x = x1;
-    line.start.y = y1;
-    line.end.x = x2;
-    line.end.y = y2;
-    return line;
+EmbCircle
+embCircle_create(void)
+{
+    EmbCircle circle;
+    circle.center.x = 0;
+    circle.center.y = 0;
+    circle.radius = 1;
+    circle.lineType = 0;
+    circle.color = black_thread.color;
+    return circle;
 }
+
+EmbEllipse
+embEllipse_create(void)
+{
+    EmbEllipse ellipse;
+    ellipse.center.x = 0;
+    ellipse.center.y = 0;
+    ellipse.radius.x = 1;
+    ellipse.radius.y = 1;
+    ellipse.rotation = 0.0;
+    ellipse.lineType = 0;
+    ellipse.color = black_thread.color;
+    return ellipse;
+}
+
+EmbRect
+embRect_create(void)
+{
+    EmbRect rect;
+    rect.left = 0;
+    rect.top = 0;
+    rect.right = 1;
+    rect.bottom = 1;
+    rect.lineType = 0;
+    rect.color = black_thread.color;
+    return rect;
+}
+
 
 /*! Finds the normalized vector perpendicular (clockwise) to the line
  * given by v1->v2 (normal to the line) */

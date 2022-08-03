@@ -3,6 +3,7 @@
  *
  * Copyright 2018-2022 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
+ *
  */
 
 #include <stdio.h>
@@ -400,6 +401,7 @@ int
 create_test_file_3(const char* outf)
 {
     EmbPattern* p;
+    EmbCircle circle;
 
     p = embPattern_create();
     if (!p) {
@@ -407,7 +409,10 @@ create_test_file_3(const char* outf)
         return 1;
     }
 
-    embPattern_addCircleObjectAbs(p, 10.0, 1.0, 5.0);
+    circle.center.x = 10.0;
+    circle.center.y = 1.0;
+    circle.radius = 5.0;
+    embPattern_addCircleAbs(p, circle);
 
     embPattern_addThread(p, black_thread);
     embPattern_convertGeometry(p);
@@ -491,7 +496,7 @@ full_test_matrix(char *fname)
             strcat(fname_image, ".ppm");
             printf("Attempting: %s %s\n", fname, fname_converted);
             result = convert(fname, fname_converted);
-            embPattern_read(pattern, fname_converted, j);
+            embPattern_readAuto(pattern, fname_converted);
             embPattern_render(pattern, fname_image);
             embPattern_free(pattern);
             fprintf(f, "%d %d %f%% ", i, j, 100*success/(1.0*ntests));

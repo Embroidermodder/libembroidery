@@ -5917,22 +5917,22 @@ char* svgAttribute_getValue(const char* name) {
 void
 parse_circle(EmbPattern *p)
 {
-    float cx, cy, r;
-    cx = atof(svgAttribute_getValue("cx"));
-    cy = atof(svgAttribute_getValue("cy"));
-    r = atof(svgAttribute_getValue("r"));
-    embPattern_addCircleObjectAbs(p, cx, cy, r);
+    EmbCircle circle;
+    circle.center.x = atof(svgAttribute_getValue("cx"));
+    circle.center.y = atof(svgAttribute_getValue("cy"));
+    circle.radius = atof(svgAttribute_getValue("r"));
+    embPattern_addCircleAbs(p, circle);
 }
 
 void
 parse_ellipse(EmbPattern *p)
 {
-    float cx, cy, rx, ry;
-    cx = atof(svgAttribute_getValue("cx"));
-    cy = atof(svgAttribute_getValue("cy"));
-    rx = atof(svgAttribute_getValue("rx"));
-    ry = atof(svgAttribute_getValue("ry"));
-    embPattern_addEllipseObjectAbs(p, cx, cy, rx, ry);
+    EmbEllipse ellipse;
+    ellipse.center.x = atof(svgAttribute_getValue("cx"));
+    ellipse.center.y = atof(svgAttribute_getValue("cy"));
+    ellipse.radius.x = atof(svgAttribute_getValue("rx"));
+    ellipse.radius.y = atof(svgAttribute_getValue("ry"));
+    embPattern_addEllipseAbs(p, ellipse);
 }
 
 void
@@ -5946,10 +5946,18 @@ parse_line(EmbPattern *p)
 
     /* If the starting and ending points are the same, it is a point */
     if (!strcmp(x1, x2) && !strcmp(y1, y2)) {
-        embPattern_addPointObjectAbs(p, atof(x1), atof(y1));
+        EmbPoint point;
+        point.position.x = atof(x1);
+        point.position.y = atof(y1);
+        embPattern_addPointAbs(p, point);
     }
     else {
-        embPattern_addLineObjectAbs(p, atof(x1), atof(y1), atof(x2), atof(y2));
+        EmbLine line;
+        line.start.x = atof(x1);
+        line.start.y = atof(y1);
+        line.end.x = atof(x2);
+        line.end.y = atof(y2);
+        embPattern_addLineAbs(p, line);
     }
 
 }
@@ -5964,7 +5972,7 @@ parse_path(EmbPattern *p)
     unsigned int numMoves;
     EmbColor color;
     EmbArray* flagList = 0;
-    EmbPathObject *path;
+    EmbPath path;
     char* pointStr = svgAttribute_getValue("d");
     char* mystrok = svgAttribute_getValue("stroke");
     int last = strlen(pointStr);
@@ -6076,7 +6084,7 @@ parse_path(EmbPattern *p)
 
                     /* Check whether prior command need to be saved */
                     if (trip>=0) {
-                        EmbPointObject test;
+                        EmbPoint test;
                         trip = -1;
                         reset = -1;
 
@@ -6155,8 +6163,8 @@ parse_path(EmbPattern *p)
                             pointList = embArray_create(EMB_POINT);
                             flagList = embArray_create(EMB_FLAG);
                         }
-                        test.point = position;
-                        embArray_addPoint(pointList, &test);
+                        test.position = position;
+                        embArray_addPoint(pointList, test);
                         embArray_addFlag(flagList, svgPathCmdToEmbPathFlag(cmd));
                         l_point = position;
 
@@ -6243,12 +6251,11 @@ parse_path(EmbPattern *p)
 
     color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
         
-    path = (EmbPathObject *)malloc(sizeof(EmbPathObject));
-    path->pointList = pointList;
-    path->flagList = flagList;
-    path->color = color;
-    path->lineType = 1;
-    embPattern_addPathObjectAbs(p, path);
+    path.pointList = pointList;
+    path.flagList = flagList;
+    path.color = color;
+    path.lineType = 1;
+    embPattern_addPathAbs(p, path);
 }
 
 EmbArray *parse_pointlist(EmbPattern *p)
@@ -6290,16 +6297,16 @@ EmbArray *parse_pointlist(EmbPattern *p)
                     xx = atof(polybuff);
                 }
                 else {
-                    EmbPointObject a;
+                    EmbPoint a;
                     odd = 1;
                     yy = atof(polybuff);
 
                     if (!pointList) {
                         pointList = embArray_create(EMB_POINT);
                     }
-                    a.point.x = xx;
-                    a.point.y = yy;
-                    embArray_addPoint(pointList, &a);
+                    a.position.x = xx;
+                    a.position.y = yy;
+                    embArray_addPoint(pointList, a);
                 }
 
                 break;
@@ -6356,12 +6363,15 @@ parse_polyline(EmbPattern *p)
 void
 parse_rect(EmbPattern *p)
 {
-    float x, y, width, height;
-    x = atof(svgAttribute_getValue("x"));
-    y = atof(svgAttribute_getValue("y"));
+    EmbRect rect;
+    float width, height;
+    rect.left = atof(svgAttribute_getValue("x"));
+    rect.top = atof(svgAttribute_getValue("y"));
     width = atof(svgAttribute_getValue("width"));
     height = atof(svgAttribute_getValue("height"));
-    embPattern_addRectObjectAbs(p, x, y, width, height);
+    rect.right = rect.left + width;
+    rect.bottom = rect.top + height;
+    embPattern_addRectAbs(p, rect);
 }
 
 void
@@ -6628,43 +6638,43 @@ readSvg(EmbPattern* pattern, FILE* file) {
         printf("OBJECT SUMMARY:\n");
         if (pattern->circles) {
             for (i = 0; i < pattern->circles->count; i++) {
-                EmbCircle c = pattern->circles->circle[i].circle;
+                EmbCircle c = pattern->circles->circle[i];
                 printf("circle %f %f %f\n", c.center.x, c.center.y, c.radius);
             }
         }
         if (pattern->ellipses) {
             for (i = 0; i < pattern->ellipses->count; i++) {
-                EmbEllipse e = pattern->ellipses->ellipse[i].ellipse;
-                printf("ellipse %f %f %f %f\n", e.centerX, e.centerY, e.radiusX, e.radiusY);
+                EmbEllipse e = pattern->ellipses->ellipse[i];
+                printf("ellipse %f %f %f %f\n", e.center.x, e.center.y, e.radius.x, e.radius.y);
             }
         }
         if (pattern->lines) {
             for (i = 0; i < pattern->lines->count; i++) {
-                EmbLine li = pattern->lines->line[i].line;
+                EmbLine li = pattern->lines->line[i];
                 printf("line %f %f %f %f\n", li.start.x, li.start.y, li.end.x, li.end.y);
             }
         }
         if (pattern->points) {
             for (i = 0; i < pattern->points->count; i++) {
-                EmbVector po = pattern->points->point[i].point;
+                EmbVector po = pattern->points->point[i].position;
                 printf("point %f %f\n", po.x, po.y);
             }
         }
         if (pattern->polygons) {
-            for (i = 0; i < pattern->polylines->count; i++) {
-                int vertices = pattern->polygons->polygon[i]->pointList->count;
-                printf("polygon %d\n", vertices);
+            for (i = 0; i < pattern->polygons->count; i++) {
+                EmbArray *verts = pattern->polygons->polygon[i].pointList;
+                printf("polygon %d\n", verts->count);
             }
         }
         if (pattern->polylines) {
             for (i = 0; i < pattern->polylines->count; i++) {
-                int vertices = pattern->polylines->polyline[i]->pointList->count;
-                printf("polyline %d\n", vertices);
+                EmbArray * verts = pattern->polylines->polyline[i].pointList;
+                printf("polyline %d\n", verts->count);
             }
         }
         if (pattern->rects) {
             for (i = 0; i < pattern->rects->count; i++) {
-                EmbRect r = pattern->rects->rect[i].rect;
+                EmbRect r = pattern->rects->rect[i];
                 double width = r.right - r.left;
                 double height = r.bottom - r.top;
                 printf("rect %f %f %f %f\n", r.left, r.top, width, height);
@@ -6739,7 +6749,7 @@ writeSvg(EmbPattern* pattern, FILE *file) {
     /* write circles */
     if (pattern->circles) {
         for (i = 0; i < pattern->circles->count; i++) {
-            EmbCircle circle = pattern->circles->circle[i].circle;
+            EmbCircle circle = pattern->circles->circle[i];
             EmbColor color = pattern->circles->circle[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             fprintf(file, "\n<circle stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" r=\"%f\" />",
@@ -6755,24 +6765,24 @@ writeSvg(EmbPattern* pattern, FILE *file) {
     /* write ellipses */
     if (pattern->ellipses) {
         for (i = 0; i < pattern->ellipses->count; i++) {
-            EmbEllipse ellipse = pattern->ellipses->ellipse[i].ellipse;
+            EmbEllipse ellipse = pattern->ellipses->ellipse[i];
             color = pattern->ellipses->ellipse[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             fprintf(file, "\n<ellipse stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" rx=\"%f\" ry=\"%f\" />",
                         color.r,
                         color.g,
                         color.b,
-                        ellipse.centerX,
-                        ellipse.centerY,
-                        ellipse.radiusX,
-                        ellipse.radiusY);
+                        ellipse.center.x,
+                        ellipse.center.y,
+                        ellipse.radius.x,
+                        ellipse.radius.y);
         }
     }
 
     /* write lines */
     if (pattern->lines) {
         for (i = 0; i < pattern->lines->count; i++) {
-            EmbLine line = pattern->lines->line[i].line;
+            EmbLine line = pattern->lines->line[i];
             color = pattern->lines->line[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             fprintf(file,
@@ -6785,33 +6795,32 @@ writeSvg(EmbPattern* pattern, FILE *file) {
     /* write points */
     if (pattern->points) {
         for (i = 0; i < pattern->points->count; i++) {
-            point = pattern->points->point[i].point;
-            color = pattern->points->point[i].color;
+            EmbPoint p = pattern->points->point[i];
             /* See SVG Tiny 1.2 Spec:
              * Section 9.5 The 'line' element
              * Section C.6 'path' element implementation notes */
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             fprintf(file,
                 "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
-                color.r, color.g, color.b,
-                point.x, point.y, point.x, point.y);
+                p.color.r, p.color.g, p.color.b,
+                p.position.x, p.position.y, p.position.x, p.position.y);
         }
     }
 
     /* write polygons */
     if (pattern->polygons) {
         for (i = 0; i < pattern->polygons->count; i++) {
-            EmbArray *pointList = pattern->polygons->polygon[i]->pointList;
-            color = pattern->polygons->polygon[i]->color;
+            EmbArray *pointList = pattern->polygons->polygon[i].pointList;
+            color = pattern->polygons->polygon[i].color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
                 fprintf(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
                     color.r, color.g, color.b,
-                    emb_optOut(pointList->point[0].point.x, tmpX),
-                    emb_optOut(pointList->point[0].point.y, tmpY));
+                    emb_optOut(pointList->point[0].position.x, tmpX),
+                    emb_optOut(pointList->point[0].position.y, tmpY));
             for (j=1; j < pointList->count; j++) {
                 fprintf(file, " %s,%s",
-                    emb_optOut(pointList->point[j].point.x, tmpX),
-                    emb_optOut(pointList->point[j].point.y, tmpY));
+                    emb_optOut(pointList->point[j].position.x, tmpX),
+                    emb_optOut(pointList->point[j].position.y, tmpY));
             }
             fprintf(file, "\"/>");
         }
@@ -6820,8 +6829,8 @@ writeSvg(EmbPattern* pattern, FILE *file) {
     /* write polylines */
     if (pattern->polylines) {
         for (i = 0; i < pattern->polylines->count; i++) {
-            EmbArray *pointList = pattern->polylines->polyline[i]->pointList;
-            color = pattern->polylines->polyline[i]->color;
+            EmbArray *pointList = pattern->polylines->polyline[i].pointList;
+            color = pattern->polylines->polyline[i].color;
             /* TODO: use proper thread width for stoke-width rather
              * than just 0.2.
              */
@@ -6829,12 +6838,12 @@ writeSvg(EmbPattern* pattern, FILE *file) {
                     color.r,
                     color.g,
                     color.b,
-                    emb_optOut(pointList->point[0].point.x, tmpX),
-                    emb_optOut(pointList->point[0].point.y, tmpY));
+                    emb_optOut(pointList->point[0].position.x, tmpX),
+                    emb_optOut(pointList->point[0].position.y, tmpY));
             for (j=1; j < pointList->count; j++) {
                 fprintf(file, " %s,%s",
-                    emb_optOut(pointList->point[j].point.x, tmpX),
-                    emb_optOut(pointList->point[j].point.y, tmpY));
+                    emb_optOut(pointList->point[j].position.x, tmpX),
+                    emb_optOut(pointList->point[j].position.y, tmpY));
             }
             fprintf(file, "\"/>");
         }
@@ -6843,7 +6852,7 @@ writeSvg(EmbPattern* pattern, FILE *file) {
     /* write rects */
     if (pattern->rects) {
         for (i = 0; i < pattern->rects->count; i++) {
-            rect = pattern->rects->rect[i].rect;
+            rect = pattern->rects->rect[i];
             color = pattern->rects->rect[i].color;
             /* TODO: use proper thread width for stoke-width rather
              * than just 0.2.
@@ -8009,7 +8018,10 @@ writeVp3(EmbPattern* pattern, FILE* file)
     EmbRect bounds;
     int a_int, remainingBytesPos, remainingBytesPos2;
     int colorSectionStitchBytes, first = 1, i, numberOfColors;
-    EmbColor color = embColor_make(0xFE, 0xFE, 0xFE);
+    EmbColor color;
+    color.r = 0xFE;
+    color.g = 0xFE;
+    color.b = 0xFE;
 
     bounds = embPattern_calcBoundingBox(pattern);
 

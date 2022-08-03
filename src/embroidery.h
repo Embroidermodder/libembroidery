@@ -184,30 +184,10 @@ typedef struct EmbVector_
     double y;
 } EmbVector;
 
-typedef struct EmbArray_ EmbArray;
-
 /**
- * Does it make sense to have lineType for a point?
+ * The basic array type.
  */
-typedef struct EmbPointObject_
-{
-    EmbVector point;
-    int lineType;
-    EmbColor color;
-} EmbPointObject;
-
-typedef struct EmbLine_
-{
-    EmbVector start;
-    EmbVector end;
-} EmbLine;
-
-typedef struct EmbLineObject_
-{
-    EmbLine line;
-    int lineType;
-    EmbColor color;
-} EmbLineObject;
+typedef struct EmbArray_ EmbArray;
 
 typedef struct EmbLayer_
 {
@@ -215,13 +195,28 @@ typedef struct EmbLayer_
     const char name[100];
 } EmbLayer;
 
-typedef struct EmbPathObject_
+typedef struct EmbPoint_
+{
+    EmbVector position;
+    int lineType;
+    EmbColor color;
+} EmbPoint;
+
+typedef struct EmbLine_
+{
+    EmbVector start;
+    EmbVector end;
+    int lineType;
+    EmbColor color;
+} EmbLine;
+
+typedef struct EmbPath_
 {
     EmbArray* pointList;
     EmbArray* flagList;
     int lineType;
     EmbColor color;
-} EmbPathObject;
+} EmbPath;
 
 typedef struct EmbStitch_
 {
@@ -261,14 +256,6 @@ typedef struct EmbTime_
     unsigned int second;
 } EmbTime;
 
-typedef struct EmbEllipse_
-{
-    double centerX;
-    double centerY;
-    double radiusX;
-    double radiusY;
-} EmbEllipse;
-
 /* absolute position (not relative) */
 typedef struct EmbArc_
 {
@@ -285,38 +272,25 @@ typedef struct EmbRect_
     double left;
     double bottom;
     double right;
+    double rotation;
+    double radius;
+    int lineType;
+    EmbColor color;
 } EmbRect;
 
 typedef struct EmbCircle_
 {
     EmbVector center;
     double radius;
-} EmbCircle;
-
-typedef struct EmbCircleObject_
-{
-    EmbCircle circle;
     int lineType;
     EmbColor color;
     int count;
     int length;
-} EmbCircleObject;
+} EmbCircle;
 
-typedef struct EmbRectObject_
-{
-    EmbRect rect;
-    double rotation;
-    double radius;
-    int lineType;
-    EmbColor color;
-} EmbRectObject;
-
-typedef struct EmbPolygonObject_
-{
-    EmbArray* pointList;
-    int lineType;
-    EmbColor color;
-} EmbPolygonObject;
+typedef EmbPath EmbPolygon;
+typedef EmbPath EmbPolyline;
+typedef int EmbFlag;
 
 typedef struct EmbSatinOutline_
 {
@@ -325,20 +299,14 @@ typedef struct EmbSatinOutline_
     EmbArray* side2;
 } EmbSatinOutline;
 
-typedef struct EmbEllipseObject_
+typedef struct EmbEllipse_
 {
-    EmbEllipse ellipse;
+    EmbVector center;
+    EmbVector radius;
     double rotation;
     int lineType;
     EmbColor color;
-} EmbEllipseObject;
-
-typedef struct EmbPolylineObject_
-{
-    EmbArray* pointList;
-    int lineType;
-    EmbColor color;
-} EmbPolylineObject;
+} EmbEllipse;
 
 typedef struct EmbSettings_ {
     unsigned int dstJumpsPerTrim;
@@ -346,22 +314,17 @@ typedef struct EmbSettings_ {
 } EmbSettings;
 
 typedef struct EmbBezier_ {
-    double startX;
-    double startY;
-    double control1X;
-    double control1Y;
-    double control2X;
-    double control2Y;
-    double endX;
-    double endY;
+    EmbVector start;
+    EmbVector control1;
+    EmbVector control2;
+    EmbVector end;
 } EmbBezier;
 
-typedef struct EmbSplineObject_ {
-    EmbBezier bezier;
-    struct EmbSplineObject_* next;
+typedef struct EmbSpline_ {
+    EmbArray *beziers;
     int lineType;
     EmbColor color;
-} EmbSplineObject;
+} EmbSpline;
 
 typedef struct LSYSTEM {
     char axiom;
@@ -370,25 +333,22 @@ typedef struct LSYSTEM {
     char **rules;
 } L_system;
 
-/**
- * Only one of the pointers is used at a time so this should be a union.
- */
 struct EmbArray_ {
     EmbArc *arc;
-    EmbCircleObject *circle;
+    EmbCircle *circle;
     EmbColor *color;
-    EmbEllipseObject *ellipse;
-    int *flag;
-    EmbPathObject **path;
-    EmbPointObject *point;
-    EmbLineObject *line;
-    EmbPolygonObject **polygon;
-    EmbPolylineObject **polyline;
-    EmbRectObject *rect;
-    EmbSplineObject *spline;
-    EmbStitch *stitch;
-    EmbThread *thread;
-    EmbVector *vector;
+	EmbEllipse *ellipse;
+	int *flag;
+	EmbLine *line;
+	EmbPath *path;
+	EmbPoint *point;
+	EmbPolygon *polygon;
+	EmbPolyline *polyline;
+	EmbRect *rect;
+	EmbSpline *spline;
+	EmbStitch *stitch;
+	EmbThread *thread;
+	EmbVector *vector;
     int count;
     int length;
     int type;
@@ -434,20 +394,25 @@ EMB_PUBLIC int hilbert_curve(EmbPattern *pattern, int iterations);
 
 EMB_PUBLIC int emb_identify_format(const char *ending);
 
+EMB_PUBLIC EmbArc embArc_create(void);
+EMB_PUBLIC EmbCircle embCircle_create(void);
+EMB_PUBLIC EmbEllipse embEllipse_create(void);
+EMB_PUBLIC EmbRect embRect_create(void);
+
 EMB_PUBLIC EmbArray* embArray_create(int type);
 EMB_PUBLIC int embArray_resize(EmbArray *g);
 EMB_PUBLIC void embArray_copy(EmbArray *dst, EmbArray *src);
 EMB_PUBLIC int embArray_addArc(EmbArray* g, EmbArc arc);
-EMB_PUBLIC int embArray_addCircle(EmbArray* g, EmbCircle circle, int lineType, EmbColor color);
-EMB_PUBLIC int embArray_addEllipse(EmbArray* g, EmbEllipse circle, double rotation, int lineType, EmbColor color);
+EMB_PUBLIC int embArray_addCircle(EmbArray* g, EmbCircle circle);
+EMB_PUBLIC int embArray_addEllipse(EmbArray* g, EmbEllipse ellipse);
 EMB_PUBLIC int embArray_addFlag(EmbArray* g, int flag);
-EMB_PUBLIC int embArray_addLine(EmbArray* g, EmbLineObject line);
-EMB_PUBLIC int embArray_addRect(EmbArray* g, EmbRect rect, int lineType, EmbColor color);
-EMB_PUBLIC int embArray_addPath(EmbArray* g, EmbPathObject *p);
-EMB_PUBLIC int embArray_addPoint(EmbArray* g, EmbPointObject *p);
-EMB_PUBLIC int embArray_addPolygon(EmbArray* g, EmbPolygonObject *p);
-EMB_PUBLIC int embArray_addPolyline(EmbArray* g, EmbPolylineObject *p);
-/* EMB_PUBLIC int embArray_addSpline(EmbArray* g, EmbSplineObject *p); */
+EMB_PUBLIC int embArray_addLine(EmbArray* g, EmbLine line);
+EMB_PUBLIC int embArray_addRect(EmbArray* g, EmbRect rect);
+EMB_PUBLIC int embArray_addPath(EmbArray* g, EmbPath p);
+EMB_PUBLIC int embArray_addPoint(EmbArray* g, EmbPoint p);
+EMB_PUBLIC int embArray_addPolygon(EmbArray* g, EmbPolygon p);
+EMB_PUBLIC int embArray_addPolyline(EmbArray* g, EmbPolyline p);
+/* EMB_PUBLIC int embArray_addSpline(EmbArray* g, EmbSpline p); */
 EMB_PUBLIC int embArray_addStitch(EmbArray* g, EmbStitch st);
 EMB_PUBLIC int embArray_addThread(EmbArray* g, EmbThread p);
 EMB_PUBLIC int embArray_addVector(EmbArray* g, EmbVector);
@@ -506,7 +471,7 @@ EMB_PUBLIC double embEllipse_diameterY(EmbEllipse ellipse);
 EMB_PUBLIC double embEllipse_width(EmbEllipse ellipse);
 EMB_PUBLIC double embEllipse_height(EmbEllipse ellipse);
 
-EMB_PUBLIC EmbEllipseObject embEllipseObject_make(double cx, double cy, double rx, double ry);
+EMB_PUBLIC EmbEllipse embEllipse_make(double cx, double cy, double rx, double ry);
 
 EMB_PUBLIC int threadColor(const char*, int brand);
 EMB_PUBLIC int threadColorNum(unsigned int color, int brand);
@@ -550,14 +515,14 @@ EMB_PUBLIC void embPattern_horizontal_fill(EmbPattern *pattern, int *, int thres
 EMB_PUBLIC int embPattern_render(EmbPattern *pattern, char *fname);
 EMB_PUBLIC int embPattern_simulate(EmbPattern *pattern, char *fname);
 
-EMB_PUBLIC void embPattern_addCircleObjectAbs(EmbPattern* p, double cx, double cy, double r);
-EMB_PUBLIC void embPattern_addEllipseObjectAbs(EmbPattern* p, double cx, double cy, double rx, double ry); /* TODO: ellipse rotation */
-EMB_PUBLIC void embPattern_addLineObjectAbs(EmbPattern* p, double x1, double y1, double x2, double y2);
-EMB_PUBLIC void embPattern_addPathObjectAbs(EmbPattern* p, EmbPathObject* obj);
-EMB_PUBLIC void embPattern_addPointObjectAbs(EmbPattern* p, double x, double y);
-EMB_PUBLIC void embPattern_addPolygonObjectAbs(EmbPattern* p, EmbPolygonObject* obj);
-EMB_PUBLIC void embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolylineObject* obj);
-EMB_PUBLIC void embPattern_addRectObjectAbs(EmbPattern* p, double x, double y, double w, double h);
+EMB_PUBLIC void embPattern_addCircleAbs(EmbPattern* p, EmbCircle obj);
+EMB_PUBLIC void embPattern_addEllipseAbs(EmbPattern* p, EmbEllipse obj); /* TODO: ellipse rotation */
+EMB_PUBLIC void embPattern_addLineAbs(EmbPattern* p, EmbLine obj);
+EMB_PUBLIC void embPattern_addPathAbs(EmbPattern* p, EmbPath obj);
+EMB_PUBLIC void embPattern_addPointAbs(EmbPattern* p, EmbPoint obj);
+EMB_PUBLIC void embPattern_addPolygonAbs(EmbPattern* p, EmbPolygon obj);
+EMB_PUBLIC void embPattern_addPolylineAbs(EmbPattern* p, EmbPolyline obj);
+EMB_PUBLIC void embPattern_addRectAbs(EmbPattern* p, EmbRect obj);
 
 EMB_PUBLIC void embPattern_copyStitchListToPolylines(EmbPattern* pattern);
 EMB_PUBLIC void embPattern_copyPolylinesToStitchList(EmbPattern* pattern);

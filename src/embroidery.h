@@ -234,12 +234,6 @@ typedef struct EmbThread_
     char catalogNumber[30];
 } EmbThread;
 
-typedef struct EmbHoop_
-{
-    double width;
-    double height;
-} EmbHoop;
-
 typedef struct thread_color_ {
     char name[22];
     unsigned int hex_code;
@@ -284,8 +278,6 @@ typedef struct EmbCircle_
     double radius;
     int lineType;
     EmbColor color;
-    int count;
-    int length;
 } EmbCircle;
 
 typedef EmbPath EmbPolygon;
@@ -307,11 +299,6 @@ typedef struct EmbEllipse_
     int lineType;
     EmbColor color;
 } EmbEllipse;
-
-typedef struct EmbSettings_ {
-    unsigned int dstJumpsPerTrim;
-    EmbVector home;
-} EmbSettings;
 
 typedef struct EmbBezier_ {
     EmbVector start;
@@ -356,8 +343,10 @@ struct EmbArray_ {
 
 typedef struct EmbPattern_
 {
-    EmbSettings settings;
-    EmbHoop hoop;
+    unsigned int dstJumpsPerTrim;
+    EmbVector home;
+    double hoop_width;
+    double hoop_height;
 
     EmbArray* stitchList;
     EmbArray* threads;
@@ -480,11 +469,6 @@ EMB_PUBLIC const char* threadColorName(unsigned int color, int brand);
 EMB_PUBLIC void embTime_initNow(EmbTime* t);
 EMB_PUBLIC EmbTime embTime_time(EmbTime* t);
 
-EMB_PUBLIC EmbSettings embSettings_init(void);
-
-EMB_PUBLIC EmbVector embSettings_home(EmbSettings* settings);
-EMB_PUBLIC void embSettings_setHome(EmbSettings* settings, EmbVector point);
-
 EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbArray* lines, double thickness, EmbSatinOutline* result);
 EMB_PUBLIC EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density);
 
@@ -516,7 +500,7 @@ EMB_PUBLIC int embPattern_render(EmbPattern *pattern, char *fname);
 EMB_PUBLIC int embPattern_simulate(EmbPattern *pattern, char *fname);
 
 EMB_PUBLIC void embPattern_addCircleAbs(EmbPattern* p, EmbCircle obj);
-EMB_PUBLIC void embPattern_addEllipseAbs(EmbPattern* p, EmbEllipse obj); /* TODO: ellipse rotation */
+EMB_PUBLIC void embPattern_addEllipseAbs(EmbPattern* p, EmbEllipse obj);
 EMB_PUBLIC void embPattern_addLineAbs(EmbPattern* p, EmbLine obj);
 EMB_PUBLIC void embPattern_addPathAbs(EmbPattern* p, EmbPath obj);
 EMB_PUBLIC void embPattern_addPointAbs(EmbPattern* p, EmbPoint obj);

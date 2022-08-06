@@ -20,19 +20,20 @@
 EmbPattern*
 embPattern_create(void)
 {
-    EmbPattern* p = 0;
-    p = (EmbPattern*)malloc(sizeof(EmbPattern));
+    EmbPattern* p = (EmbPattern*)malloc(sizeof(EmbPattern));
     if (!p) { 
         printf("ERROR: emb-pattern.c embPattern_create(), ");
         printf("unable to allocate memory for p\n");
         return 0;
     }
-    p->settings = embSettings_init();
+    p->dstJumpsPerTrim = 6;
+    p->home.x = 0.0;
+    p->home.y = 0.0;
     p->currentColorIndex = 0;
     p->stitchList = embArray_create(EMB_STITCH);
     p->threads = embArray_create(EMB_THREAD);
-    p->hoop.height = 0.0;
-    p->hoop.width = 0.0;
+    p->hoop_height = 0.0;
+    p->hoop_width = 0.0;
     p->arcs = 0;
     p->circles = 0;
     p->ellipses = 0;
@@ -49,9 +50,10 @@ embPattern_create(void)
 void
 embPattern_hideStitchesOverLength(EmbPattern* p, int length)
 {
-    double prevX = 0;
-    double prevY = 0;
+    EmbVector prev;
     int i;
+    prev.x = 0.0;
+    prev.y = 0.0;
 
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_hideStitchesOverLength(), ");
@@ -59,13 +61,13 @@ embPattern_hideStitchesOverLength(EmbPattern* p, int length)
         return;
     }
     for (i = 0; i < p->stitchList->count; i++) {
-        if ((fabs(p->stitchList->stitch[i].x - prevX) > length)
-         || (fabs(p->stitchList->stitch[i].y - prevY) > length)) {
+        if ((fabs(p->stitchList->stitch[i].x - prev.x) > length)
+         || (fabs(p->stitchList->stitch[i].y - prev.y) > length)) {
             p->stitchList->stitch[i].flags |= TRIM;
             p->stitchList->stitch[i].flags &= ~NORMAL;
         }
-        prevX = p->stitchList->stitch[i].x;
-        prevY = p->stitchList->stitch[i].y;
+        prev.x = p->stitchList->stitch[i].x;
+        prev.y = p->stitchList->stitch[i].y;
     }
 }
 
@@ -273,10 +275,9 @@ embPattern_addStitchAbs(EmbPattern* p, double x, double y,
         stitches to it. The first coordinate will be the HOME position. */
     if (p->stitchList->count == 0) {
         /* NOTE: Always HOME the machine before starting any stitching */
-        EmbVector home = embSettings_home(&(p->settings));
         EmbStitch h;
-        h.x = home.x;
-        h.y = home.y;
+        h.x = p->home.x;
+        h.y = p->home.y;
         h.flags = JUMP;
         h.color = p->currentColorIndex;
         embArray_addStitch(p->stitchList, h);
@@ -306,9 +307,8 @@ embPattern_addStitchRel(EmbPattern* p, double dx, double dy,
     } else {
         /* NOTE: The stitchList is empty, so add it to the HOME position.
          * The embStitchList_create function will ensure the first coordinate is at the HOME position. */
-        EmbVector home = embSettings_home(&(p->settings));
-        x = home.x + dx;
-        y = home.y + dy;
+        x = p->home.x + dx;
+        y = p->home.y + dy;
     }
     embPattern_addStitchAbs(p, x, y, flags, isAutoColorIndex);
 }

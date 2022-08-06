@@ -764,7 +764,7 @@ write100(EmbPattern* pattern, FILE* file)
     int i;
     EmbVector delta, position;
 
-    position = pattern->settings.home;
+    position = pattern->home;
     for (i=0; i<pattern->stitchList->count; i++) {
         unsigned char b[4];
         EmbStitch st = pattern->stitchList->stitch[i];
@@ -3073,31 +3073,32 @@ jefDecode(unsigned char inputByte) {
 }
 
 void
-jefSetHoopFromId(EmbPattern* pattern, int hoopCode) {
+jefSetHoopFromId(EmbPattern* pattern, int hoopCode)
+{
     if (!pattern) {
         printf("ERROR: format-jef.c jefSetHoopFromId(), pattern argument is null\n");
         return;
     }
     switch (hoopCode) {
         case HOOP_126X110:
-            pattern->hoop.height = 126.0;
-            pattern->hoop.width = 110.0;
+            pattern->hoop_height = 126.0;
+            pattern->hoop_width = 110.0;
             break;
         case HOOP_50X50:
-            pattern->hoop.height = 50.0;
-            pattern->hoop.width = 50.0;
+            pattern->hoop_height = 50.0;
+            pattern->hoop_width = 50.0;
             break;
         case HOOP_110X110:
-           pattern->hoop.height = 110.0;
-            pattern->hoop.width = 110.0;
+            pattern->hoop_height = 110.0;
+            pattern->hoop_width = 110.0;
             break;
         case HOOP_140X200:
-            pattern->hoop.height = 140.0;
-            pattern->hoop.width = 200.0;
+            pattern->hoop_height = 140.0;
+            pattern->hoop_width = 200.0;
             break;
         case HOOP_230X200:
-            pattern->hoop.height = 230.0;
-            pattern->hoop.width = 200.0;
+            pattern->hoop_height = 230.0;
+            pattern->hoop_width = 200.0;
             break;
     }
 }
@@ -4069,12 +4070,12 @@ readPcs(EmbPattern* pattern, const char* fileName, FILE* file)
 
     switch(hoopSize) {
         case 2:
-            pattern->hoop.width = 80.0;
-            pattern->hoop.height = 80.0;
+            pattern->hoop_width = 80.0;
+            pattern->hoop_height = 80.0;
             break;
         case 3:
-            pattern->hoop.width = 115;
-            pattern->hoop.height = 120.0;
+            pattern->hoop_width = 115.0;
+            pattern->hoop_height = 120.0;
             break;
     }
 

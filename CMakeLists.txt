@@ -23,7 +23,6 @@ set(C_SOURCES
 	src/compress.c
 	src/encoding.c
 	src/thread-color.c
-	src/interface.c
 )
 
 add_compile_options(

@@ -356,9 +356,9 @@ typedef struct SvgAttribute_
 
 typedef struct Huffman {
     int default_value;
-    int *lengths;
+    int lengths[1000];
     int nlengths;
-    int *table;
+    int table[1000];
     int table_width;
     int ntable;
 } huffman;
@@ -369,9 +369,9 @@ typedef struct Compress {
     int input_length;
     int bits_total;
     int block_elements;
-    huffman *character_length_huffman;
-    huffman *character_huffman;
-    huffman *distance_huffman;
+    huffman character_length_huffman;
+    huffman character_huffman;
+    huffman distance_huffman;
 } compress;
 
 /* FUNCTION PROTOTYPES */
@@ -396,15 +396,13 @@ int testGeomArc(void);
 int testThreadColor(void);
 int testEmbFormat(void);
 
-void huffman_init(huffman *h, int lengths, int value);
 void huffman_build_table(huffman *h);
-void huffman_table_lookup(huffman *h, int byte_lookup, int *value, int *lengths);
-void huffman_free(huffman *h);
+int *huffman_table_lookup(huffman *h, int byte_lookup, int *lengths);
 
 int compress_get_bits(compress *c, int length);
 int compress_pop(compress *c, int bit_count);
 int compress_read_variable_length(compress *c);
-int compress_load_character_length_huffman(compress *c);
+void compress_load_character_length_huffman(compress *c);
 void compress_load_character_huffman(compress *c);
 void compress_load_distance_huffman(compress *c);
 void compress_load_block(compress *c);

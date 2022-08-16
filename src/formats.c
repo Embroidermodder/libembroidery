@@ -17,6 +17,18 @@
 #include "embroidery.h"
 #include "internal.h"
 
+/* round is C99 and we're committed to C90 so here's a replacement.
+ */
+static int
+emb_round(double x)
+{
+    double y = floor(x);
+    if (fabs(x-y) > 0.5) {
+        return (int)ceil(x);
+    }
+    return (int)y;
+}
+
 static char read100(EmbPattern *pattern, FILE* file);
 static char write100(EmbPattern *pattern, FILE* file);
 static char read10o(EmbPattern *pattern, FILE* file);
@@ -774,16 +786,16 @@ write100(EmbPattern* pattern, FILE* file)
         b[0] = 0;
         b[1] = 0;
         if (delta.x < 0.0) {
-            b[2] = -round(10.0*delta.x);
+            b[2] = -emb_round(10.0*delta.x);
         }
         else {
-            b[2] = round(10.0*delta.x);
+            b[2] = emb_round(10.0*delta.x);
         }
         if (delta.y < 0.0) {
-            b[3] = -round(10.0*delta.y);
+            b[3] = -emb_round(10.0*delta.y);
         }
         else {
-            b[3] = round(10.0*delta.y);
+            b[3] = emb_round(10.0*delta.y);
         }
         if (!(st.flags & STOP)) {
             b[0] |= 0x01;
@@ -1910,8 +1922,8 @@ writeDst(EmbPattern* pattern, FILE* file) {
         int dx, dy;
         st = pattern->stitchList->stitch[i];
         /* convert from mm to 0.1mm for file format */
-        dx = (int)round(10.0*(st.x - pos.x));
-        dy = (int)round(10.0*(st.y - pos.y));
+        dx = (int)emb_round(10.0*(st.x - pos.x));
+        dy = (int)emb_round(10.0*(st.y - pos.y));
         pos.x += 0.1*dx;
         pos.y += 0.1*dy;
         if (emb_verbose > 0) {
@@ -2427,8 +2439,8 @@ writeExp(EmbPattern* pattern, FILE* file) {
         char b[4];
         char dx, dy;
         EmbStitch st = pattern->stitchList->stitch[i];
-        dx = (char)round(10.0*(st.x - pos.x));
-        dy = (char)round(10.0*(st.y - pos.y));
+        dx = (char)emb_round(10.0*(st.x - pos.x));
+        dy = (char)emb_round(10.0*(st.y - pos.y));
         pos.x += 0.1*dx;
         pos.y += 0.1*dy;
         switch (st.flags) {
@@ -2698,7 +2710,7 @@ husDecodeByte(unsigned char b)
 unsigned char
 husEncodeByte(double f)
 {
-    return (unsigned char)(int)round(f);
+    return (unsigned char)(int)emb_round(f);
 }
 
 unsigned char
@@ -2835,10 +2847,10 @@ writeHus(EmbPattern* pattern, FILE* file)
     embInt_write(file, "minColors", &minColors, EMB_INT32_LITTLE);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
-    right = (short) round(boundingRect.right * 10.0);
-    top = (short) -round(boundingRect.top * 10.0);
-    left = (short) round(boundingRect.left * 10.0);
-    bottom = (short) -round(boundingRect.bottom * 10.0);
+    right = (short) emb_round(boundingRect.right * 10.0);
+    top = (short) -emb_round(boundingRect.top * 10.0);
+    left = (short) emb_round(boundingRect.left * 10.0);
+    bottom = (short) -emb_round(boundingRect.bottom * 10.0);
     embInt_write(file, "right", &right, EMB_INT16_LITTLE);
     embInt_write(file, "top", &top, EMB_INT16_LITTLE);
     embInt_write(file, "left", &left, EMB_INT16_LITTLE);
@@ -3326,8 +3338,8 @@ writeJef(EmbPattern* pattern, FILE* file)
         b[2] = 0;
         b[3] = 0;
         st = pattern->stitchList->stitch[i];
-        dx = (char)round(10.0*(st.x - pos.x));
-        dy = (char)round(10.0*(st.y - pos.y));
+        dx = (char)emb_round(10.0*(st.x - pos.x));
+        dy = (char)emb_round(10.0*(st.y - pos.y));
         pos.x += 0.1*dx;
         pos.y += 0.1*dy;
         jefEncode(b, dx, dy, st.flags);
@@ -3453,8 +3465,8 @@ writeMax(EmbPattern* pattern, FILE* file)
     fwrite(max_header, 1, 0xD5, file);
     for (i = 0; i < pattern->stitchList->count; i++) {
         st = pattern->stitchList->stitch[i];
-        x = (int)round(st.x * 10.0);
-        y = (int)round(st.y * 10.0);
+        x = (int)emb_round(st.x * 10.0);
+        y = (int)emb_round(st.y * 10.0);
         write_24bit(file, x);
         write_24bit(file, y);
     }
@@ -3901,7 +3913,7 @@ writePcd(EmbPattern* pattern, FILE* file)
     /* write stitches */
     for (i = 0; i < pattern->stitchList->count; i++) {
         EmbStitch st = pattern->stitchList->stitch[i];
-        pfaffEncode(file, (int)round(st.x * 10.0), (int)round(st.y * 10.0), st.flags);
+        pfaffEncode(file, (int)emb_round(st.x * 10.0), (int)emb_round(st.y * 10.0), st.flags);
     }
     return 1;
 }
@@ -4044,7 +4056,7 @@ writePcq(EmbPattern* pattern, FILE* file)
     /* write stitches */
     for (i = 0; i < pattern->stitchList->count; i++) {
         EmbStitch st = pattern->stitchList->stitch[i];
-        pfaffEncode(file, (int)round(st.x * 10.0), (int)round(st.y * 10.0), st.flags);
+        pfaffEncode(file, (int)emb_round(st.x * 10.0), (int)emb_round(st.y * 10.0), st.flags);
     }
     return 1;
 }
@@ -4143,7 +4155,7 @@ writePcs(EmbPattern* pattern, FILE* file)
     /* write stitches */
     for (i = 0; i < pattern->stitchList->count; i++) {
         EmbStitch st = pattern->stitchList->stitch[i];
-        pfaffEncode(file, (int)round(st.x * 10.0), (int)round(st.y * 10.0), st.flags);
+        pfaffEncode(file, (int)emb_round(st.x * 10.0), (int)emb_round(st.y * 10.0), st.flags);
     }
     return 1;
 }
@@ -4312,8 +4324,8 @@ pecEncode(FILE* file, EmbPattern* p)
         int deltaX, deltaY;
         EmbStitch s = p->stitchList->stitch[i];
 
-        deltaX = (int)round(s.x - thisX);
-        deltaY = (int)round(s.y - thisY);
+        deltaX = (int)emb_round(s.x - thisX);
+        deltaY = (int)emb_round(s.y - thisY);
         thisX += (double)deltaX;
         thisY += (double)deltaY;
 
@@ -4406,8 +4418,8 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
 
     bounds = embPattern_calcBoundingBox(pattern);
 
-    height = (int)round(bounds.bottom - bounds.top);
-    width = (int)round(bounds.right - bounds.left);
+    height = (int)emb_round(bounds.bottom - bounds.top);
+    width = (int)emb_round(bounds.right - bounds.left);
     /* write 2 byte x size */
     binaryWriteShort(file, (short)width);
     /* write 2 byte y size */
@@ -4416,8 +4428,8 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
     /* Write 4 miscellaneous int16's */
     fwrite("\x01\xe0\x01\xb0", 1, 4, file);
 
-    binaryWriteUShortBE(file, (unsigned short)(0x9000 | -(int)round(bounds.left)));
-    binaryWriteUShortBE(file, (unsigned short)(0x9000 | -(int)round(bounds.top)));
+    binaryWriteUShortBE(file, (unsigned short)(0x9000 | -(int)emb_round(bounds.left)));
+    binaryWriteUShortBE(file, (unsigned short)(0x9000 | -(int)emb_round(bounds.top)));
 
     pecEncode(file, pattern);
     graphicsOffsetValue = ftell(file) - graphicsOffsetLocation + 2;
@@ -4436,8 +4448,8 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
     xFactor = 42.0 / width;
     for (i = 0; i < pattern->stitchList->count; i++) {
         EmbStitch st = pattern->stitchList->stitch[i];
-        int x = (int)round((st.x - bounds.left) * xFactor) + 3;
-        int y = (int)round((st.y - bounds.top) * yFactor) + 3;
+        int x = (int)emb_round((st.x - bounds.left) * xFactor) + 3;
+        int y = (int)emb_round((st.y - bounds.top) * yFactor) + 3;
         if (x<=0 || x>48) continue;
         if (y<=0 || y>38) continue;
         image[y][x] = 1;
@@ -4450,8 +4462,8 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
         memcpy(image, imageWithFrame, 48*38);
         for (; j < pattern->stitchList->count; j++) {
             EmbStitch st = pattern->stitchList->stitch[j];
-            int x = (int)round((st.x - bounds.left) * xFactor) + 3;
-            int y = (int)round((st.y - bounds.top) * yFactor) + 3;
+            int x = (int)emb_round((st.x - bounds.left) * xFactor) + 3;
+            int y = (int)emb_round((st.y - bounds.top) * yFactor) + 3;
             if (x<=0 || x>48) continue;
             if (y<=0 || y>38) continue;
             if (st.flags & STOP) {
@@ -5301,8 +5313,8 @@ writeSew(EmbPattern* pattern, FILE* file)
         unsigned char b[4];
         char dx, dy;
         st = pattern->stitchList->stitch[i];
-        dx = (char)round(10.0*(st.x - xx));
-        dy = (char)round(10.0*(st.y - yy));
+        dx = (char)emb_round(10.0*(st.x - xx));
+        dy = (char)emb_round(10.0*(st.y - yy));
         xx += 0.1*dx;
         yy += 0.1*dy;
         if (st.flags & STOP) {
@@ -5836,11 +5848,12 @@ EmbColor svgColorToEmbColor(char* colorString)
                 *s = ' ';
             }
         }
-        c.r = (unsigned char)round(255.0/100.0 * strtod(colorStr, &pEnd));
-        c.g = (unsigned char)round(255.0/100.0 * strtod(pEnd,     &pEnd));
-        c.b = (unsigned char)round(255.0/100.0 * strtod(pEnd,     &pEnd));
+        c.r = (unsigned char)emb_round(255.0/100.0 * strtod(colorStr, &pEnd));
+        c.g = (unsigned char)emb_round(255.0/100.0 * strtod(pEnd,     &pEnd));
+        c.b = (unsigned char)emb_round(255.0/100.0 * strtod(pEnd,     &pEnd));
     }
-    else if (length > 3 && colorStr[0] == 'r' && colorStr[1] == 'g' && colorStr[2] == 'b') /* Integer functional — rgb(rrr, ggg, bbb) */ {
+    else if (length > 3 && colorStr[0] == 'r' && colorStr[1] == 'g' && colorStr[2] == 'b') {
+        /* Integer functional — rgb(rrr, ggg, bbb) */
         char *s = colorStr;
         /* replace characters we aren't using with spaces */
         for (; *s; s++) {
@@ -6696,9 +6709,9 @@ readSvg(EmbPattern* pattern, FILE* file) {
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
 static char
-writeSvg(EmbPattern* pattern, FILE *file) {
+writeSvg(EmbPattern* pattern, FILE *file)
+{
     EmbRect boundingRect;
-    EmbVector point;
     EmbRect rect;
     EmbColor color;
     int i, j;
@@ -6945,8 +6958,8 @@ writeT01(EmbPattern* pattern, FILE* file)
         int dx, dy;
         EmbStitch st = pattern->stitchList->stitch[i];
         /* convert from mm to 0.1mm for file format */
-        dx = (int)round(10.0*(st.x - pos.x));
-        dy = (int)round(10.0*(st.y - pos.y));
+        dx = (int)emb_round(10.0*(st.x - pos.x));
+        dy = (int)emb_round(10.0*(st.y - pos.y));
         pos.x += 0.1*dx;
         pos.y += 0.1*dy;
         encode_t01_record(b, dx, dy, st.flags);
@@ -7001,8 +7014,8 @@ writeT09(EmbPattern* pattern, FILE* file)
         int dx, dy;
         EmbStitch st = pattern->stitchList->stitch[i];
         /* convert from mm to 0.1mm for file format */
-        dx = (int)round(10.0*(st.x - pos.x));
-        dy = (int)round(10.0*(st.y - pos.y));
+        dx = (int)emb_round(10.0*(st.x - pos.x));
+        dy = (int)emb_round(10.0*(st.y - pos.y));
         pos.x += 0.1*dx;
         pos.y += 0.1*dy;
 
@@ -7102,8 +7115,8 @@ writeTap(EmbPattern* pattern, FILE* file)
         int dx, dy;
         EmbStitch st = pattern->stitchList->stitch[i];
         /* convert from mm to 0.1mm for file format */
-        dx = (int)round(10.0*(st.x - pos.x));
-        dy = (int)round(10.0*(st.y - pos.y));
+        dx = (int)emb_round(10.0*(st.x - pos.x));
+        dy = (int)emb_round(10.0*(st.y - pos.y));
         pos.x += 0.1*dx;
         pos.y += 0.1*dy;
         encode_tap_record(file, dx, dy, st.flags);
@@ -7287,6 +7300,10 @@ readTxt(EmbPattern* pattern, FILE* file)
         char *p, *y, *color, *flags;
         int state = 0;
         emb_readline(file, line, 99);
+        p = line;
+        y = line;
+        color = line;
+        flags = line;
         for (p=line; *p; p++) {
             if (*p == ',' || *p == ' ') {
                 *p = 0;
@@ -7608,7 +7625,7 @@ vipCompressData(unsigned char* input, int decompressedInputSize, int* compressed
 unsigned char
 vipEncodeByte(double f)
 {
-    return (unsigned char)(int)round(f);
+    return (unsigned char)(int)emb_round(f);
 }
 
 unsigned char
@@ -7676,10 +7693,10 @@ writeVip(EmbPattern* pattern, FILE* file)
     binaryWriteUInt(file, minColors);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
-    binaryWriteShort(file, (short) round(boundingRect.right * 10.0));
-    binaryWriteShort(file, (short) -round(boundingRect.top * 10.0 - 1.0));
-    binaryWriteShort(file, (short) round(boundingRect.left * 10.0));
-    binaryWriteShort(file, (short) -round(boundingRect.bottom * 10.0 - 1.0));
+    binaryWriteShort(file, (short) emb_round(boundingRect.right * 10.0));
+    binaryWriteShort(file, (short) -emb_round(boundingRect.top * 10.0 - 1.0));
+    binaryWriteShort(file, (short) emb_round(boundingRect.left * 10.0));
+    binaryWriteShort(file, (short) -emb_round(boundingRect.bottom * 10.0 - 1.0));
 
     binaryWriteUInt(file, 0x38 + (minColors << 3));
 
@@ -8301,8 +8318,8 @@ xxxEncodeStitch(FILE* file, double deltaX, double deltaY, int flags)
         binaryWriteShort(file, (short)deltaY);
     } else {
         /* TODO: Verify this works after changing this to unsigned char */
-        fputc((unsigned char)round(deltaX), file);
-        fputc((unsigned char)round(deltaY), file);
+        fputc((unsigned char)emb_round(deltaX), file);
+        fputc((unsigned char)emb_round(deltaY), file);
     }
 }
 

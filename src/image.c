@@ -88,8 +88,7 @@ embPattern_render(EmbPattern *p, char *fname)
 	NSVGimage *image = NULL;
 	NSVGrasterizer *rast = NULL;
 	unsigned char* img_data = NULL;
-	int width, height;
-    embPattern_writeAuto(p, tmp_fname);
+	embPattern_writeAuto(p, tmp_fname);
 	image = nsvgParseFromFile(tmp_fname, "px", 96.0f);
 	img_data = malloc(4*image->width*image->height);
 	nsvgRasterize(

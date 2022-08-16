@@ -56,19 +56,8 @@ int hus_compress(char *data, int length, char *output, int *output_length)
     return 0;
 }
 
-/* These next 4 functions represent the Huffman class in tartarize's code.
+/* These next 2 functions represent the Huffman class in tartarize's code.
  */
-void huffman_init(huffman *h, int lengths, int value)
-{
-    /* these mallocs are guessing for now */
-    h->default_value = value;
-    h->lengths = malloc(1000);
-    h->nlengths = lengths;
-    h->table = malloc(1000);
-    h->ntable = 0;
-    h->table_width = 0;
-}
-
 void huffman_build_table(huffman *h)
 {
     int bit_length, i, max_length, size;
@@ -94,21 +83,19 @@ void huffman_build_table(huffman *h)
     }
 }
 
-void huffman_lookup(huffman *h, int* out, int byte_lookup)
-{
-    if (h->table == 0) {
-        out[0] = h->default_value;
-        out[1] = 0;
-        return;
-    }
-    out[0] = h->table[byte_lookup >> (16-h->table_width)];
-    out[1] = h->lengths[out[0]];
-}
+int huffman_lookup_data[2];
 
-void huffman_free(huffman *h)
+int *huffman_lookup(huffman h, int byte_lookup)
 {
-    free(h->table);
-    free(h->lengths);
+    int *out = huffman_lookup_data;
+    if (h.table_width == 0) {
+        out[0] = h.default_value;
+        out[1] = 0;
+        return out;
+    }
+    out[0] = h.table[byte_lookup >> (16-h.table_width)];
+    out[1] = h.lengths[out[0]];
+    return out;
 }
 
 /* These functions represent the EmbCompress class. */
@@ -173,54 +160,40 @@ int compress_read_variable_length(compress *c)
     return m;
 }
 
-int compress_load_character_length_huffman(compress *c)
+void compress_load_character_length_huffman(compress *c)
 {
     int count;
-    huffman h;
     count = compress_pop(c, 5);
     if (count == 0) {
-        /*v = compress_pop(c, 5);*/
-        /* huffman = huffman_init(huffman, v); ? */
+        c->character_length_huffman.default_value = compress_pop(c, 5);
     }
     else {
         int i;
         for (i = 0; i < count; i++) {
-            h.lengths[i] = 0;
+            c->character_length_huffman.lengths[i] = 0;
         }
         for (i = 0; i < count; i++) {
             if (i==3) {
                 i += compress_pop(c, 2);
             }
-            h.lengths[i] = compress_read_variable_length(c);
+            c->character_length_huffman.lengths[i] = compress_read_variable_length(c);
         }
-        h.nlengths = count;
-        h.default_value = 8;
-        huffman_build_table(&h);
     }
-    c->character_length_huffman = &h;
-    return 1;
+    huffman_build_table(&(c->character_length_huffman));
 }
 
 void compress_load_character_huffman(compress *c)
 {
     int count;
-    huffman h;
     count = compress_pop(c, 9);
     if (count == 0) {
-        /*
-        v = compress_pop(c, 9);
-        huffman = huffman(v);
-        */
+        c->character_huffman.default_value = compress_pop(c, 9);
     }
     else {
-        int i;
-        for (i = 0; i < count; i++) {
-            h.lengths[i] = 0;
-        }
-        i = 0;
+        int i = 0;
         while (i < count) {
-            int h[2];
-            huffman_lookup(c->character_length_huffman, h, compress_peek(c, 16));
+            int *h = huffman_lookup(c->character_length_huffman,
+                compress_peek(c, 16));
             c->bit_position += h[1];
             if (h[0]==0) {
                 i += h[0];
@@ -232,36 +205,28 @@ void compress_load_character_huffman(compress *c)
                 i += 20 + compress_pop(c, 9);
             }
             else {
-                c->character_huffman->lengths[i] = h[0] - 2;
+                c->character_huffman.lengths[i] = h[0] - 2;
                 i++;
             }
         }
-        huffman_build_table(c->character_huffman);
     }
+    huffman_build_table(&(c->character_huffman));
 }
 
 void compress_load_distance_huffman(compress *c)
 {
     int count;
-    huffman h;
     count = compress_pop(c, 5);
     if (count == 0) {
-        /*
-        v = compress_pop(c, 5);
-        c->distance_huffman = Huffman(v);
-        */
+        c->distance_huffman.default_value = compress_pop(c, 5);
     }
     else {
         int i;
         for (i = 0; i < count; i++) {
-            h.lengths[i] = 0;
+            c->distance_huffman.lengths[i] = compress_read_variable_length(c);
         }
-        for (i = 0; i < count; i++) {
-            h.lengths[i] = compress_read_variable_length(c);
-        }
-        huffman_build_table(&h);
     }
-    c->distance_huffman = &h;
+    huffman_build_table(&(c->distance_huffman));
 }
     
 void compress_load_block(compress *c)
@@ -274,21 +239,20 @@ void compress_load_block(compress *c)
 
 int compress_get_token(compress *c)
 {
-    int h[2];
+    int *h;
     if (c->block_elements <= 0) {
         compress_load_block(c);
     }
     c->block_elements--;
-    huffman_lookup(c->character_huffman, h, compress_peek(c, 16));
+    h = huffman_lookup(c->character_huffman, compress_peek(c, 16));
     c->bit_position += h[1];
     return h[0];
 }
 
 int compress_get_position(compress *c)
 {
-    int h[2];
-    int v;
-    huffman_lookup(c->distance_huffman, h, compress_peek(c, 16));
+    int *h, v;
+    h = huffman_lookup(c->distance_huffman, compress_peek(c, 16));
     c->bit_position += h[1];
     if (h[0] == 0) {
         return 0;

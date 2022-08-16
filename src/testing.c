@@ -137,7 +137,7 @@ testEmbCircle(void)
     double epsilon = 1e-3;
     EmbVector p0, p1;
     /* Problem */
-    EmbCircle c1 = {{0.0, 0.0}, 3.0};
+    EmbCircle c1 = {{0.0, 0.0}, 3.0, 0, {0, 0, 0}};
     /* Solution */
     EmbVector t0 = {2.2500, 1.9843};
     EmbVector t1 = {2.2500, -1.9843};
@@ -157,7 +157,7 @@ int testEmbCircle_2(void) {
     double error;
     double epsilon = 1e-3;
     EmbVector p0, p1;
-    EmbCircle c2 = {{20.1762, 10.7170}, 6.8221};
+    EmbCircle c2 = {{20.1762, 10.7170}, 6.8221, 0, {0, 0, 0}};
     /* Solution */
     EmbVector s0 = {19.0911, 17.4522};
     EmbVector s1 = {26.4428, 13.4133};

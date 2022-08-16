@@ -29,11 +29,11 @@ add_compile_options(
 	-g
 	-O2
 	-fPIC
-#	-ansi
-#	-pedantic
-#	-Wall
-#	-Wextra
-#	-Werror
+	-std=c99
+	-pedantic
+	-Wall
+	-Wextra
+	-Werror
 )
 
 add_library(embroidery_static STATIC ${C_SOURCES})

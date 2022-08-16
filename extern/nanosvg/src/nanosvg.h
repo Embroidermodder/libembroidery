@@ -120,10 +120,8 @@ typedef struct NSVGgradient {
 
 typedef struct NSVGpaint {
 	char type;
-	union {
-		unsigned int color;
-		NSVGgradient* gradient;
-	};
+	unsigned int color;
+	NSVGgradient* gradient;
 } NSVGpaint;
 
 typedef struct NSVGpath
@@ -395,10 +393,8 @@ typedef struct NSVGgradientData
 	char id[64];
 	char ref[64];
 	char type;
-	union {
-		NSVGlinearData linear;
-		NSVGradialData radial;
-	};
+	NSVGlinearData linear;
+	NSVGradialData radial;
 	char spread;
 	char units;
 	float xform[6];

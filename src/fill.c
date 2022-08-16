@@ -116,25 +116,28 @@ static int *
 threshold_method(EmbImage *image, int *n_points,
     int subsample_width, int subsample_height, int threshold)
 {
-    /*
     int i, j;
     int *points;
-    points = (int *)malloc((image->pixel_height/subsample_height)
-        *(image->pixel_width/subsample_width) * sizeof(int));
+    int height = 1000;
+    int width = 1000;
+    printf("%d", image[0]);
+    points = (int *)malloc((height/subsample_height)
+        *(width/subsample_width) * sizeof(int));
     *n_points = 0;
-    for (i=0; i<image->pixel_height/subsample_height; i++)
-    for (j=0; j<image->pixel_width/subsample_width; j++) {
+    for (i=0; i<height/subsample_height; i++)
+    for (j=0; j<width/subsample_width; j++) {
         EmbColor color;
-        int index = subsample_height*i*image->pixel_width+subsample_width*j;
-        color = image->color[index];
+        int index = subsample_height*i*width+subsample_width*j;
+        color.r = 0;
+        color.g = 0;
+        color.b = 0;
+        /* color = image->color[index]; */
         if (color.r+color.g+color.b < threshold) {
             points[*n_points] = index;
             (*n_points)++;
         }
     }
     return points;
-    */
-    return n_points;
 }
 
 /* Greedy Algorithm
@@ -149,6 +152,10 @@ threshold_method(EmbImage *image, int *n_points,
 static void
 greedy_algorithm(int *points, int n_points, int width, double bias)
 {
+    printf("points[0] = %d\n", points[0]);
+    printf("n_points = %d\n", n_points);
+    printf("width = %d\n", width);
+    printf("bias = %f\n", bias);
     /*
     int i, j;
     for (i=0; i<n_points-1; i++) {
@@ -199,22 +206,21 @@ void
 embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
 {
     /* Size of the crosses in millimeters. */
-    /*
     double scale = 0.1;
     int sample_w = 3;
     int sample_h = 3;
     double bias = 1.2;
     int *points;
     int n_points;
+    int width = 1000;
 
     points = threshold_method(image, &n_points, sample_w, sample_h, threshhold);
-    greedy_algorithm(points, n_points, image->pixel_width, bias);
-    join_short_stitches(points, &n_points, image->pixel_width, 40);
-    save_points_to_pattern(pattern, points, n_points, scale, image->pixel_width);
+    greedy_algorithm(points, n_points, width, bias);
+    join_short_stitches(points, &n_points, width, 40);
+    save_points_to_pattern(pattern, points, n_points, scale, width);
 
     embPattern_end(pattern);
     free(points);
-    */
 }
 
 /* Uses a threshhold method to determine where to put
@@ -235,15 +241,14 @@ embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
     double bias = 1.0;
     int *points;
     int n_points;
-    /*
-
+    int width = 1000;
     points = threshold_method(image, &n_points, sample_w, sample_h, threshhold);
-    greedy_algorithm(points, n_points, image->pixel_width, bias);
+    greedy_algorithm(points, n_points, width, bias);
 
     for (i=0; i<n_points; i++) {
         double x, y;
-        x = points[i]%image->pixel_width;
-        y = points[i]/image->pixel_width;
+        x = points[i]%width;
+        y = points[i]/width;
         printf("%f %f\n", x, y);
         embPattern_addStitchAbs(pattern, scale*x, scale*y, NORMAL, 0);
         embPattern_addStitchAbs(pattern, scale*(x+sample_w), scale*(y+sample_h), NORMAL, 0);
@@ -252,7 +257,6 @@ embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
     }
 
     embPattern_end(pattern);
-    */
 }
 
 int

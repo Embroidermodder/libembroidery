@@ -3,27 +3,11 @@
 We're in the process of developing an embroidery machine that is completely
 free of patents and runs on software that is also free.
 
-The full cutting list and pricing of the design will come out as we ammend it
+The full cutting list and pricing of the design will come out as we amend it
 so hopefully various shops can build the experimental alpha design alongside
 our own. Perhaps, in the long run this could be sold as a complete kit similar
 to recent open source hardware 3D printer designs, but as with
 our other projects we prefer donations to keep the Embroidermodder Team going.
-
-## License
-
-Unlike Embroidermodder and libembroidery, Embroiderbot is closer to a physical
-product and we want the licensing to reflect that.
-
-All software parts (that is assembly code, files with the suffixes `.S` and `.ino`)
-are under the permissive zlib license as with our other projects.
-
-All hardware designs, images, circuit board designs, desciptions like this document
-and physical implimentations thereof are under Creative Commons Attributation
-Share-Alike 3.0 (CC BY-SA 3.0).
-
-The upshot of this is you may take the assembly out of this project to build an
-entirely new closed source machine, but derivative machines need to remain
-open because of the share alike clause.
 
 ## Software
 
@@ -35,11 +19,30 @@ the desktop, mobile and embedded versions was impractical. However, the
 documentation and C functions serve as a good template for the development
 of our own user interface.
 
-This means that to create your own forked hardware we don't supply a library of
-assembly routines as would be the case for creating GUIs that backend to `libembroidery`.
-Instead, derivative works should 
+### The Example Program
+
+For testing purposes, the library is shipped as a working example of how to use
+it. So you can alter the EmbroiderBot.ino file, build and make your machine
+variant from this starting point.
+
+To build:
+
+    $ make install
+
+installs the arduino-cli program to bin/ folder, then run:
+
+    $ make
+
+It assumes you already have the necessary `LiquidCrystal.h` library installed
+which you can install with the standard Arduino framework.
+
+Note that if you want to use arduino then the
+`embroidery_embedded` library should work on other C embedded environments
+with little alteration.
 
 ## Hardware
+
+This is going to be housed in another repository and is currently just a pipe dream.
 
 We intend for this to be buildable from standard parts with a minimum of
 waste. For example:

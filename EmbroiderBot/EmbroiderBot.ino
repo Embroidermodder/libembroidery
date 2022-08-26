@@ -392,7 +392,7 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVector *p3, EmbV
 {
   EmbVector diff, p2, m;
   float a, h, d;
-  embVector_subtract(c1.center, c0.center, &diff);
+  embVector_subtract(diff, c1.center, c0.center);
   d = embVector_getLength(diff); /* Distance between centers */
 
 /* Circles share centers. This results in division by zero,
@@ -442,8 +442,8 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVector *p3, EmbV
 
   /*Find point p2 by adding the a offset in relation to line d to point p0 */
 
-  embVector_multiply(diff, a / d, &p2);
-  embVector_add(c0.center, p2, &p2);
+  embVector_multiply(p2, diff, a / d);
+  embVector_add(p2, c0.center, p2);
 
 /* Tangent circles have only one intersection
  *
@@ -463,8 +463,8 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVector *p3, EmbV
   m.y = (diff.x * h / d);
 
 /* Add the offsets to point p2 to obtain the intersection points */
-  embVector_add(p2, m, p3);
-  embVector_subtract(p2, m, p4);
+  embVector_add((*p3), p2, m);
+  embVector_subtract((*p4), p2, m);
 
   return 1;
 }

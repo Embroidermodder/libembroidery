@@ -12,7 +12,6 @@
 #include <time.h>
 
 #include "embroidery.h"
-#include "internal.h"
 
 /* same order as flag_list, to use in jump table */
 #define FLAG_TO                       0
@@ -1081,17 +1080,17 @@ command_line_interface(int argc, char* argv[])
             break;
         case FLAG_FILL:
             if (i + 3 < argc) {
+                EmbImage image;
                 /* the user appears to have entered the needed arguments */
                 i++;
-                /* to stb command
-                image = embImage_create(1000, 1000);
-                embImage_read(argv[i], image, 1000, 1000);
+                /* to stb command */
+                image = embImage_create(2000, 2000);
+                embImage_read(&image, argv[i]);
                 i++;
-                embPattern_horizontal_fill(current_pattern, image, atoi(argv[i]));
-                embImage_free(image);
+                embPattern_horizontal_fill(current_pattern, &image, atoi(argv[i]));
+                embImage_free(&image);
                 i++;
                 embPattern_writeAuto(current_pattern, argv[i]);
-                */
             }
             break;
         case FLAG_RENDER:
@@ -1106,8 +1105,8 @@ command_line_interface(int argc, char* argv[])
                 i++;
                 if (argv[i][0] == '-') {
                     /* they haven't, use the default name */
-                    puts("Defaulting to the output name 'output.ppm'.");
-                    embPattern_render(current_pattern, "output.ppm");
+                    puts("Defaulting to the output name 'output.png'.");
+                    embPattern_render(current_pattern, "output.png");
                     i--;
                 }
                 else {
@@ -1116,8 +1115,8 @@ command_line_interface(int argc, char* argv[])
                 }
             }
             else {
-                puts("Defaulting to the output name 'output.ppm'.");
-                embPattern_render(current_pattern, "output.ppm");
+                puts("Defaulting to the output name 'output.png'.");
+                embPattern_render(current_pattern, "output.png");
             }
             break;
         case FLAG_SIMULATE:
@@ -1173,16 +1172,17 @@ command_line_interface(int argc, char* argv[])
             break;
         case FLAG_CROSS_STITCH:
             if (i + 3 < argc) {
+                EmbImage image;
                 /* the user appears to have entered the needed arguments */
+                image = embImage_create(2000, 2000);
                 i++;
-                /* to stb command
-                embImage_read(argv[i], image, 1000, 1000);
+                /* to stb command */
+                embImage_read(&image, argv[i]);
                 i++;
-                embPattern_crossstitch(current_pattern, image, atoi(argv[i]));
-                embImage_free(image);
+                embPattern_crossstitch(current_pattern, &image, atoi(argv[i]));
+                embImage_free(&image);
                 i++;
                 embPattern_writeAuto(current_pattern, argv[i]);
-                */
             }
             break;
         default:

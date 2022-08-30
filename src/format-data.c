@@ -7,6 +7,8 @@
  * This file contains all the data for parsing and analysing file formats.
  */
 
+#include <stdio.h>
+
 #include "embroidery.h"
 
 /* TODO: This list needs reviewed in case some stitch 

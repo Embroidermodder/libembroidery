@@ -12,7 +12,6 @@
 #include <math.h>
 
 #include "embroidery.h"
-#include "internal.h"
 
 void
 report(int result, char *label)

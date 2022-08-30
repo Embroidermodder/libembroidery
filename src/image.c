@@ -19,7 +19,6 @@
 #include <math.h>
 
 #include "embroidery.h"
-#include "internal.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "../extern/stb/stb_image.h"
@@ -87,25 +86,20 @@ embPattern_render(EmbPattern *p, char *fname)
     const char *tmp_fname = "libembroidery_temp.svg";
 	NSVGimage *image = NULL;
 	NSVGrasterizer *rast = NULL;
-	unsigned char* img_data = NULL;
+	EmbImage output_image;
 	embPattern_writeAuto(p, tmp_fname);
 	image = nsvgParseFromFile(tmp_fname, "px", 96.0f);
-	img_data = malloc(4*image->width*image->height);
+	output_image.width = image->width;
+	output_image.height = image->height;
 	nsvgRasterize(
 	    rast,
 	    image,
 	    0, 0, 1,
-	    img_data,
+	    output_image.data,
 	    image->width,
 	    image->height,
 	    4*image->width);
- 	stbi_write_png(
- 	    fname,
- 	    image->width,
-	    image->height,
-	    4,
-	    img_data,
-	    4*image->width);
+    embImage_write(&output_image, fname);
     return 0;
 }
 
@@ -119,4 +113,46 @@ embPattern_simulate(EmbPattern *pattern, char *fname)
     embPattern_render(pattern, fname);
     return 0;
 }
+
+EmbImage
+embImage_create(int width, int height)
+{
+    EmbImage image;
+    image.width = width;
+    image.height = height;
+	image.data = malloc(4*width*height);
+    return image;
+    
+}
+
+void
+embImage_read(EmbImage *image, char *fname)
+{
+    int channels_in_file;
+    image->data = stbi_load(
+        fname,
+        &(image->width),
+        &(image->height),
+        &channels_in_file,
+        3);
+}
+
+int
+embImage_write(EmbImage *image, char *fname)
+{
+    return stbi_write_png(
+ 	    fname,
+ 	    image->width,
+	    image->height,
+	    4,
+	    image->data,
+	    4*image->width);
+}
+
+void
+embImage_free(EmbImage *image)
+{
+    free(image->data);
+}
+
 

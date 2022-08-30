@@ -14,7 +14,8 @@
 #include <math.h>
 
 #include "embroidery.h"
-#include "internal.h"
+
+void write_24bit(FILE* file, int);
 
 /* ENCODING
  *******************************************************************

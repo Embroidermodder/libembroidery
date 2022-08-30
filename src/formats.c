@@ -15,7 +15,6 @@
 #include <ctype.h>
 
 #include "embroidery.h"
-#include "internal.h"
 
 /* round is C99 and we're committed to C90 so here's a replacement.
  */

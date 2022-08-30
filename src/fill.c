@@ -10,13 +10,11 @@
  * FILL ALGORITHMS
  *******************************************************************/
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "embroidery.h"
-#include "internal.h"
-
-typedef int EmbImage;
 
 const char *rules[] = {"+BF-AFA-FB+", "-AF+BFB+FA-"};
 
@@ -120,7 +118,6 @@ threshold_method(EmbImage *image, int *n_points,
     int *points;
     int height = 1000;
     int width = 1000;
-    printf("%d", image[0]);
     points = (int *)malloc((height/subsample_height)
         *(width/subsample_width) * sizeof(int));
     *n_points = 0;
@@ -128,10 +125,9 @@ threshold_method(EmbImage *image, int *n_points,
     for (j=0; j<width/subsample_width; j++) {
         EmbColor color;
         int index = subsample_height*i*width+subsample_width*j;
-        color.r = 0;
-        color.g = 0;
-        color.b = 0;
-        /* color = image->color[index]; */
+        color.r = image->data[3*index+0];
+        color.g = image->data[3*index+1];
+        color.b = image->data[3*index+2];
         if (color.r+color.g+color.b < threshold) {
             points[*n_points] = index;
             (*n_points)++;

@@ -5,6 +5,8 @@
  * Licensed under the terms of the zlib license.
  */
 
+#include <stdio.h>
+
 #include "embroidery.h"
 #include <string.h>
 

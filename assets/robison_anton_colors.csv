@@ -1,0 +1,13 @@
+
+
+/* Based on the manufacturer table at 
+ *   https://help.brother-usa.com/app/answers/detail/a_id/75245/~/thread-color-conversion-chart
+ * using a colour picker.
+ */
+thread_color RobisonAnton_Polyester_codes[] = {
+    {"Black", 0xFF000000, 5596},
+    {"White", 0xFFFFFFFF, 5597},
+    /* unfinished */
+    {"END", 0, -1}
+};
+

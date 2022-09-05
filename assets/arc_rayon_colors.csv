@@ -1,0 +1,4 @@
+
+thread_color Arc_Rayon_codes[] = {
+    {"END", 0, -1}
+};

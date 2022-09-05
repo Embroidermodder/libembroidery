@@ -1,0 +1,5 @@
+
+thread_color Fufu_Rayon_codes[] = {
+    {"END", 0, -1}
+};
+

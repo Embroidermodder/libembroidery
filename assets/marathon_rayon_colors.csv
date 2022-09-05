@@ -1,0 +1,6 @@
+
+
+thread_color Marathon_Rayon_codes[] = {
+    {"END", 0, -1}
+};
+

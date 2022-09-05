@@ -1,0 +1,5 @@
+
+thread_color Madeira_Polyester_codes[] = {
+    {"END", 0, -1}
+};
+

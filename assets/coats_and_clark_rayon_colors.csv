@@ -1,0 +1,4 @@
+
+thread_color CoatsAndClark_Rayon_codes[] = {
+    {"END", 0, -1}
+};

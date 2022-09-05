@@ -21,17 +21,17 @@
 #include "embroidery.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "../extern/stb/stb_image.h"
+#include "stb_image.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "../extern/stb/stb_image_write.h"
+#include "stb_image_write.h"
 
 #define NANOSVG_ALL_COLOR_KEYWORDS
 #define NANOSVG_IMPLEMENTATION
-#include "../extern/nanosvg/src/nanosvg.h"
+#include "nanosvg.h"
 
 #define NANOSVGRAST_IMPLEMENTATION
-#include "../extern/nanosvg/src/nanosvgrast.h"
+#include "nanosvgrast.h"
 
 /* for the PES embedded */
 void
@@ -85,21 +85,26 @@ embPattern_render(EmbPattern *p, char *fname)
 {
     const char *tmp_fname = "libembroidery_temp.svg";
 	NSVGimage *image = NULL;
-	NSVGrasterizer *rast = NULL;
-	EmbImage output_image;
+	NSVGrasterizer rast;
+	unsigned char *img_data = NULL;
 	embPattern_writeAuto(p, tmp_fname);
 	image = nsvgParseFromFile(tmp_fname, "px", 96.0f);
-	output_image.width = image->width;
-	output_image.height = image->height;
+	img_data = malloc(4*image->width*image->height);
 	nsvgRasterize(
-	    rast,
+	    &rast,
 	    image,
 	    0, 0, 1,
-	    output_image.data,
+	    img_data,
 	    image->width,
 	    image->height,
 	    4*image->width);
-    embImage_write(&output_image, fname);
+    stbi_write_png(
+ 	    fname,
+ 	    image->width,
+	    image->height,
+	    4,
+	    img_data,
+	    4*image->width);
     return 0;
 }
 

@@ -9,6 +9,7 @@ build:
 all: install build
 
 install:
+	cp ../src/* .
 	curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
 	./bin/arduino-cli update
 	./bin/arduino-cli core install arduino:avr

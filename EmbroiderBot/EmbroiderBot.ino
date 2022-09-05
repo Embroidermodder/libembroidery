@@ -8,7 +8,7 @@
 //#include <SD.h>
 #include <LiquidCrystal.h>
 
-#include "embroidery_embedded.h"
+#include "embroidery.h"
 
 //TODO: This is a work in progress sketch using libembroidery
 //TODO: NOTE: you may need to modify the SD_CS and/or supply your own sample file
@@ -392,7 +392,7 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVector *p3, EmbV
 {
   EmbVector diff, p2, m;
   float a, h, d;
-  embVector_subtract(diff, c1.center, c0.center);
+  diff = embVector_subtract(c1.center, c0.center);
   d = embVector_getLength(diff); /* Distance between centers */
 
 /* Circles share centers. This results in division by zero,
@@ -442,30 +442,29 @@ int getCircleCircleIntersections(EmbCircle c0, EmbCircle c1, EmbVector *p3, EmbV
 
   /*Find point p2 by adding the a offset in relation to line d to point p0 */
 
-  embVector_multiply(p2, diff, a / d);
-  embVector_add(p2, c0.center, p2);
+  p2 = embVector_multiply(diff, a / d);
+  p2 = embVector_add(c0.center, p2);
 
-/* Tangent circles have only one intersection
- *
- * TODO: using == in floating point arithmetic
- * doesn't account for the machine accuracy, having
- * a stated (float) tolerance value would help.
- */
+  /* Tangent circles have only one intersection
+   *
+   * TODO: using == in floating point arithmetic
+   * doesn't account for the machine accuracy, having
+   * a stated (float) tolerance value would help.
+   */
   if (d == (c0.radius + c1.radius)) {
     *p3 = *p4 = p2;
     return 1;
   }
 
-/* Get the perpendicular slope by multiplying by the negative reciprocal
- * Then multiply by the h offset in relation to d to get the actual offsets 
- */
+  /* Get the perpendicular slope by multiplying by the negative reciprocal
+   * Then multiply by the h offset in relation to d to get the actual offsets 
+   */
   m.x = -(diff.y * h / d);
   m.y = (diff.x * h / d);
 
-/* Add the offsets to point p2 to obtain the intersection points */
-  embVector_add((*p3), p2, m);
-  embVector_subtract((*p4), p2, m);
+  /* Add the offsets to point p2 to obtain the intersection points */
+  *p3 = embVector_add(p2, m);
+  *p4 = embVector_subtract(p2, m);
 
   return 1;
 }
-

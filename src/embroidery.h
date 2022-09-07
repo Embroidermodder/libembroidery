@@ -1028,17 +1028,7 @@ extern const EmbThread pcmThreads[];
 extern const EmbThread pecThreads[];
 extern const unsigned char _dxfColorTable[][3];
 extern EmbThread black_thread;
-extern const unsigned char csd_decryptArray[];
-extern const unsigned char max_header[];
-extern const char imageWithFrame[38][48];
 extern const unsigned char vipDecodingTable[];
-extern const char *csv_header[];
-extern const char *pes_version_strings[];
-extern const char svg_attribute_table[50][100][30];
-extern const char *svg_element_tokens[];
-extern const char *svg_attribute_tokens[];
-extern const char *svg_property_tokens[];
-extern const char *svg_media_property_tokens[];
 
 /* VARIABLES
  ******************************************************************************/

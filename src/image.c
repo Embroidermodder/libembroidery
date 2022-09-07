@@ -20,18 +20,6 @@
 
 #include "embroidery.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
-
-#define NANOSVG_ALL_COLOR_KEYWORDS
-#define NANOSVG_IMPLEMENTATION
-#include "nanosvg.h"
-
-#define NANOSVGRAST_IMPLEMENTATION
-#include "nanosvgrast.h"
 
 /* for the PES embedded */
 void
@@ -73,6 +61,21 @@ float image_diff(unsigned char *a, unsigned char *b, int size)
     }
     return total;
 }
+
+#ifdef LIBEMBROIDERY_CLI
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
+#define NANOSVG_ALL_COLOR_KEYWORDS
+#define NANOSVG_IMPLEMENTATION
+#include "nanosvg.h"
+
+#define NANOSVGRAST_IMPLEMENTATION
+#include "nanosvgrast.h"
+
 
 /* Basic Render
  * ------------
@@ -159,5 +162,5 @@ embImage_free(EmbImage *image)
 {
     free(image->data);
 }
-
+#endif
 

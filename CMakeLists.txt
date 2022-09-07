@@ -11,9 +11,7 @@ option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
 set(C_SOURCES
 	src/main.c
 	src/embroidery.h
-	src/testing.c
 	src/formats.c
-	src/format-data.c
 	src/pattern.c
 	src/image.c
 	src/fill.c
@@ -31,7 +29,7 @@ add_compile_options(
 	-pedantic
 	-Wall
 	-Wextra
-	-Werror
+#	-Werror
 )
 
 add_library(embroidery_static STATIC ${C_SOURCES})

@@ -59,6 +59,18 @@ int emb_error = 0;
 
 const double embConstantPi = 3.1415926535;
 
+/* Constant representing the number of Double Indirect FAT
+ * entries in a single header */
+const unsigned int difatEntriesInHeader = 109;
+const unsigned int sizeOfFatEntry = sizeof(unsigned int);
+const unsigned int sizeOfDifatEntry = 4;
+const unsigned int sizeOfChainingEntryAtEndOfDifatSector = 4;
+const unsigned int sizeOfDirectoryEntry = 128;
+/*
+const int supportedMinorVersion = 0x003E;
+const int littleEndianByteOrderMark = 0xFFFE;
+*/
+
 void embVector_print(EmbVector v, char *label)
 {
     printf("%sX = %f\n", label, v.x);
@@ -125,20 +137,8 @@ const char *welcome_message = "EMBROIDER\n"
     "\n"
     "    https://github.com/Embroidermodder/libembroidery\n"
     "    https://embroidermodder.org\n";
+#endif
 
-/*! Constant representing the number of Double Indirect FAT entries in a single header */
-const unsigned int difatEntriesInHeader = 109;
-const unsigned int sizeOfFatEntry = sizeof(unsigned int);
-const unsigned int sizeOfDifatEntry = 4;
-const unsigned int sizeOfChainingEntryAtEndOfDifatSector = 4;
-const unsigned int sizeOfDirectoryEntry = 128;
-/*
-const int supportedMinorVersion = 0x003E;
-const int littleEndianByteOrderMark = 0xFFFE;
-*/
-
-/* GENERATORS
- *******************************************************************/
 
 /* Checks that there are enough bytes to interpret the header,
  * stops possible segfaults when reading in the header bytes.
@@ -918,7 +918,7 @@ divideByZero = divideByZero/divideByZero; /*TODO: wrap time() from time.h and ve
     return *t;
 }
 
-
+#ifdef LIBEMBROIDERY_CLI
 void
 report(int result, char *label)
 {

@@ -8,12 +8,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "embroidery.h"
-
-#ifdef LIBEMBROIDERY_CLI
 #include <math.h>
 #include <time.h>
+
+#include "embroidery.h"
 
 /* same order as flag_list, to use in jump table */
 #define FLAG_TO                       0
@@ -55,12 +53,29 @@
 #define FLAG_CROSS_STITCH            36
 #define NUM_FLAGS                    37
 
-/* DATA 
- *******************************************************************/
-
 EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
 int emb_verbose = 0;
 int emb_error = 0;
+
+const double embConstantPi = 3.1415926535;
+
+void embVector_print(EmbVector v, char *label)
+{
+    printf("%sX = %f\n", label, v.x);
+    printf("%sY = %f\n", label, v.y);
+}
+
+void embArc_print(EmbArc arc)
+{
+    embVector_print(arc.start, "start");
+    embVector_print(arc.mid, "middle");
+    embVector_print(arc.end, "end");
+}
+
+#ifdef LIBEMBROIDERY_CLI
+/* DATA 
+ *******************************************************************/
+
 
 const char *flag_list[] = {
     "--to",
@@ -122,23 +137,8 @@ const int supportedMinorVersion = 0x003E;
 const int littleEndianByteOrderMark = 0xFFFE;
 */
 
-const double embConstantPi = 3.1415926535;
-
 /* GENERATORS
  *******************************************************************/
-
-void embVector_print(EmbVector v, char *label)
-{
-    printf("%sX = %f\n", label, v.x);
-    printf("%sY = %f\n", label, v.y);
-}
-
-void embArc_print(EmbArc arc)
-{
-    embVector_print(arc.start, "start");
-    embVector_print(arc.mid, "middle");
-    embVector_print(arc.end, "end");
-}
 
 /* Checks that there are enough bytes to interpret the header,
  * stops possible segfaults when reading in the header bytes.

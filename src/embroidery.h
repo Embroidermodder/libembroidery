@@ -969,6 +969,8 @@ void readThreads(FILE* file, EmbPattern* pattern);
 
 void embInt_read(FILE* f, char *label, void *b, int mode);
 void embInt_write(FILE* f, char *label, void *b, int mode);
+
+#ifdef LIBEMBROIDERY_CLI
 int emb_readline(FILE* file, char *line, int maxLength);
 
 int bcfFile_read(FILE* file, bcf_file* bcfFile);
@@ -977,6 +979,7 @@ void bcf_file_free(bcf_file* bcfFile);
 
 void binaryReadString(FILE* file, char *buffer, int maxLength);
 void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength);
+#endif
 
 int stringInArray(const char *s, const char **array);
 void fpad(FILE *f, char c, int n);

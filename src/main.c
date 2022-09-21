@@ -1027,14 +1027,6 @@ testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
     }
 }
 
-float
-embVector_distance(EmbVector p, EmbVector q)
-{
-    EmbVector delta;
-    embVector_subtract(p, q, &delta);
-    return embVector_length(delta);
-}
-
 int
 testEmbCircle(void)
 {

@@ -579,3 +579,10 @@ EmbVector embVector_unit(float angle)
     return a;
 }
 
+float
+embVector_distance(EmbVector p, EmbVector q)
+{
+    EmbVector delta;
+    embVector_subtract(p, q, &delta);
+    return embVector_length(delta);
+}

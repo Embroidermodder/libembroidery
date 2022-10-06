@@ -10,6 +10,7 @@ option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
 
 set(C_SOURCES
 	src/main.c
+	src/array.c
 	src/embroidery.h
 	src/formats.c
 	src/pattern.c
@@ -60,7 +61,7 @@ endif (WIN32)
 if(EMBROIDERY_BUILD_SHARED_LIBS)
 install(
     FILES
-        embroidery.h
+        src/embroidery.h
     DESTINATION /usr/include
 )
 

@@ -1575,6 +1575,7 @@ writeCsv(EmbPattern* pattern, FILE* file) {
 
     boundingRect = embPattern_calcBoundingBox(pattern);
 
+#if LIBEMBROIDERY_EMBEDDED_VERSION
     /* write header */
     FILE *csv_header;
     csv_header = fopen("assets/header.csv", "r");
@@ -1584,6 +1585,27 @@ writeCsv(EmbPattern* pattern, FILE* file) {
         fwrite(&c, 1, 1, file);
     }
     fclose(csv_header);
+#else
+    fprintf(file, "\"#\",\"Embroidermodder 2 CSV Embroidery File\"");
+    fprintf(file, "\"#\",\"http://embroidermodder.github.io\"");
+    fprintf(file, "\"#\",\" \"");
+    fprintf(file, "\"#\",\"General Notes:\"");
+    fprintf(file, "\"#\",\"This file can be read by Excel or LibreOffice as CSV (Comma Separated Value) or with a text editor.\"");
+    fprintf(file, "\"#\",\"Lines beginning with # are comments.\"");
+    fprintf(file, "\"#\",\"Lines beginning with > are variables: [VAR_NAME], [VAR_VALUE]\"");
+    fprintf(file, "\"#\",\"Lines beginning with $ are threads: [THREAD_NUMBER], [RED], [GREEN], [BLUE], [DESCRIPTION], [CATALOG_NUMBER]\"");
+    fprintf(file, "\"#\",\"Lines beginning with * are stitch entries: [STITCH_TYPE], [X], [Y]\"");
+    fprintf(file, "\"#\",\" \"");
+    fprintf(file, "\"#\",\"Stitch Entry Notes:\"");
+    fprintf(file, "\"#\",\"STITCH instructs the machine to move to the position [X][Y] and then make a stitch.\"");
+    fprintf(file, "\"#\",\"JUMP instructs the machine to move to the position [X][Y] without making a stitch.\"");
+    fprintf(file, "\"#\",\"TRIM instructs the machine to cut the thread before moving to the position [X][Y] without making a stitch.\"");
+    fprintf(file, "\"#\",\"COLOR instructs the machine to stop temporarily so that the user can change to a different color thread before resuming.\"");
+    fprintf(file, "\"#\",\"END instructs the machine that the design is completed and there are no further instructions.\"");
+    fprintf(file, "\"#\",\"UNKNOWN encompasses instructions that may not be supported currently.\"");
+    fprintf(file, "\"#\",\"[X] and [Y] are absolute coordinates in millimeters (mm).\"");
+    fprintf(file, "\"#\",\" \"");
+#endif
 
     /* write variables */
     fprintf(file,"\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");

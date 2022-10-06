@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+#ifndef LIBEMBROIDERY_EMBEDDED_VERSION
+#define LIBEMBROIDERY_EMBEDDED_VERSION 0
+#endif
+
 /* MACROS
  *****************************************************************************/
 

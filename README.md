@@ -294,46 +294,46 @@ issue of the minimum support of the 4.
 Overview of documentation support by format.
 
 | Format | Ratings | Score |
-|---|---|---|---|---|---|
+|---|---|---|
 | Toyota Embroidery Format (.100) | `rw-basic doc-none test-none` | `unstable` |
 | Toyota Embroidery Format (.10o) | `rw-basic doc-none test-none` | `unstable` |
 | Bernina Embroidery Format (.art) | `rw-none doc-none test-none` | `experimental` |
 | Bitmap Cache Embroidery Format (.bmc) | `r-basic w-none doc-none test-none` | 1 |
-Bits and Volts Embroidery Format (.bro) | `rw-none doc-none test-none` | 0 |
-Melco Embroidery Format (.cnd) | `rw-none doc-none test-none` | `experimental` |
-Embroidery Thread Color Format (.col) | `rw-basic doc-none test-none` | `experimental` |
-Singer Embroidery Format (.csd) | `rw-none doc-none test-none` | `experimental` |
-Comma Separated Values (.csv) | `rw-none doc-none test-none` | `experimental` |
-Barudan Embroidery Format (.dat) | `rw-none doc-none test-none` | `experimental` |
-Melco Embroidery Format (.dem) | `rw-none doc-none test-none` | `experimental` |
-Barudan Embroidery Format (.dsb) | `rw-none doc-none test-none` | `experimental` |
-Tajima Embroidery Format (.dst) | `rw-none doc-none test-none` | `experimental` |
-ZSK USA Embroidery Format (.dsz) | `rw-none doc-none test-none` | `experimental` |
-Drawing Exchange Format (.dxf) | `rw-none doc-none test-none` | `experimental` |
-Embird Embroidery Format (.edr) | `rw-none doc-none test-none` | `experimental` |
-Elna Embroidery Format (.emd) | `rw-none doc-none test-none` | `experimental` |
-Melco Embroidery Format (.exp) | `rw-none doc-none test-none` | `experimental` |
-Eltac Embroidery Format (.exy) | `rw-none doc-none test-none` | `experimental` |
-Sierra Expanded Embroidery Format (.eys) | `rw-none doc-none test-none` | `experimental` |
-Fortron Embroidery Format (.fxy) | `rw-none doc-none test-none` | `experimental` |
-Smoothie G-Code Embroidery Format (.gc) | `rw-none doc-none test-none` | `experimental` |
-Great Notions Embroidery Format (.gnc) | `rw-none doc-none test-none` | `experimental` |
-Gold Thread Embroidery Format (.gt) | `rw-none doc-none test-none` | `experimental` |
-Husqvarna Viking Embroidery Format (.hus) | `rw-none doc-none test-none` | `experimental` |
-Inbro Embroidery Format (.inb) | `rw-none doc-none test-none` | `experimental` |
-Embroidery Color Format (.inf) | `rw-none doc-none test-none` | `experimental` |
-Janome Embroidery Format (.jef) | `rw-none doc-none test-none` | `experimental` |
-Pfaff Embroidery Format (.ksm) | `rw-none doc-none test-none` | `experimental` |
-Pfaff Embroidery Format (.max) | `rw-none doc-none test-none` | `experimental` |
-Mitsubishi Embroidery Format (.mit) | `rw-none doc-none test-none` | `experimental` |
-Ameco Embroidery Format (.new) | `rw-none doc-none test-none` | `experimental` |
-Melco Embroidery Format (.ofm) | `rw-none doc-none test-none` | `experimental` |
-Pfaff Embroidery Format (.pcd) |  `rw-none doc-none test-none` | `experimental` |
-Pfaff Embroidery Format (.pcm) | `rw-none doc-none test-none` | `experimental` |
-Pfaff Embroidery Format (.pcq) | `rw-none doc-none test-none` | `experimental` |
-Pfaff Embroidery Format (.pcs) | `rw-none doc-none test-none` | `experimental` |
-Brother Embroidery Format (.pec) | `rw-none doc-none test-none` | `experimental` |
-Brother Embroidery Format (.pel) | `rw-none doc-none test-none` | `experimental` |
+| Bits and Volts Embroidery Format (.bro) | `rw-none doc-none test-none` | 0 |
+| Melco Embroidery Format (.cnd) | `rw-none doc-none test-none` | `experimental` |
+| Embroidery Thread Color Format (.col) | `rw-basic doc-none test-none` | `experimental` |
+| Singer Embroidery Format (.csd) | `rw-none doc-none test-none` | `experimental` |
+| Comma Separated Values (.csv) | `rw-none doc-none test-none` | `experimental` |
+| Barudan Embroidery Format (.dat) | `rw-none doc-none test-none` | `experimental` |
+| Melco Embroidery Format (.dem) | `rw-none doc-none test-none` | `experimental` |
+| Barudan Embroidery Format (.dsb) | `rw-none doc-none test-none` | `experimental` |
+| Tajima Embroidery Format (.dst) | `rw-none doc-none test-none` | `experimental` |
+| ZSK USA Embroidery Format (.dsz) | `rw-none doc-none test-none` | `experimental` |
+| Drawing Exchange Format (.dxf) | `rw-none doc-none test-none` | `experimental` |
+| Embird Embroidery Format (.edr) | `rw-none doc-none test-none` | `experimental` |
+| Elna Embroidery Format (.emd) | `rw-none doc-none test-none` | `experimental` |
+| Melco Embroidery Format (.exp) | `rw-none doc-none test-none` | `experimental` |
+| Eltac Embroidery Format (.exy) | `rw-none doc-none test-none` | `experimental` |
+| Sierra Expanded Embroidery Format (.eys) | `rw-none doc-none test-none` | `experimental` |
+| Fortron Embroidery Format (.fxy) | `rw-none doc-none test-none` | `experimental` |
+| Smoothie G-Code Embroidery Format (.gc) | `rw-none doc-none test-none` | `experimental` |
+| Great Notions Embroidery Format (.gnc) | `rw-none doc-none test-none` | `experimental` |
+| Gold Thread Embroidery Format (.gt) | `rw-none doc-none test-none` | `experimental` |
+| Husqvarna Viking Embroidery Format (.hus) | `rw-none doc-none test-none` | `experimental` |
+| Inbro Embroidery Format (.inb) | `rw-none doc-none test-none` | `experimental` |
+| Embroidery Color Format (.inf) | `rw-none doc-none test-none` | `experimental` |
+| Janome Embroidery Format (.jef) | `rw-none doc-none test-none` | `experimental` |
+| Pfaff Embroidery Format (.ksm) | `rw-none doc-none test-none` | `experimental` |
+| Pfaff Embroidery Format (.max) | `rw-none doc-none test-none` | `experimental` |
+| Mitsubishi Embroidery Format (.mit) | `rw-none doc-none test-none` | `experimental` |
+| Ameco Embroidery Format (.new) | `rw-none doc-none test-none` | `experimental` |
+| Melco Embroidery Format (.ofm) | `rw-none doc-none test-none` | `experimental` |
+| Pfaff Embroidery Format (.pcd) |  `rw-none doc-none test-none` | `experimental` |
+| Pfaff Embroidery Format (.pcm) | `rw-none doc-none test-none` | `experimental` |
+| Pfaff Embroidery Format (.pcq) | `rw-none doc-none test-none` | `experimental` |
+| Pfaff Embroidery Format (.pcs) | `rw-none doc-none test-none` | `experimental` |
+| Brother Embroidery Format (.pec) | `rw-none doc-none test-none` | `experimental` |
+| Brother Embroidery Format (.pel) | `rw-none doc-none test-none` | `experimental` |
 | Brother Embroidery Format (.pem) | `rw-none doc-none test-none` | `experimental` |
 | Brother Embroidery Format (.pes) | `rw-none doc-none test-none` | `experimental` |
 | Brother Embroidery Format (.phb) | `rw-none doc-none test-none` | `experimental` |
@@ -355,7 +355,7 @@ Text File (.txt) | `rw-none doc-none test-none` | `experimental` |
 | Pfaff Embroidery Format (.vip) | `rw-none doc-none test-none` | `experimental` |
 | Pfaff Embroidery Format (.vp3) | `rw-none doc-none test-none` | `experimental` |
 | Singer Embroidery Format (.xxx) | `rw-none doc-none test-none` | `experimental` |
-| ZSK USA Embroidery Format (.zsk) | `rw-none doc-none test-none` | `experimental` |
+| [ZSK USA Embroidery Format (.zsk)](#zsk-usa-embroidery-format-zsk) | `rw-none doc-none test-none` | `experimental` |
 
 #### Toyota Embroidery Format (.100)
 

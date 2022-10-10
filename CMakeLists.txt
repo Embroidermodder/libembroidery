@@ -51,12 +51,12 @@ add_executable(embroider ${C_SOURCES})
 target_compile_definitions(embroider PUBLIC LIBEMBROIDERY_CLI)
 
 target_include_directories(embroider INTERFACE src)
-endif()
 
 if (WIN32)
 else (WIN32)
 target_link_libraries(embroider PRIVATE m)
 endif (WIN32)
+endif()
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
 install(

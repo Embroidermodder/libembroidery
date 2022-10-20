@@ -32,11 +32,11 @@ LICENCE file. This applies to all the source code in this directory.
 
 We're currently trying out some fill techniques which will be demonstrated here and in the script `qa_test.sh`.
 
-<img width="100%" src="demos/logo-spirals.png"></img>
+![images/logo-spirals.png](images/logo-spirals.png)
 
 Converts to:
 
-<img width="100%" src="demos/logo_spirals_cross_stitch.png"></img>
+![images/logo_spirals_cross_stitch.png](images/logo_spirals_cross_stitch.png)
 
 ### Build
 

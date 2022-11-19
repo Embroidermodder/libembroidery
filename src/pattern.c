@@ -31,7 +31,7 @@ embPattern_create(void)
     p->home.y = 0.0;
     p->currentColorIndex = 0;
     p->stitchList = embArray_create(EMB_STITCH);
-    p->threads = embArray_create(EMB_THREAD);
+    p->n_threads = 0;
     p->hoop_height = 0.0;
     p->hoop_width = 0.0;
     p->arcs = 0;
@@ -72,17 +72,16 @@ embPattern_hideStitchesOverLength(EmbPattern* p, int length)
 }
 
 int
-embPattern_addThread(EmbPattern* p, EmbThread thread)
+embPattern_addThread(EmbPattern *pattern, EmbThread thread)
 {
-    if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_addThread(), ");
-        printf("p argument is null\n");
-        return 0;
+    if (pattern->n_threads >= MAX_THREADS) {
+        puts("ERROR: Maximum number of threads has been reached.");
+        printf("If you genuinely need: %d threads\n", pattern->n_threads);
+        printf("please contact the Embroidermodder team and describe your\n");
+        printf("use case.\n");
     }
-    if (!p->threads) {
-        p->threads = embArray_create(EMB_THREAD);
-    }
-    embArray_addThread(p->threads, thread);
+    pattern->thread_list[pattern->n_threads] = thread;
+    pattern->n_threads++;
     return 1;
 }
 
@@ -101,13 +100,13 @@ embPattern_fixColorCount(EmbPattern* p)
 /*        printf("%d %d\n", list->stitch.color, maxColorIndex);*/
         maxColorIndex = EMB_MAX(maxColorIndex, p->stitchList->stitch[i].color);
     }
-    if (p->threads->count == 0 || maxColorIndex == 0) {
+    if (p->n_threads == 0 || maxColorIndex == 0) {
         embPattern_addThread(p, black_thread);
     }
     else {
         if (maxColorIndex > 0) {
-            while (p->threads->count <= maxColorIndex) {
-/*        printf("%d %d\n", p->threads->count, maxColorIndex);*/
+            while (p->n_threads <= maxColorIndex) {
+/*        printf("%d %d\n", p->n_threads, maxColorIndex);*/
                 embPattern_addThread(p, embThread_getRandom());
             }
         }
@@ -146,7 +145,7 @@ embPattern_copyStitchListToPolylines(EmbPattern* p)
             if (!(st.flags & JUMP)) {
                 if (!pointList) {
                     pointList = embArray_create(EMB_POINT);
-                    color = p->threads->thread[st.color].color;
+                    color = p->thread_list[st.color].color;
                 }
                 point.position.x = st.x;
                 point.position.y = st.y;
@@ -221,7 +220,7 @@ embPattern_moveStitchListToPolylines(EmbPattern* p)
     embPattern_copyStitchListToPolylines(p);
     /* Free the stitchList and threadList since their data has now been transferred to polylines */
     p->stitchList->count = 0;
-    p->threads->count = 0;
+    p->n_threads = 0;
 }
 
 /*! Moves all of the EmbPolylineObjectList data to EmbStitchList data for pattern (\a p). */
@@ -800,7 +799,6 @@ embPattern_free(EmbPattern* p)
         return;
     }
     embArray_free(p->stitchList);
-    embArray_free(p->threads);
     embArray_free(p->arcs);
     embArray_free(p->circles);
     embArray_free(p->ellipses);
@@ -972,7 +970,7 @@ embPattern_color_count(EmbPattern *pattern, EmbColor startColor)
 
         st = pattern->stitchList->stitch[i];
 
-        newColor = pattern->threads->thread[st.color].color;
+        newColor = pattern->thread_list[st.color].color;
         if (embColor_distance(newColor, color) != 0) {
             numberOfColors++;
             color = newColor;
@@ -1008,7 +1006,6 @@ embPattern_designDetails(EmbPattern *pattern)
     jump_stitches = 0;
     trim_stitches = 0;
     unknown_stitches = 0;
-    num_colors = pattern->threads->count;
     bounds = embPattern_calcBoundingBox(pattern);
     
     if (emb_verbose > 1) {
@@ -1018,7 +1015,7 @@ embPattern_designDetails(EmbPattern *pattern)
         printf("jump_stitches: %d\n", jump_stitches);
         printf("trim_stitches: %d\n", trim_stitches);
         printf("unknown_stitches: %d\n", unknown_stitches);
-        printf("num_colors: %d\n", num_colors);
+        printf("num_colors: %d\n", pattern->n_threads);
         printf("bounds.left: %f\n", bounds.left);
         printf("bounds.right: %f\n", bounds.right);
         printf("bounds.top: %f\n", bounds.top);

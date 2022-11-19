@@ -72,9 +72,6 @@ embArray_create(int type)
     case EMB_STITCH:
         p->stitch = (EmbStitch*)malloc(CHUNK_SIZE*sizeof(EmbStitch));
         break;
-    case EMB_THREAD:
-        p->thread = (EmbThread*)malloc(CHUNK_SIZE*sizeof(EmbThread));
-        break;
     case EMB_VECTOR:
         p->vector = (EmbVector*)malloc(CHUNK_SIZE*sizeof(EmbVector));
         break;
@@ -148,10 +145,6 @@ embArray_resize(EmbArray *p)
         p->stitch = (EmbStitch *)realloc(p->stitch, p->length*sizeof(EmbStitch));
         if (!p->stitch) return 0;
         break;
-    case EMB_THREAD:
-        p->thread = (EmbThread *)realloc(p->thread, p->length*sizeof(EmbThread));
-        if (!p->thread) return 0;
-        break;
     case EMB_VECTOR:
         p->vector = (EmbVector *)realloc(p->vector, p->length*sizeof(EmbVector));
         if (!p->vector) return 0;
@@ -206,9 +199,6 @@ void embArray_copy(EmbArray *dst, EmbArray *src)
     case EMB_STITCH:
         memcpy(dst->stitch, src->stitch, sizeof(int)*src->count);
         break;
-    case EMB_THREAD:
-        memcpy(dst->thread, src->thread, sizeof(int)*src->count);
-        break;
     case EMB_VECTOR:
         memcpy(dst->vector, src->vector, sizeof(int)*src->count);
         break;
@@ -240,8 +230,8 @@ addGeometry(Polygon, polygon)
 addGeometry(Polyline, polyline)
 addGeometry(Rect, rect)
 addGeometry(Stitch, stitch)
-addGeometry(Thread, thread)
 addGeometry(Vector, vector)
+
 
 void embArray_free(EmbArray* p) {
     int i;
@@ -293,9 +283,6 @@ void embArray_free(EmbArray* p) {
         break;
     case EMB_STITCH:
         free(p->stitch);
-        break;
-    case EMB_THREAD:
-        free(p->thread);
         break;
     case EMB_VECTOR:
         free(p->vector);

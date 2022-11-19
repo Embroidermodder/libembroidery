@@ -127,15 +127,16 @@ extern "C" {
 #define EMB_RECT                9
 #define EMB_SPLINE              10
 #define EMB_STITCH              11
-#define EMB_THREAD              12
-#define EMB_VECTOR              13
-#define EMB_CHAR                14
-#define EMB_ARRAY               15
+#define EMB_VECTOR              12
+#define EMB_CHAR                13
+#define EMB_ARRAY               14
 
-#define EMBFORMAT_UNSUPPORTED   0
-#define EMBFORMAT_STITCHONLY    1
-#define EMBFORMAT_OBJECTONLY    2
-#define EMBFORMAT_STCHANDOBJ    3 /* binary operation: 1+2=3 */
+#define MAX_THREADS            256
+
+#define EMBFORMAT_UNSUPPORTED    0
+#define EMBFORMAT_STITCHONLY     1
+#define EMBFORMAT_OBJECTONLY     2
+#define EMBFORMAT_STCHANDOBJ     3 /* binary operation: 1+2=3 */
 
 #define numberOfFormats         61
 
@@ -714,7 +715,7 @@ struct EmbArray_ {
 	EmbRect *rect;
 	EmbSpline *spline;
 	EmbStitch *stitch;
-	EmbThread *thread;
+	EmbThread thread[MAX_THREADS];
 	EmbVector *vector;
     int count;
     int length;
@@ -728,8 +729,10 @@ typedef struct EmbPattern_
     double hoop_width;
     double hoop_height;
 
+    EmbThread thread_list[MAX_THREADS];
+    int n_threads;
+
     EmbArray* stitchList;
-    EmbArray* threads;
     EmbArray* arcs;
     EmbArray* circles;
     EmbArray* ellipses;

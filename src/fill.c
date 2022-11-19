@@ -851,11 +851,11 @@ embPattern_combine(EmbPattern *p1, EmbPattern *p2)
         embArray_addStitch(out->stitchList, p2->stitchList->stitch[i]);
     }
     /* These need to be merged, not appended. */
-    for (i=0; i<p1->threads->count; i++) {
-        embArray_addThread(out->threads, p1->threads->thread[i]);
+    for (i=0; i<p1->n_threads; i++) {
+        embPattern_addThread(out, p1->thread_list[i]);
     }
-    for (i=0; i<p2->threads->count; i++) {
-        embArray_addThread(out->threads, p2->threads->thread[i]);
+    for (i=0; i<p2->n_threads; i++) {
+        embPattern_addThread(out, p2->thread_list[i]);
     }
     return out;
 }

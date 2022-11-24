@@ -2,12 +2,13 @@
 
 Copyright (c) 2013-2022 The EmbroiderModder Team
 
-https://embroidermodder.org
+https://www.libembroidery.org
 
 (Under construction, please wait for v1.0 release.)
 
 libembroidery is a low-level library for reading, writing, 
-and altering digital embroidery files in C.
+and altering digital embroidery files in C. It is part of the Embroidermodder Project
+for open source machine embroidery.
 
 libembroidery is the underlying library that is used by [Embroidermodder 2](http://embroidermodder.org)
 and is developed by [The Embroidermodder Team](#the-embroidermodder-team).
@@ -21,7 +22,7 @@ It also includes a CLI called `embroider` that allows for better automation of
 changes to embroidery files and will be more up-to date than
 the Embroidermodder 2 GUI.
 
-A printer-friendly version of these docs are available on [our website](https://embroidermodder.github.io/Embroidermodder/docs/libembroidery_1.0-alpha_manual.pdf, LINK BROKEN).
+A printer-friendly version of these docs are available on [our website](https://www.libembroidery.org/docs/libembroidery_1.0-alpha_manual.pdf).
 
 ####  License
 

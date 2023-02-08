@@ -13,7 +13,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "embroidery.h"
+#include "embroidery_internal.h"
 
 void write_24bit(FILE* file, int);
 

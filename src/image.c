@@ -1,7 +1,7 @@
 /*
  * This file is part of libembroidery.
  *
- * Copyright 2018-2022 The Embroidermodder Team
+ * Copyright 2018-2023 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
  * This file contains all the read and write functions for the
@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "embroidery.h"
+#include "embroidery_internal.h"
 
 
 /* for the PES embedded */

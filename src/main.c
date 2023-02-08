@@ -1,7 +1,7 @@
 /*
  * This file is part of libembroidery.
  *
- * Copyright 2018-2022 The Embroidermodder Team
+ * Copyright 2018-2023 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  */
 
@@ -11,7 +11,7 @@
 #include <math.h>
 #include <time.h>
 
-#include "embroidery.h"
+#include "embroidery_internal.h"
 
 /* same order as flag_list, to use in jump table */
 #define FLAG_TO                       0

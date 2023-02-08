@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "embroidery.h"
+#include "embroidery_internal.h"
 
 EmbArray*
 embArray_create(int type)

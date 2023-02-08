@@ -12,7 +12,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "embroidery.h"
+#include "embroidery_internal.h"
 
 /*! Returns a pointer to an EmbPattern. It is created on the heap.
  * The caller is responsible for freeing the allocated memory with

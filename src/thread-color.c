@@ -6,9 +6,9 @@
  */
 
 #include <stdio.h>
-
-#include "embroidery.h"
 #include <string.h>
+
+#include "embroidery_internal.h"
 
 #ifndef LIBEMBROIDERY_CLI
 const unsigned char _dxfColorTable[][3] = {{   0,   0,   0 }};

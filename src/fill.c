@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "embroidery.h"
+#include "embroidery_internal.h"
 
 const char *rules[] = {"+BF-AFA-FB+", "-AF+BFB+FA-"};
 

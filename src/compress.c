@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "embroidery.h"
+#include "embroidery_internal.h"
 
 /* This is a work in progress.
  * ---------------------------

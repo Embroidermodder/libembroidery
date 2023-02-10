@@ -1188,3 +1188,118 @@ convert(const char *inf, const char *outf)
     return 0;
 }
 
+float embPattern_totalStitchLength(EmbPattern *pattern)
+{
+    EmbArray *sts = pattern->stitchList;
+    float result = 0.0;
+    for (int i = 1; i < sts->count; i++) {
+        EmbStitch st = sts->stitch[i];
+        double length = 0.0;
+        EmbVector delta;
+        delta.x = sts->stitch[i].x - sts->stitch[i-1].x;
+        delta.y = sts->stitch[i].y - sts->stitch[i-1].y;
+        length = embVector_length(delta);
+        if (sts->stitch[i].flags & NORMAL)
+        if (sts->stitch[i-1].flags & NORMAL) {
+            result += length;
+        }
+    }
+    return result;
+}
+
+float embPattern_minimumStitchLength(EmbPattern *pattern)
+{
+    EmbArray *sts = pattern->stitchList;
+    float result = 1.0e10;
+    for (int i = 1; i < sts->count; i++) {
+        double length = 0.0;
+        EmbVector delta;
+        delta.x = sts->stitch[i].x - sts->stitch[i-1].x;
+        delta.y = sts->stitch[i].y - sts->stitch[i-1].y;
+        length = embVector_length(delta);
+        if (sts->stitch[i].flags & NORMAL)
+        if (sts->stitch[i-1].flags & NORMAL) {
+            if (length < result) {
+                result = length;
+            }
+        }
+    }
+    return result;
+}
+
+float embPattern_maximumStitchLength(EmbPattern *pattern)
+{
+    EmbArray *sts = pattern->stitchList;
+    float result = 0.0;
+    for (int i = 1; i < sts->count; i++) {
+        double length = 0.0;
+        EmbVector delta;
+        delta.x = sts->stitch[i].x - sts->stitch[i-1].x;
+        delta.y = sts->stitch[i].y - sts->stitch[i-1].y;
+        length = embVector_length(delta);
+        if (sts->stitch[i].flags & NORMAL)
+        if (sts->stitch[i-1].flags & NORMAL) {
+            if (length > result) {
+                result = length;
+            }
+        }
+    }
+    return result;
+}
+
+void embPattern_lengthHistogram(EmbPattern *pattern, int *bin, int NUMBINS)
+{
+    float max_stitch_length = embPattern_maximumStitchLength(pattern);
+    EmbArray *sts = pattern->stitchList;
+    for (int i = 0; i <= NUMBINS; i++) {
+        bin[i] = 0;
+    }
+
+    for (int i = 1; i < sts->count; i++) {
+        if (sts->stitch[i].flags & NORMAL)
+        if (sts->stitch[i-1].flags & NORMAL) {
+            EmbVector delta;
+            delta.x = sts->stitch[i].x - sts->stitch[i-1].x;
+            delta.y = sts->stitch[i].y - sts->stitch[i-1].x;
+            float length = embVector_length(delta);
+            bin[(int)(floor(NUMBINS*length/max_stitch_length))]++;
+        }
+    }
+}
+
+int embPattern_realStitches(EmbPattern *pattern)
+{
+    EmbArray *sts = pattern->stitchList;
+    int real_stitches = 0;
+    for (int i = 0; i < sts->count; i++) {
+        if (!(sts->stitch[i].flags & (JUMP | TRIM | END))) {
+            real_stitches++;
+        }
+    }
+    return real_stitches;
+}
+
+int embPattern_jumpStitches(EmbPattern *pattern)
+{
+    EmbArray *sts = pattern->stitchList;
+    int jump_stitches = 0;
+    for (int i = 0; i < sts->count; i++) {
+        if (sts->stitch[i].flags & JUMP) {
+            jump_stitches++;
+        }
+    }
+    return jump_stitches;
+}
+
+
+int embPattern_trimStitches(EmbPattern *pattern)
+{
+    EmbArray *sts = pattern->stitchList;
+    int trim_stitches = 0;
+    for (int i = 0; i < sts->count; i++) {
+        if (sts->stitch[i].flags & TRIM) {
+            trim_stitches++;
+        }
+    }
+    return trim_stitches;
+}

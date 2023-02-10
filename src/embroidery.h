@@ -565,6 +565,13 @@ EMB_PUBLIC void embPattern_addStitchRel(EmbPattern* p, double dx, double dy, int
 EMB_PUBLIC void embPattern_changeColor(EmbPattern* p, int index);
 EMB_PUBLIC void embPattern_free(EmbPattern* p);
 EMB_PUBLIC void embPattern_scale(EmbPattern* p, double scale);
+EMB_PUBLIC float embPattern_totalStitchLength(EmbPattern *pattern);
+EMB_PUBLIC float embPattern_minimumStitchLength(EmbPattern *pattern);
+EMB_PUBLIC float embPattern_maximumStitchLength(EmbPattern *pattern);
+EMB_PUBLIC void embPattern_lengthHistogram(EmbPattern *pattern, int *bin, int NUMBINS);
+EMB_PUBLIC int embPattern_realStitches(EmbPattern *pattern);
+EMB_PUBLIC int embPattern_jumpStitches(EmbPattern *pattern);
+EMB_PUBLIC int embPattern_trimStitches(EmbPattern *pattern);
 EMB_PUBLIC EmbRect embPattern_calcBoundingBox(EmbPattern* p);
 EMB_PUBLIC void embPattern_flipHorizontal(EmbPattern* p);
 EMB_PUBLIC void embPattern_flipVertical(EmbPattern* p);

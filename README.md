@@ -22,7 +22,7 @@ It also includes a CLI called `embroider` that allows for better automation of
 changes to embroidery files and will be more up-to date than
 the Embroidermodder 2 GUI.
 
-A printer-friendly version of these docs are available on [our website](https://www.libembroidery.org/docs/libembroidery_1.0-alpha_manual.pdf).
+A printer-friendly version of these docs are available on [our website](https://www.libembroidery.org/libembroidery_1.0-alpha_manual.pdf).
 
 ####  License
 

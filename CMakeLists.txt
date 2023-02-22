@@ -59,6 +59,23 @@ endif (WIN32)
 endif()
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
+if(APPLE)
+install(
+    FILES
+        src/embroidery.h
+    DESTINATION /usr/local/include
+)
+
+install(
+    TARGETS
+       embroidery
+       embroidery_static
+       embroider
+    LIBRARY DESTINATION /usr/local/lib
+    ARCHIVE DESTINATION /usr/local/lib
+    RUNTIME DESTINATION /usr/bin
+)
+else()
 install(
     FILES
         src/embroidery.h
@@ -74,4 +91,5 @@ install(
     ARCHIVE DESTINATION /usr/lib
     RUNTIME DESTINATION /usr/bin
 )
+endif()
 endif()

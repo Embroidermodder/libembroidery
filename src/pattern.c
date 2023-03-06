@@ -237,7 +237,7 @@ embPattern_movePolylinesToStitchList(EmbPattern* p)
 
 /*! Adds a stitch to the pattern (\a p) at the absolute position (\a x,\a y). Positive y is up. Units are in millimeters. */
 void
-embPattern_addStitchAbs(EmbPattern* p, double x, double y, 
+embPattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y, 
                             int flags, int isAutoColorIndex)
 {
     EmbStitch s;
@@ -291,10 +291,10 @@ embPattern_addStitchAbs(EmbPattern* p, double x, double y,
 /*! Adds a stitch to the pattern (\a p) at the relative position (\a dx,\a dy) 
     to the previous stitch. Positive y is up. Units are in millimeters. */
 void
-embPattern_addStitchRel(EmbPattern* p, double dx, double dy, 
+embPattern_addStitchRel(EmbPattern* p, EmbReal dx, EmbReal dy, 
                             int flags, int isAutoColorIndex)
 {
-    double x, y;
+    EmbReal x, y;
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_addStitchRel(), p argument is null\n");
         return;
@@ -325,7 +325,7 @@ embPattern_changeColor(EmbPattern* p, int index)
 /* Very simple scaling of the x and y axis for every point.
 * Doesn't insert or delete stitches to preserve density. */
 void
-embPattern_scale(EmbPattern* p, double scale)
+embPattern_scale(EmbPattern* p, EmbReal scale)
 {
     int i;
     if (!p) {
@@ -682,7 +682,7 @@ embPattern_combineJumpStitches(EmbPattern* p)
     They need renamed or clarified further. */
 void
 embPattern_correctForMaxStitchLength(EmbPattern* p, 
-                        double maxStitchLength, double maxJumpLength)
+                        EmbReal maxStitchLength, EmbReal maxJumpLength)
 {
     if (!p) {
         printf("ERROR: emb-pattern.c embPattern_correctForMaxStitchLength(), ");
@@ -691,14 +691,14 @@ embPattern_correctForMaxStitchLength(EmbPattern* p,
     }
     if (p->stitchList->count > 1) {
         int i, j, splits;
-        double maxXY, maxLen, addX, addY;
+        EmbReal maxXY, maxLen, addX, addY;
         EmbArray *newList = embArray_create(EMB_STITCH);
         for (i=1; i < p->stitchList->count; i++) {
             EmbStitch st = p->stitchList->stitch[i];
-            double xx = st.x;
-            double yy = st.y;
-            double dx = p->stitchList->stitch[i-1].x - xx;
-            double dy = p->stitchList->stitch[i-1].y - yy;
+            EmbReal xx = st.x;
+            EmbReal yy = st.y;
+            EmbReal dx = p->stitchList->stitch[i-1].x - xx;
+            EmbReal dy = p->stitchList->stitch[i-1].y - yy;
             if ((fabs(dx) > maxStitchLength) || (fabs(dy) > maxStitchLength)) {
                 maxXY = EMB_MAX(fabs(dx), fabs(dy));
                 if (st.flags & (JUMP | TRIM)) {
@@ -706,11 +706,11 @@ embPattern_correctForMaxStitchLength(EmbPattern* p,
                 } else {
                     maxLen = maxStitchLength;
                 }
-                splits = (int)ceil((double)maxXY / maxLen);
+                splits = (int)ceil((EmbReal)maxXY / maxLen);
 
                 if (splits > 1) {
-                    addX = (double)dx / splits;
-                    addY = (double)dy / splits;
+                    addX = (EmbReal)dx / splits;
+                    addY = (EmbReal)dy / splits;
 
                     for (j = 1; j < splits; j++) {
                         EmbStitch s;
@@ -1022,26 +1022,27 @@ embPattern_designDetails(EmbPattern *pattern)
         printf("bounds.bottom: %f\n", bounds.bottom);
     }
 /*
-    double minx = 0.0, maxx = 0.0, miny = 0.0, maxy = 0.0;
-    double min_stitchlength = 999.0;
-    double max_stitchlength = 0.0;
-    double total_stitchlength = 0.0;
+    EmbReal minx = 0.0, maxx = 0.0, miny = 0.0, maxy = 0.0;
+    EmbReal min_stitchlength = 999.0;
+    EmbReal max_stitchlength = 0.0;
+    EmbReal total_stitchlength = 0.0;
     int number_of_minlength_stitches = 0;
     int number_of_maxlength_stitches = 0;
 
-    double xx = 0.0, yy = 0.0;
-    double length = 0.0;
+    EmbReal xx = 0.0, yy = 0.0;
+    EmbReal length = 0.0;
 
     if (num_stitches == 0) {
         QMessageBox::warning(this, tr("No Design Loaded"), tr("<b>A design needs to be loaded or created before details can be determined.</b>"));
         return;
     }
-    QVector<double> stitchLengths;
+    QVector<EmbReal> stitchLengths;
 
-    double totalColorLength = 0.0;
-    for (int i = 0; i < num_stitches; i++) {
+    EmbReal totalColorLength = 0.0;
+    int i;
+    for (i = 0; i < num_stitches; i++) {
         EmbStitch st = pattern->stitchList->stitch[i];
-        double dx, dy;
+        EmbReal dx, dy;
         dx = st.x - xx;
         dy = st.y - yy;
         xx = st.x;
@@ -1086,11 +1087,12 @@ embPattern_designDetails(EmbPattern *pattern)
     //second pass to fill bins now that we know max stitch length
 #define NUMBINS 10
     int bin[NUMBINS+1];
-    for (int i = 0; i <= NUMBINS; i++) {
+    int i;
+    for (i = 0; i <= NUMBINS; i++) {
         bin[i]=0;
     }
 
-    for (int i = 0; i < num_stitches; i++) {
+    for (i = 0; i < num_stitches; i++) {
         dx = embStitchList_getAt(pattern->stitchList, i).xx - xx;
         dy = embStitchList_getAt(pattern->stitchList, i).yy - yy;
         xx = embStitchList_getAt(pattern->stitchList, i).xx;
@@ -1102,10 +1104,11 @@ embPattern_designDetails(EmbPattern *pattern)
         }
     }
 
-    double binSize = max_stitchlength / NUMBINS;
+    EmbReal binSize = max_stitchlength / NUMBINS;
 
     QString str;
-    for (int i = 0; i < NUMBINS; i++) {
+    int i;
+    for (i = 0; i < NUMBINS; i++) {
         str += QString::number(binSize * (i), 'f', 1) + " - " + QString::number(binSize * (i+1), 'f', 1) + " mm: " +  QString::number(bin[i]) + "\n\n";
     }
 
@@ -1123,7 +1126,8 @@ embPattern_designDetails(EmbPattern *pattern)
     grid->addWidget(new QLabel(tr("\nThread Length By Color: \n")),11,0,1,2);
     int currentRow = 12;
 
-    for (int i = 0; i < num_colors; i++) {
+    int i;
+    for (i = 0; i < num_colors; i++) {
         QFrame *frame = new QFrame();
         frame->setGeometry(0,0,30,30);
         QPalette palette = frame->palette();
@@ -1192,9 +1196,10 @@ float embPattern_totalStitchLength(EmbPattern *pattern)
 {
     EmbArray *sts = pattern->stitchList;
     float result = 0.0;
-    for (int i = 1; i < sts->count; i++) {
+    int i;
+    for (i = 1; i < sts->count; i++) {
         EmbStitch st = sts->stitch[i];
-        double length = 0.0;
+        EmbReal length = 0.0;
         EmbVector delta;
         delta.x = sts->stitch[i].x - sts->stitch[i-1].x;
         delta.y = sts->stitch[i].y - sts->stitch[i-1].y;
@@ -1211,8 +1216,9 @@ float embPattern_minimumStitchLength(EmbPattern *pattern)
 {
     EmbArray *sts = pattern->stitchList;
     float result = 1.0e10;
-    for (int i = 1; i < sts->count; i++) {
-        double length = 0.0;
+    int i;
+    for (i = 1; i < sts->count; i++) {
+        EmbReal length = 0.0;
         EmbVector delta;
         delta.x = sts->stitch[i].x - sts->stitch[i-1].x;
         delta.y = sts->stitch[i].y - sts->stitch[i-1].y;
@@ -1231,8 +1237,9 @@ float embPattern_maximumStitchLength(EmbPattern *pattern)
 {
     EmbArray *sts = pattern->stitchList;
     float result = 0.0;
-    for (int i = 1; i < sts->count; i++) {
-        double length = 0.0;
+    int i;
+    for (i = 1; i < sts->count; i++) {
+        EmbReal length = 0.0;
         EmbVector delta;
         delta.x = sts->stitch[i].x - sts->stitch[i-1].x;
         delta.y = sts->stitch[i].y - sts->stitch[i-1].y;
@@ -1249,13 +1256,14 @@ float embPattern_maximumStitchLength(EmbPattern *pattern)
 
 void embPattern_lengthHistogram(EmbPattern *pattern, int *bin, int NUMBINS)
 {
+    int i;
     float max_stitch_length = embPattern_maximumStitchLength(pattern);
     EmbArray *sts = pattern->stitchList;
-    for (int i = 0; i <= NUMBINS; i++) {
+    for (i = 0; i <= NUMBINS; i++) {
         bin[i] = 0;
     }
 
-    for (int i = 1; i < sts->count; i++) {
+    for (i = 1; i < sts->count; i++) {
         if (sts->stitch[i].flags & NORMAL)
         if (sts->stitch[i-1].flags & NORMAL) {
             EmbVector delta;
@@ -1269,9 +1277,10 @@ void embPattern_lengthHistogram(EmbPattern *pattern, int *bin, int NUMBINS)
 
 int embPattern_realStitches(EmbPattern *pattern)
 {
+    int i;
     EmbArray *sts = pattern->stitchList;
     int real_stitches = 0;
-    for (int i = 0; i < sts->count; i++) {
+    for (i = 0; i < sts->count; i++) {
         if (!(sts->stitch[i].flags & (JUMP | TRIM | END))) {
             real_stitches++;
         }
@@ -1281,9 +1290,10 @@ int embPattern_realStitches(EmbPattern *pattern)
 
 int embPattern_jumpStitches(EmbPattern *pattern)
 {
+    int i;
     EmbArray *sts = pattern->stitchList;
     int jump_stitches = 0;
-    for (int i = 0; i < sts->count; i++) {
+    for (i = 0; i < sts->count; i++) {
         if (sts->stitch[i].flags & JUMP) {
             jump_stitches++;
         }
@@ -1294,9 +1304,10 @@ int embPattern_jumpStitches(EmbPattern *pattern)
 
 int embPattern_trimStitches(EmbPattern *pattern)
 {
+    int i;
     EmbArray *sts = pattern->stitchList;
     int trim_stitches = 0;
-    for (int i = 0; i < sts->count; i++) {
+    for (i = 0; i < sts->count; i++) {
         if (sts->stitch[i].flags & TRIM) {
             trim_stitches++;
         }

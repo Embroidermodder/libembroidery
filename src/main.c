@@ -57,9 +57,9 @@ EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
 int emb_verbose = 0;
 int emb_error = 0;
 
-const double embConstantPi = 3.1415926535;
+const EmbReal embConstantPi = 3.1415926535;
 
-/* Constant representing the number of Double Indirect FAT
+/* Constant representing the number of EmbReal Indirect FAT
  * entries in a single header */
 const unsigned int difatEntriesInHeader = 109;
 const unsigned int sizeOfFatEntry = sizeof(unsigned int);
@@ -517,7 +517,7 @@ bcfFileHeader_read(FILE* file)
 }
 
 void
-embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, EmbSatinOutline* result)
+embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSatinOutline* result)
 {
     int i;
     EmbLine line1, line2;
@@ -527,7 +527,7 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, EmbSatin
     EmbVector temp;
     EmbLine line;
 
-    double halfThickness = thickness / 2.0;
+    EmbReal halfThickness = thickness / 2.0;
     int intermediateOutlineCount = 2 * lines->count - 2;
     outline.side1 = embArray_create(EMB_VECTOR);
     if (!outline.side1) {
@@ -605,14 +605,14 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, double thickness, EmbSatin
 }
 
 EmbArray*
-embSatinOutline_renderStitches(EmbSatinOutline* result, double density)
+embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density)
 {
     int i, j;
     EmbVector currTop, currBottom, topDiff, bottomDiff, midDiff;
     EmbVector midLeft, midRight, topStep, bottomStep;
     EmbArray* stitches = 0;
     int numberOfSteps;
-    double midLength;
+    EmbReal midLength;
 
     if (!result) {
         printf("ERROR: emb-satin-line.c embSatinOutline_renderStitches(), result argument is null\n");
@@ -868,7 +868,7 @@ copy_trim(char const *s)
 
 /*! Optimizes the number (\a num) for output to a text file and returns it as a string (\a str). */
 char*
-emb_optOut(double num, char* str)
+emb_optOut(EmbReal num, char* str)
 {
     char *str_end;
     /* Convert the number to a string */
@@ -1030,8 +1030,8 @@ testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
 int
 testEmbCircle(void)
 {
-    double error;
-    double epsilon = 1e-3;
+    EmbReal error;
+    EmbReal epsilon = 1e-3;
     EmbVector p0, p1;
     /* Problem */
     EmbCircle c1 = {{0.0, 0.0}, 3.0, 0, {0, 0, 0}};
@@ -1051,8 +1051,8 @@ testEmbCircle(void)
 }
 
 int testEmbCircle_2(void) {
-    double error;
-    double epsilon = 1e-3;
+    EmbReal error;
+    EmbReal epsilon = 1e-3;
     EmbVector p0, p1;
     EmbCircle c2 = {{20.1762, 10.7170}, 6.8221, 0, {0, 0, 0}};
     /* Solution */
@@ -1071,13 +1071,13 @@ int testEmbCircle_2(void) {
 }
 
 void
-printArcResults(double bulge, EmbArc arc,
-                     double centerX,   double centerY,
-                     double radius,    double diameter,
-                     double chord,
-                     double chordMidX, double chordMidY,
-                     double sagitta,   double apothem,
-                     double incAngle,  char   clockwise)
+printArcResults(EmbReal bulge, EmbArc arc,
+                     EmbReal centerX,   EmbReal centerY,
+                     EmbReal radius,    EmbReal diameter,
+                     EmbReal chord,
+                     EmbReal chordMidX, EmbReal chordMidY,
+                     EmbReal sagitta,   EmbReal apothem,
+                     EmbReal incAngle,  char   clockwise)
 {
     fprintf(stdout, "bulge     = %f\n"
                     "startX    = %f\n"
@@ -1123,7 +1123,7 @@ testGeomArc(void)
 {
     EmbArc arc;
     EmbVector center, chordMid;
-    double bulge, radius, diameter, chord, sagitta, apothem, incAngle;
+    EmbReal bulge, radius, diameter, chord, sagitta, apothem, incAngle;
     char clockwise;
 
     bulge = -0.414213562373095;

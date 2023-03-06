@@ -394,9 +394,9 @@ void writePecStitches(EmbPattern* pattern, FILE* file, const char* filename);
 int decodeNewStitch(unsigned char value);
 
 void pfaffEncode(FILE* file, int x, int y, int flags);
-double pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3);
+EmbReal pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3);
 
-unsigned char mitEncodeStitch(double value);
+unsigned char mitEncodeStitch(EmbReal value);
 int mitDecodeStitch(unsigned char value);
 
 int encode_tajima_ternary(unsigned char b[3], int x, int y);
@@ -433,7 +433,7 @@ void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength);
 int stringInArray(const char *s, const char **array);
 void fpad(FILE *f, char c, int n);
 char *copy_trim(char const *s);
-char* emb_optOut(double num, char* str);
+char* emb_optOut(EmbReal num, char* str);
 
 void write_24bit(FILE* file, int);
 int check_header_present(FILE* file, int minimum_header_length);
@@ -466,13 +466,13 @@ int hus_decompress(char* input, int size, char* output, int *out_size);
 int encode_tajima_ternary(unsigned char b[3], int x, int y);
 void decode_tajima_ternary(unsigned char b[3], int *x, int *y);
 void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1);
-void printArcResults(double bulge, EmbArc arc,
-                     double centerX,   double centerY,
-                     double radius,    double diameter,
-                     double chord,
-                     double chordMidX, double chordMidY,
-                     double sagitta,   double apothem,
-                     double incAngle,  char   clockwise);
+void printArcResults(EmbReal bulge, EmbArc arc,
+                     EmbReal centerX,   EmbReal centerY,
+                     EmbReal radius,    EmbReal diameter,
+                     EmbReal chord,
+                     EmbReal chordMidX, EmbReal chordMidY,
+                     EmbReal sagitta,   EmbReal apothem,
+                     EmbReal incAngle,  char   clockwise);
 int create_test_file_1(const char* outf);
 int create_test_file_2(const char* outf);
 int create_test_file_3(const char* outf);
@@ -481,6 +481,8 @@ int testEmbCircle_2(void);
 int testGeomArc(void);
 int testThreadColor(void);
 int testEmbFormat(void);
+
+int emb_round(EmbReal);
 
 void embColor_read(FILE *f, EmbColor *c, int toRead);
 void embColor_write(FILE *f, EmbColor c, int toWrite);

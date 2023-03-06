@@ -27,6 +27,32 @@ void write_24bit(FILE* file, int);
  * formats and the only part that changes is the flag encoding.
  */
 
+/* Converts a 6 digit hex string (I.E. "00FF00") 
+    into an EmbColor and returns it. */
+EmbColor embColor_fromHexStr(char* val) {
+    EmbColor color;
+    char r[3];
+    char g[3];
+    char b[3];
+
+    r[0] = val[0];
+    r[1] = val[1];
+    r[2] = 0;
+
+    g[0] = val[2];
+    g[1] = val[3];
+    g[2] = 0;
+
+    b[0] = val[4];
+    b[1] = val[5];
+    b[2] = 0;
+
+    color.r = (unsigned char)strtol(r, 0, 16);
+    color.g = (unsigned char)strtol(g, 0, 16);
+    color.b = (unsigned char)strtol(b, 0, 16);
+    return color;
+}
+
 void reverse_byte_order(void *b, int bytes)
 {
     char swap;
@@ -286,7 +312,7 @@ void pfaffEncode(FILE* file, int dx, int dy, int flags)
     fwrite(&flagsToWrite, 1, 1, file);
 }
 
-double pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3) {
+EmbReal pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3) {
     int res = a1 + (a2 << 8) + (a3 << 16);
     if (res > 0x7FFFFF) {
         return (-((~(res) & 0x7FFFFF) - 1));
@@ -294,7 +320,7 @@ double pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3) {
     return res;
 }
 
-unsigned char mitEncodeStitch(double value) {
+unsigned char mitEncodeStitch(EmbReal value) {
     if (value < 0) {
         return 0x80 | (unsigned char)(-value);
     }

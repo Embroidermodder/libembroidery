@@ -166,8 +166,10 @@ extern "C" {
     #endif
 #endif
 
-/* STRUCTS
+/* TYPEDEFS AND STRUCTS
  *******************************************************************/
+
+typedef float EmbReal;
 
 /**
  * EmbColor uses the light primaries: red, green, blue in that order.
@@ -186,8 +188,8 @@ typedef struct EmbColor_
  */
 typedef struct EmbVector_
 {
-    double x;
-    double y;
+    EmbReal x;
+    EmbReal y;
 } EmbVector;
 
 /**
@@ -296,8 +298,8 @@ typedef struct EmbPath_
 typedef struct EmbStitch_
 {
     int flags; /* uses codes defined above */
-    double x; /* absolute position (not relative) */
-    double y; /* positive is up, units are in mm  */
+    EmbReal x; /* absolute position (not relative) */
+    EmbReal y; /* positive is up, units are in mm  */
     int color; /* color number for this stitch */
     /* TODO: this should be called colorIndex since it is not an EmbColor */
 } EmbStitch;
@@ -327,12 +329,12 @@ typedef struct EmbArc_
 
 typedef struct EmbRect_
 {
-    double top;
-    double left;
-    double bottom;
-    double right;
-    double rotation;
-    double radius;
+    EmbReal top;
+    EmbReal left;
+    EmbReal bottom;
+    EmbReal right;
+    EmbReal rotation;
+    EmbReal radius;
     int lineType;
     EmbColor color;
 } EmbRect;
@@ -340,7 +342,7 @@ typedef struct EmbRect_
 typedef struct EmbCircle_
 {
     EmbVector center;
-    double radius;
+    EmbReal radius;
     int lineType;
     EmbColor color;
 } EmbCircle;
@@ -360,7 +362,7 @@ typedef struct EmbEllipse_
 {
     EmbVector center;
     EmbVector radius;
-    double rotation;
+    EmbReal rotation;
     int lineType;
     EmbColor color;
 } EmbEllipse;
@@ -426,8 +428,8 @@ typedef struct EmbPattern_
 {
     unsigned int dstJumpsPerTrim;
     EmbVector home;
-    double hoop_width;
-    double hoop_height;
+    EmbReal hoop_width;
+    EmbReal hoop_height;
 
     EmbThread thread_list[MAX_THREADS];
     int n_threads;
@@ -466,11 +468,13 @@ EMB_PUBLIC int lindenmayer_system(L_system L, char* state, int iteration, int co
 EMB_PUBLIC int hilbert_curve(EmbPattern *pattern, int iterations);
 
 EMB_PUBLIC int emb_identify_format(const char *ending);
+EMB_PUBLIC void testMain(int level);
+EMB_PUBLIC int convert(const char *inf, const char *outf);
 
-EMB_PUBLIC EmbArc embArc_create(void);
-EMB_PUBLIC EmbCircle embCircle_create(void);
-EMB_PUBLIC EmbEllipse embEllipse_create(void);
-EMB_PUBLIC EmbRect embRect_create(void);
+EMB_PUBLIC EmbColor embColor_make(unsigned char r, unsigned char g, unsigned char b);
+EMB_PUBLIC EmbColor* embColor_create(unsigned char r, unsigned char g, unsigned char b);
+EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
+EMB_PUBLIC int embColor_distance(EmbColor a, EmbColor b);
 
 EMB_PUBLIC EmbArray* embArray_create(int type);
 EMB_PUBLIC int embArray_resize(EmbArray *g);
@@ -491,7 +495,7 @@ EMB_PUBLIC int embArray_addThread(EmbArray* g, EmbThread p);
 EMB_PUBLIC int embArray_addVector(EmbArray* g, EmbVector);
 EMB_PUBLIC void embArray_free(EmbArray* p);
 
-EMB_PUBLIC EmbLine embLine_make(double x1, double y1, double x2, double y2);
+EMB_PUBLIC EmbLine embLine_make(EmbReal x1, EmbReal y1, EmbReal x2, EmbReal y2);
 
 EMB_PUBLIC void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise);
 EMB_PUBLIC EmbVector embLine_intersectionPoint(EmbLine line1, EmbLine line2);
@@ -501,50 +505,55 @@ EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, EmbThread* 
 EMB_PUBLIC EmbThread embThread_getRandom(void);
 
 EMB_PUBLIC void embVector_normalize(EmbVector vector, EmbVector* result);
-EMB_PUBLIC void embVector_multiply(EmbVector vector, double magnitude, EmbVector* result);
+EMB_PUBLIC void embVector_multiply(EmbVector vector, EmbReal magnitude, EmbVector* result);
 EMB_PUBLIC void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result);
 EMB_PUBLIC void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result);
-EMB_PUBLIC float embVector_dot(EmbVector v1, EmbVector v2);
-EMB_PUBLIC float embVector_cross(EmbVector v1, EmbVector v2);
+EMB_PUBLIC EmbReal embVector_dot(EmbVector v1, EmbVector v2);
+EMB_PUBLIC EmbReal embVector_cross(EmbVector v1, EmbVector v2);
 EMB_PUBLIC void embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result);
-EMB_PUBLIC float embVector_length(EmbVector vector);
-EMB_PUBLIC float embVector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3);
-EMB_PUBLIC float embVector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3);
-EMB_PUBLIC float embVector_angle(EmbVector v);
-EMB_PUBLIC float embVector_distance(EmbVector a, EmbVector b);
-EMB_PUBLIC EmbVector embVector_unit(float angle);
+EMB_PUBLIC EmbReal embVector_length(EmbVector vector);
+EMB_PUBLIC EmbReal embVector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3);
+EMB_PUBLIC EmbReal embVector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3);
+EMB_PUBLIC EmbReal embVector_angle(EmbVector v);
+EMB_PUBLIC EmbReal embVector_distance(EmbVector a, EmbVector b);
+EMB_PUBLIC EmbVector embVector_unit(EmbReal angle);
 
-EMB_PUBLIC void testMain(int level);
-EMB_PUBLIC int convert(const char *inf, const char *outf);
+EMB_PUBLIC EmbArc embArc_init(void);
+EMB_PUBLIC char embArc_clockwise(EmbArc arc);
 
-EMB_PUBLIC char isArcClockwise(EmbArc arc);
 EMB_PUBLIC void getArcCenter(EmbArc arc, EmbVector *arcCenter);
-EMB_PUBLIC char getArcDataFromBulge(double bulge,
+EMB_PUBLIC char getArcDataFromBulge(EmbReal bulge,
                          EmbArc *arc,
-                         double* arcCenterX,        double* arcCenterY,
-                         double* radius,            double* diameter,
-                         double* chord,
-                         double* chordMidX,         double* chordMidY,
-                         double* sagitta,           double* apothem,
-                         double* incAngleInDegrees, char*   clockwise);
+                         EmbReal* arcCenterX,        EmbReal* arcCenterY,
+                         EmbReal* radius,            EmbReal* diameter,
+                         EmbReal* chord,
+                         EmbReal* chordMidX,         EmbReal* chordMidY,
+                         EmbReal* sagitta,           EmbReal* apothem,
+                         EmbReal* incAngleInDegrees, char*   clockwise);
 
+EMB_PUBLIC EmbCircle embCircle_init(void);
 EMB_PUBLIC int getCircleCircleIntersections(
      EmbCircle c0, EmbCircle c1, EmbVector *v0, EmbVector *v1);
 EMB_PUBLIC int getCircleTangentPoints(
      EmbCircle c, EmbVector p, EmbVector *v0, EmbVector *v1);
 
-EMB_PUBLIC EmbColor embColor_make(unsigned char r, unsigned char g, unsigned char b);
-EMB_PUBLIC EmbColor* embColor_create(unsigned char r, unsigned char g, unsigned char b);
-EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
-EMB_PUBLIC int embColor_distance(EmbColor a, EmbColor b);
+EMB_PUBLIC EmbEllipse embEllipse_init(void);
+EMB_PUBLIC EmbEllipse embEllipse_make(EmbReal cx, EmbReal cy, EmbReal rx, EmbReal ry);
+EMB_PUBLIC EmbReal embEllipse_diameterX(EmbEllipse ellipse);
+EMB_PUBLIC EmbReal embEllipse_diameterY(EmbEllipse ellipse);
+EMB_PUBLIC EmbReal embEllipse_width(EmbEllipse ellipse);
+EMB_PUBLIC EmbReal embEllipse_height(EmbEllipse ellipse);
+EMB_PUBLIC EmbReal embEllipse_area(EmbEllipse ellipse);
+EMB_PUBLIC EmbReal embEllipse_perimeter(EmbEllipse ellipse);
 
-EMB_PUBLIC double embEllipse_diameterX(EmbEllipse ellipse);
-EMB_PUBLIC double embEllipse_diameterY(EmbEllipse ellipse);
-EMB_PUBLIC double embEllipse_width(EmbEllipse ellipse);
-EMB_PUBLIC double embEllipse_height(EmbEllipse ellipse);
+EMB_PUBLIC EmbImage embImage_create(int, int);
+EMB_PUBLIC void embImage_read(EmbImage *image, char *fname);
+EMB_PUBLIC int embImage_write(EmbImage *image, char *fname);
+EMB_PUBLIC void embImage_free(EmbImage *image);
 
-EMB_PUBLIC EmbEllipse embEllipse_make(double cx, double cy, double rx, double ry);
+EMB_PUBLIC EmbRect embRect_init(void);
+EMB_PUBLIC EmbReal embRect_area(EmbRect);
 
 EMB_PUBLIC int threadColor(const char*, int brand);
 EMB_PUBLIC int threadColorNum(unsigned int color, int brand);
@@ -553,21 +562,21 @@ EMB_PUBLIC const char* threadColorName(unsigned int color, int brand);
 EMB_PUBLIC void embTime_initNow(EmbTime* t);
 EMB_PUBLIC EmbTime embTime_time(EmbTime* t);
 
-EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbArray* lines, double thickness, EmbSatinOutline* result);
-EMB_PUBLIC EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, double density);
+EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbArray* lines, EmbReal thickness, EmbSatinOutline* result);
+EMB_PUBLIC EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density);
 
 EMB_PUBLIC EmbPattern* embPattern_create(void);
 EMB_PUBLIC void embPattern_hideStitchesOverLength(EmbPattern* p, int length);
 EMB_PUBLIC void embPattern_fixColorCount(EmbPattern* p);
 EMB_PUBLIC int embPattern_addThread(EmbPattern* p, EmbThread thread);
-EMB_PUBLIC void embPattern_addStitchAbs(EmbPattern* p, double x, double y, int flags, int isAutoColorIndex);
-EMB_PUBLIC void embPattern_addStitchRel(EmbPattern* p, double dx, double dy, int flags, int isAutoColorIndex);
+EMB_PUBLIC void embPattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y, int flags, int isAutoColorIndex);
+EMB_PUBLIC void embPattern_addStitchRel(EmbPattern* p, EmbReal dx, EmbReal dy, int flags, int isAutoColorIndex);
 EMB_PUBLIC void embPattern_changeColor(EmbPattern* p, int index);
 EMB_PUBLIC void embPattern_free(EmbPattern* p);
-EMB_PUBLIC void embPattern_scale(EmbPattern* p, double scale);
-EMB_PUBLIC float embPattern_totalStitchLength(EmbPattern *pattern);
-EMB_PUBLIC float embPattern_minimumStitchLength(EmbPattern *pattern);
-EMB_PUBLIC float embPattern_maximumStitchLength(EmbPattern *pattern);
+EMB_PUBLIC void embPattern_scale(EmbPattern* p, EmbReal scale);
+EMB_PUBLIC EmbReal embPattern_totalStitchLength(EmbPattern *pattern);
+EMB_PUBLIC EmbReal embPattern_minimumStitchLength(EmbPattern *pattern);
+EMB_PUBLIC EmbReal embPattern_maximumStitchLength(EmbPattern *pattern);
 EMB_PUBLIC void embPattern_lengthHistogram(EmbPattern *pattern, int *bin, int NUMBINS);
 EMB_PUBLIC int embPattern_realStitches(EmbPattern *pattern);
 EMB_PUBLIC int embPattern_jumpStitches(EmbPattern *pattern);
@@ -577,7 +586,7 @@ EMB_PUBLIC void embPattern_flipHorizontal(EmbPattern* p);
 EMB_PUBLIC void embPattern_flipVertical(EmbPattern* p);
 EMB_PUBLIC void embPattern_flip(EmbPattern* p, int horz, int vert);
 EMB_PUBLIC void embPattern_combineJumpStitches(EmbPattern* p);
-EMB_PUBLIC void embPattern_correctForMaxStitchLength(EmbPattern* p, double maxStitchLength, double maxJumpLength);
+EMB_PUBLIC void embPattern_correctForMaxStitchLength(EmbPattern* p, EmbReal maxStitchLength, EmbReal maxJumpLength);
 EMB_PUBLIC void embPattern_center(EmbPattern* p);
 EMB_PUBLIC void embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName);
 EMB_PUBLIC void embPattern_convertGeometry(EmbPattern* p);
@@ -613,10 +622,6 @@ EMB_PUBLIC char embPattern_writeAuto(EmbPattern *pattern, const char* fileName);
 EMB_PUBLIC void report(int result, char *label);
 EMB_PUBLIC int full_test_matrix(char *fname);
 
-EMB_PUBLIC EmbImage embImage_create(int, int);
-EMB_PUBLIC void embImage_read(EmbImage *image, char *fname);
-EMB_PUBLIC int embImage_write(EmbImage *image, char *fname);
-EMB_PUBLIC void embImage_free(EmbImage *image);
 
 /* NON-MACRO CONSTANTS
  ******************************************************************************/
@@ -624,7 +629,7 @@ EMB_PUBLIC void embImage_free(EmbImage *image);
 extern EmbFormatList formatTable[numberOfFormats];
 extern const int pecThreadCount;
 extern const int shvThreadCount;
-extern const double embConstantPi;
+extern const EmbReal embConstantPi;
 extern const EmbThread husThreads[];
 extern const EmbThread jefThreads[];
 extern const EmbThread shvThreads[];

@@ -2,21 +2,36 @@ cmake_minimum_required(VERSION 3.5)
 
 project(libembroidery VERSION 1.0.0 LANGUAGES C)
 
-#set(CMAKE_C_STANDARD 90)
-#set(CMAKE_C_STANDARD_REQUIRED True)
+set(CMAKE_C_STANDARD 90)
+set(CMAKE_C_STANDARD_REQUIRED True)
 
 option( EMBROIDERY_BUILD_SHARED_LIBS "Build shared library." ON )
 option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
 
 set(C_SOURCES
-	src/main.c
+    src/geometry/arc.c
+    src/geometry/circle.c
+    src/geometry/ellipse.c
+    src/geometry/functions.c
+    src/geometry/line.c
+	src/geometry/path.c
+	src/geometry/polygon.c
+	src/geometry/polyline.c
+	src/geometry/rect.c
+	src/geometry/text.c
+	src/geometry/vector.c
+
+    src/formats/format_xxx.c
+    src/formats/format_zsk.c
+
+    src/main.c
 	src/array.c
 	src/embroidery.h
+	src/embroidery_internal.h
 	src/formats.c
 	src/pattern.c
 	src/image.c
 	src/fill.c
-	src/geometry.c
 	src/compress.c
 	src/encoding.c
 	src/thread-color.c
@@ -33,24 +48,20 @@ add_compile_options(
 #	-Werror
 )
 
-add_library(embroidery_static STATIC ${C_SOURCES})
+include_directories(src)
 
-target_include_directories(embroidery_static INTERFACE src)
+add_library(embroidery_static STATIC ${C_SOURCES})
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
 add_library(embroidery SHARED ${C_SOURCES})
 
 target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
-
-target_include_directories(embroidery INTERFACE src)
 endif()
 
 if(EMBROIDERY_BUILD_CLI)
 add_executable(embroider ${C_SOURCES})
 
 target_compile_definitions(embroider PUBLIC LIBEMBROIDERY_CLI)
-
-target_include_directories(embroider INTERFACE src)
 
 if (WIN32)
 else (WIN32)

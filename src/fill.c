@@ -146,7 +146,7 @@ threshold_method(EmbImage *image, int *n_points,
 * bias the distance operator to prefer horizontal direction.
 */
 static void
-greedy_algorithm(int *points, int n_points, int width, double bias)
+greedy_algorithm(int *points, int n_points, int width, EmbReal bias)
 {
     printf("points[0] = %d\n", points[0]);
     printf("n_points = %d\n", n_points);
@@ -156,7 +156,7 @@ greedy_algorithm(int *points, int n_points, int width, double bias)
     int i, j;
     for (i=0; i<n_points-1; i++) {
         int stor;
-        double shortest = 1.0e20;
+        EmbReal shortest = 1.0e20;
         int next = i+1;
         /* Find nearest neighbour. */
         int x1 = points[i]%width;
@@ -167,7 +167,7 @@ greedy_algorithm(int *points, int n_points, int width, double bias)
                 continue;
             }
             int y = y1 - (points[j]/width);
-            double distance = x*x + bias*y*y;
+            EmbReal distance = x*x + bias*y*y;
             if (distance < shortest) {
                 next = j;
                 shortest = distance;
@@ -185,7 +185,7 @@ greedy_algorithm(int *points, int n_points, int width, double bias)
 
 static void
 save_points_to_pattern(
-    EmbPattern *pattern, int *points, int n_points, double scale, int width, int height)
+    EmbPattern *pattern, int *points, int n_points, EmbReal scale, int width, int height)
 {
     int i;
     for (i=0; i<n_points; i++) {
@@ -209,10 +209,10 @@ void
 embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
 {
     /* Size of the crosses in millimeters. */
-    double scale = 0.1;
+    EmbReal scale = 0.1;
     int sample_w = 3;
     int sample_h = 3;
-    double bias = 1.2;
+    EmbReal bias = 1.2;
     int *points;
     int n_points;
 
@@ -237,10 +237,10 @@ embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
 {
     int i;
     /* Size of the crosses in millimeters. */
-    double scale = 0.1;
+    EmbReal scale = 0.1;
     int sample_w = 5;
     int sample_h = 5;
-    double bias = 1.0;
+    EmbReal bias = 1.0;
     int *points;
     int n_points;
     int width = 1000;
@@ -248,7 +248,7 @@ embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
     greedy_algorithm(points, n_points, width, bias);
 
     for (i=0; i<n_points; i++) {
-        double x, y;
+        EmbReal x, y;
         x = points[i]%width;
         y = points[i]/width;
         printf("%f %f\n", x, y);
@@ -272,7 +272,7 @@ hilbert_curve(EmbPattern *pattern, int iterations)
     */
     char *state;
     int i, position[2], direction;
-    double scale = 1.0;
+    EmbReal scale = 1.0;
 
     /* Make the n-th iteration. */
     state = malloc(MAX_STITCHES*10);
@@ -380,14 +380,14 @@ StitchBlock* BreakIntoColorBlocks(EmbPattern *pattern)
 StitchBlock * BreakIntoSeparateObjects(EmbStitchBlock* blocks)
 {
     int i, block;
-    double previousAngle = 0.0;
+    EmbReal previousAngle = 0.0;
     for (block=0; block<blocks->length; block++) {
         int stitches = new List<VectorStitch>();
         block.Stitches[0].Type = VectorStitchType.Contour;
         block.Stitches[block.Stitches.Count - 1].Type = VectorStitchType.Contour;
 
         for (int i = 0; i < block.Stitches.Count - 2; i++) { /* step 0 */
-            double dx = (embVector_relativeX(block.Stitches[i].Xy, block.Stitches[i + 1].Xy, block.Stitches[i + 2].Xy));
+            EmbReal dx = (embVector_relativeX(block.Stitches[i].Xy, block.Stitches[i + 1].Xy, block.Stitches[i + 2].Xy));
             block.Stitches[i + 1].Type = dx <= 0 ? VectorStitchType.Run : VectorStitchType.Contour;
             block.Stitches[i].Angle = GetAngle(block.Stitches[i], block.Stitches[i + 1]);
             stitches.Add(block.Stitches[i].Clone());
@@ -550,7 +550,7 @@ EmbPattern SimplifyOutline(EmbPattern pattern)
 }
 
 bool[] _usePt;
-double _distanceTolerance;
+EmbReal _distanceTolerance;
 
 /* Removes all collinear points on the polygon. */
 Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance)
@@ -619,11 +619,11 @@ void SimplifySection(Vertices vertices, int i, int j)
 
     Vector2 a = vertices[i];
     Vector2 b = vertices[j];
-    double maxDistance = -1.0;
+    EmbReal maxDistance = -1.0;
     int maxIndex = i;
     for (int k = i + 1; k < j; k++)
     {
-        double distance = DistancePointLine(vertices[k], a, b);
+        EmbReal distance = DistancePointLine(vertices[k], a, b);
 
         if (distance > maxDistance)
         {
@@ -642,7 +642,7 @@ void SimplifySection(Vertices vertices, int i, int j)
     }
 }
 
-double DistancePointLine(EmbVector p, EmbVector a, EmbVector b)
+EmbReal DistancePointLine(EmbVector p, EmbVector a, EmbVector b)
 {
     /* if start == end, then use point-to-point distance */
     if (a.X == b.X && a.Y == b.Y)
@@ -661,7 +661,7 @@ double DistancePointLine(EmbVector p, EmbVector a, EmbVector b)
                 0<r<1 Point is interior to AB
     */
 
-    double r = ((p.X - a.X) * (b.X - a.X) + (p.Y - a.Y) * (b.Y - a.Y))
+    EmbReal r = ((p.X - a.X) * (b.X - a.X) + (p.Y - a.Y) * (b.Y - a.Y))
                /
                ((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y));
 
@@ -677,7 +677,7 @@ double DistancePointLine(EmbVector p, EmbVector a, EmbVector b)
                 Then the distance from C to Point = |s|*Curve.
     */
 
-    double s = ((a.Y - p.Y) * (b.X - a.X) - (a.X - p.X) * (b.Y - a.Y))
+    EmbReal s = ((a.Y - p.Y) * (b.X - a.X) - (a.X - p.X) * (b.Y - a.Y))
                /
                ((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y));
 

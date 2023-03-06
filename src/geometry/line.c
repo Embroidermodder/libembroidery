@@ -23,7 +23,7 @@ embLine_normalVector(EmbLine line, EmbVector* result, int clockwise)
         printf("result argument is null\n");
         return;
     }
-    embVector_subtract(line.end, line.start, result);
+    *result = embVector_subtract(line.end, line.start);
     embVector_normalize(*result, result);
     temp = result->x;
     result->x = result->y;
@@ -34,11 +34,10 @@ embLine_normalVector(EmbLine line, EmbVector* result, int clockwise)
     }
 }
 
-EmbVector embLine_toVector(EmbLine line)
+EmbVector
+embLine_toVector(EmbLine line)
 {
-    EmbVector v;
-    embVector_subtract(line.end, line.start, &v);
-    return v;
+    return embVector_subtract(line.end, line.start);
 }
 
 /*

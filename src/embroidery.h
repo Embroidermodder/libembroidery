@@ -115,21 +115,25 @@ extern "C" {
 #define shv_thread              28
 #define dxf_color               29
 
-#define EMB_ARC                 0
-#define EMB_CIRCLE              1
-#define EMB_ELLIPSE             2
-#define EMB_FLAG                3
-#define EMB_LINE                4
-#define EMB_PATH                5
-#define EMB_POINT               6
-#define EMB_POLYGON             7
-#define EMB_POLYLINE            8 
-#define EMB_RECT                9
-#define EMB_SPLINE              10
-#define EMB_STITCH              11
-#define EMB_VECTOR              12
-#define EMB_CHAR                13
-#define EMB_ARRAY               14
+#define EMB_ARRAY               0
+#define EMB_ARC                 1
+#define EMB_CIRCLE              2
+#define EMB_DIM_DIAMETER        3
+#define EMB_DIM_LEADER          4
+#define EMB_ELLIPSE             5
+#define EMB_FLAG                6
+#define EMB_LINE                7
+#define EMB_IMAGE               8
+#define EMB_PATH                9
+#define EMB_POINT               10
+#define EMB_POLYGON             11
+#define EMB_POLYLINE            12
+#define EMB_RECT                13
+#define EMB_SPLINE              14
+#define EMB_STITCH              15
+#define EMB_TEXT_SINGLE         16
+#define EMB_TEXT_MULTI          17
+#define EMB_VECTOR              18
 
 #define EMBFORMAT_UNSUPPORTED    0
 #define EMBFORMAT_STITCHONLY     1
@@ -387,6 +391,26 @@ typedef struct LSYSTEM {
     char **rules;
 } L_system;
 
+typedef struct EmbGeometry_ {
+    union {
+        EmbArc arc;
+        EmbCircle circle;
+        EmbColor color;
+        EmbEllipse ellipse;
+        int flag;
+        EmbLine line;
+        EmbPath path;
+        EmbPoint point;
+        EmbPolygon polygon;
+        EmbPolyline polyline;
+        EmbRect rect;
+        EmbSpline spline;
+    } object;
+    int type;
+    int lineType;
+    EmbColor color;
+} EmbGeometry;
+
 struct EmbArray_ {
     EmbArc *arc;
     EmbCircle *circle;
@@ -506,9 +530,9 @@ EMB_PUBLIC EmbThread embThread_getRandom(void);
 
 EMB_PUBLIC void embVector_normalize(EmbVector vector, EmbVector* result);
 EMB_PUBLIC void embVector_multiply(EmbVector vector, EmbReal magnitude, EmbVector* result);
-EMB_PUBLIC void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result);
-EMB_PUBLIC void embVector_average(EmbVector v1, EmbVector v2, EmbVector* result);
-EMB_PUBLIC void embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result);
+EMB_PUBLIC EmbVector embVector_add(EmbVector v1, EmbVector v2);
+EMB_PUBLIC EmbVector embVector_average(EmbVector v1, EmbVector v2);
+EMB_PUBLIC EmbVector embVector_subtract(EmbVector v1, EmbVector v2);
 EMB_PUBLIC EmbReal embVector_dot(EmbVector v1, EmbVector v2);
 EMB_PUBLIC EmbReal embVector_cross(EmbVector v1, EmbVector v2);
 EMB_PUBLIC void embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result);
@@ -564,6 +588,12 @@ EMB_PUBLIC EmbTime embTime_time(EmbTime* t);
 
 EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbArray* lines, EmbReal thickness, EmbSatinOutline* result);
 EMB_PUBLIC EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density);
+
+EMB_PUBLIC EmbGeometry *embGeometry_init(int type_in);
+EMB_PUBLIC void embGeometry_free(EmbGeometry *obj);
+EMB_PUBLIC void embGeometry_move(EmbGeometry *obj, EmbVector delta);
+EMB_PUBLIC EmbRect embGeometry_boundingRect(EmbGeometry *obj);
+EMB_PUBLIC void embGeometry_vulcanize(EmbGeometry *obj);
 
 EMB_PUBLIC EmbPattern* embPattern_create(void);
 EMB_PUBLIC void embPattern_hideStitchesOverLength(EmbPattern* p, int length);

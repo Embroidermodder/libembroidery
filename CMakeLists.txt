@@ -29,6 +29,7 @@ set(C_SOURCES
 	src/embroidery.h
 	src/embroidery_internal.h
 	src/formats.c
+	src/geometry.c
 	src/pattern.c
 	src/image.c
 	src/fill.c

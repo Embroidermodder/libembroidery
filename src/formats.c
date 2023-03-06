@@ -957,7 +957,7 @@ write100(EmbPattern* pattern, FILE* file)
         EmbStitch st = pattern->stitchList->stitch[i];
         delta.x = st.x - position.x;
         delta.y = st.y - position.y;
-        embVector_add(position, delta, &position);
+        position = embVector_add(position, delta);
         b[0] = 0;
         b[1] = 0;
         if (delta.x < 0.0) {

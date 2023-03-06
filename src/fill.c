@@ -747,8 +747,8 @@ void MergeParallelEdges(EmbArray *vertices, float tolerance)
         int lower = (i == 0) ? (vertices.Count - 1) : (i - 1);
         int upper = (i == vertices.Count - 1) ? (0) : (i + 1);
 
-        embVector_subtract(vertices[i], vertices[lower], &delta0);
-        embVector_subtract(vertices[upper], vertices[i], &delta1);
+        delta0 = embVector_subtract(vertices[i], vertices[lower]);
+        delta1 = embVector_subtract(vertices[upper], vertices[i]);
         float norm0 = embVector_length(delta0);
         float norm1 = embVector_length(delta0);
 
@@ -812,7 +812,7 @@ void embPolygon_reduceByDistance(EmbArray *vertices, EmbArray *simplified, float
         EmbVector delta;
         int nextId = (i + 1) % vertices->count;
 
-        embVector_subtract(vertices->vector[nextId], vertices->vector[i], &delta);
+        delta = embVector_subtract(vertices->vector[nextId], vertices->vector[i]);
 
         /* If they are closer than the distance, continue */
         if (embVector_length(delta) < distance) {

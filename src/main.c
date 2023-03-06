@@ -547,15 +547,15 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
         embLine_normalVector(line, &v1, 1);
 
         embVector_multiply(v1, halfThickness, &temp);
-        embVector_add(temp, lines->vector[i - 1], &temp);
+        temp = embVector_add(temp, lines->vector[i - 1]);
         embArray_addVector(outline.side1, temp);
-        embVector_add(temp, lines->vector[i], &temp);
+        temp = embVector_add(temp, lines->vector[i]);
         embArray_addVector(outline.side1, temp);
 
         embVector_multiply(v1, -halfThickness, &temp);
-        embVector_add(temp, lines->vector[i - 1], &temp);
+        temp = embVector_add(temp, lines->vector[i - 1]);
         embArray_addVector(outline.side2, temp);
-        embVector_add(temp, lines->vector[i], &temp);
+        temp = embVector_add(temp, lines->vector[i]);
         embArray_addVector(outline.side2, temp);
     }
 
@@ -621,13 +621,13 @@ embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density)
 
     if (result->length > 0) {
         for (j = 0; j < result->length - 1; j++) {
-            embVector_subtract(result->side1->vector[j+1], result->side1->vector[j], &topDiff);
-            embVector_subtract(result->side2->vector[j+1], result->side2->vector[j], &bottomDiff);
+            topDiff = embVector_subtract(result->side1->vector[j+1], result->side1->vector[j]);
+            bottomDiff = embVector_subtract(result->side2->vector[j+1], result->side2->vector[j]);
 
-            embVector_average(result->side1->vector[j], result->side2->vector[j], &midLeft);
-            embVector_average(result->side1->vector[j+1], result->side2->vector[j+1], &midRight);
+            midLeft = embVector_average(result->side1->vector[j], result->side2->vector[j]);
+            midRight = embVector_average(result->side1->vector[j+1], result->side2->vector[j+1]);
 
-            embVector_subtract(midLeft, midRight, &midDiff);
+            midDiff = embVector_subtract(midLeft, midRight);
             midLength = embVector_length(midDiff);
 
             numberOfSteps = (int)(midLength * density / 200);
@@ -642,8 +642,8 @@ embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density)
                 }
                 embArray_addVector(stitches, currTop);
                 embArray_addVector(stitches, currBottom);
-                embVector_add(currTop, topStep, &currTop);
-                embVector_add(currBottom, bottomStep, &currBottom);
+                currTop = embVector_add(currTop, topStep);
+                currBottom = embVector_add(currBottom, bottomStep);
             }
         }
         embArray_addVector(stitches, currTop);

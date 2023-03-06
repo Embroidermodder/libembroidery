@@ -57,7 +57,7 @@ getCircleCircleIntersections(EmbCircle c0, EmbCircle c1,
     EmbVector delta;
     EmbReal a, h, px2, py2, mx, my, d;
     /* Distance between centers */
-    embVector_subtract(c1.center, c0.center, &delta);
+    delta = embVector_subtract(c1.center, c0.center);
     d = embVector_length(delta);
 
     /*Circles share centers. This results in division by zero,

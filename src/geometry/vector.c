@@ -44,45 +44,39 @@ embVector_multiply(EmbVector vector, EmbReal magnitude, EmbVector* result)
 }
 
 /**
- * The sum of vectors \a v1 and \a v2 returned as \a result.
+ * The sum of vectors \a v1 and \a v2 returned as a vector.
  */
-void
-embVector_add(EmbVector v1, EmbVector v2, EmbVector* result)
+EmbVector
+embVector_add(EmbVector v1, EmbVector v2)
 {
-    if (!result) {
-        printf("ERROR: emb-vector.c embVector_add(), result argument is null\n");
-        return;
-    }
-    result->x = v1.x + v2.x;
-    result->y = v1.y + v2.y;
+    EmbVector result;
+    result.x = v1.x + v2.x;
+    result.y = v1.y + v2.y;
+    return result;
 }
 
 /**
- * The average of vectors \a v1 and \a v2 returned as \a result.
+ * The average of vectors \a v1 and \a v2 returned as a vector.
  */
-void
-embVector_average(EmbVector v1, EmbVector v2, EmbVector* result)
+EmbVector
+embVector_average(EmbVector v1, EmbVector v2)
 {
-    if (!result) {
-        printf("ERROR: emb-vector.c embVector_add(), result argument is null\n");
-        return;
-    }
-    result->x = (v1.x + v2.x) / 2.0;
-    result->y = (v1.y + v2.y) / 2.0;
+    EmbVector result;
+    result.x = 0.5*(v1.x + v2.x);
+    result.y = 0.5*(v1.y + v2.y);
+    return result;
 }
 
 /**
  * The difference between vectors \a v1 and \a v2 returned as \a result.
  */
-void
-embVector_subtract(EmbVector v1, EmbVector v2, EmbVector* result)
+EmbVector
+embVector_subtract(EmbVector v1, EmbVector v2)
 {
-    if (!result) {
-        printf("ERROR: emb-vector.c embVector_subtract(), result argument is null\n");
-        return;
-    }
-    result->x = v1.x - v2.x;
-    result->y = v1.y - v2.y;
+    EmbVector result;
+    result.x = v1.x - v2.x;
+    result.y = v1.y - v2.y;
+    return result;
 }
 
 /**
@@ -149,8 +143,8 @@ float
 embVector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3)
 {
     EmbVector b, c;
-    embVector_subtract(a1, a2, &b);
-    embVector_subtract(a3, a2, &c);
+    b = embVector_subtract(a1, a2);
+    c = embVector_subtract(a3, a2);
     return embVector_dot(b, c);
 }
 
@@ -161,8 +155,8 @@ float
 embVector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3)
 {
     EmbVector b, c;
-    embVector_subtract(a1, a2, &b);
-    embVector_subtract(a3, a2, &c);
+    b = embVector_subtract(a1, a2);
+    c = embVector_subtract(a3, a2);
     return embVector_cross(b, c);
 }
 
@@ -193,7 +187,6 @@ embVector_unit(float angle)
 float
 embVector_distance(EmbVector p, EmbVector q)
 {
-    EmbVector delta;
-    embVector_subtract(p, q, &delta);
+    EmbVector delta = embVector_subtract(p, q);
     return embVector_length(delta);
 }

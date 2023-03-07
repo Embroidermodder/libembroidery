@@ -1,43 +1,56 @@
 /*
- * This file is part of libembroidery.
+ * Libembroidery 1.0.0-alpha
+ * https://www.libembroidery.org
  *
- * Copyright 2018-2022 The Embroidermodder Team
+ * A library for reading, writing, altering and otherwise
+ * processing machine embroidery files and designs.
+ *
+ * Also, the core library supporting the Embroidermodder Project's
+ * family of machine embroidery interfaces.
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright 2018-2024 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
- * This file contains all the read and write functions for the
- * library.
+ * -----------------------------------------------------------------------------
  *
- *******************************************************************
+ * Only uses source from this directory or standard C libraries,
+ * not including POSIX headers like unistd since this library
+ * needs to support non-POSIX systems like Windows.
  *
- *  Thanks to Jason Weiler for describing the binary formats of the HUS and
- *  VIP formats at:
+ * -----------------------------------------------------------------------------
  *
- *  http://www.jasonweiler.com/HUSandVIPFileFormatInfo.html
+ * This is section on compression is a work in progress.
  *
- *  Further thanks to github user tatarize for solving the mystery of the
- *  compression in:
+ * Thanks to Jason Weiler for describing the binary formats of the HUS and
+ * VIP formats at:
  *
- *  https://github.com/EmbroidePy/pyembroidery
+ * http://www.jasonweiler.com/HUSandVIPFileFormatInfo.html
  *
- *  with a description of that work here:
+ * Further thanks to github user tatarize for solving the mystery of the
+ * compression in:
  *
- *  https://stackoverflow.com/questions/7852670/greenleaf-archive-library
+ * https://github.com/EmbroidePy/pyembroidery
  *
- *  This is based on their work.
- *******************************************************************************
+ * with a description of that work here:
+ *
+ * https://stackoverflow.com/questions/7852670/greenleaf-archive-library
+ *
+ * This is based on their work.
  */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "embroidery_internal.h"
+#include "embroidery.h"
 
-/* This is a work in progress.
- * ---------------------------
- */
+int huffman_lookup_data[2];
 
-/* This avoids the now unnecessary compression by placing a
+/* Compress data "data" of length "length" to "output" with length "output_length".
+ * Returns whether it was successful as an int.
+ *
+ * This avoids the now unnecessary compression by placing a
  * minimal header of 6 bytes and using only literals in the
  * huffman compressed part (see the sources above).
  */
@@ -57,7 +70,8 @@ int hus_compress(char *data, int length, char *output, int *output_length)
 
 /* These next 2 functions represent the Huffman class in tartarize's code.
  */
-void huffman_build_table(huffman *h)
+void
+huffman_build_table(huffman *h)
 {
     int bit_length, i, max_length, size;
     max_length = 0;
@@ -82,8 +96,9 @@ void huffman_build_table(huffman *h)
     }
 }
 
-int huffman_lookup_data[2];
-
+/* Lookup a byte_lookup in huffman table a h return result
+ * as two bytes using the memory huffman_lookup_data.
+ */
 int *huffman_lookup(huffman h, int byte_lookup)
 {
     int *out = huffman_lookup_data;
@@ -103,7 +118,9 @@ void compress_init()
 
 }
 
-int compress_get_bits(compress *c, int length)
+/* Return bits from compress struct pointed to by "c" of length "length". */
+int
+compress_get_bits(compress *c, int length)
 {
     int i, end_pos_in_bits, start_pos_in_bytes,
         end_pos_in_bytes, value, mask_sample_bits,
@@ -128,19 +145,28 @@ int compress_get_bits(compress *c, int length)
     return original;
 }
 
-int compress_pop(compress *c, int bit_count)
+/* a c a bit_count . Returns.
+ */
+int
+compress_pop(compress *c, int bit_count)
 {
     int value = compress_get_bits(c, bit_count);
     c->bit_position += bit_count;
     return value;
 }
 
-int compress_peek(compress *c, int bit_count)
+/* a c a bit_count. Returns.
+ */
+int
+compress_peek(compress *c, int bit_count)
 {
     return compress_get_bits(c, bit_count);
 }
 
-int compress_read_variable_length(compress *c)
+/* a c. Returns.
+ */
+int
+compress_read_variable_length(compress *c)
 {
     int q, m, s;
     m = compress_pop(c, 3);
@@ -159,7 +185,10 @@ int compress_read_variable_length(compress *c)
     return m;
 }
 
-void compress_load_character_length_huffman(compress *c)
+/* a c  . Returns.
+ */
+void
+compress_load_character_length_huffman(compress *c)
 {
     int count;
     count = compress_pop(c, 5);
@@ -181,7 +210,10 @@ void compress_load_character_length_huffman(compress *c)
     huffman_build_table(&(c->character_length_huffman));
 }
 
-void compress_load_character_huffman(compress *c)
+/* Load character table to compress struct a c. Returns nothing.
+ */
+void
+compress_load_character_huffman(compress *c)
 {
     int count;
     count = compress_pop(c, 9);
@@ -212,7 +244,10 @@ void compress_load_character_huffman(compress *c)
     huffman_build_table(&(c->character_huffman));
 }
 
-void compress_load_distance_huffman(compress *c)
+/* a c . Returns nothing.
+ */
+void
+compress_load_distance_huffman(compress *c)
 {
     int count;
     count = compress_pop(c, 5);
@@ -227,8 +262,11 @@ void compress_load_distance_huffman(compress *c)
     }
     huffman_build_table(&(c->distance_huffman));
 }
-    
-void compress_load_block(compress *c)
+
+/* a c . Returns nothing.
+ */
+void
+compress_load_block(compress *c)
 {
     c->block_elements = compress_pop(c, 16);
     compress_load_character_length_huffman(c);
@@ -236,7 +274,10 @@ void compress_load_block(compress *c)
     compress_load_distance_huffman(c);
 }
 
-int compress_get_token(compress *c)
+/* a c . Returns the token as an int.
+ */
+int
+compress_get_token(compress *c)
 {
     int *h;
     if (c->block_elements <= 0) {
@@ -248,7 +289,10 @@ int compress_get_token(compress *c)
     return h[0];
 }
 
-int compress_get_position(compress *c)
+/* a c . Returns the position as an int.
+ */
+int
+compress_get_position(compress *c)
 {
     int *h, v;
     h = huffman_lookup(c->distance_huffman, compress_peek(c, 16));
@@ -261,7 +305,11 @@ int compress_get_position(compress *c)
     return v;
 }
 
-int hus_decompress(char *data, int length, char *output, int *output_length)
+/* a data a length a output a output_length .
+ * Returns whether the decompression was successful.
+ */
+int
+hus_decompress(char *data, int length, char *output, int *output_length)
 {
     int character, i, j;
     compress *c = (compress*)malloc(sizeof(compress));
@@ -290,6 +338,7 @@ int hus_decompress(char *data, int length, char *output, int *output_length)
             }
         }
     }
-    free(c);
+    safe_free(c);
     return 0;
 }
+

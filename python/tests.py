@@ -11,11 +11,6 @@ r"""
 
     --------------------------------------------------
 
-    Part of libembroidery
-
-    Copyright 2022 The Embroidermodder Team
-    Licensed under the terms of the zlib licence.
-
     The test suite for the libembroidery Python bindings.
 
     Similar to, although not a replica of, the internal tests. This
@@ -29,11 +24,10 @@ r"""
 import unittest
 import math
 
-from libembroidery.parser import list_processor
-import libembroidery as emb
-from libembroidery import Pattern, Vector, Circle
-from libembroidery.tools import debug_message
-
+from embroidery.parser import list_processor
+import embroidery as emb
+from embroidery import Pattern, Vector, Circle
+from embroidery.tools import debug_message
 
 def create_test_file_1(outf="test01.csv"):
     r"""
@@ -158,7 +152,7 @@ class TestLibembroidery(unittest.TestCase):
         hilbert_curve_result = pattern.hilbert_curve(3)
         render_result = image.render(pattern, 20.0, 20.0, "hilbert_level_3.ppm")
         simulate_result = image.simulate(pattern, 20.0, 20.0, "hilbert_level_3.avi")
-        
+
         self.assertEqual(hilbert_curve_result, 0)
         self.assertEqual(render_result, 0)
         self.assertEqual(simulate_result, 0)

@@ -7,62 +7,48 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 
 option( EMBROIDERY_BUILD_SHARED_LIBS "Build shared library." ON )
 option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
+option( EMBROIDERY_TESTING "Run tests." ON )
 
-set(C_SOURCES
-    src/geometry/arc.c
-    src/geometry/circle.c
-    src/geometry/ellipse.c
-    src/geometry/functions.c
-    src/geometry/line.c
-	src/geometry/path.c
-	src/geometry/polygon.c
-	src/geometry/polyline.c
-	src/geometry/rect.c
-	src/geometry/text.c
-	src/geometry/vector.c
+if (WIN32)
+#add_compile_options(
+#    -O2
+#)
+else (WIN32)
+add_compile_options(
+    -g
+    -O2
+    -fPIC
+    -std=c99
+    -Wall
+    -Wextra
+#    -Werror
+)
+endif (WIN32)
 
-    src/formats/format_xxx.c
-    src/formats/format_zsk.c
-
-    src/main.c
-	src/array.c
-	src/embroidery.h
-	src/embroidery_internal.h
+set(LIBRARY_SRC
+	src/pattern.c
+	src/compress.c
 	src/formats.c
 	src/geometry.c
-	src/pattern.c
-	src/image.c
-	src/fill.c
-	src/compress.c
-	src/encoding.c
-	src/thread-color.c
+	src/script.c
+	src/testing.c
+	src/data.c
+	src/embroidery.h
+
+	extern/mpc/mpc.c
+	extern/mpc/mpc.h
 )
 
-add_compile_options(
-	-g
-	-O2
-	-fPIC
-	-std=c99
-	-pedantic
-	-Wall
-	-Wextra
-#	-Werror
-)
-
-include_directories(src)
-
-add_library(embroidery_static STATIC ${C_SOURCES})
+add_library(embroidery_static STATIC ${LIBRARY_SRC})
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
-add_library(embroidery SHARED ${C_SOURCES})
+add_library(embroidery SHARED ${LIBRARY_SRC})
 
 target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
 endif()
 
 if(EMBROIDERY_BUILD_CLI)
-add_executable(embroider ${C_SOURCES})
-
-target_compile_definitions(embroider PUBLIC LIBEMBROIDERY_CLI)
+add_executable(embroider src/embroider.c)
 
 if (WIN32)
 else (WIN32)
@@ -71,11 +57,14 @@ endif (WIN32)
 endif()
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
-if(APPLE)
+if(WIN32)
+
+# TODO: Test this.
+# https://cmake.org/cmake/help/book/mastering-cmake/chapter/Install.html
+
 install(
-    FILES
-        src/embroidery.h
-    DESTINATION /usr/local/include
+    FILES src/embroidery.h
+    DESTINATION "<SystemDrive>/Program Files/<Project Name>"
 )
 
 install(
@@ -83,15 +72,19 @@ install(
        embroidery
        embroidery_static
        embroider
-    LIBRARY DESTINATION /usr/local/lib
-    ARCHIVE DESTINATION /usr/local/lib
-    RUNTIME DESTINATION /usr/bin
+    EXPORT embroidery
+    LIBRARY DESTINATION "<SystemDrive>/Program Files/<Project Name>"
+    ARCHIVE DESTINATION "<SystemDrive>/Program Files/<Project Name>"
+    RUNTIME DESTINATION "<SystemDrive>/Program Files/<Project Name>"
 )
-else()
+
+else(WIN32)
+
+include(GNUInstallDirs)
+
 install(
-    FILES
-        src/embroidery.h
-    DESTINATION /usr/include
+    FILES src/embroidery.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 install(
@@ -99,9 +92,25 @@ install(
        embroidery
        embroidery_static
        embroider
-    LIBRARY DESTINATION /usr/lib
-    ARCHIVE DESTINATION /usr/lib
-    RUNTIME DESTINATION /usr/bin
+    EXPORT embroidery
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+endif(WIN32)
 endif()
-endif()
+
+# https://cmake.org/cmake/help/book/mastering-cmake/chapter/Packaging%20With%20CPack.html
+
+if(WIN32)
+set(CPACK_GENERATOR "WIX")
+set(CPACK_SOURCE_GENERATOR "WIX")
+else(WIN32)
+set(CPACK_GENERATOR "DEB")
+set(CPACK_SOURCE_GENERATOR "DEB")
+endif(WIN32)
+set(CPACK_PACKAGE_DIRECTORY build)
+set(CPACK_PACKAGE_VENDOR "The Embroidermodder Team")
+set(CPACK_SOURCE_IGNORE_FILES .git .github)
+
+include(CPack)

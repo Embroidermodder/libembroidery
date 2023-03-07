@@ -417,7 +417,7 @@ struct EmbArray_ {
     EmbColor *color;
 	EmbEllipse *ellipse;
 	int *flag;
-	EmbLine *line;
+	EmbGeometry *geometry;
 	EmbPath *path;
 	EmbPoint *point;
 	EmbPolygon *polygon;
@@ -462,7 +462,7 @@ typedef struct EmbPattern_
     EmbArray* arcs;
     EmbArray* circles;
     EmbArray* ellipses;
-    EmbArray* lines;
+    EmbArray* geometry;
     EmbArray* paths;
     EmbArray* points;
     EmbArray* polygons;

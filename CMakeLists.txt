@@ -21,6 +21,14 @@ set(C_SOURCES
 	src/geometry/text.c
 	src/geometry/vector.c
 
+    src/formats/format_dem.c
+    src/formats/format_t01.c
+    src/formats/format_t09.c
+    src/formats/format_tap.c
+    src/formats/format_thr.c
+    src/formats/format_txt.c
+    src/formats/format_u00.c
+    src/formats/format_u01.c
     src/formats/format_xxx.c
     src/formats/format_zsk.c
 

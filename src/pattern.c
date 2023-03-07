@@ -37,7 +37,7 @@ embPattern_create(void)
     p->arcs = 0;
     p->circles = 0;
     p->ellipses = 0;
-    p->lines = 0;
+    p->geometry = embArray_create(EMB_LINE);
     p->paths = 0;
     p->points = 0;
     p->polygons = 0;
@@ -369,7 +369,7 @@ embPattern_calcBoundingBox(EmbPattern* p)
     /* TODO: Come back and optimize this mess so that after going thru all objects
             and stitches, if the rectangle isn't reasonable, then return a default rect */
     if (p->stitchList->count == 0 &&
-        !(p->arcs || p->circles || p->ellipses || p->lines || p->points ||
+        !(p->arcs || p->circles || p->ellipses || p->geometry || p->points ||
         p->polygons || p->polylines || p->rects || p->splines)) {
         r.top = 0.0;
         r.left = 0.0;
@@ -427,9 +427,9 @@ embPattern_calcBoundingBox(EmbPattern* p)
         }
     }
 
-    if (p->lines) {
-        for (i = 0; i < p->lines->count; i++) {
-            line = p->lines->line[i];
+    if (p->geometry) {
+        for (i = 0; i < p->geometry->count; i++) {
+            line = p->geometry->geometry[i].object.line;
             r.left = EMB_MIN(r.left, line.start.x);
             r.left = EMB_MIN(r.left, line.end.x);
             r.top = EMB_MIN(r.top, line.start.y);
@@ -564,15 +564,15 @@ embPattern_flip(EmbPattern* p, int horz, int vert)
         }
     }
 
-    if (p->lines) {
-        for (i = 0; i < p->lines->count; i++) {
+    for (i = 0; i < p->geometry->count; i++) {
+        if (p->geometry->geometry[i].type) {
             if (horz) {
-                p->lines->line[i].start.x *= -1.0;
-                p->lines->line[i].end.x *= -1.0;
+                p->geometry->geometry[i].object.line.start.x *= -1.0;
+                p->geometry->geometry[i].object.line.end.x *= -1.0;
             }
             if (vert) {
-                p->lines->line[i].start.y *= -1.0;
-                p->lines->line[i].end.y *= -1.0;
+                p->geometry->geometry[i].object.line.start.y *= -1.0;
+                p->geometry->geometry[i].object.line.end.y *= -1.0;
             }
         }
     }
@@ -802,7 +802,7 @@ embPattern_free(EmbPattern* p)
     embArray_free(p->arcs);
     embArray_free(p->circles);
     embArray_free(p->ellipses);
-    embArray_free(p->lines);
+    embArray_free(p->geometry);
     embArray_free(p->paths);
     embArray_free(p->points);
     embArray_free(p->polygons);
@@ -856,10 +856,10 @@ embPattern_addLineAbs(EmbPattern* p, EmbLine line)
         printf("ERROR: emb-pattern.c embPattern_addLineObjectAbs(), p argument is null\n");
         return;
     }
-    if (p->circles == 0) {
-         p->lines = embArray_create(EMB_LINE);
+    if (p->geometry == 0) {
+         p->geometry = embArray_create(EMB_LINE);
     }
-    embArray_addLine(p->lines, line);
+    embArray_addLine(p->geometry, line);
 }
 
 void

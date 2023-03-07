@@ -47,7 +47,7 @@ embArray_create(int type)
         p->point = (EmbPoint*)malloc(CHUNK_SIZE*sizeof(EmbPoint));
         break;
     case EMB_LINE:
-        p->line = (EmbLine*)malloc(CHUNK_SIZE*sizeof(EmbLine));
+        p->geometry = (EmbGeometry*)malloc(CHUNK_SIZE*sizeof(EmbGeometry));
         break;
     case EMB_POLYGON:
         p->polygon = (EmbPolygon*)malloc(CHUNK_SIZE*sizeof(EmbPolygon));
@@ -115,8 +115,8 @@ embArray_resize(EmbArray *p)
         if (!p->point) return 0;
         break;
     case EMB_LINE:
-        p->line = (EmbLine *)realloc(p->line, p->length*sizeof(EmbLine));
-        if (!p->line) return 0;
+        p->geometry = (EmbGeometry *)realloc(p->geometry, p->length*sizeof(EmbGeometry));
+        if (!p->geometry) return 0;
         break;
     case EMB_POLYGON:
         p->polygon = (EmbPolygon *)realloc(p->polygon, p->length*sizeof(EmbPolygon));
@@ -182,7 +182,7 @@ void embArray_copy(EmbArray *dst, EmbArray *src)
         memcpy(dst->point, src->point, sizeof(EmbPoint)*src->count);
         break;
     case EMB_LINE:
-        memcpy(dst->line, src->line, sizeof(EmbLine)*src->count);
+        memcpy(dst->geometry, src->geometry, sizeof(EmbGeometry)*src->count);
         break;
     case EMB_POLYGON:
         memcpy(dst->polygon, src->polygon, sizeof(int)*src->count);
@@ -223,7 +223,6 @@ addGeometry(Arc, arc)
 addGeometry(Circle, circle)
 addGeometry(Ellipse, ellipse)
 addGeometry(Flag, flag)
-addGeometry(Line, line)
 addGeometry(Path, path)
 addGeometry(Point, point)
 addGeometry(Polygon, polygon)
@@ -232,6 +231,17 @@ addGeometry(Rect, rect)
 addGeometry(Stitch, stitch)
 addGeometry(Vector, vector)
 
+int
+embArray_addLine(EmbArray *a, EmbLine b)
+{
+    a->count++;
+    if (!embArray_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.line = b;
+    a->geometry[a->count - 1].type = EMB_LINE;
+    return 1;
+}
 
 void embArray_free(EmbArray* p) {
     int i;
@@ -252,7 +262,7 @@ void embArray_free(EmbArray* p) {
         free(p->flag);
         break;
     case EMB_LINE:
-        free(p->line);
+        free(p->geometry);
         break;
     case EMB_PATH:
         for (i = 0; i < p->count; i++) {

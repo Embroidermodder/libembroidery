@@ -28,12 +28,6 @@ embArray_create(int type)
     case EMB_ARC:
         p->arc = (EmbArc*)malloc(CHUNK_SIZE*sizeof(EmbArc));
         break;
-    case EMB_CIRCLE:
-        p->circle = (EmbCircle*)malloc(CHUNK_SIZE*sizeof(EmbCircle));
-        break;
-    case EMB_ELLIPSE:
-        p->ellipse = (EmbEllipse*)malloc(CHUNK_SIZE*sizeof(EmbEllipse));
-        break;
     case EMB_FLAG:
         p->flag = (int*)malloc(CHUNK_SIZE*sizeof(int));
         break;
@@ -46,6 +40,8 @@ embArray_create(int type)
     case EMB_POINT:
         p->point = (EmbPoint*)malloc(CHUNK_SIZE*sizeof(EmbPoint));
         break;
+    case EMB_CIRCLE:
+    case EMB_ELLIPSE:
     case EMB_LINE:
         p->geometry = (EmbGeometry*)malloc(CHUNK_SIZE*sizeof(EmbGeometry));
         break;
@@ -94,14 +90,6 @@ embArray_resize(EmbArray *p)
         p->arc = (EmbArc *)realloc(p->arc, p->length*sizeof(EmbArc));
         if (!p->arc) return 0;
         break;
-    case EMB_CIRCLE:
-        p->circle = (EmbCircle *)realloc(p->circle, p->length*sizeof(EmbCircle));
-        if (!p->circle) return 0;
-        break;
-    case EMB_ELLIPSE:
-        p->ellipse = (EmbEllipse *)realloc(p->ellipse, p->length*sizeof(EmbEllipse));
-        if (!p->ellipse) return 0;
-        break;
     case EMB_FLAG:
         p->flag = (int *)realloc(p->flag, p->length*sizeof(int));
         if (!p->flag) return 0;
@@ -114,6 +102,8 @@ embArray_resize(EmbArray *p)
         p->point = (EmbPoint *)realloc(p->point, p->length*sizeof(EmbPoint));
         if (!p->point) return 0;
         break;
+    case EMB_CIRCLE:
+    case EMB_ELLIPSE:
     case EMB_LINE:
         p->geometry = (EmbGeometry *)realloc(p->geometry, p->length*sizeof(EmbGeometry));
         if (!p->geometry) return 0;
@@ -166,12 +156,6 @@ void embArray_copy(EmbArray *dst, EmbArray *src)
     case EMB_ARC:
         memcpy(dst->arc, src->arc, sizeof(EmbArc)*src->count);
         break;
-    case EMB_CIRCLE:
-        memcpy(dst->circle, src->circle, sizeof(EmbCircle)*src->count);
-        break;
-    case EMB_ELLIPSE:
-        memcpy(dst->ellipse, src->ellipse, sizeof(EmbEllipse)*src->count);
-        break;
     case EMB_FLAG:
         memcpy(dst->flag, src->flag, sizeof(int)*src->count);
         break;
@@ -181,6 +165,8 @@ void embArray_copy(EmbArray *dst, EmbArray *src)
     case EMB_POINT:
         memcpy(dst->point, src->point, sizeof(EmbPoint)*src->count);
         break;
+    case EMB_CIRCLE:
+    case EMB_ELLIPSE:
     case EMB_LINE:
         memcpy(dst->geometry, src->geometry, sizeof(EmbGeometry)*src->count);
         break;
@@ -220,8 +206,6 @@ void embArray_copy(EmbArray *dst, EmbArray *src)
     }
 
 addGeometry(Arc, arc)
-addGeometry(Circle, circle)
-addGeometry(Ellipse, ellipse)
 addGeometry(Flag, flag)
 addGeometry(Path, path)
 addGeometry(Point, point)
@@ -230,6 +214,30 @@ addGeometry(Polyline, polyline)
 addGeometry(Rect, rect)
 addGeometry(Stitch, stitch)
 addGeometry(Vector, vector)
+
+int
+embArray_addCircle(EmbArray *a, EmbCircle b)
+{
+    a->count++;
+    if (!embArray_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.circle = b;
+    a->geometry[a->count - 1].type = EMB_CIRCLE;
+    return 1;
+}
+
+int
+embArray_addEllipse(EmbArray *a, EmbEllipse b)
+{
+    a->count++;
+    if (!embArray_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.ellipse = b;
+    a->geometry[a->count - 1].type = EMB_ELLIPSE;
+    return 1;
+}
 
 int
 embArray_addLine(EmbArray *a, EmbLine b)
@@ -252,15 +260,11 @@ void embArray_free(EmbArray* p) {
     case EMB_ARC:
         free(p->arc);
         break;
-    case EMB_CIRCLE:
-        free(p->circle);
-        break;
-    case EMB_ELLIPSE:
-        free(p->ellipse);
-        break;
     case EMB_FLAG:
         free(p->flag);
         break;
+    case EMB_CIRCLE:
+    case EMB_ELLIPSE:
     case EMB_LINE:
         free(p->geometry);
         break;

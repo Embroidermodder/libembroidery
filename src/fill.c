@@ -869,8 +869,10 @@ embPattern_combine(EmbPattern *p1, EmbPattern *p2)
 void
 embPattern_convertGeometry(EmbPattern* p)
 {
+    /*
     if (p->circles->count > 0) {
         
     }
+    */
 }
 

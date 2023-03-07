@@ -413,9 +413,7 @@ typedef struct EmbGeometry_ {
 
 struct EmbArray_ {
     EmbArc *arc;
-    EmbCircle *circle;
     EmbColor *color;
-	EmbEllipse *ellipse;
 	int *flag;
 	EmbGeometry *geometry;
 	EmbPath *path;
@@ -436,16 +434,7 @@ typedef struct EmbLayer_
 {
     char name[100];
     EmbArray* stitchList;
-    EmbArray* arcs;
-    EmbArray* circles;
-    EmbArray* ellipses;
-    EmbArray* lines;
-    EmbArray* paths;
-    EmbArray* points;
-    EmbArray* polygons;
-    EmbArray* polylines;
-    EmbArray* rects;
-    EmbArray* splines;
+    EmbArray* geometry;
 } EmbLayer;
 
 typedef struct EmbPattern_
@@ -460,8 +449,6 @@ typedef struct EmbPattern_
 
     EmbArray* stitchList;
     EmbArray* arcs;
-    EmbArray* circles;
-    EmbArray* ellipses;
     EmbArray* geometry;
     EmbArray* paths;
     EmbArray* points;

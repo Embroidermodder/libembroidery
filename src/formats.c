@@ -6943,27 +6943,35 @@ writeSvg(EmbPattern* pattern, FILE *file)
 
     /*TODO: Low Priority: Indent output properly. */
 
-    /* write circles */
-    if (pattern->circles) {
-        for (i = 0; i < pattern->circles->count; i++) {
-            EmbCircle circle = pattern->circles->circle[i];
-            EmbColor color = pattern->circles->circle[i].color;
+    /* write circles, ellipses and lines */
+    for (i = 0; i < pattern->geometry->count; i++) {
+        EmbGeometry g = pattern->geometry->geometry[i];
+        switch (g.type) {
+        case EMB_LINE: {
+            EmbLine line = g.object.line;
+            color = g.color;
+            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+            fprintf(file,
+                "\n<line stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
+                color.r, color.g, color.b,
+                line.start.x, line.start.y, line.end.x, line.end.y);
+            break;
+        }
+        case EMB_CIRCLE: {
+            EmbCircle circle = g.object.circle;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             fprintf(file, "\n<circle stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" r=\"%f\" />",
-                        color.r,
-                        color.g,
-                        color.b,
-                        circle.center.x,
-                        circle.center.y,
-                        circle.radius);
+                g.color.r,
+                g.color.g,
+                g.color.b,
+                circle.center.x,
+                circle.center.y,
+                circle.radius);
+            break;
         }
-    }
-
-    /* write ellipses */
-    if (pattern->ellipses) {
-        for (i = 0; i < pattern->ellipses->count; i++) {
-            EmbEllipse ellipse = pattern->ellipses->ellipse[i];
-            color = pattern->ellipses->ellipse[i].color;
+        case EMB_ELLIPSE: {
+            EmbEllipse ellipse = g.object.ellipse;
+            color = g.color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
             fprintf(file, "\n<ellipse stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" rx=\"%f\" ry=\"%f\" />",
                         color.r,
@@ -6973,19 +6981,10 @@ writeSvg(EmbPattern* pattern, FILE *file)
                         ellipse.center.y,
                         ellipse.radius.x,
                         ellipse.radius.y);
+            break;
         }
-    }
-
-    /* write lines */
-    if (pattern->geometry) {
-        for (i = 0; i < pattern->geometry->count; i++) {
-            EmbLine line = pattern->geometry->geometry[i].object.line;
-            color = pattern->geometry->geometry[i].color;
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            fprintf(file,
-                "\n<line stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
-                color.r, color.g, color.b,
-                line.start.x, line.start.y, line.end.x, line.end.y);
+        default:
+            break;
         }
     }
 

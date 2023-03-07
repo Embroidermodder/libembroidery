@@ -35,8 +35,6 @@ embPattern_create(void)
     p->hoop_height = 0.0;
     p->hoop_width = 0.0;
     p->arcs = 0;
-    p->circles = 0;
-    p->ellipses = 0;
     p->geometry = embArray_create(EMB_LINE);
     p->paths = 0;
     p->points = 0;
@@ -369,7 +367,7 @@ embPattern_calcBoundingBox(EmbPattern* p)
     /* TODO: Come back and optimize this mess so that after going thru all objects
             and stitches, if the rectangle isn't reasonable, then return a default rect */
     if (p->stitchList->count == 0 &&
-        !(p->arcs || p->circles || p->ellipses || p->geometry || p->points ||
+        !(p->arcs || p->geometry || p->points ||
         p->polygons || p->polylines || p->rects || p->splines)) {
         r.top = 0.0;
         r.left = 0.0;
@@ -406,30 +404,11 @@ embPattern_calcBoundingBox(EmbPattern* p)
         }
     }
 
-    if (p->circles) {
-        for (i = 0; i < p->circles->count; i++) {
-            circle = p->circles->circle[i];
-            r.left = EMB_MIN(r.left, circle.center.x - circle.radius);
-            r.top = EMB_MIN(r.top, circle.center.y - circle.radius);
-            r.right = EMB_MAX(r.right, circle.center.x + circle.radius);
-            r.bottom = EMB_MAX(r.bottom, circle.center.y + circle.radius);
-        }
-    }
-
-    if (p->ellipses) {
-        for (i = 0; i < p->ellipses->count; i++) {
-            /* TODO: account for rotation */
-            ellipse = p->ellipses->ellipse[i];
-            r.left = EMB_MIN(r.left, ellipse.center.x - ellipse.radius.x);
-            r.top = EMB_MIN(r.top, ellipse.center.y - ellipse.radius.y);
-            r.right = EMB_MAX(r.right, ellipse.center.x + ellipse.radius.x);
-            r.bottom = EMB_MAX(r.bottom, ellipse.center.y + ellipse.radius.y);
-        }
-    }
-
-    if (p->geometry) {
-        for (i = 0; i < p->geometry->count; i++) {
-            line = p->geometry->geometry[i].object.line;
+    for (i = 0; i < p->geometry->count; i++) {
+        EmbGeometry g = p->geometry->geometry[i];
+        switch (g.type) {
+        case EMB_LINE: {
+            line = g.object.line;
             r.left = EMB_MIN(r.left, line.start.x);
             r.left = EMB_MIN(r.left, line.end.x);
             r.top = EMB_MIN(r.top, line.start.y);
@@ -438,6 +417,27 @@ embPattern_calcBoundingBox(EmbPattern* p)
             r.right = EMB_MAX(r.right, line.end.x);
             r.bottom = EMB_MAX(r.bottom, line.start.y);
             r.bottom = EMB_MAX(r.bottom, line.end.y);
+            break;
+        }
+        case EMB_CIRCLE: {
+            circle = g.object.circle;
+            r.left = EMB_MIN(r.left, circle.center.x - circle.radius);
+            r.top = EMB_MIN(r.top, circle.center.y - circle.radius);
+            r.right = EMB_MAX(r.right, circle.center.x + circle.radius);
+            r.bottom = EMB_MAX(r.bottom, circle.center.y + circle.radius);
+            break;
+        }
+        case EMB_ELLIPSE: {
+            /* TODO: account for rotation */
+            ellipse = g.object.ellipse;
+            r.left = EMB_MIN(r.left, ellipse.center.x - ellipse.radius.x);
+            r.top = EMB_MIN(r.top, ellipse.center.y - ellipse.radius.y);
+            r.right = EMB_MAX(r.right, ellipse.center.x + ellipse.radius.x);
+            r.bottom = EMB_MAX(r.bottom, ellipse.center.y + ellipse.radius.y);
+            break;
+        }
+        default:
+            break;
         }
     }
 
@@ -550,30 +550,39 @@ embPattern_flip(EmbPattern* p, int horz, int vert)
         }
     }
 
-    if (p->circles) {
-        for (i = 0; i < p->circles->count; i++) {
-            if (horz) { p->circles->circle[i].center.x *= -1.0; }
-            if (vert) { p->circles->circle[i].center.y *= -1.0; }
-        }
-    }
-
-    if (p->ellipses) {
-        for (i = 0; i < p->ellipses->count; i++) {
-            if (horz) { p->ellipses->ellipse[i].center.x *= -1.0; }
-            if (vert) { p->ellipses->ellipse[i].center.y *= -1.0; }
-        }
-    }
-
     for (i = 0; i < p->geometry->count; i++) {
-        if (p->geometry->geometry[i].type) {
+        EmbGeometry *g = &(p->geometry->geometry[i]);
+        switch (g->type) {
+        case EMB_LINE: {
             if (horz) {
-                p->geometry->geometry[i].object.line.start.x *= -1.0;
-                p->geometry->geometry[i].object.line.end.x *= -1.0;
+                g->object.line.start.x *= -1.0;
+                g->object.line.end.x *= -1.0;
             }
             if (vert) {
-                p->geometry->geometry[i].object.line.start.y *= -1.0;
-                p->geometry->geometry[i].object.line.end.y *= -1.0;
+                g->object.line.start.y *= -1.0;
+                g->object.line.end.y *= -1.0;
             }
+            break;
+        }
+        case EMB_CIRCLE: {
+            if (horz) {
+                g->object.circle.center.x *= -1.0;
+            }
+            if (vert) {
+                g->object.circle.center.y *= -1.0;
+            }
+            break;
+        }
+        case EMB_ELLIPSE:
+            if (horz) {
+                g->object.ellipse.center.x *= -1.0;
+            }
+            if (vert) {
+                g->object.ellipse.center.y *= -1.0;
+            }
+            break;
+        default:
+            break;
         }
     }
 
@@ -800,8 +809,6 @@ embPattern_free(EmbPattern* p)
     }
     embArray_free(p->stitchList);
     embArray_free(p->arcs);
-    embArray_free(p->circles);
-    embArray_free(p->ellipses);
     embArray_free(p->geometry);
     embArray_free(p->paths);
     embArray_free(p->points);
@@ -823,10 +830,10 @@ embPattern_addCircleAbs(EmbPattern* p, EmbCircle circle)
         printf("ERROR: emb-pattern.c embPattern_addCircleObjectAbs(), p argument is null\n");
         return;
     }
-    if (p->circles == 0) {
-         p->circles = embArray_create(EMB_CIRCLE);
+    if (p->geometry == 0) {
+         p->geometry = embArray_create(EMB_CIRCLE);
     }
-    embArray_addCircle(p->circles, circle);
+    embArray_addCircle(p->geometry, circle);
 }
 
 /*! Adds an ellipse object to pattern (\a p) with its center at the
@@ -839,10 +846,10 @@ embPattern_addEllipseAbs(EmbPattern* p, EmbEllipse ellipse)
         printf("ERROR: emb-pattern.c embPattern_addEllipseObjectAbs(), p argument is null\n");
         return;
     }
-    if (!p->ellipses) {
-        p->ellipses = embArray_create(EMB_ELLIPSE);
+    if (!p->geometry) {
+        p->geometry = embArray_create(EMB_ELLIPSE);
     }
-    embArray_addEllipse(p->ellipses, ellipse);
+    embArray_addEllipse(p->geometry, ellipse);
 }
 
 /*! Adds a line object to pattern (\a p) starting at the absolute position

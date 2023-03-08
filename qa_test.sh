@@ -16,12 +16,7 @@ STUB="${1::-4}_crosses"
 
 echo "Building..."
 
-rm -fr build
-mkdir build
-cd build
-cmake ..
-cmake --build .
-cd ..
+bash build.sh
 
 echo "Built in tests..."
 

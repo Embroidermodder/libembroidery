@@ -6,6 +6,7 @@ embroidery_static_autogen/
 dist/
 libembroidery.egg-info/
 __pycache__/
+.vscode/
 
 # C++ objects and libs
 *.slo

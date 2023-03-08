@@ -18,7 +18,6 @@
 EmbArray*
 embArray_create(int type)
 {
-    int i;
     EmbArray *a;
     a = (EmbArray*)malloc(sizeof(EmbArray));
     a->type = type;
@@ -41,16 +40,34 @@ embArray_create(int type)
 int
 embArray_resize(EmbArray *a)
 {
-    int i;
     if (a->count < a->length) {
         return 1;
     }
     a->length += CHUNK_SIZE;
-    a->geometry = (EmbGeometry *)realloc(a->geometry, a->length*sizeof(EmbGeometry));
-    if (!a->geometry) {
-        /* TODO: Error reporting */
-        return 0;
+    switch (a->type) {
+    case EMB_STITCH:
+        a->stitch = (EmbStitch*)realloc(a->stitch, a->length*sizeof(EmbStitch));
+        if (!a->stitch) {
+            /* TODO: Error reporting */
+            return 0;
+        }
+        break;
+    case EMB_THREAD:
+        a->thread = (EmbThread*)realloc(a->thread, a->length*sizeof(EmbThread));
+        if (!a->thread) {
+            /* TODO: Error reporting */
+            return 0;
+        }
+        break;
+    default:
+        a->geometry = (EmbGeometry *)realloc(a->geometry, a->length*sizeof(EmbGeometry));
+        if (!a->geometry) {
+            /* TODO: Error reporting */
+            return 0;
+        }
+        break;
     }
+    
     return 1;
 }
 
@@ -142,11 +159,7 @@ embArray_addPath(EmbArray *a, EmbPath b)
     if (!embArray_resize(a)) {
         return 0;
     }
-    a->geometry[a->count - 1].object.path.pointList = embArray_create(EMB_POINT);
-    if (!a->geometry[a->count - 1].object.path.pointList) {
-        /* TODO: Error reporting */
-        return 0;
-    }
+    a->geometry[a->count - 1].object.path = b;
     a->geometry[a->count - 1].type = EMB_PATH;
     return 1;
 }
@@ -170,11 +183,7 @@ embArray_addPolyline(EmbArray *a, EmbPolyline b)
     if (!embArray_resize(a)) {
         return 0;
     }
-    a->geometry[a->count - 1].object.polyline.pointList = embArray_create(EMB_POINT);
-    if (!a->geometry[a->count - 1].object.polyline.pointList) {
-        /* TODO: Error reporting */
-        return 0;
-    }
+    a->geometry[a->count - 1].object.polyline = b;
     a->geometry[a->count - 1].type = EMB_POLYLINE;
     return 1;
 }
@@ -186,11 +195,7 @@ embArray_addPolygon(EmbArray *a, EmbPolygon b)
     if (!embArray_resize(a)) {
         return 0;
     }
-    a->geometry[a->count - 1].object.polygon.pointList = embArray_create(EMB_POINT);
-    if (!a->geometry[a->count - 1].object.polygon.pointList) {
-        /* TODO: Error reporting */
-        return 0;
-    }
+    a->geometry[a->count - 1].object.polygon = b;
     a->geometry[a->count - 1].type = EMB_POLYGON;
     return 1;
 }

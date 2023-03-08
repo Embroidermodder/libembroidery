@@ -417,8 +417,7 @@ struct EmbArray_ {
 typedef struct EmbLayer_
 {
     char name[100];
-    EmbArray* stitch_list;
-    EmbArray* geometry;
+    EmbArray *geometry;
 } EmbLayer;
 
 typedef struct EmbPattern_
@@ -429,7 +428,7 @@ typedef struct EmbPattern_
     EmbReal hoop_height;
     EmbArray *thread_list;
     EmbArray *stitch_list;
-    EmbArray* geometry;
+    EmbArray *geometry;
     EmbLayer layer[EMB_MAX_LAYERS];
     int currentColorIndex;
 } EmbPattern;

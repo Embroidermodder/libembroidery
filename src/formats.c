@@ -686,7 +686,7 @@ embPattern_write(EmbPattern* pattern, const char *fileName, int format)
         printf("ERROR: embPattern_write(), fileName argument is null\n");
         return 0;
     }
-    if (pattern->stitchList->count == 0) {
+    if (pattern->stitch_list->count == 0) {
         printf("ERROR: embPattern_write(), pattern contains no stitches\n");
         return 0;
     }
@@ -952,9 +952,9 @@ write100(EmbPattern* pattern, FILE* file)
     EmbVector delta, position;
 
     position = pattern->home;
-    for (i=0; i<pattern->stitchList->count; i++) {
+    for (i=0; i<pattern->stitch_list->count; i++) {
         unsigned char b[4];
-        EmbStitch st = pattern->stitchList->stitch[i];
+        EmbStitch st = pattern->stitch_list->stitch[i];
         delta.x = st.x - position.x;
         delta.y = st.y - position.y;
         position = embVector_add(position, delta);
@@ -1019,9 +1019,9 @@ read10o(EmbPattern* pattern, FILE* file) {
 char
 write10o(EmbPattern* pattern, FILE* file) {
     int i;
-    for (i=0; i<pattern->stitchList->count; i++) {
+    for (i=0; i<pattern->stitch_list->count; i++) {
         unsigned char b[3];
-        EmbStitch st = pattern->stitchList->stitch[i];
+        EmbStitch st = pattern->stitch_list->stitch[i];
         b[0] = 0;
         b[1] = 0;
         b[2] = 0;
@@ -1182,7 +1182,7 @@ readCol(EmbPattern* pattern, FILE* file) {
     EmbThread t;
     char line[30];
 
-    pattern->n_threads = 0;
+    pattern->thread_list->count = 0;
 
     emb_readline(file, line, 30);
     numberOfColors = atoi(line);
@@ -1215,10 +1215,10 @@ writeCol(EmbPattern* pattern, FILE* file)
 {
     int i;
 
-    fprintf(file, "%d\r\n", pattern->n_threads);
-    for (i = 0; i < pattern->n_threads; i++) {
+    fprintf(file, "%d\r\n", pattern->thread_list->count);
+    for (i = 0; i < pattern->thread_list->count; i++) {
         EmbColor c;
-        c = pattern->thread_list[i].color;
+        c = pattern->thread_list->thread[i].color;
         fprintf(file, "%d,%d,%d,%d\r\n", i, (int)c.r, (int)c.g, (int)c.b);
     }
     return 1;
@@ -1532,7 +1532,7 @@ readCsv(EmbPattern* pattern, FILE* file) {
                     } else if (cellNum == 4) {
                         yy = atof(buff);
                         /* printf("%d %d %f %f\n", 
-                            pattern->stitchList->count, flags, xx, yy); */
+                            pattern->stitch_list->count, flags, xx, yy); */
                         embPattern_addStitchAbs(pattern, xx, yy, flags, 1);
                         csvMode = CSV_MODE_NULL;
                         cellNum = 0;
@@ -1596,8 +1596,8 @@ writeCsv(EmbPattern* pattern, FILE* file) {
 
     /* write variables */
     fprintf(file,"\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");
-    fprintf(file, "\">\",\"STITCH_COUNT:\",\"%u\"\n", (unsigned int)pattern->stitchList->count);
-    fprintf(file, "\">\",\"THREAD_COUNT:\",\"%u\"\n", (unsigned int)pattern->n_threads);
+    fprintf(file, "\">\",\"STITCH_COUNT:\",\"%u\"\n", (unsigned int)pattern->stitch_list->count);
+    fprintf(file, "\">\",\"THREAD_COUNT:\",\"%u\"\n", (unsigned int)pattern->thread_list->count);
     fprintf(file, "\">\",\"EXTENTS_LEFT:\",\"%f\"\n",   boundingRect.left);
     fprintf(file, "\">\",\"EXTENTS_TOP:\",\"%f\"\n",    boundingRect.top);
     fprintf(file, "\">\",\"EXTENTS_RIGHT:\",\"%f\"\n",  boundingRect.right);
@@ -1610,9 +1610,8 @@ writeCsv(EmbPattern* pattern, FILE* file) {
     fprintf(file, "\"#\",\"[THREAD_NUMBER]\",\"[RED]\",\"[GREEN]\",");
     fprintf(file, "\"[BLUE]\",\"[DESCRIPTION]\",\"[CATALOG_NUMBER]\"\n");
     
-    for (i = 0; i < pattern->n_threads; i++) {
-        EmbThread thr;
-        thr = pattern->thread_list[i];
+    for (i = 0; i < pattern->thread_list->count; i++) {
+        EmbThread thr = pattern->thread_list->thread[i];
         /* TODO: fix segfault that backtraces here when 
             libembroidery-convert from dst to csv. */
         fprintf(file, "\"$\",\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
@@ -1627,8 +1626,8 @@ writeCsv(EmbPattern* pattern, FILE* file) {
 
     /* write stitches */
     fprintf(file, "\"#\",\"[STITCH_TYPE]\",\"[X]\",\"[Y]\"\n");
-    for (i = 0; i < pattern->stitchList->count; i++) {
-        EmbStitch s = pattern->stitchList->stitch[i];
+    for (i = 0; i < pattern->stitch_list->count; i++) {
+        EmbStitch s = pattern->stitch_list->stitch[i];
         fprintf(file, "\"*\",\"%s\",\"%f\",\"%f\"\n",
             csvStitchFlagToStr(s.flags), s.x, s.y);
     }
@@ -1689,9 +1688,9 @@ writeDat(EmbPattern* pattern, FILE* file)
 {
     int i;
     fpad(file, 0x00, 0x100);
-    for (i=0; i<pattern->stitchList->count; i++) {
+    for (i=0; i<pattern->stitch_list->count; i++) {
         unsigned char b[3];
-        EmbStitch st = pattern->stitchList->stitch[i];
+        EmbStitch st = pattern->stitch_list->stitch[i];
         b[0] = 0;
         b[1] = 0;
         b[2] = 0;
@@ -1787,9 +1786,9 @@ int decode_record_flags(unsigned char b2)
 /* void combineJumpStitches(EmbPattern* p, int jumpsPerTrim)
 {
     if (!p) { printf("ERROR: format-dst.c combineJumpStitches(), p argument is null\n"); return; }
-    EmbStitchList* pointer = p->stitchList;
+    Embstitch_list* pointer = p->stitch_list;
     int jumpCount = 0;
-    EmbStitchList* jumpListStart = 0;
+    Embstitch_list* jumpListStart = 0;
     char needleDown = 0;
     while (pointer) {
         if ((pointer->stitch.flags & JUMP) && !(pointer->stitch.flags & STOP)) {
@@ -1800,7 +1799,7 @@ int decode_record_flags(unsigned char b2)
             jumpCount++;
             if (needleDown && jumpCount >= jumpsPerTrim)
             {
-                EmbStitchList* removePointer = jumpListStart->next;
+                Embstitch_list* removePointer = jumpListStart->next;
                 jumpListStart->stitch.x = pointer->stitch.x;
                 jumpListStart->stitch.y = pointer->stitch.y;
                 jumpListStart->stitch.flags |= TRIM;
@@ -1809,7 +1808,7 @@ int decode_record_flags(unsigned char b2)
                 jumpCount-=2;
                 for (; jumpCount > 0; jumpCount--)
                 {
-                    EmbStitchList* tempPointer = removePointer->next;
+                    Embstitch_list* tempPointer = removePointer->next;
                     jumpListStart->stitch.flags |= removePointer->stitch.flags;
                     safe_free(removePointer);
                     removePointer = 0;
@@ -2044,7 +2043,7 @@ writeDst(EmbPattern* pattern, FILE* file) {
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
-    /* TODO: make sure that pattern->n_threads
+    /* TODO: make sure that pattern->thread_list->count
      * defaults to 1 in new patterns */
     boundingRect = embPattern_calcBoundingBox(pattern);
     /* TODO: review the code below
@@ -2057,9 +2056,9 @@ writeDst(EmbPattern* pattern, FILE* file) {
     }
     */
     fprintf(file, "LA:%-16s\x0d", "Untitled");
-    fprintf(file, "ST:%7d\x0d", pattern->stitchList->count);
+    fprintf(file, "ST:%7d\x0d", pattern->stitch_list->count);
     /* number of color changes, not number of colors! */
-    fprintf(file, "CO:%3d\x0d", pattern->n_threads - 1); 
+    fprintf(file, "CO:%3d\x0d", pattern->thread_list->count - 1); 
     fprintf(file,
         "+X:%5d\x0d"
         "-X:%5d\x0d"
@@ -2097,10 +2096,10 @@ writeDst(EmbPattern* pattern, FILE* file) {
     /* write stitches */
     pos.x = 0.0;
     pos.y = 0.0;
-    for (i = 0; i < pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitch_list->count; i++) {
         EmbStitch st;
         int dx, dy;
-        st = pattern->stitchList->stitch[i];
+        st = pattern->stitch_list->stitch[i];
         /* convert from mm to 0.1mm for file format */
         dx = (int)emb_round(10.0*(st.x - pos.x));
         dy = (int)emb_round(10.0*(st.y - pos.y));
@@ -2615,10 +2614,10 @@ writeExp(EmbPattern* pattern, FILE* file) {
     /* write stitches */
     pos.x = 0.0;
     pos.y = 0.0;
-    for (i = 0; i < pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitch_list->count; i++) {
         char b[4];
         char dx, dy;
-        EmbStitch st = pattern->stitchList->stitch[i];
+        EmbStitch st = pattern->stitch_list->stitch[i];
         dx = (char)emb_round(10.0*(st.x - pos.x));
         dy = (char)emb_round(10.0*(st.y - pos.y));
         pos.x += 0.1*dx;
@@ -3016,9 +3015,9 @@ writeHus(EmbPattern* pattern, FILE* file)
     unsigned char *xValues = 0, *yValues = 0, *attributeValues = 0,
         *attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
     
-    stitchCount = pattern->stitchList->count;
+    stitchCount = pattern->stitch_list->count;
     /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
-    minColors = pattern->n_threads;
+    minColors = pattern->thread_list->count;
     patternColor = minColors;
     if (minColors > 24) minColors = 24;
     code = 0x00C8AF5B;
@@ -3057,9 +3056,9 @@ writeHus(EmbPattern* pattern, FILE* file)
 
     previousX = 0.0;
     previousY = 0.0;
-    for (i = 0; i < pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitch_list->count; i++) {
         EmbStitch st;
-        st = pattern->stitchList->stitch[i];
+        st = pattern->stitch_list->stitch[i];
         xValues[i] = husEncodeByte((st.x - previousX) * 10.0);
         previousX = st.x;
         yValues[i] = husEncodeByte((st.y - previousY) * 10.0);
@@ -3078,7 +3077,7 @@ writeHus(EmbPattern* pattern, FILE* file)
     fpad(file, 0, 10);
 
     for (i = 0; i < patternColor; i++) {
-        short color_index = (short)embThread_findNearestColor_fromThread(pattern->thread_list[i].color, (EmbThread*)husThreads, 29);
+        short color_index = (short)embThread_findNearestThread(pattern->thread_list->thread[i].color, (EmbThread*)husThreads, 29);
         embInt_write(file, ".", &color_index, EMB_INT16_LITTLE);
     }
 
@@ -3187,7 +3186,7 @@ readInf(EmbPattern* pattern, FILE* file)
     fseek(file, 12, SEEK_CUR);
     embInt_read(file, "nColors", &nColors, EMB_INT32_BIG);
 
-    pattern->n_threads = 0;
+    pattern->thread_list->count = 0;
 
     for (i = 0; i < nColors; i++) {
         fseek(file, 4, SEEK_CUR);
@@ -3210,13 +3209,13 @@ writeInf(EmbPattern* pattern, FILE* file) {
     binaryWriteUIntBE(file, 0x08);
     /* write place holder offset */
     binaryWriteUIntBE(file, 0x00);
-    binaryWriteUIntBE(file, pattern->n_threads);
+    binaryWriteUIntBE(file, pattern->thread_list->count);
 
-    for (i = 0; i < pattern->n_threads; i++) {
+    for (i = 0; i < pattern->thread_list->count; i++) {
         char buffer[50];
         unsigned short record_length, record_number, needle_number;
         EmbColor c;
-        c = pattern->thread_list[i].color;
+        c = pattern->thread_list->thread[i].color;
         sprintf(buffer, "RGB(%d,%d,%d)", (int)c.r, (int)c.g, (int)c.b);
         record_length = 14 + strlen(buffer);
         record_number = i;
@@ -3428,7 +3427,7 @@ writeJef(EmbPattern* pattern, FILE* file)
 
     embPattern_correctForMaxStitchLength(pattern, 12.7, 12.7);
 
-    colorlistSize = pattern->n_threads;
+    colorlistSize = pattern->thread_list->count;
     minColors = EMB_MAX(colorlistSize, 6);
     binaryWriteInt(file, 0x74 + (minColors * 4));
     binaryWriteInt(file, 0x0A);
@@ -3439,8 +3438,8 @@ writeJef(EmbPattern* pattern, FILE* file)
             (int)(time.month + 1), (int)(time.day), (int)(time.hour),
             (int)(time.minute), (int)(time.second));
     fpad(file, 0, 2);
-    embInt_write(file, ".", &(pattern->n_threads), EMB_INT32_LITTLE);
-    data = pattern->stitchList->count + EMB_MAX(0, (6 - colorlistSize) * 2) + 1;
+    embInt_write(file, ".", &(pattern->thread_list->count), EMB_INT32_LITTLE);
+    data = pattern->stitch_list->count + EMB_MAX(0, (6 - colorlistSize) * 2) + 1;
     embInt_write(file, ".", &data, EMB_INT32_LITTLE);
 
     boundingRect = embPattern_calcBoundingBox(pattern);
@@ -3496,8 +3495,8 @@ writeJef(EmbPattern* pattern, FILE* file)
     binaryWriteInt(file, (int) (630 - designWidth / 2));  /* right */
     binaryWriteInt(file, (int) (550 - designHeight / 2)); /* bottom */
 
-    for (i = 0; i < pattern->n_threads; i++) {
-        int j = embThread_findNearestColor_fromThread(pattern->thread_list[i].color, (EmbThread *)jefThreads, 79);
+    for (i = 0; i < pattern->thread_list->count; i++) {
+        int j = embThread_findNearestThread(pattern->thread_list->thread[i].color, (EmbThread *)jefThreads, 79);
         binaryWriteInt(file, j);
     }
 
@@ -3508,7 +3507,7 @@ writeJef(EmbPattern* pattern, FILE* file)
 
     pos.x = 0.0;
     pos.y = 0.0;
-    for (i = 0; i < pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitch_list->count; i++) {
         unsigned char b[4];
         EmbStitch st;
         char dx, dy;
@@ -3516,7 +3515,7 @@ writeJef(EmbPattern* pattern, FILE* file)
         b[1] = 0;
         b[2] = 0;
         b[3] = 0;
-        st = pattern->stitchList->stitch[i];
+        st = pattern->stitch_list->stitch[i];
         dx = (char)emb_round(10.0*(st.x - pos.x));
         dy = (char)emb_round(10.0*(st.y - pos.y));
         pos.x += 0.1*dx;
@@ -3594,10 +3593,10 @@ writeKsm(EmbPattern* pattern, FILE* file)
     /* write stitches */
     pos.x = 0.0;
     pos.y = 0.0;
-    for (i = 0; i < pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitch_list->count; i++) {
         unsigned char b[4];
         char dx, dy;
-        EmbStitch st = pattern->stitchList->stitch[i];
+        EmbStitch st = pattern->stitch_list->stitch[i];
         dx = (char)(10.0*(st.x - pos.x));
         dy = (char)(10.0*(st.y - pos.y));
         pos.x += 0.1*dx;
@@ -3642,8 +3641,8 @@ writeMax(EmbPattern* pattern, FILE* file)
     EmbStitch st;
 
     fwrite(max_header, 1, 0xD5, file);
-    for (i = 0; i < pattern->stitchList->count; i++) {
-        st = pattern->stitchList->stitch[i];
+    for (i = 0; i < pattern->stitch_list->count; i++) {
+        st = pattern->stitch_list->stitch[i];
         x = (int)emb_round(st.x * 10.0);
         y = (int)emb_round(st.y * 10.0);
         write_24bit(file, x);
@@ -3677,9 +3676,9 @@ writeMit(EmbPattern* pattern, FILE* file)
     embPattern_correctForMaxStitchLength(pattern, 0x1F, 0x1F);
     xx = 0;
     yy = 0;
-    for (i = 0; i < pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitch_list->count; i++) {
         unsigned char b[2];
-        EmbStitch st = pattern->stitchList->stitch[i];
+        EmbStitch st = pattern->stitch_list->stitch[i];
         b[0] = mitEncodeStitch(st.x - xx);
         b[1] = mitEncodeStitch(st.y - yy);
         xx = st.x;
@@ -4079,19 +4078,19 @@ writePcd(EmbPattern* pattern, FILE* file)
 
     /* TODO: select hoop size defaulting to Large PCS hoop */
     fwrite("2\x03", 1, 2, file);
-    binaryWriteUShort(file, (unsigned short)pattern->n_threads);
-    for (i = 0; i < pattern->n_threads; i++) {
-        EmbColor color = pattern->thread_list[i].color;
+    binaryWriteUShort(file, (unsigned short)pattern->thread_list->count);
+    for (i = 0; i < pattern->thread_list->count; i++) {
+        EmbColor color = pattern->thread_list->thread[i].color;
         embColor_write(file, color, 4);
     }
 
     fpad(file, 0, 4*(16-i));
     /* write remaining colors to reach 16 */
 
-    binaryWriteUShort(file, (unsigned short)pattern->stitchList->count);
+    binaryWriteUShort(file, (unsigned short)pattern->stitch_list->count);
     /* write stitches */
-    for (i = 0; i < pattern->stitchList->count; i++) {
-        EmbStitch st = pattern->stitchList->stitch[i];
+    for (i = 0; i < pattern->stitch_list->count; i++) {
+        EmbStitch st = pattern->stitch_list->stitch[i];
         pfaffEncode(file, (int)emb_round(st.x * 10.0), (int)emb_round(st.y * 10.0), st.flags);
     }
     return 1;
@@ -4222,19 +4221,19 @@ writePcq(EmbPattern* pattern, FILE* file)
 
     /* TODO: select hoop size defaulting to Large PCS hoop */
     fwrite("2\x03", 1, 2, file);
-    binaryWriteUShort(file, (unsigned short)pattern->n_threads);
-    for (i = 0; i < pattern->n_threads; i++) {
-        EmbColor color = pattern->thread_list[i].color;
+    binaryWriteUShort(file, (unsigned short)pattern->thread_list->count);
+    for (i = 0; i < pattern->thread_list->count; i++) {
+        EmbColor color = pattern->thread_list->thread[i].color;
         embColor_write(file, color, 4);
     }
 
     /* write remaining colors to reach 16 */
     fpad(file, 0, (16-i)*4);
 
-    binaryWriteUShort(file, (unsigned short)pattern->stitchList->count);
+    binaryWriteUShort(file, (unsigned short)pattern->stitch_list->count);
     /* write stitches */
-    for (i = 0; i < pattern->stitchList->count; i++) {
-        EmbStitch st = pattern->stitchList->stitch[i];
+    for (i = 0; i < pattern->stitch_list->count; i++) {
+        EmbStitch st = pattern->stitch_list->stitch[i];
         pfaffEncode(file, (int)emb_round(st.x * 10.0), (int)emb_round(st.y * 10.0), st.flags);
     }
     return 1;
@@ -4321,19 +4320,19 @@ writePcs(EmbPattern* pattern, FILE* file)
 
     /* TODO: select hoop size defaulting to Large PCS hoop */
     fwrite("2\x03", 1, 2, file);
-    binaryWriteUShort(file, (unsigned short)pattern->n_threads);
-    for (i = 0; i < pattern->n_threads; i++) {
-        EmbColor color = pattern->thread_list[i].color;
+    binaryWriteUShort(file, (unsigned short)pattern->thread_list->count);
+    for (i = 0; i < pattern->thread_list->count; i++) {
+        EmbColor color = pattern->thread_list->thread[i].color;
         embColor_write(file, color, 4);
     }
 
     /* write remaining colors to reach 16 */
     /* fpad(file, 0, 4*(16-i)); */
 
-    binaryWriteUShort(file, (unsigned short)pattern->stitchList->count);
+    binaryWriteUShort(file, (unsigned short)pattern->stitch_list->count);
     /* write stitches */
-    for (i = 0; i < pattern->stitchList->count; i++) {
-        EmbStitch st = pattern->stitchList->stitch[i];
+    for (i = 0; i < pattern->stitch_list->count; i++) {
+        EmbStitch st = pattern->stitch_list->stitch[i];
         pfaffEncode(file, (int)emb_round(st.x * 10.0), (int)emb_round(st.y * 10.0), st.flags);
     }
     return 1;
@@ -4499,9 +4498,9 @@ pecEncode(FILE* file, EmbPattern* p)
         return;
     }
 
-    for (i = 0; i < p->stitchList->count; i++) {
+    for (i = 0; i < p->stitch_list->count; i++) {
         int deltaX, deltaY;
-        EmbStitch s = p->stitchList->stitch[i];
+        EmbStitch s = p->stitch_list->stitch[i];
 
         deltaX = (int)emb_round(s.x - thisX);
         deltaY = (int)emb_round(s.y - thisY);
@@ -4576,17 +4575,17 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
     fwrite("\xff\x00\x06\x26", 1, 4, file);
 
     fpad(file, 0x20, 12);
-    toWrite = (unsigned char)(pattern->n_threads-1);
+    toWrite = (unsigned char)(pattern->thread_list->count-1);
     fwrite(&toWrite, 1, 1, file);
 
-    for (i = 0; i < pattern->n_threads; i++) {
-        EmbColor thr = pattern->thread_list[i].color;
+    for (i = 0; i < pattern->thread_list->count; i++) {
+        EmbColor thr = pattern->thread_list->thread[i].color;
         unsigned char color = (unsigned char)
-            embThread_findNearestColor_fromThread(thr, 
+            embThread_findNearestThread(thr, 
             (EmbThread*)pecThreads, pecThreadCount);
         fwrite(&color, 1, 1, file);
     }
-    fpad(file, 0x20, (int)(0x1CF - pattern->n_threads));
+    fpad(file, 0x20, (int)(0x1CF - pattern->thread_list->count));
     fpad(file, 0x00, 2);
 
     graphicsOffsetLocation = ftell(file);
@@ -4625,8 +4624,8 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
 
     yFactor = 32.0 / height;
     xFactor = 42.0 / width;
-    for (i = 0; i < pattern->stitchList->count; i++) {
-        EmbStitch st = pattern->stitchList->stitch[i];
+    for (i = 0; i < pattern->stitch_list->count; i++) {
+        EmbStitch st = pattern->stitch_list->stitch[i];
         int x = (int)emb_round((st.x - bounds.left) * xFactor) + 3;
         int y = (int)emb_round((st.y - bounds.top) * yFactor) + 3;
         if (x<=0 || x>48) continue;
@@ -4637,10 +4636,10 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
 
     /* Writing each individual color */
     j = 0;
-    for (i = 0; i < pattern->n_threads; i++) {
+    for (i = 0; i < pattern->thread_list->count; i++) {
         memcpy(image, imageWithFrame, 48*38);
-        for (; j < pattern->stitchList->count; j++) {
-            EmbStitch st = pattern->stitchList->stitch[j];
+        for (; j < pattern->stitch_list->count; j++) {
+            EmbStitch st = pattern->stitch_list->stitch[j];
             int x = (int)emb_round((st.x - bounds.left) * xFactor) + 3;
             int y = (int)emb_round((st.y - bounds.top) * yFactor) + 3;
             if (x<=0 || x>48) continue;
@@ -5025,23 +5024,23 @@ pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
     int i, j;
     EmbRect bounds = embPattern_calcBoundingBox(pattern);
 
-    for (i = 0; i < pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitch_list->count; i++) {
         EmbColor color;
-        EmbStitch st = pattern->stitchList->stitch[i];
+        EmbStitch st = pattern->stitch_list->stitch[i];
         flag = st.flags;
-        if (st.color < pattern->n_threads) {
-            color = pattern->thread_list[st.color].color;
+        if (st.color < pattern->thread_list->count) {
+            color = pattern->thread_list->thread[st.color].color;
         }
         else {
             color = pecThreads[0].color;
         }
-        newColorCode = embThread_findNearestColor_fromThread(color, (EmbThread*)pecThreads, pecThreadCount);
+        newColorCode = embThread_findNearestThread(color, (EmbThread*)pecThreads, pecThreadCount);
         if (newColorCode != colorCode) {
             colorCount++;
             colorCode = newColorCode;
         }
-        while (i < pattern->stitchList->count && (flag == st.flags)) {
-            st = pattern->stitchList->stitch[i];
+        while (i < pattern->stitch_list->count && (flag == st.flags)) {
+            st = pattern->stitch_list->stitch[i];
             count++;
             i++;
         }
@@ -5063,14 +5062,14 @@ pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
     colorInfo = (short *) calloc(colorCount * 2, sizeof(short));
     colorCode = -1;
     blockCount = 0;
-    for (i = 0; i < pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitch_list->count; i++) {
         EmbColor color;
         EmbStitch st;
-        st = pattern->stitchList->stitch[i];
+        st = pattern->stitch_list->stitch[i];
         j = i;
         flag = st.flags;
-        color = pattern->thread_list[st.color].color;
-        newColorCode = embThread_findNearestColor_fromThread(color, (EmbThread*)pecThreads, pecThreadCount);
+        color = pattern->thread_list->thread[st.color].color;
+        newColorCode = embThread_findNearestThread(color, (EmbThread*)pecThreads, pecThreadCount);
         if (newColorCode != colorCode) {
             if (colorInfoIndex+2 > colorCount) {
                 puts("Ran out of memory for color info.");
@@ -5081,8 +5080,8 @@ pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
             colorCode = newColorCode;
         }
         count = 0;
-        while (j < pattern->stitchList->count && (flag == st.flags)) {
-            st = pattern->stitchList->stitch[j];
+        while (j < pattern->stitch_list->count && (flag == st.flags)) {
+            st = pattern->stitch_list->stitch[j];
             count++;
             j++;
         }
@@ -5097,12 +5096,12 @@ pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
         binaryWriteShort(file, (short)colorCode); /* color code */
         binaryWriteShort(file, (short)count); /* stitches in block */
         j = i;
-        while (j < pattern->stitchList->count && (flag == st.flags)) {
-            st = pattern->stitchList->stitch[j];
+        while (j < pattern->stitch_list->count && (flag == st.flags)) {
+            st = pattern->stitch_list->stitch[j];
             binaryWriteShort(file, (short)(st.x - bounds.left));
             binaryWriteShort(file, (short)(st.y + bounds.top));
         }
-        if (j < pattern->stitchList->count ) {
+        if (j < pattern->stitch_list->count ) {
             binaryWriteUShort(file, 0x8003);
         }
         blockCount++;
@@ -5341,9 +5340,9 @@ writePlt(EmbPattern* pattern, FILE* file) {
     fprintf(file, "IN;");
     fprintf(file, "ND;");
 
-    for (i = 0; i < pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitch_list->count; i++) {
         EmbStitch stitch;
-        stitch = pattern->stitchList->stitch[i];
+        stitch = pattern->stitch_list->stitch[i];
         if (stitch.flags & STOP) {
             firstStitchOfBlock = 1;
         }
@@ -5378,7 +5377,7 @@ readRgb(EmbPattern* pattern, FILE* file)
     fseek(file, 0x00, SEEK_END);
     numberOfColors = ftell(file) / 4;
 
-    pattern->n_threads = 0;
+    pattern->thread_list->count = 0;
     
     printf("numberOfColors: %d\n", numberOfColors);
 
@@ -5397,8 +5396,8 @@ char
 writeRgb(EmbPattern* pattern, FILE* file)
 {
     int i;
-    for (i = 0; i < pattern->n_threads; i++) {
-        EmbColor c = pattern->thread_list[i].color;
+    for (i = 0; i < pattern->thread_list->count; i++) {
+        EmbColor c = pattern->thread_list->thread[i].color;
         embColor_write(file, c, 4);
     }
     return 1;
@@ -5471,28 +5470,28 @@ writeSew(EmbPattern* pattern, FILE* file)
 {
     int i;
     EmbReal xx = 0.0, yy = 0.0;
-    binaryWriteShort(file, pattern->n_threads);
+    binaryWriteShort(file, pattern->thread_list->count);
 
     if (emb_verbose>1) {
         printf("Debugging Information\n");
-        printf("number of colors = %d\n", pattern->n_threads);
-        printf("number of stitches = %d\n", pattern->stitchList->count);
+        printf("number of colors = %d\n", pattern->thread_list->count);
+        printf("number of stitches = %d\n", pattern->stitch_list->count);
     }
 
-    for (i = 0; i < pattern->n_threads; i++) {
+    for (i = 0; i < pattern->thread_list->count; i++) {
         short thr;
         EmbColor col;
-        col = pattern->thread_list[i].color;
-        thr = embThread_findNearestColor_fromThread(col, (EmbThread *)jefThreads, 79);
+        col = pattern->thread_list->thread[i].color;
+        thr = embThread_findNearestThread(col, (EmbThread *)jefThreads, 79);
         binaryWriteShort(file, thr);
     }
-    fpad(file, 0, 0x1D78 - 2 - pattern->n_threads * 2);
+    fpad(file, 0, 0x1D78 - 2 - pattern->thread_list->count * 2);
 
-    for (i = 0; i < pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitch_list->count; i++) {
         EmbStitch st;
         unsigned char b[4];
         char dx, dy;
-        st = pattern->stitchList->stitch[i];
+        st = pattern->stitch_list->stitch[i];
         dx = (char)emb_round(10.0*(st.x - xx));
         dy = (char)emb_round(10.0*(st.y - yy));
         xx += 0.1*dx;
@@ -5721,7 +5720,7 @@ writeSst(EmbPattern* pattern, FILE* file)
     for (i=0; i<head_length; i++) {
         fprintf(file, " ");
     }
-    for (i=0; i<pattern->stitchList->count; i++) {
+    for (i=0; i<pattern->stitch_list->count; i++) {
         printf(".");
     }
     return 0; /*TODO: finish writeSst */
@@ -6947,16 +6946,6 @@ writeSvg(EmbPattern* pattern, FILE *file)
     for (i = 0; i < pattern->geometry->count; i++) {
         EmbGeometry g = pattern->geometry->geometry[i];
         switch (g.type) {
-        case EMB_LINE: {
-            EmbLine line = g.object.line;
-            color = g.color;
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            fprintf(file,
-                "\n<line stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
-                color.r, color.g, color.b,
-                line.start.x, line.start.y, line.end.x, line.end.y);
-            break;
-        }
         case EMB_CIRCLE: {
             EmbCircle circle = g.object.circle;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
@@ -6983,15 +6972,18 @@ writeSvg(EmbPattern* pattern, FILE *file)
                         ellipse.radius.y);
             break;
         }
-        default:
+        case EMB_LINE: {
+            EmbLine line = g.object.line;
+            color = g.color;
+            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
+            fprintf(file,
+                "\n<line stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
+                color.r, color.g, color.b,
+                line.start.x, line.start.y, line.end.x, line.end.y);
             break;
         }
-    }
-
-    /* write points */
-    if (pattern->points) {
-        for (i = 0; i < pattern->points->count; i++) {
-            EmbPoint p = pattern->points->point[i];
+        case EMB_POINT: {
+            EmbPoint p = g.object.point;
             /* See SVG Tiny 1.2 Spec:
              * Section 9.5 The 'line' element
              * Section C.6 'path' element implementation notes */
@@ -7000,33 +6992,27 @@ writeSvg(EmbPattern* pattern, FILE *file)
                 "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
                 p.color.r, p.color.g, p.color.b,
                 p.position.x, p.position.y, p.position.x, p.position.y);
+            break;
         }
-    }
-
-    /* write polygons */
-    if (pattern->polygons) {
-        for (i = 0; i < pattern->polygons->count; i++) {
-            EmbArray *pointList = pattern->polygons->polygon[i].pointList;
-            color = pattern->polygons->polygon[i].color;
+        case EMB_POLYGON: {
+            EmbArray *pointList = g.object.polygon.pointList;
+            color = g.object.color;
             /* TODO: use proper thread width for stoke-width rather than just 0.2 */
                 fprintf(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
                     color.r, color.g, color.b,
-                    emb_optOut(pointList->point[0].position.x, tmpX),
-                    emb_optOut(pointList->point[0].position.y, tmpY));
+                    emb_optOut(pointList->geometry[0].object.point.position.x, tmpX),
+                    emb_optOut(pointList->geometry[0].object.point.position.y, tmpY));
             for (j=1; j < pointList->count; j++) {
                 fprintf(file, " %s,%s",
-                    emb_optOut(pointList->point[j].position.x, tmpX),
-                    emb_optOut(pointList->point[j].position.y, tmpY));
+                    emb_optOut(pointList->geometry[j].object.point.position.x, tmpX),
+                    emb_optOut(pointList->geometry[j].object.point.position.y, tmpY));
             }
             fprintf(file, "\"/>");
+            break;
         }
-    }
-
-    /* write polylines */
-    if (pattern->polylines) {
-        for (i = 0; i < pattern->polylines->count; i++) {
-            EmbArray *pointList = pattern->polylines->polyline[i].pointList;
-            color = pattern->polylines->polyline[i].color;
+        case EMB_POLYLINE: {
+            EmbArray *pointList = g.object.polyline.pointList;
+            color = g.object.polyline.color;
             /* TODO: use proper thread width for stoke-width rather
              * than just 0.2.
              */
@@ -7034,22 +7020,19 @@ writeSvg(EmbPattern* pattern, FILE *file)
                     color.r,
                     color.g,
                     color.b,
-                    emb_optOut(pointList->point[0].position.x, tmpX),
-                    emb_optOut(pointList->point[0].position.y, tmpY));
+                    emb_optOut(pointList->geometry[0].object.point.position.x, tmpX),
+                    emb_optOut(pointList->geometry[0].object.point.position.y, tmpY));
             for (j=1; j < pointList->count; j++) {
                 fprintf(file, " %s,%s",
-                    emb_optOut(pointList->point[j].position.x, tmpX),
-                    emb_optOut(pointList->point[j].position.y, tmpY));
+                    emb_optOut(pointList->geometry[j].object.point.position.x, tmpX),
+                    emb_optOut(pointList->geometry[j].object.point.position.y, tmpY));
             }
             fprintf(file, "\"/>");
+            break;
         }
-    }
-
-    /* write rects */
-    if (pattern->rects) {
-        for (i = 0; i < pattern->rects->count; i++) {
-            rect = pattern->rects->rect[i];
-            color = pattern->rects->rect[i].color;
+        case EMB_RECT: {
+            rect = g.object.rect;
+            color = g.object.color;
             /* TODO: use proper thread width for stoke-width rather
              * than just 0.2.
              */
@@ -7058,19 +7041,23 @@ writeSvg(EmbPattern* pattern, FILE *file)
                 rect.left, rect.top,
                 rect.right - rect.left,
                 rect.bottom - rect.top);
+            break;
+        }
+        default:
+            break;
         }
     }
 
     isNormal = 0;
-    for (i = 0; i < pattern->stitchList->count; i++) {
-        EmbStitch st = pattern->stitchList->stitch[i];
+    for (i = 0; i < pattern->stitch_list->count; i++) {
+        EmbStitch st = pattern->stitch_list->stitch[i];
         /* TODO:
          * #ifdef SVG_DEBUG for Josh which outputs
          * JUMPS/TRIMS instead of chopping them out.
          */
         if (st.flags == NORMAL && !isNormal) {
             isNormal = 1;
-            color = pattern->thread_list[st.color].color;
+            color = pattern->thread_list->thread[st.color].color;
             /* TODO: use proper thread width for stoke-width rather
              * than just 0.2.
              */
@@ -7294,8 +7281,8 @@ writeVip(EmbPattern* pattern, FILE* file)
     puts("VIP not yet implemented.");
     return 0;
 
-    stitchCount = pattern->stitchList->count;
-    minColors = pattern->n_threads;
+    stitchCount = pattern->stitch_list->count;
+    minColors = pattern->thread_list->count;
     decodedColors = (unsigned char*)malloc(minColors << 2);
     if (!decodedColors) {
         return 0;
@@ -7330,9 +7317,9 @@ writeVip(EmbPattern* pattern, FILE* file)
     yValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
     attributeValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
     if (xValues && yValues && attributeValues) {
-        for (i = 0; i < pattern->stitchList->count; i++) {
+        for (i = 0; i < pattern->stitch_list->count; i++) {
             EmbStitch st;
-            st = pattern->stitchList->stitch[i];
+            st = pattern->stitch_list->stitch[i];
             xx = st.x;
             yy = st.y;
             flags = st.flags;
@@ -7356,7 +7343,7 @@ writeVip(EmbPattern* pattern, FILE* file)
 
         for (i = 0; i < minColors; i++) {
             int byteChunk = i << 2;
-            EmbColor currentColor = pattern->thread_list[i].color;
+            EmbColor currentColor = pattern->thread_list->thread[i].color;
             decodedColors[byteChunk] = currentColor.r;
             decodedColors[byteChunk + 1] = currentColor.g;
             decodedColors[byteChunk + 2] = currentColor.b;
@@ -7721,7 +7708,7 @@ writeVp3(EmbPattern* pattern, FILE* file)
     vp3WriteString(file, "");
     embInt_write(file, ".", &numberOfColors, EMB_INT16_BIG);
 
-    for (i=0; i<pattern->stitchList->count; i++) {
+    for (i=0; i<pattern->stitch_list->count; i++) {
         char colorName[8] = { 0 };
         EmbReal lastX, lastY;
         int colorSectionLengthPos, j;
@@ -7746,7 +7733,7 @@ writeVp3(EmbPattern* pattern, FILE* file)
 
         /*
         pointer = mainPointer;
-        color = pattern->thread_list[pointer->stitch.color].color;
+        color = pattern->thread_list->thread[pointer->stitch.color].color;
 
         if (first && pointer->stitch.flags & JUMP && pointer->next->stitch.flags & JUMP) {
             pointer = pointer->next;
@@ -7799,7 +7786,7 @@ writeVp3(EmbPattern* pattern, FILE* file)
         fputc(0, file);
 
         /*
-        for (j=i; j<pattern->stitchList->count; j++) {
+        for (j=i; j<pattern->stitch_list->count; j++) {
         while (pointer) {
             short dx, dy;
 

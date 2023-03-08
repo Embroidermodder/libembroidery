@@ -78,10 +78,9 @@ writeZsk(EmbPattern* pattern, FILE* file)
 
     fpad(file, 0x00, 0x230);
 
-    fprintf(file, "%c", pattern->n_threads);
-    for (i=pattern->n_threads; i>0; i--) {
-        EmbThread t;
-        t = pattern->thread_list[i-1];
+    fprintf(file, "%c", pattern->thread_list->count);
+    for (i=pattern->thread_list->count; i>0; i--) {
+        EmbThread t = pattern->thread_list->thread[i-1];
         embColor_write(file, t.color, 3);
         fpad(file, 0x00, 0x48);
         fprintf(file, "%c", i-1);
@@ -89,10 +88,10 @@ writeZsk(EmbPattern* pattern, FILE* file)
 
     fpad(file, 0x00, 0x2E);
 
-    for (i=0; i<pattern->stitchList->count; i++) {
+    for (i=0; i<pattern->stitch_list->count; i++) {
         EmbStitch st;
         unsigned char b[3];
-        st = pattern->stitchList->stitch[i];
+        st = pattern->stitch_list->stitch[i];
         b[0] = 0;
         b[1] = st.x;
         b[2] = st.y;

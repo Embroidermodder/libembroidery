@@ -22,8 +22,6 @@ embCircle_init(void)
     circle.center.x = 0.0;
     circle.center.y = 0.0;
     circle.radius = 1.0;
-    circle.lineType = 0;
-    circle.color = black_thread.color;
     return circle;
 }
 

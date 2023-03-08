@@ -134,6 +134,7 @@ extern "C" {
 #define EMB_TEXT_SINGLE         16
 #define EMB_TEXT_MULTI          17
 #define EMB_VECTOR              18
+#define EMB_THREAD              19
 
 #define EMBFORMAT_UNSUPPORTED    0
 #define EMBFORMAT_STITCHONLY     1
@@ -327,8 +328,6 @@ typedef struct EmbArc_
     EmbVector start;
     EmbVector mid;
     EmbVector end;
-    int lineType;
-    EmbColor color;
 } EmbArc;
 
 typedef struct EmbRect_
@@ -339,16 +338,12 @@ typedef struct EmbRect_
     EmbReal right;
     EmbReal rotation;
     EmbReal radius;
-    int lineType;
-    EmbColor color;
 } EmbRect;
 
 typedef struct EmbCircle_
 {
     EmbVector center;
     EmbReal radius;
-    int lineType;
-    EmbColor color;
 } EmbCircle;
 
 typedef EmbPath EmbPolygon;
@@ -367,8 +362,6 @@ typedef struct EmbEllipse_
     EmbVector center;
     EmbVector radius;
     EmbReal rotation;
-    int lineType;
-    EmbColor color;
 } EmbEllipse;
 
 typedef struct EmbBezier_ {
@@ -380,8 +373,6 @@ typedef struct EmbBezier_ {
 
 typedef struct EmbSpline_ {
     EmbArray *beziers;
-    int lineType;
-    EmbColor color;
 } EmbSpline;
 
 typedef struct LSYSTEM {
@@ -397,7 +388,6 @@ typedef struct EmbGeometry_ {
         EmbCircle circle;
         EmbColor color;
         EmbEllipse ellipse;
-        int flag;
         EmbLine line;
         EmbPath path;
         EmbPoint point;
@@ -405,26 +395,20 @@ typedef struct EmbGeometry_ {
         EmbPolyline polyline;
         EmbRect rect;
         EmbSpline spline;
+        EmbVector vector;
     } object;
+    EmbStitch stitch;
+    EmbThread thread;
+    int flag;
     int type;
     int lineType;
     EmbColor color;
 } EmbGeometry;
 
 struct EmbArray_ {
-    EmbArc *arc;
-    EmbColor *color;
-	int *flag;
 	EmbGeometry *geometry;
-	EmbPath *path;
-	EmbPoint *point;
-	EmbPolygon *polygon;
-	EmbPolyline *polyline;
-	EmbRect *rect;
-	EmbSpline *spline;
 	EmbStitch *stitch;
-	EmbThread thread[MAX_THREADS];
-	EmbVector *vector;
+	EmbThread *thread;
     int count;
     int length;
     int type;
@@ -433,7 +417,7 @@ struct EmbArray_ {
 typedef struct EmbLayer_
 {
     char name[100];
-    EmbArray* stitchList;
+    EmbArray* stitch_list;
     EmbArray* geometry;
 } EmbLayer;
 
@@ -443,21 +427,10 @@ typedef struct EmbPattern_
     EmbVector home;
     EmbReal hoop_width;
     EmbReal hoop_height;
-
-    EmbThread thread_list[MAX_THREADS];
-    int n_threads;
-
-    EmbArray* stitchList;
-    EmbArray* arcs;
+    EmbArray *thread_list;
+    EmbArray *stitch_list;
     EmbArray* geometry;
-    EmbArray* paths;
-    EmbArray* points;
-    EmbArray* polygons;
-    EmbArray* polylines;
-    EmbArray* rects;
-    EmbArray* splines;
     EmbLayer layer[EMB_MAX_LAYERS];
-
     int currentColorIndex;
 } EmbPattern;
 
@@ -511,8 +484,8 @@ EMB_PUBLIC EmbLine embLine_make(EmbReal x1, EmbReal y1, EmbReal x2, EmbReal y2);
 EMB_PUBLIC void embLine_normalVector(EmbLine line, EmbVector* result, int clockwise);
 EMB_PUBLIC EmbVector embLine_intersectionPoint(EmbLine line1, EmbLine line2);
 
-EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbArray* colors, int mode);
-EMB_PUBLIC int embThread_findNearestColor_fromThread(EmbColor color, EmbThread* colors, int length);
+EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbColor* colors, int n_colors);
+EMB_PUBLIC int embThread_findNearestThread(EmbColor color, EmbThread* threads, int n_threads);
 EMB_PUBLIC EmbThread embThread_getRandom(void);
 
 EMB_PUBLIC void embVector_normalize(EmbVector vector, EmbVector* result);

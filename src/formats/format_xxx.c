@@ -117,12 +117,12 @@ xxxEncodeDesign(FILE* file, EmbPattern* p)
     EmbReal thisX = 0.0f;
     EmbReal thisY = 0.0f;
 
-    if (p->stitchList->count > 0) {
-        thisX = (float)p->stitchList->stitch[0].x;
-        thisY = (float)p->stitchList->stitch[0].y;
+    if (p->stitch_list->count > 0) {
+        thisX = (float)p->stitch_list->stitch[0].x;
+        thisY = (float)p->stitch_list->stitch[0].y;
     }
-    for (i = 0; i < p->stitchList->count; i++) {
-        EmbStitch s = p->stitchList->stitch[i];
+    for (i = 0; i < p->stitch_list->count; i++) {
+        EmbStitch s = p->stitch_list->stitch[i];
         EmbReal deltaX, deltaY;
         EmbReal previousX = thisX;
         EmbReal previousY = thisY;
@@ -153,11 +153,11 @@ writeXxx(EmbPattern* pattern, FILE* file)
     embPattern_correctForMaxStitchLength(pattern, 124, 127);
 
     fpad(file, 0, 0x17);
-    n_stitches = (unsigned int)pattern->stitchList->count;
+    n_stitches = (unsigned int)pattern->stitch_list->count;
     embInt_write(file, "n_stitches", &n_stitches, EMB_INT32_LITTLE);
 
     fpad(file, 0, 0x0C);
-    n_threads = (unsigned short)pattern->n_threads;
+    n_threads = (unsigned short)pattern->thread_list->count;
     embInt_write(file, "n_threads", &n_threads, EMB_INT16_LITTLE);
 
     fpad(file, 0, 0x02);
@@ -195,12 +195,12 @@ writeXxx(EmbPattern* pattern, FILE* file)
     /* is this really correct? */
     fwrite("\x7F\x7F\x03\x14\x00\x00", 1, 6, file);
 
-    for (i = 0; i < pattern->n_threads; i++) {
-        EmbColor c = pattern->thread_list[i].color;
+    for (i = 0; i < pattern->thread_list->count; i++) {
+        EmbColor c = pattern->thread_list->thread[i].color;
         fputc(0x00, file);
         embColor_write(file, c, 3);
     }
-    for (i = 0; i < (22 - pattern->n_threads); i++) {
+    for (i = 0; i < (22 - pattern->thread_list->count); i++) {
         unsigned int padder = 0x01000000;
         embInt_write(file, "padder", &padder, EMB_INT32_LITTLE);
     }

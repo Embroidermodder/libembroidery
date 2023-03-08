@@ -49,10 +49,10 @@ writeT09(EmbPattern* pattern, FILE* file)
 
     pos.x = 0.0;
     pos.y = 0.0;
-    for (i = 0; i < pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitch_list->count; i++) {
         unsigned char b[3];
         int dx, dy;
-        EmbStitch st = pattern->stitchList->stitch[i];
+        EmbStitch st = pattern->stitch_list->stitch[i];
         /* convert from mm to 0.1mm for file format */
         dx = (int)emb_round(10.0*(st.x - pos.x));
         dy = (int)emb_round(10.0*(st.y - pos.y));

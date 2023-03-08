@@ -19,201 +19,73 @@ EmbArray*
 embArray_create(int type)
 {
     int i;
-    EmbArray *p;
-    p = (EmbArray*)malloc(sizeof(EmbArray));
-    p->type = type;
-    p->length = CHUNK_SIZE;
-    p->count = 0;
-    switch (p->type) {
-    case EMB_ARC:
-        p->arc = (EmbArc*)malloc(CHUNK_SIZE*sizeof(EmbArc));
-        break;
-    case EMB_FLAG:
-        p->flag = (int*)malloc(CHUNK_SIZE*sizeof(int));
-        break;
-    case EMB_PATH:
-        p->path = (EmbPath*)malloc(CHUNK_SIZE*sizeof(EmbPath));
-        for (i=0; i<CHUNK_SIZE; i++) {
-            p->path[i].pointList = embArray_create(EMB_POINT);
-        }
-        break;
-    case EMB_POINT:
-        p->point = (EmbPoint*)malloc(CHUNK_SIZE*sizeof(EmbPoint));
-        break;
-    case EMB_CIRCLE:
-    case EMB_ELLIPSE:
-    case EMB_LINE:
-        p->geometry = (EmbGeometry*)malloc(CHUNK_SIZE*sizeof(EmbGeometry));
-        break;
-    case EMB_POLYGON:
-        p->polygon = (EmbPolygon*)malloc(CHUNK_SIZE*sizeof(EmbPolygon));
-        for (i=0; i<CHUNK_SIZE; i++) {
-            p->polygon[i].pointList = embArray_create(EMB_POINT);
-            p->polygon[i].flagList = embArray_create(EMB_FLAG);
-        }
-        break;
-    case EMB_POLYLINE:
-        p->polyline = (EmbPolyline*)malloc(CHUNK_SIZE*sizeof(EmbPolyline));
-        for (i=0; i<CHUNK_SIZE; i++) {
-            p->polyline[i].pointList = embArray_create(EMB_POINT);
-            p->polyline[i].flagList = embArray_create(EMB_FLAG);
-        }
-        break;
-    case EMB_RECT:
-        p->rect = (EmbRect*)malloc(CHUNK_SIZE*sizeof(EmbRect));
-        break;
-    case EMB_SPLINE:
-        p->spline = (EmbSpline*)malloc(CHUNK_SIZE*sizeof(EmbSpline));
-        break;
+    EmbArray *a;
+    a = (EmbArray*)malloc(sizeof(EmbArray));
+    a->type = type;
+    a->length = CHUNK_SIZE;
+    a->count = 0;
+    switch (type) {
     case EMB_STITCH:
-        p->stitch = (EmbStitch*)malloc(CHUNK_SIZE*sizeof(EmbStitch));
+        a->stitch = (EmbStitch*)malloc(CHUNK_SIZE*sizeof(EmbStitch));
         break;
-    case EMB_VECTOR:
-        p->vector = (EmbVector*)malloc(CHUNK_SIZE*sizeof(EmbVector));
+    case EMB_THREAD:
+        a->thread = (EmbThread*)malloc(CHUNK_SIZE*sizeof(EmbThread));
         break;
     default:
+        a->geometry = (EmbGeometry*)malloc(CHUNK_SIZE*sizeof(EmbGeometry));
         break;
     }
-    return p;
+    return a;
 }
 
 int
-embArray_resize(EmbArray *p)
+embArray_resize(EmbArray *a)
 {
     int i;
-    if (p->count < p->length) {
+    if (a->count < a->length) {
         return 1;
     }
-    p->length += CHUNK_SIZE;
-    switch (p->type) {
-    case EMB_ARC:
-        p->arc = (EmbArc *)realloc(p->arc, p->length*sizeof(EmbArc));
-        if (!p->arc) return 0;
-        break;
-    case EMB_FLAG:
-        p->flag = (int *)realloc(p->flag, p->length*sizeof(int));
-        if (!p->flag) return 0;
-        break;
-    case EMB_PATH:
-        p->path = (EmbPath *)realloc(p->path, p->length*sizeof(EmbPath*));
-        if (!p->path) return 0;
-        break;
-    case EMB_POINT:
-        p->point = (EmbPoint *)realloc(p->point, p->length*sizeof(EmbPoint));
-        if (!p->point) return 0;
-        break;
-    case EMB_CIRCLE:
-    case EMB_ELLIPSE:
-    case EMB_LINE:
-        p->geometry = (EmbGeometry *)realloc(p->geometry, p->length*sizeof(EmbGeometry));
-        if (!p->geometry) return 0;
-        break;
-    case EMB_POLYGON:
-        p->polygon = (EmbPolygon *)realloc(p->polygon, p->length*sizeof(EmbPolygon));
-        if (p->polygon == NULL) {
-            return 0;
-        }
-        break;
-    case EMB_POLYLINE:
-        p->polyline = (EmbPolyline *)realloc(p->polyline, p->length*sizeof(EmbPolyline));
-        if (!p->polyline) return 0;
-        for (i=0; i<CHUNK_SIZE; i++) {
-            p->polyline[i].pointList = embArray_create(EMB_POINT);
-            if (!p->polyline) return 0;
-            p->polyline[i].flagList = embArray_create(EMB_FLAG);
-        }
-        break;
-    case EMB_RECT:
-        p->rect = (EmbRect *)realloc(p->rect, p->length*sizeof(EmbRect));
-        if (!p->rect) return 0;
-        break;
-    case EMB_SPLINE:
-        p->spline = (EmbSpline *)realloc(p->spline, p->length*sizeof(EmbSpline));
-        if (!p->spline) return 0;
-        break;
-    case EMB_STITCH:
-        p->stitch = (EmbStitch *)realloc(p->stitch, p->length*sizeof(EmbStitch));
-        if (!p->stitch) return 0;
-        break;
-    case EMB_VECTOR:
-        p->vector = (EmbVector *)realloc(p->vector, p->length*sizeof(EmbVector));
-        if (!p->vector) return 0;
-        break;
-    default:
-        break;
+    a->length += CHUNK_SIZE;
+    a->geometry = (EmbGeometry *)realloc(a->geometry, a->length*sizeof(EmbGeometry));
+    if (!a->geometry) {
+        /* TODO: Error reporting */
+        return 0;
     }
     return 1;
 }
 
 void embArray_copy(EmbArray *dst, EmbArray *src)
 {
-    dst = (EmbArray*)malloc(sizeof(EmbArray));
-    dst->type = src->type;
+    dst = embArray_create(src->type);
     dst->length = src->length;
     dst->count = src->count;
     embArray_resize(dst);
-    switch (src->type) {
-    case EMB_ARC:
-        memcpy(dst->arc, src->arc, sizeof(EmbArc)*src->count);
-        break;
-    case EMB_FLAG:
-        memcpy(dst->flag, src->flag, sizeof(int)*src->count);
-        break;
-    case EMB_PATH:
-        memcpy(dst->path, src->path, sizeof(EmbPath)*src->count);
-        break;
-    case EMB_POINT:
-        memcpy(dst->point, src->point, sizeof(EmbPoint)*src->count);
-        break;
-    case EMB_CIRCLE:
-    case EMB_ELLIPSE:
-    case EMB_LINE:
-        memcpy(dst->geometry, src->geometry, sizeof(EmbGeometry)*src->count);
-        break;
-    case EMB_POLYGON:
-        memcpy(dst->polygon, src->polygon, sizeof(int)*src->count);
-        break;
-    case EMB_POLYLINE:
-        memcpy(dst->polyline, src->polyline, sizeof(int)*src->count);
-        break;
-    case EMB_RECT:
-        memcpy(dst->rect, src->rect, sizeof(int)*src->count);
-        break;
-    case EMB_SPLINE:
-        memcpy(dst->spline, src->spline, sizeof(int)*src->count);
-        break;
+    /* BUG: Potential failure to copy path memory, only copy pointers? */
+
+    switch (dst->type) {
     case EMB_STITCH:
-        memcpy(dst->stitch, src->stitch, sizeof(int)*src->count);
+        memcpy(dst->stitch, src->stitch, sizeof(EmbStitch)*src->count);
         break;
-    case EMB_VECTOR:
-        memcpy(dst->vector, src->vector, sizeof(int)*src->count);
+    case EMB_THREAD:
+        memcpy(dst->thread, src->thread, sizeof(EmbThread)*src->count);
         break;
     default:
+        memcpy(dst->geometry, src->geometry, sizeof(EmbGeometry)*src->count);
         break;
     }
 }
 
-#define addGeometry(A, B) \
-    int \
-    embArray_add##A(EmbArray *a, Emb##A B) \
-    { \
-        a->count++; \
-        if (!embArray_resize(a)) { \
-            return 0; \
-        } \
-        a->B[a->count - 1] = B; \
-        return 1; \
+int
+embArray_addArc(EmbArray *a, EmbArc b)
+{
+    a->count++;
+    if (!embArray_resize(a)) {
+        return 0;
     }
-
-addGeometry(Arc, arc)
-addGeometry(Flag, flag)
-addGeometry(Path, path)
-addGeometry(Point, point)
-addGeometry(Polygon, polygon)
-addGeometry(Polyline, polyline)
-addGeometry(Rect, rect)
-addGeometry(Stitch, stitch)
-addGeometry(Vector, vector)
+    a->geometry[a->count - 1].object.arc = b;
+    a->geometry[a->count - 1].type = EMB_ARC;
+    return 1;
+}
 
 int
 embArray_addCircle(EmbArray *a, EmbCircle b)
@@ -240,6 +112,18 @@ embArray_addEllipse(EmbArray *a, EmbEllipse b)
 }
 
 int
+embArray_addFlag(EmbArray *a, EmbFlag b)
+{
+    a->count++;
+    if (!embArray_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].flag = b;
+    a->geometry[a->count - 1].type = EMB_FLAG;
+    return 1;
+}
+
+int
 embArray_addLine(EmbArray *a, EmbLine b)
 {
     a->count++;
@@ -251,59 +135,138 @@ embArray_addLine(EmbArray *a, EmbLine b)
     return 1;
 }
 
-void embArray_free(EmbArray* p) {
+int
+embArray_addPath(EmbArray *a, EmbPath b)
+{
+    a->count++;
+    if (!embArray_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.path.pointList = embArray_create(EMB_POINT);
+    if (!a->geometry[a->count - 1].object.path.pointList) {
+        /* TODO: Error reporting */
+        return 0;
+    }
+    a->geometry[a->count - 1].type = EMB_PATH;
+    return 1;
+}
+
+int
+embArray_addPoint(EmbArray *a, EmbPoint b)
+{
+    a->count++;
+    if (!embArray_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.point = b;
+    a->geometry[a->count - 1].type = EMB_POINT;
+    return 1;
+}
+
+int
+embArray_addPolyline(EmbArray *a, EmbPolyline b)
+{
+    a->count++;
+    if (!embArray_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.polyline.pointList = embArray_create(EMB_POINT);
+    if (!a->geometry[a->count - 1].object.polyline.pointList) {
+        /* TODO: Error reporting */
+        return 0;
+    }
+    a->geometry[a->count - 1].type = EMB_POLYLINE;
+    return 1;
+}
+
+int
+embArray_addPolygon(EmbArray *a, EmbPolygon b)
+{
+    a->count++;
+    if (!embArray_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.polygon.pointList = embArray_create(EMB_POINT);
+    if (!a->geometry[a->count - 1].object.polygon.pointList) {
+        /* TODO: Error reporting */
+        return 0;
+    }
+    a->geometry[a->count - 1].type = EMB_POLYGON;
+    return 1;
+}
+
+int
+embArray_addRect(EmbArray *a, EmbRect b)
+{
+    a->count++;
+    if (!embArray_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.rect = b;
+    a->geometry[a->count - 1].type = EMB_RECT;
+    return 1;
+}
+
+int
+embArray_addStitch(EmbArray *a, EmbStitch b)
+{
+    a->count++;
+    if (!embArray_resize(a)) {
+        return 0;
+    }
+    a->stitch[a->count - 1] = b;
+    return 1;
+}
+
+int
+embArray_addVector(EmbArray *a, EmbVector b)
+{
+    a->count++;
+    if (!embArray_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.vector = b;
+    a->geometry[a->count - 1].type = EMB_VECTOR;
+    return 1;
+}
+
+void
+embArray_free(EmbArray* a)
+{
     int i;
-    if (!p) {
+    if (!a) {
         return;
     }
-    switch (p->type) {
-    case EMB_ARC:
-        free(p->arc);
-        break;
-    case EMB_FLAG:
-        free(p->flag);
-        break;
-    case EMB_CIRCLE:
-    case EMB_ELLIPSE:
-    case EMB_LINE:
-        free(p->geometry);
-        break;
-    case EMB_PATH:
-        for (i = 0; i < p->count; i++) {
-            embArray_free(p->path[i].pointList);
-        }
-        free(p->path);
-        break;
-    case EMB_POINT:
-        free(p->point);
-        break;
-    case EMB_POLYGON:
-        for (i = 0; i < p->count; i++) {
-            embArray_free(p->polygon[i].pointList);
-        }
-        free(p->polygon);
-        break;
-    case EMB_POLYLINE:
-        for (i = 0; i < p->count; i++) {
-            embArray_free(p->polyline[i].pointList);
-        }
-        free(p->polyline);
-        break;
-    case EMB_RECT:
-        free(p->rect);
-        break;
-    case EMB_SPLINE:
-        free(p->spline);
-        break;
+    switch (a->type) {
     case EMB_STITCH:
-        free(p->stitch);
+        free(a->stitch);
         break;
-    case EMB_VECTOR:
-        free(p->vector);
+    case EMB_THREAD:
+        free(a->thread);
         break;
     default:
+        for (i = 0; i < a->count; i++) {
+            EmbGeometry g = a->geometry[i];
+            switch (a->geometry[i].type) {
+            case EMB_PATH: {
+                embArray_free(g.object.path.pointList);
+                break;
+            }
+            case EMB_POLYGON: {
+                embArray_free(g.object.polygon.pointList);
+                break;
+            }
+            case EMB_POLYLINE: {
+                embArray_free(g.object.polyline.pointList);
+                break;
+            }
+            default:
+                break;
+            }
+        }
+        free(a->geometry);
         break;
     }
-    free(p);
+    free(a);
 }
 

@@ -28,8 +28,6 @@ embArc_init(void)
     arc.mid.y = 1.0;
     arc.end.x = 2.0;
     arc.end.y = 2.0;
-    arc.lineType = 0;
-    arc.color = black_thread.color;
     return arc;
 }
 

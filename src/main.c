@@ -541,21 +541,21 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
     }
 
     for (i = 1; i < lines->count; i++) {
-        line.start = lines->vector[i - 1];
-        line.end = lines->vector[i];
+        line.start = lines->geometry[i - 1].object.vector;
+        line.end = lines->geometry[i].object.vector;
 
         embLine_normalVector(line, &v1, 1);
 
         embVector_multiply(v1, halfThickness, &temp);
-        temp = embVector_add(temp, lines->vector[i - 1]);
+        temp = embVector_add(temp, lines->geometry[i-1].object.vector);
         embArray_addVector(outline.side1, temp);
-        temp = embVector_add(temp, lines->vector[i]);
+        temp = embVector_add(temp, lines->geometry[i].object.vector);
         embArray_addVector(outline.side1, temp);
 
         embVector_multiply(v1, -halfThickness, &temp);
-        temp = embVector_add(temp, lines->vector[i - 1]);
+        temp = embVector_add(temp, lines->geometry[i - 1].object.vector);
         embArray_addVector(outline.side2, temp);
-        temp = embVector_add(temp, lines->vector[i]);
+        temp = embVector_add(temp, lines->geometry[i].object.vector);
         embArray_addVector(outline.side2, temp);
     }
 
@@ -574,24 +574,24 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
         return;
     }
 
-    embArray_addVector(result->side1, outline.side1->vector[0]);
-    embArray_addVector(result->side2, outline.side2->vector[0]);
+    embArray_addVector(result->side1, outline.side1->geometry[0].object.vector);
+    embArray_addVector(result->side2, outline.side2->geometry[0].object.vector);
 
     for (i = 3; i < intermediateOutlineCount; i += 2) {
-        line1.start = outline.side1->vector[i - 3];
-        line1.end = outline.side1->vector[i - 2];
-        line2.start = outline.side1->vector[i - 1];
-        line2.end = outline.side1->vector[i];
+        line1.start = outline.side1->geometry[i - 3].object.vector;
+        line1.end = outline.side1->geometry[i - 2].object.vector;
+        line2.start = outline.side1->geometry[i - 1].object.vector;
+        line2.end = outline.side1->geometry[i].object.vector;
         out = embLine_intersectionPoint(line1, line2);
         if (emb_error) {
             puts("No intersection point.");
         }
         embArray_addVector(result->side1, out);
 
-        line1.start = outline.side2->vector[i - 3];
-        line1.end = outline.side2->vector[i - 2];
-        line2.start = outline.side2->vector[i - 1];
-        line2.end = outline.side2->vector[i];
+        line1.start = outline.side2->geometry[i - 3].object.vector;
+        line1.end = outline.side2->geometry[i - 2].object.vector;
+        line2.start = outline.side2->geometry[i - 1].object.vector;
+        line2.end = outline.side2->geometry[i].object.vector;
         out = embLine_intersectionPoint(line1, line2);
         if (emb_error) {
             puts("No intersection point.");
@@ -599,8 +599,8 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
         embArray_addVector(result->side2, out);
     }
 
-    embArray_addVector(result->side1, outline.side1->vector[2 * lines->count - 3]);
-    embArray_addVector(result->side2, outline.side2->vector[2 * lines->count - 3]);
+    embArray_addVector(result->side1, outline.side1->geometry[2 * lines->count - 3].object.vector);
+    embArray_addVector(result->side2, outline.side2->geometry[2 * lines->count - 3].object.vector);
     result->length = lines->count;
 }
 
@@ -621,11 +621,15 @@ embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density)
 
     if (result->length > 0) {
         for (j = 0; j < result->length - 1; j++) {
-            topDiff = embVector_subtract(result->side1->vector[j+1], result->side1->vector[j]);
-            bottomDiff = embVector_subtract(result->side2->vector[j+1], result->side2->vector[j]);
+            EmbGeometry *g10 = &(result->side1->geometry[j+0]);
+            EmbGeometry *g11 = &(result->side1->geometry[j+1]);
+            EmbGeometry *g20 = &(result->side2->geometry[j+0]);
+            EmbGeometry *g21 = &(result->side2->geometry[j+1]);
+            topDiff = embVector_subtract(g10->object.vector, g11->object.vector);
+            bottomDiff = embVector_subtract(g21->object.vector, g20->object.vector);
 
-            midLeft = embVector_average(result->side1->vector[j], result->side2->vector[j]);
-            midRight = embVector_average(result->side1->vector[j+1], result->side2->vector[j+1]);
+            midLeft = embVector_average(g10->object.vector, g20->object.vector);
+            midRight = embVector_average(g11->object.vector, g21->object.vector);
 
             midDiff = embVector_subtract(midLeft, midRight);
             midLength = embVector_length(midDiff);
@@ -633,8 +637,8 @@ embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density)
             numberOfSteps = (int)(midLength * density / 200);
             embVector_multiply(topDiff, 1.0/numberOfSteps, &topStep);
             embVector_multiply(bottomDiff, 1.0/numberOfSteps, &bottomStep);
-            currTop = result->side1->vector[j];
-            currBottom = result->side2->vector[j];
+            currTop = g10->object.vector;
+            currBottom = g20->object.vector;
 
             for (i = 0; i < numberOfSteps; i++) {
                 if (!stitches) {
@@ -708,17 +712,12 @@ embColor_write(FILE *f, EmbColor c, int toWrite)
  * @return closestIndex The entry in the ThreadList that matches.
  */
 int
-embThread_findNearestColor(EmbColor color, EmbArray* a, int mode)
+embThread_findNearestColor(EmbColor color, EmbColor *color_list, int n_colors)
 {
     int currentClosestValue = 256*256*3;
     int closestIndex = -1, i;
-    for (i = 0; i < a->count; i++) {
-        int delta;
-        if (mode == 0) { /* thread mode */
-            delta = embColor_distance(color, a->thread[i].color);
-        } else { /* color array mode */
-            delta = embColor_distance(color, a->color[i]);
-        }
+    for (i = 0; i < n_colors; i++) {
+        int delta = embColor_distance(color, color_list[i]);
 
         if (delta <= currentClosestValue) {
             currentClosestValue = delta;
@@ -729,14 +728,12 @@ embThread_findNearestColor(EmbColor color, EmbArray* a, int mode)
 }
 
 int
-embThread_findNearestColor_fromThread(EmbColor color, EmbThread* a, int length)
+embThread_findNearestThread(EmbColor color, EmbThread *thread_list, int n_threads)
 {
     int currentClosestValue = 256*256*3;
     int closestIndex = -1, i;
-
-    for (i = 0; i < length; i++) {
-        int delta;
-        delta = embColor_distance(color, a[i].color);
+    for (i = 0; i < n_threads; i++) {
+        int delta = embColor_distance(color, thread_list[i].color);
 
         if (delta <= currentClosestValue) {
             currentClosestValue = delta;
@@ -1034,7 +1031,7 @@ testEmbCircle(void)
     EmbReal epsilon = 1e-3;
     EmbVector p0, p1;
     /* Problem */
-    EmbCircle c1 = {{0.0, 0.0}, 3.0, 0, {0, 0, 0}};
+    EmbCircle c1 = {{0.0, 0.0}, 3.0};
     /* Solution */
     EmbVector t0 = {2.2500, 1.9843};
     EmbVector t1 = {2.2500, -1.9843};
@@ -1054,7 +1051,7 @@ int testEmbCircle_2(void) {
     EmbReal error;
     EmbReal epsilon = 1e-3;
     EmbVector p0, p1;
-    EmbCircle c2 = {{20.1762, 10.7170}, 6.8221, 0, {0, 0, 0}};
+    EmbCircle c2 = {{20.1762, 10.7170}, 6.8221};
     /* Solution */
     EmbVector s0 = {19.0911, 17.4522};
     EmbVector s1 = {26.4428, 13.4133};
@@ -1622,7 +1619,7 @@ command_line_interface(int argc, char* argv[])
             if (i + 2 < argc) {
                 /* the user appears to have entered filenames after render */
                 embPattern_readAuto(current_pattern, argv[i+1]);
-                printf("%d\n", current_pattern->stitchList->count);
+                printf("%d\n", current_pattern->stitch_list->count);
                 embPattern_render(current_pattern, argv[i+2]);
                 i += 2;
                 break;

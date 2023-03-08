@@ -23,8 +23,6 @@ embEllipse_init(void)
     ellipse.radius.x = 1.0;
     ellipse.radius.y = 2.0;
     ellipse.rotation = 0.0;
-    ellipse.lineType = 0;
-    ellipse.color = black_thread.color;
     return ellipse;
 }
 

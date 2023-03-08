@@ -107,7 +107,7 @@ writeThr(EmbPattern* pattern, FILE* file)
     ThredExtension extension;
     char bitmapName[16];
 
-    stitchCount = pattern->stitchList->count;
+    stitchCount = pattern->stitch_list->count;
 
     memset(&header, 0, sizeof(ThredHeader));
     header.sigVersion = 0x746872 | (version << 24);
@@ -142,9 +142,9 @@ writeThr(EmbPattern* pattern, FILE* file)
     }
 
     /* write stitches */
-    for (i = 0; i < pattern->stitchList->count; i++) {
+    for (i = 0; i < pattern->stitch_list->count; i++) {
         unsigned int NOTFRM = 0x00080000;
-        EmbStitch st = pattern->stitchList->stitch[i];
+        EmbStitch st = pattern->stitch_list->stitch[i];
         float x, y;
         x = (float)(st.x * 10.0);
         y = (float)(st.y * 10.0);
@@ -156,8 +156,8 @@ writeThr(EmbPattern* pattern, FILE* file)
     /* background color */
     fwrite("\xFF\xFF\xFF\x00", 1, 4, file);
 
-    for (i = 0; i < pattern->n_threads; i++) {
-        EmbColor c = pattern->thread_list[i].color;
+    for (i = 0; i < pattern->thread_list->count; i++) {
+        EmbColor c = pattern->thread_list->thread[i].color;
         embColor_write(file, c, 4);
         if (i >= 16) break;
     }

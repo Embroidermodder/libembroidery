@@ -61,10 +61,10 @@ char
 writeTxt(EmbPattern* pattern, FILE* file)
 {
     int i;
-    fprintf(file, "%u\n", (unsigned int) pattern->stitchList->count);
+    fprintf(file, "%u\n", (unsigned int) pattern->stitch_list->count);
 
-    for (i = 0; i < pattern->stitchList->count; i++) {
-        EmbStitch s = pattern->stitchList->stitch[i];
+    for (i = 0; i < pattern->stitch_list->count; i++) {
+        EmbStitch s = pattern->stitch_list->stitch[i];
         fprintf(file, "%.1f,%.1f color:%i flags:%i\n", 
                 s.x, s.y, s.color, s.flags);
     }

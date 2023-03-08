@@ -22,11 +22,8 @@ embRect_init(void)
     rect.top = 0.0;
     rect.right = 1.0;
     rect.bottom = 1.0;
-    rect.lineType = 0;
-    rect.color = black_thread.color;
     return rect;
 }
-
 
 EmbReal
 embRect_area(EmbRect rect)

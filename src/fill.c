@@ -357,11 +357,11 @@ StitchBlock* BreakIntoColorBlocks(EmbPattern *pattern)
 {
     int i;
     int sa2 = new StitchBlock();
-    int oldColor = pattern->stitchList->stitch[0].color;
+    int oldColor = pattern->stitch_list->stitch[0].color;
     int color = pattern.ColorList[oldColor];
     sa2.Thread = new Thread(color.Red, color.Blue, color.Green);
-    for (i = 0; i < pattern->stitchList->count; i++) {
-        EmbStitch s = pattern->stitchList->stitch[i];
+    for (i = 0; i < pattern->stitch_list->count; i++) {
+        EmbStitch s = pattern->stitch_list->stitch[i];
         if (s.color != oldColor) {
             yield return sa2;
             sa2 = new StitchBlock();
@@ -508,16 +508,16 @@ EmbPattern DrawGraphics(EmbPattern p) {
             break;
             StitchObject stitchObject = objectsFound[1];))
             if (stitchObject.SideOne.Count > 0) {
-                outPattern.StitchList.Add(new Stitch(stitchObject.SideOne[0].X, stitchObject.SideOne[0].Y,
+                outPattern.stitch_list.Add(new Stitch(stitchObject.SideOne[0].X, stitchObject.SideOne[0].Y,
                                                      StitchType.Jump, colorIndex));
             }
             foreach (Point t in stitchObject.SideOne) {
             
-                outPattern.StitchList.Add(new Stitch(t.X, t.Y,
+                outPattern.stitch_list.Add(new Stitch(t.X, t.Y,
                                                      StitchType.Normal, colorIndex));
             }
             foreach (Point t in stitchObject.SideTwo) {
-                outPattern.StitchList.Add(new Stitch(t.X, t.Y,
+                outPattern.stitch_list.Add(new Stitch(t.X, t.Y,
                                                      StitchType.Normal, colorIndex));
             }
             break;
@@ -533,7 +533,7 @@ EmbPattern DrawGraphics(EmbPattern p) {
 EmbPattern SimplifyOutline(EmbPattern pattern)
 {
     int v = new Vertices();
-    v.AddRange(pattern.StitchList.Select(point => new Vector2(point.X, point.Y)));
+    v.AddRange(pattern.stitch_list.Select(point => new Vector2(point.X, point.Y)));
     int output = SimplifyTools.DouglasPeuckerSimplify(v, 10);
     int patternOut = new Pattern();
     foreach (var color in pattern.ColorList)
@@ -812,14 +812,16 @@ void embPolygon_reduceByDistance(EmbArray *vertices, EmbArray *simplified, float
         EmbVector delta;
         int nextId = (i + 1) % vertices->count;
 
-        delta = embVector_subtract(vertices->vector[nextId], vertices->vector[i]);
+        delta = embVector_subtract(
+            vertices->geometry[nextId].object.vector,
+            vertices->geometry[i].object.vector);
 
         /* If they are closer than the distance, continue */
         if (embVector_length(delta) < distance) {
             continue;
         }
 
-        embArray_addVector(simplified, vertices->vector[i]);
+        embArray_addVector(simplified, vertices->geometry[i].object.vector);
     }
 }
 
@@ -838,7 +840,7 @@ void embPolygon_reduceByNth(EmbArray *vertices, EmbArray *out, int nth)
 
     for (i=0; i<vertices->count; i++) {
         if (i!=nth) {
-            embArray_addVector(out, vertices->vector[i]);
+            embArray_addVector(out, vertices->geometry[i].object.vector);
         }
     }
 }
@@ -850,18 +852,18 @@ embPattern_combine(EmbPattern *p1, EmbPattern *p2)
 {
     int i;
     EmbPattern *out = embPattern_create();
-    for (i=0; i<p1->stitchList->count; i++) {
-        embArray_addStitch(out->stitchList, p1->stitchList->stitch[i]);
+    for (i=0; i<p1->stitch_list->count; i++) {
+        embArray_addStitch(out->stitch_list, p1->stitch_list->stitch[i]);
     }
-    for (i=0; i<p2->stitchList->count; i++) {
-        embArray_addStitch(out->stitchList, p2->stitchList->stitch[i]);
+    for (i=0; i<p2->stitch_list->count; i++) {
+        embArray_addStitch(out->stitch_list, p2->stitch_list->stitch[i]);
     }
     /* These need to be merged, not appended. */
-    for (i=0; i<p1->n_threads; i++) {
-        embPattern_addThread(out, p1->thread_list[i]);
+    for (i=0; i<p1->thread_list->count; i++) {
+        embPattern_addThread(out, p1->thread_list->thread[i]);
     }
-    for (i=0; i<p2->n_threads; i++) {
-        embPattern_addThread(out, p2->thread_list[i]);
+    for (i=0; i<p2->thread_list->count; i++) {
+        embPattern_addThread(out, p2->thread_list->thread[i]);
     }
     return out;
 }

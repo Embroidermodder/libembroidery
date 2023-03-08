@@ -611,6 +611,9 @@ EMB_PUBLIC char embPattern_writeAuto(EmbPattern *pattern, const char* fileName);
 EMB_PUBLIC void report(int result, char *label);
 EMB_PUBLIC int full_test_matrix(char *fname);
 
+EMB_PUBLIC int emb_round(EmbReal x);
+EMB_PUBLIC EmbReal radians(EmbReal degree);
+EMB_PUBLIC EmbReal degrees(EmbReal radian);
 
 /* NON-MACRO CONSTANTS
  ******************************************************************************/

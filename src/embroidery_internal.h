@@ -482,8 +482,6 @@ int testGeomArc(void);
 int testThreadColor(void);
 int testEmbFormat(void);
 
-int emb_round(EmbReal);
-
 void embColor_read(FILE *f, EmbColor *c, int toRead);
 void embColor_write(FILE *f, EmbColor c, int toWrite);
 

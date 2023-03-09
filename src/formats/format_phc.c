@@ -11,10 +11,6 @@
 
 #include "../embroidery_internal.h"
 
-
-/* ---------------------------------------------------------------- */
-/* format phc */
-
 char
 readPhc(EmbPattern* pattern, FILE* file)
 {

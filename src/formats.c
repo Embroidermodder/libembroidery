@@ -271,7 +271,12 @@ embPattern_read(EmbPattern* pattern, const char *fileName, int format)
     }
     file = fopen(fileName, "rb");
     if (!file) {
-        printf("ERROR: Failed to open file with name: %s.\n", fileName);
+        if ((format != EMB_FORMAT_EDR) &&
+            (format != EMB_FORMAT_RGB) &&
+            (format != EMB_FORMAT_COL) &&
+            (format != EMB_FORMAT_INF)) {
+            printf("ERROR: Failed to open file with name: %s.\n", fileName);
+        }
         return 0;
     }
     if (formatTable[format].check_for_color_file) {

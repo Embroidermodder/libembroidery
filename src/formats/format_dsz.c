@@ -50,12 +50,46 @@ readDsz(EmbPattern* pattern, FILE* file)
     return 1;
 }
 
+/* WARNING: this is untested.
+ * This is based on the readDsz function.
+ */
 char
 writeDsz(EmbPattern* pattern, FILE* file)
 {
-    puts("writeDsz is not implemented.");
-    puts("Overridden, defaulting to dst.");
-    writeDst(pattern, file);
-    return 0; /*TODO: finish writeDsz */
+    int i;
+    EmbVector delta;
+    EmbVector start;
+    fpad(file, ' ', 200);
+    start.x = 0.0;
+    start.y = 0.0;
+    for (i=0; i<pattern->stitch_list->count; i++) {
+        EmbVector pos;
+        EmbStitch st;
+        unsigned char b[3];
+        st = pattern->stitch_list->stitch[i];
+        pos.x = st.x;
+        pos.y = st.y;
+        delta = embVector_subtract(pos, start);
+        b[2] = 0;
+        if (st.flags & TRIM) {
+            b[2] |= 0x01;
+        }
+        if (10.0*delta.x < 0.0) {
+            b[2] |= 0x20;
+        }
+        if (10.0*delta.y < 0.0) {
+            b[2] |= 0x40;
+        }
+        if (st.flags & STOP) {
+            b[2] |= 0x0E;
+        }
+        if (st.flags & END) {
+            b[2] |= 0x10;
+        }
+        b[0] = emb_round(10.0*delta.x);
+        b[1] = emb_round(10.0*delta.y);
+        fwrite(b, 1, 3, file);
+    }
+    return 1;
 }
 

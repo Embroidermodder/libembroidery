@@ -1,5 +1,5 @@
 /*
- * 100 FORMAT
+ * PCQ FORMAT
  * This file is part of libembroidery.
  *
  * Copyright 2018-2023 The Embroidermodder Team
@@ -7,10 +7,10 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 
 #include "../embroidery_internal.h"
-
 
 char
 readPcq(EmbPattern* pattern, const char* fileName, FILE* file)

@@ -11,11 +11,9 @@
 
 #include "../embroidery_internal.h"
 
-
-/* ---------------------------------------------------------------- */
-/* format jef */
-
-int jefGetHoopSize(int width, int height) {
+int
+jefGetHoopSize(int width, int height)
+{
     if (width < 50 && height < 50) {
         return HOOP_50X50;
     }

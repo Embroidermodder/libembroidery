@@ -442,8 +442,11 @@ void write_24bit(FILE* file, int);
 int check_header_present(FILE* file, int minimum_header_length);
 
 unsigned short fread_uint16(FILE *file);
+short fread_int16(FILE* f);
 void safe_free(void *data);
 void embInt_read(FILE* f, char *label, void *b, int mode);
+ 
+void binaryWriteUInt(FILE* f, unsigned int data);
 
 bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize);
 unsigned int readFullSector(FILE* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);

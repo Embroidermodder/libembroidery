@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "embroidery_internal.h"
 
@@ -871,10 +872,149 @@ embPattern_combine(EmbPattern *p1, EmbPattern *p2)
 }
 
 void
+embPattern_stitchArc(EmbPattern *p, EmbArc arc, int thread_index, int style)
+{
+
+}
+
+void
+embPattern_stitchCircle(EmbPattern *p, EmbCircle circle, int thread_index, int style)
+{
+    /* style determines:
+     *     stitch density
+     *     fill pattern
+     *     outline or fill
+     *
+     * For now it's a straight fill of 1000 stitches of the whole object by 
+     * default.
+     *
+     * Consider the intersection of a line in direction "d" that passes through
+     * the disc with center "c", radius "r". The start and end points are:
+     *
+     *     $(c-r(d/|d|), c + r(d/|d|))$
+     *
+     * Lines that are above and below this with an even seperation $s$ can be 
+     * found by taking the point on the line to be c+sn where the $n$ is the 
+     * unit normal vector to $d$ and the vector to be $d$ again. The
+     * intersection points are therefore a right angled triangle, with one side
+     * r, another s and the third the length to be solved, by Pythagoras we
+     * have:
+     *
+     *    $(c + sn - \sqrt{r^2-s^2}(d/|d|), c + sn + \sqrt{r^2-s^2}(d/|d|))$
+     *
+     * repeating this process gives us all the end points and the fill only 
+     * alters these lines by splitting the ones longer than some tolerence.
+     */
+    float s;
+    float seperation = 0.1;
+    EmbVector direction = {1.0, 1.0};
+    EmbVector normal = {-1.0, 1.0};
+    embVector_normalize(direction, &direction);
+    embVector_normalize(normal, &normal);
+    for (s=-circle.radius; s<circle.radius; s += seperation) {
+        EmbLine line;
+        float length = sqrt(circle.radius*circle.radius - s*s);
+        EmbVector scaled;
+        embVector_multiply(normal, s, &scaled);
+        line.start = embVector_add(circle.center, scaled);
+        embVector_multiply(direction, length, &scaled);
+        line.start = embVector_subtract(line.start, scaled);
+        embVector_multiply(normal, s, &scaled);
+        line.end = embVector_add(circle.center, scaled);
+        embVector_multiply(direction, length, &scaled);
+        line.end = embVector_add(line.end, scaled);
+        /* Split long stitches here. */
+        embPattern_addStitchAbs(p, line.start.x, line.start.y, NORMAL, thread_index);
+        embPattern_addStitchAbs(p, line.end.x, line.end.y, NORMAL, thread_index);
+    }
+}
+
+void
+embPattern_stitchEllipse(EmbPattern *p, EmbEllipse ellipse, int thread_index, int style)
+{
+
+}
+
+void
+embPattern_stitchPath(EmbPattern *p, EmbPath rect, int thread_index, int style)
+{
+
+}
+
+void
+embPattern_stitchPolygon(EmbPattern *p, EmbPolygon rect, int thread_index, int style)
+{
+
+}
+
+void
+embPattern_stitchPolyline(EmbPattern *p, EmbPolyline rect, int thread_index, int style)
+{
+
+}
+
+void
+embPattern_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int style)
+{
+    /* Here we just stitch the rectangle in the direction of it's longer side. */
+    EmbReal seperation = 0.1;
+    EmbReal width = rect.right - rect.left;
+    EmbReal height = rect.bottom - rect.top;
+    if (width > height) {
+        float s;
+        for (s=rect.top; s<rect.bottom; s += seperation) {
+            /* Split long stitches here. */
+            embPattern_addStitchAbs(p, rect.top, s, NORMAL, thread_index);
+            embPattern_addStitchAbs(p, rect.bottom, s, NORMAL, thread_index);
+        }
+    }
+    else {
+        float s;
+        for (s=rect.left; s<rect.right; s += seperation) {
+            /* Split long stitches here. */
+            embPattern_addStitchAbs(p, s, rect.left, NORMAL, thread_index);
+            embPattern_addStitchAbs(p, s, rect.right, NORMAL, thread_index);
+        }
+    }
+}
+
+void
+embPattern_stitchText(EmbPattern *p, EmbRect rect, int thread_index, int style)
+{
+}
+
+void
 embPattern_convertGeometry(EmbPattern* p)
 {
-    if (p->geometry->count == 0) {
-        return;
+    int i;
+    for (i=0; i<p->geometry->count; i++) {
+        EmbGeometry g = p->geometry->geometry[i];
+        switch (g.type) {
+        case EMB_ARC: {
+            /* To Do make the thread up here. */
+            embPattern_stitchArc(p, g.object.arc, 0, 0);
+            break;
+        }
+        case EMB_CIRCLE: {
+            /* To Do make the thread up here. */
+            embPattern_stitchCircle(p, g.object.circle, 0, 0);
+            break;
+        }
+        case EMB_ELLIPSE: {
+            /* To Do make the thread up here. */
+            embPattern_stitchEllipse(p, g.object.ellipse, 0, 0);
+            break;
+        }
+        case EMB_RECT: {
+            /* To Do make the thread up here. */
+            embPattern_stitchRect(p, g.object.rect, 0, 0);
+            break;
+        }
+        default:
+            break;
+        }
     }
+    /* Now ignore the geometry when writing. */
+    p->geometry->count = 0;
 }
 

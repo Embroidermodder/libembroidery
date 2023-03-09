@@ -21,7 +21,56 @@ set(C_SOURCES
 	src/geometry/text.c
 	src/geometry/vector.c
 
+    src/formats/format_10o.c
+    src/formats/format_100.c
+    src/formats/format_art.c
+    src/formats/format_bmc.c
+    src/formats/format_bro.c
+    src/formats/format_cnd.c
+    src/formats/format_col.c
+    src/formats/format_csd.c
+    src/formats/format_csv.c
+    src/formats/format_dat.c
     src/formats/format_dem.c
+    src/formats/format_dsb.c
+    src/formats/format_dst.c
+    src/formats/format_dsz.c
+    src/formats/format_dxf.c
+    src/formats/format_edr.c
+    src/formats/format_emd.c
+    src/formats/format_exp.c
+    src/formats/format_exy.c
+    src/formats/format_eys.c
+    src/formats/format_fxy.c
+    src/formats/format_gc.c
+    src/formats/format_gnc.c
+    src/formats/format_gt.c
+    src/formats/format_hus.c
+    src/formats/format_inb.c
+    src/formats/format_inf.c
+    src/formats/format_jef.c
+    src/formats/format_ksm.c
+    src/formats/format_max.c
+    src/formats/format_mit.c
+    src/formats/format_new.c
+    src/formats/format_ofm.c
+    src/formats/format_pcd.c
+    src/formats/format_pcm.c
+    src/formats/format_pcq.c
+    src/formats/format_pcs.c
+    src/formats/format_pec.c
+    src/formats/format_pel.c
+    src/formats/format_pem.c
+    src/formats/format_pes.c
+    src/formats/format_phb.c
+    src/formats/format_phc.c
+    src/formats/format_plt.c
+    src/formats/format_rgb.c
+    src/formats/format_sew.c
+    src/formats/format_shv.c
+    src/formats/format_sst.c
+    src/formats/format_stx.c
+    src/formats/format_svg.c
     src/formats/format_t01.c
     src/formats/format_t09.c
     src/formats/format_tap.c
@@ -29,6 +78,8 @@ set(C_SOURCES
     src/formats/format_txt.c
     src/formats/format_u00.c
     src/formats/format_u01.c
+    src/formats/format_vip.c
+    src/formats/format_vp3.c
     src/formats/format_xxx.c
     src/formats/format_zsk.c
 

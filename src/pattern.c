@@ -31,7 +31,7 @@ embPattern_create(void)
     p->home.y = 0.0;
     p->currentColorIndex = 0;
     p->stitch_list = embArray_create(EMB_STITCH);
-    p->thread_list = embArray_create(EMB_LINE);
+    p->thread_list = embArray_create(EMB_THREAD);
     p->hoop_height = 0.0;
     p->hoop_width = 0.0;
     p->geometry = embArray_create(EMB_LINE);
@@ -169,12 +169,13 @@ embPattern_copyPolylinesTostitch_list(EmbPattern* p)
         return;
     }
     for (i = 0; i < p->geometry->count; i++) {
-        if (p->geometry->geometry[i].type != EMB_POLYLINE) {
-            continue;
-        }
         EmbPolyline currentPoly;
         EmbArray* currentPointList;
         EmbThread thread;
+
+        if (p->geometry->geometry[i].type != EMB_POLYLINE) {
+            continue;
+        }
 
         currentPoly = p->geometry->geometry[i].object.polyline;
         currentPointList = currentPoly.pointList;
@@ -941,7 +942,7 @@ void
 embPattern_designDetails(EmbPattern *pattern)
 {
     int colors, num_stitches, real_stitches, jump_stitches, trim_stitches;
-    int unknown_stitches, num_colors;
+    int unknown_stitches;
     EmbRect bounds;
 
     puts("Design Details");
@@ -1148,10 +1149,10 @@ float embPattern_totalStitchLength(EmbPattern *pattern)
         EmbStitch st = sts->stitch[i];
         EmbReal length = 0.0;
         EmbVector delta;
-        delta.x = sts->stitch[i].x - sts->stitch[i-1].x;
-        delta.y = sts->stitch[i].y - sts->stitch[i-1].y;
+        delta.x = st.x - sts->stitch[i-1].x;
+        delta.y = st.y - sts->stitch[i-1].y;
         length = embVector_length(delta);
-        if (sts->stitch[i].flags & NORMAL)
+        if (st.flags & NORMAL)
         if (sts->stitch[i-1].flags & NORMAL) {
             result += length;
         }
@@ -1214,9 +1215,10 @@ void embPattern_lengthHistogram(EmbPattern *pattern, int *bin, int NUMBINS)
         if (sts->stitch[i].flags & NORMAL)
         if (sts->stitch[i-1].flags & NORMAL) {
             EmbVector delta;
+            float length;
             delta.x = sts->stitch[i].x - sts->stitch[i-1].x;
             delta.y = sts->stitch[i].y - sts->stitch[i-1].x;
-            float length = embVector_length(delta);
+            length = embVector_length(delta);
             bin[(int)(floor(NUMBINS*length/max_stitch_length))]++;
         }
     }

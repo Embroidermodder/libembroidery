@@ -148,12 +148,12 @@ threshold_method(EmbImage *image, int *n_points,
 static void
 greedy_algorithm(int *points, int n_points, int width, EmbReal bias)
 {
+    int i, j;
     printf("points[0] = %d\n", points[0]);
     printf("n_points = %d\n", n_points);
     printf("width = %d\n", width);
     printf("bias = %f\n", bias);
 
-    int i, j;
     for (i=0; i<n_points-1; i++) {
         int stor;
         EmbReal shortest = 1.0e20;
@@ -162,12 +162,14 @@ greedy_algorithm(int *points, int n_points, int width, EmbReal bias)
         int x1 = points[i]%width;
         int y1 = points[i]/width;
         for (j=i+1; j<n_points; j++) {
-            int x = x1 - (points[j]%width);
+            int x, y;
+            EmbReal distance;
+            x = x1 - (points[j]%width);
             if (x*x > shortest) {
                 continue;
             }
-            int y = y1 - (points[j]/width);
-            EmbReal distance = x*x + bias*y*y;
+            y = y1 - (points[j]/width);
+            distance = x*x + bias*y*y;
             if (distance < shortest) {
                 next = j;
                 shortest = distance;
@@ -871,10 +873,8 @@ embPattern_combine(EmbPattern *p1, EmbPattern *p2)
 void
 embPattern_convertGeometry(EmbPattern* p)
 {
-    /*
-    if (p->circles->count > 0) {
-        
+    if (p->geometry->count == 0) {
+        return;
     }
-    */
 }
 

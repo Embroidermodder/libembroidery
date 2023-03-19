@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.6" xml:lang="en-US">
+  <compounddef id="struct_emb_thread__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbThread_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_emb_thread___1a5b70f2bf502560229b7fecf8984e33e9" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1acde9d757854564332fd795a084ec88b3" kindref="member">EmbColor</ref></type>
+        <definition>EmbColor color</definition>
+        <argsstring></argsstring>
+        <name>color</name>
+        <qualifiedname>EmbThread_::color</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="314" column="14" bodyfile="src/embroidery.h" bodystart="314" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_emb_thread___1a54075ac9418786f6ce2c360f8a90d85a" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char description[50]</definition>
+        <argsstring>[50]</argsstring>
+        <name>description</name>
+        <qualifiedname>EmbThread_::description</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="315" column="10" bodyfile="src/embroidery.h" bodystart="315" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_emb_thread___1a078d3842e4fd90843020a4e39abb6822" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char catalogNumber[30]</definition>
+        <argsstring>[30]</argsstring>
+        <name>catalogNumber</name>
+        <qualifiedname>EmbThread_::catalogNumber</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="316" column="10" bodyfile="src/embroidery.h" bodystart="316" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="2">
+        <label>EmbColor_</label>
+        <link refid="struct_emb_color__"/>
+      </node>
+      <node id="1">
+        <label>EmbThread_</label>
+        <link refid="struct_emb_thread__"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>color</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery.h" line="312" column="1" bodyfile="src/embroidery.h" bodystart="313" bodyend="317"/>
+    <listofallmembers>
+      <member refid="struct_emb_thread___1a078d3842e4fd90843020a4e39abb6822" prot="public" virt="non-virtual"><scope>EmbThread_</scope><name>catalogNumber</name></member>
+      <member refid="struct_emb_thread___1a5b70f2bf502560229b7fecf8984e33e9" prot="public" virt="non-virtual"><scope>EmbThread_</scope><name>color</name></member>
+      <member refid="struct_emb_thread___1a54075ac9418786f6ce2c360f8a90d85a" prot="public" virt="non-virtual"><scope>EmbThread_</scope><name>description</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

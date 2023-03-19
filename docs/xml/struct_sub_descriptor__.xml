@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.6" xml:lang="en-US">
+  <compounddef id="struct_sub_descriptor__" kind="struct" language="C++" prot="public">
+    <compoundname>SubDescriptor_</compoundname>
+    <includes refid="embroidery__internal_8h" local="no">embroidery_internal.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_sub_descriptor___1ac713c31369d47dd7877c92a7965cf8fc" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int someNum</definition>
+        <argsstring></argsstring>
+        <name>someNum</name>
+        <qualifiedname>SubDescriptor_::someNum</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="304" column="9" bodyfile="src/embroidery_internal.h" bodystart="304" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_sub_descriptor___1a0cfe04519ff6dab092ee7c002e55e520" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int someInt</definition>
+        <argsstring></argsstring>
+        <name>someInt</name>
+        <qualifiedname>SubDescriptor_::someInt</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="305" column="9" bodyfile="src/embroidery_internal.h" bodystart="305" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_sub_descriptor___1a6154b0f4ec7815c6d26c71852506418e" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int someOtherInt</definition>
+        <argsstring></argsstring>
+        <name>someOtherInt</name>
+        <qualifiedname>SubDescriptor_::someOtherInt</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="306" column="9" bodyfile="src/embroidery_internal.h" bodystart="306" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_sub_descriptor___1affb2c75b7f632338f368aafab49f678d" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* colorCode</definition>
+        <argsstring></argsstring>
+        <name>colorCode</name>
+        <qualifiedname>SubDescriptor_::colorCode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="307" column="10" bodyfile="src/embroidery_internal.h" bodystart="307" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_sub_descriptor___1afd299d356687996ab03ea2e304396441" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* colorName</definition>
+        <argsstring></argsstring>
+        <name>colorName</name>
+        <qualifiedname>SubDescriptor_::colorName</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="308" column="10" bodyfile="src/embroidery_internal.h" bodystart="308" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery_internal.h" line="302" column="1" bodyfile="src/embroidery_internal.h" bodystart="303" bodyend="309"/>
+    <listofallmembers>
+      <member refid="struct_sub_descriptor___1affb2c75b7f632338f368aafab49f678d" prot="public" virt="non-virtual"><scope>SubDescriptor_</scope><name>colorCode</name></member>
+      <member refid="struct_sub_descriptor___1afd299d356687996ab03ea2e304396441" prot="public" virt="non-virtual"><scope>SubDescriptor_</scope><name>colorName</name></member>
+      <member refid="struct_sub_descriptor___1a0cfe04519ff6dab092ee7c002e55e520" prot="public" virt="non-virtual"><scope>SubDescriptor_</scope><name>someInt</name></member>
+      <member refid="struct_sub_descriptor___1ac713c31369d47dd7877c92a7965cf8fc" prot="public" virt="non-virtual"><scope>SubDescriptor_</scope><name>someNum</name></member>
+      <member refid="struct_sub_descriptor___1a6154b0f4ec7815c6d26c71852506418e" prot="public" virt="non-virtual"><scope>SubDescriptor_</scope><name>someOtherInt</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

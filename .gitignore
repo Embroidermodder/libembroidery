@@ -8,6 +8,16 @@ libembroidery.egg-info/
 __pycache__/
 .vscode/
 
+# LaTeX build files
+*.log
+*.bbl
+*.idx
+*.ind
+*.out
+*.aux
+*.ilg
+*.toc
+
 # C++ objects and libs
 *.slo
 *.lo

@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.6" xml:lang="en-US">
+  <compounddef id="struct_l_s_y_s_t_e_m" kind="struct" language="C++" prot="public">
+    <compoundname>LSYSTEM</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_l_s_y_s_t_e_m_1ae513c35eeae639f970cb8ec81f067963" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char axiom</definition>
+        <argsstring></argsstring>
+        <name>axiom</name>
+        <qualifiedname>LSYSTEM::axiom</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="379" column="10" bodyfile="src/embroidery.h" bodystart="379" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_l_s_y_s_t_e_m_1a9ad9888c58e984ac37dc6b6073b182f4" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* alphabet</definition>
+        <argsstring></argsstring>
+        <name>alphabet</name>
+        <qualifiedname>LSYSTEM::alphabet</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="380" column="10" bodyfile="src/embroidery.h" bodystart="380" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_l_s_y_s_t_e_m_1a4fb4a23862dd0b3033fa326c0f499848" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* constants</definition>
+        <argsstring></argsstring>
+        <name>constants</name>
+        <qualifiedname>LSYSTEM::constants</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="381" column="10" bodyfile="src/embroidery.h" bodystart="381" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_l_s_y_s_t_e_m_1a9798541de208c99bb426e1bf9d1bd0eb" prot="public" static="no" mutable="no">
+        <type>char **</type>
+        <definition>char** rules</definition>
+        <argsstring></argsstring>
+        <name>rules</name>
+        <qualifiedname>LSYSTEM::rules</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="382" column="10" bodyfile="src/embroidery.h" bodystart="382" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="378" column="1" bodyfile="src/embroidery.h" bodystart="378" bodyend="383"/>
+    <listofallmembers>
+      <member refid="struct_l_s_y_s_t_e_m_1a9ad9888c58e984ac37dc6b6073b182f4" prot="public" virt="non-virtual"><scope>LSYSTEM</scope><name>alphabet</name></member>
+      <member refid="struct_l_s_y_s_t_e_m_1ae513c35eeae639f970cb8ec81f067963" prot="public" virt="non-virtual"><scope>LSYSTEM</scope><name>axiom</name></member>
+      <member refid="struct_l_s_y_s_t_e_m_1a4fb4a23862dd0b3033fa326c0f499848" prot="public" virt="non-virtual"><scope>LSYSTEM</scope><name>constants</name></member>
+      <member refid="struct_l_s_y_s_t_e_m_1a9798541de208c99bb426e1bf9d1bd0eb" prot="public" virt="non-virtual"><scope>LSYSTEM</scope><name>rules</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.6" xml:lang="en-US">
+  <compounddef id="struct_huffman" kind="struct" language="C++" prot="public">
+    <compoundname>Huffman</compoundname>
+    <includes refid="embroidery__internal_8h" local="no">embroidery_internal.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_huffman_1a82cbea818dc861959eccbe67d971a1fe" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int default_value</definition>
+        <argsstring></argsstring>
+        <name>default_value</name>
+        <qualifiedname>Huffman::default_value</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="360" column="9" bodyfile="src/embroidery_internal.h" bodystart="360" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_huffman_1a3612239e49acda829e2ea44fb152b20f" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int lengths[1000]</definition>
+        <argsstring>[1000]</argsstring>
+        <name>lengths</name>
+        <qualifiedname>Huffman::lengths</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="361" column="9" bodyfile="src/embroidery_internal.h" bodystart="361" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_huffman_1a21f1bd20236f85738f2fe88782e0bbf2" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int nlengths</definition>
+        <argsstring></argsstring>
+        <name>nlengths</name>
+        <qualifiedname>Huffman::nlengths</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="362" column="9" bodyfile="src/embroidery_internal.h" bodystart="362" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_huffman_1a45876a2bc205d017b2a4d1e66644c390" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int table[1000]</definition>
+        <argsstring>[1000]</argsstring>
+        <name>table</name>
+        <qualifiedname>Huffman::table</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="363" column="9" bodyfile="src/embroidery_internal.h" bodystart="363" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_huffman_1ad3e7e75009104b66e7455c12eec7986a" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int table_width</definition>
+        <argsstring></argsstring>
+        <name>table_width</name>
+        <qualifiedname>Huffman::table_width</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="364" column="9" bodyfile="src/embroidery_internal.h" bodystart="364" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_huffman_1aeb804b35c86ac6c54c34e72c84b182af" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int ntable</definition>
+        <argsstring></argsstring>
+        <name>ntable</name>
+        <qualifiedname>Huffman::ntable</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="365" column="9" bodyfile="src/embroidery_internal.h" bodystart="365" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery_internal.h" line="359" column="1" bodyfile="src/embroidery_internal.h" bodystart="359" bodyend="366"/>
+    <listofallmembers>
+      <member refid="struct_huffman_1a82cbea818dc861959eccbe67d971a1fe" prot="public" virt="non-virtual"><scope>Huffman</scope><name>default_value</name></member>
+      <member refid="struct_huffman_1a3612239e49acda829e2ea44fb152b20f" prot="public" virt="non-virtual"><scope>Huffman</scope><name>lengths</name></member>
+      <member refid="struct_huffman_1a21f1bd20236f85738f2fe88782e0bbf2" prot="public" virt="non-virtual"><scope>Huffman</scope><name>nlengths</name></member>
+      <member refid="struct_huffman_1aeb804b35c86ac6c54c34e72c84b182af" prot="public" virt="non-virtual"><scope>Huffman</scope><name>ntable</name></member>
+      <member refid="struct_huffman_1a45876a2bc205d017b2a4d1e66644c390" prot="public" virt="non-virtual"><scope>Huffman</scope><name>table</name></member>
+      <member refid="struct_huffman_1ad3e7e75009104b66e7455c12eec7986a" prot="public" virt="non-virtual"><scope>Huffman</scope><name>table_width</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

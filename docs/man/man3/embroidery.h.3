@@ -1,0 +1,2211 @@
+.TH "src/embroidery.h" 3 "Sun Mar 19 2023" "Version 1.0.0-alpha" "Libembroidery" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/embroidery.h
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBEmbColor_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbVector_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbImage_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbBlock_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbAlignedDim_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbAngularDim_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbArcLengthDim_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbDiameterDim_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbLeaderDim_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbLinearDim_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbOrdinateDim_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbRadiusDim_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbInfiniteLine_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbRay_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbTextMulti_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbTextSingle_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbTime_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbPoint_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbLine_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbPath_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbStitch_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbThread_\fP"
+.br
+.ti -1c
+.RI "struct \fBthread_color_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbArc_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbRect_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbCircle_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbSatinOutline_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbEllipse_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbBezier_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbSpline_\fP"
+.br
+.ti -1c
+.RI "struct \fBLSYSTEM\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbGeometry_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbArray_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbLayer_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbPattern_\fP"
+.br
+.ti -1c
+.RI "struct \fBEmbFormatList_\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBLIBEMBROIDERY_EMBEDDED_VERSION\fP   0"
+.br
+.ti -1c
+.RI "#define \fBNORMAL\fP   0 /* stitch to (x, y) */"
+.br
+.ti -1c
+.RI "#define \fBJUMP\fP   1 /* move to (x, y) */"
+.br
+.ti -1c
+.RI "#define \fBTRIM\fP   2 /* trim + move to (x, y) */"
+.br
+.ti -1c
+.RI "#define \fBSTOP\fP   4 /* pause machine for thread change */"
+.br
+.ti -1c
+.RI "#define \fBSEQUIN\fP   8 /* sequin */"
+.br
+.ti -1c
+.RI "#define \fBEND\fP   16 /* end of program */"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_100\fP   0"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_10O\fP   1"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_ART\fP   2"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_BMC\fP   3"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_BRO\fP   4"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_CND\fP   5"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_COL\fP   6"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_CSD\fP   7"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_CSV\fP   8"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_DAT\fP   9"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_DEM\fP   10"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_DSB\fP   11"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_DST\fP   12"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_DSZ\fP   13"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_DXF\fP   14"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_EDR\fP   15"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_EMD\fP   16"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_EXP\fP   17"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_EXY\fP   18"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_EYS\fP   19"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_FXY\fP   20"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_GC\fP   21"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_GNC\fP   22"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_GT\fP   23"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_HUS\fP   24"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_INB\fP   25"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_INF\fP   26"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_JEF\fP   27"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_KSM\fP   28"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_MAX\fP   29"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_MIT\fP   30"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_NEW\fP   31"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_OFM\fP   32"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_PCD\fP   33"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_PCM\fP   34"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_PCQ\fP   35"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_PCS\fP   36"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_PEC\fP   37"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_PEL\fP   38"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_PEM\fP   39"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_PES\fP   40"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_PHB\fP   41"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_PHC\fP   42"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_PLT\fP   43"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_RGB\fP   44"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_SEW\fP   45"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_SHV\fP   46"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_SST\fP   47"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_STX\fP   48"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_SVG\fP   49"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_T01\fP   50"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_T09\fP   51"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_TAP\fP   52"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_THR\fP   53"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_TXT\fP   54"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_U00\fP   55"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_U01\fP   56"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_VIP\fP   57"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_VP3\fP   58"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_XXX\fP   59"
+.br
+.ti -1c
+.RI "#define \fBEMB_FORMAT_ZSK\fP   60"
+.br
+.ti -1c
+.RI "#define \fBArc_Polyester\fP   0"
+.br
+.ti -1c
+.RI "#define \fBArc_Rayon\fP   1"
+.br
+.ti -1c
+.RI "#define \fBCoatsAndClark_Rayon\fP   2"
+.br
+.ti -1c
+.RI "#define \fBExquisite_Polyester\fP   3"
+.br
+.ti -1c
+.RI "#define \fBFufu_Polyester\fP   4"
+.br
+.ti -1c
+.RI "#define \fBFufu_Rayon\fP   5"
+.br
+.ti -1c
+.RI "#define \fBHemingworth_Polyester\fP   6"
+.br
+.ti -1c
+.RI "#define \fBIsacord_Polyester\fP   7"
+.br
+.ti -1c
+.RI "#define \fBIsafil_Rayon\fP   8"
+.br
+.ti -1c
+.RI "#define \fBMarathon_Polyester\fP   9"
+.br
+.ti -1c
+.RI "#define \fBMarathon_Rayon\fP   10"
+.br
+.ti -1c
+.RI "#define \fBMadeira_Polyester\fP   11"
+.br
+.ti -1c
+.RI "#define \fBMadeira_Rayon\fP   12"
+.br
+.ti -1c
+.RI "#define \fBMetro_Polyester\fP   13"
+.br
+.ti -1c
+.RI "#define \fBPantone\fP   14"
+.br
+.ti -1c
+.RI "#define \fBRobisonAnton_Polyester\fP   15"
+.br
+.ti -1c
+.RI "#define \fBRobisonAnton_Rayon\fP   16"
+.br
+.ti -1c
+.RI "#define \fBSigma_Polyester\fP   17"
+.br
+.ti -1c
+.RI "#define \fBSulky_Rayon\fP   18"
+.br
+.ti -1c
+.RI "#define \fBThreadArt_Rayon\fP   19"
+.br
+.ti -1c
+.RI "#define \fBThreadArt_Polyester\fP   20"
+.br
+.ti -1c
+.RI "#define \fBThreaDelight_Polyester\fP   21"
+.br
+.ti -1c
+.RI "#define \fBZ102_Isacord_Polyester\fP   22"
+.br
+.ti -1c
+.RI "#define \fBSVG_Colors\fP   23"
+.br
+.ti -1c
+.RI "#define \fBhus_thread\fP   24"
+.br
+.ti -1c
+.RI "#define \fBjef_thread\fP   25"
+.br
+.ti -1c
+.RI "#define \fBpcm_thread\fP   26"
+.br
+.ti -1c
+.RI "#define \fBpec_thread\fP   27"
+.br
+.ti -1c
+.RI "#define \fBshv_thread\fP   28"
+.br
+.ti -1c
+.RI "#define \fBdxf_color\fP   29"
+.br
+.ti -1c
+.RI "#define \fBEMB_ARRAY\fP   0"
+.br
+.ti -1c
+.RI "#define \fBEMB_ARC\fP   1"
+.br
+.ti -1c
+.RI "#define \fBEMB_CIRCLE\fP   2"
+.br
+.ti -1c
+.RI "#define \fBEMB_DIM_DIAMETER\fP   3"
+.br
+.ti -1c
+.RI "#define \fBEMB_DIM_LEADER\fP   4"
+.br
+.ti -1c
+.RI "#define \fBEMB_ELLIPSE\fP   5"
+.br
+.ti -1c
+.RI "#define \fBEMB_FLAG\fP   6"
+.br
+.ti -1c
+.RI "#define \fBEMB_LINE\fP   7"
+.br
+.ti -1c
+.RI "#define \fBEMB_IMAGE\fP   8"
+.br
+.ti -1c
+.RI "#define \fBEMB_PATH\fP   9"
+.br
+.ti -1c
+.RI "#define \fBEMB_POINT\fP   10"
+.br
+.ti -1c
+.RI "#define \fBEMB_POLYGON\fP   11"
+.br
+.ti -1c
+.RI "#define \fBEMB_POLYLINE\fP   12"
+.br
+.ti -1c
+.RI "#define \fBEMB_RECT\fP   13"
+.br
+.ti -1c
+.RI "#define \fBEMB_SPLINE\fP   14"
+.br
+.ti -1c
+.RI "#define \fBEMB_STITCH\fP   15"
+.br
+.ti -1c
+.RI "#define \fBEMB_TEXT_SINGLE\fP   16"
+.br
+.ti -1c
+.RI "#define \fBEMB_TEXT_MULTI\fP   17"
+.br
+.ti -1c
+.RI "#define \fBEMB_VECTOR\fP   18"
+.br
+.ti -1c
+.RI "#define \fBEMB_THREAD\fP   19"
+.br
+.ti -1c
+.RI "#define \fBEMBFORMAT_UNSUPPORTED\fP   0"
+.br
+.ti -1c
+.RI "#define \fBEMBFORMAT_STITCHONLY\fP   1"
+.br
+.ti -1c
+.RI "#define \fBEMBFORMAT_OBJECTONLY\fP   2"
+.br
+.ti -1c
+.RI "#define \fBEMBFORMAT_STCHANDOBJ\fP   3 /* binary operation: 1+2=3 */"
+.br
+.ti -1c
+.RI "#define \fBnumberOfFormats\fP   61"
+.br
+.ti -1c
+.RI "#define \fBCHUNK_SIZE\fP   128"
+.br
+.ti -1c
+.RI "#define \fBEMB_MAX_LAYERS\fP   10"
+.br
+.ti -1c
+.RI "#define \fBMAX_THREADS\fP   256"
+.br
+.ti -1c
+.RI "#define \fBEMBFORMAT_MAXEXT\fP   3"
+.br
+.ti -1c
+.RI "#define \fBEMBFORMAT_MAXDESC\fP   50"
+.br
+.ti -1c
+.RI "#define \fBMAX_STITCHES\fP   1000000"
+.br
+.ti -1c
+.RI "#define \fBEMB_PUBLIC\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef float \fBEmbReal\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbColor_\fP \fBEmbColor\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbVector_\fP \fBEmbVector\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbArray_\fP \fBEmbArray\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbImage_\fP \fBEmbImage\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbBlock_\fP \fBEmbBlock\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbAlignedDim_\fP \fBEmbAlignedDim\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbAngularDim_\fP \fBEmbAngularDim\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbArcLengthDim_\fP \fBEmbArcLengthDim\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbDiameterDim_\fP \fBEmbDiameterDim\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbLeaderDim_\fP \fBEmbLeaderDim\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbLinearDim_\fP \fBEmbLinearDim\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbOrdinateDim_\fP \fBEmbOrdinateDim\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbRadiusDim_\fP \fBEmbRadiusDim\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbInfiniteLine_\fP \fBEmbInfiniteLine\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbRay_\fP \fBEmbRay\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbTextMulti_\fP \fBEmbTextMulti\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbTextSingle_\fP \fBEmbTextSingle\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbTime_\fP \fBEmbTime\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbPoint_\fP \fBEmbPoint\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbLine_\fP \fBEmbLine\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbPath_\fP \fBEmbPath\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbStitch_\fP \fBEmbStitch\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbThread_\fP \fBEmbThread\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBthread_color_\fP \fBthread_color\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbArc_\fP \fBEmbArc\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbRect_\fP \fBEmbRect\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbCircle_\fP \fBEmbCircle\fP"
+.br
+.ti -1c
+.RI "typedef \fBEmbPath\fP \fBEmbPolygon\fP"
+.br
+.ti -1c
+.RI "typedef \fBEmbPath\fP \fBEmbPolyline\fP"
+.br
+.ti -1c
+.RI "typedef int \fBEmbFlag\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbSatinOutline_\fP \fBEmbSatinOutline\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbEllipse_\fP \fBEmbEllipse\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbBezier_\fP \fBEmbBezier\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbSpline_\fP \fBEmbSpline\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBLSYSTEM\fP \fBL_system\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbGeometry_\fP \fBEmbGeometry\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbLayer_\fP \fBEmbLayer\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbPattern_\fP \fBEmbPattern\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBEmbFormatList_\fP \fBEmbFormatList\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBlindenmayer_system\fP (\fBL_system\fP L, char *state, int iteration, int complete)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBhilbert_curve\fP (\fBEmbPattern\fP *pattern, int iterations)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBemb_identify_format\fP (const char *ending)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBtestMain\fP (int level)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBconvert\fP (const char *inf, const char *outf)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbColor\fP \fBembColor_make\fP (unsigned char r, unsigned char g, unsigned char b)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbColor\fP * \fBembColor_create\fP (unsigned char r, unsigned char g, unsigned char b)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbColor\fP \fBembColor_fromHexStr\fP (char *val)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembColor_distance\fP (\fBEmbColor\fP a, \fBEmbColor\fP b)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbArray\fP * \fBembArray_create\fP (int type)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_resize\fP (\fBEmbArray\fP *g)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembArray_copy\fP (\fBEmbArray\fP *dst, \fBEmbArray\fP *src)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_addArc\fP (\fBEmbArray\fP *g, \fBEmbArc\fP arc)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_addCircle\fP (\fBEmbArray\fP *g, \fBEmbCircle\fP circle)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_addEllipse\fP (\fBEmbArray\fP *g, \fBEmbEllipse\fP ellipse)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_addFlag\fP (\fBEmbArray\fP *g, int flag)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_addLine\fP (\fBEmbArray\fP *g, \fBEmbLine\fP line)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_addRect\fP (\fBEmbArray\fP *g, \fBEmbRect\fP rect)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_addPath\fP (\fBEmbArray\fP *g, \fBEmbPath\fP p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_addPoint\fP (\fBEmbArray\fP *g, \fBEmbPoint\fP p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_addPolygon\fP (\fBEmbArray\fP *g, \fBEmbPolygon\fP p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_addPolyline\fP (\fBEmbArray\fP *g, \fBEmbPolyline\fP p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_addStitch\fP (\fBEmbArray\fP *g, \fBEmbStitch\fP st)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_addThread\fP (\fBEmbArray\fP *g, \fBEmbThread\fP p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembArray_addVector\fP (\fBEmbArray\fP *g, \fBEmbVector\fP)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembArray_free\fP (\fBEmbArray\fP *p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbLine\fP \fBembLine_make\fP (\fBEmbReal\fP x1, \fBEmbReal\fP y1, \fBEmbReal\fP x2, \fBEmbReal\fP y2)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembLine_normalVector\fP (\fBEmbLine\fP line, \fBEmbVector\fP *result, int clockwise)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbVector\fP \fBembLine_intersectionPoint\fP (\fBEmbLine\fP line1, \fBEmbLine\fP line2)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembThread_findNearestColor\fP (\fBEmbColor\fP color, \fBEmbColor\fP *colors, int n_colors)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembThread_findNearestThread\fP (\fBEmbColor\fP color, \fBEmbThread\fP *threads, int n_threads)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbThread\fP \fBembThread_getRandom\fP (void)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembVector_normalize\fP (\fBEmbVector\fP vector, \fBEmbVector\fP *result)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembVector_multiply\fP (\fBEmbVector\fP vector, \fBEmbReal\fP magnitude, \fBEmbVector\fP *result)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbVector\fP \fBembVector_add\fP (\fBEmbVector\fP v1, \fBEmbVector\fP v2)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbVector\fP \fBembVector_average\fP (\fBEmbVector\fP v1, \fBEmbVector\fP v2)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbVector\fP \fBembVector_subtract\fP (\fBEmbVector\fP v1, \fBEmbVector\fP v2)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembVector_dot\fP (\fBEmbVector\fP v1, \fBEmbVector\fP v2)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembVector_cross\fP (\fBEmbVector\fP v1, \fBEmbVector\fP v2)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembVector_transpose_product\fP (\fBEmbVector\fP v1, \fBEmbVector\fP v2, \fBEmbVector\fP *result)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembVector_length\fP (\fBEmbVector\fP vector)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembVector_relativeX\fP (\fBEmbVector\fP a1, \fBEmbVector\fP a2, \fBEmbVector\fP a3)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembVector_relativeY\fP (\fBEmbVector\fP a1, \fBEmbVector\fP a2, \fBEmbVector\fP a3)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembVector_angle\fP (\fBEmbVector\fP v)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembVector_distance\fP (\fBEmbVector\fP a, \fBEmbVector\fP b)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbVector\fP \fBembVector_unit\fP (\fBEmbReal\fP angle)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbArc\fP \fBembArc_init\fP (void)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP char \fBembArc_clockwise\fP (\fBEmbArc\fP arc)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBgetArcCenter\fP (\fBEmbArc\fP arc, \fBEmbVector\fP *arcCenter)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP char \fBgetArcDataFromBulge\fP (\fBEmbReal\fP bulge, \fBEmbArc\fP *arc, \fBEmbReal\fP *arcCenterX, \fBEmbReal\fP *arcCenterY, \fBEmbReal\fP *radius, \fBEmbReal\fP *diameter, \fBEmbReal\fP *chord, \fBEmbReal\fP *chordMidX, \fBEmbReal\fP *chordMidY, \fBEmbReal\fP *sagitta, \fBEmbReal\fP *apothem, \fBEmbReal\fP *incAngleInDegrees, char *clockwise)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbCircle\fP \fBembCircle_init\fP (void)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBgetCircleCircleIntersections\fP (\fBEmbCircle\fP c0, \fBEmbCircle\fP c1, \fBEmbVector\fP *v0, \fBEmbVector\fP *v1)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBgetCircleTangentPoints\fP (\fBEmbCircle\fP c, \fBEmbVector\fP p, \fBEmbVector\fP *v0, \fBEmbVector\fP *v1)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbEllipse\fP \fBembEllipse_init\fP (void)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbEllipse\fP \fBembEllipse_make\fP (\fBEmbReal\fP cx, \fBEmbReal\fP cy, \fBEmbReal\fP rx, \fBEmbReal\fP ry)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembEllipse_diameterX\fP (\fBEmbEllipse\fP ellipse)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembEllipse_diameterY\fP (\fBEmbEllipse\fP ellipse)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembEllipse_width\fP (\fBEmbEllipse\fP ellipse)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembEllipse_height\fP (\fBEmbEllipse\fP ellipse)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembEllipse_area\fP (\fBEmbEllipse\fP ellipse)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembEllipse_perimeter\fP (\fBEmbEllipse\fP ellipse)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbImage\fP \fBembImage_create\fP (int, int)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembImage_read\fP (\fBEmbImage\fP *image, char *fname)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembImage_write\fP (\fBEmbImage\fP *image, char *fname)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembImage_free\fP (\fBEmbImage\fP *image)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbRect\fP \fBembRect_init\fP (void)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembRect_area\fP (\fBEmbRect\fP)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBthreadColor\fP (const char *, int brand)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBthreadColorNum\fP (unsigned int color, int brand)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP const char * \fBthreadColorName\fP (unsigned int color, int brand)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembTime_initNow\fP (\fBEmbTime\fP *t)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbTime\fP \fBembTime_time\fP (\fBEmbTime\fP *t)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembSatinOutline_generateSatinOutline\fP (\fBEmbArray\fP *lines, \fBEmbReal\fP thickness, \fBEmbSatinOutline\fP *result)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbArray\fP * \fBembSatinOutline_renderStitches\fP (\fBEmbSatinOutline\fP *result, \fBEmbReal\fP density)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbGeometry\fP * \fBembGeometry_init\fP (int type_in)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembGeometry_free\fP (\fBEmbGeometry\fP *obj)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembGeometry_move\fP (\fBEmbGeometry\fP *obj, \fBEmbVector\fP delta)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbRect\fP \fBembGeometry_boundingRect\fP (\fBEmbGeometry\fP *obj)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembGeometry_vulcanize\fP (\fBEmbGeometry\fP *obj)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbPattern\fP * \fBembPattern_create\fP (void)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_hideStitchesOverLength\fP (\fBEmbPattern\fP *p, int length)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_fixColorCount\fP (\fBEmbPattern\fP *p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembPattern_addThread\fP (\fBEmbPattern\fP *p, \fBEmbThread\fP thread)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_addStitchAbs\fP (\fBEmbPattern\fP *p, \fBEmbReal\fP x, \fBEmbReal\fP y, int flags, int isAutoColorIndex)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_addStitchRel\fP (\fBEmbPattern\fP *p, \fBEmbReal\fP dx, \fBEmbReal\fP dy, int flags, int isAutoColorIndex)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_changeColor\fP (\fBEmbPattern\fP *p, int index)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_free\fP (\fBEmbPattern\fP *p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_scale\fP (\fBEmbPattern\fP *p, \fBEmbReal\fP scale)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembPattern_totalStitchLength\fP (\fBEmbPattern\fP *pattern)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembPattern_minimumStitchLength\fP (\fBEmbPattern\fP *pattern)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBembPattern_maximumStitchLength\fP (\fBEmbPattern\fP *pattern)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_lengthHistogram\fP (\fBEmbPattern\fP *pattern, int *bin, int NUMBINS)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembPattern_realStitches\fP (\fBEmbPattern\fP *pattern)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembPattern_jumpStitches\fP (\fBEmbPattern\fP *pattern)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembPattern_trimStitches\fP (\fBEmbPattern\fP *pattern)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbRect\fP \fBembPattern_calcBoundingBox\fP (\fBEmbPattern\fP *p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_flipHorizontal\fP (\fBEmbPattern\fP *p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_flipVertical\fP (\fBEmbPattern\fP *p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_flip\fP (\fBEmbPattern\fP *p, int horz, int vert)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_combineJumpStitches\fP (\fBEmbPattern\fP *p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_correctForMaxStitchLength\fP (\fBEmbPattern\fP *p, \fBEmbReal\fP maxStitchLength, \fBEmbReal\fP maxJumpLength)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_center\fP (\fBEmbPattern\fP *p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_loadExternalColorFile\fP (\fBEmbPattern\fP *p, const char *fileName)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_convertGeometry\fP (\fBEmbPattern\fP *p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_designDetails\fP (\fBEmbPattern\fP *p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbPattern\fP * \fBembPattern_combine\fP (\fBEmbPattern\fP *p1, \fBEmbPattern\fP *p2)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembPattern_color_count\fP (\fBEmbPattern\fP *pattern, \fBEmbColor\fP startColor)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_end\fP (\fBEmbPattern\fP *p)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_crossstitch\fP (\fBEmbPattern\fP *pattern, \fBEmbImage\fP *, int threshhold)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_horizontal_fill\fP (\fBEmbPattern\fP *pattern, \fBEmbImage\fP *, int threshhold)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembPattern_render\fP (\fBEmbPattern\fP *pattern, char *fname)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBembPattern_simulate\fP (\fBEmbPattern\fP *pattern, char *fname)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_addCircleAbs\fP (\fBEmbPattern\fP *p, \fBEmbCircle\fP obj)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_addEllipseAbs\fP (\fBEmbPattern\fP *p, \fBEmbEllipse\fP obj)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_addLineAbs\fP (\fBEmbPattern\fP *p, \fBEmbLine\fP obj)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_addPathAbs\fP (\fBEmbPattern\fP *p, \fBEmbPath\fP obj)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_addPointAbs\fP (\fBEmbPattern\fP *p, \fBEmbPoint\fP obj)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_addPolygonAbs\fP (\fBEmbPattern\fP *p, \fBEmbPolygon\fP obj)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_addPolylineAbs\fP (\fBEmbPattern\fP *p, \fBEmbPolyline\fP obj)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_addRectAbs\fP (\fBEmbPattern\fP *p, \fBEmbRect\fP obj)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_copyStitchListToPolylines\fP (\fBEmbPattern\fP *pattern)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_copyPolylinesToStitchList\fP (\fBEmbPattern\fP *pattern)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_moveStitchListToPolylines\fP (\fBEmbPattern\fP *pattern)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBembPattern_movePolylinesToStitchList\fP (\fBEmbPattern\fP *pattern)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP char \fBembPattern_read\fP (\fBEmbPattern\fP *pattern, const char *fileName, int format)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP char \fBembPattern_write\fP (\fBEmbPattern\fP *pattern, const char *fileName, int format)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP char \fBembPattern_readAuto\fP (\fBEmbPattern\fP *pattern, const char *fileName)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP char \fBembPattern_writeAuto\fP (\fBEmbPattern\fP *pattern, const char *fileName)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP void \fBreport\fP (int result, char *label)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBfull_test_matrix\fP (char *fname)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP int \fBemb_round\fP (\fBEmbReal\fP x)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBradians\fP (\fBEmbReal\fP degree)"
+.br
+.ti -1c
+.RI "\fBEMB_PUBLIC\fP \fBEmbReal\fP \fBdegrees\fP (\fBEmbReal\fP radian)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBEmbFormatList\fP \fBformatTable\fP [\fBnumberOfFormats\fP]"
+.br
+.ti -1c
+.RI "const int \fBpecThreadCount\fP"
+.br
+.ti -1c
+.RI "const int \fBshvThreadCount\fP"
+.br
+.ti -1c
+.RI "const \fBEmbReal\fP \fBembConstantPi\fP"
+.br
+.ti -1c
+.RI "const \fBEmbThread\fP \fBhusThreads\fP []"
+.br
+.ti -1c
+.RI "const \fBEmbThread\fP \fBjefThreads\fP []"
+.br
+.ti -1c
+.RI "const \fBEmbThread\fP \fBshvThreads\fP []"
+.br
+.ti -1c
+.RI "const \fBEmbThread\fP \fBpcmThreads\fP []"
+.br
+.ti -1c
+.RI "const \fBEmbThread\fP \fBpecThreads\fP []"
+.br
+.ti -1c
+.RI "const unsigned char \fB_dxfColorTable\fP [][3]"
+.br
+.ti -1c
+.RI "\fBEmbThread\fP \fBblack_thread\fP"
+.br
+.ti -1c
+.RI "const unsigned char \fBvipDecodingTable\fP []"
+.br
+.ti -1c
+.RI "int \fBemb_error\fP"
+.br
+.ti -1c
+.RI "int \fBemb_verbose\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define Arc_Polyester   0"
+
+.PP
+Definition at line \fB87\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Arc_Rayon   1"
+
+.PP
+Definition at line \fB88\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define CHUNK_SIZE   128"
+
+.PP
+Definition at line \fB146\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define CoatsAndClark_Rayon   2"
+
+.PP
+Definition at line \fB89\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define dxf_color   29"
+
+.PP
+Definition at line \fB116\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_ARC   1"
+
+.PP
+Definition at line \fB119\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_ARRAY   0"
+
+.PP
+Definition at line \fB118\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_CIRCLE   2"
+
+.PP
+Definition at line \fB120\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_DIM_DIAMETER   3"
+
+.PP
+Definition at line \fB121\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_DIM_LEADER   4"
+
+.PP
+Definition at line \fB122\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_ELLIPSE   5"
+
+.PP
+Definition at line \fB123\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FLAG   6"
+
+.PP
+Definition at line \fB124\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_100   0"
+
+.PP
+Definition at line \fB24\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_10O   1"
+
+.PP
+Definition at line \fB25\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_ART   2"
+
+.PP
+Definition at line \fB26\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_BMC   3"
+
+.PP
+Definition at line \fB27\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_BRO   4"
+
+.PP
+Definition at line \fB28\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_CND   5"
+
+.PP
+Definition at line \fB29\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_COL   6"
+
+.PP
+Definition at line \fB30\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_CSD   7"
+
+.PP
+Definition at line \fB31\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_CSV   8"
+
+.PP
+Definition at line \fB32\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_DAT   9"
+
+.PP
+Definition at line \fB33\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_DEM   10"
+
+.PP
+Definition at line \fB34\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_DSB   11"
+
+.PP
+Definition at line \fB35\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_DST   12"
+
+.PP
+Definition at line \fB36\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_DSZ   13"
+
+.PP
+Definition at line \fB37\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_DXF   14"
+
+.PP
+Definition at line \fB38\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_EDR   15"
+
+.PP
+Definition at line \fB39\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_EMD   16"
+
+.PP
+Definition at line \fB40\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_EXP   17"
+
+.PP
+Definition at line \fB41\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_EXY   18"
+
+.PP
+Definition at line \fB42\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_EYS   19"
+
+.PP
+Definition at line \fB43\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_FXY   20"
+
+.PP
+Definition at line \fB44\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_GC   21"
+
+.PP
+Definition at line \fB45\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_GNC   22"
+
+.PP
+Definition at line \fB46\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_GT   23"
+
+.PP
+Definition at line \fB47\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_HUS   24"
+
+.PP
+Definition at line \fB48\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_INB   25"
+
+.PP
+Definition at line \fB49\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_INF   26"
+
+.PP
+Definition at line \fB50\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_JEF   27"
+
+.PP
+Definition at line \fB51\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_KSM   28"
+
+.PP
+Definition at line \fB52\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_MAX   29"
+
+.PP
+Definition at line \fB53\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_MIT   30"
+
+.PP
+Definition at line \fB54\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_NEW   31"
+
+.PP
+Definition at line \fB55\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_OFM   32"
+
+.PP
+Definition at line \fB56\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_PCD   33"
+
+.PP
+Definition at line \fB57\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_PCM   34"
+
+.PP
+Definition at line \fB58\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_PCQ   35"
+
+.PP
+Definition at line \fB59\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_PCS   36"
+
+.PP
+Definition at line \fB60\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_PEC   37"
+
+.PP
+Definition at line \fB61\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_PEL   38"
+
+.PP
+Definition at line \fB62\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_PEM   39"
+
+.PP
+Definition at line \fB63\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_PES   40"
+
+.PP
+Definition at line \fB64\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_PHB   41"
+
+.PP
+Definition at line \fB65\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_PHC   42"
+
+.PP
+Definition at line \fB66\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_PLT   43"
+
+.PP
+Definition at line \fB67\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_RGB   44"
+
+.PP
+Definition at line \fB68\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_SEW   45"
+
+.PP
+Definition at line \fB69\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_SHV   46"
+
+.PP
+Definition at line \fB70\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_SST   47"
+
+.PP
+Definition at line \fB71\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_STX   48"
+
+.PP
+Definition at line \fB72\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_SVG   49"
+
+.PP
+Definition at line \fB73\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_T01   50"
+
+.PP
+Definition at line \fB74\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_T09   51"
+
+.PP
+Definition at line \fB75\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_TAP   52"
+
+.PP
+Definition at line \fB76\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_THR   53"
+
+.PP
+Definition at line \fB77\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_TXT   54"
+
+.PP
+Definition at line \fB78\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_U00   55"
+
+.PP
+Definition at line \fB79\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_U01   56"
+
+.PP
+Definition at line \fB80\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_VIP   57"
+
+.PP
+Definition at line \fB81\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_VP3   58"
+
+.PP
+Definition at line \fB82\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_XXX   59"
+
+.PP
+Definition at line \fB83\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_FORMAT_ZSK   60"
+
+.PP
+Definition at line \fB84\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_IMAGE   8"
+
+.PP
+Definition at line \fB126\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_LINE   7"
+
+.PP
+Definition at line \fB125\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_MAX_LAYERS   10"
+
+.PP
+Definition at line \fB148\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_PATH   9"
+
+.PP
+Definition at line \fB127\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_POINT   10"
+
+.PP
+Definition at line \fB128\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_POLYGON   11"
+
+.PP
+Definition at line \fB129\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_POLYLINE   12"
+
+.PP
+Definition at line \fB130\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_PUBLIC"
+
+.PP
+Definition at line \fB164\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_RECT   13"
+
+.PP
+Definition at line \fB131\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_SPLINE   14"
+
+.PP
+Definition at line \fB132\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_STITCH   15"
+
+.PP
+Definition at line \fB133\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_TEXT_MULTI   17"
+
+.PP
+Definition at line \fB135\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_TEXT_SINGLE   16"
+
+.PP
+Definition at line \fB134\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_THREAD   19"
+
+.PP
+Definition at line \fB137\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMB_VECTOR   18"
+
+.PP
+Definition at line \fB136\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMBFORMAT_MAXDESC   50"
+
+.PP
+Definition at line \fB152\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMBFORMAT_MAXEXT   3"
+
+.PP
+Definition at line \fB150\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMBFORMAT_OBJECTONLY   2"
+
+.PP
+Definition at line \fB141\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMBFORMAT_STCHANDOBJ   3 /* binary operation: 1+2=3 */"
+
+.PP
+Definition at line \fB142\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMBFORMAT_STITCHONLY   1"
+
+.PP
+Definition at line \fB140\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define EMBFORMAT_UNSUPPORTED   0"
+
+.PP
+Definition at line \fB139\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define END   16 /* end of program */"
+
+.PP
+Definition at line \fB21\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Exquisite_Polyester   3"
+
+.PP
+Definition at line \fB90\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Fufu_Polyester   4"
+
+.PP
+Definition at line \fB91\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Fufu_Rayon   5"
+
+.PP
+Definition at line \fB92\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Hemingworth_Polyester   6"
+
+.PP
+Definition at line \fB93\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define hus_thread   24"
+
+.PP
+Definition at line \fB111\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Isacord_Polyester   7"
+
+.PP
+Definition at line \fB94\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Isafil_Rayon   8"
+
+.PP
+Definition at line \fB95\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define jef_thread   25"
+
+.PP
+Definition at line \fB112\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define JUMP   1 /* move to (x, y) */"
+
+.PP
+Definition at line \fB17\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define LIBEMBROIDERY_EMBEDDED_VERSION   0"
+
+.PP
+Definition at line \fB9\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Madeira_Polyester   11"
+
+.PP
+Definition at line \fB98\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Madeira_Rayon   12"
+
+.PP
+Definition at line \fB99\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Marathon_Polyester   9"
+
+.PP
+Definition at line \fB96\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Marathon_Rayon   10"
+
+.PP
+Definition at line \fB97\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define MAX_STITCHES   1000000"
+
+.PP
+Definition at line \fB154\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define MAX_THREADS   256"
+
+.PP
+Definition at line \fB149\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Metro_Polyester   13"
+
+.PP
+Definition at line \fB100\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define NORMAL   0 /* stitch to (x, y) */"
+
+.PP
+Definition at line \fB16\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define numberOfFormats   61"
+
+.PP
+Definition at line \fB144\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Pantone   14"
+
+.PP
+Definition at line \fB101\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define pcm_thread   26"
+
+.PP
+Definition at line \fB113\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define pec_thread   27"
+
+.PP
+Definition at line \fB114\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define RobisonAnton_Polyester   15"
+
+.PP
+Definition at line \fB102\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define RobisonAnton_Rayon   16"
+
+.PP
+Definition at line \fB103\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define SEQUIN   8 /* sequin */"
+
+.PP
+Definition at line \fB20\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define shv_thread   28"
+
+.PP
+Definition at line \fB115\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Sigma_Polyester   17"
+
+.PP
+Definition at line \fB104\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define STOP   4 /* pause machine for thread change */"
+
+.PP
+Definition at line \fB19\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Sulky_Rayon   18"
+
+.PP
+Definition at line \fB105\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define SVG_Colors   23"
+
+.PP
+Definition at line \fB110\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define ThreadArt_Polyester   20"
+
+.PP
+Definition at line \fB107\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define ThreadArt_Rayon   19"
+
+.PP
+Definition at line \fB106\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define ThreaDelight_Polyester   21"
+
+.PP
+Definition at line \fB108\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define TRIM   2 /* trim + move to (x, y) */"
+
+.PP
+Definition at line \fB18\fP of file \fBembroidery\&.h\fP\&.
+.SS "#define Z102_Isacord_Polyester   22"
+
+.PP
+Definition at line \fB109\fP of file \fBembroidery\&.h\fP\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBEmbAlignedDim_\fP \fBEmbAlignedDim\fP"
+
+.SS "typedef struct \fBEmbAngularDim_\fP \fBEmbAngularDim\fP"
+
+.SS "typedef struct \fBEmbArc_\fP \fBEmbArc\fP"
+
+.SS "typedef struct \fBEmbArcLengthDim_\fP \fBEmbArcLengthDim\fP"
+
+.SS "typedef struct \fBEmbArray_\fP \fBEmbArray\fP"
+The basic array type\&. 
+.PP
+Definition at line \fB203\fP of file \fBembroidery\&.h\fP\&.
+.SS "typedef struct \fBEmbBezier_\fP \fBEmbBezier\fP"
+
+.SS "typedef struct \fBEmbBlock_\fP \fBEmbBlock\fP"
+
+.SS "typedef struct \fBEmbCircle_\fP \fBEmbCircle\fP"
+
+.SS "typedef struct \fBEmbColor_\fP \fBEmbColor\fP"
+EmbColor uses the light primaries: red, green, blue in that order\&. 
+.SS "typedef struct \fBEmbDiameterDim_\fP \fBEmbDiameterDim\fP"
+
+.SS "typedef struct \fBEmbEllipse_\fP \fBEmbEllipse\fP"
+
+.SS "typedef int \fBEmbFlag\fP"
+
+.PP
+Definition at line \fB351\fP of file \fBembroidery\&.h\fP\&.
+.SS "typedef struct \fBEmbFormatList_\fP \fBEmbFormatList\fP"
+
+.SS "typedef struct \fBEmbGeometry_\fP \fBEmbGeometry\fP"
+
+.SS "typedef struct \fBEmbImage_\fP \fBEmbImage\fP"
+
+.SS "typedef struct \fBEmbInfiniteLine_\fP \fBEmbInfiniteLine\fP"
+
+.SS "typedef struct \fBEmbLayer_\fP \fBEmbLayer\fP"
+
+.SS "typedef struct \fBEmbLeaderDim_\fP \fBEmbLeaderDim\fP"
+
+.SS "typedef struct \fBEmbLine_\fP \fBEmbLine\fP"
+
+.SS "typedef struct \fBEmbLinearDim_\fP \fBEmbLinearDim\fP"
+
+.SS "typedef struct \fBEmbOrdinateDim_\fP \fBEmbOrdinateDim\fP"
+
+.SS "typedef struct \fBEmbPath_\fP \fBEmbPath\fP"
+
+.SS "typedef struct \fBEmbPattern_\fP \fBEmbPattern\fP"
+
+.SS "typedef struct \fBEmbPoint_\fP \fBEmbPoint\fP"
+
+.SS "typedef \fBEmbPath\fP \fBEmbPolygon\fP"
+
+.PP
+Definition at line \fB349\fP of file \fBembroidery\&.h\fP\&.
+.SS "typedef \fBEmbPath\fP \fBEmbPolyline\fP"
+
+.PP
+Definition at line \fB350\fP of file \fBembroidery\&.h\fP\&.
+.SS "typedef struct \fBEmbRadiusDim_\fP \fBEmbRadiusDim\fP"
+
+.SS "typedef struct \fBEmbRay_\fP \fBEmbRay\fP"
+
+.SS "typedef float \fBEmbReal\fP"
+
+.PP
+Definition at line \fB177\fP of file \fBembroidery\&.h\fP\&.
+.SS "typedef struct \fBEmbRect_\fP \fBEmbRect\fP"
+
+.SS "typedef struct \fBEmbSatinOutline_\fP \fBEmbSatinOutline\fP"
+
+.SS "typedef struct \fBEmbSpline_\fP \fBEmbSpline\fP"
+
+.SS "typedef struct \fBEmbStitch_\fP \fBEmbStitch\fP"
+
+.SS "typedef struct \fBEmbTextMulti_\fP \fBEmbTextMulti\fP"
+
+.SS "typedef struct \fBEmbTextSingle_\fP \fBEmbTextSingle\fP"
+
+.SS "typedef struct \fBEmbThread_\fP \fBEmbThread\fP"
+
+.SS "typedef struct \fBEmbTime_\fP \fBEmbTime\fP"
+
+.SS "typedef struct \fBEmbVector_\fP \fBEmbVector\fP"
+The basic type to represent points absolutely or represent directions\&.
+.PP
+Positive y is up, units are in mm\&. 
+.SS "typedef struct \fBLSYSTEM\fP \fBL_system\fP"
+
+.SS "typedef struct \fBthread_color_\fP \fBthread_color\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBEMB_PUBLIC\fP int convert (const char * inf, const char * outf)"
+
+.PP
+Definition at line \fB1108\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP degrees (\fBEmbReal\fP radian)"
+
+.SS "\fBEMB_PUBLIC\fP int emb_identify_format (const char * ending)"
+
+.PP
+Definition at line \fB167\fP of file \fBformats\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int emb_round (\fBEmbReal\fP x)"
+
+.SS "\fBEMB_PUBLIC\fP char embArc_clockwise (\fBEmbArc\fP arc)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbArc\fP embArc_init (void)"
+
+.SS "\fBEMB_PUBLIC\fP int embArray_addArc (\fBEmbArray\fP * g, \fBEmbArc\fP arc)"
+
+.PP
+Definition at line \fB96\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embArray_addCircle (\fBEmbArray\fP * g, \fBEmbCircle\fP circle)"
+
+.PP
+Definition at line \fB108\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embArray_addEllipse (\fBEmbArray\fP * g, \fBEmbEllipse\fP ellipse)"
+
+.PP
+Definition at line \fB120\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embArray_addFlag (\fBEmbArray\fP * g, int flag)"
+
+.PP
+Definition at line \fB132\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embArray_addLine (\fBEmbArray\fP * g, \fBEmbLine\fP line)"
+
+.PP
+Definition at line \fB144\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embArray_addPath (\fBEmbArray\fP * g, \fBEmbPath\fP p)"
+
+.PP
+Definition at line \fB156\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embArray_addPoint (\fBEmbArray\fP * g, \fBEmbPoint\fP p)"
+
+.PP
+Definition at line \fB168\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embArray_addPolygon (\fBEmbArray\fP * g, \fBEmbPolygon\fP p)"
+
+.PP
+Definition at line \fB192\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embArray_addPolyline (\fBEmbArray\fP * g, \fBEmbPolyline\fP p)"
+
+.PP
+Definition at line \fB180\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embArray_addRect (\fBEmbArray\fP * g, \fBEmbRect\fP rect)"
+
+.PP
+Definition at line \fB204\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embArray_addStitch (\fBEmbArray\fP * g, \fBEmbStitch\fP st)"
+
+.PP
+Definition at line \fB216\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embArray_addThread (\fBEmbArray\fP * g, \fBEmbThread\fP p)"
+
+.SS "\fBEMB_PUBLIC\fP int embArray_addVector (\fBEmbArray\fP * g, \fBEmbVector\fP b)"
+
+.PP
+Definition at line \fB227\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embArray_copy (\fBEmbArray\fP * dst, \fBEmbArray\fP * src)"
+
+.PP
+Definition at line \fB74\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbArray\fP * embArray_create (int type)"
+
+.PP
+Definition at line \fB19\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embArray_free (\fBEmbArray\fP * p)"
+
+.PP
+Definition at line \fB239\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embArray_resize (\fBEmbArray\fP * g)"
+
+.PP
+Definition at line \fB41\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbCircle\fP embCircle_init (void)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbColor\fP * embColor_create (unsigned char r, unsigned char g, unsigned char b)"
+
+.SS "\fBEMB_PUBLIC\fP int embColor_distance (\fBEmbColor\fP a, \fBEmbColor\fP b)"
+
+.PP
+Definition at line \fB671\fP of file \fBmain\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbColor\fP embColor_fromHexStr (char * val)"
+
+.PP
+Definition at line \fB32\fP of file \fBencoding\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbColor\fP embColor_make (unsigned char r, unsigned char g, unsigned char b)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embEllipse_area (\fBEmbEllipse\fP ellipse)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embEllipse_diameterX (\fBEmbEllipse\fP ellipse)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embEllipse_diameterY (\fBEmbEllipse\fP ellipse)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embEllipse_height (\fBEmbEllipse\fP ellipse)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbEllipse\fP embEllipse_init (void)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbEllipse\fP embEllipse_make (\fBEmbReal\fP cx, \fBEmbReal\fP cy, \fBEmbReal\fP rx, \fBEmbReal\fP ry)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embEllipse_perimeter (\fBEmbEllipse\fP ellipse)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embEllipse_width (\fBEmbEllipse\fP ellipse)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbRect\fP embGeometry_boundingRect (\fBEmbGeometry\fP * obj)"
+
+.PP
+Definition at line \fB102\fP of file \fBgeometry\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embGeometry_free (\fBEmbGeometry\fP * obj)"
+
+.PP
+Definition at line \fB63\fP of file \fBgeometry\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbGeometry\fP * embGeometry_init (int type_in)"
+
+.PP
+Definition at line \fB20\fP of file \fBgeometry\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embGeometry_move (\fBEmbGeometry\fP * obj, \fBEmbVector\fP delta)"
+
+.PP
+Definition at line \fB81\fP of file \fBgeometry\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embGeometry_vulcanize (\fBEmbGeometry\fP * obj)"
+
+.PP
+Definition at line \fB128\fP of file \fBgeometry\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbImage\fP embImage_create (int, int)"
+
+.SS "\fBEMB_PUBLIC\fP void embImage_free (\fBEmbImage\fP * image)"
+
+.SS "\fBEMB_PUBLIC\fP void embImage_read (\fBEmbImage\fP * image, char * fname)"
+
+.SS "\fBEMB_PUBLIC\fP int embImage_write (\fBEmbImage\fP * image, char * fname)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbVector\fP embLine_intersectionPoint (\fBEmbLine\fP line1, \fBEmbLine\fP line2)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbLine\fP embLine_make (\fBEmbReal\fP x1, \fBEmbReal\fP y1, \fBEmbReal\fP x2, \fBEmbReal\fP y2)"
+
+.SS "\fBEMB_PUBLIC\fP void embLine_normalVector (\fBEmbLine\fP line, \fBEmbVector\fP * result, int clockwise)"
+
+.SS "\fBEMB_PUBLIC\fP void embPattern_addCircleAbs (\fBEmbPattern\fP * p, \fBEmbCircle\fP circle)"
+Adds a circle object to pattern (\fIp\fP) with its center at the absolute position (\fIcx\fP,\fIcy\fP) with a radius of (\fIr\fP)\&. Positive y is up\&. Units are in millimeters\&. 
+.PP
+Definition at line \fB787\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_addEllipseAbs (\fBEmbPattern\fP * p, \fBEmbEllipse\fP ellipse)"
+Adds an ellipse object to pattern (\fIp\fP) with its center at the absolute position (\fIcx\fP,\fIcy\fP) with radii of (\fIrx\fP,\fIry\fP)\&. Positive y is up\&. Units are in millimeters\&. 
+.PP
+Definition at line \fB801\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_addLineAbs (\fBEmbPattern\fP * p, \fBEmbLine\fP line)"
+Adds a line object to pattern (\fIp\fP) starting at the absolute position (\fIx1\fP,\fIy1\fP) and ending at the absolute position (\fIx2\fP,\fIy2\fP)\&. Positive y is up\&. Units are in millimeters\&. 
+.PP
+Definition at line \fB816\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_addPathAbs (\fBEmbPattern\fP * p, \fBEmbPath\fP obj)"
+
+.PP
+Definition at line \fB827\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_addPointAbs (\fBEmbPattern\fP * p, \fBEmbPoint\fP obj)"
+Adds a point object to pattern (\fIp\fP) at the absolute position (\fIx\fP,\fIy\fP)\&. Positive y is up\&. Units are in millimeters\&. 
+.PP
+Definition at line \fB843\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_addPolygonAbs (\fBEmbPattern\fP * p, \fBEmbPolygon\fP obj)"
+
+.PP
+Definition at line \fB854\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_addPolylineAbs (\fBEmbPattern\fP * p, \fBEmbPolyline\fP obj)"
+
+.SS "\fBEMB_PUBLIC\fP void embPattern_addRectAbs (\fBEmbPattern\fP * p, \fBEmbRect\fP rect)"
+Adds a rectangle object to pattern (\fIp\fP) at the absolute position (\fIx\fP,\fIy\fP) with a width of (\fIw\fP) and a height of (\fIh\fP)\&. Positive y is up\&. Units are in millimeters\&. 
+.PP
+Definition at line \fB888\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_addStitchAbs (\fBEmbPattern\fP * p, \fBEmbReal\fP x, \fBEmbReal\fP y, int flags, int isAutoColorIndex)"
+Adds a stitch to the pattern (\fIp\fP) at the absolute position (\fIx\fP,\fIy\fP)\&. Positive y is up\&. Units are in millimeters\&. 
+.PP
+Definition at line \fB236\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_addStitchRel (\fBEmbPattern\fP * p, \fBEmbReal\fP dx, \fBEmbReal\fP dy, int flags, int isAutoColorIndex)"
+Adds a stitch to the pattern (\fIp\fP) at the relative position (\fIdx\fP,\fIdy\fP) to the previous stitch\&. Positive y is up\&. Units are in millimeters\&. 
+.PP
+Definition at line \fB290\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embPattern_addThread (\fBEmbPattern\fP * p, \fBEmbThread\fP thread)"
+
+.PP
+Definition at line \fB66\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbRect\fP embPattern_calcBoundingBox (\fBEmbPattern\fP * p)"
+Returns an EmbRect that encapsulates all stitches and objects in the pattern (\fIp\fP)\&. 
+.PP
+Definition at line \fB340\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_center (\fBEmbPattern\fP * p)"
+
+.PP
+Definition at line \fB709\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_changeColor (\fBEmbPattern\fP * p, int index)"
+
+.PP
+Definition at line \fB312\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embPattern_color_count (\fBEmbPattern\fP * pattern, \fBEmbColor\fP startColor)"
+
+.PP
+Definition at line \fB911\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbPattern\fP * embPattern_combine (\fBEmbPattern\fP * p1, \fBEmbPattern\fP * p2)"
+
+.PP
+Definition at line \fB854\fP of file \fBfill\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_combineJumpStitches (\fBEmbPattern\fP * p)"
+
+.PP
+Definition at line \fB624\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_convertGeometry (\fBEmbPattern\fP * p)"
+
+.PP
+Definition at line \fB987\fP of file \fBfill\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_copyPolylinesToStitchList (\fBEmbPattern\fP * pattern)"
+
+.SS "\fBEMB_PUBLIC\fP void embPattern_copyStitchListToPolylines (\fBEmbPattern\fP * pattern)"
+
+.SS "\fBEMB_PUBLIC\fP void embPattern_correctForMaxStitchLength (\fBEmbPattern\fP * p, \fBEmbReal\fP maxStitchLength, \fBEmbReal\fP maxJumpLength)"
+
+.PP
+Definition at line \fB660\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbPattern\fP * embPattern_create (void)"
+Returns a pointer to an EmbPattern\&. It is created on the heap\&. The caller is responsible for freeing the allocated memory with \fBembPattern_free()\fP\&. 
+.PP
+Definition at line \fB21\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_crossstitch (\fBEmbPattern\fP * pattern, \fBEmbImage\fP * image, int threshhold)"
+
+.PP
+Definition at line \fB239\fP of file \fBfill\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_designDetails (\fBEmbPattern\fP * p)"
+
+.PP
+Definition at line \fB942\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_end (\fBEmbPattern\fP * p)"
+
+.PP
+Definition at line \fB898\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_fixColorCount (\fBEmbPattern\fP * p)"
+
+.PP
+Definition at line \fB79\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_flip (\fBEmbPattern\fP * p, int horz, int vert)"
+Flips the entire pattern (\fIp\fP) horizontally about the x-axis if (\fIhorz\fP) is true\&. Flips the entire pattern (\fIp\fP) vertically about the y-axis if (\fIvert\fP) is true\&. 
+.PP
+Definition at line \fB497\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_flipHorizontal (\fBEmbPattern\fP * p)"
+Flips the entire pattern (\fIp\fP) horizontally about the y-axis\&. 
+.PP
+Definition at line \fB472\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_flipVertical (\fBEmbPattern\fP * p)"
+Flips the entire pattern (\fIp\fP) vertically about the x-axis\&. 
+.PP
+Definition at line \fB484\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_free (\fBEmbPattern\fP * p)"
+Frees all memory allocated in the pattern (\fIp\fP)\&. 
+.PP
+Definition at line \fB771\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_hideStitchesOverLength (\fBEmbPattern\fP * p, int length)"
+
+.PP
+Definition at line \fB42\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_horizontal_fill (\fBEmbPattern\fP * pattern, \fBEmbImage\fP * image, int threshhold)"
+
+.PP
+Definition at line \fB212\fP of file \fBfill\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embPattern_jumpStitches (\fBEmbPattern\fP * pattern)"
+
+.PP
+Definition at line \fB1240\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_lengthHistogram (\fBEmbPattern\fP * pattern, int * bin, int NUMBINS)"
+
+.PP
+Definition at line \fB1205\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_loadExternalColorFile (\fBEmbPattern\fP * p, const char * fileName)"
+
+.PP
+Definition at line \fB732\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embPattern_maximumStitchLength (\fBEmbPattern\fP * pattern)"
+
+.PP
+Definition at line \fB1184\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embPattern_minimumStitchLength (\fBEmbPattern\fP * pattern)"
+
+.PP
+Definition at line \fB1163\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embPattern_movePolylinesToStitchList (\fBEmbPattern\fP * pattern)"
+
+.SS "\fBEMB_PUBLIC\fP void embPattern_moveStitchListToPolylines (\fBEmbPattern\fP * pattern)"
+
+.SS "\fBEMB_PUBLIC\fP char embPattern_read (\fBEmbPattern\fP * pattern, const char * fileName, int format)"
+
+.PP
+Definition at line \fB259\fP of file \fBformats\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP char embPattern_readAuto (\fBEmbPattern\fP * pattern, const char * fileName)"
+
+.PP
+Definition at line \fB706\fP of file \fBformats\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embPattern_realStitches (\fBEmbPattern\fP * pattern)"
+
+.PP
+Definition at line \fB1227\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embPattern_render (\fBEmbPattern\fP * pattern, char * fname)"
+
+.SS "\fBEMB_PUBLIC\fP void embPattern_scale (\fBEmbPattern\fP * p, \fBEmbReal\fP scale)"
+
+.PP
+Definition at line \fB324\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embPattern_simulate (\fBEmbPattern\fP * pattern, char * fname)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embPattern_totalStitchLength (\fBEmbPattern\fP * pattern)"
+
+.PP
+Definition at line \fB1143\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embPattern_trimStitches (\fBEmbPattern\fP * pattern)"
+
+.PP
+Definition at line \fB1254\fP of file \fBpattern\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP char embPattern_write (\fBEmbPattern\fP * pattern, const char * fileName, int format)"
+
+.PP
+Definition at line \fB480\fP of file \fBformats\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP char embPattern_writeAuto (\fBEmbPattern\fP * pattern, const char * fileName)"
+
+.PP
+Definition at line \fB718\fP of file \fBformats\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embRect_area (\fBEmbRect\fP)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbRect\fP embRect_init (void)"
+
+.SS "\fBEMB_PUBLIC\fP void embSatinOutline_generateSatinOutline (\fBEmbArray\fP * lines, \fBEmbReal\fP thickness, \fBEmbSatinOutline\fP * result)"
+
+.PP
+Definition at line \fB520\fP of file \fBmain\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbArray\fP * embSatinOutline_renderStitches (\fBEmbSatinOutline\fP * result, \fBEmbReal\fP density)"
+
+.PP
+Definition at line \fB608\fP of file \fBmain\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embThread_findNearestColor (\fBEmbColor\fP color, \fBEmbColor\fP * color_list, int n_colors)"
+Returns the closest color to the required color based on a list of available threads\&. The algorithm is a simple least squares search against the list\&. If the (square of) Euclidean 3-dimensional distance between the points in (red, green, blue) space is smaller then the index is saved and the remaining index is returned to the caller\&.
+.PP
+\fBParameters\fP
+.RS 4
+\fIcolor\fP The EmbColor color to match\&. 
+.br
+\fIcolors\fP The EmbThreadList pointer to start the search at\&. 
+.br
+\fImode\fP Is the argument an array of threads (0) or colors (1)? 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+closestIndex The entry in the ThreadList that matches\&. 
+.RE
+.PP
+
+.PP
+Definition at line \fB715\fP of file \fBmain\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int embThread_findNearestThread (\fBEmbColor\fP color, \fBEmbThread\fP * threads, int n_threads)"
+
+.PP
+Definition at line \fB731\fP of file \fBmain\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbThread\fP embThread_getRandom (void)"
+Returns a random thread color, useful in filling in cases where the actual color of the thread doesn't matter but one needs to be declared to test or render a pattern\&.
+.PP
+\fBReturns\fP
+.RS 4
+c The resulting color\&. 
+.RE
+.PP
+
+.PP
+Definition at line \fB754\fP of file \fBmain\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP void embTime_initNow (\fBEmbTime\fP * t)"
+
+.PP
+Definition at line \fB885\fP of file \fBmain\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbTime\fP embTime_time (\fBEmbTime\fP * t)"
+
+.PP
+Definition at line \fB905\fP of file \fBmain\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbVector\fP embVector_add (\fBEmbVector\fP v1, \fBEmbVector\fP v2)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embVector_angle (\fBEmbVector\fP v)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbVector\fP embVector_average (\fBEmbVector\fP v1, \fBEmbVector\fP v2)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embVector_cross (\fBEmbVector\fP v1, \fBEmbVector\fP v2)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embVector_distance (\fBEmbVector\fP a, \fBEmbVector\fP b)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embVector_dot (\fBEmbVector\fP v1, \fBEmbVector\fP v2)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embVector_length (\fBEmbVector\fP vector)"
+
+.SS "\fBEMB_PUBLIC\fP void embVector_multiply (\fBEmbVector\fP vector, \fBEmbReal\fP magnitude, \fBEmbVector\fP * result)"
+
+.SS "\fBEMB_PUBLIC\fP void embVector_normalize (\fBEmbVector\fP vector, \fBEmbVector\fP * result)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embVector_relativeX (\fBEmbVector\fP a1, \fBEmbVector\fP a2, \fBEmbVector\fP a3)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP embVector_relativeY (\fBEmbVector\fP a1, \fBEmbVector\fP a2, \fBEmbVector\fP a3)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbVector\fP embVector_subtract (\fBEmbVector\fP v1, \fBEmbVector\fP v2)"
+
+.SS "\fBEMB_PUBLIC\fP void embVector_transpose_product (\fBEmbVector\fP v1, \fBEmbVector\fP v2, \fBEmbVector\fP * result)"
+
+.SS "\fBEMB_PUBLIC\fP \fBEmbVector\fP embVector_unit (\fBEmbReal\fP angle)"
+
+.SS "\fBEMB_PUBLIC\fP int full_test_matrix (char * fname)"
+
+.SS "\fBEMB_PUBLIC\fP void getArcCenter (\fBEmbArc\fP arc, \fBEmbVector\fP * arcCenter)"
+
+.SS "\fBEMB_PUBLIC\fP char getArcDataFromBulge (\fBEmbReal\fP bulge, \fBEmbArc\fP * arc, \fBEmbReal\fP * arcCenterX, \fBEmbReal\fP * arcCenterY, \fBEmbReal\fP * radius, \fBEmbReal\fP * diameter, \fBEmbReal\fP * chord, \fBEmbReal\fP * chordMidX, \fBEmbReal\fP * chordMidY, \fBEmbReal\fP * sagitta, \fBEmbReal\fP * apothem, \fBEmbReal\fP * incAngleInDegrees, char * clockwise)"
+
+.SS "\fBEMB_PUBLIC\fP int getCircleCircleIntersections (\fBEmbCircle\fP c0, \fBEmbCircle\fP c1, \fBEmbVector\fP * v0, \fBEmbVector\fP * v1)"
+
+.SS "\fBEMB_PUBLIC\fP int getCircleTangentPoints (\fBEmbCircle\fP c, \fBEmbVector\fP p, \fBEmbVector\fP * v0, \fBEmbVector\fP * v1)"
+
+.SS "\fBEMB_PUBLIC\fP int hilbert_curve (\fBEmbPattern\fP * pattern, int iterations)"
+
+.PP
+Definition at line \fB268\fP of file \fBfill\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int lindenmayer_system (\fBL_system\fP L, char * state, int iteration, int complete)"
+
+.PP
+Definition at line \fB27\fP of file \fBfill\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP \fBEmbReal\fP radians (\fBEmbReal\fP degree)"
+
+.SS "\fBEMB_PUBLIC\fP void report (int result, char * label)"
+
+.SS "\fBEMB_PUBLIC\fP void testMain (int level)"
+
+.SS "\fBEMB_PUBLIC\fP int threadColor (const char * name, int brand)"
+
+.PP
+Definition at line \fB4012\fP of file \fBthread\-color\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP const char * threadColorName (unsigned int color, int brand)"
+
+.PP
+Definition at line \fB4035\fP of file \fBthread\-color\&.c\fP\&.
+.SS "\fBEMB_PUBLIC\fP int threadColorNum (unsigned int color, int brand)"
+
+.PP
+Definition at line \fB4023\fP of file \fBthread\-color\&.c\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "const unsigned char _dxfColorTable[][3]\fC [extern]\fP"
+
+.PP
+Definition at line \fB14\fP of file \fBthread\-color\&.c\fP\&.
+.SS "\fBEmbThread\fP black_thread\fC [extern]\fP"
+
+.PP
+Definition at line \fB56\fP of file \fBmain\&.c\fP\&.
+.SS "int emb_error\fC [extern]\fP"
+
+.PP
+Definition at line \fB58\fP of file \fBmain\&.c\fP\&.
+.SS "int emb_verbose\fC [extern]\fP"
+
+.PP
+Definition at line \fB57\fP of file \fBmain\&.c\fP\&.
+.SS "const \fBEmbReal\fP embConstantPi\fC [extern]\fP"
+
+.PP
+Definition at line \fB60\fP of file \fBmain\&.c\fP\&.
+.SS "\fBEmbFormatList\fP formatTable[\fBnumberOfFormats\fP]\fC [extern]\fP"
+
+.PP
+Definition at line \fB21\fP of file \fBformats\&.c\fP\&.
+.SS "const \fBEmbThread\fP husThreads[]\fC [extern]\fP"
+
+.PP
+Definition at line \fB15\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const \fBEmbThread\fP jefThreads[]\fC [extern]\fP"
+
+.PP
+Definition at line \fB16\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const \fBEmbThread\fP pcmThreads[]\fC [extern]\fP"
+
+.PP
+Definition at line \fB18\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const int pecThreadCount\fC [extern]\fP"
+
+.PP
+Definition at line \fB21\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const \fBEmbThread\fP pecThreads[]\fC [extern]\fP"
+
+.PP
+Definition at line \fB19\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const int shvThreadCount\fC [extern]\fP"
+
+.PP
+Definition at line \fB20\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const \fBEmbThread\fP shvThreads[]\fC [extern]\fP"
+
+.PP
+Definition at line \fB17\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const unsigned char vipDecodingTable[]\fC [extern]\fP"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Libembroidery from the source code\&.

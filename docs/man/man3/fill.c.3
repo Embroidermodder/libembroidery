@@ -1,0 +1,180 @@
+.TH "src/fill.c" 3 "Sun Mar 19 2023" "Version 1.0.0-alpha" "Libembroidery" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/fill.c
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include 'embroidery_internal\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBlindenmayer_system\fP (\fBL_system\fP L, char *state, int iterations, int complete)"
+.br
+.ti -1c
+.RI "void \fBembPattern_horizontal_fill\fP (\fBEmbPattern\fP *pattern, \fBEmbImage\fP *image, int threshhold)"
+.br
+.ti -1c
+.RI "void \fBembPattern_crossstitch\fP (\fBEmbPattern\fP *pattern, \fBEmbImage\fP *image, int threshhold)"
+.br
+.ti -1c
+.RI "int \fBhilbert_curve\fP (\fBEmbPattern\fP *pattern, int iterations)"
+.br
+.ti -1c
+.RI "void \fBgenerate_dragon_curve\fP (char *state, int iterations)"
+.br
+.ti -1c
+.RI "int \fBdragon_curve\fP (int iterations)"
+.br
+.ti -1c
+.RI "void \fBembPolygon_reduceByDistance\fP (\fBEmbArray\fP *vertices, \fBEmbArray\fP *simplified, float distance)"
+.br
+.ti -1c
+.RI "void \fBembPolygon_reduceByNth\fP (\fBEmbArray\fP *vertices, \fBEmbArray\fP *out, int nth)"
+.br
+.ti -1c
+.RI "\fBEmbPattern\fP * \fBembPattern_combine\fP (\fBEmbPattern\fP *p1, \fBEmbPattern\fP *p2)"
+.br
+.ti -1c
+.RI "void \fBembPattern_stitchArc\fP (\fBEmbPattern\fP *p, \fBEmbArc\fP arc, int thread_index, int style)"
+.br
+.ti -1c
+.RI "void \fBembPattern_stitchCircle\fP (\fBEmbPattern\fP *p, \fBEmbCircle\fP circle, int thread_index, int style)"
+.br
+.ti -1c
+.RI "void \fBembPattern_stitchEllipse\fP (\fBEmbPattern\fP *p, \fBEmbEllipse\fP ellipse, int thread_index, int style)"
+.br
+.ti -1c
+.RI "void \fBembPattern_stitchPath\fP (\fBEmbPattern\fP *p, \fBEmbPath\fP rect, int thread_index, int style)"
+.br
+.ti -1c
+.RI "void \fBembPattern_stitchPolygon\fP (\fBEmbPattern\fP *p, \fBEmbPolygon\fP rect, int thread_index, int style)"
+.br
+.ti -1c
+.RI "void \fBembPattern_stitchPolyline\fP (\fBEmbPattern\fP *p, \fBEmbPolyline\fP rect, int thread_index, int style)"
+.br
+.ti -1c
+.RI "void \fBembPattern_stitchRect\fP (\fBEmbPattern\fP *p, \fBEmbRect\fP rect, int thread_index, int style)"
+.br
+.ti -1c
+.RI "void \fBembPattern_stitchText\fP (\fBEmbPattern\fP *p, \fBEmbRect\fP rect, int thread_index, int style)"
+.br
+.ti -1c
+.RI "void \fBembPattern_convertGeometry\fP (\fBEmbPattern\fP *p)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "const char * \fBrules\fP [] = {'+BF\-AFA\-FB+', '\-AF+BFB+FA\-'}"
+.br
+.ti -1c
+.RI "\fBL_system\fP \fBhilbert_curve_l_system\fP"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int dragon_curve (int iterations)"
+
+.PP
+Definition at line \fB345\fP of file \fBfill\&.c\fP\&.
+.SS "\fBEmbPattern\fP * embPattern_combine (\fBEmbPattern\fP * p1, \fBEmbPattern\fP * p2)"
+
+.PP
+Definition at line \fB854\fP of file \fBfill\&.c\fP\&.
+.SS "void embPattern_convertGeometry (\fBEmbPattern\fP * p)"
+
+.PP
+Definition at line \fB987\fP of file \fBfill\&.c\fP\&.
+.SS "void embPattern_crossstitch (\fBEmbPattern\fP * pattern, \fBEmbImage\fP * image, int threshhold)"
+
+.PP
+Definition at line \fB239\fP of file \fBfill\&.c\fP\&.
+.SS "void embPattern_horizontal_fill (\fBEmbPattern\fP * pattern, \fBEmbImage\fP * image, int threshhold)"
+
+.PP
+Definition at line \fB212\fP of file \fBfill\&.c\fP\&.
+.SS "void embPattern_stitchArc (\fBEmbPattern\fP * p, \fBEmbArc\fP arc, int thread_index, int style)"
+
+.PP
+Definition at line \fB875\fP of file \fBfill\&.c\fP\&.
+.SS "void embPattern_stitchCircle (\fBEmbPattern\fP * p, \fBEmbCircle\fP circle, int thread_index, int style)"
+
+.PP
+Definition at line \fB881\fP of file \fBfill\&.c\fP\&.
+.SS "void embPattern_stitchEllipse (\fBEmbPattern\fP * p, \fBEmbEllipse\fP ellipse, int thread_index, int style)"
+
+.PP
+Definition at line \fB933\fP of file \fBfill\&.c\fP\&.
+.SS "void embPattern_stitchPath (\fBEmbPattern\fP * p, \fBEmbPath\fP rect, int thread_index, int style)"
+
+.PP
+Definition at line \fB939\fP of file \fBfill\&.c\fP\&.
+.SS "void embPattern_stitchPolygon (\fBEmbPattern\fP * p, \fBEmbPolygon\fP rect, int thread_index, int style)"
+
+.PP
+Definition at line \fB945\fP of file \fBfill\&.c\fP\&.
+.SS "void embPattern_stitchPolyline (\fBEmbPattern\fP * p, \fBEmbPolyline\fP rect, int thread_index, int style)"
+
+.PP
+Definition at line \fB951\fP of file \fBfill\&.c\fP\&.
+.SS "void embPattern_stitchRect (\fBEmbPattern\fP * p, \fBEmbRect\fP rect, int thread_index, int style)"
+
+.PP
+Definition at line \fB957\fP of file \fBfill\&.c\fP\&.
+.SS "void embPattern_stitchText (\fBEmbPattern\fP * p, \fBEmbRect\fP rect, int thread_index, int style)"
+
+.PP
+Definition at line \fB982\fP of file \fBfill\&.c\fP\&.
+.SS "void embPolygon_reduceByDistance (\fBEmbArray\fP * vertices, \fBEmbArray\fP * simplified, float distance)"
+
+.PP
+Definition at line \fB805\fP of file \fBfill\&.c\fP\&.
+.SS "void embPolygon_reduceByNth (\fBEmbArray\fP * vertices, \fBEmbArray\fP * out, int nth)"
+
+.PP
+Definition at line \fB835\fP of file \fBfill\&.c\fP\&.
+.SS "void generate_dragon_curve (char * state, int iterations)"
+
+.PP
+Definition at line \fB324\fP of file \fBfill\&.c\fP\&.
+.SS "int hilbert_curve (\fBEmbPattern\fP * pattern, int iterations)"
+
+.PP
+Definition at line \fB268\fP of file \fBfill\&.c\fP\&.
+.SS "int lindenmayer_system (\fBL_system\fP L, char * state, int iterations, int complete)"
+
+.PP
+Definition at line \fB27\fP of file \fBfill\&.c\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBL_system\fP hilbert_curve_l_system"
+\fBInitial value:\fP.PP
+.nf
+= {
+    'A', "AB", "F+\-", (char**)rules
+}
+.fi
+
+.PP
+Definition at line \fB22\fP of file \fBfill\&.c\fP\&.
+.SS "const char* rules[] = {'+BF\-AFA\-FB+', '\-AF+BFB+FA\-'}"
+
+.PP
+Definition at line \fB20\fP of file \fBfill\&.c\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Libembroidery from the source code\&.

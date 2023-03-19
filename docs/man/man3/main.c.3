@@ -1,0 +1,690 @@
+.TH "src/main.c" 3 "Sun Mar 19 2023" "Version 1.0.0-alpha" "Libembroidery" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/main.c
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include 'embroidery_internal\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFLAG_TO\fP   0"
+.br
+.ti -1c
+.RI "#define \fBFLAG_TO_SHORT\fP   1"
+.br
+.ti -1c
+.RI "#define \fBFLAG_HELP\fP   2"
+.br
+.ti -1c
+.RI "#define \fBFLAG_HELP_SHORT\fP   3"
+.br
+.ti -1c
+.RI "#define \fBFLAG_FORMATS\fP   4"
+.br
+.ti -1c
+.RI "#define \fBFLAG_FORMATS_SHORT\fP   5"
+.br
+.ti -1c
+.RI "#define \fBFLAG_QUIET\fP   6"
+.br
+.ti -1c
+.RI "#define \fBFLAG_QUIET_SHORT\fP   7"
+.br
+.ti -1c
+.RI "#define \fBFLAG_VERBOSE\fP   8"
+.br
+.ti -1c
+.RI "#define \fBFLAG_VERBOSE_SHORT\fP   9"
+.br
+.ti -1c
+.RI "#define \fBFLAG_VERSION\fP   10"
+.br
+.ti -1c
+.RI "#define \fBFLAG_VERSION_SHORT\fP   11"
+.br
+.ti -1c
+.RI "#define \fBFLAG_CIRCLE\fP   12"
+.br
+.ti -1c
+.RI "#define \fBFLAG_CIRCLE_SHORT\fP   13"
+.br
+.ti -1c
+.RI "#define \fBFLAG_ELLIPSE\fP   14"
+.br
+.ti -1c
+.RI "#define \fBFLAG_ELLIPSE_SHORT\fP   15"
+.br
+.ti -1c
+.RI "#define \fBFLAG_LINE\fP   16"
+.br
+.ti -1c
+.RI "#define \fBFLAG_LINE_SHORT\fP   17"
+.br
+.ti -1c
+.RI "#define \fBFLAG_POLYGON\fP   18"
+.br
+.ti -1c
+.RI "#define \fBFLAG_POLYGON_SHORT\fP   19"
+.br
+.ti -1c
+.RI "#define \fBFLAG_POLYLINE\fP   20"
+.br
+.ti -1c
+.RI "#define \fBFLAG_POLYLINE_SHORT\fP   21"
+.br
+.ti -1c
+.RI "#define \fBFLAG_RENDER\fP   22"
+.br
+.ti -1c
+.RI "#define \fBFLAG_RENDER_SHORT\fP   23"
+.br
+.ti -1c
+.RI "#define \fBFLAG_SATIN\fP   24"
+.br
+.ti -1c
+.RI "#define \fBFLAG_SATIN_SHORT\fP   25"
+.br
+.ti -1c
+.RI "#define \fBFLAG_STITCH\fP   26"
+.br
+.ti -1c
+.RI "#define \fBFLAG_STITCH_SHORT\fP   27"
+.br
+.ti -1c
+.RI "#define \fBFLAG_TEST\fP   28"
+.br
+.ti -1c
+.RI "#define \fBFLAG_FULL_TEST_SUITE\fP   29"
+.br
+.ti -1c
+.RI "#define \fBFLAG_HILBERT_CURVE\fP   30"
+.br
+.ti -1c
+.RI "#define \fBFLAG_SIERPINSKI_TRIANGLE\fP   31"
+.br
+.ti -1c
+.RI "#define \fBFLAG_FILL\fP   32"
+.br
+.ti -1c
+.RI "#define \fBFLAG_FILL_SHORT\fP   33"
+.br
+.ti -1c
+.RI "#define \fBFLAG_SIMULATE\fP   34"
+.br
+.ti -1c
+.RI "#define \fBFLAG_COMBINE\fP   35"
+.br
+.ti -1c
+.RI "#define \fBFLAG_CROSS_STITCH\fP   36"
+.br
+.ti -1c
+.RI "#define \fBNUM_FLAGS\fP   37"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBembVector_print\fP (\fBEmbVector\fP v, char *label)"
+.br
+.ti -1c
+.RI "void \fBembArc_print\fP (\fBEmbArc\fP arc)"
+.br
+.ti -1c
+.RI "int \fBcheck_header_present\fP (FILE *file, int minimum_header_length)"
+.br
+.ti -1c
+.RI "unsigned int \fBsectorSize\fP (\fBbcf_file\fP *bcfFile)"
+.br
+.ti -1c
+.RI "int \fBhaveExtraDIFATSectors\fP (\fBbcf_file\fP *file)"
+.br
+.ti -1c
+.RI "int \fBseekToSector\fP (\fBbcf_file\fP *bcfFile, FILE *file, const unsigned int sector)"
+.br
+.ti -1c
+.RI "void \fBparseDIFATSectors\fP (FILE *file, \fBbcf_file\fP *bcfFile)"
+.br
+.ti -1c
+.RI "int \fBbcfFile_read\fP (FILE *file, \fBbcf_file\fP *bcfFile)"
+.br
+.ti -1c
+.RI "FILE * \fBGetFile\fP (\fBbcf_file\fP *bcfFile, FILE *file, char *fileToFind)"
+.br
+.ti -1c
+.RI "void \fBbcf_file_free\fP (\fBbcf_file\fP *bcfFile)"
+.br
+.ti -1c
+.RI "\fBbcf_file_difat\fP * \fBbcf_difat_create\fP (FILE *file, unsigned int fatSectors, const unsigned int \fBsectorSize\fP)"
+.br
+.ti -1c
+.RI "unsigned int \fBentriesInDifatSector\fP (\fBbcf_file_difat\fP *fat)"
+.br
+.ti -1c
+.RI "unsigned int \fBreadFullSector\fP (FILE *file, \fBbcf_file_difat\fP *bcfFile, unsigned int *difatEntriesToRead)"
+.br
+.ti -1c
+.RI "void \fBparseDirectoryEntryName\fP (FILE *file, \fBbcf_directory_entry\fP *dir)"
+.br
+.ti -1c
+.RI "\fBbcf_directory\fP * \fBCompoundFileDirectory\fP (const unsigned int maxNumberOfDirectoryEntries)"
+.br
+.ti -1c
+.RI "\fBEmbTime\fP \fBparseTime\fP (FILE *file)"
+.br
+.ti -1c
+.RI "\fBbcf_directory_entry\fP * \fBCompoundFileDirectoryEntry\fP (FILE *file)"
+.br
+.ti -1c
+.RI "void \fBreadNextSector\fP (FILE *file, \fBbcf_directory\fP *dir)"
+.br
+.ti -1c
+.RI "void \fBbcf_directory_free\fP (\fBbcf_directory\fP **dir)"
+.br
+.ti -1c
+.RI "\fBbcf_file_fat\fP * \fBbcfFileFat_create\fP (const unsigned int \fBsectorSize\fP)"
+.br
+.ti -1c
+.RI "void \fBloadFatFromSector\fP (\fBbcf_file_fat\fP *fat, FILE *file)"
+.br
+.ti -1c
+.RI "\fBbcf_file_header\fP \fBbcfFileHeader_read\fP (FILE *file)"
+.br
+.ti -1c
+.RI "void \fBembSatinOutline_generateSatinOutline\fP (\fBEmbArray\fP *lines, \fBEmbReal\fP thickness, \fBEmbSatinOutline\fP *result)"
+.br
+.ti -1c
+.RI "\fBEmbArray\fP * \fBembSatinOutline_renderStitches\fP (\fBEmbSatinOutline\fP *result, \fBEmbReal\fP density)"
+.br
+.ti -1c
+.RI "void \fBwrite_24bit\fP (FILE *file, int x)"
+.br
+.ti -1c
+.RI "int \fBembColor_distance\fP (\fBEmbColor\fP a, \fBEmbColor\fP b)"
+.br
+.ti -1c
+.RI "void \fBembColor_read\fP (FILE *f, \fBEmbColor\fP *c, int toRead)"
+.br
+.ti -1c
+.RI "void \fBembColor_write\fP (FILE *f, \fBEmbColor\fP c, int toWrite)"
+.br
+.ti -1c
+.RI "int \fBembThread_findNearestColor\fP (\fBEmbColor\fP color, \fBEmbColor\fP *color_list, int n_colors)"
+.br
+.ti -1c
+.RI "int \fBembThread_findNearestThread\fP (\fBEmbColor\fP color, \fBEmbThread\fP *thread_list, int n_threads)"
+.br
+.ti -1c
+.RI "\fBEmbThread\fP \fBembThread_getRandom\fP (void)"
+.br
+.ti -1c
+.RI "void \fBbinaryReadString\fP (FILE *file, char *buffer, int maxLength)"
+.br
+.ti -1c
+.RI "void \fBbinaryReadUnicodeString\fP (FILE *file, char *buffer, const int stringLength)"
+.br
+.ti -1c
+.RI "int \fBstringInArray\fP (const char *s, const char **array)"
+.br
+.ti -1c
+.RI "int \fBemb_readline\fP (FILE *file, char *line, int maxLength)"
+.br
+.ti -1c
+.RI "void \fBget_trim_bounds\fP (char const *s, char const **firstWord, char const **trailingSpace)"
+.br
+.ti -1c
+.RI "char * \fBcopy_trim\fP (char const *s)"
+.br
+.ti -1c
+.RI "char * \fBemb_optOut\fP (\fBEmbReal\fP num, char *str)"
+.br
+.ti -1c
+.RI "void \fBembTime_initNow\fP (\fBEmbTime\fP *t)"
+.br
+.ti -1c
+.RI "\fBEmbTime\fP \fBembTime_time\fP (\fBEmbTime\fP *t)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBEmbThread\fP \fBblack_thread\fP = { { 0, 0, 0 }, 'Black', 'Black' }"
+.br
+.ti -1c
+.RI "int \fBemb_verbose\fP = 0"
+.br
+.ti -1c
+.RI "int \fBemb_error\fP = 0"
+.br
+.ti -1c
+.RI "const \fBEmbReal\fP \fBembConstantPi\fP = 3\&.1415926535"
+.br
+.ti -1c
+.RI "const unsigned int \fBdifatEntriesInHeader\fP = 109"
+.br
+.ti -1c
+.RI "const unsigned int \fBsizeOfFatEntry\fP = sizeof(unsigned int)"
+.br
+.ti -1c
+.RI "const unsigned int \fBsizeOfDifatEntry\fP = 4"
+.br
+.ti -1c
+.RI "const unsigned int \fBsizeOfChainingEntryAtEndOfDifatSector\fP = 4"
+.br
+.ti -1c
+.RI "const unsigned int \fBsizeOfDirectoryEntry\fP = 128"
+.br
+.ti -1c
+.RI "char const \fBWHITESPACE\fP [] = ' \\t\\n\\r'"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define FLAG_CIRCLE   12"
+
+.PP
+Definition at line \fB29\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_CIRCLE_SHORT   13"
+
+.PP
+Definition at line \fB30\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_COMBINE   35"
+
+.PP
+Definition at line \fB52\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_CROSS_STITCH   36"
+
+.PP
+Definition at line \fB53\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_ELLIPSE   14"
+
+.PP
+Definition at line \fB31\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_ELLIPSE_SHORT   15"
+
+.PP
+Definition at line \fB32\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_FILL   32"
+
+.PP
+Definition at line \fB49\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_FILL_SHORT   33"
+
+.PP
+Definition at line \fB50\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_FORMATS   4"
+
+.PP
+Definition at line \fB21\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_FORMATS_SHORT   5"
+
+.PP
+Definition at line \fB22\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_FULL_TEST_SUITE   29"
+
+.PP
+Definition at line \fB46\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_HELP   2"
+
+.PP
+Definition at line \fB19\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_HELP_SHORT   3"
+
+.PP
+Definition at line \fB20\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_HILBERT_CURVE   30"
+
+.PP
+Definition at line \fB47\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_LINE   16"
+
+.PP
+Definition at line \fB33\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_LINE_SHORT   17"
+
+.PP
+Definition at line \fB34\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_POLYGON   18"
+
+.PP
+Definition at line \fB35\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_POLYGON_SHORT   19"
+
+.PP
+Definition at line \fB36\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_POLYLINE   20"
+
+.PP
+Definition at line \fB37\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_POLYLINE_SHORT   21"
+
+.PP
+Definition at line \fB38\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_QUIET   6"
+
+.PP
+Definition at line \fB23\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_QUIET_SHORT   7"
+
+.PP
+Definition at line \fB24\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_RENDER   22"
+
+.PP
+Definition at line \fB39\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_RENDER_SHORT   23"
+
+.PP
+Definition at line \fB40\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_SATIN   24"
+
+.PP
+Definition at line \fB41\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_SATIN_SHORT   25"
+
+.PP
+Definition at line \fB42\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_SIERPINSKI_TRIANGLE   31"
+
+.PP
+Definition at line \fB48\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_SIMULATE   34"
+
+.PP
+Definition at line \fB51\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_STITCH   26"
+
+.PP
+Definition at line \fB43\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_STITCH_SHORT   27"
+
+.PP
+Definition at line \fB44\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_TEST   28"
+
+.PP
+Definition at line \fB45\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_TO   0"
+
+.PP
+Definition at line \fB17\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_TO_SHORT   1"
+
+.PP
+Definition at line \fB18\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_VERBOSE   8"
+
+.PP
+Definition at line \fB25\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_VERBOSE_SHORT   9"
+
+.PP
+Definition at line \fB26\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_VERSION   10"
+
+.PP
+Definition at line \fB27\fP of file \fBmain\&.c\fP\&.
+.SS "#define FLAG_VERSION_SHORT   11"
+
+.PP
+Definition at line \fB28\fP of file \fBmain\&.c\fP\&.
+.SS "#define NUM_FLAGS   37"
+
+.PP
+Definition at line \fB54\fP of file \fBmain\&.c\fP\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBbcf_file_difat\fP * bcf_difat_create (FILE * file, unsigned int fatSectors, const unsigned int sectorSize)"
+
+.PP
+Definition at line \fB276\fP of file \fBmain\&.c\fP\&.
+.SS "void bcf_directory_free (\fBbcf_directory\fP ** dir)"
+
+.PP
+Definition at line \fB448\fP of file \fBmain\&.c\fP\&.
+.SS "void bcf_file_free (\fBbcf_file\fP * bcfFile)"
+
+.PP
+Definition at line \fB267\fP of file \fBmain\&.c\fP\&.
+.SS "int bcfFile_read (FILE * file, \fBbcf_file\fP * bcfFile)"
+
+.PP
+Definition at line \fB196\fP of file \fBmain\&.c\fP\&.
+.SS "\fBbcf_file_fat\fP * bcfFileFat_create (const unsigned int sectorSize)"
+
+.PP
+Definition at line \fB467\fP of file \fBmain\&.c\fP\&.
+.SS "\fBbcf_file_header\fP bcfFileHeader_read (FILE * file)"
+
+.PP
+Definition at line \fB495\fP of file \fBmain\&.c\fP\&.
+.SS "void binaryReadString (FILE * file, char * buffer, int maxLength)"
+
+.PP
+Definition at line \fB766\fP of file \fBmain\&.c\fP\&.
+.SS "void binaryReadUnicodeString (FILE * file, char * buffer, const int stringLength)"
+
+.PP
+Definition at line \fB777\fP of file \fBmain\&.c\fP\&.
+.SS "int check_header_present (FILE * file, int minimum_header_length)"
+
+.PP
+Definition at line \fB149\fP of file \fBmain\&.c\fP\&.
+.SS "\fBbcf_directory\fP * CompoundFileDirectory (const unsigned int maxNumberOfDirectoryEntries)"
+
+.PP
+Definition at line \fB360\fP of file \fBmain\&.c\fP\&.
+.SS "\fBbcf_directory_entry\fP * CompoundFileDirectoryEntry (FILE * file)"
+
+.PP
+Definition at line \fB390\fP of file \fBmain\&.c\fP\&.
+.SS "char * copy_trim (char const * s)"
+
+.PP
+Definition at line \fB851\fP of file \fBmain\&.c\fP\&.
+.SS "char * emb_optOut (\fBEmbReal\fP num, char * str)"
+Optimizes the number (\fInum\fP) for output to a text file and returns it as a string (\fIstr\fP)\&. 
+.PP
+Definition at line \fB868\fP of file \fBmain\&.c\fP\&.
+.SS "int emb_readline (FILE * file, char * line, int maxLength)"
+
+.PP
+Definition at line \fB809\fP of file \fBmain\&.c\fP\&.
+.SS "void embArc_print (\fBEmbArc\fP arc)"
+
+.PP
+Definition at line \fB80\fP of file \fBmain\&.c\fP\&.
+.SS "int embColor_distance (\fBEmbColor\fP a, \fBEmbColor\fP b)"
+
+.PP
+Definition at line \fB671\fP of file \fBmain\&.c\fP\&.
+.SS "void embColor_read (FILE * f, \fBEmbColor\fP * c, int toRead)"
+
+.PP
+Definition at line \fB681\fP of file \fBmain\&.c\fP\&.
+.SS "void embColor_write (FILE * f, \fBEmbColor\fP c, int toWrite)"
+
+.PP
+Definition at line \fB691\fP of file \fBmain\&.c\fP\&.
+.SS "void embSatinOutline_generateSatinOutline (\fBEmbArray\fP * lines, \fBEmbReal\fP thickness, \fBEmbSatinOutline\fP * result)"
+
+.PP
+Definition at line \fB520\fP of file \fBmain\&.c\fP\&.
+.SS "\fBEmbArray\fP * embSatinOutline_renderStitches (\fBEmbSatinOutline\fP * result, \fBEmbReal\fP density)"
+
+.PP
+Definition at line \fB608\fP of file \fBmain\&.c\fP\&.
+.SS "int embThread_findNearestColor (\fBEmbColor\fP color, \fBEmbColor\fP * color_list, int n_colors)"
+Returns the closest color to the required color based on a list of available threads\&. The algorithm is a simple least squares search against the list\&. If the (square of) Euclidean 3-dimensional distance between the points in (red, green, blue) space is smaller then the index is saved and the remaining index is returned to the caller\&.
+.PP
+\fBParameters\fP
+.RS 4
+\fIcolor\fP The EmbColor color to match\&. 
+.br
+\fIcolors\fP The EmbThreadList pointer to start the search at\&. 
+.br
+\fImode\fP Is the argument an array of threads (0) or colors (1)? 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+closestIndex The entry in the ThreadList that matches\&. 
+.RE
+.PP
+
+.PP
+Definition at line \fB715\fP of file \fBmain\&.c\fP\&.
+.SS "int embThread_findNearestThread (\fBEmbColor\fP color, \fBEmbThread\fP * thread_list, int n_threads)"
+
+.PP
+Definition at line \fB731\fP of file \fBmain\&.c\fP\&.
+.SS "\fBEmbThread\fP embThread_getRandom (void)"
+Returns a random thread color, useful in filling in cases where the actual color of the thread doesn't matter but one needs to be declared to test or render a pattern\&.
+.PP
+\fBReturns\fP
+.RS 4
+c The resulting color\&. 
+.RE
+.PP
+
+.PP
+Definition at line \fB754\fP of file \fBmain\&.c\fP\&.
+.SS "void embTime_initNow (\fBEmbTime\fP * t)"
+
+.PP
+Definition at line \fB885\fP of file \fBmain\&.c\fP\&.
+.SS "\fBEmbTime\fP embTime_time (\fBEmbTime\fP * t)"
+
+.PP
+Definition at line \fB905\fP of file \fBmain\&.c\fP\&.
+.SS "void embVector_print (\fBEmbVector\fP v, char * label)"
+
+.PP
+Definition at line \fB74\fP of file \fBmain\&.c\fP\&.
+.SS "unsigned int entriesInDifatSector (\fBbcf_file_difat\fP * fat)"
+
+.PP
+Definition at line \fB308\fP of file \fBmain\&.c\fP\&.
+.SS "void get_trim_bounds (char const * s, char const ** firstWord, char const ** trailingSpace)"
+
+.PP
+Definition at line \fB839\fP of file \fBmain\&.c\fP\&.
+.SS "FILE * GetFile (\fBbcf_file\fP * bcfFile, FILE * file, char * fileToFind)"
+
+.PP
+Definition at line \fB233\fP of file \fBmain\&.c\fP\&.
+.SS "int haveExtraDIFATSectors (\fBbcf_file\fP * file)"
+
+.PP
+Definition at line \fB172\fP of file \fBmain\&.c\fP\&.
+.SS "void loadFatFromSector (\fBbcf_file_fat\fP * fat, FILE * file)"
+
+.PP
+Definition at line \fB481\fP of file \fBmain\&.c\fP\&.
+.SS "void parseDIFATSectors (FILE * file, \fBbcf_file\fP * bcfFile)"
+
+.PP
+Definition at line \fB185\fP of file \fBmain\&.c\fP\&.
+.SS "void parseDirectoryEntryName (FILE * file, \fBbcf_directory_entry\fP * dir)"
+
+.PP
+Definition at line \fB347\fP of file \fBmain\&.c\fP\&.
+.SS "\fBEmbTime\fP parseTime (FILE * file)"
+
+.PP
+Definition at line \fB372\fP of file \fBmain\&.c\fP\&.
+.SS "unsigned int readFullSector (FILE * file, \fBbcf_file_difat\fP * bcfFile, unsigned int * difatEntriesToRead)"
+
+.PP
+Definition at line \fB314\fP of file \fBmain\&.c\fP\&.
+.SS "void readNextSector (FILE * file, \fBbcf_directory\fP * dir)"
+
+.PP
+Definition at line \fB426\fP of file \fBmain\&.c\fP\&.
+.SS "unsigned int sectorSize (\fBbcf_file\fP * bcfFile)"
+
+.PP
+Definition at line \fB162\fP of file \fBmain\&.c\fP\&.
+.SS "int seekToSector (\fBbcf_file\fP * bcfFile, FILE * file, const unsigned int sector)"
+
+.PP
+Definition at line \fB178\fP of file \fBmain\&.c\fP\&.
+.SS "int stringInArray (const char * s, const char ** array)"
+Tests for the presence of a string \fIs\fP in the supplied \fIarray\fP\&.
+.PP
+The end of the array is marked by an empty string\&.
+.PP
+\fBReturns\fP
+.RS 4
+0 if not present 1 if present\&. 
+.RE
+.PP
+
+.PP
+Definition at line \fB797\fP of file \fBmain\&.c\fP\&.
+.SS "void write_24bit (FILE * file, int x)"
+
+.PP
+Definition at line \fB660\fP of file \fBmain\&.c\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBEmbThread\fP black_thread = { { 0, 0, 0 }, 'Black', 'Black' }"
+
+.PP
+Definition at line \fB56\fP of file \fBmain\&.c\fP\&.
+.SS "const unsigned int difatEntriesInHeader = 109"
+
+.PP
+Definition at line \fB64\fP of file \fBmain\&.c\fP\&.
+.SS "int emb_error = 0"
+
+.PP
+Definition at line \fB58\fP of file \fBmain\&.c\fP\&.
+.SS "int emb_verbose = 0"
+
+.PP
+Definition at line \fB57\fP of file \fBmain\&.c\fP\&.
+.SS "const \fBEmbReal\fP embConstantPi = 3\&.1415926535"
+
+.PP
+Definition at line \fB60\fP of file \fBmain\&.c\fP\&.
+.SS "const unsigned int sizeOfChainingEntryAtEndOfDifatSector = 4"
+
+.PP
+Definition at line \fB67\fP of file \fBmain\&.c\fP\&.
+.SS "const unsigned int sizeOfDifatEntry = 4"
+
+.PP
+Definition at line \fB66\fP of file \fBmain\&.c\fP\&.
+.SS "const unsigned int sizeOfDirectoryEntry = 128"
+
+.PP
+Definition at line \fB68\fP of file \fBmain\&.c\fP\&.
+.SS "const unsigned int sizeOfFatEntry = sizeof(unsigned int)"
+
+.PP
+Definition at line \fB65\fP of file \fBmain\&.c\fP\&.
+.SS "char const WHITESPACE[] = ' \\t\\n\\r'"
+
+.PP
+Definition at line \fB835\fP of file \fBmain\&.c\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Libembroidery from the source code\&.

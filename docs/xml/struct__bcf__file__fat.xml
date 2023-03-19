@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.6" xml:lang="en-US">
+  <compounddef id="struct__bcf__file__fat" kind="struct" language="C++" prot="public">
+    <compoundname>_bcf_file_fat</compoundname>
+    <includes refid="embroidery__internal_8h" local="no">embroidery_internal.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct__bcf__file__fat_1a45b4e0f1c1fdd2a8c04ed13c89f0b3b9" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int fatEntryCount</definition>
+        <argsstring></argsstring>
+        <name>fatEntryCount</name>
+        <qualifiedname>_bcf_file_fat::fatEntryCount</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="190" column="18" bodyfile="src/embroidery_internal.h" bodystart="190" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__fat_1a5da77162f5d8e2dd6a27794ce342325e" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int fatEntries[255]</definition>
+        <argsstring>[255]</argsstring>
+        <name>fatEntries</name>
+        <qualifiedname>_bcf_file_fat::fatEntries</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="191" column="18" bodyfile="src/embroidery_internal.h" bodystart="191" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__fat_1a4437f708545262c46eefc636e3ca780d" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int numberOfEntriesInFatSector</definition>
+        <argsstring></argsstring>
+        <name>numberOfEntriesInFatSector</name>
+        <qualifiedname>_bcf_file_fat::numberOfEntriesInFatSector</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="192" column="18" bodyfile="src/embroidery_internal.h" bodystart="192" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery_internal.h" line="188" column="1" bodyfile="src/embroidery_internal.h" bodystart="189" bodyend="193"/>
+    <listofallmembers>
+      <member refid="struct__bcf__file__fat_1a5da77162f5d8e2dd6a27794ce342325e" prot="public" virt="non-virtual"><scope>_bcf_file_fat</scope><name>fatEntries</name></member>
+      <member refid="struct__bcf__file__fat_1a45b4e0f1c1fdd2a8c04ed13c89f0b3b9" prot="public" virt="non-virtual"><scope>_bcf_file_fat</scope><name>fatEntryCount</name></member>
+      <member refid="struct__bcf__file__fat_1a4437f708545262c46eefc636e3ca780d" prot="public" virt="non-virtual"><scope>_bcf_file_fat</scope><name>numberOfEntriesInFatSector</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

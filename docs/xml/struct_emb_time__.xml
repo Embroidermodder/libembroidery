@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.6" xml:lang="en-US">
+  <compounddef id="struct_emb_time__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbTime_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_emb_time___1a9c83bbc97dcf2390b043382b4dfe3c98" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int year</definition>
+        <argsstring></argsstring>
+        <name>year</name>
+        <qualifiedname>EmbTime_::year</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="271" column="18" bodyfile="src/embroidery.h" bodystart="271" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_emb_time___1a8c07e017c7b80f536d05c6134cae89ef" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int month</definition>
+        <argsstring></argsstring>
+        <name>month</name>
+        <qualifiedname>EmbTime_::month</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="272" column="18" bodyfile="src/embroidery.h" bodystart="272" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_emb_time___1a2398ea43f7d25f677616371d3b545f59" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int day</definition>
+        <argsstring></argsstring>
+        <name>day</name>
+        <qualifiedname>EmbTime_::day</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="273" column="18" bodyfile="src/embroidery.h" bodystart="273" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_emb_time___1aa64c18c25aeef9a0d7c92d89fa24a636" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int hour</definition>
+        <argsstring></argsstring>
+        <name>hour</name>
+        <qualifiedname>EmbTime_::hour</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="274" column="18" bodyfile="src/embroidery.h" bodystart="274" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_emb_time___1a7ff63df03ff6549639b712d24a94adef" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int minute</definition>
+        <argsstring></argsstring>
+        <name>minute</name>
+        <qualifiedname>EmbTime_::minute</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="275" column="18" bodyfile="src/embroidery.h" bodystart="275" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_emb_time___1a7ab95bf164c7490d2855a7efcea6784a" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int second</definition>
+        <argsstring></argsstring>
+        <name>second</name>
+        <qualifiedname>EmbTime_::second</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="276" column="18" bodyfile="src/embroidery.h" bodystart="276" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="269" column="1" bodyfile="src/embroidery.h" bodystart="270" bodyend="277"/>
+    <listofallmembers>
+      <member refid="struct_emb_time___1a2398ea43f7d25f677616371d3b545f59" prot="public" virt="non-virtual"><scope>EmbTime_</scope><name>day</name></member>
+      <member refid="struct_emb_time___1aa64c18c25aeef9a0d7c92d89fa24a636" prot="public" virt="non-virtual"><scope>EmbTime_</scope><name>hour</name></member>
+      <member refid="struct_emb_time___1a7ff63df03ff6549639b712d24a94adef" prot="public" virt="non-virtual"><scope>EmbTime_</scope><name>minute</name></member>
+      <member refid="struct_emb_time___1a8c07e017c7b80f536d05c6134cae89ef" prot="public" virt="non-virtual"><scope>EmbTime_</scope><name>month</name></member>
+      <member refid="struct_emb_time___1a7ab95bf164c7490d2855a7efcea6784a" prot="public" virt="non-virtual"><scope>EmbTime_</scope><name>second</name></member>
+      <member refid="struct_emb_time___1a9c83bbc97dcf2390b043382b4dfe3c98" prot="public" virt="non-virtual"><scope>EmbTime_</scope><name>year</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

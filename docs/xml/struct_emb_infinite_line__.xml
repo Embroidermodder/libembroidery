@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.6" xml:lang="en-US">
+  <compounddef id="struct_emb_infinite_line__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbInfiniteLine_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_emb_infinite_line___1a15a2229bf7033fb362667fa4f5fa94ff" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a16fa26764453571074cb85a7574738d4" kindref="member">EmbVector</ref></type>
+        <definition>EmbVector position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <qualifiedname>EmbInfiniteLine_::position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="252" column="15" bodyfile="src/embroidery.h" bodystart="252" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>EmbInfiniteLine_</label>
+        <link refid="struct_emb_infinite_line__"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>position</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>EmbVector_</label>
+        <link refid="struct_emb_vector__"/>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery.h" line="251" column="1" bodyfile="src/embroidery.h" bodystart="251" bodyend="253"/>
+    <listofallmembers>
+      <member refid="struct_emb_infinite_line___1a15a2229bf7033fb362667fa4f5fa94ff" prot="public" virt="non-virtual"><scope>EmbInfiniteLine_</scope><name>position</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

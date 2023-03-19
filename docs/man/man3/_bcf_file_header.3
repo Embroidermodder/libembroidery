@@ -1,0 +1,149 @@
+.TH "_bcf_file_header" 3 "Sun Mar 19 2023" "Version 1.0.0-alpha" "Libembroidery" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+_bcf_file_header
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <embroidery_internal\&.h>\fP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "unsigned char \fBsignature\fP [8]"
+.br
+.ti -1c
+.RI "unsigned char \fBCLSID\fP [16]"
+.br
+.ti -1c
+.RI "unsigned short \fBminorVersion\fP"
+.br
+.ti -1c
+.RI "unsigned short \fBmajorVersion\fP"
+.br
+.ti -1c
+.RI "unsigned short \fBbyteOrder\fP"
+.br
+.ti -1c
+.RI "unsigned short \fBsectorShift\fP"
+.br
+.ti -1c
+.RI "unsigned short \fBminiSectorShift\fP"
+.br
+.ti -1c
+.RI "unsigned short \fBreserved1\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBreserved2\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnumberOfDirectorySectors\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnumberOfFATSectors\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBfirstDirectorySectorLocation\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBtransactionSignatureNumber\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBminiStreamCutoffSize\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBfirstMiniFATSectorLocation\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnumberOfMiniFatSectors\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBfirstDifatSectorLocation\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnumberOfDifatSectors\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line \fB222\fP of file \fBembroidery_internal\&.h\fP\&.
+.SH "Field Documentation"
+.PP 
+.SS "unsigned short byteOrder"
+
+.PP
+Definition at line \fB228\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned char CLSID[16]"
+
+.PP
+Definition at line \fB225\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned int firstDifatSectorLocation"
+
+.PP
+Definition at line \fB240\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned int firstDirectorySectorLocation"
+
+.PP
+Definition at line \fB235\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned int firstMiniFATSectorLocation"
+
+.PP
+Definition at line \fB238\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned short majorVersion"
+
+.PP
+Definition at line \fB227\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned short miniSectorShift"
+
+.PP
+Definition at line \fB230\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned int miniStreamCutoffSize"
+
+.PP
+Definition at line \fB237\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned short minorVersion"
+
+.PP
+Definition at line \fB226\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned int numberOfDifatSectors"
+
+.PP
+Definition at line \fB241\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned int numberOfDirectorySectors"
+
+.PP
+Definition at line \fB233\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned int numberOfFATSectors"
+
+.PP
+Definition at line \fB234\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned int numberOfMiniFatSectors"
+
+.PP
+Definition at line \fB239\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned short reserved1"
+
+.PP
+Definition at line \fB231\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned int reserved2"
+
+.PP
+Definition at line \fB232\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned short sectorShift"
+
+.PP
+Definition at line \fB229\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned char signature[8]"
+
+.PP
+Definition at line \fB224\fP of file \fBembroidery_internal\&.h\fP\&.
+.SS "unsigned int transactionSignatureNumber"
+
+.PP
+Definition at line \fB236\fP of file \fBembroidery_internal\&.h\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Libembroidery from the source code\&.

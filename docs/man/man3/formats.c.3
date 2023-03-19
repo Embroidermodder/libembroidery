@@ -1,0 +1,176 @@
+.TH "src/formats.c" 3 "Sun Mar 19 2023" "Version 1.0.0-alpha" "Libembroidery" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/formats.c
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <ctype\&.h>\fP
+.br
+\fC#include 'embroidery_internal\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBsafe_free\fP (void *data)"
+.br
+.ti -1c
+.RI "int \fBembFormat_getExtension\fP (const char *fileName, char *ending)"
+.br
+.ti -1c
+.RI "int \fBemb_identify_format\fP (const char *fileName)"
+.br
+.ti -1c
+.RI "short \fBfread_int16\fP (FILE *f)"
+.br
+.ti -1c
+.RI "unsigned short \fBfread_uint16\fP (FILE *f)"
+.br
+.ti -1c
+.RI "int \fBfread_int32_be\fP (FILE *f)"
+.br
+.ti -1c
+.RI "void \fBfpad\fP (FILE *file, char c, int n)"
+.br
+.ti -1c
+.RI "void \fBbinaryWriteShort\fP (FILE *f, short data)"
+.br
+.ti -1c
+.RI "void \fBbinaryWriteUShort\fP (FILE *f, unsigned short data)"
+.br
+.ti -1c
+.RI "void \fBbinaryWriteUShortBE\fP (FILE *f, unsigned short data)"
+.br
+.ti -1c
+.RI "void \fBbinaryWriteInt\fP (FILE *f, int data)"
+.br
+.ti -1c
+.RI "void \fBbinaryWriteIntBE\fP (FILE *f, int data)"
+.br
+.ti -1c
+.RI "void \fBbinaryWriteUInt\fP (FILE *f, unsigned int data)"
+.br
+.ti -1c
+.RI "void \fBbinaryWriteUIntBE\fP (FILE *f, unsigned int data)"
+.br
+.ti -1c
+.RI "char \fBembPattern_read\fP (\fBEmbPattern\fP *pattern, const char *fileName, int format)"
+.br
+.ti -1c
+.RI "char \fBembPattern_write\fP (\fBEmbPattern\fP *pattern, const char *fileName, int format)"
+.br
+.ti -1c
+.RI "char \fBembPattern_readAuto\fP (\fBEmbPattern\fP *pattern, const char *fileName)"
+.br
+.ti -1c
+.RI "char \fBembPattern_writeAuto\fP (\fBEmbPattern\fP *pattern, const char *fileName)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBEmbFormatList\fP \fBformatTable\fP [\fBnumberOfFormats\fP]"
+.br
+.ti -1c
+.RI "const char \fBimageWithFrame\fP [38][48]"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "void binaryWriteInt (FILE * f, int data)"
+
+.PP
+Definition at line \fB235\fP of file \fBformats\&.c\fP\&.
+.SS "void binaryWriteIntBE (FILE * f, int data)"
+
+.PP
+Definition at line \fB241\fP of file \fBformats\&.c\fP\&.
+.SS "void binaryWriteShort (FILE * f, short data)"
+
+.PP
+Definition at line \fB217\fP of file \fBformats\&.c\fP\&.
+.SS "void binaryWriteUInt (FILE * f, unsigned int data)"
+
+.PP
+Definition at line \fB247\fP of file \fBformats\&.c\fP\&.
+.SS "void binaryWriteUIntBE (FILE * f, unsigned int data)"
+
+.PP
+Definition at line \fB253\fP of file \fBformats\&.c\fP\&.
+.SS "void binaryWriteUShort (FILE * f, unsigned short data)"
+
+.PP
+Definition at line \fB223\fP of file \fBformats\&.c\fP\&.
+.SS "void binaryWriteUShortBE (FILE * f, unsigned short data)"
+
+.PP
+Definition at line \fB229\fP of file \fBformats\&.c\fP\&.
+.SS "int emb_identify_format (const char * fileName)"
+
+.PP
+Definition at line \fB167\fP of file \fBformats\&.c\fP\&.
+.SS "int embFormat_getExtension (const char * fileName, char * ending)"
+
+.PP
+Definition at line \fB138\fP of file \fBformats\&.c\fP\&.
+.SS "char embPattern_read (\fBEmbPattern\fP * pattern, const char * fileName, int format)"
+
+.PP
+Definition at line \fB259\fP of file \fBformats\&.c\fP\&.
+.SS "char embPattern_readAuto (\fBEmbPattern\fP * pattern, const char * fileName)"
+
+.PP
+Definition at line \fB706\fP of file \fBformats\&.c\fP\&.
+.SS "char embPattern_write (\fBEmbPattern\fP * pattern, const char * fileName, int format)"
+
+.PP
+Definition at line \fB480\fP of file \fBformats\&.c\fP\&.
+.SS "char embPattern_writeAuto (\fBEmbPattern\fP * pattern, const char * fileName)"
+
+.PP
+Definition at line \fB718\fP of file \fBformats\&.c\fP\&.
+.SS "void fpad (FILE * file, char c, int n)"
+
+.PP
+Definition at line \fB207\fP of file \fBformats\&.c\fP\&.
+.SS "short fread_int16 (FILE * f)"
+
+.PP
+Definition at line \fB183\fP of file \fBformats\&.c\fP\&.
+.SS "int fread_int32_be (FILE * f)"
+
+.PP
+Definition at line \fB199\fP of file \fBformats\&.c\fP\&.
+.SS "unsigned short fread_uint16 (FILE * f)"
+
+.PP
+Definition at line \fB191\fP of file \fBformats\&.c\fP\&.
+.SS "void safe_free (void * data)"
+
+.PP
+Definition at line \fB129\fP of file \fBformats\&.c\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBEmbFormatList\fP formatTable[\fBnumberOfFormats\fP]"
+
+.PP
+Definition at line \fB21\fP of file \fBformats\&.c\fP\&.
+.SS "const char imageWithFrame[38][48]"
+
+.PP
+Definition at line \fB87\fP of file \fBformats\&.c\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Libembroidery from the source code\&.

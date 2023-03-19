@@ -1,0 +1,172 @@
+\hypertarget{image_8c_source}{}\doxysection{image.\+c}
+\label{image_8c_source}\index{src/image.c@{src/image.c}}
+\mbox{\hyperlink{image_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00001}00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00002}00002\ \textcolor{comment}{\ *\ This\ file\ is\ part\ of\ libembroidery.}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00003}00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00004}00004\ \textcolor{comment}{\ *\ Copyright\ 2018-\/2023\ The\ Embroidermodder\ Team}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00005}00005\ \textcolor{comment}{\ *\ Licensed\ under\ the\ terms\ of\ the\ zlib\ license.}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00006}00006\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00007}00007\ \textcolor{comment}{\ *\ This\ file\ contains\ all\ the\ read\ and\ write\ functions\ for\ the}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00008}00008\ \textcolor{comment}{\ *\ library.}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00009}00009\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00010}00010\ \textcolor{comment}{\ *******************************************************************}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00011}00011\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00012}00012\ \textcolor{comment}{\ *\ This\ backends\ to\ the\ stb\ libraries\ and\ nanosvg\ library.}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00013}00013\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00014}00014\ \textcolor{comment}{\ *\ Use\ Python\ PEP7\ for\ coding\ style.}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00015}00015\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00017}00017\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00018}00018\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00019}00019\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00021}00021\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{embroidery__internal_8h}{embroidery\_internal.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00024}00024\ \textcolor{comment}{/*\ for\ the\ PES\ embedded\ */}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00025}00025\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00026}\mbox{\hyperlink{image_8c_acf5d4a6e72ad546b2502069adbf45c3b}{00026}}\ \mbox{\hyperlink{image_8c_acf5d4a6e72ad546b2502069adbf45c3b}{writeImage}}(FILE*\ file,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ image[][48])}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00027}00027\ \{}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00028}00028\ \ \ \ \ \textcolor{keywordtype}{int}\ i,\ j;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00030}00030\ \ \ \ \ \textcolor{keywordflow}{if}\ (!file)\ \{}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00031}00031\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}ERROR:\ format-\/pec.c\ writeImage(),\ file\ argument\ is\ null\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00033}00033\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0;\ i\ <\ 38;\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (j\ =\ 0;\ j\ <\ 6;\ j++)\ \{}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ offset\ =\ j\ *\ 8;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ output\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ output\ |=\ (\textcolor{keywordtype}{unsigned}\ char)(image[i][offset]\ !=\ 0);}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ output\ |=\ (\textcolor{keywordtype}{unsigned}\ char)(image[i][offset\ +\ 1]\ !=\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})0)\ <<\ 1;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ output\ |=\ (\textcolor{keywordtype}{unsigned}\ char)(image[i][offset\ +\ 2]\ !=\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})0)\ <<\ 2;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ output\ |=\ (\textcolor{keywordtype}{unsigned}\ char)(image[i][offset\ +\ 3]\ !=\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})0)\ <<\ 3;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ output\ |=\ (\textcolor{keywordtype}{unsigned}\ char)(image[i][offset\ +\ 4]\ !=\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})0)\ <<\ 4;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ output\ |=\ (\textcolor{keywordtype}{unsigned}\ char)(image[i][offset\ +\ 5]\ !=\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})0)\ <<\ 5;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ output\ |=\ (\textcolor{keywordtype}{unsigned}\ char)(image[i][offset\ +\ 6]\ !=\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})0)\ <<\ 6;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ output\ |=\ (\textcolor{keywordtype}{unsigned}\ char)(image[i][offset\ +\ 7]\ !=\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})0)\ <<\ 7;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ fwrite(\&output,\ 1,\ 1,\ file);}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00047}00047\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00048}00048\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00049}00049\ \}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00051}00051\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00052}00052\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00053}00053\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00054}\mbox{\hyperlink{image_8c_ac932a13030ae86a36da67dde06da0917}{00054}}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{image_8c_ac932a13030ae86a36da67dde06da0917}{image\_diff}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *a,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *b,\ \textcolor{keywordtype}{int}\ size)}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00055}00055\ \{}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00056}00056\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00057}00057\ \ \ \ \ \textcolor{keywordtype}{float}\ total\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00058}00058\ \ \ \ \ \textcolor{keywordflow}{for}\ (i=0;\ i<size;\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ diff\ =\ a[i]\ -\/\ b[i];}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00060}00060\ \ \ \ \ \ \ \ \ total\ +=\ diff*diff;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00061}00061\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00062}00062\ \ \ \ \ \textcolor{keywordflow}{return}\ total;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00063}00063\ \}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00065}00065\ \textcolor{preprocessor}{\#ifdef\ LIBEMBROIDERY\_CLI}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00066}00066\ \textcolor{preprocessor}{\#define\ STB\_IMAGE\_IMPLEMENTATION}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00067}00067\ \textcolor{preprocessor}{\#include\ "{}stb/stb\_image.h"{}}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00069}00069\ \textcolor{preprocessor}{\#define\ STB\_IMAGE\_WRITE\_IMPLEMENTATION}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00070}00070\ \textcolor{preprocessor}{\#include\ "{}stb/stb\_image\_write.h"{}}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00072}00072\ \textcolor{preprocessor}{\#define\ NANOSVG\_ALL\_COLOR\_KEYWORDS}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00073}00073\ \textcolor{preprocessor}{\#define\ NANOSVG\_IMPLEMENTATION}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00074}00074\ \textcolor{preprocessor}{\#include\ "{}nanosvg/src/nanosvg.h"{}}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00076}00076\ \textcolor{preprocessor}{\#define\ NANOSVGRAST\_IMPLEMENTATION}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00077}00077\ \textcolor{preprocessor}{\#include\ "{}nanosvg/src/nanosvgrast.h"{}}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00080}00080\ \textcolor{comment}{/*\ Basic\ Render}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00081}00081\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00082}00082\ \textcolor{comment}{\ *\ Backends\ rendering\ to\ nanosvg/stb\_image.}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00083}00083\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00084}00084\ \textcolor{comment}{\ *\ The\ caller\ is\ responsible\ for\ the\ memory\ in\ p.}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00085}00085\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00086}00086\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00087}00087\ \mbox{\hyperlink{embroidery_8h_a4a1b44a1dda28aec2cdab69cbdd226fb}{embPattern\_render}}(\mbox{\hyperlink{struct_emb_pattern__}{EmbPattern}}\ *p,\ \textcolor{keywordtype}{char}\ *fname)}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00088}00088\ \{}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00089}00089\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *tmp\_fname\ =\ \textcolor{stringliteral}{"{}libembroidery\_temp.svg"{}};}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00090}00090\ \ \ \ \ NSVGimage\ *image\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00091}00091\ \ \ \ \ NSVGrasterizer\ rast;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00092}00092\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *img\_data\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00093}00093\ \ \ \ \ \mbox{\hyperlink{embroidery_8h_a533aaf5c2f1775990d297435354288f1}{embPattern\_writeAuto}}(p,\ tmp\_fname);}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00094}00094\ \ \ \ \ image\ =\ nsvgParseFromFile(tmp\_fname,\ \textcolor{stringliteral}{"{}px"{}},\ 96.0f);}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00095}00095\ \ \ \ \ img\_data\ =\ malloc(4*image-\/>width*image-\/>height);}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00096}00096\ \ \ \ \ nsvgRasterize(}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00097}00097\ \ \ \ \ \ \ \ \ \&rast,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00098}00098\ \ \ \ \ \ \ \ \ image,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00099}00099\ \ \ \ \ \ \ \ \ 0,\ 0,\ 1,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00100}00100\ \ \ \ \ \ \ \ \ img\_data,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00101}00101\ \ \ \ \ \ \ \ \ image-\/>width,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00102}00102\ \ \ \ \ \ \ \ \ image-\/>height,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00103}00103\ \ \ \ \ \ \ \ \ 4*image-\/>width);}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00104}00104\ \ \ \ \ stbi\_write\_png(}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00105}00105\ \ \ \ \ \ \ \ \ fname,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00106}00106\ \ \ \ \ \ \ \ \ image-\/>width,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00107}00107\ \ \ \ \ \ \ \ \ image-\/>height,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00108}00108\ \ \ \ \ \ \ \ \ 4,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00109}00109\ \ \ \ \ \ \ \ \ img\_data,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00110}00110\ \ \ \ \ \ \ \ \ 4*image-\/>width);}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00111}00111\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00112}00112\ \}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00114}00114\ \textcolor{comment}{/*\ Simulate\ the\ stitching\ of\ a\ pattern,\ using\ the\ image\ for\ rendering}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00115}00115\ \textcolor{comment}{\ *\ hints\ about\ how\ to\ represent\ the\ pattern.}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00116}00116\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00117}00117\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00118}00118\ \mbox{\hyperlink{embroidery_8h_a76cca8e66e7c5efcf965f5c708fc7b8b}{embPattern\_simulate}}(\mbox{\hyperlink{struct_emb_pattern__}{EmbPattern}}\ *pattern,\ \textcolor{keywordtype}{char}\ *fname)}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00119}00119\ \{}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00121}00121\ \ \ \ \ \mbox{\hyperlink{embroidery_8h_a4a1b44a1dda28aec2cdab69cbdd226fb}{embPattern\_render}}(pattern,\ fname);}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00122}00122\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00123}00123\ \}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00125}00125\ \mbox{\hyperlink{struct_emb_image__}{EmbImage}}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00126}00126\ \mbox{\hyperlink{embroidery_8h_a910afe5c3ca865bc9afd8a520ae73e37}{embImage\_create}}(\textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height)}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00127}00127\ \{}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00128}00128\ \ \ \ \ \mbox{\hyperlink{struct_emb_image__}{EmbImage}}\ image;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00129}00129\ \ \ \ \ image.\mbox{\hyperlink{struct_emb_image___a2474a5474cbff19523a51eb1de01cda4}{width}}\ =\ width;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00130}00130\ \ \ \ \ image.\mbox{\hyperlink{struct_emb_image___ad12fc34ce789bce6c8a05d8a17138534}{height}}\ =\ height;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00131}00131\ \ \ \ \ image.\mbox{\hyperlink{struct_emb_image___ac24cea2bfcc927fd29bc74d1086707d8}{data}}\ =\ malloc(4*width*height);}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00132}00132\ \ \ \ \ \textcolor{keywordflow}{return}\ image;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00133}00133\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00134}00134\ \}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00136}00136\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00137}00137\ \mbox{\hyperlink{embroidery_8h_a3de1df7b3d8f70b0b961b3e0bf000cc0}{embImage\_read}}(\mbox{\hyperlink{struct_emb_image__}{EmbImage}}\ *image,\ \textcolor{keywordtype}{char}\ *fname)}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00138}00138\ \{}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00139}00139\ \ \ \ \ \textcolor{keywordtype}{int}\ channels\_in\_file;}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00140}00140\ \ \ \ \ image-\/>\mbox{\hyperlink{struct_emb_image___ac24cea2bfcc927fd29bc74d1086707d8}{data}}\ =\ stbi\_load(}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00141}00141\ \ \ \ \ \ \ \ \ fname,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00142}00142\ \ \ \ \ \ \ \ \ \&(image-\/>\mbox{\hyperlink{struct_emb_image___a2474a5474cbff19523a51eb1de01cda4}{width}}),}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00143}00143\ \ \ \ \ \ \ \ \ \&(image-\/>\mbox{\hyperlink{struct_emb_image___ad12fc34ce789bce6c8a05d8a17138534}{height}}),}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00144}00144\ \ \ \ \ \ \ \ \ \&channels\_in\_file,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00145}00145\ \ \ \ \ \ \ \ \ 3);}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00146}00146\ \}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00148}00148\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00149}00149\ \mbox{\hyperlink{embroidery_8h_a953ced4b5adcaaa6a048894144427cf6}{embImage\_write}}(\mbox{\hyperlink{struct_emb_image__}{EmbImage}}\ *image,\ \textcolor{keywordtype}{char}\ *fname)}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00150}00150\ \{}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00151}00151\ \ \ \ \ \textcolor{keywordflow}{return}\ stbi\_write\_png(}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00152}00152\ \ \ \ \ \ \ \ \ fname,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00153}00153\ \ \ \ \ \ \ \ \ image-\/>\mbox{\hyperlink{struct_emb_image___a2474a5474cbff19523a51eb1de01cda4}{width}},}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00154}00154\ \ \ \ \ \ \ \ \ image-\/>\mbox{\hyperlink{struct_emb_image___ad12fc34ce789bce6c8a05d8a17138534}{height}},}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00155}00155\ \ \ \ \ \ \ \ \ 4,}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00156}00156\ \ \ \ \ \ \ \ \ image-\/>\mbox{\hyperlink{struct_emb_image___ac24cea2bfcc927fd29bc74d1086707d8}{data}},}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00157}00157\ \ \ \ \ \ \ \ \ 4*image-\/>\mbox{\hyperlink{struct_emb_image___a2474a5474cbff19523a51eb1de01cda4}{width}});}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00158}00158\ \}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00159}00159\ }
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00160}00160\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00161}00161\ \mbox{\hyperlink{embroidery_8h_acb2e2b58edf88941e0afa44fe8e2ea6f}{embImage\_free}}(\mbox{\hyperlink{struct_emb_image__}{EmbImage}}\ *image)}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00162}00162\ \{}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00163}00163\ \ \ \ \ free(image-\/>\mbox{\hyperlink{struct_emb_image___ac24cea2bfcc927fd29bc74d1086707d8}{data}});}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00164}00164\ \}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00165}00165\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{image_8c_source_l00166}00166\ }
+
+\end{DoxyCode}

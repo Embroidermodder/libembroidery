@@ -1,0 +1,314 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.6" xml:lang="en-US">
+  <compounddef id="geometry_8c" kind="file" language="C++">
+    <compoundname>geometry.c</compoundname>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes local="no">math.h</includes>
+    <includes refid="embroidery_8h" local="yes">embroidery.h</includes>
+    <incdepgraph>
+      <node id="5">
+        <label>embroidery.h</label>
+        <link refid="embroidery_8h"/>
+      </node>
+      <node id="1">
+        <label>src/geometry.c</label>
+        <link refid="geometry_8c"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>math.h</label>
+      </node>
+      <node id="2">
+        <label>stdio.h</label>
+      </node>
+      <node id="3">
+        <label>stdlib.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="geometry_8c_1a85a825da7fbe0f04460724b80cc5844c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="embroidery_8h_1aca7cafe21cb651b77560fece69fb1984" kindref="member">EmbGeometry</ref> *</type>
+        <definition>EmbGeometry * embGeometry_init</definition>
+        <argsstring>(int type_in)</argsstring>
+        <name>embGeometry_init</name>
+        <param>
+          <type>int</type>
+          <declname>type_in</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/geometry.c" line="20" column="1" bodyfile="src/geometry.c" bodystart="20" bodyend="60"/>
+      </memberdef>
+      <memberdef kind="function" id="geometry_8c_1a9946219466f0f6a7b5a506703bc34e9d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void embGeometry_free</definition>
+        <argsstring>(EmbGeometry *obj)</argsstring>
+        <name>embGeometry_free</name>
+        <param>
+          <type><ref refid="embroidery_8h_1aca7cafe21cb651b77560fece69fb1984" kindref="member">EmbGeometry</ref> *</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/geometry.c" line="63" column="1" bodyfile="src/geometry.c" bodystart="63" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="geometry_8c_1a289ed9ab03a956588e081281ec112f4d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void embGeometry_move</definition>
+        <argsstring>(EmbGeometry *obj, EmbVector delta)</argsstring>
+        <name>embGeometry_move</name>
+        <param>
+          <type><ref refid="embroidery_8h_1aca7cafe21cb651b77560fece69fb1984" kindref="member">EmbGeometry</ref> *</type>
+          <declname>obj</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1a16fa26764453571074cb85a7574738d4" kindref="member">EmbVector</ref></type>
+          <declname>delta</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/geometry.c" line="81" column="1" bodyfile="src/geometry.c" bodystart="81" bodyend="99"/>
+      </memberdef>
+      <memberdef kind="function" id="geometry_8c_1afe82721878628886585c5a6d8db7d55e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="embroidery_8h_1ac2f33b151fc40a0da3b14379aa0ec653" kindref="member">EmbRect</ref></type>
+        <definition>EmbRect embGeometry_boundingRect</definition>
+        <argsstring>(EmbGeometry *obj)</argsstring>
+        <name>embGeometry_boundingRect</name>
+        <param>
+          <type><ref refid="embroidery_8h_1aca7cafe21cb651b77560fece69fb1984" kindref="member">EmbGeometry</ref> *</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/geometry.c" line="102" column="1" bodyfile="src/geometry.c" bodystart="102" bodyend="125"/>
+      </memberdef>
+      <memberdef kind="function" id="geometry_8c_1ae6461f57f08ce5992c70fa9897988644" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void embGeometry_vulcanize</definition>
+        <argsstring>(EmbGeometry *obj)</argsstring>
+        <name>embGeometry_vulcanize</name>
+        <param>
+          <type><ref refid="embroidery_8h_1aca7cafe21cb651b77560fece69fb1984" kindref="member">EmbGeometry</ref> *</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/geometry.c" line="128" column="1" bodyfile="src/geometry.c" bodystart="128" bodyend="179"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>GEOMETRY</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>This<sp/>file<sp/>is<sp/>part<sp/>of<sp/>libembroidery.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>2018-2023<sp/>The<sp/>Embroidermodder<sp/>Team</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/>Licensed<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>zlib<sp/>license.</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;math.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="embroidery_8h" kindref="compound">embroidery.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>Our<sp/>generic<sp/>object<sp/>interface<sp/>backends<sp/>to<sp/>each<sp/>individual<sp/>type,</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/></highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><ref refid="struct_emb_geometry__" kindref="compound">EmbGeometry</ref><sp/>*</highlight></codeline>
+<codeline lineno="20" refid="embroidery_8h_1a1f7e5a1db0dc11ef2bb7def04bae32b9" refkind="member"><highlight class="normal"><ref refid="geometry_8c_1a85a825da7fbe0f04460724b80cc5844c" kindref="member">embGeometry_init</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>type_in)</highlight></codeline>
+<codeline lineno="21"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_emb_geometry__" kindref="compound">EmbGeometry</ref><sp/>*obj<sp/>=<sp/>(<ref refid="struct_emb_geometry__" kindref="compound">EmbGeometry</ref>*)malloc(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="struct_emb_geometry__" kindref="compound">EmbGeometry</ref>));</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>obj-&gt;<ref refid="struct_emb_geometry___1ac765329451135abec74c45e1897abf26" kindref="member">type</ref><sp/>=<sp/>type_in;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/>obj-&gt;<ref refid="struct_emb_geometry___1a5b70f2bf502560229b7fecf8984e33e9" kindref="member">color</ref>.<ref refid="struct_emb_color___1afd7b1ea9ff115205b65e0bffc92946ac" kindref="member">r</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>obj-&gt;<ref refid="struct_emb_geometry___1a5b70f2bf502560229b7fecf8984e33e9" kindref="member">color</ref>.<ref refid="struct_emb_color___1a83576af39a9f289a28c1263d61073508" kindref="member">g</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>obj-&gt;<ref refid="struct_emb_geometry___1a5b70f2bf502560229b7fecf8984e33e9" kindref="member">color</ref>.<ref refid="struct_emb_color___1a41cede1b4c0d05cff170ad5761f70964" kindref="member">b</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="29"><highlight class="comment"><sp/><sp/><sp/><sp/>//<sp/>QGraphicsItem*<sp/>parent</highlight></codeline>
+<codeline lineno="30"><highlight class="comment"><sp/><sp/><sp/><sp/>debug_message(&quot;BaseObject<sp/>Constructor()&quot;);</highlight></codeline>
+<codeline lineno="31"><highlight class="comment"></highlight></codeline>
+<codeline lineno="32"><highlight class="comment"><sp/><sp/><sp/><sp/>objPen.setCapStyle(RoundCap);</highlight></codeline>
+<codeline lineno="33"><highlight class="comment"><sp/><sp/><sp/><sp/>objPen.setJoinStyle(RoundJoin);</highlight></codeline>
+<codeline lineno="34"><highlight class="comment"><sp/><sp/><sp/><sp/>lwtPen.setCapStyle(RoundCap);</highlight></codeline>
+<codeline lineno="35"><highlight class="comment"><sp/><sp/><sp/><sp/>lwtPen.setJoinStyle(RoundJoin);</highlight></codeline>
+<codeline lineno="36"><highlight class="comment"></highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/><sp/><sp/><sp/>objID<sp/>=<sp/>QDateTime::currentMSecsSinceEpoch();</highlight></codeline>
+<codeline lineno="38"><highlight class="comment"><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal"><sp/>(obj-&gt;<ref refid="struct_emb_geometry___1ac765329451135abec74c45e1897abf26" kindref="member">type</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a121b752016999703e9ec106a3839d5dc" kindref="member">EMB_ARC</ref>:<sp/>{</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>obj-&gt;<ref refid="struct_emb_geometry___1a31650b1b1788d96f8b93bb39ed6e17ba" kindref="member">object</ref>.<ref refid="struct_emb_geometry___1a643b1c49b6a47115b01c80af29914520" kindref="member">arc</ref><sp/>=<sp/><ref refid="embroidery_8h_1a9b68f2e53b9683d777bf82aef736741a" kindref="member">embArc_init</ref>();</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="44"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>embArc_init(EmbArc<sp/>arc_in,<sp/>unsigned<sp/>int<sp/>rgb,<sp/>int<sp/>lineType)</highlight></codeline>
+<codeline lineno="45"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arc<sp/>=<sp/>arc_in;</highlight></codeline>
+<codeline lineno="46"><highlight class="comment"></highlight></codeline>
+<codeline lineno="47"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>setFlag(ItemIsSelectable,<sp/>true);</highlight></codeline>
+<codeline lineno="48"><highlight class="comment"></highlight></codeline>
+<codeline lineno="49"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>calculateArcData(arc);</highlight></codeline>
+<codeline lineno="50"><highlight class="comment"></highlight></codeline>
+<codeline lineno="51"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>setColor(rgb);</highlight></codeline>
+<codeline lineno="52"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>setLineType(lineType);</highlight></codeline>
+<codeline lineno="53"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>setLineWeight(0.35);<sp/>//TODO:<sp/>pass<sp/>in<sp/>proper<sp/>lineweight</highlight></codeline>
+<codeline lineno="54"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>setPen(objPen);</highlight></codeline>
+<codeline lineno="55"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>obj;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63" refid="embroidery_8h_1a439d686b2b6c28793e50ef72b909f12f" refkind="member"><highlight class="normal"><ref refid="geometry_8c_1a9946219466f0f6a7b5a506703bc34e9d" kindref="member">embGeometry_free</ref>(<ref refid="struct_emb_geometry__" kindref="compound">EmbGeometry</ref><sp/>*obj)</highlight></codeline>
+<codeline lineno="64"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal"><sp/>(obj-&gt;<ref refid="struct_emb_geometry___1ac765329451135abec74c45e1897abf26" kindref="member">type</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a121b752016999703e9ec106a3839d5dc" kindref="member">EMB_ARC</ref>:<sp/>{</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a360a30eda3be6c003bc6aff56be7be37" kindref="member">EMB_CIRCLE</ref>:<sp/>{</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a09ebf481eb0c684537b863663e40ede8" kindref="member">EMB_ELLIPSE</ref>:<sp/>{</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="78"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="81" refid="embroidery_8h_1ad828bce06ad3137b9f8079fe5d262b6f" refkind="member"><highlight class="normal"><ref refid="geometry_8c_1a289ed9ab03a956588e081281ec112f4d" kindref="member">embGeometry_move</ref>(<ref refid="struct_emb_geometry__" kindref="compound">EmbGeometry</ref><sp/>*obj,<sp/><ref refid="struct_emb_vector__" kindref="compound">EmbVector</ref><sp/>delta)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal"><sp/>(obj-&gt;<ref refid="struct_emb_geometry___1ac765329451135abec74c45e1897abf26" kindref="member">type</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a121b752016999703e9ec106a3839d5dc" kindref="member">EMB_ARC</ref>:<sp/>{</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="struct_emb_arc__" kindref="compound">EmbArc</ref><sp/>*arc<sp/>=<sp/>&amp;(obj-&gt;<ref refid="struct_emb_geometry___1a31650b1b1788d96f8b93bb39ed6e17ba" kindref="member">object</ref>.<ref refid="struct_emb_geometry___1a643b1c49b6a47115b01c80af29914520" kindref="member">arc</ref>);</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arc-&gt;<ref refid="struct_emb_arc___1ad61a9cd980182f7b946d1a38aaee8562" kindref="member">start</ref><sp/>=<sp/><ref refid="embroidery_8h_1a6efd27ecee68d6b66d1abae0d90925a7" kindref="member">embVector_add</ref>(arc-&gt;<ref refid="struct_emb_arc___1ad61a9cd980182f7b946d1a38aaee8562" kindref="member">start</ref>,<sp/>delta);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arc-&gt;<ref refid="struct_emb_arc___1ae22a3dbe0e89a2ee0b0934a8799c8f14" kindref="member">mid</ref><sp/>=<sp/><ref refid="embroidery_8h_1a6efd27ecee68d6b66d1abae0d90925a7" kindref="member">embVector_add</ref>(arc-&gt;<ref refid="struct_emb_arc___1ae22a3dbe0e89a2ee0b0934a8799c8f14" kindref="member">mid</ref>,<sp/>delta);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arc-&gt;<ref refid="struct_emb_arc___1ac19242fe9e53942be61574685fbd49ed" kindref="member">end</ref><sp/>=<sp/><ref refid="embroidery_8h_1a6efd27ecee68d6b66d1abae0d90925a7" kindref="member">embVector_add</ref>(arc-&gt;<ref refid="struct_emb_arc___1ac19242fe9e53942be61574685fbd49ed" kindref="member">end</ref>,<sp/>delta);</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a360a30eda3be6c003bc6aff56be7be37" kindref="member">EMB_CIRCLE</ref>:<sp/>{</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="struct_emb_circle__" kindref="compound">EmbCircle</ref><sp/>*circle<sp/>=<sp/>&amp;(obj-&gt;<ref refid="struct_emb_geometry___1a31650b1b1788d96f8b93bb39ed6e17ba" kindref="member">object</ref>.<ref refid="struct_emb_geometry___1a266384774724ffa486e4512821606c8b" kindref="member">circle</ref>);</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>circle-&gt;<ref refid="struct_emb_circle___1a68e2bdfeb187d1c5a46afffe5129aabf" kindref="member">center</ref><sp/>=<sp/><ref refid="embroidery_8h_1a6efd27ecee68d6b66d1abae0d90925a7" kindref="member">embVector_add</ref>(circle-&gt;<ref refid="struct_emb_circle___1a68e2bdfeb187d1c5a46afffe5129aabf" kindref="member">center</ref>,<sp/>delta);</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="99"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><ref refid="struct_emb_rect__" kindref="compound">EmbRect</ref></highlight></codeline>
+<codeline lineno="102" refid="embroidery_8h_1ad869f53be717447df50db02df40178ed" refkind="member"><highlight class="normal"><ref refid="geometry_8c_1afe82721878628886585c5a6d8db7d55e" kindref="member">embGeometry_boundingRect</ref>(<ref refid="struct_emb_geometry__" kindref="compound">EmbGeometry</ref><sp/>*obj)</highlight></codeline>
+<codeline lineno="103"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_emb_rect__" kindref="compound">EmbRect</ref><sp/>r;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>((obj-&gt;<ref refid="struct_emb_geometry___1ac765329451135abec74c45e1897abf26" kindref="member">type</ref><sp/>==<sp/><ref refid="embroidery_8h_1a121b752016999703e9ec106a3839d5dc" kindref="member">EMB_ARC</ref>))<sp/>{</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="107"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arcRect.setWidth(radius*2.0);</highlight></codeline>
+<codeline lineno="108"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arcRect.setHeight(radius*2.0);</highlight></codeline>
+<codeline lineno="109"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arcRect.moveCenter(EmbVector(0,0));</highlight></codeline>
+<codeline lineno="110"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>setRect(arcRect);</highlight></codeline>
+<codeline lineno="111"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/>r.<ref refid="struct_emb_rect___1a4b993166cfa980dd5e6a6509918ece68" kindref="member">top</ref><sp/>=<sp/>1.0;</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/>r.<ref refid="struct_emb_rect___1a80919e999819bed2a8571971e583212f" kindref="member">bottom</ref><sp/>=<sp/>1.0;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/>r.<ref refid="struct_emb_rect___1add22e8a42c753ce55b8c0bb8d00d8fa5" kindref="member">left</ref><sp/>=<sp/>1.0;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/>r.<ref refid="struct_emb_rect___1a74553efd0031b4ea1214293434719a5c" kindref="member">right</ref><sp/>=<sp/>1.0;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="118"><highlight class="comment"><sp/><sp/><sp/><sp/>&quot;Base&quot;</highlight></codeline>
+<codeline lineno="119"><highlight class="comment"><sp/><sp/><sp/><sp/>//If<sp/>gripped,<sp/>force<sp/>this<sp/>object<sp/>to<sp/>be<sp/>drawn<sp/>even<sp/>if<sp/>it<sp/>is<sp/>offscreen</highlight></codeline>
+<codeline lineno="120"><highlight class="comment"><sp/><sp/><sp/><sp/>if<sp/>(objectRubberMode()<sp/>==<sp/>OBJ_RUBBER_GRIP)</highlight></codeline>
+<codeline lineno="121"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>scene()-&gt;sceneRect();</highlight></codeline>
+<codeline lineno="122"><highlight class="comment"><sp/><sp/><sp/><sp/>return<sp/>path().boundingRect();</highlight></codeline>
+<codeline lineno="123"><highlight class="comment"><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>r;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="128" refid="embroidery_8h_1aaad366b6c8651825c096c9b8fd731fcc" refkind="member"><highlight class="normal"><ref refid="geometry_8c_1ae6461f57f08ce5992c70fa9897988644" kindref="member">embGeometry_vulcanize</ref>(<ref refid="struct_emb_geometry__" kindref="compound">EmbGeometry</ref><sp/>*obj)</highlight></codeline>
+<codeline lineno="129"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal"><sp/>(obj-&gt;<ref refid="struct_emb_geometry___1ac765329451135abec74c45e1897abf26" kindref="member">type</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a121b752016999703e9ec106a3839d5dc" kindref="member">EMB_ARC</ref>:</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a360a30eda3be6c003bc6aff56be7be37" kindref="member">EMB_CIRCLE</ref>:</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a8b2765db6e3b5f8dda8dd28cc7a64a09" kindref="member">EMB_DIM_LEADER</ref>:</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a09ebf481eb0c684537b863663e40ede8" kindref="member">EMB_ELLIPSE</ref>:</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a97c04d0fc0ec3c30df885c20cca443fa" kindref="member">EMB_IMAGE</ref>:</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a702fd238ea210e97017fd4b709528f0f" kindref="member">EMB_LINE</ref>:</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a20f029cd78225bfeec66da1b3745311a" kindref="member">EMB_POINT</ref>:</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1a2fcee7ad80543768ad9578ca4ec02ada" kindref="member">EMB_RECT</ref>:</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="embroidery_8h_1ae3382ca947f1c723aa0d12433c19705d" kindref="member">EMB_TEXT_SINGLE</ref>:</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="141"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>updateRubber();</highlight></codeline>
+<codeline lineno="142"><highlight class="comment"></highlight></codeline>
+<codeline lineno="143"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>setRubberMode(OBJ_RUBBER_OFF);</highlight></codeline>
+<codeline lineno="144"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(obj-&gt;<ref refid="struct_emb_geometry___1ac765329451135abec74c45e1897abf26" kindref="member">type</ref><sp/>==<sp/><ref refid="embroidery_8h_1a33c2bba91cbd00ce32e770488175d4d2" kindref="member">EMB_PATH</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="151"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>updateRubber();</highlight></codeline>
+<codeline lineno="152"><highlight class="comment"></highlight></codeline>
+<codeline lineno="153"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>setRubberMode(OBJ_RUBBER_OFF);</highlight></codeline>
+<codeline lineno="154"><highlight class="comment"></highlight></codeline>
+<codeline lineno="155"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(!normalPath.elementCount())</highlight></codeline>
+<codeline lineno="156"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>critical_messagebox(0,<sp/>translate(&quot;Empty<sp/>Path<sp/>Error&quot;),<sp/>translate(&quot;The<sp/>path<sp/>added<sp/>contains<sp/>no<sp/>points.<sp/>The<sp/>command<sp/>that<sp/>created<sp/>this<sp/>object<sp/>has<sp/>flawed<sp/>logic.&quot;));</highlight></codeline>
+<codeline lineno="157"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(obj-&gt;<ref refid="struct_emb_geometry___1ac765329451135abec74c45e1897abf26" kindref="member">type</ref><sp/>==<sp/><ref refid="embroidery_8h_1a8f03220a91565e1239055ed73ec6f7a4" kindref="member">EMB_POLYGON</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="161"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>updateRubber();</highlight></codeline>
+<codeline lineno="162"><highlight class="comment"></highlight></codeline>
+<codeline lineno="163"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>setRubberMode(OBJ_RUBBER_OFF);</highlight></codeline>
+<codeline lineno="164"><highlight class="comment"></highlight></codeline>
+<codeline lineno="165"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(!normalPath.elementCount())</highlight></codeline>
+<codeline lineno="166"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>critical_messagebox(0,<sp/>translate(&quot;Empty<sp/>Polygon<sp/>Error&quot;),<sp/>translate(&quot;The<sp/>polygon<sp/>added<sp/>contains<sp/>no<sp/>points.<sp/>The<sp/>command<sp/>that<sp/>created<sp/>this<sp/>object<sp/>has<sp/>flawed<sp/>logic.&quot;));</highlight></codeline>
+<codeline lineno="167"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(obj-&gt;<ref refid="struct_emb_geometry___1ac765329451135abec74c45e1897abf26" kindref="member">type</ref><sp/>==<sp/><ref refid="embroidery_8h_1a70437221e34443b9b272d5cac835de0c" kindref="member">EMB_POLYLINE</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="171"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>updateRubber();</highlight></codeline>
+<codeline lineno="172"><highlight class="comment"></highlight></codeline>
+<codeline lineno="173"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>setRubberMode(OBJ_RUBBER_OFF);</highlight></codeline>
+<codeline lineno="174"><highlight class="comment"></highlight></codeline>
+<codeline lineno="175"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(!normalPath.elementCount())</highlight></codeline>
+<codeline lineno="176"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>critical_messagebox(0,<sp/>translate(&quot;Empty<sp/>embPolyline<sp/>Error&quot;),<sp/>translate(&quot;The<sp/>embPolyline<sp/>added<sp/>contains<sp/>no<sp/>points.<sp/>The<sp/>command<sp/>that<sp/>created<sp/>this<sp/>object<sp/>has<sp/>flawed<sp/>logic.&quot;));</highlight></codeline>
+<codeline lineno="177"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="179"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="src/geometry.c"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,258 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.6" xml:lang="en-US">
+  <compounddef id="struct__bcf__directory__entry" kind="struct" language="C++" prot="public">
+    <compoundname>_bcf_directory_entry</compoundname>
+    <includes refid="embroidery__internal_8h" local="no">embroidery_internal.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1a962ea084735924f1b32b8f9d9657d83e" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char directoryEntryName[32]</definition>
+        <argsstring>[32]</argsstring>
+        <name>directoryEntryName</name>
+        <qualifiedname>_bcf_directory_entry::directoryEntryName</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="197" column="34" bodyfile="src/embroidery_internal.h" bodystart="197" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1a7f035e9575047b046de83f4d27c9b6aa" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short directoryEntryNameLength</definition>
+        <argsstring></argsstring>
+        <name>directoryEntryNameLength</name>
+        <qualifiedname>_bcf_directory_entry::directoryEntryNameLength</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="198" column="34" bodyfile="src/embroidery_internal.h" bodystart="198" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1a594b4708319b280d9e2dc20771729286" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char objectType</definition>
+        <argsstring></argsstring>
+        <name>objectType</name>
+        <qualifiedname>_bcf_directory_entry::objectType</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="199" column="34" bodyfile="src/embroidery_internal.h" bodystart="199" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1a64bcb7f33df4e854a91e7daab4b68a25" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char colorFlag</definition>
+        <argsstring></argsstring>
+        <name>colorFlag</name>
+        <qualifiedname>_bcf_directory_entry::colorFlag</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="200" column="34" bodyfile="src/embroidery_internal.h" bodystart="200" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1a1a189ccb0591596986b8ae10dd22ed00" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int leftSiblingId</definition>
+        <argsstring></argsstring>
+        <name>leftSiblingId</name>
+        <qualifiedname>_bcf_directory_entry::leftSiblingId</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="201" column="34" bodyfile="src/embroidery_internal.h" bodystart="201" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1a4309dd1822928c08c69a6cc65f0cc864" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int rightSiblingId</definition>
+        <argsstring></argsstring>
+        <name>rightSiblingId</name>
+        <qualifiedname>_bcf_directory_entry::rightSiblingId</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="202" column="34" bodyfile="src/embroidery_internal.h" bodystart="202" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1a0a09332e2a856d71393ee0f2dce09591" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int childId</definition>
+        <argsstring></argsstring>
+        <name>childId</name>
+        <qualifiedname>_bcf_directory_entry::childId</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="203" column="34" bodyfile="src/embroidery_internal.h" bodystart="203" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1a84b9e393b711171ed0a445466d1aa622" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char CLSID[16]</definition>
+        <argsstring>[16]</argsstring>
+        <name>CLSID</name>
+        <qualifiedname>_bcf_directory_entry::CLSID</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="204" column="34" bodyfile="src/embroidery_internal.h" bodystart="204" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1a20d0ee6bd48248313256db45c05219ee" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int stateBits</definition>
+        <argsstring></argsstring>
+        <name>stateBits</name>
+        <qualifiedname>_bcf_directory_entry::stateBits</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="205" column="34" bodyfile="src/embroidery_internal.h" bodystart="205" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1a45c6392f7a7c3479b584d0e179ed1c77" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a3829b58c37eab5cd81529f1916adcd33" kindref="member">EmbTime</ref></type>
+        <definition>EmbTime creationTime</definition>
+        <argsstring></argsstring>
+        <name>creationTime</name>
+        <qualifiedname>_bcf_directory_entry::creationTime</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="206" column="34" bodyfile="src/embroidery_internal.h" bodystart="206" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1a3533a0d9af50b46ea93ed624dda16591" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a3829b58c37eab5cd81529f1916adcd33" kindref="member">EmbTime</ref></type>
+        <definition>EmbTime modifiedTime</definition>
+        <argsstring></argsstring>
+        <name>modifiedTime</name>
+        <qualifiedname>_bcf_directory_entry::modifiedTime</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="207" column="34" bodyfile="src/embroidery_internal.h" bodystart="207" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1ad12af0ff40cabd7efe3ed7e4322ba50f" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int startingSectorLocation</definition>
+        <argsstring></argsstring>
+        <name>startingSectorLocation</name>
+        <qualifiedname>_bcf_directory_entry::startingSectorLocation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="208" column="34" bodyfile="src/embroidery_internal.h" bodystart="208" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1ab3c00c29703d357e49a08770247b39dc" prot="public" static="no" mutable="no">
+        <type>unsigned long</type>
+        <definition>unsigned long streamSize</definition>
+        <argsstring></argsstring>
+        <name>streamSize</name>
+        <qualifiedname>_bcf_directory_entry::streamSize</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="209" column="34" bodyfile="src/embroidery_internal.h" bodystart="209" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1a8116ef4fd8bff207a789ee4ec5ff03c6" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int streamSizeHigh</definition>
+        <argsstring></argsstring>
+        <name>streamSizeHigh</name>
+        <qualifiedname>_bcf_directory_entry::streamSizeHigh</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="210" column="34" bodyfile="src/embroidery_internal.h" bodystart="210" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory__entry_1a9d1f6b35fc43e643da6e80b691051421" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="struct__bcf__directory__entry" kindref="compound">_bcf_directory_entry</ref> *</type>
+        <definition>struct _bcf_directory_entry* next</definition>
+        <argsstring></argsstring>
+        <name>next</name>
+        <qualifiedname>_bcf_directory_entry::next</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery_internal.h" line="211" column="32" bodyfile="src/embroidery_internal.h" bodystart="211" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="2">
+        <label>EmbTime_</label>
+        <link refid="struct_emb_time__"/>
+      </node>
+      <node id="1">
+        <label>_bcf_directory_entry</label>
+        <link refid="struct__bcf__directory__entry"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>creationTime</edgelabel>
+          <edgelabel>modifiedTime</edgelabel>
+        </childnode>
+        <childnode refid="1" relation="usage">
+          <edgelabel>next</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery_internal.h" line="195" column="1" bodyfile="src/embroidery_internal.h" bodystart="196" bodyend="212"/>
+    <listofallmembers>
+      <member refid="struct__bcf__directory__entry_1a0a09332e2a856d71393ee0f2dce09591" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>childId</name></member>
+      <member refid="struct__bcf__directory__entry_1a84b9e393b711171ed0a445466d1aa622" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>CLSID</name></member>
+      <member refid="struct__bcf__directory__entry_1a64bcb7f33df4e854a91e7daab4b68a25" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>colorFlag</name></member>
+      <member refid="struct__bcf__directory__entry_1a45c6392f7a7c3479b584d0e179ed1c77" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>creationTime</name></member>
+      <member refid="struct__bcf__directory__entry_1a962ea084735924f1b32b8f9d9657d83e" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>directoryEntryName</name></member>
+      <member refid="struct__bcf__directory__entry_1a7f035e9575047b046de83f4d27c9b6aa" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>directoryEntryNameLength</name></member>
+      <member refid="struct__bcf__directory__entry_1a1a189ccb0591596986b8ae10dd22ed00" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>leftSiblingId</name></member>
+      <member refid="struct__bcf__directory__entry_1a3533a0d9af50b46ea93ed624dda16591" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>modifiedTime</name></member>
+      <member refid="struct__bcf__directory__entry_1a9d1f6b35fc43e643da6e80b691051421" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>next</name></member>
+      <member refid="struct__bcf__directory__entry_1a594b4708319b280d9e2dc20771729286" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>objectType</name></member>
+      <member refid="struct__bcf__directory__entry_1a4309dd1822928c08c69a6cc65f0cc864" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>rightSiblingId</name></member>
+      <member refid="struct__bcf__directory__entry_1ad12af0ff40cabd7efe3ed7e4322ba50f" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>startingSectorLocation</name></member>
+      <member refid="struct__bcf__directory__entry_1a20d0ee6bd48248313256db45c05219ee" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>stateBits</name></member>
+      <member refid="struct__bcf__directory__entry_1ab3c00c29703d357e49a08770247b39dc" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>streamSize</name></member>
+      <member refid="struct__bcf__directory__entry_1a8116ef4fd8bff207a789ee4ec5ff03c6" prot="public" virt="non-virtual"><scope>_bcf_directory_entry</scope><name>streamSizeHigh</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

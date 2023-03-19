@@ -1,0 +1,138 @@
+.TH "src/array.c" 3 "Sun Mar 19 2023" "Version 1.0.0-alpha" "Libembroidery" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/array.c
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'embroidery_internal\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBEmbArray\fP * \fBembArray_create\fP (int type)"
+.br
+.ti -1c
+.RI "int \fBembArray_resize\fP (\fBEmbArray\fP *a)"
+.br
+.ti -1c
+.RI "void \fBembArray_copy\fP (\fBEmbArray\fP *dst, \fBEmbArray\fP *src)"
+.br
+.ti -1c
+.RI "int \fBembArray_addArc\fP (\fBEmbArray\fP *a, \fBEmbArc\fP b)"
+.br
+.ti -1c
+.RI "int \fBembArray_addCircle\fP (\fBEmbArray\fP *a, \fBEmbCircle\fP b)"
+.br
+.ti -1c
+.RI "int \fBembArray_addEllipse\fP (\fBEmbArray\fP *a, \fBEmbEllipse\fP b)"
+.br
+.ti -1c
+.RI "int \fBembArray_addFlag\fP (\fBEmbArray\fP *a, \fBEmbFlag\fP b)"
+.br
+.ti -1c
+.RI "int \fBembArray_addLine\fP (\fBEmbArray\fP *a, \fBEmbLine\fP b)"
+.br
+.ti -1c
+.RI "int \fBembArray_addPath\fP (\fBEmbArray\fP *a, \fBEmbPath\fP b)"
+.br
+.ti -1c
+.RI "int \fBembArray_addPoint\fP (\fBEmbArray\fP *a, \fBEmbPoint\fP b)"
+.br
+.ti -1c
+.RI "int \fBembArray_addPolyline\fP (\fBEmbArray\fP *a, \fBEmbPolyline\fP b)"
+.br
+.ti -1c
+.RI "int \fBembArray_addPolygon\fP (\fBEmbArray\fP *a, \fBEmbPolygon\fP b)"
+.br
+.ti -1c
+.RI "int \fBembArray_addRect\fP (\fBEmbArray\fP *a, \fBEmbRect\fP b)"
+.br
+.ti -1c
+.RI "int \fBembArray_addStitch\fP (\fBEmbArray\fP *a, \fBEmbStitch\fP b)"
+.br
+.ti -1c
+.RI "int \fBembArray_addVector\fP (\fBEmbArray\fP *a, \fBEmbVector\fP b)"
+.br
+.ti -1c
+.RI "void \fBembArray_free\fP (\fBEmbArray\fP *a)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int embArray_addArc (\fBEmbArray\fP * a, \fBEmbArc\fP b)"
+
+.PP
+Definition at line \fB96\fP of file \fBarray\&.c\fP\&.
+.SS "int embArray_addCircle (\fBEmbArray\fP * a, \fBEmbCircle\fP b)"
+
+.PP
+Definition at line \fB108\fP of file \fBarray\&.c\fP\&.
+.SS "int embArray_addEllipse (\fBEmbArray\fP * a, \fBEmbEllipse\fP b)"
+
+.PP
+Definition at line \fB120\fP of file \fBarray\&.c\fP\&.
+.SS "int embArray_addFlag (\fBEmbArray\fP * a, \fBEmbFlag\fP b)"
+
+.PP
+Definition at line \fB132\fP of file \fBarray\&.c\fP\&.
+.SS "int embArray_addLine (\fBEmbArray\fP * a, \fBEmbLine\fP b)"
+
+.PP
+Definition at line \fB144\fP of file \fBarray\&.c\fP\&.
+.SS "int embArray_addPath (\fBEmbArray\fP * a, \fBEmbPath\fP b)"
+
+.PP
+Definition at line \fB156\fP of file \fBarray\&.c\fP\&.
+.SS "int embArray_addPoint (\fBEmbArray\fP * a, \fBEmbPoint\fP b)"
+
+.PP
+Definition at line \fB168\fP of file \fBarray\&.c\fP\&.
+.SS "int embArray_addPolygon (\fBEmbArray\fP * a, \fBEmbPolygon\fP b)"
+
+.PP
+Definition at line \fB192\fP of file \fBarray\&.c\fP\&.
+.SS "int embArray_addPolyline (\fBEmbArray\fP * a, \fBEmbPolyline\fP b)"
+
+.PP
+Definition at line \fB180\fP of file \fBarray\&.c\fP\&.
+.SS "int embArray_addRect (\fBEmbArray\fP * a, \fBEmbRect\fP b)"
+
+.PP
+Definition at line \fB204\fP of file \fBarray\&.c\fP\&.
+.SS "int embArray_addStitch (\fBEmbArray\fP * a, \fBEmbStitch\fP b)"
+
+.PP
+Definition at line \fB216\fP of file \fBarray\&.c\fP\&.
+.SS "int embArray_addVector (\fBEmbArray\fP * a, \fBEmbVector\fP b)"
+
+.PP
+Definition at line \fB227\fP of file \fBarray\&.c\fP\&.
+.SS "void embArray_copy (\fBEmbArray\fP * dst, \fBEmbArray\fP * src)"
+
+.PP
+Definition at line \fB74\fP of file \fBarray\&.c\fP\&.
+.SS "\fBEmbArray\fP * embArray_create (int type)"
+
+.PP
+Definition at line \fB19\fP of file \fBarray\&.c\fP\&.
+.SS "void embArray_free (\fBEmbArray\fP * a)"
+
+.PP
+Definition at line \fB239\fP of file \fBarray\&.c\fP\&.
+.SS "int embArray_resize (\fBEmbArray\fP * a)"
+
+.PP
+Definition at line \fB41\fP of file \fBarray\&.c\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Libembroidery from the source code\&.

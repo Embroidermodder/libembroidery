@@ -1,0 +1,150 @@
+.TH "src/thread-color.c" 3 "Sun Mar 19 2023" "Version 1.0.0-alpha" "Libembroidery" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/thread-color.c
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'embroidery_internal\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBthreadColor\fP (const char *name, int brand)"
+.br
+.ti -1c
+.RI "int \fBthreadColorNum\fP (unsigned int color, int brand)"
+.br
+.ti -1c
+.RI "const char * \fBthreadColorName\fP (unsigned int color, int brand)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "const unsigned char \fB_dxfColorTable\fP [][3] = {{ 0, 0, 0 }}"
+.br
+.ti -1c
+.RI "const \fBEmbThread\fP \fBhusThreads\fP [] = {{{ 0, 0, 0 }, 'END', 'END'}}"
+.br
+.ti -1c
+.RI "const \fBEmbThread\fP \fBjefThreads\fP [] = {{{ 0, 0, 0 }, 'END', 'END'}}"
+.br
+.ti -1c
+.RI "const \fBEmbThread\fP \fBshvThreads\fP [] = {{{ 0, 0, 0 }, 'END', 'END'}}"
+.br
+.ti -1c
+.RI "const \fBEmbThread\fP \fBpcmThreads\fP [] = {{{ 0, 0, 0 }, 'END', 'END'}}"
+.br
+.ti -1c
+.RI "const \fBEmbThread\fP \fBpecThreads\fP [] = {{{ 0, 0, 0 }, 'END', 'END'}}"
+.br
+.ti -1c
+.RI "const int \fBshvThreadCount\fP = 42"
+.br
+.ti -1c
+.RI "const int \fBpecThreadCount\fP = 65"
+.br
+.ti -1c
+.RI "\fBthread_color\fP * \fBbrand_codes\fP []"
+.br
+.ti -1c
+.RI "const char * \fBbrand_codes_files\fP []"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int threadColor (const char * name, int brand)"
+
+.PP
+Definition at line \fB4012\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const char * threadColorName (unsigned int color, int brand)"
+
+.PP
+Definition at line \fB4035\fP of file \fBthread\-color\&.c\fP\&.
+.SS "int threadColorNum (unsigned int color, int brand)"
+
+.PP
+Definition at line \fB4023\fP of file \fBthread\-color\&.c\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "const unsigned char _dxfColorTable[][3] = {{ 0, 0, 0 }}"
+
+.PP
+Definition at line \fB14\fP of file \fBthread\-color\&.c\fP\&.
+.SS "\fBthread_color\fP* brand_codes[]"
+
+.PP
+Definition at line \fB23\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const char* brand_codes_files[]"
+\fBInitial value:\fP.PP
+.nf
+= {
+    "arc_polyester_colors\&.csv",          
+    "arc_rayon_colors\&.csv",              
+    "coats_and_clark_rayon_colors\&.csv",  
+    "exquisite_polyester_colors\&.csv",    
+    "fufu_Polyester_colors\&.csv",         
+    "fufu_Rayon_colors\&.csv",             
+    "Hemingworth_Polyester_colors\&.csv",  
+    "Isacord_Polyester_colors\&.csv",      
+    "Isafil_Rayon_colors\&.csv",           
+    "Marathon_Polyester_colors\&.csv",     
+    "Marathon_Rayon_colors\&.csv",         
+    "Madeira_Polyester_colors\&.csv",      
+    "Madeira_Rayon_colors\&.csv",          
+    "Metro_Polyester_colors\&.csv",        
+    "Pantone_colors\&.csv",                
+    "RobisonAnton_Polyester_colors\&.csv", 
+    "RobisonAnton_Rayon_colors\&.csv",     
+    "Sigma_Polyester_colors\&.csv",        
+    "Sulky_Rayon_colors\&.csv",            
+    "ThreadArt_Rayon_colors\&.csv",        
+    "ThreadArt_Polyester_colors\&.csv",    
+    "ThreaDelight_Polyester_colors\&.csv", 
+    "Z102_Isacord_Polyester_colors\&.csv", 
+    "svg_color_colors\&.csv"               
+}
+.fi
+
+.PP
+Definition at line \fB58\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const \fBEmbThread\fP husThreads[] = {{{ 0, 0, 0 }, 'END', 'END'}}"
+
+.PP
+Definition at line \fB15\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const \fBEmbThread\fP jefThreads[] = {{{ 0, 0, 0 }, 'END', 'END'}}"
+
+.PP
+Definition at line \fB16\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const \fBEmbThread\fP pcmThreads[] = {{{ 0, 0, 0 }, 'END', 'END'}}"
+
+.PP
+Definition at line \fB18\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const int pecThreadCount = 65"
+
+.PP
+Definition at line \fB21\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const \fBEmbThread\fP pecThreads[] = {{{ 0, 0, 0 }, 'END', 'END'}}"
+
+.PP
+Definition at line \fB19\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const int shvThreadCount = 42"
+
+.PP
+Definition at line \fB20\fP of file \fBthread\-color\&.c\fP\&.
+.SS "const \fBEmbThread\fP shvThreads[] = {{{ 0, 0, 0 }, 'END', 'END'}}"
+
+.PP
+Definition at line \fB17\fP of file \fBthread\-color\&.c\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Libembroidery from the source code\&.

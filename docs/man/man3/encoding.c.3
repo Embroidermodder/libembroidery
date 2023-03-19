@@ -1,0 +1,126 @@
+.TH "src/encoding.c" 3 "Sun Mar 19 2023" "Version 1.0.0-alpha" "Libembroidery" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/encoding.c
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include 'embroidery_internal\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBwrite_24bit\fP (FILE *file, int)"
+.br
+.ti -1c
+.RI "\fBEmbColor\fP \fBembColor_fromHexStr\fP (char *val)"
+.br
+.ti -1c
+.RI "void \fBreverse_byte_order\fP (void *b, int bytes)"
+.br
+.ti -1c
+.RI "int \fBdecode_t01_record\fP (unsigned char b[3], int *x, int *y, int *flags)"
+.br
+.ti -1c
+.RI "void \fBencode_t01_record\fP (unsigned char b[3], int x, int y, int flags)"
+.br
+.ti -1c
+.RI "int \fBencode_tajima_ternary\fP (unsigned char b[3], int x, int y)"
+.br
+.ti -1c
+.RI "void \fBdecode_tajima_ternary\fP (unsigned char b[3], int *x, int *y)"
+.br
+.ti -1c
+.RI "void \fBpfaffEncode\fP (FILE *file, int dx, int dy, int flags)"
+.br
+.ti -1c
+.RI "\fBEmbReal\fP \fBpfaffDecode\fP (unsigned char a1, unsigned char a2, unsigned char a3)"
+.br
+.ti -1c
+.RI "unsigned char \fBmitEncodeStitch\fP (\fBEmbReal\fP value)"
+.br
+.ti -1c
+.RI "int \fBmitDecodeStitch\fP (unsigned char value)"
+.br
+.ti -1c
+.RI "int \fBdecodeNewStitch\fP (unsigned char value)"
+.br
+.ti -1c
+.RI "void \fBembInt_read\fP (FILE *f, char *label, void *b, int mode)"
+.br
+.ti -1c
+.RI "void \fBembInt_write\fP (FILE *f, char *label, void *b, int mode)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int decode_t01_record (unsigned char b[3], int * x, int * y, int * flags)"
+
+.PP
+Definition at line \fB74\fP of file \fBencoding\&.c\fP\&.
+.SS "void decode_tajima_ternary (unsigned char b[3], int * x, int * y)"
+
+.PP
+Definition at line \fB229\fP of file \fBencoding\&.c\fP\&.
+.SS "int decodeNewStitch (unsigned char value)"
+
+.PP
+Definition at line \fB337\fP of file \fBencoding\&.c\fP\&.
+.SS "\fBEmbColor\fP embColor_fromHexStr (char * val)"
+
+.PP
+Definition at line \fB32\fP of file \fBencoding\&.c\fP\&.
+.SS "void embInt_read (FILE * f, char * label, void * b, int mode)"
+
+.PP
+Definition at line \fB350\fP of file \fBencoding\&.c\fP\&.
+.SS "void embInt_write (FILE * f, char * label, void * b, int mode)"
+
+.PP
+Definition at line \fB381\fP of file \fBencoding\&.c\fP\&.
+.SS "void encode_t01_record (unsigned char b[3], int x, int y, int flags)"
+
+.PP
+Definition at line \fB99\fP of file \fBencoding\&.c\fP\&.
+.SS "int encode_tajima_ternary (unsigned char b[3], int x, int y)"
+
+.PP
+Definition at line \fB118\fP of file \fBencoding\&.c\fP\&.
+.SS "int mitDecodeStitch (unsigned char value)"
+
+.PP
+Definition at line \fB330\fP of file \fBencoding\&.c\fP\&.
+.SS "unsigned char mitEncodeStitch (\fBEmbReal\fP value)"
+
+.PP
+Definition at line \fB323\fP of file \fBencoding\&.c\fP\&.
+.SS "\fBEmbReal\fP pfaffDecode (unsigned char a1, unsigned char a2, unsigned char a3)"
+
+.PP
+Definition at line \fB315\fP of file \fBencoding\&.c\fP\&.
+.SS "void pfaffEncode (FILE * file, int dx, int dy, int flags)"
+
+.PP
+Definition at line \fB295\fP of file \fBencoding\&.c\fP\&.
+.SS "void reverse_byte_order (void * b, int bytes)"
+
+.PP
+Definition at line \fB56\fP of file \fBencoding\&.c\fP\&.
+.SS "void write_24bit (FILE * file, int x)"
+
+.PP
+Definition at line \fB660\fP of file \fBmain\&.c\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Libembroidery from the source code\&.

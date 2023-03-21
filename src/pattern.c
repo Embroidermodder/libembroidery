@@ -14,9 +14,13 @@
 
 #include "embroidery_internal.h"
 
-/*! Returns a pointer to an EmbPattern. It is created on the heap.
+/**
+ * @brief Returns a pointer to an EmbPattern. It is created on the heap.
  * The caller is responsible for freeing the allocated memory with
- * embPattern_free(). */
+ * embPattern_free().
+ * 
+ * @return EmbPattern* 
+ */
 EmbPattern*
 embPattern_create(void)
 {
@@ -38,6 +42,12 @@ embPattern_create(void)
     return p;
 }
 
+/**
+ * @brief 
+ * 
+ * @param p 
+ * @param length 
+ */
 void
 embPattern_hideStitchesOverLength(EmbPattern* p, int length)
 {
@@ -62,6 +72,13 @@ embPattern_hideStitchesOverLength(EmbPattern* p, int length)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param pattern 
+ * @param thread 
+ * @return int 
+ */
 int
 embPattern_addThread(EmbPattern *pattern, EmbThread thread)
 {
@@ -75,6 +92,11 @@ embPattern_addThread(EmbPattern *pattern, EmbThread thread)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param p 
+ */
 void
 embPattern_fixColorCount(EmbPattern* p)
 {
@@ -108,8 +130,12 @@ embPattern_fixColorCount(EmbPattern* p)
     */
 }
 
-/*! Copies all of the Embstitch_list data to 
-    EmbPolylineObjectList data for pattern (\a p). */
+/**
+ * @brief Copies all of the Embstitch_list data to 
+ * EmbPolylineObjectList data for pattern (\a p).
+ * 
+ * @param p 
+ */
 void
 embPattern_copystitch_listToPolylines(EmbPattern* p)
 {
@@ -308,6 +334,12 @@ embPattern_addStitchRel(EmbPattern* p, EmbReal dx, EmbReal dy,
     embPattern_addStitchAbs(p, x, y, flags, isAutoColorIndex);
 }
 
+/**
+ * @brief 
+ * 
+ * @param p 
+ * @param index 
+ */
 void
 embPattern_changeColor(EmbPattern* p, int index)
 {
@@ -1140,7 +1172,14 @@ convert(const char *inf, const char *outf)
     return 0;
 }
 
-float embPattern_totalStitchLength(EmbPattern *pattern)
+/**
+ * @brief 
+ * 
+ * @param pattern 
+ * @return float 
+ */
+float
+embPattern_totalStitchLength(EmbPattern *pattern)
 {
     EmbArray *sts = pattern->stitch_list;
     float result = 0.0;

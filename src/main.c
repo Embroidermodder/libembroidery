@@ -71,12 +71,27 @@ const int supportedMinorVersion = 0x003E;
 const int littleEndianByteOrderMark = 0xFFFE;
 */
 
+/**
+ * @brief 
+ * 
+ * @param v 
+ * @param label 
+ *
+ * move to vector.c
+ */
 void embVector_print(EmbVector v, char *label)
 {
     printf("%sX = %f\n", label, v.x);
     printf("%sY = %f\n", label, v.y);
 }
 
+/**
+ * @brief 
+ * 
+ * @param arc 
+ *
+ * \todo move to arc.c
+ */
 void embArc_print(EmbArc arc)
 {
     embVector_print(arc.start, "start");
@@ -88,7 +103,10 @@ void embArc_print(EmbArc arc)
 /* DATA 
  *******************************************************************/
 
-
+/**
+ * @brief 
+ * 
+ */
 const char *flag_list[] = {
     "--to",
     "-t",
@@ -129,7 +147,16 @@ const char *flag_list[] = {
     "--cross-stitch"
 };
 
+/**
+ * @brief 
+ * 
+ */
 const char *version_string = "embroider v0.1";
+
+/**
+ * @brief 
+ * 
+ */
 const char *welcome_message = "EMBROIDER\n"
     "    A command line program for machine embroidery.\n"
     "    Copyright 2013-2022 The Embroidermodder Team\n"
@@ -139,8 +166,14 @@ const char *welcome_message = "EMBROIDER\n"
     "    https://embroidermodder.org\n";
 #endif
 
-
-/* Checks that there are enough bytes to interpret the header,
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param minimum_header_length 
+ * @return int 
+ *
+ * Checks that there are enough bytes to interpret the header,
  * stops possible segfaults when reading in the header bytes.
  *
  * Returns 0 if there aren't enough, or the length of the file
@@ -158,6 +191,12 @@ int check_header_present(FILE* file, int minimum_header_length)
     return length;
 }
 
+/**
+ * @brief 
+ * 
+ * @param bcfFile 
+ * @return unsigned int 
+ */
 unsigned int
 sectorSize(bcf_file* bcfFile)
 {
@@ -168,12 +207,26 @@ sectorSize(bcf_file* bcfFile)
     return 4096;
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @return int 
+ */
 int
 haveExtraDIFATSectors(bcf_file* file)
 {
     return (int)(entriesInDifatSector(file->difat) > 0);
 }
 
+/**
+ * @brief 
+ * 
+ * @param bcfFile 
+ * @param file 
+ * @param sector 
+ * @return int 
+ */
 int
 seekToSector(bcf_file* bcfFile, FILE* file, const unsigned int sector)
 {
@@ -181,6 +234,12 @@ seekToSector(bcf_file* bcfFile, FILE* file, const unsigned int sector)
     return fseek(file, offset, SEEK_SET);
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param bcfFile 
+ */
 void
 parseDIFATSectors(FILE* file, bcf_file* bcfFile)
 {
@@ -192,6 +251,13 @@ parseDIFATSectors(FILE* file, bcf_file* bcfFile)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param bcfFile 
+ * @return int 
+ */
 int
 bcfFile_read(FILE* file, bcf_file* bcfFile)
 {
@@ -229,6 +295,14 @@ bcfFile_read(FILE* file, bcf_file* bcfFile)
     return 1;
 }
 
+/**
+ * @brief Get the File object
+ * 
+ * @param bcfFile 
+ * @param file 
+ * @param fileToFind 
+ * @return FILE* 
+ */
 FILE*
 GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind)
 {
@@ -263,6 +337,11 @@ GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind)
     return fileOut;
 }
 
+/**
+ * @brief 
+ * 
+ * @param bcfFile 
+ */
 void
 bcf_file_free(bcf_file* bcfFile)
 {
@@ -272,6 +351,14 @@ bcf_file_free(bcf_file* bcfFile)
     free(bcfFile);
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param fatSectors 
+ * @param sectorSize 
+ * @return bcf_file_difat* 
+ */
 bcf_file_difat*
 bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize)
 {
@@ -304,12 +391,26 @@ bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorS
     return difat;
 }
 
+/**
+ * @brief 
+ * 
+ * @param fat 
+ * @return unsigned int 
+ */
 unsigned int
 entriesInDifatSector(bcf_file_difat* fat)
 {
     return (fat->sectorSize - sizeOfChainingEntryAtEndOfDifatSector) / sizeOfDifatEntry;
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param bcfFile 
+ * @param difatEntriesToRead 
+ * @return unsigned int 
+ */
 unsigned int
 readFullSector(FILE* file, bcf_file_difat* bcfFile, 
                             unsigned int* difatEntriesToRead)
@@ -343,6 +444,12 @@ readFullSector(FILE* file, bcf_file_difat* bcfFile,
     return nextDifatSectorInChain;
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param dir 
+ */
 void
 parseDirectoryEntryName(FILE* file, bcf_directory_entry* dir)
 {
@@ -356,6 +463,12 @@ parseDirectoryEntryName(FILE* file, bcf_directory_entry* dir)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param maxNumberOfDirectoryEntries 
+ * @return bcf_directory* 
+ */
 bcf_directory*
 CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries)
 {
@@ -368,6 +481,12 @@ CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries)
     return dir;
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @return EmbTime 
+ */
 EmbTime
 parseTime(FILE* file)
 {
@@ -386,6 +505,12 @@ parseTime(FILE* file)
     return returnVal;
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @return bcf_directory_entry* 
+ */
 bcf_directory_entry*
 CompoundFileDirectoryEntry(FILE* file)
 {
@@ -422,6 +547,12 @@ CompoundFileDirectoryEntry(FILE* file)
     return dir;
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param dir 
+ */
 void
 readNextSector(FILE* file, bcf_directory* dir)
 {
@@ -444,6 +575,11 @@ readNextSector(FILE* file, bcf_directory* dir)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param dir 
+ */
 void
 bcf_directory_free(bcf_directory** dir)
 {
@@ -463,6 +599,12 @@ bcf_directory_free(bcf_directory** dir)
     safe_free(*dir);
 }
 
+/**
+ * @brief 
+ * 
+ * @param sectorSize 
+ * @return bcf_file_fat* 
+ */
 bcf_file_fat*
 bcfFileFat_create(const unsigned int sectorSize)
 {
@@ -477,6 +619,12 @@ bcfFileFat_create(const unsigned int sectorSize)
     return fat;
 }
 
+/**
+ * @brief 
+ * 
+ * @param fat 
+ * @param file 
+ */
 void
 loadFatFromSector(bcf_file_fat* fat, FILE* file)
 {
@@ -491,6 +639,12 @@ loadFatFromSector(bcf_file_fat* fat, FILE* file)
     fat->fatEntryCount = newSize;
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @return bcf_file_header 
+ */
 bcf_file_header
 bcfFileHeader_read(FILE* file)
 {
@@ -516,6 +670,13 @@ bcfFileHeader_read(FILE* file)
     return header;
 }
 
+/**
+ * @brief 
+ * 
+ * @param lines 
+ * @param thickness 
+ * @param result 
+ */
 void
 embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSatinOutline* result)
 {
@@ -604,6 +765,13 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
     result->length = lines->count;
 }
 
+/**
+ * @brief 
+ * 
+ * @param result 
+ * @param density 
+ * @return EmbArray* 
+ */
 EmbArray*
 embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density)
 {
@@ -656,6 +824,12 @@ embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density)
     return stitches;
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param x 
+ */
 void
 write_24bit(FILE* file, int x)
 {
@@ -667,6 +841,13 @@ write_24bit(FILE* file, int x)
     fwrite(a, 1, 4, file);
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
 int
 embColor_distance(EmbColor a, EmbColor b)
 {
@@ -677,6 +858,13 @@ embColor_distance(EmbColor a, EmbColor b)
     return t;
 }
 
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @param c 
+ * @param toRead 
+ */
 void
 embColor_read(FILE *f, EmbColor *c, int toRead)
 {
@@ -687,6 +875,13 @@ embColor_read(FILE *f, EmbColor *c, int toRead)
     c->b = b[2];
 }
 
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @param c 
+ * @param toWrite 
+ */
 void
 embColor_write(FILE *f, EmbColor c, int toWrite)
 {
@@ -727,6 +922,14 @@ embThread_findNearestColor(EmbColor color, EmbColor *color_list, int n_colors)
     return closestIndex;
 }
 
+/**
+ * @brief 
+ * 
+ * @param color 
+ * @param thread_list 
+ * @param n_threads 
+ * @return int 
+ */
 int
 embThread_findNearestThread(EmbColor color, EmbThread *thread_list, int n_threads)
 {
@@ -762,6 +965,13 @@ embThread_getRandom(void)
     return c;
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param buffer 
+ * @param maxLength 
+ */
 void
 binaryReadString(FILE* file, char* buffer, int maxLength)
 {
@@ -773,6 +983,13 @@ binaryReadString(FILE* file, char* buffer, int maxLength)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param buffer 
+ * @param stringLength 
+ */
 void
 binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength)
 {
@@ -805,6 +1022,14 @@ stringInArray(const char *s, const char **array)
     return 0;
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param line 
+ * @param maxLength 
+ * @return int 
+ */
 int
 emb_readline(FILE* file, char *line, int maxLength)
 {
@@ -835,6 +1060,14 @@ emb_readline(FILE* file, char *line, int maxLength)
 char const WHITESPACE[] = " \t\n\r";
 
 /* TODO: description */
+
+/**
+ * @brief Get the trim bounds object
+ * 
+ * @param s 
+ * @param firstWord 
+ * @param trailingSpace 
+ */
 void
 get_trim_bounds(char const *s, char const **firstWord, char const **trailingSpace)
 {
@@ -846,7 +1079,14 @@ get_trim_bounds(char const *s, char const **firstWord, char const **trailingSpac
     } while (*lastWord != '\0');
 }
 
-/* TODO: description */
+/**
+ * @brief 
+ * 
+ * @param s 
+ * @return char* 
+ *
+ * \todo decription
+ */
 char*
 copy_trim(char const *s)
 {
@@ -863,7 +1103,13 @@ copy_trim(char const *s)
     return result;
 }
 
-/*! Optimizes the number (\a num) for output to a text file and returns it as a string (\a str). */
+/**
+ * @brief Optimizes the number (\a num) for output to a text file and returns it as a string (\a str).
+ * 
+ * @param num 
+ * @param str 
+ * @return char* 
+ */
 char*
 emb_optOut(EmbReal num, char* str)
 {
@@ -881,6 +1127,11 @@ emb_optOut(EmbReal num, char* str)
     return str;
 }
 
+/**
+ * @brief 
+ * 
+ * @param t 
+ */
 void
 embTime_initNow(EmbTime* t)
 {
@@ -901,6 +1152,12 @@ embTime_initNow(EmbTime* t)
 #endif /* ARDUINO */
 }
 
+/**
+ * @brief 
+ * 
+ * @param t 
+ * @return EmbTime 
+ */
 EmbTime
 embTime_time(EmbTime* t)
 {
@@ -916,6 +1173,13 @@ divideByZero = divideByZero/divideByZero; /*TODO: wrap time() from time.h and ve
 }
 
 #ifdef LIBEMBROIDERY_CLI
+
+/**
+ * @brief 
+ * 
+ * @param result 
+ * @param label 
+ */
 void
 report(int result, char *label)
 {
@@ -928,6 +1192,11 @@ report(int result, char *label)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param level 
+ */
 void
 testMain(int level)
 {
@@ -998,6 +1267,14 @@ testMain(int level)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param c 
+ * @param p 
+ * @param t0 
+ * @param t1 
+ */
 void
 testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
 {
@@ -1024,6 +1301,14 @@ testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @return int 
+ *
+ * \todo decription
+ * \todo move to circle.c
+ */
 int
 testEmbCircle(void)
 {
@@ -1047,6 +1332,11 @@ testEmbCircle(void)
     return 0;
 }
 
+/**
+ * @brief 
+ * 
+ * @return int 
+ */
 int testEmbCircle_2(void) {
     EmbReal error;
     EmbReal epsilon = 1e-3;
@@ -1067,6 +1357,23 @@ int testEmbCircle_2(void) {
     return 0;
 }
 
+/**
+ * @brief 
+ * 
+ * @param bulge 
+ * @param arc 
+ * @param centerX 
+ * @param centerY 
+ * @param radius 
+ * @param diameter 
+ * @param chord 
+ * @param chordMidX 
+ * @param chordMidY 
+ * @param sagitta 
+ * @param apothem 
+ * @param incAngle 
+ * @param clockwise 
+ */
 void
 printArcResults(EmbReal bulge, EmbArc arc,
                      EmbReal centerX,   EmbReal centerY,
@@ -1115,6 +1422,11 @@ printArcResults(EmbReal bulge, EmbArc arc,
                     clockwise);
 }
 
+/**
+ * @brief 
+ * 
+ * @return int 
+ */
 int
 testGeomArc(void)
 {
@@ -1172,6 +1484,11 @@ testGeomArc(void)
     return 0;
 }
 
+/**
+ * @brief 
+ * 
+ * @return int 
+ */
 int
 testThreadColor(void)
 {
@@ -1193,7 +1510,14 @@ testThreadColor(void)
     return 0;
 }
 
-int testEmbFormat(void) {
+/**
+ * @brief 
+ * 
+ * @return int 
+ */
+int
+testEmbFormat(void)
+{
     const char*  tName = "example.zsk";
     int format = emb_identify_format(tName);
 
@@ -1222,6 +1546,12 @@ int testEmbFormat(void) {
     return 0;
 }
 
+/**
+ * @brief Create a test file 1 object
+ * 
+ * @param outf 
+ * @return int 
+ */
 int
 create_test_file_1(const char* outf)
 {
@@ -1258,6 +1588,12 @@ create_test_file_1(const char* outf)
     return 0;
 }
 
+/**
+ * @brief Create a test file 2 object
+ * 
+ * @param outf 
+ * @return int 
+ */
 int
 create_test_file_2(const char* outf)
 {
@@ -1291,6 +1627,12 @@ create_test_file_2(const char* outf)
     return 0;
 }
 
+/**
+ * @brief Create a test file 3 object
+ * 
+ * @param outf 
+ * @return int 
+ */
 int
 create_test_file_3(const char* outf)
 {
@@ -1324,7 +1666,15 @@ create_test_file_3(const char* outf)
 /* TODO: Add capability for converting multiple files of various types to a single format. 
 Currently, we only convert a single file to multiple formats. */
 #if 0
-int testThreadColor(void) {
+
+/**
+ * @brief 
+ * 
+ * @return int 
+ */
+int
+testThreadColor(void)
+{
     unsigned int tColor = 0xFFD25F00;
     EmbColor c;
     c.r = 0xD2;
@@ -1354,6 +1704,12 @@ int testThreadColor(void) {
  * Add command "--full-test-suite" for this full matrix.
  */
 
+/**
+ * @brief 
+ * 
+ * @param fname 
+ * @return int 
+ */
 int
 full_test_matrix(char *fname)
 {
@@ -1407,6 +1763,10 @@ full_test_matrix(char *fname)
     return 0;
 }
 
+/**
+ * @brief 
+ * 
+ */
 void
 usage(void)
 {
@@ -1455,6 +1815,10 @@ usage(void)
     puts("        --full-test-suite  Run all tests, even those we expect to fail.");
 }
 
+/**
+ * @brief 
+ * 
+ */
 void
 formats(void)
 {
@@ -1495,6 +1859,13 @@ formats(void)
     puts("");
 }
 
+/**
+ * @brief 
+ * 
+ * @param argv 
+ * @param argc 
+ * @param i 
+ */
 void
 to_flag(char **argv, int argc, int i)
 {
@@ -1526,6 +1897,14 @@ to_flag(char **argv, int argc, int i)
 }
 
 /* TODO: Add capability for converting multiple files of various types to a single format. Currently, we only convert a single file to multiple formats. */
+
+/**
+ * @brief 
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int
 command_line_interface(int argc, char* argv[])
 {
@@ -1725,6 +2104,13 @@ command_line_interface(int argc, char* argv[])
     return 0;
 }
 
+/**
+ * @brief 
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char* argv[])
 {
     return command_line_interface(argc, argv);

@@ -15,6 +15,12 @@
 
 #include "embroidery_internal.h"
 
+/**
+ * @brief 
+ * 
+ * @param type 
+ * @return EmbArray* 
+ */
 EmbArray*
 embArray_create(int type)
 {
@@ -37,6 +43,12 @@ embArray_create(int type)
     return a;
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @return int 
+ */
 int
 embArray_resize(EmbArray *a)
 {
@@ -71,7 +83,14 @@ embArray_resize(EmbArray *a)
     return 1;
 }
 
-void embArray_copy(EmbArray *dst, EmbArray *src)
+/**
+ * @brief 
+ * 
+ * @param dst 
+ * @param src 
+ */
+void
+embArray_copy(EmbArray *dst, EmbArray *src)
 {
     dst = embArray_create(src->type);
     dst->length = src->length;
@@ -92,6 +111,13 @@ void embArray_copy(EmbArray *dst, EmbArray *src)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
 int
 embArray_addArc(EmbArray *a, EmbArc b)
 {
@@ -104,6 +130,13 @@ embArray_addArc(EmbArray *a, EmbArc b)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
 int
 embArray_addCircle(EmbArray *a, EmbCircle b)
 {
@@ -116,6 +149,13 @@ embArray_addCircle(EmbArray *a, EmbCircle b)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
 int
 embArray_addEllipse(EmbArray *a, EmbEllipse b)
 {
@@ -128,6 +168,13 @@ embArray_addEllipse(EmbArray *a, EmbEllipse b)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
 int
 embArray_addFlag(EmbArray *a, EmbFlag b)
 {
@@ -140,6 +187,13 @@ embArray_addFlag(EmbArray *a, EmbFlag b)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
 int
 embArray_addLine(EmbArray *a, EmbLine b)
 {
@@ -152,6 +206,13 @@ embArray_addLine(EmbArray *a, EmbLine b)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
 int
 embArray_addPath(EmbArray *a, EmbPath b)
 {
@@ -164,6 +225,13 @@ embArray_addPath(EmbArray *a, EmbPath b)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
 int
 embArray_addPoint(EmbArray *a, EmbPoint b)
 {
@@ -176,6 +244,13 @@ embArray_addPoint(EmbArray *a, EmbPoint b)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
 int
 embArray_addPolyline(EmbArray *a, EmbPolyline b)
 {
@@ -188,6 +263,13 @@ embArray_addPolyline(EmbArray *a, EmbPolyline b)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
 int
 embArray_addPolygon(EmbArray *a, EmbPolygon b)
 {
@@ -200,6 +282,13 @@ embArray_addPolygon(EmbArray *a, EmbPolygon b)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
 int
 embArray_addRect(EmbArray *a, EmbRect b)
 {
@@ -212,6 +301,13 @@ embArray_addRect(EmbArray *a, EmbRect b)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
 int
 embArray_addStitch(EmbArray *a, EmbStitch b)
 {
@@ -223,6 +319,13 @@ embArray_addStitch(EmbArray *a, EmbStitch b)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
 int
 embArray_addVector(EmbArray *a, EmbVector b)
 {
@@ -235,6 +338,11 @@ embArray_addVector(EmbArray *a, EmbVector b)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param a 
+ */
 void
 embArray_free(EmbArray* a)
 {

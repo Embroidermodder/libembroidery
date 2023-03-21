@@ -178,6 +178,11 @@
  *******************************************************************/
 
 /* double-indirection file allocation table references */
+
+/**
+ * @brief 
+ * 
+ */
 typedef struct _bcf_file_difat
 {
     unsigned int fatSectorCount;
@@ -185,6 +190,10 @@ typedef struct _bcf_file_difat
     unsigned int sectorSize;
 } bcf_file_difat;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct _bcf_file_fat
 {
     int          fatEntryCount;
@@ -192,6 +201,10 @@ typedef struct _bcf_file_fat
     unsigned int numberOfEntriesInFatSector;
 } bcf_file_fat;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct _bcf_directory_entry
 {
     char                         directoryEntryName[32];
@@ -211,18 +224,25 @@ typedef struct _bcf_directory_entry
     struct _bcf_directory_entry* next;
 } bcf_directory_entry;
 
+/**
+ * @brief 
+ * 
+ * \todo possibly add a directory tree in the future.
+ */
 typedef struct _bcf_directory
 {
     bcf_directory_entry* dirEntries;
     unsigned int         maxNumberOfDirectoryEntries;
-    /* TODO: possibly add a directory tree in the future */
-
 } bcf_directory;
 
+/**
+ * @brief 
+ * \todo CLSID should be a separate type.
+ */
 typedef struct _bcf_file_header
 {
     unsigned char  signature[8];
-    unsigned char  CLSID[16]; /* TODO: this should be a separate type */
+    unsigned char  CLSID[16]; 
     unsigned short minorVersion;
     unsigned short majorVersion;
     unsigned short byteOrder;
@@ -241,6 +261,10 @@ typedef struct _bcf_file_header
     unsigned int   numberOfDifatSectors;
 } bcf_file_header;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct _bcf_file
 {
     bcf_file_header header;   /*! The header for the CompoundFile */
@@ -249,6 +273,10 @@ typedef struct _bcf_file
     bcf_directory* directory; /*! The directory for the CompoundFile */
 } bcf_file;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct _vp3Hoop
 {
     int right;
@@ -279,6 +307,10 @@ typedef struct _vp3Hoop
     int height;
 } vp3Hoop;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct ThredHeader_     /* thred file header */
 {
     unsigned int sigVersion;    /* signature and version */
@@ -288,6 +320,10 @@ typedef struct ThredHeader_     /* thred file header */
     unsigned short reserved[7]; /* reserved for expansion */
 } ThredHeader;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct ThredExtension_  /* thred v1.0 file header extension */
 {
     float hoopX;                /* hoop size x dimension in 1/6 mm units */
@@ -299,15 +335,23 @@ typedef struct ThredExtension_  /* thred v1.0 file header extension */
     char reserved[31];          /* reserved for expansion */
 } ThredExtension;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct SubDescriptor_
 {
-    int someNum;      /* TODO: better variable naming */
-    int someInt;      /* TODO: better variable naming */
-    int someOtherInt; /* TODO: better variable naming */
+    int someNum;      /*! \todo better variable naming */
+    int someInt;      /*! \todo better variable naming */
+    int someOtherInt; /*! \todo better variable naming */
     char* colorCode;
     char* colorName;
 } SubDescriptor;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct StxThread_
 {
     char* colorCode;
@@ -317,6 +361,10 @@ typedef struct StxThread_
     EmbColor stxColor;
 } StxThread;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct VipHeader_ {
     int magicCode;
     int numberOfStitches;
@@ -333,6 +381,10 @@ typedef struct VipHeader_ {
     int colorLength;
 } VipHeader;
 
+/**
+ * @brief 
+ * 
+ */
 typedef enum
 {
     CSV_EXPECT_NULL,
@@ -341,6 +393,10 @@ typedef enum
     CSV_EXPECT_COMMA
 } CSV_EXPECT;
 
+/**
+ * @brief 
+ * 
+ */
 typedef enum
 {
     CSV_MODE_NULL,
@@ -350,12 +406,20 @@ typedef enum
     CSV_MODE_STITCH
 } CSV_MODE;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct SvgAttribute_
 {
     char* name;
     char* value;
 } SvgAttribute;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct Huffman {
     int default_value;
     int lengths[1000];
@@ -365,6 +429,10 @@ typedef struct Huffman {
     int ntable;
 } huffman;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct Compress {
     int bit_position;
     char *input_data;

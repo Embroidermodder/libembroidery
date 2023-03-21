@@ -20,8 +20,14 @@
 
 #include "embroidery_internal.h"
 
-
-/* for the PES embedded */
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param image 
+ *
+ * for the PES embedded
+ */
 void
 writeImage(FILE* file, unsigned char image[][48])
 {
@@ -48,10 +54,16 @@ writeImage(FILE* file, unsigned char image[][48])
     }
 }
 
-/*
- *
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @param size 
+ * @return float 
  */
-float image_diff(unsigned char *a, unsigned char *b, int size)
+float
+image_diff(unsigned char *a, unsigned char *b, int size)
 {
     int i;
     float total = 0.0;
@@ -76,8 +88,14 @@ float image_diff(unsigned char *a, unsigned char *b, int size)
 #define NANOSVGRAST_IMPLEMENTATION
 #include "nanosvg/src/nanosvgrast.h"
 
-
-/* Basic Render
+/**
+ * @brief 
+ * 
+ * @param p 
+ * @param fname 
+ * @return int 
+ *
+ * Basic Render
  * ------------
  * Backends rendering to nanosvg/stb_image.
  *
@@ -111,17 +129,30 @@ embPattern_render(EmbPattern *p, char *fname)
     return 0;
 }
 
-/* Simulate the stitching of a pattern, using the image for rendering
+/**
+ * @brief 
+ * 
+ * @param pattern 
+ * @param fname 
+ * @return int 
+ *
+ * Simulate the stitching of a pattern, using the image for rendering
  * hints about how to represent the pattern.
  */
 int
 embPattern_simulate(EmbPattern *pattern, char *fname)
 {
-
     embPattern_render(pattern, fname);
     return 0;
 }
 
+/**
+ * @brief 
+ * 
+ * @param width 
+ * @param height 
+ * @return EmbImage 
+ */
 EmbImage
 embImage_create(int width, int height)
 {
@@ -133,6 +164,12 @@ embImage_create(int width, int height)
     
 }
 
+/**
+ * @brief 
+ * 
+ * @param image 
+ * @param fname 
+ */
 void
 embImage_read(EmbImage *image, char *fname)
 {
@@ -145,6 +182,13 @@ embImage_read(EmbImage *image, char *fname)
         3);
 }
 
+/**
+ * @brief 
+ * 
+ * @param image 
+ * @param fname 
+ * @return int 
+ */
 int
 embImage_write(EmbImage *image, char *fname)
 {
@@ -157,6 +201,11 @@ embImage_write(EmbImage *image, char *fname)
 	    4*image->width);
 }
 
+/**
+ * @brief 
+ * 
+ * @param image 
+ */
 void
 embImage_free(EmbImage *image)
 {

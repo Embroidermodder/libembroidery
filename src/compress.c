@@ -1,4 +1,4 @@
-/*
+/**
  * This file is part of libembroidery.
  *
  * Copyright 2018-2022 The Embroidermodder Team
@@ -37,9 +37,19 @@
  * ---------------------------
  */
 
-/* This avoids the now unnecessary compression by placing a
+/**
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param output 
+ * @param output_length 
+ * @return int
+ *
+ * This avoids the now unnecessary compression by placing a
  * minimal header of 6 bytes and using only literals in the
  * huffman compressed part (see the sources above).
+ *
  */
 int hus_compress(char *data, int length, char *output, int *output_length)
 {
@@ -55,9 +65,13 @@ int hus_compress(char *data, int length, char *output, int *output_length)
     return 0;
 }
 
-/* These next 2 functions represent the Huffman class in tartarize's code.
+/**
+ * @brief 
+ * These next 2 functions represent the Huffman class in tartarize's code.
+ * @param h 
  */
-void huffman_build_table(huffman *h)
+void
+huffman_build_table(huffman *h)
 {
     int bit_length, i, max_length, size;
     max_length = 0;
@@ -82,8 +96,19 @@ void huffman_build_table(huffman *h)
     }
 }
 
+/**
+ * @brief 
+ * 
+ */
 int huffman_lookup_data[2];
 
+/**
+ * @brief 
+ * 
+ * @param h 
+ * @param byte_lookup 
+ * @return int* 
+ */
 int *huffman_lookup(huffman h, int byte_lookup)
 {
     int *out = huffman_lookup_data;
@@ -98,12 +123,25 @@ int *huffman_lookup(huffman h, int byte_lookup)
 }
 
 /* These functions represent the EmbCompress class. */
+
+/**
+ * @brief 
+ * 
+ */
 void compress_init()
 {
 
 }
 
-int compress_get_bits(compress *c, int length)
+/**
+ * @brief 
+ * 
+ * @param c 
+ * @param length 
+ * @return int 
+ */
+int
+compress_get_bits(compress *c, int length)
 {
     int i, end_pos_in_bits, start_pos_in_bytes,
         end_pos_in_bytes, value, mask_sample_bits,
@@ -128,19 +166,42 @@ int compress_get_bits(compress *c, int length)
     return original;
 }
 
-int compress_pop(compress *c, int bit_count)
+/**
+ * @brief 
+ * 
+ * @param c 
+ * @param bit_count 
+ * @return int 
+ */
+int
+compress_pop(compress *c, int bit_count)
 {
     int value = compress_get_bits(c, bit_count);
     c->bit_position += bit_count;
     return value;
 }
 
-int compress_peek(compress *c, int bit_count)
+/**
+ * @brief 
+ * 
+ * @param c 
+ * @param bit_count 
+ * @return int 
+ */
+int
+compress_peek(compress *c, int bit_count)
 {
     return compress_get_bits(c, bit_count);
 }
 
-int compress_read_variable_length(compress *c)
+/**
+ * @brief 
+ * 
+ * @param c 
+ * @return int 
+ */
+int
+compress_read_variable_length(compress *c)
 {
     int q, m, s;
     m = compress_pop(c, 3);
@@ -159,7 +220,13 @@ int compress_read_variable_length(compress *c)
     return m;
 }
 
-void compress_load_character_length_huffman(compress *c)
+/**
+ * @brief 
+ * 
+ * @param c 
+ */
+void
+compress_load_character_length_huffman(compress *c)
 {
     int count;
     count = compress_pop(c, 5);
@@ -181,7 +248,13 @@ void compress_load_character_length_huffman(compress *c)
     huffman_build_table(&(c->character_length_huffman));
 }
 
-void compress_load_character_huffman(compress *c)
+/**
+ * @brief 
+ * 
+ * @param c 
+ */
+void
+compress_load_character_huffman(compress *c)
 {
     int count;
     count = compress_pop(c, 9);
@@ -212,7 +285,13 @@ void compress_load_character_huffman(compress *c)
     huffman_build_table(&(c->character_huffman));
 }
 
-void compress_load_distance_huffman(compress *c)
+/**
+ * @brief 
+ * 
+ * @param c 
+ */
+void
+compress_load_distance_huffman(compress *c)
 {
     int count;
     count = compress_pop(c, 5);
@@ -227,8 +306,14 @@ void compress_load_distance_huffman(compress *c)
     }
     huffman_build_table(&(c->distance_huffman));
 }
-    
-void compress_load_block(compress *c)
+
+/**
+ * @brief 
+ * 
+ * @param c 
+ */
+void
+compress_load_block(compress *c)
 {
     c->block_elements = compress_pop(c, 16);
     compress_load_character_length_huffman(c);
@@ -236,7 +321,14 @@ void compress_load_block(compress *c)
     compress_load_distance_huffman(c);
 }
 
-int compress_get_token(compress *c)
+/**
+ * @brief 
+ * 
+ * @param c 
+ * @return int 
+ */
+int
+compress_get_token(compress *c)
 {
     int *h;
     if (c->block_elements <= 0) {
@@ -248,7 +340,14 @@ int compress_get_token(compress *c)
     return h[0];
 }
 
-int compress_get_position(compress *c)
+/**
+ * @brief 
+ * 
+ * @param c 
+ * @return int 
+ */
+int
+compress_get_position(compress *c)
 {
     int *h, v;
     h = huffman_lookup(c->distance_huffman, compress_peek(c, 16));
@@ -261,7 +360,17 @@ int compress_get_position(compress *c)
     return v;
 }
 
-int hus_decompress(char *data, int length, char *output, int *output_length)
+/**
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param output 
+ * @param output_length 
+ * @return int 
+ */
+int
+hus_decompress(char *data, int length, char *output, int *output_length)
 {
     int character, i, j;
     compress *c = (compress*)malloc(sizeof(compress));

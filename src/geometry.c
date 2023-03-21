@@ -12,9 +12,11 @@
 
 #include "embroidery.h"
 
-
-/* Our generic object interface backends to each individual type,
+/**
+ * @brief Our generic object interface backends to each individual type.
  * 
+ * @param type_in 
+ * @return EmbGeometry* 
  */
 EmbGeometry *
 embGeometry_init(int type_in)
@@ -59,6 +61,11 @@ embGeometry_init(int type_in)
     return obj;
 }
 
+/**
+ * @brief 
+ * 
+ * @param obj 
+ */
 void
 embGeometry_free(EmbGeometry *obj)
 {
@@ -77,6 +84,12 @@ embGeometry_free(EmbGeometry *obj)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param obj 
+ * @param delta 
+ */
 void
 embGeometry_move(EmbGeometry *obj, EmbVector delta)
 {
@@ -98,6 +111,12 @@ embGeometry_move(EmbGeometry *obj, EmbVector delta)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param obj 
+ * @return EmbRect 
+ */
 EmbRect
 embGeometry_boundingRect(EmbGeometry *obj)
 {
@@ -124,6 +143,11 @@ embGeometry_boundingRect(EmbGeometry *obj)
     return r;
 }
 
+/**
+ * @brief 
+ * 
+ * @param obj 
+ */
 void
 embGeometry_vulcanize(EmbGeometry *obj)
 {

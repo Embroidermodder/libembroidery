@@ -1,4 +1,4 @@
-/*
+/**
  * This file is part of libembroidery.
  *
  * Copyright 2018-2022 The Embroidermodder Team
@@ -16,8 +16,12 @@
 
 #include "embroidery_internal.h"
 
-/* TODO: This list needs reviewed in case some stitch 
-    formats also can contain object data (EMBFORMAT_STCHANDOBJ). */
+/**
+ * @brief 
+ *
+ * \todo This list needs reviewed in case some stitch 
+ *   formats also can contain object data (EMBFORMAT_STCHANDOBJ). * 
+ */
 EmbFormatList formatTable[numberOfFormats] = {
     {".10o", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY, 0, 1, 0},
     {".100", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY, 0, 1, 0},
@@ -82,8 +86,10 @@ EmbFormatList formatTable[numberOfFormats] = {
     {".zsk", "ZSK USA Embroidery Format",          'U', ' ', EMBFORMAT_STITCHONLY, 0, 0, 0}
 };
 
-
-
+/**
+ * @brief 
+ * 
+ */
 const char imageWithFrame[38][48] = {
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 {0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0},
@@ -125,6 +131,11 @@ const char imageWithFrame[38][48] = {
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
 
+/**
+ * @brief 
+ * 
+ * @param data 
+ */
 void
 safe_free(void *data)
 {
@@ -134,6 +145,13 @@ safe_free(void *data)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param fileName 
+ * @param ending 
+ * @return int 
+ */
 int
 embFormat_getExtension(const char *fileName, char *ending)
 {
@@ -163,6 +181,12 @@ embFormat_getExtension(const char *fileName, char *ending)
     return 1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param fileName 
+ * @return int 
+ */
 int
 emb_identify_format(const char *fileName)
 {
@@ -179,6 +203,12 @@ emb_identify_format(const char *fileName)
     return -1;
 }
 
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @return short 
+ */
 short
 fread_int16(FILE* f)
 {
@@ -187,6 +217,14 @@ fread_int16(FILE* f)
     return x;
 }
 
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @return unsigned short 
+ *
+ * \todo replace with embInt_read
+ */
 unsigned short
 fread_uint16(FILE* f)
 {
@@ -195,6 +233,14 @@ fread_uint16(FILE* f)
     return x;
 }
 
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @return int 
+ *
+ * \todo replace with embInt_read
+ */
 int
 fread_int32_be(FILE* f)
 {
@@ -203,6 +249,12 @@ fread_int32_be(FILE* f)
     return x;
 }
 
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @return int 
+ */
 void
 fpad(FILE* file, char c, int n)
 {
@@ -212,49 +264,112 @@ fpad(FILE* file, char c, int n)
     }
 }
 
-
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @param data
+ *
+ * \todo replace with embInt_read
+ */ 
 void
 binaryWriteShort(FILE* f, short data)
 {
     embInt_write(f, "binaryWriteShort", &data, EMB_INT16_LITTLE);
 }
 
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @param data
+ *
+ * \todo replace with embInt_read
+ */ 
 void
 binaryWriteUShort(FILE* f, unsigned short data)
 {
     embInt_write(f, "binaryWriteUShort", &data, EMB_INT16_LITTLE);
 }
 
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @param data
+ *
+ * \todo replace with embInt_read
+ */ 
 void
 binaryWriteUShortBE(FILE* f, unsigned short data)
 {
     embInt_write(f, "binaryWriteUShortBE", &data, EMB_INT16_BIG);
 }
 
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @param data
+ *
+ * \todo replace with embInt_read
+ */ 
 void
 binaryWriteInt(FILE* f, int data)
 {
     embInt_write(f, "binaryWriteInt", &data, EMB_INT32_LITTLE);
 }
 
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @param data
+ *
+ * \todo replace with embInt_read
+ */ 
 void
 binaryWriteIntBE(FILE* f, int data)
 {
     embInt_write(f, "binaryWriteIntBE", &data, EMB_INT32_BIG);
 }
 
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @param data
+ *
+ * \todo replace with embInt_read
+ */ 
 void
 binaryWriteUInt(FILE* f, unsigned int data)
 {
     embInt_write(f, "binaryWriteUInt", &data, EMB_INT32_LITTLE);
 }
 
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @param data
+ *
+ * \todo replace with embInt_read
+ */ 
 void
 binaryWriteUIntBE(FILE* f, unsigned int data)
 {
     embInt_write(f, "binaryWriteUIntBE", &data, EMB_INT32_BIG);
 }
 
+/**
+ * @brief 
+ * 
+ * @param pattern 
+ * @param fileName 
+ * @param format 
+ * @return char 
+ */
 char
 embPattern_read(EmbPattern* pattern, const char *fileName, int format)
 {
@@ -476,6 +591,14 @@ embPattern_read(EmbPattern* pattern, const char *fileName, int format)
     return result;
 }
 
+/**
+ * @brief 
+ * 
+ * @param pattern 
+ * @param fileName 
+ * @param format 
+ * @return char 
+ */
 char
 embPattern_write(EmbPattern* pattern, const char *fileName, int format)
 {
@@ -702,6 +825,13 @@ embPattern_write(EmbPattern* pattern, const char *fileName, int format)
     return result;
 }
 
+/**
+ * @brief 
+ * 
+ * @param pattern 
+ * @param fileName 
+ * @return char 
+ */
 char
 embPattern_readAuto(EmbPattern* pattern, const char* fileName)
 {
@@ -714,6 +844,13 @@ embPattern_readAuto(EmbPattern* pattern, const char* fileName)
     return embPattern_read(pattern, fileName, format);
 }
 
+/**
+ * @brief 
+ * 
+ * @param pattern 
+ * @param fileName 
+ * @return char 
+ */
 char
 embPattern_writeAuto(EmbPattern* pattern, const char* fileName)
 {

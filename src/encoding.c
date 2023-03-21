@@ -27,9 +27,18 @@ void write_24bit(FILE* file, int);
  * formats and the only part that changes is the flag encoding.
  */
 
-/* Converts a 6 digit hex string (I.E. "00FF00") 
-    into an EmbColor and returns it. */
-EmbColor embColor_fromHexStr(char* val) {
+/*  */
+
+/**
+ * @brief Converts a 6 digit hex string (I.E. "00FF00")
+ * into an EmbColor and returns it.
+ * 
+ * @param val 6 byte code describing the color as a hex string, doesn't require null termination.
+ * @return EmbColor the same color as our internal type.
+ */
+EmbColor
+embColor_fromHexStr(char* val)
+{
     EmbColor color;
     char r[3];
     char g[3];
@@ -53,7 +62,14 @@ EmbColor embColor_fromHexStr(char* val) {
     return color;
 }
 
-void reverse_byte_order(void *b, int bytes)
+/**
+ * @brief Reverses the byte order for 2 or 4 byte arrays.
+ * 
+ * @param b The pointer to the data to be processed.
+ * @param bytes The number of bytes to reverse.
+ */
+void
+reverse_byte_order(void *b, int bytes)
 {
     char swap;
     if (bytes == 2) {
@@ -71,7 +87,18 @@ void reverse_byte_order(void *b, int bytes)
     }
 }
 
-int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags) {
+/**
+ * @brief 
+ * 
+ * @param b 
+ * @param x 
+ * @param y 
+ * @param flags 
+ * @return int 
+ */
+int
+decode_t01_record(unsigned char b[3], int *x, int *y, int *flags)
+{
     decode_tajima_ternary(b, x, y);
 
     if (b[2] == 0xF3) {
@@ -96,7 +123,17 @@ int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags) {
     return 1;
 }
 
-void encode_t01_record(unsigned char b[3], int x, int y, int flags) {
+/**
+ * @brief 
+ * 
+ * @param b 
+ * @param x 
+ * @param y 
+ * @param flags 
+ */
+void
+encode_t01_record(unsigned char b[3], int x, int y, int flags)
+{
     if (!encode_tajima_ternary(b, x, y)) {
         return;
     }
@@ -115,7 +152,16 @@ void encode_t01_record(unsigned char b[3], int x, int y, int flags) {
     }
 }
 
-int encode_tajima_ternary(unsigned char b[3], int x, int y)
+/**
+ * @brief 
+ * 
+ * @param b 
+ * @param x 
+ * @param y 
+ * @return int 
+ */
+int
+encode_tajima_ternary(unsigned char b[3], int x, int y)
 {
     b[0] = 0;
     b[1] = 0;
@@ -226,7 +272,15 @@ int encode_tajima_ternary(unsigned char b[3], int x, int y)
     return 1;
 }
 
-void decode_tajima_ternary(unsigned char b[3], int *x, int *y)
+/**
+ * @brief 
+ * 
+ * @param b 
+ * @param x 
+ * @param y 
+ */
+void
+decode_tajima_ternary(unsigned char b[3], int *x, int *y)
 {
     *x = 0;
     *y = 0;
@@ -292,11 +346,22 @@ void decode_tajima_ternary(unsigned char b[3], int *x, int *y)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param dx 
+ * @param dy 
+ * @param flags 
+ */
 void pfaffEncode(FILE* file, int dx, int dy, int flags)
 {
     unsigned char flagsToWrite = 0;
 
-    if (!file) { printf("ERROR: format-pcs.c pcsEncode(), file argument is null\n"); return; }
+    if (!file) {
+        printf("ERROR: format-pcs.c pcsEncode(), file argument is null\n"); 
+        return;
+    }
 
     write_24bit(file, dx);
     write_24bit(file, dy);
@@ -312,7 +377,17 @@ void pfaffEncode(FILE* file, int dx, int dy, int flags)
     fwrite(&flagsToWrite, 1, 1, file);
 }
 
-EmbReal pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3) {
+/**
+ * @brief 
+ * 
+ * @param a1 
+ * @param a2 
+ * @param a3 
+ * @return EmbReal 
+ */
+EmbReal
+pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3)
+{
     int res = a1 + (a2 << 8) + (a3 << 16);
     if (res > 0x7FFFFF) {
         return (-((~(res) & 0x7FFFFF) - 1));
@@ -320,25 +395,57 @@ EmbReal pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3) {
     return res;
 }
 
-unsigned char mitEncodeStitch(EmbReal value) {
+/**
+ * @brief 
+ * 
+ * @param value 
+ * @return unsigned char 
+ */
+unsigned char
+mitEncodeStitch(EmbReal value)
+{
     if (value < 0) {
         return 0x80 | (unsigned char)(-value);
     }
     return (unsigned char)value;
 }
 
-int mitDecodeStitch(unsigned char value) {
+/**
+ * @brief 
+ * 
+ * @param value 
+ * @return int 
+ */
+int
+mitDecodeStitch(unsigned char value)
+{
     if (value & 0x80) {
         return -(value & 0x1F);
     }
     return value;
 }
 
-int decodeNewStitch(unsigned char value) {
+/**
+ * @brief 
+ * 
+ * @param value 
+ * @return int 
+ */
+int
+decodeNewStitch(unsigned char value)
+{
     return (int)value;
 }
 
-/* Read and write system for multiple byte types.
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @param label 
+ * @param b 
+ * @param mode 
+ *
+ * Read and write system for multiple byte types.
  *
  * The caller passes the function to read/write from, the
  * memory location as a void pointer and a mode identifier that describes
@@ -377,6 +484,14 @@ embInt_read(FILE* f, char *label, void *b, int mode)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param f 
+ * @param label 
+ * @param b 
+ * @param mode 
+ */
 void
 embInt_write(FILE* f, char *label, void *b, int mode)
 {

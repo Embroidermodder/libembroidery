@@ -130,11 +130,9 @@ endif (WIN32)
 endif()
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
-if(APPLE)
 install(
-    FILES
-        src/embroidery.h
-    DESTINATION /usr/local/include
+    FILES src/embroidery.h
+    DESTINATION .
 )
 
 install(
@@ -142,25 +140,10 @@ install(
        embroidery
        embroidery_static
        embroider
-    LIBRARY DESTINATION /usr/local/lib
-    ARCHIVE DESTINATION /usr/local/lib
-    RUNTIME DESTINATION /usr/bin
+    LIBRARY DESTINATION .
+    ARCHIVE DESTINATION .
+    RUNTIME DESTINATION .
 )
-else()
-install(
-    FILES
-        src/embroidery.h
-    DESTINATION /usr/include
-)
+endif()
 
-install(
-    TARGETS
-       embroidery
-       embroidery_static
-       embroider
-    LIBRARY DESTINATION /usr/lib
-    ARCHIVE DESTINATION /usr/lib
-    RUNTIME DESTINATION /usr/bin
-)
-endif()
-endif()
+include(cpack.cmake)

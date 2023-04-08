@@ -1,8 +1,8 @@
-# The \texttt{embroider} Command Line Program
+\section embroider The `embroider` Command Line Program
 
 \todo Move back to libembroidery now we have the combined docs build.
 
-## Embroider pipeline
+\subsection pipeline Embroider pipeline
 
 Adjectives apply to every following noun so
 
@@ -17,7 +17,7 @@ Creates:
 
 in that order then writes them to the output file `output.pes`.
 
-## embroider CLI
+\subsection cli embroider CLI
 
 * Make `-circle` flag to add a circle to the current pattern.
 * Make `-rect` flag to add a rectangle to the current pattern.

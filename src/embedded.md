@@ -1,8 +1,8 @@
-# Embroiderbot and Libembroidery on Embedded Systems
+\section embroiderbot Embroiderbot and Libembroidery on Embedded Systems
 
 The libembroidery library is designed to support embedded environments, so it can be used in CNC applications.
 
-## Compatible Boards
+\subsection compatible-board Compatible Boards
 
 We recommend using an Arduino\index{Arduino} Mega 2560 or another board with equal or
 greater specs. That being said, we have had success using an Arduino Uno
@@ -10,7 +10,7 @@ R3 but this will likely require further optimization and other
 improvements to ensure continued compatibility with the Uno. See below
 for more information.
 
-## Arduino Considerations
+\subsection arduino Arduino Considerations
 
 There are two main concerns here: Flash Storage and SRAM.
 
@@ -34,7 +34,7 @@ There is also an excellent article by Bill Earl on the Adafruit Learning
 System which covers these topics in more depth:
 [http://learn.adafruit.com/memories-of-an-arduino?view=all](http://learn.adafruit.com/memories-of-an-arduino?view=all).
 
-## Space
+\subsection space Space
 
 Since a stitch takes 3 bytes of storage and many patterns use more than
 10k stitches, we can't assume that the pattern will fit in memory. Therefore
@@ -49,7 +49,7 @@ the arrays lie in storage.
 
 \todo Replace EmbArray functions with embPattern load functions.
 
-## Tables
+\subsection tables Tables
 
 All thread tables and large text blocks are too big to compile directly
 into the source code. Instead we can package the library with a data packet
@@ -62,7 +62,7 @@ needs to be loaded on the pattern USB/SD card or the program won't function.
 \todo Start file with a list of offsets to data with a corresponding table
 to load into with macro constants for each label needed.
 
-## Current Pattern Memory Management
+\subsection current_pattern Current Pattern Memory Management
 
 It will be simpler to make one file per EmbArray so we keep an EmbFile*
 and a length, so no malloc call is necessary. So there needs to be a consistent
@@ -72,7 +72,7 @@ tmpfile naming scheme.
 to the filenames like `stitchList\_A16F.dat`. Need to check for a file
 which indicates that this string has been used already.
 
-## Special Notes
+\subsection special-notes Special Notes
 
 Due to historical reasons and to remain compatible with the Arduino 1.0
 IDE, this folder must be called ``utility''. Refer to the arduino build
@@ -82,7 +82,7 @@ process for more info:
 libembroidery relies on the Arduino SD library for reading files. See
 the ino-file source and header files for more information.
 
-## The Assembly Split
+\subsection the-assembly-split The Assembly Split
 
 One problem to the problem of supporting both systems with abundant memory
 (such as a 2010s or later desktop) and with scarce memory (such as embedded

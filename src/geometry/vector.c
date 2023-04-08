@@ -14,6 +14,14 @@
 
 /**
  * Finds the unit length vector \a result in the same direction as \a vector.
+ *
+ * Equivalent to:
+ *
+ * \f[
+ *       \mathbf{u} = \frac{v}{|\mathbf{v}|}
+ * \f]
+ *
+ * \todo make result return argument.
  */
 void
 embVector_normalize(EmbVector vector, EmbVector* result)
@@ -31,6 +39,8 @@ embVector_normalize(EmbVector vector, EmbVector* result)
 /**
  * The scalar multiple \a magnitude of a vector \a vector. Returned as
  * \a result.
+ *
+ * \todo make result return argument.
  */
 void
 embVector_multiply(EmbVector vector, EmbReal magnitude, EmbVector* result)
@@ -44,31 +54,52 @@ embVector_multiply(EmbVector vector, EmbReal magnitude, EmbVector* result)
 }
 
 /**
- * The sum of vectors \a v1 and \a v2 returned as a vector.
+ * The sum of vectors \a a and \a b returned as a vector.
+ *
+ * Equivalent to:
+ *
+ * \f[
+ *       \mathbf{c} = \mathbf{a} + \mathbf{b}
+ *                  = \begin{pmatrix} a_{x} + b_{x} \\ a_{y}+b_{y} \end{pmatrix}
+ * \f]
  */
 EmbVector
-embVector_add(EmbVector v1, EmbVector v2)
+embVector_add(EmbVector a, EmbVector b)
 {
     EmbVector result;
-    result.x = v1.x + v2.x;
-    result.y = v1.y + v2.y;
+    result.x = a.x + b.x;
+    result.y = a.y + b.y;
     return result;
 }
 
 /**
  * The average of vectors \a v1 and \a v2 returned as a vector.
+ *
+ * Equivalent to:
+ *
+ * \f[
+ *       \mathbf{c} = \frac{\mathbf{a} + \mathbf{b}}{2}
+ *                  = \begin{pmatrix} \frac{a_{x} + b_{x}}{2} \\ \frac{a_{y}+b_{y}}{2} \end{pmatrix}
+ * \f]
  */
 EmbVector
-embVector_average(EmbVector v1, EmbVector v2)
+embVector_average(EmbVector a, EmbVector b)
 {
     EmbVector result;
-    result.x = 0.5*(v1.x + v2.x);
-    result.y = 0.5*(v1.y + v2.y);
+    result.x = 0.5*(a.x + b.x);
+    result.y = 0.5*(a.y + b.y);
     return result;
 }
 
 /**
  * The difference between vectors \a v1 and \a v2 returned as \a result.
+ *
+ * Equivalent to:
+ *
+ * \f[
+ *       \mathbf{c} = \mathbf{a} - \mathbf{b}
+ *                  = \begin{pmatrix} a_{x} - b_{x} \\ a_{y}-b_{y} \end{pmatrix}
+ * \f]
  */
 EmbVector
 embVector_subtract(EmbVector v1, EmbVector v2)
@@ -82,29 +113,36 @@ embVector_subtract(EmbVector v1, EmbVector v2)
 /**
  * The dot product as vectors \a v1 and \a v2 returned as a EmbReal.
  *
- * That is
- * (x)   (a) = xa+yb
- * (y) . (b)
+ * Equivalent to:
+ *
+ * \f[
+ *       c = \mathbf{a} \cdot \mathbf{b}
+ *         = a_x b_x + a_y b_y
+ * \f]
  */
-float
-embVector_dot(EmbVector v1, EmbVector v2)
+EmbReal
+embVector_dot(EmbVector a, EmbVector b)
 {
-    return v1.x * v2.x + v1.y * v2.y;
+    return a.x * b.x + a.y * b.y;
 }
 
 /**
- * The "cross product" as vectors \a v1 and \a v2 returned as a float.
- * Technically, this is one component only of a cross product, but in
- * our 2 dimensional framework we can use this as a scalar rather than
- * a vector in calculations.
+ * @brief The "cross product" as vectors \a a and \a b returned as a real value.
  *
- * (a) x (c) = ad-bc
- * (b)   (d)
+ * Technically, this is the magnitude of the cross product when the
+ * embroidery is placed in the z=0 plane (since the cross product is defined for
+ * 3-dimensional vectors). That is:
+ *
+ * \f[
+ *       |c| = \left| \begin{pmatrix} a_x \\ a_y \\ 0 \end{pmatrix} \times \begin{pmatrix} b_x \\ b_y \\ 0 \end{pmatrix}\right|
+ *           = \left| \begin{pmatrix} 0 \\ 0 \\ a_x b_y - a_y b_x \end{pmatrix} \right|
+ *           = a_x b_y - a_y b_x
+ * \f]
  */
-float
-embVector_cross(EmbVector v1, EmbVector v2)
+EmbReal
+embVector_cross(EmbVector a, EmbVector b)
 {
-    return v1.x * v2.y - v1.y * v2.x;
+    return a.x * b.y - a.y * b.x;
 }
 
 /**
@@ -128,18 +166,24 @@ embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result)
 }
 
 /**
- * The length or absolute value of the vector \a vector. 
+ * The length or absolute value of the vector \a vector.
+ *
+ * Equivalent to:
+ *
+ * \f[
+ *       |v| = \sqrt{v_{x}^{2} + v_{y}^{2}}
+ * \f]
  */
-float
+EmbReal
 embVector_length(EmbVector vector)
 {
     return sqrt(vector.x * vector.x + vector.y * vector.y);
 }
 
-/*
- *  
+/**
+ * The x-component of the vector 
  */
-float
+EmbReal
 embVector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3)
 {
     EmbVector b, c;
@@ -148,10 +192,10 @@ embVector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3)
     return embVector_dot(b, c);
 }
 
-/*
- *  
+/**
+ * The y-component of the vector 
  */
-float
+EmbReal
 embVector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3)
 {
     EmbVector b, c;
@@ -160,33 +204,42 @@ embVector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3)
     return embVector_cross(b, c);
 }
 
-/*
+/**
  * The angle, measured anti-clockwise from the x-axis, of a vector v.
  */
-float
+EmbReal
 embVector_angle(EmbVector v)
 {
     return atan2(v.y, v.x);
 }
 
-/*
- *  
+/**
+ * The unit vector in the direction \a angle.
+ *
+ * \f[
+ *       \mathbf{a}_{\alpha} = \begin{pmatrix} \cos(\alpha) \\ \sin(\alpha) \end{pmatrix}
+ * \f]
  */
 EmbVector
-embVector_unit(float angle)
+embVector_unit(EmbReal alpha)
 {
     EmbVector a;
-    a.x = cos(angle);
-    a.y = sin(angle);
+    a.x = cos(alpha);
+    a.y = sin(alpha);
     return a;
 }
 
-/*
- *  
+/**
+ * The distance between \a a and \a b returned as a real value.
+ *
+ * \f[
+ *      d = \left|\mathbf{a}-\mathbf{b}\right|
+ *        = \sqrt{(a_x-b_x)^{2} + (a_y-b_y)^{2}}
+ * \f]
  */
-float
-embVector_distance(EmbVector p, EmbVector q)
+EmbReal
+embVector_distance(EmbVector a, EmbVector b)
 {
-    EmbVector delta = embVector_subtract(p, q);
+    EmbVector delta = embVector_subtract(a, b);
     return embVector_length(delta);
 }

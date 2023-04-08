@@ -14,7 +14,7 @@
 
 /**
  * @brief Our generic object interface backends to each individual type.
- * 
+ *
  * @param type_in 
  * @return EmbGeometry* 
  */
@@ -62,9 +62,9 @@ embGeometry_init(int type_in)
 }
 
 /**
- * @brief 
- * 
- * @param obj 
+ * @brief Free the memory occupied by a non-stitch geometry object.
+ *
+ * @param obj Pointer to geometry memory.
  */
 void
 embGeometry_free(EmbGeometry *obj)
@@ -85,10 +85,10 @@ embGeometry_free(EmbGeometry *obj)
 }
 
 /**
- * @brief 
- * 
- * @param obj 
- * @param delta 
+ * @brief Translate \a obj by the vector \a delta.
+ *
+ * @param obj A pointer to the geometry memory.
+ * @param delta A vector in the 0.1mm scale to offset the geometry by.
  */
 void
 embGeometry_move(EmbGeometry *obj, EmbVector delta)
@@ -112,10 +112,14 @@ embGeometry_move(EmbGeometry *obj, EmbVector delta)
 }
 
 /**
- * @brief 
- * 
- * @param obj 
- * @return EmbRect 
+ * @brief Calculate the bounding box of geometry \a obj based on what kind of
+ * geometric object it is.
+ *
+ * @param obj A pointer to the geometry memory.
+ * @return EmbRect The bounding box in the same scale as the input geometry.
+ *
+ * In the case of a failure the bounding box returned is always the unit square
+ * with top left corner at (0, 0).
  */
 EmbRect
 embGeometry_boundingRect(EmbGeometry *obj)
@@ -129,9 +133,9 @@ embGeometry_boundingRect(EmbGeometry *obj)
         setRect(arcRect);
         */
     }
-    r.top = 1.0;
+    r.top = 0.0;
+    r.left = 0.0;
     r.bottom = 1.0;
-    r.left = 1.0;
     r.right = 1.0;
     /*
     "Base"
@@ -144,9 +148,11 @@ embGeometry_boundingRect(EmbGeometry *obj)
 }
 
 /**
- * @brief 
- * 
+ * @brief Toggle the rubber mode of the object.
+ *
  * @param obj 
+ *
+ * \todo Review. This could be controlled by a simple flag.
  */
 void
 embGeometry_vulcanize(EmbGeometry *obj)

@@ -1062,15 +1062,16 @@ embPattern_combine(EmbPattern *p1, EmbPattern *p2)
 /**
  * @brief 
  * 
- * @param p 
- * @param arc 
- * @param thread_index 
- * @param style 
+ * \a p 
+ * \a arc 
+ * \a thread_index 
+ * \a style 
  */
 void
 embPattern_stitchArc(EmbPattern *p, EmbArc arc, int thread_index, int style)
 {
-
+    printf("DEBUG stitchArc (unfinished): %f %f %d %d\n",
+        p->home.x, arc.start.x, thread_index, style);
 }
 
 /**
@@ -1078,8 +1079,8 @@ embPattern_stitchArc(EmbPattern *p, EmbArc arc, int thread_index, int style)
  * 
  * @param p 
  * @param circle 
- * @param thread_index 
- * @param style 
+ * \a thread_index 
+ * \a style 
  *
  * style determines:
  *     stitch density
@@ -1146,7 +1147,8 @@ embPattern_stitchCircle(EmbPattern *p, EmbCircle circle, int thread_index, int s
 void
 embPattern_stitchEllipse(EmbPattern *p, EmbEllipse ellipse, int thread_index, int style)
 {
-
+    printf("DEBUG stitchEllipse: %f %f %d %d\n",
+        p->home.x, ellipse.center.x, thread_index, style);
 }
 
 /**
@@ -1160,9 +1162,10 @@ embPattern_stitchEllipse(EmbPattern *p, EmbEllipse ellipse, int thread_index, in
  * \todo finish stitch path
  */
 void
-embPattern_stitchPath(EmbPattern *p, EmbPath rect, int thread_index, int style)
+embPattern_stitchPath(EmbPattern *p, EmbPath path, int thread_index, int style)
 {
-
+    printf("DEBUG stitchPath: %f %d %d %d\n",
+        p->home.x, path.pointList->count, thread_index, style);
 }
 
 /**
@@ -1176,9 +1179,10 @@ embPattern_stitchPath(EmbPattern *p, EmbPath rect, int thread_index, int style)
  * \todo finish stitch polygon
  */
 void
-embPattern_stitchPolygon(EmbPattern *p, EmbPolygon rect, int thread_index, int style)
+embPattern_stitchPolygon(EmbPattern *p, EmbPolygon polygon, int thread_index, int style)
 {
-
+    printf("DEBUG stitchPolygon: %f %d %d %d\n",
+        p->home.x, polygon.pointList->count, thread_index, style);
 }
 
 /**
@@ -1192,9 +1196,10 @@ embPattern_stitchPolygon(EmbPattern *p, EmbPolygon rect, int thread_index, int s
  * \todo finish stitch polyline
  */
 void
-embPattern_stitchPolyline(EmbPattern *p, EmbPolyline rect, int thread_index, int style)
+embPattern_stitchPolyline(EmbPattern *p, EmbPolyline polyline, int thread_index, int style)
 {
-
+    printf("DEBUG stitchPolyline: %f %d %d %d\n",
+        p->home.x, polyline.pointList->count, thread_index, style);
 }
 
 /**
@@ -1242,6 +1247,8 @@ embPattern_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int style)
 void
 embPattern_stitchText(EmbPattern *p, EmbRect rect, int thread_index, int style)
 {
+    printf("DEBUG: %f %f %d %d",
+        p->home.x, rect.top, thread_index, style);
 }
 
 /**

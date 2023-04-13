@@ -511,10 +511,17 @@ int check_header_present(FILE* file, int minimum_header_length);
 
 unsigned short fread_uint16(FILE *file);
 short fread_int16(FILE* f);
+int fread_int32_be(FILE* f);
 void safe_free(void *data);
 void embInt_read(FILE* f, char *label, void *b, int mode);
  
+void binaryWriteUIntBE(FILE* f, unsigned int data);
 void binaryWriteUInt(FILE* f, unsigned int data);
+void binaryWriteIntBE(FILE* f, int data);
+void binaryWriteInt(FILE* f, int data);
+void binaryWriteUShort(FILE* f, unsigned short data);
+void binaryWriteUShortBE(FILE* f, unsigned short data);
+void binaryWriteShort(FILE* f, short data);
 
 bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize);
 unsigned int readFullSector(FILE* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);

@@ -13,6 +13,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Data Stitch Embroidery Format (.stx)
+\addindex stx
+
+The Data Stitch stx format is stitch-only.
+
+ */
+
 int
 stxReadThread(StxThread* thread, FILE* file)
 {

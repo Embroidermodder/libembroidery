@@ -12,6 +12,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Brother Embroidery Format (.pec)
+\addindex pec
+\addindex Brother
+
+The Brother pec format is stitch-only.
+
+ */
+
 void
 readPecStitches(EmbPattern* pattern, FILE* file)
 {

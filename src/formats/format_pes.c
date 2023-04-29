@@ -13,6 +13,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+
+\subsection Brother Embroidery Format (.pes)
+\addindex pes
+\addindex Brother
+
+The Brother pes format is stitch-only.
+ */
+
 const char *pes_version_strings[] = {
     "#PES0001",
     "#PES0020",

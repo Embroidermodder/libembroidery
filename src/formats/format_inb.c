@@ -11,6 +11,16 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection inbro-inb-format Inbro Embroidery Format (.inb)
+\addindex inb
+\addindex Inbro
+
+Stitch Only Format.
+
+ */
+
 /* ---------------------------------------------------------------- */
 /* format inb */
 

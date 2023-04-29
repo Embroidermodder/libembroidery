@@ -1,5 +1,5 @@
 /*
- * VP3 FORMAT
+ * MIT FORMAT
  * This file is part of libembroidery.
  *
  * Copyright 2018-2023 The Embroidermodder Team
@@ -10,6 +10,15 @@
 #include <math.h>
 
 #include "../embroidery_internal.h"
+
+/**
+ *
+\subsection mitsubishi-mit-format Mitsubishi Embroidery Format (.mit)
+\addindex mit
+\addindex Mitsubishi
+
+Stitch Only Format.
+ */
 
 char
 readMit(EmbPattern* pattern, FILE* file)

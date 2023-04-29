@@ -13,6 +13,17 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection drawing-dxf-format Drawing Exchange Format (.dxf)
+\addindex dxf
+\addindex AutoCAD
+\addindex AutoDesk
+
+Graphics format for drawing files designed and used by AudoDesk for their AutoCAD program. \cite{dxf_reference
+
+ */
+
 void
 readLine(FILE* file, char *str)
 {

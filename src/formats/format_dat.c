@@ -11,6 +11,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ * \file The Barudan Embroidery Format (.dat)
+ * \addindex dat
+ * \addindex Barudan
+ * 
+ * Stitch Only Format.
+ */
+
 char
 readDat(EmbPattern* pattern, FILE* file)
 {

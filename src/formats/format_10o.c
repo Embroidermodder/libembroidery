@@ -11,6 +11,17 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ * \file format_10o.c The Toyota Embroidery Format (.100)
+ * \addindex 100
+ * \addindex Toyota
+ *
+ * The Toyota 100 format is a stitch-only format that
+ * uses an external color file.
+ *
+ * The stitch encoding is in 4 byte chunks.
+ */
+
 char
 read10o(EmbPattern* pattern, FILE* file)
 {

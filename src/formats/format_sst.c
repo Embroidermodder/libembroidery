@@ -11,6 +11,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Sunstar Embroidery Format (.sst)
+\addindex sst
+\addindex Sunstar
+
+The Sunstar sst format is stitch-only.
+
+ */
+
 char
 readSst(EmbPattern* pattern, FILE* file)
 {

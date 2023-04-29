@@ -16,10 +16,8 @@
 #include "embroidery_internal.h"
 
 /**
- * @brief 
- * 
- * @param type 
- * @return EmbArray* 
+ * Allocates memory for an EmbArray of the type determined by
+ * the argument \a type.
  */
 EmbArray*
 embArray_create(int type)
@@ -44,15 +42,14 @@ embArray_create(int type)
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @return int 
+ * Resizes the array \a a to be CHUNK_SIZE entries longer
+ * if and only if the amount of room left is less than
+ * 3 entries.
  */
 int
 embArray_resize(EmbArray *a)
 {
-    if (a->count < a->length) {
+    if (a->count < a->length - 3) {
         return 1;
     }
     a->length += CHUNK_SIZE;
@@ -84,10 +81,7 @@ embArray_resize(EmbArray *a)
 }
 
 /**
- * @brief 
- * 
- * @param dst 
- * @param src 
+ * Copies all entries in the EmbArray struct from \a src to \a dst.
  */
 void
 embArray_copy(EmbArray *dst, EmbArray *src)
@@ -112,11 +106,8 @@ embArray_copy(EmbArray *dst, EmbArray *src)
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @return int 
+ * Add an arc \a b to the EmbArray \a a and it returns if the
+ * element was successfully added.
  */
 int
 embArray_addArc(EmbArray *a, EmbArc b)
@@ -131,11 +122,8 @@ embArray_addArc(EmbArray *a, EmbArc b)
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @return int 
+ * Add a circle \a b to the EmbArray \a a and it returns if the
+ * element was successfully added.
  */
 int
 embArray_addCircle(EmbArray *a, EmbCircle b)
@@ -150,11 +138,8 @@ embArray_addCircle(EmbArray *a, EmbCircle b)
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @return int 
+ * Add an ellipse \a b to the EmbArray \a a and it returns if the
+ * element was successfully added.
  */
 int
 embArray_addEllipse(EmbArray *a, EmbEllipse b)
@@ -169,11 +154,8 @@ embArray_addEllipse(EmbArray *a, EmbEllipse b)
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @return int 
+ * Add a flag \a b to the EmbArray \a a and it returns if the
+ * element was successfully added.
  */
 int
 embArray_addFlag(EmbArray *a, EmbFlag b)
@@ -188,11 +170,8 @@ embArray_addFlag(EmbArray *a, EmbFlag b)
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @return int 
+ * Add a line \a b to the EmbArray \a a and it returns if the
+ * element was successfully added.
  */
 int
 embArray_addLine(EmbArray *a, EmbLine b)
@@ -207,11 +186,8 @@ embArray_addLine(EmbArray *a, EmbLine b)
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @return int 
+ * Add a path \a b to the EmbArray \a a and it returns if the
+ * element was successfully added.
  */
 int
 embArray_addPath(EmbArray *a, EmbPath b)
@@ -226,11 +202,8 @@ embArray_addPath(EmbArray *a, EmbPath b)
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @return int 
+ * Add a point \a b to the EmbArray \a a and it returns if the
+ * element was successfully added.
  */
 int
 embArray_addPoint(EmbArray *a, EmbPoint b)
@@ -245,11 +218,8 @@ embArray_addPoint(EmbArray *a, EmbPoint b)
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @return int 
+ * Add a polyline \a b to the EmbArray \a a and it returns if the
+ * element was successfully added.
  */
 int
 embArray_addPolyline(EmbArray *a, EmbPolyline b)
@@ -264,11 +234,8 @@ embArray_addPolyline(EmbArray *a, EmbPolyline b)
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @return int 
+ * Add a polygon \a b to the EmbArray \a a and it returns if the
+ * element was successfully added.
  */
 int
 embArray_addPolygon(EmbArray *a, EmbPolygon b)
@@ -283,11 +250,8 @@ embArray_addPolygon(EmbArray *a, EmbPolygon b)
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @return int 
+ * Add a rectangle \a b to the EmbArray \a a and it returns if the
+ * element was successfully added. 
  */
 int
 embArray_addRect(EmbArray *a, EmbRect b)
@@ -302,11 +266,8 @@ embArray_addRect(EmbArray *a, EmbRect b)
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @return int 
+ * Add a stitch \a b to the EmbArray \a a and it returns if the
+ * element was successfully added.
  */
 int
 embArray_addStitch(EmbArray *a, EmbStitch b)
@@ -320,11 +281,8 @@ embArray_addStitch(EmbArray *a, EmbStitch b)
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @return int 
+ * Add a vector \a b to the EmbArray \a a and it returns if the
+ * element was successfully added. 
  */
 int
 embArray_addVector(EmbArray *a, EmbVector b)
@@ -339,9 +297,7 @@ embArray_addVector(EmbArray *a, EmbVector b)
 }
 
 /**
- * @brief 
- * 
- * @param a 
+ * Free the memory of EmbArray \a a, recursively if necessary.
  */
 void
 embArray_free(EmbArray* a)

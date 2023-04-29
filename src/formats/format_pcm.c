@@ -11,6 +11,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection pfaff-pcm-format Pfaff Embroidery Format (.pcm)
+\addindex pcm
+\addindex Pfaff
+
+The Pfaff pcm format is stitch-only.
+ */
+
 char
 readPcm(EmbPattern* pattern, FILE* file)
 {

@@ -12,6 +12,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+
+\subsection Pfaff Embroidery Format (.pcs)
+\addindex pcs
+\addindex Pfaff
+
+The Pfaff pcs format is stitch-only.
+ */
+
 char
 readPcs(EmbPattern* pattern, const char* fileName, FILE* file)
 {

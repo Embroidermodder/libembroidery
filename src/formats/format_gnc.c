@@ -11,6 +11,16 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection great-gnc-format Great Notions Embroidery Format (.gnc)
+\addindex gnc
+\addindex Great Notions
+
+Stitch Only Format.
+ *
+ */
+
 char
 readGnc(EmbPattern* pattern, FILE* file)
 {

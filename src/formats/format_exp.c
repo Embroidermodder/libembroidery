@@ -11,6 +11,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection melco-exp-format Melco Embroidery Format (.exp)
+\addindex exp
+\addindex Melco
+
+Stitch Only Format.
+ */
+
 char
 expDecode(unsigned char a1)
 {

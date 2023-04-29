@@ -11,6 +11,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+
+\subsection Janome Embroidery Format (.sew)
+\addindex sew
+\addindex Janome
+
+The Janome sew format is stitch-only.
+ */
 
 /* ---------------------------------------------------------------- */
 /* format sew */

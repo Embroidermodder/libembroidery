@@ -12,13 +12,75 @@
 
 #include "../embroidery_internal.h"
 
-
-/* ---------------------------------------------------------------- */
-/* format dst */
-
-/* .DST (Tajima) embroidery file read/write routines
+/**
+ * \file format_dst.c
+ *
+ * .DST (Tajima) embroidery file read/write routines
  * Format comments are thanks to tspilman@dalcoathletic.com who's
  * notes appeared at http://www.wotsit.org under Tajima Format.
+
+\subsection tajima-dst-format Tajima Embroidery Format (.dst)
+\addindex dst
+\addindex Tajima
+
+* Stitch Only Format.
+* [X] Basic Read Support
+* [X] Basic Write Support
+* [ ] Well Tested Read
+* [ ] Well Tested Write
+
+.DST (Tajima) embroidery file read/write routines
+Format comments are thanks to [tspilman@dalcoathletic.com](tspilman@dalcoathletic.com) who's
+notes appeared at [http://www.wotsit.org](http://www.wotsit.org) under Tajima Format.
+
+Other references: \cite kde_tajima , \cite acatina .
+
+\subsubsection dst-header Header
+
+The header contains general information about the design. It is in lines of ASCII, so if you open a DST file as a text file, it's the only part that's easy to read. The line ending symbol is  `0x0D}. The header is necessary for the file to be read by most softwares and hardwares.
+
+The header is 125 bytes of data followed by padding spaces to make it 512 bytes in total.
+
+The lines are as follows.
+
+| *Label* | *Size* | *Description* | *Example* |
+|----|----|----|----|
+| `LA:` | 17 | The design name with no path or extension. The space reserved is 16 characters, but the name must not be longer than 8 and be padded to 16 with spaces (0x20). | `"LA:Star            "` |
+| `ST:` | 8 | The stitch count. An integer in the format `%07d`, that is: a 7 digit number padded by leading zeros. This is the total accross all possible stitch flags. | |
+| `CO:` | 4 | The number of color changes (not to be confused with thread count, an all black design we would have the record \textbf{000}). An integer in the format  `%03d`, that is: a 3 digit number padded by leading zeros. | |
+| `+X:` | 6 | The extent of the pattern in the postitive x direction in millimeters. An integer in the format  `%05d`, that is: a 5 digit number padded by leading zeros. | |
+| `-X:` | 6 | The extent of the pattern in the negative x direction in millimeters. An integer in the format  `%05d`, that is: a 5 digit integer padded by leading zeros. | |
+| `+Y:` | 6 | The extent of the pattern in the postitive y direction in millimeters. An integer in the format  `%05d`, that is: a 5 digit integer padded by leading zeros. | |
+| `-Y:` | 6 | The extent of the pattern in the negative y direction in millimeters. An integer in the format  `%05d`, that is: a 5 digit integer padded by leading zeros. | |
+| `AX:` | 7 | The difference of the end from the start in the x direction in 0.1mm, the first char should be the sign, followed by an integer in the format `%05d`, that is: a 5 digit integer padded by leading zeros. | |
+| `AY:` | 7 | The difference of the end from the start in the y direction in 0.1mm, the first char should be the sign, followed by an integer in the format `%05d`, that is: a 5 digit integer padded by leading zeros. | |
+| `MX:` | 7 | The x co-ordinate of the last point in the previous file should the design span multiple files. Like AX, it is the sign, followed by a 5 digit integer. If we have a one file design set it to zero. | |
+| `MY:` | 7 | The y co-ordinate of the last point in the previous file should the design span multiple files. Like AY, it is the sign, followed by a 5 digit integer. If we have a one file design set it to zero. | |
+| `PD:` | 10 | Information about multivolume designs. | |
+
+\subsubsection dst-stitch-data Stitch Data
+
+Uses 3 byte per stitch encoding with the format as follows:
+
+| *Bit* | *7* | *6* | *5* | *4* | *3* | *2* | *1* | *0* |
+|-------|-----|-----|-----|-----|-----|-----|-----|-----|
+| Byte 0 | y+1 | y-1 | y+9 | y-9 | x-9 | x+9 | x-1 | x+1 |
+| Byte 1 | y+3 | y-3 | y+27 | y-27 | x-27 | x+27 | x-3 | x+3 |
+| Byte 2 | jump | color change | y+81 | y-81 | x-81 | x+81 | set | set |
+
+T01 and Tap appear to use Tajima Ternary.
+ 
+Where the stitch type is determined as:
+
+* Normal Stitch `0b00000011 0x03`
+* Jump Stitch `0b10000011 0x83`
+* Stop/Change Color `0b11000011 0xC3`
+* End Design `0b11110011 0xF3`
+
+Inclusive or'ed with the last byte.
+
+Note that the max stitch length is the largest sum of $1+3+9+27+81=121$ where the unit length is 0.1mm so 12.1mm. The coordinate system is right handed.
+ *
  */
 
 int decode_record_flags(unsigned char b2)

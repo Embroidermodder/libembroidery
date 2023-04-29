@@ -12,6 +12,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection ThredWorks Embroidery Format (.thr)
+\addindex thr
+\addindex ThreadWorks
+
+The ThreadWorks thr format is stitch-only.
+ */
+
 /*
  * bit definitions for attributes of stitch
  * 0-3     stitch color

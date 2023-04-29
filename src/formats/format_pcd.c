@@ -12,6 +12,22 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection pfaff-pcd-format Pfaff PCD File Format (.pcd)
+\addindex pcd
+\addindex Pfaff
+
+Stitch Only Format.
+
+The format uses a signed 3 byte-length number type.
+
+See the description here ([5](5)) for the overview of the format.
+
+For an example of the format see ([11](11)).
+
+ */
+
 char
 readPcd(EmbPattern* pattern, const char *fileName, FILE* file)
 {

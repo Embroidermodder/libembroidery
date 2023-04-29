@@ -1,13 +1,14 @@
-/**
+/*
  * This file is part of libembroidery.
  *
- * Copyright 2018-2022 The Embroidermodder Team
+ * Copyright 2018-2023 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
+ */
+
+/**
+ *  \file compress.c
  *
- * This file contains all the read and write functions for the
- * library.
- *
- *******************************************************************
+ *  This is a work in progress.
  *
  *  Thanks to Jason Weiler for describing the binary formats of the HUS and
  *  VIP formats at:
@@ -24,7 +25,6 @@
  *  https://stackoverflow.com/questions/7852670/greenleaf-archive-library
  *
  *  This is based on their work.
- *******************************************************************************
  */
 
 #include <stdio.h>
@@ -33,18 +33,9 @@
 
 #include "embroidery_internal.h"
 
-/* This is a work in progress.
- * ---------------------------
- */
-
 /**
- * @brief 
- * 
- * @param data 
- * @param length 
- * @param output 
- * @param output_length 
- * @return int
+ * \a data \a length \a output \a output_length .
+ * Returns whether it was successful as an int.
  *
  * This avoids the now unnecessary compression by placing a
  * minimal header of 6 bytes and using only literals in the
@@ -66,9 +57,8 @@ int hus_compress(char *data, int length, char *output, int *output_length)
 }
 
 /**
- * @brief 
  * These next 2 functions represent the Huffman class in tartarize's code.
- * @param h 
+ * \a h 
  */
 void
 huffman_build_table(huffman *h)
@@ -103,11 +93,8 @@ huffman_build_table(huffman *h)
 int huffman_lookup_data[2];
 
 /**
- * @brief 
- * 
- * @param h 
- * @param byte_lookup 
- * @return int* 
+ * Lookup \a byte_lookup in huffman table \a h return result
+ * as two bytes using the memory huffman_lookup_data.
  */
 int *huffman_lookup(huffman h, int byte_lookup)
 {
@@ -134,11 +121,8 @@ void compress_init()
 }
 
 /**
- * @brief 
- * 
- * @param c 
- * @param length 
- * @return int 
+ * \a c \a length 
+ * Returns .
  */
 int
 compress_get_bits(compress *c, int length)
@@ -167,11 +151,7 @@ compress_get_bits(compress *c, int length)
 }
 
 /**
- * @brief 
- * 
- * @param c 
- * @param bit_count 
- * @return int 
+ * \a c \a bit_count . Returns.
  */
 int
 compress_pop(compress *c, int bit_count)
@@ -182,11 +162,7 @@ compress_pop(compress *c, int bit_count)
 }
 
 /**
- * @brief 
- * 
- * @param c 
- * @param bit_count 
- * @return int 
+ * \a c \a bit_count. Returns.
  */
 int
 compress_peek(compress *c, int bit_count)
@@ -195,10 +171,7 @@ compress_peek(compress *c, int bit_count)
 }
 
 /**
- * @brief 
- * 
- * @param c 
- * @return int 
+ * \a c. Returns.
  */
 int
 compress_read_variable_length(compress *c)
@@ -221,9 +194,7 @@ compress_read_variable_length(compress *c)
 }
 
 /**
- * @brief 
- * 
- * @param c 
+ * \a c  . Returns.
  */
 void
 compress_load_character_length_huffman(compress *c)
@@ -249,9 +220,7 @@ compress_load_character_length_huffman(compress *c)
 }
 
 /**
- * @brief 
- * 
- * @param c 
+ * Load character table to compress struct \a c. Returns nothing.
  */
 void
 compress_load_character_huffman(compress *c)
@@ -286,9 +255,7 @@ compress_load_character_huffman(compress *c)
 }
 
 /**
- * @brief 
- * 
- * @param c 
+ * \a c . Returns nothing.
  */
 void
 compress_load_distance_huffman(compress *c)
@@ -308,9 +275,7 @@ compress_load_distance_huffman(compress *c)
 }
 
 /**
- * @brief 
- * 
- * @param c 
+ * \a c . Returns nothing.
  */
 void
 compress_load_block(compress *c)
@@ -322,10 +287,7 @@ compress_load_block(compress *c)
 }
 
 /**
- * @brief 
- * 
- * @param c 
- * @return int 
+ * \a c . Returns the token as an int.
  */
 int
 compress_get_token(compress *c)
@@ -341,10 +303,7 @@ compress_get_token(compress *c)
 }
 
 /**
- * @brief 
- * 
- * @param c 
- * @return int 
+ * \a c . Returns the position as an int.
  */
 int
 compress_get_position(compress *c)
@@ -361,13 +320,8 @@ compress_get_position(compress *c)
 }
 
 /**
- * @brief 
- * 
- * @param data 
- * @param length 
- * @param output 
- * @param output_length 
- * @return int 
+ * \a data \a length \a output \a output_length .
+ * Returns whether the decompression was successful.
  */
 int
 hus_decompress(char *data, int length, char *output, int *output_length)

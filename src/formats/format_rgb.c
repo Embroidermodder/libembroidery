@@ -12,6 +12,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection RGB Color File (.rgb)
+\addindex rgb
+
+The RGB format is a color-only format to act as an external color file for other formats.
+
+ */
+
 char
 readRgb(EmbPattern* pattern, FILE* file)
 {

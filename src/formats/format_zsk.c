@@ -9,6 +9,14 @@
 #include <stdio.h>
 #include <string.h>
 
+/**
+ * \file format_zsk.c The ZSK USA Embroidery Format (.zsk)
+ * \addindex zsk
+ * \addindex ZSK USA
+ *
+ * The ZSK USA zsk format is stitch-only.
+ */
+
 #include "../embroidery_internal.h"
 
 char

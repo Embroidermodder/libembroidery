@@ -11,6 +11,17 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection sierra-eys-format Sierra Expanded Embroidery Format (.eys)
+\addindex eys
+\addindex Sierra Expanded
+
+Stitch Only Format.
+
+Smoothie G-Code Embroidery Format (.fxy)?
+ */
+
 char
 readEys(EmbPattern* pattern, FILE* file)
 {

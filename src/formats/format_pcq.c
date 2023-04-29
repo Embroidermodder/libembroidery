@@ -12,6 +12,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Pfaff Embroidery Format (.pcq)
+\addindex pcq
+\addindex Pfaff
+
+The Pfaff pcq format is stitch-only.
+ */
+
 char
 readPcq(EmbPattern* pattern, const char* fileName, FILE* file)
 {

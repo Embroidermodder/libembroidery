@@ -6,6 +6,10 @@ extern "C" {
 #endif
 
 /**
+ * \file embroidery.h
+ */
+
+/**
  * @brief 
  * 
  */

@@ -12,6 +12,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Barudan Embroidery Format (.u00)
+\addindex u00
+\addindex Barudan
+
+The Barudan u00 format is stitch-only.
+ */
+
 char
 readU00(EmbPattern* pattern, FILE* file)
 {

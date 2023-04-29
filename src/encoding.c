@@ -17,8 +17,9 @@
 
 void write_24bit(FILE* file, int);
 
-/* ENCODING
- *******************************************************************
+/**
+ * \file encoding.c
+ *
  * The functions in this file are grouped together to aid the developer's
  * understanding of the similarities between the file formats. This also helps
  * reduce errors between reimplementation of the same idea.
@@ -33,7 +34,7 @@ void write_24bit(FILE* file, int);
  * @brief Converts a 6 digit hex string (I.E. "00FF00")
  * into an EmbColor and returns it.
  * 
- * @param val 6 byte code describing the color as a hex string, doesn't require null termination.
+ * \a val 6 byte code describing the color as a hex string, doesn't require null termination.
  * @return EmbColor the same color as our internal type.
  */
 EmbColor
@@ -63,10 +64,8 @@ embColor_fromHexStr(char* val)
 }
 
 /**
- * @brief Reverses the byte order for 2 or 4 byte arrays.
- * 
- * @param b The pointer to the data to be processed.
- * @param bytes The number of bytes to reverse.
+ * Reverses the byte order of \a bytes number of bytes
+ * at memory location \a b. Only works for 2 or 4 byte arrays.
  */
 void
 reverse_byte_order(void *b, int bytes)
@@ -88,13 +87,9 @@ reverse_byte_order(void *b, int bytes)
 }
 
 /**
- * @brief 
- * 
- * @param b 
- * @param x 
- * @param y 
- * @param flags 
- * @return int 
+ * \a b \a x \a y \a flags .
+ *
+ * \todo remove the unused return argument.
  */
 int
 decode_t01_record(unsigned char b[3], int *x, int *y, int *flags)
@@ -124,12 +119,8 @@ decode_t01_record(unsigned char b[3], int *x, int *y, int *flags)
 }
 
 /**
- * @brief 
- * 
- * @param b 
- * @param x 
- * @param y 
- * @param flags 
+ * Encode into bytes \a b the values of the x-position \a x,
+ * y-position \a y and the \a flags.
  */
 void
 encode_t01_record(unsigned char b[3], int x, int y, int flags)
@@ -153,12 +144,12 @@ encode_t01_record(unsigned char b[3], int x, int y, int flags)
 }
 
 /**
- * @brief 
+ * Encode the signed ternary of the tajima format into
+ * \a b the position values \a x and \a y.
  * 
- * @param b 
- * @param x 
- * @param y 
- * @return int 
+ * If the values of \a x or \a y fall outside of the
+ * valid range of -121 and +121 then it returns 0 and
+ * 1.
  */
 int
 encode_tajima_ternary(unsigned char b[3], int x, int y)
@@ -273,11 +264,10 @@ encode_tajima_ternary(unsigned char b[3], int x, int y)
 }
 
 /**
- * @brief 
- * 
- * @param b 
- * @param x 
- * @param y 
+ * Decode the signed ternary of the tajima format from
+ * \a b to the position values \a x and \a y.
+ *
+ * There is no return argument.
  */
 void
 decode_tajima_ternary(unsigned char b[3], int *x, int *y)
@@ -347,12 +337,7 @@ decode_tajima_ternary(unsigned char b[3], int *x, int *y)
 }
 
 /**
- * @brief 
- * 
- * @param file 
- * @param dx 
- * @param dy 
- * @param flags 
+ * \a file \a dx \a dy \a flags 
  */
 void pfaffEncode(FILE* file, int dx, int dy, int flags)
 {
@@ -378,12 +363,8 @@ void pfaffEncode(FILE* file, int dx, int dy, int flags)
 }
 
 /**
- * @brief 
- * 
- * @param a1 
- * @param a2 
- * @param a3 
- * @return EmbReal 
+ * Decode the bytes \a a1, \a a2 and \a a3 .
+ * Returns the EmbReal floating-point value.
  */
 EmbReal
 pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3)
@@ -398,7 +379,7 @@ pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 /**
  * @brief 
  * 
- * @param value 
+ * \a value 
  * @return unsigned char 
  */
 unsigned char
@@ -413,7 +394,7 @@ mitEncodeStitch(EmbReal value)
 /**
  * @brief 
  * 
- * @param value 
+ * \a value 
  * @return int 
  */
 int
@@ -428,7 +409,7 @@ mitDecodeStitch(unsigned char value)
 /**
  * @brief 
  * 
- * @param value 
+ * \a value 
  * @return int 
  */
 int
@@ -438,12 +419,7 @@ decodeNewStitch(unsigned char value)
 }
 
 /**
- * @brief 
- * 
- * @param f 
- * @param label 
- * @param b 
- * @param mode 
+ * \a f \a label \a b \a mode 
  *
  * Read and write system for multiple byte types.
  *
@@ -485,12 +461,7 @@ embInt_read(FILE* f, char *label, void *b, int mode)
 }
 
 /**
- * @brief 
- * 
- * @param f 
- * @param label 
- * @param b 
- * @param mode 
+ * \a f \a label \a b \a mode 
  */
 void
 embInt_write(FILE* f, char *label, void *b, int mode)

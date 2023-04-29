@@ -12,6 +12,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+
+\subsection Husqvarna Viking Embroidery Format (.shv)
+\addindex shv
+\addindex Husqvarna Viking
+
+The Husqvarna Viking shv format is stitch-only.
+ */
+
 char
 shvDecode(unsigned char inputByte)
 {

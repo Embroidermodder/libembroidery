@@ -74,8 +74,8 @@ const int littleEndianByteOrderMark = 0xFFFE;
 /**
  * @brief 
  * 
- * @param v 
- * @param label 
+ * \a v 
+ * \a label 
  *
  * move to vector.c
  */
@@ -88,7 +88,7 @@ void embVector_print(EmbVector v, char *label)
 /**
  * @brief 
  * 
- * @param arc 
+ * \a arc 
  *
  * \todo move to arc.c
  */
@@ -169,8 +169,8 @@ const char *welcome_message = "EMBROIDER\n"
 /**
  * @brief 
  * 
- * @param file 
- * @param minimum_header_length 
+ * \a file 
+ * \a minimum_header_length 
  * @return int 
  *
  * Checks that there are enough bytes to interpret the header,
@@ -194,7 +194,7 @@ int check_header_present(FILE* file, int minimum_header_length)
 /**
  * @brief 
  * 
- * @param bcfFile 
+ * \a bcfFile 
  * @return unsigned int 
  */
 unsigned int
@@ -210,7 +210,7 @@ sectorSize(bcf_file* bcfFile)
 /**
  * @brief 
  * 
- * @param file 
+ * \a file 
  * @return int 
  */
 int
@@ -222,9 +222,9 @@ haveExtraDIFATSectors(bcf_file* file)
 /**
  * @brief 
  * 
- * @param bcfFile 
- * @param file 
- * @param sector 
+ * \a bcfFile 
+ * \a file 
+ * \a sector 
  * @return int 
  */
 int
@@ -237,8 +237,8 @@ seekToSector(bcf_file* bcfFile, FILE* file, const unsigned int sector)
 /**
  * @brief 
  * 
- * @param file 
- * @param bcfFile 
+ * \a file 
+ * \a bcfFile 
  */
 void
 parseDIFATSectors(FILE* file, bcf_file* bcfFile)
@@ -254,8 +254,8 @@ parseDIFATSectors(FILE* file, bcf_file* bcfFile)
 /**
  * @brief 
  * 
- * @param file 
- * @param bcfFile 
+ * \a file 
+ * \a bcfFile 
  * @return int 
  */
 int
@@ -298,9 +298,9 @@ bcfFile_read(FILE* file, bcf_file* bcfFile)
 /**
  * @brief Get the File object
  * 
- * @param bcfFile 
- * @param file 
- * @param fileToFind 
+ * \a bcfFile 
+ * \a file 
+ * \a fileToFind 
  * @return FILE* 
  */
 FILE*
@@ -340,7 +340,7 @@ GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind)
 /**
  * @brief 
  * 
- * @param bcfFile 
+ * \a bcfFile 
  */
 void
 bcf_file_free(bcf_file* bcfFile)
@@ -354,9 +354,9 @@ bcf_file_free(bcf_file* bcfFile)
 /**
  * @brief 
  * 
- * @param file 
- * @param fatSectors 
- * @param sectorSize 
+ * \a file 
+ * \a fatSectors 
+ * \a sectorSize 
  * @return bcf_file_difat* 
  */
 bcf_file_difat*
@@ -394,7 +394,7 @@ bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorS
 /**
  * @brief 
  * 
- * @param fat 
+ * \a fat 
  * @return unsigned int 
  */
 unsigned int
@@ -406,9 +406,9 @@ entriesInDifatSector(bcf_file_difat* fat)
 /**
  * @brief 
  * 
- * @param file 
- * @param bcfFile 
- * @param difatEntriesToRead 
+ * \a file 
+ * \a bcfFile 
+ * \a difatEntriesToRead 
  * @return unsigned int 
  */
 unsigned int
@@ -447,8 +447,8 @@ readFullSector(FILE* file, bcf_file_difat* bcfFile,
 /**
  * @brief 
  * 
- * @param file 
- * @param dir 
+ * \a file 
+ * \a dir 
  */
 void
 parseDirectoryEntryName(FILE* file, bcf_directory_entry* dir)
@@ -466,7 +466,7 @@ parseDirectoryEntryName(FILE* file, bcf_directory_entry* dir)
 /**
  * @brief 
  * 
- * @param maxNumberOfDirectoryEntries 
+ * \a maxNumberOfDirectoryEntries 
  * @return bcf_directory* 
  */
 bcf_directory*
@@ -484,7 +484,7 @@ CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries)
 /**
  * @brief 
  * 
- * @param file 
+ * \a file 
  * @return EmbTime 
  */
 EmbTime
@@ -508,7 +508,7 @@ parseTime(FILE* file)
 /**
  * @brief 
  * 
- * @param file 
+ * \a file 
  * @return bcf_directory_entry* 
  */
 bcf_directory_entry*
@@ -550,8 +550,8 @@ CompoundFileDirectoryEntry(FILE* file)
 /**
  * @brief 
  * 
- * @param file 
- * @param dir 
+ * \a file 
+ * \a dir 
  */
 void
 readNextSector(FILE* file, bcf_directory* dir)
@@ -578,7 +578,7 @@ readNextSector(FILE* file, bcf_directory* dir)
 /**
  * @brief 
  * 
- * @param dir 
+ * \a dir 
  */
 void
 bcf_directory_free(bcf_directory** dir)
@@ -602,7 +602,7 @@ bcf_directory_free(bcf_directory** dir)
 /**
  * @brief 
  * 
- * @param sectorSize 
+ * \a sectorSize 
  * @return bcf_file_fat* 
  */
 bcf_file_fat*
@@ -622,8 +622,8 @@ bcfFileFat_create(const unsigned int sectorSize)
 /**
  * @brief 
  * 
- * @param fat 
- * @param file 
+ * \a fat 
+ * \a file 
  */
 void
 loadFatFromSector(bcf_file_fat* fat, FILE* file)
@@ -642,7 +642,7 @@ loadFatFromSector(bcf_file_fat* fat, FILE* file)
 /**
  * @brief 
  * 
- * @param file 
+ * \a file 
  * @return bcf_file_header 
  */
 bcf_file_header
@@ -673,9 +673,9 @@ bcfFileHeader_read(FILE* file)
 /**
  * @brief 
  * 
- * @param lines 
- * @param thickness 
- * @param result 
+ * \a lines 
+ * \a thickness 
+ * \a result 
  */
 void
 embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSatinOutline* result)
@@ -768,8 +768,8 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
 /**
  * @brief 
  * 
- * @param result 
- * @param density 
+ * \a result 
+ * \a density 
  * @return EmbArray* 
  */
 EmbArray*
@@ -827,8 +827,8 @@ embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density)
 /**
  * @brief 
  * 
- * @param file 
- * @param x 
+ * \a file 
+ * \a x 
  */
 void
 write_24bit(FILE* file, int x)
@@ -844,8 +844,8 @@ write_24bit(FILE* file, int x)
 /**
  * @brief 
  * 
- * @param a 
- * @param b 
+ * \a a 
+ * \a b 
  * @return int 
  */
 int
@@ -861,9 +861,9 @@ embColor_distance(EmbColor a, EmbColor b)
 /**
  * @brief 
  * 
- * @param f 
- * @param c 
- * @param toRead 
+ * \a f 
+ * \a c 
+ * \a toRead 
  */
 void
 embColor_read(FILE *f, EmbColor *c, int toRead)
@@ -878,9 +878,9 @@ embColor_read(FILE *f, EmbColor *c, int toRead)
 /**
  * @brief 
  * 
- * @param f 
- * @param c 
- * @param toWrite 
+ * \a f 
+ * \a c 
+ * \a toWrite 
  */
 void
 embColor_write(FILE *f, EmbColor c, int toWrite)
@@ -901,9 +901,9 @@ embColor_write(FILE *f, EmbColor c, int toWrite)
  * then the index is saved and the remaining index is returned to the
  * caller.
  *
- * @param color  The EmbColor color to match.
- * @param colors The EmbThreadList pointer to start the search at.
- * @param mode   Is the argument an array of threads (0) or colors (1)?
+ * \a color  The EmbColor color to match.
+ * \a colors The EmbThreadList pointer to start the search at.
+ * \a mode   Is the argument an array of threads (0) or colors (1)?
  * @return closestIndex The entry in the ThreadList that matches.
  */
 int
@@ -925,9 +925,9 @@ embThread_findNearestColor(EmbColor color, EmbColor *color_list, int n_colors)
 /**
  * @brief 
  * 
- * @param color 
- * @param thread_list 
- * @param n_threads 
+ * \a color 
+ * \a thread_list 
+ * \a n_threads 
  * @return int 
  */
 int
@@ -968,9 +968,9 @@ embThread_getRandom(void)
 /**
  * @brief 
  * 
- * @param file 
- * @param buffer 
- * @param maxLength 
+ * \a file 
+ * \a buffer 
+ * \a maxLength 
  */
 void
 binaryReadString(FILE* file, char* buffer, int maxLength)
@@ -986,9 +986,9 @@ binaryReadString(FILE* file, char* buffer, int maxLength)
 /**
  * @brief 
  * 
- * @param file 
- * @param buffer 
- * @param stringLength 
+ * \a file 
+ * \a buffer 
+ * \a stringLength 
  */
 void
 binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength)
@@ -1025,9 +1025,9 @@ stringInArray(const char *s, const char **array)
 /**
  * @brief 
  * 
- * @param file 
- * @param line 
- * @param maxLength 
+ * \a file 
+ * \a line 
+ * \a maxLength 
  * @return int 
  */
 int
@@ -1064,9 +1064,9 @@ char const WHITESPACE[] = " \t\n\r";
 /**
  * @brief Get the trim bounds object
  * 
- * @param s 
- * @param firstWord 
- * @param trailingSpace 
+ * \a s 
+ * \a firstWord 
+ * \a trailingSpace 
  */
 void
 get_trim_bounds(char const *s, char const **firstWord, char const **trailingSpace)
@@ -1082,7 +1082,7 @@ get_trim_bounds(char const *s, char const **firstWord, char const **trailingSpac
 /**
  * @brief 
  * 
- * @param s 
+ * \a s 
  * @return char* 
  *
  * \todo decription
@@ -1106,8 +1106,8 @@ copy_trim(char const *s)
 /**
  * @brief Optimizes the number (\a num) for output to a text file and returns it as a string (\a str).
  * 
- * @param num 
- * @param str 
+ * \a num 
+ * \a str 
  * @return char* 
  */
 char*
@@ -1130,7 +1130,7 @@ emb_optOut(EmbReal num, char* str)
 /**
  * @brief 
  * 
- * @param t 
+ * \a t 
  */
 void
 embTime_initNow(EmbTime* t)
@@ -1155,7 +1155,7 @@ embTime_initNow(EmbTime* t)
 /**
  * @brief 
  * 
- * @param t 
+ * \a t 
  * @return EmbTime 
  */
 EmbTime
@@ -1177,8 +1177,8 @@ divideByZero = divideByZero/divideByZero; /*TODO: wrap time() from time.h and ve
 /**
  * @brief 
  * 
- * @param result 
- * @param label 
+ * \a result 
+ * \a label 
  */
 void
 report(int result, char *label)
@@ -1195,7 +1195,7 @@ report(int result, char *label)
 /**
  * @brief 
  * 
- * @param level 
+ * \a level 
  */
 void
 testMain(int level)
@@ -1270,10 +1270,10 @@ testMain(int level)
 /**
  * @brief 
  * 
- * @param c 
- * @param p 
- * @param t0 
- * @param t1 
+ * \a c 
+ * \a p 
+ * \a t0 
+ * \a t1 
  */
 void
 testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
@@ -1360,19 +1360,19 @@ int testEmbCircle_2(void) {
 /**
  * @brief 
  * 
- * @param bulge 
- * @param arc 
- * @param centerX 
- * @param centerY 
- * @param radius 
- * @param diameter 
- * @param chord 
- * @param chordMidX 
- * @param chordMidY 
- * @param sagitta 
- * @param apothem 
- * @param incAngle 
- * @param clockwise 
+ * \a bulge 
+ * \a arc 
+ * \a centerX 
+ * \a centerY 
+ * \a radius 
+ * \a diameter 
+ * \a chord 
+ * \a chordMidX 
+ * \a chordMidY 
+ * \a sagitta 
+ * \a apothem 
+ * \a incAngle 
+ * \a clockwise 
  */
 void
 printArcResults(EmbReal bulge, EmbArc arc,
@@ -1549,7 +1549,7 @@ testEmbFormat(void)
 /**
  * @brief Create a test file 1 object
  * 
- * @param outf 
+ * \a outf 
  * @return int 
  */
 int
@@ -1591,7 +1591,7 @@ create_test_file_1(const char* outf)
 /**
  * @brief Create a test file 2 object
  * 
- * @param outf 
+ * \a outf 
  * @return int 
  */
 int
@@ -1630,7 +1630,7 @@ create_test_file_2(const char* outf)
 /**
  * @brief Create a test file 3 object
  * 
- * @param outf 
+ * \a outf 
  * @return int 
  */
 int
@@ -1707,7 +1707,7 @@ testThreadColor(void)
 /**
  * @brief 
  * 
- * @param fname 
+ * \a fname 
  * @return int 
  */
 int
@@ -1862,9 +1862,9 @@ formats(void)
 /**
  * @brief 
  * 
- * @param argv 
- * @param argc 
- * @param i 
+ * \a argv 
+ * \a argc 
+ * \a i 
  */
 void
 to_flag(char **argv, int argc, int i)
@@ -1901,8 +1901,8 @@ to_flag(char **argv, int argc, int i)
 /**
  * @brief 
  * 
- * @param argc 
- * @param argv 
+ * \a argc 
+ * \a argv 
  * @return int 
  */
 int
@@ -2107,8 +2107,8 @@ command_line_interface(int argc, char* argv[])
 /**
  * @brief 
  * 
- * @param argc 
- * @param argv 
+ * \a argc 
+ * \a argv 
  * @return int 
  */
 int main(int argc, char* argv[])

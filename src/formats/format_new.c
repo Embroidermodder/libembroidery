@@ -11,6 +11,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection ameco-new-format Ameco Embroidery Format (.new)
+\addindex new
+\addindex Ameco
+
+Stitch Only Format.
+ */
+
 char
 readNew(EmbPattern* pattern, FILE* file)
 {

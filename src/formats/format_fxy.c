@@ -11,6 +11,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection Fortron Embroidery Format (.fxy)
+\addindex fxy
+\addindex Fortron
+
+Stitch Only Format.
+ */
+
 char
 readFxy(EmbPattern* pattern, FILE* file)
 {

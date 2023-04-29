@@ -11,6 +11,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Brother Embroidery Format (.phc)
+\addindex phc
+\addindex Brother
+
+The Brother phc format is stitch-only.
+ */
+
 char
 readPhc(EmbPattern* pattern, FILE* file)
 {

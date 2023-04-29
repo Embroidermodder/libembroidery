@@ -11,6 +11,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Scalable Vector Graphics (.svg)
+\addindex svg
+
+The scalable vector graphics (SVG) format is a graphics format
+maintained by ...
+ */
+
 int svgCreator;
 
 int svgExpect;

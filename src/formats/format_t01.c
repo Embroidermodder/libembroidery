@@ -11,6 +11,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Pfaff Embroidery Format (.t01)
+\addindex t01
+\addindex Pfaff
+
+The Pfaff t01 format is stitch-only.
+ */
+
 char
 readT01(EmbPattern* pattern, FILE* file)
 {

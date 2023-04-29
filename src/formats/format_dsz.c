@@ -11,6 +11,17 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+
+\subsection zsk-dsz-format ZSK USA Embroidery Format (.dsz)
+\addindex dsz
+\addindex ZSK USA
+
+The ZSK USA dsz format is stitch-only.
+
+ */
+
 char
 readDsz(EmbPattern* pattern, FILE* file)
 {

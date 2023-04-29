@@ -11,6 +11,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ * \file format_art.c The Bernina Embroidery Format (.art)
+ * \addindex art
+ * \addindex Bernina
+ *
+ * We don't know much about this format. \todo Find a source.
+ */
+
 char
 readArt(EmbPattern* pattern, FILE* file)
 {

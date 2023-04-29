@@ -6,9 +6,10 @@
  *
  * This file contains all the read and write functions for the
  * library.
- *
- *******************************************************************
- *
+ */
+
+/**
+ * \file image.c
  * This backends to the stb libraries and nanosvg library.
  *
  * Use Python PEP7 for coding style.
@@ -21,12 +22,7 @@
 #include "embroidery_internal.h"
 
 /**
- * @brief 
- * 
- * @param file 
- * @param image 
- *
- * for the PES embedded
+ * Write a PES embedded \a image to the given \a file pointer.
  */
 void
 writeImage(FILE* file, unsigned char image[][48])
@@ -55,12 +51,8 @@ writeImage(FILE* file, unsigned char image[][48])
 }
 
 /**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @param size 
- * @return float 
+ * The distance between the arrays \a a and \a b of length
+ * \a size.
  */
 float
 image_diff(unsigned char *a, unsigned char *b, int size)
@@ -89,14 +81,12 @@ image_diff(unsigned char *a, unsigned char *b, int size)
 #include "nanosvg/src/nanosvgrast.h"
 
 /**
- * @brief 
- * 
- * @param p 
- * @param fname 
- * @return int 
+ * Render the pattern \a p to the file with name \a fname.
+ * Return whether it was successful as an int.
  *
  * Basic Render
  * ------------
+ *
  * Backends rendering to nanosvg/stb_image.
  *
  * The caller is responsible for the memory in p.
@@ -130,10 +120,7 @@ embPattern_render(EmbPattern *p, char *fname)
 }
 
 /**
- * @brief 
- * 
- * @param pattern 
- * @param fname 
+ * \a pattern \a fname 
  * @return int 
  *
  * Simulate the stitching of a pattern, using the image for rendering
@@ -147,10 +134,7 @@ embPattern_simulate(EmbPattern *pattern, char *fname)
 }
 
 /**
- * @brief 
- * 
- * @param width 
- * @param height 
+ * \a width \a height 
  * @return EmbImage 
  */
 EmbImage
@@ -165,10 +149,7 @@ embImage_create(int width, int height)
 }
 
 /**
- * @brief 
- * 
- * @param image 
- * @param fname 
+ * \a image \a fname 
  */
 void
 embImage_read(EmbImage *image, char *fname)
@@ -183,10 +164,7 @@ embImage_read(EmbImage *image, char *fname)
 }
 
 /**
- * @brief 
- * 
- * @param image 
- * @param fname 
+ * \a image \a fname 
  * @return int 
  */
 int
@@ -202,9 +180,7 @@ embImage_write(EmbImage *image, char *fname)
 }
 
 /**
- * @brief 
- * 
- * @param image 
+ * \a image 
  */
 void
 embImage_free(EmbImage *image)

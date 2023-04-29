@@ -11,6 +11,16 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection eltac-exy-format Eltac Embroidery Format (.exy)
+\addindex exy
+\addindex Eltac
+
+Stitch Only Format.
+
+ */
+
 int decode_exy_flags(unsigned char b2)
 {
     int returnCode = 0;

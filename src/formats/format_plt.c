@@ -11,6 +11,13 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection AutoCAD Embroidery Format (.plt)
+\addindex plt
+\addindex AutoCAD
+
+The AutoCAD plt format is stitch-only.
+ */
 
 /* ---------------------------------------------------------------- */
 /* format plt */

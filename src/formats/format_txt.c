@@ -12,6 +12,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Text File (.txt)
+\addindex txt
+
+The txt format is stitch-only and isn't associated with a specific company.
+
+ */
+
 char
 readTxt(EmbPattern* pattern, FILE* file)
 {

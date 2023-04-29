@@ -11,6 +11,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+
+\subsubsection Pfaff Embroidery Format (.t09)
+\addindex t09
+\addindex Pfaff
+
+The Pfaff t09 format is stitch-only.
+ */
+
 char
 readT09(EmbPattern* pattern, FILE* file)
 {

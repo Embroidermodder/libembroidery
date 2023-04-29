@@ -11,6 +11,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Barudan Embroidery Format (.u01)
+\addindex u01
+\addindex Barudan
+
+The Barudan u01 format is stitch-only.
+
+ */
+
 /* TODO: AFAIK this is a duplicate of U00. Review for differences and merge files and handle accordingly. */
 
 char

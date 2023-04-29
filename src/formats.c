@@ -134,7 +134,7 @@ const char imageWithFrame[38][48] = {
 /**
  * @brief 
  * 
- * @param data 
+ * \a data 
  */
 void
 safe_free(void *data)
@@ -148,8 +148,8 @@ safe_free(void *data)
 /**
  * @brief 
  * 
- * @param fileName 
- * @param ending 
+ * \a fileName 
+ * \a ending 
  * @return int 
  */
 int
@@ -184,7 +184,7 @@ embFormat_getExtension(const char *fileName, char *ending)
 /**
  * @brief 
  * 
- * @param fileName 
+ * \a fileName 
  * @return int 
  */
 int
@@ -206,7 +206,7 @@ emb_identify_format(const char *fileName)
 /**
  * @brief 
  * 
- * @param f 
+ * \a f 
  * @return short 
  */
 short
@@ -220,7 +220,7 @@ fread_int16(FILE* f)
 /**
  * @brief 
  * 
- * @param f 
+ * \a f 
  * @return unsigned short 
  *
  * \todo replace with embInt_read
@@ -236,7 +236,7 @@ fread_uint16(FILE* f)
 /**
  * @brief 
  * 
- * @param f 
+ * \a f 
  * @return int 
  *
  * \todo replace with embInt_read
@@ -252,7 +252,7 @@ fread_int32_be(FILE* f)
 /**
  * @brief 
  * 
- * @param f 
+ * \a f 
  * @return int 
  */
 void
@@ -267,8 +267,8 @@ fpad(FILE* file, char c, int n)
 /**
  * @brief 
  * 
- * @param f 
- * @param data
+ * \a f 
+ * \a data
  *
  * \todo replace with embInt_read
  */ 
@@ -281,8 +281,8 @@ binaryWriteShort(FILE* f, short data)
 /**
  * @brief 
  * 
- * @param f 
- * @param data
+ * \a f 
+ * \a data
  *
  * \todo replace with embInt_read
  */ 
@@ -295,8 +295,8 @@ binaryWriteUShort(FILE* f, unsigned short data)
 /**
  * @brief 
  * 
- * @param f 
- * @param data
+ * \a f 
+ * \a data
  *
  * \todo replace with embInt_read
  */ 
@@ -309,8 +309,8 @@ binaryWriteUShortBE(FILE* f, unsigned short data)
 /**
  * @brief 
  * 
- * @param f 
- * @param data
+ * \a f 
+ * \a data
  *
  * \todo replace with embInt_read
  */ 
@@ -323,8 +323,8 @@ binaryWriteInt(FILE* f, int data)
 /**
  * @brief 
  * 
- * @param f 
- * @param data
+ * \a f 
+ * \a data
  *
  * \todo replace with embInt_read
  */ 
@@ -337,8 +337,8 @@ binaryWriteIntBE(FILE* f, int data)
 /**
  * @brief 
  * 
- * @param f 
- * @param data
+ * \a f 
+ * \a data
  *
  * \todo replace with embInt_read
  */ 
@@ -351,8 +351,8 @@ binaryWriteUInt(FILE* f, unsigned int data)
 /**
  * @brief 
  * 
- * @param f 
- * @param data
+ * \a f 
+ * \a data
  *
  * \todo replace with embInt_read
  */ 
@@ -365,9 +365,9 @@ binaryWriteUIntBE(FILE* f, unsigned int data)
 /**
  * @brief 
  * 
- * @param pattern 
- * @param fileName 
- * @param format 
+ * \a pattern 
+ * \a fileName 
+ * \a format 
  * @return char 
  */
 char
@@ -594,9 +594,9 @@ embPattern_read(EmbPattern* pattern, const char *fileName, int format)
 /**
  * @brief 
  * 
- * @param pattern 
- * @param fileName 
- * @param format 
+ * \a pattern 
+ * \a fileName 
+ * \a format 
  * @return char 
  */
 char
@@ -828,8 +828,8 @@ embPattern_write(EmbPattern* pattern, const char *fileName, int format)
 /**
  * @brief 
  * 
- * @param pattern 
- * @param fileName 
+ * \a pattern 
+ * \a fileName 
  * @return char 
  */
 char
@@ -847,8 +847,8 @@ embPattern_readAuto(EmbPattern* pattern, const char* fileName)
 /**
  * @brief 
  * 
- * @param pattern 
- * @param fileName 
+ * \a pattern 
+ * \a fileName 
  * @return char 
  */
 char

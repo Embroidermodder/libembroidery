@@ -11,6 +11,13 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Brother Embroidery Format (.pem)
+\addindex pem
+\addindex Brother
+
+The Brother pem format is stitch-only.
+ */
 
 /* ---------------------------------------------------------------- */
 /* format pem */

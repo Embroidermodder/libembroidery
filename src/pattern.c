@@ -3,9 +3,12 @@
  *
  * Copyright 2018-2022 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
- *
+ */
+ 
+/**
+ * \file pattern.c
  * The file is for the management of the main struct: EmbPattern.
- *******************************************************************/
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,7 +18,7 @@
 #include "embroidery_internal.h"
 
 /**
- * @brief Returns a pointer to an EmbPattern. It is created on the heap.
+ * Returns a pointer to an EmbPattern. It is created on the heap.
  * The caller is responsible for freeing the allocated memory with
  * embPattern_free().
  * 
@@ -43,10 +46,7 @@ embPattern_create(void)
 }
 
 /**
- * @brief 
- * 
- * @param p 
- * @param length 
+ * \a p \a length 
  */
 void
 embPattern_hideStitchesOverLength(EmbPattern* p, int length)
@@ -73,10 +73,7 @@ embPattern_hideStitchesOverLength(EmbPattern* p, int length)
 }
 
 /**
- * @brief 
- * 
- * @param pattern 
- * @param thread 
+ * \a pattern \a thread 
  * @return int 
  */
 int
@@ -93,9 +90,7 @@ embPattern_addThread(EmbPattern *pattern, EmbThread thread)
 }
 
 /**
- * @brief 
- * 
- * @param p 
+ * \a p 
  */
 void
 embPattern_fixColorCount(EmbPattern* p)
@@ -131,10 +126,8 @@ embPattern_fixColorCount(EmbPattern* p)
 }
 
 /**
- * @brief Copies all of the Embstitch_list data to 
+ * Copies all of the Embstitch_list data to 
  * EmbPolylineObjectList data for pattern (\a p).
- * 
- * @param p 
  */
 void
 embPattern_copystitch_listToPolylines(EmbPattern* p)
@@ -182,7 +175,10 @@ embPattern_copystitch_listToPolylines(EmbPattern* p)
     }
 }
 
-/*! Copies all of the EmbPolylineObjectList data to Embstitch_list data for pattern (\a p). */
+/**
+ * Copies all of the EmbPolylineObjectList data to Embstitch_list
+ * data for pattern (\a p).
+ */
 void
 embPattern_copyPolylinesTostitch_list(EmbPattern* p)
 {
@@ -232,7 +228,10 @@ embPattern_copyPolylinesTostitch_list(EmbPattern* p)
     embPattern_addStitchRel(p, 0.0, 0.0, END, 1);
 }
 
-/*! Moves all of the Embstitch_list data to EmbPolylineObjectList data for pattern (\a p). */
+/**
+ * Moves all of the Embstitch_list data to EmbPolylineObjectList
+ * data for pattern (\a p).
+ */
 void
 embPattern_movestitch_listToPolylines(EmbPattern* p)
 {
@@ -246,7 +245,10 @@ embPattern_movestitch_listToPolylines(EmbPattern* p)
     p->thread_list->count = 0;
 }
 
-/*! Moves all of the EmbPolylineObjectList data to Embstitch_list data for pattern (\a p). */
+/**
+ * Moves all of the EmbPolylineObjectList data to Embstitch_list
+ * data for pattern (\a p).
+ */
 void
 embPattern_movePolylinesTostitch_list(EmbPattern* p)
 {
@@ -257,7 +259,10 @@ embPattern_movePolylinesTostitch_list(EmbPattern* p)
     embPattern_copyPolylinesTostitch_list(p);
 }
 
-/*! Adds a stitch to the pattern (\a p) at the absolute position (\a x,\a y). Positive y is up. Units are in millimeters. */
+/**
+ * Adds a stitch to the pattern (\a p) at the absolute position
+ * (\a x,\a y). Positive y is up. Units are in millimeters.
+ */
 void
 embPattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y, 
                             int flags, int isAutoColorIndex)
@@ -310,8 +315,11 @@ embPattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y,
     embArray_addStitch(p->stitch_list, s);
 }
 
-/*! Adds a stitch to the pattern (\a p) at the relative position (\a dx,\a dy) 
-    to the previous stitch. Positive y is up. Units are in millimeters. */
+/**
+ * Adds a stitch to the pattern (\a p) at the relative position
+ * (\a dx,\a dy) to the previous stitch. Positive y is up.
+ * Units are in millimeters.
+ */
 void
 embPattern_addStitchRel(EmbPattern* p, EmbReal dx, EmbReal dy, 
                             int flags, int isAutoColorIndex)
@@ -335,10 +343,7 @@ embPattern_addStitchRel(EmbPattern* p, EmbReal dx, EmbReal dy,
 }
 
 /**
- * @brief 
- * 
- * @param p 
- * @param index 
+ * Change the currentColorIndex of pattern \a p to \a index.
  */
 void
 embPattern_changeColor(EmbPattern* p, int index)
@@ -350,8 +355,10 @@ embPattern_changeColor(EmbPattern* p, int index)
     p->currentColorIndex = index;
 }
 
-/* Very simple scaling of the x and y axis for every point.
-* Doesn't insert or delete stitches to preserve density. */
+/**
+ * Very simple scaling of the x and y axis for every point.
+ * Doesn't insert or delete stitches to preserve density.
+ */
 void
 embPattern_scale(EmbPattern* p, EmbReal scale)
 {
@@ -367,7 +374,10 @@ embPattern_scale(EmbPattern* p, EmbReal scale)
     }
 }
 
-/*! Returns an EmbRect that encapsulates all stitches and objects in the pattern (\a p). */
+/**
+ * Returns an EmbRect that encapsulates all stitches and objects in the
+ * pattern (\a p).
+ */
 EmbRect
 embPattern_calcBoundingBox(EmbPattern* p)
 {
@@ -499,7 +509,9 @@ embPattern_calcBoundingBox(EmbPattern* p)
     return r;
 }
 
-/*! Flips the entire pattern (\a p) horizontally about the y-axis. */
+/**
+ * Flips the entire pattern (\a p) horizontally about the y-axis.
+ */
 void
 embPattern_flipHorizontal(EmbPattern* p)
 {
@@ -511,7 +523,9 @@ embPattern_flipHorizontal(EmbPattern* p)
     embPattern_flip(p, 1, 0);
 }
 
-/*! Flips the entire pattern (\a p) vertically about the x-axis. */
+/**
+ * Flips the entire pattern (\a p) vertically about the x-axis.
+ */
 void
 embPattern_flipVertical(EmbPattern* p)
 {
@@ -523,8 +537,10 @@ embPattern_flipVertical(EmbPattern* p)
     embPattern_flip(p, 0, 1);
 }
 
-/*! Flips the entire pattern (\a p) horizontally about the x-axis if (\a horz) is true.
- *  Flips the entire pattern (\a p) vertically about the y-axis if (\a vert) is true. */
+/**
+ * Flips the entire pattern (\a p) horizontally about the x-axis if (\a horz) is true.
+ *  Flips the entire pattern (\a p) vertically about the y-axis if (\a vert) is true.
+ */
 void
 embPattern_flip(EmbPattern* p, int horz, int vert)
 {
@@ -652,6 +668,9 @@ embPattern_flip(EmbPattern* p, int horz, int vert)
     }
 }
 
+/**
+ * \a p
+ */
 void
 embPattern_combineJumpStitches(EmbPattern* p)
 {
@@ -686,8 +705,10 @@ embPattern_combineJumpStitches(EmbPattern* p)
     p->stitch_list = newList;
 }
 
-/*TODO: The params determine the max XY movement rather than the length. 
-    They need renamed or clarified further. */
+/**
+ * \todo The params determine the max XY movement rather than the length.
+ * They need renamed or clarified further.
+ */
 void
 embPattern_correctForMaxStitchLength(EmbPattern* p, 
                         EmbReal maxStitchLength, EmbReal maxJumpLength)
@@ -737,6 +758,9 @@ embPattern_correctForMaxStitchLength(EmbPattern* p,
     embPattern_end(p);
 }
 
+/**
+ * Center the pattern \a p.
+ */
 void
 embPattern_center(EmbPattern* p)
 {
@@ -759,7 +783,9 @@ embPattern_center(EmbPattern* p)
     }
 }
 
-/*TODO: Description needed. */
+/**
+ * TODO: Description needed.
+ */
 void
 embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
 {
@@ -798,7 +824,9 @@ embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
     }
 }
 
-/*! Frees all memory allocated in the pattern (\a p). */
+/**
+ * Frees all memory allocated in the pattern (\a p).
+ */
 void
 embPattern_free(EmbPattern* p)
 {
@@ -812,9 +840,11 @@ embPattern_free(EmbPattern* p)
     free(p);
 }
 
-/*! Adds a circle object to pattern (\a p) with its center at the absolute
+/**
+ * Adds a circle object to pattern (\a p) with its center at the absolute
  * position (\a cx,\a cy) with a radius of (\a r). Positive y is up.
- * Units are in millimeters. */
+ * Units are in millimeters.
+ */
 void
 embPattern_addCircleAbs(EmbPattern* p, EmbCircle circle)
 {
@@ -826,9 +856,11 @@ embPattern_addCircleAbs(EmbPattern* p, EmbCircle circle)
     embArray_addCircle(p->geometry, circle);
 }
 
-/*! Adds an ellipse object to pattern (\a p) with its center at the
+/**
+ * Adds an ellipse object to pattern (\a p) with its center at the
  * absolute position (\a cx,\a cy) with radii of (\a rx,\a ry). Positive y is up.
- * Units are in millimeters. */
+ * Units are in millimeters.
+ */
 void
 embPattern_addEllipseAbs(EmbPattern* p, EmbEllipse ellipse)
 {
@@ -840,7 +872,8 @@ embPattern_addEllipseAbs(EmbPattern* p, EmbEllipse ellipse)
     embArray_addEllipse(p->geometry, ellipse);
 }
 
-/*! Adds a line object to pattern (\a p) starting at the absolute position
+/**
+ * Adds a line object to pattern (\a p) starting at the absolute position
  * (\a x1,\a y1) and ending at the absolute position (\a x2,\a y2).
  * Positive y is up. Units are in millimeters.
  */
@@ -855,6 +888,9 @@ embPattern_addLineAbs(EmbPattern* p, EmbLine line)
     embArray_addLine(p->geometry, line);
 }
 
+/**
+ * .
+ */
 void
 embPattern_addPathAbs(EmbPattern* p, EmbPath obj)
 {
@@ -1173,9 +1209,7 @@ convert(const char *inf, const char *outf)
 }
 
 /**
- * @brief 
- * 
- * @param pattern 
+ * \a pattern 
  * @return float 
  */
 float

@@ -11,6 +11,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+
+\subsection Brother Embroidery Format (.pel)
+\addindex pel
+\addindex Brother
+
+The Brother pel format is stitch-only.
+ */
+
 /* ---------------------------------------------------------------- */
 /* format pel */
 

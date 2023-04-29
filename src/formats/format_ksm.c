@@ -11,6 +11,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection pfaff-ksm-format Pfaff professional Design format (.ksm)
+\addindex ksm
+\addindex Pfaff
+
+Stitch Only Format.
+ */
+
 void
 ksmEncode(unsigned char* b, char dx, char dy, int flags)
 {

@@ -12,6 +12,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection embroidery-inf-format Embroidery Color Format (.inf)
+\addindex inf
+
+Stitch Only Format.
+
+ */
 
 /* ---------------------------------------------------------------- */
 /* format inf */

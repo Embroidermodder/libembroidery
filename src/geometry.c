@@ -15,7 +15,7 @@
 /**
  * @brief Our generic object interface backends to each individual type.
  *
- * @param type_in 
+ * \a type_in 
  * @return EmbGeometry* 
  */
 EmbGeometry *
@@ -64,7 +64,7 @@ embGeometry_init(int type_in)
 /**
  * @brief Free the memory occupied by a non-stitch geometry object.
  *
- * @param obj Pointer to geometry memory.
+ * \a obj Pointer to geometry memory.
  */
 void
 embGeometry_free(EmbGeometry *obj)
@@ -87,8 +87,8 @@ embGeometry_free(EmbGeometry *obj)
 /**
  * @brief Translate \a obj by the vector \a delta.
  *
- * @param obj A pointer to the geometry memory.
- * @param delta A vector in the 0.1mm scale to offset the geometry by.
+ * \a obj A pointer to the geometry memory.
+ * \a delta A vector in the 0.1mm scale to offset the geometry by.
  */
 void
 embGeometry_move(EmbGeometry *obj, EmbVector delta)
@@ -115,7 +115,7 @@ embGeometry_move(EmbGeometry *obj, EmbVector delta)
  * @brief Calculate the bounding box of geometry \a obj based on what kind of
  * geometric object it is.
  *
- * @param obj A pointer to the geometry memory.
+ * \a obj A pointer to the geometry memory.
  * @return EmbRect The bounding box in the same scale as the input geometry.
  *
  * In the case of a failure the bounding box returned is always the unit square
@@ -150,7 +150,7 @@ embGeometry_boundingRect(EmbGeometry *obj)
 /**
  * @brief Toggle the rubber mode of the object.
  *
- * @param obj 
+ * \a obj 
  *
  * \todo Review. This could be controlled by a simple flag.
  */

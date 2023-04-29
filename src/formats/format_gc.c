@@ -11,7 +11,8 @@
 
 #include "../embroidery_internal.h"
 
-/* Smoothie G-Code
+/**
+ * Smoothie G-Code
  *
  * Main Reference:
  *     Machinery's Handbook Guide

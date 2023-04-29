@@ -1,5 +1,5 @@
 /*
- * 100 FORMAT
+ * GT FORMAT
  * This file is part of libembroidery.
  *
  * Copyright 2018-2023 The Embroidermodder Team
@@ -10,6 +10,15 @@
 #include <math.h>
 
 #include "../embroidery_internal.h"
+
+/**
+ *
+\subsection gold-gt-format Gold Thread Embroidery Format (.gt)
+\addindex gt
+\addindex Gold Thread
+
+Stitch Only Format.
+ */
 
 char
 readGt(EmbPattern* pattern, FILE* file)

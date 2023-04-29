@@ -3,6 +3,10 @@
 
 #include "embroidery.h"
 
+/**
+ * \file embroidery_internal.h
+ */
+
 /* For FILE * */
 #include <stdio.h>
 

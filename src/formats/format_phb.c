@@ -11,7 +11,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Brother Embroidery Format (.phb)
+\addindex phb
+\addindex Brother
 
+The Brother phb format is stitch-only.
+
+ */
 
 /* ---------------------------------------------------------------- */
 /* format phb */

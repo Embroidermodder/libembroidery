@@ -13,6 +13,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection melco-ofm-format Melco Embroidery Format (.ofm)
+\addindex ofm
+\addindex Melco
+
+Stitch Only Format.
+ */
+
 char*
 ofmReadLibrary(FILE* file)
 {

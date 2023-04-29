@@ -11,6 +11,18 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ * \file format_dsb.c The Barudan Embroidery Format (.dsb)
+ * \addindex dsb
+ * \addindex Barudan
+ * 
+ * * Stitch Only Format.
+ * * [X] Basic Read Support
+ * * [o] Basic Write Support
+ * * [o] Well Tested Read
+ * * [o] Well Tested Write
+ */
+
 char
 readDsb(EmbPattern* pattern, FILE* file)
 {

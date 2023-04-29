@@ -12,6 +12,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Happy Embroidery Format (.tap)
+\addindex tap
+\addindex Happy
+
+The Happy tap format is stitch-only.
+ */
+
 void
 encode_tap_record(FILE* file, int x, int y, int flags)
 {

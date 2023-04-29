@@ -11,6 +11,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection janome-jef-format Janome Embroidery Format (.jef)
+\addindex jef
+\addindex Janome
+
+Stitch Only Format.
+ */
+
 int
 jefGetHoopSize(int width, int height)
 {

@@ -11,6 +11,15 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ *
+\subsection embird-edr-format Embird Embroidery Format (.edr)
+\addindex edr
+\addindex Embird
+
+Stitch Only Format
+ */
+
 char
 readEdr(EmbPattern* pattern, FILE* file)
 {

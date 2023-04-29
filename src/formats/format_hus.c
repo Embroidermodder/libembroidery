@@ -13,6 +13,15 @@
 #include "../embroidery_internal.h"
 
 
+/**
+ *
+\subsection husqvarna-hus-format Husqvarna Viking Embroidery Format (.hus)
+\addindex hus
+\addindex Husqvarna Viking
+
+Stitch Only Format.
+ */
+
 /* ---------------------------------------------------------------- */
 /* format hus */
 

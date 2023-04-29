@@ -13,6 +13,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Pfaff Embroidery Format (.vp3)
+\addindex vp3
+\addindex Pfaff
+
+The Pfaff vp3 format is stitch-only.
+ */
+
 unsigned char*
 vp3ReadString(FILE* file)
 {

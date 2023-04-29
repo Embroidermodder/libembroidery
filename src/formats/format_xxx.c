@@ -12,6 +12,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+\subsection Singer Embroidery Format (.xxx)
+\addindex xxx
+\addindex Singer
+
+The Singer xxx format is stitch-only.
+ */
+
 char
 xxxDecodeByte(unsigned char inputByte)
 {

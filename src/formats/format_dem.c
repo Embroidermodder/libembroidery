@@ -11,6 +11,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ * \file format_dem.c The Melco Embroidery Format (.dem)
+ * \addindex dem
+ * \addindex Melco
+ * 
+ * Stitch Only Format
+ */
+
 char
 readDem(EmbPattern* pattern, FILE* file)
 {

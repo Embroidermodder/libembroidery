@@ -11,9 +11,14 @@
 
 #include "../embroidery_internal.h"
 
+/**
+ * \file format_emd.c The Elna Embroidery Format (.emd)
+ * \addindex emd
+ * \addindex Elna
+ *
+ * Stitch Only Format.
+ */
 
-/* ---------------------------------------------------------------- */
-/* format emd */
 
 char
 emdDecode(unsigned char inputByte) {

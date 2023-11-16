@@ -23,17 +23,14 @@
  *
  * \todo make result return argument.
  */
-void
-embVector_normalize(EmbVector vector, EmbVector* result)
+EmbVector
+embVector_normalize(EmbVector vector)
 {
+    EmbVector result;
     EmbReal length = embVector_length(vector);
-
-    if (!result) {
-        printf("ERROR: emb-vector.c embVector_normalize(), result argument is null\n");
-        return;
-    }
-    result->x = vector.x / length;
-    result->y = vector.y / length;
+    result.x = vector.x / length;
+    result.y = vector.y / length;
+    return result;
 }
 
 /**
@@ -42,15 +39,13 @@ embVector_normalize(EmbVector vector, EmbVector* result)
  *
  * \todo make result return argument.
  */
-void
-embVector_multiply(EmbVector vector, EmbReal magnitude, EmbVector* result)
+EmbVector
+embVector_scale(EmbVector vector, EmbReal magnitude)
 {
-    if (!result) {
-        printf("ERROR: emb-vector.c embVector_multiply(), result argument is null\n");
-        return;
-    }
-    result->x = vector.x * magnitude;
-    result->y = vector.y * magnitude;
+    EmbVector result;
+    result.x = vector.x * magnitude;
+    result.y = vector.y * magnitude;
+    return result;
 }
 
 /**
@@ -154,15 +149,13 @@ embVector_cross(EmbVector a, EmbVector b)
  *      (1 0) (a) = (xa)
  * (x y)(0 1) (b)   (yb)
  */
-void
-embVector_transpose_product(EmbVector v1, EmbVector v2, EmbVector* result)
+EmbVector
+embVector_transpose_product(EmbVector v1, EmbVector v2)
 {
-    if (!result) {
-        printf("ERROR: emb-vector.c embVector_transpose_product(), result argument is null\n");
-        return;
-    }
-    result->x = v1.x * v2.x;
-    result->y = v1.y * v2.y;
+    EmbVector result;
+    result.x = v1.x * v2.x;
+    result.y = v1.y * v2.y;
+    return result;
 }
 
 /**

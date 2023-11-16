@@ -12,28 +12,28 @@
 
 #include "../embroidery.h"
 
-/*! Finds the normalized vector perpendicular (clockwise) to the line
+/* Finds the normalized vector perpendicular (clockwise) to the line
  * given by v1->v2 (normal to the line) */
-void
-embLine_normalVector(EmbLine line, EmbVector* result, int clockwise)
+EmbVector
+embLine_normalVector(EmbLine line, int clockwise)
 {
+    EmbVector result;
     EmbReal temp;
-    if (!result) {
-        printf("ERROR: emb-line.c embLine_normalVector(), ");
-        printf("result argument is null\n");
-        return;
-    }
-    *result = embVector_subtract(line.end, line.start);
-    embVector_normalize(*result, result);
-    temp = result->x;
-    result->x = result->y;
-    result->y = -temp;
+    result = embVector_subtract(line.end, line.start);
+    result = embVector_normalize(result);
+    temp = result.x;
+    result.x = result.y;
+    result.y = -temp;
     if (!clockwise) {
-        result->x = -result->x;
-        result->y = -result->y;
+        result.x = -result.x;
+        result.y = -result.y;
     }
+    return result;
 }
 
+/* Returns the vector that is the same length as the line, in the same
+ * direction.
+ */
 EmbVector
 embLine_toVector(EmbLine line)
 {
@@ -44,7 +44,8 @@ embLine_toVector(EmbLine line)
  * Finds the intersection of two lines given by v1->v2 and v3->v4
  * and sets the value in the result variable.
  */
-EmbVector embLine_intersectionPoint(EmbLine line1, EmbLine line2)
+EmbVector
+embLine_intersectionPoint(EmbLine line1, EmbLine line2)
 {
     EmbReal det, C2, C1, tolerance;
     EmbVector vec1, vec2, result;

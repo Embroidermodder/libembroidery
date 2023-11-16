@@ -866,8 +866,8 @@ MergeParallelEdges(EmbArray *vertices, float tolerance)
             newNVertices--;
         }
 
-        embVector_normalize(delta0, &delta0);
-        embVector_normalize(delta1, &delta1);
+        delta0 = embVector_normalize(delta0);
+        delta1 = embVector_normalize(delta1);
         float cross = embVector_cross(delta0, delta1);
         float dot = embVector_dot(delta0, delta1);
 
@@ -1030,19 +1030,18 @@ embPattern_stitchCircle(EmbPattern *p, EmbCircle circle, int thread_index, int s
     float seperation = 0.1;
     EmbVector direction = {1.0, 1.0};
     EmbVector normal = {-1.0, 1.0};
-    embVector_normalize(direction, &direction);
-    embVector_normalize(normal, &normal);
+    direction = embVector_normalize(direction);
+    normal = embVector_normalize(normal);
     for (s=-circle.radius; s<circle.radius; s += seperation) {
         EmbLine line;
         float length = sqrt(circle.radius*circle.radius - s*s);
-        EmbVector scaled;
-        embVector_multiply(normal, s, &scaled);
+        EmbVector scaled = embVector_scale(normal, s);
         line.start = embVector_add(circle.center, scaled);
-        embVector_multiply(direction, length, &scaled);
+        scaled = embVector_scale(direction, length);
         line.start = embVector_subtract(line.start, scaled);
-        embVector_multiply(normal, s, &scaled);
+        scaled = embVector_scale(normal, s);
         line.end = embVector_add(circle.center, scaled);
-        embVector_multiply(direction, length, &scaled);
+        scaled = embVector_scale(direction, length);
         line.end = embVector_add(line.end, scaled);
         /* Split long stitches here. */
         embPattern_addStitchAbs(p, line.start.x, line.start.y, NORMAL, thread_index);

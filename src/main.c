@@ -547,12 +547,7 @@ CompoundFileDirectoryEntry(FILE* file)
     return dir;
 }
 
-/**
- * @brief 
- * 
- * \a file 
- * \a dir 
- */
+/* . */
 void
 readNextSector(FILE* file, bcf_directory* dir)
 {
@@ -575,11 +570,7 @@ readNextSector(FILE* file, bcf_directory* dir)
     }
 }
 
-/**
- * @brief 
- * 
- * \a dir 
- */
+/* . */
 void
 bcf_directory_free(bcf_directory** dir)
 {
@@ -599,12 +590,7 @@ bcf_directory_free(bcf_directory** dir)
     safe_free(*dir);
 }
 
-/**
- * @brief 
- * 
- * \a sectorSize 
- * @return bcf_file_fat* 
- */
+/* . */
 bcf_file_fat*
 bcfFileFat_create(const unsigned int sectorSize)
 {
@@ -619,12 +605,7 @@ bcfFileFat_create(const unsigned int sectorSize)
     return fat;
 }
 
-/**
- * @brief 
- * 
- * \a fat 
- * \a file 
- */
+/* . */
 void
 loadFatFromSector(bcf_file_fat* fat, FILE* file)
 {
@@ -639,12 +620,7 @@ loadFatFromSector(bcf_file_fat* fat, FILE* file)
     fat->fatEntryCount = newSize;
 }
 
-/**
- * @brief 
- * 
- * \a file 
- * @return bcf_file_header 
- */
+/* . */
 bcf_file_header
 bcfFileHeader_read(FILE* file)
 {
@@ -670,13 +646,7 @@ bcfFileHeader_read(FILE* file)
     return header;
 }
 
-/**
- * @brief 
- * 
- * \a lines 
- * \a thickness 
- * \a result 
- */
+/* . */
 void
 embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSatinOutline* result)
 {
@@ -705,15 +675,15 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
         line.start = lines->geometry[i - 1].object.vector;
         line.end = lines->geometry[i].object.vector;
 
-        embLine_normalVector(line, &v1, 1);
+        v1 = embLine_normalVector(line, 1);
 
-        embVector_multiply(v1, halfThickness, &temp);
+        temp = embVector_scale(v1, halfThickness);
         temp = embVector_add(temp, lines->geometry[i-1].object.vector);
         embArray_addVector(outline.side1, temp);
         temp = embVector_add(temp, lines->geometry[i].object.vector);
         embArray_addVector(outline.side1, temp);
 
-        embVector_multiply(v1, -halfThickness, &temp);
+        temp = embVector_scale(v1, -halfThickness);
         temp = embVector_add(temp, lines->geometry[i - 1].object.vector);
         embArray_addVector(outline.side2, temp);
         temp = embVector_add(temp, lines->geometry[i].object.vector);
@@ -803,8 +773,8 @@ embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density)
             midLength = embVector_length(midDiff);
 
             numberOfSteps = (int)(midLength * density / 200);
-            embVector_multiply(topDiff, 1.0/numberOfSteps, &topStep);
-            embVector_multiply(bottomDiff, 1.0/numberOfSteps, &bottomStep);
+            topStep = embVector_scale(topDiff, 1.0/numberOfSteps);
+            bottomStep = embVector_scale(bottomDiff, 1.0/numberOfSteps);
             currTop = g10->object.vector;
             currBottom = g20->object.vector;
 
@@ -1061,13 +1031,7 @@ char const WHITESPACE[] = " \t\n\r";
 
 /* TODO: description */
 
-/**
- * @brief Get the trim bounds object
- * 
- * \a s 
- * \a firstWord 
- * \a trailingSpace 
- */
+/* Get the trim bounds object. */
 void
 get_trim_bounds(char const *s, char const **firstWord, char const **trailingSpace)
 {
@@ -1079,14 +1043,7 @@ get_trim_bounds(char const *s, char const **firstWord, char const **trailingSpac
     } while (*lastWord != '\0');
 }
 
-/**
- * @brief 
- * 
- * \a s 
- * @return char* 
- *
- * \todo decription
- */
+/* . */
 char*
 copy_trim(char const *s)
 {
@@ -1103,12 +1060,8 @@ copy_trim(char const *s)
     return result;
 }
 
-/**
- * @brief Optimizes the number (\a num) for output to a text file and returns it as a string (\a str).
- * 
- * \a num 
- * \a str 
- * @return char* 
+/* Optimizes the number (\a num) for output to a text file and returns
+ * it as a string (\a str).
  */
 char*
 emb_optOut(EmbReal num, char* str)
@@ -1127,11 +1080,7 @@ emb_optOut(EmbReal num, char* str)
     return str;
 }
 
-/**
- * @brief 
- * 
- * \a t 
- */
+/* . */
 void
 embTime_initNow(EmbTime* t)
 {
@@ -1438,64 +1387,68 @@ testGeomArc(void)
     bulge = -0.414213562373095;
     arc.start.x = 1.0;
     arc.start.y = 0.0;
-    arc.end.x   = 2.0;
-    arc.end.y   = 1.0;
-    if (getArcDataFromBulge(bulge, &arc,
-                           &(center.x),   &(center.y),
-                           &radius,    &diameter,
-                           &chord,
-                           &(chordMid.x), &(chordMid.y),
-                           &sagitta,   &apothem,
-                           &incAngle,  &clockwise)) {
-        if (emb_verbose > 0) {
-            fprintf(stdout, "Clockwise Test:\n");
-            printArcResults(bulge, arc, center.x, center.y,
-                        radius, diameter,
-                        chord,
-                        chordMid.x, chordMid.y,
-                        sagitta,   apothem,
-                        incAngle,  clockwise);
-        }
-    }
+    arc.mid.x = 0.0; /* FIXME */
+    arc.mid.y = 0.0;
+    arc.end.x = 2.0;
+    arc.end.y = 1.0;
+    center = embArc_center(arc);
+    chord = embArc_chord(arc);
+    radius = embArc_radius(arc);
+    diameter = embArc_diameter(arc);
+    chordMid = embArc_chordMid(arc);
+    sagitta = embArc_sagitta(arc);
+    apothem = embArc_apothem(arc);
+    incAngle = embArc_incAngle(arc);
+    clockwise = embArc_clockwise(arc);
+    /* bulge = embArc_bulge(arc); */
+	if (emb_verbose > 0) {
+		fprintf(stdout, "Clockwise Test:\n");
+		printArcResults(bulge, arc, center.x, center.y,
+					radius, diameter,
+					chord,
+					chordMid.x, chordMid.y,
+					sagitta,   apothem,
+					incAngle,  clockwise);
+	}
 
     bulge  = 2.414213562373095;
     arc.start.x = 4.0;
     arc.start.y = 0.0;
+    arc.mid.x = 0.0; /* FIXME */
+    arc.mid.y = 0.0;
     arc.end.x   = 5.0;
     arc.end.y   = 1.0;
-    if (getArcDataFromBulge(bulge, &arc,
-                           &(center.x),   &(center.y),
-                           &radius,    &diameter,
-                           &chord,
-                           &(chordMid.x), &(chordMid.y),
-                           &sagitta,   &apothem,
-                           &incAngle,  &clockwise)) {
-        if (emb_verbose > 0) {
-            fprintf(stdout, "Counter-Clockwise Test:\n");
-            printArcResults(bulge, arc, center.x, center.y,
-                        radius,    diameter,
-                        chord,
-                        chordMid.x, chordMid.y,
-                        sagitta,   apothem,
-                        incAngle,  clockwise);
-        }
-    }
+    center = embArc_center(arc);
+    chord = embArc_chord(arc);
+    radius = embArc_radius(arc);
+    diameter = embArc_diameter(arc);
+    chordMid = embArc_chordMid(arc);
+    sagitta = embArc_sagitta(arc);
+    apothem = embArc_apothem(arc);
+    incAngle = embArc_incAngle(arc);
+    clockwise = embArc_clockwise(arc);
+    /* bulge = embArc_bulge(arc); */
+	if (emb_verbose > 0) {
+		fprintf(stdout, "Counter-Clockwise Test:\n");
+		printArcResults(bulge, arc, center.x, center.y,
+					radius,    diameter,
+					chord,
+					chordMid.x, chordMid.y,
+					sagitta,   apothem,
+					incAngle,  clockwise);
+	}
 
     return 0;
 }
 
-/**
- * @brief 
- * 
- * @return int 
- */
+/* . */
 int
 testThreadColor(void)
 {
     unsigned int tColor = 0xFFD25F00;
-    int          tBrand = Sulky_Rayon;
-    int          tNum   = threadColorNum(tColor, tBrand);
-    const char*  tName  = threadColorName(tColor, tBrand);
+    int tBrand = Sulky_Rayon;
+    int tNum   = threadColorNum(tColor, tBrand);
+    const char* tName  = threadColorName(tColor, tBrand);
 
     if (emb_verbose > 0) {
         printf("Color : 0x%X\n"
@@ -1510,11 +1463,7 @@ testThreadColor(void)
     return 0;
 }
 
-/**
- * @brief 
- * 
- * @return int 
- */
+/* . */
 int
 testEmbFormat(void)
 {

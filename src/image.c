@@ -95,27 +95,27 @@ int
 embPattern_render(EmbPattern *p, char *fname)
 {
     const char *tmp_fname = "libembroidery_temp.svg";
-	NSVGimage *image = NULL;
-	NSVGrasterizer rast;
-	unsigned char *img_data = NULL;
-	embPattern_writeAuto(p, tmp_fname);
-	image = nsvgParseFromFile(tmp_fname, "px", 96.0f);
-	img_data = malloc(4*image->width*image->height);
-	nsvgRasterize(
-	    &rast,
-	    image,
-	    0, 0, 1,
-	    img_data,
-	    image->width,
-	    image->height,
-	    4*image->width);
+    NSVGimage *image = NULL;
+    NSVGrasterizer rast;
+    unsigned char *img_data = NULL;
+    embPattern_writeAuto(p, tmp_fname);
+    image = nsvgParseFromFile(tmp_fname, "px", 96.0f);
+    img_data = malloc(4*image->width*image->height);
+    nsvgRasterize(
+        &rast,
+        image,
+        0, 0, 1,
+        img_data,
+        image->width,
+        image->height,
+        4*image->width);
     stbi_write_png(
- 	    fname,
- 	    image->width,
-	    image->height,
-	    4,
-	    img_data,
-	    4*image->width);
+         fname,
+         image->width,
+        image->height,
+        4,
+        img_data,
+        4*image->width);
     return 0;
 }
 
@@ -143,7 +143,7 @@ embImage_create(int width, int height)
     EmbImage image;
     image.width = width;
     image.height = height;
-	image.data = malloc(4*width*height);
+    image.data = malloc(4*width*height);
     return image;
     
 }
@@ -171,12 +171,12 @@ int
 embImage_write(EmbImage *image, char *fname)
 {
     return stbi_write_png(
- 	    fname,
- 	    image->width,
-	    image->height,
-	    4,
-	    image->data,
-	    4*image->width);
+         fname,
+         image->width,
+        image->height,
+        4,
+        image->data,
+        4*image->width);
 }
 
 /**

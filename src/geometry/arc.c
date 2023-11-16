@@ -9,6 +9,15 @@
  *
  * Use Python's PEP7 style guide.
  *     https://peps.python.org/pep-0007/
+ *
+ * ------------------------------------------------------------
+ *
+ * The EmbArc is implicitly an elliptical arc not a circular one
+ * because of our need to cover all of the SVG spec. Note that
+ * the circlar arcs are a subset of the elliptical arcs.
+ *
+ * TODO: some of these formulae may assume that the arc is circular,
+ * correct for elliptic versions.
  */
 
 #include <stdio.h>
@@ -17,17 +26,21 @@
 
 #include "../embroidery.h"
 
-/* Returns an EmbArcObject. It is created on the stack. */
+/* Returns an EmbArcObject. It is created on the stack.
+ *
+ * Note that the default arc is the semicircular arc of the circle of radius
+ * arc.
+ */
 EmbArc
 embArc_init(void)
 {
     EmbArc arc;
     arc.start.x = 0.0;
-    arc.start.y = 0.0;
+    arc.start.y = -1.0;
     arc.mid.x = 1.0;
-    arc.mid.y = 1.0;
-    arc.end.x = 2.0;
-    arc.end.y = 2.0;
+    arc.mid.y = 0.0;
+    arc.end.x = 0.0;
+    arc.end.y = 1.0;
     return arc;
 }
 
@@ -45,25 +58,25 @@ embArc_clockwise(EmbArc arc)
     return 0;
 }
 
-
 /* Calculates the CenterPoint of the Arc */
-void
-getArcCenter(EmbArc arc, EmbVector* arcCenter)
+EmbVector
+embArc_center(EmbArc arc)
 {
+    EmbVector center;
     EmbVector a_vec, b_vec, aMid_vec, bMid_vec, aPerp_vec, bPerp_vec, pa, pb;
     EmbLine line1, line2;
     EmbReal paAngleInRadians, pbAngleInRadians;
     a_vec = embVector_subtract(arc.mid, arc.start);
     aMid_vec = embVector_average(arc.mid, arc.start);
 
-    paAngleInRadians = embVector_angle(a_vec) + radians(90.0);
+    paAngleInRadians = embVector_angle(a_vec) + (embConstantPi/2.0);
     pa = embVector_unit(paAngleInRadians);
     aPerp_vec = embVector_add(aMid_vec, pa);
 
     b_vec = embVector_subtract(arc.end, arc.mid);
     bMid_vec = embVector_average(arc.end, arc.mid);
 
-    pbAngleInRadians = embVector_angle(b_vec) + radians(90.0);
+    pbAngleInRadians = embVector_angle(b_vec) + (embConstantPi/2.0);
     pb = embVector_unit(pbAngleInRadians);
     bPerp_vec = embVector_add(bMid_vec, pb);
 
@@ -71,108 +84,113 @@ getArcCenter(EmbArc arc, EmbVector* arcCenter)
     line1.end = aPerp_vec;
     line2.start = bMid_vec;
     line2.end = bPerp_vec;
-    *arcCenter = embLine_intersectionPoint(line1, line2);
+    center = embLine_intersectionPoint(line1, line2);
     if (emb_error) {
         puts("ERROR: no intersection, cannot find arcCenter.");
     }
+    return center;
+}
+
+/* Calculate the Radius */
+EmbReal
+embArc_radius(EmbArc arc)
+{
+    EmbReal incAngle = embArc_incAngle(arc);
+    EmbReal chord = embArc_chord(arc);
+    return fabs(chord / (2.0 * sin(incAngle / 2.0)));
+}
+
+/* Calculate the Diameter */
+EmbReal
+embArc_diameter(EmbArc arc)
+{
+    return fabs(embArc_radius(arc) * 2.0);
+}
+
+/* Calculate the Chord Angle (from arc.start to arc.end). */
+EmbReal
+embArc_chordAngle(EmbArc arc)
+{
+    EmbVector delta = embVector_subtract(arc.end, arc.start);
+    return atan2(delta.y, delta.x);
+}
+
+/* . */
+EmbReal
+embArc_chord(EmbArc arc)
+{
+    return embVector_distance(arc.start, arc.end);
+}
+
+/* Calculate the Chord MidPoint. */
+EmbVector
+embArc_chordMid(EmbArc arc)
+{
+    return embVector_scale(embVector_add(arc.start, arc.end), 0.5);
+}
+
+/* Calculate the Sagitta. */
+EmbReal
+embArc_sagitta(EmbArc arc)
+{
+    EmbReal chord = embArc_chord(arc);
+    EmbReal bulge = embArc_bulge(arc);
+    return fabs((chord / 2.0) * bulge);
+}
+
+/* Calculate the Apothem */
+EmbReal
+embArc_apothem(EmbArc arc)
+{
+    return fabs(embArc_radius(arc) - embArc_sagitta(arc));
+}
+
+/* Calculate the Included Angle. */
+EmbReal
+embArc_incAngle(EmbArc arc)
+{
+    return atan(embArc_bulge(arc))*4.0;
+}
+
+/* TODO: fixme */
+EmbReal
+embArc_bulge(EmbArc arc)
+{
+    return 1.0;
 }
 
 /* Calculates Arc Geometry from Bulge Data.
- * Returns false if there was an error calculating the data. */
-char
-getArcDataFromBulge(EmbReal bulge,
-                         EmbArc *arc,
-                         EmbReal* arcCenterX,        EmbReal* arcCenterY,
-                         EmbReal* radius,            EmbReal* diameter,
-                         EmbReal* chord,
-                         EmbReal* chordMidX,         EmbReal* chordMidY,
-                         EmbReal* sagitta,           EmbReal* apothem,
-                         EmbReal* incAngleInDegrees, char*   clockwise)
-{
-    EmbReal incAngleInRadians;
-    EmbReal chordAngleInRadians;
-    EmbReal sagittaAngleInRadians;
-    EmbReal fx ,fy, dx, dy;
-    EmbVector arcCenter;
-
-    /* Confirm the direction of the Bulge */
-    if (bulge >= 0.0) { 
-        *clockwise = 0;
-    } else { 
-        *clockwise = 1;
-    }
-
-    /* Calculate the Included Angle in Radians */
-    incAngleInRadians = atan(bulge)*4.0;
-
-    /* Calculate the Chord */
-    dx = arc->end.x - arc->start.x;
-    dy = arc->end.y - arc->start.y;
-    *chord = sqrt(dx*dx + dy*dy);
-
-    /* Calculate the Radius */
-    *radius = fabs(*chord / (2.0 * sin(incAngleInRadians / 2.0)));
-
-    /* Calculate the Diameter */
-    *diameter = fabs(*radius * 2.0);
-
-    /* Calculate the Sagitta */
-    *sagitta = fabs((*chord / 2.0) * bulge);
-
-    /* Calculate the Apothem */
-    *apothem = fabs(*radius - *sagitta);
-
-    /* Calculate the Chord MidPoint */
-    *chordMidX = (arc->start.x + arc->end.x) / 2.0;
-    *chordMidY = (arc->start.y + arc->end.y) / 2.0;
-
-    /* Calculate the Chord Angle (from arcStart to arcEnd) */
-    chordAngleInRadians = atan2(dy, dx);
-
-    /* Calculate the Sagitta Angle (from chordMid to arcMid) */
+ * Returns false if there was an error calculating the data. 
+    Calculate the Sagitta Angle (from chordMid to arcMid)
     if (*clockwise) sagittaAngleInRadians = chordAngleInRadians + radians(90.0);
     else           sagittaAngleInRadians = chordAngleInRadians - radians(90.0);
 
-    /* Calculate the Arc MidPoint */
-    fx = *sagitta * cos(sagittaAngleInRadians);
-    fy = *sagitta * sin(sagittaAngleInRadians);
+    Calculate the Arc MidPoint
+    fx = embArc_sagitta(arc) * cos(sagittaAngleInRadians);
+    fy = embArc_sagitta(arc) * sin(sagittaAngleInRadians);
     arc->mid.x = *chordMidX + fx;
     arc->mid.y = *chordMidY + fy;
 
-    getArcCenter(*arc, &arcCenter);
-    *arcCenterX = arcCenter.x;
-    *arcCenterY = arcCenter.y;
-
-    /* Convert the Included Angle from Radians to Degrees */
+    Convert the Included Angle from Radians to Degrees
     *incAngleInDegrees = degrees(incAngleInRadians);
-
-    /* Confirm the direction of the Arc, it should match the Bulge */
-    if (*clockwise != embArc_clockwise(*arc)) {
-        fprintf(stderr, "Arc and Bulge direction do not match.\n");
-        return 0;
-    }
 
     return 1;
 }
+ */
 
-char clockwise(EmbGeometry *obj)
-{
-
-    return 0;
-}
-
-void embArc_setCenter(EmbArc *arc, EmbVector point)
+void
+embArc_setCenter(EmbArc *arc, EmbVector point)
 {
     EmbVector delta;
-    EmbVector old_center;
-    getArcCenter(*arc, &old_center);
+    EmbVector old_center = embArc_center(*arc);
     delta = embVector_subtract(point, old_center);
     arc->start = embVector_add(arc->start, delta);
     arc->mid = embVector_add(arc->mid, delta);
     arc->end = embVector_add(arc->end, delta);
 }
 
-void embArc_setRadius(EmbArc *arc, float radius)
+void
+embArc_setRadius(EmbArc *arc, float radius)
 {
     EmbVector delta;
     float rad;
@@ -183,59 +201,61 @@ void embArc_setRadius(EmbArc *arc, float radius)
         rad = radius;
     }
 
-    EmbVector center;
-    getArcCenter(*arc, &center);
+    EmbVector center = embArc_center(*arc);
     double delta_length;
 
     delta = embVector_subtract(arc->start, center);
     delta_length = embVector_length(delta);
-    embVector_multiply(delta, rad/delta_length, &delta);
+    delta = embVector_scale(delta, rad/delta_length);
     arc->start = embVector_add(center, delta);
 
     delta = embVector_subtract(arc->mid, center);
     delta_length = embVector_length(delta);
-    embVector_multiply(delta, rad/delta_length, &delta);
+    delta = embVector_scale(delta, rad/delta_length);
     arc->mid = embVector_add(center, delta);
 
     delta = embVector_subtract(arc->end, center);
     delta_length = embVector_length(delta);
-    embVector_multiply(delta, rad/delta_length, &delta);
+    delta = embVector_scale(delta, rad/delta_length);
     arc->end = embVector_add(center, delta);
 }
 
-void embArc_setStartAngle(EmbArc *arc, float angle)
+void
+embArc_setStartAngle(EmbArc *arc, float angle)
 {
     printf("%f %f", arc->start.x, angle);
     //TODO: ArcObject setStartAngle
 }
 
-void embArc_setEndAngle(EmbArc *arc, float angle)
+void
+embArc_setEndAngle(EmbArc *arc, float angle)
 {
     printf("%f %f", arc->start.x, angle);
     //TODO: ArcObject setEndAngle
 }
 
-float embArc_startAngle(EmbArc arc)
+EmbReal
+embArc_startAngle(EmbArc arc)
 {
     EmbVector delta;
-    EmbVector center;
-    getArcCenter(arc, &center);
+    EmbVector center = embArc_center(arc);
     delta = embVector_subtract(arc.end, center);
     float angle = embVector_angle(delta);
     return fmodf(angle, 360.0);
 }
 
-float embArc_endAngle(EmbArc arc)
+EmbReal
+embArc_endAngle(EmbArc arc)
 {
     EmbVector delta;
-    EmbVector center;
-    getArcCenter(arc, &center);
+    EmbVector center = embArc_center(arc);
     delta = embVector_subtract(arc.end, center);
     float angle = embVector_angle(delta);
     return fmodf(angle, 360.0);
 }
 
-float embArc_area(EmbArc arc)
+EmbReal
+embArc_area(EmbArc arc)
 {
     printf("%f", arc.start.x);
     /*
@@ -247,7 +267,8 @@ float embArc_area(EmbArc arc)
     return 0.0;
 }
 
-float embArc_arcLength(EmbArc arc)
+EmbReal
+embArc_arcLength(EmbArc arc)
 {
     printf("%f", arc.start.x);
     /*
@@ -256,12 +277,8 @@ float embArc_arcLength(EmbArc arc)
     return 0.0;
 }
 
-float embArc_chord(EmbArc arc)
-{
-    return embVector_distance(arc.start, arc.end);
-}
-
-float embArc_includedAngle(EmbArc arc)
+EmbReal
+embArc_includedAngle(EmbArc arc)
 {
     printf("%f", arc.start.x);
     /*
@@ -384,8 +401,7 @@ EmbVector embArc_mouseSnapPoint(EmbArc arc, EmbVector mousePoint)
 /*
 std::vector<EmbVector> embArc_allGripPoints(EmbArc arc)
 {
-    EmbVector center;
-    getArcCenter(arc, &center);
+    EmbVector center = embArc_center(arc);
     std::vector<EmbVector> gripPoints = {center, arc.start, arc.mid, arc.end};
     return gripPoints;
 }
@@ -406,7 +422,7 @@ void set_object_color(EmbGeometry *obj, EmbColor color)
     */
 }
 
-void embBase_setColorRGB(EmbGeometry *obj, unsigned int rgb)
+void embGeometry_setColorRGB(EmbGeometry *obj, unsigned int rgb)
 {
     printf("%d", rgb);
     /*
@@ -415,7 +431,7 @@ void embBase_setColorRGB(EmbGeometry *obj, unsigned int rgb)
     */
 }
 
-void Base_setLineType(EmbGeometry *obj, int lineType)
+void embGeometry_setLineType(EmbGeometry *obj, int lineType)
 {
     printf("%d", lineType);
     /*
@@ -424,7 +440,7 @@ void Base_setLineType(EmbGeometry *obj, int lineType)
     */
 }
 
-void Base_setLineWeight(EmbGeometry *obj, float lineWeight)
+void embGeometry_setLineWeight(EmbGeometry *obj, float lineWeight)
 {
     printf("%f", lineWeight);
     /*
@@ -483,7 +499,7 @@ Base_objectRubberText(EmbGeometry *obj, const char *key)
 }
 
 /*
-void Base_drawRubberLine(const EmbLine& rubLine, QPainter* painter, const char* colorFromScene)
+void embGeometry_drawRubberLine(const EmbLine& rubLine, QPainter* painter, const char* colorFromScene)
 {
     if (painter) {
         QGraphicsScene* objScene = scene();
@@ -496,7 +512,7 @@ void Base_drawRubberLine(const EmbLine& rubLine, QPainter* painter, const char* 
     }
 }
 
-void Base_realRender(QPainter* painter, const QPainterPath& renderPath)
+void embGeometry_realRender(QPainter* painter, const QPainterPath& renderPath)
 {
     QColor color1 = objectColor();       //lighter color
     QColor color2  = color1.darker(150); //darker color
@@ -881,7 +897,7 @@ void embCircle_updateRubber(QPainter* painter)
         arc.mid.y = sceneTan2Point.y();
         arc.end.x = sceneTan3Point.x();
         arc.end.y = sceneTan3Point.y();
-        getArcCenter(arc, &sceneCenter);
+        embArc_center(arc, &sceneCenter);
         EmbVector sceneCenterPoint(sceneCenter.x, sceneCenter.y);
         EmbLine sceneLine(sceneCenterPoint, sceneTan3Point);
         setCenter(sceneCenterPoint);

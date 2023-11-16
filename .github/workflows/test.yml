@@ -14,8 +14,7 @@ jobs:
       run: |
         git clone https://github.com/Embroidermodder/libembroidery
         cd libembroidery
-        . qa_test.sh
-        cmake_build
-        all_tests
+        bash build.sh
+        bash builds.sh test
       shell: bash
         

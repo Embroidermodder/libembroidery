@@ -269,7 +269,7 @@ writeCsv(EmbPattern* pattern, FILE* file) {
     /* write colors */
     fprintf(file, "\"#\",\"[THREAD_NUMBER]\",\"[RED]\",\"[GREEN]\",");
     fprintf(file, "\"[BLUE]\",\"[DESCRIPTION]\",\"[CATALOG_NUMBER]\"\n");
-   
+
     for (i = 0; i < pattern->thread_list->count; i++) {
         EmbThread thr = pattern->thread_list->thread[i];
         /* TODO: fix segfault that backtraces here when

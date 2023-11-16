@@ -142,7 +142,7 @@ readJef(EmbPattern* pattern, FILE* file) {
         if (fread(b, 1, 2, file) != 2) {
             break;
         }
-       
+
         if (b[0] == 0x80) {
             if (b[1] & 1) {
                 if (fread(b, 1, 2, file) != 2) {

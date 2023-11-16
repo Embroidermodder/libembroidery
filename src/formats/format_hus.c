@@ -193,7 +193,7 @@ writeHus(EmbPattern* pattern, FILE* file)
     unsigned int code, colors, offset1, offset2;
     unsigned char *xValues = 0, *yValues = 0, *attributeValues = 0,
         *attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
-   
+
     stitchCount = pattern->stitch_list->count;
     /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
     minColors = pattern->thread_list->count;

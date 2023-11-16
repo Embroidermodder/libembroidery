@@ -41,7 +41,7 @@ readSew(EmbPattern* pattern, FILE* file)
     fseek(file, 0x00, SEEK_SET);
     numberOfColors = fgetc(file);
     numberOfColors += (fgetc(file) << 8);
-   
+
 
     for (i = 0; i < numberOfColors; i++) {
         int color = fread_int16(file);

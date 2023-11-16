@@ -76,7 +76,7 @@ embArray_resize(EmbArray *a)
         }
         break;
     }
-   
+
     return 1;
 }
 

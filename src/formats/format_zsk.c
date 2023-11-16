@@ -25,12 +25,12 @@ readZsk(EmbPattern* pattern, FILE* file)
     char b[3];
     int stitchType;
     unsigned char colorNumber;
-   
+
     fseek(file, 0, SEEK_END);
     if (ftell(file) < 0x230) {
         return 0;
     }
-   
+
     fseek(file, 0x230, SEEK_SET);
     colorNumber = fgetc(file);
     while (colorNumber != 0) {

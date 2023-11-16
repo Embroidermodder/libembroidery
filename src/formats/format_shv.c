@@ -88,7 +88,7 @@ readShv(EmbPattern* pattern, FILE* file)
     something2 = (char)fgetc(file);
     numberOfSections = fgetc(file);
     something3 = (char)fgetc(file);
-   
+
     if (emb_verbose>1) {
         printf("magicCode: %d\n", magicCode);
         printf("halfDesignWidth: %d\n", halfDesignWidth);
@@ -103,7 +103,7 @@ readShv(EmbPattern* pattern, FILE* file)
         printf("number of sections: %d\n", numberOfSections);
         printf("something3: %d\n", something3);
     }
-       
+
     for (i = 0; i < numberOfColors; i++) {
         unsigned int stitchCount, colorNumber;
         embInt_read(file, "stitchCount", &stitchCount, EMB_INT32_BIG);
@@ -114,7 +114,7 @@ readShv(EmbPattern* pattern, FILE* file)
     }
 
     fseek(file, -2, SEEK_CUR);
-   
+
     for (i = 0; !feof(file); i++) {
         unsigned char b0, b1;
         int flags;

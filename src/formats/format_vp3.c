@@ -212,7 +212,7 @@ readVp3(EmbPattern* pattern, FILE* file)
         fseek(file, unknownThreadString, SEEK_CUR);
         numberOfBytesInColor = fread_int32_be(file);
         fseek(file, 0x3, SEEK_CUR);
-       
+
         if (emb_verbose>1) {
             printf("number of bytes in color: %d\n", numberOfBytesInColor);
             printf("thread color number: %s\n", threadColorNumber);

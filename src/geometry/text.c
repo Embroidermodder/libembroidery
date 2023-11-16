@@ -123,12 +123,12 @@ void textSingle_setText(const std::string& str)
         textPath.translate(-jRect.right(), 0);
     }
     else if (objTextJustify == "Aligned") {
-       
+
     } //TODO: TextSingleObject Aligned Justification
     else if (objTextJustify == "Middle") {
         textPath.translate(-jRect.center()); }
     else if (objTextJustify == "Fit") {
-       
+
     } //TODO: TextSingleObject Fit Justification
     else if (objTextJustify == "Top Left") {
         textPath.translate(-jRect.topLeft());

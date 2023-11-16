@@ -166,7 +166,7 @@ embFormat_getExtension(const char *fileName, char *ending)
     if (strlen(fileName) == 0) {
         return 0;
     }
-   
+
     offset = strrchr(fileName, '.');
     if (offset==0) {
         return 0;

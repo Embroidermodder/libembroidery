@@ -145,7 +145,7 @@ embImage_create(int width, int height)
     image.height = height;
     image.data = malloc(4*width*height);
     return image;
-   
+
 }
 
 /**

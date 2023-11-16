@@ -574,7 +574,7 @@ DrawGraphics(EmbPattern p)
                                                      StitchType.Jump, colorIndex));
             }
             foreach (Point t in stitchObject.SideOne) {
-           
+
                 outPattern.stitch_list.Add(new Stitch(t.X, t.Y,
                                                      StitchType.Normal, colorIndex));
             }

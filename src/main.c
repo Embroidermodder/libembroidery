@@ -1202,7 +1202,7 @@ testMain(int level)
         report(renderResult, "Rendering Hilbert Curve");
         report(simulateResult, "Simulating Hilbert Curve");
     }
-   
+
     embPattern_free(pattern);
     if (level > 0) {
         puts("More expensive tests.");
@@ -1402,13 +1402,13 @@ testGeomArc(void)
     clockwise = embArc_clockwise(arc);
     /* bulge = embArc_bulge(arc); */
     if (emb_verbose > 0) {
-    	fprintf(stdout, "Clockwise Test:\n");
-    	printArcResults(bulge, arc, center.x, center.y,
-    				radius, diameter,
-    				chord,
-    				chordMid.x, chordMid.y,
-    				sagitta,   apothem,
-    				incAngle,  clockwise);
+        fprintf(stdout, "Clockwise Test:\n");
+        printArcResults(bulge, arc, center.x, center.y,
+                    radius, diameter,
+                    chord,
+                    chordMid.x, chordMid.y,
+                    sagitta,   apothem,
+                    incAngle,  clockwise);
     }
 
     bulge  = 2.414213562373095;
@@ -1429,13 +1429,13 @@ testGeomArc(void)
     clockwise = embArc_clockwise(arc);
     /* bulge = embArc_bulge(arc); */
     if (emb_verbose > 0) {
-    	fprintf(stdout, "Counter-Clockwise Test:\n");
-    	printArcResults(bulge, arc, center.x, center.y,
-    				radius,    diameter,
-    				chord,
-    				chordMid.x, chordMid.y,
-    				sagitta,   apothem,
-    				incAngle,  clockwise);
+        fprintf(stdout, "Counter-Clockwise Test:\n");
+        printArcResults(bulge, arc, center.x, center.y,
+                    radius,    diameter,
+                    chord,
+                    chordMid.x, chordMid.y,
+                    sagitta,   apothem,
+                    incAngle,  clockwise);
     }
 
     return 0;

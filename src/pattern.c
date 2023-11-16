@@ -1023,7 +1023,7 @@ embPattern_designDetails(EmbPattern *pattern)
     trim_stitches = 0;
     unknown_stitches = 0;
     bounds = embPattern_calcBoundingBox(pattern);
-   
+
     if (emb_verbose > 1) {
         printf("colors: %d\n", colors);
         printf("num_stitches: %d\n", num_stitches);

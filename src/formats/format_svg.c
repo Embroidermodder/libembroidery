@@ -324,7 +324,7 @@ parse_path(EmbPattern *p)
                         relative = 0;
                         /* relative to prior coordinate point
                          * or absolute coordinate? */
-                       
+
                         if (cmd >= 'a' && cmd <= 'z') {
                             relative = 1;
                         }
@@ -483,7 +483,7 @@ parse_path(EmbPattern *p)
     /* TODO: subdivide numMoves > 1 */
 
     color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
-       
+
     path.pointList = pointList;
     path.flagList = flagList;
     path.color = color;
@@ -505,7 +505,7 @@ EmbArray *parse_pointlist(EmbPattern *p)
     EmbArray* pointList = 0;
 
     char* polybuff = 0;
-   
+
     if (emb_verbose > 1) {
         printf("Called with %p\n", (void*)p);
     }
@@ -822,7 +822,7 @@ readSvg(EmbPattern* pattern, FILE* file) {
 
     currentAttribute[0] = 0;
     currentValue[0] = 0;
-   
+
     /* Pre-flip in case of multiple reads on the same pattern */
     embPattern_flipVertical(pattern);
 
@@ -952,7 +952,7 @@ writeSvg(EmbPattern* pattern, FILE *file)
     *       Until all of the formats and API is stable, the width, height and viewBox attributes need to be left unspecified.
     *       If the attribute values are incorrect, some applications wont open it at all.
     */
-   
+
     /* Add a margin of 10%. */
     border = boundingRect;
     border.left *= 10.0;

@@ -36,7 +36,7 @@ readU01(EmbPattern* pattern, FILE* file)
     fseek(file, 0, SEEK_END);
     fileLength = ftell(file);
     fseek(file, 0x100, SEEK_SET);
-    
+   
     if (emb_verbose>1) {
         printf("file length: %d\n", fileLength);
     }

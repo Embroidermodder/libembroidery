@@ -82,7 +82,7 @@ ofmReadBlockHeader(FILE* file)
     /* TODO: determine what the unknown variables represent */
     int unknown3, unknown2;
     /* TODO: determine what this represents */
-    
+   
     if (!file) {
         printf("ERROR: format-ofm.c ofmReadBlockHeader(), file argument is null\n");
         return;

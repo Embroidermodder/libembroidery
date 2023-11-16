@@ -469,7 +469,7 @@ typedef struct _bcf_directory
 typedef struct _bcf_file_header
 {
     unsigned char  signature[8];
-    unsigned char  CLSID[16]; 
+    unsigned char  CLSID[16];
     unsigned short minorVersion;
     unsigned short majorVersion;
     unsigned short byteOrder;

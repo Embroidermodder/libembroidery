@@ -65,7 +65,7 @@ readThr(EmbPattern* pattern, FILE* file)
             case 1:
             case 2:
                 /* skip the file header extension */
-                fseek(file, 144, SEEK_CUR); 
+                fseek(file, 144, SEEK_CUR);
                 break;
             default:
                 return 0; /* unsupported version */

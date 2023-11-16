@@ -16,7 +16,7 @@
 /**
  * \file format_csv.c Comma Separated Values (.csv)
  * \addindex csv
- * 
+ *
  * Comma Seperated Values files aren't a universal system, here we aim to
  * offer a broad support. The dialect is detected based on the opening lines,
  * as each manufacturer should label their CSV files there.
@@ -24,7 +24,7 @@
  * \subsubsection emb-2-csv-dialect Embroidermodder 2.0 CSV Dialect
  *
  * Our own version has the identifier comment line:
- * 
+ *
  * | Control Symbol | Type | Description |
  * |---|---|
  * | `#` | `COMMENT` | |
@@ -35,10 +35,10 @@
  * | `*` | `COLOR` | To change a color: used for trim as well |
  * | `*` | `END` | To end a pattern. |
  * | `*` | `UNKNOWN` | For any feature that we can't identify.
- * 
+ *
  * \subsubsection embird-csv-dialect EmBird CSV Dialect
  * \addindex Embird
- * 
+ *
  */
 
 char* csvStitchFlagToStr(int flags)
@@ -191,7 +191,7 @@ readCsv(EmbPattern* pattern, FILE* file) {
                         xx = atof(buff);
                     } else if (cellNum == 4) {
                         yy = atof(buff);
-                        /* printf("%d %d %f %f\n", 
+                        /* printf("%d %d %f %f\n",
                             pattern->stitch_list->count, flags, xx, yy); */
                         embPattern_addStitchAbs(pattern, xx, yy, flags, 1);
                         csvMode = CSV_MODE_NULL;
@@ -269,10 +269,10 @@ writeCsv(EmbPattern* pattern, FILE* file) {
     /* write colors */
     fprintf(file, "\"#\",\"[THREAD_NUMBER]\",\"[RED]\",\"[GREEN]\",");
     fprintf(file, "\"[BLUE]\",\"[DESCRIPTION]\",\"[CATALOG_NUMBER]\"\n");
-    
+   
     for (i = 0; i < pattern->thread_list->count; i++) {
         EmbThread thr = pattern->thread_list->thread[i];
-        /* TODO: fix segfault that backtraces here when 
+        /* TODO: fix segfault that backtraces here when
             libembroidery-convert from dst to csv. */
         fprintf(file, "\"$\",\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
             i+1,

@@ -62,7 +62,7 @@ unsigned short fread_uint16(FILE *file);
 short fread_int16(FILE* f);
 int fread_int32_be(FILE* f);
 void embInt_read(FILE* f, char *label, void *b, int mode);
- 
+
 void binaryWriteUIntBE(FILE* f, unsigned int data);
 void binaryWriteUInt(FILE* f, unsigned int data);
 void binaryWriteIntBE(FILE* f, int data);

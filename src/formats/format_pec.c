@@ -81,9 +81,9 @@ pecEncodeJump(FILE* file, int x, int types)
     unsigned int orPart = 0x80;
     unsigned char toWrite;
 
-    if (!file) { 
+    if (!file) {
         printf("ERROR: format-pec.c pecEncodeJump(), file argument is null\n");
-        return; 
+        return;
     }
     if (types & TRIM) {
         orPart |= 0x20;
@@ -261,7 +261,7 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
     for (i = 0; i < pattern->thread_list->count; i++) {
         EmbColor thr = pattern->thread_list->thread[i].color;
         unsigned char color = (unsigned char)
-            embThread_findNearestThread(thr, 
+            embThread_findNearestThread(thr,
             (EmbThread*)pecThreads, pecThreadCount);
         fwrite(&color, 1, 1, file);
     }
@@ -336,9 +336,9 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
 char
 writePec(EmbPattern* pattern, const char* fileName, FILE* file)
 {
-    /* TODO: There needs to be a matching flipVertical() call after the write 
+    /* TODO: There needs to be a matching flipVertical() call after the write
         to ensure multiple writes from the same pattern work properly */
-    embPattern_flipVertical(pattern); 
+    embPattern_flipVertical(pattern);
     embPattern_fixColorCount(pattern);
     embPattern_correctForMaxStitchLength(pattern, 12.7, 204.7);
     embPattern_scale(pattern, 10.0);

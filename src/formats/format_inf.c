@@ -54,7 +54,7 @@ char
 writeInf(EmbPattern* pattern, FILE* file)
 {
     int i, bytesRemaining;
-    
+   
     binaryWriteUIntBE(file, 0x01);
     binaryWriteUIntBE(file, 0x08);
     /* write place holder offset */

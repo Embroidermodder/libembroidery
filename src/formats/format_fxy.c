@@ -23,7 +23,7 @@ Stitch Only Format.
 char
 readFxy(EmbPattern* pattern, FILE* file)
 {
-    /* TODO: review for combining code. This line appears 
+    /* TODO: review for combining code. This line appears
         to be the only difference from the GT format. */
     fseek(file, 0x100, SEEK_SET);
 

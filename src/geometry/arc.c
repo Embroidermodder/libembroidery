@@ -160,7 +160,7 @@ embArc_bulge(EmbArc arc)
 }
 
 /* Calculates Arc Geometry from Bulge Data.
- * Returns false if there was an error calculating the data. 
+ * Returns false if there was an error calculating the data.
     Calculate the Sagitta Angle (from chordMid to arcMid)
     if (*clockwise) sagittaAngleInRadians = chordAngleInRadians + radians(90.0);
     else           sagittaAngleInRadians = chordAngleInRadians - radians(90.0);

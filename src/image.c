@@ -120,8 +120,8 @@ embPattern_render(EmbPattern *p, char *fname)
 }
 
 /**
- * \a pattern \a fname 
- * @return int 
+ * \a pattern \a fname
+ * @return int
  *
  * Simulate the stitching of a pattern, using the image for rendering
  * hints about how to represent the pattern.
@@ -134,8 +134,8 @@ embPattern_simulate(EmbPattern *pattern, char *fname)
 }
 
 /**
- * \a width \a height 
- * @return EmbImage 
+ * \a width \a height
+ * @return EmbImage
  */
 EmbImage
 embImage_create(int width, int height)
@@ -145,11 +145,11 @@ embImage_create(int width, int height)
     image.height = height;
     image.data = malloc(4*width*height);
     return image;
-    
+   
 }
 
 /**
- * \a image \a fname 
+ * \a image \a fname
  */
 void
 embImage_read(EmbImage *image, char *fname)
@@ -164,8 +164,8 @@ embImage_read(EmbImage *image, char *fname)
 }
 
 /**
- * \a image \a fname 
- * @return int 
+ * \a image \a fname
+ * @return int
  */
 int
 embImage_write(EmbImage *image, char *fname)
@@ -180,7 +180,7 @@ embImage_write(EmbImage *image, char *fname)
 }
 
 /**
- * \a image 
+ * \a image
  */
 void
 embImage_free(EmbImage *image)

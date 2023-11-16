@@ -23,7 +23,7 @@ Stitch Only Format.
 char
 readGt(EmbPattern* pattern, FILE* file)
 {
-    /* TODO: review for combining code. This line appears 
+    /* TODO: review for combining code. This line appears
         to be the only difference from the FXY format. */
     fseek(file, 0x200, SEEK_SET);
 

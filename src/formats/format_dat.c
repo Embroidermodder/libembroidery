@@ -15,7 +15,7 @@
  * \file The Barudan Embroidery Format (.dat)
  * \addindex dat
  * \addindex Barudan
- * 
+ *
  * Stitch Only Format.
  */
 

@@ -86,7 +86,7 @@ write10o(EmbPattern* pattern, FILE* file)
         if (st.flags == END) {
             b[2] = 0xF8;
         }
-        fwrite(b, 1, 3, file);    
+        fwrite(b, 1, 3, file);   
     }
     return 1;
 }

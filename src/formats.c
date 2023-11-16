@@ -17,10 +17,10 @@
 #include "embroidery_internal.h"
 
 /**
- * @brief 
+ * @brief
  *
- * \todo This list needs reviewed in case some stitch 
- *   formats also can contain object data (EMBFORMAT_STCHANDOBJ). * 
+ * \todo This list needs reviewed in case some stitch
+ *   formats also can contain object data (EMBFORMAT_STCHANDOBJ). *
  */
 EmbFormatList formatTable[numberOfFormats] = {
     {".10o", "Toyota Embroidery Format",           'U', ' ', EMBFORMAT_STITCHONLY, 0, 1, 0},
@@ -87,8 +87,8 @@ EmbFormatList formatTable[numberOfFormats] = {
 };
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 const char imageWithFrame[38][48] = {
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -132,9 +132,9 @@ const char imageWithFrame[38][48] = {
 };
 
 /**
- * @brief 
- * 
- * \a data 
+ * @brief
+ *
+ * \a data
  */
 void
 safe_free(void *data)
@@ -146,11 +146,11 @@ safe_free(void *data)
 }
 
 /**
- * @brief 
- * 
- * \a fileName 
- * \a ending 
- * @return int 
+ * @brief
+ *
+ * \a fileName
+ * \a ending
+ * @return int
  */
 int
 embFormat_getExtension(const char *fileName, char *ending)
@@ -166,7 +166,7 @@ embFormat_getExtension(const char *fileName, char *ending)
     if (strlen(fileName) == 0) {
         return 0;
     }
-    
+   
     offset = strrchr(fileName, '.');
     if (offset==0) {
         return 0;
@@ -182,10 +182,10 @@ embFormat_getExtension(const char *fileName, char *ending)
 }
 
 /**
- * @brief 
- * 
- * \a fileName 
- * @return int 
+ * @brief
+ *
+ * \a fileName
+ * @return int
  */
 int
 emb_identify_format(const char *fileName)
@@ -204,10 +204,10 @@ emb_identify_format(const char *fileName)
 }
 
 /**
- * @brief 
- * 
- * \a f 
- * @return short 
+ * @brief
+ *
+ * \a f
+ * @return short
  */
 short
 fread_int16(FILE* f)
@@ -218,10 +218,10 @@ fread_int16(FILE* f)
 }
 
 /**
- * @brief 
- * 
- * \a f 
- * @return unsigned short 
+ * @brief
+ *
+ * \a f
+ * @return unsigned short
  *
  * \todo replace with embInt_read
  */
@@ -234,10 +234,10 @@ fread_uint16(FILE* f)
 }
 
 /**
- * @brief 
- * 
- * \a f 
- * @return int 
+ * @brief
+ *
+ * \a f
+ * @return int
  *
  * \todo replace with embInt_read
  */
@@ -250,10 +250,10 @@ fread_int32_be(FILE* f)
 }
 
 /**
- * @brief 
- * 
- * \a f 
- * @return int 
+ * @brief
+ *
+ * \a f
+ * @return int
  */
 void
 fpad(FILE* file, char c, int n)
@@ -265,13 +265,13 @@ fpad(FILE* file, char c, int n)
 }
 
 /**
- * @brief 
- * 
- * \a f 
+ * @brief
+ *
+ * \a f
  * \a data
  *
  * \todo replace with embInt_read
- */ 
+ */
 void
 binaryWriteShort(FILE* f, short data)
 {
@@ -279,13 +279,13 @@ binaryWriteShort(FILE* f, short data)
 }
 
 /**
- * @brief 
- * 
- * \a f 
+ * @brief
+ *
+ * \a f
  * \a data
  *
  * \todo replace with embInt_read
- */ 
+ */
 void
 binaryWriteUShort(FILE* f, unsigned short data)
 {
@@ -293,13 +293,13 @@ binaryWriteUShort(FILE* f, unsigned short data)
 }
 
 /**
- * @brief 
- * 
- * \a f 
+ * @brief
+ *
+ * \a f
  * \a data
  *
  * \todo replace with embInt_read
- */ 
+ */
 void
 binaryWriteUShortBE(FILE* f, unsigned short data)
 {
@@ -307,13 +307,13 @@ binaryWriteUShortBE(FILE* f, unsigned short data)
 }
 
 /**
- * @brief 
- * 
- * \a f 
+ * @brief
+ *
+ * \a f
  * \a data
  *
  * \todo replace with embInt_read
- */ 
+ */
 void
 binaryWriteInt(FILE* f, int data)
 {
@@ -321,13 +321,13 @@ binaryWriteInt(FILE* f, int data)
 }
 
 /**
- * @brief 
- * 
- * \a f 
+ * @brief
+ *
+ * \a f
  * \a data
  *
  * \todo replace with embInt_read
- */ 
+ */
 void
 binaryWriteIntBE(FILE* f, int data)
 {
@@ -335,13 +335,13 @@ binaryWriteIntBE(FILE* f, int data)
 }
 
 /**
- * @brief 
- * 
- * \a f 
+ * @brief
+ *
+ * \a f
  * \a data
  *
  * \todo replace with embInt_read
- */ 
+ */
 void
 binaryWriteUInt(FILE* f, unsigned int data)
 {
@@ -349,13 +349,13 @@ binaryWriteUInt(FILE* f, unsigned int data)
 }
 
 /**
- * @brief 
- * 
- * \a f 
+ * @brief
+ *
+ * \a f
  * \a data
  *
  * \todo replace with embInt_read
- */ 
+ */
 void
 binaryWriteUIntBE(FILE* f, unsigned int data)
 {
@@ -363,12 +363,12 @@ binaryWriteUIntBE(FILE* f, unsigned int data)
 }
 
 /**
- * @brief 
- * 
- * \a pattern 
- * \a fileName 
- * \a format 
- * @return char 
+ * @brief
+ *
+ * \a pattern
+ * \a fileName
+ * \a format
+ * @return char
  */
 char
 embPattern_read(EmbPattern* pattern, const char *fileName, int format)
@@ -592,12 +592,12 @@ embPattern_read(EmbPattern* pattern, const char *fileName, int format)
 }
 
 /**
- * @brief 
- * 
- * \a pattern 
- * \a fileName 
- * \a format 
- * @return char 
+ * @brief
+ *
+ * \a pattern
+ * \a fileName
+ * \a format
+ * @return char
  */
 char
 embPattern_write(EmbPattern* pattern, const char *fileName, int format)
@@ -826,11 +826,11 @@ embPattern_write(EmbPattern* pattern, const char *fileName, int format)
 }
 
 /**
- * @brief 
- * 
- * \a pattern 
- * \a fileName 
- * @return char 
+ * @brief
+ *
+ * \a pattern
+ * \a fileName
+ * @return char
  */
 char
 embPattern_readAuto(EmbPattern* pattern, const char* fileName)
@@ -845,11 +845,11 @@ embPattern_readAuto(EmbPattern* pattern, const char* fileName)
 }
 
 /**
- * @brief 
- * 
- * \a pattern 
- * \a fileName 
- * @return char 
+ * @brief
+ *
+ * \a pattern
+ * \a fileName
+ * @return char
  */
 char
 embPattern_writeAuto(EmbPattern* pattern, const char* fileName)

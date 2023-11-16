@@ -151,7 +151,7 @@ readVip(EmbPattern* pattern, FILE* file)
 
     fseek(file, header.xOffset, SEEK_SET);
     xData = (unsigned char*)malloc(header.yOffset - header.xOffset);
-    if (!xData) { 
+    if (!xData) {
         printf("ERROR: format-vip.c readVip(), cannot allocate memory for xData\n");
         return 0;
     }

@@ -144,7 +144,7 @@ readStx(EmbPattern* pattern, FILE* file)
     header = (char*)headerBytes;
 
     /* bytes 7-9 */
-    memcpy(filetype, &header[0], 3); 
+    memcpy(filetype, &header[0], 3);
     /* bytes 10-13 */
     memcpy(version, &header[3], 4);
     filetype[3] = '\0';
@@ -183,8 +183,8 @@ readStx(EmbPattern* pattern, FILE* file)
     }
 
     gif = (unsigned char*)malloc(imageLength);
-    if (!gif) { 
-        printf("ERROR: format-stx.c readStx(), unable to allocate memory for gif\n"); 
+    if (!gif) {
+        printf("ERROR: format-stx.c readStx(), unable to allocate memory for gif\n");
         return 0;
     }
     fread(gif, 1, imageLength, file); /* TODO: check return value */
@@ -195,7 +195,7 @@ readStx(EmbPattern* pattern, FILE* file)
     stxThreads = (StxThread*)malloc(sizeof(StxThread) * threadCount);
     if (!stxThreads) {
         printf("ERROR: format-stx.c readStx(), unable ");
-        printf("to allocate memory for stxThreads\n"); 
+        printf("to allocate memory for stxThreads\n");
         return 0;
     }
     for (i = 0; i < threadCount; i++) {
@@ -239,12 +239,12 @@ readStx(EmbPattern* pattern, FILE* file)
                 case 2:
                     b0 = (char)fgetc(file);
                     b1 = (char)fgetc(file);
-                    embPattern_addStitchRel(pattern, b0 / 10.0, 
+                    embPattern_addStitchRel(pattern, b0 / 10.0,
                         b1 / 10.0, JUMP, 1);
                     i++;
                     break;
                 case -94:
-                    /* TODO: Is this a synchronize? 
+                    /* TODO: Is this a synchronize?
                         If so document it in the comments. */
                     break;
                 default:

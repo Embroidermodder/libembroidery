@@ -15,10 +15,10 @@
  * \file format_100.c The Toyota Embroidery Format (.10o)
  * \addindex 10o
  * \addindex Toyota
- * 
+ *
  * The Toyota 10o format is a stitch-only format that uses
  * an external color file.
- * 
+ *
  * The stitch encoding is in 3 byte chunks.
  */
 

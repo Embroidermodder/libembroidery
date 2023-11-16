@@ -74,7 +74,7 @@ writeTxt(EmbPattern* pattern, FILE* file)
 
     for (i = 0; i < pattern->stitch_list->count; i++) {
         EmbStitch s = pattern->stitch_list->stitch[i];
-        fprintf(file, "%.1f,%.1f color:%i flags:%i\n", 
+        fprintf(file, "%.1f,%.1f color:%i flags:%i\n",
                 s.x, s.y, s.color, s.flags);
     }
     return 1;

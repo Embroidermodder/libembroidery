@@ -58,7 +58,7 @@ int hus_compress(char *data, int length, char *output, int *output_length)
 
 /**
  * These next 2 functions represent the Huffman class in tartarize's code.
- * \a h 
+ * \a h
  */
 void
 huffman_build_table(huffman *h)
@@ -87,8 +87,8 @@ huffman_build_table(huffman *h)
 }
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 int huffman_lookup_data[2];
 
@@ -112,8 +112,8 @@ int *huffman_lookup(huffman h, int byte_lookup)
 /* These functions represent the EmbCompress class. */
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void compress_init()
 {
@@ -121,7 +121,7 @@ void compress_init()
 }
 
 /**
- * \a c \a length 
+ * \a c \a length
  * Returns .
  */
 int

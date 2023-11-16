@@ -72,7 +72,7 @@ readXxx(EmbPattern* pattern, FILE* file)
             flags = TRIM;
         } else if (b0 == 0x7F) {
             /* TODO: LOOKS LIKE THESE CODES ARE IN THE HEADER */
-            if (b1 != 0x17 && b1 != 0x46 && b1 >= 8) { 
+            if (b1 != 0x17 && b1 != 0x46 && b1 >= 8) {
                 b0 = 0;
                 b1 = 0;
                 thisStitchJump = 1;
@@ -194,7 +194,7 @@ writeXxx(EmbPattern* pattern, FILE* file)
     fpad(file, 0, 0xC5);
 
     /* place holder for end of stitches */
-    binaryWriteInt(file, 0x0000); 
+    binaryWriteInt(file, 0x0000);
     xxxEncodeDesign(file, pattern);
     endOfStitches = ftell(file);
     fseek(file, 0xFC, SEEK_SET);

@@ -29,7 +29,7 @@ readRgb(EmbPattern* pattern, FILE* file)
     numberOfColors = ftell(file) / 4;
 
     pattern->thread_list->count = 0;
-    
+   
     printf("numberOfColors: %d\n", numberOfColors);
 
     fseek(file, 0x00, SEEK_SET);

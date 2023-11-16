@@ -69,7 +69,7 @@ Uses 3 byte per stitch encoding with the format as follows:
 | Byte 2 | jump | color change | y+81 | y-81 | x-81 | x+81 | set | set |
 
 T01 and Tap appear to use Tajima Ternary.
- 
+
 Where the stitch type is determined as:
 
 * Normal Stitch `0b00000011 0x03`
@@ -219,7 +219,7 @@ set_dst_variable(EmbPattern* pattern, char* var, char* val) {
     case cci('P','D'):
         /* store this string as-is, it will be saved as-is, 6 characters */
         if (strlen(val) != 6) {
-            /*pattern->messages.add("Warning: in DST file read, 
+            /*pattern->messages.add("Warning: in DST file read,
                 PD is not 6 characters, but ",(int)strlen(val)); */
         }
         /*pattern->set_variable(var,val);*/
@@ -229,9 +229,9 @@ set_dst_variable(EmbPattern* pattern, char* var, char* val) {
     case cci('C','P'): /* Copyright string, arbitrary length */
         /*pattern->set_variable(var,val); TODO: review this line. */
         break;
-        /*Thread Color: #RRGGBB,Description,Catalog Number (1st field RGB 
+        /*Thread Color: #RRGGBB,Description,Catalog Number (1st field RGB
             hex values, 2nd&3rd fields optional arbitrary length) */
-    case cci('T','C'): 
+    case cci('T','C'):
         /* TODO: review these lines below.
         description=split_cell_str(val,2);
         catalog_number=split_cell_str(val,3);
@@ -309,7 +309,7 @@ readDst(EmbPattern* pattern, FILE* file) {
 
     fread(header, 1, 512, file);
 
-    /*TODO:It would probably be a good idea to 
+    /*TODO:It would probably be a good idea to
         validate file before accepting it. */
     /* fill variables from header fields */
     for (i = 0; i < 512; i++) {
@@ -373,7 +373,7 @@ writeDst(EmbPattern* pattern, FILE* file) {
     fprintf(file, "LA:%-16s\x0d", "Untitled");
     fprintf(file, "ST:%7d\x0d", pattern->stitch_list->count);
     /* number of color changes, not number of colors! */
-    fprintf(file, "CO:%3d\x0d", pattern->thread_list->count - 1); 
+    fprintf(file, "CO:%3d\x0d", pattern->thread_list->count - 1);
     fprintf(file,
         "+X:%5d\x0d"
         "-X:%5d\x0d"

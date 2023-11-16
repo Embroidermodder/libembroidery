@@ -1,10 +1,10 @@
-/* 
+/*
  * This file is part of libembroidery.
  *
  * Copyright 2018-2022 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  */
- 
+
 /**
  * \file pattern.c
  * The file is for the management of the main struct: EmbPattern.
@@ -21,14 +21,14 @@
  * Returns a pointer to an EmbPattern. It is created on the heap.
  * The caller is responsible for freeing the allocated memory with
  * embPattern_free().
- * 
- * @return EmbPattern* 
+ *
+ * @return EmbPattern*
  */
 EmbPattern*
 embPattern_create(void)
 {
     EmbPattern* p = (EmbPattern*)malloc(sizeof(EmbPattern));
-    if (!p) { 
+    if (!p) {
         printf("ERROR: emb-pattern.c embPattern_create(), ");
         printf("unable to allocate memory for p\n");
         return 0;
@@ -46,7 +46,7 @@ embPattern_create(void)
 }
 
 /**
- * \a p \a length 
+ * \a p \a length
  */
 void
 embPattern_hideStitchesOverLength(EmbPattern* p, int length)
@@ -73,8 +73,8 @@ embPattern_hideStitchesOverLength(EmbPattern* p, int length)
 }
 
 /**
- * \a pattern \a thread 
- * @return int 
+ * \a pattern \a thread
+ * @return int
  */
 int
 embPattern_addThread(EmbPattern *pattern, EmbThread thread)
@@ -90,7 +90,7 @@ embPattern_addThread(EmbPattern *pattern, EmbThread thread)
 }
 
 /**
- * \a p 
+ * \a p
  */
 void
 embPattern_fixColorCount(EmbPattern* p)
@@ -126,7 +126,7 @@ embPattern_fixColorCount(EmbPattern* p)
 }
 
 /**
- * Copies all of the Embstitch_list data to 
+ * Copies all of the Embstitch_list data to
  * EmbPolylineObjectList data for pattern (\a p).
  */
 void
@@ -209,7 +209,7 @@ embPattern_copyPolylinesTostitch_list(EmbPattern* p)
 
         if (!firstObject) {
             embPattern_addStitchAbs(p,
-                currentPointList->geometry[0].object.point.position.x, 
+                currentPointList->geometry[0].object.point.position.x,
                 currentPointList->geometry[0].object.point.position.y, TRIM, 1);
             embPattern_addStitchRel(p, 0.0, 0.0, STOP, 1);
         }
@@ -219,7 +219,7 @@ embPattern_copyPolylinesTostitch_list(EmbPattern* p)
             currentPointList->geometry[0].object.point.position.y,
             JUMP,
             1);
-        for (j = 1; j < currentPointList->count; j++) { 
+        for (j = 1; j < currentPointList->count; j++) {
             EmbVector v = currentPointList->geometry[j].object.point.position;
             embPattern_addStitchAbs(p, v.x, v.y, NORMAL, 1);
         }
@@ -264,7 +264,7 @@ embPattern_movePolylinesTostitch_list(EmbPattern* p)
  * (\a x,\a y). Positive y is up. Units are in millimeters.
  */
 void
-embPattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y, 
+embPattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y,
                             int flags, int isAutoColorIndex)
 {
     EmbStitch s;
@@ -297,7 +297,7 @@ embPattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y,
         }
     }
 
-    /* NOTE: If the stitch_list is empty, we will create it before adding 
+    /* NOTE: If the stitch_list is empty, we will create it before adding
         stitches to it. The first coordinate will be the HOME position. */
     if (p->stitch_list->count == 0) {
         /* NOTE: Always HOME the machine before starting any stitching */
@@ -321,7 +321,7 @@ embPattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y,
  * Units are in millimeters.
  */
 void
-embPattern_addStitchRel(EmbPattern* p, EmbReal dx, EmbReal dy, 
+embPattern_addStitchRel(EmbPattern* p, EmbReal dx, EmbReal dy,
                             int flags, int isAutoColorIndex)
 {
     EmbReal x, y;
@@ -427,7 +427,7 @@ embPattern_calcBoundingBox(EmbPattern* p)
         EmbGeometry g = p->geometry->geometry[i];
         switch (g.type) {
         case EMB_ARC: {
-            /* TODO: embPattern_calcBoundingBox for arcs, 
+            /* TODO: embPattern_calcBoundingBox for arcs,
             for now just checks the start point */
             EmbArc arc = g.object.arc;
             r.left = EMB_MIN(r.left, arc.start.x);
@@ -710,7 +710,7 @@ embPattern_combineJumpStitches(EmbPattern* p)
  * They need renamed or clarified further.
  */
 void
-embPattern_correctForMaxStitchLength(EmbPattern* p, 
+embPattern_correctForMaxStitchLength(EmbPattern* p,
                         EmbReal maxStitchLength, EmbReal maxJumpLength)
 {
     if (!p) {
@@ -764,7 +764,7 @@ embPattern_correctForMaxStitchLength(EmbPattern* p,
 void
 embPattern_center(EmbPattern* p)
 {
-    /* TODO: review this. currently not used in anywhere. 
+    /* TODO: review this. currently not used in anywhere.
         Also needs to handle various design objects */
     int moveLeft, moveTop, i;
     EmbRect boundingRect;
@@ -1023,7 +1023,7 @@ embPattern_designDetails(EmbPattern *pattern)
     trim_stitches = 0;
     unknown_stitches = 0;
     bounds = embPattern_calcBoundingBox(pattern);
-    
+   
     if (emb_verbose > 1) {
         printf("colors: %d\n", colors);
         printf("num_stitches: %d\n", num_stitches);
@@ -1209,8 +1209,8 @@ convert(const char *inf, const char *outf)
 }
 
 /**
- * \a pattern 
- * @return float 
+ * \a pattern
+ * @return float
  */
 float
 embPattern_totalStitchLength(EmbPattern *pattern)

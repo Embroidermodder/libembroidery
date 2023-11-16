@@ -64,7 +64,7 @@ BuildDecryptionTable(int seed) {
     }
 }
 
-unsigned char DecodeCsdByte(long fileOffset, 
+unsigned char DecodeCsdByte(long fileOffset,
         unsigned char val, int type) {
     int newOffset;
 
@@ -167,10 +167,10 @@ readCsd(EmbPattern* pattern, FILE* file) {
         }
         dx = (char) b2;
         dy = (char) b1;
-        if (negativeX) { 
+        if (negativeX) {
             dx = (char) -dx;
         }
-        if (negativeY) { 
+        if (negativeY) {
             dy = (char) -dy;
         }
         if (flags == STOP) {

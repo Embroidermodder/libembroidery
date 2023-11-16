@@ -798,7 +798,7 @@ thread_color Fufu_Rayon_codes[] = {
 };
 
 thread_color Hemingworth_Polyester_codes[] = {
-    {"Pure White", 0xFFFFFFFF, 1001}, 
+    {"Pure White", 0xFFFFFFFF, 1001},
     {"Lemon Ice", 0xFFDDE00F, 1271},
     {"Neon Green", 0xFFC9DD03, 1272},
     {"Brilliant Lime", 0xFF60DD49, 1273},
@@ -2918,7 +2918,7 @@ thread_color Pantone_codes[] = {
     {"END", 0, -1}
 };
 
-/* Based on the manufacturer table at 
+/* Based on the manufacturer table at
  *   https://help.brother-usa.com/app/answers/detail/a_id/75245/~/thread-color-conversion-chart
  * using a colour picker.
  */

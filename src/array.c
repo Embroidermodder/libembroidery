@@ -76,7 +76,7 @@ embArray_resize(EmbArray *a)
         }
         break;
     }
-    
+   
     return 1;
 }
 
@@ -251,7 +251,7 @@ embArray_addPolygon(EmbArray *a, EmbPolygon b)
 
 /**
  * Add a rectangle \a b to the EmbArray \a a and it returns if the
- * element was successfully added. 
+ * element was successfully added.
  */
 int
 embArray_addRect(EmbArray *a, EmbRect b)
@@ -282,7 +282,7 @@ embArray_addStitch(EmbArray *a, EmbStitch b)
 
 /**
  * Add a vector \a b to the EmbArray \a a and it returns if the
- * element was successfully added. 
+ * element was successfully added.
  */
 int
 embArray_addVector(EmbArray *a, EmbVector b)

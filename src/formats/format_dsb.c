@@ -15,7 +15,7 @@
  * \file format_dsb.c The Barudan Embroidery Format (.dsb)
  * \addindex dsb
  * \addindex Barudan
- * 
+ *
  * * Stitch Only Format.
  * * [X] Basic Read Support
  * * [o] Basic Write Support

@@ -77,7 +77,7 @@ readDxf(EmbPattern* pattern, FILE* file)
     pos.y = 0.0;
     prev.x = 0.0;
     prev.y = 0.0;
-   
+  
     puts("overriding dxf. Unimplemented for now.");
     puts("Overridden, defaulting to dst.");
     readDst(pattern, file);
@@ -179,12 +179,12 @@ readDxf(EmbPattern* pattern, FILE* file)
 
                     colorNum = atoi(buff);
                     co = embColor_create(_dxfColorTable[colorNum][0], _dxfColorTable[colorNum][1], _dxfColorTable[colorNum][2]);
-                    if (!co) { 
-                        /* TODO: error allocating memory for EmbColor */  
-                        return 0; 
+                    if (!co) {
+                        /* TODO: error allocating memory for EmbColor */ 
+                        return 0;
                     }
                     printf("inserting:%s,%d,%d,%d\n", layerName, co->r, co->g, co->b);
-                    /* TODO: fix this with a lookup finish this 
+                    /* TODO: fix this with a lookup finish this
                     if (embHash_insert(layerColorHash, emb_strdup(layerName), co))
                     {
                          TODO: log error: failed inserting into layerColorHash

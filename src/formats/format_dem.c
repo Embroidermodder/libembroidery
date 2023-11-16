@@ -15,7 +15,7 @@
  * \file format_dem.c The Melco Embroidery Format (.dem)
  * \addindex dem
  * \addindex Melco
- * 
+ *
  * Stitch Only Format
  */
 

@@ -33,7 +33,7 @@ void write_24bit(FILE* file, int);
 /**
  * @brief Converts a 6 digit hex string (I.E. "00FF00")
  * into an EmbColor and returns it.
- * 
+ *
  * \a val 6 byte code describing the color as a hex string, doesn't require null termination.
  * @return EmbColor the same color as our internal type.
  */
@@ -146,7 +146,7 @@ encode_t01_record(unsigned char b[3], int x, int y, int flags)
 /**
  * Encode the signed ternary of the tajima format into
  * \a b the position values \a x and \a y.
- * 
+ *
  * If the values of \a x or \a y fall outside of the
  * valid range of -121 and +121 then it returns 0 and
  * 1.
@@ -337,14 +337,14 @@ decode_tajima_ternary(unsigned char b[3], int *x, int *y)
 }
 
 /**
- * \a file \a dx \a dy \a flags 
+ * \a file \a dx \a dy \a flags
  */
 void pfaffEncode(FILE* file, int dx, int dy, int flags)
 {
     unsigned char flagsToWrite = 0;
 
     if (!file) {
-        printf("ERROR: format-pcs.c pcsEncode(), file argument is null\n"); 
+        printf("ERROR: format-pcs.c pcsEncode(), file argument is null\n");
         return;
     }
 
@@ -377,10 +377,10 @@ pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 }
 
 /**
- * @brief 
- * 
- * \a value 
- * @return unsigned char 
+ * @brief
+ *
+ * \a value
+ * @return unsigned char
  */
 unsigned char
 mitEncodeStitch(EmbReal value)
@@ -392,10 +392,10 @@ mitEncodeStitch(EmbReal value)
 }
 
 /**
- * @brief 
- * 
- * \a value 
- * @return int 
+ * @brief
+ *
+ * \a value
+ * @return int
  */
 int
 mitDecodeStitch(unsigned char value)
@@ -407,10 +407,10 @@ mitDecodeStitch(unsigned char value)
 }
 
 /**
- * @brief 
- * 
- * \a value 
- * @return int 
+ * @brief
+ *
+ * \a value
+ * @return int
  */
 int
 decodeNewStitch(unsigned char value)
@@ -419,7 +419,7 @@ decodeNewStitch(unsigned char value)
 }
 
 /**
- * \a f \a label \a b \a mode 
+ * \a f \a label \a b \a mode
  *
  * Read and write system for multiple byte types.
  *
@@ -461,7 +461,7 @@ embInt_read(FILE* f, char *label, void *b, int mode)
 }
 
 /**
- * \a f \a label \a b \a mode 
+ * \a f \a label \a b \a mode
  */
 void
 embInt_write(FILE* f, char *label, void *b, int mode)

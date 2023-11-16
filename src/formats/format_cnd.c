@@ -15,11 +15,11 @@
  * \file format_cnd.c The Melco Embroidery Format (.cnd)
  * \addindex cnd
  * \addindex Melco
- * 
+ *
  * The Melco cnd format is a stitch-only format.
- * 
+ *
  * We don't know much about this format.
- * 
+ *
  * \todo Find a source.
  */
 

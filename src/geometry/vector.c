@@ -174,7 +174,7 @@ embVector_length(EmbVector vector)
 }
 
 /**
- * The x-component of the vector 
+ * The x-component of the vector
  */
 EmbReal
 embVector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3)
@@ -186,7 +186,7 @@ embVector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3)
 }
 
 /**
- * The y-component of the vector 
+ * The y-component of the vector
  */
 EmbReal
 embVector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3)

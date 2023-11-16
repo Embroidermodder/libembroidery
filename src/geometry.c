@@ -15,8 +15,8 @@
 /**
  * @brief Our generic object interface backends to each individual type.
  *
- * \a type_in 
- * @return EmbGeometry* 
+ * \a type_in
+ * @return EmbGeometry*
  */
 EmbGeometry *
 embGeometry_init(int type_in)
@@ -150,7 +150,7 @@ embGeometry_boundingRect(EmbGeometry *obj)
 /**
  * @brief Toggle the rubber mode of the object.
  *
- * \a obj 
+ * \a obj
  *
  * \todo Review. This could be controlled by a simple flag.
  */

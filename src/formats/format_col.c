@@ -18,18 +18,18 @@
  * \addindex col
  *
  * An external color file format for formats that do not record
- * their own colors. 
+ * their own colors.
  *
  * It is a human-readable format that has a header that is
  * a single line containing only the number of threads in decimal
  * followed by the windows line break  `\textbackslash{}r\textbackslash{}n}.
- * 
+ *
  * Then the rest of the file is a comma seperated value list of
  * all threads with 4 values per line: the index of the thread
  * then the red, green and blue channels of the color in that order.
  *
  * \subsubsection col-example Example
- * 
+ *
  * If we had a pattern called "example" with four colors:
  * black, red, magenta and cyan in that order then the file is
  * (with the white space written out):

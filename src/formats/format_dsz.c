@@ -47,7 +47,7 @@ readDsz(EmbPattern* pattern, FILE* file)
         }
         if (ctrl & 0x0E) {
             /*
-            TODO: Add back if head number is added to the library 
+            TODO: Add back if head number is added to the library
             int headNumber = (ctrl & 0x0E) >> 1;
             */
             stitchType = STOP;

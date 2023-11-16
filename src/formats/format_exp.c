@@ -37,7 +37,7 @@ readExp(EmbPattern* pattern, FILE* file)
         if (b[0] == 0x80) {
             if (b[1] == 0x01) {
                 if (fread(b, 1, 2, file) != 2) break;
-                /* b0=0x00 and b1=0x00, but accept any, 
+                /* b0=0x00 and b1=0x00, but accept any,
                 not worth crashing over. */
                 flags = STOP;
             } else if (b[1] == 0x04) {
@@ -49,7 +49,7 @@ readExp(EmbPattern* pattern, FILE* file)
                 if (fread(b, 1, 2, file) != 2) {
                     break;
                 }
-                /* b0=0x07 and b1=0x00, but accept any, 
+                /* b0=0x07 and b1=0x00, but accept any,
                 not worth crashing over. */
                 flags = TRIM;
             }

@@ -1,4 +1,4 @@
-/* 
+/*
  * TAP FORMAT
  * This file is part of libembroidery.
  *

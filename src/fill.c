@@ -1,4 +1,4 @@
-/* 
+/*
  * This file is part of libembroidery.
  *
  * Copyright 2018-2022 The Embroidermodder Team
@@ -24,8 +24,8 @@ L_system hilbert_curve_l_system = {
 };
 
 /**
- * \a L \a state \a iterations \a complete 
- * @return int 
+ * \a L \a state \a iterations \a complete
+ * @return int
  *
  * This is a slow generation algorithm.
  */
@@ -84,7 +84,7 @@ Potential reference:
 }
 
 /**
- * \a points \a n_points \a width \a tolerence 
+ * \a points \a n_points \a width \a tolerence
  *
  * Remove points that lie in the middle of two short stitches that could
  * be one longer stitch. Repeat until none are found.
@@ -118,9 +118,9 @@ join_short_stitches(int *points, int *n_points, int width, int tolerence)
 }
 
 /**
- * \a image \a n_points \a subsample_width \a subsample_height 
- * \a threshold 
- * @return int* 
+ * \a image \a n_points \a subsample_width \a subsample_height
+ * \a threshold
+ * @return int*
  *
  * Identify darker pixels to put stitches in.
  */
@@ -151,14 +151,14 @@ threshold_method(EmbImage *image, int *n_points,
 }
 
 /**
- * \a points \a n_points \a width \a bias 
+ * \a points \a n_points \a width \a bias
  *
  * Greedy Algorithm
  * ----------------
  * For each point in the list find the shortest distance to
  * any possible neighbour, then perform a swap to make that
  * neighbour the next item in the list.
- * 
+ *
  * To make the stitches lie more on one axis than the other
  * bias the distance operator to prefer horizontal direction.
  */
@@ -203,8 +203,8 @@ greedy_algorithm(int *points, int n_points, int width, EmbReal bias)
 }
 
 /**
- * \a pattern \a points \a n_points 
- * \a scale \a width \a height 
+ * \a pattern \a points \a n_points
+ * \a scale \a width \a height
  */
 static void
 save_points_to_pattern(
@@ -220,7 +220,7 @@ save_points_to_pattern(
 }
 
 /**
- * \a pattern \a image \a threshhold 
+ * \a pattern \a image \a threshhold
  *
  * Uses a threshhold method to determine where to put
  * lines in the fill.
@@ -228,7 +228,7 @@ save_points_to_pattern(
  * Needs to pass a "donut test", i.e. an image with black pixels where:
  *     10 < x*x + y*y < 20
  * over the area (-30, 30) x (-30, 30).
- * 
+ *
  * Use render then image difference to see how well it passes.
  */
 void
@@ -252,7 +252,7 @@ embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
 }
 
 /**
- * \a pattern \a image \a threshhold 
+ * \a pattern \a image \a threshhold
  *
  * Uses a threshhold method to determine where to put
  * crosses in the fill.
@@ -291,7 +291,7 @@ embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
 }
 
 /**
- * \a pattern \a iterations 
+ * \a pattern \a iterations
  *
  * https://en.wikipedia.org/wiki/Hilbert_curve
  *
@@ -349,7 +349,7 @@ hilbert_curve(EmbPattern *pattern, int iterations)
 }
 
 /**
- * \a state \a iterations 
+ * \a state \a iterations
  *
  * using the "paper folding" method
  * \todo find citation for paper folding method
@@ -379,7 +379,7 @@ void generate_dragon_curve(char *state, int iterations)
  * Create the dragon curve for \a iterations.
  *
  * Returns 0 if the number of iterations is greater than 10
- * and 1 otherwise. 
+ * and 1 otherwise.
  */
 int
 dragon_curve(int iterations)
@@ -397,8 +397,8 @@ dragon_curve(int iterations)
 
 #if 0
 /**
- * \a pattern 
- * @return StitchBlock* 
+ * \a pattern
+ * @return StitchBlock*
  */
 StitchBlock*
 BreakIntoColorBlocks(EmbPattern *pattern)
@@ -424,8 +424,8 @@ BreakIntoColorBlocks(EmbPattern *pattern)
 }
 
 /**
- * \a blocks 
- * @return StitchBlock* 
+ * \a blocks
+ * @return StitchBlock*
  */
 StitchBlock *
 BreakIntoSeparateObjects(EmbStitchBlock* blocks)
@@ -476,8 +476,8 @@ BreakIntoSeparateObjects(EmbStitchBlock* blocks)
 }
 
 /**
- * \a stitchData 
- * @return StitchObject* 
+ * \a stitchData
+ * @return StitchObject*
  */
 StitchObject *
 FindOutline(EmbStitchBlock* stitchData)
@@ -535,8 +535,8 @@ FindOutline(EmbStitchBlock* stitchData)
 }
 
 /**
- * \a p 
- * @return EmbPattern 
+ * \a p
+ * @return EmbPattern
  */
 EmbPattern
 DrawGraphics(EmbPattern p)
@@ -574,7 +574,7 @@ DrawGraphics(EmbPattern p)
                                                      StitchType.Jump, colorIndex));
             }
             foreach (Point t in stitchObject.SideOne) {
-            
+           
                 outPattern.stitch_list.Add(new Stitch(t.X, t.Y,
                                                      StitchType.Normal, colorIndex));
             }
@@ -593,10 +593,10 @@ DrawGraphics(EmbPattern p)
 }
 
 /**
- * @brief 
- * 
- * \a pattern 
- * @return EmbPattern 
+ * @brief
+ *
+ * \a pattern
+ * @return EmbPattern
  */
 EmbPattern
 SimplifyOutline(EmbPattern pattern)
@@ -623,10 +623,10 @@ EmbReal _distanceTolerance;
 
 /**
  * @brief Removes all collinear points on the polygon.
- * 
- * \a vertices 
- * \a collinearityTolerance 
- * @return Vertices 
+ *
+ * \a vertices
+ * \a collinearityTolerance
+ * @return Vertices
  */
 Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance)
 {
@@ -655,10 +655,10 @@ Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance)
 }
 
 /**
- * @brief 
- * 
- * \a vertices 
- * @return Vertices 
+ * @brief
+ *
+ * \a vertices
+ * @return Vertices
  *
  * Removes all collinear points on the polygon. Has a default bias of 0.
  *
@@ -672,11 +672,11 @@ CollinearSimplify(Vertices vertices)
 }
 
 /**
- * @brief 
- * 
- * \a vertices 
- * \a distanceTolerance 
- * @return Vertices 
+ * @brief
+ *
+ * \a vertices
+ * \a distanceTolerance
+ * @return Vertices
  *
  * Ramer-Douglas-Peucker polygon simplification algorithm.
  * This is the general recursive version that does not use the
@@ -702,7 +702,7 @@ DouglasPeuckerSimplify(Vertices vertices, float distanceTolerance)
 }
 
 /**
- * \a vertices \a i \a j 
+ * \a vertices \a i \a j
  */
 void
 SimplifySection(Vertices vertices, int i, int j)
@@ -736,8 +736,8 @@ SimplifySection(Vertices vertices, int i, int j)
 }
 
 /**
- * \a p \a a \a b 
- * @return EmbReal 
+ * \a p \a a \a b
+ * @return EmbReal
  */
 EmbReal
 DistancePointLine(EmbVector p, EmbVector a, EmbVector b)
@@ -783,8 +783,8 @@ DistancePointLine(EmbVector p, EmbVector a, EmbVector b)
 }
 
 /**
- * \a vertices \a areaTolerance 
- * @return public 
+ * \a vertices \a areaTolerance
+ * @return public
  *
  * From physics2d.net.
  */
@@ -832,7 +832,7 @@ ReduceByArea(Vertices vertices, float areaTolerance)
 }
 
 /**
- * \a vertices \a tolerance 
+ * \a vertices \a tolerance
  *
  * From Eric Jordan's convex decomposition library.
  * Merges all parallel edges in the list of vertices.
@@ -903,7 +903,7 @@ void embPolygon_reduceByDistance(EmbArray *vertices, EmbArray *simplified, float
 void embPolygon_reduceByNth(EmbArray *vertices, EmbArray *out, int nth);
 
 /**
- * \a vertices \a simplified \a distance 
+ * \a vertices \a simplified \a distance
  *
  * Reduces the polygon by distance.
  *
@@ -937,7 +937,7 @@ void embPolygon_reduceByDistance(EmbArray *vertices, EmbArray *simplified, float
 }
 
 /**
- * \a vertices \a out \a nth 
+ * \a vertices \a out \a nth
  *
  * Reduces the polygon by removing the Nth vertex in the vertices list.
  * This is a non-destructive function, so the caller is responsible for
@@ -961,8 +961,8 @@ embPolygon_reduceByNth(EmbArray *vertices, EmbArray *out, int nth)
 }
 
 /**
- * \a p1 \a p2 
- * @return EmbPattern* 
+ * \a p1 \a p2
+ * @return EmbPattern*
  */
 EmbPattern *
 embPattern_combine(EmbPattern *p1, EmbPattern *p2)
@@ -985,8 +985,8 @@ embPattern_combine(EmbPattern *p1, EmbPattern *p2)
     return out;
 }
 
-/** 
- * \a p \a arc \a thread_index \a style 
+/**
+ * \a p \a arc \a thread_index \a style
  */
 void
 embPattern_stitchArc(EmbPattern *p, EmbArc arc, int thread_index, int style)
@@ -996,14 +996,14 @@ embPattern_stitchArc(EmbPattern *p, EmbArc arc, int thread_index, int style)
 }
 
 /**
- * \a p \a circle \a thread_index \a style 
+ * \a p \a circle \a thread_index \a style
  *
  * style determines:
  *     stitch density
  *     fill pattern
  *     outline or fill
  *
- * For now it's a straight fill of 1000 stitches of the whole object by 
+ * For now it's a straight fill of 1000 stitches of the whole object by
  * default.
  *
  * Consider the intersection of a line in direction "d" that passes through
@@ -1011,8 +1011,8 @@ embPattern_stitchArc(EmbPattern *p, EmbArc arc, int thread_index, int style)
  *
  *     $(c-r(d/|d|), c + r(d/|d|))$
  *
- * Lines that are above and below this with an even seperation $s$ can be 
- * found by taking the point on the line to be c+sn where the $n$ is the 
+ * Lines that are above and below this with an even seperation $s$ can be
+ * found by taking the point on the line to be c+sn where the $n$ is the
  * unit normal vector to $d$ and the vector to be $d$ again. The
  * intersection points are therefore a right angled triangle, with one side
  * r, another s and the third the length to be solved, by Pythagoras we
@@ -1020,7 +1020,7 @@ embPattern_stitchArc(EmbPattern *p, EmbArc arc, int thread_index, int style)
  *
  *    $(c + sn - \sqrt{r^2-s^2}(d/|d|), c + sn + \sqrt{r^2-s^2}(d/|d|))$
  *
- * repeating this process gives us all the end points and the fill only 
+ * repeating this process gives us all the end points and the fill only
  * alters these lines by splitting the ones longer than some tolerence.
  */
 void
@@ -1050,7 +1050,7 @@ embPattern_stitchCircle(EmbPattern *p, EmbCircle circle, int thread_index, int s
 }
 
 /**
- * \a p \a ellipse \a thread_index \a style 
+ * \a p \a ellipse \a thread_index \a style
  *
  * \todo finish stitchEllipse
  */
@@ -1062,7 +1062,7 @@ embPattern_stitchEllipse(EmbPattern *p, EmbEllipse ellipse, int thread_index, in
 }
 
 /**
- * \a p \a rect \a thread_index \a style 
+ * \a p \a rect \a thread_index \a style
  *
  * \todo finish stitch path
  */
@@ -1074,7 +1074,7 @@ embPattern_stitchPath(EmbPattern *p, EmbPath path, int thread_index, int style)
 }
 
 /**
- * \a p \a rect \a thread_index \a style 
+ * \a p \a rect \a thread_index \a style
  *
  * \todo finish stitch polygon
  */
@@ -1086,7 +1086,7 @@ embPattern_stitchPolygon(EmbPattern *p, EmbPolygon polygon, int thread_index, in
 }
 
 /**
- * \a p \a rect \a thread_index \a style 
+ * \a p \a rect \a thread_index \a style
  *
  * \todo finish stitch polyline
  */
@@ -1097,8 +1097,8 @@ embPattern_stitchPolyline(EmbPattern *p, EmbPolyline polyline, int thread_index,
         p->home.x, polyline.pointList->count, thread_index, style);
 }
 
-/** 
- * \a p \a rect \a thread_index \a style 
+/**
+ * \a p \a rect \a thread_index \a style
  *
  * Here we just stitch the rectangle in the direction of it's longer side.
  */
@@ -1127,7 +1127,7 @@ embPattern_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int style)
 }
 
 /**
- * \a p \a rect \a thread_index \a style 
+ * \a p \a rect \a thread_index \a style
  */
 void
 embPattern_stitchText(EmbPattern *p, EmbRect rect, int thread_index, int style)
@@ -1137,7 +1137,7 @@ embPattern_stitchText(EmbPattern *p, EmbRect rect, int thread_index, int style)
 }
 
 /**
- * \a p 
+ * \a p
  */
 void
 embPattern_convertGeometry(EmbPattern* p)

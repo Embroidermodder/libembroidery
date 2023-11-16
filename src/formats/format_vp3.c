@@ -57,7 +57,7 @@ vp3ReadHoopSection(FILE* file)
 {
     vp3Hoop hoop;
 
-    if (!file) { 
+    if (!file) {
         printf("ERROR: format-vp3.c vp3ReadHoopSection(), file argument is null\n");
         hoop.bottom = 0;
         hoop.left = 0;
@@ -82,7 +82,7 @@ vp3ReadHoopSection(FILE* file)
         hoop.top2 = 0;
         hoop.height = 0;
         hoop.width = 0;
-        return hoop; 
+        return hoop;
     }
 
     embInt_read(file, "hoop right", &(hoop.right), EMB_INT32_BIG);
@@ -212,7 +212,7 @@ readVp3(EmbPattern* pattern, FILE* file)
         fseek(file, unknownThreadString, SEEK_CUR);
         numberOfBytesInColor = fread_int32_be(file);
         fseek(file, 0x3, SEEK_CUR);
-        
+       
         if (emb_verbose>1) {
             printf("number of bytes in color: %d\n", numberOfBytesInColor);
             printf("thread color number: %s\n", threadColorNumber);

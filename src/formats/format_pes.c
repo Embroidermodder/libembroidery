@@ -184,7 +184,7 @@ readPESHeaderV7(FILE *file, EmbPattern* pattern)
     readFeatherPatterns(file, pattern);
     readThreads(file, pattern);
 }
-    
+   
 void
 readPESHeaderV8(FILE *file, EmbPattern* pattern)
 {
@@ -293,7 +293,7 @@ readFeatherPatterns(FILE* file, EmbPattern* pattern)
         return;
     }
 }
-    
+   
 void
 readThreads(FILE* file, EmbPattern* pattern)
 {
@@ -378,7 +378,7 @@ pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
 
     binaryWriteShort(file, 0x07); /* string length */
     fwrite("CSewSeg", 1, 7, file);
-    
+   
     if (colorCount > 1000) {
         puts("Color count exceeds 1000 this is likely an error. Truncating to 1000.");
         colorCount = 1000;

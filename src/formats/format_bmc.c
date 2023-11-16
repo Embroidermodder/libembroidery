@@ -15,7 +15,7 @@
  * \file format_bmc.c The Bitmap Cache Embroidery Format (.bmc)
  * \addindex bmc
  * \addindex Bitmap Cache
- * 
+ *
  * We don't know much about this format. \todo Find a source.
  */
 

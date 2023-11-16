@@ -15,13 +15,13 @@
  * \file format_bro.c The Bits and Volts Embroidery Format (.bro)
  * \addindex bro
  * \addindex Bits and Volts
- * 
+ *
  * The Bits and Volts bro format is a stitch-only format that
  * uses an external color file.
- * 
+ *
  * The header is 256 bytes.
  * There's a series of unknown variables in the header.
- * 
+ *
  * The stitch list uses a variable length encoding which is
  * 2 bytes for any stitch.
  */

@@ -32,7 +32,7 @@ readU00(EmbPattern* pattern, FILE* file)
         return 0;
     }
 
-    /* 16 3byte RGB's start @ 0x08 followed by 14 bytes between 
+    /* 16 3byte RGB's start @ 0x08 followed by 14 bytes between
         0 and 15 with index of color for each color change */
     fseek(file, 0x08, SEEK_SET);
     for (i = 0; i < 16; i++) {

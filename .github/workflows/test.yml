@@ -15,6 +15,6 @@ jobs:
         git clone https://github.com/Embroidermodder/libembroidery
         cd libembroidery
         bash build.sh
-        bash builds.sh test
+        bash build.sh test
       shell: bash
         

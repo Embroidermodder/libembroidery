@@ -1,0 +1,312 @@
+%\documentclass[a4paper]{report}
+
+% Encoding goes first because it effects how other packages work
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Fonts
+\usepackage{courier}
+\usepackage{tgbonum}
+%\usepackage{inconsolata}
+
+\usepackage{geometry}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage{fancyhdr}
+\usepackage{imakeidx}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{longtable}
+\usepackage{booktabs}
+
+\DeclareUnicodeCharacter{0008}{ }
+
+\geometry{
+    margin=1.4in,
+    marginparwidth=0.8in
+}
+
+% Constants that are redefined
+\newcommand{\embversion}{2.0.0-alpha4}
+\newcommand{\version}{\embversion}
+\newcommand{\libembversion}{1.0.0-alpha}
+\newcommand{\publicationdate}{August 2023}
+
+% Marginalia
+\newcommand{\todo}[1]{\marginpar{\emph{TODO}\\{\footnotesize #1}}}
+
+\makeindex
+
+\title{Embroidermodder Reference Manual \embversion}
+\author{The Embroidermodder Team}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  language=C,
+  numbers=left,
+  extendedchars=true,
+%  commentstyle=\color{olivegreen},
+  title=\lstname,
+  frame=single
+}
+
+\hypersetup{
+  colorlinks=true,
+  breaklinks=true,
+  linkcolor=black,
+  filecolor=black,      
+  urlcolor=black,
+  citecolor=black
+}
+
+\begin{document}
+
+\begin{titlepage}
+
+\vspace*{8cm}
+
+\noindent\textbf{\Huge Embroidermodder}
+
+\vspace{10pt}
+
+\noindent\rule{\linewidth}{2pt}
+
+\vspace{10pt}
+
+\begin{flushright}
+\Large
+    Reference Manual
+
+\normalsize
+    The design, analysis and rationale of all Embroidermodder projects.
+
+\embversion
+
+\publicationdate
+\end{flushright}
+
+\vspace{6cm}
+
+\begin{flushleft}
+\Large
+\emph{The Embroidermodder Team}
+
+\url{embroidermodder@gmail.com}
+
+\vspace{10pt}
+
+\noindent\rule{\linewidth}{1pt}
+
+\end{flushleft}
+    
+\end{titlepage}
+
+
+\vspace*{8cm}
+
+\begin{quote}
+Copyright \copyright{} 2013-2023 The Embroidermodder Team.
+
+\url{https://www.libembroidery.org}
+
+The Embroidermodder Team consists of all contributors to our projects
+at \url{https://github.com/Embroidermodder}. A copy of the contributor
+list is in
+\ref{credits-for-embroidermodder-2-libembroidery-and-all-other-related-code}
+and maintained at \url{https://www.libembroidery.org/docs/credits}.
+
+\bigskip
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is included in the section entitled ``GNU
+Free Documentation License''.
+\end{quote}
+
+\newpage
+
+\vspace*{8cm}
+
+\begin{center}
+    \emph{Dedicated to Jonathan Grieg}
+    
+    \vspace{1cm}
+    
+    \emph{Open source software is made by people who care about good tools
+     and other people.}
+    
+    \vspace{1cm}
+    
+    \emph{You gave us so many ideas worth saving and we'll be working on,
+    and sharing, your creations for some time.}
+    
+    \vspace{1cm}
+    
+    \emph{Rock on!}
+\end{center}
+    
+\newpage
+
+\tableofcontents
+
+\include{credits.tex}
+
+\include{gui.tex}
+
+\include{actions.tex}
+	
+\include{electronics.tex}
+
+\include{embedded.tex}
+		
+\include{ideas.tex}
+
+\include{mobile.tex}
+
+\include{todo.tex}
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\appendix
+
+\chapter{Tread Tables}
+
+\if{0}
+\section{Arc Threads}
+
+%\include{tables/arc_polyester_colors.tex}
+
+%\include{tables/arc_rayon_colors.tex}
+
+\section{Coats and Clark Rayon Codes}
+
+%\include{tables/coats_and_clark_rayon_colors.tex}
+
+\section{DXF Colors}
+
+Based on the DraftSight color table.
+
+%\include{tables/shv_colors.tex}
+
+\section{Exquisite Polyester Codes}
+
+%\include{tables/exquisite_polyester_colors.tex}
+
+\section{Fufu Threads}
+
+%\include{tables/fufu_polyester_colors.tex}
+
+%\include{tables/fufu_rayon_colors.tex}
+
+\section{Hemingworth Polyester Codes}
+
+%\include{tables/shv_colors.tex}
+
+\section{HUS Colors}
+
+(find a citation)
+
+CSV format: red, green, blue, name, catalog number
+
+.HUS Colors
+
+%\include{tables/hus_colors.tex}
+
+\section{Isacord Polyester Codes}
+
+%\include{tables/isacord_polyester_colors.tex}
+
+\section{Isafil Rayon Codes}
+
+%\include{tables/isafil_rayon_colors.tex}
+
+\section{JEF Colors}
+
+To do: find a citation
+
+%\include{tables/jef_colors.tex}
+
+\section{Madeira Threads}
+
+%\include{tables/madeira_polyester_colors.tex}
+
+%\include{tables/madeira_rayon_colors.tex}
+
+\section{Marathon Polyester Codes}
+
+%\include{tables/shv_colors.tex}
+
+\section{Marathon Rayon Codes}
+
+%\include{tables/shv_colors.tex}
+
+\section{Metro Polyester Code}
+
+%\include{tables/shv_colors.tex}
+
+\section{Pantone Codes}
+
+See https://www.pantone-colours.com/}
+
+%\include{tables/pantone_colors.tex}
+
+\section{PCM Color Codes}
+
+%\include{tables/pcm_colors.tex}
+
+\section{PEC Color Codes}
+
+%\include{tables/pec_colors.tex}
+
+\section{Robinson Anton Polyester Codes}
+\index{Robinson Anton}
+
+%\include{tables/robinson_anton_colors.tex}
+
+\section{Sigma Polyester Codes}
+
+%\include{tables/sigma_polyester_colors.tex}
+
+\section{Sulky Rayon Colors}
+\index{Sulky}
+\index{Rayon}
+
+%\include{tables/sulky_rayon_colors.tex}
+
+\section{SVG Colors}
+\index{SVG}
+
+Converted from the table at:
+\url{https://www.w3.org/TR/SVGb/types.html#ColorKeywords}
+
+NOTE: This supports both UK and US English names, so the repeated values aren't
+an error.
+
+\section{ThreadArt Threads}
+\index{ThreadArt}
+
+%\include{tables/threadart_polyester_colors.tex}
+
+%\include{tables/threadart_rayon_colors.tex}
+\fi
+
+\section{ThreaDelight Polyester Codes}
+\index{ThreadDelight}
+
+\section{Z102 Threads}
+
+%\include{tables/z102_isacord_polyester_colors.tex}
+
+\include{fdl-1.3.tex}
+
+\printindex
+
+\end{document}

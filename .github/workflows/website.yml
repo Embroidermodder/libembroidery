@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-  schedule:
-    - cron:  '30 17 * * *'
 
 permissions:
   contents: read
@@ -24,12 +22,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build
-        run: bash build.sh
+        run: cd docs/; bash build.sh; cd ..
    
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./build/html
+          path: ./docs/build/html
 
   deploy:
     runs-on: ubuntu-latest

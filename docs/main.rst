@@ -70,12 +70,3 @@ the same file parsing and geometry routines.
 
 .. include:: contact.rst
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-Copyright (C) 2013-2024 The Embroidermodder Team
-

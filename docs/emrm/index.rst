@@ -1,11 +1,16 @@
-Embroidermodder Reference Manual 2.0.0-alpha
+============================================
+Embroidermodder Reference Manual
 ============================================
 
+-----------
+2.0.0-alpha
+-----------
+
 Introduction
-------------
+============
 
 The Embroidermodder Project and Team
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------
 
 The _Embroidermodder 2_ project is a collection of small software
 utilities for manipulating, converting and creating embroidery files in all
@@ -18,7 +23,7 @@ The tools and associated documents are:
 * This reference manual covering the development of all these projects with
 the current version available here:
 https://www.libembroidery.org/embroidermodder_2.0_manual.pdf}
-* The GUI \emph{Embroidermodder 2} covered in Chapter~\ref{GUI}.
+* The GUI *Embroidermodder 2* covered in Chapter~\ref{GUI}.
 * The core library of low-level functions: `libembroidery`, covered in
 Chapter~\ref{libembroidery}
 * The CLI `embroider`, which is part of libembroidery
@@ -31,7 +36,7 @@ maintained in \citep{embroidermodder_website}.
 They all tools to make the standard
 user experience of working with an embroidery machine better without expensive
 software which is locked to specific manufacturers and formats. But ultimately
-we hope that the core \emph{Embroidermodder 2} is a practical, ever-present tool in
+we hope that the core *Embroidermodder 2* is a practical, ever-present tool in
 larger workshops, small cottage industry workshops and personal hobbyist's
 bedrooms.
 
@@ -82,7 +87,8 @@ One reason why this is useful is that the rewrite by Jonathan Greig, John Varga
 and Robin Swift for Embroidermodder 2 should have no regressions: no features
 present in v1 should be missing in v2.
 
-## Features
+Features
+~~~~~~~~
 
 Embroidermodder 2 has many advanced features that enable you to create awesome designs quicker, tweak existing designs to perfection, and can be fully customized to fit your workflow.
 
@@ -97,7 +103,8 @@ A summary of these features:
 * Batch Conversion
 * Scripting API
 
-### Cross Platform
+Cross Platform
+~~~~~~~~~~~~~~
 
 If you use multiple operating systems, it's important to choose software that works on all of them.
 
@@ -161,7 +168,8 @@ available that it can sometimes be confusing whether a design will work with you
 Embroidermodder 2 supports a wide variety of embroidery formats as well as several vector
 formats, such as SVG and DXF. This allows you to worry less about which designs you can use.
 
-### Batch Conversion}
+Batch Conversion
+~~~~~~~~~~~~~~~~
 
 Need to send a client several different formats? Just use libembroidery-convert, our command
 line utility which supports batch file conversion.
@@ -170,7 +178,8 @@ There are a multitude of formats to choose from:
 
 image{images/features-formats-1.png[features formats}
 
-### Scripting API
+Scripting API
+~~~~~~~~~~~~~
 
 If you've got programming skills and there is a feature that isn't currently available that you
 absolutely cannot live without, you have the capability to create your own custom commands for
@@ -181,10 +190,13 @@ us (contact.html) and we will review it for functionality, bugs, and finally inc
 
 An Embroidermodder 2 command excerpt:
 
-\includegraphics[width=0.5\textwidth]{images/features-scripting-1.png}
-%[scripting screenshot}
+.. image::
+   images/features-scripting-1.png
 
-## Scraps}
+% scripting screenshot
+
+Scraps
+------
 
 For
 Embroidermodder 2.0.0-alpha4, libembroidery 1.0.0-alpha, PET 1.0.0-alpha
@@ -195,23 +207,22 @@ time you edit using `revision.sh`.
 
 Test these:
 
-\begin{verbatim}
-sudo apt install latexml texlive-latex-base imagemagick info2man
+    sudo apt install latexml texlive-latex-base imagemagick info2man
 
-# For our command line tools:
-makeinfo embroider.texi -o embroider.info
-info2man embroider.info > embroider.1
-texi2pdf embroider.texi
-# Or groff macro package for example ms.
-# These may be housed in libembroidery since they're to be shipped as part of
-# the embroider tarball.
+    # For our command line tools:
+    makeinfo embroider.texi -o embroider.info
+    info2man embroider.info > embroider.1
+    texi2pdf embroider.texi
+    # Or groff macro package for example ms.
+    # These may be housed in libembroidery since they're to be shipped as part of
+    # the embroider tarball.
 
-# For online documentation:
-pandoc embroidermodder_refman.tex -f latex -t html -s -o emb_refman.html --bibliography embroidermodder.bib
-# Or latexml/latexmlpost
-\end{verbatim}
+    # For online documentation:
+    pandoc embroidermodder_refman.tex -f latex -t html -s -o emb_refman.html --bibliography embroidermodder.bib
+    # Or latexml/latexmlpost
 
-### Command Language}
+Command Language
+~~~~~~~~~~~~~~~~
 
 Printer Command Language (PCL), see \citet{packard1992pcl}.
 
@@ -221,11 +232,9 @@ Has commands like: \texttt{PU} Pen Up, \texttt{PR} Plot Relative,
 
 So commands read like this:
 
-\begin{verbatim}
-PA40,10;
-\end{verbatim}
+    PA40,10;
 
-command argument seperator(\texttt{,}) argument terminator(\texttt{;})
+command argument seperator(``,``) argument terminator(``;``)
 
 Constructing new commands from old ones in the command language is less
 natural in the HP-GL/2 language, but a similar layer for us is
@@ -237,12 +246,10 @@ for embroidery machines in others?
 
 All systems are supported by ghostscript, when you account for homebrew \citet{9}:
 
-\begin{verbatim}
-brew update
-brew upgrade
-brew install ghostscript
-brew cleanup
-\end{verbatim}
+    brew update
+    brew upgrade
+    brew install ghostscript
+    brew cleanup
 
 Vector graphic logos don't require the SVG Qt library.
 

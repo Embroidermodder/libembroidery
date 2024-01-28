@@ -1,0 +1,236 @@
+#!/bin/bash
+
+MODE="-halt-on-error"
+#MODE="-interaction=nonstopmode"
+
+DATE=`date -I`
+A_STUB="emrm_${DATE}_a4"
+US_STUB="emrm_${DATE}_us_letter"
+EMBROIDER=./bin/embroider
+
+function docs () {
+
+    cd docs
+    sudo apt-get update &> deps.log
+    sudo apt-get upgrade &>> deps.log
+    sudo apt-get install doxygen &>> deps.log
+    pip install sphinx sphinx-book-theme breathe &>> deps.log
+
+    sphinx-build -M html . . || exit 1
+    cd ..
+
+}
+
+function latex_build () {
+    cat refman.tex >> $1.tex
+
+    pdflatex $MODE $1.tex || exit 1
+#    bibtex $1.aux
+    pdflatex $MODE $1.tex
+    pdflatex $MODE $1.tex
+    pdflatex $MODE $1.tex
+}
+
+function build_refman () {
+
+	sudo apt-get update &> deps.log
+	sudo apt-get upgrade &>> deps.log
+    sudo apt-get install texlive texlive-latex-extra &>> deps.log
+
+#   mandoc -c -O width=80 -T ascii docs/embroider.1 > docs/embroider.txt || exit 1
+
+    cd docs/emrm
+
+    echo "Building Reference Manual..."
+
+    python3 - <<EOF
+import csv
+
+thread_tables = [
+    ["arc_polyester", "Arc Polyester Threads", "arcpoly"],
+    ["arc_rayon", "Arc Rayon Threads", "arcrayon"],
+    ["coats_and_clark_rayon", "Coats and Clark Rayon Threads", "coatsrayon"],
+    ["dxf", "DXF Colors", "dxf"],
+    ["exquisite_polyester", "Exquisite Polyester Threads", "exquisite"],
+    ["fufu_polyester", "Fufu Polyester Threads", "fufupoly"],
+    ["fufu_rayon", "Fufu Rayon Threads", "fufurayon"],
+    ["hemingworth_polyester", "Hemingworth Polyester Threads", "hemingworth"],
+    ["hus", "HUS Colors", "hus"],
+    ["isacord_polyester", "Isacord Polyester Threads", "isacord"],
+    ["isafil_rayon", "Isafil Rayon Threads", "isafil"],
+    ["jef", "JEF Colors", "jef"],
+    ["madeira_polyester", "Madeira Polyester Threads", "madeirapoly"],
+    ["madeira_rayon", "Madeira Rayon Threads", "madeirarayon"],
+    ["marathon_polyester", "Marathon Polyester Threads", "marathonpoly"],
+    ["marathon_rayon", "Marathon Rayon Threads", "marathonrayon"],
+    ["pantone", "Pantone Colors", "pantone"],
+    ["pcm", "Brother PCM Colors", "pcm"],
+    ["pec", "Brother PEC Colors", "pec"],
+    ["robison_anton_polyester", "Robinson Anton Polyester Threads", "robinsonpoly"],
+    ["robison_anton_rayon", "Robinson Anton Rayon Threads", "robisonrayon"],
+    ["shv", "SHV Threads", "shv"],
+    ["sigma_polyester", "Sigma Polyester Threads", "sigmapoly"],
+    ["sulky_rayon", "Sulky Rayon Threads", "sulkyrayon"],
+    ["svg", "SVG Colors", "svg"],
+    ["thread_art_polyester", "Thread Art Polyester", "threadartpoly"],
+    ["thread_art_rayon", "Thread Art Rayon", "threadartrayon"],
+    ["threadelight_polyester", "ThreaDelight Polyester", "threadelight"],
+    ["z102_isacord_polyester", "Z102 Isacord Polyester", "z102"]
+]
+
+for table in thread_tables:
+    fname = "data/"+table[0]+"_colors.csv"
+    outfname = "tables/"+table[0]+"_colors.tex"
+    file = open(fname, "r", newline='')
+    out_file = open(outfname, "w")
+    data = csv.reader(file)
+    out_file.write(r"""
+\begin{longtable}{p{0.3\linewidth} p{0.3\linewidth} p{0.4\linewidth}}
+\caption = {%s}
+\label{tblr:%s}\\
+\textbf{Name} & \textbf{RGB hex code} & \textbf{Catalog Code} \\
+""" % (table[1], table[2]))
+    first_line = 1
+    for row in data:
+        if first_line:
+            first_line = 0
+            continue
+        out_file.write(" & ".join(row) + "\\\\\n")
+    out_file.write(r"""
+\end{longtable}
+""")
+    file.close()
+    out_file.close()
+
+EOF
+
+    printf "\\documentclass[a4paper]{report}\n\n" > ${A_STUB}.tex || exit 1
+    printf "\\documentclass[letterpaper]{report}\n\n" > ${US_STUB}.tex || exit 1
+
+    latex_build ${A_STUB} || exit 1
+    latex_build ${US_STUB} || exit 1
+
+    tar cf emrm.tar ${A_STUB}.pdf ${US_STUB}.pdf
+
+    echo "Reference Manual successfully built in A4 and US Letter paper."
+
+    cd ../..
+}
+
+function test_fills () {
+    echo "$1 test..."
+
+    STUB="${1::-4}_stitches"
+    ${EMBROIDER} --fill $1 130 $STUB.csv
+    ${EMBROIDER} --fill $1 130 $STUB.svg
+    #./bin/embroider --render $STUB.csv $STUB.png
+
+    STUB="${1::-4}_crosses"
+    ${EMBROIDER} --cross-stitch $1 130 $STUB.csv
+    ${EMBROIDER} --cross-stitch $1 130 $STUB.svg
+    #./bin/embroider --render $STUB.csv $STUB.png
+}
+
+function cmake_build () {
+    echo "Building..."
+
+    rm -fr build
+    mkdir build
+    cd build
+    cmake ..
+    cmake --build .
+    cd ..
+}
+
+function tidy_src () {
+    echo "This script enforces some of our style requirements"
+    echo "and warns developers about possible untidy code."
+    echo ""
+    echo "See the reference manual for the full list of rules."
+
+    for file in src/*.c src/*.h src/geometry/*.c src/formats/*.c
+    do
+        sed -i 's/\r$//' $file
+        sed -i 's/\t/    /' $file
+        sed -i 's/ $//' $file
+    done
+
+    # Report changes.
+    git diff
+}
+
+function analyse_src () {
+    mkdir analysis
+
+    for file in src/*.c src/*.h src/geometry/*.c src/formats/*.c
+    do
+        # For analysis
+        gcc -fdump-tree-all -o ${file:-2}.o -c $file
+        clang $file -S -Xclang -dump-tokens &> ${file:-2}.tokens
+        clang $file -S -emit-llvm &> ${file:-2}.llvm
+        clang $file -S -ast-dump &> ${file:-2}.ast-dump
+        clang $file -S -ast-view &> ${file:-2}.ast
+        clang $file -S -mllvm -print-after-all &> ${file:-2}.opt
+    done
+}
+
+function libembroidery_tests () {
+    echo "Built in tests..."
+
+    ./build/embroider --test
+
+    echo "Stitch fill tests..."
+
+    test_fills demos/donut.png
+    test_fills demos/logo-spirals.png
+    test_fills demos/berries.png
+    test_fills demos/snow-squirrel.png
+    test_fills demos/great-tit.png
+    test_fills demos/owl.png
+    test_fills demos/logo.png
+}
+
+function help () {
+
+    cat <<EOF
+
+COMMANDS
+
+    help
+    docs
+    tidy_src
+    analysis
+    test
+    build
+
+EOF
+
+}
+
+case "$1" in
+    '--help'|'-h'|'help')
+        help
+        ;;
+    'docs')
+        docs
+        ;;
+    'tidy')
+        tidy_src
+        ;;
+    'analysis')
+        analyse_src
+        ;;
+    'test')
+        libembroidery_tests
+        ;;
+    'build')
+        cmake_build
+        ;;
+    *)
+        echo "Command \"$1\" not recognised."
+        help
+        exit 1
+        ;;
+esac
+
+exit 0

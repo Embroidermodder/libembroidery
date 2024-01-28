@@ -1,5 +1,32 @@
 #!/bin/bash
 
+function docs () {
+
+    cd docs
+	sudo apt-get update &> deps.log
+	sudo apt-get upgrade &>> deps.log
+	sudo apt-get install doxygen &>> deps.log
+	pip install sphinx sphinx-book-theme breathe &>> deps.log
+	git submodule init &>> deps.log
+	git submodule update &>> deps.log
+
+	make html || exit 1
+	cd ..
+
+}
+
+function build_refman () {
+
+	sudo apt-get update &> deps.log
+	sudo apt-get upgrade &>> deps.log
+	sudo apt-get install texlive-full &>> deps.log
+
+    cd docs/emrm
+	pdflatex refman.tex
+	cd ../..
+
+}
+
 function test_fills () {
     echo "$1 test..."
 
@@ -72,6 +99,11 @@ function libembroidery_tests () {
     test_fills demos/owl.png
     test_fills demos/logo.png
 }
+
+if [ "$1" = "docs" ]; then
+    docs
+    exit
+fi
 
 if [ "$1" = "tidy" ]; then
     tidy_src

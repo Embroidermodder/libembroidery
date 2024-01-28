@@ -7,8 +7,6 @@ function docs () {
 	sudo apt-get upgrade &>> deps.log
 	sudo apt-get install doxygen &>> deps.log
 	pip install sphinx sphinx-book-theme breathe &>> deps.log
-	git submodule init &>> deps.log
-	git submodule update &>> deps.log
 
 	make html || exit 1
     sphinx-build -M html . .

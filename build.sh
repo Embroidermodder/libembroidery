@@ -3,14 +3,13 @@
 function docs () {
 
     cd docs
-	sudo apt-get update &> deps.log
-	sudo apt-get upgrade &>> deps.log
-	sudo apt-get install doxygen &>> deps.log
-	pip install sphinx sphinx-book-theme breathe &>> deps.log
+    sudo apt-get update &> deps.log
+    sudo apt-get upgrade &>> deps.log
+    sudo apt-get install doxygen &>> deps.log
+    pip install sphinx sphinx-book-theme breathe &>> deps.log
 
-	make html || exit 1
-    sphinx-build -M html . .
-	cd ..
+    sphinx-build -M html . . || exit 1
+    cd ..
 
 }
 

@@ -1,8 +1,11 @@
-# Embroidermodder Reference Manual 2.0.0-alpha
+Embroidermodder Reference Manual 2.0.0-alpha
+============================================
 
-# Introduction
+Introduction
+------------
 
-## The Embroidermodder Project and Team
+The Embroidermodder Project and Team
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The _Embroidermodder 2_ project is a collection of small software
 utilities for manipulating, converting and creating embroidery files in all
@@ -44,7 +47,8 @@ patches, artwork and documentation to our three projects.
 The team was established by Jonathan Greig and Josh Varga.
 The full list is actively maintained below.
 
-### Core Development Team
+Core Development Team
+~~~~~~~~~~~~~~~~~~~~~
 
 Embroidermodder 2:
 
@@ -57,13 +61,15 @@ Embroidermodder 1:
 * Josh Varga (https://github.com/JoshVarga)
 * Mark Pontius (http://sourceforge.net/u/mpontius/profile)
 
-## Credits for Embroidermodder 2, libembroidery and all other related code
+Credits for Embroidermodder 2, libembroidery and all other related code
+-----------------------------------------------------------------------
 
 If you have contributed and wish to be added to this list, alter the  README on Embroidermodder
 github page (https://github.com/Embroidermodder/Embroidermodder) and we'll copy it to the
 libembroidery source code since that is credited to ``The Embroidermodder Team''.
 
-## Embroidermodder 1
+Embroidermodder 1
+~~~~~~~~~~~~~~~~~
 
 The Embroidermodder Team is also inspired by the original Embroidermodder that
 was built by Mark Pontius and the same Josh Varga on SourceForge which

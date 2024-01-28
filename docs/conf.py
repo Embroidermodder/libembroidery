@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'The Embroidermodder Project'
-copyright = '2024, The Embroidermodder Team'
+copyright = '2013-2024, The Embroidermodder Team'
 author = 'The Embroidermodder Team'
 release = '2.0.0-alpha4'
 
@@ -18,8 +18,6 @@ extensions = []
 
 templates_path = ['_templates']
 exclude_patterns = []
-
-
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

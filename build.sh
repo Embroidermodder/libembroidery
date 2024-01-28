@@ -11,6 +11,7 @@ function docs () {
 	git submodule update &>> deps.log
 
 	make html || exit 1
+    sphinx-build -M html . .
 	cd ..
 
 }

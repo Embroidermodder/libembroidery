@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['testembcircle_0',['testEmbCircle',['../embroidery_8h.html#a7bc2c245a43d04c56fa57880e0fd6f88',1,'embroidery.h']]],
+  ['testembcircle_5f2_1',['testEmbCircle_2',['../embroidery_8h.html#a487123ec5233cb094bda04b25e97c733',1,'embroidery.h']]],
+  ['testembformat_2',['testEmbFormat',['../embroidery_8h.html#a9315b31be5b5e6e85e0f681d9c09131c',1,'embroidery.h']]],
+  ['testgeomarc_3',['testGeomArc',['../embroidery_8h.html#adf555641d1e90c6cc775d3788bde53db',1,'embroidery.h']]],
+  ['testmain_4',['testMain',['../embroidery_8h.html#aa95d3b9c2310c592992aafea1bb441e0',1,'embroidery.h']]],
+  ['testtangentpoints_5',['testTangentPoints',['../embroidery_8h.html#a507e41adb21a428dd84461aab50d6ae0',1,'embroidery.h']]],
+  ['testthreadcolor_6',['testThreadColor',['../embroidery_8h.html#a3c34c74c49aaa95b18e39585956f1beb',1,'embroidery.h']]],
+  ['textsingle_5fgripedit_7',['textSingle_gripEdit',['../text_8c.html#a002b56774f4f0c9d7ec9ebb986e4d34b',1,'text.c']]],
+  ['textsingle_5fmousesnappoint_8',['textSingle_mouseSnapPoint',['../text_8c.html#aa8ade69d6b3d7c79820d4f4e1c702922',1,'text.c']]],
+  ['textsingle_5fpaint_9',['textSingle_paint',['../text_8c.html#a6f19a3bceaea2616348f5c8802947a9e',1,'text.c']]],
+  ['textsingle_5fsetjustify_10',['textSingle_setJustify',['../text_8c.html#ad7bf753ccbea4b4f9d934d9459817306',1,'text.c']]],
+  ['textsingle_5fsettextbackward_11',['textSingle_setTextBackward',['../text_8c.html#a3a164dac152597b307ce2931b06b93b1',1,'text.c']]],
+  ['textsingle_5fsettextbold_12',['textSingle_setTextBold',['../text_8c.html#ab3c6b3a66d3c4c234f4774a85b8d0876',1,'text.c']]],
+  ['textsingle_5fsettextfont_13',['textSingle_setTextFont',['../text_8c.html#a60c3e5f1c71175f001682f25abed78ed',1,'text.c']]],
+  ['textsingle_5fsettextitalic_14',['textSingle_setTextItalic',['../text_8c.html#a261afbada56b004f334d1809b558c169',1,'text.c']]],
+  ['textsingle_5fsettextoverline_15',['textSingle_setTextOverline',['../text_8c.html#ae329b813af5e1c90eb001bcaea4ff47e',1,'text.c']]],
+  ['textsingle_5fsettextsize_16',['textSingle_setTextSize',['../text_8c.html#a4cdd8ff994c5c566fbe081254093fbb4',1,'text.c']]],
+  ['textsingle_5fsettextstrikeout_17',['textSingle_setTextStrikeOut',['../text_8c.html#a43a0a30df0f473f9e0b75996c7d6e74e',1,'text.c']]],
+  ['textsingle_5fsettextstyle_18',['textSingle_setTextStyle',['../text_8c.html#a9b2e51d3cce48cb2bc51b2e6ed9ce6e1',1,'text.c']]],
+  ['textsingle_5fsettextunderline_19',['textSingle_setTextUnderline',['../text_8c.html#aeb6b64a53e5fb3c4f5bcb611bc4e3639',1,'text.c']]],
+  ['textsingle_5fsettextupsidedown_20',['textSingle_setTextUpsideDown',['../text_8c.html#a82e082c6bb16c5727d2dc70146e45a49',1,'text.c']]],
+  ['textsingle_5fupdaterubber_21',['textSingle_updateRubber',['../text_8c.html#a14ca3dd462635c60734598613924d3f1',1,'text.c']]],
+  ['threadcolor_22',['threadColor',['../embroidery_8h.html#a22b614f435550f386b2fcfef48848e23',1,'threadColor(const char *, int brand):&#160;thread-color.c'],['../thread-color_8c.html#ae931e68a9dae7e904f4c38f43978578f',1,'threadColor(const char *name, int brand):&#160;thread-color.c']]],
+  ['threadcolorname_23',['threadColorName',['../embroidery_8h.html#a2be9bcb326d8bb595079f9129df9e35e',1,'threadColorName(unsigned int color, int brand):&#160;thread-color.c'],['../thread-color_8c.html#a3bce5f4edf41410fca570ef1ad2f24ff',1,'threadColorName(unsigned int color, int brand):&#160;thread-color.c']]],
+  ['threadcolornum_24',['threadColorNum',['../embroidery_8h.html#ae6976ffd0a29cdf4247e8da3aefc8ef0',1,'threadColorNum(unsigned int color, int brand):&#160;thread-color.c'],['../thread-color_8c.html#a222aa0f0e27609e59f7cf534758a6436',1,'threadColorNum(unsigned int color, int brand):&#160;thread-color.c']]]
+];

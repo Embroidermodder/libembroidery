@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['catalognumber_0',['catalogNumber',['../struct_emb_thread__.html#a93008a0ebfbad332f30a9b26f3fb3532',1,'EmbThread_']]],
+  ['center_1',['center',['../struct_emb_circle__.html#aeaf172d0a68dbf3e9d56ab7852b59f5e',1,'EmbCircle_::center'],['../struct_emb_ellipse__.html#ac73c807bcbb77b58a78cafa070f30bcb',1,'EmbEllipse_::center']]],
+  ['character_5fhuffman_2',['character_huffman',['../struct_compress.html#a67f49d8abbd6877edf45caf393038502',1,'Compress']]],
+  ['character_5flength_5fhuffman_3',['character_length_huffman',['../struct_compress.html#a99c8a2d5795bd0a503d10bf2f4786b4a',1,'Compress']]],
+  ['check_5ffor_5fcolor_5ffile_4',['check_for_color_file',['../struct_emb_format_list__.html#a2936bb3f578af23e25e272e1e77803af',1,'EmbFormatList_']]],
+  ['childid_5',['childId',['../struct__bcf__directory__entry.html#a41adf6d5027e548f7b2b6eeca7aad334',1,'_bcf_directory_entry']]],
+  ['circle_6',['circle',['../struct_emb_geometry__.html#a8053c8f8d21c5f8abe65911ca62cf132',1,'EmbGeometry_']]],
+  ['clsid_7',['CLSID',['../struct__bcf__directory__entry.html#a33cf37715ff139356766482169f90553',1,'_bcf_directory_entry::CLSID'],['../struct__bcf__file__header.html#a9e175ae15ec669b334d57d2b419cac11',1,'_bcf_file_header::CLSID']]],
+  ['color_8',['color',['../struct_emb_point__.html#aedcf88235479138d084ba60fc7ae198d',1,'EmbPoint_::color'],['../struct_emb_line__.html#a99947aa02be0d8acb87a595ffae48ab6',1,'EmbLine_::color'],['../struct_emb_path__.html#a835433db3d719c012ebb2e153fa429f0',1,'EmbPath_::color'],['../struct_emb_stitch__.html#a7ec28b66816a1998bdf3aa0d03438c93',1,'EmbStitch_::color'],['../struct_emb_thread__.html#a330767bfcde041455b98fc0aba64d903',1,'EmbThread_::color'],['../struct_emb_geometry__.html#a0484560a98a4627470e11d3328bc093c',1,'EmbGeometry_::color']]],
+  ['color_5fonly_9',['color_only',['../struct_emb_format_list__.html#ac1a6a2a300064a0d76d3c62a69ab806e',1,'EmbFormatList_']]],
+  ['colorcode_10',['colorCode',['../struct_sub_descriptor__.html#a38fd406a9a90eadf0a7493f544c96936',1,'SubDescriptor_::colorCode'],['../struct_stx_thread__.html#a381b951738a4f215b59e672cae8e84f6',1,'StxThread_::colorCode']]],
+  ['colorflag_11',['colorFlag',['../struct__bcf__directory__entry.html#a16c6e2ecae2639aeb1c829dce614015b',1,'_bcf_directory_entry']]],
+  ['colorlength_12',['colorLength',['../struct_vip_header__.html#a4b74311537cbcaafd7320c79e047e5cd',1,'VipHeader_']]],
+  ['colorname_13',['colorName',['../struct_sub_descriptor__.html#a0314df2ef09283304358ffb75b115d90',1,'SubDescriptor_::colorName'],['../struct_stx_thread__.html#afe11233786926710084631f992944af6',1,'StxThread_::colorName']]],
+  ['constants_14',['constants',['../struct_l_s_y_s_t_e_m.html#ae84d002f2e679d34488cd23ef36a5276',1,'LSYSTEM']]],
+  ['control1_15',['control1',['../struct_emb_bezier__.html#a4191270ea7146fe21f00e5435217c509',1,'EmbBezier_']]],
+  ['control2_16',['control2',['../struct_emb_bezier__.html#a4d14c71543ffcc796a3832f0ef7a1183',1,'EmbBezier_']]],
+  ['count_17',['count',['../struct_emb_array__.html#a8990bac53b58b94fff75b6771594e05e',1,'EmbArray_']]],
+  ['creationtime_18',['creationTime',['../struct__bcf__directory__entry.html#a7d0b72680c4c5c664f7cbb81133eba6e',1,'_bcf_directory_entry']]],
+  ['creatorname_19',['creatorName',['../struct_thred_extension__.html#acc413814bf3da0a745bfc81abf3aab7a',1,'ThredExtension_']]],
+  ['csd_5fdecryptarray_20',['csd_decryptArray',['../format__csd_8c.html#a8088700999062a5c76345d7a8901c69b',1,'format_csd.c']]],
+  ['current_5felement_5fid_21',['current_element_id',['../format__svg_8c.html#a3732a0819af92d41ba15d1e843912baa',1,'format_svg.c']]],
+  ['currentattribute_22',['currentAttribute',['../format__svg_8c.html#a5ca69064432e28b0b57f5272cfa089a6',1,'format_svg.c']]],
+  ['currentcolorindex_23',['currentColorIndex',['../struct_emb_pattern__.html#a9c147eb15d72b34b057a29ed0deafac4',1,'EmbPattern_']]],
+  ['currentvalue_24',['currentValue',['../format__svg_8c.html#a0a91524923521a7df3f7be107218dbf2',1,'format_svg.c']]]
+];

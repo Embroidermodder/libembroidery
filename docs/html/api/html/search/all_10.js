@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['n_5fattributes_0',['n_attributes',['../format__svg_8c.html#aedc757fedd30c5470f56f7c9efed4112',1,'format_svg.c']]],
+  ['n_5fpes_5fversions_1',['N_PES_VERSIONS',['../embroidery_8h.html#aa6660609be834a61c2f9a4aa3e550703',1,'embroidery.h']]],
+  ['name_2',['name',['../struct_svg_attribute__.html#aef046267a3d28ecf5e182873e3afad72',1,'SvgAttribute_::name'],['../struct_emb_image__.html#abcd651d5503aa222951d100ff42f5f7d',1,'EmbImage_::name'],['../structthread__color__.html#ad6b81778e9ea500163090733702f4a27',1,'thread_color_::name'],['../struct_emb_layer__.html#a3fb4327b04103c6d92555a1709c302d4',1,'EmbLayer_::name']]],
+  ['negativexhoopsize_3',['negativeXHoopSize',['../struct_vip_header__.html#a8f0c278a388ce7cf8ecd6f6dd139006e',1,'VipHeader_']]],
+  ['negativeyhoopsize_4',['negativeYHoopSize',['../struct_vip_header__.html#acb06bebae3a9d5857e70b225c2a76c92',1,'VipHeader_']]],
+  ['new_5',['Ameco Embroidery Format (.new)',['../format__new_8c.html#ameco-new-format',1,'']]],
+  ['next_6',['next',['../struct__bcf__directory__entry.html#a3a85857d9c4884c1853bca76612b7700',1,'_bcf_directory_entry']]],
+  ['nlengths_7',['nlengths',['../struct_huffman.html#ad328bc90744d8d324d3ab33d7659022c',1,'Huffman']]],
+  ['normal_8',['NORMAL',['../embroidery_8h.html#a1291f416b069313021b519eea62d5bf1',1,'embroidery.h']]],
+  ['notions_20embroidery_20format_20gnc_9',['Great Notions Embroidery Format (.gnc)',['../format__gnc_8c.html#great-gnc-format',1,'']]],
+  ['ntable_10',['ntable',['../struct_huffman.html#a458748dfa24a54243283656f9ecccd48',1,'Huffman']]],
+  ['num_5fflags_11',['NUM_FLAGS',['../main_8c.html#aaea442f582a9863b593b63383773b548',1,'main.c']]],
+  ['numberofbytesremaining_12',['numberOfBytesRemaining',['../struct__vp3_hoop.html#ab199642857a5ef43c1899750aae56dd5',1,'_vp3Hoop']]],
+  ['numberofcolors_13',['numberOfColors',['../struct__vp3_hoop.html#ab01dc8cff26133c4c5684a1d18571293',1,'_vp3Hoop::numberOfColors'],['../struct_vip_header__.html#a84b58ff13fbacb701209ccf389b17abe',1,'VipHeader_::numberOfColors']]],
+  ['numberofdifatsectors_14',['numberOfDifatSectors',['../struct__bcf__file__header.html#a6b934d7f5ac9c6316800a197cfd69af6',1,'_bcf_file_header']]],
+  ['numberofdirectorysectors_15',['numberOfDirectorySectors',['../struct__bcf__file__header.html#a207b30c91a2158cfb2df01af1bdd1cb8',1,'_bcf_file_header']]],
+  ['numberofentriesindifatsector_16',['numberOfEntriesInDifatSector',['../embroidery_8h.html#a58d3aa09a56571089e2e4e0fae76139d',1,'embroidery.h']]],
+  ['numberofentriesinfatsector_17',['numberOfEntriesInFatSector',['../struct__bcf__file__fat.html#aa673a0e4b7e0c60831f39a9d255ea948',1,'_bcf_file_fat']]],
+  ['numberoffatsectors_18',['numberOfFATSectors',['../struct__bcf__file__header.html#a27a869609901b9ca301c54c9ca10117a',1,'_bcf_file_header']]],
+  ['numberofformats_19',['numberOfFormats',['../embroidery_8h.html#afc6032ce2b92a1d32b18b87b1e5ba13e',1,'embroidery.h']]],
+  ['numberofminifatsectors_20',['numberOfMiniFatSectors',['../struct__bcf__file__header.html#a7551ad4c222ec6e557a0fa6d262f6097',1,'_bcf_file_header']]],
+  ['numberofstitches_21',['numberOfStitches',['../struct_vip_header__.html#a84ce04f3b0a8f2f8e283dbd3374c255a',1,'VipHeader_']]],
+  ['numstiches_22',['numStiches',['../struct_thred_header__.html#a3391e3788a691ab199c60ef4827f4109',1,'ThredHeader_']]]
+];

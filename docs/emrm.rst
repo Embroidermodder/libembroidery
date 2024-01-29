@@ -16,9 +16,9 @@ Introduction
 The Embroidermodder Project and Team
 ------------------------------------
 
-The _Embroidermodder 2_ project is a collection of small software
+The *Embroidermodder 2* project is a collection of small software
 utilities for manipulating, converting and creating embroidery files in all
-major embroidery machine formats. The program _Embroidermodder 2_ itself
+major embroidery machine formats. The program *Embroidermodder 2* itself
 is a larger graphical user interface (GUI) which is at the heart of the project.
 
 The tools and associated documents are:
@@ -148,7 +148,9 @@ Multiple grids and rulers in action Figure ref fig grid-ruler.
 
 // \label{fig-grid-ruler}
 .Grid and ruler examples.
-image{features-grid-ruler-1.png}
+
+.. image::
+   images/features-grid-ruler-1.png
 
 Many measurement tools
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -160,9 +162,11 @@ locate individual points or find distances between any 2 points anywhere in the 
 
 Take quick and accurate measurements:
 
-image{images/features-measure-1.png}
+.. image::
+   images/features-measure-1.png
 
-### Add text to any design}
+Add text to any design
+~~~~~~~~~~~~~~~~~~~~~~
 
 Need to make company apparel for all of your employees with individual names on them? No sweat.
 Just simply add text to your existing design or create one from scratch, quickly and easily.
@@ -171,9 +175,11 @@ with the property editor.
 
 Add text and adjust its properties quickly:
 
-image{images/features-text-1.png}
+.. image::
+   images/features-text-1.png
 
-### Supports many formats}
+Supports many formats
+~~~~~~~~~~~~~~~~~~~~~~
 
 Embroidery machines all accept different formats. There are so many formats
 available that it can sometimes be confusing whether a design will work with your machine.
@@ -271,13 +277,13 @@ Vector graphic logos don't require the SVG Qt library.
 We maintain a traditional manpage for \texttt{embroider} using
 the basic macros.
 
-### Arduino}
+Arduino
+~~~~~~~
 
-\begin{verbatim}
-apt-get install avr-libc gcc-avr uisp avrdude
-\end{verbatim}
+    apt-get install avr-libc gcc-avr uisp avrdude
 
-## Libembroidery}
+Libembroidery
+-------------
 
 (Under construction, please wait for v1.0 release.)
 
@@ -297,7 +303,8 @@ It also includes a CLI called `embroider` that allows for better automation of
 changes to embroidery files and will be more up-to date than
 the Embroidermodder 2 GUI.
 
-### Documentation}
+Documentation
+~~~~~~~~~~~~~
 
 Libembroidery is documented as part of this reference manual. If you need
 libembroidery for any non-trivial usage or want to contribute to the library we
@@ -310,42 +317,45 @@ repository.
 For more basic usage, `embroider` should have some in-built help
 starting with:
 
-\begin{lstlisting}
-$ embroider --help
-\end{lstlisting}
+    $ embroider --help
 
-### License}
+License
+~~~~~~~
 
 Libembroidery is distributed under the permissive zlib licence, see the LICENCE
 file.
 
-## Demos}
+Demos
+-----
 
 We're currently trying out some fill techniques which will be demonstrated here
 and in the script `qa\_test.sh`.
+
+.. image::
+   images/examples/logo.png
 
 // center and caption
 image{images/examples/logo.png[the logo}
 
 Converts to:
 
+.. image::
+    images/examples/crossstitch_logo.png
+
 // center and caption
-\includegraphics{images/examples/crossstitch_logo.png}
 crossstitch logo
 
-### Build}
+Build
+~~~~~
 
 libembroidery and EmbroiderModder 2 use CMake builds
 so if you are building the project to use as a library we recommend
 you run:
 
-\begin{verbatim}
-git clone https://github.com/Embroidermodder/libembroidery
-cd libembroidery
-cmake .
-cmake --build .
-cmake --install .
-\end{verbatim}
+.. literalinclude:: build_libembroidery.sh
+   :language: bash
+   :encoding: latin-1
+   :linenos:
 
 This builds both the static and shared versions of the library as well
 as the command line program `embroider`.
@@ -1762,7 +1772,8 @@ some kind.
 
 \subsection{Plans}
 
-\subsubsection{Windows Specific Advice}
+Windows Specific Advice
+~~~~~~~~~~~~~~~~~~~~~~~
 
 This is one of many possible ways to build the software on Windows,
 this section is to help people who've not got a build environment to start with.
@@ -1771,15 +1782,13 @@ this section is to help people who've not got a build environment to start with.
 2. Boot ``Mintty'' from the Start menu.
 3. Use the commands:
 
-```bash
-pacman -S gcc cmake git bash mingw-w64-SDL2 \
-     mingw-w64-SDL2_image mingw-w64-SDL2_ttf
-git clone https://github.com/Embroidermodder/Embroidermodder
-cd Embroidermodder
-bash build.sh
-```
+.. literalinclude:: build_em_on_windows.sh
+   :language: bash
+   :encoding: latin-1
+   :linenos:
 
-\subsubsection{Mobile}
+Mobile
+~~~~~~
 
 These are currently unsupported (see iMobileViewer and Mobileviewer for
 iOS and Android respectively), but after the Desktop version is
@@ -2859,16 +2868,18 @@ would get the pattern.
 These are key bits of reasoning behind why the software is built the way
 it is.
 
-# Conclusions
+Conclusions
+===========
 
 
-# Bibliography
+Bibliography
+============
 
 The Embroidermodder Team _Embroidermodder_
  http://embroidermodder.org
  (accessed 3. June. 2022)
 
-achatina _Technical Info_
+achatina *Technical Info*
  http://www.achatina.de/sewing/main/TECHNICL.HTM
  (accessed 28. Sep. 2021)
 
@@ -2888,28 +2899,38 @@ EduTech Wiki
  https://edutechwiki.unige.ch/en/Embroidery_format_DST}
  (accessed 28. Sep. 2021)
 
-# Color Charts
+Color Charts
+============
 
-## Built-ins
+Built-ins
+---------
 
-### SVG Colors
+SVG Colors
+~~~~~~~~~~
 
-## Threads
+Threads
+-------
 
-### DXF color table
+DXF color table
+~~~~~~~~~~~~~~~
 
-### HUS color table
+HUS color table
+~~~~~~~~~~~~~~~
 
-### JEF color table
+JEF color table
+~~~~~~~~~~~~~~~
 
-### PCM color table
+PCM color table
+~~~~~~~~~~~~~~~
 
-### PEC color table}
+PEC color table
+~~~~~~~~~~~~~~~
 
+Contributing
+------------
 
-## Contributing}
-
-### Version Control}
+Version Control
+~~~~~~~~~~~~~~~
 
 Being an open source project, developers can grab the latest code at any time
 and attempt to build it themselves. We try our best to ensure that it will build smoothly
@@ -2925,27 +2946,23 @@ See the coding style  here (coding-style).
 
 When we switch to releases we recommend using them, unless you're reporting a bug in which case you can check the development build for whether it has been patched. If this applies to you, the current development build is https://github.com/Embroidermodder/Embroidermodder/releases/tag/alpha3[here].
 
-### To Do}
+To Do
+~~~~~
 
-\begin{itemize}
 * Beta
-\begin{itemize}
-* Libembroidery 1.0.
-* Better integrated help: I don't think the help should backend to a html file somewhere on the user's system. A better system would be a custom widget within the program that's searchable.
-* EmbroideryFLOSS - Color picker that displays catalog numbers and names.
-* Custom filter bug -- doesn't save changes in some cases.
-* Advanced printing.
-* Stitching simulation.
-\end{itemize}
+  * Libembroidery 1.0.
+  * Better integrated help: I don't think the help should backend to a html file somewhere on the user's system. A better system would be a custom widget within the program that's searchable.
+  * EmbroideryFLOSS - Color picker that displays catalog numbers and names.
+  * Custom filter bug -- doesn't save changes in some cases.
+  * Advanced printing.
+  * Stitching simulation.
 * 2.x/ideas
-\begin{itemize}
-* User designed custom fill.
-\end{itemize}
-\end{itemize}
+  * User designed custom fill.
 
 These are key bits of reasoning behind why the GUI is built the way it is.
 
-## Translation of the user interface}
+Translation of the user interface
+---------------------------------
 
 In a given table the left column is the default symbol and the right string is the translation.
 If the translate function fails to find a translation it returns the default symbol.
@@ -3078,27 +3095,26 @@ We're currently trying out some fill techniques which will be demonstrated here 
 
 Converts to:
 
-![images/logo_spirals_cross_stitch.png](images/logo_spirals_cross_stitch.png)
+.. image::
+   images/logo_spirals_cross_stitch.png
 
-### Build
+Build
+~~~~~
 
 libembroidery and EmbroiderModder 2 use CMake builds
 so if you are building the project to use as a library we recommend
 you run:
 
-```sh
-git clone https://github.com/Embroidermodder/libembroidery
-cd libembroidery
-cmake .
-cmake --build .
-cmake --install .
-```
+.. literalinclude:: build_libembroidery.sh
+   :language: bash
+   :encoding: latin-1
+   :linenos:
 
 This builds both the static and shared versions of the library as well
 as the command line program `embroider`.
 
-
-\chapter{CAD Command Overview}
+CAD Command Overview
+====================
 
 \newcommand{\indexi}[1]{\index{#1}#1}
 \newcommand{\indext}[1]{\index{#1}\texttt{#1}}

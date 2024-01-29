@@ -10,6 +10,12 @@ The Embroidermodder Project
    :caption: Contents
    :name: maintoc
 
+   em_user
+   mobile_user
+   pet_user
+   emrm
+   credits
+
 .. warning::
 
    IN ALPHA DEVELOPMENT: NOT READY FOR SERIOUS USE.

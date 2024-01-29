@@ -5,6 +5,11 @@ Embroidermodder Reference Manual
 2.0.0-alpha
 -----------
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents
+   :name: maintoc
+
 Introduction
 ============
 
@@ -5979,3 +5984,10 @@ If your document contains nontrivial examples of program code, we
 recommend releasing these examples in parallel under your choice of
 free software license, such as the GNU General Public License,
 to permit their use in free software.
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

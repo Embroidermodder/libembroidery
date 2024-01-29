@@ -115,7 +115,8 @@ If you use multiple operating systems, it's important to choose software that wo
 Embroidermodder 2 runs on Windows, Linux and Mac OS X. Let's not forget the  Raspberry
 Pi (https://www.raspberrypi.org).
 
-![Running on different platforms](images/features-platforms-1.png)
+.. image::
+   images/features-platforms-1.png
 
 Realistic Rendering
 ~~~~~~~~~~~~~~~~~~~
@@ -124,11 +125,10 @@ It is important to be able to visualize what a design will look like when stitch
 pseudo ``3D'' realistic rendering helps achieve this
 (see Figure~\ref{real-render}).
 
+Real render examples.
+
 .. image::
    images/features-realrender-1.png
-
-// \label{fig-real-render}
-.Real render examples.
 
 .. image::
    images/features-realrender-2.png
@@ -146,8 +146,7 @@ Use rectangular, circular or isometric grids to construct your masterpiece!
 
 Multiple grids and rulers in action Figure ref fig grid-ruler.
 
-// \label{fig-grid-ruler}
-.Grid and ruler examples.
+Grid and ruler examples.
 
 .. image::
    images/features-grid-ruler-1.png
@@ -195,7 +194,8 @@ line utility which supports batch file conversion.
 
 There are a multitude of formats to choose from:
 
-image{images/features-formats-1.png[features formats}
+.. image::
+   images/features-formats-1.png
 
 Scripting API
 ~~~~~~~~~~~~~
@@ -272,7 +272,8 @@ All systems are supported by ghostscript, when you account for homebrew \citet{9
 
 Vector graphic logos don't require the SVG Qt library.
 
-### Man Pages}
+Man Pages
+~~~~~~~~~
 
 We maintain a traditional manpage for \texttt{embroider} using
 the basic macros.
@@ -283,7 +284,7 @@ Arduino
     apt-get install avr-libc gcc-avr uisp avrdude
 
 Libembroidery
--------------
+=============
 
 (Under construction, please wait for v1.0 release.)
 
@@ -294,12 +295,11 @@ for open source machine embroidery.
 Libembroidery is the underlying library that is used by Embroidermodder 2
 and is developed by  The Embroidermodder Team \ref{the-embroidermodder-team}.
 A full list of contributors to the project is maintained in
-https://github.com/Embroidermodder/embroidermodder}
-the Embroidermodder 2 github in the file `CREDITS.md`.
-It handles over 45 different embroidery specific formats as well
+the Embroidermodder 2 github (https://github.com/Embroidermodder/embroidermodder)
+in the file ``CREDITS.md``. It handles over 45 different embroidery specific formats as well
 as several non-embroidery specific vector formats.
 
-It also includes a CLI called `embroider` that allows for better automation of
+It also includes a CLI called ``embroider`` that allows for better automation of
 changes to embroidery files and will be more up-to date than
 the Embroidermodder 2 GUI.
 
@@ -334,16 +334,10 @@ and in the script `qa\_test.sh`.
 .. image::
    images/examples/logo.png
 
-// center and caption
-image{images/examples/logo.png[the logo}
-
 Converts to:
 
 .. image::
     images/examples/crossstitch_logo.png
-
-// center and caption
-crossstitch logo
 
 Build
 ~~~~~
@@ -706,57 +700,56 @@ installed (this helps with testing and running on machines without root). Theref
 create an initiation file but it won't rely on its existence to boot:
 `~/.embroidermodder/config.json`.
 
-\begin{itemize}
 * Switch colors to be stored as 6 digit hexcodes with a `\#`.
 * We've got close to a hand implemented ini read/write setup in `settings.py`.
-\end{itemize}
 
-### Distribution}
-\index{distribution}
+Distribution
+~~~~~~~~~~~~
+
+:index:`distribution`
 
 When we release the new pip wheel we should also package:
 
-\begin{itemize}
-* `.tar.gz` and `.zip` source archive.
+* ``.tar.gz`` and ``.zip`` source archive.
 * Debian package
 * RPM package
-\end{itemize}
 
 Only do this once per minor version number.
 
-\begin{itemize}
-* todo Screenshot a working draft to demonstrate.
-\end{itemize}
+.. todo::
+   Screenshot a working draft to demonstrate.
 
-### Perennial Jobs}
+Perennial Jobs
+~~~~~~~~~~~~~~
 
-\begin{itemize}
 * Check for memory leaks
 * Clear compiler warnings on `-Wall -ansi -pedantic` for C.
 * Write new tests for new code.
 * Get Embroidermodder onto the current version of libembroidery.
 * PEP7 compliance.
 * Better documentation with more photos/screencaps.
-\end{itemize}
 
-### Full Test Suite}
-\index{testing}
+Full Test Suite
+~~~~~~~~~~~~~~
+:index:`testing`
 
 (This needs a hook from Embroidermodder to embroider's full test suite.)
 
-The flag `--full-test-suite` runs all the tests that have been written.
+The flag ``--full-test-suite`` runs all the tests that have been written.
 Since this results in a lot of output the details are both to stdout
-and to a text file called `test\_matrix.txt`.
+and to a text file called ``test\_matrix.txt``.
 
-Patches that strictly improve the results in the `test\_matrix.txt` over
+Patches that strictly improve the results in the ``test\_matrix.txt`` over
 the current version will likely be accepted and it'll be a good place
 to go digging for contributions. (Note: strictly improve means that
 the testing result for each test is as good a result, if not better.
 Sacrificing one critera for another would require some design work
 before we would consider it.)
 
-### Symbols}
-\index{symbols}
+Symbols
+~~~~~~~
+
+:index:`symbols`
 
 Symbols use the SVG path syntax.
 
@@ -766,10 +759,13 @@ rendered once and stored as icons in Qt. (Or as textures in FreeGLUT.)
 Also we want to render the patterns themselves using SVG syntax, so it would
 save on repeated work overall.
 
-## Features}
+Features
+--------
 
-### Bindings}
-\index{bindings}
+Bindings
+~~~~~~~~
+
+:index:`bindings`
 
 Bindings for libembroidery are maintained for the languages we use internally
 in the project, for other languages we consider that the responsibility of
@@ -777,34 +773,31 @@ other teams using the library.
 
 So libembroidery is going to be supported on:
 
-\begin{itemize}
-* `C` (by default)
-* `C++` (also by default)
-* `Java` (for the Android\index{Android} application MobileViewer)
-* `Swift` (for the iOS\index{iOS} application iMobileViewer)
-\end{itemize}
+* ``C`` (by default)
+* ``C++`` (also by default)
+* ``Java`` (for the Android :index:`Android` application MobileViewer)
+* ``Swift`` (for the iOS :index:`iOS` application iMobileViewer)
 
-For `C\#` \index{C-sharp} we recommend directly calling the function directly
+For ``C#`` :index:`C-sharp` we recommend directly calling the function directly
 using the DllImport feature:
 
-\begin{lstlisting}
-/* Calling readCsv() via C# as a native function. */
-[DllImport("libembroidery.so", EntryPoint="readCsv")]
-\end{lstlisting}
+    /* Calling readCsv() via C# as a native function. */
+    [DllImport("libembroidery.so", EntryPoint="readCsv")]
 
 see this StackOverflow discussion for help:
-https://stackoverflow.com/questions/11425202/is-it-possible-to-call-a-c-function-from-c-net}.
+https://stackoverflow.com/questions/11425202/is-it-possible-to-call-a-c-function-from-c-net
 
 For Python you can do the same using ctypes:
-https://www.geeksforgeeks.org/how-to-call-a-c-function-in-python/}.
+https://www.geeksforgeeks.org/how-to-call-a-c-function-in-python/
 
-### Other Supported Thread Brands}
-\index{supported threads}
+Other Supported Thread Brands
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:index:`supported threads`
 
 The thread lists that aren't preprogrammed into formats but are indexed in
 the data file for the purpose of conversion or fitting to images/graphics.
 
-\begin{itemize}
 * Arc Polyester
 * Arc Rayon
 * Coats and Clark Rayon
@@ -828,33 +821,29 @@ the data file for the purpose of conversion or fitting to images/graphics.
 * ThreadArt Polyester
 * ThreaDelight Polyester
 * Z102 Isacord Polyester
-\end{itemize}
 
-## House Style}
+House Style
+-----------
 
-\begin{verbatim}
-//=========================================
-// Embroidermodder Project Coding Standards
-//=========================================
 A basic set of guidelines to use when submitting code.
 
-//=====================
-// Naming Conventions
-//=====================
+Naming Conventions
+~~~~~~~~~~~~~~~~~~
+
 Name variables and functions intelligently to minimize the need for comments.
 It should be immediately obvious what information it represents.
 Short names such as x and y are fine when referring to coordinates.
 Short names such as i and j are fine when doing loops.
 
-Variable names should be "camelCase", starting with a lowercase word followed by uppercase word(s).
-C++ Class Names should be "CamelCase", using all uppercase word(s).
+Variable names should be ``camelCase``, starting with a lowercase word followed by uppercase word(s).
+C++ Class Names should be ``CamelCase``, using all uppercase word(s).
 C Functions that attempt to simulate namespacing, should be "nameSpace_camelCase".
 
 All files and directories shall be lowercase and contain no spaces.
 
-//=====================
-// Code Style
-//=====================
+Code Style
+~~~~~~~~~~
+
 Tabs should not be used when indenting. Setup your IDE or text editor to use 4 spaces.
 
 If you use KATE (KDE Advanced Text Editor), modelines are included in our code to enforce 
@@ -873,9 +862,9 @@ Do not use ternary operator (?:) in place of if/else.
 
 Do not repeat a variable name that already occurs in an outer scope.
 
-//=====================
-// Version Control 
-//=====================
+Version Control 
+~~~~~~~~~~~~~~~
+
 Being an open source project, developers can grab the latest code at any time
 and attempt to build it themselves. We try our best to ensure that it will build smoothly
 at any time, although occasionally we do break the build. In these instances,
@@ -884,9 +873,9 @@ notify us of the problem, as we may not be aware of it and we can build fine.
 
 Try to group commits based on what they are related to: features/bugs/comments/graphics/commands/etc...
 
-//=====================
-// Comments
-//=====================
+Comments
+~~~~~~~~
+
 When writing code, sometimes there are items that we know can be improved,
 incomplete or need special clarification. In these cases, use the types of
 comments shown below. They are pretty standard and are highlighted by many editors to
@@ -894,25 +883,23 @@ make reviewing code easier. We also use shell scripts to parse the code to find
 all of these occurances so someone wanting to go on a bug hunt will be able to
 easily see which areas of the code need more love.
 
-//C++ Style Comments
-//TODO: This code clearly needs more work or further review.
-//BUG: This code is definitely wrong. It needs fixed.
-//HACK: This code shouldn't be written this way or I don't feel right about it. There may a better solution.
-//WARNING: Think twice (or more times) before changing this code. I put this here for a good reason.
-//NOTE: This comment is much more important than lesser comments.
+    C++ Style Comments
+    TODO: This code clearly needs more work or further review.
+    BUG: This code is definitely wrong. It needs fixed.
+    HACK: This code shouldn't be written this way or I don't feel right about it. There may a better solution.
+    WARNING: Think twice (or more times) before changing this code. I put this here for a good reason.
+    NOTE: This comment is much more important than lesser comments.
 
 libembroidery is written in C and adheres to C89 standards. This means
 that any C99 or C++ comments will show up as errors when compiling with
 gcc. In any C code, you must use:
 
-/* C Style Comments */
-/* TODO: This code clearly needs more work or further review. */
-/* BUG: This code is definitely wrong. It needs fixed. */
-/* HACK: This code shouldn't be written this way or I don't feel right about it. There may a better solution */
-/* WARNING: Think twice (or more times) before changing this code. I put this here for a good reason. */
-/* NOTE: This comment is much more important than lesser comments. */
-
-\end{verbatim}
+    /* C Style Comments */
+    /* TODO: This code clearly needs more work or further review. */
+    /* BUG: This code is definitely wrong. It needs fixed. */
+    /* HACK: This code shouldn't be written this way or I don't feel right about it. There may a better solution */
+    /* WARNING: Think twice (or more times) before changing this code. I put this here for a good reason. */
+    /* NOTE: This comment is much more important than lesser comments. */
 
 These are rules for the general intended style of Embroidermodder's GUI source
 code. Not included are anything that a compiler will warn you about: fixing
@@ -925,7 +912,8 @@ don't worry about it. We only ask that your source code follow the basic rules
 in the developer training section. These rules are for sculpting Embroidermodder
 into a body of code that is resiliant to future bugs and reliable for users.
 
-### Brevity}
+Brevity
+~~~~~~~
 
 Readable source code is short. Developers have finite time and becoming
 acquainted with more than 1000 lines of dense C code is often too high a bar
@@ -947,37 +935,39 @@ label `std::string`.
 The structure given by this table allowed the code to be much
 easier to interpret. So for this reason we don't recommend the use unordered maps or hashes any more.
 
-### Rigidity Vs. Ease of Modification
+Rigidity Vs. Ease of Modification
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Difficult to restructure code is good if the structure that's there is good.
 It guides new developers into safe practices without having to explain them.
 Therefore we want ease of modification that comes from well chosen `structs`
 and a carefully curated global header of .
 
-### Developer Prose
+Developer Prose
+~~~~~~~~~~~~~~~
 
-
-### Macro Policy}
+Macro Policy
+~~~~~~~~~~~~
 
 Macros are great, you can do all sorts with them. But it's easy to make readable
 short code that is really difficult to safely modify.
 
-### Function Style}
+Function Style
+~~~~~~~~~~~~~~
 
-\begin{enumerate}
-* Don't write a new convenience function unless there are two
+1. Don't write a new convenience function unless there are two
 existing applications of it in the source code.
-* 
-\end{enumerate}
+2. 
 
-### Summary}
+Summary
+~~~~~~~
 
-\begin{itemize}
-* 
-\end{itemize}
+* .
 
-## GUI Design}
-\index{GUI}
+GUI Design
+----------
+
+:index:`GUI`
 
 Embroidermodder 2 was written in C++/Qt5 and it was far too complex. We had
 issues with people not able to build from source because the Qt5 libraries were
@@ -1007,12 +997,10 @@ key parts of the main struct in the undo history (an unsolved problem because
 we need to decide how much data to copy over per action). This means undo,
 redo and repeat actions can refer to this data.
 
-## To Do}
-
-These should be sorted into relevant code sections.
-
 To Do
 -----
+
+These should be sorted into relevant code sections.
 
 Current work
 ~~~~~~~~~~~~
@@ -1037,8 +1025,8 @@ Documentation
 * WIP - Saving DST/PES/JEF (varga)
 * WIP - Saving CSV/SVG (rt) + CSV read/write UNKNOWN interpreted as COLOR bug
 
-
-\subsection{2.0 alpha2}
+2.0 alpha2
+~~~~~~~~~~
 
 * Notify user of data loss if not saving to an object format.
 * Import Raster Image
@@ -1046,8 +1034,8 @@ Documentation
 * Layer Manager + LayerSwitcher DockWidget
 * Reading DXF
 
-
-\subsection{2.0 alpha3}
+2.0 alpha3
+~~~~~~~~~~
 
 * Writing DXF
 * Amount of Thread and Machine Time Estimation (also allow customizable times for setup, color changes, manually trimming jump threads, etc. that way a realistic total time can be estimated)
@@ -1095,8 +1083,8 @@ Documentation
 * CAD Command review: star
 * Clean up all compiler warning messages, right now theres plenty :P
 
-
-\subsection{2.0 release}
+2.0 release
+~~~~~~~~~~~
 
 * tar.gz archive
 * zip archive
@@ -1105,8 +1093,8 @@ Documentation
 * Mac Bundle?
 * press release
 
-
-\subsection{2.x/Ideas}
+2.x/Ideas
+~~~~~~~~~
 
 * libembroidery.mk for MXE project (refer to qt submodule packages for qmake based building. Also refer to plibc.mk for example of how write an update macro for github.)
 * libembroidery safeguard for all writers - check if the last stitch is an END stitch. If not, add an end stitch in the writer and modify the header data if necessary.
@@ -1175,7 +1163,8 @@ setting has been changed. Adding an Apply button is what would make sense for th
 * EmbroideryFLOSS - Color picker that displays catalog numbers and names.
 * emscripten/javascript port of libembroidery
   
-\subsection{Arduino}
+Arduino
+~~~~~~~
 
 * Fix emb-outline files
 * Fix thread-color files
@@ -1183,212 +1172,191 @@ setting has been changed. Adding an Apply button is what would make sense for th
 * inotool.org - seems like the logical solution for Nightly/CI builds
 * Smoothieboard experiments
 
-\subsection{libembroidery-tests}
+libembroidery-tests
+~~~~~~~~~~~~~~~~~~~
 
 * looping test that reads 10 times while running valgrind. See \texttt{embPattern\_loadExternalColorFile()} Arduino leak note for more info.
 
-
-\begin{itemize}
 * todo sort todo list.
 * Alpha: High priority
-\begin{itemize}
-* Statistics from 1.0, needs histogram
-* Saving DST/PES/JEF (varga)
-* Saving CSV/SVG (rt) + CSV read/write UNKNOWN interpreted as COLOR bug
-\end{itemize}
+  * Statistics from 1.0, needs histogram
+  * Saving DST/PES/JEF (varga)
+  * Saving CSV/SVG (rt) + CSV read/write UNKNOWN interpreted as COLOR bug
 * Alpha: medium priority
-\begin{itemize}
-* Notify user of data loss if not saving to an object format.
-* Import Raster Image
-* SNAP/ORTHO/POLAR
-* Layer Manager + LayerSwitcher DockWidget
-* Reading DXF
-\end{itemize}
+  * Notify user of data loss if not saving to an object format.
+  * Import Raster Image
+  * SNAP/ORTHO/POLAR
+  * Layer Manager + LayerSwitcher DockWidget
+  * Reading DXF
 * Alpha: low priority
-\begin{itemize}
-* Writing DXF
-* Up and Down keys cycle thru commands in the command prompt
-* Amount of Thread, Machine Time Estimation (also allow customizable times
+  * Writing DXF* Up and Down keys cycle thru commands in the command prompt
+  * Amount of Thread, Machine Time Estimation (also allow customizable times
 for setup, color changes, manually
 trimming jump threads, etc...that way a realistic total time can be estimated)
-* Otto Theme Icons - whatsthis icon doesn't scale well, needs redone
-* embroidermodder2.ico 16 x 16 looks horrible
-\end{itemize}
+  * Otto Theme Icons - whatsthis icon doesn't scale well, needs redone
+  * embroidermodder2.ico 16 x 16 looks horrible
 * Alpha: lower priority
-\begin{itemize}
-* CAD Command: Arc (rt)
-\end{itemize}
+  * CAD Command: Arc (rt)
 * beta
-\begin{itemize}
-* Custom Filter Bug - doesn't save changes in some cases
-* Cannot open file with `\#` in name when opening multiple files (works fine
+  * Custom Filter Bug - doesn't save changes in some cases
+  * Cannot open file with `\#` in name when opening multiple files (works fine
 when opening the single file)
-* Closing Settings Dialog with the X in the window saves settings rather than
+  * Closing Settings Dialog with the X in the window saves settings rather than
 discards them
-* Advanced Printing
-* Filling Algorithms (varga)
-* Otto Theme Icons - beta (rt) - Units, Render, Selectors
-\end{itemize}
+  * Advanced Printing
+  * Filling Algorithms (varga)
+  * Otto Theme Icons - beta (rt) - Units, Render, Selectors
 * Finish before 2.0 release
-\begin{itemize}
-* QDoc Comments
-* Review KDE4 Thumbnailer
-* Documentation for libembroidery and formats
-* HTML Help files
-* Update language translations
-* CAD Command review: line
-* CAD Command review: circle
-* CAD Command review: rectangle
-* CAD Command review: polygon
-* CAD Command review: polyline
-* CAD Command review: point
-* CAD Command review: ellipse
-* CAD Command review: arc
-* CAD Command review: distance
-* CAD Command review: locatepoint
-* CAD Command review: move
-* CAD Command review: rgb
-* CAD Command review: rotate
-* CAD Command review: scale
-* CAD Command review: singlelinetext
-* CAD Command review: star
-* Clean up all compiler warning messages, right now theres plenty :P
-\end{itemize}
+  * QDoc Comments
+  * Review KDE4 Thumbnailer
+  * Documentation for libembroidery and formats
+  * HTML Help files
+  * Update language translations
+  * CAD Command review: line
+  * CAD Command review: circle
+  * CAD Command review: rectangle
+  * CAD Command review: polygon
+  * CAD Command review: polyline
+  * CAD Command review: point
+  * CAD Command review: ellipse
+  * CAD Command review: arc
+  * CAD Command review: distance
+  * CAD Command review: locatepoint
+  * CAD Command review: move
+  * CAD Command review: rgb
+  * CAD Command review: rotate
+  * CAD Command review: scale
+  * CAD Command review: singlelinetext
+  * CAD Command review: star
+  * Clean up all compiler warning messages, right now theres plenty :P
 * 2.0
-\begin{itemize}
-* tar.gz archive
-* zip archive
-* Debian Package (rt)
-* NSIS Installer (rt)
-* Mac Bundle?
-* press release
-\end{itemize}
+  * tar.gz archive
+  * zip archive
+  * Debian Package (rt)
+  * NSIS Installer (rt)
+  * Mac Bundle?
+  * press release
 * 2.x/Ideas
-\begin{itemize}
-* libembroidery.mk for MXE project (refer to qt submodule packages for qmake based building. Also refer to plibc.mk for example of how write an update macro for github.)
-* libembroidery safeguard for all writers - check if the last stitch is an END stitch. If not, add an end stitch in the writer and modify the header data if necessary.
-* Cut/Copy - Allow Post-selection
-* CAD Command: Array
-* CAD Command: Offset
-* CAD Command: Extend
-* CAD Command: Trim
-* CAD Command: BreakAtPoint
-* CAD Command: Break2Points
-* CAD Command: Fillet
-* CAD Command: Chamfer
-* CAD Command: Split
-* CAD Command: Area
-* CAD Command: Time
-* CAD Command: PickAdd
-* CAD Command: Product
-* CAD Command: Program
-* CAD Command: ZoomFactor
-* CAD Command: GripHot
-* CAD Command: GripColor and GripCool
-* CAD Command: GripSize
-* CAD Command: Highlight
-* CAD Command: Units
-* CAD Command: Grid
-* CAD Command: Find
-* CAD Command: Divide
-* CAD Command: ZoomWindow (Move out of view.cpp)
-* Command: Web (Generates Spiderweb patterns)
-* Command: Guilloche (Generates Guilloche patterns)
-* Command: Celtic Knots
-* Command: Knotted Wreath
-* Lego Mindstorms NXT/EV3 ports and/or commands.
-* native function that flashes the command prompt to get users attention when using the prompt is required for a command.
-* libembroidery-composer like app that combines multiple files into one.
-* Settings Dialog, it would be nice to have it notify you when switching tabs that a setting has been changed. Adding an Apply button is what would make sense for this to happen.
-* Keyboard Zooming/Panning
-* G-Code format?
-* 3D Raised Embroidery
-* Gradient Filling Algorithms
-* Stitching Simulation
-* RPM packages?
-* Reports?
-* Record and Playback Commands
-* Settings option for reversing zoom scrolling direction
-* Qt GUI for libembroidery-convert
-* EPS format? Look at using Ghostscript as an optional add-on to libembroidery...
-* optional compile option for including LGPL/GPL libs etc... with warning to user about license requirements.
-* Realistic Visualization - Bump Mapping/OpenGL/Gradients?
-* Stippling Fill
-* User Designed Custom Fill
-* Honeycomb Fill
-* Hilbert Curve Fill
-* Sierpinski Triangle fill
-* Circle Grid Fill
-* Spiral Fill
-* Offset Fill
-* Brick Fill
-* Trim jumps over a certain length.
-* FAQ about setting high number of jumps for more controlled trimming.
-* Minimum stitch length option. (Many machines also have this option too)
-* Add 'Design Details' functionality to libembroidery-convert
-* Add 'Batch convert many to one format' functionality to libembroidery-convert
-* EmbroideryFLOSS - Color picker that displays catalog numbers and names.
-\end{itemize}
+  * libembroidery.mk for MXE project (refer to qt submodule packages for qmake based building. Also refer to plibc.mk for example of how write an update macro for github.)
+  * libembroidery safeguard for all writers - check if the last stitch is an END stitch. If not, add an end stitch in the writer and modify the header data if necessary.
+  * Cut/Copy - Allow Post-selection
+  * CAD Command: Array
+  * CAD Command: Offset
+  * CAD Command: Extend
+  * CAD Command: Trim
+  * CAD Command: BreakAtPoint
+  * CAD Command: Break2Points
+  * CAD Command: Fillet
+  * CAD Command: Chamfer
+  * CAD Command: Split
+  * CAD Command: Area
+  * CAD Command: Time
+  * CAD Command: PickAdd
+  * CAD Command: Product
+  * CAD Command: Program
+  * CAD Command: ZoomFactor
+  * CAD Command: GripHot
+  * CAD Command: GripColor and GripCool
+  * CAD Command: GripSize
+  * CAD Command: Highlight
+  * CAD Command: Units
+  * CAD Command: Grid
+  * CAD Command: Find
+  * CAD Command: Divide
+  * CAD Command: ZoomWindow (Move out of view.cpp)
+  * Command: Web (Generates Spiderweb patterns)
+  * Command: Guilloche (Generates Guilloche patterns)
+  * Command: Celtic Knots
+  * Command: Knotted Wreath
+  * Lego Mindstorms NXT/EV3 ports and/or commands.
+  * native function that flashes the command prompt to get users attention when using the prompt is required for a command.
+  * libembroidery-composer like app that combines multiple files into one.
+  * Settings Dialog, it would be nice to have it notify you when switching tabs that a setting has been changed. Adding an Apply button is what would make sense for this to happen.
+  * Keyboard Zooming/Panning
+  * G-Code format?
+  * 3D Raised Embroidery
+  * Gradient Filling Algorithms
+  * Stitching Simulation
+  * RPM packages?
+  * Reports?
+  * Record and Playback Commands
+  * Settings option for reversing zoom scrolling direction
+  * Qt GUI for libembroidery-convert
+  * EPS format? Look at using Ghostscript as an optional add-on to libembroidery...
+  * optional compile option for including LGPL/GPL libs etc... with warning to user about license requirements.
+  * Realistic Visualization - Bump Mapping/OpenGL/Gradients?
+  * Stippling Fill
+  * User Designed Custom Fill
+  * Honeycomb Fill
+  * Hilbert Curve Fill
+  * Sierpinski Triangle fill
+  * Circle Grid Fill
+  * Spiral Fill
+  * Offset Fill
+  * Brick Fill
+  * Trim jumps over a certain length.
+  * FAQ about setting high number of jumps for more controlled trimming.
+  * Minimum stitch length option. (Many machines also have this option too)
+  * Add 'Design Details' functionality to libembroidery-convert
+  * Add 'Batch convert many to one format' functionality to libembroidery-convert
+  * EmbroideryFLOSS - Color picker that displays catalog numbers and names.
 * beta
-\begin{itemize}
-* Realistic Visualization - Bump Mapping/OpenGL/Gradients?
-* Get undo history widget back (BUG).
-* Mac Bundle, .tar.gz and .zip source archive.
-* NSIS installer for Windows, Debian package, RPM package
-* GUI frontend for embroider features that aren't
+  * Realistic Visualization - Bump Mapping/OpenGL/Gradients?
+  * Get undo history widget back (BUG).
+  * Mac Bundle, .tar.gz and .zip source archive.
+  * NSIS installer for Windows, Debian package, RPM package
+  * GUI frontend for embroider features that aren't
 supported by embroidermodder: flag selector from a table
-* Update all formats without color to check for edr or rgb files.
-* Setting for reverse scrolling direction (for zoom, vertical pan)
-* Keyboard zooming, panning
-* New embroidermodder2.ico 16x16 logo that looks good at that scale.
-* Saving dst, pes, jef.
-* Settings dialog: notify when the user is switching tabs
+  * Update all formats without color to check for edr or rgb files.
+  * Setting for reverse scrolling direction (for zoom, vertical pan)
+  * Keyboard zooming, panning
+  * New embroidermodder2.ico 16x16 logo that looks good at that scale.
+  * Saving dst, pes, jef.
+  * Settings dialog: notify when the user is switching tabs
 that the setting has been changed, adding apply button is what would
 make sense for this to happen.
-* Update language translations.
-* Replace KDE4 thumbnailer.
-* Import raster image.
-* Statistics from 1.0, needs histogram.
-* SNAP/ORTHO/POLAR.
-* Cut/copy allow post-selection.
-* Layout into config.
-* Notify user of data loss if not saving to an object format.
-* Add which formats to work with to preferences.
-* Cannot open file with `\#` in the name when opening multiple
-files but works with opening a single file.
-* Closing settings dialog with the X in the window saves
+  * Update language translations.
+  * Replace KDE4 thumbnailer.
+  * Import raster image.
+  * Statistics from 1.0, needs histogram.
+  * SNAP/ORTHO/POLAR.
+  * Cut/copy allow post-selection.
+  * Layout into config.
+  * Notify user of data loss if not saving to an object format.
+  * Add which formats to work with to preferences.
+  * Cannot open file with `\#` in the name when opening multiple
+    files but works with opening a single file.
+  * Closing settings dialog with the X in the window saves
 settings rather than discarding them.
-* Otto theme icons: units, render, selectors, what's
+  * Otto theme icons: units, render, selectors, what's
 this icon doesn't scale.
-* Layer manager and Layer switcher dock widget.
-* Test that all formats read data in correct scale
+  * Layer manager and Layer switcher dock widget.
+  * Test that all formats read data in correct scale
 (format details should match other programs).
-* Custom filter bug -- doesn't save changes in some cases.
-* Tools to find common problems in the source code and suggest fixes
+  * Custom filter bug -- doesn't save changes in some cases.
+  * Tools to find common problems in the source code and suggest fixes
 to the developers. For example, a translation miss: that is, for any language
 other than English a missing entry in the translation table should supply a
 clear warning to developers.
-* Converting Qt C++ version to native GUI C throughout.
-* OpenGL Rendering: `Real` rendering to see what the embroidery
+  * Converting Qt C++ version to native GUI C throughout.
+  * OpenGL Rendering: `Real` rendering to see what the embroidery
 looks like, Icons and toolbars, Menu bar.
-* Libembroidery interfacing: get all classes to use the proper
+  * Libembroidery interfacing: get all classes to use the proper
 libembroidery types within them. So `Ellipse` has `EmbEllipse` as public
 data within it.
-* Move calculations of rotation and scaling into `EmbVector` calls.
-* GUI frontend for embroider features that aren't supported by
+  * Move calculations of rotation and scaling into `EmbVector` calls.
+  * GUI frontend for embroider features that aren't supported by
 embroidermodder: flag selector from a table
-* Update all formats without color to check for edr or rgb files.
-* Setting for reverse scrolling direction (for zoom, vertical pan)
-* Keyboard zooming, panning
-* Better integrated help: I don't think the help should backend to
+  * Update all formats without color to check for edr or rgb files.
+  * Setting for reverse scrolling direction (for zoom, vertical pan)
+  * Keyboard zooming, panning
+  * Better integrated help: I don't think the help should backend to
 a html file somewhere on the user's system. A better system would be a custom
 widget within the program that's searchable.
-* New embroidermodder2.ico 16x16 logo that looks good at that scale.
-* Settings dialog: notify when the user is switching tabs that the
+  * New embroidermodder2.ico 16x16 logo that looks good at that scale.
+  * Settings dialog: notify when the user is switching tabs that the
 setting has been changed, adding apply button is what would make sense for
 this to happen.
-\end{itemize}
-\end{itemize}
 
 Introduction
 ==================

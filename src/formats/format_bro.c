@@ -4,14 +4,7 @@
  *
  * Copyright 2018-2023 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
- */
 
-#include <stdio.h>
-#include <math.h>
-
-#include "../embroidery_internal.h"
-
-/**
  * \file format_bro.c The Bits and Volts Embroidery Format (.bro)
  * \addindex bro
  * \addindex Bits and Volts

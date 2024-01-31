@@ -4,16 +4,7 @@
  *
  * Copyright 2018-2023 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
- */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-
-#include "../embroidery_internal.h"
-
-/**
  * \file format_csv.c Comma Separated Values (.csv)
  * \addindex csv
  *

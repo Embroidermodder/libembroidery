@@ -4,14 +4,6 @@
  *
  * Copyright 2018-2023 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
- */
-
-#include <stdio.h>
-#include <math.h>
-
-#include "../embroidery_internal.h"
-
-/**
  *
 \subsection pfaff-ksm-format Pfaff professional Design format (.ksm)
 \addindex ksm

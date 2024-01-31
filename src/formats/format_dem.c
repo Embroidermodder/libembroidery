@@ -6,10 +6,6 @@
  * Licensed under the terms of the zlib license.
  */
 
-#include <stdio.h>
-#include <math.h>
-
-#include "../embroidery_internal.h"
 
 /**
  * \file format_dem.c The Melco Embroidery Format (.dem)

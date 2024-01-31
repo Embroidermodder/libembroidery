@@ -4,15 +4,6 @@
  *
  * Copyright 2018-2023 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
- */
-
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-
-#include "../embroidery_internal.h"
-
-/**
  *
 \subsection pfaff-pcd-format Pfaff PCD File Format (.pcd)
 \addindex pcd

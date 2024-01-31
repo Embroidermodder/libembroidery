@@ -3,9 +3,8 @@
  *
  * Copyright 2018-2023 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
- */
-
-/**
+ *
+ *
  *  \file compress.c
  *
  *  This is a work in progress.
@@ -26,12 +25,6 @@
  *
  *  This is based on their work.
  */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "embroidery_internal.h"
 
 /**
  * \a data \a length \a output \a output_length .

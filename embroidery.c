@@ -1,12 +1,35 @@
 /*
- * LIBEMBROIDERY INTERNAL HEADER
- * This file is part of libembroidery.
+ * Libembroidery 1.0.0-alpha
+ * https://www.libembroidery.org
  *
- * Copyright 2018-2023 The Embroidermodder Team
+ * A library for reading, writing, altering and otherwise
+ * processing machine embroidery files and designs.
+ *
+ * Also, the core library supporting the Embroidermodder Project's
+ * family of machine embroidery interfaces.
+ *
+ * ---------------------------------------------------------
+ *
+ * Copyright 2018-2024 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
- * -----------------------------------------------------------------------------
+ * ---------------------------------------------------------
  *
+ * Only uses source from this directory or standard C libraries,
+ * not including POSIX headers like unistd since this library
+ * needs to support non-POSIX systems like Windows.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <time.h>
+#include <ctype.h>
+
+#include "embroidery.h"
+
+/*
  * Note that this file only has to exist because we cannot necessary include
  * any of the C standard library on all platforms. For example, "FILE *" and
  * "printf" aren't universal. See the "Supported Platforms" section of
@@ -15,11 +38,6 @@
 
 #ifndef EMB_INTERNAL_HEADER__
 #define EMB_INTERNAL_HEADER__
-
-#include "embroidery.h"
-
-/* For FILE * */
-#include <stdio.h>
 
 /* Function Declarations
 *****************************************************************************/
@@ -203,3 +221,88 @@ char readZsk(EmbPattern *pattern, FILE* file);
 char writeZsk(EmbPattern *pattern, FILE* file);
 
 #endif
+
+#include "src/geometry/arc.c"
+#include "src/geometry/circle.c"
+#include "src/geometry/ellipse.c"
+#include "src/geometry/functions.c"
+#include "src/geometry/line.c"
+#include "src/geometry/path.c"
+#include "src/geometry/polygon.c"
+#include "src/geometry/polyline.c"
+#include "src/geometry/rect.c"
+#include "src/geometry/text.c"
+#include "src/geometry/vector.c"
+
+#include "src/formats/format_10o.c"
+#include "src/formats/format_100.c"
+#include "src/formats/format_art.c"
+#include "src/formats/format_bmc.c"
+#include "src/formats/format_bro.c"
+#include "src/formats/format_cnd.c"
+#include "src/formats/format_col.c"
+#include "src/formats/format_csd.c"
+#include "src/formats/format_csv.c"
+#include "src/formats/format_dat.c"
+#include "src/formats/format_dem.c"
+#include "src/formats/format_dsb.c"
+#include "src/formats/format_dst.c"
+#include "src/formats/format_dsz.c"
+#include "src/formats/format_dxf.c"
+#include "src/formats/format_edr.c"
+#include "src/formats/format_emd.c"
+#include "src/formats/format_exp.c"
+#include "src/formats/format_exy.c"
+#include "src/formats/format_eys.c"
+#include "src/formats/format_fxy.c"
+#include "src/formats/format_gc.c"
+#include "src/formats/format_gnc.c"
+#include "src/formats/format_gt.c"
+#include "src/formats/format_hus.c"
+#include "src/formats/format_inb.c"
+#include "src/formats/format_inf.c"
+#include "src/formats/format_jef.c"
+#include "src/formats/format_ksm.c"
+#include "src/formats/format_max.c"
+#include "src/formats/format_mit.c"
+#include "src/formats/format_new.c"
+#include "src/formats/format_ofm.c"
+#include "src/formats/format_pcd.c"
+#include "src/formats/format_pcm.c"
+#include "src/formats/format_pcq.c"
+#include "src/formats/format_pcs.c"
+#include "src/formats/format_pec.c"
+#include "src/formats/format_pel.c"
+#include "src/formats/format_pem.c"
+#include "src/formats/format_pes.c"
+#include "src/formats/format_phb.c"
+#include "src/formats/format_phc.c"
+#include "src/formats/format_plt.c"
+#include "src/formats/format_rgb.c"
+#include "src/formats/format_sew.c"
+#include "src/formats/format_shv.c"
+#include "src/formats/format_sst.c"
+#include "src/formats/format_stx.c"
+#include "src/formats/format_svg.c"
+#include "src/formats/format_t01.c"
+#include "src/formats/format_t09.c"
+#include "src/formats/format_tap.c"
+#include "src/formats/format_thr.c"
+#include "src/formats/format_txt.c"
+#include "src/formats/format_u00.c"
+#include "src/formats/format_u01.c"
+#include "src/formats/format_vip.c"
+#include "src/formats/format_vp3.c"
+#include "src/formats/format_xxx.c"
+#include "src/formats/format_zsk.c"
+
+#include "src/main.c"
+#include "src/array.c"
+#include "src/formats.c"
+#include "src/geometry.c"
+#include "src/pattern.c"
+#include "src/image.c"
+#include "src/fill.c"
+#include "src/compress.c"
+#include "src/encoding.c"
+#include "src/thread-color.c"

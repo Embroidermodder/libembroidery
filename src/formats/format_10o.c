@@ -4,14 +4,7 @@
  *
  * Copyright 2018-2023 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
- */
-
-#include <stdio.h>
-#include <math.h>
-
-#include "../embroidery_internal.h"
-
-/**
+ *
  * \file format_10o.c The Toyota Embroidery Format (.100)
  * \addindex 100
  * \addindex Toyota

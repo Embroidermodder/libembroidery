@@ -9,12 +9,6 @@
  * The array management for libembroidery's arrays.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "embroidery_internal.h"
-
 /**
  * Allocates memory for an EmbArray of the type determined by
  * the argument \a type.

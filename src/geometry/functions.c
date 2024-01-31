@@ -6,12 +6,6 @@
  * Licensed under the terms of the zlib license.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-#include "../embroidery.h"
-
 /* round is C99 and we're committed to C90 so here's a replacement.
  */
 int

@@ -6,13 +6,6 @@
  * Licensed under the terms of the zlib license.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-#include "../embroidery.h"
-
-
 //NOTE: This void should be used to interpret various object types and save them as polylines for stitchOnly formats.
 /*
 void save_toPolyline(EmbPattern* pattern, const EmbVector& objPos, const QPainterPath& objPath, const std::string& layer, const QColor& color, const std::string& lineType, const std::string& lineWeight)

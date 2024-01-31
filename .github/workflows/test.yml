@@ -14,7 +14,8 @@ jobs:
       run: |
         git clone https://github.com/Embroidermodder/libembroidery
         cd libembroidery
-        bash build.sh
-        bash build.sh test
+        bash emb build || exit 1
+        cd build || exit 1
+        ./embroider --test || exit 1
       shell: bash
         

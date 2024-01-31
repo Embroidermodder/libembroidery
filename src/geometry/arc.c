@@ -20,12 +20,6 @@
  * correct for elliptic versions.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-#include "../embroidery.h"
-
 /* Returns an EmbArcObject. It is created on the stack.
  *
  * Note that the default arc is the semicircular arc of the circle of radius

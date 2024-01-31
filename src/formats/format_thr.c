@@ -4,15 +4,7 @@
  *
  * Copyright 2018-2023 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
- */
 
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-
-#include "../embroidery_internal.h"
-
-/**
 \subsection ThredWorks Embroidery Format (.thr)
 \addindex thr
 \addindex ThreadWorks

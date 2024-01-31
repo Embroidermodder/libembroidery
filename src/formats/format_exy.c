@@ -6,11 +6,6 @@
  * Licensed under the terms of the zlib license.
  */
 
-#include <stdio.h>
-#include <math.h>
-
-#include "../embroidery_internal.h"
-
 /**
  *
 \subsection eltac-exy-format Eltac Embroidery Format (.exy)

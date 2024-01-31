@@ -6,13 +6,6 @@
  * Licensed under the terms of the zlib license.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-
-#include "../embroidery_internal.h"
-
 /**
  *
 \subsection drawing-dxf-format Drawing Exchange Format (.dxf)

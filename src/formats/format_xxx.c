@@ -6,12 +6,6 @@
  * Licensed under the terms of the zlib license.
  */
 
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-
-#include "../embroidery_internal.h"
-
 /**
 \subsection Singer Embroidery Format (.xxx)
 \addindex xxx

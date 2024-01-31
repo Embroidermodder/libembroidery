@@ -6,12 +6,6 @@
  * Licensed under the terms of the zlib license.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-#include "../embroidery.h"
-
 /* Finds the normalized vector perpendicular (clockwise) to the line
  * given by v1->v2 (normal to the line) */
 EmbVector

@@ -6,22 +6,13 @@
  *
  * This file contains all the read and write functions for the
  * library.
- */
-
-/**
+ *
  * \file image.c
  * This backends to the stb libraries and nanosvg library.
  *
  * Use Python PEP7 for coding style.
- */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-#include "embroidery_internal.h"
-
-/**
+ *
+ *
  * Write a PES embedded \a image to the given \a file pointer.
  */
 void

@@ -5,14 +5,6 @@
  * Licensed under the terms of the zlib license.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <time.h>
-
-#include "embroidery_internal.h"
-
 /* same order as flag_list, to use in jump table */
 #define FLAG_TO                       0
 #define FLAG_TO_SHORT                 1

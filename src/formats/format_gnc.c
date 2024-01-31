@@ -4,15 +4,7 @@
  *
  * Copyright 2018-2023 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
- */
 
-#include <stdio.h>
-#include <math.h>
-
-#include "../embroidery_internal.h"
-
-/**
- *
 \subsection great-gnc-format Great Notions Embroidery Format (.gnc)
 \addindex gnc
 \addindex Great Notions

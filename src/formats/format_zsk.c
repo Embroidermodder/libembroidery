@@ -4,20 +4,14 @@
  *
  * Copyright 2018-2023 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
- */
-
-#include <stdio.h>
-#include <string.h>
-
-/**
+ *
+ *
  * \file format_zsk.c The ZSK USA Embroidery Format (.zsk)
  * \addindex zsk
  * \addindex ZSK USA
  *
  * The ZSK USA zsk format is stitch-only.
  */
-
-#include "../embroidery_internal.h"
 
 char
 readZsk(EmbPattern* pattern, FILE* file)

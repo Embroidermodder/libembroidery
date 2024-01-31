@@ -5,11 +5,6 @@
  * Licensed under the terms of the zlib license.
  */
 
-#include <stdio.h>
-#include <string.h>
-
-#include "embroidery_internal.h"
-
 #ifndef LIBEMBROIDERY_CLI
 const unsigned char _dxfColorTable[][3] = {{   0,   0,   0 }};
 const EmbThread husThreads[] = {{{   0,   0,   0 }, "END", "END"}};

@@ -6,12 +6,6 @@
  * Licensed under the terms of the zlib license.
  */
 
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-
-#include "../embroidery_internal.h"
-
 /**
  * \file format_csd.c The Singer Embroidery Format (.csd)
  * \addindex csd

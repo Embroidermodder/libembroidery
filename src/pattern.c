@@ -3,21 +3,11 @@
  *
  * Copyright 2018-2022 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
- */
-
-/**
+ *
+ *
  * \file pattern.c
  * The file is for the management of the main struct: EmbPattern.
- */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-
-#include "embroidery_internal.h"
-
-/**
+ *
  * Returns a pointer to an EmbPattern. It is created on the heap.
  * The caller is responsible for freeing the allocated memory with
  * embPattern_free().

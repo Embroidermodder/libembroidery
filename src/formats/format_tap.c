@@ -4,15 +4,7 @@
  *
  * Copyright 2018-2022 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
- *******************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "../embroidery_internal.h"
-
-/**
 \subsection Happy Embroidery Format (.tap)
 \addindex tap
 \addindex Happy

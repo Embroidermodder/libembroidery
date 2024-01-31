@@ -6,13 +6,6 @@
  * Licensed under the terms of the zlib license.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-
-#include "../embroidery_internal.h"
-
 /**
 \subsection Data Stitch Embroidery Format (.stx)
 \addindex stx

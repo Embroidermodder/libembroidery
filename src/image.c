@@ -15,6 +15,7 @@
  *
  * Write a PES embedded \a image to the given \a file pointer.
  */
+
 void
 writeImage(FILE* file, unsigned char image[][48])
 {
@@ -58,18 +59,6 @@ image_diff(unsigned char *a, unsigned char *b, int size)
 }
 
 #ifdef LIBEMBROIDERY_CLI
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.h"
-
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb/stb_image_write.h"
-
-#define NANOSVG_ALL_COLOR_KEYWORDS
-#define NANOSVG_IMPLEMENTATION
-#include "nanosvg/src/nanosvg.h"
-
-#define NANOSVGRAST_IMPLEMENTATION
-#include "nanosvg/src/nanosvgrast.h"
 
 /**
  * Render the pattern \a p to the file with name \a fname.
@@ -85,6 +74,7 @@ image_diff(unsigned char *a, unsigned char *b, int size)
 int
 embPattern_render(EmbPattern *p, char *fname)
 {
+/*
     const char *tmp_fname = "libembroidery_temp.svg";
     NSVGimage *image = NULL;
     NSVGrasterizer rast;
@@ -107,6 +97,7 @@ embPattern_render(EmbPattern *p, char *fname)
         4,
         img_data,
         4*image->width);
+*/
     return 0;
 }
 
@@ -145,6 +136,7 @@ embImage_create(int width, int height)
 void
 embImage_read(EmbImage *image, char *fname)
 {
+	/*
     int channels_in_file;
     image->data = stbi_load(
         fname,
@@ -152,6 +144,7 @@ embImage_read(EmbImage *image, char *fname)
         &(image->height),
         &channels_in_file,
         3);
+	*/
 }
 
 /**
@@ -161,6 +154,7 @@ embImage_read(EmbImage *image, char *fname)
 int
 embImage_write(EmbImage *image, char *fname)
 {
+/*
     return stbi_write_png(
          fname,
          image->width,
@@ -168,6 +162,8 @@ embImage_write(EmbImage *image, char *fname)
         4,
         image->data,
         4*image->width);
+*/
+    return 0;
 }
 
 /**

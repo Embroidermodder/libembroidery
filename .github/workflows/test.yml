@@ -12,10 +12,9 @@ jobs:
     steps:
     - name: Build and test library and command-line program.
       run: |
-        git clone https://github.com/Embroidermodder/libembroidery
-        cd libembroidery
-        bash emb build || exit 1
-        cd build || exit 1
+        git clone https://github.com/Embroidermodder/libembroidery || exit 1
+        cmake libembroidery || exit 1
+        cmake --build . || exit 1
         ./embroider --test || exit 1
       shell: bash
         

@@ -116,7 +116,7 @@ The Embroidermodder Team is the collection of people who've submitted
 patches, artwork and documentation to our three projects.
 The team was established by Jonathan Greig and Josh Varga.
 The full list of contributors who wish to be credited is
-`here <https://www.libembroidery.org/docs/credits/>`_
+here: https://www.libembroidery.org/docs/credits/
 
 Core Development Team
 ---------------------
@@ -150,14 +150,14 @@ due to link rot we've lost them.
 
 .. todo: upload a backup here.
 
-The `source code <https://github.com/Embroidermodder/Embroidermodder>`_ for Embroidermodder
-2 was moved to GitHub on July 18, 2013.
+The source code for Embroidermodder
+2 was moved to GitHub (https://github.com/Embroidermodder/Embroidermodder) on July 18, 2013.
 
-`This website <https://github.com/Embroidermodder/www.libembroidery.org>`_ was moved to
-GitHub on September 9, 2013. Due to us losing the domain name it was renamed to
+This website was moved to
+GitHub (https://github.com/Embroidermodder/www.libembroidery.org) on September 9, 2013. Due to us losing the domain name it was renamed to
 ``www.libembroidery.org`` from ``www.embroidermodder.org``.
 
-The `libembroidery library <https://github.com/Embroidermodder/libembroidery>`_
+The libembroidery library (https://github.com/Embroidermodder/libembroidery)
 became a seperate project in 2018 as a way of supporting other frontends with the
 same file parsing and geometry routines.
 
@@ -246,9 +246,10 @@ User Manuals
 
 Note that these URLs are maintained as the permalinks.
 
-For all of these user manuals (except the ``embroider`` manpage),
+For all of these user manuals including the ``embroider`` manpage,
 the source code is maintained as part
-of the website `here <https://github.com/Embroidermodder/docs>`_.
+of the libembroidery project (https://github.com/Embroidermodder/libembroidery).
+The documentation, like the code, is mostly common to all subprojects.
 
 * Embroidermodder: https://www.libembroidery.org/em_user
 * embroider: https://www.libembroidery.org/docs/embroider.txt

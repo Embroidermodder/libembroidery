@@ -13,8 +13,8 @@ jobs:
     - name: Build and test library and command-line program.
       run: |
         git clone https://github.com/Embroidermodder/libembroidery || exit 1
-        cmake libembroidery || exit 1
-        cmake --build . || exit 1
-        ./embroider --test || exit 1
+        cd libembroidery || exit 1
+        bash bin/build.sh || exit 1
+        bash bin/test.sh || exit 1
       shell: bash
         

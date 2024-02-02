@@ -27,7 +27,7 @@ exclude_patterns = []
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_title = "Embroidermodder"
-html_theme = 'agogo'
+html_theme = 'nature'
 """
 html_theme = 'sphinx_book_theme'
 html_theme_options = {

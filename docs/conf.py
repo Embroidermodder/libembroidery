@@ -15,7 +15,6 @@ release = '2.0.0-alpha4'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    "sphinx.ext.autodoc",
     "sphinx.ext.todo",
     "sphinx.ext.coverage",
     "sphinx.ext.viewcode"
@@ -28,6 +27,8 @@ exclude_patterns = []
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_title = "Embroidermodder"
+html_theme = 'agogo'
+"""
 html_theme = 'sphinx_book_theme'
 html_theme_options = {
     "announcement": "IN ALPHA DEVELOPMENT, NOT READY FOR SERIOUS USE",
@@ -54,6 +55,7 @@ html_theme_options = {
     "max_navbar_depth": 4,
     "navigation_with_keys": False
 }
+"""
 html_static_path = ['_static']
 # html_css_files = ["custom.css"]
 html_logo = "docs/images/icons/app.png"

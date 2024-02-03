@@ -119,11 +119,7 @@ const char imageWithFrame[38][48] = {
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
 
-/**
- * @brief
- *
- * \a data
- */
+/* Check that the pointer isn't NULL before freeing. */
 void
 safe_free(void *data)
 {
@@ -133,13 +129,7 @@ safe_free(void *data)
     }
 }
 
-/**
- * @brief
- *
- * \a fileName
- * \a ending
- * @return int
- */
+/* Get extension from file name. */
 int
 embFormat_getExtension(const char *fileName, char *ending)
 {
@@ -169,12 +159,7 @@ embFormat_getExtension(const char *fileName, char *ending)
     return 1;
 }
 
-/**
- * @brief
- *
- * \a fileName
- * @return int
- */
+/* Identify format from the file name. */
 int
 emb_identify_format(const char *fileName)
 {
@@ -191,12 +176,7 @@ emb_identify_format(const char *fileName)
     return -1;
 }
 
-/**
- * @brief
- *
- * \a f
- * @return short
- */
+/* TODO: Replace with embInt_read macros. */
 short
 fread_int16(FILE* f)
 {
@@ -205,13 +185,7 @@ fread_int16(FILE* f)
     return x;
 }
 
-/**
- * @brief
- *
- * \a f
- * @return unsigned short
- *
- * \todo replace with embInt_read
+/* \todo replace with embInt_read
  */
 unsigned short
 fread_uint16(FILE* f)
@@ -221,13 +195,7 @@ fread_uint16(FILE* f)
     return x;
 }
 
-/**
- * @brief
- *
- * \a f
- * @return int
- *
- * \todo replace with embInt_read
+/* \todo replace with embInt_read
  */
 int
 fread_int32_be(FILE* f)
@@ -237,12 +205,7 @@ fread_int32_be(FILE* f)
     return x;
 }
 
-/**
- * @brief
- *
- * \a f
- * @return int
- */
+/* . */
 void
 fpad(FILE* file, char c, int n)
 {
@@ -252,13 +215,7 @@ fpad(FILE* file, char c, int n)
     }
 }
 
-/**
- * @brief
- *
- * \a f
- * \a data
- *
- * \todo replace with embInt_read
+/* \todo replace with embInt_read
  */
 void
 binaryWriteShort(FILE* f, short data)
@@ -266,13 +223,7 @@ binaryWriteShort(FILE* f, short data)
     embInt_write(f, "binaryWriteShort", &data, EMB_INT16_LITTLE);
 }
 
-/**
- * @brief
- *
- * \a f
- * \a data
- *
- * \todo replace with embInt_read
+/* \todo replace with embInt_read
  */
 void
 binaryWriteUShort(FILE* f, unsigned short data)
@@ -280,13 +231,7 @@ binaryWriteUShort(FILE* f, unsigned short data)
     embInt_write(f, "binaryWriteUShort", &data, EMB_INT16_LITTLE);
 }
 
-/**
- * @brief
- *
- * \a f
- * \a data
- *
- * \todo replace with embInt_read
+/* \todo replace with embInt_read
  */
 void
 binaryWriteUShortBE(FILE* f, unsigned short data)
@@ -294,13 +239,7 @@ binaryWriteUShortBE(FILE* f, unsigned short data)
     embInt_write(f, "binaryWriteUShortBE", &data, EMB_INT16_BIG);
 }
 
-/**
- * @brief
- *
- * \a f
- * \a data
- *
- * \todo replace with embInt_read
+/* \todo replace with embInt_read
  */
 void
 binaryWriteInt(FILE* f, int data)
@@ -308,13 +247,7 @@ binaryWriteInt(FILE* f, int data)
     embInt_write(f, "binaryWriteInt", &data, EMB_INT32_LITTLE);
 }
 
-/**
- * @brief
- *
- * \a f
- * \a data
- *
- * \todo replace with embInt_read
+/* \todo replace with embInt_read
  */
 void
 binaryWriteIntBE(FILE* f, int data)
@@ -322,13 +255,7 @@ binaryWriteIntBE(FILE* f, int data)
     embInt_write(f, "binaryWriteIntBE", &data, EMB_INT32_BIG);
 }
 
-/**
- * @brief
- *
- * \a f
- * \a data
- *
- * \todo replace with embInt_read
+/* \todo replace with embInt_read
  */
 void
 binaryWriteUInt(FILE* f, unsigned int data)
@@ -336,13 +263,7 @@ binaryWriteUInt(FILE* f, unsigned int data)
     embInt_write(f, "binaryWriteUInt", &data, EMB_INT32_LITTLE);
 }
 
-/**
- * @brief
- *
- * \a f
- * \a data
- *
- * \todo replace with embInt_read
+/* \todo replace with embInt_read
  */
 void
 binaryWriteUIntBE(FILE* f, unsigned int data)
@@ -350,14 +271,7 @@ binaryWriteUIntBE(FILE* f, unsigned int data)
     embInt_write(f, "binaryWriteUIntBE", &data, EMB_INT32_BIG);
 }
 
-/**
- * @brief
- *
- * \a pattern
- * \a fileName
- * \a format
- * @return char
- */
+/* . */
 char
 embPattern_read(EmbPattern* pattern, const char *fileName, int format)
 {
@@ -579,14 +493,7 @@ embPattern_read(EmbPattern* pattern, const char *fileName, int format)
     return result;
 }
 
-/**
- * @brief
- *
- * \a pattern
- * \a fileName
- * \a format
- * @return char
- */
+/* . */
 char
 embPattern_write(EmbPattern* pattern, const char *fileName, int format)
 {
@@ -813,13 +720,7 @@ embPattern_write(EmbPattern* pattern, const char *fileName, int format)
     return result;
 }
 
-/**
- * @brief
- *
- * \a pattern
- * \a fileName
- * @return char
- */
+/* . */
 char
 embPattern_readAuto(EmbPattern* pattern, const char* fileName)
 {
@@ -832,13 +733,7 @@ embPattern_readAuto(EmbPattern* pattern, const char* fileName)
     return embPattern_read(pattern, fileName, format);
 }
 
-/**
- * @brief
- *
- * \a pattern
- * \a fileName
- * @return char
- */
+/* . */
 char
 embPattern_writeAuto(EmbPattern* pattern, const char* fileName)
 {
@@ -851,8 +746,7 @@ embPattern_writeAuto(EmbPattern* pattern, const char* fileName)
     return embPattern_write(pattern, fileName, format);
 }
 
-/*
- * \file format_100.c The Toyota Embroidery Format (.10o)
+/* format_100.c The Toyota Embroidery Format (.10o)
  *
  * The Toyota 10o format is a stitch-only format that uses
  * an external color file.
@@ -916,10 +810,8 @@ write100(EmbPattern* pattern, FILE* file)
     }
     return 1;
 }
-/*
- * \file format_10o.c The Toyota Embroidery Format (.100)
- * \addindex 100
- * \addindex Toyota
+
+/* format_10o.c The Toyota Embroidery Format (.100)
  *
  * The Toyota 100 format is a stitch-only format that
  * uses an external color file.
@@ -996,14 +888,10 @@ write10o(EmbPattern* pattern, FILE* file)
     return 1;
 }
 
-/*
- * \file format_art.c The Bernina Embroidery Format (.art)
- * \addindex art
- * \addindex Bernina
+/* The Bernina Embroidery Format (.art)
  *
  * We don't know much about this format. \todo Find a source.
  */
-
 char
 readArt(EmbPattern* pattern, FILE* file)
 {
@@ -1024,14 +912,10 @@ writeArt(EmbPattern* pattern, FILE* file)
     return 0; /*TODO: finish writeArt */
 }
 
-/*
- * \file format_bmc.c The Bitmap Cache Embroidery Format (.bmc)
- * \addindex bmc
- * \addindex Bitmap Cache
+/* The Bitmap Cache Embroidery Format (.bmc)
  *
  * We don't know much about this format. \todo Find a source.
  */
-
 char
 readBmc(EmbPattern* pattern, FILE* file)
 {
@@ -1052,8 +936,7 @@ writeBmc(EmbPattern* pattern, FILE* file)
     return 0; /*TODO: finish writeBmc */
 }
 
-/*
- * \file format_bro.c The Bits and Volts Embroidery Format (.bro)
+/* The Bits and Volts Embroidery Format (.bro)
  *
  * The Bits and Volts bro format is a stitch-only format that
  * uses an external color file.
@@ -1119,10 +1002,8 @@ writeBro(EmbPattern* pattern, FILE* file)
     writeDst(pattern, file);
     return 0; /*TODO: finish writeBro */
 }
-/*
- * \file format_cnd.c The Melco Embroidery Format (.cnd)
- * \addindex cnd
- * \addindex Melco
+
+/* The Melco Embroidery Format (.cnd)
  *
  * The Melco cnd format is a stitch-only format.
  *
@@ -1130,7 +1011,6 @@ writeBro(EmbPattern* pattern, FILE* file)
  *
  * \todo Find a source.
  */
-
 char
 readCnd(EmbPattern* pattern, FILE* file)
 {
@@ -1148,9 +1028,8 @@ writeCnd(EmbPattern* pattern, FILE* file)
     writeDst(pattern, file);
     return 0; /*TODO: finish writeCnd */
 }
-/*
- * \file format_col.c The Embroidery Thread Color Format (.col)
- * \addindex col
+
+/* The Embroidery Thread Color Format (.col)
  *
  * An external color file format for formats that do not record
  * their own colors.
@@ -1177,7 +1056,6 @@ writeCnd(EmbPattern* pattern, FILE* file)
  *    2,0,255,0\r\n
  *    3,0,0,255\r\n
  */
-
 char
 readCol(EmbPattern* pattern, FILE* file)
 {
@@ -1228,14 +1106,10 @@ writeCol(EmbPattern* pattern, FILE* file)
     return 1;
 }
 
-/*
- * \file format_csd.c The Singer Embroidery Format (.csd)
- * \addindex csd
- * \addindex Singer
+/* The Singer Embroidery Format (.csd)
  *
  * Stitch Only Format.
  */
-
 #define CsdSubMaskSize  479
 #define CsdXorMaskSize  501
 
@@ -1427,8 +1301,7 @@ writeCsd(EmbPattern* pattern, FILE* file) {
  * | `*` | `END` | To end a pattern. |
  * | `*` | `UNKNOWN` | For any feature that we can't identify.
  *
- * \subsubsection embird-csv-dialect EmBird CSV Dialect
- * \addindex Embird
+ * ## EmBird CSV Dialect
  *
  */
 
@@ -1607,23 +1480,13 @@ readCsv(EmbPattern* pattern, FILE* file) {
 }
 
 char
-writeCsv(EmbPattern* pattern, FILE* file) {
+writeCsv(EmbPattern* pattern, FILE* file)
+{
     EmbRect boundingRect;
     int i;
 
     boundingRect = embPattern_calcBoundingBox(pattern);
 
-#if LIBEMBROIDERY_EMBEDDED_VERSION
-    /* write header */
-    FILE *csv_header;
-    csv_header = fopen("assets/header.csv", "r");
-    while (!feof(csv_header)) {
-        char c;
-        fread(&c, 1, 1, csv_header);
-        fwrite(&c, 1, 1, file);
-    }
-    fclose(csv_header);
-#else
     fprintf(file, "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n");
     fprintf(file, "\"#\",\"http://embroidermodder.github.io\"\n");
     fprintf(file, "\"#\",\" \"\n");
@@ -1643,7 +1506,6 @@ writeCsv(EmbPattern* pattern, FILE* file) {
     fprintf(file, "\"#\",\"UNKNOWN encompasses instructions that may not be supported currently.\"\n");
     fprintf(file, "\"#\",\"[X] and [Y] are absolute coordinates in millimeters (mm).\"\n");
     fprintf(file, "\"#\",\" \"\n");
-#endif
 
     /* write variables */
     fprintf(file,"\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");
@@ -1685,12 +1547,10 @@ writeCsv(EmbPattern* pattern, FILE* file) {
     return 1;
 }
 
-/*
- * \file The Barudan Embroidery Format (.dat)
+/* The Barudan Embroidery Format (.dat)
  *
  * Stitch Only Format.
  */
-
 char
 readDat(EmbPattern* pattern, FILE* file)
 {
@@ -1771,14 +1631,10 @@ writeDat(EmbPattern* pattern, FILE* file)
     return 1; /*TODO: finish writeDat */
 }
 
-/**
- * \file format_dem.c The Melco Embroidery Format (.dem)
- * \addindex dem
- * \addindex Melco
+/* The Melco Embroidery Format (.dem)
  *
  * Stitch Only Format
  */
-
 char
 readDem(EmbPattern* pattern, FILE* file)
 {
@@ -1795,18 +1651,14 @@ writeDem(EmbPattern* pattern, FILE* file)
     return writeDst(pattern, file); /*TODO: finish writeDem */
 }
 
-/**
- * \file format_dsb.c The Barudan Embroidery Format (.dsb)
- * \addindex dsb
- * \addindex Barudan
+/* The Barudan Embroidery Format (.dsb)
  *
- * * Stitch Only Format.
- * * [X] Basic Read Support
- * * [o] Basic Write Support
- * * [o] Well Tested Read
- * * [o] Well Tested Write
+ * Stitch Only Format.
+ * [X] Basic Read Support
+ * [o] Basic Write Support
+ * [o] Well Tested Read
+ * [o] Well Tested Write
  */
-
 char
 readDsb(EmbPattern* pattern, FILE* file)
 {
@@ -1856,14 +1708,12 @@ writeDsb(EmbPattern* pattern, FILE* file)
  * notes appeared at http://www.wotsit.org under Tajima Format.
 
 \subsection tajima-dst-format Tajima Embroidery Format (.dst)
-\addindex dst
-\addindex Tajima
 
-* Stitch Only Format.
-* [X] Basic Read Support
-* [X] Basic Write Support
-* [ ] Well Tested Read
-* [ ] Well Tested Write
+Stitch Only Format.
+[X] Basic Read Support
+[X] Basic Write Support
+[ ] Well Tested Read
+[ ] Well Tested Write
 
 .DST (Tajima) embroidery file read/write routines
 Format comments are thanks to [tspilman@dalcoathletic.com](tspilman@dalcoathletic.com) who's
@@ -1871,7 +1721,7 @@ notes appeared at [http://www.wotsit.org](http://www.wotsit.org) under Tajima Fo
 
 Other references: \cite kde_tajima , \cite acatina .
 
-\subsubsection dst-header Header
+## Header
 
 The header contains general information about the design. It is in lines of ASCII, so if you open a DST file as a text file, it's the only part that's easy to read. The line ending symbol is  `0x0D}. The header is necessary for the file to be read by most softwares and hardwares.
 
@@ -1919,7 +1769,8 @@ Note that the max stitch length is the largest sum of $1+3+9+27+81=121$ where th
  *
  */
 
-int decode_record_flags(unsigned char b2)
+int
+decode_record_flags(unsigned char b2)
 {
     if (b2 == 0xF3) {
         return END;
@@ -1934,7 +1785,9 @@ int decode_record_flags(unsigned char b2)
 }
 
 /* TODO: review this then remove since emb-pattern.c has a similar function */
-/* void combineJumpStitches(EmbPattern* p, int jumpsPerTrim)
+/*
+void
+combineJumpStitches(EmbPattern* p, int jumpsPerTrim)
 {
     if (!p) { printf("ERROR: format-dst.c combineJumpStitches(), p argument is null\n"); return; }
     Embstitch_list* pointer = p->stitch_list;
@@ -2019,7 +1872,7 @@ encode_record(FILE* file, int x, int y, int flags)
 
 /*convert 2 characters into 1 int for case statement */
 /*#define cci(s) (s[0]*256+s[1]) */
-#define cci(c1,c2) (c1*256+c2)
+#define cci(c1, c2) (c1*256+c2)
 
 void
 set_dst_variable(EmbPattern* pattern, char* var, char* val) {

@@ -18,13 +18,6 @@
 extern "C" {
 #endif
 
-/* This setting overrides large tables so they aren't included in embedded
- * systems.
- */
-#ifndef EMB_EMBEDDED_VERSION
-#define EMB_EMBEDDED_VERSION          0
-#endif
-
 /* MACROS
  *****************************************************************************
  *
@@ -1075,65 +1068,6 @@ EMB_PUBLIC int full_test_matrix(char *fname);
 EMB_PUBLIC int emb_round(EmbReal x);
 EMB_PUBLIC EmbReal radians(EmbReal degree);
 EMB_PUBLIC EmbReal degrees(EmbReal radian);
-
-/* Utility Functions */
-EMB_PUBLIC int stringInArray(const char *s, const char **array);
-EMB_PUBLIC char *copy_trim(char const *s);
-EMB_PUBLIC char* emb_optOut(EmbReal num, char* str);
-EMB_PUBLIC void safe_free(void *data);
-
-/* DIFAT functions */
-EMB_PUBLIC unsigned int entriesInDifatSector(bcf_file_difat* fat);
-EMB_PUBLIC bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
-EMB_PUBLIC void loadFatFromSector(bcf_file_fat* fat, FILE* file);
-EMB_PUBLIC void bcf_file_fat_free(bcf_file_fat** fat);
-EMB_PUBLIC bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
-EMB_PUBLIC void bcf_directory_free(bcf_directory** dir);
-EMB_PUBLIC unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
-EMB_PUBLIC void bcf_file_difat_free(bcf_file_difat* difat);
-EMB_PUBLIC bcf_file_header bcfFileHeader_read(FILE* file);
-EMB_PUBLIC int bcfFileHeader_isValid(bcf_file_header header);
-EMB_PUBLIC void bcf_file_free(bcf_file* bcfFile);
-
-EMB_PUBLIC void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1);
-EMB_PUBLIC int create_test_file_1(const char* outf);
-EMB_PUBLIC int create_test_file_2(const char* outf);
-EMB_PUBLIC int create_test_file_3(const char* outf);
-EMB_PUBLIC int testEmbCircle(void);
-EMB_PUBLIC int testEmbCircle_2(void);
-EMB_PUBLIC int testGeomArc(void);
-EMB_PUBLIC int testThreadColor(void);
-EMB_PUBLIC int testEmbFormat(void);
-
-/* Encoding/decoding and compression functions. */
-EMB_PUBLIC int hus_compress(char* input, int size, char* output, int *out_size);
-EMB_PUBLIC int hus_decompress(char* input, int size, char* output, int *out_size);
-
-EMB_PUBLIC void huffman_build_table(huffman *h);
-EMB_PUBLIC int *huffman_table_lookup(huffman *h, int byte_lookup, int *lengths);
-
-EMB_PUBLIC int compress_get_bits(compress *c, int length);
-EMB_PUBLIC int compress_pop(compress *c, int bit_count);
-EMB_PUBLIC int compress_read_variable_length(compress *c);
-EMB_PUBLIC void compress_load_character_length_huffman(compress *c);
-EMB_PUBLIC void compress_load_character_huffman(compress *c);
-EMB_PUBLIC void compress_load_distance_huffman(compress *c);
-EMB_PUBLIC void compress_load_block(compress *c);
-EMB_PUBLIC int compress_get_token(compress *c);
-EMB_PUBLIC int compress_get_position(compress *c);
-
-EMB_PUBLIC EmbReal pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3);
-
-EMB_PUBLIC int decodeNewStitch(unsigned char value);
-
-EMB_PUBLIC unsigned char mitEncodeStitch(EmbReal value);
-EMB_PUBLIC int mitDecodeStitch(unsigned char value);
-
-EMB_PUBLIC void encode_t01_record(unsigned char b[3], int x, int y, int flags);
-EMB_PUBLIC int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags);
-
-EMB_PUBLIC int encode_tajima_ternary(unsigned char b[3], int x, int y);
-EMB_PUBLIC void decode_tajima_ternary(unsigned char b[3], int *x, int *y);
 
 /* NON-MACRO CONSTANTS
  ******************************************************************************/

@@ -58,8 +58,6 @@ image_diff(unsigned char *a, unsigned char *b, int size)
     return total;
 }
 
-#ifdef LIBEMBROIDERY_CLI
-
 /**
  * Render the pattern \a p to the file with name \a fname.
  * Return whether it was successful as an int.
@@ -101,11 +99,7 @@ embPattern_render(EmbPattern *p, char *fname)
     return 0;
 }
 
-/**
- * \a pattern \a fname
- * @return int
- *
- * Simulate the stitching of a pattern, using the image for rendering
+/* Simulate the stitching of a pattern, using the image for rendering
  * hints about how to represent the pattern.
  */
 int
@@ -115,10 +109,7 @@ embPattern_simulate(EmbPattern *pattern, char *fname)
     return 0;
 }
 
-/**
- * \a width \a height
- * @return EmbImage
- */
+/* . */
 EmbImage
 embImage_create(int width, int height)
 {
@@ -130,9 +121,7 @@ embImage_create(int width, int height)
 
 }
 
-/**
- * \a image \a fname
- */
+/* . */
 void
 embImage_read(EmbImage *image, char *fname)
 {
@@ -147,10 +136,7 @@ embImage_read(EmbImage *image, char *fname)
 	*/
 }
 
-/**
- * \a image \a fname
- * @return int
- */
+/* . */
 int
 embImage_write(EmbImage *image, char *fname)
 {
@@ -166,13 +152,9 @@ embImage_write(EmbImage *image, char *fname)
     return 0;
 }
 
-/**
- * \a image
- */
+/* . */
 void
 embImage_free(EmbImage *image)
 {
     free(image->data);
 }
-#endif
-

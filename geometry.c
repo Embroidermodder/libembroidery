@@ -6,11 +6,8 @@
  * Licensed under the terms of the zlib license.
  */
 
-/**
- * @brief Our generic object interface backends to each individual type.
- *
- * \a type_in
- * @return EmbGeometry*
+/* Our generic object interface backends to each individual type.
+ * The caller defines what the type is.
  */
 EmbGeometry *
 embGeometry_init(int type_in)
@@ -55,10 +52,9 @@ embGeometry_init(int type_in)
     return obj;
 }
 
-/**
- * @brief Free the memory occupied by a non-stitch geometry object.
+/* Free the memory occupied by a non-stitch geometry object.
  *
- * \a obj Pointer to geometry memory.
+ * Pointer to geometry memory.
  */
 void
 embGeometry_free(EmbGeometry *obj)
@@ -78,11 +74,10 @@ embGeometry_free(EmbGeometry *obj)
     }
 }
 
-/**
- * @brief Translate \a obj by the vector \a delta.
+/* Translate \a obj by the vector \a delta.
  *
- * \a obj A pointer to the geometry memory.
- * \a delta A vector in the 0.1mm scale to offset the geometry by.
+ * obj A pointer to the geometry memory.
+ * delta A vector in the 0.1mm scale to offset the geometry by.
  */
 void
 embGeometry_move(EmbGeometry *obj, EmbVector delta)
@@ -105,12 +100,11 @@ embGeometry_move(EmbGeometry *obj, EmbVector delta)
     }
 }
 
-/**
- * @brief Calculate the bounding box of geometry \a obj based on what kind of
+/* Calculate the bounding box of geometry \a obj based on what kind of
  * geometric object it is.
  *
- * \a obj A pointer to the geometry memory.
- * @return EmbRect The bounding box in the same scale as the input geometry.
+ * obj A pointer to the geometry memory.
+ * Returns an EmbRect, the bounding box in the same scale as the input geometry.
  *
  * In the case of a failure the bounding box returned is always the unit square
  * with top left corner at (0, 0).
@@ -141,10 +135,7 @@ embGeometry_boundingRect(EmbGeometry *obj)
     return r;
 }
 
-/**
- * @brief Toggle the rubber mode of the object.
- *
- * \a obj
+/* Toggle the rubber mode of the object.
  *
  * \todo Review. This could be controlled by a simple flag.
  */
@@ -201,17 +192,9 @@ embGeometry_vulcanize(EmbGeometry *obj)
         */
     }
 }
+
 /*
  * ARC GEOMETRY
- * This file is part of libembroidery.
- *
- * Copyright 2018-2023 The Embroidermodder Team
- * Licensed under the terms of the zlib license.
- *
- * ------------------------------------------------------------
- *
- * Use Python's PEP7 style guide.
- *     https://peps.python.org/pep-0007/
  *
  * ------------------------------------------------------------
  *
@@ -242,7 +225,8 @@ embArc_init(void)
 }
 
 /* Calculus based approach at determining whether a polygon is clockwise or counterclockwise.
- * Returns true if arc is clockwise. */
+ * Returns true if arc is clockwise.
+ */
 char
 embArc_clockwise(EmbArc arc)
 {
@@ -628,7 +612,8 @@ void embGeometry_setColorRGB(EmbGeometry *obj, unsigned int rgb)
     */
 }
 
-void embGeometry_setLineType(EmbGeometry *obj, int lineType)
+void
+embGeometry_setLineType(EmbGeometry *obj, int lineType)
 {
     printf("%d", lineType);
     /*
@@ -637,7 +622,8 @@ void embGeometry_setLineType(EmbGeometry *obj, int lineType)
     */
 }
 
-void embGeometry_setLineWeight(EmbGeometry *obj, float lineWeight)
+void
+embGeometry_setLineWeight(EmbGeometry *obj, float lineWeight)
 {
     printf("%f", lineWeight);
     /*

@@ -103,38 +103,6 @@ extern "C" {
 #define EMB_FORMAT_XXX          59
 #define EMB_FORMAT_ZSK          60
 
-/* Thread color */
-#define Arc_Polyester           0
-#define Arc_Rayon               1
-#define CoatsAndClark_Rayon     2
-#define Exquisite_Polyester     3
-#define Fufu_Polyester          4
-#define Fufu_Rayon              5
-#define Hemingworth_Polyester   6
-#define Isacord_Polyester       7
-#define Isafil_Rayon            8
-#define Marathon_Polyester      9
-#define Marathon_Rayon          10
-#define Madeira_Polyester       11
-#define Madeira_Rayon           12
-#define Metro_Polyester         13
-#define Pantone                 14
-#define RobisonAnton_Polyester  15
-#define RobisonAnton_Rayon      16
-#define Sigma_Polyester         17
-#define Sulky_Rayon             18
-#define ThreadArt_Rayon         19
-#define ThreadArt_Polyester     20
-#define ThreaDelight_Polyester  21
-#define Z102_Isacord_Polyester  22
-#define SVG_Colors              23
-#define hus_thread              24
-#define jef_thread              25
-#define pcm_thread              26
-#define pec_thread              27
-#define shv_thread              28
-#define dxf_color               29
-
 /* EmbGeometry types, should include all of the possible rendering types
  * for EmbroiderModder and internal types for stitch processing (like
  * fills).

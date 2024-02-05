@@ -9,17 +9,15 @@ option( EMBROIDERY_BUILD_SHARED_LIBS "Build shared library." ON )
 option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
 
 add_compile_options(
-	-g
-	-O2
-	-fPIC
-	-std=c99
-	-pedantic
-	-Wall
-	-Wextra
-#	-Werror
+    -g
+    -O2
+    -fPIC
+    -std=c99
+    -pedantic
+    -Wall
+    -Wextra
+#    -Werror
 )
-
-include_directories(src)
 
 add_library(embroidery_static STATIC embroidery.c embroidery.h)
 
@@ -41,9 +39,14 @@ endif (WIN32)
 endif()
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
+if(WIN32)
+
+# TODO: Test this.
+# https://cmake.org/cmake/help/book/mastering-cmake/chapter/Install.html
+
 install(
-    FILES src/embroidery.h
-    DESTINATION .
+    FILES embroidery.h
+    DESTINATION "<SystemDrive>/Program Files/<Project Name>"
 )
 
 install(
@@ -51,10 +54,33 @@ install(
        embroidery
        embroidery_static
        embroider
-    LIBRARY DESTINATION .
-    ARCHIVE DESTINATION .
-    RUNTIME DESTINATION .
+    EXPORT embroidery
+    LIBRARY DESTINATION "<SystemDrive>/Program Files/<Project Name>"
+    ARCHIVE DESTINATION "<SystemDrive>/Program Files/<Project Name>"
+    RUNTIME DESTINATION "<SystemDrive>/Program Files/<Project Name>"
 )
+
+else(WIN32)
+
+include(GNUInstallDirs)
+
+install(
+    FILES embroidery.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(
+    TARGETS
+       embroidery
+       embroidery_static
+       embroider
+    EXPORT embroidery
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+endif(WIN32)
 endif()
 
+include(testing.cmake)
 include(cpack.cmake)

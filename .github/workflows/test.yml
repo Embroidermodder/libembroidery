@@ -10,11 +10,18 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - name: Build and test library and command-line program.
-      run: |
-        git clone https://github.com/Embroidermodder/libembroidery || exit 1
-        cd libembroidery || exit 1
-        bash bin/build.sh || exit 1
-        bash bin/test.sh || exit 1
-      shell: bash
-        
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: CMake
+      run: cmake .
+
+    - name: Build
+      run: cmake --build .
+
+    - name: Install
+      run: cmake --install .
+
+    - name: Test
+      run: ctest 
+

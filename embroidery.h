@@ -18,6 +18,11 @@
 extern "C" {
 #endif
 
+#define EMB_LIB_VERSION_MAJOR 1
+#define EMB_LIB_VERSION_MINOR 0
+#define EMB_LIB_VERSION_PATCH 0
+#define EMB_LIB_VERSION_TAG   "alpha"
+
 /* MACROS
  *****************************************************************************
  *

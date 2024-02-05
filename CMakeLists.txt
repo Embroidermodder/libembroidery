@@ -8,6 +8,11 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 option( EMBROIDERY_BUILD_SHARED_LIBS "Build shared library." ON )
 option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
 
+if (WIN32)
+#add_compile_options(
+#    -O2
+#)
+else (WIN32)
 add_compile_options(
     -g
     -O2
@@ -18,6 +23,7 @@ add_compile_options(
     -Wextra
 #    -Werror
 )
+endif (WIN32)
 
 add_library(embroidery_static STATIC embroidery.c embroidery.h)
 

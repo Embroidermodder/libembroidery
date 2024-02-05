@@ -13972,7 +13972,7 @@ EmbRect
 embGeometry_boundingRect(EmbGeometry *obj)
 {
     EmbRect r;
-    if ((obj->type == EMB_ARC)) {
+    if (obj->type == EMB_ARC) {
         /*
         arcRect.setWidth(radius*2.0);
         arcRect.setHeight(radius*2.0);
@@ -16975,23 +16975,21 @@ embEllipse_init(void)
     return ellipse;
 }
 
-/*
- */
+/* TODO: look up a formula. */
 EmbReal
 embEllipse_area(EmbEllipse ellipse)
 {
-
+    return 0.0;
 }
 
-/*
- */
+/* TODO: Use Ramanujan's approximation here. */
 EmbReal
 embEllipse_perimeter(EmbEllipse ellipse)
 {
-
+    return 0.0;
 }
 
-
+/* . */
 EmbReal
 embEllipse_diameterX(EmbEllipse ellipse)
 {
@@ -17403,7 +17401,10 @@ embLine_intersectionPoint(EmbLine line1, EmbLine line2)
     det = embVector_cross(vec2, vec1);
 
     if (fabs(det) < tolerance) {
+		/* Default to the origin when an error is thrown. */
         emb_error = 1;
+        result.x = 0.0;
+        result.y = 0.0;
         return result;
     }
     result.x = (vec2.x * C2 - vec1.x * C1) / det;

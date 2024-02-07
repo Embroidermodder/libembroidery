@@ -7,6 +7,8 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 
 option( EMBROIDERY_BUILD_SHARED_LIBS "Build shared library." ON )
 option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
+option( EMBROIDERY_TESTING "Run tests." ON )
+option( EMBROIDERY_EXPERIMENTAL_TESTING "Run experimental tests." OFF )
 
 if (WIN32)
 #add_compile_options(
@@ -88,5 +90,12 @@ install(
 endif(WIN32)
 endif()
 
+if (EMBROIDERY_TESTING)
 include(testing.cmake)
+endif (EMBROIDERY_TESTING)
+
+if (EMBROIDERY_EXPERIMENTAL_TESTING)
+include(experimental.cmake)
+endif (EMBROIDERY_EXPERIMENTAL_TESTING)
+
 include(cpack.cmake)

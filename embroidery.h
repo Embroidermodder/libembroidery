@@ -322,6 +322,47 @@ extern "C" {
 #define QUADTOCONTROL    256
 #define QUADTOEND        512
 
+
+/* same order as flag_list, to use in jump table */
+#define FLAG_TO                       0
+#define FLAG_TO_SHORT                 1
+#define FLAG_HELP                     2
+#define FLAG_HELP_SHORT               3
+#define FLAG_FORMATS                  4
+#define FLAG_FORMATS_SHORT            5
+#define FLAG_QUIET                    6
+#define FLAG_QUIET_SHORT              7
+#define FLAG_VERBOSE                  8
+#define FLAG_VERBOSE_SHORT            9
+#define FLAG_VERSION                 10
+#define FLAG_VERSION_SHORT           11
+#define FLAG_CIRCLE                  12
+#define FLAG_CIRCLE_SHORT            13
+#define FLAG_ELLIPSE                 14
+#define FLAG_ELLIPSE_SHORT           15
+#define FLAG_LINE                    16
+#define FLAG_LINE_SHORT              17
+#define FLAG_POLYGON                 18
+#define FLAG_POLYGON_SHORT           19
+#define FLAG_POLYLINE                20
+#define FLAG_POLYLINE_SHORT          21
+#define FLAG_RENDER                  22
+#define FLAG_RENDER_SHORT            23
+#define FLAG_SATIN                   24
+#define FLAG_SATIN_SHORT             25
+#define FLAG_STITCH                  26
+#define FLAG_STITCH_SHORT            27
+#define FLAG_TEST                    28
+#define FLAG_FULL_TEST_SUITE         29
+#define FLAG_HILBERT_CURVE           30
+#define FLAG_SIERPINSKI_TRIANGLE     31
+#define FLAG_FILL                    32
+#define FLAG_FILL_SHORT              33
+#define FLAG_SIMULATE                34
+#define FLAG_COMBINE                 35
+#define FLAG_CROSS_STITCH            36
+#define NUM_FLAGS                    37
+
 /* Utility macros
  */
 #define EMB_MIN(A, B) (((A) < (B)) ? (A) : (B))
@@ -379,6 +420,22 @@ typedef struct EmbTime_
     unsigned int minute;
     unsigned int second;
 } EmbTime;
+
+/* For our internal string library.
+ *
+ * Note that we cannot use this for any larger amount of data,
+ * it's to ensure that the cap on the size is fixed at 200.
+ */
+typedef char EmbString[200];
+
+/* To help new developers understand why we use "void *",
+ * when it is widely not recommended within C++.
+ *
+ * libembroidery is a low-level library: we need to do bit-level
+ * and untyped calculations. Thinking "memory location" not
+ * "untyped pointer" helped me (Robin).
+ */
+typedef void *EmbMem;
 
 /* The basic array type. */
 typedef struct EmbArray_ EmbArray;
@@ -608,8 +665,8 @@ typedef struct EmbImage_ {
     unsigned char* data;
     int width;
     int height;
-    char path[200];
-    char name[200];
+    EmbString path;
+    EmbString name;
 } EmbImage;
 
 /* . */
@@ -670,13 +727,13 @@ typedef struct EmbRay_ {
 /* . */
 typedef struct EmbTextMulti_ {
     EmbVector position;
-    char text[200];
+    EmbString text;
 } EmbTextMulti;
 
 /* . */
 typedef struct EmbTextSingle_ {
     EmbVector position;
-    char text[200];
+    EmbString text;
 } EmbTextSingle;
 
 /* . */
@@ -719,13 +776,13 @@ typedef struct EmbStitch_
 typedef struct EmbThread_
 {
     EmbColor color;
-    char description[50];
-    char catalogNumber[30];
+    EmbString description;
+    EmbString catalogNumber;
 } EmbThread;
 
 /* . */
 typedef struct thread_color_ {
-    char name[22];
+    EmbString name;
     unsigned int hex_code;
     int manufacturer_code;
 } thread_color;
@@ -860,8 +917,8 @@ typedef struct EmbPattern_
 /* . */
 typedef struct EmbFormatList_
 {
-    char extension[2 + EMBFORMAT_MAXEXT];
-    char description[EMBFORMAT_MAXDESC];
+    EmbString extension;
+    EmbString description;
     char reader_state;
     char writer_state;
     int type;

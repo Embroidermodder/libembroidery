@@ -22,52 +22,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <math.h>
 #include <time.h>
 #include <ctype.h>
 
 #include "embroidery.h"
-
-/* same order as flag_list, to use in jump table */
-#define FLAG_TO                       0
-#define FLAG_TO_SHORT                 1
-#define FLAG_HELP                     2
-#define FLAG_HELP_SHORT               3
-#define FLAG_FORMATS                  4
-#define FLAG_FORMATS_SHORT            5
-#define FLAG_QUIET                    6
-#define FLAG_QUIET_SHORT              7
-#define FLAG_VERBOSE                  8
-#define FLAG_VERBOSE_SHORT            9
-#define FLAG_VERSION                 10
-#define FLAG_VERSION_SHORT           11
-#define FLAG_CIRCLE                  12
-#define FLAG_CIRCLE_SHORT            13
-#define FLAG_ELLIPSE                 14
-#define FLAG_ELLIPSE_SHORT           15
-#define FLAG_LINE                    16
-#define FLAG_LINE_SHORT              17
-#define FLAG_POLYGON                 18
-#define FLAG_POLYGON_SHORT           19
-#define FLAG_POLYLINE                20
-#define FLAG_POLYLINE_SHORT          21
-#define FLAG_RENDER                  22
-#define FLAG_RENDER_SHORT            23
-#define FLAG_SATIN                   24
-#define FLAG_SATIN_SHORT             25
-#define FLAG_STITCH                  26
-#define FLAG_STITCH_SHORT            27
-#define FLAG_TEST                    28
-#define FLAG_FULL_TEST_SUITE         29
-#define FLAG_HILBERT_CURVE           30
-#define FLAG_SIERPINSKI_TRIANGLE     31
-#define FLAG_FILL                    32
-#define FLAG_FILL_SHORT              33
-#define FLAG_SIMULATE                34
-#define FLAG_COMBINE                 35
-#define FLAG_CROSS_STITCH            36
-#define NUM_FLAGS                    37
 
 /* Internal function declarations.
  * ----------------------------------------------------------------------------
@@ -436,8 +395,8 @@ const char *help_msg[] = {
     "EOF"
 };
 
-/* String table of flags. */
-const char *flag_list[] = {
+/* EmbString table of flags. */
+const EmbString flag_list[] = {
     "--to",
     "-t",
     "--help",
@@ -1206,12 +1165,126 @@ thread_color svg_color_codes[] = {
  * in both cases.
  */
 typedef struct BRAND {
-	thread_color *codes;
-	int length;
-	char label[100];
+    thread_color *codes;
+    int length;
+    EmbString label;
 } EmbBrand;
 
 EmbBrand brand_codes[100];
+
+/* Replacing functions that compilers complain about.
+ * In some cases, this is due to valid concerns about
+ * functions not returning (like a string without null-termination).
+ *
+ * We don't use size_t because it's system-specific.
+ *
+ * IDEA: don't rely on "sizeof" because it's system and
+ * compiler-specific, depending on how the struct is packed.
+ * We could manually pack out structs and then know exactly
+ * how much space they need.
+ *
+ * TODO: UTF-8 support.
+ */
+void string_copy(EmbString dst, const EmbString src);
+int string_len(const EmbString src);
+void string_cat(EmbString dst, const EmbString src);
+void memory_copy(void *dst, const void *src, int n);
+char memory_cmp(void *dst, const void *src, int n);
+
+/* Replacement for strcpy. Since we know the EmbString
+ * type is always has 200 bytes allocated
+ * we can backend to memory_copy.
+ */
+void
+string_copy(EmbString dst, const EmbString src)
+{
+    memory_copy(dst, src, EMB_MIN(string_len(src)+1, 200));
+}
+
+/* Note that our version of strlen can tell us that
+ * the string is not null-terminated by returning -1.
+ */
+int
+string_len(const EmbString src)
+{
+    int i;
+    for (i=0; i<200; i++) {
+        if (src[i] == 0) {
+            return i;
+        }
+	}
+	return -1;
+}
+
+/* Replacement for strcat that is only to be used for
+ * short strings, otherwise use memory_copy.
+ */
+void
+string_cat(EmbString dst, const EmbString src)
+{
+	int i, j, src_len;
+	j = string_len(dst);
+	src_len = string_len(src)+1;
+    for (i=0; i<src_len; i++) {
+        dst[j+i] = src[i];
+        if (src[i] == 0) {
+            return;
+        }
+		if (i+j == 200) {
+			break;
+		}
+    }
+	puts("ERROR: string_cat failed to concatenate because the source string");
+	puts("    was too long.");
+	dst[199] = 0;
+}
+
+/* Replacement for memcpy. To allow us to take out
+ * "string.h" entirely.
+ */
+void
+memory_copy(void *dst, const void *src, int n)
+{
+    int i;
+	char *dst_, *src_;
+	dst_ = (char *)dst;
+	src_ = (char *)src;
+    for (i=0; i<n; i++) {
+        dst_[i] = src_[i];
+    }
+}
+
+/* Replacement for memcmp. To allow us to take out
+ * "string.h" entirely.
+ */
+char
+memory_cmp(void *dst, const void *src, int n)
+{
+    size_t i;
+	char *dst_, *src_;
+	dst_ = (char *)dst;
+	src_ = (char *)src;
+    for (i=0; i<n; i++) {
+		char result = dst_[i] - src_[i];
+		if (result) {
+			return result;
+		}
+    }
+	return 0;
+}
+
+/* Replacement for memset. To allow us to take out
+ * "string.h" entirely. 
+ */
+char
+memory_set(void *dst, char value, int n)
+{
+    int i;
+	char *dst_ = (char*)dst;
+    for (i=0; i<n; i++) {
+		dst_[i] = value;
+    }
+}
 
 /* ENCODING SECTION
  * ----------------------------------------------------------------------------
@@ -1705,7 +1778,7 @@ int hus_compress(char *data, int length, char *output, int *output_length)
     a[3] = 0xA0;
     a[4] = 0x01;
     a[5] = 0xFE;
-    memcpy(output+6, data, length);
+    memory_copy(output+6, data, length);
     *output_length = length+6;
     return 0;
 }
@@ -2065,13 +2138,13 @@ embArray_copy(EmbArray *dst, EmbArray *src)
 
     switch (dst->type) {
     case EMB_STITCH:
-        memcpy(dst->stitch, src->stitch, sizeof(EmbStitch)*src->count);
+        memory_copy(dst->stitch, src->stitch, sizeof(EmbStitch)*src->count);
         break;
     case EMB_THREAD:
-        memcpy(dst->thread, src->thread, sizeof(EmbThread)*src->count);
+        memory_copy(dst->thread, src->thread, sizeof(EmbThread)*src->count);
         break;
     default:
-        memcpy(dst->geometry, src->geometry, sizeof(EmbGeometry)*src->count);
+        memory_copy(dst->geometry, src->geometry, sizeof(EmbGeometry)*src->count);
         break;
     }
 }
@@ -2377,7 +2450,7 @@ bcfFile_read(FILE* file, bcf_file* bcfFile)
     unsigned int directorySectorToReadFrom;
 
     bcfFile->header = bcfFileHeader_read(file);
-    if (memcmp(bcfFile->header.signature, "\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1", 8) != 0) {
+    if (memory_cmp(bcfFile->header.signature, "\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1", 8) != 0) {
         printf("bad header signature\n");
         printf("Failed to parse header\n");
         return 0;
@@ -2584,7 +2657,7 @@ CompoundFileDirectoryEntry(FILE* file)
         printf("ERROR: compound-file-directory.c CompoundFileDirectoryEntry(), cannot allocate memory for dir\n");
         return 0;
     }
-    memset(dir->directoryEntryName, 0, 32);
+    memory_set(dir->directoryEntryName, 0, 32);
     parseDirectoryEntryName(file, dir);
     dir->next = 0;
     dir->directoryEntryNameLength = fread_uint16(file);
@@ -2957,8 +3030,8 @@ embThread_getRandom(void)
     c.color.r = rand()%256;
     c.color.g = rand()%256;
     c.color.b = rand()%256;
-    strcpy(c.description, "random");
-    strcpy(c.catalogNumber, "");
+    string_copy(c.description, "random");
+    string_copy(c.catalogNumber, "");
     return c;
 }
 
@@ -2999,7 +3072,7 @@ int
 stringInArray(const char *s, const char **array)
 {
     int i;
-    for (i = 0; strlen(array[i]); i++) {
+    for (i = 0; string_len(array[i]); i++) {
         if (!strcmp(s, array[i])) {
             return 1;
         }
@@ -3063,7 +3136,7 @@ copy_trim(char const *s)
     newLength = trailingSpace - firstWord;
 
     result = (char*)malloc(newLength + 1);
-    memcpy(result, firstWord, newLength);
+    memory_copy(result, firstWord, newLength);
     result[newLength] = '\0';
     return result;
 }
@@ -3078,7 +3151,7 @@ emb_optOut(EmbReal num, char* str)
     /* Convert the number to a string */
     sprintf(str, "%.10f", num);
     /* Remove trailing zeroes */
-    str_end = str + strlen(str);
+    str_end = str + string_len(str);
     while (*--str_end == '0');
     str_end[1] = 0;
     /* Remove the decimal point if it happens to be an integer */
@@ -3120,7 +3193,7 @@ embTime_time(EmbTime* t)
 void
 report(int result, char *label)
 {
-    printf("%s Test...%*c", label, (int)(20-strlen(label)), ' ');
+    printf("%s Test...%*c", label, (int)(20-string_len(label)), ' ');
     if (result) {
         printf(RED_TERM_COLOR "[FAIL] [CODE=%d]\n" RESET_TERM_COLOR, result);
     }
@@ -3520,11 +3593,11 @@ testThreadColor(void)
     c.r = 0xD2;
     c.g = 0x5F;
     c.b = 0x00;
-	if (0) {
+    if (0) {
     int tBrand = 0; /*EMB_BRAND_SULKY_RAYON; */
     int tNum = threadColorNum(tColor, tBrand);
     char tName[50];
-    strcpy(tName, threadColorName(tColor, tBrand));
+    string_copy(tName, threadColorName(tColor, tBrand));
 
     if (emb_verbose > 0) {
         printf("Color : 0x%X\n"
@@ -3535,9 +3608,9 @@ testThreadColor(void)
         tBrand,
         tNum, /* Solution: 1833 */
         tName); /* Solution: Pumpkin Pie */
-	}
-	}
-	return 1;
+    }
+    }
+    return 1;
 }
 
 /*
@@ -3560,26 +3633,26 @@ full_test_matrix(char *fname)
     success = 0;
     ntests = (numberOfFormats - 1)*(numberOfFormats - 5);
     for (i = 0; i < numberOfFormats; i++) {
-        char fname[100];
+        EmbString fname;
         if (formatTable[i].color_only) {
             continue;
         }
-        strcpy(fname, "test01");
-        strcat(fname, formatTable[i].extension);
+        string_copy(fname, "test01");
+        string_cat(fname, formatTable[i].extension);
         create_test_file_1(fname);
         for (j=0; j < numberOfFormats; j++) {
             EmbPattern *pattern = 0;
-            char fname_converted[100];
-            char fname_image[100];
+            EmbString fname_converted;
+            EmbString fname_image;
             int result;
-            strcpy(fname_converted, "test01_");
-            strcat(fname_converted, formatTable[i].extension+1);
-            strcat(fname_converted, formatTable[j].extension);
-            strcpy(fname_image, "test01_");
-            strcat(fname_image, formatTable[i].extension+1);
-            strcat(fname_image, "_");
-            strcat(fname_image, formatTable[j].extension+1);
-            strcat(fname_image, ".ppm");
+            string_copy(fname_converted, "test01_");
+            string_cat(fname_converted, formatTable[i].extension+1);
+            string_cat(fname_converted, formatTable[j].extension);
+            string_copy(fname_image, "test01_");
+            string_cat(fname_image, formatTable[i].extension+1);
+            string_cat(fname_image, "_");
+            string_cat(fname_image, formatTable[j].extension+1);
+            string_cat(fname_image, ".ppm");
             printf("Attempting: %s %s\n", fname, fname_converted);
             result = convert(fname, fname_converted);
             embPattern_readAuto(pattern, fname_converted);
@@ -3658,7 +3731,7 @@ to_flag(char **argv, int argc, int i)
 {
     if (i + 2 < argc) {
         int j;
-        char output_fname[100];
+        EmbString output_fname;
         int format;
         sprintf(output_fname, "example.%s", argv[i+1]);
         format = emb_identify_format(output_fname);
@@ -3666,11 +3739,11 @@ to_flag(char **argv, int argc, int i)
             puts("Error: format unrecognised.");
         }
         for (j=i+2; j<argc; j++) {
-            int length = strlen(argv[j]);
+            int length = string_len(argv[j]);
             output_fname[0] = 0;
-            strcpy(output_fname, argv[j]);
+            string_copy(output_fname, argv[j]);
             output_fname[length-4] = 0;
-            strcat(output_fname, formatTable[format].extension);
+            string_cat(output_fname, formatTable[format].extension);
             printf("Converting %s to %s.\n",
                 argv[j], output_fname);
             convert(argv[j], output_fname);
@@ -3934,21 +4007,21 @@ Potential reference:
     new_state[0] = 0;
 
     /* replace letters using rules by copying to new_state */
-    for (j=0; j < (int)strlen(state); j++) {
+    for (j=0; j < (int)string_len(state); j++) {
         if (state[j] >= 'A' && state[j] < 'F') {
-            strcat(new_state, L.rules[state[j]-'A']);
+            string_cat(new_state, L.rules[state[j]-'A']);
         }
         if (state[j] == 'F') {
-            strcat(new_state, "F");
+            string_cat(new_state, "F");
         }
         if (state[j] == '+') {
-            strcat(new_state, "+");
+            string_cat(new_state, "+");
         }
         if (state[j] == '-') {
-            strcat(new_state, "-");
+            string_cat(new_state, "-");
         }
     }
-    memcpy(state, new_state, strlen(new_state)+1);
+    memory_copy(state, new_state, string_len(new_state)+1);
 
     if (complete < iterations) {
         lindenmayer_system(L, state, iterations, complete+1);
@@ -4180,7 +4253,7 @@ hilbert_curve(EmbPattern *pattern, int iterations)
     position[1] = 0;
     direction = 0;
 
-    for (i = 0; i < (int)strlen(state); i++) {
+    for (i = 0; i < (int)string_len(state); i++) {
         if (state[i] == '+') {
             direction = (direction + 1) % 4;
             continue;
@@ -4227,7 +4300,7 @@ void generate_dragon_curve(char *state, int iterations)
         state[1] = 0;
         return;
     }
-    length = strlen(state);
+    length = string_len(state);
     for (i=length-1; i>=0; i--) {
         state[2*i+1] = state[i];
         if (i%2 == 0) {
@@ -5073,7 +5146,7 @@ embFormat_getExtension(const char *fileName, char *ending)
         return 0;
     }
 
-    if (strlen(fileName) == 0) {
+    if (string_len(fileName) == 0) {
         return 0;
     }
 
@@ -5632,10 +5705,10 @@ embPattern_write(EmbPattern* pattern, const char *fileName, int format)
     if (formatTable[format].write_external_color_file) {
         char externalFileName[1000];
         int stub_length;
-        strcpy(externalFileName, fileName);
-        stub_length = strlen(fileName)-strlen(formatTable[format].extension);
+        string_copy(externalFileName, fileName);
+        stub_length = string_len(fileName)-string_len(formatTable[format].extension);
         externalFileName[stub_length] = 0;
-        strcat(externalFileName, ".rgb");
+        string_cat(externalFileName, ".rgb");
         embPattern_write(pattern, externalFileName, EMB_FORMAT_RGB);
     }
     fclose(file);
@@ -5996,7 +6069,7 @@ readCol(EmbPattern* pattern, FILE* file)
     }
     for (i = 0; i < numberOfColors; i++) {
         emb_readline(file, line, 30);
-        if (strlen(line) < 1) {
+        if (string_len(line) < 1) {
             printf("ERROR: Empty line in col file.");
             return 0;
         }
@@ -6007,8 +6080,8 @@ readCol(EmbPattern* pattern, FILE* file)
         t.color.r = (unsigned char)red;
         t.color.g = (unsigned char)green;
         t.color.b = (unsigned char)blue;
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
+        string_copy(t.catalogNumber, "");
+        string_copy(t.description, "");
         embPattern_addThread(pattern, t);
     }
     return 1;
@@ -6137,8 +6210,8 @@ readCsd(EmbPattern* pattern, FILE* file) {
         thread.color.r = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
         thread.color.g = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
         thread.color.b = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
-        strcpy(thread.catalogNumber, "");
-        strcpy(thread.description, "");
+        string_copy(thread.catalogNumber, "");
+        string_copy(thread.description, "");
         embPattern_addThread(pattern, thread);
     }
     unknown1 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
@@ -6286,7 +6359,7 @@ readCsv(EmbPattern* pattern, FILE* file) {
     EmbReal xx = 0.0;
     EmbReal yy = 0.0;
     unsigned char r = 0, g = 0, b = 0;
-    char buff[100];
+    EmbString buff;
 
     pos = 0;
     while (!feof(file)) {
@@ -6357,8 +6430,8 @@ readCsv(EmbPattern* pattern, FILE* file) {
                         t.color.r = r;
                         t.color.g = g;
                         t.color.b = b;
-                        strcpy(t.description, "TODO:DESCRIPTION");
-                        strcpy(t.catalogNumber, "TODO:CATALOG_NUMBER");
+                        string_copy(t.description, "TODO:DESCRIPTION");
+                        string_copy(t.catalogNumber, "TODO:CATALOG_NUMBER");
                         embPattern_addThread(pattern, t);
                         csvMode = CSV_MODE_NULL;
                         cellNum = 0;
@@ -6800,7 +6873,7 @@ void
 set_dst_variable(EmbPattern* pattern, char* var, char* val) {
     unsigned int i;
     EmbThread t;
-    for (i = 0; i <= (unsigned int)strlen(var); i++) {
+    for (i = 0; i <= (unsigned int)string_len(var); i++) {
         /* uppercase the var */
         if (var[i] >= 'a' && var[i] <= 'z') {
             var[i] += 'A' - 'a';
@@ -6829,9 +6902,9 @@ set_dst_variable(EmbPattern* pattern, char* var, char* val) {
         break;
     case cci('P','D'):
         /* store this string as-is, it will be saved as-is, 6 characters */
-        if (strlen(val) != 6) {
+        if (string_len(val) != 6) {
             /*pattern->messages.add("Warning: in DST file read,
-                PD is not 6 characters, but ",(int)strlen(val)); */
+                PD is not 6 characters, but ",(int)string_len(val)); */
         }
         /*pattern->set_variable(var,val);*/
         break;
@@ -6848,8 +6921,8 @@ set_dst_variable(EmbPattern* pattern, char* var, char* val) {
         catalog_number=split_cell_str(val,3);
         */
         t.color = embColor_fromHexStr(val);
-        strcpy(t.description, "");
-        strcpy(t.catalogNumber, "");
+        string_copy(t.description, "");
+        string_copy(t.catalogNumber, "");
         embPattern_addThread(pattern, t);
         break;
     default:
@@ -6937,7 +7010,8 @@ readDst(EmbPattern* pattern, FILE* file) {
                     if (header[i] == ':') {
                         i -= 2;
                     }
-                    strncpy(val, &header[valpos], (size_t)(i - valpos));
+					/* TODO: used to be strncpy, make sure this is a safe substitution. */
+                    memory_copy(val, &header[valpos], (size_t)(i - valpos));
                     val[i - valpos] = '\0';
                     set_dst_variable(pattern, var, val);
                     break;
@@ -6961,11 +7035,12 @@ readDst(EmbPattern* pattern, FILE* file) {
 }
 
 char
-writeDst(EmbPattern* pattern, FILE* file) {
+writeDst(EmbPattern* pattern, FILE* file)
+{
     EmbRect boundingRect;
     int i, ax, ay, mx, my;
     EmbVector pos;
-    char pd[10];
+    EmbString pd;
 
     embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
@@ -6975,7 +7050,7 @@ writeDst(EmbPattern* pattern, FILE* file) {
     /* TODO: review the code below
     if (pattern->get_variable("design_name") != NULL) {
         char *la = stralloccopy(pattern->get_variable("design_name"));
-        if (strlen(la)>16) la[16]='\0';
+        if (string_len(la)>16) la[16]='\0';
 
         fprintf(file,"LA:%-16s\x0d",la);
         safe_free(la);
@@ -7004,9 +7079,9 @@ writeDst(EmbPattern* pattern, FILE* file) {
 
     /*pd=pattern->get_variable("pd");*/ /* will return null pointer if not defined */
    /* pd = 0;
-    if (pd == 0 || strlen(pd) != 6) { */
+    if (pd == 0 || string_len(pd) != 6) { */
         /* pd is not valid, so fill in a default consisting of "******" */
-        strcpy(pd, "******");
+        string_copy(pd, "******");
     /*}*/
     fprintf(file,
         "AX:+%5d\x0d"
@@ -7168,16 +7243,16 @@ readLine(FILE* file, char *str)
 char
 readDxf(EmbPattern* pattern, FILE* file)
 {
-    char dxfVersion[255];
-    char section[255];
-    char tableName[255];
-    char layerName[255];
-    char entityType[255];
+    EmbString dxfVersion;
+    EmbString section;
+    EmbString tableName;
+    EmbString layerName;
+    EmbString entityType;
     /*char layerColorHash[100][8]; */ /* hash <layerName, EmbColor> */
 
     int eof = 0; /* End Of File */
 
-    char buff[255];
+    EmbString buff;
     EmbVector prev, pos, first;
     EmbReal bulge = 0.0;
     char firstStitch = 1;
@@ -7210,11 +7285,11 @@ readDxf(EmbPattern* pattern, FILE* file)
             (!strcmp(buff, "ENTITIES")) ||
             (!strcmp(buff, "OBJECTS"))  ||
             (!strcmp(buff, "THUMBNAILIMAGE"))) {
-            strcpy(section, buff);
+            string_copy(section, buff);
             printf("SECTION:%s\n", buff);
         }
         if (!strcmp(buff, "ENDSEC")) {
-            strcpy(section, "");
+            string_copy(section, "");
             printf("ENDSEC:%s\n", buff);
         }
         if ( (!strcmp(buff, "ARC"))        ||
@@ -7223,7 +7298,7 @@ readDxf(EmbPattern* pattern, FILE* file)
             (!strcmp(buff, "LINE"))       ||
             (!strcmp(buff, "LWPOLYLINE")) ||
             (!strcmp(buff, "POINT"))) {
-            strcpy(entityType, buff);
+            string_copy(entityType, buff);
         }
         if (!strcmp(buff, "EOF")) {
             eof = 1;
@@ -8186,8 +8261,8 @@ readInf(EmbPattern* pattern, FILE* file)
     for (i = 0; i < nColors; i++) {
         fseek(file, 4, SEEK_CUR);
         embColor_read(file, &(t.color), 3);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
+        string_copy(t.catalogNumber, "");
+        string_copy(t.description, "");
         embPattern_addThread(pattern, t);
         fseek(file, 2, SEEK_CUR);
         binaryReadString(file, colorType, 50);
@@ -8208,12 +8283,12 @@ writeInf(EmbPattern* pattern, FILE* file)
     binaryWriteUIntBE(file, pattern->thread_list->count);
 
     for (i = 0; i < pattern->thread_list->count; i++) {
-        char buffer[50];
+        EmbString buffer;
         unsigned short record_length, record_number, needle_number;
         EmbColor c;
         c = pattern->thread_list->thread[i].color;
         sprintf(buffer, "RGB(%d,%d,%d)", (int)c.r, (int)c.g, (int)c.b);
-        record_length = 14 + strlen(buffer);
+        record_length = 14 + string_len(buffer);
         record_number = i;
         needle_number = i;
         emb_write(file, &record_length, EMB_INT16_BIG);
@@ -8314,12 +8389,14 @@ read_hoop(FILE *file, struct hoop_padding *hoop, char *label)
 }
 
 char
-readJef(EmbPattern* pattern, FILE* file) {
+readJef(EmbPattern* pattern, FILE* file)
+{
     int stitchOffset, formatFlags, numberOfColors, numberOfStitchs;
     int hoopSize, i, stitchCount;
     struct hoop_padding bounds, rectFrom110x110;
     struct hoop_padding rectFrom50x50, rectFrom200x140, rect_from_custom;
-    char date[8], time[8];
+    EmbString date;
+    EmbString time;
 
     emb_read(file, &stitchOffset, EMB_INT32_LITTLE);
     emb_read(file, &formatFlags, EMB_INT32_LITTLE); /* TODO: find out what this means */
@@ -8924,8 +9001,8 @@ ofmReadThreads(FILE* file, EmbPattern* p)
         /* TODO: check return value */
         fseek(file, 2, SEEK_CUR);
         sprintf(colorNumberText, "%10d", colorNumber);
-        strcpy(thread.catalogNumber, colorNumberText);
-        strcpy(thread.description, colorName);
+        string_copy(thread.catalogNumber, colorNumberText);
+        string_copy(thread.description, colorName);
         embPattern_addThread(p, thread);
     }
     fseek(file, 2, SEEK_CUR);
@@ -9082,8 +9159,8 @@ readPcd(EmbPattern* pattern, const char *fileName, FILE* file)
     for (i = 0; i < colorCount; i++) {
         EmbThread t;
         embColor_read(file, &(t.color), 4);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
+        string_copy(t.catalogNumber, "");
+        string_copy(t.description, "");
         if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
@@ -9228,8 +9305,8 @@ readPcq(EmbPattern* pattern, const char* fileName, FILE* file)
     for (i = 0; i < colorCount; i++) {
         EmbThread t;
         embColor_read(file, &(t.color), 4);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
+        string_copy(t.catalogNumber, "");
+        string_copy(t.description, "");
         if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
@@ -9330,8 +9407,8 @@ readPcs(EmbPattern* pattern, const char* fileName, FILE* file)
     for (i = 0; i < colorCount; i++) {
         EmbThread t;
         embColor_read(file, &(t.color), 4);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
+        string_copy(t.catalogNumber, "");
+        string_copy(t.description, "");
         if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
@@ -9652,7 +9729,7 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
     height = (int)emb_round(bounds.bottom - bounds.top);
     width = (int)emb_round(bounds.right - bounds.left);
     unsigned short top = (unsigned short)(0x9000 | -(int)emb_round(bounds.left));
-	unsigned short bottom = (unsigned short)(0x9000 | -(int)emb_round(bounds.top));
+    unsigned short bottom = (unsigned short)(0x9000 | -(int)emb_round(bounds.top));
     /* write 2 byte x size */
     emb_write(file, &width, EMB_INT16_LITTLE);
     /* write 2 byte y size */
@@ -9661,7 +9738,7 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
     /* Write 4 miscellaneous int16's */
     fwrite("\x01\xe0\x01\xb0", 1, 4, file);
 
-	/* CHECK: is this really big endian? */
+    /* CHECK: is this really big endian? */
     emb_write(file, &top, EMB_INT16_BIG);
     emb_write(file, &bottom, EMB_INT16_BIG);
 
@@ -9676,7 +9753,7 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
     fseek(file, 0x00, SEEK_END);
 
     /* Writing all colors */
-    memcpy(image, imageWithFrame, 48*38);
+    memory_copy(image, imageWithFrame, 48*38);
 
     yFactor = 32.0 / height;
     xFactor = 42.0 / width;
@@ -9693,7 +9770,7 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
     /* Writing each individual color */
     j = 0;
     for (i = 0; i < pattern->thread_list->count; i++) {
-        memcpy(image, imageWithFrame, 48*38);
+        memory_copy(image, imageWithFrame, 48*38);
         for (; j < pattern->stitch_list->count; j++) {
             EmbStitch st = pattern->stitch_list->stitch[j];
             int x = (int)emb_round((st.x - bounds.left) * xFactor) + 3;
@@ -9886,19 +9963,19 @@ readDescriptions(FILE *file, EmbPattern* pattern)
     int keywordsStringLength;
     int commentsStringLength;
     DesignStringLength = fgetc();
-    String DesignName = readString(DesignStringLength);
+    EmbString DesignName = readString(DesignStringLength);
     pattern.setName(DesignName);
     categoryStringLength = fgetc();
-    String Category = readString(categoryStringLength);
+    EmbString Category = readString(categoryStringLength);
     pattern.setCategory(Category);
     authorStringLength = fgetc();
-    String Author = readString(authorStringLength);
+    EmbString Author = readString(authorStringLength);
     pattern.setAuthor(Author);
     keywordsStringLength = fgetc();
-    String keywords = readString(keywordsStringLength);
+    EmbString keywords = readString(keywordsStringLength);
     pattern.setKeywords(keywords);
     commentsStringLength = fgetc();
-    String Comments = readString(commentsStringLength);
+    EmbString Comments = readString(commentsStringLength);
     pattern.setComments(Comments);
     */
 }
@@ -9989,7 +10066,7 @@ readHoopName(FILE* file, EmbPattern* pattern)
     }
     /*
     int hoopNameStringLength = fgetc(file);
-    String hoopNameString = readString(hoopNameStringLength);
+    EmbString hoopNameString = readString(hoopNameStringLength);
     if (hoopNameString.length() != 0) {
         pattern.setMetadata("hoop_name", hoopNameString);
     }
@@ -10004,7 +10081,7 @@ readImageString(FILE* file, EmbPattern* pattern)
     }
     /*
     int fromImageStringLength = fgetc(file);
-    String fromImageString = readString(fromImageStringLength);
+    EmbString fromImageString = readString(fromImageStringLength);
     if (fromImageString.length() != 0) {
         pattern.setMetadata("image_file", fromImageString);
     }
@@ -10065,19 +10142,19 @@ readThreads(FILE* file, EmbPattern* pattern)
         int brandStringLength;
         int threadChartStringLength;
         color_code_length = fgetc(file);
-        /* strcpy(thread.color_code, readString(color_code_length)); */
+        /* string_copy(thread.color_code, readString(color_code_length)); */
         thread.color.r = fgetc(file);
         thread.color.g = fgetc(file);
         thread.color.b = fgetc(file);
         fseek(file, 5, SEEK_CUR);
         descriptionStringLength = fgetc(file);
-        /* strcpy(thread.description, readString(descriptionStringLength)); */
+        /* string_copy(thread.description, readString(descriptionStringLength)); */
 
         brandStringLength = fgetc(file);
-        /* strcpy(thread.brand, readString(brandStringLength)); */
+        /* string_copy(thread.brand, readString(brandStringLength)); */
 
         threadChartStringLength = fgetc(file);
-        /* strcpy(thread.threadChart, readString(threadChartStringLength)); */
+        /* string_copy(thread.threadChart, readString(threadChartStringLength)); */
 
         if (emb_verbose > 1) {
             printf("color code length: %d\n", color_code_length);
@@ -10474,8 +10551,8 @@ readRgb(EmbPattern* pattern, FILE* file)
     for (i = 0; i < numberOfColors; i++) {
         EmbThread t;
         embColor_read(file, &(t.color), 4);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
+        string_copy(t.catalogNumber, "");
+        string_copy(t.description, "");
         embPattern_addThread(pattern, t);
     }
     return 1;
@@ -10659,7 +10736,7 @@ readShv(EmbPattern* pattern, FILE* file)
         return 0;
     }
 
-    fseek(file, strlen(headerText), SEEK_SET);
+    fseek(file, string_len(headerText), SEEK_SET);
     fileNameLength = fgetc(file);
     fseek(file, fileNameLength, SEEK_CUR);
     designWidth = fgetc(file);
@@ -10949,9 +11026,9 @@ readStx(EmbPattern* pattern, FILE* file)
     header = (char*)headerBytes;
 
     /* bytes 7-9 */
-    memcpy(filetype, &header[0], 3);
+    memory_copy(filetype, &header[0], 3);
     /* bytes 10-13 */
-    memcpy(version, &header[3], 4);
+    memory_copy(version, &header[3], 4);
     filetype[3] = '\0';
     version[4] = '\0';
     /* byte 14 */
@@ -11009,8 +11086,8 @@ readStx(EmbPattern* pattern, FILE* file)
         stxReadThread(&st, file);
 
         t.color = st.stxColor;
-        strcpy(t.description, st.colorName);
-        strcpy(t.catalogNumber, st.colorCode);
+        string_copy(t.description, st.colorName);
+        string_copy(t.catalogNumber, st.colorCode);
         embPattern_addThread(pattern, t);
         stxThreads[i] = st;
     }
@@ -11101,7 +11178,7 @@ EmbColor svgColorToEmbColor(char* colorString)
     EmbColor c;
     char* pEnd = 0;
     char* colorStr = copy_trim(colorString); /* Trim out any junk spaces */
-    int length = strlen(colorStr);
+    int length = string_len(colorStr);
     int tableColor;
 
     /* SVGTiny1.2 Spec Section 11.13.1 syntax for color values */
@@ -11269,7 +11346,7 @@ parse_path(EmbPattern *p)
     EmbPath path;
     char* pointStr = svgAttribute_getValue("d");
     char* mystrok = svgAttribute_getValue("stroke");
-    int last = strlen(pointStr);
+    int last = string_len(pointStr);
     int size = 32;
     int pendingTask = 0;
     int relative = 0;
@@ -11555,7 +11632,7 @@ parse_path(EmbPattern *p)
 EmbArray *parse_pointlist(EmbPattern *p)
 {
     char* pointStr = svgAttribute_getValue("points");
-    int last = strlen(pointStr);
+    int last = string_len(pointStr);
     int size = 32;
     int i = 0;
     int pos = 0;
@@ -11817,32 +11894,32 @@ svgProcess(int c, const char* buff)
         if (advance) {
             printf("ATTRIBUTE:\n");
             svgExpect = SVG_EXPECT_VALUE;
-            strcpy(currentAttribute, buff);
+            string_copy(currentAttribute, buff);
         }
     } else if (svgExpect == SVG_EXPECT_VALUE) {
-        int last = strlen(buff) - 1;
+        int last = string_len(buff) - 1;
         printf("VALUE:\n");
 
         /* single-value */
         if ((buff[0] == '"' || buff[0] == '\'') && (buff[last] == '/' || buff[last] == '"' || buff[last] == '\'') && !svgMultiValue) {
             svgExpect = SVG_EXPECT_ATTRIBUTE;
-            strcpy(attributeList[n_attributes].name, currentAttribute);
-            strcpy(attributeList[n_attributes].value, buff);
+            string_copy(attributeList[n_attributes].name, currentAttribute);
+            string_copy(attributeList[n_attributes].value, buff);
             n_attributes++;
         } else { /* multi-value */
             svgMultiValue = 1;
-            if (strlen(currentValue)==0) {
-                strcpy(currentValue, buff);
+            if (string_len(currentValue)==0) {
+                string_copy(currentValue, buff);
             }
             else {
-                strcat(currentValue, " ");
-                strcat(currentValue, buff);
+                string_cat(currentValue, " ");
+                string_cat(currentValue, buff);
             }
             if (buff[last] == '/' || buff[last] == '"' || buff[last] == '\'') {
                 svgMultiValue = 0;
                 svgExpect = SVG_EXPECT_ATTRIBUTE;
-                strcpy(attributeList[n_attributes].name, currentAttribute);
-                strcpy(attributeList[n_attributes].value, currentValue);
+                string_copy(attributeList[n_attributes].name, currentAttribute);
+                string_copy(attributeList[n_attributes].value, currentValue);
                 n_attributes++;
             }
         }
@@ -12481,8 +12558,8 @@ readThr(EmbPattern* pattern, FILE* file)
     }
     for (i = 0; i < 16; i++) {
         EmbThread thread;
-        strcpy(thread.description, "NULL");
-        strcpy(thread.catalogNumber, "NULL");
+        string_copy(thread.description, "NULL");
+        string_copy(thread.catalogNumber, "NULL");
         embColor_read(file, &(thread.color), 4);
         embPattern_addThread(pattern, thread);
     }
@@ -12502,7 +12579,7 @@ writeThr(EmbPattern* pattern, FILE* file)
 
     stitchCount = pattern->stitch_list->count;
 
-    memset(&header, 0, sizeof(ThredHeader));
+    memory_set(&header, 0, sizeof(ThredHeader));
     header.sigVersion = 0x746872 | (version << 24);
     header.length = stitchCount * 12 + 16;
     if (version == 1 || version == 2) {
@@ -12520,7 +12597,7 @@ writeThr(EmbPattern* pattern, FILE* file)
     }
 
     if (version == 1 || version == 2) {
-        memset(&extension, 0, sizeof(ThredExtension));
+        memory_set(&extension, 0, sizeof(ThredExtension));
         extension.auxFormat = 1;
         extension.hoopX = 640;
         extension.hoopY = 640;
@@ -12566,11 +12643,10 @@ writeThr(EmbPattern* pattern, FILE* file)
  * Text File (.txt)
  * The txt format is stitch-only and isn't associated with a specific company.
  */
-
 char
 readTxt(EmbPattern* pattern, FILE* file)
 {
-    char line[100];
+    EmbString line;
     int stated_count, i;
     emb_readline(file, line, 99);
     stated_count = atoi(line);
@@ -12650,8 +12726,8 @@ readU00(EmbPattern* pattern, FILE* file)
     for (i = 0; i < 16; i++) {
         EmbThread t;
         embColor_read(file, &(t.color), 3);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
+        string_copy(t.catalogNumber, "");
+        string_copy(t.description, "");
         embPattern_addThread(pattern, t);
     }
 
@@ -13243,8 +13319,8 @@ readVp3(EmbPattern* pattern, FILE* file)
         unsigned char* threadColorNumber, *colorName, *threadVendor;
         int unknownThreadString, numberOfBytesInColor;
 
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
+        string_copy(t.catalogNumber, "");
+        string_copy(t.description, "");
         fseek(file, colorSectionOffset, SEEK_SET);
         printf("ERROR: format-vp3.c Color Check Byte #1: 0 == %d\n", (char)fgetc(file));
         printf("ERROR: format-vp3.c Color Check Byte #2: 5 == %d\n", (char)fgetc(file));
@@ -13331,7 +13407,7 @@ vp3WriteStringLen(FILE* file, const char* str, int len)
 void
 vp3WriteString(FILE* file, const char* str)
 {
-    vp3WriteStringLen(file, str, strlen(str));
+    vp3WriteStringLen(file, str, string_len(str));
 }
 
 void
@@ -13570,8 +13646,8 @@ readXxx(EmbPattern* pattern, FILE* file)
 
     for (i = 0; i < numberOfColors; i++) {
         EmbThread thread;
-        strcpy(thread.catalogNumber, "NULL");
-        strcpy(thread.description, "NULL");
+        string_copy(thread.catalogNumber, "NULL");
+        string_copy(thread.description, "NULL");
         fseek(file, 1, SEEK_CUR);
         embColor_read(file, &(thread.color), 3);
         embPattern_addThread(pattern, thread);
@@ -13762,8 +13838,8 @@ readZsk(EmbPattern* pattern, FILE* file)
     while (colorNumber != 0) {
         EmbThread t;
         embColor_read(file, &(t.color), 3);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
+        string_copy(t.catalogNumber, "");
+        string_copy(t.description, "");
         embPattern_addThread(pattern, t);
         fseek(file, 0x48, SEEK_CUR);
         colorNumber = fgetc(file);
@@ -17401,7 +17477,7 @@ embLine_intersectionPoint(EmbLine line1, EmbLine line2)
     det = embVector_cross(vec2, vec1);
 
     if (fabs(det) < tolerance) {
-		/* Default to the origin when an error is thrown. */
+        /* Default to the origin when an error is thrown. */
         emb_error = 1;
         result.x = 0.0;
         result.y = 0.0;
@@ -18175,7 +18251,7 @@ embImage_create(int width, int height)
 void
 embImage_read(EmbImage *image, char *fname)
 {
-	/*
+    /*
     int channels_in_file;
     image->data = stbi_load(
         fname,
@@ -18183,7 +18259,7 @@ embImage_read(EmbImage *image, char *fname)
         &(image->height),
         &channels_in_file,
         3);
-	*/
+    */
 }
 
 /* . */
@@ -18390,9 +18466,9 @@ embPattern_copyPolylinesTostitch_list(EmbPattern* p)
         currentPoly = p->geometry->geometry[i].object.polyline;
         currentPointList = currentPoly.pointList;
 
-        strcpy(thread.catalogNumber, "");
+        string_copy(thread.catalogNumber, "");
         thread.color = currentPoly.color;
-        strcpy(thread.description, "");
+        string_copy(thread.description, "");
         embPattern_addThread(p, thread);
 
         if (!firstObject) {
@@ -18975,25 +19051,25 @@ embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
         return;
     }
 
-    strcpy(extractName, fileName);
+    string_copy(extractName, fileName);
     format = emb_identify_format(fileName);
-    stub_len = strlen(fileName) - strlen(formatTable[format].extension);
+    stub_len = string_len(fileName) - string_len(formatTable[format].extension);
     extractName[stub_len] = 0;
-    strcat(extractName, ".edr");
+    string_cat(extractName, ".edr");
     hasRead = embPattern_read(p, extractName, EMB_FORMAT_EDR);
     if (!hasRead) {
         extractName[stub_len] = 0;
-        strcat(extractName,".rgb");
+        string_cat(extractName,".rgb");
         hasRead = embPattern_read(p, extractName, EMB_FORMAT_RGB);
     }
     if (!hasRead) {
         extractName[stub_len] = 0;
-        strcat(extractName,".col");
+        string_cat(extractName,".col");
         hasRead = embPattern_read(p, extractName, EMB_FORMAT_COL);
     }
     if (!hasRead) {
         extractName[stub_len] = 0;
-        strcat(extractName,".inf");
+        string_cat(extractName,".inf");
         hasRead = embPattern_read(p, extractName, EMB_FORMAT_INF);
     }
 }

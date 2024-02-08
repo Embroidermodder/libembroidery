@@ -15,28 +15,54 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: "Build libembroidery, run tests."
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-    runs-on: ${matrix.os}
+  build_windows:
+    name: "Build libembroidery on Windows, run tests."
+    runs-on: windows-latest
     env:
-      HOST_SYSTEM: ${matrix.os}
-
+      HOST_SYSTEM: windows-latest
     steps:
       - name: Build
         run: bash <(curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build.sh)
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${matrix.os}
+          name: libembroidery-windows
           path: ./libembroidery
 
+  build_macos:
+    name: "Build libembroidery on Mac OS, run tests."
+    runs-on: macos-latest
+    env:
+      HOST_SYSTEM: macos-latest
+    steps:
+      - name: Build
+        run: bash <(curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build.sh)
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libembroidery-macos
+          path: ./libembroidery
+  
+  build_ubuntu:
+    name: "Build libembroidery on Ubuntu, run tests."
+    runs-on: ubuntu-latest
+    env:
+      HOST_SYSTEM: ubuntu-latest
+    steps:
+      - name: Build
+        run: bash <(curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build.sh)
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libembroidery-ubuntu
+          path: ./libembroidery
+  
   website:
     runs-on: ubuntu-latest
-    needs: build
+    needs:
+    - build_windows
+    - build_macos
+    - build_ubuntu
     name: "Build website."
     steps:
       - uses: actions/download-artifact@v4

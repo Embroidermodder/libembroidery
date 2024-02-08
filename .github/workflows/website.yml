@@ -21,9 +21,10 @@ jobs:
     env:
       HOST_SYSTEM: windows-latest
     steps:
+      - name: Get Script
+        run: curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build.sh -o build.sh
       - name: Build
-        run: bash <(curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build.sh)
-
+        run: bash build.sh
       - uses: actions/upload-artifact@v4
         with:
           name: libembroidery-windows
@@ -35,9 +36,10 @@ jobs:
     env:
       HOST_SYSTEM: macos-latest
     steps:
+      - name: Get Script
+        run: curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build.sh -o build.sh
       - name: Build
-        run: bash <(curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build.sh)
-
+        run: bash build.sh
       - uses: actions/upload-artifact@v4
         with:
           name: libembroidery-macos
@@ -49,9 +51,10 @@ jobs:
     env:
       HOST_SYSTEM: ubuntu-latest
     steps:
+      - name: Get Script
+        run: curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build.sh -o build.sh
       - name: Build
-        run: bash <(curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build.sh)
-
+        run: bash build.sh
       - uses: actions/upload-artifact@v4
         with:
           name: libembroidery-ubuntu

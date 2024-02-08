@@ -1,4 +1,4 @@
-name: Build and Deploy Website
+name: Build and Deploy Website, Run Testing
 
 on:
   push:
@@ -12,18 +12,55 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
-  website:
-    runs-on: ubuntu-latest
+  build:
+    name: "Build libembroidery, run tests."
+    strategy:
+      fail-fast: false
+      matrix:
+        platforms: [
+          { os: "windows-latest", key: "windows" },
+          { os: "macos-latest", key: "macos" },
+          { os: "ubuntu-latest", key: "linux64" }
+        }
+    runs-on: ${matrix.os}
+    env:
+      HOST_SYSTEM: ${matrix.key}
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Build
+        run: bash <(curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build.sh)
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: ${matrix.key}
+          path: libembroidery
+
+  website:
+    needs: build
+    name: "Build website."
+    steps:
+      - name: Download windows build
+        uses: actions/download-artifact
+        with:
+          name: "windows"
+
+      - name: Download macos build
+        uses: actions/download-artifact
+        with:
+          name: "macos"
+
+      - name: Download linux build
+        uses: actions/download-artifact
+        with:
+          name: "linux64"
 
       - name: Build
-        run: bash bin/build_docs.sh
-   
+        run: bash <(curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build_website.sh)
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

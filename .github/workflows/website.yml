@@ -35,6 +35,7 @@ jobs:
           path: ./libembroidery
 
   website:
+    runs-on: ubuntu-latest
     needs: build
     name: "Build website."
     steps:

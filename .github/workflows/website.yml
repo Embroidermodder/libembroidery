@@ -30,7 +30,7 @@ jobs:
         run: bash <(curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build.sh)
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact
         with:
           name: ${matrix.os}
           path: libembroidery

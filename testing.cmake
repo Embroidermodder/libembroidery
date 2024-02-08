@@ -1,13 +1,10 @@
 #
 
-add_executable(emb_test1 test/test1.c)
-target_link_libraries(emb_test1 PRIVATE embroidery)
-
 enable_testing()
 
 add_test(
-    NAME emb_test1
-    COMMAND $<TARGET_FILE:emb_test1>
+    NAME INBUILT_TESTING
+    COMMAND $<TARGET_FILE:embroider> --test
 )
 
 add_test(

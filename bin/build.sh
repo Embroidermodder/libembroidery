@@ -11,7 +11,7 @@ cd libembroidery || exit 1
 
 mkdir debug || exit 1
 cd debug || exit 1
-    cmake -DCMAKE_BUILD_TYPE=Debug . || exit 1
+    cmake -DCMAKE_BUILD_TYPE=Debug .. || exit 1
     cmake --build . || exit 1
 
     if [ $ == "linux64" ]; then

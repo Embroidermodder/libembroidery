@@ -29,30 +29,29 @@ jobs:
       - name: Build
         run: bash <(curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build.sh)
 
-      - name: Upload artifact
-        uses: actions/upload-artifact
+      - uses: actions/upload-artifact@v4
         with:
           name: ${matrix.os}
-          path: libembroidery
+          path: ./libembroidery
 
   website:
     needs: build
     name: "Build website."
     steps:
-      - name: Download windows build
-        uses: actions/download-artifact
+      - uses: actions/download-artifact@v4
         with:
           name: "windows-latest"
 
-      - name: Download macos build
-        uses: actions/download-artifact
+      - uses: actions/download-artifact@v4
         with:
           name: "macos-latest"
 
-      - name: Download linux build
-        uses: actions/download-artifact
+      - uses: actions/download-artifact@v4
         with:
           name: "ubuntu-latest"
+
+      - name: Place in Downloads
+        run: mv *.zip docs/html/downloads
 
       - name: Build
         run: bash <(curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build_website.sh)

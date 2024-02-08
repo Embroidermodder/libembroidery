@@ -20,14 +20,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platforms: [
-          { os: "windows-latest", key: "windows" },
-          { os: "macos-latest", key: "macos" },
-          { os: "ubuntu-latest", key: "linux64" }
-        }
+        os: [windows-latest, macos-latest, ubuntu-latest]
     runs-on: ${matrix.os}
     env:
-      HOST_SYSTEM: ${matrix.key}
+      HOST_SYSTEM: ${matrix.os}
 
     steps:
       - name: Build
@@ -36,7 +32,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          name: ${matrix.key}
+          name: ${matrix.os}
           path: libembroidery
 
   website:
@@ -46,17 +42,17 @@ jobs:
       - name: Download windows build
         uses: actions/download-artifact
         with:
-          name: "windows"
+          name: "windows-latest"
 
       - name: Download macos build
         uses: actions/download-artifact
         with:
-          name: "macos"
+          name: "macos-latest"
 
       - name: Download linux build
         uses: actions/download-artifact
         with:
-          name: "linux64"
+          name: "ubuntu-latest"
 
       - name: Build
         run: bash <(curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build_website.sh)

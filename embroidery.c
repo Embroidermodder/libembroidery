@@ -32,11 +32,13 @@
  * ----------------------------------------------------------------------------
  */
 
-/* Utility Functions */
+/* Utility Functions: merge first three with string library */
 int stringInArray(const char *s, const char **array);
 char *copy_trim(char const *s);
 char* emb_optOut(EmbReal num, char* str);
 void safe_free(void *data);
+
+int testMain(int);
 
 /* DIFAT functions */
 unsigned int entriesInDifatSector(bcf_file_difat* fat);
@@ -52,14 +54,7 @@ int bcfFileHeader_isValid(bcf_file_header header);
 void bcf_file_free(bcf_file* bcfFile);
 
 void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1);
-int create_test_file_1(const char* outf);
-int create_test_file_2(const char* outf);
-int create_test_file_3(const char* outf);
-int testEmbCircle(void);
-int testEmbCircle_2(void);
-int testGeomArc(void);
-int testThreadColor(void);
-int testEmbFormat(void);
+int create_test_file(int test_file, const char* outf);
 
 /* Encoding/decoding and compression functions. */
 int hus_compress(char* input, int size, char* output, int *out_size);
@@ -277,6 +272,28 @@ char readZsk(EmbPattern *pattern, FILE* file);
 char writeZsk(EmbPattern *pattern, FILE* file);
 
 void write_24bit(FILE* file, int);
+
+/* Replacing functions that compilers complain about.
+ * In some cases, this is due to valid concerns about
+ * functions not returning (like a string without null-termination).
+ *
+ * We don't use size_t because it's system-specific.
+ *
+ * IDEA: don't rely on "sizeof" because it's system and
+ * compiler-specific, depending on how the struct is packed.
+ * We could manually pack out structs and then know exactly
+ * how much space they need.
+ *
+ * TODO: UTF-8 support.
+ */
+void string_copy(EmbString dst, const char *src);
+int string_equals(const char *s1, const char *s2);
+int string_len(const EmbString src);
+void string_cat(EmbString dst, const char *src);
+int string_rchar(const EmbString s1, char c);
+void char_ptr_to_string(EmbString dst, char *src);
+void memory_copy(void *dst, const void *src, int n);
+char memory_cmp(void *dst, const void *src, int n);
 
 /* Internal Data
  * ----------------------------------------------------------------------------
@@ -1172,33 +1189,37 @@ typedef struct BRAND {
 
 EmbBrand brand_codes[100];
 
-/* Replacing functions that compilers complain about.
- * In some cases, this is due to valid concerns about
- * functions not returning (like a string without null-termination).
+/*
  *
- * We don't use size_t because it's system-specific.
- *
- * IDEA: don't rely on "sizeof" because it's system and
- * compiler-specific, depending on how the struct is packed.
- * We could manually pack out structs and then know exactly
- * how much space they need.
- *
- * TODO: UTF-8 support.
- */
-void string_copy(EmbString dst, const EmbString src);
-int string_len(const EmbString src);
-void string_cat(EmbString dst, const EmbString src);
-void memory_copy(void *dst, const void *src, int n);
-char memory_cmp(void *dst, const void *src, int n);
-
-/* Replacement for strcpy. Since we know the EmbString
- * type is always has 200 bytes allocated
- * we can backend to memory_copy.
  */
 void
-string_copy(EmbString dst, const EmbString src)
+string_copy(EmbString dst, const char *src)
 {
-    memory_copy(dst, src, EMB_MIN(string_len(src)+1, 200));
+    int i;
+    for (i=0; i<200; i++) {
+        dst[i] = src[i];
+        if (src[i] == 0) {
+            break;
+        }
+    }
+    dst[199] = 0;
+}
+
+/* Finds the location of the first non-whitespace character
+ * in the string and returns it.
+ */
+int
+string_whitespace(EmbString s)
+{
+    int i;
+    for (i=0; i<200; i++) {
+        if (s[i] == ' ') continue;
+        if (s[i] == '\t') continue;
+        if (s[i] == '\r') continue;
+        if (s[i] == '\n') continue;
+        return i;
+    }
+    return i;
 }
 
 /* Note that our version of strlen can tell us that
@@ -1212,31 +1233,69 @@ string_len(const EmbString src)
         if (src[i] == 0) {
             return i;
         }
-	}
-	return -1;
+    }
+    return -1;
 }
 
 /* Replacement for strcat that is only to be used for
  * short strings, otherwise use memory_copy.
  */
 void
-string_cat(EmbString dst, const EmbString src)
+string_cat(EmbString dst, const char *src)
 {
-	int i, j, src_len;
-	j = string_len(dst);
-	src_len = string_len(src)+1;
+    int i, j, src_len;
+    j = string_len(dst);
+    src_len = string_len(src)+1;
     for (i=0; i<src_len; i++) {
         dst[j+i] = src[i];
         if (src[i] == 0) {
             return;
         }
-		if (i+j == 200) {
-			break;
-		}
+        if (i+j == 200) {
+            break;
+        }
     }
-	puts("ERROR: string_cat failed to concatenate because the source string");
-	puts("    was too long.");
-	dst[199] = 0;
+    puts("ERROR: string_cat failed to concatenate because the source string");
+    puts("    was too long.");
+    dst[199] = 0;
+}
+
+/*
+ */
+int
+string_equals(const char *s1, const char *s2)
+{
+    int i;
+    for (i=0; i<200; i++) {
+        if (s1[i] != s2[i]) {
+            return 0;
+        }
+        if (s1[i] == 0) {
+            if (s2[i] == 0) {
+                return 1;
+            }
+            return 0;
+        }
+    }
+	/* Strings which aren't null-terminated are treated as unequal.
+	 * The caller should be warned with an arror string.
+     */
+    return 0;
+}
+
+/*
+ */
+int
+string_rchar(const EmbString s, char c)
+{
+	int i;
+	int n = string_len(s);
+	for (i=n-1; i>=0; i++) {
+		if (s[i] == c) {
+			return i;
+		}
+	}
+	return 0;
 }
 
 /* Replacement for memcpy. To allow us to take out
@@ -1246,9 +1305,9 @@ void
 memory_copy(void *dst, const void *src, int n)
 {
     int i;
-	char *dst_, *src_;
-	dst_ = (char *)dst;
-	src_ = (char *)src;
+    char *dst_, *src_;
+    dst_ = (char *)dst;
+    src_ = (char *)src;
     for (i=0; i<n; i++) {
         dst_[i] = src_[i];
     }
@@ -1261,16 +1320,16 @@ char
 memory_cmp(void *dst, const void *src, int n)
 {
     size_t i;
-	char *dst_, *src_;
-	dst_ = (char *)dst;
-	src_ = (char *)src;
+    char *dst_, *src_;
+    dst_ = (char *)dst;
+    src_ = (char *)src;
     for (i=0; i<n; i++) {
-		char result = dst_[i] - src_[i];
-		if (result) {
-			return result;
-		}
+        char result = dst_[i] - src_[i];
+        if (result) {
+            return result;
+        }
     }
-	return 0;
+    return 0;
 }
 
 /* Replacement for memset. To allow us to take out
@@ -1280,9 +1339,9 @@ char
 memory_set(void *dst, char value, int n)
 {
     int i;
-	char *dst_ = (char*)dst;
+    char *dst_ = (char*)dst;
     for (i=0; i<n; i++) {
-		dst_[i] = value;
+        dst_[i] = value;
     }
 }
 
@@ -2378,7 +2437,7 @@ void embVector_print(EmbVector v, char *label)
 }
 
 /* Print the arc "arc". */
-void embArc_print(EmbArc arc)
+void emb_arc_print(EmbArc arc)
 {
     embVector_print(arc.start, "start");
     embVector_print(arc.mid, "middle");
@@ -2489,8 +2548,9 @@ GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind)
     FILE* fileOut = tmpfile();
     bcf_directory_entry* pointer = bcfFile->directory->dirEntries;
     while (pointer) {
-        if (strcmp(fileToFind, pointer->directoryEntryName) == 0)
+        if (string_equals(fileToFind, pointer->directoryEntryName)) {
             break;
+        }
         pointer = pointer->next;
     }
     filesize = pointer->streamSize;
@@ -3073,7 +3133,7 @@ stringInArray(const char *s, const char **array)
 {
     int i;
     for (i = 0; string_len(array[i]); i++) {
-        if (!strcmp(s, array[i])) {
+        if (string_equals(s, array[i])) {
             return 1;
         }
     }
@@ -3107,9 +3167,6 @@ emb_readline(FILE* file, char *line, int maxLength)
     return i;
 }
 
-/* TODO: trimming function should handle any character, not just whitespace */
-char const WHITESPACE[] = " \t\n\r";
-
 /* TODO: description */
 
 /* Get the trim bounds object. */
@@ -3117,10 +3174,10 @@ void
 get_trim_bounds(char const *s, char const **firstWord, char const **trailingSpace)
 {
     char const* lastWord = 0;
-    *firstWord = lastWord = s + strspn(s, WHITESPACE);
+    *firstWord = lastWord = s + string_whitespace(s);
     do {
-        *trailingSpace = lastWord + strcspn(lastWord, WHITESPACE);
-        lastWord = *trailingSpace + strspn(*trailingSpace, WHITESPACE);
+        *trailingSpace = lastWord + string_whitespace(lastWord);
+        lastWord = *trailingSpace + string_whitespace(*trailingSpace);
     } while (*lastWord != '\0');
 }
 
@@ -3189,88 +3246,232 @@ embTime_time(EmbTime* t)
     return *t;
 }
 
-/* . */
-void
-report(int result, char *label)
+/* Currently just crash testing.
+ */
+int
+test_convert(int test_case, int from, int to)
 {
-    printf("%s Test...%*c", label, (int)(20-string_len(label)), ' ');
-    if (result) {
-        printf(RED_TERM_COLOR "[FAIL] [CODE=%d]\n" RESET_TERM_COLOR, result);
-    }
-    else {
-        printf(GREEN_TERM_COLOR "[PASS]\n" RESET_TERM_COLOR);
-    }
+	EmbString fname_from;
+	EmbString fname_to;
+	sprintf(fname_from, "test%02d.%s", test_case, formatTable[from].extension);
+	sprintf(fname_from, "test%02d_out.%s", test_case, formatTable[to].extension);
+	int result = create_test_file(test_case, fname_from);
+	if (result) {
+		return result;
+	}
+	convert(fname_from, fname_to);
+	return 0;
 }
 
+
 /* . */
-void
-testMain(int level)
+int
+testMain(int test_index)
 {
-    EmbPattern *pattern = embPattern_create();
-    int overall = 0;
-    int circleResult = testEmbCircle();
-    int threadResult = testThreadColor();
-    int formatResult = testEmbFormat();
-    int arcResult = testGeomArc();
-    int create1Result = create_test_file_1("test01.csv");
-    int create2Result = create_test_file_2("test02.csv");
-    int create3Result = create_test_file_3("test03.csv");
-    int svg1Result = convert("test01.csv", "test01.svg");
-    int svg2Result = convert("test02.csv", "test02.svg");
-    int svg3Result = convert("test03.csv", "test03.svg");
-    int dst1Result = convert("test01.csv", "test01.dst");
-    int dst2Result = convert("test02.csv", "test02.dst");
-    int dst3Result = convert("test03.csv", "test03.dst");
-    int hilbertCurveResult = hilbert_curve(pattern, 3);
-    int renderResult = embPattern_render(pattern, "hilbert_level_3.png");
-    int simulateResult = embPattern_simulate(pattern, "hilbert_level_3.avi");
+    switch (test_index) {
+    case 0: {
+        EmbReal error;
+        EmbReal epsilon = 0.001f;
+        EmbVector p0, p1;
+        /* Problem */
+        EmbCircle c1 = {{0.0f, 0.0f}, 3.0f};
+        /* Solution */
+        EmbVector t0 = {2.2500f, 1.9843f};
+        EmbVector t1 = {2.2500f, -1.9843f};
+        EmbVector p = {4.0f, 0.0f};
+        /* Test */
+        testTangentPoints(c1, p, &p0, &p1);
+        error = embVector_distance(p0, t0) + embVector_distance(p1, t1);
+        if (error > epsilon) {
+            printf("Error larger than tolerance, circle test 1: %f.\n\n", error);
+            return 0;
+        }
 
-    overall += circleResult;
-    overall += threadResult;
-    overall += formatResult;
-    overall += arcResult;
-    overall += create1Result;
-    overall += create2Result;
-    overall += create3Result;
-    overall += svg1Result;
-    overall += svg2Result;
-    overall += svg3Result;
-    overall += dst1Result;
-    overall += dst2Result;
-    overall += dst3Result;
-
-    if (emb_verbose >= 0) {
-        puts("SUMMARY OF RESULTS");
-        puts("------------------");
-        report(circleResult, "Tangent Point");
-        report(threadResult, "Thread");
-        report(formatResult, "Format");
-        report(arcResult, "Arc");
-        report(create1Result, "Create CSV 1");
-        report(create2Result, "Create CSV 2");
-        report(create3Result, "Create CSV 3");
-        report(svg1Result, "Convert CSV-SVG 1");
-        report(svg2Result, "Convert CSV-SVG 2");
-        report(svg3Result, "Convert CSV-SVG 3");
-        report(dst1Result, "Convert CSV-DST 1");
-        report(dst2Result, "Convert CSV-DST 2");
-        report(dst3Result, "Convert CSV-DST 3");
-        report(hilbertCurveResult, "Generating Hilbert Curve");
-        report(renderResult, "Rendering Hilbert Curve");
-        report(simulateResult, "Simulating Hilbert Curve");
+        return 1;
     }
+    case 1: {
+        EmbReal error;
+        EmbReal epsilon = 0.001f;
+        EmbVector p0, p1;
+        EmbCircle c2 = {{20.1762f, 10.7170f}, 6.8221f};
+        /* Solution */
+        EmbVector s0 = {19.0911f, 17.4522f};
+        EmbVector s1 = {26.4428f, 13.4133f};
+        EmbVector p = {24.3411f, 18.2980f};
+        /* Test */
+        testTangentPoints(c2, p, &p0, &p1);
+        error = embVector_distance(p0, s0) + embVector_distance(p1, s1);
+        if (error > epsilon) {
+            printf("Error larger than tolerance, circle test 2: %f.\n\n", error);
+            return 0;
+        }
 
-    embPattern_free(pattern);
-    if (level > 0) {
+        return 1;
+    }
+    case 2: {
+        unsigned int tColor = 0xFFD25F00;
+        EmbColor c;
+        c.r = 0xD2;
+        c.g = 0x5F;
+        c.b = 0x00;
+        if (0) {
+        int tBrand = 0; /*EMB_BRAND_SULKY_RAYON; */
+        int tNum = threadColorNum(tColor, tBrand);
+        char tName[50];
+        string_copy(tName, threadColorName(tColor, tBrand));
+
+        if (emb_verbose > 0) {
+            printf("Color : 0x%X\n"
+               "Brand : %d\n"
+               "Num   : %d\n"
+               "Name  : %s\n\n",
+            tColor,
+            tBrand,
+            tNum, /* Solution: 1833 */
+            tName); /* Solution: Pumpkin Pie */
+        }
+        }
+        return 1;
+    }
+    case 3: {
+        const char*  tName = "example.zsk";
+        int format = emb_identify_format(tName);
+
+        if (emb_verbose > 0) {
+            printf("Filename   : %s\n"
+               "Extension  : %s\n"
+               "Description: %s\n"
+               "Reader     : %c\n"
+               "Writer     : %c\n"
+               "Type       : %d\n\n",
+                tName,
+                formatTable[format].extension,
+                formatTable[format].description,
+                formatTable[format].reader_state,
+                formatTable[format].writer_state,
+                formatTable[format].type);
+        }
+
+        if (!string_equals(formatTable[format].extension, ".zsk")) {
+   			return 20;
+		}
+        if (!string_equals(formatTable[format].description, "ZSK USA Embroidery Format")) {
+            return 21;
+        }
+        if (formatTable[format].reader_state != 'U') {
+			return 22;
+		}
+        if (formatTable[format].writer_state != ' ') {
+			return 23;
+		}
+        if (formatTable[format].type != 1) {
+			return 24;
+		}
+        return 0;
+    }
+    case 4: {
+        EmbArc arc;
+        EmbVector center, chordMid;
+        EmbReal bulge, radius, diameter, chord, sagitta, apothem, incAngle;
+        char clockwise;
+
+        bulge = -0.414213562373095f;
+        arc.start.x = 1.0f;
+        arc.start.y = 0.0f;
+        arc.mid.x = 0.0f; /* FIXME */
+        arc.mid.y = 0.0f;
+        arc.end.x = 2.0f;
+        arc.end.y = 1.0f;
+        center = emb_arc_center(arc);
+        chord = emb_arc_chord(arc);
+        radius = emb_arc_radius(arc);
+        diameter = emb_arc_diameter(arc);
+        chordMid = emb_arc_chordMid(arc);
+        sagitta = emb_arc_sagitta(arc);
+        apothem = emb_arc_apothem(arc);
+        incAngle = emb_arc_incAngle(arc);
+        clockwise = emb_arc_clockwise(arc);
+        /* bulge = emb_arc_bulge(arc); */
+        if (emb_verbose > 0) {
+            fprintf(stdout, "Clockwise Test:\n");
+            printArcResults(bulge, arc, center,
+                        radius, diameter,
+                        chord, chordMid,
+                        sagitta,   apothem,
+                        incAngle,  clockwise);
+        }
+
+        bulge  = 2.414213562373095f;
+        arc.start.x = 4.0f;
+        arc.start.y = 0.0f;
+        arc.mid.x = 0.0f; /* FIXME */
+        arc.mid.y = 0.0f;
+        arc.end.x = 5.0f;
+        arc.end.y = 1.0f;
+        center = emb_arc_center(arc);
+        chord = emb_arc_chord(arc);
+        radius = emb_arc_radius(arc);
+        diameter = emb_arc_diameter(arc);
+        chordMid = emb_arc_chordMid(arc);
+        sagitta = emb_arc_sagitta(arc);
+        apothem = emb_arc_apothem(arc);
+        incAngle = emb_arc_incAngle(arc);
+        clockwise = emb_arc_clockwise(arc);
+        /* bulge = emb_arc_bulge(arc); */
+        if (emb_verbose > 0) {
+            fprintf(stdout, "Counter-Clockwise Test:\n");
+            printArcResults(bulge, arc, center,
+                        radius, diameter, chord,
+                        chordMid, sagitta,   apothem,
+                        incAngle, clockwise);
+        }
+
+        return 0;
+    }
+    case 5: {
+        return create_test_file(0, "test01.csv");
+    }
+    case 6: {
+        return create_test_file(1, "test02.csv");
+    }
+    case 7: {
+        return create_test_file(2, "test03.csv");
+    }
+    case 8: {
+        return test_convert(0, EMB_FORMAT_CSV, EMB_FORMAT_SVG);
+    }
+    case 9: {
+        return test_convert(0, EMB_FORMAT_CSV, EMB_FORMAT_DST);
+    }
+    case 10: {
+        return test_convert(1, EMB_FORMAT_CSV, EMB_FORMAT_SVG);
+    }
+    case 11: {
+        return test_convert(1, EMB_FORMAT_CSV, EMB_FORMAT_DST);
+    }
+    case 12: {
+        return test_convert(2, EMB_FORMAT_CSV, EMB_FORMAT_SVG);
+    }
+    case 13: {
+        return test_convert(2, EMB_FORMAT_CSV, EMB_FORMAT_DST);
+    }
+    case 14: {
+        EmbPattern *pattern = embPattern_create();
+        int hilbertCurveResult = hilbert_curve(pattern, 3);
+        int renderResult = embPattern_render(pattern, "hilbert_level_3.png");
+        int simulateResult = embPattern_simulate(pattern, "hilbert_level_3.avi");
+        embPattern_free(pattern);
+        return hilbertCurveResult;
+    }
+    case 15: {
         puts("More expensive tests.");
-        full_test_matrix("test_matrix.txt");
+		char results[100][100];
+        full_test_matrix(0, results);
+        return 0;
     }
-    if (overall == 0) {
-        puts("PASS");
+    default: break;
     }
-    else {
-        puts("FAIL");
-    }
+    return 10;
 }
 
 /* . */
@@ -3301,53 +3502,6 @@ testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
 }
 
 /* . */
-int
-testEmbCircle(void)
-{
-    EmbReal error;
-    EmbReal epsilon = 1e-3;
-    EmbVector p0, p1;
-    /* Problem */
-    EmbCircle c1 = {{0.0, 0.0}, 3.0};
-    /* Solution */
-    EmbVector t0 = {2.2500, 1.9843};
-    EmbVector t1 = {2.2500, -1.9843};
-    EmbVector p = {4.0, 0.0};
-    /* Test */
-    testTangentPoints(c1, p, &p0, &p1);
-    error = embVector_distance(p0, t0) + embVector_distance(p1, t1);
-    if (error > epsilon) {
-        printf("Error larger than tolerance, circle test 1: %f.\n\n", error);
-        return 16;
-    }
-
-    return 0;
-}
-
-/* . */
-int
-testEmbCircle_2(void)
-{
-    EmbReal error;
-    EmbReal epsilon = 1e-3;
-    EmbVector p0, p1;
-    EmbCircle c2 = {{20.1762, 10.7170}, 6.8221};
-    /* Solution */
-    EmbVector s0 = {19.0911, 17.4522};
-    EmbVector s1 = {26.4428, 13.4133};
-    EmbVector p = {24.3411, 18.2980};
-    /* Test */
-    testTangentPoints(c2, p, &p0, &p1);
-    error = embVector_distance(p0, s0) + embVector_distance(p1, s1);
-    if (error > epsilon) {
-        printf("Error larger than tolerance, circle test 2: %f.\n\n", error);
-        return 17;
-    }
-
-    return 0;
-}
-
-/* . */
 void
 printArcResults(
     EmbReal bulge,
@@ -3362,7 +3516,7 @@ printArcResults(
     EmbReal incAngle,
     char clockwise)
 {
-    embArc_print(arc);
+    emb_arc_print(arc);
     embVector_print(center, "center");
     embVector_print(chordMid, "chordMid");
     fprintf(stdout, "bulge     = %f\n"
@@ -3384,104 +3538,9 @@ printArcResults(
                     clockwise);
 }
 
-/* . */
-int
-testGeomArc(void)
-{
-    EmbArc arc;
-    EmbVector center, chordMid;
-    EmbReal bulge, radius, diameter, chord, sagitta, apothem, incAngle;
-    char clockwise;
-
-    bulge = -0.414213562373095;
-    arc.start.x = 1.0;
-    arc.start.y = 0.0;
-    arc.mid.x = 0.0; /* FIXME */
-    arc.mid.y = 0.0;
-    arc.end.x = 2.0;
-    arc.end.y = 1.0;
-    center = embArc_center(arc);
-    chord = embArc_chord(arc);
-    radius = embArc_radius(arc);
-    diameter = embArc_diameter(arc);
-    chordMid = embArc_chordMid(arc);
-    sagitta = embArc_sagitta(arc);
-    apothem = embArc_apothem(arc);
-    incAngle = embArc_incAngle(arc);
-    clockwise = embArc_clockwise(arc);
-    /* bulge = embArc_bulge(arc); */
-    if (emb_verbose > 0) {
-        fprintf(stdout, "Clockwise Test:\n");
-        printArcResults(bulge, arc, center,
-                    radius, diameter,
-                    chord, chordMid,
-                    sagitta,   apothem,
-                    incAngle,  clockwise);
-    }
-
-    bulge  = 2.414213562373095;
-    arc.start.x = 4.0;
-    arc.start.y = 0.0;
-    arc.mid.x = 0.0; /* FIXME */
-    arc.mid.y = 0.0;
-    arc.end.x   = 5.0;
-    arc.end.y   = 1.0;
-    center = embArc_center(arc);
-    chord = embArc_chord(arc);
-    radius = embArc_radius(arc);
-    diameter = embArc_diameter(arc);
-    chordMid = embArc_chordMid(arc);
-    sagitta = embArc_sagitta(arc);
-    apothem = embArc_apothem(arc);
-    incAngle = embArc_incAngle(arc);
-    clockwise = embArc_clockwise(arc);
-    /* bulge = embArc_bulge(arc); */
-    if (emb_verbose > 0) {
-        fprintf(stdout, "Counter-Clockwise Test:\n");
-        printArcResults(bulge, arc, center,
-                    radius, diameter, chord,
-                    chordMid, sagitta,   apothem,
-                    incAngle, clockwise);
-    }
-
-    return 0;
-}
-
-/* . */
-int
-testEmbFormat(void)
-{
-    const char*  tName = "example.zsk";
-    int format = emb_identify_format(tName);
-
-    if (emb_verbose > 0) {
-        printf("Filename   : %s\n"
-           "Extension  : %s\n"
-           "Description: %s\n"
-           "Reader     : %c\n"
-           "Writer     : %c\n"
-           "Type       : %d\n\n",
-            tName,
-            formatTable[format].extension,
-            formatTable[format].description,
-            formatTable[format].reader_state,
-            formatTable[format].writer_state,
-            formatTable[format].type);
-    }
-
-    if (strcmp(formatTable[format].extension, ".zsk")) return 20;
-    if (strcmp(formatTable[format].description, "ZSK USA Embroidery Format")) {
-            return 21;
-    }
-    if (formatTable[format].reader_state != 'U') return 22;
-    if (formatTable[format].writer_state != ' ') return 23;
-    if (formatTable[format].type != 1) return 24;
-    return 0;
-}
-
 /* Create a test file 1 object. */
 int
-create_test_file_1(const char* outf)
+create_test_file(int test_file, const char* outf)
 {
     int i;
     EmbPattern* p;
@@ -3493,125 +3552,74 @@ create_test_file_1(const char* outf)
         return 1;
     }
 
-    /* 10mm circle */
-    for (i = 0; i < 20; i++) {
-        embPattern_addStitchRel(p, 0.0, 1.0, JUMP, 0);
-    }
-    for (i = 0; i < 200; i++) {
-        st.x = 10 + 10 * sin(i * (0.03141592));
-        st.y = 10 + 10 * cos(i * (0.03141592));
-        st.flags = NORMAL;
-        st.color = 0;
-        embPattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
-    }
+    switch (test_file) {
+	case 0: {
+		/* 10mm circle */
+		for (i = 0; i < 20; i++) {
+			embPattern_addStitchRel(p, 0.0, 1.0, JUMP, 0);
+		}
+		for (i = 0; i < 200; i++) {
+			st.x = 10 + 10 * sin(i * (0.03141592));
+			st.y = 10 + 10 * cos(i * (0.03141592));
+			st.flags = NORMAL;
+			st.color = 0;
+			embPattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
+		}
 
-    embPattern_addThread(p, black_thread);
-    embPattern_end(p);
+		embPattern_addThread(p, black_thread);
+		embPattern_end(p);
 
-    if (!embPattern_writeAuto(p, outf)) {
-        return 16;
-    }
+		if (!embPattern_writeAuto(p, outf)) {
+            embPattern_free(p);
+			return 16;
+		}
+		break;
+	}
+	case 1: {
+        /* sin wave */
+        for (i = 0; i < 100; i++) {
+            st.x = 10 + 10 * sin(i * (0.5 / 3.141592));
+            st.y = 10 + i * 0.1;
+            st.flags = NORMAL;
+            st.color = 0;
+            embPattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
+        }
 
-    embPattern_free(p);
-    return 0;
-}
+        embPattern_addThread(p, black_thread);
+        embPattern_end(p);
 
-/* Create a test file 2 object. */
-int
-create_test_file_2(const char* outf)
-{
-    int i;
-    EmbPattern* p;
-    EmbStitch st;
+        if (!embPattern_writeAuto(p, outf)) {
+            embPattern_free(p);
+            return 16;
+        }
+		break;
+	}
+	case 2: {
+        EmbCircle circle = embCircle_init(10.0f, 1.0f, 5.0f);
+        embPattern_addCircleAbs(p, circle);
 
-    p = embPattern_create();
-    if (!p) {
-        puts("ERROR: convert(), cannot allocate memory for p\n");
-        return 1;
-    }
+        embPattern_addThread(p, black_thread);
+        embPattern_convertGeometry(p);
+        embPattern_end(p);
 
-    /* sin wave */
-    for (i = 0; i < 100; i++) {
-        st.x = 10 + 10 * sin(i * (0.5 / 3.141592));
-        st.y = 10 + i * 0.1;
-        st.flags = NORMAL;
-        st.color = 0;
-        embPattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
-    }
-
-    embPattern_addThread(p, black_thread);
-    embPattern_end(p);
-
-    if (!embPattern_writeAuto(p, outf)) {
-        return 16;
-    }
-
-    embPattern_free(p);
-    return 0;
-}
-
-/* Create a test file 3 object. */
-int
-create_test_file_3(const char* outf)
-{
-    EmbPattern* p;
-    EmbCircle circle;
-
-    p = embPattern_create();
-    if (!p) {
-        puts("ERROR: convert(), cannot allocate memory for p\n");
-        return 1;
-    }
-
-    circle.center.x = 10.0;
-    circle.center.y = 1.0;
-    circle.radius = 5.0;
-    embPattern_addCircleAbs(p, circle);
-
-    embPattern_addThread(p, black_thread);
-    embPattern_convertGeometry(p);
-    embPattern_end(p);
-
-    if (!embPattern_writeAuto(p, outf)) {
-        return 16;
+        if (!embPattern_writeAuto(p, outf)) {
+            embPattern_free(p);
+            return 16;
+        }
+		break;
+	}
+    default: {
+		puts("This case is not covered.");
+		break;
+	}
     }
 
     embPattern_free(p);
     return 0;
 }
-
 
 /* TODO: Add capability for converting multiple files of various types to a single format.
 Currently, we only convert a single file to multiple formats. */
-
-/* . */
-int
-testThreadColor(void)
-{
-    unsigned int tColor = 0xFFD25F00;
-    EmbColor c;
-    c.r = 0xD2;
-    c.g = 0x5F;
-    c.b = 0x00;
-    if (0) {
-    int tBrand = 0; /*EMB_BRAND_SULKY_RAYON; */
-    int tNum = threadColorNum(tColor, tBrand);
-    char tName[50];
-    string_copy(tName, threadColorName(tColor, tBrand));
-
-    if (emb_verbose > 0) {
-        printf("Color : 0x%X\n"
-           "Brand : %d\n"
-           "Num   : %d\n"
-           "Name  : %s\n\n",
-        tColor,
-        tBrand,
-        tNum, /* Solution: 1833 */
-        tName); /* Solution: Pumpkin Pie */
-    }
-    }
-    return 1;
-}
 
 /*
  * Table of from/to for formats. What conversions after a from A to B conversion
@@ -3619,57 +3627,15 @@ testThreadColor(void)
  *
  * Add command "--full-test-suite" for this full matrix.
  */
-int
-full_test_matrix(char *fname)
+void
+full_test_matrix(int test_case, char results[100][100])
 {
-    int i, j, success, ntests;
-    FILE *f;
-    f = fopen(fname, "wb");
-    if (!f) {
-        puts("ERROR: full_test_matrix(fname) failed to open file.");
-        return 1;
-    }
-
-    success = 0;
-    ntests = (numberOfFormats - 1)*(numberOfFormats - 5);
+    int i, j;
     for (i = 0; i < numberOfFormats; i++) {
-        EmbString fname;
-        if (formatTable[i].color_only) {
-            continue;
-        }
-        string_copy(fname, "test01");
-        string_cat(fname, formatTable[i].extension);
-        create_test_file_1(fname);
         for (j=0; j < numberOfFormats; j++) {
-            EmbPattern *pattern = 0;
-            EmbString fname_converted;
-            EmbString fname_image;
-            int result;
-            string_copy(fname_converted, "test01_");
-            string_cat(fname_converted, formatTable[i].extension+1);
-            string_cat(fname_converted, formatTable[j].extension);
-            string_copy(fname_image, "test01_");
-            string_cat(fname_image, formatTable[i].extension+1);
-            string_cat(fname_image, "_");
-            string_cat(fname_image, formatTable[j].extension+1);
-            string_cat(fname_image, ".ppm");
-            printf("Attempting: %s %s\n", fname, fname_converted);
-            result = convert(fname, fname_converted);
-            embPattern_readAuto(pattern, fname_converted);
-            embPattern_render(pattern, fname_image);
-            embPattern_free(pattern);
-            fprintf(f, "%d %d %f%% ", i, j, 100*success/(1.0*ntests));
-            if (!result) {
-                fprintf(f, "PASS\n");
-                success++;
-            } else {
-                fprintf(f, "FAIL\n");
-            }
+    		results[i][j] = test_convert(test_case, i, j);
         }
     }
-
-    fclose(f);
-    return 0;
 }
 
 /* construct from tables above somehow, like how getopt_long works,
@@ -3678,8 +3644,9 @@ full_test_matrix(char *fname)
 void
 usage(void)
 {
+	int i;
     puts(welcome_message);
-    for (int i=0; strcmp(help_msg[i], "EOF"); i++) {
+    for (i=0; !string_equals(help_msg[i], "EOF"); i++) {
         puts(help_msg[i]);
     }
 }
@@ -3688,10 +3655,6 @@ usage(void)
 void
 formats(void)
 {
-    const char* extension = 0;
-    const char* description = 0;
-    char readerState;
-    char writerState;
     int numReaders = 0;
     int numWriters = 0;
     int i;
@@ -3708,14 +3671,17 @@ formats(void)
     printf("|        |       |       |                                                    |\n");
 
     for (i = 0; i < numberOfFormats; i++) {
-        extension = formatTable[i].extension;
-        description = formatTable[i].description;
-        readerState = formatTable[i].reader_state;
-        writerState = formatTable[i].writer_state;
-
-        numReaders += readerState != ' '? 1 : 0;
-        numWriters += writerState != ' '? 1 : 0;
-        printf("|  %-4s  |   %c   |   %c   |  %-49s |\n", extension, readerState, writerState, description);
+		if (formatTable[i].reader_state != ' ') {
+			numReaders++;
+		}
+		if (formatTable[i].writer_state != ' ') {
+			numWriters++;
+		}
+        printf("|  %-4s  |   %c   |   %c   |  %-49s |\n",
+     		formatTable[i].extension,
+			formatTable[i].reader_state,
+			formatTable[i].writer_state,
+			formatTable[i].description);
     }
 
     printf("|________|_______|_______|____________________________________________________|\n");
@@ -3774,7 +3740,7 @@ command_line_interface(int argc, char* argv[])
         result = -1;
         /* identify what flag index the user may have entered */
         for (j=0; j < NUM_FLAGS; j++) {
-            if (!strcmp(flag_list[j], argv[i])) {
+            if (string_equals(flag_list[j], argv[i])) {
                 result = j;
                 break;
             }
@@ -3919,11 +3885,21 @@ command_line_interface(int argc, char* argv[])
             hilbert_curve(current_pattern, 3);
             break;
         case FLAG_TEST:
-            testMain(0);
+            if (i + 1 < argc) {
+                embPattern_free(current_pattern);
+                return testMain(atoi(argv[i+1]));
+            }
             break;
         case FLAG_FULL_TEST_SUITE:
-            testMain(1);
-            break;
+            /* Ideally we use ctest, this is just for crash testing. */
+			embPattern_free(current_pattern);
+            for (int t=0; t<10; t++) {
+                if (testMain(t)) {
+                    printf("Failed test %d.\n", t);
+					return 1;
+                }
+            }
+			return 0;
         case FLAG_CROSS_STITCH:
             if (i + 3 < argc) {
                 EmbImage image;
@@ -5136,7 +5112,7 @@ safe_free(void *data)
 
 /* Get extension from file name. */
 int
-embFormat_getExtension(const char *fileName, char *ending)
+embFormat_getExtension(EmbString fileName, char *ending)
 {
     int i;
     const char *offset;
@@ -5150,7 +5126,7 @@ embFormat_getExtension(const char *fileName, char *ending)
         return 0;
     }
 
-    offset = strrchr(fileName, '.');
+    offset = string_rchar(fileName, '.');
     if (offset==0) {
         return 0;
     }
@@ -5174,7 +5150,7 @@ emb_identify_format(const char *fileName)
         return 0;
     }
     for (i = 0; i < numberOfFormats; i++) {
-        if (!strcmp(ending, formatTable[i].extension)) {
+        if (string_equals(ending, formatTable[i].extension)) {
             return i;
         }
     }
@@ -6330,17 +6306,17 @@ int csvStrToStitchFlag(const char* str)
         printf("ERROR: format-csv.c csvStrToStitchFlag(), str argument is null\n");
         return -1;
     }
-    if (!strcmp(str, "STITCH")) {
+    if (string_equals(str, "STITCH")) {
         return NORMAL;
-    } else if (!strcmp(str, "JUMP")) {
+    } else if (string_equals(str, "JUMP")) {
         return JUMP;
-    } else if (!strcmp(str, "TRIM")) {
+    } else if (string_equals(str, "TRIM")) {
         return TRIM;
-    } else if (!strcmp(str, "COLOR")) {
+    } else if (string_equals(str, "COLOR")) {
         return STOP;
-    } else if (!strcmp(str, "END")) {
+    } else if (string_equals(str, "END")) {
         return END;
-    } else if (!strcmp(str, "UNKNOWN")) {
+    } else if (string_equals(str, "UNKNOWN")) {
         return STOP;
     }
     return -1;
@@ -6398,13 +6374,13 @@ readCsv(EmbPattern* pattern, FILE* file) {
             cellNum++;
             expect = CSV_EXPECT_QUOTE1;
                 if (csvMode == CSV_MODE_NULL) {
-                    if     (!strcmp(buff, "#")) {
+                    if     (string_equals(buff, "#")) {
                         csvMode = CSV_MODE_COMMENT;
-                    } else if (!strcmp(buff, ">")) {
+                    } else if (string_equals(buff, ">")) {
                         csvMode = CSV_MODE_VARIABLE;
-                    } else if (!strcmp(buff, "$")) {
+                    } else if (string_equals(buff, "$")) {
                         csvMode = CSV_MODE_THREAD;
-                    } else if (!strcmp(buff, "*")) {
+                    } else if (string_equals(buff, "*")) {
                         csvMode = CSV_MODE_STITCH;
                     } else {/* TODO: error */
                         return 0;
@@ -7010,7 +6986,7 @@ readDst(EmbPattern* pattern, FILE* file) {
                     if (header[i] == ':') {
                         i -= 2;
                     }
-					/* TODO: used to be strncpy, make sure this is a safe substitution. */
+                    /* TODO: used to be strncpy, make sure this is a safe substitution. */
                     memory_copy(val, &header[valpos], (size_t)(i - valpos));
                     val[i - valpos] = '\0';
                     set_dst_variable(pattern, var, val);
@@ -7278,85 +7254,85 @@ readDxf(EmbPattern* pattern, FILE* file)
     while (ftell(file) < fileLength) {
         readLine(file, buff);
         /*printf("%s\n", buff);*/
-        if ( (!strcmp(buff, "HEADER"))   ||
-            (!strcmp(buff, "CLASSES"))  ||
-            (!strcmp(buff, "TABLES"))   ||
-            (!strcmp(buff, "BLOCKS"))   ||
-            (!strcmp(buff, "ENTITIES")) ||
-            (!strcmp(buff, "OBJECTS"))  ||
-            (!strcmp(buff, "THUMBNAILIMAGE"))) {
+        if ( (string_equals(buff, "HEADER"))   ||
+            (string_equals(buff, "CLASSES"))  ||
+            (string_equals(buff, "TABLES"))   ||
+            (string_equals(buff, "BLOCKS"))   ||
+            (string_equals(buff, "ENTITIES")) ||
+            (string_equals(buff, "OBJECTS"))  ||
+            (string_equals(buff, "THUMBNAILIMAGE"))) {
             string_copy(section, buff);
             printf("SECTION:%s\n", buff);
         }
-        if (!strcmp(buff, "ENDSEC")) {
+        if (string_equals(buff, "ENDSEC")) {
             string_copy(section, "");
             printf("ENDSEC:%s\n", buff);
         }
-        if ( (!strcmp(buff, "ARC"))        ||
-            (!strcmp(buff, "CIRCLE"))     ||
-            (!strcmp(buff, "ELLIPSE"))    ||
-            (!strcmp(buff, "LINE"))       ||
-            (!strcmp(buff, "LWPOLYLINE")) ||
-            (!strcmp(buff, "POINT"))) {
+        if ( (string_equals(buff, "ARC"))        ||
+            (string_equals(buff, "CIRCLE"))     ||
+            (string_equals(buff, "ELLIPSE"))    ||
+            (string_equals(buff, "LINE"))       ||
+            (string_equals(buff, "LWPOLYLINE")) ||
+            (string_equals(buff, "POINT"))) {
             string_copy(entityType, buff);
         }
-        if (!strcmp(buff, "EOF")) {
+        if (string_equals(buff, "EOF")) {
             eof = 1;
         }
 
-        if (!strcmp(section, "HEADER")) {
-            if (!strcmp(buff, "$ACADVER"))
+        if (string_equals(section, "HEADER")) {
+            if (string_equals(buff, "$ACADVER"))
             {
                 readLine(file, buff);
                 readLine(file, dxfVersion);
                 /* TODO: Allow these versions when POLYLINE is handled. */
-                if ((!strcmp(dxfVersion, DXF_VERSION_R10))
-                || (!strcmp(dxfVersion, DXF_VERSION_R11))
-                || (!strcmp(dxfVersion, DXF_VERSION_R12))
-                || (!strcmp(dxfVersion, DXF_VERSION_R13))) {
+                if ((string_equals(dxfVersion, DXF_VERSION_R10))
+                || (string_equals(dxfVersion, DXF_VERSION_R11))
+                || (string_equals(dxfVersion, DXF_VERSION_R12))
+                || (string_equals(dxfVersion, DXF_VERSION_R13))) {
                     return 0;
                 }
             }
         }
-        else if (!strcmp(section,"TABLES")) {
-            if (!strcmp(buff,"ENDTAB")) {
+        else if (string_equals(section,"TABLES")) {
+            if (string_equals(buff,"ENDTAB")) {
                 tableName[0] = 0;
             }
 
             if (tableName[0] == 0) {
-                if (!strcmp(buff,"2")) { /* Table Name */
+                if (string_equals(buff,"2")) { /* Table Name */
                     readLine(file, tableName);
                 }
             }
-            else if (!strcmp(tableName, "LAYER"))
+            else if (string_equals(tableName, "LAYER"))
             {
                 /* Common Group Codes for Tables */
-                if (!strcmp(buff,"5")) /* Handle */
+                if (string_equals(buff,"5")) /* Handle */
                 {
                     readLine(file, buff);
                     continue;
                 }
-                else if (!strcmp(buff,"330")) /* Soft Pointer */
+                else if (string_equals(buff,"330")) /* Soft Pointer */
                 {
                     readLine(file, buff);
                     continue;
                 }
-                else if (!strcmp(buff,"100")) /* Subclass Marker */
+                else if (string_equals(buff,"100")) /* Subclass Marker */
                 {
                     readLine(file, buff);
                     continue;
                 }
-                else if (!strcmp(buff,"70")) /* Number of Entries in Table */
+                else if (string_equals(buff,"70")) /* Number of Entries in Table */
                 {
                     readLine(file, buff);
                     continue;
                 }
                 /* The meaty stuff */
-                else if (!strcmp(buff,"2")) /* Layer Name */
+                else if (string_equals(buff,"2")) /* Layer Name */
                 {
                     readLine(file, layerName);
                 }
-                else if (!strcmp(buff,"62")) /* Color Number */
+                else if (string_equals(buff,"62")) /* Color Number */
                 {
                     unsigned char colorNum;
                     EmbColor* co;
@@ -7381,71 +7357,71 @@ readDxf(EmbPattern* pattern, FILE* file)
                 }
             }
         }
-        else if (!strcmp(section,"ENTITIES")) {
+        else if (string_equals(section,"ENTITIES")) {
             /* Common Group Codes for Entities */
-            if (!strcmp(buff, "5")) /* Handle */
+            if (string_equals(buff, "5")) /* Handle */
             {
                 readLine(file, buff);
                 continue;
             }
-            else if (!strcmp(buff, "330")) /* Soft Pointer */
+            else if (string_equals(buff, "330")) /* Soft Pointer */
             {
                 readLine(file, buff);
                 continue;
             }
-            else if (!strcmp(buff, "100")) /* Subclass Marker */
+            else if (string_equals(buff, "100")) /* Subclass Marker */
             {
                 readLine(file, buff);
                 continue;
             }
-            else if (!strcmp(buff, "8")) /* Layer Name */
+            else if (string_equals(buff, "8")) /* Layer Name */
             {
                 readLine(file, buff);
                 /* embPattern_changeColor(pattern, colorIndexMap[buff]); TODO: port to C */
                 continue;
             }
 
-            if (!strcmp(entityType,"LWPOLYLINE")) {
+            if (string_equals(entityType,"LWPOLYLINE")) {
                 /* The not so important group codes */
-                if (!strcmp(buff, "90")) /* Vertices */
+                if (string_equals(buff, "90")) /* Vertices */
                 {
                     readLine(file, buff);
                     continue;
                 }
-                else if (!strcmp(buff,"70")) /* Polyline Flag */
+                else if (string_equals(buff,"70")) /* Polyline Flag */
                 {
                     readLine(file, buff);
                     continue;
                 }
                 /* TODO: Try to use the widths at some point */
-                else if (!strcmp(buff,"40")) /* Starting Width */
+                else if (string_equals(buff,"40")) /* Starting Width */
                 {
                     readLine(file, buff);
                     continue;
                 }
-                else if (!strcmp(buff,"41")) /* Ending Width */
+                else if (string_equals(buff,"41")) /* Ending Width */
                 {
                     readLine(file, buff);
                     continue;
                 }
-                else if (!strcmp(buff,"43")) /* Constant Width */
+                else if (string_equals(buff,"43")) /* Constant Width */
                 {
                     readLine(file, buff);
                     continue;
                 }
                 /* The meaty stuff */
-                else if (!strcmp(buff,"42")) /* Bulge */
+                else if (string_equals(buff,"42")) /* Bulge */
                 {
                     readLine(file, buff);
                     bulge = atof(buff);
                     bulgeFlag = 1;
                 }
-                else if (!strcmp(buff,"10")) /* X */
+                else if (string_equals(buff,"10")) /* X */
                 {
                     readLine(file, buff);
                     pos.x = atof(buff);
                 }
-                else if (!strcmp(buff,"20")) /* Y */
+                else if (string_equals(buff,"20")) /* Y */
                 {
                     readLine(file, buff);
                     pos.y = atof(buff);
@@ -7474,7 +7450,7 @@ readDxf(EmbPattern* pattern, FILE* file)
                         firstStitch = 0;
                     }
                 }
-                else if (!strcmp(buff,"0")) {
+                else if (string_equals(buff,"0")) {
                     entityType[0] = 0;
                     firstStitch = 1;
                     if (bulgeFlag) {
@@ -8875,7 +8851,7 @@ static int
 ofmReadClass(FILE* file)
 {
     int len;
-    char* s = 0;
+    EmbString s;
 
     if (!file) {
         printf("ERROR: format-ofm.c ofmReadClass(), file argument is null\n");
@@ -8885,18 +8861,13 @@ ofmReadClass(FILE* file)
     fread_int16(file);
     len = fread_int16(file);
 
-    s = (char*)malloc(sizeof(char) * len + 1);
-    if (!s) {
-        printf("ERROR: format-ofm.c ofmReadClass(), unable to allocate memory for s\n");
-        return 0;
-    }
     fread((unsigned char*)s, 1, len, file);
     /* TODO: check return value */
     s[len] = '\0';
-    if (strcmp(s, "CExpStitch") == 0) {
+    if (string_equals(s, "CExpStitch")) {
         return 0x809C;
     }
-    if (strcmp(s, "CColorChange") == 0) {
+    if (string_equals(s, "CColorChange")) {
         return 0xFFFF;
     }
     return 0;
@@ -9680,9 +9651,9 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
     int i, j, flen, graphicsOffsetLocation;
     int graphicsOffsetValue, height, width;
     EmbReal xFactor, yFactor;
-    const char* forwardSlashPos = strrchr(fileName, '/');
-    const char* backSlashPos = strrchr(fileName, '\\');
-    const char* dotPos = strrchr(fileName, '.');
+    const char* forwardSlashPos = string_rchar(fileName, '/');
+    const char* backSlashPos = string_rchar(fileName, '\\');
+    const char* dotPos = string_rchar(fileName, '.');
     const char* start = 0;
 
     start = fileName;
@@ -9888,7 +9859,7 @@ readPes(EmbPattern* pattern, const char *fileName, FILE* file)
 
     version = 0;
     for (i=0; i<N_PES_VERSIONS; i++) {
-        if (!strcmp(signature, pes_version_strings[i])) {
+        if (string_equals(signature, pes_version_strings[i])) {
             version = i;
             break;
         }
@@ -11278,7 +11249,7 @@ int svgPathCmdToEmbPathFlag(char cmd)
 char* svgAttribute_getValue(const char* name) {
     int i;
     for (i=0; i<n_attributes; i++) {
-        if (!strcmp(attributeList[i].name, name)) {
+        if (string_equals(attributeList[i].name, name)) {
             return attributeList[i].value;
         }
     }
@@ -11316,7 +11287,7 @@ parse_line(EmbPattern *p)
     y2 = svgAttribute_getValue("y2");
 
     /* If the starting and ending points are the same, it is a point */
-    if (!strcmp(x1, x2) && !strcmp(y1, y2)) {
+    if (string_equals(x1, x2) && string_equals(y1, y2)) {
         EmbPoint point;
         point.position.x = atof(x1);
         point.position.y = atof(y1);
@@ -11783,7 +11754,7 @@ int svg_identify_element(char *buff)
 {
     int i;
     for (i=0; svg_element_tokens[i][0]; i++) {
-        if (!strcmp(buff, svg_element_tokens[i])) {
+        if (string_equals(buff, svg_element_tokens[i])) {
             return i;
         }
     }
@@ -11796,13 +11767,13 @@ int svgIsElement(const char* buff) {
     }
     /* Attempt to identify the program that created the SVG file.
      * This should be in a comment at that occurs before the svg element. */
-    else if (!strcmp(buff, "Embroidermodder")) {
+    else if (string_equals(buff, "Embroidermodder")) {
         svgCreator = SVG_CREATOR_EMBROIDERMODDER;
     }
-    else if (!strcmp(buff, "Illustrator")) {
+    else if (string_equals(buff, "Illustrator")) {
         svgCreator = SVG_CREATOR_ILLUSTRATOR;
     }
-    else if (!strcmp(buff, "Inkscape")) {
+    else if (string_equals(buff, "Inkscape")) {
         svgCreator = SVG_CREATOR_INKSCAPE;
     }
 
@@ -13967,9 +13938,9 @@ embGeometry_init(int type_in)
 
     switch (obj->type) {
     case EMB_ARC: {
-        obj->object.arc = embArc_init();
+        obj->object.arc = emb_arc_init();
         /*
-        embArc_init(EmbArc arc_in, unsigned int rgb, int lineType)
+        emb_arc_init(EmbArc arc_in, unsigned int rgb, int lineType)
         arc = arc_in;
 
         setFlag(ItemIsSelectable, true);
@@ -14146,7 +14117,7 @@ embGeometry_vulcanize(EmbGeometry *obj)
  * arc.
  */
 EmbArc
-embArc_init(void)
+emb_arc_init(void)
 {
     EmbArc arc;
     arc.start.x = 0.0;
@@ -14162,7 +14133,7 @@ embArc_init(void)
  * Returns true if arc is clockwise.
  */
 char
-embArc_clockwise(EmbArc arc)
+emb_arc_clockwise(EmbArc arc)
 {
     EmbReal edge1 = (arc.mid.x-arc.start.x)*(arc.mid.y+arc.start.y);
     EmbReal edge2 = (arc.end.x-arc.mid.x)*(arc.end.y+arc.mid.y);
@@ -14175,7 +14146,7 @@ embArc_clockwise(EmbArc arc)
 
 /* Calculates the CenterPoint of the Arc */
 EmbVector
-embArc_center(EmbArc arc)
+emb_arc_center(EmbArc arc)
 {
     EmbVector center;
     EmbVector a_vec, b_vec, aMid_vec, bMid_vec, aPerp_vec, bPerp_vec, pa, pb;
@@ -14208,23 +14179,23 @@ embArc_center(EmbArc arc)
 
 /* Calculate the Radius */
 EmbReal
-embArc_radius(EmbArc arc)
+emb_arc_radius(EmbArc arc)
 {
-    EmbReal incAngle = embArc_incAngle(arc);
-    EmbReal chord = embArc_chord(arc);
+    EmbReal incAngle = emb_arc_incAngle(arc);
+    EmbReal chord = emb_arc_chord(arc);
     return fabs(chord / (2.0 * sin(incAngle / 2.0)));
 }
 
 /* Calculate the Diameter */
 EmbReal
-embArc_diameter(EmbArc arc)
+emb_arc_diameter(EmbArc arc)
 {
-    return fabs(embArc_radius(arc) * 2.0);
+    return fabs(emb_arc_radius(arc) * 2.0);
 }
 
 /* Calculate the Chord Angle (from arc.start to arc.end). */
 EmbReal
-embArc_chordAngle(EmbArc arc)
+emb_arc_chordAngle(EmbArc arc)
 {
     EmbVector delta = embVector_subtract(arc.end, arc.start);
     return atan2(delta.y, delta.x);
@@ -14232,44 +14203,44 @@ embArc_chordAngle(EmbArc arc)
 
 /* . */
 EmbReal
-embArc_chord(EmbArc arc)
+emb_arc_chord(EmbArc arc)
 {
     return embVector_distance(arc.start, arc.end);
 }
 
 /* Calculate the Chord MidPoint. */
 EmbVector
-embArc_chordMid(EmbArc arc)
+emb_arc_chordMid(EmbArc arc)
 {
     return embVector_scale(embVector_add(arc.start, arc.end), 0.5);
 }
 
 /* Calculate the Sagitta. */
 EmbReal
-embArc_sagitta(EmbArc arc)
+emb_arc_sagitta(EmbArc arc)
 {
-    EmbReal chord = embArc_chord(arc);
-    EmbReal bulge = embArc_bulge(arc);
+    EmbReal chord = emb_arc_chord(arc);
+    EmbReal bulge = emb_arc_bulge(arc);
     return fabs((chord / 2.0) * bulge);
 }
 
 /* Calculate the Apothem */
 EmbReal
-embArc_apothem(EmbArc arc)
+emb_arc_apothem(EmbArc arc)
 {
-    return fabs(embArc_radius(arc) - embArc_sagitta(arc));
+    return fabs(emb_arc_radius(arc) - emb_arc_sagitta(arc));
 }
 
 /* Calculate the Included Angle. */
 EmbReal
-embArc_incAngle(EmbArc arc)
+emb_arc_incAngle(EmbArc arc)
 {
-    return atan(embArc_bulge(arc))*4.0;
+    return atan(emb_arc_bulge(arc))*4.0;
 }
 
 /* TODO: fixme */
 EmbReal
-embArc_bulge(EmbArc arc)
+emb_arc_bulge(EmbArc arc)
 {
     return 1.0;
 }
@@ -14281,8 +14252,8 @@ embArc_bulge(EmbArc arc)
     else           sagittaAngleInRadians = chordAngleInRadians - radians(90.0);
 
     Calculate the Arc MidPoint
-    fx = embArc_sagitta(arc) * cos(sagittaAngleInRadians);
-    fy = embArc_sagitta(arc) * sin(sagittaAngleInRadians);
+    fx = emb_arc_sagitta(arc) * cos(sagittaAngleInRadians);
+    fy = emb_arc_sagitta(arc) * sin(sagittaAngleInRadians);
     arc->mid.x = *chordMidX + fx;
     arc->mid.y = *chordMidY + fy;
 
@@ -14294,10 +14265,10 @@ embArc_bulge(EmbArc arc)
  */
 
 void
-embArc_setCenter(EmbArc *arc, EmbVector point)
+emb_arc_setCenter(EmbArc *arc, EmbVector point)
 {
     EmbVector delta;
-    EmbVector old_center = embArc_center(*arc);
+    EmbVector old_center = emb_arc_center(*arc);
     delta = embVector_subtract(point, old_center);
     arc->start = embVector_add(arc->start, delta);
     arc->mid = embVector_add(arc->mid, delta);
@@ -14305,7 +14276,7 @@ embArc_setCenter(EmbArc *arc, EmbVector point)
 }
 
 void
-embArc_setRadius(EmbArc *arc, float radius)
+emb_arc_setRadius(EmbArc *arc, float radius)
 {
     EmbVector delta;
     float rad;
@@ -14316,7 +14287,7 @@ embArc_setRadius(EmbArc *arc, float radius)
         rad = radius;
     }
 
-    EmbVector center = embArc_center(*arc);
+    EmbVector center = emb_arc_center(*arc);
     double delta_length;
 
     delta = embVector_subtract(arc->start, center);
@@ -14336,41 +14307,41 @@ embArc_setRadius(EmbArc *arc, float radius)
 }
 
 void
-embArc_setStartAngle(EmbArc *arc, float angle)
+emb_arc_setStartAngle(EmbArc *arc, float angle)
 {
     printf("%f %f", arc->start.x, angle);
     //TODO: ArcObject setStartAngle
 }
 
 void
-embArc_setEndAngle(EmbArc *arc, float angle)
+emb_arc_setEndAngle(EmbArc *arc, float angle)
 {
     printf("%f %f", arc->start.x, angle);
     //TODO: ArcObject setEndAngle
 }
 
 EmbReal
-embArc_startAngle(EmbArc arc)
+emb_arc_startAngle(EmbArc arc)
 {
     EmbVector delta;
-    EmbVector center = embArc_center(arc);
+    EmbVector center = emb_arc_center(arc);
     delta = embVector_subtract(arc.end, center);
     float angle = embVector_angle(delta);
     return fmodf(angle, 360.0);
 }
 
 EmbReal
-embArc_endAngle(EmbArc arc)
+emb_arc_endAngle(EmbArc arc)
 {
     EmbVector delta;
-    EmbVector center = embArc_center(arc);
+    EmbVector center = emb_arc_center(arc);
     delta = embVector_subtract(arc.end, center);
     float angle = embVector_angle(delta);
     return fmodf(angle, 360.0);
 }
 
 EmbReal
-embArc_area(EmbArc arc)
+emb_arc_area(EmbArc arc)
 {
     printf("%f", arc.start.x);
     /*
@@ -14383,7 +14354,7 @@ embArc_area(EmbArc arc)
 }
 
 EmbReal
-embArc_arcLength(EmbArc arc)
+emb_arc_arcLength(EmbArc arc)
 {
     printf("%f", arc.start.x);
     /*
@@ -14393,7 +14364,7 @@ embArc_arcLength(EmbArc arc)
 }
 
 EmbReal
-embArc_includedAngle(EmbArc arc)
+emb_arc_includedAngle(EmbArc arc)
 {
     printf("%f", arc.start.x);
     /*
@@ -14426,12 +14397,12 @@ char Arc_clockwise()
     arc2.mid.y *= -1.0;
     arc2.end.y *= -1.0;
 
-    return embArc_clockwise(arc2);
+    return emb_arc_clockwise(arc2);
     */
     return 0;
 }
 
-void embArc_updatePath(EmbArc arc)
+void emb_arc_updatePath(EmbArc arc)
 {
     printf("%f", arc.start.x);
     /*
@@ -14451,7 +14422,7 @@ void embArc_updatePath(EmbArc arc)
     */
 }
 
-void embArc_paint(void)
+void emb_arc_paint(void)
 {
     // QPainter* painter, QStyleOptionGraphicsItem* option, QWidget* widget
     /*
@@ -14477,7 +14448,7 @@ void embArc_paint(void)
     */
 }
 
-void embArc_updateRubber(EmbArc arc, int pattern, int layer, int index)
+void emb_arc_updateRubber(EmbArc arc, int pattern, int layer, int index)
 {
     //TODO: Arc Rubber Modes
 
@@ -14486,7 +14457,7 @@ void embArc_updateRubber(EmbArc arc, int pattern, int layer, int index)
 }
 
 // Returns the closest snap point to the mouse point
-EmbVector embArc_mouseSnapPoint(EmbArc arc, EmbVector mousePoint)
+EmbVector emb_arc_mouseSnapPoint(EmbArc arc, EmbVector mousePoint)
 {
     printf("%f", arc.start.x);
     printf("%f", mousePoint.x);
@@ -14514,15 +14485,15 @@ EmbVector embArc_mouseSnapPoint(EmbArc arc, EmbVector mousePoint)
 }
 
 /*
-std::vector<EmbVector> embArc_allGripPoints(EmbArc arc)
+std::vector<EmbVector> emb_arc_allGripPoints(EmbArc arc)
 {
-    EmbVector center = embArc_center(arc);
+    EmbVector center = emb_arc_center(arc);
     std::vector<EmbVector> gripPoints = {center, arc.start, arc.mid, arc.end};
     return gripPoints;
 }
 */
 
-void embArc_gripEdit(EmbArc *arc, EmbVector before, EmbVector after)
+void emb_arc_gripEdit(EmbArc *arc, EmbVector before, EmbVector after)
 {
     printf("%f %f %f", arc->start.x, before.x, after.x);
     // TODO: gripEdit() for ArcObject
@@ -15014,7 +14985,7 @@ void embCircle_updateRubber(QPainter* painter)
         arc.mid.y = sceneTan2Point.y();
         arc.end.x = sceneTan3Point.x();
         arc.end.y = sceneTan3Point.y();
-        embArc_center(arc, &sceneCenter);
+        emb_arc_center(arc, &sceneCenter);
         EmbVector sceneCenterPoint(sceneCenter.x, sceneCenter.y);
         EmbLine sceneLine(sceneCenterPoint, sceneTan3Point);
         setCenter(sceneCenterPoint);
@@ -16897,12 +16868,12 @@ QPainterPath rect_objectSavePath()
 /*
  */
 EmbCircle
-embCircle_init(void)
+embCircle_init(EmbReal x, EmbReal y, EmbReal radius)
 {
     EmbCircle circle;
-    circle.center.x = 0.0;
-    circle.center.y = 0.0;
-    circle.radius = 1.0;
+    circle.center.x = x;
+    circle.center.y = y;
+    circle.radius = radius;
     return circle;
 }
 
@@ -16919,7 +16890,7 @@ embCircle_area(EmbCircle circle)
 EmbReal
 embCircle_circumference(EmbCircle circle)
 {
-    return embConstantPi * circle.radius * circle.radius;
+    return 2.0f * embConstantPi * circle.radius;
 }
 
 /* Computational Geometry for Circles */
@@ -19586,7 +19557,7 @@ threadColor(const char *name, int brand)
 {
     int i;
     for (i = 0; brand_codes[brand].codes[i].manufacturer_code >= 0; i++) {
-        if (!strcmp(brand_codes[brand].codes[i].name, name)) {
+        if (string_equals(brand_codes[brand].codes[i].name, name)) {
             return brand_codes[brand].codes[i].hex_code;
         }
     }

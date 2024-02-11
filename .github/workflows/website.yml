@@ -53,8 +53,10 @@ jobs:
     steps:
       - name: Get Script
         run: curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build.sh -o build.sh
+
       - name: Build
         run: bash build.sh
+
       - uses: actions/upload-artifact@v4
         with:
           name: libembroidery-ubuntu
@@ -83,8 +85,11 @@ jobs:
       - name: Place in Downloads
         run: mv *.zip docs/html/downloads
 
+      - name: Get Script
+        run: curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build_website.sh
+
       - name: Build
-        run: bash <(curl -s https://raw.githubusercontent.com/Embroidermodder/libembroidery/main/bin/build_website.sh)
+        run: bash build_website.sh
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

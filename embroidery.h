@@ -933,7 +933,6 @@ EMB_PUBLIC int lindenmayer_system(L_system L, char* state, int iteration, int co
 EMB_PUBLIC int hilbert_curve(EmbPattern *pattern, int iterations);
 
 EMB_PUBLIC int emb_identify_format(const char *ending);
-EMB_PUBLIC void testMain(int level);
 EMB_PUBLIC int convert(const char *inf, const char *outf);
 
 EMB_PUBLIC EmbColor embColor_make(unsigned char r, unsigned char g, unsigned char b);
@@ -984,19 +983,19 @@ EMB_PUBLIC EmbReal embVector_angle(EmbVector v);
 EMB_PUBLIC EmbReal embVector_distance(EmbVector a, EmbVector b);
 EMB_PUBLIC EmbVector embVector_unit(EmbReal angle);
 
-EMB_PUBLIC EmbArc embArc_init(void);
-EMB_PUBLIC char embArc_clockwise(EmbArc arc);
-EMB_PUBLIC EmbVector embArc_center(EmbArc arc);
-EMB_PUBLIC EmbReal embArc_radius(EmbArc arc);
-EMB_PUBLIC EmbReal embArc_diameter(EmbArc arc);
-EMB_PUBLIC EmbReal embArc_chord(EmbArc arc);
-EMB_PUBLIC EmbVector embArc_chordMid(EmbArc arc);
-EMB_PUBLIC EmbReal embArc_sagitta(EmbArc arc);
-EMB_PUBLIC EmbReal embArc_apothem(EmbArc arc);
-EMB_PUBLIC EmbReal embArc_incAngle(EmbArc arc);
-EMB_PUBLIC EmbReal embArc_bulge(EmbArc arc);
+EMB_PUBLIC EmbArc emb_arc_init(void);
+EMB_PUBLIC char emb_arc_clockwise(EmbArc arc);
+EMB_PUBLIC EmbVector emb_arc_center(EmbArc arc);
+EMB_PUBLIC EmbReal emb_arc_radius(EmbArc arc);
+EMB_PUBLIC EmbReal emb_arc_diameter(EmbArc arc);
+EMB_PUBLIC EmbReal emb_arc_chord(EmbArc arc);
+EMB_PUBLIC EmbVector emb_arc_chordMid(EmbArc arc);
+EMB_PUBLIC EmbReal emb_arc_sagitta(EmbArc arc);
+EMB_PUBLIC EmbReal emb_arc_apothem(EmbArc arc);
+EMB_PUBLIC EmbReal emb_arc_incAngle(EmbArc arc);
+EMB_PUBLIC EmbReal emb_arc_bulge(EmbArc arc);
 
-EMB_PUBLIC EmbCircle embCircle_init(void);
+EMB_PUBLIC EmbCircle embCircle_init(EmbReal x, EmbReal y, EmbReal r);
 EMB_PUBLIC int getCircleCircleIntersections(
      EmbCircle c0, EmbCircle c1, EmbVector *v0, EmbVector *v1);
 EMB_PUBLIC int getCircleTangentPoints(
@@ -1092,8 +1091,7 @@ EMB_PUBLIC char embPattern_write(EmbPattern *pattern, const char* fileName, int 
 EMB_PUBLIC char embPattern_readAuto(EmbPattern *pattern, const char* fileName);
 EMB_PUBLIC char embPattern_writeAuto(EmbPattern *pattern, const char* fileName);
 
-EMB_PUBLIC void report(int result, char *label);
-EMB_PUBLIC int full_test_matrix(char *fname);
+EMB_PUBLIC void full_test_matrix(int test_case, char results[100][100]);
 
 EMB_PUBLIC int emb_round(EmbReal x);
 EMB_PUBLIC EmbReal radians(EmbReal degree);

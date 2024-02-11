@@ -1,4 +1,4 @@
-name: Build and Deploy Website, Run Testing
+name: test
 
 on:
   push:

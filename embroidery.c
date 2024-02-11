@@ -407,7 +407,8 @@ const char *help_msg[] = {
     "    -S, --stitch     Add a stitch defined by the arguments given to the current pattern.",
     "",
     "Quality Assurance:",
-    "        --test       Run the basic test suite.",
+    "        --test N           Run the test number N.",
+    "        --convert-test A N M Test conversion of test file A from format N to format M.",
     "        --full-test-suite  Run all tests, even those we expect to fail.",
     "EOF"
 };
@@ -444,6 +445,7 @@ const EmbString flag_list[] = {
     "-S",
     "--test",
     "--full-test-suite",
+    "--convert-test",
     "--hilbert-curve",
     "--sierpinski-triangle",
     "--fill",
@@ -2430,7 +2432,7 @@ embArray_free(EmbArray* a)
 }
 
 /* Print the vector "v2 with the name "label". */
-void embVector_print(EmbVector v, char *label)
+void emb_vector_print(EmbVector v, char *label)
 {
     printf("%sX = %f\n", label, v.x);
     printf("%sY = %f\n", label, v.y);
@@ -2439,9 +2441,9 @@ void embVector_print(EmbVector v, char *label)
 /* Print the arc "arc". */
 void emb_arc_print(EmbArc arc)
 {
-    embVector_print(arc.start, "start");
-    embVector_print(arc.mid, "middle");
-    embVector_print(arc.end, "end");
+    emb_vector_print(arc.start, "start");
+    emb_vector_print(arc.mid, "middle");
+    emb_vector_print(arc.end, "end");
 }
 
 /* Checks that there are enough bytes to interpret the header,
@@ -2872,18 +2874,18 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
         line.start = lines->geometry[i - 1].object.vector;
         line.end = lines->geometry[i].object.vector;
 
-        v1 = embLine_normalVector(line, 1);
+        v1 = emb_line_normalVector(line, 1);
 
-        temp = embVector_scale(v1, halfThickness);
-        temp = embVector_add(temp, lines->geometry[i-1].object.vector);
+        temp = emb_vector_scale(v1, halfThickness);
+        temp = emb_vector_add(temp, lines->geometry[i-1].object.vector);
         embArray_addVector(outline.side1, temp);
-        temp = embVector_add(temp, lines->geometry[i].object.vector);
+        temp = emb_vector_add(temp, lines->geometry[i].object.vector);
         embArray_addVector(outline.side1, temp);
 
-        temp = embVector_scale(v1, -halfThickness);
-        temp = embVector_add(temp, lines->geometry[i - 1].object.vector);
+        temp = emb_vector_scale(v1, -halfThickness);
+        temp = emb_vector_add(temp, lines->geometry[i - 1].object.vector);
         embArray_addVector(outline.side2, temp);
-        temp = embVector_add(temp, lines->geometry[i].object.vector);
+        temp = emb_vector_add(temp, lines->geometry[i].object.vector);
         embArray_addVector(outline.side2, temp);
     }
 
@@ -2910,7 +2912,7 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
         line1.end = outline.side1->geometry[i - 2].object.vector;
         line2.start = outline.side1->geometry[i - 1].object.vector;
         line2.end = outline.side1->geometry[i].object.vector;
-        out = embLine_intersectionPoint(line1, line2);
+        out = emb_line_intersectionPoint(line1, line2);
         if (emb_error) {
             puts("No intersection point.");
         }
@@ -2920,7 +2922,7 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
         line1.end = outline.side2->geometry[i - 2].object.vector;
         line2.start = outline.side2->geometry[i - 1].object.vector;
         line2.end = outline.side2->geometry[i].object.vector;
-        out = embLine_intersectionPoint(line1, line2);
+        out = emb_line_intersectionPoint(line1, line2);
         if (emb_error) {
             puts("No intersection point.");
         }
@@ -2954,18 +2956,18 @@ embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density)
             EmbGeometry *g11 = &(result->side1->geometry[j+1]);
             EmbGeometry *g20 = &(result->side2->geometry[j+0]);
             EmbGeometry *g21 = &(result->side2->geometry[j+1]);
-            topDiff = embVector_subtract(g10->object.vector, g11->object.vector);
-            bottomDiff = embVector_subtract(g21->object.vector, g20->object.vector);
+            topDiff = emb_vector_subtract(g10->object.vector, g11->object.vector);
+            bottomDiff = emb_vector_subtract(g21->object.vector, g20->object.vector);
 
-            midLeft = embVector_average(g10->object.vector, g20->object.vector);
-            midRight = embVector_average(g11->object.vector, g21->object.vector);
+            midLeft = emb_vector_average(g10->object.vector, g20->object.vector);
+            midRight = emb_vector_average(g11->object.vector, g21->object.vector);
 
-            midDiff = embVector_subtract(midLeft, midRight);
-            midLength = embVector_length(midDiff);
+            midDiff = emb_vector_subtract(midLeft, midRight);
+            midLength = emb_vector_length(midDiff);
 
             numberOfSteps = (int)(midLength * density / 200);
-            topStep = embVector_scale(topDiff, 1.0/numberOfSteps);
-            bottomStep = embVector_scale(bottomDiff, 1.0/numberOfSteps);
+            topStep = emb_vector_scale(topDiff, 1.0/numberOfSteps);
+            bottomStep = emb_vector_scale(bottomDiff, 1.0/numberOfSteps);
             currTop = g10->object.vector;
             currBottom = g20->object.vector;
 
@@ -2975,8 +2977,8 @@ embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density)
                 }
                 embArray_addVector(stitches, currTop);
                 embArray_addVector(stitches, currBottom);
-                currTop = embVector_add(currTop, topStep);
-                currBottom = embVector_add(currBottom, bottomStep);
+                currTop = emb_vector_add(currTop, topStep);
+                currBottom = emb_vector_add(currBottom, bottomStep);
             }
         }
         embArray_addVector(stitches, currTop);
@@ -3255,6 +3257,7 @@ test_convert(int test_case, int from, int to)
 	EmbString fname_to;
 	sprintf(fname_from, "test%02d.%s", test_case, formatTable[from].extension);
 	sprintf(fname_from, "test%02d_out.%s", test_case, formatTable[to].extension);
+	printf("Converting test case %d: %s to %s.", test_case, fname_from, fname_to);
 	int result = create_test_file(test_case, fname_from);
 	if (result) {
 		return result;
@@ -3274,20 +3277,20 @@ testMain(int test_index)
         EmbReal epsilon = 0.001f;
         EmbVector p0, p1;
         /* Problem */
-        EmbCircle c1 = {{0.0f, 0.0f}, 3.0f};
+        EmbCircle c1 = emb_circle_init(0.0f, 0.0f, 3.0f);
         /* Solution */
         EmbVector t0 = {2.2500f, 1.9843f};
         EmbVector t1 = {2.2500f, -1.9843f};
         EmbVector p = {4.0f, 0.0f};
         /* Test */
         testTangentPoints(c1, p, &p0, &p1);
-        error = embVector_distance(p0, t0) + embVector_distance(p1, t1);
+        error = emb_vector_distance(p0, t0) + emb_vector_distance(p1, t1);
         if (error > epsilon) {
             printf("Error larger than tolerance, circle test 1: %f.\n\n", error);
-            return 0;
+            return 1;
         }
 
-        return 1;
+        return 0;
     }
     case 1: {
         EmbReal error;
@@ -3300,13 +3303,13 @@ testMain(int test_index)
         EmbVector p = {24.3411f, 18.2980f};
         /* Test */
         testTangentPoints(c2, p, &p0, &p1);
-        error = embVector_distance(p0, s0) + embVector_distance(p1, s1);
+        error = emb_vector_distance(p0, s0) + emb_vector_distance(p1, s1);
         if (error > epsilon) {
             printf("Error larger than tolerance, circle test 2: %f.\n\n", error);
-            return 0;
+            return 2;
         }
 
-        return 1;
+        return 0;
     }
     case 2: {
         unsigned int tColor = 0xFFD25F00;
@@ -3314,7 +3317,6 @@ testMain(int test_index)
         c.r = 0xD2;
         c.g = 0x5F;
         c.b = 0x00;
-        if (0) {
         int tBrand = 0; /*EMB_BRAND_SULKY_RAYON; */
         int tNum = threadColorNum(tColor, tBrand);
         char tName[50];
@@ -3330,8 +3332,7 @@ testMain(int test_index)
             tNum, /* Solution: 1833 */
             tName); /* Solution: Pumpkin Pie */
         }
-        }
-        return 1;
+        return 0;
     }
     case 3: {
         const char*  tName = "example.zsk";
@@ -3456,18 +3457,12 @@ testMain(int test_index)
         return test_convert(2, EMB_FORMAT_CSV, EMB_FORMAT_DST);
     }
     case 14: {
-        EmbPattern *pattern = embPattern_create();
+        EmbPattern *pattern = emb_pattern_create();
         int hilbertCurveResult = hilbert_curve(pattern, 3);
-        int renderResult = embPattern_render(pattern, "hilbert_level_3.png");
-        int simulateResult = embPattern_simulate(pattern, "hilbert_level_3.avi");
-        embPattern_free(pattern);
+        int renderResult = emb_pattern_render(pattern, "hilbert_level_3.png");
+        int simulateResult = emb_pattern_simulate(pattern, "hilbert_level_3.avi");
+        emb_pattern_free(pattern);
         return hilbertCurveResult;
-    }
-    case 15: {
-        puts("More expensive tests.");
-		char results[100][100];
-        full_test_matrix(0, results);
-        return 0;
     }
     default: break;
     }
@@ -3517,8 +3512,8 @@ printArcResults(
     char clockwise)
 {
     emb_arc_print(arc);
-    embVector_print(center, "center");
-    embVector_print(chordMid, "chordMid");
+    emb_vector_print(center, "center");
+    emb_vector_print(chordMid, "chordMid");
     fprintf(stdout, "bulge     = %f\n"
                     "radius    = %f\n"
                     "diameter  = %f\n"
@@ -3546,7 +3541,7 @@ create_test_file(int test_file, const char* outf)
     EmbPattern* p;
     EmbStitch st;
 
-    p = embPattern_create();
+    p = emb_pattern_create();
     if (!p) {
         puts("ERROR: convert(), cannot allocate memory for p\n");
         return 1;
@@ -3556,21 +3551,21 @@ create_test_file(int test_file, const char* outf)
 	case 0: {
 		/* 10mm circle */
 		for (i = 0; i < 20; i++) {
-			embPattern_addStitchRel(p, 0.0, 1.0, JUMP, 0);
+			emb_pattern_addStitchRel(p, 0.0, 1.0, JUMP, 0);
 		}
 		for (i = 0; i < 200; i++) {
 			st.x = 10 + 10 * sin(i * (0.03141592));
 			st.y = 10 + 10 * cos(i * (0.03141592));
 			st.flags = NORMAL;
 			st.color = 0;
-			embPattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
+			emb_pattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
 		}
 
-		embPattern_addThread(p, black_thread);
-		embPattern_end(p);
+		emb_pattern_addThread(p, black_thread);
+		emb_pattern_end(p);
 
-		if (!embPattern_writeAuto(p, outf)) {
-            embPattern_free(p);
+		if (!emb_pattern_writeAuto(p, outf)) {
+            emb_pattern_free(p);
 			return 16;
 		}
 		break;
@@ -3582,28 +3577,28 @@ create_test_file(int test_file, const char* outf)
             st.y = 10 + i * 0.1;
             st.flags = NORMAL;
             st.color = 0;
-            embPattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
+            emb_pattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
         }
 
-        embPattern_addThread(p, black_thread);
-        embPattern_end(p);
+        emb_pattern_addThread(p, black_thread);
+        emb_pattern_end(p);
 
-        if (!embPattern_writeAuto(p, outf)) {
-            embPattern_free(p);
+        if (!emb_pattern_writeAuto(p, outf)) {
+            emb_pattern_free(p);
             return 16;
         }
 		break;
 	}
 	case 2: {
-        EmbCircle circle = embCircle_init(10.0f, 1.0f, 5.0f);
-        embPattern_addCircleAbs(p, circle);
+        EmbCircle circle = emb_circle_init(10.0f, 1.0f, 5.0f);
+        emb_pattern_addCircleAbs(p, circle);
 
-        embPattern_addThread(p, black_thread);
-        embPattern_convertGeometry(p);
-        embPattern_end(p);
+        emb_pattern_addThread(p, black_thread);
+        emb_pattern_convertGeometry(p);
+        emb_pattern_end(p);
 
-        if (!embPattern_writeAuto(p, outf)) {
-            embPattern_free(p);
+        if (!emb_pattern_writeAuto(p, outf)) {
+            emb_pattern_free(p);
             return 16;
         }
 		break;
@@ -3614,29 +3609,12 @@ create_test_file(int test_file, const char* outf)
 	}
     }
 
-    embPattern_free(p);
+    emb_pattern_free(p);
     return 0;
 }
 
 /* TODO: Add capability for converting multiple files of various types to a single format.
 Currently, we only convert a single file to multiple formats. */
-
-/*
- * Table of from/to for formats. What conversions after a from A to B conversion
- * leave a file with the same render?
- *
- * Add command "--full-test-suite" for this full matrix.
- */
-void
-full_test_matrix(int test_case, char results[100][100])
-{
-    int i, j;
-    for (i = 0; i < numberOfFormats; i++) {
-        for (j=0; j < numberOfFormats; j++) {
-    		results[i][j] = test_convert(test_case, i, j);
-        }
-    }
-}
 
 /* construct from tables above somehow, like how getopt_long works,
  * but we're avoiding that for compatibility
@@ -3728,7 +3706,7 @@ to_flag(char **argv, int argc, int i)
 int
 command_line_interface(int argc, char* argv[])
 {
-    EmbPattern *current_pattern = embPattern_create();
+    EmbPattern *current_pattern = emb_pattern_create();
     int i, j, flags, result;
     if (argc == 1) {
         usage();
@@ -3807,36 +3785,36 @@ command_line_interface(int argc, char* argv[])
                 image = embImage_create(2000, 2000);
                 embImage_read(&image, argv[i]);
                 i++;
-                embPattern_horizontal_fill(current_pattern, &image, atoi(argv[i]));
+                emb_pattern_horizontal_fill(current_pattern, &image, atoi(argv[i]));
                 embImage_free(&image);
                 i++;
-                embPattern_writeAuto(current_pattern, argv[i]);
+                emb_pattern_writeAuto(current_pattern, argv[i]);
             }
             break;
         case FLAG_RENDER:
         case FLAG_RENDER_SHORT:
             if (i + 2 < argc) {
                 /* the user appears to have entered filenames after render */
-                embPattern_readAuto(current_pattern, argv[i+1]);
+                emb_pattern_readAuto(current_pattern, argv[i+1]);
                 printf("%d\n", current_pattern->stitch_list->count);
-                embPattern_render(current_pattern, argv[i+2]);
+                emb_pattern_render(current_pattern, argv[i+2]);
                 i += 2;
                 break;
                 i++;
                 if (argv[i][0] == '-') {
                     /* they haven't, use the default name */
                     puts("Defaulting to the output name 'output.png'.");
-                    embPattern_render(current_pattern, "output.png");
+                    emb_pattern_render(current_pattern, "output.png");
                     i--;
                 }
                 else {
                     /* they have, use the user-supplied name */
-                    embPattern_render(current_pattern, argv[i]);
+                    emb_pattern_render(current_pattern, argv[i]);
                 }
             }
             else {
                 puts("Defaulting to the output name 'output.png'.");
-                embPattern_render(current_pattern, "output.png");
+                emb_pattern_render(current_pattern, "output.png");
             }
             break;
         case FLAG_SIMULATE:
@@ -3846,31 +3824,31 @@ command_line_interface(int argc, char* argv[])
                 if (argv[i][0] == '-') {
                     /* they haven't, use the default name */
                     puts("Defaulting to the output name 'output.avi'.");
-                    embPattern_simulate(current_pattern, "output.avi");
+                    emb_pattern_simulate(current_pattern, "output.avi");
                     i--;
                 }
                 else {
                     /* they have, use the user-supplied name */
-                    embPattern_simulate(current_pattern, argv[i]);
+                    emb_pattern_simulate(current_pattern, argv[i]);
                 }
             }
             else {
                 puts("Defaulting to the output name 'output.avi'.");
-                embPattern_simulate(current_pattern, "output.avi");
+                emb_pattern_simulate(current_pattern, "output.avi");
             }
             break;
         case FLAG_COMBINE:
             if (i + 3 < argc) {
                 EmbPattern *out;
-                EmbPattern *p1 = embPattern_create();
-                EmbPattern *p2 = embPattern_create();
-                embPattern_readAuto(p1, argv[i+1]);
-                embPattern_readAuto(p2, argv[i+2]);
-                out = embPattern_combine(p1, p2);
-                embPattern_writeAuto(out, argv[i+3]);
-                embPattern_free(p1);
-                embPattern_free(p2);
-                embPattern_free(out);
+                EmbPattern *p1 = emb_pattern_create();
+                EmbPattern *p2 = emb_pattern_create();
+                emb_pattern_readAuto(p1, argv[i+1]);
+                emb_pattern_readAuto(p2, argv[i+2]);
+                out = emb_pattern_combine(p1, p2);
+                emb_pattern_writeAuto(out, argv[i+3]);
+                emb_pattern_free(p1);
+                emb_pattern_free(p2);
+                emb_pattern_free(out);
             }
             else {
                 puts("--combine takes 3 arguments and you have supplied <3.");
@@ -3881,18 +3859,18 @@ command_line_interface(int argc, char* argv[])
             puts(version_string);
             break;
         case FLAG_HILBERT_CURVE:
-            current_pattern = embPattern_create();
+            current_pattern = emb_pattern_create();
             hilbert_curve(current_pattern, 3);
             break;
         case FLAG_TEST:
             if (i + 1 < argc) {
-                embPattern_free(current_pattern);
+                emb_pattern_free(current_pattern);
                 return testMain(atoi(argv[i+1]));
             }
             break;
         case FLAG_FULL_TEST_SUITE:
             /* Ideally we use ctest, this is just for crash testing. */
-			embPattern_free(current_pattern);
+			emb_pattern_free(current_pattern);
             for (int t=0; t<10; t++) {
                 if (testMain(t)) {
                     printf("Failed test %d.\n", t);
@@ -3900,6 +3878,13 @@ command_line_interface(int argc, char* argv[])
                 }
             }
 			return 0;
+        case FLAG_CONVERT_TEST: {
+			emb_pattern_free(current_pattern);
+            if (i + 3 < argc) {
+                return test_convert(atoi(argv[i+1]), atoi(argv[i+2]), atoi(argv[i+3]));
+            }
+			return 0;
+		}
         case FLAG_CROSS_STITCH:
             if (i + 3 < argc) {
                 EmbImage image;
@@ -3909,10 +3894,10 @@ command_line_interface(int argc, char* argv[])
                 /* to stb command */
                 embImage_read(&image, argv[i]);
                 i++;
-                embPattern_crossstitch(current_pattern, &image, atoi(argv[i]));
+                emb_pattern_crossstitch(current_pattern, &image, atoi(argv[i]));
                 embImage_free(&image);
                 i++;
-                embPattern_writeAuto(current_pattern, argv[i]);
+                emb_pattern_writeAuto(current_pattern, argv[i]);
             }
             break;
         default:
@@ -3930,7 +3915,7 @@ command_line_interface(int argc, char* argv[])
             puts("Please enter an output format for your file, see --help.");
         }
     }
-    embPattern_free(current_pattern);
+    emb_pattern_free(current_pattern);
     return 0;
 }
 
@@ -4133,7 +4118,7 @@ save_points_to_pattern(
         int x, y;
         x = points[i]%width;
         y = height - points[i]/width;
-        embPattern_addStitchAbs(pattern, scale*x, scale*y, NORMAL, 0);
+        emb_pattern_addStitchAbs(pattern, scale*x, scale*y, NORMAL, 0);
     }
 }
 
@@ -4149,7 +4134,7 @@ save_points_to_pattern(
  * Use render then image difference to see how well it passes.
  */
 void
-embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
+emb_pattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
 {
     /* Size of the crosses in millimeters. */
     EmbReal scale = 0.1;
@@ -4164,7 +4149,7 @@ embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
     join_short_stitches(points, &n_points, image->width, 40);
     save_points_to_pattern(pattern, points, n_points, scale, image->width, image->height);
 
-    embPattern_end(pattern);
+    emb_pattern_end(pattern);
     free(points);
 }
 
@@ -4178,7 +4163,7 @@ embPattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
  * that are neighbours exactly one ahead.
  */
 void
-embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
+emb_pattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
 {
     int i;
     /* Size of the crosses in millimeters. */
@@ -4197,13 +4182,13 @@ embPattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
         x = points[i]%width;
         y = points[i]/width;
         printf("%f %f\n", x, y);
-        embPattern_addStitchAbs(pattern, scale*x, scale*y, NORMAL, 0);
-        embPattern_addStitchAbs(pattern, scale*(x+sample_w), scale*(y+sample_h), NORMAL, 0);
-        embPattern_addStitchAbs(pattern, scale*x, scale*(y+sample_h), NORMAL, 0);
-        embPattern_addStitchAbs(pattern, scale*(x+sample_w), scale*y, NORMAL, 0);
+        emb_pattern_addStitchAbs(pattern, scale*x, scale*y, NORMAL, 0);
+        emb_pattern_addStitchAbs(pattern, scale*(x+sample_w), scale*(y+sample_h), NORMAL, 0);
+        emb_pattern_addStitchAbs(pattern, scale*x, scale*(y+sample_h), NORMAL, 0);
+        emb_pattern_addStitchAbs(pattern, scale*(x+sample_w), scale*y, NORMAL, 0);
     }
 
-    embPattern_end(pattern);
+    emb_pattern_end(pattern);
 }
 
 /* a pattern a iterations
@@ -4255,11 +4240,11 @@ hilbert_curve(EmbPattern *pattern, int iterations)
                 position[1]--;
                 break;
             }
-            embPattern_addStitchAbs(pattern, position[0]*scale, position[1]*scale, flags, 0);
+            emb_pattern_addStitchAbs(pattern, position[0]*scale, position[1]*scale, flags, 0);
         }
     }
     free(state);
-    embPattern_end(pattern);
+    emb_pattern_end(pattern);
     return 0;
 }
 
@@ -4349,7 +4334,7 @@ BreakIntoSeparateObjects(EmbStitchBlock* blocks)
         block.Stitches[block.Stitches.Count - 1].Type = VectorStitchType.Contour;
 
         for (int i = 0; i < block.Stitches.Count - 2; i++) { /* step 0 */
-            EmbReal dx = (embVector_relativeX(block.Stitches[i].Xy, block.Stitches[i + 1].Xy, block.Stitches[i + 2].Xy));
+            EmbReal dx = (emb_vector_relativeX(block.Stitches[i].Xy, block.Stitches[i + 1].Xy, block.Stitches[i + 2].Xy));
             block.Stitches[i + 1].Type = dx <= 0 ? VectorStitchType.Run : VectorStitchType.Contour;
             block.Stitches[i].Angle = GetAngle(block.Stitches[i], block.Stitches[i + 1]);
             stitches.Add(block.Stitches[i].Clone());
@@ -4371,9 +4356,9 @@ BreakIntoSeparateObjects(EmbStitchBlock* blocks)
         /* step 1 */
         for (i = 1; i < sa.Stitches.Count - 3; i++) {
             if (sa.Stitches[i + 1].Type == VectorStitchType.Contour) {
-                float dy = embVector_relativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
-                float dy2 = embVector_relativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
-                float dy3 = embVector_relativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
+                float dy = emb_vector_relativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
+                float dy2 = emb_vector_relativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
+                float dy3 = emb_vector_relativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
                 if (dy)
                 if (sa.Stitches[i - 1].Type == VectorStitchType.Run || sa.Stitches[i + 1].Type == VectorStitchType.Run) {
                     sa.Stitches[i].Type = VectorStitchType.Tatami;
@@ -4403,14 +4388,14 @@ FindOutline(EmbStitchBlock* stitchData)
             for (int i = 0; i < sa.Stitches.Count - 2; i++) {
                 float dx = (GetRelativeX(sa.Stitches[i].Xy, sa.Stitches[i + 1].Xy, sa.Stitches[i + 2].Xy));
                 sa.Stitches[i + 1].Type = dx <= 0 ? VectorStitchType.Run : VectorStitchType.Contour;
-                sa.Stitches[i].Angle = embVector_angle(sa.Stitches[i], sa.Stitches[i + 1]);
+                sa.Stitches[i].Angle = emb_vector_angle(sa.Stitches[i], sa.Stitches[i + 1]);
             }
             /* step 1 */
             for (int i = 1; i < sa.Stitches.Count - 3; i++) {
                 if (sa.Stitches[i + 1].Type == VectorStitchType.Contour) {
-                    float dy = embVector_relativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
-                    float dy2 = embVector_relativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
-                    float dy3 = embVector_relativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
+                    float dy = emb_vector_relativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
+                    float dy2 = emb_vector_relativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
+                    float dy3 = emb_vector_relativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
                     if (dy)
                     if (sa.Stitches[i - 1].Type == VectorStitchType.Run || sa.Stitches[i + 1].Type == VectorStitchType.Run) {
                         sa.Stitches[i].Type = VectorStitchType.Tatami;
@@ -4550,7 +4535,7 @@ Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance)
         Vector2 next = vertices[nextId];
 
         /* If they collinear, continue */
-        if (embVector_collinear(ref prev, ref current, ref next, collinearityTolerance))
+        if (emb_vector_collinear(ref prev, ref current, ref next, collinearityTolerance))
             continue;
 
         simplified.Add(current);
@@ -4749,10 +4734,10 @@ MergeParallelEdges(EmbArray *vertices, float tolerance)
         int lower = (i == 0) ? (vertices.Count - 1) : (i - 1);
         int upper = (i == vertices.Count - 1) ? (0) : (i + 1);
 
-        delta0 = embVector_subtract(vertices[i], vertices[lower]);
-        delta1 = embVector_subtract(vertices[upper], vertices[i]);
-        float norm0 = embVector_length(delta0);
-        float norm1 = embVector_length(delta0);
+        delta0 = emb_vector_subtract(vertices[i], vertices[lower]);
+        delta1 = emb_vector_subtract(vertices[upper], vertices[i]);
+        float norm0 = emb_vector_length(delta0);
+        float norm1 = emb_vector_length(delta0);
 
         if (!(norm0 > 0.0f && norm1 > 0.0f) && newNVertices > 3) {
             /* Merge identical points */
@@ -4760,10 +4745,10 @@ MergeParallelEdges(EmbArray *vertices, float tolerance)
             newNVertices--;
         }
 
-        delta0 = embVector_normalize(delta0);
-        delta1 = embVector_normalize(delta1);
-        float cross = embVector_cross(delta0, delta1);
-        float dot = embVector_dot(delta0, delta1);
+        delta0 = emb_vector_normalize(delta0);
+        delta1 = emb_vector_normalize(delta1);
+        float cross = emb_vector_cross(delta0, delta1);
+        float dot = emb_vector_dot(delta0, delta1);
 
         if (fabs(cross) < tolerance && dot > 0 && newNVertices > 3) {
             mergeMe[i] = 1;
@@ -4816,12 +4801,12 @@ void embPolygon_reduceByDistance(EmbArray *vertices, EmbArray *simplified, float
         EmbVector delta;
         int nextId = (i + 1) % vertices->count;
 
-        delta = embVector_subtract(
+        delta = emb_vector_subtract(
             vertices->geometry[nextId].object.vector,
             vertices->geometry[i].object.vector);
 
         /* If they are closer than the distance, continue */
-        if (embVector_length(delta) < distance) {
+        if (emb_vector_length(delta) < distance) {
             continue;
         }
 
@@ -4856,10 +4841,10 @@ embPolygon_reduceByNth(EmbArray *vertices, EmbArray *out, int nth)
  * Returns EmbPattern*
  */
 EmbPattern *
-embPattern_combine(EmbPattern *p1, EmbPattern *p2)
+emb_pattern_combine(EmbPattern *p1, EmbPattern *p2)
 {
     int i;
-    EmbPattern *out = embPattern_create();
+    EmbPattern *out = emb_pattern_create();
     for (i=0; i<p1->stitch_list->count; i++) {
         embArray_addStitch(out->stitch_list, p1->stitch_list->stitch[i]);
     }
@@ -4868,10 +4853,10 @@ embPattern_combine(EmbPattern *p1, EmbPattern *p2)
     }
     /* These need to be merged, not appended. */
     for (i=0; i<p1->thread_list->count; i++) {
-        embPattern_addThread(out, p1->thread_list->thread[i]);
+        emb_pattern_addThread(out, p1->thread_list->thread[i]);
     }
     for (i=0; i<p2->thread_list->count; i++) {
-        embPattern_addThread(out, p2->thread_list->thread[i]);
+        emb_pattern_addThread(out, p2->thread_list->thread[i]);
     }
     return out;
 }
@@ -4879,7 +4864,7 @@ embPattern_combine(EmbPattern *p1, EmbPattern *p2)
 /* p a arc a thread_index a style
  */
 void
-embPattern_stitchArc(EmbPattern *p, EmbArc arc, int thread_index, int style)
+emb_pattern_stitchArc(EmbPattern *p, EmbArc arc, int thread_index, int style)
 {
     printf("DEBUG stitchArc (unfinished): %f %f %d %d\n",
         p->home.x, arc.start.x, thread_index, style);
@@ -4913,28 +4898,28 @@ embPattern_stitchArc(EmbPattern *p, EmbArc arc, int thread_index, int style)
  * alters these lines by splitting the ones longer than some tolerence.
  */
 void
-embPattern_stitchCircle(EmbPattern *p, EmbCircle circle, int thread_index, int style)
+emb_pattern_stitchCircle(EmbPattern *p, EmbCircle circle, int thread_index, int style)
 {
     float s;
     float seperation = 0.1;
     EmbVector direction = {1.0, 1.0};
     EmbVector normal = {-1.0, 1.0};
-    direction = embVector_normalize(direction);
-    normal = embVector_normalize(normal);
+    direction = emb_vector_normalize(direction);
+    normal = emb_vector_normalize(normal);
     for (s=-circle.radius; s<circle.radius; s += seperation) {
         EmbLine line;
         float length = sqrt(circle.radius*circle.radius - s*s);
-        EmbVector scaled = embVector_scale(normal, s);
-        line.start = embVector_add(circle.center, scaled);
-        scaled = embVector_scale(direction, length);
-        line.start = embVector_subtract(line.start, scaled);
-        scaled = embVector_scale(normal, s);
-        line.end = embVector_add(circle.center, scaled);
-        scaled = embVector_scale(direction, length);
-        line.end = embVector_add(line.end, scaled);
+        EmbVector scaled = emb_vector_scale(normal, s);
+        line.start = emb_vector_add(circle.center, scaled);
+        scaled = emb_vector_scale(direction, length);
+        line.start = emb_vector_subtract(line.start, scaled);
+        scaled = emb_vector_scale(normal, s);
+        line.end = emb_vector_add(circle.center, scaled);
+        scaled = emb_vector_scale(direction, length);
+        line.end = emb_vector_add(line.end, scaled);
         /* Split long stitches here. */
-        embPattern_addStitchAbs(p, line.start.x, line.start.y, NORMAL, thread_index);
-        embPattern_addStitchAbs(p, line.end.x, line.end.y, NORMAL, thread_index);
+        emb_pattern_addStitchAbs(p, line.start.x, line.start.y, NORMAL, thread_index);
+        emb_pattern_addStitchAbs(p, line.end.x, line.end.y, NORMAL, thread_index);
     }
 }
 
@@ -4943,7 +4928,7 @@ embPattern_stitchCircle(EmbPattern *p, EmbCircle circle, int thread_index, int s
  * \todo finish stitchEllipse
  */
 void
-embPattern_stitchEllipse(EmbPattern *p, EmbEllipse ellipse, int thread_index, int style)
+emb_pattern_stitchEllipse(EmbPattern *p, EmbEllipse ellipse, int thread_index, int style)
 {
     printf("DEBUG stitchEllipse: %f %f %d %d\n",
         p->home.x, ellipse.center.x, thread_index, style);
@@ -4954,7 +4939,7 @@ embPattern_stitchEllipse(EmbPattern *p, EmbEllipse ellipse, int thread_index, in
  * \todo finish stitch path
  */
 void
-embPattern_stitchPath(EmbPattern *p, EmbPath path, int thread_index, int style)
+emb_pattern_stitchPath(EmbPattern *p, EmbPath path, int thread_index, int style)
 {
     printf("DEBUG stitchPath: %f %d %d %d\n",
         p->home.x, path.pointList->count, thread_index, style);
@@ -4965,7 +4950,7 @@ embPattern_stitchPath(EmbPattern *p, EmbPath path, int thread_index, int style)
  * \todo finish stitch polygon
  */
 void
-embPattern_stitchPolygon(EmbPattern *p, EmbPolygon polygon, int thread_index, int style)
+emb_pattern_stitchPolygon(EmbPattern *p, EmbPolygon polygon, int thread_index, int style)
 {
     printf("DEBUG stitchPolygon: %f %d %d %d\n",
         p->home.x, polygon.pointList->count, thread_index, style);
@@ -4976,7 +4961,7 @@ embPattern_stitchPolygon(EmbPattern *p, EmbPolygon polygon, int thread_index, in
  * \todo finish stitch polyline
  */
 void
-embPattern_stitchPolyline(EmbPattern *p, EmbPolyline polyline, int thread_index, int style)
+emb_pattern_stitchPolyline(EmbPattern *p, EmbPolyline polyline, int thread_index, int style)
 {
     printf("DEBUG stitchPolyline: %f %d %d %d\n",
         p->home.x, polyline.pointList->count, thread_index, style);
@@ -4987,7 +4972,7 @@ embPattern_stitchPolyline(EmbPattern *p, EmbPolyline polyline, int thread_index,
  * Here we just stitch the rectangle in the direction of it's longer side.
  */
 void
-embPattern_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int style)
+emb_pattern_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int style)
 {
     EmbReal seperation = 0.1;
     EmbReal width = rect.right - rect.left;
@@ -4996,16 +4981,16 @@ embPattern_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int style)
         float s;
         for (s=rect.top; s<rect.bottom; s += seperation) {
             /* Split long stitches here. */
-            embPattern_addStitchAbs(p, rect.top, s, NORMAL, thread_index);
-            embPattern_addStitchAbs(p, rect.bottom, s, NORMAL, thread_index);
+            emb_pattern_addStitchAbs(p, rect.top, s, NORMAL, thread_index);
+            emb_pattern_addStitchAbs(p, rect.bottom, s, NORMAL, thread_index);
         }
     }
     else {
         float s;
         for (s=rect.left; s<rect.right; s += seperation) {
             /* Split long stitches here. */
-            embPattern_addStitchAbs(p, s, rect.left, NORMAL, thread_index);
-            embPattern_addStitchAbs(p, s, rect.right, NORMAL, thread_index);
+            emb_pattern_addStitchAbs(p, s, rect.left, NORMAL, thread_index);
+            emb_pattern_addStitchAbs(p, s, rect.right, NORMAL, thread_index);
         }
     }
 }
@@ -5013,7 +4998,7 @@ embPattern_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int style)
 /* a p a rect a thread_index a style
  */
 void
-embPattern_stitchText(EmbPattern *p, EmbRect rect, int thread_index, int style)
+emb_pattern_stitchText(EmbPattern *p, EmbRect rect, int thread_index, int style)
 {
     printf("DEBUG: %f %f %d %d",
         p->home.x, rect.top, thread_index, style);
@@ -5022,7 +5007,7 @@ embPattern_stitchText(EmbPattern *p, EmbRect rect, int thread_index, int style)
 /* a p
  */
 void
-embPattern_convertGeometry(EmbPattern* p)
+emb_pattern_convertGeometry(EmbPattern* p)
 {
     int i;
     for (i=0; i<p->geometry->count; i++) {
@@ -5030,22 +5015,22 @@ embPattern_convertGeometry(EmbPattern* p)
         switch (g.type) {
         case EMB_ARC: {
             /* To Do make the thread up here. */
-            embPattern_stitchArc(p, g.object.arc, 0, 0);
+            emb_pattern_stitchArc(p, g.object.arc, 0, 0);
             break;
         }
         case EMB_CIRCLE: {
             /* To Do make the thread up here. */
-            embPattern_stitchCircle(p, g.object.circle, 0, 0);
+            emb_pattern_stitchCircle(p, g.object.circle, 0, 0);
             break;
         }
         case EMB_ELLIPSE: {
             /* To Do make the thread up here. */
-            embPattern_stitchEllipse(p, g.object.ellipse, 0, 0);
+            emb_pattern_stitchEllipse(p, g.object.ellipse, 0, 0);
             break;
         }
         case EMB_RECT: {
             /* To Do make the thread up here. */
-            embPattern_stitchRect(p, g.object.rect, 0, 0);
+            emb_pattern_stitchRect(p, g.object.rect, 0, 0);
             break;
         }
         default:
@@ -5244,17 +5229,17 @@ binaryWriteUIntBE(FILE* f, unsigned int data)
 
 /* . */
 char
-embPattern_read(EmbPattern* pattern, const char *fileName, int format)
+emb_pattern_read(EmbPattern* pattern, const char *fileName, int format)
 {
     int result;
     FILE *file;
     result = 0;
     if (!pattern) {
-        printf("ERROR: embPattern_read(), pattern argument is null.\n");
+        printf("ERROR: emb_pattern_read(), pattern argument is null.\n");
         return 0;
     }
     if (!fileName) {
-        printf("ERROR: embPattern_read(), fileName argument is null.\n");
+        printf("ERROR: emb_pattern_read(), fileName argument is null.\n");
         return 0;
     }
     file = fopen(fileName, "rb");
@@ -5268,7 +5253,7 @@ embPattern_read(EmbPattern* pattern, const char *fileName, int format)
         return 0;
     }
     if (formatTable[format].check_for_color_file) {
-        embPattern_loadExternalColorFile(pattern, fileName);
+        emb_pattern_loadExternalColorFile(pattern, fileName);
     }
     switch (format) {
     case EMB_FORMAT_100:
@@ -5459,31 +5444,31 @@ embPattern_read(EmbPattern* pattern, const char *fileName, int format)
     }
     fclose(file);
     if (!formatTable[format].color_only) {
-        embPattern_end(pattern);
+        emb_pattern_end(pattern);
     }
     return result;
 }
 
 /* . */
 char
-embPattern_write(EmbPattern* pattern, const char *fileName, int format)
+emb_pattern_write(EmbPattern* pattern, const char *fileName, int format)
 {
     FILE *file;
     int result = 0;
     if (!pattern) {
-        printf("ERROR: embPattern_write(), pattern argument is null\n");
+        printf("ERROR: emb_pattern_write(), pattern argument is null\n");
         return 0;
     }
     if (!fileName) {
-        printf("ERROR: embPattern_write(), fileName argument is null\n");
+        printf("ERROR: emb_pattern_write(), fileName argument is null\n");
         return 0;
     }
     if (pattern->stitch_list->count == 0) {
-        printf("ERROR: embPattern_write(), pattern contains no stitches\n");
+        printf("ERROR: emb_pattern_write(), pattern contains no stitches\n");
         return 0;
     }
     if (!formatTable[format].color_only) {
-        embPattern_end(pattern);
+        emb_pattern_end(pattern);
     }
 
     file = fopen(fileName, "wb");
@@ -5685,7 +5670,7 @@ embPattern_write(EmbPattern* pattern, const char *fileName, int format)
         stub_length = string_len(fileName)-string_len(formatTable[format].extension);
         externalFileName[stub_length] = 0;
         string_cat(externalFileName, ".rgb");
-        embPattern_write(pattern, externalFileName, EMB_FORMAT_RGB);
+        emb_pattern_write(pattern, externalFileName, EMB_FORMAT_RGB);
     }
     fclose(file);
     return result;
@@ -5693,28 +5678,28 @@ embPattern_write(EmbPattern* pattern, const char *fileName, int format)
 
 /* . */
 char
-embPattern_readAuto(EmbPattern* pattern, const char* fileName)
+emb_pattern_readAuto(EmbPattern* pattern, const char* fileName)
 {
     int format = emb_identify_format(fileName);
     if (format < 0) {
         printf("ERROR: convert(), unsupported read file type: %s\n", fileName);
-        embPattern_free(pattern);
+        emb_pattern_free(pattern);
         return 0;
     }
-    return embPattern_read(pattern, fileName, format);
+    return emb_pattern_read(pattern, fileName, format);
 }
 
 /* . */
 char
-embPattern_writeAuto(EmbPattern* pattern, const char* fileName)
+emb_pattern_writeAuto(EmbPattern* pattern, const char* fileName)
 {
     int format = emb_identify_format(fileName);
     if (format < 0) {
         printf("ERROR: convert(), unsupported write file type: %s\n", fileName);
-        embPattern_free(pattern);
+        emb_pattern_free(pattern);
         return 0;
     }
-    return embPattern_write(pattern, fileName, format);
+    return emb_pattern_write(pattern, fileName, format);
 }
 
 /* format_100.c The Toyota Embroidery Format (.10o)
@@ -5739,7 +5724,7 @@ read100(EmbPattern* pattern, FILE* file)
         /*if (!(b[0] & 0xFC)) stitchType = JUMP; TODO: review & fix */
         if (!(b[0] & 0x01)) stitchType = STOP;
         if (b[0] == 0x1F) stitchType = END;
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
+        emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
     }
     return 1;
 }
@@ -5756,7 +5741,7 @@ write100(EmbPattern* pattern, FILE* file)
         EmbStitch st = pattern->stitch_list->stitch[i];
         delta.x = st.x - position.x;
         delta.y = st.y - position.y;
-        position = embVector_add(position, delta);
+        position = emb_vector_add(position, delta);
         b[0] = 0;
         b[1] = 0;
         if (delta.x < 0.0) {
@@ -5813,10 +5798,10 @@ read10o(EmbPattern* pattern, FILE* file)
             stitchType = STOP;
         }
         if (ctrl == 0xF8 || ctrl == 0x91 || ctrl == 0x87) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
+            emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
+        emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
     }
     return 1;
 }
@@ -5956,11 +5941,11 @@ readBro(EmbPattern* pattern, FILE* file)
             } else if (bCode == 3) {
                 stitchType = TRIM;
             } else if (bCode == 0x7E) {
-                embPattern_addStitchRel(pattern, 0, 0, END, 1);
+                emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
                 break;
             }
         }
-        embPattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
+        emb_pattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
     }
     return 1;
 }
@@ -6058,7 +6043,7 @@ readCol(EmbPattern* pattern, FILE* file)
         t.color.b = (unsigned char)blue;
         string_copy(t.catalogNumber, "");
         string_copy(t.description, "");
-        embPattern_addThread(pattern, t);
+        emb_pattern_addThread(pattern, t);
     }
     return 1;
 }
@@ -6188,7 +6173,7 @@ readCsd(EmbPattern* pattern, FILE* file) {
         thread.color.b = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
         string_copy(thread.catalogNumber, "");
         string_copy(thread.description, "");
-        embPattern_addThread(pattern, thread);
+        emb_pattern_addThread(pattern, thread);
     }
     unknown1 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
     unknown2 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
@@ -6219,7 +6204,7 @@ readCsd(EmbPattern* pattern, FILE* file) {
             if (colorChange >= 14) {
                 printf("Invalid color change detected\n");
             }
-            embPattern_changeColor(pattern, colorOrder[colorChange  % 14]);
+            emb_pattern_changeColor(pattern, colorOrder[colorChange  % 14]);
             colorChange += 1;
         } else if ((b0 & 0x1F) > 0) {
             flags = TRIM;
@@ -6235,9 +6220,9 @@ readCsd(EmbPattern* pattern, FILE* file) {
             dy = (char) -dy;
         }
         if (flags == STOP) {
-            embPattern_addStitchRel(pattern, 0, 0, flags, 1);
+            emb_pattern_addStitchRel(pattern, 0, 0, flags, 1);
         } else {
-            embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+            emb_pattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
         }
     }
     return 1;
@@ -6408,7 +6393,7 @@ readCsv(EmbPattern* pattern, FILE* file) {
                         t.color.b = b;
                         string_copy(t.description, "TODO:DESCRIPTION");
                         string_copy(t.catalogNumber, "TODO:CATALOG_NUMBER");
-                        embPattern_addThread(pattern, t);
+                        emb_pattern_addThread(pattern, t);
                         csvMode = CSV_MODE_NULL;
                         cellNum = 0;
                     } else {
@@ -6428,7 +6413,7 @@ readCsv(EmbPattern* pattern, FILE* file) {
                         yy = atof(buff);
                         /* printf("%d %d %f %f\n",
                             pattern->stitch_list->count, flags, xx, yy); */
-                        embPattern_addStitchAbs(pattern, xx, yy, flags, 1);
+                        emb_pattern_addStitchAbs(pattern, xx, yy, flags, 1);
                         csvMode = CSV_MODE_NULL;
                         cellNum = 0;
                     } else {
@@ -6456,7 +6441,7 @@ writeCsv(EmbPattern* pattern, FILE* file)
     EmbRect boundingRect;
     int i;
 
-    boundingRect = embPattern_calcBoundingBox(pattern);
+    boundingRect = emb_pattern_calcBoundingBox(pattern);
 
     fprintf(file, "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n");
     fprintf(file, "\"#\",\"http://embroidermodder.github.io\"\n");
@@ -6562,7 +6547,7 @@ readDat(EmbPattern* pattern, FILE* file)
         if (b2 >= 0x80) {
             b2 = -(b2 & 0x7F);
         }
-        embPattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
+        emb_pattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
     }
 
     return 1;
@@ -6655,10 +6640,10 @@ readDsb(EmbPattern* pattern, FILE* file)
             stitchType = STOP;
         }
         if (ctrl == 0xF8 || ctrl == 0x91 || ctrl == 0x87) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
+            emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
+        emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
     }
     return 1;
 }
@@ -6899,7 +6884,7 @@ set_dst_variable(EmbPattern* pattern, char* var, char* val) {
         t.color = embColor_fromHexStr(val);
         string_copy(t.description, "");
         string_copy(t.catalogNumber, "");
-        embPattern_addThread(pattern, t);
+        emb_pattern_addThread(pattern, t);
         break;
     default:
         /* unknown field, just save it. */
@@ -7003,7 +6988,7 @@ readDst(EmbPattern* pattern, FILE* file) {
         if (flags == END) {
             break;
         }
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
+        emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
     }
 
     /* combineJumpStitches(pattern, 5); */
@@ -7018,11 +7003,11 @@ writeDst(EmbPattern* pattern, FILE* file)
     EmbVector pos;
     EmbString pd;
 
-    embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
+    emb_pattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
     /* TODO: make sure that pattern->thread_list->count
      * defaults to 1 in new patterns */
-    boundingRect = embPattern_calcBoundingBox(pattern);
+    boundingRect = emb_pattern_calcBoundingBox(pattern);
     /* TODO: review the code below
     if (pattern->get_variable("design_name") != NULL) {
         char *la = stralloccopy(pattern->get_variable("design_name"));
@@ -7131,10 +7116,10 @@ readDsz(EmbPattern* pattern, FILE* file)
             stitchType = STOP;
         }
         if (ctrl & 0x10) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
+            emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
-        embPattern_addStitchRel(pattern, x  / 10.0, y  / 10.0, stitchType, 1);
+        emb_pattern_addStitchRel(pattern, x  / 10.0, y  / 10.0, stitchType, 1);
     }
     return 1;
 }
@@ -7158,7 +7143,7 @@ writeDsz(EmbPattern* pattern, FILE* file)
         st = pattern->stitch_list->stitch[i];
         pos.x = st.x;
         pos.y = st.y;
-        delta = embVector_subtract(pos, start);
+        delta = emb_vector_subtract(pos, start);
         b[2] = 0;
         if (st.flags & TRIM) {
             b[2] |= 0x01;
@@ -7377,7 +7362,7 @@ readDxf(EmbPattern* pattern, FILE* file)
             else if (string_equals(buff, "8")) /* Layer Name */
             {
                 readLine(file, buff);
-                /* embPattern_changeColor(pattern, colorIndexMap[buff]); TODO: port to C */
+                /* emb_pattern_changeColor(pattern, colorIndexMap[buff]); TODO: port to C */
                 continue;
             }
 
@@ -7436,13 +7421,13 @@ readDxf(EmbPattern* pattern, FILE* file)
                             return 0;
                         }
                         if (firstStitch) {
-                            /* embPattern_addStitchAbs(pattern, x, y, TRIM, 1); TODO: Add moveTo point to embPath pointList */
+                            /* emb_pattern_addStitchAbs(pattern, x, y, TRIM, 1); TODO: Add moveTo point to embPath pointList */
                         }
-                        /* embPattern_addStitchAbs(pattern, x, y, ARC, 1); TODO: Add arcTo point to embPath pointList */
+                        /* emb_pattern_addStitchAbs(pattern, x, y, ARC, 1); TODO: Add arcTo point to embPath pointList */
                     }
                     else {
-                        /*if (firstStitch) embPattern_addStitchAbs(pattern, x, y, TRIM, 1); TODO: Add moveTo point to embPath pointList */
-                        /*else            embPattern_addStitchAbs(pattern, x, y, NORMAL, 1); TODO: Add lineTo point to embPath pointList */
+                        /*if (firstStitch) emb_pattern_addStitchAbs(pattern, x, y, TRIM, 1); TODO: Add moveTo point to embPath pointList */
+                        /*else            emb_pattern_addStitchAbs(pattern, x, y, NORMAL, 1); TODO: Add lineTo point to embPath pointList */
                     }
                     prev = pos;
                     if (firstStitch) {
@@ -7463,11 +7448,11 @@ readDxf(EmbPattern* pattern, FILE* file)
                             return 0;
                         }
                         prev = arc.start;
-                        /* embPattern_addStitchAbs(pattern, prevX, prevY, ARC, 1); TODO: Add arcTo point to embPath pointList */
+                        /* emb_pattern_addStitchAbs(pattern, prevX, prevY, ARC, 1); TODO: Add arcTo point to embPath pointList */
                     }
                     else
                     {
-                        /* embPattern_addStitchAbs(pattern, firstX, firstY, NORMAL, 1); TODO: Add lineTo point to embPath pointList */
+                        /* emb_pattern_addStitchAbs(pattern, firstX, firstY, NORMAL, 1); TODO: Add lineTo point to embPath pointList */
                     }
                 }
             } /* end LWPOLYLINE */
@@ -7557,13 +7542,13 @@ readEmd(EmbPattern* pattern, FILE* file) {
 
             if (b[0] == 0x80) {
                 if (b[1] == 0x2A) {
-                    embPattern_addStitchRel(pattern, 0, 0, STOP, 1);
+                    emb_pattern_addStitchRel(pattern, 0, 0, STOP, 1);
                     continue;
                 } else if (b[1] == 0x80) {
                     fread(b, 1, 2, file);
                     flags = TRIM;
                 } else if (b[1] == 0xFD) {
-                    embPattern_addStitchRel(pattern, 0, 0, END, 1);
+                    emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
                     break;
                 } else {
                     continue;
@@ -7571,7 +7556,7 @@ readEmd(EmbPattern* pattern, FILE* file) {
             }
             dx = emdDecode(b[0]);
             dy = emdDecode(b[1]);
-            embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+            emb_pattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     return 1;
 }
@@ -7625,7 +7610,7 @@ readExp(EmbPattern* pattern, FILE* file)
         }
         dx = expDecode(b[0]);
         dy = expDecode(b[1]);
-        embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        emb_pattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     return 1;
 }
@@ -7712,10 +7697,10 @@ readExy(EmbPattern* pattern, FILE* file)
         decode_tajima_ternary(b, &x, &y);
         flags = decode_exy_flags(b[2]);
         if (flags & END) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
+            emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
+        emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
     }
     return 1;
 }
@@ -7767,7 +7752,7 @@ readFxy(EmbPattern* pattern, FILE* file)
         unsigned char commandByte = (unsigned char)fgetc(file);
 
         if (commandByte == 0x91) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
+            emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
         if ((commandByte & 0x01) == 0x01)
@@ -7778,7 +7763,7 @@ readFxy(EmbPattern* pattern, FILE* file)
             b1 = -b1;
         if ((commandByte & 0x40) == 0x40)
             b2 = -b2;
-        embPattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
+        emb_pattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
     }
     return 1;
 }
@@ -7854,7 +7839,7 @@ readGt(EmbPattern* pattern, FILE* file)
         unsigned char commandByte = (unsigned char)fgetc(file);
 
         if (commandByte == 0x91) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
+            emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
         if ((commandByte & 0x01) == 0x01) {
@@ -7869,7 +7854,7 @@ readGt(EmbPattern* pattern, FILE* file)
         if ((commandByte & 0x40) == 0x40) {
             b2 = -b2;
         }
-        embPattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
+        emb_pattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
     }
     return 1;
 }
@@ -7999,7 +7984,7 @@ readHus(EmbPattern* pattern, FILE* file)
     for (i = 0; i < numberOfColors; i++) {
         short pos;
         emb_read(file, &pos, EMB_INT16_LITTLE);
-        embPattern_addThread(pattern, husThreads[pos]);
+        emb_pattern_addThread(pattern, husThreads[pos]);
     }
 
     attributeData = (unsigned char*)malloc(sizeof(unsigned char)*(xOffset - attributeOffset + 1));
@@ -8032,7 +8017,7 @@ readHus(EmbPattern* pattern, FILE* file)
         v.x = husDecodeByte(xDecompressed[i]) / 10.0;
         v.y = husDecodeByte(yDecompressed[i]) / 10.0;
         flag = husDecodeStitchType(attributeDataDecompressed[i]);
-        embPattern_addStitchRel(pattern, v.x, v.y, flag, 1);
+        emb_pattern_addStitchRel(pattern, v.x, v.y, flag, 1);
     }
 
     safe_free(stringVal);
@@ -8058,7 +8043,7 @@ writeHus(EmbPattern* pattern, FILE* file)
         *attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
 
     stitchCount = pattern->stitch_list->count;
-    /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
+    /* emb_pattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
     minColors = pattern->thread_list->count;
     patternColor = minColors;
     if (minColors > 24) minColors = 24;
@@ -8067,7 +8052,7 @@ writeHus(EmbPattern* pattern, FILE* file)
     emb_write(file, &stitchCount, EMB_INT32_LITTLE);
     emb_write(file, &minColors, EMB_INT32_LITTLE);
 
-    boundingRect = embPattern_calcBoundingBox(pattern);
+    boundingRect = emb_pattern_calcBoundingBox(pattern);
     right = (short) emb_round(boundingRect.right * 10.0);
     top = (short) -emb_round(boundingRect.top * 10.0);
     left = (short) emb_round(boundingRect.left * 10.0);
@@ -8198,9 +8183,9 @@ readInb(EmbPattern* pattern, FILE* file)
             stitch = STOP;
         if ((type & 2) > 0)
             stitch = TRIM;
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitch, 1);
+        emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitch, 1);
     }
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
 
     return 1;
 }
@@ -8239,7 +8224,7 @@ readInf(EmbPattern* pattern, FILE* file)
         embColor_read(file, &(t.color), 3);
         string_copy(t.catalogNumber, "");
         string_copy(t.description, "");
-        embPattern_addThread(pattern, t);
+        emb_pattern_addThread(pattern, t);
         fseek(file, 2, SEEK_CUR);
         binaryReadString(file, colorType, 50);
         binaryReadString(file, colorDescription, 50);
@@ -8403,7 +8388,7 @@ readJef(EmbPattern* pattern, FILE* file)
     for (i = 0; i < numberOfColors; i++) {
         int thread_num;
         emb_read(file, &thread_num, EMB_INT32_LITTLE);
-        embPattern_addThread(pattern, jefThreads[thread_num % 79]);
+        emb_pattern_addThread(pattern, jefThreads[thread_num % 79]);
     }
     fseek(file, stitchOffset, SEEK_SET);
     stitchCount = 0;
@@ -8429,13 +8414,13 @@ readJef(EmbPattern* pattern, FILE* file)
                 flags = TRIM;
             }
             else if (b[1] == 0x10) {
-                embPattern_addStitchRel(pattern, 0.0, 0.0, END, 1);
+                emb_pattern_addStitchRel(pattern, 0.0, 0.0, END, 1);
                 break;
             }
         }
         dx = jefDecode(b[0]);
         dy = jefDecode(b[1]);
-        embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        emb_pattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
         stitchCount++;
     }
     return 1;
@@ -8478,7 +8463,7 @@ writeJef(EmbPattern* pattern, FILE* file)
     int data;
     EmbVector pos;
 
-    embPattern_correctForMaxStitchLength(pattern, 12.7, 12.7);
+    emb_pattern_correctForMaxStitchLength(pattern, 12.7, 12.7);
 
     colorlistSize = pattern->thread_list->count;
     minColors = EMB_MAX(colorlistSize, 6);
@@ -8495,7 +8480,7 @@ writeJef(EmbPattern* pattern, FILE* file)
     data = pattern->stitch_list->count + EMB_MAX(0, (6 - colorlistSize) * 2) + 1;
     emb_write(file, &data, EMB_INT32_LITTLE);
 
-    boundingRect = embPattern_calcBoundingBox(pattern);
+    boundingRect = emb_pattern_calcBoundingBox(pattern);
     width = boundingRect.right - boundingRect.left;
     height = boundingRect.bottom - boundingRect.top;
     designWidth = (int)(width * 10.0);
@@ -8635,7 +8620,7 @@ readKsm(EmbPattern* pattern, FILE* file)
         if (b[2] & 0x20) {
             b[0] = -b[0];
         }
-        embPattern_addStitchRel(pattern, b[1] / 10.0, b[0] / 10.0, flags, 1);
+        emb_pattern_addStitchRel(pattern, b[1] / 10.0, b[0] / 10.0, flags, 1);
     }
     return 1;
 }
@@ -8705,9 +8690,9 @@ readMax(EmbPattern* pattern, FILE* file)
         flags = NORMAL;
         dx = pfaffDecode(b[0], b[1], b[2]);
         dy = pfaffDecode(b[4], b[5], b[6]);
-        embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        emb_pattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
     return 1;
 }
 
@@ -8743,7 +8728,7 @@ readMit(EmbPattern* pattern, FILE* file)
     while (fread(data, 1, 2, file) == 2) {
         int x = mitDecodeStitch(data[0]);
         int y = mitDecodeStitch(data[1]);
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, NORMAL, 1);
+        emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, NORMAL, 1);
     }
     return 1;
 }
@@ -8754,7 +8739,7 @@ writeMit(EmbPattern* pattern, FILE* file)
     EmbReal xx, yy;
     int i;
 
-    embPattern_correctForMaxStitchLength(pattern, 0x1F, 0x1F);
+    emb_pattern_correctForMaxStitchLength(pattern, 0x1F, 0x1F);
     xx = 0;
     yy = 0;
     for (i = 0; i < pattern->stitch_list->count; i++) {
@@ -8809,7 +8794,7 @@ readNew(EmbPattern* pattern, FILE* file)
         if (val != 0 && data[2] != 0x9B && data[2] != 0x91) {
             int z = 1;
         }*/
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flag, 1);
+        emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, flag, 1);
     }
 
     return 1;
@@ -8925,7 +8910,7 @@ ofmReadColorChange(FILE* file, EmbPattern* pattern)
     }
 
     ofmReadBlockHeader(file);
-    embPattern_addStitchRel(pattern, 0.0, 0.0, STOP, 1);
+    emb_pattern_addStitchRel(pattern, 0.0, 0.0, STOP, 1);
 }
 
 void
@@ -8974,7 +8959,7 @@ ofmReadThreads(FILE* file, EmbPattern* p)
         sprintf(colorNumberText, "%10d", colorNumber);
         string_copy(thread.catalogNumber, colorNumberText);
         string_copy(thread.description, colorName);
-        embPattern_addThread(p, thread);
+        emb_pattern_addThread(p, thread);
     }
     fseek(file, 2, SEEK_CUR);
     primaryLibraryName = ofmReadLibrary(file);
@@ -9012,10 +8997,10 @@ ofmReadExpanded(FILE* file, EmbPattern* p)
         unsigned char stitch[5];
         fread(stitch, 1, 5, file); /* TODO: check return value */
         if (stitch[0] == 0) {
-            embPattern_addStitchAbs(p, ofmDecode(stitch[1], stitch[2]) / 10.0, ofmDecode(stitch[3], stitch[4]) / 10.0, i == 0 ? JUMP : NORMAL, 1);
+            emb_pattern_addStitchAbs(p, ofmDecode(stitch[1], stitch[2]) / 10.0, ofmDecode(stitch[3], stitch[4]) / 10.0, i == 0 ? JUMP : NORMAL, 1);
         }
         else if (stitch[0] == 32) {
-            embPattern_addStitchAbs(p, ofmDecode(stitch[1], stitch[2]) / 10.0, ofmDecode(stitch[3], stitch[4]) / 10.0, i == 0 ? TRIM : NORMAL, 1);
+            emb_pattern_addStitchAbs(p, ofmDecode(stitch[1], stitch[2]) / 10.0, ofmDecode(stitch[3], stitch[4]) / 10.0, i == 0 ? TRIM : NORMAL, 1);
         }
     }
 }
@@ -9077,7 +9062,7 @@ readOfm(EmbPattern* pattern, FILE* fileCompound)
         }
     }
 
-    embPattern_flip(pattern, 1, 1);
+    emb_pattern_flip(pattern, 1, 1);
 
     return 1;
 }
@@ -9135,10 +9120,10 @@ readPcd(EmbPattern* pattern, const char *fileName, FILE* file)
         if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
-        embPattern_addThread(pattern, t);
+        emb_pattern_addThread(pattern, t);
     }
     if (allZeroColor) {
-        embPattern_loadExternalColorFile(pattern, fileName);
+        emb_pattern_loadExternalColorFile(pattern, fileName);
     }
     st = fread_uint16(file);
     /* READ STITCH RECORDS */
@@ -9157,7 +9142,7 @@ readPcd(EmbPattern* pattern, const char *fileName, FILE* file)
         }
         dx = pfaffDecode(b[1], b[2], b[3]);
         dy = pfaffDecode(b[5], b[6], b[7]);
-        embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        emb_pattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     return 1;
 }
@@ -9208,7 +9193,7 @@ readPcm(EmbPattern* pattern, FILE* file)
         int colorNumber;
         (void)fgetc(file); /* zero */
         colorNumber = fgetc(file);
-        embPattern_addThread(pattern, pcmThreads[colorNumber]);
+        emb_pattern_addThread(pattern, pcmThreads[colorNumber]);
     }
     emb_read(file, &st, EMB_INT16_BIG);
     st = EMB_MIN(st, MAX_STITCHES);
@@ -9229,7 +9214,7 @@ readPcm(EmbPattern* pattern, FILE* file)
         }
         dx = pfaffDecode(b[2], b[1], b[0]);
         dy = pfaffDecode(b[6], b[5], b[4]);
-        embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        emb_pattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     return 1;
 }
@@ -9281,10 +9266,10 @@ readPcq(EmbPattern* pattern, const char* fileName, FILE* file)
         if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
-        embPattern_addThread(pattern, t);
+        emb_pattern_addThread(pattern, t);
     }
     if (allZeroColor) {
-        embPattern_loadExternalColorFile(pattern, fileName);
+        emb_pattern_loadExternalColorFile(pattern, fileName);
     }
     st = fread_uint16(file);
     /* READ STITCH RECORDS */
@@ -9305,7 +9290,7 @@ readPcq(EmbPattern* pattern, const char* fileName, FILE* file)
         }
         dx = pfaffDecode(b[1], b[2], b[3]);
         dy = pfaffDecode(b[5], b[6], b[7]);
-        embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        emb_pattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     return 1;
 }
@@ -9383,10 +9368,10 @@ readPcs(EmbPattern* pattern, const char* fileName, FILE* file)
         if (t.color.r || t.color.g || t.color.b) {
             allZeroColor = 0;
         }
-        embPattern_addThread(pattern, t);
+        emb_pattern_addThread(pattern, t);
     }
     if (allZeroColor) {
-        embPattern_loadExternalColorFile(pattern, fileName);
+        emb_pattern_loadExternalColorFile(pattern, fileName);
     }
     st = fread_uint16(file);
     /* READ STITCH RECORDS */
@@ -9406,7 +9391,7 @@ readPcs(EmbPattern* pattern, const char* fileName, FILE* file)
         }
         dx = pfaffDecode(b[1], b[2], b[3]);
         dy = pfaffDecode(b[5], b[6], b[7]);
-        embPattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        emb_pattern_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
 
     return 1;
@@ -9454,12 +9439,12 @@ readPecStitches(EmbPattern* pattern, FILE* file)
 
         int stitchType = NORMAL;
         if (b[0] == 0xFF && b[1] == 0x00) {
-            embPattern_end(pattern);
+            emb_pattern_end(pattern);
             return;
         }
         if (b[0] == 0xFE && b[1] == 0xB0) {
             (void)fgetc(f);
-            embPattern_addStitchRel(pattern, 0.0, 0.0, STOP, 1);
+            emb_pattern_addStitchRel(pattern, 0.0, 0.0, STOP, 1);
             continue;
         }
         /* High bit set means 12-bit offset, otherwise 7-bit signed delta */
@@ -9490,7 +9475,7 @@ readPecStitches(EmbPattern* pattern, FILE* file)
             val2 -= 0x80;
         }
 
-        embPattern_addStitchRel(pattern, val1 / 10.0,
+        emb_pattern_addStitchRel(pattern, val1 / 10.0,
                 val2 / 10.0, stitchType, 1);
     }
 }
@@ -9551,7 +9536,7 @@ readPec(EmbPattern* pattern, const char *fileName, FILE* file)
     fseek(file, 0x38, SEEK_SET);
     colorChanges = (unsigned char)(char)fgetc(file);
     for (i = 0; i <= colorChanges; i++) {
-        embPattern_addThread(pattern, pecThreads[(char)fgetc(file) % 65]);
+        emb_pattern_addThread(pattern, pecThreads[(char)fgetc(file) % 65]);
     }
 
     /* Get Graphics offset */
@@ -9578,7 +9563,7 @@ readPec(EmbPattern* pattern, const char *fileName, FILE* file)
     /* 0x21C */
     /*unsigned int end = graphicsOffset + 0x208; */
     readPecStitches(pattern, file);
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
     return 1;
 }
 
@@ -9695,7 +9680,7 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
 
     fwrite("\x31\xff\xf0", 1, 3, file);
 
-    bounds = embPattern_calcBoundingBox(pattern);
+    bounds = emb_pattern_calcBoundingBox(pattern);
 
     height = (int)emb_round(bounds.bottom - bounds.top);
     width = (int)emb_round(bounds.right - bounds.left);
@@ -9762,10 +9747,10 @@ writePec(EmbPattern* pattern, const char* fileName, FILE* file)
 {
     /* TODO: There needs to be a matching flipVertical() call after the write
         to ensure multiple writes from the same pattern work properly */
-    embPattern_flipVertical(pattern);
-    embPattern_fixColorCount(pattern);
-    embPattern_correctForMaxStitchLength(pattern, 12.7, 204.7);
-    embPattern_scale(pattern, 10.0);
+    emb_pattern_flipVertical(pattern);
+    emb_pattern_fixColorCount(pattern);
+    emb_pattern_correctForMaxStitchLength(pattern, 12.7, 204.7);
+    emb_pattern_scale(pattern, 10.0);
     fwrite("#PEC0001", 1, 8, file);
     writePecStitches(pattern, file, fileName);
     return 1;
@@ -9910,13 +9895,13 @@ readPes(EmbPattern* pattern, const char *fileName, FILE* file)
         if (color_index >= pecThreadCount) {
             color_index = 0;
         }
-        embPattern_addThread(pattern, pecThreads[color_index]);
+        emb_pattern_addThread(pattern, pecThreads[color_index]);
     }
 
     fseek(file, pecstart + 528, SEEK_SET);
     readPecStitches(pattern, file);
 
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
 
     return 1;
 }
@@ -10133,7 +10118,7 @@ readThreads(FILE* file, EmbPattern* pattern)
             printf("brand string length: %d\n", brandStringLength);
             printf("thread chart string length: %d\n", threadChartStringLength);
         }
-        embPattern_addThread(pattern, thread);
+        emb_pattern_addThread(pattern, thread);
     }
 }
 
@@ -10151,7 +10136,7 @@ pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
     int newColorCode = 0;
     int colorInfoIndex = 0;
     int i, j;
-    EmbRect bounds = embPattern_calcBoundingBox(pattern);
+    EmbRect bounds = emb_pattern_calcBoundingBox(pattern);
 
     for (i = 0; i < pattern->stitch_list->count; i++) {
         EmbColor color;
@@ -10253,7 +10238,7 @@ pesWriteEmbOneSection(EmbPattern* pattern, FILE* file) {
     EmbRect bounds;
     binaryWriteShort(file, 0x07); /* string length */
     fwrite("CEmbOne", 1, 7, file);
-    bounds = embPattern_calcBoundingBox(pattern);
+    bounds = emb_pattern_calcBoundingBox(pattern);
 
     fpad(file, 0, 16);
 
@@ -10287,8 +10272,8 @@ char
 writePes(EmbPattern* pattern,  const char *fileName, FILE* file)
 {
     int pecLocation;
-    embPattern_flipVertical(pattern);
-    embPattern_scale(pattern, 10.0);
+    emb_pattern_flipVertical(pattern);
+    emb_pattern_scale(pattern, 10.0);
     fwrite("#PES0001", 1, 8, file);
     /* WRITE PECPointer 32 bit int */
     binaryWriteInt(file, 0x00);
@@ -10331,7 +10316,7 @@ readPhb(EmbPattern* pattern, FILE* file)
 
     for (i = 0; i < colorCount; i++) {
         EmbThread t = pecThreads[fgetc(file)];
-        embPattern_addThread(pattern, t);
+        emb_pattern_addThread(pattern, t);
     }
 
     /* TODO: check that file begins with #PHB */
@@ -10363,7 +10348,7 @@ readPhb(EmbPattern* pattern, FILE* file)
 
     readPecStitches(pattern, file);
 
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
     return 1; /*TODO: finish ReadPhb */
 }
 
@@ -10398,7 +10383,7 @@ readPhc(EmbPattern* pattern, FILE* file)
 
     for (i = 0; i < colorChanges; i++) {
         EmbThread t = pecThreads[(int)(char)fgetc(file)];
-        embPattern_addThread(pattern, t);
+        emb_pattern_addThread(pattern, t);
     }
     fseek(file, 0x2B, SEEK_SET);
     pecAdd = (char)fgetc(file);
@@ -10418,7 +10403,7 @@ readPhc(EmbPattern* pattern, FILE* file)
 
     readPecStitches(pattern, file);
 
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
     return 1; /*TODO: finish ReadPhc */
 }
 
@@ -10451,14 +10436,14 @@ readPlt(EmbPattern* pattern, FILE* file)
             if (sscanf(input, "PD%f,%f;", &x, &y) < 2) {
                 break;
             }
-            embPattern_addStitchAbs(pattern, x / scalingFactor,
+            emb_pattern_addStitchAbs(pattern, x / scalingFactor,
                             y / scalingFactor, NORMAL, 1);
         } else if (input[0] == 'P' && input[1] == 'U') {
             /* TODO: replace all scanf code */
             if (sscanf(input, "PU%f,%f;", &x, &y) < 2) {
                 break;
             }
-            embPattern_addStitchAbs(pattern, x / scalingFactor,
+            emb_pattern_addStitchAbs(pattern, x / scalingFactor,
                     y / scalingFactor, STOP, 1);
         }
     }
@@ -10524,7 +10509,7 @@ readRgb(EmbPattern* pattern, FILE* file)
         embColor_read(file, &(t.color), 4);
         string_copy(t.catalogNumber, "");
         string_copy(t.description, "");
-        embPattern_addThread(pattern, t);
+        emb_pattern_addThread(pattern, t);
     }
     return 1;
 }
@@ -10567,7 +10552,7 @@ readSew(EmbPattern* pattern, FILE* file)
 
     for (i = 0; i < numberOfColors; i++) {
         int color = fread_int16(file);
-        embPattern_addThread(pattern, jefThreads[color%78]);
+        emb_pattern_addThread(pattern, jefThreads[color%78]);
     }
     fseek(file, 0x1D78, SEEK_SET);
 
@@ -10598,7 +10583,7 @@ readSew(EmbPattern* pattern, FILE* file)
             thisStitchIsJump = 1;
             flags = TRIM;
         }
-        embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        emb_pattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     printf("current position: %ld\n", ftell(file));
     return 1;
@@ -10754,7 +10739,7 @@ readShv(EmbPattern* pattern, FILE* file)
         unsigned int stitchCount, colorNumber;
         emb_read(file, &stitchCount, EMB_INT32_BIG);
         colorNumber = fgetc(file);
-        embPattern_addThread(pattern, shvThreads[colorNumber % 43]);
+        emb_pattern_addThread(pattern, shvThreads[colorNumber % 43]);
         stitchesPerColor[i] = stitchCount;
         fseek(file, 9, SEEK_CUR);
     }
@@ -10771,7 +10756,7 @@ readShv(EmbPattern* pattern, FILE* file)
         b0 = fgetc(file);
         b1 = fgetc(file);
         if (stitchesSinceChange >= stitchesPerColor[currColorIndex]) {
-            embPattern_addStitchRel(pattern, 0, 0, STOP, 1);
+            emb_pattern_addStitchRel(pattern, 0, 0, STOP, 1);
             currColorIndex++;
             stitchesSinceChange = 0;
         }
@@ -10792,16 +10777,16 @@ readShv(EmbPattern* pattern, FILE* file)
                 sy = (unsigned short)(sy << 8 | fgetc(file));
                 flags = TRIM;
                 inJump = 1;
-                embPattern_addStitchRel(pattern, shvDecodeShort(sx) / 10.0, shvDecodeShort(sy) / 10.0, flags, 1);
+                emb_pattern_addStitchRel(pattern, shvDecodeShort(sx) / 10.0, shvDecodeShort(sy) / 10.0, flags, 1);
                 continue;
             }
         }
         dx = shvDecode(b0);
         dy = shvDecode(b1);
     stitchesSinceChange++;
-        embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        emb_pattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
 
     return 1;
 }
@@ -10837,7 +10822,7 @@ readSst(EmbPattern* pattern, FILE* file)
         unsigned char commandByte = (unsigned char)fgetc(file);
 
         if (commandByte == 0x04) {
-            embPattern_addStitchRel(pattern, 0, 0, END, 1);
+            emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
 
@@ -10849,7 +10834,7 @@ readSst(EmbPattern* pattern, FILE* file)
             b2 = -b2;
         if ((commandByte & 0x40) == 0x40)
             b1 = -b1;
-        embPattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
+        emb_pattern_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
     }
 
     return 1; /*TODO: finish readSst */
@@ -11059,7 +11044,7 @@ readStx(EmbPattern* pattern, FILE* file)
         t.color = st.stxColor;
         string_copy(t.description, st.colorName);
         string_copy(t.catalogNumber, st.colorCode);
-        embPattern_addThread(pattern, t);
+        emb_pattern_addThread(pattern, t);
         stxThreads[i] = st;
     }
 
@@ -11085,14 +11070,14 @@ readStx(EmbPattern* pattern, FILE* file)
                 case 1:
                     b0 = (char)fgetc(file);
                     b1 = (char)fgetc(file);
-                    /*embPattern_addStitchRel(b0, b1, STOP); TODO: review */
+                    /*emb_pattern_addStitchRel(b0, b1, STOP); TODO: review */
 
                     i++;
                     break;
                 case 2:
                     b0 = (char)fgetc(file);
                     b1 = (char)fgetc(file);
-                    embPattern_addStitchRel(pattern, b0 / 10.0,
+                    emb_pattern_addStitchRel(pattern, b0 / 10.0,
                         b1 / 10.0, JUMP, 1);
                     i++;
                     break;
@@ -11105,11 +11090,11 @@ readStx(EmbPattern* pattern, FILE* file)
                     break;
             }
         } else {
-            embPattern_addStitchRel(pattern, b0 / 10.0, b1 / 10.0, NORMAL, 1);
+            emb_pattern_addStitchRel(pattern, b0 / 10.0, b1 / 10.0, NORMAL, 1);
             i++;
         }
     }
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
     return 1;
 }
 
@@ -11263,7 +11248,7 @@ parse_circle(EmbPattern *p)
     circle.center.x = atof(svgAttribute_getValue("cx"));
     circle.center.y = atof(svgAttribute_getValue("cy"));
     circle.radius = atof(svgAttribute_getValue("r"));
-    embPattern_addCircleAbs(p, circle);
+    emb_pattern_addCircleAbs(p, circle);
 }
 
 void
@@ -11274,7 +11259,7 @@ parse_ellipse(EmbPattern *p)
     ellipse.center.y = atof(svgAttribute_getValue("cy"));
     ellipse.radius.x = atof(svgAttribute_getValue("rx"));
     ellipse.radius.y = atof(svgAttribute_getValue("ry"));
-    embPattern_addEllipseAbs(p, ellipse);
+    emb_pattern_addEllipseAbs(p, ellipse);
 }
 
 void
@@ -11291,7 +11276,7 @@ parse_line(EmbPattern *p)
         EmbPoint point;
         point.position.x = atof(x1);
         point.position.y = atof(y1);
-        embPattern_addPointAbs(p, point);
+        emb_pattern_addPointAbs(p, point);
     }
     else {
         EmbLine line;
@@ -11299,7 +11284,7 @@ parse_line(EmbPattern *p)
         line.start.y = atof(y1);
         line.end.x = atof(x2);
         line.end.y = atof(y2);
-        embPattern_addLineAbs(p, line);
+        emb_pattern_addLineAbs(p, line);
     }
 
 }
@@ -11597,7 +11582,7 @@ parse_path(EmbPattern *p)
     path.flagList = flagList;
     path.color = color;
     path.lineType = 1;
-    embPattern_addPathAbs(p, path);
+    emb_pattern_addPathAbs(p, path);
 }
 
 EmbArray *parse_pointlist(EmbPattern *p)
@@ -11682,7 +11667,7 @@ parse_polygon(EmbPattern *p)
     BROKEN: polygonObj.pointList = parse_pointlist(p);
     polygonObj.color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
     polygonObj.lineType = 1; TODO: use lineType enum
-    embPattern_addPolygonObjectAbs(p, &polygonObj);
+    emb_pattern_addPolygonObjectAbs(p, &polygonObj);
     */
 }
 
@@ -11698,7 +11683,7 @@ parse_polyline(EmbPattern *p)
     polylineObj->pointList = parse_pointlist(p);
     polylineObj->color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
     polylineObj->lineType = 1; TODO: use lineType enum
-    embPattern_addPolylineObjectAbs(p, polylineObj);
+    emb_pattern_addPolylineObjectAbs(p, polylineObj);
     */
 }
 
@@ -11713,7 +11698,7 @@ parse_rect(EmbPattern *p)
     height = atof(svgAttribute_getValue("height"));
     rect.right = rect.left + width;
     rect.bottom = rect.top + height;
-    embPattern_addRectAbs(p, rect);
+    emb_pattern_addRectAbs(p, rect);
 }
 
 void
@@ -11933,7 +11918,7 @@ readSvg(EmbPattern* pattern, FILE* file) {
     currentValue[0] = 0;
 
     /* Pre-flip in case of multiple reads on the same pattern */
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
 
     pos = 0;
     while (fread(&c, 1, 1, file)) {
@@ -12032,7 +12017,7 @@ readSvg(EmbPattern* pattern, FILE* file) {
         safe_free(attributeList[i].value);
     }
     /* Flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
 #endif
     return 1; /*TODO: finish readSvg */
 }
@@ -12050,8 +12035,8 @@ writeSvg(EmbPattern* pattern, FILE *file)
     EmbRect border;
 
     /* Pre-flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
-    embPattern_flipVertical(pattern);
-    boundingRect = embPattern_calcBoundingBox(pattern);
+    emb_pattern_flipVertical(pattern);
+    boundingRect = emb_pattern_calcBoundingBox(pattern);
     fprintf(file, "<?xml version=\"1.0\"?>\n");
     fprintf(file, "<!-- Embroidermodder 2 SVG Embroidery File -->\n");
     fprintf(file, "<!-- http://embroidermodder.github.io -->\n");
@@ -12232,7 +12217,7 @@ writeSvg(EmbPattern* pattern, FILE *file)
     /* Reset the pattern so future writes(regardless of format)
      * are not flipped.
      */
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
 
     return 1;
 }
@@ -12250,7 +12235,7 @@ readT01(EmbPattern* pattern, FILE* file)
     while (fread(b, 1, 3, file) == 3) {
         int flags, x, y;
         decode_t01_record(b, &flags, &x, &y);
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
+        emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
         if (flags == END) {
             break;
         }
@@ -12265,9 +12250,9 @@ writeT01(EmbPattern* pattern, FILE* file)
     int i;
     EmbVector pos;
 
-    embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
+    emb_pattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
-    boundingRect = embPattern_calcBoundingBox(pattern);
+    boundingRect = emb_pattern_calcBoundingBox(pattern);
     if (emb_verbose>1) {
         printf("bounding rectangle with top %f not used ", boundingRect.top);
         printf("in the function writeT01\n");
@@ -12318,7 +12303,7 @@ readT09(EmbPattern* pattern, FILE* file)
         if (commandByte & 0x40) {
             b2 = -b2;
         }
-        embPattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
+        emb_pattern_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
     }
     return 1;
 }
@@ -12418,7 +12403,7 @@ readTap(EmbPattern* pattern, FILE* file) {
         int flags, x, y;
         decode_tajima_ternary(b, &x, &y);
         flags = decode_tap_record_flags(b[2]);
-        embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
+        emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
         if (flags == END) {
             break;
         }
@@ -12432,7 +12417,7 @@ writeTap(EmbPattern* pattern, FILE* file)
     int i;
     EmbVector pos;
 
-    embPattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
+    emb_pattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
 
     pos.x = 0.0;
     pos.y = 0.0;
@@ -12516,10 +12501,10 @@ readThr(EmbPattern* pattern, FILE* file)
 
         if ((int)(color & 0xF) != currentColor) {
             currentColor = (int)color & 0xF;
-            embPattern_changeColor(pattern, currentColor);
+            emb_pattern_changeColor(pattern, currentColor);
             type = STOP | TRIM;
         }
-        embPattern_addStitchAbs(pattern, x, y, type, 0);
+        emb_pattern_addStitchAbs(pattern, x, y, type, 0);
     }
     fseek(file, 16, SEEK_CUR); /* skip bitmap name (16 chars) */
 
@@ -12532,7 +12517,7 @@ readThr(EmbPattern* pattern, FILE* file)
         string_copy(thread.description, "NULL");
         string_copy(thread.catalogNumber, "NULL");
         embColor_read(file, &(thread.color), 4);
-        embPattern_addThread(pattern, thread);
+        emb_pattern_addThread(pattern, thread);
     }
     /*  64 bytes of rgbx(4 bytes) colors (16 custom colors) */
     /*  16 bytes of thread size (ascii representation ie. '4') */
@@ -12653,7 +12638,7 @@ readTxt(EmbPattern* pattern, FILE* file)
         st.y = atof(y);
         st.color = atoi(color);
         st.flags = atoi(flags);
-        embPattern_addStitchAbs(pattern, st.x, st.y, st.flags, st.color);
+        emb_pattern_addStitchAbs(pattern, st.x, st.y, st.flags, st.color);
     }
     puts("Overridden, defaulting to dst.");
     readDst(pattern, file);
@@ -12699,7 +12684,7 @@ readU00(EmbPattern* pattern, FILE* file)
         embColor_read(file, &(t.color), 3);
         string_copy(t.catalogNumber, "");
         string_copy(t.description, "");
-        embPattern_addThread(pattern, t);
+        emb_pattern_addThread(pattern, t);
     }
 
     fseek(file, 0x100, SEEK_SET);
@@ -12727,7 +12712,7 @@ readU00(EmbPattern* pattern, FILE* file)
         if (negativeY) {
             dy = (char) -dy;
         }
-        embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        emb_pattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     return 1;
 }
@@ -12790,7 +12775,7 @@ readU01(EmbPattern* pattern, FILE* file)
         if (negativeY) {
             dy = (char) -dy;
         }
-        embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        emb_pattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     return 1;
 }
@@ -12925,7 +12910,7 @@ readVip(EmbPattern* pattern, FILE* file)
         thread.color.g = decodedColors[startIndex + 1];
         thread.color.b = decodedColors[startIndex + 2];
         /* printf("%d\n", decodedColors[startIndex + 3]); */
-        embPattern_addThread(pattern, thread);
+        emb_pattern_addThread(pattern, thread);
     }
     fseek(file, header.attributeOffset, SEEK_SET);
     attributeData = (unsigned char*)malloc(header.xOffset - header.attributeOffset);
@@ -12952,12 +12937,12 @@ readVip(EmbPattern* pattern, FILE* file)
     yDecompressed = vipDecompressData(yData, fileLength - header.yOffset, header.numberOfStitches);
 
     for (i = 0; i < header.numberOfStitches; i++) {
-        embPattern_addStitchRel(pattern,
+        emb_pattern_addStitchRel(pattern,
                     vipDecodeByte(xDecompressed[i]) / 10.0,
                     vipDecodeByte(yDecompressed[i]) / 10.0,
                     vipDecodeStitchType(attributeDataDecompressed[i]), 1);
     }
-    embPattern_addStitchRel(pattern, 0, 0, END, 1);
+    emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
 
     safe_free(attributeData);
     safe_free(xData);
@@ -13037,7 +13022,7 @@ writeVip(EmbPattern* pattern, FILE* file)
         safe_free(decodedColors);
         return 0;
     }
-    /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
+    /* emb_pattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
 
     patternColor = minColors;
     if (emb_verbose>1) {
@@ -13050,7 +13035,7 @@ writeVip(EmbPattern* pattern, FILE* file)
     binaryWriteUInt(file, stitchCount);
     binaryWriteUInt(file, minColors);
 
-    boundingRect = embPattern_calcBoundingBox(pattern);
+    boundingRect = emb_pattern_calcBoundingBox(pattern);
     binaryWriteShort(file, (short) emb_round(boundingRect.right * 10.0));
     binaryWriteShort(file, (short) -emb_round(boundingRect.top * 10.0 - 1.0));
     binaryWriteShort(file, (short) emb_round(boundingRect.left * 10.0));
@@ -13300,12 +13285,12 @@ readVp3(EmbPattern* pattern, FILE* file)
         colorSectionOffset += ftell(file);
         emb_read(file, &startX, EMB_INT32_BIG);
         emb_read(file, &startY, EMB_INT32_BIG);
-        embPattern_addStitchAbs(pattern, startX / 1000.0, -startY / 1000.0, JUMP, 1);
+        emb_pattern_addStitchAbs(pattern, startX / 1000.0, -startY / 1000.0, JUMP, 1);
 
         tableSize = (char)fgetc(file);
         fseek(file, 1, SEEK_CUR);
         embColor_read(file, &(t.color), 3);
-        embPattern_addThread(pattern, t);
+        emb_pattern_addThread(pattern, t);
         fseek(file, 6*tableSize - 1, SEEK_CUR);
 
         threadColorNumber = vp3ReadString(file);
@@ -13346,13 +13331,13 @@ readVp3(EmbPattern* pattern, FILE* file)
                         emb_read(file, &readIn, EMB_INT16_BIG);
                         y = vp3DecodeInt16(readIn);
                         fseek(file, 2, SEEK_CUR);
-                        embPattern_addStitchRel(pattern, x/ 10.0, y / 10.0, TRIM, 1);
+                        emb_pattern_addStitchRel(pattern, x/ 10.0, y / 10.0, TRIM, 1);
                         break;
                     default:
                         break;
                 }
             } else {
-                embPattern_addStitchRel(pattern, x / 10.0, y / 10.0, NORMAL, 1);
+                emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, NORMAL, 1);
             }
 
             if (ftell(file) == lastFilePosition) {
@@ -13361,10 +13346,10 @@ readVp3(EmbPattern* pattern, FILE* file)
             }
         }
         if (i + 1 < numberOfColors) {
-            embPattern_addStitchRel(pattern, 0, 0, STOP, 1);
+            emb_pattern_addStitchRel(pattern, 0, 0, STOP, 1);
         }
     }
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
     return 1;
 }
 
@@ -13403,11 +13388,11 @@ writeVp3(EmbPattern* pattern, FILE* file)
     color.g = 0xFE;
     color.b = 0xFE;
 
-    bounds = embPattern_calcBoundingBox(pattern);
+    bounds = emb_pattern_calcBoundingBox(pattern);
 
-    embPattern_correctForMaxStitchLength(pattern, 3200.0, 3200.0); /* VP3 can encode signed 16bit deltas */
+    emb_pattern_correctForMaxStitchLength(pattern, 3200.0, 3200.0); /* VP3 can encode signed 16bit deltas */
 
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
 
     fwrite("%vsm%\0", 1, 6, file);
     vp3WriteString(file, "Embroidermodder");
@@ -13423,7 +13408,7 @@ writeVp3(EmbPattern* pattern, FILE* file)
     binaryWriteInt(file, 0); /* this would be some (unknown) function of thread length */
     fputc(0, file);
 
-    numberOfColors = embPattern_color_count(pattern, color);
+    numberOfColors = emb_pattern_color_count(pattern, color);
     fputc(numberOfColors, file);
     fwrite("\x0C\x00\x01\x00\x03\x00", 1, 6, file);
 
@@ -13580,7 +13565,7 @@ writeVp3(EmbPattern* pattern, FILE* file)
     vp3PatchByteCount(file, remainingBytesPos2, -4);
     vp3PatchByteCount(file, remainingBytesPos, -4);
 
-    embPattern_flipVertical(pattern);
+    emb_pattern_flipVertical(pattern);
     return 0;
 }
 
@@ -13621,7 +13606,7 @@ readXxx(EmbPattern* pattern, FILE* file)
         string_copy(thread.description, "NULL");
         fseek(file, 1, SEEK_CUR);
         embColor_read(file, &(thread.color), 3);
-        embPattern_addThread(pattern, thread);
+        emb_pattern_addThread(pattern, thread);
     }
     fseek(file, 0x100, SEEK_SET);
 
@@ -13659,7 +13644,7 @@ readXxx(EmbPattern* pattern, FILE* file)
             dx = xxxDecodeByte(b0);
             dy = xxxDecodeByte(b1);
         }
-        embPattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        emb_pattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     /* TODO: check end of pattern for multiple STOPs */
     return 1;
@@ -13727,7 +13712,7 @@ writeXxx(EmbPattern* pattern, FILE* file)
     unsigned int n_stitches;
     unsigned short n_threads;
 
-    embPattern_correctForMaxStitchLength(pattern, 124, 127);
+    emb_pattern_correctForMaxStitchLength(pattern, 124, 127);
 
     fpad(file, 0, 0x17);
     n_stitches = (unsigned int)pattern->stitch_list->count;
@@ -13739,7 +13724,7 @@ writeXxx(EmbPattern* pattern, FILE* file)
 
     fpad(file, 0, 0x02);
 
-    rect = embPattern_calcBoundingBox(pattern);
+    rect = emb_pattern_calcBoundingBox(pattern);
     width = rect.right - rect.left;
     height = rect.bottom - rect.top;
     to_write = (short)(width * 10.0);
@@ -13811,7 +13796,7 @@ readZsk(EmbPattern* pattern, FILE* file)
         embColor_read(file, &(t.color), 3);
         string_copy(t.catalogNumber, "");
         string_copy(t.description, "");
-        embPattern_addThread(pattern, t);
+        emb_pattern_addThread(pattern, t);
         fseek(file, 0x48, SEEK_CUR);
         colorNumber = fgetc(file);
     }
@@ -13839,12 +13824,12 @@ readZsk(EmbPattern* pattern, FILE* file)
                 }
                 /* TODO: need to determine what b[1] is used for.*/
                 stitchType = STOP;
-                embPattern_changeColor(pattern, colorNumber - 1);
+                emb_pattern_changeColor(pattern, colorNumber - 1);
             }
             b[1] = 0;
             b[2] = 0;
         }
-        embPattern_addStitchRel(pattern, b[1] / 10.0,
+        emb_pattern_addStitchRel(pattern, b[1] / 10.0,
             b[2] / 10.0, stitchType, 0);
     }
 
@@ -13991,14 +13976,14 @@ embGeometry_move(EmbGeometry *obj, EmbVector delta)
     switch (obj->type) {
     case EMB_ARC: {
         EmbArc *arc = &(obj->object.arc);
-        arc->start = embVector_add(arc->start, delta);
-        arc->mid = embVector_add(arc->mid, delta);
-        arc->end = embVector_add(arc->end, delta);
+        arc->start = emb_vector_add(arc->start, delta);
+        arc->mid = emb_vector_add(arc->mid, delta);
+        arc->end = emb_vector_add(arc->end, delta);
         return;
     }
     case EMB_CIRCLE: {
         EmbCircle *circle = &(obj->object.circle);
-        circle->center = embVector_add(circle->center, delta);
+        circle->center = emb_vector_add(circle->center, delta);
         return;
     }
     default:
@@ -14152,25 +14137,25 @@ emb_arc_center(EmbArc arc)
     EmbVector a_vec, b_vec, aMid_vec, bMid_vec, aPerp_vec, bPerp_vec, pa, pb;
     EmbLine line1, line2;
     EmbReal paAngleInRadians, pbAngleInRadians;
-    a_vec = embVector_subtract(arc.mid, arc.start);
-    aMid_vec = embVector_average(arc.mid, arc.start);
+    a_vec = emb_vector_subtract(arc.mid, arc.start);
+    aMid_vec = emb_vector_average(arc.mid, arc.start);
 
-    paAngleInRadians = embVector_angle(a_vec) + (embConstantPi/2.0);
-    pa = embVector_unit(paAngleInRadians);
-    aPerp_vec = embVector_add(aMid_vec, pa);
+    paAngleInRadians = emb_vector_angle(a_vec) + (embConstantPi/2.0);
+    pa = emb_vector_unit(paAngleInRadians);
+    aPerp_vec = emb_vector_add(aMid_vec, pa);
 
-    b_vec = embVector_subtract(arc.end, arc.mid);
-    bMid_vec = embVector_average(arc.end, arc.mid);
+    b_vec = emb_vector_subtract(arc.end, arc.mid);
+    bMid_vec = emb_vector_average(arc.end, arc.mid);
 
-    pbAngleInRadians = embVector_angle(b_vec) + (embConstantPi/2.0);
-    pb = embVector_unit(pbAngleInRadians);
-    bPerp_vec = embVector_add(bMid_vec, pb);
+    pbAngleInRadians = emb_vector_angle(b_vec) + (embConstantPi/2.0);
+    pb = emb_vector_unit(pbAngleInRadians);
+    bPerp_vec = emb_vector_add(bMid_vec, pb);
 
     line1.start = aMid_vec;
     line1.end = aPerp_vec;
     line2.start = bMid_vec;
     line2.end = bPerp_vec;
-    center = embLine_intersectionPoint(line1, line2);
+    center = emb_line_intersectionPoint(line1, line2);
     if (emb_error) {
         puts("ERROR: no intersection, cannot find arcCenter.");
     }
@@ -14197,7 +14182,7 @@ emb_arc_diameter(EmbArc arc)
 EmbReal
 emb_arc_chordAngle(EmbArc arc)
 {
-    EmbVector delta = embVector_subtract(arc.end, arc.start);
+    EmbVector delta = emb_vector_subtract(arc.end, arc.start);
     return atan2(delta.y, delta.x);
 }
 
@@ -14205,14 +14190,14 @@ emb_arc_chordAngle(EmbArc arc)
 EmbReal
 emb_arc_chord(EmbArc arc)
 {
-    return embVector_distance(arc.start, arc.end);
+    return emb_vector_distance(arc.start, arc.end);
 }
 
 /* Calculate the Chord MidPoint. */
 EmbVector
 emb_arc_chordMid(EmbArc arc)
 {
-    return embVector_scale(embVector_add(arc.start, arc.end), 0.5);
+    return emb_vector_scale(emb_vector_add(arc.start, arc.end), 0.5);
 }
 
 /* Calculate the Sagitta. */
@@ -14269,10 +14254,10 @@ emb_arc_setCenter(EmbArc *arc, EmbVector point)
 {
     EmbVector delta;
     EmbVector old_center = emb_arc_center(*arc);
-    delta = embVector_subtract(point, old_center);
-    arc->start = embVector_add(arc->start, delta);
-    arc->mid = embVector_add(arc->mid, delta);
-    arc->end = embVector_add(arc->end, delta);
+    delta = emb_vector_subtract(point, old_center);
+    arc->start = emb_vector_add(arc->start, delta);
+    arc->mid = emb_vector_add(arc->mid, delta);
+    arc->end = emb_vector_add(arc->end, delta);
 }
 
 void
@@ -14290,20 +14275,20 @@ emb_arc_setRadius(EmbArc *arc, float radius)
     EmbVector center = emb_arc_center(*arc);
     double delta_length;
 
-    delta = embVector_subtract(arc->start, center);
-    delta_length = embVector_length(delta);
-    delta = embVector_scale(delta, rad/delta_length);
-    arc->start = embVector_add(center, delta);
+    delta = emb_vector_subtract(arc->start, center);
+    delta_length = emb_vector_length(delta);
+    delta = emb_vector_scale(delta, rad/delta_length);
+    arc->start = emb_vector_add(center, delta);
 
-    delta = embVector_subtract(arc->mid, center);
-    delta_length = embVector_length(delta);
-    delta = embVector_scale(delta, rad/delta_length);
-    arc->mid = embVector_add(center, delta);
+    delta = emb_vector_subtract(arc->mid, center);
+    delta_length = emb_vector_length(delta);
+    delta = emb_vector_scale(delta, rad/delta_length);
+    arc->mid = emb_vector_add(center, delta);
 
-    delta = embVector_subtract(arc->end, center);
-    delta_length = embVector_length(delta);
-    delta = embVector_scale(delta, rad/delta_length);
-    arc->end = embVector_add(center, delta);
+    delta = emb_vector_subtract(arc->end, center);
+    delta_length = emb_vector_length(delta);
+    delta = emb_vector_scale(delta, rad/delta_length);
+    arc->end = emb_vector_add(center, delta);
 }
 
 void
@@ -14325,8 +14310,8 @@ emb_arc_startAngle(EmbArc arc)
 {
     EmbVector delta;
     EmbVector center = emb_arc_center(arc);
-    delta = embVector_subtract(arc.end, center);
-    float angle = embVector_angle(delta);
+    delta = emb_vector_subtract(arc.end, center);
+    float angle = emb_vector_angle(delta);
     return fmodf(angle, 360.0);
 }
 
@@ -14335,8 +14320,8 @@ emb_arc_endAngle(EmbArc arc)
 {
     EmbVector delta;
     EmbVector center = emb_arc_center(arc);
-    delta = embVector_subtract(arc.end, center);
-    float angle = embVector_angle(delta);
+    delta = emb_vector_subtract(arc.end, center);
+    float angle = emb_vector_angle(delta);
     return fmodf(angle, 360.0);
 }
 
@@ -14644,7 +14629,7 @@ void embGeometry_realRender(QPainter* painter, const QPainterPath& renderPath)
     }
 }
 
-void embCircle_main()
+void emb_circle_main()
 {
     initCommand();
     clearSelection();
@@ -14659,7 +14644,8 @@ void embCircle_main()
 }
 */
 
-void embCircle_prompt(const char *str)
+void
+emb_circle_prompt(const char *str)
 {
     /*
     if (view.ui_mode == "CIRCLE_MODE_1P_RAD") {
@@ -14831,7 +14817,7 @@ void embCircle_prompt(const char *str)
 }
 
 /*
-void embCircle_CircleObject(EmbVector center, float radius, unsigned int rgb)
+void emb_circle_CircleObject(EmbVector center, float radius, unsigned int rgb)
 {
     if (n_views == 0) {
         return;
@@ -14843,7 +14829,7 @@ void embCircle_CircleObject(EmbVector center, float radius, unsigned int rgb)
     init(centerX, centerY, radius, rgb, Qt::SolidLine); //TODO: getCurrentLineType
 }
 
-void embCircle_CircleObject(EmbCircle* obj)
+void emb_circle_CircleObject(EmbCircle* obj)
 {
     debug_message("CircleObject Constructor()");
     if (obj) {
@@ -14852,7 +14838,7 @@ void embCircle_CircleObject(EmbCircle* obj)
     }
 }
 
-void embCircle_init(EmbVector center, float radius, unsigned int rgb, int lineType)
+void emb_circle_init(EmbVector center, float radius, unsigned int rgb, int lineType)
 {
     if (n_views == 0) {
         return;
@@ -14874,7 +14860,7 @@ void embCircle_init(EmbVector center, float radius, unsigned int rgb, int lineTy
     updatePath();
 }
 
-void embCircle_setDiameter(EmbCircle *circle, float diameter)
+void emb_circle_setDiameter(EmbCircle *circle, float diameter)
 {
     if (n_views == 0) {
         return;
@@ -14892,18 +14878,18 @@ void embCircle_setDiameter(EmbCircle *circle, float diameter)
 }
 */
 
-void embCircle_setArea(EmbCircle *circle, float area)
+void emb_circle_setArea(EmbCircle *circle, float area)
 {
     circle->radius = sqrt(area / embConstantPi);
 }
 
-void embCircle_setCircumference(EmbCircle *circle, float circumference)
+void emb_circle_setCircumference(EmbCircle *circle, float circumference)
 {
     circle->radius = circumference / (2.0*embConstantPi);
 }
 
 /*
-void embCircle_updatePath()
+void emb_circle_updatePath()
 {
     QPainterPath path;
     EmbRect r = rect();
@@ -14917,7 +14903,7 @@ void embCircle_updatePath()
     setPath(path);
 }
 
-void embCircle_paint(QPainter* painter)
+void emb_circle_paint(QPainter* painter)
 {
     QGraphicsScene* objScene = scene();
     if (!objScene) return;
@@ -14932,7 +14918,7 @@ void embCircle_paint(QPainter* painter)
     painter->drawEllipse(rect());
 }
 
-void embCircle_updateRubber(QPainter* painter)
+void emb_circle_updateRubber(QPainter* painter)
 {
     int rubberMode = objectRubberMode();
     if (rubberMode == OBJ_RUBBER_CIRCLE_1P_RAD) {
@@ -15047,7 +15033,7 @@ std::vector<EmbVector> Circle_allGripPoints()
 */
 
 /*
-void embCircle_gripEdit(EmbVector& before, EmbVector& after)
+void emb_circle_gripEdit(EmbVector& before, EmbVector& after)
 {
     if (before == objectCenter()) {
         EmbVector delta = after-before;
@@ -15099,7 +15085,7 @@ void dimleader_setEndPoint1(EmbVector endPt1)
 {
     EmbVector delta;
     EmbVector endPt2 = objectEndPoint2();
-    embVector_subtract(endPt2, endPt1, &delta);
+    emb_vector_subtract(endPt2, endPt1, &delta);
     setRotation(0);
     setLine(0, 0, dx, dy);
     setPos(endPt1);
@@ -15112,7 +15098,7 @@ void dimleader_setEndPoint2(EmbVector endPt2)
 {
     EmbVector delta;
     EmbVector endPt1 = scenePos();
-    embVector_subtract(endPt2, endPt1, &delta);
+    emb_vector_subtract(endPt2, endPt1, &delta);
     setRotation(0);
     setLine(0, 0, delta.x, delta.y);
     setPos(endPt1);
@@ -15135,7 +15121,7 @@ EmbVector dimleader_objectEndPoint2()
     EmbVector point2;
     point2.x = lyne.x2()*scale();
     point2.y = lyne.y2()*scale();
-    EmbVector rot = embVector_rotate(point2, alpha);
+    EmbVector rot = emb_vector_rotate(point2, alpha);
 
     return (scenePos() + rot);
 }
@@ -15144,7 +15130,7 @@ EmbVector dimleader_objectMidPoint()
 {
     EmbVector mp = line().pointAt(0.5) * scale();
     float alpha = radians(rotation());
-    EmbVector rotMid = embVector_rotate(mp, alpha);
+    EmbVector rotMid = emb_vector_rotate(mp, alpha);
     return scenePos() + rotMid;
 }
 
@@ -15329,7 +15315,7 @@ void embDimLeader_gripEdit(const EmbVector before, const EmbVector after)
         setEndPoint2(after);
     }
     else if (before == objectMidPoint()) {
-        EmbVector delta = embVector_subtract(after, before);
+        EmbVector delta = emb_vector_subtract(after, before);
         moveBy(delta);
     }
 }
@@ -15650,7 +15636,7 @@ EmbVector image_objectTopLeft()
 {
     float alpha = radians(rotation());
     EmbVector tl = rect().topRight() * scale();
-    EmbVector ptlrot = embVector_rotate(tl, alpha);
+    EmbVector ptlrot = emb_vector_rotate(tl, alpha);
     return scenePos() + ptlrot;
 }
 */
@@ -15660,7 +15646,7 @@ EmbVector image_objectTopRight()
 {
     float alpha = radians(rotation());
     EmbVector tr = rect().topRight() * scale();
-    EmbVector ptrrot = embVector_rotate(tr, alpha);
+    EmbVector ptrrot = emb_vector_rotate(tr, alpha);
     return scenePos() + ptrrot;
 }
 */
@@ -15670,7 +15656,7 @@ EmbVector image_objectBottomLeft()
 {
     float alpha = radians(rotation());
     EmbVector bl = rect().topRight() * scale();
-    EmbVector pblrot = embVector_rotate(bl, alpha);
+    EmbVector pblrot = emb_vector_rotate(bl, alpha);
     return scenePos() + pblrot;
 }
 */
@@ -15680,7 +15666,7 @@ EmbVector image_objectBottomRight()
 {
     float alpha = radians(rotation());
     EmbVector br = rect().topRight() * scale();
-    EmbVector pbrrot = embVector_rotate(br, alpha);
+    EmbVector pbrrot = emb_vector_rotate(br, alpha);
     return scenePos() + pbrrot;
 }
 */
@@ -15943,7 +15929,7 @@ EmbVector line_objectEndPoint2()
     EmbVector point2;
     point2.x = lyne.x2()*scale();
     point2.y = lyne.y2()*scale();
-    EmbVector rotEnd = embVector_rotate(point2, alpha);
+    EmbVector rotEnd = emb_vector_rotate(point2, alpha);
 
     return scenePos() + rotEnd;
 }
@@ -15955,7 +15941,7 @@ EmbVector line_objectMidPoint()
     EmbLine lyne = line();
     EmbVector mp = lyne.pointAt(0.5) * scale();
     float alpha = radians(rotation());
-    EmbVector rotMid = embVector_rotate(mp, alpha);
+    EmbVector rotMid = emb_vector_rotate(mp, alpha);
 
     return scenePos() + rotMid;
 }
@@ -16679,7 +16665,7 @@ EmbVector rect_objectTopLeft()
 {
     float alpha = radians(rotation());
     EmbVector tl = rect().topLeft() * scale();
-    EmbVector ptlrot = embVector_rotate(t1, alpha);
+    EmbVector ptlrot = emb_vector_rotate(t1, alpha);
     return scenePos() + ptlrot;
 }
 
@@ -16687,7 +16673,7 @@ EmbVector rect_objectTopRight()
 {
     float alpha = radians(rotation());
     EmbVector tr = rect().topRight() * scale();
-    EmbVector ptlrot = embVector_rotate(t1, alpha);
+    EmbVector ptlrot = emb_vector_rotate(t1, alpha);
     return scenePos() + ptrrot;
 }
 */
@@ -16700,7 +16686,7 @@ EmbVector embRect_bottomLeft(EmbRect rect)
     /*
     float alpha = radians(rotation());
     EmbVector bl = rect().bottomLeft() * scale();
-    EmbVector pblrot = embVector_rotate(b1, alpha);
+    EmbVector pblrot = emb_vector_rotate(b1, alpha);
     return scenePos() + pblrot;
     */
     return v;
@@ -16714,7 +16700,7 @@ EmbVector embRect_bottomRight(EmbRect rect)
     /*
     float alpha = radians(rotation());
     EmbVector br = rect().bottomRight() * scale();
-    EmbVector pbrrot = embVector_rotate(br, alpha);
+    EmbVector pbrrot = emb_vector_rotate(br, alpha);
     return scenePos() + pbrrot;
     */
     return v;
@@ -16868,7 +16854,7 @@ QPainterPath rect_objectSavePath()
 /*
  */
 EmbCircle
-embCircle_init(EmbReal x, EmbReal y, EmbReal radius)
+emb_circle_init(EmbReal x, EmbReal y, EmbReal radius)
 {
     EmbCircle circle;
     circle.center.x = x;
@@ -16880,7 +16866,7 @@ embCircle_init(EmbReal x, EmbReal y, EmbReal radius)
 /*
  */
 EmbReal
-embCircle_area(EmbCircle circle)
+emb_circle_area(EmbCircle circle)
 {
     return embConstantPi * circle.radius * circle.radius;
 }
@@ -16888,7 +16874,7 @@ embCircle_area(EmbCircle circle)
 /*
  */
 EmbReal
-embCircle_circumference(EmbCircle circle)
+emb_circle_circumference(EmbCircle circle)
 {
     return 2.0f * embConstantPi * circle.radius;
 }
@@ -16905,8 +16891,8 @@ getCircleCircleIntersections(EmbCircle c0, EmbCircle c1,
     EmbVector delta;
     EmbReal a, h, px2, py2, mx, my, d;
     /* Distance between centers */
-    delta = embVector_subtract(c1.center, c0.center);
-    d = embVector_length(delta);
+    delta = emb_vector_subtract(c1.center, c0.center);
+    d = emb_vector_length(delta);
 
     /*Circles share centers. This results in division by zero,
       infinite solutions or one circle being contained within the other. */
@@ -16990,7 +16976,7 @@ getCircleTangentPoints(EmbCircle c, EmbVector point, EmbVector *t0, EmbVector *t
     EmbCircle p;
     EmbReal hyp;
     /* Distance to center of circle */
-    hyp = embVector_distance(point, c.center);
+    hyp = emb_vector_distance(point, c.center);
     /* Point is inside the circle */
     if (hyp < c.radius) {
         return 0;
@@ -17404,12 +17390,12 @@ degrees(EmbReal radian)
 /* Finds the normalized vector perpendicular (clockwise) to the line
  * given by v1->v2 (normal to the line) */
 EmbVector
-embLine_normalVector(EmbLine line, int clockwise)
+emb_line_normalVector(EmbLine line, int clockwise)
 {
     EmbVector result;
     EmbReal temp;
-    result = embVector_subtract(line.end, line.start);
-    result = embVector_normalize(result);
+    result = emb_vector_subtract(line.end, line.start);
+    result = emb_vector_normalize(result);
     temp = result.x;
     result.x = result.y;
     result.y = -temp;
@@ -17424,9 +17410,9 @@ embLine_normalVector(EmbLine line, int clockwise)
  * direction.
  */
 EmbVector
-embLine_toVector(EmbLine line)
+emb_line_toVector(EmbLine line)
 {
-    return embVector_subtract(line.end, line.start);
+    return emb_vector_subtract(line.end, line.start);
 }
 
 /*
@@ -17434,18 +17420,18 @@ embLine_toVector(EmbLine line)
  * and sets the value in the result variable.
  */
 EmbVector
-embLine_intersectionPoint(EmbLine line1, EmbLine line2)
+emb_line_intersectionPoint(EmbLine line1, EmbLine line2)
 {
     EmbReal det, C2, C1, tolerance;
     EmbVector vec1, vec2, result;
     emb_error = 0;
-    vec1 = embLine_toVector(line1);
-    vec2 = embLine_toVector(line2);
-    C2 = embVector_cross(line1.start, vec1);
-    C1 = embVector_cross(line2.start, vec2);
+    vec1 = emb_line_toVector(line1);
+    vec2 = emb_line_toVector(line2);
+    C2 = emb_vector_cross(line1.start, vec1);
+    C1 = emb_vector_cross(line2.start, vec2);
 
     tolerance = 1e-10;
-    det = embVector_cross(vec2, vec1);
+    det = emb_vector_cross(vec2, vec1);
 
     if (fabs(det) < tolerance) {
         /* Default to the origin when an error is thrown. */
@@ -17506,7 +17492,7 @@ void save_toPolyline(EmbPattern* pattern, const EmbVector& objPos, const QPainte
     polyObject.color.g = color.green();
     polyObject.color.b = color.blue();
     //TODO: proper lineType
-    embPattern_addPolylineAbs(pattern, polyObject);
+    emb_pattern_addPolylineAbs(pattern, polyObject);
 }
 
 void textSingle_TextSingleObject(const std::string& str, float x, float y, unsigned int rgb, QGraphicsItem* parent)
@@ -17902,10 +17888,10 @@ std::vector<QPainterPath> text_single_subPathList()
  * \todo make result return argument.
  */
 EmbVector
-embVector_normalize(EmbVector vector)
+emb_vector_normalize(EmbVector vector)
 {
     EmbVector result;
-    EmbReal length = embVector_length(vector);
+    EmbReal length = emb_vector_length(vector);
     result.x = vector.x / length;
     result.y = vector.y / length;
     return result;
@@ -17917,7 +17903,7 @@ embVector_normalize(EmbVector vector)
  * \todo make result return argument.
  */
 EmbVector
-embVector_scale(EmbVector vector, EmbReal magnitude)
+emb_vector_scale(EmbVector vector, EmbReal magnitude)
 {
     EmbVector result;
     result.x = vector.x * magnitude;
@@ -17935,7 +17921,7 @@ embVector_scale(EmbVector vector, EmbReal magnitude)
  * \f]
  */
 EmbVector
-embVector_add(EmbVector a, EmbVector b)
+emb_vector_add(EmbVector a, EmbVector b)
 {
     EmbVector result;
     result.x = a.x + b.x;
@@ -17953,7 +17939,7 @@ embVector_add(EmbVector a, EmbVector b)
  * \f]
  */
 EmbVector
-embVector_average(EmbVector a, EmbVector b)
+emb_vector_average(EmbVector a, EmbVector b)
 {
     EmbVector result;
     result.x = 0.5*(a.x + b.x);
@@ -17971,7 +17957,7 @@ embVector_average(EmbVector a, EmbVector b)
  * \f]
  */
 EmbVector
-embVector_subtract(EmbVector v1, EmbVector v2)
+emb_vector_subtract(EmbVector v1, EmbVector v2)
 {
     EmbVector result;
     result.x = v1.x - v2.x;
@@ -17989,7 +17975,7 @@ embVector_subtract(EmbVector v1, EmbVector v2)
  * \f]
  */
 EmbReal
-embVector_dot(EmbVector a, EmbVector b)
+emb_vector_dot(EmbVector a, EmbVector b)
 {
     return a.x * b.x + a.y * b.y;
 }
@@ -18007,7 +17993,7 @@ embVector_dot(EmbVector a, EmbVector b)
  * \f]
  */
 EmbReal
-embVector_cross(EmbVector a, EmbVector b)
+emb_vector_cross(EmbVector a, EmbVector b)
 {
     return a.x * b.y - a.y * b.x;
 }
@@ -18021,7 +18007,7 @@ embVector_cross(EmbVector a, EmbVector b)
  * (x y)(0 1) (b)   (yb)
  */
 EmbVector
-embVector_transpose_product(EmbVector v1, EmbVector v2)
+emb_vector_transpose_product(EmbVector v1, EmbVector v2)
 {
     EmbVector result;
     result.x = v1.x * v2.x;
@@ -18038,7 +18024,7 @@ embVector_transpose_product(EmbVector v1, EmbVector v2)
  * \f]
  */
 EmbReal
-embVector_length(EmbVector vector)
+emb_vector_length(EmbVector vector)
 {
     return sqrt(vector.x * vector.x + vector.y * vector.y);
 }
@@ -18046,29 +18032,29 @@ embVector_length(EmbVector vector)
 /* The x-component of the vector
  */
 EmbReal
-embVector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3)
+emb_vector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3)
 {
     EmbVector b, c;
-    b = embVector_subtract(a1, a2);
-    c = embVector_subtract(a3, a2);
-    return embVector_dot(b, c);
+    b = emb_vector_subtract(a1, a2);
+    c = emb_vector_subtract(a3, a2);
+    return emb_vector_dot(b, c);
 }
 
 /* The y-component of the vector
  */
 EmbReal
-embVector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3)
+emb_vector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3)
 {
     EmbVector b, c;
-    b = embVector_subtract(a1, a2);
-    c = embVector_subtract(a3, a2);
-    return embVector_cross(b, c);
+    b = emb_vector_subtract(a1, a2);
+    c = emb_vector_subtract(a3, a2);
+    return emb_vector_cross(b, c);
 }
 
 /* The angle, measured anti-clockwise from the x-axis, of a vector v.
  */
 EmbReal
-embVector_angle(EmbVector v)
+emb_vector_angle(EmbVector v)
 {
     return atan2(v.y, v.x);
 }
@@ -18080,7 +18066,7 @@ embVector_angle(EmbVector v)
  * \f]
  */
 EmbVector
-embVector_unit(EmbReal alpha)
+emb_vector_unit(EmbReal alpha)
 {
     EmbVector a;
     a.x = cos(alpha);
@@ -18096,10 +18082,10 @@ embVector_unit(EmbReal alpha)
  * \f]
  */
 EmbReal
-embVector_distance(EmbVector a, EmbVector b)
+emb_vector_distance(EmbVector a, EmbVector b)
 {
-    EmbVector delta = embVector_subtract(a, b);
-    return embVector_length(delta);
+    EmbVector delta = emb_vector_subtract(a, b);
+    return emb_vector_length(delta);
 }
 
 /*
@@ -18167,14 +18153,14 @@ image_diff(unsigned char *a, unsigned char *b, int size)
  * The caller is responsible for the memory in p.
  */
 int
-embPattern_render(EmbPattern *p, char *fname)
+emb_pattern_render(EmbPattern *p, char *fname)
 {
 /*
     const char *tmp_fname = "libembroidery_temp.svg";
     NSVGimage *image = NULL;
     NSVGrasterizer rast;
     unsigned char *img_data = NULL;
-    embPattern_writeAuto(p, tmp_fname);
+    emb_pattern_writeAuto(p, tmp_fname);
     image = nsvgParseFromFile(tmp_fname, "px", 96.0f);
     img_data = malloc(4*image->width*image->height);
     nsvgRasterize(
@@ -18200,9 +18186,9 @@ embPattern_render(EmbPattern *p, char *fname)
  * hints about how to represent the pattern.
  */
 int
-embPattern_simulate(EmbPattern *pattern, char *fname)
+emb_pattern_simulate(EmbPattern *pattern, char *fname)
 {
-    embPattern_render(pattern, fname);
+    emb_pattern_render(pattern, fname);
     return 0;
 }
 
@@ -18260,16 +18246,16 @@ embImage_free(EmbImage *image)
  *
  * Returns a pointer to an EmbPattern. It is created on the heap.
  * The caller is responsible for freeing the allocated memory with
- * embPattern_free().
+ * emb_pattern_free().
  *
  * Returns EmbPattern*
  */
 EmbPattern*
-embPattern_create(void)
+emb_pattern_create(void)
 {
     EmbPattern* p = (EmbPattern*)malloc(sizeof(EmbPattern));
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_create(), ");
+        printf("ERROR: emb-pattern.c emb_pattern_create(), ");
         printf("unable to allocate memory for p\n");
         return 0;
     }
@@ -18288,7 +18274,7 @@ embPattern_create(void)
 /* a p a length
  */
 void
-embPattern_hideStitchesOverLength(EmbPattern* p, int length)
+emb_pattern_hideStitchesOverLength(EmbPattern* p, int length)
 {
     EmbVector prev;
     int i;
@@ -18296,7 +18282,7 @@ embPattern_hideStitchesOverLength(EmbPattern* p, int length)
     prev.y = 0.0;
 
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_hideStitchesOverLength(), ");
+        printf("ERROR: emb-pattern.c emb_pattern_hideStitchesOverLength(), ");
         printf("p argument is null\n");
         return;
     }
@@ -18315,7 +18301,7 @@ embPattern_hideStitchesOverLength(EmbPattern* p, int length)
  * Returns int
  */
 int
-embPattern_addThread(EmbPattern *pattern, EmbThread thread)
+emb_pattern_addThread(EmbPattern *pattern, EmbThread thread)
 {
     if (pattern->thread_list->count + 1 > pattern->thread_list->length) {
         if (!embArray_resize(pattern->thread_list)) {
@@ -18330,13 +18316,13 @@ embPattern_addThread(EmbPattern *pattern, EmbThread thread)
 /* a p
  */
 void
-embPattern_fixColorCount(EmbPattern* p)
+emb_pattern_fixColorCount(EmbPattern* p)
 {
     /* fix color count to be max of color index. */
     int maxColorIndex = 0, i;
 
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_fixColorCount(), ");
+        printf("ERROR: emb-pattern.c emb_pattern_fixColorCount(), ");
         printf("p argument is null\n");
         return;
     }
@@ -18345,13 +18331,13 @@ embPattern_fixColorCount(EmbPattern* p)
         maxColorIndex = EMB_MAX(maxColorIndex, p->stitch_list->stitch[i].color);
     }
     if (p->thread_list->count == 0 || maxColorIndex == 0) {
-        embPattern_addThread(p, black_thread);
+        emb_pattern_addThread(p, black_thread);
     }
     else {
         if (maxColorIndex > 0) {
             while (p->thread_list->count <= maxColorIndex) {
 /*        printf("%d %d\n", p->n_threads, maxColorIndex);*/
-                embPattern_addThread(p, embThread_getRandom());
+                emb_pattern_addThread(p, embThread_getRandom());
             }
         }
     }
@@ -18366,14 +18352,14 @@ embPattern_fixColorCount(EmbPattern* p)
  * EmbPolylineObjectList data for pattern (a p).
  */
 void
-embPattern_copystitch_listToPolylines(EmbPattern* p)
+emb_pattern_copystitch_listToPolylines(EmbPattern* p)
 {
     int breakAtFlags, i;
     EmbPoint point;
     EmbColor color;
 
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_copystitch_listToPolylines(), ");
+        printf("ERROR: emb-pattern.c emb_pattern_copystitch_listToPolylines(), ");
         printf("p argument is null\n");
         return;
     }
@@ -18415,13 +18401,13 @@ embPattern_copystitch_listToPolylines(EmbPattern* p)
  * data for pattern (a p).
  */
 void
-embPattern_copyPolylinesTostitch_list(EmbPattern* p)
+emb_pattern_copyPolylinesTostitch_list(EmbPattern* p)
 {
     int firstObject = 1, i, j;
     /*int currentColor = polyList->polylineObj->color TODO: polyline color */
 
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_copyPolylinesTostitch_list(), ");
+        printf("ERROR: emb-pattern.c emb_pattern_copyPolylinesTostitch_list(), ");
         printf("p argument is null\n");
         return;
     }
@@ -18440,40 +18426,40 @@ embPattern_copyPolylinesTostitch_list(EmbPattern* p)
         string_copy(thread.catalogNumber, "");
         thread.color = currentPoly.color;
         string_copy(thread.description, "");
-        embPattern_addThread(p, thread);
+        emb_pattern_addThread(p, thread);
 
         if (!firstObject) {
-            embPattern_addStitchAbs(p,
+            emb_pattern_addStitchAbs(p,
                 currentPointList->geometry[0].object.point.position.x,
                 currentPointList->geometry[0].object.point.position.y, TRIM, 1);
-            embPattern_addStitchRel(p, 0.0, 0.0, STOP, 1);
+            emb_pattern_addStitchRel(p, 0.0, 0.0, STOP, 1);
         }
 
-        embPattern_addStitchAbs(p,
+        emb_pattern_addStitchAbs(p,
             currentPointList->geometry[0].object.point.position.x,
             currentPointList->geometry[0].object.point.position.y,
             JUMP,
             1);
         for (j = 1; j < currentPointList->count; j++) {
             EmbVector v = currentPointList->geometry[j].object.point.position;
-            embPattern_addStitchAbs(p, v.x, v.y, NORMAL, 1);
+            emb_pattern_addStitchAbs(p, v.x, v.y, NORMAL, 1);
         }
         firstObject = 0;
     }
-    embPattern_addStitchRel(p, 0.0, 0.0, END, 1);
+    emb_pattern_addStitchRel(p, 0.0, 0.0, END, 1);
 }
 
 /* Moves all of the Embstitch_list data to EmbPolylineObjectList
  * data for pattern (a p).
  */
 void
-embPattern_movestitch_listToPolylines(EmbPattern* p)
+emb_pattern_movestitch_listToPolylines(EmbPattern* p)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_movestitch_listToPolylines(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_movestitch_listToPolylines(), p argument is null\n");
         return;
     }
-    embPattern_copystitch_listToPolylines(p);
+    emb_pattern_copystitch_listToPolylines(p);
     /* Free the stitch_list and threadList since their data has now been transferred to polylines */
     p->stitch_list->count = 0;
     p->thread_list->count = 0;
@@ -18483,26 +18469,26 @@ embPattern_movestitch_listToPolylines(EmbPattern* p)
  * data for pattern (a p).
  */
 void
-embPattern_movePolylinesTostitch_list(EmbPattern* p)
+emb_pattern_movePolylinesTostitch_list(EmbPattern* p)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_movePolylinesTostitch_list(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_movePolylinesTostitch_list(), p argument is null\n");
         return;
     }
-    embPattern_copyPolylinesTostitch_list(p);
+    emb_pattern_copyPolylinesTostitch_list(p);
 }
 
 /* Adds a stitch to the pattern (a p) at the absolute position
  * (a x,a y). Positive y is up. Units are in millimeters.
  */
 void
-embPattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y,
+emb_pattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y,
                             int flags, int isAutoColorIndex)
 {
     EmbStitch s;
 
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_addStitchAbs(), ");
+        printf("ERROR: emb-pattern.c emb_pattern_addStitchAbs(), ");
         printf("p argument is null\n");
         return;
     }
@@ -18513,10 +18499,10 @@ embPattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y,
         }
         /* Prevent unnecessary multiple END stitches */
         if (p->stitch_list->stitch[p->stitch_list->count - 1].flags & END) {
-            printf("ERROR: emb-pattern.c embPattern_addStitchAbs(), found multiple END stitches\n");
+            printf("ERROR: emb-pattern.c emb_pattern_addStitchAbs(), found multiple END stitches\n");
             return;
         }
-        embPattern_fixColorCount(p);
+        emb_pattern_fixColorCount(p);
         /* HideStitchesOverLength(127); TODO: fix or remove this */
     }
 
@@ -18552,12 +18538,12 @@ embPattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y,
  * Units are in millimeters.
  */
 void
-embPattern_addStitchRel(EmbPattern* p, EmbReal dx, EmbReal dy,
+emb_pattern_addStitchRel(EmbPattern* p, EmbReal dx, EmbReal dy,
                             int flags, int isAutoColorIndex)
 {
     EmbReal x, y;
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_addStitchRel(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_addStitchRel(), p argument is null\n");
         return;
     }
     if (p->stitch_list->count > 0) {
@@ -18570,16 +18556,16 @@ embPattern_addStitchRel(EmbPattern* p, EmbReal dx, EmbReal dy,
         x = p->home.x + dx;
         y = p->home.y + dy;
     }
-    embPattern_addStitchAbs(p, x, y, flags, isAutoColorIndex);
+    emb_pattern_addStitchAbs(p, x, y, flags, isAutoColorIndex);
 }
 
 /* Change the currentColorIndex of pattern a p to a index.
  */
 void
-embPattern_changeColor(EmbPattern* p, int index)
+emb_pattern_changeColor(EmbPattern* p, int index)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_changeColor(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_changeColor(), p argument is null\n");
         return;
     }
     p->currentColorIndex = index;
@@ -18589,11 +18575,11 @@ embPattern_changeColor(EmbPattern* p, int index)
  * Doesn't insert or delete stitches to preserve density.
  */
 void
-embPattern_scale(EmbPattern* p, EmbReal scale)
+emb_pattern_scale(EmbPattern* p, EmbReal scale)
 {
     int i;
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_scale(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_scale(), p argument is null\n");
         return;
     }
 
@@ -18607,7 +18593,7 @@ embPattern_scale(EmbPattern* p, EmbReal scale)
  * pattern (a p).
  */
 EmbRect
-embPattern_calcBoundingBox(EmbPattern* p)
+emb_pattern_calcBoundingBox(EmbPattern* p)
 {
     EmbRect r;
     EmbStitch pt;
@@ -18619,7 +18605,7 @@ embPattern_calcBoundingBox(EmbPattern* p)
     r.bottom = 0;
 
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_calcBoundingBox(), ");
+        printf("ERROR: emb-pattern.c emb_pattern_calcBoundingBox(), ");
         printf("p argument is null\n");
         return r;
     }
@@ -18655,7 +18641,7 @@ embPattern_calcBoundingBox(EmbPattern* p)
         EmbGeometry g = p->geometry->geometry[i];
         switch (g.type) {
         case EMB_ARC: {
-            /* TODO: embPattern_calcBoundingBox for arcs,
+            /* TODO: emb_pattern_calcBoundingBox for arcs,
             for now just checks the start point */
             EmbArc arc = g.object.arc;
             r.left = EMB_MIN(r.left, arc.start.x);
@@ -18704,14 +18690,14 @@ embPattern_calcBoundingBox(EmbPattern* p)
         case EMB_POLYGON: {
             EmbArray *polygon = g.object.polygon.pointList;
             for (j=0; j < polygon->count; j++) {
-                /* TODO: embPattern_calcBoundingBox for polygons */
+                /* TODO: emb_pattern_calcBoundingBox for polygons */
             }
             break;
         }
         case EMB_POLYLINE: {
             EmbArray *polyline = g.object.polyline.pointList;
             for (j=0; j < polyline->count; j++) {
-                /* TODO: embPattern_calcBoundingBox for polylines */
+                /* TODO: emb_pattern_calcBoundingBox for polylines */
             }
             break;
         }
@@ -18726,7 +18712,7 @@ embPattern_calcBoundingBox(EmbPattern* p)
         case EMB_SPLINE: {
             /* EmbBezier bezier;
             bezier = p->splines->spline[i].bezier; */
-            /* TODO: embPattern_calcBoundingBox for splines */
+            /* TODO: emb_pattern_calcBoundingBox for splines */
             break;
         }
         default:
@@ -18740,39 +18726,39 @@ embPattern_calcBoundingBox(EmbPattern* p)
 /* Flips the entire pattern (a p) horizontally about the y-axis.
  */
 void
-embPattern_flipHorizontal(EmbPattern* p)
+emb_pattern_flipHorizontal(EmbPattern* p)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_flipHorizontal(), ");
+        printf("ERROR: emb-pattern.c emb_pattern_flipHorizontal(), ");
         printf("p argument is null\n");
         return;
     }
-    embPattern_flip(p, 1, 0);
+    emb_pattern_flip(p, 1, 0);
 }
 
 /* Flips the entire pattern (a p) vertically about the x-axis.
  */
 void
-embPattern_flipVertical(EmbPattern* p)
+emb_pattern_flipVertical(EmbPattern* p)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_flipVertical(), ");
+        printf("ERROR: emb-pattern.c emb_pattern_flipVertical(), ");
         printf("p argument is null\n");
         return;
     }
-    embPattern_flip(p, 0, 1);
+    emb_pattern_flip(p, 0, 1);
 }
 
 /* Flips the entire pattern (a p) horizontally about the x-axis if (a horz) is true.
  *  Flips the entire pattern (a p) vertically about the y-axis if (a vert) is true.
  */
 void
-embPattern_flip(EmbPattern* p, int horz, int vert)
+emb_pattern_flip(EmbPattern* p, int horz, int vert)
 {
     int i, j;
 
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_flip(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_flip(), p argument is null\n");
         return;
     }
 
@@ -18896,14 +18882,14 @@ embPattern_flip(EmbPattern* p, int horz, int vert)
 /* a p
  */
 void
-embPattern_combineJumpStitches(EmbPattern* p)
+emb_pattern_combineJumpStitches(EmbPattern* p)
 {
     int jumpCount = 0, i;
     EmbArray *newList;
     EmbStitch j;
 
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_combineJumpStitches(), ");
+        printf("ERROR: emb-pattern.c emb_pattern_combineJumpStitches(), ");
         printf("p argument is null\n");
         return;
     }
@@ -18933,11 +18919,11 @@ embPattern_combineJumpStitches(EmbPattern* p)
  * They need renamed or clarified further.
  */
 void
-embPattern_correctForMaxStitchLength(EmbPattern* p,
+emb_pattern_correctForMaxStitchLength(EmbPattern* p,
                         EmbReal maxStitchLength, EmbReal maxJumpLength)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_correctForMaxStitchLength(), ");
+        printf("ERROR: emb-pattern.c emb_pattern_correctForMaxStitchLength(), ");
         printf("p argument is null\n");
         return;
     }
@@ -18978,23 +18964,23 @@ embPattern_correctForMaxStitchLength(EmbPattern* p,
         embArray_free(p->stitch_list);
         p->stitch_list = newList;
     }
-    embPattern_end(p);
+    emb_pattern_end(p);
 }
 
 /* Center the pattern a p.
  */
 void
-embPattern_center(EmbPattern* p)
+emb_pattern_center(EmbPattern* p)
 {
     /* TODO: review this. currently not used in anywhere.
         Also needs to handle various design objects */
     int moveLeft, moveTop, i;
     EmbRect boundingRect;
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_center(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_center(), p argument is null\n");
         return;
     }
-    boundingRect = embPattern_calcBoundingBox(p);
+    boundingRect = emb_pattern_calcBoundingBox(p);
 
     moveLeft = (int)(boundingRect.left - (boundingRect.right- boundingRect.left) / 2.0);
     moveTop = (int)(boundingRect.top - (boundingRect.bottom - boundingRect.top) / 2.0);
@@ -19008,17 +18994,17 @@ embPattern_center(EmbPattern* p)
 /* TODO: Description needed.
  */
 void
-embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
+emb_pattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
 {
     int hasRead, stub_len, format;
     char extractName[200];
 
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_loadExternalColorFile(), p argument is null\n");
         return;
     }
     if (!fileName) {
-        printf("ERROR: emb-pattern.c embPattern_loadExternalColorFile(), fileName argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_loadExternalColorFile(), fileName argument is null\n");
         return;
     }
 
@@ -19027,31 +19013,31 @@ embPattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
     stub_len = string_len(fileName) - string_len(formatTable[format].extension);
     extractName[stub_len] = 0;
     string_cat(extractName, ".edr");
-    hasRead = embPattern_read(p, extractName, EMB_FORMAT_EDR);
+    hasRead = emb_pattern_read(p, extractName, EMB_FORMAT_EDR);
     if (!hasRead) {
         extractName[stub_len] = 0;
         string_cat(extractName,".rgb");
-        hasRead = embPattern_read(p, extractName, EMB_FORMAT_RGB);
+        hasRead = emb_pattern_read(p, extractName, EMB_FORMAT_RGB);
     }
     if (!hasRead) {
         extractName[stub_len] = 0;
         string_cat(extractName,".col");
-        hasRead = embPattern_read(p, extractName, EMB_FORMAT_COL);
+        hasRead = emb_pattern_read(p, extractName, EMB_FORMAT_COL);
     }
     if (!hasRead) {
         extractName[stub_len] = 0;
         string_cat(extractName,".inf");
-        hasRead = embPattern_read(p, extractName, EMB_FORMAT_INF);
+        hasRead = emb_pattern_read(p, extractName, EMB_FORMAT_INF);
     }
 }
 
 /* Frees all memory allocated in the pattern (a p).
  */
 void
-embPattern_free(EmbPattern* p)
+emb_pattern_free(EmbPattern* p)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_free(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_free(), p argument is null\n");
         return;
     }
     embArray_free(p->stitch_list);
@@ -19065,10 +19051,10 @@ embPattern_free(EmbPattern* p)
  * Units are in millimeters.
  */
 void
-embPattern_addCircleAbs(EmbPattern* p, EmbCircle circle)
+emb_pattern_addCircleAbs(EmbPattern* p, EmbCircle circle)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_addCircleObjectAbs(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_addCircleObjectAbs(), p argument is null\n");
         return;
     }
 
@@ -19080,10 +19066,10 @@ embPattern_addCircleAbs(EmbPattern* p, EmbCircle circle)
  * Units are in millimeters.
  */
 void
-embPattern_addEllipseAbs(EmbPattern* p, EmbEllipse ellipse)
+emb_pattern_addEllipseAbs(EmbPattern* p, EmbEllipse ellipse)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_addEllipseObjectAbs(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_addEllipseObjectAbs(), p argument is null\n");
         return;
     }
 
@@ -19095,10 +19081,10 @@ embPattern_addEllipseAbs(EmbPattern* p, EmbEllipse ellipse)
  * Positive y is up. Units are in millimeters.
  */
 void
-embPattern_addLineAbs(EmbPattern* p, EmbLine line)
+emb_pattern_addLineAbs(EmbPattern* p, EmbLine line)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_addLineObjectAbs(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_addLineObjectAbs(), p argument is null\n");
         return;
     }
 
@@ -19108,14 +19094,14 @@ embPattern_addLineAbs(EmbPattern* p, EmbLine line)
 /* .
  */
 void
-embPattern_addPathAbs(EmbPattern* p, EmbPath obj)
+emb_pattern_addPathAbs(EmbPattern* p, EmbPath obj)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_addPathObjectAbs(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_addPathObjectAbs(), p argument is null\n");
         return;
     }
     if (!obj.pointList) {
-        printf("ERROR: emb-pattern.c embPattern_addPathObjectAbs(), obj->pointList is empty\n");
+        printf("ERROR: emb-pattern.c emb_pattern_addPathObjectAbs(), obj->pointList is empty\n");
         return;
     }
 
@@ -19124,10 +19110,10 @@ embPattern_addPathAbs(EmbPattern* p, EmbPath obj)
 
 /*! Adds a point object to pattern (a p) at the absolute position (a x,a y). Positive y is up. Units are in millimeters. */
 void
-embPattern_addPointAbs(EmbPattern* p, EmbPoint obj)
+emb_pattern_addPointAbs(EmbPattern* p, EmbPoint obj)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_addPointObjectAbs(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_addPointObjectAbs(), p argument is null\n");
         return;
     }
 
@@ -19135,14 +19121,14 @@ embPattern_addPointAbs(EmbPattern* p, EmbPoint obj)
 }
 
 void
-embPattern_addPolygonAbs(EmbPattern* p, EmbPolygon obj)
+emb_pattern_addPolygonAbs(EmbPattern* p, EmbPolygon obj)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_addPolygonObjectAbs(), p argument is null\n");
         return;
     }
     if (!obj.pointList) {
-        printf("ERROR: emb-pattern.c embPattern_addPolygonObjectAbs(), obj->pointList is empty\n");
+        printf("ERROR: emb-pattern.c emb_pattern_addPolygonObjectAbs(), obj->pointList is empty\n");
         return;
     }
 
@@ -19150,14 +19136,14 @@ embPattern_addPolygonAbs(EmbPattern* p, EmbPolygon obj)
 }
 
 void
-embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolyline obj)
+emb_pattern_addPolylineObjectAbs(EmbPattern* p, EmbPolyline obj)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_addPolylineObjectAbs(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_addPolylineObjectAbs(), p argument is null\n");
         return;
     }
     if (!obj.pointList) {
-        printf("ERROR: emb-pattern.c embPattern_addPolylineObjectAbs(), obj->pointList is empty\n");
+        printf("ERROR: emb-pattern.c emb_pattern_addPolylineObjectAbs(), obj->pointList is empty\n");
         return;
     }
     embArray_addPolyline(p->geometry, obj);
@@ -19168,30 +19154,30 @@ embPattern_addPolylineObjectAbs(EmbPattern* p, EmbPolyline obj)
  * Positive y is up. Units are in millimeters.
  */
 void
-embPattern_addRectAbs(EmbPattern* p, EmbRect rect)
+emb_pattern_addRectAbs(EmbPattern* p, EmbRect rect)
 {
     if (!p) {
-        printf("ERROR: emb-pattern.c embPattern_addRectObjectAbs(), p argument is null\n");
+        printf("ERROR: emb-pattern.c emb_pattern_addRectObjectAbs(), p argument is null\n");
         return;
     }
     embArray_addRect(p->geometry, rect);
 }
 
 void
-embPattern_end(EmbPattern *p)
+emb_pattern_end(EmbPattern *p)
 {
     if (p->stitch_list->count == 0) {
         return;
     }
     /* Check for an END stitch and add one if it is not present */
     if (p->stitch_list->stitch[p->stitch_list->count-1].flags != END) {
-        embPattern_addStitchRel(p, 0, 0, END, 1);
+        emb_pattern_addStitchRel(p, 0, 0, END, 1);
     }
 }
 
 
 int
-embPattern_color_count(EmbPattern *pattern, EmbColor startColor)
+emb_pattern_color_count(EmbPattern *pattern, EmbColor startColor)
 {
     int numberOfColors = 0, i;
     EmbColor color = startColor;
@@ -19222,14 +19208,14 @@ embPattern_color_count(EmbPattern *pattern, EmbColor startColor)
 
 
 void
-embPattern_designDetails(EmbPattern *pattern)
+emb_pattern_designDetails(EmbPattern *pattern)
 {
     int colors, num_stitches, real_stitches, jump_stitches, trim_stitches;
     int unknown_stitches;
     EmbRect bounds;
 
     puts("Design Details");
-    bounds = embPattern_calcBoundingBox(pattern);
+    bounds = emb_pattern_calcBoundingBox(pattern);
 
     colors = 1;
     num_stitches = pattern->stitch_list->count;
@@ -19237,7 +19223,7 @@ embPattern_designDetails(EmbPattern *pattern)
     jump_stitches = 0;
     trim_stitches = 0;
     unknown_stitches = 0;
-    bounds = embPattern_calcBoundingBox(pattern);
+    bounds = emb_pattern_calcBoundingBox(pattern);
 
     if (emb_verbose > 1) {
         printf("colors: %d\n", colors);
@@ -19393,15 +19379,15 @@ convert(const char *inf, const char *outf)
     EmbPattern* p = 0;
     int reader, writer;
 
-    p = embPattern_create();
+    p = emb_pattern_create();
     if (!p) {
         printf("ERROR: convert(), cannot allocate memory for p\n");
         return 1;
     }
 
-    if (!embPattern_readAuto(p, inf)) {
+    if (!emb_pattern_readAuto(p, inf)) {
         printf("ERROR: convert(), reading file was unsuccessful: %s\n", inf);
-        embPattern_free(p);
+        emb_pattern_free(p);
         return 1;
     }
 
@@ -19409,17 +19395,17 @@ convert(const char *inf, const char *outf)
     writer = emb_identify_format(outf);
     if (formatTable[reader].type == EMBFORMAT_OBJECTONLY) {
         if (formatTable[writer].type == EMBFORMAT_STITCHONLY) {
-            embPattern_movePolylinesTostitch_list(p);
+            emb_pattern_movePolylinesTostitch_list(p);
         }
     }
 
-    if (!embPattern_writeAuto(p, outf)) {
+    if (!emb_pattern_writeAuto(p, outf)) {
         printf("ERROR: convert(), writing file %s was unsuccessful\n", outf);
-        embPattern_free(p);
+        emb_pattern_free(p);
         return 1;
     }
 
-    embPattern_free(p);
+    emb_pattern_free(p);
     return 0;
 }
 
@@ -19427,7 +19413,7 @@ convert(const char *inf, const char *outf)
  * Returns float
  */
 float
-embPattern_totalStitchLength(EmbPattern *pattern)
+emb_pattern_totalStitchLength(EmbPattern *pattern)
 {
     EmbArray *sts = pattern->stitch_list;
     float result = 0.0;
@@ -19438,7 +19424,7 @@ embPattern_totalStitchLength(EmbPattern *pattern)
         EmbVector delta;
         delta.x = st.x - sts->stitch[i-1].x;
         delta.y = st.y - sts->stitch[i-1].y;
-        length = embVector_length(delta);
+        length = emb_vector_length(delta);
         if (st.flags & NORMAL)
         if (sts->stitch[i-1].flags & NORMAL) {
             result += length;
@@ -19447,7 +19433,7 @@ embPattern_totalStitchLength(EmbPattern *pattern)
     return result;
 }
 
-float embPattern_minimumStitchLength(EmbPattern *pattern)
+float emb_pattern_minimumStitchLength(EmbPattern *pattern)
 {
     EmbArray *sts = pattern->stitch_list;
     float result = 1.0e10;
@@ -19457,7 +19443,7 @@ float embPattern_minimumStitchLength(EmbPattern *pattern)
         EmbVector delta;
         delta.x = sts->stitch[i].x - sts->stitch[i-1].x;
         delta.y = sts->stitch[i].y - sts->stitch[i-1].y;
-        length = embVector_length(delta);
+        length = emb_vector_length(delta);
         if (sts->stitch[i].flags & NORMAL)
         if (sts->stitch[i-1].flags & NORMAL) {
             if (length < result) {
@@ -19468,7 +19454,7 @@ float embPattern_minimumStitchLength(EmbPattern *pattern)
     return result;
 }
 
-float embPattern_maximumStitchLength(EmbPattern *pattern)
+float emb_pattern_maximumStitchLength(EmbPattern *pattern)
 {
     EmbArray *sts = pattern->stitch_list;
     float result = 0.0;
@@ -19478,7 +19464,7 @@ float embPattern_maximumStitchLength(EmbPattern *pattern)
         EmbVector delta;
         delta.x = sts->stitch[i].x - sts->stitch[i-1].x;
         delta.y = sts->stitch[i].y - sts->stitch[i-1].y;
-        length = embVector_length(delta);
+        length = emb_vector_length(delta);
         if (sts->stitch[i].flags & NORMAL)
         if (sts->stitch[i-1].flags & NORMAL) {
             if (length > result) {
@@ -19489,10 +19475,10 @@ float embPattern_maximumStitchLength(EmbPattern *pattern)
     return result;
 }
 
-void embPattern_lengthHistogram(EmbPattern *pattern, int *bin, int NUMBINS)
+void emb_pattern_lengthHistogram(EmbPattern *pattern, int *bin, int NUMBINS)
 {
     int i;
-    float max_stitch_length = embPattern_maximumStitchLength(pattern);
+    float max_stitch_length = emb_pattern_maximumStitchLength(pattern);
     EmbArray *sts = pattern->stitch_list;
     for (i = 0; i <= NUMBINS; i++) {
         bin[i] = 0;
@@ -19505,13 +19491,13 @@ void embPattern_lengthHistogram(EmbPattern *pattern, int *bin, int NUMBINS)
             float length;
             delta.x = sts->stitch[i].x - sts->stitch[i-1].x;
             delta.y = sts->stitch[i].y - sts->stitch[i-1].x;
-            length = embVector_length(delta);
+            length = emb_vector_length(delta);
             bin[(int)(floor(NUMBINS*length/max_stitch_length))]++;
         }
     }
 }
 
-int embPattern_realStitches(EmbPattern *pattern)
+int emb_pattern_realStitches(EmbPattern *pattern)
 {
     int i;
     EmbArray *sts = pattern->stitch_list;
@@ -19524,7 +19510,7 @@ int embPattern_realStitches(EmbPattern *pattern)
     return real_stitches;
 }
 
-int embPattern_jumpStitches(EmbPattern *pattern)
+int emb_pattern_jumpStitches(EmbPattern *pattern)
 {
     int i;
     EmbArray *sts = pattern->stitch_list;
@@ -19538,7 +19524,7 @@ int embPattern_jumpStitches(EmbPattern *pattern)
 }
 
 
-int embPattern_trimStitches(EmbPattern *pattern)
+int emb_pattern_trimStitches(EmbPattern *pattern)
 {
     int i;
     EmbArray *sts = pattern->stitch_list;

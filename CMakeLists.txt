@@ -99,45 +99,83 @@ add_test(
 
 macro(emb_test)
     add_test(
-        NAME ${ARGV1}
-        COMMAND $<TARGET_FILE:embroider> --test ${ARGV2}
+        NAME ${ARGV0}
+        COMMAND $<TARGET_FILE:embroider> --test ${ARGV1}
     )
+    set_tests_properties(${ARGV0} PROPERTIES TIMEOUT 5)
 endmacro()
 
-macro(fill_tests)
+macro(fill_test)
     add_test(
-        NAME ${ARGV1}_FILL_SVG
-        COMMAND $<TARGET_FILE:embroider> --fill demos/${ARGV1}.png ${ARGV2} ${ARGV1}.svg
+        NAME ${ARGV0}_FILL_SVG
+        COMMAND $<TARGET_FILE:embroider> --fill demos/${ARGV0}.png 130 ${ARGV0}.svg
     )
+    set_tests_properties(${ARGV0}_FILL_SVG PROPERTIES TIMEOUT 5)
+endmacro()
+
+macro(cross_test)
     add_test(
-        NAME ${ARGV1}_CROSS_SVG
-        COMMAND $<TARGET_FILE:embroider> --cross-stitch demos/${ARGV1}.png ${ARGV2} ${ARGV1}.svg
+        NAME ${ARGV0}_CROSS_SVG
+        COMMAND $<TARGET_FILE:embroider> --cross-stitch demos/${ARGV0}.png 130 ${ARGV0}.svg
     )
+    set_tests_properties(${ARGV0}_CROSS_SVG PROPERTIES TIMEOUT 5)
+endmacro()
+
+macro(render_fill_test)
     add_test(
-        NAME ${ARGV1}_FILL_RENDER
+        NAME ${ARGV0}_FILL_RENDER
         COMMAND
-    		$<TARGET_FILE:embroider> --fill demos/${ARGV1}.png ${ARGV2} ${ARGV1}.csv &&
-	    	$<TARGET_FILE:embroider> --fill ${ARGV4}.csv ${ARGV4}.png
+    		$<TARGET_FILE:embroider> --fill demos/${ARGV0}.png 130 ${ARGV0}.csv &&
+	    	$<TARGET_FILE:embroider> --fill ${ARGV0}.csv ${ARGV0}.png
     )
+#    set_tests_properties(${ARGV0}_FILL_REDNER PROPERTIES TIMEOUT 5)
+endmacro()
+
+macro(render_cross_test)
     add_test(
-        NAME ${ARGV1}_CROSS_RENDER
+        NAME ${ARGV0}_CROSS_RENDER
         COMMAND
-		    $<TARGET_FILE:embroider> --cross-stitch demos/${ARGV1}.png ${ARGV3} ${ARGV1}.csv &&
-			$<TARGET_FILE:embroider> --render ${ARGV1}.csv ${ARGV1}_render.png
+		    $<TARGET_FILE:embroider> --cross-stitch demos/${ARGV0}.png 130 ${ARGV0}.csv &&
+			$<TARGET_FILE:embroider> --render ${ARGV0}.csv ${ARGV0}_render.png
     )
+#    set_tests_properties(${ARGV0}_CROSS_REDNER PROPERTIES TIMEOUT 5)
+endmacro()
+
+macro(test_convert)
+    add_test(
+        NAME CONVERT_${ARGV0}_${ARGV1}
+        COMMAND
+		    $<TARGET_FILE:embroider> --convert ${ARGV0} ${ARGV1}
+    )    
 endmacro()
 
 emb_test(testCircle1 0)
 emb_test(testCircle2 1)
 emb_test(testThread 2)
+emb_test(testThread3 3)
+emb_test(testThread4 4)
+emb_test(testThread5 5)
+emb_test(testThread6 6)
+emb_test(testThread7 7)
+emb_test(testThread8 8)
+emb_test(testThread9 9)
+emb_test(testThread10 10)
+emb_test(testThread11 11)
+emb_test(testThread12 12)
+emb_test(testThread13 13)
+#emb_test(testThread14 14)
 
-fill_tests(donut 130 )
-fill_tests(logo-spirals 130)
-fill_tests(berries 130)
-fill_tests(snow-squirrel 130)
-fill_tests(great-tit 130)
-fill_tests(owl 130)
-fill_tests(logo 130)
+fill_test(donut 130)
+fill_test(logo-spirals 130)
+fill_test(berries 130)
+fill_test(snow-squirrel 130)
+fill_test(great-tit 130)
+fill_test(owl 130)
+fill_test(logo 130)
+
+cross_test(logo)
+render_fill_test(logo)
+render_cross_test(logo)
 
 endif (EMBROIDERY_TESTING)
 

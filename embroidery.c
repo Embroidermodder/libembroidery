@@ -53,6 +53,19 @@ bcf_file_header bcfFileHeader_read(FILE* file);
 int bcfFileHeader_isValid(bcf_file_header header);
 void bcf_file_free(bcf_file* bcfFile);
 
+void
+printArcResults(
+    EmbReal bulge,
+    EmbArc arc,
+    EmbVector center,
+    EmbReal radius,
+    EmbReal diameter,
+    EmbReal chord,
+    EmbVector chordMid,
+    EmbReal sagitta,
+    EmbReal apothem,
+    EmbReal incAngle,
+    char clockwise);
 void testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1);
 int create_test_file(int test_file, const char* outf);
 
@@ -286,12 +299,12 @@ void write_24bit(FILE* file, int);
  *
  * TODO: UTF-8 support.
  */
-void string_copy(EmbString dst, const char *src);
+void string_copy(char *dst, const char *src);
 int string_equals(const char *s1, const char *s2);
-int string_len(const EmbString src);
-void string_cat(EmbString dst, const char *src);
-int string_rchar(const EmbString s1, char c);
-void char_ptr_to_string(EmbString dst, char *src);
+int string_len(const char *src);
+void string_cat(char *dst, const char *src);
+int string_rchar(const char *s1, char c);
+void char_ptr_to_string(char *dst, char *src);
 void memory_copy(void *dst, const void *src, int n);
 char memory_cmp(void *dst, const void *src, int n);
 
@@ -1195,7 +1208,7 @@ EmbBrand brand_codes[100];
  *
  */
 void
-string_copy(EmbString dst, const char *src)
+string_copy(char *dst, const char *src)
 {
     int i;
     for (i=0; i<200; i++) {
@@ -1211,7 +1224,7 @@ string_copy(EmbString dst, const char *src)
  * in the string and returns it.
  */
 int
-string_whitespace(EmbString s)
+string_whitespace(const char *s)
 {
     int i;
     for (i=0; i<200; i++) {
@@ -1228,7 +1241,7 @@ string_whitespace(EmbString s)
  * the string is not null-terminated by returning -1.
  */
 int
-string_len(const EmbString src)
+string_len(const char *src)
 {
     int i;
     for (i=0; i<200; i++) {
@@ -1243,7 +1256,7 @@ string_len(const EmbString src)
  * short strings, otherwise use memory_copy.
  */
 void
-string_cat(EmbString dst, const char *src)
+string_cat(char *dst, const char *src)
 {
     int i, j, src_len;
     j = string_len(dst);
@@ -1288,7 +1301,7 @@ string_equals(const char *s1, const char *s2)
 /*
  */
 int
-string_rchar(const EmbString s, char c)
+string_rchar(const char *s, char c)
 {
 	int i;
 	int n = string_len(s);
@@ -3868,16 +3881,18 @@ command_line_interface(int argc, char* argv[])
                 return testMain(atoi(argv[i+1]));
             }
             break;
-        case FLAG_FULL_TEST_SUITE:
+        case FLAG_FULL_TEST_SUITE: {
             /* Ideally we use ctest, this is just for crash testing. */
+			int t;
 			emb_pattern_free(current_pattern);
-            for (int t=0; t<10; t++) {
+            for (t=0; t<10; t++) {
                 if (testMain(t)) {
                     printf("Failed test %d.\n", t);
 					return 1;
                 }
             }
 			return 0;
+		}
         case FLAG_CONVERT_TEST: {
 			emb_pattern_free(current_pattern);
             if (i + 3 < argc) {
@@ -5097,7 +5112,7 @@ safe_free(void *data)
 
 /* Get extension from file name. */
 int
-embFormat_getExtension(EmbString fileName, char *ending)
+embFormat_getExtension(const char *fileName, char ending[5])
 {
     int i;
     const char *offset;
@@ -5111,8 +5126,8 @@ embFormat_getExtension(EmbString fileName, char *ending)
         return 0;
     }
 
-    offset = string_rchar(fileName, '.');
-    if (offset==0) {
+    offset = fileName + string_rchar(fileName, '.');
+    if (offset == fileName) {
         return 0;
     }
 
@@ -9636,9 +9651,9 @@ writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
     int i, j, flen, graphicsOffsetLocation;
     int graphicsOffsetValue, height, width;
     EmbReal xFactor, yFactor;
-    const char* forwardSlashPos = string_rchar(fileName, '/');
-    const char* backSlashPos = string_rchar(fileName, '\\');
-    const char* dotPos = string_rchar(fileName, '.');
+    const char* forwardSlashPos = fileName + string_rchar(fileName, '/');
+    const char* backSlashPos = fileName + string_rchar(fileName, '\\');
+    const char* dotPos = fileName + string_rchar(fileName, '.');
     const char* start = 0;
 
     start = fileName;

@@ -2140,7 +2140,7 @@ hus_decompress(char *data, int length, char *output, int *output_length)
  * the argument a type.
  */
 EmbArray*
-embArray_create(int type)
+emb_array_create(int type)
 {
     EmbArray *a;
     a = (EmbArray*)malloc(sizeof(EmbArray));
@@ -2166,7 +2166,7 @@ embArray_create(int type)
  * 3 entries.
  */
 int
-embArray_resize(EmbArray *a)
+emb_array_resize(EmbArray *a)
 {
     if (a->count < a->length - 3) {
         return 1;
@@ -2202,12 +2202,12 @@ embArray_resize(EmbArray *a)
 /* Copies all entries in the EmbArray struct from a src to a dst.
  */
 void
-embArray_copy(EmbArray *dst, EmbArray *src)
+emb_array_copy(EmbArray *dst, EmbArray *src)
 {
-    dst = embArray_create(src->type);
+    dst = emb_array_create(src->type);
     dst->length = src->length;
     dst->count = src->count;
-    embArray_resize(dst);
+    emb_array_resize(dst);
     /* BUG: Potential failure to copy path memory, only copy pointers? */
 
     switch (dst->type) {
@@ -2227,10 +2227,10 @@ embArray_copy(EmbArray *dst, EmbArray *src)
  * element was successfully added.
  */
 int
-embArray_addArc(EmbArray *a, EmbArc b)
+emb_array_addArc(EmbArray *a, EmbArc b)
 {
     a->count++;
-    if (!embArray_resize(a)) {
+    if (!emb_array_resize(a)) {
         return 0;
     }
     a->geometry[a->count - 1].object.arc = b;
@@ -2242,10 +2242,10 @@ embArray_addArc(EmbArray *a, EmbArc b)
  * element was successfully added.
  */
 int
-embArray_addCircle(EmbArray *a, EmbCircle b)
+emb_array_addCircle(EmbArray *a, EmbCircle b)
 {
     a->count++;
-    if (!embArray_resize(a)) {
+    if (!emb_array_resize(a)) {
         return 0;
     }
     a->geometry[a->count - 1].object.circle = b;
@@ -2257,10 +2257,10 @@ embArray_addCircle(EmbArray *a, EmbCircle b)
  * element was successfully added.
  */
 int
-embArray_addEllipse(EmbArray *a, EmbEllipse b)
+emb_array_addEllipse(EmbArray *a, EmbEllipse b)
 {
     a->count++;
-    if (!embArray_resize(a)) {
+    if (!emb_array_resize(a)) {
         return 0;
     }
     a->geometry[a->count - 1].object.ellipse = b;
@@ -2272,10 +2272,10 @@ embArray_addEllipse(EmbArray *a, EmbEllipse b)
  * element was successfully added.
  */
 int
-embArray_addFlag(EmbArray *a, EmbFlag b)
+emb_array_addFlag(EmbArray *a, EmbFlag b)
 {
     a->count++;
-    if (!embArray_resize(a)) {
+    if (!emb_array_resize(a)) {
         return 0;
     }
     a->geometry[a->count - 1].flag = b;
@@ -2287,10 +2287,10 @@ embArray_addFlag(EmbArray *a, EmbFlag b)
  * element was successfully added.
  */
 int
-embArray_addLine(EmbArray *a, EmbLine b)
+emb_array_addLine(EmbArray *a, EmbLine b)
 {
     a->count++;
-    if (!embArray_resize(a)) {
+    if (!emb_array_resize(a)) {
         return 0;
     }
     a->geometry[a->count - 1].object.line = b;
@@ -2302,10 +2302,10 @@ embArray_addLine(EmbArray *a, EmbLine b)
  * element was successfully added.
  */
 int
-embArray_addPath(EmbArray *a, EmbPath b)
+emb_array_addPath(EmbArray *a, EmbPath b)
 {
     a->count++;
-    if (!embArray_resize(a)) {
+    if (!emb_array_resize(a)) {
         return 0;
     }
     a->geometry[a->count - 1].object.path = b;
@@ -2317,10 +2317,10 @@ embArray_addPath(EmbArray *a, EmbPath b)
  * element was successfully added.
  */
 int
-embArray_addPoint(EmbArray *a, EmbPoint b)
+emb_array_addPoint(EmbArray *a, EmbPoint b)
 {
     a->count++;
-    if (!embArray_resize(a)) {
+    if (!emb_array_resize(a)) {
         return 0;
     }
     a->geometry[a->count - 1].object.point = b;
@@ -2332,10 +2332,10 @@ embArray_addPoint(EmbArray *a, EmbPoint b)
  * element was successfully added.
  */
 int
-embArray_addPolyline(EmbArray *a, EmbPolyline b)
+emb_array_addPolyline(EmbArray *a, EmbPolyline b)
 {
     a->count++;
-    if (!embArray_resize(a)) {
+    if (!emb_array_resize(a)) {
         return 0;
     }
     a->geometry[a->count - 1].object.polyline = b;
@@ -2347,10 +2347,10 @@ embArray_addPolyline(EmbArray *a, EmbPolyline b)
  * element was successfully added.
  */
 int
-embArray_addPolygon(EmbArray *a, EmbPolygon b)
+emb_array_addPolygon(EmbArray *a, EmbPolygon b)
 {
     a->count++;
-    if (!embArray_resize(a)) {
+    if (!emb_array_resize(a)) {
         return 0;
     }
     a->geometry[a->count - 1].object.polygon = b;
@@ -2362,10 +2362,10 @@ embArray_addPolygon(EmbArray *a, EmbPolygon b)
  * element was successfully added.
  */
 int
-embArray_addRect(EmbArray *a, EmbRect b)
+emb_array_addRect(EmbArray *a, EmbRect b)
 {
     a->count++;
-    if (!embArray_resize(a)) {
+    if (!emb_array_resize(a)) {
         return 0;
     }
     a->geometry[a->count - 1].object.rect = b;
@@ -2377,10 +2377,10 @@ embArray_addRect(EmbArray *a, EmbRect b)
  * element was successfully added.
  */
 int
-embArray_addStitch(EmbArray *a, EmbStitch b)
+emb_array_addStitch(EmbArray *a, EmbStitch b)
 {
     a->count++;
-    if (!embArray_resize(a)) {
+    if (!emb_array_resize(a)) {
         return 0;
     }
     a->stitch[a->count - 1] = b;
@@ -2391,10 +2391,10 @@ embArray_addStitch(EmbArray *a, EmbStitch b)
  * element was successfully added.
  */
 int
-embArray_addVector(EmbArray *a, EmbVector b)
+emb_array_addVector(EmbArray *a, EmbVector b)
 {
     a->count++;
-    if (!embArray_resize(a)) {
+    if (!emb_array_resize(a)) {
         return 0;
     }
     a->geometry[a->count - 1].object.vector = b;
@@ -2405,7 +2405,7 @@ embArray_addVector(EmbArray *a, EmbVector b)
 /* Free the memory of EmbArray a a, recursively if necessary.
  */
 void
-embArray_free(EmbArray* a)
+emb_array_free(EmbArray* a)
 {
     int i;
     if (!a) {
@@ -2423,15 +2423,15 @@ embArray_free(EmbArray* a)
             EmbGeometry g = a->geometry[i];
             switch (a->geometry[i].type) {
             case EMB_PATH: {
-                embArray_free(g.object.path.pointList);
+                emb_array_free(g.object.path.pointList);
                 break;
             }
             case EMB_POLYGON: {
-                embArray_free(g.object.polygon.pointList);
+                emb_array_free(g.object.polygon.pointList);
                 break;
             }
             case EMB_POLYLINE: {
-                embArray_free(g.object.polyline.pointList);
+                emb_array_free(g.object.polyline.pointList);
                 break;
             }
             default:
@@ -2872,12 +2872,12 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
 
     EmbReal halfThickness = thickness / 2.0;
     int intermediateOutlineCount = 2 * lines->count - 2;
-    outline.side1 = embArray_create(EMB_VECTOR);
+    outline.side1 = emb_array_create(EMB_VECTOR);
     if (!outline.side1) {
         printf("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for outline->side1\n");
         return;
     }
-    outline.side2 = embArray_create(EMB_VECTOR);
+    outline.side2 = emb_array_create(EMB_VECTOR);
     if (!outline.side2) {
         printf("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for outline->side2\n");
         return;
@@ -2891,34 +2891,34 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
 
         temp = emb_vector_scale(v1, halfThickness);
         temp = emb_vector_add(temp, lines->geometry[i-1].object.vector);
-        embArray_addVector(outline.side1, temp);
+        emb_array_addVector(outline.side1, temp);
         temp = emb_vector_add(temp, lines->geometry[i].object.vector);
-        embArray_addVector(outline.side1, temp);
+        emb_array_addVector(outline.side1, temp);
 
         temp = emb_vector_scale(v1, -halfThickness);
         temp = emb_vector_add(temp, lines->geometry[i - 1].object.vector);
-        embArray_addVector(outline.side2, temp);
+        emb_array_addVector(outline.side2, temp);
         temp = emb_vector_add(temp, lines->geometry[i].object.vector);
-        embArray_addVector(outline.side2, temp);
+        emb_array_addVector(outline.side2, temp);
     }
 
     if (!result) {
         printf("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), result argument is null\n");
         return;
     }
-    result->side1 = embArray_create(EMB_VECTOR);
+    result->side1 = emb_array_create(EMB_VECTOR);
     if (!result->side1) {
         printf("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side1\n");
         return;
     }
-    result->side2 = embArray_create(EMB_VECTOR);
+    result->side2 = emb_array_create(EMB_VECTOR);
     if (!result->side2) {
         printf("ERROR: emb-satin-line.c embSatinOutline_generateSatinOutline(), cannot allocate memory for result->side2\n");
         return;
     }
 
-    embArray_addVector(result->side1, outline.side1->geometry[0].object.vector);
-    embArray_addVector(result->side2, outline.side2->geometry[0].object.vector);
+    emb_array_addVector(result->side1, outline.side1->geometry[0].object.vector);
+    emb_array_addVector(result->side2, outline.side2->geometry[0].object.vector);
 
     for (i = 3; i < intermediateOutlineCount; i += 2) {
         line1.start = outline.side1->geometry[i - 3].object.vector;
@@ -2929,7 +2929,7 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
         if (emb_error) {
             puts("No intersection point.");
         }
-        embArray_addVector(result->side1, out);
+        emb_array_addVector(result->side1, out);
 
         line1.start = outline.side2->geometry[i - 3].object.vector;
         line1.end = outline.side2->geometry[i - 2].object.vector;
@@ -2939,11 +2939,11 @@ embSatinOutline_generateSatinOutline(EmbArray *lines, EmbReal thickness, EmbSati
         if (emb_error) {
             puts("No intersection point.");
         }
-        embArray_addVector(result->side2, out);
+        emb_array_addVector(result->side2, out);
     }
 
-    embArray_addVector(result->side1, outline.side1->geometry[2 * lines->count - 3].object.vector);
-    embArray_addVector(result->side2, outline.side2->geometry[2 * lines->count - 3].object.vector);
+    emb_array_addVector(result->side1, outline.side1->geometry[2 * lines->count - 3].object.vector);
+    emb_array_addVector(result->side2, outline.side2->geometry[2 * lines->count - 3].object.vector);
     result->length = lines->count;
 }
 
@@ -2986,16 +2986,16 @@ embSatinOutline_renderStitches(EmbSatinOutline* result, EmbReal density)
 
             for (i = 0; i < numberOfSteps; i++) {
                 if (!stitches) {
-                    stitches = embArray_create(EMB_VECTOR);
+                    stitches = emb_array_create(EMB_VECTOR);
                 }
-                embArray_addVector(stitches, currTop);
-                embArray_addVector(stitches, currBottom);
+                emb_array_addVector(stitches, currTop);
+                emb_array_addVector(stitches, currBottom);
                 currTop = emb_vector_add(currTop, topStep);
                 currBottom = emb_vector_add(currBottom, bottomStep);
             }
         }
-        embArray_addVector(stitches, currTop);
-        embArray_addVector(stitches, currBottom);
+        emb_array_addVector(stitches, currTop);
+        emb_array_addVector(stitches, currBottom);
     }
     return stitches;
 }
@@ -4808,7 +4808,7 @@ void embPolygon_reduceByDistance(EmbArray *vertices, EmbArray *simplified, float
     int i;
     /* We can't simplify polygons under 3 vertices */
     if (vertices->count < 3) {
-        embArray_copy(simplified, vertices);
+        emb_array_copy(simplified, vertices);
         return;
     }
 
@@ -4825,7 +4825,7 @@ void embPolygon_reduceByDistance(EmbArray *vertices, EmbArray *simplified, float
             continue;
         }
 
-        embArray_addVector(simplified, vertices->geometry[i].object.vector);
+        emb_array_addVector(simplified, vertices->geometry[i].object.vector);
     }
 }
 
@@ -4841,13 +4841,13 @@ embPolygon_reduceByNth(EmbArray *vertices, EmbArray *out, int nth)
     int i;
     /* We can't simplify polygons under 3 vertices */
     if (vertices->count < 3) {
-        embArray_copy(out, vertices);
+        emb_array_copy(out, vertices);
         return;
     }
 
     for (i=0; i<vertices->count; i++) {
         if (i!=nth) {
-            embArray_addVector(out, vertices->geometry[i].object.vector);
+            emb_array_addVector(out, vertices->geometry[i].object.vector);
         }
     }
 }
@@ -4861,10 +4861,10 @@ emb_pattern_combine(EmbPattern *p1, EmbPattern *p2)
     int i;
     EmbPattern *out = emb_pattern_create();
     for (i=0; i<p1->stitch_list->count; i++) {
-        embArray_addStitch(out->stitch_list, p1->stitch_list->stitch[i]);
+        emb_array_addStitch(out->stitch_list, p1->stitch_list->stitch[i]);
     }
     for (i=0; i<p2->stitch_list->count; i++) {
-        embArray_addStitch(out->stitch_list, p2->stitch_list->stitch[i]);
+        emb_array_addStitch(out->stitch_list, p2->stitch_list->stitch[i]);
     }
     /* These need to be merged, not appended. */
     for (i=0; i<p1->thread_list->count; i++) {
@@ -11502,12 +11502,12 @@ parse_path(EmbPattern *p)
                         }
 
                         if (!pointList && !flagList) {
-                            pointList = embArray_create(EMB_POINT);
-                            flagList = embArray_create(EMB_FLAG);
+                            pointList = emb_array_create(EMB_POINT);
+                            flagList = emb_array_create(EMB_FLAG);
                         }
                         test.position = position;
-                        embArray_addPoint(pointList, test);
-                        embArray_addFlag(flagList, svgPathCmdToEmbPathFlag(cmd));
+                        emb_array_addPoint(pointList, test);
+                        emb_array_addFlag(flagList, svgPathCmdToEmbPathFlag(cmd));
                         l_point = position;
 
                         pathbuff[0] = (char)cmd;                  /* set the command for compare */
@@ -11644,11 +11644,11 @@ EmbArray *parse_pointlist(EmbPattern *p)
                     yy = atof(polybuff);
 
                     if (!pointList) {
-                        pointList = embArray_create(EMB_POINT);
+                        pointList = emb_array_create(EMB_POINT);
                     }
                     a.position.x = xx;
                     a.position.y = yy;
-                    embArray_addPoint(pointList, a);
+                    emb_array_addPoint(pointList, a);
                 }
 
                 break;
@@ -11678,7 +11678,7 @@ parse_polygon(EmbPattern *p)
     }
     /*
     EmbPolygonObject polygonObj;
-    polygonObj.pointList = embArray_create(EMB_POINT);
+    polygonObj.pointList = emb_array_create(EMB_POINT);
     BROKEN: polygonObj.pointList = parse_pointlist(p);
     polygonObj.color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
     polygonObj.lineType = 1; TODO: use lineType enum
@@ -17485,7 +17485,7 @@ void save_toPolyline(EmbPattern* pattern, const EmbVector& objPos, const QPainte
 {
     float startX = objPos.x();
     float startY = objPos.y();
-    EmbArray *pointList = embArray_create(EMB_POINT);
+    EmbArray *pointList = emb_array_create(EMB_POINT);
     EmbPoint lastPoint;
     QPainterPath::Element element;
     for (int i = 0; i < objPath.elementCount(); ++i) {
@@ -17493,7 +17493,7 @@ void save_toPolyline(EmbPattern* pattern, const EmbVector& objPos, const QPainte
         if (pointList->count == 0) {
             lastPoint.position.x = element.x + startX;
             lastPoint.position.y = -(element.y + startY);
-            embArray_addPoint(pointList, lastPoint);
+            emb_array_addPoint(pointList, lastPoint);
         }
         else {
             lastPoint.position.x += element.x + startX;
@@ -18278,11 +18278,11 @@ emb_pattern_create(void)
     p->home.x = 0.0;
     p->home.y = 0.0;
     p->currentColorIndex = 0;
-    p->stitch_list = embArray_create(EMB_STITCH);
-    p->thread_list = embArray_create(EMB_THREAD);
+    p->stitch_list = emb_array_create(EMB_STITCH);
+    p->thread_list = emb_array_create(EMB_THREAD);
     p->hoop_height = 0.0;
     p->hoop_width = 0.0;
-    p->geometry = embArray_create(EMB_LINE);
+    p->geometry = emb_array_create(EMB_LINE);
     return p;
 }
 
@@ -18319,7 +18319,7 @@ int
 emb_pattern_addThread(EmbPattern *pattern, EmbThread thread)
 {
     if (pattern->thread_list->count + 1 > pattern->thread_list->length) {
-        if (!embArray_resize(pattern->thread_list)) {
+        if (!emb_array_resize(pattern->thread_list)) {
             return 0;
         }
     }
@@ -18390,12 +18390,12 @@ emb_pattern_copystitch_listToPolylines(EmbPattern* p)
             }
             if (!(st.flags & JUMP)) {
                 if (!pointList) {
-                    pointList = embArray_create(EMB_POINT);
+                    pointList = emb_array_create(EMB_POINT);
                     color = p->thread_list->thread[st.color].color;
                 }
                 point.position.x = st.x;
                 point.position.y = st.y;
-                embArray_addPoint(pointList, point);
+                emb_array_addPoint(pointList, point);
             }
         }
 
@@ -18407,7 +18407,7 @@ emb_pattern_copystitch_listToPolylines(EmbPattern* p)
             /* TODO: Determine what the correct value should be */
             currentPolyline.lineType = 1;
 
-            embArray_addPolyline(p->geometry, currentPolyline);
+            emb_array_addPolyline(p->geometry, currentPolyline);
         }
     }
 }
@@ -18539,13 +18539,13 @@ emb_pattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y,
         h.y = p->home.y;
         h.flags = JUMP;
         h.color = p->currentColorIndex;
-        embArray_addStitch(p->stitch_list, h);
+        emb_array_addStitch(p->stitch_list, h);
     }
     s.x = x;
     s.y = y;
     s.flags = flags;
     s.color = p->currentColorIndex;
-    embArray_addStitch(p->stitch_list, s);
+    emb_array_addStitch(p->stitch_list, s);
 }
 
 /* Adds a stitch to the pattern (a p) at the relative position
@@ -18908,7 +18908,7 @@ emb_pattern_combineJumpStitches(EmbPattern* p)
         printf("p argument is null\n");
         return;
     }
-    newList = embArray_create(EMB_STITCH);
+    newList = emb_array_create(EMB_STITCH);
     for (i = 0; i < p->stitch_list->count; i++) {
         EmbStitch st = p->stitch_list->stitch[i];
         if (st.flags & JUMP) {
@@ -18921,12 +18921,12 @@ emb_pattern_combineJumpStitches(EmbPattern* p)
             jumpCount++;
         } else {
             if (jumpCount > 0) {
-                embArray_addStitch(newList, j);
+                emb_array_addStitch(newList, j);
             }
-            embArray_addStitch(newList, st);
+            emb_array_addStitch(newList, st);
         }
     }
-    embArray_free(p->stitch_list);
+    emb_array_free(p->stitch_list);
     p->stitch_list = newList;
 }
 
@@ -18945,7 +18945,7 @@ emb_pattern_correctForMaxStitchLength(EmbPattern* p,
     if (p->stitch_list->count > 1) {
         int i, j, splits;
         EmbReal maxXY, maxLen, addX, addY;
-        EmbArray *newList = embArray_create(EMB_STITCH);
+        EmbArray *newList = emb_array_create(EMB_STITCH);
         for (i=1; i < p->stitch_list->count; i++) {
             EmbStitch st = p->stitch_list->stitch[i];
             EmbReal xx = st.x;
@@ -18970,13 +18970,13 @@ emb_pattern_correctForMaxStitchLength(EmbPattern* p,
                         s = st;
                         s.x = xx + addX * j;
                         s.y = yy + addY * j;
-                        embArray_addStitch(newList, s);
+                        emb_array_addStitch(newList, s);
                     }
                 }
             }
-            embArray_addStitch(newList, st);
+            emb_array_addStitch(newList, st);
         }
-        embArray_free(p->stitch_list);
+        emb_array_free(p->stitch_list);
         p->stitch_list = newList;
     }
     emb_pattern_end(p);
@@ -19055,9 +19055,9 @@ emb_pattern_free(EmbPattern* p)
         printf("ERROR: emb-pattern.c emb_pattern_free(), p argument is null\n");
         return;
     }
-    embArray_free(p->stitch_list);
-    embArray_free(p->thread_list);
-    embArray_free(p->geometry);
+    emb_array_free(p->stitch_list);
+    emb_array_free(p->thread_list);
+    emb_array_free(p->geometry);
     free(p);
 }
 
@@ -19073,7 +19073,7 @@ emb_pattern_addCircleAbs(EmbPattern* p, EmbCircle circle)
         return;
     }
 
-    embArray_addCircle(p->geometry, circle);
+    emb_array_addCircle(p->geometry, circle);
 }
 
 /* Adds an ellipse object to pattern (a p) with its center at the
@@ -19088,7 +19088,7 @@ emb_pattern_addEllipseAbs(EmbPattern* p, EmbEllipse ellipse)
         return;
     }
 
-    embArray_addEllipse(p->geometry, ellipse);
+    emb_array_addEllipse(p->geometry, ellipse);
 }
 
 /* Adds a line object to pattern (a p) starting at the absolute position
@@ -19103,7 +19103,7 @@ emb_pattern_addLineAbs(EmbPattern* p, EmbLine line)
         return;
     }
 
-    embArray_addLine(p->geometry, line);
+    emb_array_addLine(p->geometry, line);
 }
 
 /* .
@@ -19120,7 +19120,7 @@ emb_pattern_addPathAbs(EmbPattern* p, EmbPath obj)
         return;
     }
 
-    embArray_addPath(p->geometry, obj);
+    emb_array_addPath(p->geometry, obj);
 }
 
 /*! Adds a point object to pattern (a p) at the absolute position (a x,a y). Positive y is up. Units are in millimeters. */
@@ -19132,7 +19132,7 @@ emb_pattern_addPointAbs(EmbPattern* p, EmbPoint obj)
         return;
     }
 
-    embArray_addPoint(p->geometry, obj);
+    emb_array_addPoint(p->geometry, obj);
 }
 
 void
@@ -19147,7 +19147,7 @@ emb_pattern_addPolygonAbs(EmbPattern* p, EmbPolygon obj)
         return;
     }
 
-    embArray_addPolygon(p->geometry, obj);
+    emb_array_addPolygon(p->geometry, obj);
 }
 
 void
@@ -19161,7 +19161,7 @@ emb_pattern_addPolylineObjectAbs(EmbPattern* p, EmbPolyline obj)
         printf("ERROR: emb-pattern.c emb_pattern_addPolylineObjectAbs(), obj->pointList is empty\n");
         return;
     }
-    embArray_addPolyline(p->geometry, obj);
+    emb_array_addPolyline(p->geometry, obj);
 }
 
 /* Adds a rectangle object to pattern (a p) at the absolute position
@@ -19175,7 +19175,7 @@ emb_pattern_addRectAbs(EmbPattern* p, EmbRect rect)
         printf("ERROR: emb-pattern.c emb_pattern_addRectObjectAbs(), p argument is null\n");
         return;
     }
-    embArray_addRect(p->geometry, rect);
+    emb_array_addRect(p->geometry, rect);
 }
 
 void

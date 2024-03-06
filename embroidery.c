@@ -160,7 +160,6 @@ void readNextSector(FILE* file, bcf_directory* dir);
 
 void embColor_read(FILE *f, EmbColor *c, int toRead);
 void embColor_write(FILE *f, EmbColor c, int toWrite);
-EmbColor embColor_create(int red, int green, int blue);
 
 char read100(EmbPattern *pattern, FILE* file);
 char write100(EmbPattern *pattern, FILE* file);
@@ -1404,7 +1403,7 @@ embColor_fromHexStr(char* val)
 }
 
 EmbColor
-embColor_create(int red, int green, int blue)
+embColor_make(unsigned char red, unsigned char green, unsigned char blue)
 {
     EmbColor c;
     c.r = red;
@@ -7355,24 +7354,21 @@ readDxf(EmbPattern* pattern, FILE* file)
                 else if (string_equals(buff,"62")) /* Color Number */
                 {
                     unsigned char colorNum;
-                    EmbColor* co;
+                    EmbColor co;
 
                     readLine(file, buff);
                     colorNum = atoi(buff);
 
+		/* Why is this here twice? */
                     colorNum = atoi(buff);
-                    co = embColor_create(_dxfColorTable[colorNum][0], _dxfColorTable[colorNum][1], _dxfColorTable[colorNum][2]);
-                    if (!co) {
-                        /* TODO: error allocating memory for EmbColor */
-                        return 0;
-                    }
-                    printf("inserting:%s,%d,%d,%d\n", layerName, co->r, co->g, co->b);
+                    co = embColor_make(_dxfColorTable[colorNum][0], _dxfColorTable[colorNum][1], _dxfColorTable[colorNum][2]);
+                    printf("inserting:%s,%d,%d,%d\n", layerName, co.r, co.g, co.b);
                     /* TODO: fix this with a lookup finish this
                     if (embHash_insert(layerColorHash, emb_strdup(layerName), co))
                     {
                          TODO: log error: failed inserting into layerColorHash
                     }
-                */
+                    */
                     layerName[0] = 0;
                 }
             }

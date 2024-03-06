@@ -1,0 +1,14 @@
+name: Docs
+
+on:
+  push:
+
+jobs:
+  docs:
+    name: "Build Reference Manual"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build Website
+        run: bash bin/build_refman.sh

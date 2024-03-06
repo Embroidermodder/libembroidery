@@ -3,7 +3,7 @@ name: Website
 on:
   push:
     branches:
-      -main
+      - main
 
 permissions:
   contents: read

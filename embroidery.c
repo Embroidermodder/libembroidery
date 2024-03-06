@@ -7431,10 +7431,13 @@ readDxf(EmbPattern* pattern, FILE* file)
                         bulgeFlag = 0;
                         arc.start = prev;
                         arc.end = pos;
+		        /*TODO: error */
+		        /*
                         if (!getArcDataFromBulge(bulge, &arc, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)) {
-                            /*TODO: error */
                             return 0;
                         }
+			*/
+			return 0;
                         if (firstStitch) {
                             /* emb_pattern_addStitchAbs(pattern, x, y, TRIM, 1); TODO: Add moveTo point to embPath pointList */
                         }
@@ -7458,10 +7461,13 @@ readDxf(EmbPattern* pattern, FILE* file)
                         bulgeFlag = 0;
                         arc.start = prev;
                         arc.end = first;
+		        /* TODO: error */
+                        /*
                         if (!getArcDataFromBulge(bulge, &arc, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)) {
-                            /*TODO: error */
                             return 0;
                         }
+			*/
+		        return 0;
                         prev = arc.start;
                         /* emb_pattern_addStitchAbs(pattern, prevX, prevY, ARC, 1); TODO: Add arcTo point to embPath pointList */
                     }

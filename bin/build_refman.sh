@@ -1,5 +1,14 @@
 #!/bin/bash
 
+latex_build () {
+   pdflatex $1.tex || exit 1
+   makeindex $1 || exit 1
+   bibtex $1.aux || exit 1
+   pdflatex $1.tex || exit 1
+   pdflatex $1.tex || exit 1
+   pdflatex $1.tex || exit 1
+}
+
 sudo apt-get update &> deps.log
 sudo apt-get upgrade &>> deps.log
 sudo apt-get install texlive texlive-latex-extra &>> deps.log

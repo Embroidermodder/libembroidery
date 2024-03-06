@@ -6,7 +6,8 @@ on:
 jobs:
   build:
     strategy:
-      os: ["windows-latest", "macos-latest", "ubuntu-latest"]
+      matrix:
+        os: ["windows-latest", "macos-latest", "ubuntu-latest"]
     name: "Build on ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
     steps:

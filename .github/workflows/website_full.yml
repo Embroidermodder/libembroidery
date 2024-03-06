@@ -1,4 +1,4 @@
-name: test
+name: Website (including dailies)
 
 on:
   workflow_dispatch:

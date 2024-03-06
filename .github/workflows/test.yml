@@ -1,4 +1,4 @@
-name: Build
+name: Test
 
 on:
   push:
@@ -22,4 +22,4 @@ jobs:
       - name: Testing
         run: |
           cd build
-          ./embroider --test-suite
+          ./embroider --test

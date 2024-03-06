@@ -1705,7 +1705,7 @@ pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3)
     if (res > 0x7FFFFF) {
         return (-((~(res) & 0x7FFFFF) - 1));
     }
-    return res;
+    return 1.0f * res;
 }
 
 /*  * a value
@@ -7018,7 +7018,7 @@ writeDst(EmbPattern* pattern, FILE* file)
     EmbVector pos;
     EmbString pd;
 
-    emb_pattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
+    emb_pattern_correctForMaxStitchLength(pattern, 12.1f, 12.1f);
 
     /* TODO: make sure that pattern->thread_list->count
      * defaults to 1 in new patterns */
@@ -7078,10 +7078,10 @@ writeDst(EmbPattern* pattern, FILE* file)
         int dx, dy;
         st = pattern->stitch_list->stitch[i];
         /* convert from mm to 0.1mm for file format */
-        dx = (int)emb_round(10.0*(st.x - pos.x));
-        dy = (int)emb_round(10.0*(st.y - pos.y));
-        pos.x += 0.1*dx;
-        pos.y += 0.1*dy;
+        dx = (int)emb_round(10.0f * (st.x - pos.x));
+        dy = (int)emb_round(10.0f * (st.y - pos.y));
+        pos.x += 0.1f * dx;
+        pos.y += 0.1f * dy;
         if (emb_verbose > 0) {
             printf("%d %f %f %d %d %f %f %d\n", i, st.x, st.y, dx, dy, pos.x, pos.y, st.flags);
         }
@@ -7134,7 +7134,7 @@ readDsz(EmbPattern* pattern, FILE* file)
             emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
-        emb_pattern_addStitchRel(pattern, x  / 10.0, y  / 10.0, stitchType, 1);
+        emb_pattern_addStitchRel(pattern, x  / 10.0f, y  / 10.0f, stitchType, 1);
     }
     return 1;
 }
@@ -7230,16 +7230,16 @@ readDxf(EmbPattern* pattern, FILE* file)
 
     EmbString buff;
     EmbVector prev, pos, first;
-    EmbReal bulge = 0.0;
+    EmbReal bulge = 0.0f;
     char firstStitch = 1;
     char bulgeFlag = 0;
     int fileLength = 0;
-    first.x = 0.0;
-    first.y = 0.0;
-    pos.x = 0.0;
-    pos.y = 0.0;
-    prev.x = 0.0;
-    prev.y = 0.0;
+    first.x = 0.0f;
+    first.y = 0.0f;
+    pos.x = 0.0f;
+    pos.y = 0.0f;
+    prev.x = 0.0f;
+    prev.y = 0.0f;
 
     puts("overriding dxf. Unimplemented for now.");
     puts("Overridden, defaulting to dst.");
@@ -7560,24 +7560,27 @@ readEmd(EmbPattern* pattern, FILE* file) {
         char dx, dy;
         int flags = NORMAL;
         fread(b, 1, 2, file);
-
-            if (b[0] == 0x80) {
-                if (b[1] == 0x2A) {
-                    emb_pattern_addStitchRel(pattern, 0, 0, STOP, 1);
-                    continue;
-                } else if (b[1] == 0x80) {
-                    fread(b, 1, 2, file);
-                    flags = TRIM;
-                } else if (b[1] == 0xFD) {
-                    emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
-                    break;
-                } else {
-                    continue;
-                }
+        
+        if (b[0] == 0x80) {
+            if (b[1] == 0x2A) {
+                emb_pattern_addStitchRel(pattern, 0, 0, STOP, 1);
+                continue;
             }
-            dx = emdDecode(b[0]);
-            dy = emdDecode(b[1]);
-            emb_pattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+            else if (b[1] == 0x80) {
+                fread(b, 1, 2, file);
+                flags = TRIM;
+            }
+            else if (b[1] == 0xFD) {
+                emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
+                break;
+            }
+            else {
+                continue;
+            }
+        }
+        dx = emdDecode(b[0]);
+        dy = emdDecode(b[1]);
+        emb_pattern_addStitchRel(pattern, dx / 10.0f, dy / 10.0f, flags, 1);
     }
     return 1;
 }
@@ -14294,7 +14297,7 @@ emb_arc_setRadius(EmbArc *arc, float radius)
     }
 
     EmbVector center = emb_arc_center(*arc);
-    double delta_length;
+    EmbReal delta_length;
 
     delta = emb_vector_subtract(arc->start, center);
     delta_length = emb_vector_length(delta);

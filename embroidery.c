@@ -160,6 +160,7 @@ void readNextSector(FILE* file, bcf_directory* dir);
 
 void embColor_read(FILE *f, EmbColor *c, int toRead);
 void embColor_write(FILE *f, EmbColor c, int toWrite);
+EmbColor embColor_create(int red, int green, int blue);
 
 char read100(EmbPattern *pattern, FILE* file);
 char write100(EmbPattern *pattern, FILE* file);
@@ -1400,6 +1401,16 @@ embColor_fromHexStr(char* val)
     color.g = (unsigned char)strtol(g, 0, 16);
     color.b = (unsigned char)strtol(b, 0, 16);
     return color;
+}
+
+EmbColor
+embColor_create(int red, int green, int blue)
+{
+    EmbColor c;
+    c.r = red;
+    c.b = green;
+    c.g = blue;
+    return c;
 }
 
 /* Reverses the byte order of a bytes number of bytes

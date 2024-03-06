@@ -5919,6 +5919,12 @@ writeBmc(EmbPattern* pattern, FILE* file)
  * 2 bytes for any stitch.
  */
 
+#define READ_BYTES(dest, n) \
+    read_bytes = fread(dest, n, 1, file); \
+    if (!read_bytes) { \
+	    return 0; \
+    }
+
 char
 readBro(EmbPattern* pattern, FILE* file)
 {
@@ -5926,18 +5932,19 @@ readBro(EmbPattern* pattern, FILE* file)
     short unknown1, unknown2, unknown3, unknown4, moreBytesToEnd;
     char name[8];
     int stitchType;
-    fread(&x55, 1, 1, file);
+    int read_bytes;
+    READ_BYTES(&x55, 1);
     /* TODO: determine what this unknown data is */
-    fread(&unknown1, 2, 1, file);
+    READ_BYTES(&unknown1, 2);
 
-    fread(name, 1, 8, file);
+    READ_BYTES(name, 8);
     /* TODO: determine what this unknown data is */
-    fread(&unknown2, 2, 1, file);
+    READ_BYTES(&unknown2, 2);
     /* TODO: determine what this unknown data is */
-    fread(&unknown3, 2, 1, file);
+    READ_BYTES(&unknown3, 2);
     /* TODO: determine what this unknown data is */
-    fread(&unknown4, 2, 1, file);
-    fread(&moreBytesToEnd, 2, 1, file);
+    READ_BYTES(&unknown4, 2);
+    READ_BYTES(&moreBytesToEnd, 2);
 
     fseek(file, 0x100, SEEK_SET);
 
@@ -5964,6 +5971,8 @@ readBro(EmbPattern* pattern, FILE* file)
     }
     return 1;
 }
+
+#undef READ_BYTES
 
 char
 writeBro(EmbPattern* pattern, FILE* file)

@@ -937,7 +937,6 @@ EMB_PUBLIC int emb_identify_format(const char *ending);
 EMB_PUBLIC int convert(const char *inf, const char *outf);
 
 EMB_PUBLIC EmbColor embColor_make(unsigned char r, unsigned char g, unsigned char b);
-EMB_PUBLIC EmbColor* embColor_create(unsigned char r, unsigned char g, unsigned char b);
 EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
 EMB_PUBLIC int embColor_distance(EmbColor a, EmbColor b);
 

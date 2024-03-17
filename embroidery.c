@@ -53,6 +53,8 @@ bcf_file_header bcfFileHeader_read(FILE* file);
 int bcfFileHeader_isValid(bcf_file_header header);
 void bcf_file_free(bcf_file* bcfFile);
 
+static EmbPattern *focussed_pattern = NULL;
+
 void
 printArcResults(
     EmbReal bulge,
@@ -1203,6 +1205,104 @@ typedef struct BRAND {
 } EmbBrand;
 
 EmbBrand brand_codes[100];
+
+#define TWO_BYTE_INT(array, i) \
+    256*array[i] + array[i+1]
+
+/* Our virtual machine
+ * -------------------
+ *
+ * Program state is altered via this function, all other functions
+ * pass the program state back and forth to keep it thread-safe.
+ *
+ * Variables are packed into and removed from this state, the stack is embedded
+ * into it.
+ */
+void
+emb_processor(char *state, const char *program, int program_length)
+{
+    int i;
+    for (i=0; i<program_length; i++) {
+        switch (program[i]) {
+        case EMB_CMD_ARC: {
+            if (focussed_pattern == NULL) {
+                puts("ERROR: there is no focussed pattern, so the arc command cannot be run.");
+                return;
+            }
+            EmbVector p1, p2;
+            p1.x = 0.1 * TWO_BYTE_INT(program, i+1);
+            p1.y = 0.1 * TWO_BYTE_INT(program, i+3);
+            p2.x = 0.1 * TWO_BYTE_INT(program, i+5);
+            p2.y = 0.1 * TWO_BYTE_INT(program, i+7);
+            
+            i += 8;
+            break;
+        }
+        case EMB_CMD_CIRCLE: {
+            if (focussed_pattern == NULL) {
+                puts("ERROR: there is no focussed pattern, so the circle command cannot be run.");
+                return;
+            }
+            EmbVector center;
+            center.x = 0.1 * TWO_BYTE_INT(program, i+1);
+            center.y = 0.1 * TWO_BYTE_INT(program, i+3);
+            EmbReal r = 0.1 * TWO_BYTE_INT(program, i+5);
+            
+            i += 6;
+            break;
+        }
+        default: {
+            puts("Program command not defined.");
+            break;
+        }
+        }
+    }
+}
+
+/*
+ *
+ */
+void
+emb_postscript_compiler(const char *program, char *compiled_program)
+{
+
+}
+
+/* The actuator works by creating an on-the-fly EmbProgramState so external
+ * callers don't have to manage memory over longer sessions.
+ *
+ * It also compiles down our command line arguments, postscript and SVG
+ * defines etc. into a common "machine code" like program.
+ */
+int
+emb_compiler(const char *program, int language, char *compiled_program)
+{
+    int i = 0;
+    int output_length = 0;
+    compiled_program[i] = 0;
+    switch (language) {
+    case LANG_PS: {
+        emb_postscript_compiler(program, compiled_program);
+        break;
+    }
+    default: {
+        break;
+    }
+    }
+    return output_length;
+}
+
+/* Calls the compiler, then runs the compiled program. */
+void
+emb_actuator(const char *program, int language)
+{
+    char *state = malloc(1000);
+    char *compiled_program = malloc(1000);
+    int output_length = emb_compiler(program, language, compiled_program);
+    emb_processor(state, compiled_program, output_length);
+    free(compiled_program);
+    free(state);
+}
 
 /*
  *
@@ -3769,9 +3869,16 @@ command_line_interface(int argc, char* argv[])
             emb_verbose = 1;
             break;
         case FLAG_CIRCLE:
-        case FLAG_CIRCLE_SHORT:
-            puts("This flag is not implemented.");
+        case FLAG_CIRCLE_SHORT: {
+            char script[200];
+            if (i + 3 >= argc) {
+                puts("Not enough arguments supplied to circle command: 3 required.");
+                break;
+            }
+            sprintf(script, "%s %s %s circle", argv[i+1], argv[i+2], argv[i+3]);
+            emb_actuator(current_pattern, script);
             break;
+        }
         case FLAG_ELLIPSE:
         case FLAG_ELLIPSE_SHORT:
             puts("This flag is not implemented.");
@@ -3915,14 +4022,12 @@ command_line_interface(int argc, char* argv[])
                 EmbImage image;
                 /* the user appears to have entered the needed arguments */
                 image = embImage_create(2000, 2000);
-                i++;
                 /* to stb command */
                 embImage_read(&image, argv[i]);
-                i++;
-                emb_pattern_crossstitch(current_pattern, &image, atoi(argv[i]));
+                emb_pattern_crossstitch(current_pattern, &image, atoi(argv[i+1]));
                 embImage_free(&image);
-                i++;
-                emb_pattern_writeAuto(current_pattern, argv[i]);
+                emb_pattern_writeAuto(current_pattern, argv[i+2]);
+                i += 3;
             }
             break;
         default:

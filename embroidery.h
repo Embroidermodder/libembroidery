@@ -2,7 +2,7 @@
  * LIBEMBROIDERY HEADER
  * This file is part of libembroidery.
  *
- * Copyright 2018-2023 The Embroidermodder Team
+ * Copyright 2018-2024 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
  * -----------------------------------------------------------------------------
@@ -18,10 +18,10 @@
 extern "C" {
 #endif
 
-#define EMB_LIB_VERSION_MAJOR 1
-#define EMB_LIB_VERSION_MINOR 0
-#define EMB_LIB_VERSION_PATCH 0
-#define EMB_LIB_VERSION_TAG   "alpha"
+#define EMB_LIB_VERSION_MAJOR          1
+#define EMB_LIB_VERSION_MINOR          0
+#define EMB_LIB_VERSION_PATCH          0
+#define EMB_LIB_VERSION_TAG      "alpha"
 
 /* MACROS
  *****************************************************************************
@@ -46,92 +46,92 @@ extern "C" {
 #define END                         0x10
 
 /* Format identifiers */
-#define EMB_FORMAT_100           0
-#define EMB_FORMAT_10O           1
-#define EMB_FORMAT_ART           2
-#define EMB_FORMAT_BMC           3
-#define EMB_FORMAT_BRO           4
-#define EMB_FORMAT_CND           5
-#define EMB_FORMAT_COL           6
-#define EMB_FORMAT_CSD           7
-#define EMB_FORMAT_CSV           8
-#define EMB_FORMAT_DAT           9
-#define EMB_FORMAT_DEM          10
-#define EMB_FORMAT_DSB          11
-#define EMB_FORMAT_DST          12
-#define EMB_FORMAT_DSZ          13
-#define EMB_FORMAT_DXF          14
-#define EMB_FORMAT_EDR          15
-#define EMB_FORMAT_EMD          16
-#define EMB_FORMAT_EXP          17
-#define EMB_FORMAT_EXY          18
-#define EMB_FORMAT_EYS          19
-#define EMB_FORMAT_FXY          20
-#define EMB_FORMAT_GC           21
-#define EMB_FORMAT_GNC          22
-#define EMB_FORMAT_GT           23
-#define EMB_FORMAT_HUS          24
-#define EMB_FORMAT_INB          25
-#define EMB_FORMAT_INF          26
-#define EMB_FORMAT_JEF          27
-#define EMB_FORMAT_KSM          28
-#define EMB_FORMAT_MAX          29
-#define EMB_FORMAT_MIT          30
-#define EMB_FORMAT_NEW          31
-#define EMB_FORMAT_OFM          32
-#define EMB_FORMAT_PCD          33
-#define EMB_FORMAT_PCM          34
-#define EMB_FORMAT_PCQ          35
-#define EMB_FORMAT_PCS          36
-#define EMB_FORMAT_PEC          37
-#define EMB_FORMAT_PEL          38
-#define EMB_FORMAT_PEM          39
-#define EMB_FORMAT_PES          40
-#define EMB_FORMAT_PHB          41
-#define EMB_FORMAT_PHC          42
-#define EMB_FORMAT_PLT          43
-#define EMB_FORMAT_RGB          44
-#define EMB_FORMAT_SEW          45
-#define EMB_FORMAT_SHV          46
-#define EMB_FORMAT_SST          47
-#define EMB_FORMAT_STX          48
-#define EMB_FORMAT_SVG          49
-#define EMB_FORMAT_T01          50
-#define EMB_FORMAT_T09          51
-#define EMB_FORMAT_TAP          52
-#define EMB_FORMAT_THR          53
-#define EMB_FORMAT_TXT          54
-#define EMB_FORMAT_U00          55
-#define EMB_FORMAT_U01          56
-#define EMB_FORMAT_VIP          57
-#define EMB_FORMAT_VP3          58
-#define EMB_FORMAT_XXX          59
-#define EMB_FORMAT_ZSK          60
+#define EMB_FORMAT_100                 0
+#define EMB_FORMAT_10O                 1
+#define EMB_FORMAT_ART                 2
+#define EMB_FORMAT_BMC                 3
+#define EMB_FORMAT_BRO                 4
+#define EMB_FORMAT_CND                 5
+#define EMB_FORMAT_COL                 6
+#define EMB_FORMAT_CSD                 7
+#define EMB_FORMAT_CSV                 8
+#define EMB_FORMAT_DAT                 9
+#define EMB_FORMAT_DEM                10
+#define EMB_FORMAT_DSB                11
+#define EMB_FORMAT_DST                12
+#define EMB_FORMAT_DSZ                13
+#define EMB_FORMAT_DXF                14
+#define EMB_FORMAT_EDR                15
+#define EMB_FORMAT_EMD                16
+#define EMB_FORMAT_EXP                17
+#define EMB_FORMAT_EXY                18
+#define EMB_FORMAT_EYS                19
+#define EMB_FORMAT_FXY                20
+#define EMB_FORMAT_GC                 21
+#define EMB_FORMAT_GNC                22
+#define EMB_FORMAT_GT                 23
+#define EMB_FORMAT_HUS                24
+#define EMB_FORMAT_INB                25
+#define EMB_FORMAT_INF                26
+#define EMB_FORMAT_JEF                27
+#define EMB_FORMAT_KSM                28
+#define EMB_FORMAT_MAX                29
+#define EMB_FORMAT_MIT                30
+#define EMB_FORMAT_NEW                31
+#define EMB_FORMAT_OFM                32
+#define EMB_FORMAT_PCD                33
+#define EMB_FORMAT_PCM                34
+#define EMB_FORMAT_PCQ                35
+#define EMB_FORMAT_PCS                36
+#define EMB_FORMAT_PEC                37
+#define EMB_FORMAT_PEL                38
+#define EMB_FORMAT_PEM                39
+#define EMB_FORMAT_PES                40
+#define EMB_FORMAT_PHB                41
+#define EMB_FORMAT_PHC                42
+#define EMB_FORMAT_PLT                43
+#define EMB_FORMAT_RGB                44
+#define EMB_FORMAT_SEW                45
+#define EMB_FORMAT_SHV                46
+#define EMB_FORMAT_SST                47
+#define EMB_FORMAT_STX                48
+#define EMB_FORMAT_SVG                49
+#define EMB_FORMAT_T01                50
+#define EMB_FORMAT_T09                51
+#define EMB_FORMAT_TAP                52
+#define EMB_FORMAT_THR                53
+#define EMB_FORMAT_TXT                54
+#define EMB_FORMAT_U00                55
+#define EMB_FORMAT_U01                56
+#define EMB_FORMAT_VIP                57
+#define EMB_FORMAT_VP3                58
+#define EMB_FORMAT_XXX                59
+#define EMB_FORMAT_ZSK                60
 
 /* EmbGeometry types, should include all of the possible rendering types
  * for EmbroiderModder and internal types for stitch processing (like
  * fills).
  */
-#define EMB_ARRAY               0
-#define EMB_ARC                 1
-#define EMB_CIRCLE              2
-#define EMB_DIM_DIAMETER        3
-#define EMB_DIM_LEADER          4
-#define EMB_ELLIPSE             5
-#define EMB_FLAG                6
-#define EMB_LINE                7
-#define EMB_IMAGE               8
-#define EMB_PATH                9
-#define EMB_POINT               10
-#define EMB_POLYGON             11
-#define EMB_POLYLINE            12
-#define EMB_RECT                13
-#define EMB_SPLINE              14
-#define EMB_STITCH              15
-#define EMB_TEXT_SINGLE         16
-#define EMB_TEXT_MULTI          17
-#define EMB_VECTOR              18
-#define EMB_THREAD              19
+#define EMB_ARRAY                      0
+#define EMB_ARC                        1
+#define EMB_CIRCLE                     2
+#define EMB_DIM_DIAMETER               3
+#define EMB_DIM_LEADER                 4
+#define EMB_ELLIPSE                    5
+#define EMB_FLAG                       6
+#define EMB_LINE                       7
+#define EMB_IMAGE                      8
+#define EMB_PATH                       9
+#define EMB_POINT                     10
+#define EMB_POLYGON                   11
+#define EMB_POLYLINE                  12
+#define EMB_RECT                      13
+#define EMB_SPLINE                    14
+#define EMB_STITCH                    15
+#define EMB_TEXT_SINGLE               16
+#define EMB_TEXT_MULTI                17
+#define EMB_VECTOR                    18
+#define EMB_THREAD                    19
 
 #define EMBFORMAT_UNSUPPORTED                   0
 #define EMBFORMAT_STITCHONLY                    1
@@ -158,7 +158,7 @@ extern "C" {
 /* Most machines are little endian (including the developer's), so default to
  * that.
  */
-#define ENDIAN_HOST                             EMB_LITTLE_ENDIAN
+#define ENDIAN_HOST             EMB_LITTLE_ENDIAN
 
 #define EMB_INT16_BIG                           2
 #define EMB_INT16_LITTLE                        3
@@ -166,20 +166,20 @@ extern "C" {
 #define EMB_INT32_LITTLE                        5
 
 /* Identifiers for different PES versions. */
-#define PES0001         0
-#define PES0020         1
-#define PES0022         2
-#define PES0030         3
-#define PES0040         4
-#define PES0050         5
-#define PES0055         6
-#define PES0056         7
-#define PES0060         8
-#define PES0070         9
-#define PES0080        10
-#define PES0090        11
-#define PES0100        12
-#define N_PES_VERSIONS 13
+#define PES0001                     0
+#define PES0020                     1
+#define PES0022                     2
+#define PES0030                     3
+#define PES0040                     4
+#define PES0050                     5
+#define PES0055                     6
+#define PES0056                     7
+#define PES0060                     8
+#define PES0070                     9
+#define PES0080                    10
+#define PES0090                    11
+#define PES0100                    12
+#define N_PES_VERSIONS             13
 
 
 /**
@@ -253,7 +253,7 @@ extern "C" {
 #define ELEMENT_TITLE           44
 #define ELEMENT_TSPAN           45
 #define ELEMENT_USE             46
-#define ELEMENT_VIDEO           47
+#define ELEMENT_VIDEO                 47
 
 /* INTERNAL DEFINES */
 #define RED_TERM_COLOR      "\x1B[0;31m"
@@ -261,43 +261,43 @@ extern "C" {
 #define YELLOW_TERM_COLOR   "\x1B[1;33m"
 #define RESET_TERM_COLOR       "\033[0m"
 
-#define HOOP_126X110                  0
-#define HOOP_110X110                  1
-#define HOOP_50X50                    2
-#define HOOP_140X200                  3
-#define HOOP_230X200                  4
+#define HOOP_126X110                   0
+#define HOOP_110X110                   1
+#define HOOP_50X50                     2
+#define HOOP_140X200                   3
+#define HOOP_230X200                   4
 
 
 /* DXF Version Identifiers */
-#define DXF_VERSION_R10 "AC1006"
-#define DXF_VERSION_R11 "AC1009"
-#define DXF_VERSION_R12 "AC1009"
-#define DXF_VERSION_R13 "AC1012"
-#define DXF_VERSION_R14 "AC1014"
-#define DXF_VERSION_R15 "AC1015"
-#define DXF_VERSION_R18 "AC1018"
-#define DXF_VERSION_R21 "AC1021"
-#define DXF_VERSION_R24 "AC1024"
-#define DXF_VERSION_R27 "AC1027"
+#define DXF_VERSION_R10         "AC1006"
+#define DXF_VERSION_R11         "AC1009"
+#define DXF_VERSION_R12         "AC1009"
+#define DXF_VERSION_R13         "AC1012"
+#define DXF_VERSION_R14         "AC1014"
+#define DXF_VERSION_R15         "AC1015"
+#define DXF_VERSION_R18         "AC1018"
+#define DXF_VERSION_R21         "AC1021"
+#define DXF_VERSION_R24         "AC1024"
+#define DXF_VERSION_R27         "AC1027"
 
-#define DXF_VERSION_2000 "AC1015"
-#define DXF_VERSION_2002 "AC1015"
-#define DXF_VERSION_2004 "AC1018"
-#define DXF_VERSION_2006 "AC1018"
-#define DXF_VERSION_2007 "AC1021"
-#define DXF_VERSION_2009 "AC1021"
-#define DXF_VERSION_2010 "AC1024"
-#define DXF_VERSION_2013 "AC1027"
+#define DXF_VERSION_2000        "AC1015"
+#define DXF_VERSION_2002        "AC1015"
+#define DXF_VERSION_2004        "AC1018"
+#define DXF_VERSION_2006        "AC1018"
+#define DXF_VERSION_2007        "AC1021"
+#define DXF_VERSION_2009        "AC1021"
+#define DXF_VERSION_2010        "AC1024"
+#define DXF_VERSION_2013        "AC1027"
 
-#define SVG_CREATOR_NULL              0
-#define SVG_CREATOR_EMBROIDERMODDER   1
-#define SVG_CREATOR_ILLUSTRATOR       2
-#define SVG_CREATOR_INKSCAPE          3
+#define SVG_CREATOR_NULL               0
+#define SVG_CREATOR_EMBROIDERMODDER    1
+#define SVG_CREATOR_ILLUSTRATOR        2
+#define SVG_CREATOR_INKSCAPE           3
 
-#define SVG_EXPECT_NULL               0
-#define SVG_EXPECT_ELEMENT            1
-#define SVG_EXPECT_ATTRIBUTE          2
-#define SVG_EXPECT_VALUE              3
+#define SVG_EXPECT_NULL                0
+#define SVG_EXPECT_ELEMENT             1
+#define SVG_EXPECT_ATTRIBUTE           2
+#define SVG_EXPECT_VALUE               3
 
 /*  SVG_TYPES
  *  ---------
@@ -310,65 +310,246 @@ extern "C" {
 #define SVG_CATCH_ALL                 5
 
 /* path flag codes */
-#define LINETO             0
-#define MOVETO             1
-#define BULGETOCONTROL     2
-#define BULGETOEND         4
-#define ELLIPSETORAD       8
-#define ELLIPSETOEND      16
-#define CUBICTOCONTROL1   32
-#define CUBICTOCONTROL2   64
-#define CUBICTOEND       128
-#define QUADTOCONTROL    256
-#define QUADTOEND        512
-
+#define LINETO                     0x000
+#define MOVETO                     0x001
+#define BULGETOCONTROL             0x002
+#define BULGETOEND                 0x004
+#define ELLIPSETORAD               0x008
+#define ELLIPSETOEND               0x010
+#define CUBICTOCONTROL1            0x020
+#define CUBICTOCONTROL2            0x040
+#define CUBICTOEND                 0x080
+#define QUADTOCONTROL              0x100
+#define QUADTOEND                  0x200
 
 /* same order as flag_list, to use in jump table */
-#define FLAG_TO                       0
-#define FLAG_TO_SHORT                 1
-#define FLAG_HELP                     2
-#define FLAG_HELP_SHORT               3
-#define FLAG_FORMATS                  4
-#define FLAG_FORMATS_SHORT            5
-#define FLAG_QUIET                    6
-#define FLAG_QUIET_SHORT              7
-#define FLAG_VERBOSE                  8
-#define FLAG_VERBOSE_SHORT            9
-#define FLAG_VERSION                 10
-#define FLAG_VERSION_SHORT           11
-#define FLAG_CIRCLE                  12
-#define FLAG_CIRCLE_SHORT            13
-#define FLAG_ELLIPSE                 14
-#define FLAG_ELLIPSE_SHORT           15
-#define FLAG_LINE                    16
-#define FLAG_LINE_SHORT              17
-#define FLAG_POLYGON                 18
-#define FLAG_POLYGON_SHORT           19
-#define FLAG_POLYLINE                20
-#define FLAG_POLYLINE_SHORT          21
-#define FLAG_RENDER                  22
-#define FLAG_RENDER_SHORT            23
-#define FLAG_SATIN                   24
-#define FLAG_SATIN_SHORT             25
-#define FLAG_STITCH                  26
-#define FLAG_STITCH_SHORT            27
-#define FLAG_TEST                    28
-#define FLAG_FULL_TEST_SUITE         29
-#define FLAG_CONVERT_TEST            30
-#define FLAG_HILBERT_CURVE           31
-#define FLAG_SIERPINSKI_TRIANGLE     32
-#define FLAG_FILL                    33
-#define FLAG_FILL_SHORT              34
-#define FLAG_SIMULATE                35
-#define FLAG_COMBINE                 36
-#define FLAG_CROSS_STITCH            37
-#define NUM_FLAGS                    38
+#define FLAG_TO                        0
+#define FLAG_TO_SHORT                  1
+#define FLAG_HELP                      2
+#define FLAG_HELP_SHORT                3
+#define FLAG_FORMATS                   4
+#define FLAG_FORMATS_SHORT             5
+#define FLAG_QUIET                     6
+#define FLAG_QUIET_SHORT               7
+#define FLAG_VERBOSE                   8
+#define FLAG_VERBOSE_SHORT             9
+#define FLAG_VERSION                  10
+#define FLAG_VERSION_SHORT            11
+#define FLAG_CIRCLE                   12
+#define FLAG_CIRCLE_SHORT             13
+#define FLAG_ELLIPSE                  14
+#define FLAG_ELLIPSE_SHORT            15
+#define FLAG_LINE                     16
+#define FLAG_LINE_SHORT               17
+#define FLAG_POLYGON                  18
+#define FLAG_POLYGON_SHORT            19
+#define FLAG_POLYLINE                 20
+#define FLAG_POLYLINE_SHORT           21
+#define FLAG_RENDER                   22
+#define FLAG_RENDER_SHORT             23
+#define FLAG_SATIN                    24
+#define FLAG_SATIN_SHORT              25
+#define FLAG_STITCH                   26
+#define FLAG_STITCH_SHORT             27
+#define FLAG_TEST                     28
+#define FLAG_FULL_TEST_SUITE          29
+#define FLAG_CONVERT_TEST             30
+#define FLAG_HILBERT_CURVE            31
+#define FLAG_SIERPINSKI_TRIANGLE      32
+#define FLAG_FILL                     33
+#define FLAG_FILL_SHORT               34
+#define FLAG_SIMULATE                 35
+#define FLAG_COMBINE                  36
+#define FLAG_CROSS_STITCH             37
+#define NUM_FLAGS                     38
 
-/* Utility macros
+/* LANGUAGES */
+#define LANG_SVG                       0
+#define LANG_PS                        1
+#define LANG_PROMPT                    2
+
+/* COMMANDS
+ *
+ * These identifiers are subject to change since they are in alphabetical order
+ * and the numbers are increasing.
+ *
+ * Note that GUI-only commands are present here because this is for operations
+ * available in all frontends.
+ *
+ * The actuator uses
+ */
+#define EMB_CMD_ABOUT                  0
+#define EMB_CMD_ARC                    1
+#define EMB_CMD_CIRCLE                 2
+#define EMB_CMD_DIM_LEADER             3
+#define EMB_CMD_ELLIPSE                4
+#define EMB_CMD_HORIZONTAL_DIMENSION   6
+#define EMB_CMD_IMAGE                  7
+#define EMB_CMD_INFINITE_LINE          8
+#define EMB_CMD_LINE                   9
+#define EMB_CMD_PATH                  10
+#define EMB_CMD_POINT                 11
+#define EMB_CMD_POLYGON               12
+#define EMB_CMD_POLYLINE              13
+#define EMB_CMD_RAY                   14
+#define EMB_CMD_RECTANGLE             15
+#define EMB_CMD_REGULAR_POLYGON       16
+#define EMB_CMD_ROUNDED_RECTANGLE     17
+#define EMB_CMD_RUBBER                18
+#define EMB_CMD_SLOT                  19
+#define EMB_CMD_TEXT_MULTI            20
+#define EMB_CMD_TEXT_SINGLE           21
+#define EMB_CMD_ADD_TO_SELECTION      22
+#define EMB_CMD_TRIANGLE              23
+#define EMB_CMD_VERTICAL_DIMENSION    24
+#define EMB_CMD_ALERT                 25
+#define EMB_CMD_ALLOW_RUBBER          26
+#define EMB_CMD_APPEND_HISTORY        27
+#define EMB_CMD_CALCULATE_ANGLE       28
+#define EMB_CMD_CALCULATE_DISTANCE    29
+#define EMB_CMD_CHANGELOG             30
+#define EMB_CMD_CLEAR_RUBBER          31
+#define EMB_CMD_CLEAR_SELECTION       32
+#define EMB_CMD_COPY                  33
+#define EMB_CMD_COPY_SELECTED         34
+#define EMB_CMD_CUT                   35
+#define EMB_CMD_CUT_SELECTED          36
+#define EMB_CMD_DAY                   37
+#define EMB_CMD_DEBUG                 38
+#define EMB_CMD_DELETE_SELECTED       39
+#define EMB_CMD_DESIGN_DETAILS        40
+#define EMB_CMD_DO_NOTHING            41
+#define EMB_CMD_END                   42
+#define EMB_CMD_ERROR                 43
+#define EMB_CMD_HELP                  44
+#define EMB_CMD_ICON                             45
+#define EMB_CMD_INIT                             51
+#define EMB_CMD_MESSAGEBOX                       52
+#define EMB_CMD_MIRROR_SELECTED                  53
+#define EMB_CMD_MOUSE_X                          54
+#define EMB_CMD_MOUSE_Y                          55
+#define EMB_CMD_MOVE_SELECTED                    56
+#define EMB_CMD_NEW                              57
+#define EMB_CMD_NIGHT                            58
+#define EMB_CMD_NUM_SELECTED                     59
+#define EMB_CMD_OPEN                             60
+#define EMB_CMD_PAN_UP                           61
+#define EMB_CMD_PASTE                            62
+#define EMB_CMD_PASTE_SELECTED                   63
+#define EMB_CMD_PERPENDICULAR_DISTANCE           64
+#define EMB_CMD_PLATFORM                         65
+#define EMB_CMD_PREVIEW_OFF                      66
+#define EMB_CMD_PREVIEW_ON                       67
+#define EMB_CMD_PRINT                            68
+#define EMB_CMD_PRINT_AREA                       69
+#define EMB_CMD_QSNAP_X                          70
+#define EMB_CMD_QSNAP_Y                          71
+#define EMB_CMD_EXIT                             72
+#define EMB_CMD_REDO                             73
+#define EMB_CMD_ROTATE_SELECTED                  74
+#define EMB_CMD_RUBBER                           75
+#define EMB_CMD_SCALE_SELECTED                   76
+#define EMB_CMD_SELECT_ALL                       77
+#define EMB_CMD_SETTINGS_DIALOG                  78
+#define EMB_CMD_SET                              79
+#define EMB_CMD_SPARE_RUBBER                     80
+#define EMB_CMD_TIP_OF_THE_DAY                   81
+#define EMB_CMD_TODO                             82
+#define EMB_CMD_UNDO                             83
+#define EMB_CMD_VERSION                          84
+#define EMB_CMD_VULCANIZE                        85
+#define EMB_CMD_WHATS_THIS                       86
+#define EMB_CMD_WINDOW                           87
+#define EMB_CMD_ZOOM                             88
+#define EMB_CMD_TEST                             89
+#define EMB_CMD_SLEEP                            90
+#define EMB_CMD_LAYER_EDITOR                     91
+#define EMB_CMD_MAKE_LAYER_CURRENT               92
+#define EMB_CMD_TEXT                             93
+#define EMB_CMD_LAYER_PREVIOUS                   94
+#define EMB_CMD_SAVE                             95
+#define EMB_CMD_SAVEAS                           96
+#define EMB_CMD_LAYERS                           97
+#define EMB_CMD_LAYER_SELECTOR                   98
+#define EMB_CMD_TREBLECLEF                       99
+#define EMB_CMD_COLOR_SELECTOR                  100
+#define EMB_CMD_LINE_TYPE_SELECTOR              101
+#define EMB_CMD_LINE_WEIGHT_SELECTOR            102
+#define EMB_CMD_HIDE_ALL_LAYERS                 103
+#define EMB_CMD_ADD_HEART                       104
+#define EMB_CMD_ADD_SINGLE_LINE_TEXT            105
+#define EMB_CMD_SHOW_ALL_LAYERS                 106
+#define EMB_CMD_FREEZE_ALL_LAYERS               107
+#define EMB_CMD_THAW_ALL_LAYERS                 108
+#define EMB_CMD_LOCK_ALL_LAYERS                 109
+#define EMB_CMD_UNLOCK_ALL_LAYERS               110
+#define EMB_CMD_ADD_DOLPHIN                     111
+#define EMB_CMD_ADD_DISTANCE                    112
+#define EMB_CMD_LOCATE_POINT                    113
+#define EMB_CMD_QUICKSELECT                     114
+#define EMB_CMD_SPELLCHECK                      115
+#define EMB_CMD_DISTANCE                        116
+#define EMB_CMD_MOVE                            117
+#define EMB_CMD_QUICKLEADER                     118
+#define EMB_CMD_RGB                             119
+#define EMB_CMD_ROTATE                          120
+#define EMB_CMD_SANDBOX                         121
+#define EMB_CMD_ADD_SNOWFLAKE                   122
+#define EMB_CMD_ADD_STAR                        123
+#define EMB_CMD_DELETE                          124
+#define EMB_CMD_SCALE                           125
+#define EMB_CMD_SINGLE_LINE_TEXT                126
+#define EMB_CMD_SYSWINDOWS                      127
+#define EMB_CMD_ENABLE                          128
+#define EMB_CMD_DISABLE                         129
+#define EMB_CMD_SET_COLOR                       130
+#define EMB_CMD_SET_BACKGROUND_COLOR            131
+#define EMB_CMD_SET_CROSSHAIR_COLOR             132
+#define EMB_CMD_SET_CURSOR_SHAPE                133
+#define EMB_CMD_SET_GRID_COLOR                  134
+#define EMB_CMD_SET_PROMPT_PREFIX               135
+#define EMB_CMD_SET_RUBBER_FILTER               136
+#define EMB_CMD_SET_RUBBER_MODE                 137
+#define EMB_CMD_SET_RUBBER_POINT                138
+#define EMB_CMD_SET_RUBBER_TEXT                 139
+#define EMB_CMD_TEXT_BOLD                       140
+#define EMB_CMD_TEXT_ITALIC                     141
+#define EMB_CMD_TEXT_UNDERLINE                  142
+#define EMB_CMD_TEXT_OVERLINE                   143
+#define EMB_CMD_TEXT_STRIKEOUT                  144
+#define EMB_CMD_WINDOW_TILE                     145
+#define EMB_CMD_WINDOW_NEXT                     146
+#define EMB_CMD_WINDOW_PREVIOUS                 147
+#define EMB_CMD_WINDOW_CASCADE                  148
+#define EMB_CMD_WINDOW_CLOSE                    149
+#define EMB_CMD_WINDOW_CLOSE_ALL                150
+#define EMB_CMD_ZOOM_ALL                        151
+#define EMB_CMD_ZOOM_IN                         152
+#define EMB_CMD_ZOOM_OUT                        153
+#define EMB_CMD_ZOOM_CENTER                     154
+#define EMB_CMD_ZOOM_SELECTED                   155
+#define EMB_CMD_ZOOM_SCALE                      156
+#define EMB_CMD_ZOOM_DYNAMIC                    157
+#define EMB_CMD_ZOOM_PREVIOUS                   158
+#define EMB_CMD_ZOOM_REAL_TIME                  159
+#define EMB_CMD_ZOOM_WINDOW                     160
+#define EMB_CMD_ZOOM_EXTENTS                    161
+#define EMB_CMD_PAN_DOWN                        162
+#define EMB_CMD_PAN_LEFT                        163
+#define EMB_CMD_PAN_RIGHT                       164
+#define EMB_CMD_PAN_POINT                       165
+#define EMB_CMD_PAN_REAL_TIME                   166
+#define N_COMMANDS                              167
+
+/* UTILITY MACROS
+ * --------------
  */
 #define EMB_MIN(A, B) (((A) < (B)) ? (A) : (B))
 #define EMB_MAX(A, B) (((A) > (B)) ? (A) : (B))
 
+/* COMPILATION SETTINGS
+ * --------------------
+ */
 #if defined(_WIN32) && !defined(WIN32)
 #define WIN32
 #endif
@@ -935,6 +1116,10 @@ EMB_PUBLIC int hilbert_curve(EmbPattern *pattern, int iterations);
 
 EMB_PUBLIC int emb_identify_format(const char *ending);
 EMB_PUBLIC int convert(const char *inf, const char *outf);
+
+EMB_PUBLIC void emb_processor(char *state, const char *program, int program_length);
+EMB_PUBLIC int emb_compiler(const char *program, int language, char *compiled_program);
+EMB_PUBLIC void emb_actuator(const char *program, int language);
 
 EMB_PUBLIC EmbColor embColor_make(unsigned char r, unsigned char g, unsigned char b);
 EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);

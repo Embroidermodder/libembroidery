@@ -53,6 +53,8 @@ bcf_file_header bcfFileHeader_read(FILE* file);
 int bcfFileHeader_isValid(bcf_file_header header);
 void bcf_file_free(bcf_file* bcfFile);
 
+static EmbPattern *focussed_pattern = NULL;
+
 void
 printArcResults(
     EmbReal bulge,
@@ -1204,6 +1206,287 @@ typedef struct BRAND {
 
 EmbBrand brand_codes[100];
 
+/* Internally, we use fixed-point arithmetic because it can be made more
+ * consistent.
+ *
+ * The maximum integer value is 32767, so with a place value of 0.1 the
+ * maximum distance is 3276.7 mm which is around 3 metres. In longer
+ * calculations this means that we can have stacked errors that cause issues.
+ *
+ * However, since 2 byte, fixed-point real types are appropriate for most
+ * scenarios: if this is a issue for a specific calculation then we recommend
+ * that authors scale up then scale down what they're working on. If it
+ * continues to be an issue please describe your use case, along with a
+ * description of your art, to us at the issues page on:
+ *     https://github.com/embroidermodder/libembroidery
+ */
+#define DEFAULT_PLACE_VALUE        (0.1)
+
+/* INTERNAL POSTSCRIPT INTERPRETER
+ * -------------------------------
+ *
+ * Eventually we want all dependencies of libembroidery to be only c standard
+ * libraries and we also need the interpreter to integrate well with our
+ * own virtual machine. So this experiment is to establish that this works.
+ */
+
+/* PostScript data types */
+#define STRING_TYPE                    0
+#define ARRAY_TYPE                     1
+#define REAL_TYPE                      2
+#define INT_TYPE                       3
+#define BOOL_TYPE                      4
+#define NAME_TYPE                      5
+#define DICTIONARY_TYPE                6
+
+/* Attributes */
+#define LITERAL_ATTR                   0
+#define EXEC_ATTR                      1
+
+typedef struct EmbStackElement_ {
+    int data_type;
+    int attribute;
+    int i;
+    float r;
+    char s[100];
+} EmbStackElement;
+
+/* This uses about 100kb per instance because it's not dynamic. */
+typedef struct EmbStack_ {
+    EmbStackElement stack[1000];
+    int position;
+} EmbStack;
+
+int emb_repl(void);
+void execute_postscript(EmbStack *stack, char line[200]);
+void analyse_stack(EmbStack *stack);
+
+/* .
+ */
+void
+analyse_stack(EmbStack *stack)
+{
+
+}
+
+/* .
+ */
+void
+execute_postscript(EmbStack *stack, char line[200])
+{
+    /*
+    int i;
+    for (i=0; line[i]; i++) {
+        ;
+    }
+    */
+    puts(line);
+    analyse_stack(stack);
+}
+
+/* .
+ */
+int
+emb_repl(void)
+{
+    EmbStack stack;
+    stack.position = 0;
+
+    puts("embroider 1.0.0-alpha");
+    puts("    Copyright 2018-2024 The Embroidermodder Team.");
+    puts("    Licensed under the terms of the zlib license.");
+    puts("");
+    puts("    https://github.com/Embroidermodder/libembroidery");
+    puts("    https://www.libembroidery.org");
+    puts("");
+    puts("                             WARNING");
+    puts("-----------------------------------------------------------------------");
+    puts("    embroider is under active development and is not yet");
+    puts("    ready for any serious use. Please only use in experimental contexts");
+    puts("    not as part of your general workflow.");
+    puts("");
+    puts("    This interpreter has only just been started, try using the");
+    puts("    --help flag for other features.");
+    puts("-----------------------------------------------------------------------");
+    puts("");
+
+    int running = 1;
+    while (running) {
+        char line[200];
+        int i = 0;
+        char c = 0;
+        printf("emb> ");
+        while (c != EOF) {
+            c = fgetc(stdin);
+            /* Any non-printable character breaks the "getting characters from
+             * the terminal loop".
+             */
+            if ((c < 0x20) || (c >= 0x80)) {
+                break;
+            }
+            line[i] = c;
+            i++;
+            if (i == 200) {
+                puts("Error: input line too long, please break up your command.");
+            }
+        }
+        line[i] = 0;
+        execute_postscript(&stack, line);
+        if (!strcmp(line, "quit")) {
+            running = 0;
+        }
+    }
+    return 0;
+}
+
+static int32_t
+emb_int_from_bytes(const char *program, int i)
+{
+    return 256*program[i] + program[i+1];
+}
+
+static EmbReal
+emb_real_from_bytes(const char *program, int i)
+{
+    return DEFAULT_PLACE_VALUE * emb_int_from_bytes(program, i);
+}
+
+static EmbVector
+emb_vector_from_bytes(const char *program, int i)
+{
+    EmbVector v;
+    v.x = emb_real_from_bytes(program, i);
+    v.y = emb_real_from_bytes(program, i+2);
+    return v;
+}
+
+/* Our virtual machine
+ * -------------------
+ *
+ * Program state is altered via this function, all other functions
+ * pass the program state back and forth to keep it thread-safe.
+ *
+ * Variables are packed into and removed from this state, the stack is embedded
+ * into it. To manage memory each stack item names its successor, or is a negative
+ * number indicating that the stack terminates there.
+ *
+ * DATA TYPE FLAG
+ * --------------
+ *
+ * STRING (any value <=100): which is also the length of the string.
+ * INT (101): integer in the range (-32767, 32767).
+ * REAL (102): fixed-point real number in the range (-3276.7, 3276.7).
+ * FUNCTION (103): interpret the data as an index in the predefined function
+ *                 table.
+ * VARIABLE (104): reference to memory location outside of the stack.
+ *
+ * EXAMPLE STACK
+ * -------------
+ *
+ * Stack element 0:
+ *     description: (3, BYTE, "a")
+ *     literally: {3, , 97}
+ *
+ * Stack element 1:
+ *     description: (6, BYTE, 0)
+ *     literally: {6, 0, 0}
+ *
+ * Stack element 2:
+ *     description: (10, REAL, 21.1)
+ *     literally: {10, 1, 0, 211}
+ *
+ * Stack element 3:
+ *     description: (-1, REAL, 32.1)
+ *     literally: {-1, 1, 1, 55}
+ *
+ * Altogether, this stack is: ("a", 21.1, 32.1)
+ * Literally: {3, 0, 97, 6, 0, 0
+ *
+ * In order to ensure that the processor is running correctly, each processor
+ * call can be alternated with a full stack analysis printout that looks like
+ * this.
+ */
+void
+emb_processor(char *state, const char *program, int program_length)
+{
+    int i;
+    for (i=0; i<program_length; i++) {
+        switch (program[i]) {
+        case EMB_CMD_ARC: {
+            if (focussed_pattern == NULL) {
+                puts("ERROR: there is no focussed pattern, so the arc command cannot be run.");
+                return;
+            }
+            EmbVector p1 = emb_vector_from_bytes(program, i+1);
+            EmbVector p2 = emb_vector_from_bytes(program, i+5);
+            
+            i += 8;
+            break;
+        }
+        case EMB_CMD_CIRCLE: {
+            if (focussed_pattern == NULL) {
+                puts("ERROR: there is no focussed pattern, so the circle command cannot be run.");
+                return;
+            }
+            EmbVector center = emb_vector_from_bytes(program, i+1);
+            EmbReal r = emb_real_from_bytes(program, i+5);
+
+            i += 6;
+            break;
+        }
+        default: {
+            puts("Program command not defined.");
+            break;
+        }
+        }
+    }
+}
+
+/*
+ *
+ */
+void
+emb_postscript_compiler(const char *program, char *compiled_program)
+{
+
+}
+
+/* The actuator works by creating an on-the-fly EmbProgramState so external
+ * callers don't have to manage memory over longer sessions.
+ *
+ * It also compiles down our command line arguments, postscript and SVG
+ * defines etc. into a common "machine code" like program.
+ */
+int
+emb_compiler(const char *program, int language, char *compiled_program)
+{
+    int i = 0;
+    int output_length = 0;
+    compiled_program[i] = 0;
+    switch (language) {
+    case LANG_PS: {
+        emb_postscript_compiler(program, compiled_program);
+        break;
+    }
+    default: {
+        break;
+    }
+    }
+    return output_length;
+}
+
+/* Calls the compiler, then runs the compiled program. */
+void
+emb_actuator(const char *program, int language)
+{
+    char *state = malloc(1000);
+    char *compiled_program = malloc(1000);
+    int output_length = emb_compiler(program, language, compiled_program);
+    emb_processor(state, compiled_program, output_length);
+    free(compiled_program);
+    free(state);
+}
+
 /*
  *
  */
@@ -1400,6 +1683,16 @@ embColor_fromHexStr(char* val)
     color.g = (unsigned char)strtol(g, 0, 16);
     color.b = (unsigned char)strtol(b, 0, 16);
     return color;
+}
+
+EmbColor
+embColor_make(unsigned char red, unsigned char green, unsigned char blue)
+{
+    EmbColor c;
+    c.r = red;
+    c.b = green;
+    c.g = blue;
+    return c;
 }
 
 /* Reverses the byte order of a bytes number of bytes
@@ -1705,7 +1998,7 @@ pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3)
     if (res > 0x7FFFFF) {
         return (-((~(res) & 0x7FFFFF) - 1));
     }
-    return res;
+    return 1.0f * res;
 }
 
 /*  * a value
@@ -3720,13 +4013,14 @@ int
 command_line_interface(int argc, char* argv[])
 {
     EmbPattern *current_pattern = emb_pattern_create();
-    int i, j, flags, result;
+    int i, j, result;
+    /* If no argument is given, drop into the postscript interpreter. */
     if (argc == 1) {
-        usage();
-        return 0;
+        return emb_repl();
     }
 
-    flags = argc-1;
+    char *script = (char *)malloc(argc*100);
+    int flags = argc - 1;
     for (i=1; i < argc; i++) {
         result = -1;
         /* identify what flag index the user may have entered */
@@ -3739,29 +4033,42 @@ command_line_interface(int argc, char* argv[])
         /* apply the flag */
         switch (result) {
         case FLAG_TO:
-        case FLAG_TO_SHORT:
+        case FLAG_TO_SHORT: {
             to_flag(argv, argc, i);
             break;
+        }
         case FLAG_HELP:
-        case FLAG_HELP_SHORT:
+        case FLAG_HELP_SHORT: {
             usage();
             break;
+        }
         case FLAG_FORMATS:
-        case FLAG_FORMATS_SHORT:
+        case FLAG_FORMATS_SHORT: {
             formats();
             break;
+        }
         case FLAG_QUIET:
-        case FLAG_QUIET_SHORT:
+        case FLAG_QUIET_SHORT: {
             emb_verbose = -1;
             break;
+        }
         case FLAG_VERBOSE:
-        case FLAG_VERBOSE_SHORT:
+        case FLAG_VERBOSE_SHORT: {
             emb_verbose = 1;
             break;
+        }
         case FLAG_CIRCLE:
-        case FLAG_CIRCLE_SHORT:
-            puts("This flag is not implemented.");
+        case FLAG_CIRCLE_SHORT: {
+            char script[200];
+            if (i + 3 >= argc) {
+                puts("Not enough arguments supplied to circle command: 3 required.");
+                i = argc - 1;
+                break;
+            }
+            sprintf(script, "%s %s %s circle", argv[i+1], argv[i+2], argv[i+3]);
+            emb_actuator(current_pattern, script);
             break;
+        }
         case FLAG_ELLIPSE:
         case FLAG_ELLIPSE_SHORT:
             puts("This flag is not implemented.");
@@ -3905,14 +4212,12 @@ command_line_interface(int argc, char* argv[])
                 EmbImage image;
                 /* the user appears to have entered the needed arguments */
                 image = embImage_create(2000, 2000);
-                i++;
                 /* to stb command */
                 embImage_read(&image, argv[i]);
-                i++;
-                emb_pattern_crossstitch(current_pattern, &image, atoi(argv[i]));
+                emb_pattern_crossstitch(current_pattern, &image, atoi(argv[i+1]));
                 embImage_free(&image);
-                i++;
-                emb_pattern_writeAuto(current_pattern, argv[i]);
+                emb_pattern_writeAuto(current_pattern, argv[i+2]);
+                i += 3;
             }
             break;
         default:
@@ -3931,13 +4236,11 @@ command_line_interface(int argc, char* argv[])
         }
     }
     emb_pattern_free(current_pattern);
+    free(script);
     return 0;
 }
 
-/* This file contains all the read and write functions for the
- * library.
- *
- * FILL ALGORITHMS
+/* FILL ALGORITHMS
  */
 
 const char *rules[] = {"+BF-AFA-FB+", "-AF+BFB+FA-"};
@@ -5919,6 +6222,12 @@ writeBmc(EmbPattern* pattern, FILE* file)
  * 2 bytes for any stitch.
  */
 
+#define READ_BYTES(dest, n) \
+    read_bytes = fread(dest, n, 1, file); \
+    if (!read_bytes) { \
+	    return 0; \
+    }
+
 char
 readBro(EmbPattern* pattern, FILE* file)
 {
@@ -5926,18 +6235,19 @@ readBro(EmbPattern* pattern, FILE* file)
     short unknown1, unknown2, unknown3, unknown4, moreBytesToEnd;
     char name[8];
     int stitchType;
-    fread(&x55, 1, 1, file);
+    int read_bytes;
+    READ_BYTES(&x55, 1);
     /* TODO: determine what this unknown data is */
-    fread(&unknown1, 2, 1, file);
+    READ_BYTES(&unknown1, 2);
 
-    fread(name, 1, 8, file);
+    READ_BYTES(name, 8);
     /* TODO: determine what this unknown data is */
-    fread(&unknown2, 2, 1, file);
+    READ_BYTES(&unknown2, 2);
     /* TODO: determine what this unknown data is */
-    fread(&unknown3, 2, 1, file);
+    READ_BYTES(&unknown3, 2);
     /* TODO: determine what this unknown data is */
-    fread(&unknown4, 2, 1, file);
-    fread(&moreBytesToEnd, 2, 1, file);
+    READ_BYTES(&unknown4, 2);
+    READ_BYTES(&moreBytesToEnd, 2);
 
     fseek(file, 0x100, SEEK_SET);
 
@@ -5964,6 +6274,8 @@ readBro(EmbPattern* pattern, FILE* file)
     }
     return 1;
 }
+
+#undef READ_BYTES
 
 char
 writeBro(EmbPattern* pattern, FILE* file)
@@ -7018,7 +7330,7 @@ writeDst(EmbPattern* pattern, FILE* file)
     EmbVector pos;
     EmbString pd;
 
-    emb_pattern_correctForMaxStitchLength(pattern, 12.1, 12.1);
+    emb_pattern_correctForMaxStitchLength(pattern, 12.1f, 12.1f);
 
     /* TODO: make sure that pattern->thread_list->count
      * defaults to 1 in new patterns */
@@ -7078,10 +7390,10 @@ writeDst(EmbPattern* pattern, FILE* file)
         int dx, dy;
         st = pattern->stitch_list->stitch[i];
         /* convert from mm to 0.1mm for file format */
-        dx = (int)emb_round(10.0*(st.x - pos.x));
-        dy = (int)emb_round(10.0*(st.y - pos.y));
-        pos.x += 0.1*dx;
-        pos.y += 0.1*dy;
+        dx = (int)emb_round(10.0f * (st.x - pos.x));
+        dy = (int)emb_round(10.0f * (st.y - pos.y));
+        pos.x += 0.1f * dx;
+        pos.y += 0.1f * dy;
         if (emb_verbose > 0) {
             printf("%d %f %f %d %d %f %f %d\n", i, st.x, st.y, dx, dy, pos.x, pos.y, st.flags);
         }
@@ -7134,7 +7446,7 @@ readDsz(EmbPattern* pattern, FILE* file)
             emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
-        emb_pattern_addStitchRel(pattern, x  / 10.0, y  / 10.0, stitchType, 1);
+        emb_pattern_addStitchRel(pattern, x  / 10.0f, y  / 10.0f, stitchType, 1);
     }
     return 1;
 }
@@ -7230,16 +7542,16 @@ readDxf(EmbPattern* pattern, FILE* file)
 
     EmbString buff;
     EmbVector prev, pos, first;
-    EmbReal bulge = 0.0;
+    EmbReal bulge = 0.0f;
     char firstStitch = 1;
     char bulgeFlag = 0;
     int fileLength = 0;
-    first.x = 0.0;
-    first.y = 0.0;
-    pos.x = 0.0;
-    pos.y = 0.0;
-    prev.x = 0.0;
-    prev.y = 0.0;
+    first.x = 0.0f;
+    first.y = 0.0f;
+    pos.x = 0.0f;
+    pos.y = 0.0f;
+    prev.x = 0.0f;
+    prev.y = 0.0f;
 
     puts("overriding dxf. Unimplemented for now.");
     puts("Overridden, defaulting to dst.");
@@ -7335,24 +7647,21 @@ readDxf(EmbPattern* pattern, FILE* file)
                 else if (string_equals(buff,"62")) /* Color Number */
                 {
                     unsigned char colorNum;
-                    EmbColor* co;
+                    EmbColor co;
 
                     readLine(file, buff);
                     colorNum = atoi(buff);
 
+		/* Why is this here twice? */
                     colorNum = atoi(buff);
-                    co = embColor_create(_dxfColorTable[colorNum][0], _dxfColorTable[colorNum][1], _dxfColorTable[colorNum][2]);
-                    if (!co) {
-                        /* TODO: error allocating memory for EmbColor */
-                        return 0;
-                    }
-                    printf("inserting:%s,%d,%d,%d\n", layerName, co->r, co->g, co->b);
+                    co = embColor_make(_dxfColorTable[colorNum][0], _dxfColorTable[colorNum][1], _dxfColorTable[colorNum][2]);
+                    printf("inserting:%s,%d,%d,%d\n", layerName, co.r, co.g, co.b);
                     /* TODO: fix this with a lookup finish this
                     if (embHash_insert(layerColorHash, emb_strdup(layerName), co))
                     {
                          TODO: log error: failed inserting into layerColorHash
                     }
-                */
+                    */
                     layerName[0] = 0;
                 }
             }
@@ -7431,10 +7740,13 @@ readDxf(EmbPattern* pattern, FILE* file)
                         bulgeFlag = 0;
                         arc.start = prev;
                         arc.end = pos;
+		        /*TODO: error */
+		        /*
                         if (!getArcDataFromBulge(bulge, &arc, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)) {
-                            /*TODO: error */
                             return 0;
                         }
+			*/
+			return 0;
                         if (firstStitch) {
                             /* emb_pattern_addStitchAbs(pattern, x, y, TRIM, 1); TODO: Add moveTo point to embPath pointList */
                         }
@@ -7458,10 +7770,13 @@ readDxf(EmbPattern* pattern, FILE* file)
                         bulgeFlag = 0;
                         arc.start = prev;
                         arc.end = first;
+		        /* TODO: error */
+                        /*
                         if (!getArcDataFromBulge(bulge, &arc, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)) {
-                            /*TODO: error */
                             return 0;
                         }
+			*/
+		        return 0;
                         prev = arc.start;
                         /* emb_pattern_addStitchAbs(pattern, prevX, prevY, ARC, 1); TODO: Add arcTo point to embPath pointList */
                     }
@@ -7554,24 +7869,27 @@ readEmd(EmbPattern* pattern, FILE* file) {
         char dx, dy;
         int flags = NORMAL;
         fread(b, 1, 2, file);
-
-            if (b[0] == 0x80) {
-                if (b[1] == 0x2A) {
-                    emb_pattern_addStitchRel(pattern, 0, 0, STOP, 1);
-                    continue;
-                } else if (b[1] == 0x80) {
-                    fread(b, 1, 2, file);
-                    flags = TRIM;
-                } else if (b[1] == 0xFD) {
-                    emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
-                    break;
-                } else {
-                    continue;
-                }
+        
+        if (b[0] == 0x80) {
+            if (b[1] == 0x2A) {
+                emb_pattern_addStitchRel(pattern, 0, 0, STOP, 1);
+                continue;
             }
-            dx = emdDecode(b[0]);
-            dy = emdDecode(b[1]);
-            emb_pattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+            else if (b[1] == 0x80) {
+                fread(b, 1, 2, file);
+                flags = TRIM;
+            }
+            else if (b[1] == 0xFD) {
+                emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
+                break;
+            }
+            else {
+                continue;
+            }
+        }
+        dx = emdDecode(b[0]);
+        dy = emdDecode(b[1]);
+        emb_pattern_addStitchRel(pattern, dx / 10.0f, dy / 10.0f, flags, 1);
     }
     return 1;
 }
@@ -14288,7 +14606,7 @@ emb_arc_setRadius(EmbArc *arc, float radius)
     }
 
     EmbVector center = emb_arc_center(*arc);
-    double delta_length;
+    EmbReal delta_length;
 
     delta = emb_vector_subtract(arc->start, center);
     delta_length = emb_vector_length(delta);

@@ -1206,8 +1206,42 @@ typedef struct BRAND {
 
 EmbBrand brand_codes[100];
 
-#define TWO_BYTE_INT(array, i) \
-    256*array[i] + array[i+1]
+/* Internally, we use fixed-point arithmetic because it can be made more
+ * consistent.
+ *
+ * The maximum integer value is 32767, so with a place value of 0.1 the
+ * maximum distance is 3276.7 mm which is around 3 metres. In longer
+ * calculations this means that we can have stacked errors that cause issues.
+ *
+ * However, since 2 byte, fixed-point real types are appropriate for most
+ * scenarios: if this is a issue for a specific calculation then we recommend
+ * that authors scale up then scale down what they're working on. If it
+ * continues to be an issue please describe your use case, along with a
+ * description of your art, to us at the issues page on:
+ *     https://github.com/embroidermodder/libembroidery
+ */
+#define DEFAULT_PLACE_VALUE (0.1)
+
+static int32_t
+emb_int_from_bytes(const char *program, int i)
+{
+    return 256*program[i] + program[i+1];
+}
+
+static EmbReal
+emb_real_from_bytes(const char *program, int i)
+{
+    return DEFAULT_PLACE_VALUE * emb_int_from_bytes(program, i);
+}
+
+static EmbVector
+emb_vector_from_bytes(const char *program, int i)
+{
+    EmbVector v;
+    v.x = emb_real_from_bytes(program, i);
+    v.y = emb_real_from_bytes(program, i+2);
+    return v;
+}
 
 /* Our virtual machine
  * -------------------
@@ -1216,7 +1250,44 @@ EmbBrand brand_codes[100];
  * pass the program state back and forth to keep it thread-safe.
  *
  * Variables are packed into and removed from this state, the stack is embedded
- * into it.
+ * into it. To manage memory each stack item names its successor, or is a negative
+ * number indicating that the stack terminates there.
+ *
+ * DATA TYPE FLAG
+ * --------------
+ *
+ * STRING (any value <=100): which is also the length of the string.
+ * INT (101): integer in the range (-32767, 32767).
+ * REAL (102): fixed-point real number in the range (-3276.7, 3276.7).
+ * FUNCTION (103): interpret the data as an index in the predefined function
+ *                 table.
+ * VARIABLE (104): reference to memory location outside of the stack.
+ *
+ * EXAMPLE STACK
+ * -------------
+ *
+ * Stack element 0:
+ *     description: (3, STRING, "a")
+ *     literally: {3, , 97}
+ *
+ * Stack element 1:
+ *     description: (6, BYTE, 0)
+ *     literally: {6, 0, 0}
+ *
+ * Stack element 2:
+ *     description: (10, REAL, 21.1)
+ *     literally: {10, 1, 0, 211}
+ *
+ * Stack element 3:
+ *     description: (-1, REAL, 32.1)
+ *     literally: {-1, 1, 1, 55}
+ *
+ * Altogether, this stack is: ("a", 21.1, 32.1)
+ * Literally: {3, 0, 97, 6, 0, 0
+ *
+ * In order to ensure that the processor is running correctly, each processor
+ * call can be alternated with a full stack analysis printout that looks like
+ * this.
  */
 void
 emb_processor(char *state, const char *program, int program_length)
@@ -1229,11 +1300,8 @@ emb_processor(char *state, const char *program, int program_length)
                 puts("ERROR: there is no focussed pattern, so the arc command cannot be run.");
                 return;
             }
-            EmbVector p1, p2;
-            p1.x = 0.1 * TWO_BYTE_INT(program, i+1);
-            p1.y = 0.1 * TWO_BYTE_INT(program, i+3);
-            p2.x = 0.1 * TWO_BYTE_INT(program, i+5);
-            p2.y = 0.1 * TWO_BYTE_INT(program, i+7);
+            EmbVector p1 = emb_vector_from_bytes(program, i+1);
+            EmbVector p2 = emb_vector_from_bytes(program, i+5);
             
             i += 8;
             break;
@@ -1243,11 +1311,9 @@ emb_processor(char *state, const char *program, int program_length)
                 puts("ERROR: there is no focussed pattern, so the circle command cannot be run.");
                 return;
             }
-            EmbVector center;
-            center.x = 0.1 * TWO_BYTE_INT(program, i+1);
-            center.y = 0.1 * TWO_BYTE_INT(program, i+3);
-            EmbReal r = 0.1 * TWO_BYTE_INT(program, i+5);
-            
+            EmbVector center = emb_vector_from_bytes(program, i+1);
+            EmbReal r = emb_real_from_bytes(program, i+5);
+
             i += 6;
             break;
         }
@@ -3830,13 +3896,14 @@ int
 command_line_interface(int argc, char* argv[])
 {
     EmbPattern *current_pattern = emb_pattern_create();
-    int i, j, flags, result;
+    int i, j, result;
     if (argc == 1) {
         usage();
         return 0;
     }
 
-    flags = argc-1;
+    char *script = (char *)malloc(argc*100);
+    int flags = argc - 1;
     for (i=1; i < argc; i++) {
         result = -1;
         /* identify what flag index the user may have entered */
@@ -3849,30 +3916,36 @@ command_line_interface(int argc, char* argv[])
         /* apply the flag */
         switch (result) {
         case FLAG_TO:
-        case FLAG_TO_SHORT:
+        case FLAG_TO_SHORT: {
             to_flag(argv, argc, i);
             break;
+        }
         case FLAG_HELP:
-        case FLAG_HELP_SHORT:
+        case FLAG_HELP_SHORT: {
             usage();
             break;
+        }
         case FLAG_FORMATS:
-        case FLAG_FORMATS_SHORT:
+        case FLAG_FORMATS_SHORT: {
             formats();
             break;
+        }
         case FLAG_QUIET:
-        case FLAG_QUIET_SHORT:
+        case FLAG_QUIET_SHORT: {
             emb_verbose = -1;
             break;
+        }
         case FLAG_VERBOSE:
-        case FLAG_VERBOSE_SHORT:
+        case FLAG_VERBOSE_SHORT: {
             emb_verbose = 1;
             break;
+        }
         case FLAG_CIRCLE:
         case FLAG_CIRCLE_SHORT: {
             char script[200];
             if (i + 3 >= argc) {
                 puts("Not enough arguments supplied to circle command: 3 required.");
+                i = argc - 1;
                 break;
             }
             sprintf(script, "%s %s %s circle", argv[i+1], argv[i+2], argv[i+3]);
@@ -4046,13 +4119,11 @@ command_line_interface(int argc, char* argv[])
         }
     }
     emb_pattern_free(current_pattern);
+    free(script);
     return 0;
 }
 
-/* This file contains all the read and write functions for the
- * library.
- *
- * FILL ALGORITHMS
+/* FILL ALGORITHMS
  */
 
 const char *rules[] = {"+BF-AFA-FB+", "-AF+BFB+FA-"};

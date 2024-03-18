@@ -1220,7 +1220,124 @@ EmbBrand brand_codes[100];
  * description of your art, to us at the issues page on:
  *     https://github.com/embroidermodder/libembroidery
  */
-#define DEFAULT_PLACE_VALUE (0.1)
+#define DEFAULT_PLACE_VALUE        (0.1)
+
+/* INTERNAL POSTSCRIPT INTERPRETER
+ * -------------------------------
+ *
+ * Eventually we want all dependencies of libembroidery to be only c standard
+ * libraries and we also need the interpreter to integrate well with our
+ * own virtual machine. So this experiment is to establish that this works.
+ */
+
+/* PostScript data types */
+#define STRING_TYPE                    0
+#define ARRAY_TYPE                     1
+#define REAL_TYPE                      2
+#define INT_TYPE                       3
+#define BOOL_TYPE                      4
+#define NAME_TYPE                      5
+#define DICTIONARY_TYPE                6
+
+/* Attributes */
+#define LITERAL_ATTR                   0
+#define EXEC_ATTR                      1
+
+typedef struct EmbStackElement_ {
+    int data_type;
+    int attribute;
+    int i;
+    float r;
+    char s[100];
+} EmbStackElement;
+
+/* This uses about 100kb per instance because it's not dynamic. */
+typedef struct EmbStack_ {
+    EmbStackElement stack[1000];
+    int position;
+} EmbStack;
+
+int emb_repl(void);
+void execute_postscript(EmbStack *stack, char line[200]);
+void analyse_stack(EmbStack *stack);
+
+/* .
+ */
+void
+analyse_stack(EmbStack *stack)
+{
+
+}
+
+/* .
+ */
+void
+execute_postscript(EmbStack *stack, char line[200])
+{
+    /*
+    int i;
+    for (i=0; line[i]; i++) {
+        ;
+    }
+    */
+    puts(line);
+    analyse_stack(stack);
+}
+
+/* .
+ */
+int
+emb_repl(void)
+{
+    EmbStack stack;
+    stack.position = 0;
+
+    puts("embroider 1.0.0-alpha");
+    puts("    Copyright 2018-2024 The Embroidermodder Team.");
+    puts("    Licensed under the terms of the zlib license.");
+    puts("");
+    puts("    https://github.com/Embroidermodder/libembroidery");
+    puts("    https://www.libembroidery.org");
+    puts("");
+    puts("                             WARNING");
+    puts("-----------------------------------------------------------------------");
+    puts("    embroider is under active development and is not yet");
+    puts("    ready for any serious use. Please only use in experimental contexts");
+    puts("    not as part of your general workflow.");
+    puts("");
+    puts("    This interpreter has only just been started, try using the");
+    puts("    --help flag for other features.");
+    puts("-----------------------------------------------------------------------");
+    puts("");
+
+    int running = 1;
+    while (running) {
+        char line[200];
+        int i = 0;
+        char c = 0;
+        printf("emb> ");
+        while (c != EOF) {
+            c = fgetc(stdin);
+            /* Any non-printable character breaks the "getting characters from
+             * the terminal loop".
+             */
+            if ((c < 0x20) || (c >= 0x80)) {
+                break;
+            }
+            line[i] = c;
+            i++;
+            if (i == 200) {
+                puts("Error: input line too long, please break up your command.");
+            }
+        }
+        line[i] = 0;
+        execute_postscript(&stack, line);
+        if (!strcmp(line, "quit")) {
+            running = 0;
+        }
+    }
+    return 0;
+}
 
 static int32_t
 emb_int_from_bytes(const char *program, int i)
@@ -1267,7 +1384,7 @@ emb_vector_from_bytes(const char *program, int i)
  * -------------
  *
  * Stack element 0:
- *     description: (3, STRING, "a")
+ *     description: (3, BYTE, "a")
  *     literally: {3, , 97}
  *
  * Stack element 1:
@@ -3897,9 +4014,9 @@ command_line_interface(int argc, char* argv[])
 {
     EmbPattern *current_pattern = emb_pattern_create();
     int i, j, result;
+    /* If no argument is given, drop into the postscript interpreter. */
     if (argc == 1) {
-        usage();
-        return 0;
+        return emb_repl();
     }
 
     char *script = (char *)malloc(argc*100);

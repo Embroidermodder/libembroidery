@@ -4,11 +4,6 @@ Copyright (c) 2013-2024 The EmbroiderModder Team
 
 https://www.libembroidery.org
 
-[![.github/workflows/website.yml](https://github.com/Embroidermodder/libembroidery/actions/workflows/website.yml/badge.svg)](https://github.com/Embroidermodder/libembroidery/actions/workflows/website.yml)
-[![build status report](https://github.com/Embroidermodder/libembroidery/actions/workflows/build.yml/badge.svg)](https://github.com/Embroidermodder/libembroidery/actions/workflows/build.yml)
-[![docs build status report](https://github.com/Embroidermodder/libembroidery/actions/workflows/docs.yml/badge.svg)](https://github.com/Embroidermodder/libembroidery/actions/workflows/docs.yml)
-[![test status report](https://github.com/Embroidermodder/libembroidery/actions/workflows/test.yml/badge.svg)](https://github.com/Embroidermodder/libembroidery/actions/workflows/test.yml)
-
 (Under construction, please wait for v1.0 release.)
 
 Libembroidery is a low-level library for reading, writing, 

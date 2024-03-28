@@ -1,49 +1,167 @@
-.TH EMBROIDER 1
+.TH EMBROIDER 1 "2024-03-28" "libembroidery" "Embroidermodder"
 .SH NAME
-embroider \- a command line program for machine embroidery
+embroider \- program for converting and altering machine embroidery files
 .SH SYNOPSIS
-Copyright 2013-2023 The Embroidermodder Team
+Usage: embroider [\fIoptions\fR] [\fIinput_file\fR]...
+.SH DESCRIPTION
+.PP
+Embroider is the command-line front end to the libembroidery library.
+Using flags and the en
+.SS Conversion and Simple Generation
+.PP
+.
+.SS PostScript Engine
+.PP
+Since \fBembroider\fR needs to process vector drawings as designs, there is
+a basic PostScript (R) language interpreter embedded in libembroidery.
+.PP
+If you run \fBembroider\fR with no arguments, rather than using the flags to
+create and alter designs, you can use the syntax of Adobe's PostScript (R) language.
+By default, a pattern is loaded, so to add a circle to the empty design
+then the call would be:
+.PP
+\f[C]
+emb> 50 60 40 circle
+\f[R]
+.PP
+\f[C]
+emb> "output.dst" saveas
+\f[R]
+.PP
+\f[C]
+emb> quit
+\f[R]
+.PP
+Which is equivalent to the command line:
+.PP
+.PD
+\f[C]
+$ ./embroider -n -c 50 60 40 -o output.dst
+\f[R]
+.PP
+These are both translated into the same underlying internal script.
+.SH OPTIONS
+.SS Conversion:
+.IP "\fB\-o, \-\-output\fR" 4
+.IX Item "-o"
+.IX Item "--output"
+.PD
+Convert all files given to the format specified by the arguments to the flag,
+for example:
+.PD
+\f[C]
+     $ embroider -o output.dst input.pes
+\f[R]
+.PD
+would convert \fBinput.pes\fR to \fBinput.dst\fR in the same directory the program
+runs in.
+.PD
+For information on what formats are accepted for input and output, use the
+\fB--formats\fR flag.
+.SS Output:
+.IP "\fB\-h\fR, \fB\-\-help\fR" 4
+.IX "-h"
+.IX "--help"
+.PD
+Print this message.
+.IP "\fB-F\fR, \fB\-\-formats" 4
+.IX "-F"
+.IX "--formats"
+.PD
+Print help on the formats that embroider can deal with.
+.IP "\fB\-q\fR, \fB\-\-quiet\fR" 4
+.IX "-q"
+.IX "--quiet"
+.PD
+Only print fatal errors.
+.IP "\fB\-V\fR, \fB\-\-verbose\fR" 4
+.IX "-V"
+.IX "--verbose"
+.PD
+Print everything that has reporting.
+.IP "\fB\-v\fR, \fB\-\-version\fR" 4
+.IX "-v"
+.IX "--version"
+.PD
+Print the version.
+.SS Manage patterns:
+.IP "\fB-n\fR, \fB\-\-new\fR" 4
+.IX "-n"
+.IX "--new"
+.PD
+Make a new blank pattern, so that following commands apply to this pattern.
+.PD
+\fBEXAMPLE\fR
+.PD
+Create a design containing only a circle at location (5mm, 6mm) from the origin
+with radius 4mm.
+.PD
+\f[C]
+$ embroider -n -c 50 60 40 -o output.dst
+\f[R]
+.IP "\fB\-\-combine\fR" 4
+.IX "--combine"
+.PD
+takes all arguments and combines them by placing them atop each other
+and outputs to the third
+\f[C]
+$ embroider --combine a.dst b.dst -o output.dst
+\f[R]
+.SS Graphics:
+.IP "\fB\-c\fR, \fB\-\-circle\fR" 4
+.IX "-c"
+.IX "--circle"
+.PD
+Add a circle defined by the arguments given to the current pattern.
+.IP "\fB\-e\fR, \fB\-\-ellipse\fR" 4
+.IX "-e"
+.IX "--ellipse"
+.PD
+Add an ellipse defined by the arguments given to the current pattern.
+.IP "\fB\-l\fR, \fB\-\-line\fR" 4
+.IX "-l"
+.IX "--line"
+.PD
+Add a line defined by the arguments given to the current pattern.
+.IP "\fB\-p\fR, \fB\-\-polyline\fR" 4
+.IX "-p"
+.IX "--polyline"
+.PD
+Add a polyline.
+.IP "\fB\-P\fR, \fB\-\-polygon\fR" 4
+.IX "-P"
+.IX "--polygon"
+.PD
+Add a polygon.
+.IP "\fB\-r\fR, \fB\-\-render\fR" 4
+.IX "-r"
+.IX "--render"
+.PD
+Create an image in PNG format of what the embroidery should look like.
+.IP "\fB\-s\fR, \fB\-\-satin\fR" 4
+.IX "-s"
+.IX "--satin"
+.PD
+Fill the current geometry with satin stitches according
+to the defined algorithm.
+.IP "\fB\-S\fR, \fB\-\-stitch\fR" 4
+.IX "-S"
+.IX "--stitch"
+.PD
+Add a stitch defined by the arguments given to the current pattern.
+.SS Quality Assurance:
+.IP "\fB\-\-test\fR" 4
+.IX "--test"
+.PD
+Run the basic test suite.
+.IP "\fB\-\-full-test-suite\fR" 4
+.IX "--full-test-suite"
+.PD
+Run all tests, even those we expect to fail.
+.SH AUTHORS
+.PP
+Copyright 2018-2024 The Embroidermodder Team.
+.PP
 Licensed under the terms of the zlib license.
-
-https://github.com/Embroidermodder/libembroidery
+.PP
 https://www.libembroidery.org
-
-Usage: embroider [OPTIONS] fileToRead...
-
-Conversion:
-    -t, --to        Convert all files given to the format specified
-                    by the arguments to the flag, for example:
-                        $ embroider -t dst input.pes
-                    would convert \"input.pes\" to \"input.dst\"
-                    in the same directory the program runs in.
-
-                    The accepted input formats are (TO BE DETERMINED).
-                    The accepted output formats are (TO BE DETERMINED).
-
-Output:
-    -h, --help       Print this message.
-    -F, --formats     Print help on the formats that embroider can deal with.
-    -q, --quiet      Only print fatal errors.
-    -V, --verbose    Print everything that has reporting.
-    -v, --version    Print the version.
-
-Modify patterns:
-    --combine        takes 3 arguments and combines the first
-                     two by placing them atop each other and
-                     outputs to the third
-                        $ embroider --combine a.dst b.dst output.dst
-
-Graphics:
-    -c, --circle     Add a circle defined by the arguments given to the current pattern.
-    -e, --ellipse    Add a circle defined by the arguments given to the current pattern.
-    -l, --line       Add a line defined by the arguments given to the current pattern.
-    -P, --polyline   Add a polyline.
-    -p, --polygon    Add a polygon.
-    -r, --render     Create an image in PNG format of what the embroidery should look like.
-    -s, --satin      Fill the current geometry with satin stitches according
-                     to the defined algorithm.
-    -S, --stitch     Add a stitch defined by the arguments given to the current pattern.
-
-Quality Assurance:
-        --test       Run the basic test suite.
-        --full-test-suite  Run all tests, even those we expect to fail.

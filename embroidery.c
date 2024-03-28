@@ -1239,6 +1239,16 @@ EmbBrand brand_codes[100];
 #define NAME_TYPE                      5
 #define DICTIONARY_TYPE                6
 
+static char postscript_data_type[][20] = {
+    "string",
+    "array",
+    "real",
+    "int",
+    "bool",
+    "name",
+    "dictionary"
+};
+
 /* Attributes */
 #define LITERAL_ATTR                   0
 #define EXEC_ATTR                      1
@@ -1261,12 +1271,126 @@ int emb_repl(void);
 void execute_postscript(EmbStack *stack, char line[200]);
 void analyse_stack(EmbStack *stack);
 
+static char in_built_functions[][20] = {
+    "add",
+    "mul",
+    "quit",
+    ""
+};
+
 /* .
  */
 void
 analyse_stack(EmbStack *stack)
 {
+    int i;
+    for (i=0; i<stack->position; i++) {
+        EmbStackElement element = stack->stack[i];
+        printf("%d ", i);
+        if ((element.data_type >= 0) && (element.data_type <= DICTIONARY_TYPE)) {
+            printf(postscript_data_type[element.data_type]);
+        }
+        else {
+            printf("unknown");
+        }
+        printf(" ");
+        if (element.attribute) {
+            printf("exec");
+        }
+        else {
+            printf("literal");
+        }
+        printf(" %s\n", element.s);
+    }
+}
 
+/* .
+ */
+int
+identify_token(EmbStackElement *element)
+{
+    int i, j;
+    int all_digits = 1;
+    int decimal_place_present = 0;
+    i = 0;
+    j = 0;
+    for (j=0; in_built_functions[j][0]; j++) {
+        if (string_equals(in_built_functions[j], element->s)) {
+            element->data_type = NAME_TYPE;
+            element->attribute = EXEC_ATTR;
+            return NAME_TYPE;
+        }
+    }
+
+    element->attribute = LITERAL_ATTR;
+
+    if (element->s[0] == '-') {
+        i++;
+    }
+    if (element->s[0] == '"') {
+        element->data_type = STRING_TYPE;
+        return STRING_TYPE;
+    }
+    for (; element->s[i] && (i < 200); i++) {
+        if ((element->s[i] < '0') || (element->s[i] > '9')) {
+            all_digits = 0;
+        }
+        if (element->s[i] == '.') {
+            decimal_place_present++;
+        }
+    }
+    if (all_digits) {
+        if (decimal_place_present == 0) {
+            element->data_type = INT_TYPE;
+            return INT_TYPE;
+        }
+        if (decimal_place_present == 1) {
+            element->data_type = REAL_TYPE;
+            return REAL_TYPE;
+        }
+        /* Multiple decimal points in one float error. */
+        return -2;
+    }
+    /* ERROR CODE */
+    return -1;
+}
+
+/* .
+ */
+void
+append_token(EmbStack *stack, char token[200])
+{
+    if (token[0] == 0) {
+        return;
+    }
+    string_copy(stack->stack[stack->position].s, token);
+    identify_token(stack->stack + stack->position);
+    stack->position++;    
+}
+
+/* .
+ */
+void
+tokenize_line(EmbStack *stack, char line[200])
+{
+    char current_token[200];
+    int i, j;
+    j = 0;
+    for (i=0; line[i]; i++) {
+        if (line[i] == ' ') {
+            current_token[j] = 0;
+            append_token(stack, current_token);
+            j = 0;
+        }
+        else {
+            current_token[j] = line[i];
+            j++;
+        }
+    }
+    if (strlen(line) > 0) {
+        current_token[j] = 0;
+        append_token(stack, current_token);
+    }
 }
 
 /* .
@@ -1274,13 +1398,7 @@ analyse_stack(EmbStack *stack)
 void
 execute_postscript(EmbStack *stack, char line[200])
 {
-    /*
-    int i;
-    for (i=0; line[i]; i++) {
-        ;
-    }
-    */
-    puts(line);
+    tokenize_line(stack, line);
     analyse_stack(stack);
 }
 

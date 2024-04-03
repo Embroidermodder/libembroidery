@@ -163,12 +163,31 @@ void readNextSector(FILE* file, bcf_directory* dir);
 void embColor_read(FILE *f, EmbColor *c, int toRead);
 void embColor_write(FILE *f, EmbColor c, int toWrite);
 
-char read100(EmbPattern *pattern, FILE* file);
-char write100(EmbPattern *pattern, FILE* file);
-char read10o(EmbPattern *pattern, FILE* file);
-char write10o(EmbPattern *pattern, FILE* file);
-char readArt(EmbPattern *pattern, FILE* file);
-char writeArt(EmbPattern *pattern, FILE* file);
+unsigned char toyota_position_encode(EmbReal a);
+EmbReal toyota_position_decode(unsigned char a);
+
+void toyota_100_encode(EmbVector *position, EmbStitch *st, unsigned char *b);
+void toyota_100_decode(EmbVector *position, EmbStitch *st, unsigned char *b);
+void toyota_10o_encode(EmbVector *position, EmbStitch *st, unsigned char *b);
+void toyota_10o_decode(EmbVector *position, EmbStitch *st, unsigned char *b);
+void bernina_art_encode(EmbVector *position, EmbStitch *st, unsigned char *b);
+void bernina_art_decode(EmbVector *position, EmbStitch *st, unsigned char *b);
+
+char read_stitch_block(
+    EmbPattern *,
+    FILE *file,
+    void (*stitch_encoder)(EmbVector *, EmbStitch *, unsigned char *),
+    int stitch_data_size,
+    int mode
+);
+char write_stitch_block(
+    EmbPattern *,
+    FILE *file,
+    void (*stitch_encoder)(EmbVector *, EmbStitch *, unsigned char *),
+    int stitch_data_size,
+    int mode
+);
+
 char readBmc(EmbPattern *pattern, FILE* file);
 char writeBmc(EmbPattern *pattern, FILE* file);
 char readBro(EmbPattern *pattern, FILE* file);
@@ -1387,7 +1406,7 @@ tokenize_line(EmbStack *stack, char line[200])
             j++;
         }
     }
-    if (strlen(line) > 0) {
+    if (string_len(line) > 0) {
         current_token[j] = 0;
         append_token(stack, current_token);
     }
@@ -1414,7 +1433,6 @@ emb_repl(void)
     puts("    Copyright 2018-2024 The Embroidermodder Team.");
     puts("    Licensed under the terms of the zlib license.");
     puts("");
-    puts("    https://github.com/Embroidermodder/libembroidery");
     puts("    https://www.libembroidery.org");
     puts("");
     puts("                             WARNING");
@@ -1601,8 +1619,8 @@ emb_actuator(const char *program, int language)
     char *compiled_program = malloc(1000);
     int output_length = emb_compiler(program, language, compiled_program);
     emb_processor(state, compiled_program, output_length);
-    free(compiled_program);
-    free(state);
+    safe_free(compiled_program);
+    safe_free(state);
 }
 
 /*
@@ -2538,7 +2556,7 @@ hus_decompress(char *data, int length, char *output, int *output_length)
             }
         }
     }
-    free(c);
+    safe_free(c);
     return 0;
 }
 
@@ -2824,10 +2842,10 @@ emb_array_free(EmbArray* a)
     }
     switch (a->type) {
     case EMB_STITCH:
-        free(a->stitch);
+        safe_free(a->stitch);
         break;
     case EMB_THREAD:
-        free(a->thread);
+        safe_free(a->thread);
         break;
     default:
         for (i = 0; i < a->count; i++) {
@@ -2849,10 +2867,10 @@ emb_array_free(EmbArray* a)
                 break;
             }
         }
-        free(a->geometry);
+        safe_free(a->geometry);
         break;
     }
-    free(a);
+    safe_free(a);
 }
 
 /* Print the vector "v2 with the name "label". */
@@ -3008,7 +3026,7 @@ bcf_file_free(bcf_file* bcfFile)
     safe_free(bcfFile->difat);
     safe_free(bcfFile->fat);
     bcf_directory_free(&bcfFile->directory);
-    free(bcfFile);
+    safe_free(bcfFile);
 }
 
 /* . */
@@ -3208,7 +3226,7 @@ bcf_directory_free(bcf_directory** dir)
         bcf_directory_entry* entryToFree;
         entryToFree = pointer;
         pointer = pointer->next;
-        free(entryToFree);
+        safe_free(entryToFree);
     }
     safe_free(*dir);
 }
@@ -4354,7 +4372,7 @@ command_line_interface(int argc, char* argv[])
         }
     }
     emb_pattern_free(current_pattern);
-    free(script);
+    safe_free(script);
     return 0;
 }
 
@@ -4586,7 +4604,7 @@ emb_pattern_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold
     save_points_to_pattern(pattern, points, n_points, scale, image->width, image->height);
 
     emb_pattern_end(pattern);
-    free(points);
+    safe_free(points);
 }
 
 /* a pattern a image a threshhold
@@ -4679,7 +4697,7 @@ hilbert_curve(EmbPattern *pattern, int iterations)
             emb_pattern_addStitchAbs(pattern, position[0]*scale, position[1]*scale, flags, 0);
         }
     }
-    free(state);
+    safe_free(state);
     emb_pattern_end(pattern);
     return 0;
 }
@@ -4725,7 +4743,7 @@ dragon_curve(int iterations)
     }
     state = malloc(1<<(iterations+1));
     generate_dragon_curve(state, iterations);
-    free(state);
+    safe_free(state);
     return 1;
 }
 
@@ -5693,13 +5711,13 @@ emb_pattern_read(EmbPattern* pattern, const char *fileName, int format)
     }
     switch (format) {
     case EMB_FORMAT_100:
-        result = read100(pattern, file);
+        result = read_stitch_block(pattern, file, toyota_100_decode, 4, 0);
         break;
     case EMB_FORMAT_10O:
-        result = read10o(pattern, file);
+        result = read_stitch_block(pattern, file, toyota_10o_decode, 3, 0);
         break;
     case EMB_FORMAT_ART:
-        result = readArt(pattern, file);
+        result = read_stitch_block(pattern, file, bernina_art_decode, 1, 0);
         break;
     case EMB_FORMAT_BMC:
         result = readBmc(pattern, file);
@@ -5914,13 +5932,13 @@ emb_pattern_write(EmbPattern* pattern, const char *fileName, int format)
     }
     switch (format) {
     case EMB_FORMAT_100:
-        result = write100(pattern, file);
+        result = write_stitch_block(pattern, file, toyota_100_encode, 4, 0);
         break;
     case EMB_FORMAT_10O:
-        result = write10o(pattern, file);
+        result = write_stitch_block(pattern, file, toyota_10o_encode, 3, 0);
         break;
     case EMB_FORMAT_ART:
-        result = writeArt(pattern, file);
+        result = write_stitch_block(pattern, file, bernina_art_encode, 1, 0);
         break;
     case EMB_FORMAT_BMC:
         result = writeBmc(pattern, file);
@@ -6138,170 +6156,206 @@ emb_pattern_writeAuto(EmbPattern* pattern, const char* fileName)
     return emb_pattern_write(pattern, fileName, format);
 }
 
-/* format_100.c The Toyota Embroidery Format (.10o)
- *
- * The Toyota 10o format is a stitch-only format that uses
- * an external color file.
- *
- * The stitch encoding is in 3 byte chunks.
+/*
+ * TO DO: NEEDS ERROR REPORTING.
  */
-
-char
-read100(EmbPattern* pattern, FILE* file)
+unsigned char
+toyota_position_encode(EmbReal x)
 {
-    unsigned char b[4];
-
-    while (fread(b, 1, 4, file) == 4) {
-        int x, y;
-        int stitchType;
-        stitchType = NORMAL;
-        x = (b[2] > 0x80) ? -(b[2] - 0x80) : b[2];
-        y = (b[3] > 0x80) ? -(b[3] - 0x80) : b[3];
-        /*if (!(b[0] & 0xFC)) stitchType = JUMP; TODO: review & fix */
-        if (!(b[0] & 0x01)) stitchType = STOP;
-        if (b[0] == 0x1F) stitchType = END;
-        emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
+    if (x < 0.0) {
+        return 0x80 + (-((char)emb_round(10.0*x)));
     }
-    return 1;
+    return (unsigned char)emb_round(10.0*x);
 }
 
-char
-write100(EmbPattern* pattern, FILE* file)
+/*
+ * .
+ */
+EmbReal
+toyota_position_decode(unsigned char a)
 {
-    int i;
-    EmbVector delta, position;
-
-    position = pattern->home;
-    for (i=0; i<pattern->stitch_list->count; i++) {
-        unsigned char b[4];
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        delta.x = st.x - position.x;
-        delta.y = st.y - position.y;
-        position = emb_vector_add(position, delta);
-        b[0] = 0;
-        b[1] = 0;
-        if (delta.x < 0.0) {
-            b[2] = -emb_round(10.0*delta.x);
-        }
-        else {
-            b[2] = emb_round(10.0*delta.x);
-        }
-        if (delta.y < 0.0) {
-            b[3] = -emb_round(10.0*delta.y);
-        }
-        else {
-            b[3] = emb_round(10.0*delta.y);
-        }
-        if (!(st.flags & STOP)) {
-            b[0] |= 0x01;
-        }
-        if (st.flags & END) {
-            b[0] = 0x1F;
-        }
-        fwrite(b, 1, 4, file);
+    if (a > 0x80) {
+        return - 0.1 * (a - 0x80);
     }
-    return 1;
+    return 0.1 * a;
 }
 
-/* format_10o.c The Toyota Embroidery Format (.100)
- *
- * The Toyota 100 format is a stitch-only format that
- * uses an external color file.
+/* The Toyota 100 format is a stitch-only format that uses an external color
+ * file.
  *
  * The stitch encoding is in 4 byte chunks.
  */
-
-char
-read10o(EmbPattern* pattern, FILE* file)
+void
+toyota_100_encode(EmbVector *head_position, EmbStitch *st, unsigned char *b)
 {
-    unsigned char b[3];
-    while (fread(b, 1, 3, file) == 3) {
-        int x, y;
-        int stitchType = NORMAL;
-        unsigned char ctrl = b[0];
-        y = b[1];
-        x = b[2];
-        if (ctrl & 0x20) {
-            x = -x;
+        EmbVector delta;
+        delta.x = st->x - head_position->x;
+        delta.y = st->y - head_position->y;
+        *head_position = emb_vector_add(*head_position, delta);
+        b[0] = 0;
+        b[1] = 0;
+        b[2] = toyota_position_encode(delta.x);
+        b[3] = toyota_position_encode(delta.y);
+        if (!(st->flags & STOP)) {
+            b[0] |= 0x01;
         }
-        if (ctrl & 0x40) {
-            y = -y;
+        if (st->flags & END) {
+            b[0] = 0x1F;
         }
-        if (ctrl & 0x01) {
-            stitchType = TRIM;
-        }
-        if ((ctrl & 0x5) == 5) {
-            stitchType = STOP;
-        }
-        if (ctrl == 0xF8 || ctrl == 0x91 || ctrl == 0x87) {
-            emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
-            break;
-        }
-        emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
-    }
-    return 1;
 }
 
-char
-write10o(EmbPattern* pattern, FILE* file)
+void
+toyota_100_decode(EmbVector *head_position, EmbStitch *st, unsigned char *b)
 {
-    int i;
-    for (i=0; i<pattern->stitch_list->count; i++) {
-        unsigned char b[3];
-        EmbStitch st = pattern->stitch_list->stitch[i];
+        int stitchType;
+        st->x = toyota_position_decode(b[2]);
+        st->y = toyota_position_decode(b[3]);
+        st->flags = NORMAL;
+        /*
+        if (!(b[0] & 0xFC)) {
+            st.flags = JUMP;
+            TODO: review & fix
+        }
+        */
+        if (!(b[0] & 0x01)) {
+            st->flags = STOP;
+        }
+        if (b[0] == 0x1F) {
+            st->flags = END;
+        }
+}
+
+/* The Toyota 10o format is a stitch-only format that uses an external color
+ * file.
+ *
+ * The stitch encoding is in 3 byte chunks.
+ */
+void
+toyota_10o_encode(EmbVector *head_position, EmbStitch *st, unsigned char *b)
+{
         b[0] = 0;
         b[1] = 0;
         b[2] = 0;
-        if (st.x < 0) {
+        if (st->x < 0) {
             b[2] |= 0x20;
-            b[0] = -st.x;
+            b[0] = -st->x;
         }
         else {
-            b[0] = st.x;
+            b[0] = st->x;
         }
-        if (st.y < 0) {
+        if (st->y < 0) {
             b[2] |= 0x40;
-            b[1] = -st.y;
+            b[1] = -st->y;
         }
         else {
-            b[1] = st.y;
+            b[1] = st->y;
         }
-        if (st.flags == TRIM) {
+        if (st->flags == TRIM) {
             b[2] |= 1;
         }
-        if (st.flags == STOP) {
+        if (st->flags == STOP) {
             b[2] |= 5;
         }
-        if (st.flags == END) {
+        if (st->flags == END) {
             b[2] = 0xF8;
         }
-        fwrite(b, 1, 3, file);
-    }
-    return 1;
+}
+
+void
+toyota_10o_decode(EmbVector *head_position, EmbStitch *st, unsigned char *b)
+{
+        st->flags = NORMAL;
+        unsigned char ctrl = b[0];
+        st->y = 0.1 * b[1];
+        st->x = 0.1 * b[2];
+        if (ctrl & 0x20) {
+            st->x = -st->x;
+        }
+        if (ctrl & 0x40) {
+            st->y = -st->y;
+        }
+        if (ctrl & 0x01) {
+            st->flags = TRIM;
+        }
+        if ((ctrl & 0x5) == 5) {
+            st->flags = STOP;
+        }
+        if (ctrl == 0xF8 || ctrl == 0x91 || ctrl == 0x87) {
+            st->flags = END;
+        }
 }
 
 /* The Bernina Embroidery Format (.art)
  *
  * We don't know much about this format. \todo Find a source.
  */
-char
-readArt(EmbPattern* pattern, FILE* file)
+void
+bernina_art_encode(EmbVector *position, EmbStitch *st, unsigned char *b)
 {
-    puts("readArt is not implemented");
-    if (emb_verbose > 1) {
-        printf("Called with %p %p\n", (void*)pattern, (void*)file);
-    }
-    return 0; /*TODO: finish readArt */
+    puts("ERROR: bernina_art_encode is not supported.");
+    b[0] = 0;
 }
 
-char
-writeArt(EmbPattern* pattern, FILE* file)
+void
+bernina_art_decode(EmbVector *position, EmbStitch *st, unsigned char *b)
 {
-    puts("writeArt is not implemented");
-    if (emb_verbose > 1) {
-        printf("Called with %p %p\n", (void*)pattern, (void*)file);
+    puts("ERROR: bernina_art_decode is not supported.");
+    st->flags = NORMAL;
+}
+
+/* A generic reader loop for any format that uses a binary block representing
+ * an array of stitches.
+ */
+char
+read_stitch_block(
+    EmbPattern *pattern,
+    FILE *file,
+    void (*stitch_decoder)(EmbVector *, EmbStitch *, unsigned char *),
+    int stitch_data_size,
+    int mode
+)
+{
+    unsigned char b[10];
+    while (fread(b, 1, stitch_data_size, file) == stitch_data_size) {
+        EmbVector position;
+        EmbStitch st;
+        st.flags = NORMAL;
+        st.x = 0.0;
+        st.y = 0.0;
+        position.x = 0.0;
+        position.y = 0.0;
+        stitch_decoder(&position, &st, b);
+        emb_pattern_addStitchRel(pattern, st.x, st.y, st.flags, 1);
     }
-    return 0; /*TODO: finish writeArt */
+    return 1;
+}
+
+/* A generic writer loop for any format that uses a binary block representing
+ * an array of stitches.
+ */
+char
+write_stitch_block(
+    EmbPattern *pattern,
+    FILE *file,
+    void (*stitch_encoder)(EmbVector *, EmbStitch *, unsigned char *),
+    int stitch_data_size,
+    int mode
+)
+{
+    int i;
+    EmbVector position;
+
+    position = pattern->home;
+    for (i=0; i<pattern->stitch_list->count; i++) {
+        unsigned char b[10];
+        EmbStitch st = pattern->stitch_list->stitch[i];
+        stitch_encoder(&position, &st, b);
+        int bytes_written = fwrite(b, 1, stitch_data_size, file);
+        if (bytes_written != stitch_data_size) {
+            return 0;
+        }
+    }
+    return 1;
 }
 
 /* The Bitmap Cache Embroidery Format (.bmc)
@@ -8388,6 +8442,12 @@ husEncodeStitchType(int st)
     }
 }
 
+#define READ_RAW_BYTES(ptr, size, file) \
+    if (fread(ptr, 1, size, file) != size) { \
+        puts("Ran out of bytes before full file read."); \
+        return 0; \
+    }
+
 char
 readHus(EmbPattern* pattern, FILE* file)
 {
@@ -8429,7 +8489,7 @@ readHus(EmbPattern* pattern, FILE* file)
         printf("ERROR: format-hus.c readHus(), cannot allocate memory for stringVal\n");
         return 0;
     }
-    fread(stringVal, 1, 8, file); /* TODO: check return value */
+    READ_RAW_BYTES(stringVal, 8, file); /* TODO: check return value */
 
     emb_read(file, &unknown, EMB_INT16_LITTLE);
     for (i = 0; i < numberOfColors; i++) {
@@ -8443,7 +8503,7 @@ readHus(EmbPattern* pattern, FILE* file)
         printf("ERROR: format-hus.c readHus(), cannot allocate memory for attributeData\n");
         return 0;
     }
-    fread(attributeData, 1, xOffset - attributeOffset, file); /* TODO: check return value */
+    READ_RAW_BYTES(attributeData, xOffset - attributeOffset, file);
     attributeDataDecompressed = husDecompressData(attributeData, xOffset - attributeOffset, numberOfStitches + 1);
 
     xData = (unsigned char*)malloc(sizeof(unsigned char)*(yOffset - xOffset + 1));
@@ -8451,7 +8511,7 @@ readHus(EmbPattern* pattern, FILE* file)
         printf("ERROR: format-hus.c readHus(), cannot allocate memory for xData\n");
         return 0;
     }
-    fread(xData, 1, yOffset - xOffset, file); /* TODO: check return value */
+    READ_RAW_BYTES(xData, yOffset - xOffset, file);
     xDecompressed = husDecompressData(xData, yOffset - xOffset, numberOfStitches);
 
     yData = (unsigned char*)malloc(sizeof(unsigned char)*(fileLength - yOffset + 1));
@@ -8459,7 +8519,7 @@ readHus(EmbPattern* pattern, FILE* file)
         printf("ERROR: format-hus.c readHus(), cannot allocate memory for yData\n");
         return 0;
     }
-    fread(yData, 1, fileLength - yOffset, file); /* TODO: check return value */
+    READ_RAW_BYTES(yData, fileLength - yOffset, file);
     yDecompressed = husDecompressData(yData, fileLength - yOffset, numberOfStitches);
 
     for (i = 0; i < numberOfStitches; i++) {
@@ -9622,12 +9682,12 @@ writePcd(EmbPattern* pattern, FILE* file)
     }
     return 1;
 }
+
 /*
-\subsection pfaff-pcm-format Pfaff Embroidery Format (.pcm)
-
-The Pfaff pcm format is stitch-only.
+ * Pfaff Embroidery Format (.pcm)
+ *
+ * The Pfaff pcm format is stitch-only.
  */
-
 char
 readPcm(EmbPattern* pattern, FILE* file)
 {
@@ -9679,11 +9739,10 @@ writePcm(EmbPattern* pattern, FILE* file)
 }
 
 /*
-\subsection Pfaff Embroidery Format (.pcq)
-
-The Pfaff pcq format is stitch-only.
+ * Pfaff Embroidery Format (.pcq)
+ *
+ * The Pfaff pcq format is stitch-only.
  */
-
 char
 readPcq(EmbPattern* pattern, const char* fileName, FILE* file)
 {
@@ -9770,14 +9829,12 @@ writePcq(EmbPattern* pattern, FILE* file)
     }
     return 1;
 }
+
 /*
-\subsection Pfaff Embroidery Format (.pcs)
-addindex pcs
-addindex Pfaff
-
-The Pfaff pcs format is stitch-only.
+ * Pfaff Embroidery Format (.pcs)
+ *
+ * The Pfaff pcs format is stitch-only.
  */
-
 char
 readPcs(EmbPattern* pattern, const char* fileName, FILE* file)
 {
@@ -9790,9 +9847,13 @@ readPcs(EmbPattern* pattern, const char* fileName, FILE* file)
     unsigned short colorCount;
 
     version = (char)fgetc(file);
-    hoopSize = (char)fgetc(file);  /* 0 for PCD, 1 for PCQ (MAXI), 2 for PCS with small hoop(80x80), */
-                                      /* and 3 for PCS with large hoop (115x120) */
 
+    /* 0 for PCD
+     * 1 for PCQ (MAXI)
+     * 2 for PCS with small hoop(80x80)
+     * 3 for PCS with large hoop (115x120)
+     */
+    hoopSize = (char)fgetc(file);
     switch(hoopSize) {
         case 2:
             pattern->hoop_width = 80.0;
@@ -9877,7 +9938,6 @@ writePcs(EmbPattern* pattern, FILE* file)
  * Brother Embroidery Format (.pec)
  * The Brother pec format is stitch-only.
  */
-
 void
 readPecStitches(EmbPattern* pattern, FILE* file)
 {
@@ -10872,7 +10932,6 @@ writePhc(EmbPattern* pattern, FILE* file)
  * AutoCAD Embroidery Format (.plt)
  * The AutoCAD plt format is stitch-only.
  */
-
 char
 readPlt(EmbPattern* pattern, FILE* file)
 {
@@ -10941,7 +11000,6 @@ writePlt(EmbPattern* pattern, FILE* file) {
  * RGB Color File (.rgb)
  * The RGB format is a color-only format to act as an external color file for other formats.
  */
-
 char
 readRgb(EmbPattern* pattern, FILE* file)
 {
@@ -11102,7 +11160,6 @@ writeSew(EmbPattern* pattern, FILE* file)
  * Husqvarna Viking Embroidery Format (.shv)
  * The Husqvarna Viking shv format is stitch-only.
  */
-
 char
 shvDecode(unsigned char inputByte)
 {
@@ -11256,7 +11313,6 @@ writeShv(EmbPattern* pattern, FILE* file)
  * Sunstar Embroidery Format (.sst)
  * The Sunstar sst format is stitch-only.
  */
-
 char
 readSst(EmbPattern* pattern, FILE* file)
 {
@@ -11309,7 +11365,6 @@ writeSst(EmbPattern* pattern, FILE* file)
  * Data Stitch Embroidery Format (.stx)
  * The Data Stitch stx format is stitch-only.
  */
-
 int
 stxReadThread(StxThread* thread, FILE* file)
 {
@@ -11443,6 +11498,7 @@ readStx(EmbPattern* pattern, FILE* file)
     if (emb_verbose>1) {
         printf("stor: %d\n", stor);
     }
+
     /* bytes 15- */
     emb_read(file, &paletteLength, EMB_INT32_LITTLE);
     emb_read(file, &imageLength, EMB_INT32_LITTLE);
@@ -11563,7 +11619,6 @@ writeStx(EmbPattern* pattern, FILE* file)
  * Scalable Vector Graphics (.svg)
  * The scalable vector graphics (SVG) format is a graphics format maintained by ...
  */
-
 int svgCreator;
 
 int svgExpect;
@@ -12036,7 +12091,8 @@ parse_path(EmbPattern *p)
     emb_pattern_addPathAbs(p, path);
 }
 
-EmbArray *parse_pointlist(EmbPattern *p)
+EmbArray *
+parse_pointlist(EmbPattern *p)
 {
     char* pointStr = svgAttribute_getValue("points");
     int last = string_len(pointStr);
@@ -12217,7 +12273,9 @@ int svgIsElement(const char* buff) {
 }
 
 /*
-int svgIsSvgAttribute(const char* buff) {
+int
+svgIsSvgAttribute(const char* buff)
+{
     const char *inkscape_tokens[] = {
         "xmlns:dc", "xmlns:cc", "xmlns:rdf", "xmlns:svg", "xmlns", "\0"
     };
@@ -17486,18 +17544,6 @@ embEllipse_diameterY(EmbEllipse ellipse)
     return ellipse.radius.y * 2.0;
 }
 
-EmbReal
-embEllipse_width(EmbEllipse ellipse)
-{
-    return ellipse.radius.x * 2.0;
-}
-
-EmbReal
-embEllipse_height(EmbEllipse ellipse)
-{
-    return ellipse.radius.y * 2.0;
-}
-
 
 /*
 void embEllipse_init(EmbEllipse ellipse, unsigned int rgb, int lineType)
@@ -18690,7 +18736,7 @@ embImage_write(EmbImage *image, char *fname)
 void
 embImage_free(EmbImage *image)
 {
-    free(image->data);
+    safe_free(image->data);
 }
 
 /* The file is for the management of the main struct: EmbPattern.
@@ -19494,7 +19540,7 @@ emb_pattern_free(EmbPattern* p)
     emb_array_free(p->stitch_list);
     emb_array_free(p->thread_list);
     emb_array_free(p->geometry);
-    free(p);
+    safe_free(p);
 }
 
 /* Adds a circle object to pattern (a p) with its center at the absolute
@@ -19860,6 +19906,10 @@ convert(const char *inf, const char *outf)
     return 0;
 }
 
+/* The Pattern Properties
+ * -----------------------------------------------------------------------------
+ */
+
 /* a pattern
  * Returns float
  */
@@ -19988,6 +20038,9 @@ int emb_pattern_trimStitches(EmbPattern *pattern)
     return trim_stitches;
 }
 
+/* The Thread Management System
+ * -----------------------------------------------------------------------------
+ */
 
 int
 threadColor(const char *name, int brand)
@@ -20027,3 +20080,231 @@ threadColorName(unsigned int color, int brand)
     return "COLOR NOT FOUND";
 }
 
+/* The Geometry System
+ * -----------------------------------------------------------------------------
+ */
+
+/* . */
+EmbReal
+emb_get_real(EmbGeometry *g, int id)
+{
+    switch (id) {
+    case EMB_REAL_ARC_RADIUS: {
+        break;
+    }
+    case EMB_REAL_START_ANGLE: {
+        break;
+    }
+    case EMB_REAL_END_ANGLE: {
+        break;
+    }
+    case EMB_REAL_ARC_DIAMETER: {
+        break;
+    }
+    case EMB_REAL_ARC_AREA: {
+        break;
+    }
+    case EMB_REAL_ARC_CIRCUMFERENCE: {
+        break;
+    }
+    case EMB_REAL_ARC_LENGTH: {
+        break;
+    }
+    case EMB_REAL_CHORD: {
+        break;
+    }
+    case EMB_REAL_TEXT_SIZE: {
+        break;
+    }
+    case EMB_REAL_RADIUS_MAJOR: {
+        break;
+    }
+    case EMB_REAL_RADIUS_MINOR: {
+        break;
+    }
+    case EMB_REAL_DIAMETER_MAJOR: {
+        break;
+    }
+    case EMB_REAL_DIAMETER_MINOR: {
+        break;
+    }
+    case EMB_REAL_LENGTH: {
+        break;
+    }
+    case EMB_REAL_AREA: {
+        break;
+    }
+    case EMB_REAL_ANGLE: {
+        switch (g->type) {
+        case EMB_CIRCLE: {
+            puts("ERROR: CIRCLE has no REAL_ANGLE property.");
+            return 0.0f;
+        }
+        default:
+            break;
+        }
+        break;
+    }
+    case EMB_REAL_WIDTH: {
+        switch (g->type) {
+        case EMB_CIRCLE: {
+            return 2.0f * g->object.circle.radius;
+        }
+        case EMB_ELLIPSE {
+            return 2.0f * g->object.ellipse.radius.x;
+        }
+        default:
+            break;
+        }
+        break;
+    }
+    case EMB_REAL_HEIGHT: {
+        switch (g->type) {
+        case EMB_CIRCLE: {
+            return 2.0f * g->object.circle.radius;
+        }
+        case EMB_ELLIPSE {
+            return 2.0f * g->object.ellipse.radius.y;
+        }
+        default:
+            break;
+        }
+        break;
+    }
+    default:
+        break;
+    }
+    return 0.0f;    
+}
+
+/* . */
+EmbVector
+emb_get_vector(EmbGeometry *g, int id)
+{
+    EmbVector v;
+    v.x = 0.0f;
+    v.y = 0.0f;
+    switch (g->type) {
+    case EMB_CIRCLE: {
+        break;
+    }
+    default:
+        break;
+    }
+    return v;
+}
+
+/* . */
+int
+emb_get_int(EmbGeometry *g, int id)
+{
+    switch (g->type) {
+    case EMB_CIRCLE: {
+        break;
+    }
+    default:
+        break;
+    }
+    return 0;
+}
+
+/* . */
+void
+emb_set_real(EmbGeometry *g, int id, EmbReal r)
+{
+    switch (id) {
+    case EMB_REAL_ARC_RADIUS: {
+        break;
+    }
+    case EMB_REAL_START_ANGLE: {
+        break;
+    }
+    case EMB_REAL_END_ANGLE: {
+        break;
+    }
+    case EMB_REAL_ARC_DIAMETER: {
+        break;
+    }
+    case EMB_REAL_ARC_AREA: {
+        break;
+    }
+    case EMB_REAL_ARC_CIRCUMFERENCE: {
+        break;
+    }
+    case EMB_REAL_ARC_LENGTH: {
+        break;
+    }
+    case EMB_REAL_CHORD: {
+        break;
+    }
+    case EMB_REAL_TEXT_SIZE: {
+        break;
+    }
+    case EMB_REAL_RADIUS_MAJOR: {
+        break;
+    }
+    case EMB_REAL_RADIUS_MINOR: {
+        break;
+    }
+    case EMB_REAL_DIAMETER_MAJOR: {
+        break;
+    }
+    case EMB_REAL_DIAMETER_MINOR: {
+        break;
+    }
+    case EMB_REAL_LENGTH: {
+        break;
+    }
+    case EMB_REAL_AREA: {
+        break;
+    }
+    case EMB_REAL_ANGLE: {
+        switch (g->type) {
+        case EMB_CIRCLE: {
+            break;
+        }
+        default:
+            break;
+        }
+        break;
+    }
+    case EMB_REAL_WIDTH:
+    case EMB_REAL_HEIGHT:
+        break;
+    default:
+        break;
+    }
+}
+
+/* . */
+void
+emb_set_vector(EmbGeometry *g, int id, EmbVector v)
+{
+    switch (id) {
+    case EMB_VECTOR_ARC_START_POINT: {
+        switch (g->type) {
+        case EMB_CIRCLE: {
+            break;
+        }
+        default:
+            break;
+        }
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+/* . */
+void
+emb_set_int(EmbGeometry *g, int id, int i)
+{
+    switch (g->type) {
+    case EMB_CIRCLE: {
+        break;
+    }
+    default:
+        break;
+    }
+}

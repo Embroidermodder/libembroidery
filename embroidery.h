@@ -541,6 +541,35 @@ extern "C" {
 #define EMB_CMD_PAN_REAL_TIME                   166
 #define N_COMMANDS                              167
 
+/* Point identifiers. */
+#define EMB_VECTOR_ARC_START_POINT                0
+#define EMB_VECTOR_ARC_MID_POINT                  1
+#define EMB_VECTOR_ARC_END_POINT                  2
+#define EMB_VECTOR_ARC_POSITION                   3
+
+/* Real Identifiers */
+#define EMB_REAL_ARC_RADIUS                       0
+#define EMB_REAL_START_ANGLE                      1
+#define EMB_REAL_END_ANGLE                        2
+#define EMB_REAL_ARC_DIAMETER                     3
+#define EMB_REAL_ARC_AREA                         4
+#define EMB_REAL_ARC_CIRCUMFERENCE                5
+#define EMB_REAL_ARC_LENGTH                       6
+#define EMB_REAL_CHORD                            7
+#define EMB_REAL_TEXT                             8
+#define EMB_REAL_TEXT_FONT                        9
+#define EMB_REAL_TEXT_JUSTIFY                    10
+#define EMB_REAL_TEXT_SIZE                       11
+#define EMB_REAL_RADIUS_MAJOR                    12
+#define EMB_REAL_RADIUS_MINOR                    13
+#define EMB_REAL_DIAMETER_MAJOR                  14
+#define EMB_REAL_DIAMETER_MINOR                  15
+#define EMB_REAL_LENGTH                          16
+#define EMB_REAL_AREA                            17
+#define EMB_REAL_ANGLE                           18
+#define EMB_REAL_WIDTH                           19
+#define EMB_REAL_HEIGHT                          20
+
 /* UTILITY MACROS
  * --------------
  */
@@ -1057,8 +1086,6 @@ typedef struct EmbGeometry_ {
         EmbSpline spline;
         EmbVector vector;
     } object;
-    EmbStitch stitch;
-    EmbThread thread;
     int flag;
     int type;
     int lineType;
@@ -1168,6 +1195,14 @@ EMB_PUBLIC EmbReal emb_vector_angle(EmbVector v);
 EMB_PUBLIC EmbReal emb_vector_distance(EmbVector a, EmbVector b);
 EMB_PUBLIC EmbVector emb_vector_unit(EmbReal angle);
 
+EMB_PUBLIC EmbReal emb_get_real(EmbGeometry *g, int id);
+EMB_PUBLIC EmbVector emb_get_vector(EmbGeometry *g, int id);
+EMB_PUBLIC int emb_get_int(EmbGeometry *g, int id);
+
+EMB_PUBLIC void emb_set_real(EmbGeometry *g, int id, EmbReal r);
+EMB_PUBLIC void emb_set_vector(EmbGeometry *g, int id, EmbVector v);
+EMB_PUBLIC void emb_set_int(EmbGeometry *g, int id, int i);
+
 EMB_PUBLIC EmbArc emb_arc_init(void);
 EMB_PUBLIC char emb_arc_clockwise(EmbArc arc);
 EMB_PUBLIC EmbVector emb_arc_center(EmbArc arc);
@@ -1190,8 +1225,6 @@ EMB_PUBLIC EmbEllipse embEllipse_init(void);
 EMB_PUBLIC EmbEllipse embEllipse_make(EmbReal cx, EmbReal cy, EmbReal rx, EmbReal ry);
 EMB_PUBLIC EmbReal embEllipse_diameterX(EmbEllipse ellipse);
 EMB_PUBLIC EmbReal embEllipse_diameterY(EmbEllipse ellipse);
-EMB_PUBLIC EmbReal embEllipse_width(EmbEllipse ellipse);
-EMB_PUBLIC EmbReal embEllipse_height(EmbEllipse ellipse);
 EMB_PUBLIC EmbReal embEllipse_area(EmbEllipse ellipse);
 EMB_PUBLIC EmbReal embEllipse_perimeter(EmbEllipse ellipse);
 

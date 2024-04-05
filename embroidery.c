@@ -20150,7 +20150,7 @@ emb_get_real(EmbGeometry *g, int id)
         case EMB_CIRCLE: {
             return 2.0f * g->object.circle.radius;
         }
-        case EMB_ELLIPSE {
+        case EMB_ELLIPSE: {
             return 2.0f * g->object.ellipse.radius.x;
         }
         default:
@@ -20163,7 +20163,7 @@ emb_get_real(EmbGeometry *g, int id)
         case EMB_CIRCLE: {
             return 2.0f * g->object.circle.radius;
         }
-        case EMB_ELLIPSE {
+        case EMB_ELLIPSE: {
             return 2.0f * g->object.ellipse.radius.y;
         }
         default:

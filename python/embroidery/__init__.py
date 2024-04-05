@@ -1,116 +1,43 @@
 #!/usr/bin/env python3
 
-
 r"""
-    Libembroidery.
+Libembroidery
+1.0.0-alpha
+https://www.libembroidery.org
 
-    ---------------------------------------------
+---------------------------------------------
 
-    Copyright 2018-2022 The Embroidermodder Team
-    Libembroidery is Open Source Software.
-    See LICENSE for licensing terms.
+Copyright 2018-2024 The Embroidermodder Team
+Libembroidery is Open Source Software.
+See LICENSE for licensing terms.
 
-    ---------------------------------------------
+---------------------------------------------
 
-    The Pattern class definition file.
-
-    More Pythonic version than generated bindings,
-    a hand translation of the C version.
-
-    All of the object orientation happens here.
+Hand-written bindings to the C library for Python. This is manually updated.
 """
 
-from libembroidery.tools import (
-    Pen, Vector, vector_from_str, closest_vector, load_data
-)
-from libembroidery.geometry import (
-    Line, Rect, Arc, Circle, DimLeader, Ellipse,
-    Polygon, Polyline, PolylineArray, Path
-)
-from libembroidery.parametric import Parametric
-from libembroidery.text import TextSingle, Text
+import ctypes
+import pathlib
 
-NORMAL = 0
-JUMP = 1
-END = 16
-format_table = load_data("formats.json")
-number_of_formats = len(format_table)
+def load_library():
+    library_dir = pathlib.Path().absolute()
+    libembroidery_library = library_dir / "libembroidery.so"
+    return ctypes.CDLL(libembroidery_library)
 
+class vector(ctypes.Structure):
+    """ Wrapper to the EmbVector structure. """
+    _fields_ = [
+        ('x', ctypes.c_float),
+        ('y', ctypes.c_float)
+    ]
 
-class Pattern():
-    r"""
-    While we're working out how to interface libembroidery
-    and embroidermodder the Pattern is almost completely detatched from
-    the python binding.
+    def __str__(self,) -> str:
+        return f"({self.x}, {self.y})"
 
-    We only interact with it by calling the libembroidery convert function
-    to make it so we only need to import formats other than SVG and export
-    to formats other than SVG.
+libembroidery = load_library()
 
-    This leads to a few areas of repeated code that will have to do for now.
-    The most important is that SVG needs to be parsable by both embroidermodder
-    in Python and libembroidery in C.
-    """
-    def __init__(self, fname=""):
-        r"""
-        .
-        """
-        debug_message("")
-        if len(fname) > 0:
-            self.open(fname)
+if __name__ == "__main__":
+    libembroidery.emb_vector_add.argtypes = (vector, vector)
+    libembroidery.emb_vector_add.restype = vector
 
-        self.geometry = []
-        self.stitches = []
-
-    def open(self, fname):
-        r"""
-        Open the file called fname and load the data to
-        .
-        """
-        debug_message("")
-
-    def save(self, fname):
-        r"""
-        .
-        """
-        debug_message("")
-
-    def save_as(self, fname):
-        r"""
-        .
-        """
-        self.save("buffer_QFXZ.svg")
-        convert("buffer_QFXZ.svg", fname)
-
-    def add_circle(self, center, radius):
-        r"."
-        self.geometry += [Circle(center, radius)]
-
-    def add_dimleader(self, dimleader):
-        r"."
-        self.geometry += [DimLeader()]
-
-    def add_ellipse(self, ellipse):
-        r"."
-        self.geometry += [Ellipse()]
-
-    def add_image(self, image):
-        r"."
-        self.geometry += [Image()]
-
-    def add_line(self, start, end):
-        r"."
-        self.geometry += [Line(start, end)]
-
-    def add_stitch(self, x, y, flags=0, color=0, relative=False):
-        r"."
-        stitch = {
-            "position": Vector(x, y),
-            "flags": flags,
-            "color": color
-        }
-        self.stitches += [stitch]
-
-    def convert_to_stitches(self):
-        r"."
-        debug_message("convert_to_stitches")
+    print(libembroidery.emb_vector_add(vector(1.0, 1.0), vector(1.0, 6.0)))

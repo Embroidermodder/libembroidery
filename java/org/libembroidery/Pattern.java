@@ -10,13 +10,13 @@
  */
 
 class Pattern {
-    public Pattern() {
-        
+    public int Pattern() {
+        return 0;
     }
 
-    public AddThread() {
-        
+    public int AddThread() {
+        return 0;
     }
 
-    private static native ;
+    private static int a;
 }

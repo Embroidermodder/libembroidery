@@ -1,5 +1,0 @@
-Libembroidery bindings for Swift
-================================
-
-
-

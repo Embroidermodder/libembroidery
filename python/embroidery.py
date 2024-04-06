@@ -1,33 +1,65 @@
 #!/usr/bin/env python3
 
 r"""
-    Libembroidery.
+Libembroidery
+1.0.0-alpha
+https://www.libembroidery.org
 
-    --------------------------------------------------
+---------------------------------------------------------------------------------
 
-    Copyright 2018-2022 The Embroidermodder Team
-    Libembroidery is Open Source Software.
-    See LICENSE for licensing terms.
+Copyright 2018-2024 The Embroidermodder Team
+Libembroidery is Open Source Software.
+See LICENSE for licensing terms.
 
-    --------------------------------------------------
+---------------------------------------------------------------------------------
 
-    The test suite for the libembroidery Python bindings.
+Hand-written bindings to the C library for Python. This is manually updated.
 
-    Similar to, although not a replica of, the internal tests. This
-    cannot replace them because some systems that will run the library
-    won't support Python.
+Documentation on the ctypes interface here:
+    https://docs.python.org/3.8/library/ctypes.html
 
-    (Libembroidery may need to include some truly ancient PC in order
-    to deal with the older embroidery machines that they may talk to.)
+---------------------------------------------------------------------------------
+
+The test suite for the libembroidery Python bindings.
+
+Similar to, although not a replica of, the internal tests. This
+cannot replace them because some systems that will run the library
+won't support Python.
+
+(Libembroidery may need to include some truly ancient PC in order
+to deal with the older embroidery machines that they may talk to.)
 """
 
 import unittest
 import math
+import ctypes
+import pathlib
 
-from embroidery.parser import list_processor
-import embroidery as emb
-from embroidery import Pattern, Vector, Circle
-from embroidery.tools import debug_message
+def load_library():
+    """
+    TO DO: This needs to be operating system-dependent.
+    Currently for testing reasons it assumes that the shared library is in the same
+    directory.
+    """
+    library_dir = pathlib.Path().absolute()
+    libembroidery_library = library_dir / "libembroidery.so"
+    libembroidery = ctypes.CDLL(libembroidery_library)
+
+    libembroidery.emb_vector_add.argtypes = (vector, vector)
+    libembroidery.emb_vector_add.restype = vector
+    return libembroidery
+
+class vector(ctypes.Structure):
+    """ Wrapper for the EmbVector structure. """
+    _fields_ = [
+        ('x', ctypes.c_float),
+        ('y', ctypes.c_float)
+    ]
+
+    def __str__(self,) -> str:
+        return f"({self.x}, {self.y})"
+
+emb = load_library()
 
 def create_test_file_1(outf="test01.csv"):
     r"""
@@ -258,39 +290,39 @@ Name  : %s
 
     def test_polyline_array():
         r"Polyline & Polygon Testing"
-        pattern = Pattern()
+        p = pattern()
 
-        offset = Vector(0.0, 0.0)
+        offset = vector(0.0, 0.0)
 
         polyline_array = [
-            Vector(1.0, 1.0),
-            Vector(1.0, 2.0),
-            Vector(2.0, 2.0),
-            Vector(2.0, 3.0),
-            Vector(3.0, 3.0),
-            Vector(3.0, 2.0),
-            Vector(4.0, 2.0),
-            Vector(4.0, 1.0)
+            vector(1.0, 1.0),
+            vector(1.0, 2.0),
+            vector(2.0, 2.0),
+            vector(2.0, 3.0),
+            vector(3.0, 3.0),
+            vector(3.0, 2.0),
+            vector(4.0, 2.0),
+            vector(4.0, 1.0)
         ]
-        polyline_array = [vector + offset for vector in polyline_array]
-        pattern.add_polyline(polyline_array)
+        polyline_array = [v + offset for v in polyline_array]
+        p.add_polyline(polyline_array)
 
-        offset = Vector(5.0, 0.0)
+        offset = vector(5.0, 0.0)
 
         polygon_array = [
-            Vector(1.0, 1.0),
-            Vector(1.0, 2.0),
-            Vector(2.0, 2.0),
-            Vector(2.0, 3.0),
-            Vector(3.0, 3.0),
-            Vector(3.0, 2.0),
-            Vector(4.0, 2.0),
-            Vector(4.0, 1.0)
+            vector(1.0, 1.0),
+            vector(1.0, 2.0),
+            vector(2.0, 2.0),
+            vector(2.0, 3.0),
+            vector(3.0, 3.0),
+            vector(3.0, 2.0),
+            vector(4.0, 2.0),
+            vector(4.0, 1.0)
         ]
         polygon_array = [vector + offset for vector in polygon_array]
-        pattern.add_polygon(polygon_array)
+        p.add_polygon(polygon_array)
 
-        pattern.write("output.svg")
+        p.write("output.svg")
 
 
 if __name__ == '__main__':

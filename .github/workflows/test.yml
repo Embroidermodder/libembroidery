@@ -15,7 +15,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Build and Test
         run: ./test.sh &> test_report.txt
+      - name: Print out results
+        run: cat test_report.txt        
       - uses: actions/upload-artifact@v4
         with:
-          name: embroidermodder-${{ matrix.os }}
-          path: .
+          name: libembroidery-test-${{ matrix.os }}
+          path: test_report.txt

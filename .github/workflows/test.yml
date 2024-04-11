@@ -1,0 +1,23 @@
+name: Test
+
+on:
+  push:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: ["windows-latest", "macos-latest", "ubuntu-latest"]
+    name: "Build on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build and Test
+        run: ./test.sh &> test_report.txt
+      - name: Print out results
+        run: cat test_report.txt        
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libembroidery-test-${{ matrix.os }}
+          path: test_report.txt

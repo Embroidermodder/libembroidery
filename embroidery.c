@@ -17,7 +17,8 @@
 
 #include "embroidery.h"
 
-/*
+/* System-specific functions.
+ *
  * Only uses source from this directory or standard C libraries,
  * not including POSIX headers like unistd since this library
  * needs to support non-POSIX systems like Windows.
@@ -25,31 +26,13 @@
  * ---------------------------------------------------------
  *
  * In order to support embedded systems and WASM these need to
- * be replaced..
- */
-void *malloc(long unsigned int);
-void *realloc(void *, long unsigned int);
-void *calloc(long unsigned int, long unsigned int);
-void free(void *);
-
-double fabs(double);
-double cos(double);
-double sin(double);
-double sqrt(double);
-double ceil(double);
-double floor(double);
-float fmodf(float, float);
-double atan2(double, double);
-double atan(double);
-
-int puts(const char *);
-int printf(const char *, ...);
-
-/* System-specific functions.
- * --------------------------
+ * be replaced, see the #else block below.
  */
 #ifndef EMB_EMBEDDED
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
 
 void *
 emb_fopen(const char *fname, const char *mode)
@@ -81,33 +64,44 @@ emb_fclose(void *f)
     fclose((void*)f);
 }
 #else
-#ifdef WASM
-void *
-emb_fopen(const char *fname, const char *mode)
-{
-    return (void *)fopen(fname, mode);
-}
+/* For other systems, file i/o functions like emb_fread/emb_fwrite have
+ * to be defined by the includer. So this list of functions defines what
+ * a new platform would have to define.
+ *
+ * Emscripten doesn't use this, it's not considered "EMB_EMBEDDED".
+ */
+typedef long unsigned int size_t;
 
-void
-emb_fread(void *data, int length, void *file_pointer)
-{
-    return fread((unsigned char *)data, 1, length, file_pointer);
-}
+static const int stdin = 0;
+static const int EOF = -1;
+static const int SEEK_SET = 2;
 
-void
-emb_fwrite(void *data, int length, void *file_pointer)
-{
-    return fwrite((unsigned char *)data, 1, length, file_pointer);
-}
+#define NULL ((void*)0)
 
-void
-emb_fclose(void *f)
-{
-    fclose(f);
-}
-#else
-/* For other systems, emb_fread/emb_fwrite has to be defined by the includer. */
-#endif
+void *malloc(long unsigned int);
+void *realloc(void *, long unsigned int);
+void *calloc(long unsigned int, long unsigned int);
+void free(void *);
+
+/* These often have in-built assembly commands: so it's very chip-specific. */
+double fabs(double);
+double cos(double);
+double sin(double);
+double sqrt(double);
+double ceil(double);
+double floor(double);
+float fmodf(float, float);
+double atan2(double, double);
+double atan(double);
+
+int puts(const char *);
+int printf(const char *, ...);
+
+void *emb_fopen(const char *fname, const char *mode);
+int emb_fread(void *data, int length, void *file_pointer);
+int emb_fwrite(void *data, int length, void *file_pointer);
+void emb_fclose(void *f);
+int emb_fseek(void *file, int offset, int from);
 #endif
 
 /* Internal function declarations.
@@ -1389,7 +1383,7 @@ analyse_stack(EmbStack *stack)
         EmbStackElement element = stack->stack[i];
         printf("%d ", i);
         if ((element.data_type >= 0) && (element.data_type <= DICTIONARY_TYPE)) {
-            printf(postscript_data_type[element.data_type]);
+            printf("%s", postscript_data_type[element.data_type]);
         }
         else {
             printf("unknown");
@@ -1532,7 +1526,7 @@ emb_repl(void)
     while (running) {
         char line[200];
         int i = 0;
-        char c = 0;
+        unsigned char c = 0;
         printf("emb> ");
         while (c != EOF) {
             c = fgetc(stdin);
@@ -3220,6 +3214,7 @@ CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries)
     bcf_directory* dir = (bcf_directory*)malloc(sizeof(bcf_directory));
     if (!dir) {
         printf("ERROR: compound-file-directory.c CompoundFileDirectory(), cannot allocate memory for dir\n");
+        return NULL;
     } /* TODO: avoid crashing. null pointer will be accessed */
     dir->maxNumberOfDirectoryEntries = maxNumberOfDirectoryEntries;
     dir->dirEntries = 0;
@@ -3253,7 +3248,7 @@ CompoundFileDirectoryEntry(void* file)
     bcf_directory_entry* dir = malloc(sizeof(bcf_directory_entry));
     if (dir == NULL) {
         printf("ERROR: compound-file-directory.c CompoundFileDirectoryEntry(), cannot allocate memory for dir\n");
-        return 0;
+        return NULL;
     }
     memory_set(dir->directoryEntryName, 0, 32);
     parseDirectoryEntryName(file, dir);
@@ -3263,7 +3258,7 @@ CompoundFileDirectoryEntry(void* file)
     if ((dir->objectType != ObjectTypeStorage) && (dir->objectType != ObjectTypeStream) && (dir->objectType != ObjectTypeRootEntry)) {
         printf("ERROR: compound-file-directory.c CompoundFileDirectoryEntry()");
         printf(", unexpected object type: %d\n", dir->objectType);
-        return 0;
+        return NULL;
     }
     dir->colorFlag = (unsigned char)fgetc(file);
     emb_read(file, &(dir->leftSiblingId), EMB_INT32_LITTLE);
@@ -5660,6 +5655,15 @@ safe_free(void *data)
     }
 }
 
+unsigned char
+char_to_lower(unsigned char a)
+{
+    if (a >= 'A' && a <= 'Z') {
+        a = a - 'A' + 'a';
+    }
+    return a;
+}
+
 /* Get extension from file name. */
 int
 embFormat_getExtension(const char *fileName, char ending[5])
@@ -5683,7 +5687,7 @@ embFormat_getExtension(const char *fileName, char ending[5])
 
     i = 0;
     while (offset[i] != '\0') {
-        ending[i] = tolower(offset[i]);
+        ending[i] = char_to_lower(offset[i]);
         ++i;
     }
     ending[i] = 0; /* terminate the string */

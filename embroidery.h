@@ -447,7 +447,7 @@ extern "C" {
 #define EMB_CMD_EXIT                             72
 #define EMB_CMD_REDO                             73
 #define EMB_CMD_ROTATE_SELECTED                  74
-#define EMB_CMD_RUBBER                           75
+
 #define EMB_CMD_SCALE_SELECTED                   76
 #define EMB_CMD_SELECT_ALL                       77
 #define EMB_CMD_SETTINGS_DIALOG                  78

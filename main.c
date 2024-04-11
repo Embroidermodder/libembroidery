@@ -3,8 +3,6 @@
  * Copyright 2018-2024 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  */
-
-#include "embroidery.h"
 #include "embroidery.c"
 
 int

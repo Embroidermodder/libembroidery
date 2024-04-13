@@ -1,61 +1,66 @@
 #!/bin/bash
 #
 # This file is part of libembroidery.
-#
-# This needs the "./" part because it used to run the program
-# as well as build it.
-WORKDIR=./build
-TESTDIR=./test_data
-EMB=$WORKDIR/embroider
+
+# This needs the "./" part because it used to run the program as well as build it.
+TESTDIR=./test
+EMB=./embroider
 TEST_TIME=10
+TOTAL_TESTS=13
 
 function build () {
-    rm -fr $WORKDIR $TESTDIR
-    mkdir $WORKDIR
+    rm -fr $TESTDIR
     mkdir $TESTDIR
-    cd $WORKDIR
-    cmake ..
-    cmake --build .
-    cd ..
+    time gcc -g -O2 main.c -o $TESTDIR/embroider -lm
+    cd $TESTDIR
+}
+
+function test_wrap () {
+    timeout $TEST_TIME $@ || echo "FAILED"
 }
 
 function emb_test () {
-    echo "Sanity test $1"
-    timeout $TEST_TIME $EMB --test $1 || echo "FAILED"
-}
-
-function fill_test () {
-    echo "Fill SVG test ($1)"
-    timeout $TEST_TIME $EMB --fill images/$1.png 130 $TESTDIR/$1.svg || echo "FAILED"
-}
-
-function cross_test () {
-    echo "Cross fill SVG test ($1)"
-    timeout $TEST_TIME $EMB --cross-stitch images/$1.png 130 $TESTDIR/$1.svg || echo "FAILED"
-}
-
-function render_fill_test () {
-    echo "Render Fill Test ($1)"
-    timeout $TEST_TIME $EMB --fill images/$1.png 130 $TESTDIR/$1.csv && \
-        $EMB --fill $TESTDIR/$1.csv $TESTDIR/$1.png || echo "FAILED"
-}
-
-function render_cross_test () {
-    echo "Render Cross Test ($1)"
-    timeout $TEST_TIME $EMB --cross-stitch images/$1.png 130 $TESTDIR/$1.csv && \
-        $EMB --render $TESTDIR/$1.csv $TESTDIR/$1_render.png || echo "FAILED"
+    echo "Test $1"
+    test_wrap $EMB --args --test $1
 }
 
 function test_convert () {
     echo "Converting $1 to $2."
-    timeout $TEST_TIME $EMB --convert $TESTDIR/$1 $TESTDIR/$2 || echo "FAILED"
+    test_wrap $EMB --convert $1 $2
 }
 
-function all_tests () {
-    for i in `seq 0 13`
+function fill_test () {
+    echo "Fill SVG test ($1)"
+    test_wrap $EMB --fill ../images/$1.png 130 $1.svg
+}
+
+function cross_test () {
+    echo "Cross fill SVG test ($1)"
+    test_wrap $EMB --cross-stitch ../images/$1.png 130 $1.svg
+}
+
+function render_fill_test () {
+    echo "Render Fill Test ($1)"
+    test_wrap $EMB --fill ../images/$1.png 130 $1.csv
+    test_wrap $EMB --fill $1.csv $1.png
+}
+
+function render_cross_test () {
+    echo "Render Cross Test ($1)"
+    test_wrap $EMB --cross-stitch ../images/$1.png 130 $1.csv
+    test_wrap $EMB --render $1.csv $1_render.png
+}
+
+
+function fast_tests () {
+    for i in `seq 0 $TOTAL_TESTS`
     do
         emb_test $i
     done
+}
+
+function all_tests () {
+    fast_tests
 
     fill_test donut 130
     fill_test logo-spirals 130
@@ -71,10 +76,11 @@ function all_tests () {
 }
 
 date
+build
 
-if [ ! -e build/embroider ]
-then
-    time build
+if [ $1 = "--full" ]; then
+    time all_tests
+else
+    time fast_tests
 fi
 
-time all_tests

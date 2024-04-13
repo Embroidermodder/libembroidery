@@ -255,18 +255,11 @@ extern "C" {
 #define ELEMENT_USE             46
 #define ELEMENT_VIDEO                 47
 
-/* INTERNAL DEFINES */
-#define RED_TERM_COLOR      "\x1B[0;31m"
-#define GREEN_TERM_COLOR    "\x1B[0;32m"
-#define YELLOW_TERM_COLOR   "\x1B[1;33m"
-#define RESET_TERM_COLOR       "\033[0m"
-
 #define HOOP_126X110                   0
 #define HOOP_110X110                   1
 #define HOOP_50X50                     2
 #define HOOP_140X200                   3
 #define HOOP_230X200                   4
-
 
 /* DXF Version Identifiers */
 #define DXF_VERSION_R10         "AC1006"
@@ -541,6 +534,15 @@ extern "C" {
 #define EMB_CMD_PAN_REAL_TIME                   166
 #define N_COMMANDS                              167
 
+/* Brand identifiers. */
+#define EMB_BRAND_DXF                             0
+#define EMB_BRAND_HUS                             1
+#define EMB_BRAND_JEF                             2
+#define EMB_BRAND_SHV                             3
+#define EMB_BRAND_PCM                             4
+#define EMB_BRAND_PEC                             5
+#define EMB_BRAND_SVG                             6
+
 /* Point identifiers. */
 #define EMB_VECTOR_ARC_START_POINT                0
 #define EMB_VECTOR_ARC_MID_POINT                  1
@@ -573,8 +575,8 @@ extern "C" {
 /* UTILITY MACROS
  * --------------
  */
-#define EMB_MIN(A, B) (((A) < (B)) ? (A) : (B))
-#define EMB_MAX(A, B) (((A) > (B)) ? (A) : (B))
+#define EMB_MIN(A, B)     (((A) < (B)) ? (A) : (B))
+#define EMB_MAX(A, B)     (((A) > (B)) ? (A) : (B))
 
 /* COMPILATION SETTINGS
  * --------------------
@@ -1136,6 +1138,19 @@ typedef struct EmbFormatList_
     int write_external_color_file;
 } EmbFormatList;
 
+/* Thread colors that are subject to change are loaded at runtime,
+ * allowing us to update them as they change.
+ *
+ * However, in-builts that use indicies like the DXF, SVG or HUS
+ * tables are compiled in. This should help with embedded compatibility
+ * in both cases.
+ */
+typedef struct BRAND {
+    thread_color *codes;
+    int length;
+    EmbString label;
+} EmbBrand;
+
 /* Function Declarations
 *****************************************************************************/
 EMB_PUBLIC int lindenmayer_system(L_system L, char* state, int iteration, int complete);
@@ -1155,10 +1170,11 @@ EMB_PUBLIC int embColor_distance(EmbColor a, EmbColor b);
 EMB_PUBLIC EmbArray* emb_array_create(int type);
 EMB_PUBLIC int emb_array_resize(EmbArray *g);
 EMB_PUBLIC void emb_array_copy(EmbArray *dst, EmbArray *src);
-EMB_PUBLIC int emb_array_addArc(EmbArray* g, EmbArc arc);
-EMB_PUBLIC int emb_array_addCircle(EmbArray* g, EmbCircle circle);
-EMB_PUBLIC int emb_array_addEllipse(EmbArray* g, EmbEllipse ellipse);
-EMB_PUBLIC int emb_array_addFlag(EmbArray* g, int flag);
+EMB_PUBLIC int emb_array_add_geometry(EmbArray *a, EmbGeometry g);
+EMB_PUBLIC int emb_array_add_arc(EmbArray* g, EmbArc arc);
+EMB_PUBLIC int emb_array_add_circle(EmbArray* g, EmbCircle circle);
+EMB_PUBLIC int emb_array_add_ellipse(EmbArray* g, EmbEllipse ellipse);
+EMB_PUBLIC int emb_array_add_flag(EmbArray* g, int flag);
 EMB_PUBLIC int emb_array_addLine(EmbArray* g, EmbLine line);
 EMB_PUBLIC int emb_array_addRect(EmbArray* g, EmbRect rect);
 EMB_PUBLIC int emb_array_addPath(EmbArray* g, EmbPath p);
@@ -1174,11 +1190,11 @@ EMB_PUBLIC void emb_array_free(EmbArray* p);
 EMB_PUBLIC EmbLine emb_line_make(EmbReal x1, EmbReal y1, EmbReal x2, EmbReal y2);
 
 EMB_PUBLIC EmbVector emb_line_normalVector(EmbLine line, int clockwise);
-EMB_PUBLIC EmbVector emb_line_intersectionPoint(EmbLine line1, EmbLine line2);
+EMB_PUBLIC EmbVector emb_line_intersectionPoint(EmbLine line1, EmbLine line2, int *error_code);
 
-EMB_PUBLIC int embThread_findNearestColor(EmbColor color, EmbColor* colors, int n_colors);
-EMB_PUBLIC int embThread_findNearestThread(EmbColor color, EmbThread* threads, int n_threads);
-EMB_PUBLIC EmbThread embThread_getRandom(void);
+EMB_PUBLIC int emb_find_nearest_color(EmbColor color, EmbColor* colors, int n_colors);
+EMB_PUBLIC int emb_find_nearest_thread(EmbColor color, EmbThread* threads, int n_threads);
+EMB_PUBLIC EmbThread emb_get_random_thread(void);
 
 EMB_PUBLIC EmbVector emb_vector_normalize(EmbVector vector);
 EMB_PUBLIC EmbVector emb_vector_scale(EmbVector vector, EmbReal magnitude);
@@ -1208,14 +1224,13 @@ EMB_PUBLIC char emb_arc_clockwise(EmbArc arc);
 EMB_PUBLIC EmbVector emb_arc_center(EmbArc arc);
 EMB_PUBLIC EmbReal emb_arc_radius(EmbArc arc);
 EMB_PUBLIC EmbReal emb_arc_diameter(EmbArc arc);
-EMB_PUBLIC EmbReal emb_arc_chord(EmbArc arc);
 EMB_PUBLIC EmbVector emb_arc_chordMid(EmbArc arc);
 EMB_PUBLIC EmbReal emb_arc_sagitta(EmbArc arc);
 EMB_PUBLIC EmbReal emb_arc_apothem(EmbArc arc);
 EMB_PUBLIC EmbReal emb_arc_incAngle(EmbArc arc);
 EMB_PUBLIC EmbReal emb_arc_bulge(EmbArc arc);
 
-EMB_PUBLIC EmbCircle emb_circle_init(EmbReal x, EmbReal y, EmbReal r);
+EMB_PUBLIC EmbGeometry emb_circle_init(EmbReal x, EmbReal y, EmbReal r);
 EMB_PUBLIC int getCircleCircleIntersections(
      EmbCircle c0, EmbCircle c1, EmbVector *v0, EmbVector *v1);
 EMB_PUBLIC int getCircleTangentPoints(
@@ -1243,16 +1258,16 @@ EMB_PUBLIC const char* threadColorName(unsigned int color, int brand);
 EMB_PUBLIC void embTime_initNow(EmbTime* t);
 EMB_PUBLIC EmbTime embTime_time(EmbTime* t);
 
-EMB_PUBLIC void embSatinOutline_generateSatinOutline(EmbArray* lines,
+EMB_PUBLIC int emb_generate_satin_outline(EmbArray* lines,
     EmbReal thickness, EmbSatinOutline* result);
-EMB_PUBLIC EmbArray* embSatinOutline_renderStitches(EmbSatinOutline* result,
+EMB_PUBLIC EmbArray* emb_satin_outline_render(EmbSatinOutline* result,
     EmbReal density);
 
-EMB_PUBLIC EmbGeometry *embGeometry_init(int type_in);
-EMB_PUBLIC void embGeometry_free(EmbGeometry *obj);
-EMB_PUBLIC void embGeometry_move(EmbGeometry *obj, EmbVector delta);
+EMB_PUBLIC EmbGeometry *emb_geometry_init(int type_in);
+EMB_PUBLIC void emb_geometry_free(EmbGeometry *obj);
+EMB_PUBLIC void emb_geometry_move(EmbGeometry *obj, EmbVector delta);
 EMB_PUBLIC EmbRect embGeometry_boundingRect(EmbGeometry *obj);
-EMB_PUBLIC void embGeometry_vulcanize(EmbGeometry *obj);
+EMB_PUBLIC void emb_vulcanize(EmbGeometry *obj);
 
 EMB_PUBLIC EmbPattern* emb_pattern_create(void);
 EMB_PUBLIC void emb_pattern_hideStitchesOverLength(EmbPattern* p, int length);
@@ -1289,19 +1304,19 @@ EMB_PUBLIC void emb_pattern_horizontal_fill(EmbPattern *pattern, EmbImage *, int
 EMB_PUBLIC int emb_pattern_render(EmbPattern *pattern, char *fname);
 EMB_PUBLIC int emb_pattern_simulate(EmbPattern *pattern, char *fname);
 
-EMB_PUBLIC void emb_pattern_addCircleAbs(EmbPattern* p, EmbCircle obj);
-EMB_PUBLIC void emb_pattern_addEllipseAbs(EmbPattern* p, EmbEllipse obj);
-EMB_PUBLIC void emb_pattern_addLineAbs(EmbPattern* p, EmbLine obj);
-EMB_PUBLIC void emb_pattern_addPathAbs(EmbPattern* p, EmbPath obj);
+EMB_PUBLIC void emb_add_circle(EmbPattern* p, EmbCircle obj);
+EMB_PUBLIC void emb_add_ellipse(EmbPattern* p, EmbEllipse obj);
+EMB_PUBLIC void emb_add_line(EmbPattern* p, EmbLine obj);
+EMB_PUBLIC void emb_add_path(EmbPattern* p, EmbPath obj);
 EMB_PUBLIC void emb_pattern_addPointAbs(EmbPattern* p, EmbPoint obj);
 EMB_PUBLIC void emb_pattern_addPolygonAbs(EmbPattern* p, EmbPolygon obj);
 EMB_PUBLIC void emb_pattern_addPolylineAbs(EmbPattern* p, EmbPolyline obj);
 EMB_PUBLIC void emb_pattern_addRectAbs(EmbPattern* p, EmbRect obj);
 
-EMB_PUBLIC void emb_pattern_copyStitchListToPolylines(EmbPattern* pattern);
-EMB_PUBLIC void emb_pattern_copyPolylinesToStitchList(EmbPattern* pattern);
-EMB_PUBLIC void emb_pattern_moveStitchListToPolylines(EmbPattern* pattern);
-EMB_PUBLIC void emb_pattern_movePolylinesToStitchList(EmbPattern* pattern);
+EMB_PUBLIC void emb_copy_stitches_to_polylines(EmbPattern* pattern);
+EMB_PUBLIC void emb_copy_polylines_to_stitches(EmbPattern* pattern);
+EMB_PUBLIC void emb_move_stitches_to_polylines(EmbPattern* pattern);
+EMB_PUBLIC void emb_move_polylines_to_stitches(EmbPattern* pattern);
 
 EMB_PUBLIC char emb_pattern_read(EmbPattern *pattern, const char* fileName, int format);
 EMB_PUBLIC char emb_pattern_write(EmbPattern *pattern, const char* fileName, int format);
@@ -1317,33 +1332,9 @@ EMB_PUBLIC EmbReal degrees(EmbReal radian);
  ******************************************************************************/
 
 extern EmbFormatList formatTable[numberOfFormats];
-extern const int pecThreadCount;
-extern const int shvThreadCount;
 extern const EmbReal embConstantPi;
-extern const EmbThread husThreads[];
-extern const EmbThread jefThreads[];
-extern const EmbThread shvThreads[];
-extern const EmbThread pcmThreads[];
-extern const EmbThread pecThreads[];
-extern const unsigned char _dxfColorTable[][3];
+extern EmbBrand brand_codes[100];
 extern EmbThread black_thread;
-extern const unsigned char vipDecodingTable[];
-extern const char imageWithFrame[38][48];
-
-
-/* VARIABLES
- ******************************************************************************/
-
-/* Error code storage for optional control flow blocking.
- *
- * This is potentially not thread-safe beacuse it is set by functions called
- * asyncronously and is global. If we only ever add to the variable then
- * an error cannot be missed because then at most one call per thread can
- * resolve before the check is performed and the status isn't overridden.
- */
-extern int emb_error;
-
-/* Verbosity level. */
 extern int emb_verbose;
 
 #ifdef __cplusplus

@@ -5,11 +5,19 @@ CFLAGS=-fPIC -I ..
 all: libembroidery.so
 
 libembroidery.o: ../embroidery.c
-	$(COPY) ../embroidery.h embroidery/embroidery.h
-	$(CC) $(CFLAGS) -c ../embroidery.c -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 libembroidery.so: libembroidery.o
-	$(CC) libembroidery.o -shared -o $@
+	$(CC) $< -shared -o $@
+
+test: all
+	python3 embroidery.py
+
+dist:
+	python3 -m build
+	python3 -m pip install dist/*.whl
+
+	rm -fr build dist embroidery/__pycache__ embroidery/embroidery.egg-info
 
 clean:
 	rm -f libembroidery.o libembroidery.so

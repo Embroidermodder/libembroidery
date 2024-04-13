@@ -14,7 +14,7 @@
 #include <string.h>
 #include <jni.h>
 
-#include "embroidery.h"
+#include "../../../embroidery.h"
 
 EmbPattern *patterns[100];
 

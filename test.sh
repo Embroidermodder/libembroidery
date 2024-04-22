@@ -11,12 +11,12 @@ TOTAL_TESTS=13
 function build () {
     rm -fr $TESTDIR
     mkdir $TESTDIR
-    time gcc -g -O2 main.c -o $TESTDIR/embroider -lm
+    time gcc -g -O2 src/main.c src/embroidery.c -o $TESTDIR/embroider -lm
     cd $TESTDIR
 }
 
 function test_wrap () {
-    timeout $TEST_TIME $@ || echo "FAILED"
+    timeout $TEST_TIME $@ || echo "FAILED" && exit 1
 }
 
 function emb_test () {

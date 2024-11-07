@@ -26,16 +26,21 @@ add_compile_options(
 )
 endif (WIN32)
 
-add_library(embroidery_static STATIC embroidery.c embroidery.h)
+add_library(embroidery_static STATIC
+	src/embroidery.c
+	src/embroidery.h)
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
-add_library(embroidery SHARED embroidery.c embroidery.h)
+add_library(embroidery SHARED
+	src/embroidery.c
+	src/embroidery.h)
 
 target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
 endif()
 
 if(EMBROIDERY_BUILD_CLI)
-add_executable(embroider main.c)
+add_executable(embroider
+	src/main.c)
 
 target_compile_definitions(embroider PUBLIC LIBEMBROIDERY_CLI)
 
@@ -52,7 +57,7 @@ if(WIN32)
 # https://cmake.org/cmake/help/book/mastering-cmake/chapter/Install.html
 
 install(
-    FILES embroidery.h
+    FILES src/embroidery.h
     DESTINATION "<SystemDrive>/Program Files/<Project Name>"
 )
 
@@ -72,7 +77,7 @@ else(WIN32)
 include(GNUInstallDirs)
 
 install(
-    FILES embroidery.h
+    FILES src/embroidery.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 

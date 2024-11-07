@@ -8,12 +8,29 @@
  * Also, the core library supporting the Embroidermodder Project's
  * family of machine embroidery interfaces.
  *
- * ---------------------------------------------------------
+ * -----------------------------------------------------------------------------
  *
  * Copyright 2018-2024 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
+ * -----------------------------------------------------------------------------
+ *
+ * Only uses source from this directory or standard C libraries,
+ * not including POSIX headers like unistd since this library
+ * needs to support non-POSIX systems like Windows.
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * For the embedded systems version see the embedded/ directory.
  */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+#include <inttypes.h>
+#include <string.h>
+#include <stdbool.h>
 
 #include "embroidery.h"
 
@@ -22,26 +39,6 @@ const int NUMBINS = 10;
 double epsilon = 0.000000001;
 
 double emb_included_angle(EmbGeometry *geometry);
-
-/* System-specific functions.
- *
- * Only uses source from this directory or standard C libraries,
- * not including POSIX headers like unistd since this library
- * needs to support non-POSIX systems like Windows.
- *
- * ---------------------------------------------------------
- *
- * In order to support embedded systems and WASM these need to
- * be replaced, see the #else block below.
- */
-#ifndef EMB_EMBEDDED
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <time.h>
-#include <inttypes.h>
-#include <string.h>
-#include <stdbool.h>
 
 void *
 emb_fopen(const char *fname, const char *mode)
@@ -72,46 +69,6 @@ emb_fclose(void *f)
 {
     fclose((void*)f);
 }
-#else
-/* For other systems, file i/o functions like emb_fread/emb_fwrite have
- * to be defined by the includer. So this list of functions defines what
- * a new platform would have to define.
- *
- * Emscripten doesn't use this, it's not considered "EMB_EMBEDDED".
- */
-typedef long unsigned int size_t;
-
-static const int stdin = 0;
-static const int EOF = -1;
-static const int SEEK_SET = 2;
-
-#define NULL ((void*)0)
-
-void *malloc(long unsigned int);
-void *realloc(void *, long unsigned int);
-void *calloc(long unsigned int, long unsigned int);
-void free(void *);
-
-/* These often have in-built assembly commands: so it's very chip-specific. */
-double fabs(double);
-double cos(double);
-double sin(double);
-double sqrt(double);
-double ceil(double);
-double floor(double);
-float fmodf(float, float);
-double atan2(double, double);
-double atan(double);
-
-int puts(const char *);
-int printf(const char *, ...);
-
-void *emb_fopen(const char *fname, const char *mode);
-int emb_fread(void *data, int length, void *file_pointer);
-int emb_fwrite(void *data, int length, void *file_pointer);
-void emb_fclose(void *f);
-int emb_fseek(void *file, int offset, int from);
-#endif
 
 /* Internal function declarations.
  * ----------------------------------------------------------------------------

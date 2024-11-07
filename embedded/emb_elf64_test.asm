@@ -10,8 +10,19 @@
 ;
 ; ------------------------------------------------------------------------------
 ;
-; Elf64 testing platform, fully automated.
+; The elf64 testing platform is fully automated, create a log like this:
+;	nasm -felf64 emb_elf64_test.asm -o emb_elf64_test
+;	./emb_elf64_test
+;
+; You will then find find a ".log" file named after the current patch in the
+; same directory that you ran the binary.
 ;
 ; ------------------------------------------------------------------------------
 ;
+
+%include "embroidery.inc"
+
+_start:
+	mov	rax, 60
+	syscall
 

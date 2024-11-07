@@ -40,7 +40,9 @@ endif()
 
 if(EMBROIDERY_BUILD_CLI)
 add_executable(embroider
-	src/main.c)
+	src/main.c
+	src/embroidery.c
+	src/embroidery.h)
 
 target_compile_definitions(embroider PUBLIC LIBEMBROIDERY_CLI)
 

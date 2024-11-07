@@ -316,48 +316,6 @@ extern "C" {
 #define QUADTOCONTROL              0x100
 #define QUADTOEND                  0x200
 
-/* same order as flag_list, to use in jump table */
-#define FLAG_TO                        0
-#define FLAG_TO_SHORT                  1
-#define FLAG_HELP                      2
-#define FLAG_HELP_SHORT                3
-#define FLAG_FORMATS                   4
-#define FLAG_FORMATS_SHORT             5
-#define FLAG_QUIET                     6
-#define FLAG_QUIET_SHORT               7
-#define FLAG_VERBOSE                   8
-#define FLAG_VERBOSE_SHORT             9
-#define FLAG_VERSION                  10
-#define FLAG_VERSION_SHORT            11
-#define FLAG_CIRCLE                   12
-#define FLAG_CIRCLE_SHORT             13
-#define FLAG_ELLIPSE                  14
-#define FLAG_ELLIPSE_SHORT            15
-#define FLAG_LINE                     16
-#define FLAG_LINE_SHORT               17
-#define FLAG_POLYGON                  18
-#define FLAG_POLYGON_SHORT            19
-#define FLAG_POLYLINE                 20
-#define FLAG_POLYLINE_SHORT           21
-#define FLAG_RENDER                   22
-#define FLAG_RENDER_SHORT             23
-#define FLAG_SATIN                    24
-#define FLAG_SATIN_SHORT              25
-#define FLAG_STITCH                   26
-#define FLAG_STITCH_SHORT             27
-#define FLAG_TEST                     28
-#define FLAG_FULL_TEST_SUITE          29
-#define FLAG_CONVERT_TEST             30
-#define FLAG_HILBERT_CURVE            31
-#define FLAG_SIERPINSKI_TRIANGLE      32
-#define FLAG_FILL                     33
-#define FLAG_FILL_SHORT               34
-#define FLAG_SIMULATE                 35
-#define FLAG_COMBINE                  36
-#define FLAG_CROSS_STITCH             37
-#define FLAG_POSTSCRIPT               38
-#define NUM_FLAGS                     39
-
 /* LANGUAGES */
 #define LANG_SVG                       0
 #define LANG_PS                        1
@@ -966,6 +924,20 @@ typedef struct BRAND {
     EmbString label;
 } EmbBrand;
 
+typedef struct EmbStackElement_ {
+    int data_type;
+    int attribute;
+    int i;
+    float r;
+    char s[100];
+} EmbStackElement;
+
+/* This uses about 100kb per instance because it's not dynamic. */
+typedef struct EmbStack_ {
+    EmbStackElement stack[1000];
+    int position;
+} EmbStack;
+
 /* Function Declarations
 *****************************************************************************/
 EMB_PUBLIC int lindenmayer_system(L_system L, char* state, int iteration, int complete);
@@ -1196,6 +1168,7 @@ extern const EmbReal embConstantPi;
 extern EmbBrand brand_codes[100];
 extern EmbThread black_thread;
 extern int emb_verbose;
+extern const char *version_string;
 
 #ifdef __cplusplus
 }

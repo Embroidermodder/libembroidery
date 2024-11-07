@@ -40,34 +40,16 @@ double epsilon = 0.000000001;
 
 double emb_included_angle(EmbGeometry *geometry);
 
-void *
-emb_fopen(const char *fname, const char *mode)
-{
-    return (void *)fopen(fname, mode);
-}
-
 int
-emb_fread(void *data, int length, void *file_pointer)
+emb_fread(void *data, int length, FILE* file_pointer)
 {
     return fread((unsigned char *)data, 1, length, (void*)file_pointer);
 }
 
 int
-emb_fwrite(void *data, int length, void *file_pointer)
+emb_fwrite(void *data, int length, FILE* file_pointer)
 {
     return fwrite((unsigned char *)data, 1, length, (void*)file_pointer);
-}
-
-int
-emb_fseek(void *file, int offset, int from)
-{
-    return emb_fseek((FILE*)file, offset, from);
-}
-
-void
-emb_fclose(void *f)
-{
-    fclose((void*)f);
 }
 
 /* Internal function declarations.
@@ -85,13 +67,13 @@ int testMain(int);
 /* DIFAT functions */
 unsigned int entriesInDifatSector(bcf_file_difat* fat);
 bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
-void loadFatFromSector(bcf_file_fat* fat, void* file);
+void loadFatFromSector(bcf_file_fat* fat, FILE* file);
 void bcf_file_fat_free(bcf_file_fat** fat);
 bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
 void bcf_directory_free(bcf_directory** dir);
 unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
 void bcf_file_difat_free(bcf_file_difat* difat);
-bcf_file_header bcfFileHeader_read(void* file);
+bcf_file_header bcfFileHeader_read(FILE* file);
 int bcfFileHeader_isValid(bcf_file_header header);
 void bcf_file_free(bcf_file* bcfFile);
 
@@ -151,42 +133,42 @@ void decode_tajima_ternary(unsigned char b[3], int *x, int *y);
  */
 
 /* Function Declarations */
-void readPecStitches(EmbPattern* pattern, void* file);
-void writePecStitches(EmbPattern* pattern, void* file, const char* filename);
+void readPecStitches(EmbPattern* pattern, FILE* file);
+void writePecStitches(EmbPattern* pattern, FILE* file, const char* filename);
 
-void pfaffEncode(void* file, int x, int y, int flags);
+void pfaffEncode(FILE* file, int x, int y, int flags);
 
-void readPESHeaderV5(void* file, EmbPattern* pattern);
-void readPESHeaderV6(void* file, EmbPattern* pattern);
-void readPESHeaderV7(void* file, EmbPattern* pattern);
-void readPESHeaderV8(void* file, EmbPattern* pattern);
-void readPESHeaderV9(void* file, EmbPattern* pattern);
-void readPESHeaderV10(void* file, EmbPattern* pattern);
+void readPESHeaderV5(FILE* file, EmbPattern* pattern);
+void readPESHeaderV6(FILE* file, EmbPattern* pattern);
+void readPESHeaderV7(FILE* file, EmbPattern* pattern);
+void readPESHeaderV8(FILE* file, EmbPattern* pattern);
+void readPESHeaderV9(FILE* file, EmbPattern* pattern);
+void readPESHeaderV10(FILE* file, EmbPattern* pattern);
 
-void readDescriptions(void* file, EmbPattern* pattern);
-void readHoopName(void* file, EmbPattern* pattern);
-void readImageString(void* file, EmbPattern* pattern);
-void readProgrammableFills(void* file, EmbPattern* pattern);
-void readMotifPatterns(void* file, EmbPattern* pattern);
-void readFeatherPatterns(void* file, EmbPattern* pattern);
-void readThreads(void* file, EmbPattern* pattern);
+void readDescriptions(FILE* file, EmbPattern* pattern);
+void readHoopName(FILE* file, EmbPattern* pattern);
+void readImageString(FILE* file, EmbPattern* pattern);
+void readProgrammableFills(FILE* file, EmbPattern* pattern);
+void readMotifPatterns(FILE* file, EmbPattern* pattern);
+void readFeatherPatterns(FILE* file, EmbPattern* pattern);
+void readThreads(FILE* file, EmbPattern* pattern);
 
 void emb_read(void* f, void *b, int mode);
 void emb_write(void* f, void *b, int mode);
-int emb_readline(void* file, char *line, int maxLength);
+int emb_readline(FILE* file, char *line, int maxLength);
 
-int bcfFile_read(void* file, bcf_file* bcfFile);
-void* GetFile(bcf_file* bcfFile, void* file, char* fileToFind);
+int bcfFile_read(FILE* file, bcf_file* bcfFile);
+void* GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind);
 
-void binaryReadString(void* file, char *buffer, int maxLength);
-void binaryReadUnicodeString(void* file, char *buffer, const int stringLength);
+void binaryReadString(FILE* file, char *buffer, int maxLength);
+void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength);
 
-void fpad(void *f, char c, int n);
+void fpad(FILE* f, char c, int n);
 
-void write_24bit(void* file, int);
-int check_header_present(void* file, int minimum_header_length);
+void write_24bit(FILE* file, int);
+int check_header_present(FILE* file, int minimum_header_length);
 
-unsigned short emb_read_u16(void *file);
+unsigned short emb_read_u16(FILE* file);
 short emb_read_i16(void* f);
 
 void emb_write_u32be(void* f, unsigned int data);
@@ -197,10 +179,10 @@ void emb_write_u16(void* f, unsigned short data);
 void emb_write_u16BE(void* f, unsigned short data);
 void emb_write_i16(void* f, int16_t data);
 
-bcf_file_difat* bcf_difat_create(void* file, unsigned int fatSectors, const unsigned int sectorSize);
-unsigned int readFullSector(void* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
-bcf_directory_entry* CompoundFileDirectoryEntry(void* file);
-void readNextSector(void* file, bcf_directory* dir);
+bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize);
+unsigned int readFullSector(FILE* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
+bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file);
+void readNextSector(FILE* file, bcf_directory* dir);
 
 void embColor_read(void *f, EmbColor *c, int toRead);
 void embColor_write(void *f, EmbColor c, int toWrite);
@@ -217,137 +199,137 @@ void bernina_art_decode(EmbVector *position, EmbStitch *st, unsigned char *b);
 
 char read_stitch_block(
     EmbPattern *,
-    void *file,
+    FILE* file,
     void (*stitch_encoder)(EmbVector *, EmbStitch *, unsigned char *),
     int stitch_data_size,
     int mode
 );
 char write_stitch_block(
     EmbPattern *,
-    void *file,
+    FILE* file,
     void (*stitch_encoder)(EmbVector *, EmbStitch *, unsigned char *),
     int stitch_data_size,
     int mode
 );
 
-char readBmc(EmbPattern *pattern, void* file);
-char writeBmc(EmbPattern *pattern, void* file);
-char readBro(EmbPattern *pattern, void* file);
-char writeBro(EmbPattern *pattern, void* file);
-char readCnd(EmbPattern *pattern, void* file);
-char writeCnd(EmbPattern *pattern, void* file);
-char readCol(EmbPattern *pattern, void* file);
-char writeCol(EmbPattern *pattern, void* file);
-char readCsd(EmbPattern *pattern, void* file);
-char writeCsd(EmbPattern *pattern, void* file);
-char readCsv(EmbPattern *pattern, void* file);
-char writeCsv(EmbPattern *pattern, void* file);
-char readDat(EmbPattern *pattern, void* file);
-char writeDat(EmbPattern *pattern, void* file);
-char readDem(EmbPattern *pattern, void* file);
-char writeDem(EmbPattern *pattern, void* file);
-char readDsb(EmbPattern *pattern, void* file);
-char writeDsb(EmbPattern *pattern, void* file);
-char readDst(EmbPattern *pattern, void* file);
-char writeDst(EmbPattern *pattern, void* file);
-char readDsz(EmbPattern *pattern, void* file);
-char writeDsz(EmbPattern *pattern, void* file);
-char readDxf(EmbPattern *pattern, void* file);
-char writeDxf(EmbPattern *pattern, void* file);
-char readEdr(EmbPattern *pattern, void* file);
-char writeEdr(EmbPattern *pattern, void* file);
-char readEmd(EmbPattern *pattern, void* file);
-char writeEmd(EmbPattern *pattern, void* file);
-char readExp(EmbPattern *pattern, void* file);
-char writeExp(EmbPattern *pattern, void* file);
-char readExy(EmbPattern *pattern, void* file);
-char writeExy(EmbPattern *pattern, void* file);
-char readEys(EmbPattern *pattern, void* file);
-char writeEys(EmbPattern *pattern, void* file);
-char readFxy(EmbPattern *pattern, void* file);
-char writeFxy(EmbPattern *pattern, void* file);
-char readGc(EmbPattern *pattern, void* file);
-char writeGc(EmbPattern *pattern, void* file);
-char readGnc(EmbPattern *pattern, void* file);
-char writeGnc(EmbPattern *pattern, void* file);
-char readGt(EmbPattern *pattern, void* file);
-char writeGt(EmbPattern *pattern, void* file);
-char readHus(EmbPattern *pattern, void* file);
-char writeHus(EmbPattern *pattern, void* file);
-char readInb(EmbPattern *pattern, void* file);
-char writeInb(EmbPattern *pattern, void* file);
-char readInf(EmbPattern *pattern, void* file);
-char writeInf(EmbPattern *pattern, void* file);
-char readJef(EmbPattern *pattern, void* file);
-char writeJef(EmbPattern *pattern, void* file);
-char readKsm(EmbPattern *pattern, void* file);
-char writeKsm(EmbPattern *pattern, void* file);
-char readMax(EmbPattern *pattern, void* file);
-char writeMax(EmbPattern *pattern, void* file);
-char readMit(EmbPattern *pattern, void* file);
-char writeMit(EmbPattern *pattern, void* file);
-char readNew(EmbPattern *pattern, void* file);
-char writeNew(EmbPattern *pattern, void* file);
-char readOfm(EmbPattern *pattern, void* file);
-char writeOfm(EmbPattern *pattern, void* file);
-char readPcd(EmbPattern *pattern, const char *fileName, void* file);
-char writePcd(EmbPattern *pattern, void* file);
-char readPcm(EmbPattern *pattern, void* file);
-char writePcm(EmbPattern *pattern, void* file);
-char readPcq(EmbPattern *pattern, const char *fileName, void* file);
-char writePcq(EmbPattern *pattern, void* file);
-char readPcs(EmbPattern *pattern, const char *fileName, void* file);
-char writePcs(EmbPattern *pattern, void* file);
-char readPec(EmbPattern *pattern, const char *fileName, void* file);
-char writePec(EmbPattern *pattern, const char *fileName,  void* file);
-char readPel(EmbPattern *pattern, void *file);
-char writePel(EmbPattern *pattern, void *file);
-char readPem(EmbPattern *pattern, void *file);
-char writePem(EmbPattern *pattern, void *file);
-char readPes(EmbPattern *pattern, const char *fileName, void* file);
-char writePes(EmbPattern *pattern, const char *fileName, void* file);
-char readPhb(EmbPattern *pattern, void* file);
-char writePhb(EmbPattern *pattern, void *file);
-char readPhc(EmbPattern *pattern, void* file);
-char writePhc(EmbPattern *pattern, void *file);
-char readPlt(EmbPattern *pattern, void* file);
-char writePlt(EmbPattern *pattern, void* file);
-char readRgb(EmbPattern *pattern, void* file);
-char writeRgb(EmbPattern *pattern, void* file);
-char readSew(EmbPattern *pattern, void* file);
-char writeSew(EmbPattern *pattern, void* file);
-char readShv(EmbPattern *pattern, void* file);
-char writeShv(EmbPattern *pattern, void *file);
-char readSst(EmbPattern *pattern, void* file);
-char writeSst(EmbPattern *pattern, void *file);
-char readStx(EmbPattern *pattern, void* file);
-char writeStx(EmbPattern *pattern, void *file);
-char readSvg(EmbPattern *pattern, void* file);
-char writeSvg(EmbPattern *pattern, void* file);
-char readT01(EmbPattern *pattern, void* file);
-char writeT01(EmbPattern *pattern, void* file);
-char readT09(EmbPattern *pattern, void* file);
-char writeT09(EmbPattern *pattern, void* file);
-char readTap(EmbPattern *pattern, void* file);
-char writeTap(EmbPattern *pattern, void* file);
-char readThr(EmbPattern *pattern, void* file);
-char writeThr(EmbPattern *pattern, void* file);
-char readTxt(EmbPattern *pattern, void* file);
-char writeTxt(EmbPattern *pattern, void* file);
-char readU00(EmbPattern *pattern, void* file);
-char writeU00(EmbPattern *pattern, void *file);
-char readU01(EmbPattern *pattern, void* file);
-char writeU01(EmbPattern *pattern, void *file);
-char readVip(EmbPattern *pattern, void* file);
-char writeVip(EmbPattern *pattern, void* file);
-char readVp3(EmbPattern *pattern, void* file);
-char writeVp3(EmbPattern *pattern, void* file);
-char readXxx(EmbPattern *pattern, void* file);
-char writeXxx(EmbPattern *pattern, void* file);
-char readZsk(EmbPattern *pattern, void* file);
-char writeZsk(EmbPattern *pattern, void* file);
+char readBmc(EmbPattern *pattern, FILE* file);
+char writeBmc(EmbPattern *pattern, FILE* file);
+char readBro(EmbPattern *pattern, FILE* file);
+char writeBro(EmbPattern *pattern, FILE* file);
+char readCnd(EmbPattern *pattern, FILE* file);
+char writeCnd(EmbPattern *pattern, FILE* file);
+char readCol(EmbPattern *pattern, FILE* file);
+char writeCol(EmbPattern *pattern, FILE* file);
+char readCsd(EmbPattern *pattern, FILE* file);
+char writeCsd(EmbPattern *pattern, FILE* file);
+char readCsv(EmbPattern *pattern, FILE* file);
+char writeCsv(EmbPattern *pattern, FILE* file);
+char readDat(EmbPattern *pattern, FILE* file);
+char writeDat(EmbPattern *pattern, FILE* file);
+char readDem(EmbPattern *pattern, FILE* file);
+char writeDem(EmbPattern *pattern, FILE* file);
+char readDsb(EmbPattern *pattern, FILE* file);
+char writeDsb(EmbPattern *pattern, FILE* file);
+char readDst(EmbPattern *pattern, FILE* file);
+char writeDst(EmbPattern *pattern, FILE* file);
+char readDsz(EmbPattern *pattern, FILE* file);
+char writeDsz(EmbPattern *pattern, FILE* file);
+char readDxf(EmbPattern *pattern, FILE* file);
+char writeDxf(EmbPattern *pattern, FILE* file);
+char readEdr(EmbPattern *pattern, FILE* file);
+char writeEdr(EmbPattern *pattern, FILE* file);
+char readEmd(EmbPattern *pattern, FILE* file);
+char writeEmd(EmbPattern *pattern, FILE* file);
+char readExp(EmbPattern *pattern, FILE* file);
+char writeExp(EmbPattern *pattern, FILE* file);
+char readExy(EmbPattern *pattern, FILE* file);
+char writeExy(EmbPattern *pattern, FILE* file);
+char readEys(EmbPattern *pattern, FILE* file);
+char writeEys(EmbPattern *pattern, FILE* file);
+char readFxy(EmbPattern *pattern, FILE* file);
+char writeFxy(EmbPattern *pattern, FILE* file);
+char readGc(EmbPattern *pattern, FILE* file);
+char writeGc(EmbPattern *pattern, FILE* file);
+char readGnc(EmbPattern *pattern, FILE* file);
+char writeGnc(EmbPattern *pattern, FILE* file);
+char readGt(EmbPattern *pattern, FILE* file);
+char writeGt(EmbPattern *pattern, FILE* file);
+char readHus(EmbPattern *pattern, FILE* file);
+char writeHus(EmbPattern *pattern, FILE* file);
+char readInb(EmbPattern *pattern, FILE* file);
+char writeInb(EmbPattern *pattern, FILE* file);
+char readInf(EmbPattern *pattern, FILE* file);
+char writeInf(EmbPattern *pattern, FILE* file);
+char readJef(EmbPattern *pattern, FILE* file);
+char writeJef(EmbPattern *pattern, FILE* file);
+char readKsm(EmbPattern *pattern, FILE* file);
+char writeKsm(EmbPattern *pattern, FILE* file);
+char readMax(EmbPattern *pattern, FILE* file);
+char writeMax(EmbPattern *pattern, FILE* file);
+char readMit(EmbPattern *pattern, FILE* file);
+char writeMit(EmbPattern *pattern, FILE* file);
+char readNew(EmbPattern *pattern, FILE* file);
+char writeNew(EmbPattern *pattern, FILE* file);
+char readOfm(EmbPattern *pattern, FILE* file);
+char writeOfm(EmbPattern *pattern, FILE* file);
+char readPcd(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePcd(EmbPattern *pattern, FILE* file);
+char readPcm(EmbPattern *pattern, FILE* file);
+char writePcm(EmbPattern *pattern, FILE* file);
+char readPcq(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePcq(EmbPattern *pattern, FILE* file);
+char readPcs(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePcs(EmbPattern *pattern, FILE* file);
+char readPec(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePec(EmbPattern *pattern, const char *fileName,  FILE* file);
+char readPel(EmbPattern *pattern, FILE* file);
+char writePel(EmbPattern *pattern, FILE* file);
+char readPem(EmbPattern *pattern, FILE* file);
+char writePem(EmbPattern *pattern, FILE* file);
+char readPes(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePes(EmbPattern *pattern, const char *fileName, FILE* file);
+char readPhb(EmbPattern *pattern, FILE* file);
+char writePhb(EmbPattern *pattern, FILE* file);
+char readPhc(EmbPattern *pattern, FILE* file);
+char writePhc(EmbPattern *pattern, FILE* file);
+char readPlt(EmbPattern *pattern, FILE* file);
+char writePlt(EmbPattern *pattern, FILE* file);
+char readRgb(EmbPattern *pattern, FILE* file);
+char writeRgb(EmbPattern *pattern, FILE* file);
+char readSew(EmbPattern *pattern, FILE* file);
+char writeSew(EmbPattern *pattern, FILE* file);
+char readShv(EmbPattern *pattern, FILE* file);
+char writeShv(EmbPattern *pattern, FILE* file);
+char readSst(EmbPattern *pattern, FILE* file);
+char writeSst(EmbPattern *pattern, FILE* file);
+char readStx(EmbPattern *pattern, FILE* file);
+char writeStx(EmbPattern *pattern, FILE* file);
+char readSvg(EmbPattern *pattern, FILE* file);
+char writeSvg(EmbPattern *pattern, FILE* file);
+char readT01(EmbPattern *pattern, FILE* file);
+char writeT01(EmbPattern *pattern, FILE* file);
+char readT09(EmbPattern *pattern, FILE* file);
+char writeT09(EmbPattern *pattern, FILE* file);
+char readTap(EmbPattern *pattern, FILE* file);
+char writeTap(EmbPattern *pattern, FILE* file);
+char readThr(EmbPattern *pattern, FILE* file);
+char writeThr(EmbPattern *pattern, FILE* file);
+char readTxt(EmbPattern *pattern, FILE* file);
+char writeTxt(EmbPattern *pattern, FILE* file);
+char readU00(EmbPattern *pattern, FILE* file);
+char writeU00(EmbPattern *pattern, FILE* file);
+char readU01(EmbPattern *pattern, FILE* file);
+char writeU01(EmbPattern *pattern, FILE* file);
+char readVip(EmbPattern *pattern, FILE* file);
+char writeVip(EmbPattern *pattern, FILE* file);
+char readVp3(EmbPattern *pattern, FILE* file);
+char writeVp3(EmbPattern *pattern, FILE* file);
+char readXxx(EmbPattern *pattern, FILE* file);
+char writeXxx(EmbPattern *pattern, FILE* file);
+char readZsk(EmbPattern *pattern, FILE* file);
+char writeZsk(EmbPattern *pattern, FILE* file);
 
-void write_24bit(void* file, int);
+void write_24bit(FILE* file, int);
 
 /* Replacing functions that compilers complain about.
  * In some cases, this is due to valid concerns about
@@ -2541,7 +2523,7 @@ emb_read_i16(void* f)
 /* \todo replace with embInt_read
  */
 unsigned short
-emb_read_u16(void* f)
+emb_read_u16(FILE* f)
 {
     unsigned short x;
     emb_read(f, &x, EMB_INT16_LITTLE);
@@ -2821,7 +2803,7 @@ decode_tajima_ternary(unsigned char b[3], int *x, int *y)
 
 /* a file a dx a dy a flags
  */
-void pfaffEncode(void* file, int dx, int dy, int flags)
+void pfaffEncode(FILE* file, int dx, int dy, int flags)
 {
     unsigned char flagsToWrite = 0;
 
@@ -2935,7 +2917,7 @@ emb_read(void* f, void *b, int mode)
 
 /* . */
 void
-fpad(void* file, char c, int n)
+fpad(FILE* file, char c, int n)
 {
     int i;
     for (i = 0; i < n; i++) {
@@ -3692,12 +3674,12 @@ void emb_arc_print(EmbArc arc)
  * if there are.
  */
 int
-check_header_present(void* file, int minimum_header_length)
+check_header_present(FILE* file, int minimum_header_length)
 {
     int length;
-    emb_fseek(file, 0, SEEK_END);
+    fseek(file, 0, SEEK_END);
     length = ftell(file);
-    emb_fseek(file, 0, SEEK_SET);
+    fseek(file, 0, SEEK_SET);
     if (length < minimum_header_length) {
         return 0;
     }
@@ -3724,15 +3706,15 @@ haveExtraDIFATSectors(bcf_file* file)
 
 /* . */
 int
-seekToSector(bcf_file* bcfFile, void* file, const unsigned int sector)
+seekToSector(bcf_file* bcfFile, FILE* file, const unsigned int sector)
 {
     unsigned int offset = sector * sectorSize(bcfFile) + sectorSize(bcfFile);
-    return emb_fseek(file, offset, SEEK_SET);
+    return fseek(file, offset, SEEK_SET);
 }
 
 /* . */
 void
-parseDIFATSectors(void* file, bcf_file* bcfFile)
+parseDIFATSectors(FILE* file, bcf_file* bcfFile)
 {
     unsigned int difatEntriesToRead = bcfFile->header.numberOfFATSectors - difatEntriesInHeader;
     unsigned int difatSectorNumber = bcfFile->header.firstDifatSectorLocation;
@@ -3744,7 +3726,7 @@ parseDIFATSectors(void* file, bcf_file* bcfFile)
 
 /* . */
 int
-bcfFile_read(void* file, bcf_file* bcfFile)
+bcfFile_read(FILE* file, bcf_file* bcfFile)
 {
     unsigned int i, numberOfDirectoryEntriesPerSector;
     unsigned int directorySectorToReadFrom;
@@ -3782,11 +3764,11 @@ bcfFile_read(void* file, bcf_file* bcfFile)
 
 /* Get the File object. */
 void*
-GetFile(bcf_file* bcfFile, void* file, char* fileToFind)
+GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind)
 {
     int filesize, sectorSize, currentSector;
     int sizeToWrite, currentSize, totalSectors, i, j;
-    void* fileOut = tmpfile();
+    FILE* fileOut = tmpfile();
     bcf_directory_entry* pointer = bcfFile->directory->dirEntries;
     while (pointer) {
         if (string_equals(fileToFind, pointer->directoryEntryName)) {
@@ -3836,7 +3818,7 @@ bcf_file_free(bcf_file* bcfFile)
 
 /* . */
 bcf_file_difat*
-bcf_difat_create(void* file, unsigned int fatSectors, const unsigned int sectorSize)
+bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize)
 {
     unsigned int i;
     bcf_file_difat* difat = 0;
@@ -3877,7 +3859,7 @@ entriesInDifatSector(bcf_file_difat* fat)
 /* . */
 unsigned int
 readFullSector(
-    void* file,
+    FILE* file,
     bcf_file_difat* bcfFile,
     unsigned int* difatEntriesToRead)
 {
@@ -3912,7 +3894,7 @@ readFullSector(
 
 /* . */
 void
-parseDirectoryEntryName(void* file, bcf_directory_entry* dir)
+parseDirectoryEntryName(FILE* file, bcf_directory_entry* dir)
 {
     int i;
     for (i = 0; i < 32; ++i) {
@@ -3940,7 +3922,7 @@ CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries)
 
 /* . */
 EmbTime
-parseTime(void* file)
+parseTime(FILE* file)
 {
     EmbTime returnVal;
     unsigned int ft_low, ft_high;
@@ -3959,7 +3941,7 @@ parseTime(void* file)
 
 /* . */
 bcf_directory_entry*
-CompoundFileDirectoryEntry(void* file)
+CompoundFileDirectoryEntry(FILE* file)
 {
     const int guidSize = 16;
     bcf_directory_entry* dir = malloc(sizeof(bcf_directory_entry));
@@ -3999,7 +3981,7 @@ CompoundFileDirectoryEntry(void* file)
 
 /* . */
 void
-readNextSector(void* file, bcf_directory* dir)
+readNextSector(FILE* file, bcf_directory* dir)
 {
     unsigned int i;
     for (i = 0; i < dir->maxNumberOfDirectoryEntries; ++i) {
@@ -4057,7 +4039,7 @@ bcfFileFat_create(const unsigned int sectorSize)
 
 /* . */
 void
-loadFatFromSector(bcf_file_fat* fat, void* file)
+loadFatFromSector(bcf_file_fat* fat, FILE* file)
 {
     unsigned int i;
     unsigned int current_fat_entries = fat->fatEntryCount;
@@ -4072,7 +4054,7 @@ loadFatFromSector(bcf_file_fat* fat, void* file)
 
 /* . */
 bcf_file_header
-bcfFileHeader_read(void* file)
+bcfFileHeader_read(FILE* file)
 {
     bcf_file_header header;
     if (fread(header.signature, 1, 8, file) < 8) {
@@ -4248,7 +4230,7 @@ emb_satin_outline_render(EmbSatinOutline* result, EmbReal density)
 
 /* . */
 void
-write_24bit(void* file, int x)
+write_24bit(FILE* file, int x)
 {
     unsigned char a[4];
     a[0] = (unsigned char)0;
@@ -4361,7 +4343,7 @@ emb_get_random_thread(void)
 
 /* . */
 void
-binaryReadString(void* file, char* buffer, int maxLength)
+binaryReadString(FILE* file, char* buffer, int maxLength)
 {
     int i = 0;
     while(i < maxLength) {
@@ -4373,7 +4355,7 @@ binaryReadString(void* file, char* buffer, int maxLength)
 
 /* . */
 void
-binaryReadUnicodeString(void* file, char *buffer, const int stringLength)
+binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength)
 {
     int i = 0;
     for (i = 0; i < stringLength * 2; i++) {
@@ -4406,7 +4388,7 @@ stringInArray(const char *s, const char **array)
 
 /* . */
 int
-emb_readline(void* file, char *line, int maxLength)
+emb_readline(FILE* file, char *line, int maxLength)
 {
     int i;
     char c;
@@ -4420,7 +4402,7 @@ emb_readline(void* file, char *line, int maxLength)
                 break;
             }
             if (c != '\n') {
-                emb_fseek(file, -1L, SEEK_CUR);
+                fseek(file, -1L, SEEK_CUR);
             }
             break;
         }
@@ -6168,7 +6150,7 @@ char
 emb_pattern_read(EmbPattern* pattern, const char *fileName, int format)
 {
     int result;
-    void *file;
+    FILE *file;
     result = 0;
     if (!pattern) {
         printf("ERROR: emb_pattern_read(), pattern argument is null.\n");
@@ -6178,7 +6160,7 @@ emb_pattern_read(EmbPattern* pattern, const char *fileName, int format)
         printf("ERROR: emb_pattern_read(), fileName argument is null.\n");
         return 0;
     }
-    file = emb_fopen(fileName, "rb");
+    file = fopen(fileName, "rb");
     if (!file) {
         if ((format != EMB_FORMAT_EDR) &&
             (format != EMB_FORMAT_RGB) &&
@@ -6389,7 +6371,7 @@ emb_pattern_read(EmbPattern* pattern, const char *fileName, int format)
 char
 emb_pattern_write(EmbPattern* pattern, const char *fileName, int format)
 {
-    void *file;
+    FILE *file;
     int result = 0;
     if (!pattern) {
         printf("ERROR: emb_pattern_write(), pattern argument is null\n");
@@ -6407,7 +6389,7 @@ emb_pattern_write(EmbPattern* pattern, const char *fileName, int format)
         emb_pattern_end(pattern);
     }
 
-    file = emb_fopen(fileName, "wb");
+    file = fopen(fileName, "wb");
     if (!file) {
         printf("Failed to open file with name: %s.", fileName);
         return 0;
@@ -6792,7 +6774,7 @@ bernina_art_decode(EmbVector *position, EmbStitch *st, unsigned char *b)
 char
 read_stitch_block(
     EmbPattern *pattern,
-    void *file,
+    FILE* file,
     void (*stitch_decoder)(EmbVector *, EmbStitch *, unsigned char *),
     int stitch_data_size,
     int mode
@@ -6819,7 +6801,7 @@ read_stitch_block(
 char
 write_stitch_block(
     EmbPattern *pattern,
-    void *file,
+    FILE* file,
     void (*stitch_encoder)(EmbVector *, EmbStitch *, unsigned char *),
     int stitch_data_size,
     int mode
@@ -6846,7 +6828,7 @@ write_stitch_block(
  * We don't know much about this format. \todo Find a source.
  */
 char
-readBmc(EmbPattern* pattern, void* file)
+readBmc(EmbPattern* pattern, FILE* file)
 {
     puts("readBmc is not implemented");
     if (emb_verbose > 1) {
@@ -6856,7 +6838,7 @@ readBmc(EmbPattern* pattern, void* file)
 }
 
 char
-writeBmc(EmbPattern* pattern, void* file)
+writeBmc(EmbPattern* pattern, FILE* file)
 {
     puts("writeBmc is not implemented");
     if (emb_verbose > 1) {
@@ -6884,7 +6866,7 @@ writeBmc(EmbPattern* pattern, void* file)
     }
 
 char
-readBro(EmbPattern* pattern, void* file)
+readBro(EmbPattern* pattern, FILE* file)
 {
     unsigned char x55;
     short unknown1, unknown2, unknown3, unknown4, moreBytesToEnd;
@@ -6904,7 +6886,7 @@ readBro(EmbPattern* pattern, void* file)
     READ_BYTES(&unknown4, 2);
     READ_BYTES(&moreBytesToEnd, 2);
 
-    emb_fseek(file, 0x100, SEEK_SET);
+    fseek(file, 0x100, SEEK_SET);
 
     while (!feof(file)) {
         short b1, b2;
@@ -6939,7 +6921,7 @@ readBro(EmbPattern* pattern, void* file)
 #undef READ_BYTES
 
 char
-writeBro(EmbPattern* pattern, void* file)
+writeBro(EmbPattern* pattern, FILE* file)
 {
     puts("writeBro is not implemented");
     puts("Overridden, defaulting to dst.");
@@ -6956,7 +6938,7 @@ writeBro(EmbPattern* pattern, void* file)
  * \todo Find a source.
  */
 char
-readCnd(EmbPattern* pattern, void* file)
+readCnd(EmbPattern* pattern, FILE* file)
 {
     puts("readCnd is not implemented");
     puts("Overridden, defaulting to dst.");
@@ -6965,7 +6947,7 @@ readCnd(EmbPattern* pattern, void* file)
 }
 
 char
-writeCnd(EmbPattern* pattern, void* file)
+writeCnd(EmbPattern* pattern, FILE* file)
 {
     puts("writeCnd is not implemented");
     puts("Overridden, defaulting to dst.");
@@ -7001,7 +6983,7 @@ writeCnd(EmbPattern* pattern, void* file)
  *    3,0,0,255\r\n
  */
 char
-readCol(EmbPattern* pattern, void* file)
+readCol(EmbPattern* pattern, FILE* file)
 {
     int numberOfColors, i;
     int num, blue, green, red;
@@ -7037,7 +7019,7 @@ readCol(EmbPattern* pattern, void* file)
 }
 
 char
-writeCol(EmbPattern* pattern, void* file)
+writeCol(EmbPattern* pattern, FILE* file)
 {
     int i;
 
@@ -7133,7 +7115,7 @@ unsigned char DecodeCsdByte(long fileOffset,
 }
 
 char
-readCsd(EmbPattern* pattern, void* file) {
+readCsd(EmbPattern* pattern, FILE* file) {
     int i, type = 0;
     unsigned char identifier[8];
     unsigned char unknown1, unknown2;
@@ -7220,7 +7202,7 @@ readCsd(EmbPattern* pattern, void* file) {
 }
 
 char
-writeCsd(EmbPattern* pattern, void* file) {
+writeCsd(EmbPattern* pattern, FILE* file) {
     puts("writeCsd is not implemented.");
     puts("Overridden, defaulting to dst.");
     writeDst(pattern, file);
@@ -7299,7 +7281,7 @@ int csvStrToStitchFlag(const char* str)
 }
 
 char
-readCsv(EmbPattern* pattern, void* file) {
+readCsv(EmbPattern* pattern, FILE* file) {
     int numColorChanges = 0;
     int pos = 0;
     int c = 0;
@@ -7427,7 +7409,7 @@ readCsv(EmbPattern* pattern, void* file) {
 }
 
 char
-writeCsv(EmbPattern* pattern, void* file)
+writeCsv(EmbPattern* pattern, FILE* file)
 {
     EmbRect boundingRect;
     int i;
@@ -7499,23 +7481,23 @@ writeCsv(EmbPattern* pattern, void* file)
  * Stitch Only Format.
  */
 char
-readDat(EmbPattern* pattern, void* file)
+readDat(EmbPattern* pattern, FILE* file)
 {
     unsigned char b0;
     int fileLength, stitchesRemaining, b1, b2, stitchType;
 
-    emb_fseek(file, 0x00, SEEK_END);
+    fseek(file, 0x00, SEEK_END);
     fileLength = ftell(file);
     if (fileLength < 0x100) {
         puts("ERROR: dat file too short to contain header.");
         return 0;
     }
-    emb_fseek(file, 0x02, SEEK_SET);
+    fseek(file, 0x02, SEEK_SET);
     stitchesRemaining = emb_read_u16(file);
     if (emb_verbose>1) {
         printf("stitchesRemaining: %d", stitchesRemaining);
     }
-    emb_fseek(file, 0x100, SEEK_SET);
+    fseek(file, 0x100, SEEK_SET);
 
     while (!feof(file)) {
         b1 = (int)fgetc(file);
@@ -7545,7 +7527,7 @@ readDat(EmbPattern* pattern, void* file)
 }
 
 char
-writeDat(EmbPattern* pattern, void* file)
+writeDat(EmbPattern* pattern, FILE* file)
 {
     int i;
     fpad(file, 0x00, 0x100);
@@ -7583,7 +7565,7 @@ writeDat(EmbPattern* pattern, void* file)
  * Stitch Only Format
  */
 char
-readDem(EmbPattern* pattern, void* file)
+readDem(EmbPattern* pattern, FILE* file)
 {
     puts("readDem is not implemented.");
     puts("Overridden, defaulting to dst.");
@@ -7591,7 +7573,7 @@ readDem(EmbPattern* pattern, void* file)
 }
 
 char
-writeDem(EmbPattern* pattern, void* file)
+writeDem(EmbPattern* pattern, FILE* file)
 {
     puts("writeDem is not implemented.");
     puts("Overridden, defaulting to dst.");
@@ -7607,7 +7589,7 @@ writeDem(EmbPattern* pattern, void* file)
  * [o] Well Tested Write
  */
 char
-readDsb(EmbPattern* pattern, void* file)
+readDsb(EmbPattern* pattern, FILE* file)
 {
     char header[512+1];
     unsigned char buffer[3];
@@ -7643,7 +7625,7 @@ readDsb(EmbPattern* pattern, void* file)
 }
 
 char
-writeDsb(EmbPattern* pattern, void* file)
+writeDsb(EmbPattern* pattern, FILE* file)
 {
     puts("writeDsb is not implemented");
     puts("Overridden, defaulting to dst.");
@@ -7785,7 +7767,7 @@ combineJumpStitches(EmbPattern* p, int jumpsPerTrim)
 */
 
 void
-encode_record(void* file, int x, int y, int flags)
+encode_record(FILE* file, int x, int y, int flags)
 {
     unsigned char b[3];
     encode_tajima_ternary(b, x, y);
@@ -7933,7 +7915,7 @@ set_dst_variable(EmbPattern* pattern, char* var, char* val) {
     * char PD[9+1];   PD is also storing some information for multi-volume design.
     */
 char
-readDst(EmbPattern* pattern, void* file) {
+readDst(EmbPattern* pattern, FILE* file) {
     char var[3];   /* temporary storage variable name */
     char val[512]; /* temporary storage variable value */
     int valpos;
@@ -7993,7 +7975,7 @@ readDst(EmbPattern* pattern, void* file) {
 }
 
 char
-writeDst(EmbPattern* pattern, void* file)
+writeDst(EmbPattern* pattern, FILE* file)
 {
     EmbRect boundingRect;
     int i, ax, ay, mx, my;
@@ -8083,11 +8065,11 @@ writeDst(EmbPattern* pattern, void* file)
  */
 
 char
-readDsz(EmbPattern* pattern, void* file)
+readDsz(EmbPattern* pattern, FILE* file)
 {
     unsigned char b[3];
 
-    emb_fseek(file, 0x200, SEEK_SET);
+    fseek(file, 0x200, SEEK_SET);
     while (fread(b, 1, 3, file) == 3) {
         int x, y;
         unsigned char ctrl;
@@ -8125,7 +8107,7 @@ readDsz(EmbPattern* pattern, void* file)
  * This is based on the readDsz function.
  */
 char
-writeDsz(EmbPattern* pattern, void* file)
+writeDsz(EmbPattern* pattern, FILE* file)
 {
     int i;
     EmbVector delta;
@@ -8170,7 +8152,7 @@ writeDsz(EmbPattern* pattern, void* file)
  */
 
 void
-readLine(void* file, char *str)
+readLine(FILE* file, char *str)
 {
     int i;
     int past_leading_spaces;
@@ -8199,7 +8181,7 @@ readLine(void* file, char *str)
 }
 
 char
-readDxf(EmbPattern* pattern, void* file)
+readDxf(EmbPattern* pattern, FILE* file)
 {
     EmbString dxfVersion;
     EmbString section;
@@ -8228,10 +8210,10 @@ readDxf(EmbPattern* pattern, void* file)
     readDst(pattern, file);
     return 0;
 
-    emb_fseek(file, 0L, SEEK_END);
+    fseek(file, 0L, SEEK_END);
 
     fileLength = ftell(file);
-    emb_fseek(file, 0L, SEEK_SET);
+    fseek(file, 0L, SEEK_SET);
 
     while (ftell(file) < fileLength) {
         readLine(file, buff);
@@ -8475,7 +8457,7 @@ readDxf(EmbPattern* pattern, void* file)
 }
 
 char
-writeDxf(EmbPattern* pattern, void* file)
+writeDxf(EmbPattern* pattern, FILE* file)
 {
     puts("ERROR: writeDxf not implemented.");
     if (emb_verbose > 1) {
@@ -8489,14 +8471,14 @@ writeDxf(EmbPattern* pattern, void* file)
  */
 
 char
-readEdr(EmbPattern* pattern, void* file)
+readEdr(EmbPattern* pattern, FILE* file)
 {
     /* appears identical to readRgb, so backends to that */
     return readRgb(pattern, file);
 }
 
 char
-writeEdr(EmbPattern* pattern, void* file)
+writeEdr(EmbPattern* pattern, FILE* file)
 {
     /* appears identical to writeRgb, so backends to that */
     return writeRgb(pattern, file);
@@ -8515,18 +8497,18 @@ emdDecode(unsigned char inputByte) {
 }
 
 char
-readEmd(EmbPattern* pattern, void* file) {
+readEmd(EmbPattern* pattern, FILE* file) {
     unsigned char b[2];
     unsigned char jemd0[6]; /* TODO: more descriptive name */
     int width, height, colors, length;
 
-    emb_fseek(file, 0, SEEK_END);
+    fseek(file, 0, SEEK_END);
     length = ftell(file);
     if (length < 0x30) {
         puts("File invalid: shorter than the header.");
         return 0;
     }
-    emb_fseek(file, 0, SEEK_SET);
+    fseek(file, 0, SEEK_SET);
 
     if (fread(jemd0, 1, 6, file) != 6) {
         puts("ERROR: Failed to read 6 bytes for jemd0");
@@ -8536,7 +8518,7 @@ readEmd(EmbPattern* pattern, void* file) {
     emb_read(file, &height, EMB_INT16_LITTLE);
     emb_read(file, &colors, EMB_INT16_LITTLE);
 
-    emb_fseek(file, 0x30, SEEK_SET);
+    fseek(file, 0x30, SEEK_SET);
 
     while (!feof(file)) {
         char dx, dy;
@@ -8574,7 +8556,7 @@ readEmd(EmbPattern* pattern, void* file) {
 }
 
 char
-writeEmd(EmbPattern* pattern, void* file) {
+writeEmd(EmbPattern* pattern, FILE* file) {
     puts("writeEmd not implemented.");
     if (emb_verbose > 1) {
         printf("Called with %p %p\n", (void*)pattern, (void*)file);
@@ -8593,7 +8575,7 @@ expDecode(unsigned char a1)
 }
 
 char
-readExp(EmbPattern* pattern, void* file)
+readExp(EmbPattern* pattern, FILE* file)
 {
     unsigned char b[2];
 
@@ -8628,7 +8610,7 @@ readExp(EmbPattern* pattern, void* file)
 }
 
 char
-writeExp(EmbPattern* pattern, void* file) {
+writeExp(EmbPattern* pattern, FILE* file) {
     EmbVector pos;
     int i;
 
@@ -8699,11 +8681,11 @@ int decode_exy_flags(unsigned char b2)
 }
 
 char
-readExy(EmbPattern* pattern, void* file)
+readExy(EmbPattern* pattern, FILE* file)
 {
     unsigned char b[3];
 
-    emb_fseek(file, 0x100, SEEK_SET);
+    fseek(file, 0x100, SEEK_SET);
     while (fread(b, 1, 3, file) == 3) {
         int flags, x, y;
         decode_tajima_ternary(b, &x, &y);
@@ -8718,7 +8700,7 @@ readExy(EmbPattern* pattern, void* file)
 }
 
 char
-writeExy(EmbPattern* pattern, void* file)
+writeExy(EmbPattern* pattern, FILE* file)
 {
     puts("Overridden, defaulting to dst.");
     writeDst(pattern, file);
@@ -8731,7 +8713,7 @@ writeExy(EmbPattern* pattern, void* file)
  */
 
 char
-readEys(EmbPattern* pattern, void* file)
+readEys(EmbPattern* pattern, FILE* file)
 {
     puts("Overridden, defaulting to dst.");
     readDst(pattern, file);
@@ -8739,7 +8721,7 @@ readEys(EmbPattern* pattern, void* file)
 }
 
 char
-writeEys(EmbPattern* pattern, void* file)
+writeEys(EmbPattern* pattern, FILE* file)
 {
     puts("Overridden, defaulting to dst.");
     writeDst(pattern, file);
@@ -8751,11 +8733,11 @@ writeEys(EmbPattern* pattern, void* file)
  */
 
 char
-readFxy(EmbPattern* pattern, void* file)
+readFxy(EmbPattern* pattern, FILE* file)
 {
     /* TODO: review for combining code. This line appears
         to be the only difference from the GT format. */
-    emb_fseek(file, 0x100, SEEK_SET);
+    fseek(file, 0x100, SEEK_SET);
 
     while (!feof(file)) {
         int stitchType = NORMAL;
@@ -8781,7 +8763,7 @@ readFxy(EmbPattern* pattern, void* file)
 }
 
 char
-writeFxy(EmbPattern* pattern, void* file)
+writeFxy(EmbPattern* pattern, FILE* file)
 {
     puts("Overridden, defaulting to dst.");
     writeDst(pattern, file);
@@ -8798,14 +8780,14 @@ writeFxy(EmbPattern* pattern, void* file)
  */
 
 char
-readGc(EmbPattern* pattern, void* file) {
+readGc(EmbPattern* pattern, FILE* file) {
     puts("Overridden, defaulting to dst.");
     readDst(pattern, file);
     return 0; /*TODO: finish readGc */
 }
 
 char
-writeGc(EmbPattern* pattern, void* file) {
+writeGc(EmbPattern* pattern, FILE* file) {
     puts("Overridden, defaulting to dst.");
     writeDst(pattern, file);
     return 0; /*TODO: finish writeGc */
@@ -8817,7 +8799,7 @@ writeGc(EmbPattern* pattern, void* file) {
  */
 
 char
-readGnc(EmbPattern* pattern, void* file)
+readGnc(EmbPattern* pattern, FILE* file)
 {
     puts("Overridden, defaulting to dst.");
     readDst(pattern, file);
@@ -8825,7 +8807,7 @@ readGnc(EmbPattern* pattern, void* file)
 }
 
 char
-writeGnc(EmbPattern* pattern, void* file)
+writeGnc(EmbPattern* pattern, FILE* file)
 {
     puts("Overridden, defaulting to dst.");
     writeDst(pattern, file);
@@ -8838,11 +8820,11 @@ writeGnc(EmbPattern* pattern, void* file)
  */
 
 char
-readGt(EmbPattern* pattern, void* file)
+readGt(EmbPattern* pattern, FILE* file)
 {
     /* TODO: review for combining code. This line appears
         to be the only difference from the FXY format. */
-    emb_fseek(file, 0x200, SEEK_SET);
+    fseek(file, 0x200, SEEK_SET);
 
     while (!feof(file)) {
         int stitchType = NORMAL;
@@ -8872,7 +8854,7 @@ readGt(EmbPattern* pattern, void* file)
 }
 
 char
-writeGt(EmbPattern* pattern, void* file)
+writeGt(EmbPattern* pattern, FILE* file)
 {
     puts("Overridden, defaulting to dst.");
     writeDst(pattern, file);
@@ -8956,7 +8938,7 @@ husEncodeStitchType(int st)
     }
 
 char
-readHus(EmbPattern* pattern, void* file)
+readHus(EmbPattern* pattern, FILE* file)
 {
     int fileLength;
     int magicCode, numberOfStitches, numberOfColors;
@@ -8973,9 +8955,9 @@ readHus(EmbPattern* pattern, void* file)
     puts("ERROR: Overridden. readHus is not implemented for now.");
     return 0;
 
-    emb_fseek(file, 0x00, SEEK_END);
+    fseek(file, 0x00, SEEK_END);
     fileLength = ftell(file);
-    emb_fseek(file, 0x00, SEEK_SET);
+    fseek(file, 0x00, SEEK_SET);
 
     emb_read(file, &magicCode, EMB_INT32_LITTLE);
     emb_read(file, &numberOfStitches, EMB_INT32_LITTLE);
@@ -9050,7 +9032,7 @@ readHus(EmbPattern* pattern, void* file)
 }
 
 char
-writeHus(EmbPattern* pattern, void* file)
+writeHus(EmbPattern* pattern, FILE* file)
 {
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor, attributeSize, xCompressedSize, yCompressedSize, i;
@@ -9145,7 +9127,7 @@ writeHus(EmbPattern* pattern, void* file)
  */
 
 char
-readInb(EmbPattern* pattern, void* file)
+readInb(EmbPattern* pattern, FILE* file)
 {
     /* TODO: determine what this represents */
     unsigned char fileDescription[8], nullVal, bytesUnknown[300];
@@ -9153,7 +9135,7 @@ readInb(EmbPattern* pattern, void* file)
     short width, height, colorCount, unknown3, unknown2,
         nullbyte, left, right, top, bottom, imageWidth, imageHeight;
 
-    emb_fseek(file, 0, SEEK_END);
+    fseek(file, 0, SEEK_END);
     fileLength = ftell(file);
     emb_fread(fileDescription, 8, file); /* TODO: check return value */
     nullVal = (char)fgetc(file);
@@ -9184,7 +9166,7 @@ readInb(EmbPattern* pattern, void* file)
         printf("This should be null:     %d\n", nullbyte);
     }
 
-    emb_fseek(file, 0x2000, SEEK_SET);
+    fseek(file, 0x2000, SEEK_SET);
     /* Calculate stitch count since header has been seen to be blank */
     stitchCount = (int)((fileLength - 0x2000) / 3);
     for (i = 0; i < stitchCount; i++) {
@@ -9209,7 +9191,7 @@ readInb(EmbPattern* pattern, void* file)
 }
 
 char
-writeInb(EmbPattern* pattern, void* file)
+writeInb(EmbPattern* pattern, FILE* file)
 {
     puts("ERROR: writeInb not implemented.");
     if (emb_verbose > 1) {
@@ -9225,25 +9207,25 @@ writeInb(EmbPattern* pattern, void* file)
  */
 
 char
-readInf(EmbPattern* pattern, void* file)
+readInf(EmbPattern* pattern, FILE* file)
 {
     int nColors, i;
     char colorType[50];
     char colorDescription[50];
     EmbThread t;
 
-    emb_fseek(file, 12, SEEK_CUR);
+    fseek(file, 12, SEEK_CUR);
     emb_read(file, &nColors, EMB_INT32_BIG);
 
     pattern->thread_list->count = 0;
 
     for (i = 0; i < nColors; i++) {
-        emb_fseek(file, 4, SEEK_CUR);
+        fseek(file, 4, SEEK_CUR);
         embColor_read(file, &(t.color), 3);
         string_copy(t.catalogNumber, "");
         string_copy(t.description, "");
         emb_pattern_addThread(pattern, t);
-        emb_fseek(file, 2, SEEK_CUR);
+        fseek(file, 2, SEEK_CUR);
         binaryReadString(file, colorType, 50);
         binaryReadString(file, colorDescription, 50);
     }
@@ -9251,7 +9233,7 @@ readInf(EmbPattern* pattern, void* file)
 }
 
 char
-writeInf(EmbPattern* pattern, void* file)
+writeInf(EmbPattern* pattern, FILE* file)
 {
     int i, bytesRemaining;
 
@@ -9281,9 +9263,9 @@ writeInf(EmbPattern* pattern, void* file)
     /* It appears that there should be a pad here otherwise it clips into
      * the color description. */
     fpad(file, 0, 8);
-    emb_fseek(file, -8, SEEK_END);
+    fseek(file, -8, SEEK_END);
     bytesRemaining = ftell(file);
-    emb_fseek(file, 8, SEEK_SET);
+    fseek(file, 8, SEEK_SET);
     emb_write_u32be(file, bytesRemaining);
     return 1;
 }
@@ -9356,7 +9338,7 @@ struct hoop_padding
 };
 
 void
-read_hoop(void *file, struct hoop_padding *hoop, char *label)
+read_hoop(FILE* file, struct hoop_padding *hoop, char *label)
 {
     if (emb_verbose>1) {
         printf("%s\n", label);
@@ -9368,7 +9350,7 @@ read_hoop(void *file, struct hoop_padding *hoop, char *label)
 }
 
 char
-readJef(EmbPattern* pattern, void* file)
+readJef(EmbPattern* pattern, FILE* file)
 {
     int stitchOffset, formatFlags, numberOfColors, numberOfStitchs;
     int hoopSize, i, stitchCount;
@@ -9408,7 +9390,7 @@ readJef(EmbPattern* pattern, void* file)
         emb_read(file, &thread_num, EMB_INT32_LITTLE);
         emb_pattern_addThread(pattern, jefThreads[thread_num % 79]);
     }
-    emb_fseek(file, stitchOffset, SEEK_SET);
+    fseek(file, stitchOffset, SEEK_SET);
     stitchCount = 0;
     while (stitchCount < numberOfStitchs + 100) {
         unsigned char b[2];
@@ -9472,7 +9454,7 @@ jefEncode(unsigned char* b, char dx, char dy, int flags) {
 }
 
 char
-writeJef(EmbPattern* pattern, void* file)
+writeJef(EmbPattern* pattern, FILE* file)
 {
     int colorlistSize, minColors, designWidth, designHeight, i;
     EmbRect boundingRect;
@@ -9618,11 +9600,11 @@ ksmEncode(unsigned char* b, char dx, char dy, int flags)
 }
 
 char
-readKsm(EmbPattern* pattern, void* file)
+readKsm(EmbPattern* pattern, FILE* file)
 {
     int prevStitchType = NORMAL;
     char b[3];
-    emb_fseek(file, 0x200, SEEK_SET);
+    fseek(file, 0x200, SEEK_SET);
     while (fread(b, 1, 3, file) == 3) {
         int flags = NORMAL;
 
@@ -9644,7 +9626,7 @@ readKsm(EmbPattern* pattern, void* file)
 }
 
 char
-writeKsm(EmbPattern* pattern, void* file)
+writeKsm(EmbPattern* pattern, FILE* file)
 {
     EmbVector pos;
     int i;
@@ -9695,11 +9677,11 @@ const unsigned char max_header[] = {
 /* Pfaff MAX embroidery file format */
 
 char
-readMax(EmbPattern* pattern, void* file)
+readMax(EmbPattern* pattern, FILE* file)
 {
     unsigned char b[8];
 
-    emb_fseek(file, 0xD5, SEEK_SET);
+    fseek(file, 0xD5, SEEK_SET);
     /* emb_read(file, &stitchCount, EMB_INT32_LITTLE); CHECK IF THIS IS PRESENT */
     /* READ STITCH RECORDS */
     while (fread(b, 1, 8, file) == 8) {
@@ -9715,7 +9697,7 @@ readMax(EmbPattern* pattern, void* file)
 }
 
 char
-writeMax(EmbPattern* pattern, void* file)
+writeMax(EmbPattern* pattern, FILE* file)
 {
     int i;
     EmbReal x, y;
@@ -9739,7 +9721,7 @@ Stitch Only Format.
  */
 
 char
-readMit(EmbPattern* pattern, void* file)
+readMit(EmbPattern* pattern, FILE* file)
 {
     unsigned char data[2];
 
@@ -9752,7 +9734,7 @@ readMit(EmbPattern* pattern, void* file)
 }
 
 char
-writeMit(EmbPattern* pattern, void* file)
+writeMit(EmbPattern* pattern, FILE* file)
 {
     EmbReal xx, yy;
     int i;
@@ -9778,7 +9760,7 @@ Stitch Only Format.
  */
 
 char
-readNew(EmbPattern* pattern, void* file)
+readNew(EmbPattern* pattern, FILE* file)
 {
     unsigned int stitchCount;
     unsigned char data[3];
@@ -9819,7 +9801,7 @@ readNew(EmbPattern* pattern, void* file)
 }
 
 char
-writeNew(EmbPattern* pattern, void* file)
+writeNew(EmbPattern* pattern, FILE* file)
 {
     puts("Overridden, defaulting to dst.");
     writeDst(pattern, file);
@@ -9833,7 +9815,7 @@ Stitch Only Format.
  */
 
 char*
-ofmReadLibrary(void* file)
+ofmReadLibrary(FILE* file)
 {
     int stringLength = 0;
     char* libraryName = 0;
@@ -9853,7 +9835,7 @@ ofmReadLibrary(void* file)
 }
 
 static int
-ofmReadClass(void* file)
+ofmReadClass(FILE* file)
 {
     int len;
     EmbString s;
@@ -9879,7 +9861,7 @@ ofmReadClass(void* file)
 }
 
 void
-ofmReadBlockHeader(void* file)
+ofmReadBlockHeader(FILE* file)
 {
     int val[10], i; /* TODO: determine what these represent */
     unsigned char len;
@@ -9901,7 +9883,7 @@ ofmReadBlockHeader(void* file)
 
     /* int v = emb_fread(&v, 3, file)?; TODO: review */
     emb_read_i16(file);
-    emb_fseek(file, 1, SEEK_CUR);
+    fseek(file, 1, SEEK_CUR);
     len = (char)fgetc(file);
     s = (char*)malloc(2 * len);
     if (!s) {
@@ -9918,7 +9900,7 @@ ofmReadBlockHeader(void* file)
 }
 
 void
-ofmReadColorChange(void* file, EmbPattern* pattern)
+ofmReadColorChange(FILE* file, EmbPattern* pattern)
 {
     if (!file) {
         printf("ERROR: format-ofm.c ofmReadColorChange(), file argument is null\n");
@@ -9934,7 +9916,7 @@ ofmReadColorChange(void* file, EmbPattern* pattern)
 }
 
 void
-ofmReadThreads(void* file, EmbPattern* p)
+ofmReadThreads(FILE* file, EmbPattern* p)
 {
     int i, numberOfColors, stringLen, numberOfLibraries;
     char* primaryLibraryName = 0;
@@ -9950,11 +9932,11 @@ ofmReadThreads(void* file, EmbPattern* p)
     }
 
     /* FF FE FF 00 */
-    emb_fseek(file, 4, SEEK_CUR);
+    fseek(file, 4, SEEK_CUR);
 
     numberOfColors = emb_read_i16(file);
 
-    emb_fseek(file, 4, SEEK_CUR);
+    fseek(file, 4, SEEK_CUR);
     stringLen = emb_read_i16(file);
     expandedString = (char*)malloc(stringLen);
     if (!expandedString) {
@@ -9969,19 +9951,19 @@ ofmReadThreads(void* file, EmbPattern* p)
         int threadLibrary, colorNameLength, colorNumber;
         embColor_read(file, &(thread.color), 4);
         emb_read(file, &threadLibrary, EMB_INT16_LITTLE);
-        emb_fseek(file, 2, SEEK_CUR);
+        fseek(file, 2, SEEK_CUR);
         emb_read(file, &colorNumber, EMB_INT32_LITTLE);
-        emb_fseek(file, 3, SEEK_CUR);
+        fseek(file, 3, SEEK_CUR);
         colorNameLength = (char)fgetc(file);
         emb_fread(colorName, colorNameLength*2, file);
         /* TODO: check return value */
-        emb_fseek(file, 2, SEEK_CUR);
+        fseek(file, 2, SEEK_CUR);
         sprintf(colorNumberText, "%10d", colorNumber);
         string_copy(thread.catalogNumber, colorNumberText);
         string_copy(thread.description, colorName);
         emb_pattern_addThread(p, thread);
     }
-    emb_fseek(file, 2, SEEK_CUR);
+    fseek(file, 2, SEEK_CUR);
     primaryLibraryName = ofmReadLibrary(file);
     numberOfLibraries = emb_read_i16(file);
 
@@ -10003,7 +9985,7 @@ EmbReal ofmDecode(unsigned char b1, unsigned char b2)
 }
 
 void
-ofmReadExpanded(void* file, EmbPattern* p)
+ofmReadExpanded(FILE* file, EmbPattern* p)
 {
     int i, numberOfStitches = 0;
 
@@ -10026,11 +10008,11 @@ ofmReadExpanded(void* file, EmbPattern* p)
 }
 
 char
-readOfm(EmbPattern* pattern, void* fileCompound)
+readOfm(EmbPattern* pattern, FILE* fileCompound)
 {
     int unknownCount, key = 0, classNameLength;
     char* s = 0;
-    void *file;
+    FILE* file;
     bcf_file* bcfFile = 0;
 
     if (emb_verbose>1) {
@@ -10047,10 +10029,10 @@ readOfm(EmbPattern* pattern, void* fileCompound)
     file = GetFile(bcfFile, fileCompound, "EdsIV Object");
     bcf_file_free(bcfFile);
     bcfFile = 0;
-    emb_fseek(file, 0x1C6, SEEK_SET);
+    fseek(file, 0x1C6, SEEK_SET);
     ofmReadThreads(file, pattern);
-    emb_fseek(file, 0x110, SEEK_CUR);
-    emb_fseek(file, 0x4, SEEK_CUR); /* EMB_INT32_LITTLE */
+    fseek(file, 0x110, SEEK_CUR);
+    fseek(file, 0x4, SEEK_CUR); /* EMB_INT32_LITTLE */
     classNameLength = emb_read_i16(file);
     s = (char*)malloc(sizeof(char) * classNameLength);
     if (!s) {
@@ -10088,7 +10070,7 @@ readOfm(EmbPattern* pattern, void* fileCompound)
 }
 
 char
-writeOfm(EmbPattern* pattern, void* file)
+writeOfm(EmbPattern* pattern, FILE* file)
 {
     puts("Overridden, defaulting to dst.");
     writeDst(pattern, file);
@@ -10108,7 +10090,7 @@ For an example of the format see ([11](11)).
  */
 
 char
-readPcd(EmbPattern* pattern, const char *fileName, void* file)
+readPcd(EmbPattern* pattern, const char *fileName, FILE* file)
 {
     char allZeroColor = 1;
     int i = 0;
@@ -10168,7 +10150,7 @@ readPcd(EmbPattern* pattern, const char *fileName, void* file)
 }
 
 char
-writePcd(EmbPattern* pattern, void* file)
+writePcd(EmbPattern* pattern, FILE* file)
 {
     int i;
 
@@ -10198,7 +10180,7 @@ writePcd(EmbPattern* pattern, void* file)
  * The Pfaff pcm format is stitch-only.
  */
 char
-readPcm(EmbPattern* pattern, void* file)
+readPcm(EmbPattern* pattern, FILE* file)
 {
     int i = 0, st;
     EmbReal dx = 0, dy = 0;
@@ -10208,7 +10190,7 @@ readPcm(EmbPattern* pattern, void* file)
         printf("TODO: check header_size %d\n", header_size);
     }
 
-    emb_fseek(file, 4, SEEK_SET);
+    fseek(file, 4, SEEK_SET);
     for (i = 0; i < 16; i++) {
         int colorNumber;
         (void)fgetc(file); /* zero */
@@ -10240,7 +10222,7 @@ readPcm(EmbPattern* pattern, void* file)
 }
 
 char
-writePcm(EmbPattern* pattern, void* file)
+writePcm(EmbPattern* pattern, FILE* file)
 {
     puts("overridden, defaulting to dst");
     writeDst(pattern, file);
@@ -10253,7 +10235,7 @@ writePcm(EmbPattern* pattern, void* file)
  * The Pfaff pcq format is stitch-only.
  */
 char
-readPcq(EmbPattern* pattern, const char* fileName, void* file)
+readPcq(EmbPattern* pattern, const char* fileName, FILE* file)
 {
     char allZeroColor = 1;
     int i = 0;
@@ -10315,7 +10297,7 @@ readPcq(EmbPattern* pattern, const char* fileName, void* file)
 }
 
 char
-writePcq(EmbPattern* pattern, void* file)
+writePcq(EmbPattern* pattern, FILE* file)
 {
     int i;
 
@@ -10345,7 +10327,7 @@ writePcq(EmbPattern* pattern, void* file)
  * The Pfaff pcs format is stitch-only.
  */
 char
-readPcs(EmbPattern* pattern, const char* fileName, void* file)
+readPcs(EmbPattern* pattern, const char* fileName, FILE* file)
 {
     char allZeroColor = 1;
     int i = 0;
@@ -10419,7 +10401,7 @@ readPcs(EmbPattern* pattern, const char* fileName, void* file)
 }
 
 char
-writePcs(EmbPattern* pattern, void* file)
+writePcs(EmbPattern* pattern, FILE* file)
 {
     int i;
 
@@ -10448,7 +10430,7 @@ writePcs(EmbPattern* pattern, void* file)
  * The Brother pec format is stitch-only.
  */
 void
-readPecStitches(EmbPattern* pattern, void* file)
+readPecStitches(EmbPattern* pattern, FILE* file)
 {
     void *f = file;
     unsigned char b[2];
@@ -10501,7 +10483,7 @@ readPecStitches(EmbPattern* pattern, void* file)
 }
 
 void
-pecEncodeJump(void* file, int x, int types)
+pecEncodeJump(FILE* file, int x, int types)
 {
     int outputVal = abs(x) & 0x7FF;
     unsigned int orPart = 0x80;
@@ -10528,7 +10510,7 @@ pecEncodeJump(void* file, int x, int types)
 }
 
 void
-pecEncodeStop(void* file, unsigned char val)
+pecEncodeStop(FILE* file, unsigned char val)
 {
     if (!file) {
         printf("ERROR: format-pec.c pecEncodeStop(), file argument is null\n");
@@ -10539,7 +10521,7 @@ pecEncodeStop(void* file, unsigned char val)
 }
 
 char
-readPec(EmbPattern* pattern, const char *fileName, void* file)
+readPec(EmbPattern* pattern, const char *fileName, FILE* file)
 {
     unsigned int graphicsOffset;
     unsigned char colorChanges;
@@ -10553,14 +10535,14 @@ readPec(EmbPattern* pattern, const char *fileName, void* file)
         return 0;
     }
 
-    emb_fseek(file, 0x38, SEEK_SET);
+    fseek(file, 0x38, SEEK_SET);
     colorChanges = (unsigned char)(char)fgetc(file);
     for (i = 0; i <= colorChanges; i++) {
         emb_pattern_addThread(pattern, pecThreads[(char)fgetc(file) % 65]);
     }
 
     /* Get Graphics offset */
-    emb_fseek(file, 0x20A, SEEK_SET);
+    fseek(file, 0x20A, SEEK_SET);
 
     graphicsOffset = (unsigned int)(fgetc(file));
     graphicsOffset |= (fgetc(file) << 8);
@@ -10588,7 +10570,7 @@ readPec(EmbPattern* pattern, const char *fileName, void* file)
 }
 
 void
-pecEncode(void* file, EmbPattern* p)
+pecEncode(FILE* file, EmbPattern* p)
 {
     EmbReal thisX = 0.0;
     EmbReal thisY = 0.0;
@@ -10646,10 +10628,10 @@ pecEncode(void* file, EmbPattern* p)
     }
 }
 
-void writeImage(void* file, unsigned char image[][48]);
+void writeImage(FILE* file, unsigned char image[][48]);
 
 void
-writePecStitches(EmbPattern* pattern, void* file, const char *fileName)
+writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
 {
     EmbRect bounds;
     unsigned char image[38][48], toWrite;
@@ -10720,13 +10702,13 @@ writePecStitches(EmbPattern* pattern, void* file, const char *fileName)
 
     pecEncode(file, pattern);
     graphicsOffsetValue = ftell(file) - graphicsOffsetLocation + 2;
-    emb_fseek(file, graphicsOffsetLocation, SEEK_SET);
+    fseek(file, graphicsOffsetLocation, SEEK_SET);
 
     fputc((unsigned char)(graphicsOffsetValue & 0xFF), file);
     fputc((unsigned char)((graphicsOffsetValue >> 8) & 0xFF), file);
     fputc((unsigned char)((graphicsOffsetValue >> 16) & 0xFF), file);
 
-    emb_fseek(file, 0x00, SEEK_END);
+    fseek(file, 0x00, SEEK_END);
 
     /* Writing all colors */
     memory_copy(image, imageWithFrame, 48*38);
@@ -10763,7 +10745,7 @@ writePecStitches(EmbPattern* pattern, void* file, const char *fileName)
 }
 
 char
-writePec(EmbPattern* pattern, const char* fileName, void* file)
+writePec(EmbPattern* pattern, const char* fileName, FILE* file)
 {
     /* TODO: There needs to be a matching flipVertical() call after the write
         to ensure multiple writes from the same pattern work properly */
@@ -10782,7 +10764,7 @@ writePec(EmbPattern* pattern, const char* fileName, void* file)
  */
 
 char
-readPel(EmbPattern *pattern, void *file)
+readPel(EmbPattern *pattern, FILE* file)
 {
     puts("ERROR: readPel is not implemented.");
     if (emb_verbose > 1) {
@@ -10792,7 +10774,7 @@ readPel(EmbPattern *pattern, void *file)
 }
 
 char
-writePel(EmbPattern *pattern, void *file)
+writePel(EmbPattern *pattern, FILE* file)
 {
     puts("ERROR: writePel is not implemented.");
     if (emb_verbose > 1) {
@@ -10807,7 +10789,7 @@ writePel(EmbPattern *pattern, void *file)
  */
 
 char
-readPem(EmbPattern *pattern, void *file)
+readPem(EmbPattern *pattern, FILE* file)
 {
     puts("ERROR: readPem is not implemented.");
     if (emb_verbose > 1) {
@@ -10817,7 +10799,7 @@ readPem(EmbPattern *pattern, void *file)
 }
 
 char
-writePem(EmbPattern *pattern, void *file)
+writePem(EmbPattern *pattern, FILE* file)
 {
     puts("ERROR: writePem is not implemented.");
     if (emb_verbose > 1) {
@@ -10854,7 +10836,7 @@ const char *pes_version_strings[] = {
 int pes_version = PES0001;
 
 char
-readPes(EmbPattern* pattern, const char *fileName, void* file)
+readPes(EmbPattern* pattern, const char *fileName, FILE* file)
 {
     int pecstart, numColors, x, version, i;
     char signature[9];
@@ -10871,7 +10853,7 @@ readPes(EmbPattern* pattern, const char *fileName, void* file)
     }
 
     if (version >= PES0040) {
-        emb_fseek(file, 4, SEEK_CUR);
+        fseek(file, 4, SEEK_CUR);
         readDescriptions(file, pattern);
     }
 
@@ -10905,9 +10887,9 @@ readPes(EmbPattern* pattern, const char *fileName, void* file)
         printf("pecstart = %d\n", pecstart);
     }
 
-    /* emb_fseek(file, pecstart + 48, SEEK_SET);
+    /* fseek(file, pecstart + 48, SEEK_SET);
      * This seems wrong based on the readPESHeader functions. */
-    emb_fseek(file, pecstart, SEEK_SET);
+    fseek(file, pecstart, SEEK_SET);
 
     numColors = fgetc(file) + 1;
     for (x = 0; x < numColors; x++) {
@@ -10918,7 +10900,7 @@ readPes(EmbPattern* pattern, const char *fileName, void* file)
         emb_pattern_addThread(pattern, pecThreads[color_index]);
     }
 
-    emb_fseek(file, pecstart + 528, SEEK_SET);
+    fseek(file, pecstart + 528, SEEK_SET);
     readPecStitches(pattern, file);
 
     emb_pattern_flipVertical(pattern);
@@ -10927,7 +10909,7 @@ readPes(EmbPattern* pattern, const char *fileName, void* file)
 }
 
 void
-readDescriptions(void *file, EmbPattern* pattern)
+readDescriptions(FILE* file, EmbPattern* pattern)
 {
     if (emb_verbose > 1) {
         printf("Called with: (%p, %p)", (void*)file, (void*)pattern);
@@ -10957,13 +10939,13 @@ readDescriptions(void *file, EmbPattern* pattern)
 }
 
 void
-readPESHeaderV5(void *file, EmbPattern* pattern)
+readPESHeaderV5(FILE* file, EmbPattern* pattern)
 {
     int fromImageStringLength;
-    emb_fseek(file, 24, SEEK_CUR);
+    fseek(file, 24, SEEK_CUR);
     fromImageStringLength = fgetc(file);
-    emb_fseek(file, fromImageStringLength, SEEK_CUR);
-    emb_fseek(file, 24, SEEK_CUR);
+    fseek(file, fromImageStringLength, SEEK_CUR);
+    fseek(file, 24, SEEK_CUR);
     readProgrammableFills(file, pattern);
     readMotifPatterns(file, pattern);
     readFeatherPatterns(file, pattern);
@@ -10971,11 +10953,11 @@ readPESHeaderV5(void *file, EmbPattern* pattern)
 }
 
 void
-readPESHeaderV6(void *file, EmbPattern* pattern)
+readPESHeaderV6(FILE* file, EmbPattern* pattern)
 {
-    emb_fseek(file, 36, SEEK_CUR);
+    fseek(file, 36, SEEK_CUR);
     readImageString(file, pattern);
-    emb_fseek(file, 24, SEEK_CUR);
+    fseek(file, 24, SEEK_CUR);
     readProgrammableFills(file, pattern);
     readMotifPatterns(file, pattern);
     readFeatherPatterns(file, pattern);
@@ -10983,11 +10965,11 @@ readPESHeaderV6(void *file, EmbPattern* pattern)
 }
 
 void
-readPESHeaderV7(void *file, EmbPattern* pattern)
+readPESHeaderV7(FILE* file, EmbPattern* pattern)
 {
-    emb_fseek(file, 36, SEEK_CUR);
+    fseek(file, 36, SEEK_CUR);
     readImageString(file, pattern);
-    emb_fseek(file, 24, SEEK_CUR);
+    fseek(file, 24, SEEK_CUR);
     readProgrammableFills(file, pattern);
     readMotifPatterns(file, pattern);
     readFeatherPatterns(file, pattern);
@@ -10995,11 +10977,11 @@ readPESHeaderV7(void *file, EmbPattern* pattern)
 }
 
 void
-readPESHeaderV8(void *file, EmbPattern* pattern)
+readPESHeaderV8(FILE* file, EmbPattern* pattern)
 {
-    emb_fseek(file, 38, SEEK_CUR);
+    fseek(file, 38, SEEK_CUR);
     readImageString(file, pattern);
-    emb_fseek(file, 26, SEEK_CUR);
+    fseek(file, 26, SEEK_CUR);
     readProgrammableFills(file, pattern);
     readMotifPatterns(file, pattern);
     readFeatherPatterns(file, pattern);
@@ -11007,13 +10989,13 @@ readPESHeaderV8(void *file, EmbPattern* pattern)
 }
 
 void
-readPESHeaderV9(void *file, EmbPattern* pattern)
+readPESHeaderV9(FILE* file, EmbPattern* pattern)
 {
-    emb_fseek(file, 14, SEEK_CUR);
+    fseek(file, 14, SEEK_CUR);
     readHoopName(file, pattern);
-    emb_fseek(file, 30, SEEK_CUR);
+    fseek(file, 30, SEEK_CUR);
     readImageString(file, pattern);
-    emb_fseek(file, 34, SEEK_CUR);
+    fseek(file, 34, SEEK_CUR);
     readProgrammableFills(file, pattern);
     readMotifPatterns(file, pattern);
     readFeatherPatterns(file, pattern);
@@ -11021,13 +11003,13 @@ readPESHeaderV9(void *file, EmbPattern* pattern)
 }
 
 void
-readPESHeaderV10(void *file, EmbPattern* pattern)
+readPESHeaderV10(FILE* file, EmbPattern* pattern)
 {
-    emb_fseek(file, 14, SEEK_CUR);
+    fseek(file, 14, SEEK_CUR);
     readHoopName(file, pattern);
-    emb_fseek(file, 38, SEEK_CUR);
+    fseek(file, 38, SEEK_CUR);
     readImageString(file, pattern);
-    emb_fseek(file, 34, SEEK_CUR);
+    fseek(file, 34, SEEK_CUR);
     readProgrammableFills(file, pattern);
     readMotifPatterns(file, pattern);
     readFeatherPatterns(file, pattern);
@@ -11035,7 +11017,7 @@ readPESHeaderV10(void *file, EmbPattern* pattern)
 }
 
 void
-readHoopName(void* file, EmbPattern* pattern)
+readHoopName(FILE* file, EmbPattern* pattern)
 {
     if (emb_verbose > 1) {
         printf("Called with: (%p, %p)", (void*)file, (void*)pattern);
@@ -11050,7 +11032,7 @@ readHoopName(void* file, EmbPattern* pattern)
 }
 
 void
-readImageString(void* file, EmbPattern* pattern)
+readImageString(FILE* file, EmbPattern* pattern)
 {
     if (emb_verbose > 1) {
         printf("Called with: (%p, %p)", (void*)file, (void*)pattern);
@@ -11065,7 +11047,7 @@ readImageString(void* file, EmbPattern* pattern)
 }
 
 void
-readProgrammableFills(void* file, EmbPattern* pattern)
+readProgrammableFills(FILE* file, EmbPattern* pattern)
 {
     int numberOfProgrammableFillPatterns;
     if (emb_verbose > 1) {
@@ -11078,7 +11060,7 @@ readProgrammableFills(void* file, EmbPattern* pattern)
 }
 
 void
-readMotifPatterns(void* file, EmbPattern* pattern)
+readMotifPatterns(FILE* file, EmbPattern* pattern)
 {
     int numberOfMotifPatterns;
     if (emb_verbose > 1) {
@@ -11091,7 +11073,7 @@ readMotifPatterns(void* file, EmbPattern* pattern)
 }
 
 void
-readFeatherPatterns(void* file, EmbPattern* pattern)
+readFeatherPatterns(FILE* file, EmbPattern* pattern)
 {
     int featherPatternCount;
     if (emb_verbose > 1) {
@@ -11104,7 +11086,7 @@ readFeatherPatterns(void* file, EmbPattern* pattern)
 }
 
 void
-readThreads(void* file, EmbPattern* pattern)
+readThreads(FILE* file, EmbPattern* pattern)
 {
     int numberOfColors, i;
     if (emb_verbose > 1) {
@@ -11122,7 +11104,7 @@ readThreads(void* file, EmbPattern* pattern)
         thread.color.r = fgetc(file);
         thread.color.g = fgetc(file);
         thread.color.b = fgetc(file);
-        emb_fseek(file, 5, SEEK_CUR);
+        fseek(file, 5, SEEK_CUR);
         descriptionStringLength = fgetc(file);
         /* string_copy(thread.description, readString(descriptionStringLength)); */
 
@@ -11144,7 +11126,7 @@ readThreads(void* file, EmbPattern* pattern)
 
 
 void
-pesWriteSewSegSection(EmbPattern* pattern, void* file) {
+pesWriteSewSegSection(EmbPattern* pattern, FILE* file) {
     /* TODO: pointer safety */
     short* colorInfo = 0;
     int flag = 0;
@@ -11251,7 +11233,7 @@ pesWriteSewSegSection(EmbPattern* pattern, void* file) {
 }
 
 void
-pesWriteEmbOneSection(EmbPattern* pattern, void* file) {
+pesWriteEmbOneSection(EmbPattern* pattern, FILE* file) {
     /* TODO: pointer safety */
     float x, width, height;
     int hoopHeight = 1800, hoopWidth = 1300;
@@ -11287,7 +11269,7 @@ pesWriteEmbOneSection(EmbPattern* pattern, void* file) {
 }
 
 char
-writePes(EmbPattern* pattern,  const char *fileName, void* file)
+writePes(EmbPattern* pattern,  const char *fileName, FILE* file)
 {
     int pecLocation;
     emb_pattern_flipVertical(pattern);
@@ -11308,11 +11290,11 @@ writePes(EmbPattern* pattern,  const char *fileName, void* file)
     pesWriteSewSegSection(pattern, file);
 
     pecLocation = ftell(file);
-    emb_fseek(file, 0x08, SEEK_SET);
+    fseek(file, 0x08, SEEK_SET);
     fputc((unsigned char)(pecLocation & 0xFF), file);
     fputc((unsigned char)(pecLocation >> 8) & 0xFF, file);
     fputc((unsigned char)(pecLocation >> 16) & 0xFF, file);
-    emb_fseek(file, 0x00, SEEK_END);
+    fseek(file, 0x00, SEEK_END);
     writePecStitches(pattern, file, fileName);
     return 1;
 }
@@ -11323,13 +11305,13 @@ writePes(EmbPattern* pattern,  const char *fileName, void* file)
  */
 
 char
-readPhb(EmbPattern* pattern, void* file)
+readPhb(EmbPattern* pattern, FILE* file)
 {
     unsigned int fileOffset, readIn;
     short colorCount;
     int i;
 
-    emb_fseek(file, 0x71, SEEK_SET);
+    fseek(file, 0x71, SEEK_SET);
     colorCount = emb_read_i16(file);
 
     for (i = 0; i < colorCount; i++) {
@@ -11338,20 +11320,20 @@ readPhb(EmbPattern* pattern, void* file)
     }
 
     /* TODO: check that file begins with #PHB */
-    emb_fseek(file, 0x54, SEEK_SET);
+    fseek(file, 0x54, SEEK_SET);
     fileOffset = 0x52;
     emb_read(file, &readIn, EMB_INT32_LITTLE);
     fileOffset += readIn;
 
-    emb_fseek(file, fileOffset, SEEK_SET);
+    fseek(file, fileOffset, SEEK_SET);
     emb_read(file, &readIn, EMB_INT32_LITTLE);
     fileOffset += readIn + 2;
 
-    emb_fseek(file, fileOffset, SEEK_SET);
+    fseek(file, fileOffset, SEEK_SET);
     emb_read(file, &readIn, EMB_INT32_LITTLE);
     fileOffset += readIn;
 
-    emb_fseek(file, fileOffset + 14, SEEK_SET); /* 28 */
+    fseek(file, fileOffset + 14, SEEK_SET); /* 28 */
 
     colorCount = (int16_t)(char)fgetc(file);
     for (i = 0; i <  colorCount; i++) {
@@ -11361,8 +11343,8 @@ readPhb(EmbPattern* pattern, void* file)
             printf("stor: %d\n", stor);
         }
     }
-    emb_fseek(file, 4, SEEK_CUR); /* bytes to end of file */
-    emb_fseek(file, 17, SEEK_CUR);
+    fseek(file, 4, SEEK_CUR); /* bytes to end of file */
+    fseek(file, 17, SEEK_CUR);
 
     readPecStitches(pattern, file);
 
@@ -11371,7 +11353,7 @@ readPhb(EmbPattern* pattern, void* file)
 }
 
 char
-writePhb(EmbPattern* pattern, void* file)
+writePhb(EmbPattern* pattern, FILE* file)
 {
     puts("ERROR: writePhb is not implemented.");
     if (emb_verbose > 1) {
@@ -11386,7 +11368,7 @@ writePhb(EmbPattern* pattern, void* file)
  */
 
 char
-readPhc(EmbPattern* pattern, void* file)
+readPhc(EmbPattern* pattern, FILE* file)
 {
     int colorChanges, version, bytesInSection2;
     unsigned int fileLength;
@@ -11394,26 +11376,26 @@ readPhc(EmbPattern* pattern, void* file)
     char pecAdd;
     int i;
 
-    emb_fseek(file, 0x07, SEEK_SET);
+    fseek(file, 0x07, SEEK_SET);
     version = (char)fgetc(file) - 0x30; /* converting from ansi number */
-    emb_fseek(file, 0x4D, SEEK_SET);
+    fseek(file, 0x4D, SEEK_SET);
     colorChanges = emb_read_u16(file);
 
     for (i = 0; i < colorChanges; i++) {
         EmbThread t = pecThreads[(int)(char)fgetc(file)];
         emb_pattern_addThread(pattern, t);
     }
-    emb_fseek(file, 0x2B, SEEK_SET);
+    fseek(file, 0x2B, SEEK_SET);
     pecAdd = (char)fgetc(file);
     emb_read(file, &fileLength, EMB_INT32_LITTLE);
     pecOffset = emb_read_u16(file);
-    emb_fseek(file, pecOffset + pecAdd, SEEK_SET);
+    fseek(file, pecOffset + pecAdd, SEEK_SET);
     bytesInSection = emb_read_u16(file);
-    emb_fseek(file, bytesInSection, SEEK_CUR);
+    fseek(file, bytesInSection, SEEK_CUR);
     emb_read(file, &bytesInSection2, EMB_INT32_LITTLE);
-    emb_fseek(file, bytesInSection2, SEEK_CUR);
+    fseek(file, bytesInSection2, SEEK_CUR);
     bytesInSection3 = emb_read_u16(file);
-    emb_fseek(file, bytesInSection3 + 0x12, SEEK_CUR);
+    fseek(file, bytesInSection3 + 0x12, SEEK_CUR);
 
     if (emb_verbose>1) {
         printf("version: %d\n", version);
@@ -11426,7 +11408,7 @@ readPhc(EmbPattern* pattern, void* file)
 }
 
 char
-writePhc(EmbPattern* pattern, void* file)
+writePhc(EmbPattern* pattern, FILE* file)
 {
     puts("ERROR: writePhc is not implemented.");
     if (emb_verbose > 1) {
@@ -11440,7 +11422,7 @@ writePhc(EmbPattern* pattern, void* file)
  * The AutoCAD plt format is stitch-only.
  */
 char
-readPlt(EmbPattern* pattern, void* file)
+readPlt(EmbPattern* pattern, FILE* file)
 {
     EmbReal x, y;
     EmbReal scalingFactor = 40;
@@ -11468,7 +11450,7 @@ readPlt(EmbPattern* pattern, void* file)
 }
 
 char
-writePlt(EmbPattern* pattern, void* file) {
+writePlt(EmbPattern* pattern, FILE* file) {
     /* TODO: pointer safety */
     EmbReal scalingFactor = 40;
     char firstStitchOfBlock = 1;
@@ -11508,18 +11490,18 @@ writePlt(EmbPattern* pattern, void* file) {
  * The RGB format is a color-only format to act as an external color file for other formats.
  */
 char
-readRgb(EmbPattern* pattern, void* file)
+readRgb(EmbPattern* pattern, FILE* file)
 {
     int i, numberOfColors;
 
-    emb_fseek(file, 0x00, SEEK_END);
+    fseek(file, 0x00, SEEK_END);
     numberOfColors = ftell(file) / 4;
 
     pattern->thread_list->count = 0;
 
     printf("numberOfColors: %d\n", numberOfColors);
 
-    emb_fseek(file, 0x00, SEEK_SET);
+    fseek(file, 0x00, SEEK_SET);
     for (i = 0; i < numberOfColors; i++) {
         EmbThread t;
         embColor_read(file, &(t.color), 4);
@@ -11531,7 +11513,7 @@ readRgb(EmbPattern* pattern, void* file)
 }
 
 char
-writeRgb(EmbPattern* pattern, void* file)
+writeRgb(EmbPattern* pattern, FILE* file)
 {
     int i;
     for (i = 0; i < pattern->thread_list->count; i++) {
@@ -11554,14 +11536,14 @@ sewDecode(unsigned char inputByte)
 }
 
 char
-readSew(EmbPattern* pattern, void* file)
+readSew(EmbPattern* pattern, FILE* file)
 {
     int i, flags, numberOfColors, fileLength;
     char dx, dy, thisStitchIsJump = 0;
 
-    emb_fseek(file, 0x00, SEEK_END);
+    fseek(file, 0x00, SEEK_END);
     fileLength = ftell(file);
-    emb_fseek(file, 0x00, SEEK_SET);
+    fseek(file, 0x00, SEEK_SET);
     numberOfColors = fgetc(file);
     numberOfColors += (fgetc(file) << 8);
 
@@ -11570,7 +11552,7 @@ readSew(EmbPattern* pattern, void* file)
         int color = emb_read_i16(file);
         emb_pattern_addThread(pattern, jefThreads[color%78]);
     }
-    emb_fseek(file, 0x1D78, SEEK_SET);
+    fseek(file, 0x1D78, SEEK_SET);
 
     for (i = 0; ftell(file) < fileLength; i++) {
         unsigned char b[2];
@@ -11606,7 +11588,7 @@ readSew(EmbPattern* pattern, void* file)
 }
 
 char
-writeSew(EmbPattern* pattern, void* file)
+writeSew(EmbPattern* pattern, FILE* file)
 {
     int i;
     EmbReal xx = 0.0, yy = 0.0;
@@ -11685,7 +11667,7 @@ short shvDecodeShort(unsigned short inputByte)
 }
 
 char
-readShv(EmbPattern* pattern, void* file)
+readShv(EmbPattern* pattern, FILE* file)
 {
     int i;
     char inJump = 0;
@@ -11707,9 +11689,9 @@ readShv(EmbPattern* pattern, void* file)
         return 0;
     }
 
-    emb_fseek(file, string_len(headerText), SEEK_SET);
+    fseek(file, string_len(headerText), SEEK_SET);
     fileNameLength = fgetc(file);
-    emb_fseek(file, fileNameLength, SEEK_CUR);
+    fseek(file, fileNameLength, SEEK_CUR);
     designWidth = fgetc(file);
     designHeight = fgetc(file);
     halfDesignWidth = fgetc(file);
@@ -11717,14 +11699,14 @@ readShv(EmbPattern* pattern, void* file)
     halfDesignWidth2 = fgetc(file);
     halfDesignHeight2 = fgetc(file);
     if ((designHeight % 2) == 1) {
-        emb_fseek(file, ((designHeight + 1)*designWidth)/2, SEEK_CUR);
+        fseek(file, ((designHeight + 1)*designWidth)/2, SEEK_CUR);
     }
     else {
-        emb_fseek(file, (designHeight*designWidth)/2, SEEK_CUR);
+        fseek(file, (designHeight*designWidth)/2, SEEK_CUR);
     }
     numberOfColors = fgetc(file);
     magicCode = emb_read_u16(file);
-    emb_fseek(file, 1, SEEK_CUR);
+    fseek(file, 1, SEEK_CUR);
     emb_read(file, &something, EMB_INT32_LITTLE);
     left = emb_read_i16(file);
     top = emb_read_i16(file);
@@ -11756,10 +11738,10 @@ readShv(EmbPattern* pattern, void* file)
         colorNumber = fgetc(file);
         emb_pattern_addThread(pattern, shvThreads[colorNumber % 43]);
         stitchesPerColor[i] = stitchCount;
-        emb_fseek(file, 9, SEEK_CUR);
+        fseek(file, 9, SEEK_CUR);
     }
 
-    emb_fseek(file, -2, SEEK_CUR);
+    fseek(file, -2, SEEK_CUR);
 
     for (i = 0; !feof(file); i++) {
         unsigned char b0, b1;
@@ -11807,7 +11789,7 @@ readShv(EmbPattern* pattern, void* file)
 }
 
 char
-writeShv(EmbPattern* pattern, void* file)
+writeShv(EmbPattern* pattern, FILE* file)
 {
     puts("writeShv not implemented.");
     if (emb_verbose > 1) {
@@ -11821,13 +11803,13 @@ writeShv(EmbPattern* pattern, void* file)
  * The Sunstar sst format is stitch-only.
  */
 char
-readSst(EmbPattern* pattern, void* file)
+readSst(EmbPattern* pattern, FILE* file)
 {
     int fileLength;
 
-    emb_fseek(file, 0, SEEK_END);
+    fseek(file, 0, SEEK_END);
     fileLength = ftell(file);
-    emb_fseek(file, 0xA0, SEEK_SET); /* skip the all zero header */
+    fseek(file, 0xA0, SEEK_SET); /* skip the all zero header */
     while (ftell(file) < fileLength) {
         int stitchType = NORMAL;
 
@@ -11855,7 +11837,7 @@ readSst(EmbPattern* pattern, void* file)
 }
 
 char
-writeSst(EmbPattern* pattern, void* file)
+writeSst(EmbPattern* pattern, FILE* file)
 {
     int i;
     int head_length = 0xA0;
@@ -11873,7 +11855,7 @@ writeSst(EmbPattern* pattern, void* file)
  * The Data Stitch stx format is stitch-only.
  */
 int
-stxReadThread(StxThread* thread, void* file)
+stxReadThread(StxThread* thread, FILE* file)
 {
     int j, colorNameLength, sectionNameLength;
     int somethingSomething, somethingSomething2, somethingElse, numberOfOtherDescriptors; /* TODO: determine what these represent */
@@ -11970,7 +11952,7 @@ stxReadThread(StxThread* thread, void* file)
 }
 
 char
-readStx(EmbPattern* pattern, void* file)
+readStx(EmbPattern* pattern, FILE* file)
 {
     int i, threadCount;
     unsigned char* gif = 0;
@@ -12062,7 +12044,7 @@ readStx(EmbPattern* pattern, void* file)
         stxThreads[i] = st;
     }
 
-    emb_fseek(file, 15, SEEK_CUR);
+    fseek(file, 15, SEEK_CUR);
 
     for (i = 0; i < 12; i++) {
         emb_read(file, val+i, EMB_INT16_LITTLE);
@@ -12074,7 +12056,7 @@ readStx(EmbPattern* pattern, void* file)
         puts("val[4] == val[5] == 0");
         puts("val[10] == val[11] == 0");
     }
-    emb_fseek(file, 8, SEEK_CUR); /* 0 0 */
+    fseek(file, 8, SEEK_CUR); /* 0 0 */
     /* br.BaseStream.Position = stitchDataOffset; TODO: review */
     for (i = 1; i < stitchCount; ) {
         char b0 = (char)fgetc(file);
@@ -12113,7 +12095,7 @@ readStx(EmbPattern* pattern, void* file)
 }
 
 char
-writeStx(EmbPattern* pattern, void* file)
+writeStx(EmbPattern* pattern, FILE* file)
 {
     puts("ERROR: writeStx is not implemented.");
     if (emb_verbose > 1) {
@@ -12905,7 +12887,7 @@ svgProcess(int c, const char* buff)
 
 
 char
-readSvg(EmbPattern* pattern, void* file) {
+readSvg(EmbPattern* pattern, FILE* file) {
     int size, pos, i;
     char* buff = 0, c;
     size = 1024;
@@ -13037,7 +13019,7 @@ readSvg(EmbPattern* pattern, void* file) {
 /*! Writes the data from a pattern to a file with the given a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
 char
-writeSvg(EmbPattern* pattern, void *file)
+writeSvg(EmbPattern* pattern, FILE* file)
 {
     EmbRect boundingRect;
     EmbRect rect;
@@ -13236,7 +13218,7 @@ writeSvg(EmbPattern* pattern, void *file)
  */
 
 char
-readT01(EmbPattern* pattern, void* file)
+readT01(EmbPattern* pattern, FILE* file)
 {
     unsigned char b[3];
 
@@ -13252,7 +13234,7 @@ readT01(EmbPattern* pattern, void* file)
 }
 
 char
-writeT01(EmbPattern* pattern, void* file)
+writeT01(EmbPattern* pattern, FILE* file)
 {
     EmbRect boundingRect;
     int i;
@@ -13288,11 +13270,11 @@ writeT01(EmbPattern* pattern, void* file)
  */
 
 char
-readT09(EmbPattern* pattern, void* file)
+readT09(EmbPattern* pattern, FILE* file)
 {
     unsigned char b[3];
 
-    emb_fseek(file, 0x0C, SEEK_SET);
+    fseek(file, 0x0C, SEEK_SET);
 
     while (fread(b, 1, 3, file) == 3) {
         int stitchType = NORMAL;
@@ -13317,7 +13299,7 @@ readT09(EmbPattern* pattern, void* file)
 }
 
 char
-writeT09(EmbPattern* pattern, void* file)
+writeT09(EmbPattern* pattern, FILE* file)
 {
     int i;
     EmbVector pos;
@@ -13365,7 +13347,7 @@ writeT09(EmbPattern* pattern, void* file)
  */
 
 void
-encode_tap_record(void* file, int x, int y, int flags)
+encode_tap_record(FILE* file, int x, int y, int flags)
 {
     unsigned char b[3];
     encode_tajima_ternary(b, x, y);
@@ -13404,7 +13386,7 @@ decode_tap_record_flags(unsigned char b2)
 }
 
 char
-readTap(EmbPattern* pattern, void* file) {
+readTap(EmbPattern* pattern, FILE* file) {
     unsigned char b[3];
 
     while (fread(b, 1, 3, file) == 3) {
@@ -13420,7 +13402,7 @@ readTap(EmbPattern* pattern, void* file) {
 }
 
 char
-writeTap(EmbPattern* pattern, void* file)
+writeTap(EmbPattern* pattern, FILE* file)
 {
     int i;
     EmbVector pos;
@@ -13467,7 +13449,7 @@ writeTap(EmbPattern* pattern, void* file)
  */
 
 char
-readThr(EmbPattern* pattern, void* file)
+readThr(EmbPattern* pattern, FILE* file)
 {
     ThredHeader header;
     EmbColor background;
@@ -13490,7 +13472,7 @@ readThr(EmbPattern* pattern, void* file)
             case 1:
             case 2:
                 /* skip the file header extension */
-                emb_fseek(file, 144, SEEK_CUR);
+                fseek(file, 144, SEEK_CUR);
                 break;
             default:
                 return 0; /* unsupported version */
@@ -13514,7 +13496,7 @@ readThr(EmbPattern* pattern, void* file)
         }
         emb_pattern_addStitchAbs(pattern, x, y, type, 0);
     }
-    emb_fseek(file, 16, SEEK_CUR); /* skip bitmap name (16 chars) */
+    fseek(file, 16, SEEK_CUR); /* skip bitmap name (16 chars) */
 
     embColor_read(file, &background, 4);
     if (emb_verbose>1) {
@@ -13533,7 +13515,7 @@ readThr(EmbPattern* pattern, void* file)
 }
 
 char
-writeThr(EmbPattern* pattern, void* file)
+writeThr(EmbPattern* pattern, FILE* file)
 {
     int i, stitchCount;
     unsigned char version = 0;
@@ -13608,7 +13590,7 @@ writeThr(EmbPattern* pattern, void* file)
  * The txt format is stitch-only and isn't associated with a specific company.
  */
 char
-readTxt(EmbPattern* pattern, void* file)
+readTxt(EmbPattern* pattern, FILE* file)
 {
     EmbString line;
     int stated_count, i;
@@ -13654,7 +13636,7 @@ readTxt(EmbPattern* pattern, void* file)
 }
 
 char
-writeTxt(EmbPattern* pattern, void* file)
+writeTxt(EmbPattern* pattern, FILE* file)
 {
     int i;
     fprintf(file, "%u\n", (unsigned int) pattern->stitch_list->count);
@@ -13673,7 +13655,7 @@ writeTxt(EmbPattern* pattern, void* file)
  */
 
 char
-readU00(EmbPattern* pattern, void* file)
+readU00(EmbPattern* pattern, FILE* file)
 {
     int i;
     char dx = 0, dy = 0;
@@ -13686,7 +13668,7 @@ readU00(EmbPattern* pattern, void* file)
 
     /* 16 3byte RGB's start @ 0x08 followed by 14 bytes between
         0 and 15 with index of color for each color change */
-    emb_fseek(file, 0x08, SEEK_SET);
+    fseek(file, 0x08, SEEK_SET);
     for (i = 0; i < 16; i++) {
         EmbThread t;
         embColor_read(file, &(t.color), 3);
@@ -13695,7 +13677,7 @@ readU00(EmbPattern* pattern, void* file)
         emb_pattern_addThread(pattern, t);
     }
 
-    emb_fseek(file, 0x100, SEEK_SET);
+    fseek(file, 0x100, SEEK_SET);
     while (fread(b, 1, 3, file) == 3) {
         char negativeX , negativeY;
 
@@ -13726,7 +13708,7 @@ readU00(EmbPattern* pattern, void* file)
 }
 
 char
-writeU00(EmbPattern* pattern, void* file)
+writeU00(EmbPattern* pattern, FILE* file)
 {
     puts("writeU00 not implemented.");
     if (emb_verbose > 1) {
@@ -13743,7 +13725,7 @@ writeU00(EmbPattern* pattern, void* file)
 /* TODO: AFAIK this is a duplicate of U00. Review for differences and merge files and handle accordingly. */
 
 char
-readU01(EmbPattern* pattern, void* file)
+readU01(EmbPattern* pattern, FILE* file)
 {
     int fileLength, negativeX = 0, negativeY = 0, flags = NORMAL;
     char dx, dy;
@@ -13753,9 +13735,9 @@ readU01(EmbPattern* pattern, void* file)
         return 0;
     }
 
-    emb_fseek(file, 0, SEEK_END);
+    fseek(file, 0, SEEK_END);
     fileLength = ftell(file);
-    emb_fseek(file, 0x100, SEEK_SET);
+    fseek(file, 0x100, SEEK_SET);
 
     if (emb_verbose>1) {
         printf("file length: %d\n", fileLength);
@@ -13789,7 +13771,7 @@ readU01(EmbPattern* pattern, void* file)
 }
 
 char
-writeU01(EmbPattern* pattern, void* file)
+writeU01(EmbPattern* pattern, FILE* file)
 {
     if (emb_verbose > 1) {
         printf("Called with %p %p\n", (void*)pattern, (void*)file);
@@ -13866,7 +13848,7 @@ vipDecompressData(unsigned char* input, int compressedInputLength, int decompres
 }
 
 char
-readVip(EmbPattern* pattern, void* file)
+readVip(EmbPattern* pattern, FILE* file)
 {
     int fileLength;
     int i;
@@ -13920,7 +13902,7 @@ readVip(EmbPattern* pattern, void* file)
         /* printf("%d\n", decodedColors[startIndex + 3]); */
         emb_pattern_addThread(pattern, thread);
     }
-    emb_fseek(file, header.attributeOffset, SEEK_SET);
+    fseek(file, header.attributeOffset, SEEK_SET);
     attributeData = (unsigned char*)malloc(header.xOffset - header.attributeOffset);
     if (!attributeData) {
         printf("ERROR: format-vip.c readVip(), cannot allocate memory for attributeData\n");
@@ -13929,7 +13911,7 @@ readVip(EmbPattern* pattern, void* file)
     emb_fread(attributeData, header.xOffset - header.attributeOffset, file); /* TODO: check return value */
     attributeDataDecompressed = vipDecompressData(attributeData, header.xOffset - header.attributeOffset, header.numberOfStitches);
 
-    emb_fseek(file, header.xOffset, SEEK_SET);
+    fseek(file, header.xOffset, SEEK_SET);
     xData = (unsigned char*)malloc(header.yOffset - header.xOffset);
     if (!xData) {
         printf("ERROR: format-vip.c readVip(), cannot allocate memory for xData\n");
@@ -13938,7 +13920,7 @@ readVip(EmbPattern* pattern, void* file)
     emb_fread(xData, header.yOffset - header.xOffset, file); /* TODO: check return value */
     xDecompressed = vipDecompressData(xData, header.yOffset - header.xOffset, header.numberOfStitches);
 
-    emb_fseek(file, header.yOffset, SEEK_SET);
+    fseek(file, header.yOffset, SEEK_SET);
     yData = (unsigned char*)malloc(fileLength - header.yOffset);
     if (!yData) { printf("ERROR: format-vip.c readVip(), cannot allocate memory for yData\n"); return 0; }
     emb_fread(yData, fileLength - header.yOffset, file); /* TODO: check return value */
@@ -13998,7 +13980,7 @@ vipEncodeStitchType(int st)
 }
 
 char
-writeVip(EmbPattern* pattern, void* file)
+writeVip(EmbPattern* pattern, FILE* file)
 {
     EmbRect boundingRect;
     int stitchCount, minColors, patternColor;
@@ -14122,7 +14104,7 @@ writeVip(EmbPattern* pattern, void* file)
  */
 
 unsigned char*
-vp3ReadString(void* file)
+vp3ReadString(FILE* file)
 {
     short stringLength;
     unsigned char* charString = 0;
@@ -14159,7 +14141,7 @@ vp3DecodeInt16(unsigned short inputByte)
 }
 
 vp3Hoop
-vp3ReadHoopSection(void* file)
+vp3ReadHoopSection(FILE* file)
 {
     vp3Hoop hoop;
 
@@ -14223,7 +14205,7 @@ vp3ReadHoopSection(void* file)
 }
 
 char
-readVp3(EmbPattern* pattern, void* file)
+readVp3(EmbPattern* pattern, FILE* file)
 {
     unsigned char magicString[5];
     unsigned char some;
@@ -14293,7 +14275,7 @@ readVp3(EmbPattern* pattern, void* file)
 
         string_copy(t.catalogNumber, "");
         string_copy(t.description, "");
-        emb_fseek(file, colorSectionOffset, SEEK_SET);
+        fseek(file, colorSectionOffset, SEEK_SET);
         printf("ERROR: format-vp3.c Color Check Byte #1: 0 == %d\n", (char)fgetc(file));
         printf("ERROR: format-vp3.c Color Check Byte #2: 5 == %d\n", (char)fgetc(file));
         printf("ERROR: format-vp3.c Color Check Byte #3: 0 == %d\n", (char)fgetc(file));
@@ -14304,10 +14286,10 @@ readVp3(EmbPattern* pattern, void* file)
         emb_pattern_addStitchAbs(pattern, startX / 1000.0, -startY / 1000.0, JUMP, 1);
 
         tableSize = (char)fgetc(file);
-        emb_fseek(file, 1, SEEK_CUR);
+        fseek(file, 1, SEEK_CUR);
         embColor_read(file, &(t.color), 3);
         emb_pattern_addThread(pattern, t);
-        emb_fseek(file, 6*tableSize - 1, SEEK_CUR);
+        fseek(file, 6*tableSize - 1, SEEK_CUR);
 
         threadColorNumber = vp3ReadString(file);
         colorName = vp3ReadString(file);
@@ -14317,9 +14299,9 @@ readVp3(EmbPattern* pattern, void* file)
         emb_read(file, &offsetToNextColorY, EMB_INT32_BIG);
 
         emb_read(file, &unknownThreadString, EMB_INT16_BIG);
-        emb_fseek(file, unknownThreadString, SEEK_CUR);
+        fseek(file, unknownThreadString, SEEK_CUR);
         emb_read(file, &numberOfBytesInColor, EMB_INT32_BIG);
-        emb_fseek(file, 0x3, SEEK_CUR);
+        fseek(file, 0x3, SEEK_CUR);
 
         if (emb_verbose>1) {
             printf("number of bytes in color: %d\n", numberOfBytesInColor);
@@ -14346,7 +14328,7 @@ readVp3(EmbPattern* pattern, void* file)
                         x = vp3DecodeInt16(readIn);
                         emb_read(file, &readIn, EMB_INT16_BIG);
                         y = vp3DecodeInt16(readIn);
-                        emb_fseek(file, 2, SEEK_CUR);
+                        fseek(file, 2, SEEK_CUR);
                         emb_pattern_addStitchRel(pattern, x/ 10.0, y / 10.0, TRIM, 1);
                         break;
                     default:
@@ -14370,30 +14352,30 @@ readVp3(EmbPattern* pattern, void* file)
 }
 
 void
-vp3WriteStringLen(void* file, const char* str, int len)
+vp3WriteStringLen(FILE* file, const char* str, int len)
 {
     emb_write_u16BE(file, len);
     emb_fwrite(str, len, file);
 }
 
 void
-vp3WriteString(void* file, const char* str)
+vp3WriteString(FILE* file, const char* str)
 {
     vp3WriteStringLen(file, str, string_len(str));
 }
 
 void
-vp3PatchByteCount(void* file, int offset, int adjustment)
+vp3PatchByteCount(FILE* file, int offset, int adjustment)
 {
     int currentPos = ftell(file);
-    emb_fseek(file, offset, SEEK_SET);
+    fseek(file, offset, SEEK_SET);
     printf("Patching byte count: %d\n", currentPos - offset + adjustment);
     emb_write_i32be(file, currentPos - offset + adjustment);
-    emb_fseek(file, currentPos, SEEK_SET);
+    fseek(file, currentPos, SEEK_SET);
 }
 
 char
-writeVp3(EmbPattern* pattern, void* file)
+writeVp3(EmbPattern* pattern, FILE* file)
 {
     short a;
     EmbRect bounds;
@@ -14596,7 +14578,7 @@ xxxDecodeByte(unsigned char inputByte)
 }
 
 char
-readXxx(EmbPattern* pattern, void* file)
+readXxx(EmbPattern* pattern, FILE* file)
 {
     int dx = 0, dy = 0, numberOfColors, paletteOffset, i;
     char thisStitchJump = 0;
@@ -14606,21 +14588,21 @@ readXxx(EmbPattern* pattern, void* file)
         return 0;
     }
 
-    emb_fseek(file, 0x27, SEEK_SET);
+    fseek(file, 0x27, SEEK_SET);
     emb_read(file, &numberOfColors, EMB_INT16_LITTLE);
-    emb_fseek(file, 0xFC, SEEK_SET);
+    fseek(file, 0xFC, SEEK_SET);
     emb_read(file, &paletteOffset, EMB_INT32_LITTLE);
-    emb_fseek(file, paletteOffset + 6, SEEK_SET);
+    fseek(file, paletteOffset + 6, SEEK_SET);
 
     for (i = 0; i < numberOfColors; i++) {
         EmbThread thread;
         string_copy(thread.catalogNumber, "NULL");
         string_copy(thread.description, "NULL");
-        emb_fseek(file, 1, SEEK_CUR);
+        fseek(file, 1, SEEK_CUR);
         embColor_read(file, &(thread.color), 3);
         emb_pattern_addThread(pattern, thread);
     }
-    emb_fseek(file, 0x100, SEEK_SET);
+    fseek(file, 0x100, SEEK_SET);
 
     for (i = 0; !feof(file) && ftell(file) < paletteOffset; i++) {
         unsigned char b0, b1;
@@ -14663,14 +14645,14 @@ readXxx(EmbPattern* pattern, void* file)
 }
 
 void
-xxxEncodeStop(void* file, EmbStitch s)
+xxxEncodeStop(FILE* file, EmbStitch s)
 {
     fputc((unsigned char)0x7F, file);
     fputc((unsigned char)(s.color + 8), file);
 }
 
 void
-xxxEncodeStitch(void* file, EmbReal deltaX, EmbReal deltaY, int flags)
+xxxEncodeStitch(FILE* file, EmbReal deltaX, EmbReal deltaY, int flags)
 {
     if ((flags & (JUMP | TRIM)) && (fabs(deltaX) > 124 || fabs(deltaY) > 124)) {
         fputc(0x7E, file);
@@ -14685,7 +14667,7 @@ xxxEncodeStitch(void* file, EmbReal deltaX, EmbReal deltaY, int flags)
 }
 
 void
-xxxEncodeDesign(void* file, EmbPattern* p)
+xxxEncodeDesign(FILE* file, EmbPattern* p)
 {
     int i;
     EmbReal thisX = 0.0f;
@@ -14714,7 +14696,7 @@ xxxEncodeDesign(void* file, EmbPattern* p)
 }
 
 char
-writeXxx(EmbPattern* pattern, void* file)
+writeXxx(EmbPattern* pattern, FILE* file)
 {
     int i;
     EmbRect rect;
@@ -14755,9 +14737,9 @@ writeXxx(EmbPattern* pattern, void* file)
     emb_write_i32(file, 0x0000);
     xxxEncodeDesign(file, pattern);
     endOfStitches = ftell(file);
-    emb_fseek(file, 0xFC, SEEK_SET);
+    fseek(file, 0xFC, SEEK_SET);
     emb_write_u32(file, endOfStitches);
-    emb_fseek(file, 0, SEEK_END);
+    fseek(file, 0, SEEK_END);
     /* is this really correct? */
     emb_fwrite("\x7F\x7F\x03\x14\x00\x00", 6, file);
 
@@ -14781,18 +14763,18 @@ writeXxx(EmbPattern* pattern, void* file)
  */
 
 char
-readZsk(EmbPattern* pattern, void* file)
+readZsk(EmbPattern* pattern, FILE* file)
 {
     char b[3];
     int stitchType;
     unsigned char colorNumber;
 
-    emb_fseek(file, 0, SEEK_END);
+    fseek(file, 0, SEEK_END);
     if (ftell(file) < 0x230) {
         return 0;
     }
 
-    emb_fseek(file, 0x230, SEEK_SET);
+    fseek(file, 0x230, SEEK_SET);
     colorNumber = fgetc(file);
     while (colorNumber != 0) {
         EmbThread t;
@@ -14800,10 +14782,10 @@ readZsk(EmbPattern* pattern, void* file)
         string_copy(t.catalogNumber, "");
         string_copy(t.description, "");
         emb_pattern_addThread(pattern, t);
-        emb_fseek(file, 0x48, SEEK_CUR);
+        fseek(file, 0x48, SEEK_CUR);
         colorNumber = fgetc(file);
     }
-    emb_fseek(file, 0x2E, SEEK_CUR);
+    fseek(file, 0x2E, SEEK_CUR);
 
     while (fread(b, 1, 3, file) == 3) {
         stitchType = NORMAL;
@@ -14841,7 +14823,7 @@ readZsk(EmbPattern* pattern, void* file)
 
 /* based on the readZsk function */
 char
-writeZsk(EmbPattern* pattern, void* file)
+writeZsk(EmbPattern* pattern, FILE* file)
 {
     int i;
 
@@ -15440,7 +15422,8 @@ Base_objectRubberText(EmbGeometry *obj, const char *key)
 }
 
 /*
-void emb_circle_main()
+void
+emb_circle_main()
 {
     initCommand();
     clearSelection();
@@ -15831,7 +15814,8 @@ void dimleader_updateLeader()
 }
 */
 
-void embEllipse_main()
+void
+emb_ellipse_main()
 {
     /*
     initCommand();
@@ -16068,27 +16052,22 @@ EmbVector image_objectBottomRight()
 //Command: Line
 
 float global = {}; //Required
-global.firstRun;
-global.firstX;
-global.firstY;
-global.prevX;
-global.prevY;
 
 void
-line_main()
+emb_line_init(void)
 {
     initCommand();
     clearSelection();
     global.firstRun = true;
-    global.firstX = NaN;
-    global.firstY = NaN;
-    global.prevX = NaN;
-    global.prevY = NaN;
+    global.first.x = NaN;
+    global.first.y = NaN;
+    global.prev.x = NaN;
+    global.prev.y = NaN;
     setPromptPrefix(translate("Specify first point: "));
 }
 
 void
-line_prompt(const char *str)
+emb_line_prompt(const char *str)
 {
     if (global.firstRun) {
         std::vector<std::string> strList = str.split(",");
@@ -16126,15 +16105,16 @@ line_prompt(const char *str)
                 addRubber("LINE");
                 setRubberMode("LINE");
                 setRubberPoint("LINE_START", x, y);
-                global.prevX = x;
-                global.prevY = y;
+                global.prev.x = x;
+                global.prev.y = y;
                 setPromptPrefix(translate("Specify next point or [Undo]: "));
             }
         }
     }
 }
 
-void line_init(EmbLine line_in, unsigned int rgb, PenStyle lineType)
+void
+emb_line_init(EmbLine line_in, unsigned int rgb, PenStyle lineType)
 {
     setData(OBJ_TYPE, type);
     setData(OBJ_NAME, "Line");
@@ -16149,7 +16129,8 @@ void line_init(EmbLine line_in, unsigned int rgb, PenStyle lineType)
     setPen(objPen);
 }
 
-void line_setEndPoint1(EmbVector point1)
+void
+emb_line_set_endpoint1(EmbVector point1)
 {
     float dx = line.start.x - point1.x;
     float dy = line.start.y - point1.y;
@@ -16159,7 +16140,8 @@ void line_setEndPoint1(EmbVector point1)
     setPos(point1);
 }
 
-void line_setEndPoint2(EmbVector point1)
+void
+emb_line_set_endpoint2(EmbVector point1)
 {
     float dx = line.end.x - point1.x;
     float dy = line.end.y - point1.y;
@@ -16169,7 +16151,8 @@ void line_setEndPoint2(EmbVector point1)
     setPos(point1);
 }
 
-EmbVector line_objectEndPoint2()
+EmbVector
+emb_line_EndPoint2()
 {
     EmbLine lyne = line();
     float alpha = radians(rotation());
@@ -16182,7 +16165,7 @@ EmbVector line_objectEndPoint2()
 }
 
 EmbVector
-line_objectMidPoint()
+emb_line_MidPoint()
 {
     EmbLine lyne = line();
     EmbVector mp = lyne.pointAt(0.5) * scale();
@@ -16193,7 +16176,7 @@ line_objectMidPoint()
 }
 
 float
-line_objectAngle()
+emb_line_Angle()
 {
     return std::fmodf(line().angle() - rotation(), 360.0);
 }
@@ -17318,7 +17301,7 @@ emb_vector_distance(EmbVector a, EmbVector b)
  */
 
 void
-writeImage(void* file, unsigned char image[][48])
+writeImage(FILE* file, unsigned char image[][48])
 {
     int i, j;
 
@@ -19644,26 +19627,6 @@ emb_set_y(EmbGeometry *geometry, double y)
 
 /* . */
 void emb_set_Rect(double x1, double y1, double x2, double y2)
-{
-}
-
-/* . */
-virtual void vulcanize()
-{
-}
-
-/* . */
-virtual QList<QPointF> allGripPoints(EmbGeometry *geometry)
-{
-}
-
-/* . */
-virtual QPointF mouseSnapPoint(const QPointF& mousePoint)
-{
-}
-
-/* . */
-virtual void gripEdit(const QPointF& before, const QPointF& after)
 {
 }
 

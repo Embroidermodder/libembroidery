@@ -4,6 +4,7 @@
 #
 
 all:
-	nasm -felf64 -o emb_elf64_test emb_elf64_test.asm
+	nasm -felf64 -o emb_elf64_test.o emb_elf64_test.asm
+	ld emb_elf64_test.o -o emb_elf64_test
 	nasm -fbin -o emb_thumb emb_thumb.asm
 

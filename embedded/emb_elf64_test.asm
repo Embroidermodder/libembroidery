@@ -12,17 +12,37 @@
 ;
 ; The elf64 testing platform is fully automated, create a log like this:
 ;	nasm -felf64 emb_elf64_test.asm -o emb_elf64_test
-;	./emb_elf64_test
-;
-; You will then find find a ".log" file named after the current patch in the
-; same directory that you ran the binary.
+;	./emb_elf64_test > output.log
 ;
 ; ------------------------------------------------------------------------------
 ;
 
+	global	_start
+
+; Write message at argument 1 of length in argument 2.
+%macro	write	2
+	mov	rax, 1
+	mov	rdi, 1
+	mov	rsi, %1
+	mov	rdx, %2
+	syscall
+%endmacro
+
+; Exit with code in argument 1.
+%macro	exit	1
+	mov	rax, 60
+	mov	rdi, $1
+	syscall
+%endmacro
+
+; Uses the macros above.
 %include "embroidery.inc"
 
+	section .text
+
 _start:
-	mov	rax, 60
-	syscall
+	startup
+	exit	0
+
+	section .data
 

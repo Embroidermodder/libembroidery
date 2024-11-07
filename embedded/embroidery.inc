@@ -368,20 +368,20 @@
 ;
 ; Positive y is up, units are in mm.
 
-;struct EmbVector_
+struc EmbVector_
 ;{
-;    EmbReal x
-;    EmbReal y
+;	EmbReal x
+;	EmbReal y
 ;} EmbVector
 
-;struct EmbTime_
+struc EmbTime_
 ;{
-;    unsigned int year
-;    unsigned int month
-;    unsigned int day
-;    unsigned int hour
-;    unsigned int minute
-;    unsigned int second
+;	unsigned int year
+;	unsigned int month
+;	unsigned int day
+;	unsigned int hour
+;	unsigned int minute
+;	unsigned int second
 ;} EmbTime
 
 ; For our internal string library.
@@ -406,341 +406,349 @@
 ; double-indirection file allocation table references
 ; struct
 ;{
-;    unsigned int fatSectorCount
-;    unsigned int fatSectorEntries[109]
-;    unsigned int sectorSize
+;	unsigned int fatSectorCount
+;	unsigned int fatSectorEntries[109]
+;	unsigned int sectorSize
 ;} bcf_file_difat
 
-;struct _bcf_file_fat
-;{
-;    int          fatEntryCount
-;    unsigned int fatEntries[255]; ; maybe make this dynamic
-;    unsigned int numberOfEntriesInFatSector
-;} bcf_file_fat
+struc bcf_file_fat
+;	int          fatEntryCount
+;	unsigned int fatEntries[255]; ; maybe make this dynamic
+;	unsigned int numberOfEntriesInFatSector
+endstruc
 
-;struct _bcf_directory_entry
-;{
-;    char                         directoryEntryName[32]
-;    unsigned short               directoryEntryNameLength
-;    unsigned char                objectType
-;    unsigned char                colorFlag
-;    unsigned int                 leftSiblingId
-;    unsigned int                 rightSiblingId
-;    unsigned int                 childId
-;    unsigned char                CLSID[16]
-;    unsigned int                 stateBits
-;    EmbTime                      creationTime
-;    EmbTime                      modifiedTime
-;    unsigned int                 startingSectorLocation
-;    ; streamSize should be long long but in our case we shouldn't need it,
-;     * and hard to support on c89 cross platform.
-;    unsigned long                streamSize
-;    ; Store the high int of streamsize.
-;    unsigned int                 streamSizeHigh
-;    struct _bcf_directory_entry* next
-;} bcf_directory_entry
+struc bcf_directory_entry
+;	char                         directoryEntryName[32]
+;	unsigned short               directoryEntryNameLength
+;	unsigned char                objectType
+;	unsigned char                colorFlag
+;	unsigned int                 leftSiblingId
+;	unsigned int                 rightSiblingId
+;	unsigned int                 childId
+;	unsigned char                CLSID[16]
+;	unsigned int                 stateBits
+;	EmbTime                      creationTime
+;	EmbTime                      modifiedTime
+;	unsigned int                 startingSectorLocation
+		; streamSize should be long long but in our case
+		; we shouldn't need it, and it is hard to support on c89
+		; cross-platform.
+;	unsigned long                streamSize
+;	; Store the high int of streamsize.
+;	unsigned int                 streamSizeHigh
+;	struct _bcf_directory_entry* next
+endstruc
 
 ; TODO: possibly add a directory tree in the future.
 
-;struct _bcf_directory
+struc _bcf_directory
 ;{
-;    bcf_directory_entry* dirEntries
-;    unsigned int         maxNumberOfDirectoryEntries
+;	bcf_directory_entry* dirEntries
+;	unsigned int         maxNumberOfDirectoryEntries
 ;} bcf_directory
 
 ; TODO: CLSID should be a separate type.
 
-;struct _bcf_file_header
+struc _bcf_file_header
 ;{
-;    unsigned char  signature[8]
-;    unsigned char  CLSID[16]
-;    unsigned short minorVersion
-;    unsigned short majorVersion
-;    unsigned short byteOrder
-;    unsigned short sectorShift
-;    unsigned short miniSectorShift
-;    unsigned short reserved1
-;    unsigned int   reserved2
-;    unsigned int   numberOfDirectorySectors
-;    unsigned int   numberOfFATSectors
-;    unsigned int   firstDirectorySectorLocation
-;    unsigned int   transactionSignatureNumber
-;    unsigned int   miniStreamCutoffSize
-;    unsigned int   firstMiniFATSectorLocation
-;    unsigned int   numberOfMiniFatSectors
-;    unsigned int   firstDifatSectorLocation
-;    unsigned int   numberOfDifatSectors
+;	unsigned char  signature[8]
+;	unsigned char  CLSID[16]
+;	unsigned short minorVersion
+;	unsigned short majorVersion
+;	unsigned short byteOrder
+;	unsigned short sectorShift
+;	unsigned short miniSectorShift
+;	unsigned short reserved1
+;	unsigned int   reserved2
+;	unsigned int   numberOfDirectorySectors
+;	unsigned int   numberOfFATSectors
+;	unsigned int   firstDirectorySectorLocation
+;	unsigned int   transactionSignatureNumber
+;	unsigned int   miniStreamCutoffSize
+;	unsigned int   firstMiniFATSectorLocation
+;	unsigned int   numberOfMiniFatSectors
+;	unsigned int   firstDifatSectorLocation
+;	unsigned int   numberOfDifatSectors
 ;} bcf_file_header
 
-;struct _bcf_file
+struc _bcf_file
+;	bcf_file_header header	; The header for the CompoundFile
+;	bcf_file_difat* difat	; The "Double Indirect FAT" for the CompoundFile
+;	bcf_file_fat* fat	; The File Allocation Table for the Compound File
+;	bcf_directory* directory	; The directory for the CompoundFile
+endstruc
+
+struc _vp3Hoop
 ;{
-;    bcf_file_header header;   /*! The header for the CompoundFile
-;    bcf_file_difat* difat;    /*! The "Double Indirect FAT" for the CompoundFile
-;    bcf_file_fat* fat;        /*! The File Allocation Table for the Compound File
-;    bcf_directory* directory; /*! The directory for the CompoundFile
-;} bcf_file
+;	int right
+;	int bottom
+;	int left
+;	int top
+;	int threadLength
+;	char unknown2
+;	unsigned char numberOfColors
+;	unsigned short unknown3
+;	int unknown4
+;	int numberOfBytesRemaining
 
-;struct _vp3Hoop
-;{
-;    int right
-;    int bottom
-;    int left
-;    int top
-;    int threadLength
-;    char unknown2
-;    unsigned char numberOfColors
-;    unsigned short unknown3
-;    int unknown4
-;    int numberOfBytesRemaining
+;	int xOffset
+;	int yOffset
 
-;    int xOffset
-;    int yOffset
-
-;    unsigned char byte1
-;    unsigned char byte2
-;    unsigned char byte3
+;	unsigned char byte1
+;	unsigned char byte2
+;	unsigned char byte3
 
 ; Centered hoop dimensions
-;    int right2
-;    int left2
-;    int bottom2
-;    int top2
+;	int right2
+;	int left2
+;	int bottom2
+;	int top2
 
-;    int width
-;    int height
+;	int width
+;	int height
 ;} vp3Hoop
 
 ; thred file header
-;struct {
-;    unsigned int sigVersion;    ; signature and version
-;    unsigned int length;        ; length of ThredHeader + length of stitch data
-;    unsigned short numStiches;  ; number of stitches
-;    unsigned short hoopSize;    ; size of hoop
-;    unsigned short reserved[7]; ; reserved for expansion
-;} ThredHeader
+struc ThredHeader
+	.sigVersion	resb 4		; signature and version
+	.length		resb 4		; length of ThredHeader + length of stitch data
+	.numStiches	resb 2		; number of stitches
+	.hoopSize	resb 2    ; size of hoop
+;	unsigned short reserved resw 7; ; reserved for expansion
+endstruc
 
 ; thred v1.0 file header extension
-;struct
+struc ThredExtension
 ;{
-;    float hoopX;                ; hoop size x dimension in 1/6 mm units
-;    float hoopY;                ; hoop size y dimension in 1/6 mm units
-;    float stitchGranularity;    ; stitches per millimeter--not implemented
-;    char creatorName[50];       ; name of the file creator
-;    char modifierName[50];      ; name of last file modifier
-;    char auxFormat;             ; auxiliary file format, 0=PCS,1=DST,2=PES
-;    char reserved[31];          ; reserved for expansion
-;} ThredExtension
+;	float hoopX;	            ; hoop size x dimension in 1/6 mm units
+;	float hoopY;	            ; hoop size y dimension in 1/6 mm units
+;	float stitchGranularity;	; stitches per millimeter--not implemented
+;	char creatorName[50];	   ; name of the file creator
+;	char modifierName[50];	  ; name of last file modifier
+;	char auxFormat;	         ; auxiliary file format, 0=PCS,1=DST,2=PES
+;	char reserved[31];	      ; reserved for expansion
+endstruc
 
-;struct {
-;    int someNum;      ; TODO better variable naming
-;    int someInt;      ; TODO better variable naming
-;    int someOtherInt; ; TODO better variable naming
-;    char* colorCode
-;    char* colorName
+;struc 
+;	int someNum;	  ; TODO better variable naming
+;	int someInt;	  ; TODO better variable naming
+;	int someOtherInt; ; TODO better variable naming
+;	char* colorCode
+;	char* colorName
 ;} SubDescriptor
+endstruc
 
-;struct StxThread_
+struc StxThread_
 ;{
-;    char* colorCode
-;    char* colorName
-;    char* sectionName
-;    SubDescriptor* subDescriptors
-;    EmbColor stxColor
+;	char* colorCode
+;	char* colorName
+;	char* sectionName
+;	SubDescriptor* subDescriptors
+;	EmbColor stxColor
 ;} StxThread
+endstruc
 
-;struct VipHeader_ {
-;    int magicCode
-;    int numberOfStitches
-;    int numberOfColors
-;    short postitiveXHoopSize
-;    short postitiveYHoopSize
-;    short negativeXHoopSize
-;    short negativeYHoopSize
-;    int attributeOffset
-;    int xOffset
-;    int yOffset
-;    unsigned char stringVal[8]
-;    short unknown
-;    int colorLength
+;struc VipHeader_ {
+;	int magicCode
+;	int numberOfStitches
+;	int numberOfColors
+;	short postitiveXHoopSize
+;	short postitiveYHoopSize
+;	short negativeXHoopSize
+;	short negativeYHoopSize
+;	int attributeOffset
+;	int xOffset
+;	int yOffset
+;	unsigned char stringVal[8]
+;	short unknown
+;	int colorLength
 ;} VipHeader
+;endstruc
 
-;enum
-;{
-;    CSV_EXPECT_NULL,
-;    CSV_EXPECT_QUOTE1,
-;    CSV_EXPECT_QUOTE2,
-;    CSV_EXPECT_COMMA
-;} CSV_EXPECT
+; CSV expect
+CSV_EXPECT_NULL		equ	0x00
+CSV_EXPECT_QUOTE1	equ	0x01
+CSV_EXPECT_QUOTE2	equ	0x02
+CSV_EXPECT_COMMA	equ	0x03
 
-;enum
-;{
-;    CSV_MODE_NULL,
-;    CSV_MODE_COMMENT,
-;    CSV_MODE_VARIABLE,
-;    CSV_MODE_THREAD,
-;    CSV_MODE_STITCH
-;} CSV_MODE
+; CSV modes
+CSV_MODE_NULL		equ	0x00
+CSV_MODE_COMMENT	equ	0x01
+CSV_MODE_VARIABLE	equ	0x02
+CSV_MODE_THREAD		equ	0x03
+CSV_MODE_STITCH		equ	0x04
 
-;struct SvgAttribute_
+;struc SvgAttribute_
 ;{
-;    char* name
-;    char* value
+;	char* name
+;	char* value
 ;} SvgAttribute
 
-;struct Huffman {
-;    int default_value
-;    int lengths[1000]
-;    int nlengths
-;    int table[1000]
-;    int table_width
-;    int ntable
+;struc Huffman {
+;	int default_value
+;	int lengths[1000]
+;	int nlengths
+;	int table[1000]
+;	int table_width
+;	int ntable
 ;} huffman
 
-;struct Compress {
-;    int bit_position
-;    char *input_data
-;    int input_length
-;    int bits_total
-;    int block_elements
-;    huffman character_length_huffman
-;    huffman character_huffman
-;    huffman distance_huffman
+;struc Compress {
+;	int bit_position
+;	char *input_data
+;	int input_length
+;	int bits_total
+;	int block_elements
+;	huffman character_length_huffman
+;	huffman character_huffman
+;	huffman distance_huffman
 ;} compress
 
-;struct EmbImage_ {
-;    EmbVector position
-;    EmbVector dimensions
-;    unsigned char* data
-;    int width
-;    int height
-;    EmbString path
-;    EmbString name
+;
+;struc EmbImage
+;	.position	resb 8
+;	EmbVector dimensions
+;	unsigned char* data
+;	int width
+;	int height
+;	EmbString path
+;	EmbString name
 ;} EmbImage
 
-;struct EmbBlock_ {
-;    EmbVector position
-;} EmbBlock
-
-;struct EmbAlignedDim_ {
-;    EmbVector position
-;} EmbAlignedDim
-
-;struct EmbAngularDim_ {
-;    EmbVector position
-;} EmbAngularDim
-
-;struct EmbArcLengthDim_ {
-;    EmbVector position
-;} EmbArcLengthDim
-
-;struct EmbDiameterDim_ {
-;    EmbVector position
-;} EmbDiameterDim
-
-;struct EmbLeaderDim_ {
-;    EmbVector position
-;} EmbLeaderDim
-
-;struct EmbLinearDim_ {
-;    EmbVector position
-;} EmbLinearDim
-
-;struct EmbOrdinateDim_ {
-;    EmbVector position
-;} EmbOrdinateDim
-
-;struct
-;{
-;    EmbVector position
-;} EmbRadiusDim
-
-;struct
-;{
-;    EmbVector position
-;} EmbInfiniteLine
-
-;struct {
-;    EmbVector position
-;} EmbRay
-
-;struct
-;    EmbVector position
-;    EmbString text
-;} EmbTextMulti
-
-;struct
-;    EmbVector position
-;    EmbString text
-;} EmbTextSingle
-
-;struct
-;{
-;    EmbVector position
-;    int lineType
-;    EmbColor color
-;} EmbPoint
-
-;struct
-;{
-;    EmbVector start
-;    EmbVector end
-;    int lineType
-;    EmbColor color
-;} EmbLine
-
-;struct
-;{
-;    EmbArray* pointList
-;    EmbArray* flagList
-;    int lineType
-;    EmbColor color
-;} EmbPath
-
-;struct
-;{
-;    int flags  ; uses codes defined above
-;    EmbReal x  ; absolute position (not relative)
-;    EmbReal y  ; positive is up, units are in mm
-;    int color  ; color number for this stitch
-;    ; TODO: this should be called colorIndex since it is not an EmbColor
-;} EmbStitch
-
-;struct EmbThread_
-;{
-;    EmbColor color
-;    EmbString description
-;    EmbString catalogNumber
-;} EmbThread
-
-;struct thread_color_ {
-;    EmbString name
-;    unsigned int hex_code
-;    int manufacturer_code
-;} thread_color
 ;
+struc EmbBlock
+	.position	resb 8
+endstruc
+
+;
+struc EmbAlignedDim
+	.position	resb 8
+endstruc
+
+struc EmbAngularDim
+	.position	resb 8
+endstruc
+
+;
+struc EmbArcLengthDim
+	.position	resb 8
+endstruc
+
+;
+struc EmbDiameterDim
+	.position	resb 8
+endstruc
+
+;
+struc	EmbLeaderDim
+	.position	resb 8
+endstruc
+
+;
+struc	EmbLinearDim
+	.position	resb 8
+endstruc
+
+;
+struc	EmbOrdinateDim
+	.position	resb 8
+endstruc
+
+;
+struc	EmbRadiusDim
+	.position	resb 8
+endstruc
+
+;
+struc	EmbInfiniteLine
+	.position	resb 8
+endstruc
+
+;
+struc	EmbRay
+	.position	resb 8
+endstruc
+
+;
+struc	EmbTextMulti
+	.position	resb 8
+	.text		resb 200
+endstruc
+
+; Text Single
+struc	EmbTextSingle
+	.position	resb 8
+	.text		resb 200
+endstruc
+
+; Point
+struc EmbPoint
+	.position	resb 8
+	.lineType	resb 4
+	.color		resb 2
+endstruc
+
+; Line
+struc	EmbLine
+;	EmbVector start
+;	EmbVector end
+	.lineType	resb 4
+;	EmbColor color
+endstruc
+
+; Path
+struc	EmbPath
+;	EmbArray* pointList
+;	EmbArray* flagList
+	.lineType	resb 4
+	.color		resw 1
+endstruc
+
+; TODO: this should be called colorIndex since it is not an EmbColor
+struc EmbStitch
+	.flags	resw 1			; Flags uses codes defined above.
+	.x	resq 1			; absolute position (not relative)
+	.y	resq 1			; positive is up, units are in mm
+	.color	resw 1			; color number for this stitch
+endstruc
+
+; Thread description
+struc EmbThread
+	.color		resb 2
+	.description	resb 200
+	.catalog_code	resb 200
+endstruc
+
+; 
+struc thread_color
+	; EmbString name
+	; unsigned int hex_code
+	; int manufacturer_code
+endstruc
+
+; Arc
 ; absolute position (not relative)
-;struct EmbArc_
-;{
-;    EmbVector start
-;    EmbVector mid
-;    EmbVector end
-;} EmbArc
+struc EmbArc
+	.start		resq 2
+	.mid		resq 2
+	.end		resq 2
+endstruc
 
-;struct EmbRect_
-;{
-;    EmbReal x
-;    EmbReal y
-;    EmbReal w
-;    EmbReal h
-;    EmbReal rotation
-;    EmbReal radius
-;} EmbRect
+; Rect
+struc	EmbRect
+	.x		resq 1
+	.y		resq 1
+	.w		resq 1
+	.h		resq 1
+	.rotation	resq 1
+	.radius		resq 1
+endstruc
 
-;struct EmbCircle_
-;{
-;    EmbVector center
-;    EmbReal radius
-;} EmbCircle
+; Circle
+struc EmbCircle
+;	EmbVector center
+;	EmbReal radius
+endstruc
 
 ;EmbPath EmbPolygon
 
@@ -748,112 +756,116 @@
 
 ;int EmbFlag
 
-;struct EmbSatinOutline_
+struc EmbSatinOutline_
 ;{
-;    int length
-;    EmbArray* side1
-;    EmbArray* side2
+;	int length
+;	EmbArray* side1
+;	EmbArray* side2
 ;} EmbSatinOutline
 
-;struct EmbEllipse_
+struc EmbEllipse_
 ;{
-;    EmbVector center
-;    EmbVector radius
-;    EmbReal rotation
+;	EmbVector center
+;	EmbVector radius
+;	EmbReal rotation
 ;} EmbEllipse
 
-;struct EmbBezier_ {
-;    EmbVector start
-;    EmbVector control1
-;    EmbVector control2
-;    EmbVector end
-;} EmbBezier
-
-;struct EmbSpline_ {
-;    EmbArray *beziers
-;} EmbSpline
-
-;struct LSYSTEM {
-;    char axiom
-;    char *alphabet
-;    char *constants
-;    char **rules
-;} L_system
-
-;struct EmbGeometry_ {
-;    union {
-;        EmbArc arc
-;        EmbCircle circle
-;        EmbColor color
-;        EmbEllipse ellipse
-;        EmbLine line
-;        EmbPath path
-;        EmbPoint point
-;        EmbPolygon polygon
-;        EmbPolyline polyline
-;        EmbRect rect
-;        EmbSpline spline
-;        EmbVector vector
-;    } object
-;    int flag
-;    int type
-;    int lineType
-;    EmbColor color
-;} EmbGeometry
-
-;struct EmbArray_ {
-;    EmbGeometry *geometry
-;    EmbStitch *stitch
-;    EmbThread *thread
-;    int count
-;    int length
-;    int type
-;}
-
-;struct EmbLayer_
-;{
-;    char name[100]
-;    EmbArray *geometry
-;} EmbLayer
-
-;struct EmbPattern_
-;{
-;    unsigned int dstJumpsPerTrim
-;    EmbVector home
-;    EmbReal hoop_width
-;    EmbReal hoop_height
-;    EmbArray *thread_list
-;    EmbArray *stitch_list
-;    EmbArray *geometry
-;    EmbLayer layer[EMB_MAX_LAYERS]
-;    int currentColorIndex
-;} EmbPattern
-
-;struct EmbFormatList_
-;{
-;    EmbString extension
-;    EmbString description
-;    char reader_state
-;    char writer_state
-;    int type
-;    int color_only
-;    int check_for_color_file
-;    int write_external_color_file
-;} EmbFormatList
 ;
+struc	EmbBezier
+	.start		resb 8
+	.control1	resb 8
+	.control2	resb 8
+	.end		resb 8
+endstruc
+
+struc	EmbSpline_
+	; EmbArray
+	.beziers	resb 4
+endstruc
+
+struc LSYSTEM
+;	char axiom
+;	char *alphabet
+;	char *constants
+;	char **rules
+;} L_system
+endstruc
+
+struc EmbGeometry
+;	union {
+;	    EmbArc arc
+;	    EmbCircle circle
+;	    EmbColor color
+;	    EmbEllipse ellipse
+;	    EmbLine line
+;	    EmbPath path
+;	    EmbPoint point
+;	    EmbPolygon polygon
+;	    EmbPolyline polyline
+;	    EmbRect rect
+;	    EmbSpline spline
+;	    EmbVector vector
+;	} object
+;	int flag
+;	int type
+;	int lineType
+;	EmbColor color
+;} EmbGeometry
+endstruc
+
+struc EmbArray
+;	EmbGeometry *geometry
+;	EmbStitch *stitch
+;	EmbThread *thread
+;	int count
+;	int length
+;	int type
+endstruc
+
+struc EmbLayer_
+;{
+;	char name[100]
+;	EmbArray *geometry
+;} EmbLayer
+endstruc
+
+struc EmbPattern
+	dstJumpsPerTrim	resb	1
+;	EmbVector home
+;	EmbReal hoop_width
+;	EmbReal hoop_height
+;	EmbArray *thread_list
+;	EmbArray *stitch_list
+;	EmbArray *geometry
+;	EmbLayer layer[EMB_MAX_LAYERS]
+;	int currentColorIndex
+endstruc
+
+
+struc EmbFormatList
+	.extension	resb 200
+	.description	resb 200
+	.reader_state	resb 1
+	.writer_state	resb 1
+	.type		resb 2
+	.color_only	resb 2
+	.check_for_color_file	resb 2
+	.write_external_color_file	resb 2
+endstruc
+
 ; Thread colors that are subject to change are loaded at runtime,
 ; allowing us to update them as they change.
 ;
 ; However, in-builts that use indicies like the DXF, SVG or HUS
 ; tables are compiled in. This should help with embedded compatibility
 ; in both cases.
-;
-;struct BRAND {
-;    thread_color *codes
-;    int length
-;    EmbString label
-;} EmbBrand
-;
+
+struc EmbBrand
+	.codes	resb thread_color_size
+	.length	resw 1
+	.label	resb 200
+endstruc
+
 ; Function Declarations
 ; ****************************************************************************
 ;int lindenmayer_system(L_system L, char* state, int iteration, int complete)
@@ -869,16 +881,43 @@
 ;emb_processor(char *state, const char *program, int program_length)
 ;int emb_compiler(const char *program, int language, char *compiled_program)
 
-;emb_actuator(const char *program, int language)
-;
-;EmbColor embColor_make(unsigned char r, unsigned char g, unsigned char b)
-;EmbColor embColor_fromHexStr(char* val)
-;int embColor_distance(EmbColor a, EmbColor b)
-;
-;EmbArray* emb_array_create(int type)
-;int emb_array_resize(EmbArray *g)
+;(const char *program, int language)
+emb_actuator:
+	ret
 
-;emb_array_copy(EmbArray *dst, EmbArray *src)
+;EmbColor embColor_make(unsigned char r, unsigned char g, unsigned char b)
+	ret
+
+;EmbColor embColor_fromHexStr(char* val)
+	ret
+
+; Measure difference between two colors as a sum of squares.
+;	EmbColor a
+;	EmbColor b
+;	returns distance as a int32_t
+embColor_distance:
+	ret
+
+; Create an EmbArray.
+;EmbArray* (int type)
+emb_array_create:
+	ret
+
+; Resize an EmbArray.
+;	argument 0: EmbArray *g		pointer to EmbArray
+;	returns 0 success or an error code on failure
+; TODO: unfinished
+emb_array_resize:
+	ret
+
+; Copy an EmbArray by reference.
+;	argument 0: EmbArray *dst	pointer to destination
+;	argument 1: EmbArray *src	pointer to source
+;	No return argument.
+; TODO: unfinished
+emb_array_copy:
+	ret
+
 ;int emb_array_add_geometry(EmbArray *a, EmbGeometry g)
 ;int emb_array_add_arc(EmbArray* g, EmbArc arc)
 ;int emb_array_add_circle(EmbArray* g, EmbCircle circle)
@@ -999,9 +1038,9 @@ emb_arc:
 ;
 ;EmbGeometry emb_circle(EmbReal x, EmbReal y, EmbReal r)
 ;int getCircleCircleIntersections(
-;     EmbCircle c0, EmbCircle c1, EmbVector *v0, EmbVector *v1)
+;	 EmbCircle c0, EmbCircle c1, EmbVector *v0, EmbVector *v1)
 ;int getCircleTangentPoints(
-;     EmbCircle c, EmbVector p, EmbVector *v0, EmbVector *v1)
+;	 EmbCircle c, EmbVector p, EmbVector *v0, EmbVector *v1)
 ;
 ;EmbEllipse embEllipse_init(void)
 ;EmbEllipse embEllipse_make(EmbReal cx, EmbReal cy, EmbReal rx, EmbReal ry)
@@ -1033,16 +1072,23 @@ emb_arc:
 ;embTime_initNow(EmbTime* t)
 ;EmbTime embTime_time(EmbTime* t)
 ;
-; argument 0: EmbArray* lines
-; argument 1: EmbReal thickness
-; argument 2: EmbSatinOutline* result
-; returns int
-;emb_generate_satin_outline:
+
+; Generate Satin Outline
+;	argument 0: EmbArray* lines
+;	argument 1: EmbReal thickness
+;	argument 2: EmbSatinOutline* result
+;	returns int
+%macro	emb_generate_satin_outline	3
+	
+%endmacro
+
 ;
-; argument 0: EmbSatinOutline* result
-;    EmbReal density
-; returns EmbArray*
-;emb_satin_outline_render:
+;	argument 0: EmbSatinOutline* result
+;	argument 1: EmbReal density
+;	returns EmbArray*
+%macro	emb_satin_outline_render	2
+
+%endmacro
 
 ; argument 0: int type_in
 ; returns EmbGeometry *
@@ -1064,7 +1110,7 @@ emb_arc:
 ;int emb_pattern_addThread(EmbPattern* p, EmbThread thread)
 
 ;emb_pattern_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y,
-;    int flags, int isAutoColorIndex)
+;	int flags, int isAutoColorIndex)
 
 ;emb_pattern_addStitchRel(EmbPattern* p, EmbReal dx, EmbReal dy, int flags, int isAutoColorIndex)
 
@@ -1206,27 +1252,81 @@ emb_arc:
 
 ;emb_set_area(EmbGeometry *geometry, double area)
 
-;emb_set_circumference(EmbGeometry *geometry, double circumference)
+;(EmbGeometry *geometry, double circumference)
+emb_set_circumference:
+	ret
 
-; emb_set_radius(EmbGeometry *geometry, double radius)
+; (EmbGeometry *geometry, double radius)
+emb_set_radius:
+	ret
 
-; emb_set_radius_major(EmbGeometry *geometry, double radius)
+; (EmbGeometry *geometry, double radius)
+emb_set_radius_major:
+	ret
 
-; emb_set_radius_minor(EmbGeometry *geometry, double radius)
+;	argument 0: EmbGeometry *geometry
+;	argument 1: double radius
+%macro emb_set_radius_minor 2
+	
+%endmacro
 
-; emb_set_diameter_major(EmbGeometry *geometry, double diameter)
+; https://www.nasm.us/xdoc/2.11.02/html/nasmdoc4.html#section-4.3.4
+; (EmbGeometry *geometry, double diameter)
+%macro emb_set_diameter_major 0
 
-; emb_set_diameter_minor(EmbGeometry *geometry, double diameter)
-;
-; char *emb_get_svg_token(char *svg, char token[MAX_STRING_LENGTH])
-; char *emb_get_svg_vector(char *svg, EmbVector *v)
+%endmacro
+
+; (EmbGeometry *geometry, double diameter)
+%macro emb_set_diameter_minor 0
+%endmacro
+
+; char *(char *svg, char token[MAX_STRING_LENGTH])
+emb_get_svg_token:
+	ret
+
+; char *(char *svg, EmbVector *v)
+emb_get_svg_vector:
+	ret
+
+%macro	startup	0
+	write	welcome_message, welcome_message_len
+	write	version_string, version_string_len
+	write	begin_tests, begin_tests_len
+%endmacro
+
+%define	constant_pi	3.141592653589793
+
 ;
 ; NON-MACRO CONSTANTS
 ; *****************************************************************************
-;
+
+	section .data
+
+version_string:	db	"v0.1"
+version_string_len	equ	$-version_string
+
+formatTable:
 ; EmbFormatList formatTable[numberOfFormats]
-; const EmbReal embConstantPi
+
 ; EmbBrand brand_codes[100]
 ; EmbThread black_thread
 ; int emb_verbose
-;
+
+welcome_message:
+	db	"libembroidery (embedded)", 10
+	db	"------------------------", 10
+	db	"A command line program for testing the assembly macro version of libembroidery.", 10, 10
+	db	"Copyright 2013-2024 The Embroidermodder Team", 10
+	db	"Licensed under the terms of the zlib license.", 10
+	db	10
+	db	"https://github.com/Embroidermodder/libembroidery", 10
+	db	"https://www.libembroidery.org", 10
+	db	"------------------------", 10
+	db	"VERSION: "
+welcome_message_len	equ	$-welcome_message
+
+begin_tests:
+	db	10, "------------------------", 10
+	db	10, "Beginning tests.", 10
+begin_tests_len	equ	$-begin_tests
+

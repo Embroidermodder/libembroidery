@@ -44,7 +44,7 @@ const char *tests[] = {
 int test_vadd(EmbVector v1, EmbVector v2, EmbVector result, EmbReal tolerence);
 int test_vsubtract(EmbVector v1, EmbVector v2, EmbVector result,
     EmbReal tolerence);
-int test_ctangents(EmbCircle c, EmbVector p, EmbVector s0, EmbVector s1,
+int test_ctangents(EmbGeometry c, EmbVector p, EmbVector s0, EmbVector s1,
     EmbReal tolerence);
 
 /* Currently just crash testing. */
@@ -77,16 +77,16 @@ testMain(int test_index)
         /* Solution */
         EmbVector s0 = emb_vector(2.2500f, 1.9843f);
         EmbVector s1 = emb_vector(2.2500f, -1.9843f);
-        return test_ctangents(c1.object.circle, p, s0, s1, epsilon);
+        return test_ctangents(c1, p, s0, s1, epsilon);
     }
     case 1: {
         EmbReal epsilon = 0.001f;
-        EmbCircle c2 = emb_circle(20.1762f, 10.7170f, 6.8221f);
+        EmbGeometry c2 = emb_circle(20.1762f, 10.7170f, 6.8221f);
         EmbVector p = emb_vector(24.3411f, 18.2980f);
         /* Solution */
         EmbVector s0 = emb_vector(19.0911f, 17.4522f);
         EmbVector s1 = emb_vector(26.4428f, 13.4133f);
-        return test_ctangents(c1.object.circle, p, s0, s1, epsilon);
+        return test_ctangents(c2, p, s0, s1, epsilon);
     }
     case 2: {
         unsigned int tColor = 0xFF0d6b2f;
@@ -273,11 +273,11 @@ test_vsubtract(EmbVector v1, EmbVector v2, EmbVector result, EmbReal tolerence)
 
 /* . */
 int
-test_ctangents(EmbCircle c, EmbVector p, EmbVector s0, EmbVector s1,
+test_ctangents(EmbGeometry c, EmbVector p, EmbVector s0, EmbVector s1,
     EmbReal tolerence)
 {
     EmbVector p0, p1;
-    if (!getCircleTangentPoints(c, p, &p0, &p1)) {
+    if (!getCircleTangentPoints(c.object.circle, p, &p0, &p1)) {
         printf("Error calculating tangent points.\n");
         return 1;
     }
@@ -286,7 +286,7 @@ test_ctangents(EmbCircle c, EmbVector p, EmbVector s0, EmbVector s1,
        "Point  : px=%f, py=%f\n"
        "Tangent: tx0=%f, ty0=%f\n"
        "Tangent: tx1=%f, ty1=%f\n\n",
-       c.radius, c.center.x, c.center.y,
+       c.object.circle.radius, c.object.circle.center.x, c.object.circle.center.y,
        p.x, p.y,
        p0.x, p0.y,
        p1.x, p1.y);

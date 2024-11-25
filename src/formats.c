@@ -25,6 +25,129 @@
 
 #include "internal.h"
 
+char read100(EmbPattern *pattern, FILE* file);
+char write100(EmbPattern *pattern, FILE* file);
+char read10o(EmbPattern *pattern, FILE* file);
+char write10o(EmbPattern *pattern, FILE* file);
+char readArt(EmbPattern *pattern, FILE* file);
+char writeArt(EmbPattern *pattern, FILE* file);
+char readBmc(EmbPattern *pattern, FILE* file);
+char writeBmc(EmbPattern *pattern, FILE* file);
+char readBro(EmbPattern *pattern, FILE* file);
+char writeBro(EmbPattern *pattern, FILE* file);
+char readCnd(EmbPattern *pattern, FILE* file);
+char writeCnd(EmbPattern *pattern, FILE* file);
+char readCol(EmbPattern *pattern, FILE* file);
+char writeCol(EmbPattern *pattern, FILE* file);
+char readCsd(EmbPattern *pattern, FILE* file);
+char writeCsd(EmbPattern *pattern, FILE* file);
+char readCsv(EmbPattern *pattern, FILE* file);
+char writeCsv(EmbPattern *pattern, FILE* file);
+char readDat(EmbPattern *pattern, FILE* file);
+char writeDat(EmbPattern *pattern, FILE* file);
+char readDem(EmbPattern *pattern, FILE* file);
+char writeDem(EmbPattern *pattern, FILE* file);
+char readDsb(EmbPattern *pattern, FILE* file);
+char writeDsb(EmbPattern *pattern, FILE* file);
+char readDst(EmbPattern *pattern, FILE* file);
+char writeDst(EmbPattern *pattern, FILE* file);
+char readDsz(EmbPattern *pattern, FILE* file);
+char writeDsz(EmbPattern *pattern, FILE* file);
+char readDxf(EmbPattern *pattern, FILE* file);
+char writeDxf(EmbPattern *pattern, FILE* file);
+char readEdr(EmbPattern *pattern, FILE* file);
+char writeEdr(EmbPattern *pattern, FILE* file);
+char readEmd(EmbPattern *pattern, FILE* file);
+char writeEmd(EmbPattern *pattern, FILE* file);
+char readExp(EmbPattern *pattern, FILE* file);
+char writeExp(EmbPattern *pattern, FILE* file);
+char readExy(EmbPattern *pattern, FILE* file);
+char writeExy(EmbPattern *pattern, FILE* file);
+char readEys(EmbPattern *pattern, FILE* file);
+char writeEys(EmbPattern *pattern, FILE* file);
+char readFxy(EmbPattern *pattern, FILE* file);
+char writeFxy(EmbPattern *pattern, FILE* file);
+char readGc(EmbPattern *pattern, FILE* file);
+char writeGc(EmbPattern *pattern, FILE* file);
+char readGnc(EmbPattern *pattern, FILE* file);
+char writeGnc(EmbPattern *pattern, FILE* file);
+char readGt(EmbPattern *pattern, FILE* file);
+char writeGt(EmbPattern *pattern, FILE* file);
+char readHus(EmbPattern *pattern, FILE* file);
+char writeHus(EmbPattern *pattern, FILE* file);
+char readInb(EmbPattern *pattern, FILE* file);
+char writeInb(EmbPattern *pattern, FILE* file);
+char readInf(EmbPattern *pattern, FILE* file);
+char writeInf(EmbPattern *pattern, FILE* file);
+char readJef(EmbPattern *pattern, FILE* file);
+char writeJef(EmbPattern *pattern, FILE* file);
+char readKsm(EmbPattern *pattern, FILE* file);
+char writeKsm(EmbPattern *pattern, FILE* file);
+char readMax(EmbPattern *pattern, FILE* file);
+char writeMax(EmbPattern *pattern, FILE* file);
+char readMit(EmbPattern *pattern, FILE* file);
+char writeMit(EmbPattern *pattern, FILE* file);
+char readNew(EmbPattern *pattern, FILE* file);
+char writeNew(EmbPattern *pattern, FILE* file);
+char readOfm(EmbPattern *pattern, FILE* file);
+char writeOfm(EmbPattern *pattern, FILE* file);
+char readPcd(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePcd(EmbPattern *pattern, FILE* file);
+char readPcm(EmbPattern *pattern, FILE* file);
+char writePcm(EmbPattern *pattern, FILE* file);
+char readPcq(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePcq(EmbPattern *pattern, FILE* file);
+char readPcs(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePcs(EmbPattern *pattern, FILE* file);
+char readPec(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePec(EmbPattern *pattern, const char *fileName,  FILE* file);
+char readPel(EmbPattern *pattern, FILE* file);
+char writePel(EmbPattern *pattern, FILE* file);
+char readPem(EmbPattern *pattern, FILE* file);
+char writePem(EmbPattern *pattern, FILE* file);
+char readPes(EmbPattern *pattern, const char *fileName, FILE* file);
+char writePes(EmbPattern *pattern, const char *fileName, FILE* file);
+char readPhb(EmbPattern *pattern, FILE* file);
+char writePhb(EmbPattern *pattern, FILE* file);
+char readPhc(EmbPattern *pattern, FILE* file);
+char writePhc(EmbPattern *pattern, FILE* file);
+char readPlt(EmbPattern *pattern, FILE* file);
+char writePlt(EmbPattern *pattern, FILE* file);
+char readRgb(EmbPattern *pattern, FILE* file);
+char writeRgb(EmbPattern *pattern, FILE* file);
+char readSew(EmbPattern *pattern, FILE* file);
+char writeSew(EmbPattern *pattern, FILE* file);
+char readShv(EmbPattern *pattern, FILE* file);
+char writeShv(EmbPattern *pattern, FILE* file);
+char readSst(EmbPattern *pattern, FILE* file);
+char writeSst(EmbPattern *pattern, FILE* file);
+char readStx(EmbPattern *pattern, FILE* file);
+char writeStx(EmbPattern *pattern, FILE* file);
+char readSvg(EmbPattern *pattern, FILE* file);
+char writeSvg(EmbPattern *pattern, FILE* file);
+char readT01(EmbPattern *pattern, FILE* file);
+char writeT01(EmbPattern *pattern, FILE* file);
+char readT09(EmbPattern *pattern, FILE* file);
+char writeT09(EmbPattern *pattern, FILE* file);
+char readTap(EmbPattern *pattern, FILE* file);
+char writeTap(EmbPattern *pattern, FILE* file);
+char readThr(EmbPattern *pattern, FILE* file);
+char writeThr(EmbPattern *pattern, FILE* file);
+char readTxt(EmbPattern *pattern, FILE* file);
+char writeTxt(EmbPattern *pattern, FILE* file);
+char readU00(EmbPattern *pattern, FILE* file);
+char writeU00(EmbPattern *pattern, FILE* file);
+char readU01(EmbPattern *pattern, FILE* file);
+char writeU01(EmbPattern *pattern, FILE* file);
+char readVip(EmbPattern *pattern, FILE* file);
+char writeVip(EmbPattern *pattern, FILE* file);
+char readVp3(EmbPattern *pattern, FILE* file);
+char writeVp3(EmbPattern *pattern, FILE* file);
+char readXxx(EmbPattern *pattern, FILE* file);
+char writeXxx(EmbPattern *pattern, FILE* file);
+char readZsk(EmbPattern *pattern, FILE* file);
+char writeZsk(EmbPattern *pattern, FILE* file);
+
 int read_descriptions(FILE* file, EmbPattern* pattern);
 void readHoopName(FILE* file, EmbPattern* pattern);
 void readImageString(FILE* file, EmbPattern* pattern);
@@ -33,18 +156,30 @@ void readMotifPatterns(FILE* file, EmbPattern* pattern);
 void readFeatherPatterns(FILE* file, EmbPattern* pattern);
 void readThreads(FILE* file, EmbPattern* pattern);
 
+void readPESHeaderV5(FILE* file, EmbPattern* pattern);
+void readPESHeaderV6(FILE* file, EmbPattern* pattern);
+void readPESHeaderV7(FILE* file, EmbPattern* pattern);
+void readPESHeaderV8(FILE* file, EmbPattern* pattern);
+void readPESHeaderV9(FILE* file, EmbPattern* pattern);
+void readPESHeaderV10(FILE* file, EmbPattern* pattern);
+
 unsigned char toyota_position_encode(EmbReal a);
 EmbReal toyota_position_decode(unsigned char a);
 
-void toyota_100_encode(EmbVector *position, EmbStitch *st, unsigned char *b);
-void toyota_100_decode(EmbVector *position, EmbStitch *st, unsigned char *b);
-void toyota_10o_encode(EmbVector *position, EmbStitch *st, unsigned char *b);
-void toyota_10o_decode(EmbVector *position, EmbStitch *st, unsigned char *b);
-void bernina_art_encode(EmbVector *position, EmbStitch *st, unsigned char *b);
-void bernina_art_decode(EmbVector *position, EmbStitch *st, unsigned char *b);
-
 const int shvThreadCount = 42;
 const int pecThreadCount = 65;
+
+char
+emb_fread(void *b, int bytes, FILE *file)
+{
+    return fread(b, 1, bytes, file);
+}
+
+char
+emb_fwrite(void *b, int bytes, FILE *file)
+{
+    return fwrite(b, 1, bytes, file);
+}
 
 /* Get extension from file name. */
 int
@@ -125,13 +260,13 @@ emb_pattern_read(EmbPattern* pattern, const char *fileName, int format)
     }
     switch (format) {
     case EMB_FORMAT_100:
-        result = read_stitch_block(pattern, file, toyota_100_decode, 4, 0);
+        result = read100(pattern, file);
         break;
     case EMB_FORMAT_10O:
-        result = read_stitch_block(pattern, file, toyota_10o_decode, 3, 0);
+        result = read10o(pattern, file);
         break;
     case EMB_FORMAT_ART:
-        result = read_stitch_block(pattern, file, bernina_art_decode, 1, 0);
+        result = readArt(pattern, file);
         break;
     case EMB_FORMAT_BMC:
         result = readBmc(pattern, file);
@@ -346,13 +481,13 @@ emb_pattern_write(EmbPattern* pattern, const char *fileName, int format)
     }
     switch (format) {
     case EMB_FORMAT_100:
-        result = write_stitch_block(pattern, file, toyota_100_encode, 4, 0);
+        result = write100(pattern, file);
         break;
     case EMB_FORMAT_10O:
-        result = write_stitch_block(pattern, file, toyota_10o_encode, 3, 0);
+        result = write10o(pattern, file);
         break;
     case EMB_FORMAT_ART:
-        result = write_stitch_block(pattern, file, bernina_art_encode, 1, 0);
+        result = writeArt(pattern, file);
         break;
     case EMB_FORMAT_BMC:
         result = writeBmc(pattern, file);
@@ -600,162 +735,35 @@ toyota_position_decode(unsigned char a)
  *
  * The stitch encoding is in 4 byte chunks.
  */
-void
-toyota_100_encode(EmbVector *head_position, EmbStitch *st, unsigned char *b)
-{
-    EmbVector delta;
-    delta.x = st->x - head_position->x;
-    delta.y = st->y - head_position->y;
-    *head_position = emb_vector_add(*head_position, delta);
-    b[0] = 0;
-    b[1] = 0;
-    b[2] = toyota_position_encode(delta.x);
-    b[3] = toyota_position_encode(delta.y);
-    if (!(st->flags & STOP)) {
-        b[0] |= 0x01;
-    }
-    if (st->flags & END) {
-        b[0] = 0x1F;
-    }
-}
-
-void
-toyota_100_decode(EmbVector *head_position, EmbStitch *st, unsigned char *b)
-{
-    int stitchType;
-    st->x = toyota_position_decode(b[2]);
-    st->y = toyota_position_decode(b[3]);
-    st->flags = NORMAL;
-    /*
-    if (!(b[0] & 0xFC)) {
-        st.flags = JUMP;
-        TODO: review & fix
-    }
-    */
-    if (!(b[0] & 0x01)) {
-        st->flags = STOP;
-    }
-    if (b[0] == 0x1F) {
-        st->flags = END;
-    }
-}
-
-/* The Toyota 10o format is a stitch-only format that uses an external color
- * file.
- *
- * The stitch encoding is in 3 byte chunks.
- */
-void
-toyota_10o_encode(EmbVector *head_position, EmbStitch *st, unsigned char *b)
-{
-    b[0] = 0;
-    b[1] = 0;
-    b[2] = 0;
-    if (st->x < 0) {
-        b[2] |= 0x20;
-        b[0] = -st->x;
-    }
-    else {
-        b[0] = st->x;
-    }
-    if (st->y < 0) {
-        b[2] |= 0x40;
-        b[1] = -st->y;
-    }
-    else {
-        b[1] = st->y;
-    }
-    if (st->flags == TRIM) {
-        b[2] |= 1;
-    }
-    if (st->flags == STOP) {
-        b[2] |= 5;
-    }
-    if (st->flags == END) {
-        b[2] = 0xF8;
-    }
-}
-
-void
-toyota_10o_decode(EmbVector *head_position, EmbStitch *st, unsigned char *b)
-{
-    st->flags = NORMAL;
-    unsigned char ctrl = b[0];
-    st->y = 0.1 * b[1];
-    st->x = 0.1 * b[2];
-    if (ctrl & 0x20) {
-        st->x = -st->x;
-    }
-    if (ctrl & 0x40) {
-        st->y = -st->y;
-    }
-    if (ctrl & 0x01) {
-        st->flags = TRIM;
-    }
-    if ((ctrl & 0x5) == 5) {
-        st->flags = STOP;
-    }
-    if (ctrl == 0xF8 || ctrl == 0x91 || ctrl == 0x87) {
-        st->flags = END;
-    }
-}
-
-/* The Bernina Embroidery Format (.art)
- *
- * We don't know much about this format. \todo Find a source.
- */
-void
-bernina_art_encode(EmbVector *position, EmbStitch *st, unsigned char *b)
-{
-    puts("ERROR: bernina_art_encode is not supported.");
-    b[0] = 0;
-}
-
-void
-bernina_art_decode(EmbVector *position, EmbStitch *st, unsigned char *b)
-{
-    puts("ERROR: bernina_art_decode is not supported.");
-    st->flags = NORMAL;
-}
-
-/* A generic reader loop for any format that uses a binary block representing
- * an array of stitches.
- */
 char
-read_stitch_block(
-    EmbPattern *pattern,
-    FILE* file,
-    void (*stitch_decoder)(EmbVector *, EmbStitch *, unsigned char *),
-    int stitch_data_size,
-    int mode
-)
+read100(EmbPattern *pattern, FILE* file)
 {
     unsigned char b[10];
-    while (fread(b, 1, stitch_data_size, file) == stitch_data_size) {
-        EmbVector position;
+    while (read_bytes(file, 3, b)) {
         EmbStitch st;
+        st.x = toyota_position_decode(b[2]);
+        st.y = toyota_position_decode(b[3]);
         st.flags = NORMAL;
-        st.x = 0.0;
-        st.y = 0.0;
-        position.x = 0.0;
-        position.y = 0.0;
-        stitch_decoder(&position, &st, b);
+        /*
+        if (!(b[0] & 0xFC)) {
+            st.flags = JUMP;
+            TODO: review & fix
+        }
+        */
+        if (!(b[0] & 0x01)) {
+            st.flags = STOP;
+        }
+        if (b[0] == 0x1F) {
+            st.flags = END;
+        }
+
         emb_pattern_addStitchRel(pattern, st.x, st.y, st.flags, 1);
     }
     return 1;
 }
 
-/* A generic writer loop for any format that uses a binary block representing
- * an array of stitches.
- */
 char
-write_stitch_block(
-    EmbPattern *pattern,
-    FILE* file,
-    void (*stitch_encoder)(EmbVector *, EmbStitch *, unsigned char *),
-    int stitch_data_size,
-    int mode
-)
+write100(EmbPattern *pattern, FILE* file)
 {
     int i;
     EmbVector position;
@@ -764,13 +772,128 @@ write_stitch_block(
     for (i=0; i<pattern->stitch_list->count; i++) {
         unsigned char b[10];
         EmbStitch st = pattern->stitch_list->stitch[i];
-        stitch_encoder(&position, &st, b);
-        int bytes_written = emb_fwrite(b, stitch_data_size, file);
-        if (bytes_written != stitch_data_size) {
+
+        EmbVector delta;
+        delta.x = st.x - position.x;
+        delta.y = st.y - position.y;
+        position = emb_vector_add(position, delta);
+        b[0] = 0;
+        b[1] = 0;
+        b[2] = toyota_position_encode(delta.x);
+        b[3] = toyota_position_encode(delta.y);
+        if (!(st.flags & STOP)) {
+            b[0] |= 0x01;
+        }
+        if (st.flags & END) {
+            b[0] = 0x1F;
+        }
+
+        if (write_bytes(file, 4, b)) {
             return 0;
         }
     }
     return 1;
+}
+
+/* The Toyota 10o format is a stitch-only format that uses an external color
+ * file.
+ *
+ * The stitch encoding is in 3 byte chunks.
+ */
+char
+read10o(EmbPattern *pattern, FILE* file)
+{
+    unsigned char b[10];
+    while (read_bytes(file, 3, b)) {
+        EmbStitch st;
+
+        unsigned char ctrl = b[0];
+        st.y = 0.1 * b[1];
+        st.x = 0.1 * b[2];
+        st.flags = NORMAL;
+
+        if (ctrl & 0x20) {
+            st.x = -st.x;
+        }
+        if (ctrl & 0x40) {
+            st.y = -st.y;
+        }
+        if (ctrl & 0x01) {
+            st.flags = TRIM;
+        }
+        if ((ctrl & 0x5) == 5) {
+            st.flags = STOP;
+        }
+        if (ctrl == 0xF8 || ctrl == 0x91 || ctrl == 0x87) {
+            st.flags = END;
+        }
+
+        emb_pattern_addStitchRel(pattern, st.x, st.y, st.flags, 1);
+    }
+    return 1;
+}
+
+char
+write10o(EmbPattern *pattern, FILE* file)
+{
+    int i;
+    EmbVector position;
+
+    position = pattern->home;
+    for (i=0; i<pattern->stitch_list->count; i++) {
+        unsigned char b[10];
+        EmbStitch st = pattern->stitch_list->stitch[i];
+
+        b[0] = 0;
+        b[1] = 0;
+        b[2] = 0;
+        if (st.x < 0) {
+            b[2] |= 0x20;
+            b[0] = -st.x;
+        }
+        else {
+            b[0] = st.x;
+        }
+        if (st.y < 0) {
+            b[2] |= 0x40;
+            b[1] = -st.y;
+        }
+        else {
+            b[1] = st.y;
+        }
+        if (st.flags == TRIM) {
+            b[2] |= 1;
+        }
+        if (st.flags == STOP) {
+            b[2] |= 5;
+        }
+        if (st.flags == END) {
+            b[2] = 0xF8;
+        }
+
+        if (write_bytes(file, 3, b)) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+/* The Bernina Embroidery Format (.art)
+ *
+ * We don't know much about this format. \todo Find a source.
+ */
+char
+readArt(EmbPattern *pattern, FILE* file)
+{
+    puts("ERROR: readArt is not supported.");
+    return 0;
+}
+
+char
+writeArt(EmbPattern *pattern, FILE* file)
+{
+    puts("ERROR: writeArt is not supported.");
+    return 0;
 }
 
 /* The Bitmap Cache Embroidery Format (.bmc)
@@ -780,10 +903,7 @@ write_stitch_block(
 char
 readBmc(EmbPattern* pattern, FILE* file)
 {
-    puts("readBmc is not implemented");
-    if (emb_verbose > 1) {
-        printf("Called with %p %p\n", (void*)pattern, (void*)file);
-    }
+    puts("ERROR: readBmc is not supported.");
     return 0; /*TODO: finish readBmc */
 }
 
@@ -791,9 +911,6 @@ char
 writeBmc(EmbPattern* pattern, FILE* file)
 {
     puts("writeBmc is not implemented");
-    if (emb_verbose > 1) {
-        printf("Called with %p %p\n", (void*)pattern, (void*)file);
-    }
     return 0; /*TODO: finish writeBmc */
 }
 
@@ -885,8 +1002,6 @@ char
 readCnd(EmbPattern* pattern, FILE* file)
 {
     puts("readCnd is not implemented");
-    puts("Overridden, defaulting to dst.");
-    readDst(pattern, file);
     return 0; /*TODO: finish readCnd */
 }
 
@@ -894,8 +1009,6 @@ char
 writeCnd(EmbPattern* pattern, FILE* file)
 {
     puts("writeCnd is not implemented");
-    puts("Overridden, defaulting to dst.");
-    writeDst(pattern, file);
     return 0; /*TODO: finish writeCnd */
 }
 
@@ -1750,7 +1863,7 @@ encode_record(FILE* file, int x, int y, int flags)
         b[2] = (char) (b[2] | 0xC3);
     }
 
-    emb_fwrite(b, 3, file);
+    write_bytes(file, 3, b);
 }
 
 /*convert 2 characters into 1 int for case statement */
@@ -2006,7 +2119,7 @@ writeDst(EmbPattern* pattern, FILE* file)
     /* Finish file with a terminator character and two zeros to
      * keep the post header part a multiple of three.
      */
-    emb_fwrite("\xa1\0\0", 3, file);
+    write_bytes(file, 3, "\xa1\0\0");
     return 1;
 }
 
@@ -2092,7 +2205,7 @@ writeDsz(EmbPattern* pattern, FILE* file)
         }
         b[0] = emb_round(10.0*delta.x);
         b[1] = emb_round(10.0*delta.y);
-        emb_fwrite(b, 3, file);
+        write_bytes(file, 3, b);
     }
     return 1;
 }
@@ -2584,26 +2697,26 @@ writeExp(EmbPattern* pattern, FILE* file)
                 b[1] = 0x01;
                 b[2] = 0x00;
                 b[3] = 0x00;
-                emb_fwrite(b, 4, file);
+                write_bytes(file, 4, b);
                 break;
             case JUMP:
                 b[0] = (char)(0x80);
                 b[1] = 0x04;
                 b[2] = dx;
                 b[3] = dy;
-                emb_fwrite(b, 4, file);
+                write_bytes(file, 4, b);
                 break;
             case TRIM:
                 b[0] = (char)(0x80);
                 b[1] = (char)(0x80);
                 b[2] = 0x07;
                 b[3] = 0x00;
-                emb_fwrite(b, 4, file);
+                write_bytes(file, 4, b);
                 break;
             default: /* STITCH */
                 b[0] = dx;
                 b[1] = dy;
-                emb_fwrite(b, 2, file);
+                write_bytes(file, 2, b);
                 break;
         }
     }
@@ -3060,9 +3173,9 @@ writeHus(EmbPattern* pattern, FILE* file)
         emb_write_i16(file, color_index);
     }
 
-    emb_fwrite(attributeCompressed, attributeSize, file);
-    emb_fwrite(xCompressed, xCompressedSize, file);
-    emb_fwrite(yCompressed, yCompressedSize, file);
+    write_bytes(file, attributeSize, attributeCompressed);
+    write_bytes(file, xCompressedSize, xCompressed);
+    write_bytes(file, yCompressedSize, yCompressed);
 
     safe_free(xValues);
     safe_free(xCompressed);

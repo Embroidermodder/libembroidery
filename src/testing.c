@@ -29,6 +29,24 @@
 #include "embroidery.h"
 #include "internal.h"
 
+/*
+ * Format: the first token is the function call, the next n tokens are the
+ * number required by that function then the remaining tokens are the expected
+ * output up to some stated tolerence.
+ */
+const char *tests[] = {
+    "ctangent 0.001 0.0 0.0 3.0 4.0 0.0 2.25 1.9843 2.25 -1.9843",
+    "extension example.zsk .zsk",
+    "description example.zsk \"ZSK USA Embroidery Format\"",
+    "reader example.zsk U"
+};
+
+int test_vadd(EmbVector v1, EmbVector v2, EmbVector result, EmbReal tolerence);
+int test_vsubtract(EmbVector v1, EmbVector v2, EmbVector result,
+    EmbReal tolerence);
+int test_ctangents(EmbCircle c, EmbVector p, EmbVector s0, EmbVector s1,
+    EmbReal tolerence);
+
 /* Currently just crash testing. */
 int
 test_convert(int test_case, int from, int to)
@@ -46,50 +64,29 @@ test_convert(int test_case, int from, int to)
     return 0;
 }
 
-
 /* . */
 int
 testMain(int test_index)
 {
+    /* const char *test_str = tests[test_index]; */
     switch (test_index) {
     case 0: {
-        EmbReal error;
         EmbReal epsilon = 0.001f;
-        EmbVector p0, p1;
-        /* Problem */
         EmbGeometry c1 = emb_circle(0.0f, 0.0f, 3.0f);
+        EmbVector p = emb_vector(4.0f, 0.0f);
         /* Solution */
-        EmbVector t0 = {2.2500f, 1.9843f};
-        EmbVector t1 = {2.2500f, -1.9843f};
-        EmbVector p = {4.0f, 0.0f};
-        /* Test */
-        testTangentPoints(c1.object.circle, p, &p0, &p1);
-        error = emb_vector_distance(p0, t0) + emb_vector_distance(p1, t1);
-        if (error > epsilon) {
-            printf("Error larger than tolerance, circle test 1: %f.\n\n", error);
-            return 1;
-        }
-
-        return 0;
+        EmbVector s0 = emb_vector(2.2500f, 1.9843f);
+        EmbVector s1 = emb_vector(2.2500f, -1.9843f);
+        return test_ctangents(c1.object.circle, p, s0, s1, epsilon);
     }
     case 1: {
-        EmbReal error;
         EmbReal epsilon = 0.001f;
-        EmbVector p0, p1;
-        EmbCircle c2 = {{20.1762f, 10.7170f}, 6.8221f};
+        EmbCircle c2 = emb_circle(20.1762f, 10.7170f, 6.8221f);
+        EmbVector p = emb_vector(24.3411f, 18.2980f);
         /* Solution */
-        EmbVector s0 = {19.0911f, 17.4522f};
-        EmbVector s1 = {26.4428f, 13.4133f};
-        EmbVector p = {24.3411f, 18.2980f};
-        /* Test */
-        testTangentPoints(c2, p, &p0, &p1);
-        error = emb_vector_distance(p0, s0) + emb_vector_distance(p1, s1);
-        if (error > epsilon) {
-            printf("Error larger than tolerance, circle test 2: %f.\n\n", error);
-            return 2;
-        }
-
-        return 0;
+        EmbVector s0 = emb_vector(19.0911f, 17.4522f);
+        EmbVector s1 = emb_vector(26.4428f, 13.4133f);
+        return test_ctangents(c1.object.circle, p, s0, s1, epsilon);
     }
     case 2: {
         unsigned int tColor = 0xFF0d6b2f;
@@ -102,36 +99,32 @@ testMain(int test_index)
         char tName[50];
         string_copy(tName, threadColorName(tColor, tBrand));
 
-        if (emb_verbose > 0) {
-            printf("Color : 0x%X\n"
-               "Brand : %d\n"
-               "Num   : %d\n"
-               "Name  : %s\n\n",
+        printf("Color : 0x%X\n"
+           "Brand : %d\n"
+           "Num   : %d\n"
+           "Name  : %s\n\n",
             tColor,
             tBrand,
             tNum, /* Solution: 29 */
             tName); /* Solution: Dark Olive Green */
-        }
         return 0;
     }
     case 3: {
         const char*  tName = "example.zsk";
         int format = emb_identify_format(tName);
 
-        if (emb_verbose > 0) {
-            printf("Filename   : %s\n"
-               "Extension  : %s\n"
-               "Description: %s\n"
-               "Reader     : %c\n"
-               "Writer     : %c\n"
-               "Type       : %d\n\n",
-                tName,
-                formatTable[format].extension,
-                formatTable[format].description,
-                formatTable[format].reader_state,
-                formatTable[format].writer_state,
-                formatTable[format].type);
-        }
+        printf("Filename   : %s\n"
+           "Extension  : %s\n"
+           "Description: %s\n"
+           "Reader     : %c\n"
+           "Writer     : %c\n"
+           "Type       : %d\n\n",
+            tName,
+            formatTable[format].extension,
+            formatTable[format].description,
+            formatTable[format].reader_state,
+            formatTable[format].writer_state,
+            formatTable[format].type);
 
         if (!string_equals(formatTable[format].extension, ".zsk")) {
             puts("In test 3 the extension lookup failed.");
@@ -172,14 +165,12 @@ testMain(int test_index)
         incAngle = emb_arc_incAngle(g);
         clockwise = emb_arc_clockwise(g);
         /* bulge = emb_arc_bulge(g); */
-        if (emb_verbose > 0) {
-            printf("Clockwise Test:\n");
-            printArcResults(bulge, g.object.arc, center,
-                        radius, diameter,
-                        chord, chordMid,
-                        sagitta,   apothem,
-                        incAngle,  clockwise);
-        }
+        printf("Clockwise Test:\n");
+        printArcResults(bulge, g.object.arc, center,
+                    radius, diameter,
+                    chord, chordMid,
+                    sagitta,   apothem,
+                    incAngle,  clockwise);
 
         bulge  = 2.414213562373095f;
         /* FIXME: midpoints */
@@ -194,13 +185,11 @@ testMain(int test_index)
         incAngle = emb_arc_incAngle(g);
         clockwise = emb_arc_clockwise(g);
         /* bulge = emb_arc_bulge(g); */
-        if (emb_verbose > 0) {
-            printf("Counter-Clockwise Test:\n");
-            printArcResults(bulge, g.object.arc, center,
-                        radius, diameter, chord,
-                        chordMid, sagitta,   apothem,
-                        incAngle, clockwise);
-        }
+        printf("Counter-Clockwise Test:\n");
+        printArcResults(bulge, g.object.arc, center,
+                    radius, diameter, chord,
+                    chordMid, sagitta,   apothem,
+                    incAngle, clockwise);
 
         return 0;
     }
@@ -246,27 +235,66 @@ testMain(int test_index)
 
 /* . */
 int
-testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1)
+test_vadd(EmbVector v1, EmbVector v2, EmbVector result, EmbReal tolerence)
 {
-    t0->x = 0.0;
-    t0->y = 0.0;
-    t1->x = 0.0;
-    t1->y = 0.0;
-    if (!getCircleTangentPoints(c, p, t0, t1)) {
+    EmbVector testResult = emb_vector_add(v1, v2);
+    double xerror = fabs(testResult.x - result.x);
+    double yerror = fabs(testResult.y - result.y);
+    printf("errors: %f %f\n", xerror, yerror);
+    if (tolerence < xerror) {
+        printf("Error calculating vector sum.\n");
+        return 1;
+    }
+    if (tolerence < yerror) {
+        printf("Error calculating vector sum.\n");
+        return 1;
+    }
+    return 0;
+}
+
+/* . */
+int
+test_vsubtract(EmbVector v1, EmbVector v2, EmbVector result, EmbReal tolerence)
+{
+    EmbVector testResult = emb_vector_subtract(v1, v2);
+    double xerror = fabs(testResult.x - result.x);
+    double yerror = fabs(testResult.y - result.y);
+    printf("errors: %f %f\n", xerror, yerror);
+    if (tolerence < xerror) {
+        printf("Error calculating vector sum.\n");
+        return 1;
+    }
+    if (tolerence < yerror) {
+        printf("Error calculating vector sum.\n");
+        return 1;
+    }
+    return 0;
+}
+
+/* . */
+int
+test_ctangents(EmbCircle c, EmbVector p, EmbVector s0, EmbVector s1,
+    EmbReal tolerence)
+{
+    EmbVector p0, p1;
+    if (!getCircleTangentPoints(c, p, &p0, &p1)) {
         printf("Error calculating tangent points.\n");
         return 1;
     }
-    else {
-        if (emb_verbose > 0) {
-            printf("Circle : cr=%f, cx=%f, cy=%f\n"
-               "Point  : px=%f, py=%f\n"
-               "Tangent: tx0=%f, ty0=%f\n"
-               "Tangent: tx1=%f, ty1=%f\n\n",
-               c.radius, c.center.x, c.center.y,
-               p.x, p.y,
-               t0->x, t0->y,
-               t1->x, t1->y);
-        }
+
+    printf("Circle : cr=%f, cx=%f, cy=%f\n"
+       "Point  : px=%f, py=%f\n"
+       "Tangent: tx0=%f, ty0=%f\n"
+       "Tangent: tx1=%f, ty1=%f\n\n",
+       c.radius, c.center.x, c.center.y,
+       p.x, p.y,
+       p0.x, p0.y,
+       p1.x, p1.y);
+
+    double error = emb_vector_distance(p0, s0) + emb_vector_distance(p1, s1);
+    if (error > tolerence) {
+        printf("Error larger than tolerance, circle test 2: %f.\n\n", error);
+        return 1;
     }
     return 0;
 }

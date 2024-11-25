@@ -27,7 +27,8 @@ add_compile_options(
 endif (WIN32)
 
 set(LIBRARY_SRC
-	src/embroidery.c
+	src/pattern.c
+	src/compress.c
 	src/formats.c
 	src/geometry.c
 	src/script.c
@@ -41,52 +42,56 @@ set(LIBRARY_SRC
 	src/data/exquisite_polyester_colors.c
 	src/data/fufu_polyester_colors.c
 	src/data/fufu_rayon_colors.c
-# FIXME: src/data/hemingworth_polyester_colors.c
+	# src/data/hemingworth_polyester_colors.c
 	src/data/hus_colors.c
-# src/data/isacord_polyester_colors.c
-# src/data/isafil_rayon_colors.c
+	# src/data/isacord_polyester_colors.c
+	# src/data/isafil_rayon_colors.c
 	src/data/jef_colors.c
-#//#include "data/madeira_polyester_colors.c
-#//#include "data/madeira_rayon_colors.c
-#//#include "data/marathon_polyester_colors.c
-#//#include "data/marathon_rayon_colors.c
-#//#include "data/metro_polyester_colors.c
-#//#include "data/pantone_colors.c
+	# src/data/madeira_polyester_colors.c
+	# src/data/madeira_rayon_colors.c
+	# src/data/marathon_polyester_colors.c
+	# src/data/marathon_rayon_colors.c
+	# src/data/metro_polyester_colors.c
+	# src/data/pantone_colors.c
 	src/data/pcm_colors.c
 	src/data/pec_colors.c
-#//#include "data/robison_anton_polyester_colors.c
-#//#include "data/robison_anton_rayon_colors.c
+	# src/data/robison_anton_polyester_colors.c
+	# src/data/robison_anton_rayon_colors.c
 	src/data/shv_colors.c
-#//#include "data/sigma_polyester_colors.c
-#//#include "data/sulky_rayon_colors.c
+	# src/data/sigma_polyester_colors.c
+	# src/data/sulky_rayon_colors.c
 	src/data/svg_colors.c
-#//#include "data/thread_art_polyester_colors.c
-#//#include "data/thread_art_rayon_colors.c
-#//#include "data/threadelight_polyester_colors.c
-#//#include "data/z102_isacord_polyester_colors.c
+	# src/data/thread_art_polyester_colors.c
+	# src/data/thread_art_rayon_colors.c
+	# src/data/threadelight_polyester_colors.c
+	# src/data/z102_isacord_polyester_colors.c
 )
 
-add_library(embroidery_static STATIC
-	${LIBRARY_SRC})
+add_library(embroidery_static STATIC ${LIBRARY_SRC})
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
-add_library(embroidery SHARED
-	${LIBRARY_SRC})
+add_library(embroidery SHARED ${LIBRARY_SRC})
 
 target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
 endif()
 
 if(EMBROIDERY_BUILD_CLI)
-add_executable(embroider
-	src/main.c
-	${LIBRARY_SRC})
+add_executable(embroider src/main.c)
 
-target_compile_definitions(embroider PUBLIC LIBEMBROIDERY_CLI)
+target_link_libraries(embroider PRIVATE embroidery_static)
 
 if (WIN32)
 else (WIN32)
 target_link_libraries(embroider PRIVATE m)
 endif (WIN32)
+
+if(EMBROIDERY_TESTING)
+include(CTest)
+
+add_test(NAME test0 COMMAND embroider --test 0)
+add_test(NAME test1 COMMAND embroider --test 1)
+add_test(NAME test2 COMMAND embroider --test 2)
+endif()
 endif()
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)

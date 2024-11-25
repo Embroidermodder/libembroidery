@@ -381,122 +381,77 @@ typedef struct Compress {
     huffman distance_huffman;
 } compress;
 
-char readBmc(EmbPattern *pattern, FILE* file);
-char writeBmc(EmbPattern *pattern, FILE* file);
-char readBro(EmbPattern *pattern, FILE* file);
-char writeBro(EmbPattern *pattern, FILE* file);
-char readCnd(EmbPattern *pattern, FILE* file);
-char writeCnd(EmbPattern *pattern, FILE* file);
-char readCol(EmbPattern *pattern, FILE* file);
-char writeCol(EmbPattern *pattern, FILE* file);
-char readCsd(EmbPattern *pattern, FILE* file);
-char writeCsd(EmbPattern *pattern, FILE* file);
-char readCsv(EmbPattern *pattern, FILE* file);
-char writeCsv(EmbPattern *pattern, FILE* file);
-char readDat(EmbPattern *pattern, FILE* file);
-char writeDat(EmbPattern *pattern, FILE* file);
-char readDem(EmbPattern *pattern, FILE* file);
-char writeDem(EmbPattern *pattern, FILE* file);
-char readDsb(EmbPattern *pattern, FILE* file);
-char writeDsb(EmbPattern *pattern, FILE* file);
-char readDst(EmbPattern *pattern, FILE* file);
-char writeDst(EmbPattern *pattern, FILE* file);
-char readDsz(EmbPattern *pattern, FILE* file);
-char writeDsz(EmbPattern *pattern, FILE* file);
-char readDxf(EmbPattern *pattern, FILE* file);
-char writeDxf(EmbPattern *pattern, FILE* file);
-char readEdr(EmbPattern *pattern, FILE* file);
-char writeEdr(EmbPattern *pattern, FILE* file);
-char readEmd(EmbPattern *pattern, FILE* file);
-char writeEmd(EmbPattern *pattern, FILE* file);
-char readExp(EmbPattern *pattern, FILE* file);
-char writeExp(EmbPattern *pattern, FILE* file);
-char readExy(EmbPattern *pattern, FILE* file);
-char writeExy(EmbPattern *pattern, FILE* file);
-char readEys(EmbPattern *pattern, FILE* file);
-char writeEys(EmbPattern *pattern, FILE* file);
-char readFxy(EmbPattern *pattern, FILE* file);
-char writeFxy(EmbPattern *pattern, FILE* file);
-char readGc(EmbPattern *pattern, FILE* file);
-char writeGc(EmbPattern *pattern, FILE* file);
-char readGnc(EmbPattern *pattern, FILE* file);
-char writeGnc(EmbPattern *pattern, FILE* file);
-char readGt(EmbPattern *pattern, FILE* file);
-char writeGt(EmbPattern *pattern, FILE* file);
-char readHus(EmbPattern *pattern, FILE* file);
-char writeHus(EmbPattern *pattern, FILE* file);
-char readInb(EmbPattern *pattern, FILE* file);
-char writeInb(EmbPattern *pattern, FILE* file);
-char readInf(EmbPattern *pattern, FILE* file);
-char writeInf(EmbPattern *pattern, FILE* file);
-char readJef(EmbPattern *pattern, FILE* file);
-char writeJef(EmbPattern *pattern, FILE* file);
-char readKsm(EmbPattern *pattern, FILE* file);
-char writeKsm(EmbPattern *pattern, FILE* file);
-char readMax(EmbPattern *pattern, FILE* file);
-char writeMax(EmbPattern *pattern, FILE* file);
-char readMit(EmbPattern *pattern, FILE* file);
-char writeMit(EmbPattern *pattern, FILE* file);
-char readNew(EmbPattern *pattern, FILE* file);
-char writeNew(EmbPattern *pattern, FILE* file);
-char readOfm(EmbPattern *pattern, FILE* file);
-char writeOfm(EmbPattern *pattern, FILE* file);
-char readPcd(EmbPattern *pattern, const char *fileName, FILE* file);
-char writePcd(EmbPattern *pattern, FILE* file);
-char readPcm(EmbPattern *pattern, FILE* file);
-char writePcm(EmbPattern *pattern, FILE* file);
-char readPcq(EmbPattern *pattern, const char *fileName, FILE* file);
-char writePcq(EmbPattern *pattern, FILE* file);
-char readPcs(EmbPattern *pattern, const char *fileName, FILE* file);
-char writePcs(EmbPattern *pattern, FILE* file);
-char readPec(EmbPattern *pattern, const char *fileName, FILE* file);
-char writePec(EmbPattern *pattern, const char *fileName,  FILE* file);
-char readPel(EmbPattern *pattern, FILE* file);
-char writePel(EmbPattern *pattern, FILE* file);
-char readPem(EmbPattern *pattern, FILE* file);
-char writePem(EmbPattern *pattern, FILE* file);
-char readPes(EmbPattern *pattern, const char *fileName, FILE* file);
-char writePes(EmbPattern *pattern, const char *fileName, FILE* file);
-char readPhb(EmbPattern *pattern, FILE* file);
-char writePhb(EmbPattern *pattern, FILE* file);
-char readPhc(EmbPattern *pattern, FILE* file);
-char writePhc(EmbPattern *pattern, FILE* file);
-char readPlt(EmbPattern *pattern, FILE* file);
-char writePlt(EmbPattern *pattern, FILE* file);
-char readRgb(EmbPattern *pattern, FILE* file);
-char writeRgb(EmbPattern *pattern, FILE* file);
-char readSew(EmbPattern *pattern, FILE* file);
-char writeSew(EmbPattern *pattern, FILE* file);
-char readShv(EmbPattern *pattern, FILE* file);
-char writeShv(EmbPattern *pattern, FILE* file);
-char readSst(EmbPattern *pattern, FILE* file);
-char writeSst(EmbPattern *pattern, FILE* file);
-char readStx(EmbPattern *pattern, FILE* file);
-char writeStx(EmbPattern *pattern, FILE* file);
-char readSvg(EmbPattern *pattern, FILE* file);
-char writeSvg(EmbPattern *pattern, FILE* file);
-char readT01(EmbPattern *pattern, FILE* file);
-char writeT01(EmbPattern *pattern, FILE* file);
-char readT09(EmbPattern *pattern, FILE* file);
-char writeT09(EmbPattern *pattern, FILE* file);
-char readTap(EmbPattern *pattern, FILE* file);
-char writeTap(EmbPattern *pattern, FILE* file);
-char readThr(EmbPattern *pattern, FILE* file);
-char writeThr(EmbPattern *pattern, FILE* file);
-char readTxt(EmbPattern *pattern, FILE* file);
-char writeTxt(EmbPattern *pattern, FILE* file);
-char readU00(EmbPattern *pattern, FILE* file);
-char writeU00(EmbPattern *pattern, FILE* file);
-char readU01(EmbPattern *pattern, FILE* file);
-char writeU01(EmbPattern *pattern, FILE* file);
-char readVip(EmbPattern *pattern, FILE* file);
-char writeVip(EmbPattern *pattern, FILE* file);
-char readVp3(EmbPattern *pattern, FILE* file);
-char writeVp3(EmbPattern *pattern, FILE* file);
-char readXxx(EmbPattern *pattern, FILE* file);
-char writeXxx(EmbPattern *pattern, FILE* file);
-char readZsk(EmbPattern *pattern, FILE* file);
-char writeZsk(EmbPattern *pattern, FILE* file);
+/* Internal function declarations.
+ * ----------------------------------------------------------------------------
+ */
+
+/*
+ * Note that this file only has to exist because we cannot necessary include
+ * any of the C standard library on all platforms. For example, "void *" and
+ * "printf" aren't universal. See the "Supported Platforms" section of
+ * the reference manual.
+ */
+
+/* Replacing functions that compilers complain about.
+ * In some cases, this is due to valid concerns about
+ * functions not returning (like a string without null-termination).
+ *
+ * We don't use size_t because it's system-specific.
+ *
+ * IDEA: don't rely on "sizeof" because it's system and
+ * compiler-specific, depending on how the struct is packed.
+ * We could manually pack out structs and then know exactly
+ * how much space they need.
+ *
+ * TODO: UTF-8 support.
+ */
+void string_copy(char *dst, const char *src);
+int string_equals(const char *s1, const char *s2);
+int string_len(const char *src);
+void string_cat(char *dst, const char *src);
+int string_rchar(const char *s1, char c);
+void char_ptr_to_string(char *dst, char *src);
+void memory_copy(void *dst, const void *src, int n);
+char memory_cmp(void *dst, const void *src, int n);
+
+/* Utility Functions: merge first three with string library */
+int stringInArray(const char *s, const char **array);
+char *copy_trim(char const *s);
+char* emb_optOut(EmbReal num, char* str);
+void safe_free(void *data);
+
+int testMain(int);
+
+/* DIFAT functions */
+unsigned int entriesInDifatSector(bcf_file_difat* fat);
+bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
+void loadFatFromSector(bcf_file_fat* fat, FILE* file);
+void bcf_file_fat_free(bcf_file_fat** fat);
+bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
+void bcf_directory_free(bcf_directory** dir);
+unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
+void bcf_file_difat_free(bcf_file_difat* difat);
+bcf_file_header bcfFileHeader_read(FILE* file);
+int bcfFileHeader_isValid(bcf_file_header header);
+void bcf_file_free(bcf_file* bcfFile);
+
+void
+printArcResults(
+    EmbReal bulge,
+    EmbArc arc,
+    EmbVector center,
+    EmbReal radius,
+    EmbReal diameter,
+    EmbReal chord,
+    EmbVector chordMid,
+    EmbReal sagitta,
+    EmbReal apothem,
+    EmbReal incAngle,
+    char clockwise);
+int testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1);
+int create_test_file(int test_file, int format);
+
+double emb_stitch_length(EmbStitch prev_st, EmbStitch st);
 
 int emb_readline(FILE* file, char *line, int maxLength);
 
@@ -518,30 +473,65 @@ void emb_write_u16BE(FILE* f, uint16_t data);
 void emb_write_i32be(FILE* f, int32_t data);
 void emb_write_u32be(FILE* f, uint32_t data);
 
-void readPESHeaderV5(FILE* file, EmbPattern* pattern);
-void readPESHeaderV6(FILE* file, EmbPattern* pattern);
-void readPESHeaderV7(FILE* file, EmbPattern* pattern);
-void readPESHeaderV8(FILE* file, EmbPattern* pattern);
-void readPESHeaderV9(FILE* file, EmbPattern* pattern);
-void readPESHeaderV10(FILE* file, EmbPattern* pattern);
-
 void embColor_read(void *f, EmbColor *c, int toRead);
 void embColor_write(void *f, EmbColor c, int toWrite);
 
-char read_stitch_block(
-    EmbPattern *,
-    FILE* file,
-    void (*stitch_encoder)(EmbVector *, EmbStitch *, unsigned char *),
-    int stitch_data_size,
-    int mode
-);
-char write_stitch_block(
-    EmbPattern *,
-    FILE* file,
-    void (*stitch_encoder)(EmbVector *, EmbStitch *, unsigned char *),
-    int stitch_data_size,
-    int mode
-);
+/* Encoding/decoding and compression functions. */
+int hus_compress(char* input, int size, char* output, int *out_size);
+int hus_decompress(char* input, int size, char* output, int *out_size);
+
+void huffman_build_table(huffman *h);
+int *huffman_table_lookup(huffman *h, int byte_lookup, int *lengths);
+
+int compress_get_bits(compress *c, int length);
+int compress_pop(compress *c, int bit_count);
+int compress_read_variable_length(compress *c);
+void compress_load_character_length_huffman(compress *c);
+void compress_load_character_huffman(compress *c);
+void compress_load_distance_huffman(compress *c);
+void compress_load_block(compress *c);
+int compress_get_token(compress *c);
+int compress_get_position(compress *c);
+
+/* Function Declarations */
+void readPecStitches(EmbPattern* pattern, FILE* file);
+void writePecStitches(EmbPattern* pattern, FILE* file, const char* filename);
+
+void pfaffEncode(FILE* file, int x, int y, int flags);
+
+int read_bytes(FILE *file, int n, char *str);
+int write_bytes(FILE *file, int n, char *str);
+
+int bcfFile_read(FILE* file, bcf_file* bcfFile);
+void* GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind);
+
+void binaryReadString(FILE* file, char *buffer, int maxLength);
+void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength);
+
+void fpad(FILE* f, char c, int n);
+
+void write_24bit(FILE* file, int);
+int check_header_present(FILE* file, int minimum_header_length);
+
+bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize);
+unsigned int readFullSector(FILE* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
+bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file);
+void readNextSector(FILE* file, bcf_directory* dir);
+
+void write_24bit(FILE* file, int);
+
+EmbReal pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3);
+
+int decodeNewStitch(unsigned char value);
+
+unsigned char mitEncodeStitch(EmbReal value);
+int mitDecodeStitch(unsigned char value);
+
+void encode_t01_record(unsigned char b[3], int x, int y, int flags);
+int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags);
+
+int encode_tajima_ternary(unsigned char b[3], int x, int y);
+void decode_tajima_ternary(unsigned char b[3], int *x, int *y);
 
 extern const char imageWithFrame[38][48];
 

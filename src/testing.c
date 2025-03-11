@@ -24,9 +24,40 @@
  * Testing
  */
 
+#include <string.h>
 #include <math.h>
 
 #include "embroidery.h"
+
+#define N_TESTS                 8
+
+typedef int (*test_function)(void);
+
+void emb_vector_print(EmbVector v, char *label);
+void emb_arc_print(EmbArc a, char *label);
+
+int test_convert_from_to(int from_, int to_);
+
+int test_circle_tangents(void);
+int test_thread_lookup(void);
+int test_format_table(void);
+int test_convert_csv_svg(void);
+int test_convert_csv_dst(void);
+int test_create_files(void);
+int test_fractal_generation(void);
+int test_arc_properties(void);
+
+test_function test_functions[] = {
+    test_circle_tangents,
+    test_thread_lookup,
+    test_format_table,
+    test_create_files,
+    test_convert_csv_svg,
+    test_convert_csv_dst,
+    test_fractal_generation,
+    test_arc_properties,
+    NULL
+};
 
 /*
  * Format: the first token is the function call, the next n tokens are the
@@ -63,171 +94,209 @@ test_convert(int test_case, int from, int to)
     return 0;
 }
 
+/* Tests for accuracy of the format table lookup and identification */
+int
+test_format_table(void)
+{
+    const char*  tName = "example.zsk";
+    int format = emb_identify_format(tName);
+
+    printf("Filename   : %s\n"
+       "Extension  : %s\n"
+       "Description: %s\n"
+       "Reader     : %c\n"
+       "Writer     : %c\n"
+       "Type       : %d\n\n",
+        tName,
+        formatTable[format].extension,
+        formatTable[format].description,
+        formatTable[format].reader_state,
+        formatTable[format].writer_state,
+        formatTable[format].type);
+
+    if (strncmp(formatTable[format].extension, ".zsk", 200)) {
+        puts("In format table test the extension lookup failed.");
+		return 20;
+	}
+    if (strncmp(formatTable[format].description, "ZSK USA Embroidery Format", 200)) {
+        puts("In format table test the description lookup failed.");
+        return 21;
+    }
+    if (formatTable[format].reader_state != 'U') {
+        puts("In format table test the reader_state lookup failed.");
+		return 22;
+	}
+    if (formatTable[format].writer_state != ' ') {
+        puts("In format table test the write_state lookup failed.");
+		return 23;
+	}
+    if (formatTable[format].type != 1) {
+        puts("In format table test the type lookup failed.");
+		return 24;
+	}
+    return 0;
+}
+
+int
+test_create_files(void)
+{
+    int i;
+    for (i=0; i<3; i++) {
+        int result = create_test_file(0, EMB_FORMAT_CSV);
+        if (result) {
+            return result;
+        }
+    }
+}
+
+int
+test_convert_from_to(int from_, int to_)
+{
+    int i;
+    for (i=0; i<3; i++) {
+        int result = test_convert(i, from_, to_);
+        if (result) {
+            return result;
+        }
+    }
+    return 0;
+}
+
 /* . */
+int
+test_convert_csv_svg(void)
+{
+    return test_convert_from_to(EMB_FORMAT_CSV, EMB_FORMAT_SVG);
+}
+
+/* . */
+int
+test_convert_csv_dst(void)
+{
+    return test_convert_from_to(EMB_FORMAT_CSV, EMB_FORMAT_SVG);
+}
+
+/* . */
+int
+test_circle_tangents(void)
+{
+    EmbReal epsilon = 0.001f;
+    EmbGeometry c1 = emb_circle(0.0f, 0.0f, 3.0f);
+    EmbVector p = emb_vector(4.0f, 0.0f);
+    /* Solution */
+    EmbVector s0 = emb_vector(2.2500f, 1.9843f);
+    EmbVector s1 = emb_vector(2.2500f, -1.9843f);
+    int result = test_ctangents(c1, p, s0, s1, epsilon);
+    if (result) {
+        return result;
+    }
+    
+    c1 = emb_circle(20.1762f, 10.7170f, 6.8221f);
+    p = emb_vector(24.3411f, 18.2980f);
+    /* Solution */
+    s0 = emb_vector(19.0911f, 17.4522f);
+    s1 = emb_vector(26.4428f, 13.4133f);
+    result = test_ctangents(c1, p, s0, s1, epsilon);
+    if (result) {
+        return result;
+    }
+    return 0;
+}
+
+int
+test_thread_lookup(void)
+{
+    unsigned int tColor = 0xFF0d6b2f;
+    EmbColor c;
+    c.r = 0x0D;
+    c.g = 0x6B;
+    c.b = 0x2F;
+    int tBrand = EMB_BRAND_SVG;
+    int tNum = threadColorNum(tColor, tBrand);
+    char tName[50];
+    string_copy(tName, threadColorName(tColor, tBrand));
+
+    printf("Color : 0x%X\n"
+       "Brand : %d\n"
+       "Num   : %d\n"
+       "Name  : %s\n\n",
+        tColor,
+        tBrand,
+        tNum, /* Solution: 29 */
+        tName); /* Solution: Dark Olive Green */
+    return 0;
+}
+
+int
+test_fractal_generation(void)
+{
+    EmbPattern *pattern = emb_pattern_create();
+    int hilbertCurveResult = hilbert_curve(pattern, 3);
+    int renderResult = emb_pattern_render(pattern, "hilbert_level_3.png");
+    int simulateResult = emb_pattern_simulate(pattern, "hilbert_level_3.avi");
+    emb_pattern_free(pattern);
+    return hilbertCurveResult;
+}
+
+/* TODO: */
+int
+test_arc_properties(void)
+{
+    EmbGeometry g = emb_arc(1.0, 0.0, 0.0, 0.0, 2.0, 1.0);
+    EmbVector center, chordMid;
+    EmbReal bulge, radius, diameter, chord, sagitta, apothem, incAngle;
+    char clockwise;
+
+    bulge = -0.414213562373095f;
+    center = emb_arc_center(g);
+    chord = emb_chord(&g);
+    radius = emb_arc_radius(g);
+    diameter = emb_arc_diameter(g);
+    chordMid = emb_arc_chordMid(g);
+    sagitta = emb_arc_sagitta(g);
+    apothem = emb_arc_apothem(g);
+    incAngle = emb_arc_incAngle(g);
+    clockwise = emb_arc_clockwise(g);
+    /* bulge = emb_arc_bulge(g); */
+    printf("Clockwise Test:\n");
+    printArcResults(bulge, g.object.arc, center,
+                radius, diameter,
+                chord, chordMid,
+                sagitta,   apothem,
+                incAngle,  clockwise);
+
+    bulge  = 2.414213562373095f;
+    /* FIXME: midpoints */
+    g = emb_arc(4.0, 0.0, 0.0, 0.0, 5.0, 1.0);
+    center = emb_arc_center(g);
+    chord = emb_chord(&g);
+    radius = emb_arc_radius(g);
+    diameter = emb_arc_diameter(g);
+    chordMid = emb_arc_chordMid(g);
+    sagitta = emb_arc_sagitta(g);
+    apothem = emb_arc_apothem(g);
+    incAngle = emb_arc_incAngle(g);
+    clockwise = emb_arc_clockwise(g);
+    /* bulge = emb_arc_bulge(g); */
+    printf("Counter-Clockwise Test:\n");
+    printArcResults(bulge, g.object.arc, center,
+                radius, diameter, chord,
+                chordMid, sagitta,   apothem,
+                incAngle, clockwise);
+
+    return 0;
+}
+
+/* const char *test_str = tests[test_index]; */
 int
 testMain(int test_index)
 {
-    /* const char *test_str = tests[test_index]; */
-    switch (test_index) {
-    case 0: {
-        EmbReal epsilon = 0.001f;
-        EmbGeometry c1 = emb_circle(0.0f, 0.0f, 3.0f);
-        EmbVector p = emb_vector(4.0f, 0.0f);
-        /* Solution */
-        EmbVector s0 = emb_vector(2.2500f, 1.9843f);
-        EmbVector s1 = emb_vector(2.2500f, -1.9843f);
-        return test_ctangents(c1, p, s0, s1, epsilon);
-    }
-    case 1: {
-        EmbReal epsilon = 0.001f;
-        EmbGeometry c2 = emb_circle(20.1762f, 10.7170f, 6.8221f);
-        EmbVector p = emb_vector(24.3411f, 18.2980f);
-        /* Solution */
-        EmbVector s0 = emb_vector(19.0911f, 17.4522f);
-        EmbVector s1 = emb_vector(26.4428f, 13.4133f);
-        return test_ctangents(c2, p, s0, s1, epsilon);
-    }
-    case 2: {
-        unsigned int tColor = 0xFF0d6b2f;
-        EmbColor c;
-        c.r = 0x0D;
-        c.g = 0x6B;
-        c.b = 0x2F;
-        int tBrand = EMB_BRAND_SVG;
-        int tNum = threadColorNum(tColor, tBrand);
-        char tName[50];
-        string_copy(tName, threadColorName(tColor, tBrand));
-
-        printf("Color : 0x%X\n"
-           "Brand : %d\n"
-           "Num   : %d\n"
-           "Name  : %s\n\n",
-            tColor,
-            tBrand,
-            tNum, /* Solution: 29 */
-            tName); /* Solution: Dark Olive Green */
-        return 0;
-    }
-    case 3: {
-        const char*  tName = "example.zsk";
-        int format = emb_identify_format(tName);
-
-        printf("Filename   : %s\n"
-           "Extension  : %s\n"
-           "Description: %s\n"
-           "Reader     : %c\n"
-           "Writer     : %c\n"
-           "Type       : %d\n\n",
-            tName,
-            formatTable[format].extension,
-            formatTable[format].description,
-            formatTable[format].reader_state,
-            formatTable[format].writer_state,
-            formatTable[format].type);
-
-        if (!string_equals(formatTable[format].extension, ".zsk")) {
-            puts("In test 3 the extension lookup failed.");
-   			return 20;
-		}
-        if (!string_equals(formatTable[format].description, "ZSK USA Embroidery Format")) {
-            puts("In test 3 the description lookup failed.");
-            return 21;
-        }
-        if (formatTable[format].reader_state != 'U') {
-            puts("In test 3 the reader_state lookup failed.");
-			return 22;
-		}
-        if (formatTable[format].writer_state != ' ') {
-            puts("In test 3 the write_state lookup failed.");
-			return 23;
-		}
-        if (formatTable[format].type != 1) {
-            puts("In test 3 the type lookup failed.");
-			return 24;
-		}
-        return 0;
-    }
-    case 4: {
-        EmbGeometry g = emb_arc(1.0, 0.0, 0.0, 0.0, 2.0, 1.0);
-        EmbVector center, chordMid;
-        EmbReal bulge, radius, diameter, chord, sagitta, apothem, incAngle;
-        char clockwise;
-
-        bulge = -0.414213562373095f;
-        center = emb_arc_center(g);
-        chord = emb_chord(&g);
-        radius = emb_arc_radius(g);
-        diameter = emb_arc_diameter(g);
-        chordMid = emb_arc_chordMid(g);
-        sagitta = emb_arc_sagitta(g);
-        apothem = emb_arc_apothem(g);
-        incAngle = emb_arc_incAngle(g);
-        clockwise = emb_arc_clockwise(g);
-        /* bulge = emb_arc_bulge(g); */
-        printf("Clockwise Test:\n");
-        printArcResults(bulge, g.object.arc, center,
-                    radius, diameter,
-                    chord, chordMid,
-                    sagitta,   apothem,
-                    incAngle,  clockwise);
-
-        bulge  = 2.414213562373095f;
-        /* FIXME: midpoints */
-        g = emb_arc(4.0, 0.0, 0.0, 0.0, 5.0, 1.0);
-        center = emb_arc_center(g);
-        chord = emb_chord(&g);
-        radius = emb_arc_radius(g);
-        diameter = emb_arc_diameter(g);
-        chordMid = emb_arc_chordMid(g);
-        sagitta = emb_arc_sagitta(g);
-        apothem = emb_arc_apothem(g);
-        incAngle = emb_arc_incAngle(g);
-        clockwise = emb_arc_clockwise(g);
-        /* bulge = emb_arc_bulge(g); */
-        printf("Counter-Clockwise Test:\n");
-        printArcResults(bulge, g.object.arc, center,
-                    radius, diameter, chord,
-                    chordMid, sagitta,   apothem,
-                    incAngle, clockwise);
-
-        return 0;
-    }
-    case 5: {
-        return create_test_file(0, EMB_FORMAT_CSV);
-    }
-    case 6: {
-        return create_test_file(1, EMB_FORMAT_CSV);
-    }
-    case 7: {
-        return create_test_file(2, EMB_FORMAT_CSV);
-    }
-    case 8: {
-        return test_convert(0, EMB_FORMAT_CSV, EMB_FORMAT_SVG);
-    }
-    case 9: {
-        return test_convert(0, EMB_FORMAT_CSV, EMB_FORMAT_DST);
-    }
-    case 10: {
-        return test_convert(1, EMB_FORMAT_CSV, EMB_FORMAT_SVG);
-    }
-    case 11: {
-        return test_convert(1, EMB_FORMAT_CSV, EMB_FORMAT_DST);
-    }
-    case 12: {
-        return test_convert(2, EMB_FORMAT_CSV, EMB_FORMAT_SVG);
-    }
-    case 13: {
-        return test_convert(2, EMB_FORMAT_CSV, EMB_FORMAT_DST);
-    }
-    case 14: {
-        EmbPattern *pattern = emb_pattern_create();
-        int hilbertCurveResult = hilbert_curve(pattern, 3);
-        int renderResult = emb_pattern_render(pattern, "hilbert_level_3.png");
-        int simulateResult = emb_pattern_simulate(pattern, "hilbert_level_3.avi");
-        emb_pattern_free(pattern);
-        return hilbertCurveResult;
-    }
-    default: break;
+    if (test_index < N_TESTS) {
+        printf("Running Test %d\n", test_index);
+        printf("------------------------------------\n");
+        int result = test_functions[test_index]();
+        printf("------------------------------------\n\n");
+        return result;
     }
     return 10;
 }
@@ -313,7 +382,7 @@ printArcResults(
     EmbReal incAngle,
     char clockwise)
 {
-    emb_arc_print(arc);
+    emb_arc_print(arc, "test_arc");
     emb_vector_print(center, "center");
     emb_vector_print(chordMid, "chordMid");
     printf(

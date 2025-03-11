@@ -42,7 +42,6 @@
 
 #include <stdlib.h>
 
-#include "internal.h"
 #include "embroidery.h"
 
 int huffman_lookup_data[2];

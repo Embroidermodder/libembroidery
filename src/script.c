@@ -373,7 +373,7 @@ analyse_stack(EmbStack *stack)
 /* .
  */
 int
-stack_push(EmbStack *stack, char token[200])
+stack_push(EmbStack *stack, char *token)
 {
     int i, j;
     int all_digits = 1;
@@ -381,7 +381,7 @@ stack_push(EmbStack *stack, char token[200])
     if (token[0] == 0) {
         return;
     }
-    string_copy(stack->stack[stack->position].s, token);
+    strncpy(stack->stack[stack->position].s, token, 200);
     stack->position++;    
     EmbStackElement *element = stack->stack + stack->position - 1;
     i = 0;
@@ -474,7 +474,7 @@ queue_token_list(EmbStack *stack, char line[200])
             j++;
         }
     }
-    if (string_len(line) > 0) {
+    if (strnlen(line, 200) > 0) {
         current_token[j] = 0;
         queue_token(stack, current_token);
     }
@@ -544,7 +544,7 @@ process_stack_head(EmbStack *stack)
     EmbStackElement element = stack->stack[stack->position-1];
     EmbStackElement args[10];
     if (!element.attribute) {
-        return;
+        return 1;
     }
     switch (element.i) {
     /* 3.6.1 Stack */
@@ -1182,4 +1182,111 @@ emb_actuator(const char *program, int language)
     safe_free(state);
 }
 
+/* Create the ScriptValue tree to be used for this pattern.
+ */
+ScriptValue *
+emb_create_root(void)
+{
+    ScriptValue* root = (ScriptValue*)malloc(sizeof(ScriptValue));
+    root->type = EMB_DATATYPE_ROOT;
+    strcpy(root->label, "root");
+    strcpy(root->s, "NULL");
+    root->leaves = (ScriptValue*)malloc(sizeof(ScriptValue) * CHUNK_SIZE);
+    root->n_leaves = 0;
+    root->max_leaves = CHUNK_SIZE;
+    return root;
+}
+
+/* Add an ScriptValue as a leaf by describing it using a datatype, label for
+ * finding it and the data value as a C string.
+ */
+int
+emb_create_leaf(ScriptValue *branch, int type, char *label, char *data)
+{
+    int n = branch->n_leaves + 1;
+    if (n >= branch->max_leaves) {
+        branch->max_leaves += CHUNK_SIZE;
+        branch->leaves = (ScriptValue *)realloc(branch->leaves, branch->max_leaves * sizeof(ScriptValue));
+    }
+    branch->type = type;
+    strcpy(branch->leaves[n].label, label);
+    strcpy(branch->leaves[n].s, data);
+    switch (type) {
+    case EMB_DATATYPE_DICT:
+    case EMB_DATATYPE_ARRAY: {
+        branch->leaves[n].leaves = (ScriptValue*)malloc(sizeof(ScriptValue) * CHUNK_SIZE);
+        branch->leaves[n].n_leaves = 0;
+        branch->leaves[n].max_leaves = 10;
+        break;
+    }
+    case EMB_DATATYPE_INT: {
+        branch->leaves[n].i = atoi(data);
+        branch->leaves[n].max_leaves = 0;
+        break;
+    }
+    case EMB_DATATYPE_REAL: {
+        branch->leaves[n].r = atoi(data);
+        branch->leaves[n].max_leaves = 0;
+        break;
+    }
+    default: {
+        branch->leaves[n].max_leaves = 0;
+        break;
+    }
+    }
+    return 1;
+}
+
+/* Recursively free our tree.
+ */
+void
+emb_free_root(ScriptValue *root)
+{
+    switch (root->type) {
+    case EMB_DATATYPE_DICT:
+    case EMB_DATATYPE_ARRAY: {
+        free(root->leaves);
+        free(root);
+        break;
+    }
+    case EMB_DATATYPE_ROOT: {
+        free(root);
+        break;
+    }
+    case EMB_DATATYPE_NULL: {
+        puts("Error: DATATYPE_NULL");
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+/* Recursively print our tree.
+ */
+void
+emb_print_tree(ScriptValue *tree, int indent)
+{
+    switch (tree->type) {
+    case EMB_DATATYPE_DICT:
+    case EMB_DATATYPE_ARRAY: {
+        int i;
+        for (i=0; i<tree->n_leaves; i++) {
+            emb_print_tree(tree, indent+1);
+        }
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void
+test_tree(void)
+{
+    ScriptValue *root = emb_create_root();
+    emb_create_leaf(root, EMB_DATATYPE_STR, "test", "value");
+    emb_print_tree(root, 0);
+    emb_free_root(root);
+}
 

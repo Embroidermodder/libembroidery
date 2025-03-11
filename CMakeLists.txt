@@ -19,9 +19,8 @@ add_compile_options(
     -O2
     -fPIC
     -std=c99
-#    -pedantic
-#    -Wall
-#    -Wextra
+    -Wall
+    -Wextra
 #    -Werror
 )
 endif (WIN32)
@@ -33,7 +32,6 @@ set(LIBRARY_SRC
 	src/geometry.c
 	src/script.c
 	src/testing.c
-	src/internal.h
 	src/embroidery.h
 	src/data/arc_polyester_colors.c
 	src/data/arc_rayon_colors.c

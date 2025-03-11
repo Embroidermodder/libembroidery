@@ -10,7 +10,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright 2018-2024 The Embroidermodder Team
+ * Copyright 2018-2025 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
  * -----------------------------------------------------------------------------
@@ -33,7 +33,6 @@
 #include <stdbool.h>
 
 #include "embroidery.h"
-#include "internal.h"
 
 /* Internal Data
  * ----------------------------------------------------------------------------
@@ -1310,7 +1309,6 @@ emb_array_addVector(EmbArray *a, EmbVector b)
 void
 emb_array_free(EmbArray* a)
 {
-    int i;
     if (!a) {
         return;
     }
@@ -1321,7 +1319,8 @@ emb_array_free(EmbArray* a)
     case EMB_THREAD:
         safe_free(a->thread);
         break;
-    default:
+    default: {
+        int i;
         for (i = 0; i < a->count; i++) {
             EmbGeometry g = a->geometry[i];
             switch (a->geometry[i].type) {
@@ -1343,6 +1342,7 @@ emb_array_free(EmbArray* a)
         }
         safe_free(a->geometry);
         break;
+    }
     }
     safe_free(a);
 }

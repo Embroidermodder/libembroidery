@@ -10,7 +10,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright 2018-2024 The Embroidermodder Team
+ * Copyright 2018-2025 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
  * -----------------------------------------------------------------------------
@@ -173,9 +173,10 @@ const EmbString flag_list[] = {
  * Currently, we only convert a single file to multiple formats.
  */
 
-/* construct from tables above somehow, like how getopt_long works,
+/* Construct from tables above somehow, like how getopt_long works,
  * but we're avoiding that for compatibility
- * (C90, standard libraries only) */
+ * (C90, standard libraries only).
+ */
 void
 usage(void)
 {
@@ -406,9 +407,9 @@ main(int argc, char *argv[])
         }
         case FLAG_POSTSCRIPT: {
             EmbStack stack;
-            stack.position = 0;
             int j;
             char command[200];
+            stack.position = 0;
             command[0] = 0;
             for (j=i+1; j<argc; j++) {
                 strcat(command, argv[j]);

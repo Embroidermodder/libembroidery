@@ -30,7 +30,6 @@
 #include <math.h>
 
 #include "embroidery.h"
-#include "internal.h"
 
 extern double epsilon;
 
@@ -483,15 +482,12 @@ emb_clockwise(EmbGeometry *geometry)
         geometry->object.arc.start.y = -geometry->object.arc.start.y;
         geometry->object.arc.mid.y = -geometry->object.arc.start.y;
         geometry->object.arc.end.y = -geometry->object.arc.end.y;
-        if (emb_arc_clockwise(*geometry)) {
-            return true;
-        }
-        break;
+        return emb_arc_clockwise(*geometry);
     }
     default:
         break;
     }
-    return false;
+    return 0;
 }
 
 /* . */

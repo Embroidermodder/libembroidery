@@ -10,7 +10,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright 2018-2024 The Embroidermodder Team
+ * Copyright 2018-2025 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
  * -----------------------------------------------------------------------------
@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "internal.h"
+#include "embroidery.h"
 
 char read100(EmbPattern *pattern, FILE* file);
 char write100(EmbPattern *pattern, FILE* file);
@@ -8378,7 +8378,7 @@ void
 vp3WriteStringLen(FILE* file, const char* str, int len)
 {
     emb_write_u16BE(file, len);
-    emb_fwrite(str, len, file);
+    fwrite(str, 1, len, file);
 }
 
 void
@@ -8415,9 +8415,9 @@ writeVp3(EmbPattern* pattern, FILE* file)
 
     emb_pattern_flipVertical(pattern);
 
-    emb_fwrite("%vsm%\0", 6, file);
+    fwrite("%vsm%\0", 1, 6, file);
     vp3WriteString(file, "Embroidermodder");
-    emb_fwrite("\x00\x02\x00", 3, file);
+    fwrite("\x00\x02\x00", 1, 3, file);
 
     remainingBytesPos = ftell(file);
     emb_write_i32(file, 0); /* placeholder */
@@ -8431,7 +8431,7 @@ writeVp3(EmbPattern* pattern, FILE* file)
 
     numberOfColors = emb_pattern_color_count(pattern, color);
     fputc(numberOfColors, file);
-    emb_fwrite("\x0C\x00\x01\x00\x03\x00", 6, file);
+    fwrite("\x0C\x00\x01\x00\x03\x00", 1, 6, file);
 
     remainingBytesPos2 = ftell(file);
     emb_write_i32(file, 0); /* placeholder */
@@ -8455,7 +8455,7 @@ writeVp3(EmbPattern* pattern, FILE* file)
     emb_write_i32be(file, 0);
     emb_write_i32be(file, 4096);
 
-    emb_fwrite("xxPP\x01\0", 6, file);
+    fwrite("xxPP\x01\0", 1, 6, file);
     vp3WriteString(file, "");
     emb_write_i16be(file, numberOfColors);
 

@@ -27,7 +27,6 @@
 #include <math.h>
 
 #include "embroidery.h"
-#include "internal.h"
 
 /*
  * Format: the first token is the function call, the next n tokens are the

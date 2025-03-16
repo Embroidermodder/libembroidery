@@ -10,7 +10,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright 2018-2024 The Embroidermodder Team
+ * Copyright 2018-2025 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
  * -----------------------------------------------------------------------------
@@ -22,7 +22,6 @@
  * -----------------------------------------------------------------------------
  *
  * The Geometry System
- * TODO: error reporting for improper EmbGeometry type passing.
  */
 
 #include <stdio.h>
@@ -30,6 +29,174 @@
 #include <math.h>
 
 #include "embroidery.h"
+
+/* attribute Validation
+ * -------------------
+ *
+ * These tables use the bit within each number as the attribute axis and the
+ * the number position in the array as the geometric object axis.
+ *
+ * These numbers fit within int32_t: you can test for a attribute being available
+ * for a geometric object by writing, for example:
+ *
+ *     if (attribute_get_table[EMB_TEXT_SINGLE] & EMB_PROP_AREA) {
+ *         // Code that runs if text objects can have a known area.
+ *     }
+ */
+int32_t attribute_get_table[] = {
+    /* EMB_ARRAY */
+    0,
+
+    /* EMB_ARC */
+    0,
+
+    /* EMB_CIRCLE */
+    EMB_PROP_XPOS | EMB_PROP_YPOS | EMB_PROP_XCENTER | EMB_PROP_YCENTER,
+
+    /* EMB_DIM_DIAMETER */
+    0,
+
+    /* EMB_DIM_LEADER */
+    0,
+
+    /* EMB_ELLIPSE */
+    0,
+
+    /* EMB_FLAG */
+    0,
+
+    /* EMB_LINE */
+    0,
+
+    /* EMB_IMAGE */
+    0,
+
+    /* EMB_PATH */
+    0,
+
+    /* EMB_POINT */
+    0,
+
+    /* EMB_POLYGON */
+    0,
+
+    /* EMB_POLYLINE */
+    0,
+
+    /* EMB_RECT */
+    0,
+
+    /* EMB_SPLINE */
+    0,
+
+    /* EMB_STITCH */
+    0,
+
+    /* EMB_TEXT_SINGLE */
+    EMB_PROP_XPOS | EMB_PROP_YPOS | EMB_PROP_UPSIDEDOWN | EMB_PROP_BACKWARDS,
+
+    /* EMB_TEXT_MULTI */
+    0,
+
+    /* EMB_VECTOR */
+    0,
+
+    /* EMB_THREAD */
+    0
+};
+
+/* These numbers fit within int32_t: you can test for a attribute being user
+ * alterable by a geometric object by writing, for example:
+ *
+ *     if (attribute_set_table[EMB_TEXT_SINGLE] & EMB_PROP_AREA) {
+ *         // Code that runs if text objects can have their area set.
+ *     }
+ */
+int32_t attribute_set_table[] = {
+    /* EMB_ARRAY */
+    0,
+
+    /* EMB_ARC */
+    0,
+
+    /* EMB_CIRCLE */
+    EMB_PROP_XPOS | EMB_PROP_YPOS | EMB_PROP_XCENTER | EMB_PROP_YCENTER,
+
+    /* EMB_DIM_DIAMETER */
+    0,
+
+    /* EMB_DIM_LEADER */
+    0,
+
+    /* EMB_ELLIPSE */
+    0,
+
+    /* EMB_FLAG */
+    0,
+
+    /* EMB_LINE */
+    0,
+
+    /* EMB_IMAGE */
+    0,
+
+    /* EMB_PATH */
+    0,
+
+    /* EMB_POINT */
+    0,
+
+    /* EMB_POLYGON */
+    0,
+
+    /* EMB_POLYLINE */
+    0,
+
+    /* EMB_RECT */
+    0,
+
+    /* EMB_SPLINE */
+    0,
+
+    /* EMB_STITCH */
+    0,
+
+    /* EMB_TEXT_SINGLE */
+    EMB_PROP_XPOS | EMB_PROP_YPOS | EMB_PROP_UPSIDEDOWN | EMB_PROP_BACKWARDS,
+
+    /* EMB_TEXT_MULTI */
+    0,
+
+    /* EMB_VECTOR */
+    0,
+
+    /* EMB_THREAD */
+    0
+};
+
+int32_t attribute_types[] = {
+    EMB_DATATYPE_REAL, /* EMB_PROP_X1 */
+    EMB_DATATYPE_REAL, /* EMB_PROP_Y1 */
+    EMB_DATATYPE_REAL, /* EMB_PROP_X2 */
+    EMB_DATATYPE_REAL, /* EMB_PROP_Y2 */
+    EMB_DATATYPE_REAL, /* EMB_PROP_X3 */
+    EMB_DATATYPE_REAL, /* EMB_PROP_Y3 */
+    EMB_DATATYPE_REAL, /* EMB_PROP_XPOS */
+    EMB_DATATYPE_REAL, /* EMB_PROP_YPOS */
+    EMB_DATATYPE_REAL, /* EMB_PROP_XCENTER */
+    EMB_DATATYPE_REAL, /* EMB_PROP_YCENTER */
+    EMB_DATATYPE_REAL, /* EMB_PROP_WIDTH */
+    EMB_DATATYPE_REAL, /* EMB_PROP_HEIGHT */
+    EMB_DATATYPE_REAL, /* EMB_PROP_RADIUS */
+    EMB_DATATYPE_REAL, /* EMB_PROP_DIAMETER */
+    EMB_DATATYPE_REAL, /* EMB_PROP_AREA */
+    EMB_DATATYPE_REAL, /* EMB_PROP_PERIMETER */
+    EMB_DATATYPE_REAL, /* EMB_PROP_CIRCUMFERENCE */
+    EMB_DATATYPE_INT, /* EMB_PROP_BOLD */
+    EMB_DATATYPE_INT, /* EMB_PROP_ITALIC */
+    EMB_DATATYPE_INT, /* EMB_PROP_UPSIDEDOWN */
+    EMB_DATATYPE_INT /* EMB_PROP_BACKWARDS */
+};
 
 extern double epsilon;
 
@@ -1628,7 +1795,7 @@ emb_base_rubber_point(EmbGeometry *obj, const char *key)
 
     QGraphicsScene* gscene = scene();
     if (gscene) {
-        return scene()->property("SCENE_QSNAP_POINT").toPointF();
+        return scene()->attribute("SCENE_QSNAP_POINT").toPointF();
     }
     */
     return v;
@@ -2833,3 +3000,83 @@ void textSingle_setTextUpsideDown(char val)
     setText(objText);
     */
 }
+
+/* emb_ggeti: Geometry Get Integer
+ *
+ * For a given geometric object use the attribute flag
+ */
+int
+emb_ggeti(EmbGeometry *g, int attribute)
+{
+    if (!(attribute_get_table[g->type] & attribute)) {
+        printf("Failed to get integer attribute %d with object %d.",
+            attribute, g->type);
+        return 1;
+    }
+    switch (g->type) {
+    default:
+        break;
+    }
+    return 0;
+}
+
+/* emb_gseti: Geometry Set Integer.
+ * 
+ * Example:
+ *     g->
+ */
+int
+emb_gseti(EmbGeometry *g, int attribute, int value)
+{
+    if (!(attribute_set_table[g->type] & attribute)) {
+        printf("Failed to set attribute %d with object %d.",
+            attribute, g->type);
+        return 1;
+    }
+    switch (g->type) {
+    default:
+        break;
+    }
+    return 0;
+}
+
+/* emb_ggetr: Geometry Get Real
+ * 
+ * Example:
+ *     g->
+ */
+EmbReal
+emb_ggetr(EmbGeometry *g, int attribute)
+{
+    if (!(attribute_get_table[g->type] & attribute)) {
+        printf("Failed to set attribute %d with object %d.",
+            attribute, g->type);
+        return 0.0;
+    }
+    switch (g->type) {
+    default:
+        break;
+    }
+    return 0.0;
+}
+
+/* emb_gsetr: Geometry Set Real
+ * 
+ * Example:
+ *     g->
+ */
+int
+emb_gsetr(EmbGeometry *g, int attribute, EmbReal value)
+{
+    if (!(attribute_get_table[g->type] & attribute)) {
+        printf("Failed to set attribute %d with object %d.",
+            attribute, g->type);
+        return 1;
+    }
+    switch (g->type) {
+    default:
+        break;
+    }
+    return 0;
+}
+

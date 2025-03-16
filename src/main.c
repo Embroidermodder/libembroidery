@@ -365,19 +365,20 @@ main(int argc, char *argv[])
             current_pattern = emb_pattern_create();
             hilbert_curve(current_pattern, 3);
             break;
-        case FLAG_TEST:
+        case FLAG_TEST: {
             if (i + 1 < argc) {
                 emb_pattern_free(current_pattern);
                 return testMain(atoi(argv[i+1]));
             }
             break;
+        }
         case FLAG_FULL_TEST_SUITE: {
-            /* Ideally we use ctest, this is just for crash testing. */
 			int t;
 			emb_pattern_free(current_pattern);
             for (t=0; t<10; t++) {
-                if (testMain(t)) {
-                    printf("Failed test %d.\n", t);
+                int error = testMain(t);
+                if (error) {
+                    printf("Failed test %d with error %d.\n", t, error);
 					return 1;
                 }
             }

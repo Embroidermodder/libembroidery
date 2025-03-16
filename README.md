@@ -10,8 +10,9 @@ Libembroidery is a low-level library for reading, writing,
 and altering digital embroidery files in C. It is part of the Embroidermodder Project
 for open source machine embroidery.
 
-Libembroidery is the underlying library that is used by [Embroidermodder 2](http://embroidermodder.org)
-and is developed by [The Embroidermodder Team](#the-embroidermodder-team).
+Libembroidery is the underlying library that is used by
+[Embroidermodder 2](http://embroidermodder.org) and is developed by
+[The Embroidermodder Team](#the-embroidermodder-team).
 A full list of contributors to the project is maintained in
 [the Embroidermodder 2 github](https://github.com/Embroidermodder/embroidermodder)
 in the file `CREDITS.md`.
@@ -24,17 +25,21 @@ the Embroidermodder 2 GUI.
 
 ## Documentation
 
-Libembroidery is documented as part of the [Embroidermodder 2.0 manual](https://www.libembroidery.org/embroidermodder_2.0-alpha_manual.pdf). If you need libembroidery for any non-trivial usage or want to contribute to the library we advise you read the appropriate design sections of the manual first. Copies of this manual will be shipped with the packaged version of libembroidery, but to build it we use the Doxyfile in [the Embroidermodder git repository](https://github.com/Embroidermodder/embroidermodder).
-
-For more basic usage, `embroider` should have some in-built help starting with:
+For basic usage, `embroider` should have some in-built help starting with:
 
 ```sh
     $ embroider --help
 ```
 
+If you need libembroidery for any non-trivial usage or want to contribute to
+the library we advise you read the [manual](./manual.md) first.
+Copies of this manual will be shipped with the packaged version of
+libembroidery.
+
 ### License
 
-Libembroidery is distributed under the permissive zlib licence, see the LICENCE file.
+Libembroidery is distributed under the permissive zlib licence, see the
+[LICENCE](./LICENCE.md) file.
 
 ## Demos
 
@@ -62,3 +67,4 @@ cmake --install .
 
 This builds both the static and shared versions of the library as well
 as the command line program `embroider`.
+

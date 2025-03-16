@@ -176,16 +176,38 @@ test_convert_csv_dst(void)
     return test_convert_from_to(EMB_FORMAT_CSV, EMB_FORMAT_SVG);
 }
 
+/* In the order:
+ * (epsilon, circle_x, circle_y, circle_radius, point_x, point_y,
+ *      solution0_x, solution0_y, solution1_x, solution1_y)
+ */
+float cirtan_test[] = {
+    0.001f, 0.0f, 0.0f, 3.0f, 4.0f, 0.0f, 2.2500f, 1.9843f, 2.2500f, -1.9843f,
+};
+
+/* Unpack a circle from an array of reals. */
+EmbGeometry
+get_circle(float *data)
+{
+    return emb_circle(data[0], data[1], data[2]);
+}
+
+/* Unpack a vector from an array of reals. */
+EmbVector
+get_vector(float *data)
+{
+    return emb_vector(data[0], data[1]);
+}
+
 /* . */
 int
 test_circle_tangents(void)
 {
-    EmbReal epsilon = 0.001f;
-    EmbGeometry c1 = emb_circle(0.0f, 0.0f, 3.0f);
-    EmbVector p = emb_vector(4.0f, 0.0f);
+    EmbReal epsilon = cirtan_test[0];
+    EmbGeometry c1 = get_circle(cirtan_test + 1);
+    EmbVector p = get_vector(cirtan_test + 4);
     /* Solution */
-    EmbVector s0 = emb_vector(2.2500f, 1.9843f);
-    EmbVector s1 = emb_vector(2.2500f, -1.9843f);
+    EmbVector s0 = get_vector(cirtan_test + 6);
+    EmbVector s1 = get_vector(cirtan_test + 8);
     int result = test_ctangents(c1, p, s0, s1, epsilon);
     if (result) {
         return result;

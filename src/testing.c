@@ -147,6 +147,7 @@ test_create_files(void)
             return result;
         }
     }
+    return 0;
 }
 
 int
@@ -229,14 +230,16 @@ int
 test_thread_lookup(void)
 {
     unsigned int tColor = 0xFF0d6b2f;
+    /*
     EmbColor c;
     c.r = 0x0D;
     c.g = 0x6B;
     c.b = 0x2F;
+    */
     int tBrand = EMB_BRAND_SVG;
     int tNum = threadColorNum(tColor, tBrand);
     char tName[50];
-    string_copy(tName, threadColorName(tColor, tBrand));
+    strncpy(tName, threadColorName(tColor, tBrand), 50);
 
     printf("Color : 0x%X\n"
        "Brand : %d\n"
@@ -256,6 +259,9 @@ test_fractal_generation(void)
     int hilbertCurveResult = hilbert_curve(pattern, 3);
     int renderResult = emb_pattern_render(pattern, "hilbert_level_3.png");
     int simulateResult = emb_pattern_simulate(pattern, "hilbert_level_3.avi");
+    printf("hilbert curve result: %d\n", hilbertCurveResult);
+    printf("render result: %d\n", renderResult);
+    printf("simulate result: %d\n", simulateResult);
     emb_pattern_free(pattern);
     return hilbertCurveResult;
 }

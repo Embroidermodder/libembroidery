@@ -30,8 +30,8 @@
 
 #include "embroidery.h"
 
-/* attribute Validation
- * -------------------
+/* Attribute Validation
+ * --------------------
  *
  * These tables use the bit within each number as the attribute axis and the
  * the number position in the array as the geometric object axis.
@@ -39,7 +39,7 @@
  * These numbers fit within int32_t: you can test for a attribute being available
  * for a geometric object by writing, for example:
  *
- *     if (attribute_get_table[EMB_TEXT_SINGLE] & EMB_PROP_AREA) {
+ *     if (attribute_get_table[EMB_TEXT_SINGLE] & EMB_ATTR_AREA) {
  *         // Code that runs if text objects can have a known area.
  *     }
  */
@@ -51,7 +51,7 @@ int32_t attribute_get_table[] = {
     0,
 
     /* EMB_CIRCLE */
-    EMB_PROP_XPOS | EMB_PROP_YPOS | EMB_PROP_XCENTER | EMB_PROP_YCENTER,
+    EMB_ATTR_XPOS | EMB_ATTR_YPOS | EMB_ATTR_XCENTER | EMB_ATTR_YCENTER,
 
     /* EMB_DIM_DIAMETER */
     0,
@@ -93,7 +93,7 @@ int32_t attribute_get_table[] = {
     0,
 
     /* EMB_TEXT_SINGLE */
-    EMB_PROP_XPOS | EMB_PROP_YPOS | EMB_PROP_UPSIDEDOWN | EMB_PROP_BACKWARDS,
+    EMB_ATTR_XPOS | EMB_ATTR_YPOS | EMB_ATTR_UPSIDEDOWN | EMB_ATTR_BACKWARDS,
 
     /* EMB_TEXT_MULTI */
     0,
@@ -108,7 +108,7 @@ int32_t attribute_get_table[] = {
 /* These numbers fit within int32_t: you can test for a attribute being user
  * alterable by a geometric object by writing, for example:
  *
- *     if (attribute_set_table[EMB_TEXT_SINGLE] & EMB_PROP_AREA) {
+ *     if (attribute_set_table[EMB_TEXT_SINGLE] & EMB_ATTR_AREA) {
  *         // Code that runs if text objects can have their area set.
  *     }
  */
@@ -120,7 +120,7 @@ int32_t attribute_set_table[] = {
     0,
 
     /* EMB_CIRCLE */
-    EMB_PROP_XPOS | EMB_PROP_YPOS | EMB_PROP_XCENTER | EMB_PROP_YCENTER,
+    EMB_ATTR_XPOS | EMB_ATTR_YPOS | EMB_ATTR_XCENTER | EMB_ATTR_YCENTER,
 
     /* EMB_DIM_DIAMETER */
     0,
@@ -162,7 +162,7 @@ int32_t attribute_set_table[] = {
     0,
 
     /* EMB_TEXT_SINGLE */
-    EMB_PROP_XPOS | EMB_PROP_YPOS | EMB_PROP_UPSIDEDOWN | EMB_PROP_BACKWARDS,
+    EMB_ATTR_XPOS | EMB_ATTR_YPOS | EMB_ATTR_UPSIDEDOWN | EMB_ATTR_BACKWARDS,
 
     /* EMB_TEXT_MULTI */
     0,
@@ -175,27 +175,27 @@ int32_t attribute_set_table[] = {
 };
 
 int32_t attribute_types[] = {
-    EMB_DATATYPE_REAL, /* EMB_PROP_X1 */
-    EMB_DATATYPE_REAL, /* EMB_PROP_Y1 */
-    EMB_DATATYPE_REAL, /* EMB_PROP_X2 */
-    EMB_DATATYPE_REAL, /* EMB_PROP_Y2 */
-    EMB_DATATYPE_REAL, /* EMB_PROP_X3 */
-    EMB_DATATYPE_REAL, /* EMB_PROP_Y3 */
-    EMB_DATATYPE_REAL, /* EMB_PROP_XPOS */
-    EMB_DATATYPE_REAL, /* EMB_PROP_YPOS */
-    EMB_DATATYPE_REAL, /* EMB_PROP_XCENTER */
-    EMB_DATATYPE_REAL, /* EMB_PROP_YCENTER */
-    EMB_DATATYPE_REAL, /* EMB_PROP_WIDTH */
-    EMB_DATATYPE_REAL, /* EMB_PROP_HEIGHT */
-    EMB_DATATYPE_REAL, /* EMB_PROP_RADIUS */
-    EMB_DATATYPE_REAL, /* EMB_PROP_DIAMETER */
-    EMB_DATATYPE_REAL, /* EMB_PROP_AREA */
-    EMB_DATATYPE_REAL, /* EMB_PROP_PERIMETER */
-    EMB_DATATYPE_REAL, /* EMB_PROP_CIRCUMFERENCE */
-    EMB_DATATYPE_INT, /* EMB_PROP_BOLD */
-    EMB_DATATYPE_INT, /* EMB_PROP_ITALIC */
-    EMB_DATATYPE_INT, /* EMB_PROP_UPSIDEDOWN */
-    EMB_DATATYPE_INT /* EMB_PROP_BACKWARDS */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_X1 */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_Y1 */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_X2 */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_Y2 */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_X3 */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_Y3 */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_XPOS */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_YPOS */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_XCENTER */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_YCENTER */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_WIDTH */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_HEIGHT */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_RADIUS */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_DIAMETER */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_AREA */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_PERIMETER */
+    EMB_DATATYPE_REAL, /* EMB_ATTR_CIRCUMFERENCE */
+    EMB_DATATYPE_INT, /* EMB_ATTR_BOLD */
+    EMB_DATATYPE_INT, /* EMB_ATTR_ITALIC */
+    EMB_DATATYPE_INT, /* EMB_ATTR_UPSIDEDOWN */
+    EMB_DATATYPE_INT /* EMB_ATTR_BACKWARDS */
 };
 
 extern double epsilon;
@@ -1812,6 +1812,8 @@ emb_base_rubber_text(EmbGeometry *obj, const char *key)
     return "";
 }
 
+/*
+ */
 void
 emb_circle_main()
 {
@@ -1826,8 +1828,9 @@ emb_circle_main()
 }
 
 /*
+ * TODO: getCurrentLineType
 void
-emb_circle_CircleObject(EmbVector center, float radius, unsigned int rgb)
+emb_circle_init(EmbVector center, float radius, unsigned int rgb)
 {
     if (n_views == 0) {
         return;
@@ -1836,20 +1839,24 @@ emb_circle_CircleObject(EmbVector center, float radius, unsigned int rgb)
     View view = views[settings.pattern_index];
 
     debug_message("CircleObject Constructor()");
-    init(centerX, centerY, radius, rgb, Qt::SolidLine); //TODO: getCurrentLineType
+    init(centerX, centerY, radius, rgb, Qt::SolidLine);
 }
+*/
 
-void emb_circle_CircleObject(EmbCircle* obj)
+/* TODO: getCurrentLineType
+void
+emb_circle_init(EmbGeometry* obj)
 {
     debug_message("CircleObject Constructor()");
     if (obj) {
-        init(obj->objectCenterX(), obj->objectCenterY(), obj->objectRadius(), obj->objectColorRGB(), Qt::SolidLine); //TODO: getCurrentLineType
+        init(obj->objectCenterX(), obj->objectCenterY(), obj->objectRadius(), obj->objectColorRGB(), Qt::SolidLine);
         setRotation(obj->rotation());
     }
 }
-
 */
 
+/*
+ */
 void
 emb_circle_set_area(EmbCircle *circle, float area)
 {
@@ -1857,6 +1864,7 @@ emb_circle_set_area(EmbCircle *circle, float area)
 }
 
 /*
+ * TODO: pass in proper lineweight
 void dim_leader_init(EmbLine line, unsigned int rgb, int lineType)
 {
     setData(OBJ_TYPE, type);
@@ -1870,10 +1878,12 @@ void dim_leader_init(EmbLine line, unsigned int rgb, int lineType)
     setEndPoint2(x2, y2);
     setColor(rgb);
     setLineType(lineType);
-    setLineWeight(0.35); //TODO: pass in proper lineweight
+    setLineWeight(0.35);
     setPen(objPen);
 }
+*/
 
+/*
 void
 emb_dimleader_set_end_point_1(EmbVector endPt1)
 {
@@ -1929,13 +1939,15 @@ float dimleader_objectAngle()
     return fmodf(line().angle() - rotation(), 360.0);
 }
 
-void dimleader_updateLeader()
+//TODO: Make arrow style, angle, length and line angle and length customizable.
+void
+dimleader_updateLeader()
 {
-    int arrowStyle = Closed; //TODO: Make this customizable
-    float arrowStyleAngle = 15.0; //TODO: Make this customizable
-    float arrowStyleLength = 1.0; //TODO: Make this customizable
-    float lineStyleAngle = 45.0; //TODO: Make this customizable
-    float lineStyleLength = 1.0; //TODO: Make this customizable
+    int arrowStyle = Closed;
+    float arrowStyleAngle = 15.0;
+    float arrowStyleLength = 1.0;
+    float lineStyleAngle = 45.0;
+    float lineStyleLength = 1.0;
 
     EmbLine lyne = line();
     float angle = lyne.angle();
@@ -3014,6 +3026,9 @@ emb_ggeti(EmbGeometry *g, int attribute)
         return 1;
     }
     switch (g->type) {
+    case EMB_ATTR_BOLD: {
+        break;
+    }
     default:
         break;
     }

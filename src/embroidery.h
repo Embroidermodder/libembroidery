@@ -3,6 +3,12 @@
  * version 1.0.0-alpha
  * This file is part of libembroidery.
  *
+ * A library for reading, writing, altering and otherwise
+ * processing machine embroidery files and designs.
+ *
+ * Also, the core library supporting the Embroidermodder Project's
+ * family of machine embroidery interfaces.
+ *
  * Copyright 2018-2025 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
@@ -360,30 +366,30 @@ extern "C" {
 #define EMB_DATATYPE_REAL              5
 #define EMB_DATATYPE_ROOT              6
 
-/* Property identifier. These numbers fit within int32_t: that is, there are
+/* Attribute identifier. These numbers fit within int32_t: that is, there are
  * up to 31 flags we can set this way.
  */
-#define EMB_PROP_X1                    0x1
-#define EMB_PROP_Y1                    0x2
-#define EMB_PROP_X2                    0x4
-#define EMB_PROP_Y2                    0x8
-#define EMB_PROP_X3                   0x10
-#define EMB_PROP_Y3                   0x20
-#define EMB_PROP_XPOS                 0x40
-#define EMB_PROP_YPOS                 0x80
-#define EMB_PROP_XCENTER             0x100
-#define EMB_PROP_YCENTER             0x200
-#define EMB_PROP_WIDTH               0x400
-#define EMB_PROP_HEIGHT              0x800
-#define EMB_PROP_RADIUS             0x1000
-#define EMB_PROP_DIAMETER           0x2000
-#define EMB_PROP_AREA               0x4000
-#define EMB_PROP_PERIMETER          0x8000
-#define EMB_PROP_CIRCUMFERENCE     0x10000
-#define EMB_PROP_BOLD              0x20000
-#define EMB_PROP_ITALIC            0x40000
-#define EMB_PROP_UPSIDEDOWN        0x80000
-#define EMB_PROP_BACKWARDS        0x100000
+#define EMB_ATTR_X1                    0x1
+#define EMB_ATTR_Y1                    0x2
+#define EMB_ATTR_X2                    0x4
+#define EMB_ATTR_Y2                    0x8
+#define EMB_ATTR_X3                   0x10
+#define EMB_ATTR_Y3                   0x20
+#define EMB_ATTR_XPOS                 0x40
+#define EMB_ATTR_YPOS                 0x80
+#define EMB_ATTR_XCENTER             0x100
+#define EMB_ATTR_YCENTER             0x200
+#define EMB_ATTR_WIDTH               0x400
+#define EMB_ATTR_HEIGHT              0x800
+#define EMB_ATTR_RADIUS             0x1000
+#define EMB_ATTR_DIAMETER           0x2000
+#define EMB_ATTR_AREA               0x4000
+#define EMB_ATTR_PERIMETER          0x8000
+#define EMB_ATTR_CIRCUMFERENCE     0x10000
+#define EMB_ATTR_BOLD              0x20000
+#define EMB_ATTR_ITALIC            0x40000
+#define EMB_ATTR_UPSIDEDOWN        0x80000
+#define EMB_ATTR_BACKWARDS        0x100000
 
 /* UTILITY MACROS
  * --------------
@@ -1051,7 +1057,7 @@ typedef struct Compress {
 EMB_PUBLIC int lindenmayer_system(L_system L, char* state, int iteration, int complete);
 EMB_PUBLIC int hilbert_curve(EmbPattern *pattern, int iterations);
 
-/* Set or get geometric properties. */
+/* Set or get geometric object's attributes. */
 EMB_PUBLIC int emb_gsetr(EmbGeometry *g, int attribute, EmbReal value);
 EMB_PUBLIC EmbReal emb_ggetr(EmbGeometry *g, int attribute);
 EMB_PUBLIC int emb_gseti(EmbGeometry *g, int attribute, int value);
@@ -1283,50 +1289,27 @@ EMB_PUBLIC void emb_actuator(const char *program, int language);
 
 /* Internal function declarations.
  * ----------------------------------------------------------------------------
- *
- * Note that this file only has to exist because we cannot necessary include
- * any of the C standard library on all platforms. For example, "void *" and
- * "printf" aren't universal. See the "Supported Platforms" section of
- * the reference manual.
- *
- * Replacing functions that compilers complain about.
- * In some cases, this is due to valid concerns about
- * functions not returning (like a string without null-termination).
- *
- * We don't use size_t because it's system-specific.
- *
- * IDEA: don't rely on "sizeof" because it's system and
- * compiler-specific, depending on how the struct is packed.
- * We could manually pack out structs and then know exactly
- * how much space they need.
- *
  * TODO: UTF-8 support.
  */
-void string_copy(char *dst, const char *src);
-int string_equals(const char *s1, const char *s2);
-int string_len(const char *src);
-void string_cat(char *dst, const char *src);
-int string_rchar(const char *s1, char c);
-void char_ptr_to_string(char *dst, char *src);
-void memory_copy(void *dst, const void *src, int n);
-char memory_cmp(void *dst, const void *src, int n);
+EMB_PUBLIC int string_rchar(const char *s1, char c);
+EMB_PUBLIC void char_ptr_to_string(char *dst, char *src);
 
 /* Utility Functions: merge first three with string library */
-int stringInArray(const char *s, const char **array);
-char *copy_trim(char const *s);
-char* emb_optOut(EmbReal num, char* str);
-void safe_free(void *data);
+EMB_PUBLIC int stringInArray(const char *s, const char **array);
+EMB_PUBLIC char *copy_trim(char const *s);
+EMB_PUBLIC char* emb_optOut(EmbReal num, char* str);
+EMB_PUBLIC void safe_free(void *data);
 
-int testMain(int);
+EMB_PUBLIC int testMain(int);
 
 /* DIFAT functions */
-unsigned int entriesInDifatSector(bcf_file_difat* fat);
-bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
-void loadFatFromSector(bcf_file_fat* fat, FILE* file);
-void bcf_file_fat_free(bcf_file_fat** fat);
-bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
-void bcf_directory_free(bcf_directory** dir);
-unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
+EMB_PUBLIC unsigned int entriesInDifatSector(bcf_file_difat* fat);
+EMB_PUBLIC bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
+EMB_PUBLIC void loadFatFromSector(bcf_file_fat* fat, FILE* file);
+EMB_PUBLIC void bcf_file_fat_free(bcf_file_fat** fat);
+EMB_PUBLIC bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
+EMB_PUBLIC void bcf_directory_free(bcf_directory** dir);
+EMB_PUBLIC unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
 void bcf_file_difat_free(bcf_file_difat* difat);
 bcf_file_header bcfFileHeader_read(FILE* file);
 int bcfFileHeader_isValid(bcf_file_header header);

@@ -7,11 +7,14 @@ TESTDIR=./test
 EMB=./embroider
 TEST_TIME=10
 TOTAL_TESTS=13
+OPTIONS="-g -O2 -fPIC -std=c99 -Wall -Wextra -Werror"
+LIBRARY_SRC="src/pattern.c src/compress.c src/formats.c "\
+LIBRARY_SRC+="src/geometry.c src/script.c src/testing.c src/embroidery.h src/data.c"
 
 function build () {
     rm -fr $TESTDIR
     mkdir $TESTDIR
-    time gcc -g -O2 src/main.c src/embroidery.c -o $TESTDIR/embroider -lm
+    time gcc $LIBRARY_SRC $OPTIONS -o $TEST_DIR/embroider -lm
     cd $TESTDIR
 }
 

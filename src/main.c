@@ -182,7 +182,7 @@ usage(void)
 {
 	int i;
     puts(welcome_message);
-    for (i=0; !string_equals(help_msg[i], "EOF"); i++) {
+    for (i=0; strcmp(help_msg[i], "EOF"); i++) {
         puts(help_msg[i]);
     }
 }
@@ -207,7 +207,7 @@ main(int argc, char *argv[])
         result = -1;
         /* identify what flag index the user may have entered */
         for (j=0; j < NUM_FLAGS; j++) {
-            if (string_equals(flag_list[j], argv[i])) {
+            if (!strcmp(flag_list[j], argv[i])) {
                 result = j;
                 break;
             }

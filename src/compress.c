@@ -62,7 +62,7 @@ int hus_compress(char *data, int length, char *output, int *output_length)
     a[3] = 0xA0;
     a[4] = 0x01;
     a[5] = 0xFE;
-    memory_copy(output+6, data, length);
+    memcpy(output+6, data, length);
     *output_length = length+6;
     return 0;
 }

@@ -298,22 +298,6 @@ EmbBrand brand_codes[100] = {
     {svg_color_codes, 200, "Scalable Vector Graphics"}
 };
 
-/*
- *
- */
-void
-string_copy(char *dst, const char *src)
-{
-    int i;
-    for (i=0; i<200; i++) {
-        dst[i] = src[i];
-        if (src[i] == 0) {
-            break;
-        }
-    }
-    dst[199] = 0;
-}
-
 /* Finds the location of the first non-whitespace character
  * in the string and returns it.
  */
@@ -346,52 +330,6 @@ string_len(const char *src)
     return -1;
 }
 
-/* Replacement for strcat that is only to be used for
- * short strings, otherwise use memory_copy.
- */
-void
-string_cat(char *dst, const char *src)
-{
-    int i, j, src_len;
-    j = string_len(dst);
-    src_len = string_len(src)+1;
-    for (i=0; i<src_len; i++) {
-        dst[j+i] = src[i];
-        if (src[i] == 0) {
-            return;
-        }
-        if (i+j == 200) {
-            break;
-        }
-    }
-    puts("ERROR: string_cat failed to concatenate because the source string");
-    puts("    was too long.");
-    dst[199] = 0;
-}
-
-/*
- */
-int
-string_equals(const char *s1, const char *s2)
-{
-    int i;
-    for (i=0; i<200; i++) {
-        if (s1[i] != s2[i]) {
-            return 0;
-        }
-        if (s1[i] == 0) {
-            if (s2[i] == 0) {
-                return 1;
-            }
-            return 0;
-        }
-    }
-	/* Strings which aren't null-terminated are treated as unequal.
-	 * The caller should be warned with an arror string.
-     */
-    return 0;
-}
-
 /*
  */
 int
@@ -405,53 +343,6 @@ string_rchar(const char *s, char c)
 		}
 	}
 	return 0;
-}
-
-/* Replacement for memcpy. To allow us to take out
- * "string.h" entirely.
- */
-void
-memory_copy(void *dst, const void *src, int n)
-{
-    int i;
-    char *dst_, *src_;
-    dst_ = (char *)dst;
-    src_ = (char *)src;
-    for (i=0; i<n; i++) {
-        dst_[i] = src_[i];
-    }
-}
-
-/* Replacement for memcmp. To allow us to take out
- * "string.h" entirely.
- */
-char
-memory_cmp(void *dst, const void *src, int n)
-{
-    size_t i;
-    char *dst_, *src_;
-    dst_ = (char *)dst;
-    src_ = (char *)src;
-    for (i=0; i<n; i++) {
-        char result = dst_[i] - src_[i];
-        if (result) {
-            return result;
-        }
-    }
-    return 0;
-}
-
-/* Replacement for memset. To allow us to take out
- * "string.h" entirely. 
- */
-char
-memory_set(void *dst, char value, int n)
-{
-    int i;
-    char *dst_ = (char*)dst;
-    for (i=0; i<n; i++) {
-        dst_[i] = value;
-    }
 }
 
 /* ENCODING SECTION
@@ -535,7 +426,7 @@ int16_t
 emb_read_i16(FILE* f)
 {
     char data[2];
-    if (fread(f, 1, 2, data) != 2) {
+    if (fread(data, 1, 2, f) != 2) {
         puts("ERROR: Failed to read a int16_t.");
         return 0;
     }
@@ -548,7 +439,7 @@ uint16_t
 emb_read_u16(FILE* f)
 {
     char data[2];
-    if (fread(f, 1, 2, data) != 2) {
+    if (fread(data, 1, 2, f) != 2) {
         puts("ERROR: Failed to read a uint16_t.");
         return 0;
     }
@@ -561,7 +452,7 @@ int32_t
 emb_read_i32(FILE* f)
 {
     char data[4];
-    if (fread(f, 1, 4, data) != 4) {
+    if (fread(data, 1, 4, f) != 4) {
         puts("ERROR: Failed to read a int32_t.");
         return 0;
     }
@@ -574,7 +465,7 @@ uint32_t
 emb_read_u32(FILE* f)
 {
     char data[4];
-    if (fread(f, 1, 4, data) != 4) {
+    if (fread(data, 1, 4, f) != 4) {
         puts("ERROR: Failed to read a uint32_t.");
         return 0;
     }
@@ -587,7 +478,7 @@ int16_t
 emb_read_i16be(FILE* f)
 {
     char data[2];
-    if (fread(f, 1, 2, data) != 2) {
+    if (fread(data, 1, 2, f) != 2) {
         puts("ERROR: Failed to read a int16_t.");
         return 0;
     }
@@ -600,7 +491,7 @@ uint16_t
 emb_read_u16be(FILE* f)
 {
     char data[2];
-    if (fread(f, 1, 2, data) != 2) {
+    if (fread(data, 1, 2, f) != 2) {
         puts("ERROR: Failed to read a uint16_t.");
         return 0;
     }
@@ -613,7 +504,7 @@ int32_t
 emb_read_i32be(FILE* f)
 {
     char data[4];
-    if (fread(f, 1, 4, data) != 4) {
+    if (fread(data, 1, 4, f) != 4) {
         puts("ERROR: Failed to read a int32_t.");
         return 0;
     }
@@ -626,7 +517,7 @@ uint32_t
 emb_read_u32be(FILE* f)
 {
     char data[4];
-    if (fread(f, 1, 4, data) != 4) {
+    if (fread(data, 1, 4, f) != 4) {
         puts("ERROR: Failed to read a uint32_t.");
         return 0;
     }
@@ -645,22 +536,21 @@ decode_t01_record(unsigned char b[3], int *x, int *y, int *flags)
 
     if (b[2] == 0xF3) {
         *flags = END;
+        return 1;
     }
-    else {
-        switch (b[2] & 0xC3) {
-        case 0x03:
-            *flags = NORMAL;
-            break;
-        case 0x83:
-            *flags = TRIM;
-            break;
-        case 0xC3:
-            *flags = STOP;
-            break;
-        default:
-            *flags = NORMAL;
-            break;
-        }
+    switch (b[2] & 0xC3) {
+    case 0x03:
+        *flags = NORMAL;
+        break;
+    case 0x83:
+        *flags = TRIM;
+        break;
+    case 0xC3:
+        *flags = STOP;
+        break;
+    default:
+        *flags = NORMAL;
+        break;
     }
     return 1;
 }
@@ -902,7 +792,7 @@ void pfaffEncode(FILE* file, int dx, int dy, int flags)
     {
         flagsToWrite |= 0x04;
     }
-    emb_fwrite(&flagsToWrite, 1, file);
+    fwrite(&flagsToWrite, 1, 1, file);
 }
 
 /* Decode the bytes a a1, a a2 and a a3 .
@@ -957,7 +847,7 @@ fpad(FILE* file, char c, int n)
 {
     int i;
     for (i = 0; i < n; i++) {
-        emb_fwrite(&c, 1, file);
+        fwrite(&c, 1, 1, file);
     }
 }
 
@@ -1114,13 +1004,13 @@ emb_array_copy(EmbArray *dst, EmbArray *src)
 
     switch (dst->type) {
     case EMB_STITCH:
-        memory_copy(dst->stitch, src->stitch, sizeof(EmbStitch)*src->count);
+        memcpy(dst->stitch, src->stitch, sizeof(EmbStitch)*src->count);
         break;
     case EMB_THREAD:
-        memory_copy(dst->thread, src->thread, sizeof(EmbThread)*src->count);
+        memcpy(dst->thread, src->thread, sizeof(EmbThread)*src->count);
         break;
     default:
-        memory_copy(dst->geometry, src->geometry, sizeof(EmbGeometry)*src->count);
+        memcpy(dst->geometry, src->geometry, sizeof(EmbGeometry)*src->count);
         break;
     }
 }
@@ -1427,7 +1317,7 @@ bcfFile_read(FILE* file, bcf_file* bcfFile)
     unsigned int directorySectorToReadFrom;
 
     bcfFile->header = bcfFileHeader_read(file);
-    if (memory_cmp(bcfFile->header.signature, "\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1", 8) != 0) {
+    if (memcmp(bcfFile->header.signature, "\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1", 8) != 0) {
         printf("bad header signature\n");
         printf("Failed to parse header\n");
         return 0;
@@ -1466,7 +1356,7 @@ GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind)
     FILE* fileOut = tmpfile();
     bcf_directory_entry* pointer = bcfFile->directory->dirEntries;
     while (pointer) {
-        if (string_equals(fileToFind, pointer->directoryEntryName)) {
+        if (!strcmp(fileToFind, pointer->directoryEntryName)) {
             break;
         }
         pointer = pointer->next;
@@ -1623,6 +1513,7 @@ parseTime(FILE* file)
     /*embTime_time(&returnVal); TODO: use embTime_time() rather than time(). */
     ft_low = emb_read_i32(file);
     ft_high = emb_read_i32(file);
+    printf("%u %u\n", ft_low, ft_high);
     /* TODO: translate to actual date time */
     returnVal.day = 1;
     returnVal.hour = 2;
@@ -1644,7 +1535,7 @@ CompoundFileDirectoryEntry(FILE* file)
         printf("ERROR: compound-file-directory.c CompoundFileDirectoryEntry(), cannot allocate memory for dir\n");
         return NULL;
     }
-    memory_set(dir->directoryEntryName, 0, 32);
+    memset(dir->directoryEntryName, 0, 32);
     parseDirectoryEntryName(file, dir);
     dir->next = 0;
     dir->directoryEntryNameLength = emb_read_u16(file);
@@ -1934,7 +1825,7 @@ write_24bit(FILE* file, int x)
     a[1] = (unsigned char)(x & 0xFF);
     a[2] = (unsigned char)((x >> 8) & 0xFF);
     a[3] = (unsigned char)((x >> 16) & 0xFF);
-    emb_fwrite(a, 4, file);
+    fwrite(a, 1, 4, file);
 }
 
 /* . */
@@ -1953,7 +1844,7 @@ void
 embColor_read(void *f, EmbColor *c, int toRead)
 {
     unsigned char b[4];
-    if (fread(b, 1, toRead, f) < toRead) {
+    if (fread(b, 1, toRead, f) < (unsigned int)toRead) {
         puts("ERROR: Failed to read embColor bytes.");
         return;
     }
@@ -1971,7 +1862,7 @@ embColor_write(void *f, EmbColor c, int toWrite)
     b[1] = c.g;
     b[2] = c.b;
     b[3] = 0;
-    emb_fwrite(b, toWrite, f);
+    fwrite(b, 1, toWrite, f);
 }
 
 /* Returns the closest color to the required color based on
@@ -2033,8 +1924,8 @@ emb_get_random_thread(void)
     c.color.r = rand()%256;
     c.color.g = rand()%256;
     c.color.b = rand()%256;
-    string_copy(c.description, "random");
-    string_copy(c.catalogNumber, "");
+    strcpy(c.description, "random");
+    strcpy(c.catalogNumber, "");
     return c;
 }
 
@@ -2078,7 +1969,7 @@ stringInArray(const char *s, const char **array)
 {
     int i;
     for (i = 0; string_len(array[i]); i++) {
-        if (string_equals(s, array[i])) {
+        if (!strncmp(s, array[i], 200)) {
             return 1;
         }
     }
@@ -2141,7 +2032,7 @@ copy_trim(char const *s)
     newLength = trailingSpace - firstWord;
 
     result = (char*)malloc(newLength + 1);
-    memory_copy(result, firstWord, newLength);
+    memcpy(result, firstWord, newLength);
     result[newLength] = '\0';
     return result;
 }
@@ -2170,6 +2061,7 @@ emb_optOut(EmbReal num, char* str)
 void
 embTime_initNow(EmbTime* t)
 {
+    printf("%d", t->year);
     /*
     time_t rawtime;
     struct tm* timeinfo;
@@ -2252,9 +2144,9 @@ to_flag(char **argv, int argc, int i)
         for (j=i+2; j<argc; j++) {
             int length = string_len(argv[j]);
             output_fname[0] = 0;
-            string_copy(output_fname, argv[j]);
+            strcpy(output_fname, argv[j]);
             output_fname[length-4] = 0;
-            string_cat(output_fname, formatTable[format].extension);
+            strcat(output_fname, formatTable[format].extension);
             printf("Converting %s to %s.\n",
                 argv[j], output_fname);
             convert(argv[j], output_fname);
@@ -2314,19 +2206,19 @@ Potential reference:
     /* replace letters using rules by copying to new_state */
     for (j=0; j < (int)string_len(state); j++) {
         if (state[j] >= 'A' && state[j] < 'F') {
-            string_cat(new_state, L.rules[state[j]-'A']);
+            strcat(new_state, L.rules[state[j]-'A']);
         }
         if (state[j] == 'F') {
-            string_cat(new_state, "F");
+            strcat(new_state, "F");
         }
         if (state[j] == '+') {
-            string_cat(new_state, "+");
+            strcat(new_state, "+");
         }
         if (state[j] == '-') {
-            string_cat(new_state, "-");
+            strcat(new_state, "-");
         }
     }
-    memory_copy(state, new_state, string_len(new_state)+1);
+    memcpy(state, new_state, string_len(new_state)+1);
 
     if (complete < iterations) {
         lindenmayer_system(L, state, iterations, complete+1);
@@ -3250,6 +3142,7 @@ emb_pattern_stitchCircle(EmbPattern *p, EmbCircle circle, int thread_index, int 
     EmbVector normal = {-1.0, 1.0};
     direction = emb_vector_normalize(direction);
     normal = emb_vector_normalize(normal);
+    printf("style %d\n", style);
     for (s=-circle.radius; s<circle.radius; s += seperation) {
         EmbLine line;
         float length = sqrt(circle.radius*circle.radius - s*s);
@@ -3476,7 +3369,7 @@ writeImage(FILE* file, unsigned char image[][48])
             output |= (unsigned char)(image[i][offset + 5] != (unsigned char)0) << 5;
             output |= (unsigned char)(image[i][offset + 6] != (unsigned char)0) << 6;
             output |= (unsigned char)(image[i][offset + 7] != (unsigned char)0) << 7;
-            emb_fwrite(&output, 1, file);
+            fwrite(&output, 1, 1, file);
         }
     }
 }
@@ -3505,8 +3398,9 @@ image_diff(unsigned char *a, unsigned char *b, int size)
  * The caller is responsible for the memory in p.
  */
 int
-emb_pattern_render(EmbPattern *p, char *fname)
+emb_pattern_render(EmbPattern * /* p */, char *fname)
 {
+    printf("fname %s", fname);
 /*
     const char *tmp_fname = "libembroidery_temp.svg";
     NSVGimage *image = NULL;
@@ -3558,7 +3452,7 @@ embImage_create(int width, int height)
 
 /* . */
 void
-embImage_read(EmbImage *image, char *fname)
+embImage_read(EmbImage * /* image */, char * /* fname */)
 {
     /*
     int channels_in_file;
@@ -3573,7 +3467,7 @@ embImage_read(EmbImage *image, char *fname)
 
 /* . */
 int
-embImage_write(EmbImage *image, char *fname)
+embImage_write(EmbImage * /* image */, char * /* fname */)
 {
 /*
     return stbi_write_png(
@@ -3775,9 +3669,9 @@ emb_pattern_copyPolylinesTostitch_list(EmbPattern* p)
         currentPoly = p->geometry->geometry[i].object.polyline;
         currentPointList = currentPoly.pointList;
 
-        string_copy(thread.catalogNumber, "");
+        strcpy(thread.catalogNumber, "");
         thread.color = currentPoly.color;
-        string_copy(thread.description, "");
+        strcpy(thread.description, "");
         emb_pattern_addThread(p, thread);
 
         if (!firstObject) {
@@ -4360,25 +4254,25 @@ emb_pattern_loadExternalColorFile(EmbPattern* p, const char* fileName)
         return;
     }
 
-    string_copy(extractName, fileName);
+    strcpy(extractName, fileName);
     format = emb_identify_format(fileName);
     stub_len = string_len(fileName) - string_len(formatTable[format].extension);
     extractName[stub_len] = 0;
-    string_cat(extractName, ".edr");
+    strcat(extractName, ".edr");
     hasRead = emb_pattern_read(p, extractName, EMB_FORMAT_EDR);
     if (!hasRead) {
         extractName[stub_len] = 0;
-        string_cat(extractName,".rgb");
+        strcat(extractName,".rgb");
         hasRead = emb_pattern_read(p, extractName, EMB_FORMAT_RGB);
     }
     if (!hasRead) {
         extractName[stub_len] = 0;
-        string_cat(extractName,".col");
+        strcat(extractName,".col");
         hasRead = emb_pattern_read(p, extractName, EMB_FORMAT_COL);
     }
     if (!hasRead) {
         extractName[stub_len] = 0;
-        string_cat(extractName,".inf");
+        strcat(extractName,".inf");
         hasRead = emb_pattern_read(p, extractName, EMB_FORMAT_INF);
     }
 }
@@ -4797,7 +4691,7 @@ threadColor(const char *name, int brand)
 {
     int i;
     for (i = 0; brand_codes[brand].codes[i].manufacturer_code >= 0; i++) {
-        if (string_equals(brand_codes[brand].codes[i].name, name)) {
+        if (!strcmp(brand_codes[brand].codes[i].name, name)) {
             return brand_codes[brand].codes[i].hex_code;
         }
     }
@@ -4885,7 +4779,7 @@ EmbReal
 emb_pattern_longest_stitch(EmbPattern *pattern)
 {
     if (pattern->stitch_list->count < 2) {
-        return;
+        return 0.0;
     }
 
     int i;
@@ -4909,7 +4803,7 @@ EmbReal
 emb_pattern_shortest_stitch(EmbPattern *pattern)
 {
     if (pattern->stitch_list->count < 2) {
-        return;
+        return 0.0;
     }
 
     int i;

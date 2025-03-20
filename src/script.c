@@ -10,7 +10,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright 2018-2024 The Embroidermodder Team
+ * Copyright 2018-2025 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  *
  * -----------------------------------------------------------------------------
@@ -387,7 +387,7 @@ stack_push(EmbStack *stack, char *token)
     i = 0;
     j = 0;
     for (j=0; in_built_functions[j][0]; j++) {
-        if (string_equals(in_built_functions[j], token)) {
+        if (!strcmp(in_built_functions[j], token)) {
             element->data_type = NAME_TYPE;
             element->attribute = EXEC_ATTR;
             element->i = j;
@@ -1047,7 +1047,7 @@ emb_repl(void)
         }
         line[i] = 0;
         execute_postscript(&stack, line);
-        if (string_equals(line, "quit")) {
+        if (!strcmp(line, "quit")) {
             running = 0;
         }
     }
@@ -1105,6 +1105,7 @@ void
 emb_processor(char *state, const char *program, int program_length)
 {
     int i;
+    printf("state: %s\n", state);
     for (i=0; i<program_length; i++) {
         switch (program[i]) {
         case EMB_CMD_ARC: {
@@ -1114,7 +1115,11 @@ emb_processor(char *state, const char *program, int program_length)
             }
             EmbVector p1 = emb_vector_from_bytes(program, i+1);
             EmbVector p2 = emb_vector_from_bytes(program, i+5);
-            
+            EmbArc arc;
+            arc.start = p1;
+            arc.end = p2;
+            embPattern_addArc(focussed_pattern, arc);
+
             i += 8;
             break;
         }
@@ -1143,7 +1148,7 @@ emb_processor(char *state, const char *program, int program_length)
 void
 emb_postscript_compiler(const char *program, char *compiled_program)
 {
-
+    strcpy(compiled_program, program);
 }
 
 /* The actuator works by creating an on-the-fly EmbProgramState so external

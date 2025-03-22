@@ -8,8 +8,9 @@ EMB=./embroider
 TEST_TIME=10
 TOTAL_TESTS=13
 OPTIONS="-g -O2 -fPIC -std=c99 -Wall -Wextra -Werror"
-LIBRARY_SRC="src/pattern.c src/compress.c src/formats.c "\
-LIBRARY_SRC+="src/geometry.c src/script.c src/testing.c src/embroidery.h src/data.c"
+LIBRARY_SRC="src/pattern.c src/compress.c src/formats.c "
+LIBRARY_SRC+="src/geometry.c src/script.c src/testing.c src/embroidery.h src/data.c "
+LIBRARY_SRC+="extern/mpc/mpc.c extern/mpc/mpc.h "
 
 function build () {
     rm -fr $TESTDIR

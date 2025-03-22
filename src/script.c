@@ -27,6 +27,7 @@
 #include <math.h>
 
 #include "embroidery.h"
+#include "../extern/mpc/mpc.h"
 
 static EmbPattern *focussed_pattern = NULL;
 

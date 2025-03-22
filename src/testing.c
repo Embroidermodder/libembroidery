@@ -34,7 +34,7 @@
 typedef int (*test_function)(void);
 
 void emb_vector_print(EmbVector v, char *label);
-void emb_arc_print(EmbArc a, char *label);
+void emb_arc_print(EmbArc a);
 
 int test_convert_from_to(int from_, int to_);
 
@@ -239,7 +239,7 @@ test_thread_lookup(void)
     int tBrand = EMB_BRAND_SVG;
     int tNum = threadColorNum(tColor, tBrand);
     char tName[50];
-    strncpy(tName, threadColorName(tColor, tBrand), 50);
+    strncpy(tName, threadColorName(tColor, tBrand), 49);
 
     printf("Color : 0x%X\n"
        "Brand : %d\n"
@@ -410,7 +410,8 @@ printArcResults(
     EmbReal incAngle,
     char clockwise)
 {
-    emb_arc_print(arc, "test_arc");
+    printf("test_arc:");
+    emb_arc_print(arc);
     emb_vector_print(center, "center");
     emb_vector_print(chordMid, "chordMid");
     printf(

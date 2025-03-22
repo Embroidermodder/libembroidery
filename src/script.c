@@ -475,7 +475,7 @@ queue_token_list(EmbStack *stack, char line[200])
             j++;
         }
     }
-    if (strnlen(line, 200) > 0) {
+    if (line[0] != 0) {
         current_token[j] = 0;
         queue_token(stack, current_token);
     }

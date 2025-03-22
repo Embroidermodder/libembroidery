@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 #include "embroidery.h"
@@ -168,6 +169,14 @@ EmbReal toyota_position_decode(unsigned char a);
 
 const int shvThreadCount = 42;
 const int pecThreadCount = 65;
+
+/* for debugging purposes */
+#define REPORT_INT(X) printf(#X " %d\n", X)
+#define REPORT_FLOAT(X) printf(#X " %f\n", X)
+#define REPORT_STR(X) printf(#X " %s\n", X)
+
+/* WARNING: Not unicode safe. */
+unsigned char char_to_lower(unsigned char a);
 
 /* Get extension from file name. */
 int
@@ -658,7 +667,7 @@ emb_pattern_write(EmbPattern* pattern, const char *fileName, int format)
         char externalFileName[1000];
         int stub_length;
         strncpy(externalFileName, fileName, 200);
-        stub_length = string_len(fileName)-string_len(formatTable[format].extension);
+        stub_length = strlen(fileName) - strlen(formatTable[format].extension);
         externalFileName[stub_length] = 0;
         strcat(externalFileName, ".rgb");
         emb_pattern_write(pattern, externalFileName, EMB_FORMAT_RGB);
@@ -727,7 +736,7 @@ char
 read100(EmbPattern *pattern, FILE* file)
 {
     unsigned char b[10];
-    while (read_bytes(file, 3, b)) {
+    while (fread(b, 1, 3, file) == 3) {
         EmbStitch st;
         st.x = toyota_position_decode(b[2]);
         st.y = toyota_position_decode(b[3]);
@@ -776,7 +785,7 @@ write100(EmbPattern *pattern, FILE* file)
             b[0] = 0x1F;
         }
 
-        if (write_bytes(file, 4, b)) {
+        if (fwrite(b, 1, 4, file) != 4) {
             return 0;
         }
     }
@@ -792,7 +801,7 @@ char
 read10o(EmbPattern *pattern, FILE* file)
 {
     unsigned char b[10];
-    while (read_bytes(file, 3, b)) {
+    while (fread(b, 1, 3, file) == 3) {
         EmbStitch st;
 
         unsigned char ctrl = b[0];
@@ -821,13 +830,11 @@ read10o(EmbPattern *pattern, FILE* file)
     return 1;
 }
 
+/* . */
 char
 write10o(EmbPattern *pattern, FILE* file)
 {
     int i;
-    EmbVector position;
-
-    position = pattern->home;
     for (i=0; i<pattern->stitch_list->count; i++) {
         unsigned char b[10];
         EmbStitch st = pattern->stitch_list->stitch[i];
@@ -859,7 +866,7 @@ write10o(EmbPattern *pattern, FILE* file)
             b[2] = 0xF8;
         }
 
-        if (write_bytes(file, 3, b)) {
+        if (fwrite(b, 1, 3, file) != 3) {
             return 0;
         }
     }
@@ -918,26 +925,15 @@ readBro(EmbPattern* pattern, FILE* file)
 {
     unsigned char header[19];
     unsigned char *ptr = header;
-    if (!read_bytes(file, 19, header)) {
+    if (fread(header, 1, 19, file) != 19) {
         return 0;
     }
-    unsigned char x55 = header[0];
-    /* TODO: determine what this unknown data is */
-    ptr += 1;
-    short unknown1 = *((short*)ptr);
-    ptr += 2;
-    char *name = (char*)ptr;
-    ptr += 8;
-    /* TODO: determine what this unknown data is */
-    short unknown2 = *((short*)ptr);
-    ptr += 2;
-    /* TODO: determine what this unknown data is */
-    short unknown3 = *((short*)ptr);
-    ptr += 2;
-    /* TODO: determine what this unknown data is */
-    short unknown4 = *((short*)ptr);
-    ptr += 2;
-    short moreBytesToEnd = *((short*)header);
+    /* TODO: determine what this unknown data is.
+     * In positions 0x0-0x4, 0xC-0xC+0x8
+     */
+    ptr += 3;
+    char *name = (char*)ptr; /* 8 chars long */
+    printf("readBro: %s\n", name);
 
     fseek(file, 0x100, SEEK_SET);
 
@@ -972,7 +968,7 @@ readBro(EmbPattern* pattern, FILE* file)
 }
 
 char
-writeBro(EmbPattern* pattern, FILE* file)
+writeBro(EmbPattern* /* pattern */, FILE* /* file */)
 {
     puts("writeBro is not implemented");
     return 0; /*TODO: finish writeBro */
@@ -987,14 +983,14 @@ writeBro(EmbPattern* pattern, FILE* file)
  * \todo Find a source.
  */
 char
-readCnd(EmbPattern* pattern, FILE* file)
+readCnd(EmbPattern* /* pattern */, FILE* /* file */)
 {
     puts("readCnd is not implemented");
     return 0; /*TODO: finish readCnd */
 }
 
 char
-writeCnd(EmbPattern* pattern, FILE* file)
+writeCnd(EmbPattern* /* pattern */, FILE* /* file */)
 {
     puts("writeCnd is not implemented");
     return 0; /*TODO: finish writeCnd */
@@ -1045,7 +1041,7 @@ readCol(EmbPattern* pattern, FILE* file)
     }
     for (i = 0; i < numberOfColors; i++) {
         emb_readline(file, line, 30);
-        if (string_len(line) < 1) {
+        if (line[0] == 0) {
             printf("ERROR: Empty line in col file.");
             return 0;
         }
@@ -1856,7 +1852,7 @@ encode_record(FILE* file, int x, int y, int flags)
         b[2] = (char) (b[2] | 0xC3);
     }
 
-    write_bytes(file, 3, b);
+    fwrite(b, 1, 3, file);
 }
 
 /*convert 2 characters into 1 int for case statement */
@@ -1867,7 +1863,7 @@ void
 set_dst_variable(EmbPattern* pattern, char* var, char* val) {
     unsigned int i;
     EmbThread t;
-    for (i = 0; i <= (unsigned int)string_len(var); i++) {
+    for (i = 0; i <= (unsigned int)strlen(var); i++) {
         /* uppercase the var */
         if (var[i] >= 'a' && var[i] <= 'z') {
             var[i] += 'A' - 'a';
@@ -1896,9 +1892,9 @@ set_dst_variable(EmbPattern* pattern, char* var, char* val) {
         break;
     case cci('P','D'):
         /* store this string as-is, it will be saved as-is, 6 characters */
-        if (string_len(val) != 6) {
+        if (strlen(val) != 6) {
             /*pattern->messages.add("Warning: in DST file read,
-                PD is not 6 characters, but ",(int)string_len(val)); */
+                PD is not 6 characters, but ",(int)strlen(val)); */
         }
         /*pattern->set_variable(var,val);*/
         break;
@@ -2047,7 +2043,7 @@ writeDst(EmbPattern* pattern, FILE* file)
     /* TODO: review the code below
     if (pattern->get_variable("design_name") != NULL) {
         char *la = stralloccopy(pattern->get_variable("design_name"));
-        if (string_len(la)>16) la[16]='\0';
+        if (strlen(la)>16) la[16]='\0';
 
         fprintf(file,"LA:%-16s\x0d",la);
         safe_free(la);
@@ -2076,7 +2072,7 @@ writeDst(EmbPattern* pattern, FILE* file)
 
     /*pd=pattern->get_variable("pd");*/ /* will return null pointer if not defined */
    /* pd = 0;
-    if (pd == 0 || string_len(pd) != 6) { */
+    if (pd == 0 || strlen(pd) != 6) { */
         /* pd is not valid, so fill in a default consisting of "******" */
         strcpy(pd, "******");
     /*}*/
@@ -2112,7 +2108,7 @@ writeDst(EmbPattern* pattern, FILE* file)
     /* Finish file with a terminator character and two zeros to
      * keep the post header part a multiple of three.
      */
-    write_bytes(file, 3, "\xa1\0\0");
+    fwrite("\xa1\0\0", 1, 3, file);
     return 1;
 }
 
@@ -2198,7 +2194,7 @@ writeDsz(EmbPattern* pattern, FILE* file)
         }
         b[0] = emb_round(10.0*delta.x);
         b[1] = emb_round(10.0*delta.y);
-        write_bytes(file, 3, b);
+        fwrite(b, 1, 3, file);
     }
     return 1;
 }
@@ -2235,6 +2231,7 @@ readLine(FILE* file, char *str)
     }
 }
 
+/* Use parsing library here. Write down full DXF grammar. */
 char
 readDxf(EmbPattern* pattern, FILE* file)
 {
@@ -2250,7 +2247,9 @@ readDxf(EmbPattern* pattern, FILE* file)
     EmbString buff;
     EmbVector prev, pos, first;
     EmbReal bulge = 0.0f;
+    REPORT_FLOAT(bulge);
     char firstStitch = 1;
+    printf("%c\n", firstStitch);
     char bulgeFlag = 0;
     int fileLength = 0;
     first.x = 0.0f;
@@ -2359,7 +2358,7 @@ readDxf(EmbPattern* pattern, FILE* file)
                     readLine(file, buff);
                     colorNum = atoi(buff);
 
-		/* Why is this here twice? */
+        /* Why is this here twice? */
                     colorNum = atoi(buff);
                     co = dxf_colors[colorNum].color;
                     printf("inserting:%s,%d,%d,%d\n", layerName, co.r, co.g, co.b);
@@ -2431,6 +2430,7 @@ readDxf(EmbPattern* pattern, FILE* file)
                     readLine(file, buff);
                     bulge = atof(buff);
                     bulgeFlag = 1;
+                    printf("bulgeFlag %d\n", bulgeFlag);
                 }
                 else if (!strcmp(buff,"10")) /* X */
                 {
@@ -2439,6 +2439,7 @@ readDxf(EmbPattern* pattern, FILE* file)
                 }
                 else if (!strcmp(buff,"20")) /* Y */
                 {
+#if 0
                     readLine(file, buff);
                     pos.y = atof(buff);
 
@@ -2447,13 +2448,13 @@ readDxf(EmbPattern* pattern, FILE* file)
                         bulgeFlag = 0;
                         arc.start = prev;
                         arc.end = pos;
-		        /*TODO: error */
-		        /*
+                /*TODO: error */
+                /*
                         if (!getArcDataFromBulge(bulge, &arc, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)) {
                             return 0;
                         }
-			*/
-			return 0;
+                */
+                return 0;
                         if (firstStitch) {
                             /* emb_pattern_addStitchAbs(pattern, x, y, TRIM, 1); TODO: Add moveTo point to embPath pointList */
                         }
@@ -2468,8 +2469,10 @@ readDxf(EmbPattern* pattern, FILE* file)
                         first = pos;
                         firstStitch = 0;
                     }
+#endif
                 }
                 else if (!strcmp(buff,"0")) {
+#if 0
                     entityType[0] = 0;
                     firstStitch = 1;
                     if (bulgeFlag) {
@@ -2477,31 +2480,36 @@ readDxf(EmbPattern* pattern, FILE* file)
                         bulgeFlag = 0;
                         arc.start = prev;
                         arc.end = first;
-		        /* TODO: error */
+                        /* TODO: error */
                         /*
                         if (!getArcDataFromBulge(bulge, &arc, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)) {
                             return 0;
                         }
-			*/
-		        return 0;
+                        */
+                        return 0;
                         prev = arc.start;
-                        /* emb_pattern_addStitchAbs(pattern, prevX, prevY, ARC, 1); TODO: Add arcTo point to embPath pointList */
+                        /* emb_pattern_addStitchAbs(pattern, prevX, prevY, ARC, 1);
+                         * TODO: Add arcTo point to embPath pointList */
                     }
-                    else
-                    {
-                        /* emb_pattern_addStitchAbs(pattern, firstX, firstY, NORMAL, 1); TODO: Add lineTo point to embPath pointList */
+                    else {
+                        /* emb_pattern_addStitchAbs(pattern, firstX, firstY, NORMAL, 1);
+                         * TODO: Add lineTo point to embPath pointList */
                     }
+#endif
                 }
             } /* end LWPOLYLINE */
         } /* end ENTITIES section */
     } /* end while loop */
 
-
     /*
     EmbColor* testColor = 0;
     testColor = embHash_value(layerColorHash, "OMEGA");
-    if (!testColor) printf("NULL POINTER!!!!!!!!!!!!!!\n");
-    else printf("LAYERCOLOR: %d,%d,%d\n", testColor->r, testColor->g, testColor->b);
+    if (!testColor) {
+        printf("NULL POINTER!\n");
+    }
+    else {
+        printf("LAYERCOLOR: %d,%d,%d\n", testColor->r, testColor->g, testColor->b);
+    }
     */
 
     if (!eof) {
@@ -2524,7 +2532,6 @@ writeDxf(EmbPattern* pattern, FILE* file)
 /* Embird Embroidery Format (.edr)
  * Stitch Only Format
  */
-
 char
 readEdr(EmbPattern* pattern, FILE* file)
 {
@@ -2685,32 +2692,32 @@ writeExp(EmbPattern* pattern, FILE* file)
         pos.x += 0.1*dx;
         pos.y += 0.1*dy;
         switch (st.flags) {
-            case STOP:
-                b[0] = (char)(0x80);
-                b[1] = 0x01;
-                b[2] = 0x00;
-                b[3] = 0x00;
-                write_bytes(file, 4, b);
-                break;
-            case JUMP:
-                b[0] = (char)(0x80);
-                b[1] = 0x04;
-                b[2] = dx;
-                b[3] = dy;
-                write_bytes(file, 4, b);
-                break;
-            case TRIM:
-                b[0] = (char)(0x80);
-                b[1] = (char)(0x80);
-                b[2] = 0x07;
-                b[3] = 0x00;
-                write_bytes(file, 4, b);
-                break;
-            default: /* STITCH */
-                b[0] = dx;
-                b[1] = dy;
-                write_bytes(file, 2, b);
-                break;
+        case STOP:
+            b[0] = (char)(0x80);
+            b[1] = 0x01;
+            b[2] = 0x00;
+            b[3] = 0x00;
+            fwrite(b, 1, 4, file);
+            break;
+        case JUMP:
+            b[0] = (char)(0x80);
+            b[1] = 0x04;
+            b[2] = dx;
+            b[3] = dy;
+            fwrite(b, 1, 4, file);
+            break;
+        case TRIM:
+            b[0] = (char)(0x80);
+            b[1] = (char)(0x80);
+            b[2] = 0x07;
+            b[3] = 0x00;
+            fwrite(b, 1, 4, file);
+            break;
+        default: /* STITCH */
+            b[0] = dx;
+            b[1] = dy;
+            fwrite(b, 1, 2, file);
+            break;
         }
     }
     fprintf(file, "\x1a");
@@ -2771,14 +2778,14 @@ writeExy(EmbPattern* pattern, FILE* file)
  * Smoothie G-Code Embroidery Format (.fxy)?
  */
 char
-readEys(EmbPattern* pattern, FILE* file)
+readEys(EmbPattern* /* pattern */, FILE* /* file */)
 {
     puts("ERROR: readEys and not been finished.");
     return 0; /*TODO: finish readEys */
 }
 
 char
-writeEys(EmbPattern* pattern, FILE* file)
+writeEys(EmbPattern* /* pattern */, FILE* /* file */)
 {
     puts("ERROR: writeEys and not been finished.");
     return 0; /*TODO: finish writeEys */
@@ -2835,14 +2842,14 @@ writeFxy(EmbPattern* pattern, FILE* file)
  *     by John Milton Amiss, Franklin D. Jones and Henry Ryffel
  */
 char
-readGc(EmbPattern* pattern, FILE* file)
+readGc(EmbPattern* /* pattern */, FILE* /* file */)
 {
     puts("ERROR: readGc and not been finished.");
     return 0; /*TODO: finish readGc */
 }
 
 char
-writeGc(EmbPattern* pattern, FILE* file)
+writeGc(EmbPattern* /* pattern */, FILE* /* file */)
 {
     puts("ERROR: writeGc and not been finished.");
     return 0; /*TODO: finish writeGc */
@@ -2854,7 +2861,7 @@ writeGc(EmbPattern* pattern, FILE* file)
  */
 /* TODO: finish readGnc */
 char
-readGnc(EmbPattern* pattern, FILE* file)
+readGnc(EmbPattern* /* pattern */, FILE* /* file */)
 {
     puts("ERROR: readGnc and not been finished.");
     return 0;
@@ -2862,7 +2869,7 @@ readGnc(EmbPattern* pattern, FILE* file)
 
 /* TODO: finish writeGnc */
 char
-writeGnc(EmbPattern* pattern, FILE* file)
+writeGnc(EmbPattern* /* pattern */, FILE* /* file */)
 {
     puts("ERROR: writeGnc and not been finished.");
     return 0;
@@ -2872,7 +2879,6 @@ writeGnc(EmbPattern* pattern, FILE* file)
  * Gold Thread Embroidery Format (.gt)
  * Stitch Only Format.
  */
-
 char
 readGt(EmbPattern* pattern, FILE* file)
 {
@@ -2990,12 +2996,6 @@ husEncodeStitchType(int st)
     }
 }
 
-#define READ_RAW_BYTES(ptr, size, file) \
-    if (fread(ptr, 1, size, file) != size) { \
-        puts("Ran out of bytes before full file read."); \
-        return 0; \
-    }
-
 char
 readHus(EmbPattern* pattern, FILE* file)
 {
@@ -3037,7 +3037,11 @@ readHus(EmbPattern* pattern, FILE* file)
         printf("ERROR: format-hus.c readHus(), cannot allocate memory for stringVal\n");
         return 0;
     }
-    READ_RAW_BYTES(stringVal, 8, file); /* TODO: check return value */
+    size_t size = 8;
+    if (fread(stringVal, 1, size, file) != size) {
+        puts("Ran out of bytes before full file read.");
+        return 0;
+    }
 
     unknown = emb_read_i16(file);
     for (i = 0; i < numberOfColors; i++) {
@@ -3050,24 +3054,36 @@ readHus(EmbPattern* pattern, FILE* file)
         printf("ERROR: format-hus.c readHus(), cannot allocate memory for attributeData\n");
         return 0;
     }
-    READ_RAW_BYTES(attributeData, xOffset - attributeOffset, file);
-    attributeDataDecompressed = husDecompressData(attributeData, xOffset - attributeOffset, numberOfStitches + 1);
+    size = xOffset - attributeOffset;
+    if (fread(attributeData, 1, size, file) != size) {
+        puts("Ran out of bytes before full file read.");
+        return 0;
+    }
+    attributeDataDecompressed = husDecompressData(attributeData, size, numberOfStitches + 1);
 
     xData = (unsigned char*)malloc(sizeof(unsigned char)*(yOffset - xOffset + 1));
     if (!xData) {
         printf("ERROR: format-hus.c readHus(), cannot allocate memory for xData\n");
         return 0;
     }
-    READ_RAW_BYTES(xData, yOffset - xOffset, file);
-    xDecompressed = husDecompressData(xData, yOffset - xOffset, numberOfStitches);
+    size = yOffset - xOffset;
+    if (fread(xData, 1, size, file) != size) {
+        puts("Ran out of bytes before full file read.");
+        return 0;
+    }
+    xDecompressed = husDecompressData(xData, size, numberOfStitches);
 
     yData = (unsigned char*)malloc(sizeof(unsigned char)*(fileLength - yOffset + 1));
     if (!yData) {
         printf("ERROR: format-hus.c readHus(), cannot allocate memory for yData\n");
         return 0;
     }
-    READ_RAW_BYTES(yData, fileLength - yOffset, file);
-    yDecompressed = husDecompressData(yData, fileLength - yOffset, numberOfStitches);
+    size = fileLength - yOffset;
+    if (fread(yData, 1, size, file) != size) {
+        puts("Ran out of bytes before full file read.");
+        return 0;
+    }
+    yDecompressed = husDecompressData(yData, size, numberOfStitches);
 
     for (i = 0; i < numberOfStitches; i++) {
         int flag;
@@ -3166,9 +3182,9 @@ writeHus(EmbPattern* pattern, FILE* file)
         emb_write_i16(file, color_index);
     }
 
-    write_bytes(file, attributeSize, attributeCompressed);
-    write_bytes(file, xCompressedSize, xCompressed);
-    write_bytes(file, yCompressedSize, yCompressed);
+    fwrite(attributeCompressed, 1, attributeSize, file);
+    fwrite(xCompressed, 1, xCompressedSize, file);
+    fwrite(yCompressed, 1, yCompressedSize, file);
 
     safe_free(xValues);
     safe_free(xCompressed);
@@ -3297,7 +3313,7 @@ writeInf(EmbPattern* pattern, FILE* file)
         EmbColor c;
         c = pattern->thread_list->thread[i].color;
         sprintf(buffer, "RGB(%d,%d,%d)", (int)c.r, (int)c.g, (int)c.b);
-        record_length = 14 + string_len(buffer);
+        record_length = 14 + strlen(buffer);
         record_number = i;
         needle_number = i;
         emb_write_i16be(file, record_length);
@@ -4889,7 +4905,7 @@ readPes(EmbPattern* pattern, const char *fileName, FILE* file)
 {
     int pecstart, numColors, x, version, i;
     char signature[9];
-    if (!read_bytes(file, 8, signature)) {
+    if (fread(signature, 1, 8, file) != 8) {
         puts("ERROR PES: failed to read signature.");
         return 0;
     }
@@ -4959,39 +4975,27 @@ readPes(EmbPattern* pattern, const char *fileName, FILE* file)
 }
 
 int
-read_bytes(FILE* file, int length, char *str)
-{
-    return (fread(file, 1, length, str) == length);
-}
-
-int
-write_bytes(FILE* file, int length, char *str)
-{
-    return (fwrite(file, 1, length, str) == length);
-}
-
-int
 read_descriptions(FILE* file, EmbPattern* pattern)
 {
-    int n;
-    n = fgetc(file);
-    if (!read_bytes(file, n, pattern->design_name)) {
+    size_t n;
+    n = (size_t)fgetc(file);
+    if (fread(pattern->design_name, 1, n, file) != n) {
         return 0;
     }
-    n = fgetc(file);
-    if (!read_bytes(file, n, pattern->category)) {
+    n = (size_t)fgetc(file);
+    if (fread(pattern->category, 1, n, file) != n) {
         return 0;
     }
-    n = fgetc(file);
-    if (!read_bytes(file, n, pattern->author)) {
+    n = (size_t)fgetc(file);
+    if (fread(pattern->author, 1, n, file) != n) {
         return 0;
     }
-    n = fgetc(file);
-    if (!read_bytes(file, n, pattern->keywords)) {
+    n = (size_t)fgetc(file);
+    if (fread(pattern->keywords, 1, n, file) != n) {
         return 0;
     }
-    n = fgetc(file);
-    if (!read_bytes(file, n, pattern->comments)) {
+    n = (size_t)fgetc(file);
+    if (fread(pattern->comments, 1, n, file) != n) {
         return 0;
     }
     return 1;
@@ -5746,7 +5750,7 @@ readShv(EmbPattern* pattern, FILE* file)
         return 0;
     }
 
-    fseek(file, string_len(headerText), SEEK_SET);
+    fseek(file, strlen(headerText), SEEK_SET);
     fileNameLength = fgetc(file);
     fseek(file, fileNameLength, SEEK_CUR);
     designWidth = fgetc(file);
@@ -6165,7 +6169,7 @@ svgColorToEmbColor(char* colorString)
     EmbColor c;
     char* pEnd = 0;
     char* colorStr = copy_trim(colorString); /* Trim out any junk spaces */
-    int length = string_len(colorStr);
+    int length = strlen(colorStr);
     int tableColor;
 
     /* SVGTiny1.2 Spec Section 11.13.1 syntax for color values */
@@ -6333,7 +6337,7 @@ parse_path(EmbPattern *p)
     EmbPath path;
     char* pointStr = svgAttribute_getValue("d");
     char* mystrok = svgAttribute_getValue("stroke");
-    int last = string_len(pointStr);
+    int last = strlen(pointStr);
     int size = 32;
     int pendingTask = 0;
     int relative = 0;
@@ -6618,7 +6622,7 @@ EmbArray *
 parse_pointlist(EmbPattern *p)
 {
     char* pointStr = svgAttribute_getValue("points");
-    int last = string_len(pointStr);
+    int last = strlen(pointStr);
     int size = 32;
     int i = 0;
     int pos = 0;
@@ -6885,7 +6889,7 @@ svgProcess(int c, const char* buff)
             strcpy(currentAttribute, buff);
         }
     } else if (svgExpect == SVG_EXPECT_VALUE) {
-        int last = string_len(buff) - 1;
+        int last = strlen(buff) - 1;
         printf("VALUE:\n");
 
         /* single-value */
@@ -6896,7 +6900,7 @@ svgProcess(int c, const char* buff)
             n_attributes++;
         } else { /* multi-value */
             svgMultiValue = 1;
-            if (string_len(currentValue)==0) {
+            if (strlen(currentValue)==0) {
                 strcpy(currentValue, buff);
             }
             else {
@@ -8382,7 +8386,7 @@ vp3WriteStringLen(FILE* file, const char* str, int len)
 void
 vp3WriteString(FILE* file, const char* str)
 {
-    vp3WriteStringLen(file, str, string_len(str));
+    vp3WriteStringLen(file, str, strlen(str));
 }
 
 void

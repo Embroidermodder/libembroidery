@@ -22,6 +22,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "data.c"
+#include "compress.c"
+#include "formats.c"
+#include "script.c"
+#include "geometry.c"
+#include "pattern.c"
+#include "testing.c"
+
 #include "embroidery.h"
 
 /* same order as flag_list, to use in jump table */

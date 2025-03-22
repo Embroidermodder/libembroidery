@@ -1374,12 +1374,12 @@ GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind)
         }
         for (j=0; j<sizeToWrite; j++) {
             char input;
-            if (!read_bytes(file, 1, &input)) {
+            if (fread(&input, 1, 1, file) != 1) {
                 /* TODO: Needs an error code. */
                 puts("ERROR: GetFile failed to read byte.");
                 return fileOut;
             }
-            if (!write_bytes(fileOut, 1, &input)) {
+            if (fwrite(&input, 1, 1, fileOut) != 1) {
                 /* TODO: Needs an error code. */
                 puts("ERROR: GetFile failed to read byte.");
                 return fileOut;
@@ -3209,7 +3209,7 @@ emb_pattern_stitchPolyline(EmbPattern *p, EmbPolyline polyline, int thread_index
  * Here we just stitch the rectangle in the direction of it's longer side.
  */
 void
-emb_pattern_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int style)
+emb_pattern_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int /* style */)
 {
     EmbReal seperation = 0.1;
     if (rect.w > rect.h) {

@@ -3209,7 +3209,7 @@ emb_pattern_stitchPolyline(EmbPattern *p, EmbPolyline polyline, int thread_index
  * Here we just stitch the rectangle in the direction of it's longer side.
  */
 void
-emb_pattern_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int /* style */)
+emb_pattern_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int style)
 {
     EmbReal seperation = 0.1;
     if (rect.w > rect.h) {
@@ -3398,7 +3398,7 @@ image_diff(unsigned char *a, unsigned char *b, int size)
  * The caller is responsible for the memory in p.
  */
 int
-emb_pattern_render(EmbPattern * /* p */, char *fname)
+emb_pattern_render(EmbPattern * p, char *fname)
 {
     printf("fname %s", fname);
 /*
@@ -3452,7 +3452,7 @@ embImage_create(int width, int height)
 
 /* . */
 void
-embImage_read(EmbImage * /* image */, char * /* fname */)
+embImage_read(EmbImage * image, char * fname)
 {
     /*
     int channels_in_file;
@@ -3467,7 +3467,7 @@ embImage_read(EmbImage * /* image */, char * /* fname */)
 
 /* . */
 int
-embImage_write(EmbImage * /* image */, char * /* fname */)
+embImage_write(EmbImage * image, char * fname)
 {
 /*
     return stbi_write_png(

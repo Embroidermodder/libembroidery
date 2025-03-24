@@ -8320,7 +8320,7 @@ readVp3(EmbPattern* pattern, FILE* file)
         threadVendor = vp3ReadString(file);
 
         offsetToNextColorX = emb_read_i32be(file);
-        offsetToNextColorX = emb_read_i32be(file);
+        offsetToNextColorY = emb_read_i32be(file);
 
         unknownThreadString = emb_read_i16be(file);
         fseek(file, unknownThreadString, SEEK_CUR);

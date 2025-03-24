@@ -5251,7 +5251,7 @@ pesWriteSewSegSection(EmbPattern* pattern, FILE* file)
         color = pattern->thread_list->thread[st.color].color;
         newColorCode = emb_find_nearest_thread(color, (EmbThread*)pec_colors, pecThreadCount);
         if (newColorCode != colorCode) {
-            if (colorInfoIndex+2 > colorCount) {
+            if (colorInfoIndex+2 > colorCount * 2) {
                 puts("Ran out of memory for color info.");
                 break;
             }
@@ -5275,9 +5275,11 @@ pesWriteSewSegSection(EmbPattern* pattern, FILE* file)
         emb_write_i16(file, (int16_t)stitchType); /* 1 for jump, 0 for normal */
         emb_write_i16(file, (int16_t)colorCode); /* color code */
         emb_write_i16(file, (int16_t)count); /* stitches in block */
-        j = i;
-        while (j < pattern->stitch_list->count && (flag == st.flags)) {
+        for (j = i; j < pattern->stitch_list->count; ++j) {
             st = pattern->stitch_list->stitch[j];
+            if (st.flags != flag) {
+                break;
+            }
             emb_write_i16(file, (int16_t)(st.x - bounds.x));
             emb_write_i16(file, (int16_t)(st.y + bounds.y));
         }

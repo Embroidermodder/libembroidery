@@ -17,5 +17,5 @@ jobs:
       - name: Build
         run: |
           git clone https://github.com/embroidermodder/libembroidery
-          cd embroidermodder
+          cd libembroidery
           bash build.sh

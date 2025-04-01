@@ -2,20 +2,16 @@
 #
 # This file is part of libembroidery.
 #
-# This needs the "./" part because it used to run the program as well as build it.
-BUILD_DIR=./build
-TEST_DIR=./test
-EMB=$TEST_DIR/embroider
+EMB=./test/embroider
 TEST_TIME=10
 TOTAL_TESTS=13
 
 function test_build () {
     CC=gcc
     OPTIONS="-g -O2 -fPIC -std=c99 -Wall -Wextra -Werror"
-    rm -fr $TEST_DIR
-    mkdir $TEST_DIR
+    rm -fr test
+    mkdir test
     time $CC $OPTIONS src/embroider.c -o $EMB -lm
-    cd $TEST_DIR
 }
 
 function test_wrap () {
@@ -78,27 +74,52 @@ function all_tests () {
     render_cross_test logo
 }
 
-if [ "$1" = "--test-full" ]; then
+function test_full () {
 
     date &> test_full.log
     test_build &>> test_full.log
     time all_tests &>> test_full.log
 
-elif [ "$1" = "--test" ]; then
+}
+
+function test_main () {
 
     date &> test.log
     test_build &>> test.log
     time fast_tests &>> test.log
 
-elif [ "$1" = "--clean" ]; then
+}
 
-    rm -fr $BUILD_DIR $TEST_DIR
+function cmake_build () {
 
-else
-
-    mkdir -f $BUILD_DIR &> build.log
-    cd $BUILD_DIR &>> build.log
+    mkdir -f build &> build.log
+    cd build &>> build.log
     cmake .. &>> build.log
     cmake --build . &>> build.log
 
-fi
+}
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+    --test-full)
+        test_full
+        ;;
+    --test)
+        test_main
+        ;;
+    --github)
+        test_build
+        ;;
+    --cmake-build)
+        cmake_build
+        ;;
+    --clean)
+        rm -fr $BUILD_DIR $TEST_DIR
+        ;;
+    *)
+        echo "Unrecognised option: $1"
+        ;;
+    esac
+    shift
+done
+

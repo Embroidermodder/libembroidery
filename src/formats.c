@@ -878,14 +878,14 @@ write10o(EmbPattern *pattern, FILE* file)
  * We don't know much about this format. \todo Find a source.
  */
 char
-readArt(EmbPattern * /* pattern */, FILE* /* file */)
+readArt(EmbPattern * pattern, FILE* file)
 {
     puts("ERROR: readArt is not supported.");
     return 0;
 }
 
 char
-writeArt(EmbPattern * /* pattern */, FILE* /* file */)
+writeArt(EmbPattern * pattern, FILE* file)
 {
     puts("ERROR: writeArt is not supported.");
     return 0;
@@ -896,14 +896,14 @@ writeArt(EmbPattern * /* pattern */, FILE* /* file */)
  * We don't know much about this format. \todo Find a source.
  */
 char
-readBmc(EmbPattern* /* pattern */, FILE* /* file */)
+readBmc(EmbPattern* pattern , FILE* file)
 {
     puts("ERROR: readBmc is not supported.");
     return 0; /*TODO: finish readBmc */
 }
 
 char
-writeBmc(EmbPattern* /* pattern */, FILE* /* file */)
+writeBmc(EmbPattern* pattern , FILE* file)
 {
     puts("writeBmc is not implemented");
     return 0; /*TODO: finish writeBmc */
@@ -968,7 +968,7 @@ readBro(EmbPattern* pattern, FILE* file)
 }
 
 char
-writeBro(EmbPattern* /* pattern */, FILE* /* file */)
+writeBro(EmbPattern* pattern , FILE* file)
 {
     puts("writeBro is not implemented");
     return 0; /*TODO: finish writeBro */
@@ -983,14 +983,14 @@ writeBro(EmbPattern* /* pattern */, FILE* /* file */)
  * \todo Find a source.
  */
 char
-readCnd(EmbPattern* /* pattern */, FILE* /* file */)
+readCnd(EmbPattern* pattern , FILE* file)
 {
     puts("readCnd is not implemented");
     return 0; /*TODO: finish readCnd */
 }
 
 char
-writeCnd(EmbPattern* /* pattern */, FILE* /* file */)
+writeCnd(EmbPattern* pattern , FILE* file)
 {
     puts("writeCnd is not implemented");
     return 0; /*TODO: finish writeCnd */
@@ -2778,14 +2778,14 @@ writeExy(EmbPattern* pattern, FILE* file)
  * Smoothie G-Code Embroidery Format (.fxy)?
  */
 char
-readEys(EmbPattern* /* pattern */, FILE* /* file */)
+readEys(EmbPattern* pattern , FILE* file)
 {
     puts("ERROR: readEys and not been finished.");
     return 0; /*TODO: finish readEys */
 }
 
 char
-writeEys(EmbPattern* /* pattern */, FILE* /* file */)
+writeEys(EmbPattern* pattern , FILE* file)
 {
     puts("ERROR: writeEys and not been finished.");
     return 0; /*TODO: finish writeEys */
@@ -2842,14 +2842,14 @@ writeFxy(EmbPattern* pattern, FILE* file)
  *     by John Milton Amiss, Franklin D. Jones and Henry Ryffel
  */
 char
-readGc(EmbPattern* /* pattern */, FILE* /* file */)
+readGc(EmbPattern* pattern , FILE* file)
 {
     puts("ERROR: readGc and not been finished.");
     return 0; /*TODO: finish readGc */
 }
 
 char
-writeGc(EmbPattern* /* pattern */, FILE* /* file */)
+writeGc(EmbPattern* pattern , FILE* file)
 {
     puts("ERROR: writeGc and not been finished.");
     return 0; /*TODO: finish writeGc */
@@ -2861,7 +2861,7 @@ writeGc(EmbPattern* /* pattern */, FILE* /* file */)
  */
 /* TODO: finish readGnc */
 char
-readGnc(EmbPattern* /* pattern */, FILE* /* file */)
+readGnc(EmbPattern* pattern , FILE* file)
 {
     puts("ERROR: readGnc and not been finished.");
     return 0;
@@ -2869,7 +2869,7 @@ readGnc(EmbPattern* /* pattern */, FILE* /* file */)
 
 /* TODO: finish writeGnc */
 char
-writeGnc(EmbPattern* /* pattern */, FILE* /* file */)
+writeGnc(EmbPattern* pattern , FILE* file)
 {
     puts("ERROR: writeGnc and not been finished.");
     return 0;
@@ -4843,14 +4843,14 @@ writePec(EmbPattern* pattern, const char* fileName, FILE* file)
  * The Brother pel format is stitch-only.
  */
 char
-readPel(EmbPattern * /* pattern */, FILE* /* file */)
+readPel(EmbPattern * pattern, FILE* file)
 {
     puts("ERROR: readPel is not implemented.");
     return 0; /*TODO: finish readPel */
 }
 
 char
-writePel(EmbPattern * /* pattern */, FILE* /* file */)
+writePel(EmbPattern * pattern, FILE* file)
 {
     puts("ERROR: writePel is not implemented.");
     return 0; /*TODO: finish writePel */
@@ -4861,14 +4861,14 @@ writePel(EmbPattern * /* pattern */, FILE* /* file */)
  * The Brother pem format is stitch-only.
  */
 char
-readPem(EmbPattern * /* pattern */, FILE* /* file */)
+readPem(EmbPattern * pattern, FILE* file)
 {
     puts("ERROR: readPem is not implemented.");
     return 0; /*TODO: finish ReadPem */
 }
 
 char
-writePem(EmbPattern * /* pattern */, FILE* /* file */)
+writePem(EmbPattern * pattern, FILE* file)
 {
     puts("ERROR: writePem is not implemented.");
     return 0; /*TODO: finish writePem */

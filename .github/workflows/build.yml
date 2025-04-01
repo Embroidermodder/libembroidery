@@ -15,4 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Build
-        run: bash build.sh
+        run: |
+          git clone https://github.com/embroidermodder/libembroidery
+          cd embroidermodder
+          bash build.sh

@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="struct__bcf__file" kind="struct" language="C++" prot="public">
+    <compoundname>_bcf_file</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct__bcf__file_1a4d46f4dd4b4768322611796cafe9ea00" prot="public" static="no" mutable="no">
+        <type><ref refid="struct__bcf__file__header" kindref="compound">bcf_file_header</ref></type>
+        <definition>bcf_file_header _bcf_file::header</definition>
+        <argsstring></argsstring>
+        <name>header</name>
+        <qualifiedname>_bcf_file::header</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="983" column="21" bodyfile="src/embroidery.h" bodystart="983" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file_1aef6d3e02e2c736400d5ba041a60b1116" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a04a761d12d7ad0f1f0c7566dda49f354" kindref="member">bcf_file_difat</ref> *</type>
+        <definition>bcf_file_difat* _bcf_file::difat</definition>
+        <argsstring></argsstring>
+        <name>difat</name>
+        <qualifiedname>_bcf_file::difat</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The header for the CompoundFile </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="984" column="20" bodyfile="src/embroidery.h" bodystart="984" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file_1a2b063446112bb65f564250a209d6d05b" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a9a00b74e77254af1f7af14c6e12007d7" kindref="member">bcf_file_fat</ref> *</type>
+        <definition>bcf_file_fat* _bcf_file::fat</definition>
+        <argsstring></argsstring>
+        <name>fat</name>
+        <qualifiedname>_bcf_file::fat</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The &quot;Double Indirect FAT&quot; for the CompoundFile </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="985" column="18" bodyfile="src/embroidery.h" bodystart="985" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file_1a859904e8b413043739a83cfbb39c342e" prot="public" static="no" mutable="no">
+        <type><ref refid="struct__bcf__directory" kindref="compound">bcf_directory</ref> *</type>
+        <definition>bcf_directory* _bcf_file::directory</definition>
+        <argsstring></argsstring>
+        <name>directory</name>
+        <qualifiedname>_bcf_file::directory</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The File Allocation Table for the Compound File </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="986" column="19" bodyfile="src/embroidery.h" bodystart="986" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="5">
+        <label>_bcf_directory</label>
+        <link refid="struct__bcf__directory"/>
+        <childnode refid="6" relation="usage">
+          <edgelabel>dirEntries</edgelabel>
+        </childnode>
+      </node>
+      <node id="6">
+        <label>_bcf_directory_entry</label>
+        <link refid="struct__bcf__directory__entry"/>
+        <childnode refid="6" relation="usage">
+          <edgelabel>next</edgelabel>
+        </childnode>
+      </node>
+      <node id="1">
+        <label>_bcf_file</label>
+        <link refid="struct__bcf__file"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>header</edgelabel>
+        </childnode>
+        <childnode refid="3" relation="usage">
+          <edgelabel>difat</edgelabel>
+        </childnode>
+        <childnode refid="4" relation="usage">
+          <edgelabel>fat</edgelabel>
+        </childnode>
+        <childnode refid="5" relation="usage">
+          <edgelabel>directory</edgelabel>
+        </childnode>
+      </node>
+      <node id="3">
+        <label>_bcf_file_difat</label>
+        <link refid="struct__bcf__file__difat"/>
+      </node>
+      <node id="4">
+        <label>_bcf_file_fat</label>
+        <link refid="struct__bcf__file__fat"/>
+      </node>
+      <node id="2">
+        <label>_bcf_file_header</label>
+        <link refid="struct__bcf__file__header"/>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery.h" line="981" column="1" bodyfile="src/embroidery.h" bodystart="982" bodyend="987"/>
+    <listofallmembers>
+      <member refid="struct__bcf__file_1aef6d3e02e2c736400d5ba041a60b1116" prot="public" virt="non-virtual"><scope>_bcf_file</scope><name>difat</name></member>
+      <member refid="struct__bcf__file_1a859904e8b413043739a83cfbb39c342e" prot="public" virt="non-virtual"><scope>_bcf_file</scope><name>directory</name></member>
+      <member refid="struct__bcf__file_1a2b063446112bb65f564250a209d6d05b" prot="public" virt="non-virtual"><scope>_bcf_file</scope><name>fat</name></member>
+      <member refid="struct__bcf__file_1a4d46f4dd4b4768322611796cafe9ea00" prot="public" virt="non-virtual"><scope>_bcf_file</scope><name>header</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

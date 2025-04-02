@@ -1,0 +1,401 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1TestLibembroidery" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::TestLibembroidery</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">unittest.TestCase</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1a9f1fb7a419d94ea353333d0b78c8c1b8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_vector_length</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_vector_length</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_vector_length</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="145" column="1" bodyfile="python/embroidery.py" bodystart="145" bodyend="149"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1a3c3b12f7f3af52ad763696de0702c5ea" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_arc</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_arc</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_arc</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="150" column="1" bodyfile="python/embroidery.py" bodystart="150" bodyend="156"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1a216c70eb7dfd55e7a2ef0fef9795aad9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_circle</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_circle</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_circle</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="157" column="1" bodyfile="python/embroidery.py" bodystart="157" bodyend="163"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1a4d434b8455b8abf0627ad76dcb15b41c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_ellipse</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_ellipse</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_ellipse</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="164" column="1" bodyfile="python/embroidery.py" bodystart="164" bodyend="170"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1a1bf972253654d8be2b642294742e32ef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_path</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="171" column="1" bodyfile="python/embroidery.py" bodystart="171" bodyend="177"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1a5bd9550501211713eb34c7a58553db2e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_main</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_main</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_main</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Tests the rendering and simulating of patterns.
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="178" column="1" bodyfile="python/embroidery.py" bodystart="178" bodyend="191"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1a331846f2cbcb37044ae1016528e2950e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_convert_csv_svg</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_convert_csv_svg</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_convert_csv_svg</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="192" column="1" bodyfile="python/embroidery.py" bodystart="192" bodyend="195"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1a3580f9dd240654a26907f7c3c8096ded" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_convert_csv_dst</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_convert_csv_dst</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_convert_csv_dst</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="196" column="1" bodyfile="python/embroidery.py" bodystart="196" bodyend="199"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1adaac8ca9d3afa112b909b7f7be8193ee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_convert_csv_pes</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_convert_csv_pes</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_convert_csv_pes</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="200" column="1" bodyfile="python/embroidery.py" bodystart="200" bodyend="203"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1a6e3e76df3fb383560b24d3b031e3f6ff" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_convert_svg_csv</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_convert_svg_csv</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_convert_svg_csv</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="204" column="1" bodyfile="python/embroidery.py" bodystart="204" bodyend="207"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1add604b8decb7d507a783086462b5ca80" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_convert_dst_csv</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_convert_dst_csv</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_convert_dst_csv</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="208" column="1" bodyfile="python/embroidery.py" bodystart="208" bodyend="211"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1a0a58887ce790032062998a6822f4b4d0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_convert_pes_csv</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_convert_pes_csv</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_convert_pes_csv</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="212" column="1" bodyfile="python/embroidery.py" bodystart="212" bodyend="215"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1a292c83e3c53e4d99f10af6b218f4d67d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_circle_tangent</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_circle_tangent</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_circle_tangent</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim></verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="216" column="1" bodyfile="python/embroidery.py" bodystart="216" bodyend="228"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1ae76999cbd974a05e0e92fc635f094c19" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_circle_tangent_2</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_circle_tangent_2</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_circle_tangent_2</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim></verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="229" column="1" bodyfile="python/embroidery.py" bodystart="229" bodyend="241"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1a570c4f0ebfdd9d5b10778224adc314c4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_thread_color</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_thread_color</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_thread_color</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>TODO: Add capability for converting multiple files of various
+types to a single format. 
+
+Currently, we only convert a single file to multiple formats.
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="242" column="1" bodyfile="python/embroidery.py" bodystart="242" bodyend="266"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1ab6b5176bc709091e8e199867adedb120" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_format_table</definition>
+        <argsstring>(self)</argsstring>
+        <name>test_format_table</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_format_table</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim></verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="267" column="1" bodyfile="python/embroidery.py" bodystart="267" bodyend="279"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1adaae132e1849fc1a5c38dcbea25dc05e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_list_processor</definition>
+        <argsstring>()</argsstring>
+        <name>test_list_processor</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_list_processor</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="280" column="1" bodyfile="python/embroidery.py" bodystart="280" bodyend="286"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1ad644a1c08ea2047c15161e6bd7768187" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_selected</definition>
+        <argsstring>()</argsstring>
+        <name>test_selected</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_selected</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="287" column="1" bodyfile="python/embroidery.py" bodystart="287" bodyend="290"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1TestLibembroidery_1af10a049ffc348c2eecb0ec56f2b16060" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.TestLibembroidery.test_polyline_array</definition>
+        <argsstring>()</argsstring>
+        <name>test_polyline_array</name>
+        <qualifiedname>embroidery.TestLibembroidery.test_polyline_array</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="291" column="1" bodyfile="python/embroidery.py" bodystart="291" bodyend="327"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>The parent class for all of the bindings
+tests, this could be made to chain into the
+internal C testing.
+</verbatim> </para>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>embroidery.TestLibembroidery</label>
+        <link refid="classembroidery_1_1TestLibembroidery"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>unittest::TestCase</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1">
+        <label>embroidery.TestLibembroidery</label>
+        <link refid="classembroidery_1_1TestLibembroidery"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>unittest::TestCase</label>
+      </node>
+    </collaborationgraph>
+    <location file="python/embroidery.py" line="139" column="1" bodyfile="python/embroidery.py" bodystart="139" bodyend="327"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1TestLibembroidery_1a3c3b12f7f3af52ad763696de0702c5ea" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_arc</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1a216c70eb7dfd55e7a2ef0fef9795aad9" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_circle</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1a292c83e3c53e4d99f10af6b218f4d67d" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_circle_tangent</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1ae76999cbd974a05e0e92fc635f094c19" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_circle_tangent_2</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1a3580f9dd240654a26907f7c3c8096ded" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_convert_csv_dst</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1adaac8ca9d3afa112b909b7f7be8193ee" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_convert_csv_pes</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1a331846f2cbcb37044ae1016528e2950e" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_convert_csv_svg</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1add604b8decb7d507a783086462b5ca80" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_convert_dst_csv</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1a0a58887ce790032062998a6822f4b4d0" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_convert_pes_csv</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1a6e3e76df3fb383560b24d3b031e3f6ff" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_convert_svg_csv</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1a4d434b8455b8abf0627ad76dcb15b41c" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_ellipse</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1ab6b5176bc709091e8e199867adedb120" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_format_table</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1adaae132e1849fc1a5c38dcbea25dc05e" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_list_processor</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1a5bd9550501211713eb34c7a58553db2e" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_main</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1a1bf972253654d8be2b642294742e32ef" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_path</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1af10a049ffc348c2eecb0ec56f2b16060" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_polyline_array</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1ad644a1c08ea2047c15161e6bd7768187" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_selected</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1a570c4f0ebfdd9d5b10778224adc314c4" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_thread_color</name></member>
+      <member refid="classembroidery_1_1TestLibembroidery_1a9f1fb7a419d94ea353333d0b78c8c1b8" prot="public" virt="non-virtual"><scope>embroidery::TestLibembroidery</scope><name>test_vector_length</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

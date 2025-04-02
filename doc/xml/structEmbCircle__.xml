@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structEmbCircle__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbCircle_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structEmbCircle___1aeaf172d0a68dbf3e9d56ab7852b59f5e" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a16fa26764453571074cb85a7574738d4" kindref="member">EmbVector</ref></type>
+        <definition>EmbVector EmbCircle_::center</definition>
+        <argsstring></argsstring>
+        <name>center</name>
+        <qualifiedname>EmbCircle_::center</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="668" column="15" bodyfile="src/embroidery.h" bodystart="668" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbCircle___1a5bae675cf239a218850d0fdf65e35d0c" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a2082be9aabfb541dff1825c4ca6a05cd" kindref="member">EmbReal</ref></type>
+        <definition>EmbReal EmbCircle_::radius</definition>
+        <argsstring></argsstring>
+        <name>radius</name>
+        <qualifiedname>EmbCircle_::radius</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="669" column="13" bodyfile="src/embroidery.h" bodystart="669" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>EmbCircle_</label>
+        <link refid="structEmbCircle__"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>center</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>EmbVector_</label>
+        <link refid="structEmbVector__"/>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery.h" line="666" column="1" bodyfile="src/embroidery.h" bodystart="667" bodyend="670"/>
+    <listofallmembers>
+      <member refid="structEmbCircle___1aeaf172d0a68dbf3e9d56ab7852b59f5e" prot="public" virt="non-virtual"><scope>EmbCircle_</scope><name>center</name></member>
+      <member refid="structEmbCircle___1a5bae675cf239a218850d0fdf65e35d0c" prot="public" virt="non-virtual"><scope>EmbCircle_</scope><name>radius</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structhoop__padding" kind="struct" language="C++" prot="public">
+    <compoundname>hoop_padding</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structhoop__padding_1a9e7fa284659e78bdb752a45630e9dbb2" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int hoop_padding::left</definition>
+        <argsstring></argsstring>
+        <name>left</name>
+        <qualifiedname>hoop_padding::left</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/formats.c" line="3476" column="9" bodyfile="src/formats.c" bodystart="3476" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structhoop__padding_1ab25928aab0c70794d5159da9f004c17a" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int hoop_padding::right</definition>
+        <argsstring></argsstring>
+        <name>right</name>
+        <qualifiedname>hoop_padding::right</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/formats.c" line="3477" column="9" bodyfile="src/formats.c" bodystart="3477" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structhoop__padding_1a4652dab0089c2f9b79921213e4edc3ed" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int hoop_padding::top</definition>
+        <argsstring></argsstring>
+        <name>top</name>
+        <qualifiedname>hoop_padding::top</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/formats.c" line="3478" column="9" bodyfile="src/formats.c" bodystart="3478" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structhoop__padding_1a920072f1e60abc82263ee34f06dd3466" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int hoop_padding::bottom</definition>
+        <argsstring></argsstring>
+        <name>bottom</name>
+        <qualifiedname>hoop_padding::bottom</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/formats.c" line="3479" column="9" bodyfile="src/formats.c" bodystart="3479" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/formats.c" line="3474" column="1" bodyfile="src/formats.c" bodystart="3475" bodyend="3480"/>
+    <listofallmembers>
+      <member refid="structhoop__padding_1a920072f1e60abc82263ee34f06dd3466" prot="public" virt="non-virtual"><scope>hoop_padding</scope><name>bottom</name></member>
+      <member refid="structhoop__padding_1a9e7fa284659e78bdb752a45630e9dbb2" prot="public" virt="non-virtual"><scope>hoop_padding</scope><name>left</name></member>
+      <member refid="structhoop__padding_1ab25928aab0c70794d5159da9f004c17a" prot="public" virt="non-virtual"><scope>hoop_padding</scope><name>right</name></member>
+      <member refid="structhoop__padding_1a4652dab0089c2f9b79921213e4edc3ed" prot="public" virt="non-virtual"><scope>hoop_padding</scope><name>top</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

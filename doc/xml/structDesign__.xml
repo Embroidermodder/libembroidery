@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structDesign__" kind="struct" language="C++" prot="public">
+    <compoundname>Design_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structDesign___1ab24515d41181e398082aec2a16bcb2d2" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* Design_::command</definition>
+        <argsstring></argsstring>
+        <name>command</name>
+        <qualifiedname>Design_::command</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="828" column="10" bodyfile="src/embroidery.h" bodystart="828" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structDesign___1aa2960fdd40055417c9f916a36a6c797f" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Design_::lower</definition>
+        <argsstring></argsstring>
+        <name>lower</name>
+        <qualifiedname>Design_::lower</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="829" column="11" bodyfile="src/embroidery.h" bodystart="829" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structDesign___1a360325b63eb9829a387ef5c7e4fe8acf" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Design_::upper</definition>
+        <argsstring></argsstring>
+        <name>upper</name>
+        <qualifiedname>Design_::upper</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="830" column="11" bodyfile="src/embroidery.h" bodystart="830" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structDesign___1a7c955ce624feb116107fc755eebf3226" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Design_::num_points</definition>
+        <argsstring></argsstring>
+        <name>num_points</name>
+        <qualifiedname>Design_::num_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="831" column="9" bodyfile="src/embroidery.h" bodystart="831" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structDesign___1ab593a5a0378b5a3f98dde2c303404584" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Design_::min_points</definition>
+        <argsstring></argsstring>
+        <name>min_points</name>
+        <qualifiedname>Design_::min_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="832" column="9" bodyfile="src/embroidery.h" bodystart="832" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structDesign___1afcb99ee0aa6fe0f3581f230f44d67be3" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Design_::max_points</definition>
+        <argsstring></argsstring>
+        <name>max_points</name>
+        <qualifiedname>Design_::max_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="833" column="9" bodyfile="src/embroidery.h" bodystart="833" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structDesign___1af0f798697e126fd8c0b480b3e3956a94" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Design_::xscale</definition>
+        <argsstring></argsstring>
+        <name>xscale</name>
+        <qualifiedname>Design_::xscale</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="834" column="11" bodyfile="src/embroidery.h" bodystart="834" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structDesign___1ac2055a50d76c1cec94bc333e81c586ae" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Design_::yscale</definition>
+        <argsstring></argsstring>
+        <name>yscale</name>
+        <qualifiedname>Design_::yscale</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="835" column="11" bodyfile="src/embroidery.h" bodystart="835" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structDesign___1a9c727a7b2ec4a2165a47f23f3249a68f" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* Design_::parameter</definition>
+        <argsstring></argsstring>
+        <name>parameter</name>
+        <qualifiedname>Design_::parameter</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="836" column="10" bodyfile="src/embroidery.h" bodystart="836" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structDesign___1a49398662bb0e988589e21b7560c9517f" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* Design_::x</definition>
+        <argsstring></argsstring>
+        <name>x</name>
+        <qualifiedname>Design_::x</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="837" column="10" bodyfile="src/embroidery.h" bodystart="837" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structDesign___1a3e54d96e0205e554fbfd310017a1f40e" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* Design_::y</definition>
+        <argsstring></argsstring>
+        <name>y</name>
+        <qualifiedname>Design_::y</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="838" column="10" bodyfile="src/embroidery.h" bodystart="838" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="827" column="1" bodyfile="src/embroidery.h" bodystart="827" bodyend="839"/>
+    <listofallmembers>
+      <member refid="structDesign___1ab24515d41181e398082aec2a16bcb2d2" prot="public" virt="non-virtual"><scope>Design_</scope><name>command</name></member>
+      <member refid="structDesign___1aa2960fdd40055417c9f916a36a6c797f" prot="public" virt="non-virtual"><scope>Design_</scope><name>lower</name></member>
+      <member refid="structDesign___1afcb99ee0aa6fe0f3581f230f44d67be3" prot="public" virt="non-virtual"><scope>Design_</scope><name>max_points</name></member>
+      <member refid="structDesign___1ab593a5a0378b5a3f98dde2c303404584" prot="public" virt="non-virtual"><scope>Design_</scope><name>min_points</name></member>
+      <member refid="structDesign___1a7c955ce624feb116107fc755eebf3226" prot="public" virt="non-virtual"><scope>Design_</scope><name>num_points</name></member>
+      <member refid="structDesign___1a9c727a7b2ec4a2165a47f23f3249a68f" prot="public" virt="non-virtual"><scope>Design_</scope><name>parameter</name></member>
+      <member refid="structDesign___1a360325b63eb9829a387ef5c7e4fe8acf" prot="public" virt="non-virtual"><scope>Design_</scope><name>upper</name></member>
+      <member refid="structDesign___1a49398662bb0e988589e21b7560c9517f" prot="public" virt="non-virtual"><scope>Design_</scope><name>x</name></member>
+      <member refid="structDesign___1af0f798697e126fd8c0b480b3e3956a94" prot="public" virt="non-virtual"><scope>Design_</scope><name>xscale</name></member>
+      <member refid="structDesign___1a3e54d96e0205e554fbfd310017a1f40e" prot="public" virt="non-virtual"><scope>Design_</scope><name>y</name></member>
+      <member refid="structDesign___1ac2055a50d76c1cec94bc333e81c586ae" prot="public" virt="non-virtual"><scope>Design_</scope><name>yscale</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structCompress" kind="struct" language="C++" prot="public">
+    <compoundname>Compress</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structCompress_1ac9845dfe9fb81d2bd140bc21f95e16af" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Compress::bit_position</definition>
+        <argsstring></argsstring>
+        <name>bit_position</name>
+        <qualifiedname>Compress::bit_position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1117" column="9" bodyfile="src/embroidery.h" bodystart="1117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structCompress_1a03c994afe2ccd9768d08d42d5d142124" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* Compress::input_data</definition>
+        <argsstring></argsstring>
+        <name>input_data</name>
+        <qualifiedname>Compress::input_data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1118" column="10" bodyfile="src/embroidery.h" bodystart="1118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structCompress_1a7f5b109f96f483e8b401590d33863b9c" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Compress::input_length</definition>
+        <argsstring></argsstring>
+        <name>input_length</name>
+        <qualifiedname>Compress::input_length</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1119" column="9" bodyfile="src/embroidery.h" bodystart="1119" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structCompress_1a08674e44cf6c89049748c49da9f49d6b" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Compress::bits_total</definition>
+        <argsstring></argsstring>
+        <name>bits_total</name>
+        <qualifiedname>Compress::bits_total</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1120" column="9" bodyfile="src/embroidery.h" bodystart="1120" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structCompress_1aa14fd71352668f941c3805a271d8da8a" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Compress::block_elements</definition>
+        <argsstring></argsstring>
+        <name>block_elements</name>
+        <qualifiedname>Compress::block_elements</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1121" column="9" bodyfile="src/embroidery.h" bodystart="1121" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structCompress_1a99c8a2d5795bd0a503d10bf2f4786b4a" prot="public" static="no" mutable="no">
+        <type><ref refid="structHuffman" kindref="compound">huffman</ref></type>
+        <definition>huffman Compress::character_length_huffman</definition>
+        <argsstring></argsstring>
+        <name>character_length_huffman</name>
+        <qualifiedname>Compress::character_length_huffman</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1122" column="13" bodyfile="src/embroidery.h" bodystart="1122" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structCompress_1a67f49d8abbd6877edf45caf393038502" prot="public" static="no" mutable="no">
+        <type><ref refid="structHuffman" kindref="compound">huffman</ref></type>
+        <definition>huffman Compress::character_huffman</definition>
+        <argsstring></argsstring>
+        <name>character_huffman</name>
+        <qualifiedname>Compress::character_huffman</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1123" column="13" bodyfile="src/embroidery.h" bodystart="1123" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structCompress_1a1ed7dabd4e677a952ef7d9b5a51e95cf" prot="public" static="no" mutable="no">
+        <type><ref refid="structHuffman" kindref="compound">huffman</ref></type>
+        <definition>huffman Compress::distance_huffman</definition>
+        <argsstring></argsstring>
+        <name>distance_huffman</name>
+        <qualifiedname>Compress::distance_huffman</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1124" column="13" bodyfile="src/embroidery.h" bodystart="1124" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>Compress</label>
+        <link refid="structCompress"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>character_huffman</edgelabel>
+          <edgelabel>character_length_huffman</edgelabel>
+          <edgelabel>distance_huffman</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Huffman</label>
+        <link refid="structHuffman"/>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery.h" line="1116" column="1" bodyfile="src/embroidery.h" bodystart="1116" bodyend="1125"/>
+    <listofallmembers>
+      <member refid="structCompress_1ac9845dfe9fb81d2bd140bc21f95e16af" prot="public" virt="non-virtual"><scope>Compress</scope><name>bit_position</name></member>
+      <member refid="structCompress_1a08674e44cf6c89049748c49da9f49d6b" prot="public" virt="non-virtual"><scope>Compress</scope><name>bits_total</name></member>
+      <member refid="structCompress_1aa14fd71352668f941c3805a271d8da8a" prot="public" virt="non-virtual"><scope>Compress</scope><name>block_elements</name></member>
+      <member refid="structCompress_1a67f49d8abbd6877edf45caf393038502" prot="public" virt="non-virtual"><scope>Compress</scope><name>character_huffman</name></member>
+      <member refid="structCompress_1a99c8a2d5795bd0a503d10bf2f4786b4a" prot="public" virt="non-virtual"><scope>Compress</scope><name>character_length_huffman</name></member>
+      <member refid="structCompress_1a1ed7dabd4e677a952ef7d9b5a51e95cf" prot="public" virt="non-virtual"><scope>Compress</scope><name>distance_huffman</name></member>
+      <member refid="structCompress_1a03c994afe2ccd9768d08d42d5d142124" prot="public" virt="non-virtual"><scope>Compress</scope><name>input_data</name></member>
+      <member refid="structCompress_1a7f5b109f96f483e8b401590d33863b9c" prot="public" virt="non-virtual"><scope>Compress</scope><name>input_length</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

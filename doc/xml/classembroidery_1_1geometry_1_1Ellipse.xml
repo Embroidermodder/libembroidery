@@ -1,0 +1,728 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1geometry_1_1Ellipse" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::geometry::Ellipse</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1aa62a114dc4be9f0d77678dce2b986ec6" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>embroidery.geometry.Ellipse.type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1989" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1989" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1ab64d7f0b2807c80cfa7a88597c8140ca" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::selectable</definition>
+        <argsstring></argsstring>
+        <name>selectable</name>
+        <qualifiedname>embroidery.geometry.Ellipse.selectable</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1990" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1990" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1a558638e952fe4ebd2eb066d0f3fe0051" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::width</definition>
+        <argsstring></argsstring>
+        <name>width</name>
+        <qualifiedname>embroidery.geometry.Ellipse.width</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1991" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1991" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1abc2cebe17fb89ae63d1240ec5695b73a" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::height</definition>
+        <argsstring></argsstring>
+        <name>height</name>
+        <qualifiedname>embroidery.geometry.Ellipse.height</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1992" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1992" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1ad5d9cb74c70e0ef1013b64a66b63cb98" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <qualifiedname>embroidery.geometry.Ellipse.position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1993" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1993" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1afe523c83ae80ecdc857908d5a53e07e0" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::pen</definition>
+        <argsstring></argsstring>
+        <name>pen</name>
+        <qualifiedname>embroidery.geometry.Ellipse.pen</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1994" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1994" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1a5e0357e185b4e3b1b1c136b35f8e7a7c" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::rubber_points</definition>
+        <argsstring></argsstring>
+        <name>rubber_points</name>
+        <qualifiedname>embroidery.geometry.Ellipse.rubber_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1996" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1996" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1aa7a1e05a56d568720a0139425fbe4f26" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::mode</definition>
+        <argsstring></argsstring>
+        <name>mode</name>
+        <qualifiedname>embroidery.geometry.Ellipse.mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1999" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1999" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1a0483462ff2de83e824a2928b076a161e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::point1</definition>
+        <argsstring></argsstring>
+        <name>point1</name>
+        <qualifiedname>embroidery.geometry.Ellipse.point1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2000" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2000" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1a5df4dd9259d70993b4f946501056e96f" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::point2</definition>
+        <argsstring></argsstring>
+        <name>point2</name>
+        <qualifiedname>embroidery.geometry.Ellipse.point2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2001" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2001" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1a3b2bf29d57b1e95d1f17d69e681a03a7" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::point3</definition>
+        <argsstring></argsstring>
+        <name>point3</name>
+        <qualifiedname>embroidery.geometry.Ellipse.point3</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2002" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2002" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1a0d40d132e417605f8190d73d8afc2db6" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::rubber_mode</definition>
+        <argsstring></argsstring>
+        <name>rubber_mode</name>
+        <qualifiedname>embroidery.geometry.Ellipse.rubber_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2012" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2012" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1a373d1dc0b78858e0803b18bdbbf3d9bf" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::center</definition>
+        <argsstring></argsstring>
+        <name>center</name>
+        <qualifiedname>embroidery.geometry.Ellipse.center</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2019" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2019" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1a8a688714b4611cbc9ae788cbe0bcbeab" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::rot</definition>
+        <argsstring></argsstring>
+        <name>rot</name>
+        <qualifiedname>embroidery.geometry.Ellipse.rot</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2021" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2021" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1a46588cfbc0b814ae5aec678f6e56ab71" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::cx</definition>
+        <argsstring></argsstring>
+        <name>cx</name>
+        <qualifiedname>embroidery.geometry.Ellipse.cx</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2124" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2124" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1acf1e774d45e7d3c984b6b979abb4f205" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::cy</definition>
+        <argsstring></argsstring>
+        <name>cy</name>
+        <qualifiedname>embroidery.geometry.Ellipse.cy</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2125" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2125" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1a774cbc1209f44c21c4a83144dc078c0b" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::data</definition>
+        <argsstring></argsstring>
+        <name>data</name>
+        <qualifiedname>embroidery.geometry.Ellipse.data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2280" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2280" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Ellipse_1a0c088f5a46d257ccfdc9bbef60995221" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Ellipse::rotation</definition>
+        <argsstring></argsstring>
+        <name>rotation</name>
+        <qualifiedname>embroidery.geometry.Ellipse.rotation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2336" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2336" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1a76cb7c3d7605b90bca40affa80f60d87" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.__init__</definition>
+        <argsstring>(self, center, width, height, pen=Pen())</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.geometry.Ellipse.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>center</type>
+          <defname>center</defname>
+        </param>
+        <param>
+          <type>width</type>
+          <defname>width</defname>
+        </param>
+        <param>
+          <type>height</type>
+          <defname>height</defname>
+        </param>
+        <param>
+          <type>pen</type>
+          <defname>pen</defname>
+          <defval>Pen()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1987" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1987" bodyend="2006"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1a4236054d501a74fe83445e7e3ddf96cf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.click</definition>
+        <argsstring>(self, point)</argsstring>
+        <name>click</name>
+        <qualifiedname>embroidery.geometry.Ellipse.click</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>point</type>
+          <defname>point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2007" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2007" bodyend="2092"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1a0a2d91f8b16ab209fea2f427344d4843" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.prompt</definition>
+        <argsstring>(self, cmd)</argsstring>
+        <name>prompt</name>
+        <qualifiedname>embroidery.geometry.Ellipse.prompt</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>cmd</type>
+          <defname>cmd</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2093" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2093" bodyend="2221"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1a15d18c980ed9b303efd970fa4fcc03da" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.copy</definition>
+        <argsstring>(self)</argsstring>
+        <name>copy</name>
+        <qualifiedname>embroidery.geometry.Ellipse.copy</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2222" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2222" bodyend="2227"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1a65cef8a2e0f773d69482c3bdc1625848" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.set_Size</definition>
+        <argsstring>(self, width, height)</argsstring>
+        <name>set_Size</name>
+        <qualifiedname>embroidery.geometry.Ellipse.set_Size</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>width</type>
+          <defname>width</defname>
+        </param>
+        <param>
+          <type>height</type>
+          <defname>height</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2228" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2228" bodyend="2235"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1a393dd296a0dac6fef2113cdbd9817ada" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.set_radius_major</definition>
+        <argsstring>(self, radius)</argsstring>
+        <name>set_radius_major</name>
+        <qualifiedname>embroidery.geometry.Ellipse.set_radius_major</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>radius</type>
+          <defname>radius</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2236" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2236" bodyend="2239"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1a7952cb49c46da2111c891178cf1b5771" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.set_radius_minor</definition>
+        <argsstring>(self, radius)</argsstring>
+        <name>set_radius_minor</name>
+        <qualifiedname>embroidery.geometry.Ellipse.set_radius_minor</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>radius</type>
+          <defname>radius</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2240" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2240" bodyend="2243"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1a164a440b310cd2cba9b73c8286bfaafc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.set_diameter_major</definition>
+        <argsstring>(self, diameter)</argsstring>
+        <name>set_diameter_major</name>
+        <qualifiedname>embroidery.geometry.Ellipse.set_diameter_major</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>diameter</type>
+          <defname>diameter</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2244" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2244" bodyend="2254"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1ae41d69c555ebeed46087dec5142fadc9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.set_diameter_minor</definition>
+        <argsstring>(self, diameter)</argsstring>
+        <name>set_diameter_minor</name>
+        <qualifiedname>embroidery.geometry.Ellipse.set_diameter_minor</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>diameter</type>
+          <defname>diameter</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2255" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2255" bodyend="2264"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1a6ba03024a8b2cf090bd9923f1359596d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.quadrant</definition>
+        <argsstring>(self, angle)</argsstring>
+        <name>quadrant</name>
+        <qualifiedname>embroidery.geometry.Ellipse.quadrant</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>angle</type>
+          <defname>angle</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2265" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2265" bodyend="2270"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1a6e10d8edc28c2d78d4cd34f286f660ff" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.update_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>update_path</name>
+        <qualifiedname>embroidery.geometry.Ellipse.update_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2271" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2271" bodyend="2281"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1ac1637e9f5dd51409c8d9e9f835484655" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.paint</definition>
+        <argsstring>(self, painter, option, widget)</argsstring>
+        <name>paint</name>
+        <qualifiedname>embroidery.geometry.Ellipse.paint</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <param>
+          <type>option</type>
+          <defname>option</defname>
+        </param>
+        <param>
+          <type>widget</type>
+          <defname>widget</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2282" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2282" bodyend="2298"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1ac6eaf7ea0db719b13365c4b2b5c2e9ef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.update_rubber</definition>
+        <argsstring>(self, painter)</argsstring>
+        <name>update_rubber</name>
+        <qualifiedname>embroidery.geometry.Ellipse.update_rubber</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2299" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2299" bodyend="2380"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1acb7687a47941b611d98bb5782c2536ae" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.vulcanize</definition>
+        <argsstring>(self)</argsstring>
+        <name>vulcanize</name>
+        <qualifiedname>embroidery.geometry.Ellipse.vulcanize</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2381" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2381" bodyend="2386"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1a57489b5026c2d6a59f8324ed35263871" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.mouse_snap_point</definition>
+        <argsstring>(self, mouse_point)</argsstring>
+        <name>mouse_snap_point</name>
+        <qualifiedname>embroidery.geometry.Ellipse.mouse_snap_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>mouse_point</type>
+          <defname>mouse_point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2387" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2387" bodyend="2391"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1a901f2031d12e325a7461864a50ba9e49" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.all_grip_points</definition>
+        <argsstring>(self)</argsstring>
+        <name>all_grip_points</name>
+        <qualifiedname>embroidery.geometry.Ellipse.all_grip_points</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2392" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2392" bodyend="2401"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1ac8d68b8f55df9cf0d248daf28fd6f95c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.grip_edit</definition>
+        <argsstring>(self, before, after)</argsstring>
+        <name>grip_edit</name>
+        <qualifiedname>embroidery.geometry.Ellipse.grip_edit</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>before</type>
+          <defname>before</defname>
+        </param>
+        <param>
+          <type>after</type>
+          <defname>after</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2402" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2402" bodyend="2404"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Ellipse_1abe28b64b27fb033dc4ce189c3e7911cb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Ellipse.save_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>save_path</name>
+        <qualifiedname>embroidery.geometry.Ellipse.save_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2405" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2405" bodyend="2418"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>The Ellipse class definition.
+
+Path SavePath() const
+
+def Center(): return scenePos()
+def RadiusMajor():  return max(rect().width(), rect().height())/2.0*scale()
+def RadiusMinor(): return min(rect().width(), rect().height())/2.0*scale()
+def DiameterMajor(): return max(rect().width(), rect().height())*scale()
+def diameter_minor(): return min(rect().width(), rect().height())*scale()
+def Width(): return rect().width()*scale()
+def Height(): return rect().height()*scale()
+
+def set_Size(width, height)
+def set_RadiusMajor(radius)
+def set_RadiusMinor(radius)
+def set_DiameterMajor(diameter)
+def set_diameter_minor(diameter)
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/geometry.py" line="1967" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1967" bodyend="2432"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a76cb7c3d7605b90bca40affa80f60d87" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a901f2031d12e325a7461864a50ba9e49" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>all_grip_points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a373d1dc0b78858e0803b18bdbbf3d9bf" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>center</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a4236054d501a74fe83445e7e3ddf96cf" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>click</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a15d18c980ed9b303efd970fa4fcc03da" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>copy</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a46588cfbc0b814ae5aec678f6e56ab71" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>cx</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1acf1e774d45e7d3c984b6b979abb4f205" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>cy</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a774cbc1209f44c21c4a83144dc078c0b" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>data</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1ac8d68b8f55df9cf0d248daf28fd6f95c" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>grip_edit</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1abc2cebe17fb89ae63d1240ec5695b73a" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>height</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1aa7a1e05a56d568720a0139425fbe4f26" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>mode</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a57489b5026c2d6a59f8324ed35263871" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>mouse_snap_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1ac1637e9f5dd51409c8d9e9f835484655" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>paint</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1afe523c83ae80ecdc857908d5a53e07e0" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>pen</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a0483462ff2de83e824a2928b076a161e" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>point1</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a5df4dd9259d70993b4f946501056e96f" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>point2</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a3b2bf29d57b1e95d1f17d69e681a03a7" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>point3</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1ad5d9cb74c70e0ef1013b64a66b63cb98" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>position</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a0a2d91f8b16ab209fea2f427344d4843" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>prompt</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a6ba03024a8b2cf090bd9923f1359596d" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>quadrant</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a8a688714b4611cbc9ae788cbe0bcbeab" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>rot</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a0c088f5a46d257ccfdc9bbef60995221" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>rotation</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a0d40d132e417605f8190d73d8afc2db6" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>rubber_mode</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a5e0357e185b4e3b1b1c136b35f8e7a7c" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>rubber_points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1abe28b64b27fb033dc4ce189c3e7911cb" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>save_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1ab64d7f0b2807c80cfa7a88597c8140ca" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>selectable</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a164a440b310cd2cba9b73c8286bfaafc" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>set_diameter_major</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1ae41d69c555ebeed46087dec5142fadc9" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>set_diameter_minor</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a393dd296a0dac6fef2113cdbd9817ada" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>set_radius_major</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a7952cb49c46da2111c891178cf1b5771" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>set_radius_minor</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a65cef8a2e0f773d69482c3bdc1625848" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>set_Size</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1aa62a114dc4be9f0d77678dce2b986ec6" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>type</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a6e10d8edc28c2d78d4cd34f286f660ff" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>update_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1ac6eaf7ea0db719b13365c4b2b5c2e9ef" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>update_rubber</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1acb7687a47941b611d98bb5782c2536ae" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>vulcanize</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Ellipse_1a558638e952fe4ebd2eb066d0f3fe0051" prot="public" virt="non-virtual"><scope>embroidery::geometry::Ellipse</scope><name>width</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

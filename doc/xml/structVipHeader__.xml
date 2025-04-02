@@ -1,0 +1,210 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structVipHeader__" kind="struct" language="C++" prot="public">
+    <compoundname>VipHeader_</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structVipHeader___1a27a66cd48da84b2b9f3a8980738e94c4" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int VipHeader_::magicCode</definition>
+        <argsstring></argsstring>
+        <name>magicCode</name>
+        <qualifiedname>VipHeader_::magicCode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1054" column="9" bodyfile="src/embroidery.h" bodystart="1054" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structVipHeader___1a84ce04f3b0a8f2f8e283dbd3374c255a" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int VipHeader_::numberOfStitches</definition>
+        <argsstring></argsstring>
+        <name>numberOfStitches</name>
+        <qualifiedname>VipHeader_::numberOfStitches</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1055" column="9" bodyfile="src/embroidery.h" bodystart="1055" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structVipHeader___1a84b58ff13fbacb701209ccf389b17abe" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int VipHeader_::numberOfColors</definition>
+        <argsstring></argsstring>
+        <name>numberOfColors</name>
+        <qualifiedname>VipHeader_::numberOfColors</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1056" column="9" bodyfile="src/embroidery.h" bodystart="1056" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structVipHeader___1a1341b66644c14ee3a5628d77e13dcf81" prot="public" static="no" mutable="no">
+        <type>short</type>
+        <definition>short VipHeader_::postitiveXHoopSize</definition>
+        <argsstring></argsstring>
+        <name>postitiveXHoopSize</name>
+        <qualifiedname>VipHeader_::postitiveXHoopSize</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1057" column="11" bodyfile="src/embroidery.h" bodystart="1057" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structVipHeader___1a56697150242e54da8f69f45c5affe0a4" prot="public" static="no" mutable="no">
+        <type>short</type>
+        <definition>short VipHeader_::postitiveYHoopSize</definition>
+        <argsstring></argsstring>
+        <name>postitiveYHoopSize</name>
+        <qualifiedname>VipHeader_::postitiveYHoopSize</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1058" column="11" bodyfile="src/embroidery.h" bodystart="1058" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structVipHeader___1a8f0c278a388ce7cf8ecd6f6dd139006e" prot="public" static="no" mutable="no">
+        <type>short</type>
+        <definition>short VipHeader_::negativeXHoopSize</definition>
+        <argsstring></argsstring>
+        <name>negativeXHoopSize</name>
+        <qualifiedname>VipHeader_::negativeXHoopSize</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1059" column="11" bodyfile="src/embroidery.h" bodystart="1059" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structVipHeader___1acb06bebae3a9d5857e70b225c2a76c92" prot="public" static="no" mutable="no">
+        <type>short</type>
+        <definition>short VipHeader_::negativeYHoopSize</definition>
+        <argsstring></argsstring>
+        <name>negativeYHoopSize</name>
+        <qualifiedname>VipHeader_::negativeYHoopSize</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1060" column="11" bodyfile="src/embroidery.h" bodystart="1060" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structVipHeader___1ae9cab03a14ccbdb812dfe547a03eda93" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int VipHeader_::attributeOffset</definition>
+        <argsstring></argsstring>
+        <name>attributeOffset</name>
+        <qualifiedname>VipHeader_::attributeOffset</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1061" column="9" bodyfile="src/embroidery.h" bodystart="1061" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structVipHeader___1ab505d4d79bb74b3bc044b295a7e9b5f4" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int VipHeader_::xOffset</definition>
+        <argsstring></argsstring>
+        <name>xOffset</name>
+        <qualifiedname>VipHeader_::xOffset</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1062" column="9" bodyfile="src/embroidery.h" bodystart="1062" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structVipHeader___1a854105d3d4c885e345c2383f0ac89220" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int VipHeader_::yOffset</definition>
+        <argsstring></argsstring>
+        <name>yOffset</name>
+        <qualifiedname>VipHeader_::yOffset</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1063" column="9" bodyfile="src/embroidery.h" bodystart="1063" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structVipHeader___1a90e8a3599c7f03aeb1cea49bb5e51bc4" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char VipHeader_::stringVal[8]</definition>
+        <argsstring>[8]</argsstring>
+        <name>stringVal</name>
+        <qualifiedname>VipHeader_::stringVal</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1064" column="19" bodyfile="src/embroidery.h" bodystart="1064" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structVipHeader___1a8972238506da55aebe1768100518a1bf" prot="public" static="no" mutable="no">
+        <type>short</type>
+        <definition>short VipHeader_::unknown</definition>
+        <argsstring></argsstring>
+        <name>unknown</name>
+        <qualifiedname>VipHeader_::unknown</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1065" column="11" bodyfile="src/embroidery.h" bodystart="1065" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structVipHeader___1a4b74311537cbcaafd7320c79e047e5cd" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int VipHeader_::colorLength</definition>
+        <argsstring></argsstring>
+        <name>colorLength</name>
+        <qualifiedname>VipHeader_::colorLength</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1066" column="9" bodyfile="src/embroidery.h" bodystart="1066" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="1053" column="1" bodyfile="src/embroidery.h" bodystart="1053" bodyend="1067"/>
+    <listofallmembers>
+      <member refid="structVipHeader___1ae9cab03a14ccbdb812dfe547a03eda93" prot="public" virt="non-virtual"><scope>VipHeader_</scope><name>attributeOffset</name></member>
+      <member refid="structVipHeader___1a4b74311537cbcaafd7320c79e047e5cd" prot="public" virt="non-virtual"><scope>VipHeader_</scope><name>colorLength</name></member>
+      <member refid="structVipHeader___1a27a66cd48da84b2b9f3a8980738e94c4" prot="public" virt="non-virtual"><scope>VipHeader_</scope><name>magicCode</name></member>
+      <member refid="structVipHeader___1a8f0c278a388ce7cf8ecd6f6dd139006e" prot="public" virt="non-virtual"><scope>VipHeader_</scope><name>negativeXHoopSize</name></member>
+      <member refid="structVipHeader___1acb06bebae3a9d5857e70b225c2a76c92" prot="public" virt="non-virtual"><scope>VipHeader_</scope><name>negativeYHoopSize</name></member>
+      <member refid="structVipHeader___1a84b58ff13fbacb701209ccf389b17abe" prot="public" virt="non-virtual"><scope>VipHeader_</scope><name>numberOfColors</name></member>
+      <member refid="structVipHeader___1a84ce04f3b0a8f2f8e283dbd3374c255a" prot="public" virt="non-virtual"><scope>VipHeader_</scope><name>numberOfStitches</name></member>
+      <member refid="structVipHeader___1a1341b66644c14ee3a5628d77e13dcf81" prot="public" virt="non-virtual"><scope>VipHeader_</scope><name>postitiveXHoopSize</name></member>
+      <member refid="structVipHeader___1a56697150242e54da8f69f45c5affe0a4" prot="public" virt="non-virtual"><scope>VipHeader_</scope><name>postitiveYHoopSize</name></member>
+      <member refid="structVipHeader___1a90e8a3599c7f03aeb1cea49bb5e51bc4" prot="public" virt="non-virtual"><scope>VipHeader_</scope><name>stringVal</name></member>
+      <member refid="structVipHeader___1a8972238506da55aebe1768100518a1bf" prot="public" virt="non-virtual"><scope>VipHeader_</scope><name>unknown</name></member>
+      <member refid="structVipHeader___1ab505d4d79bb74b3bc044b295a7e9b5f4" prot="public" virt="non-virtual"><scope>VipHeader_</scope><name>xOffset</name></member>
+      <member refid="structVipHeader___1a854105d3d4c885e345c2383f0ac89220" prot="public" virt="non-virtual"><scope>VipHeader_</scope><name>yOffset</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

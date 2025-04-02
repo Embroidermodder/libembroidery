@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classMain" kind="class" language="Java" prot="package">
+    <compoundname>Main</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classMain_1a086d08b6d65c479abee84636d1c2ca95" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void Main.main</definition>
+        <argsstring>(String args[])</argsstring>
+        <name>main</name>
+        <qualifiedname>Main.main</qualifiedname>
+        <param>
+          <type>String</type>
+          <declname>args</declname>
+          <array>[]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/org/libembroidery/Main.java" line="5" column="24" bodyfile="java/org/libembroidery/Main.java" bodystart="5" bodyend="8"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="java/org/libembroidery/Main.java" line="4" column="1" bodyfile="java/org/libembroidery/Main.java" bodystart="4" bodyend="9"/>
+    <listofallmembers>
+      <member refid="classMain_1a086d08b6d65c479abee84636d1c2ca95" prot="public" virt="non-virtual"><scope>Main</scope><name>main</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

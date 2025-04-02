@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="dir_407e41cc2bc7c3130b0985640618dd7d" kind="dir">
+    <compoundname>python/embroidery</compoundname>
+    <innerfile refid="____init_____8py">__init__.py</innerfile>
+    <innerfile refid="fills_8py">fills.py</innerfile>
+    <innerfile refid="geometry_8py">geometry.py</innerfile>
+    <innerfile refid="image_8py">image.py</innerfile>
+    <innerfile refid="old__init_8py">old_init.py</innerfile>
+    <innerfile refid="parametric_8py">parametric.py</innerfile>
+    <innerfile refid="parser_8py">parser.py</innerfile>
+    <innerfile refid="python__binding_8c">python_binding.c</innerfile>
+    <innerfile refid="text_8py">text.py</innerfile>
+    <innerfile refid="tools_8py">tools.py</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="python/embroidery/"/>
+  </compounddef>
+</doxygen>

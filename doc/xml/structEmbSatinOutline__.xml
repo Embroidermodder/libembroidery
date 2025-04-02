@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structEmbSatinOutline__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbSatinOutline_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structEmbSatinOutline___1aaf9e13bd147a6bd48df6ad193ea80b7e" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbSatinOutline_::length</definition>
+        <argsstring></argsstring>
+        <name>length</name>
+        <qualifiedname>EmbSatinOutline_::length</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="684" column="9" bodyfile="src/embroidery.h" bodystart="684" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbSatinOutline___1a82529bceec679dbe3b6f3db25d7f6804" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1aebe8b1561a59d167cfe6613863a671ca" kindref="member">EmbArray</ref> *</type>
+        <definition>EmbArray* EmbSatinOutline_::side1</definition>
+        <argsstring></argsstring>
+        <name>side1</name>
+        <qualifiedname>EmbSatinOutline_::side1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="685" column="14" bodyfile="src/embroidery.h" bodystart="685" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbSatinOutline___1a2651281047a8b385386ebc61c34101b6" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1aebe8b1561a59d167cfe6613863a671ca" kindref="member">EmbArray</ref> *</type>
+        <definition>EmbArray* EmbSatinOutline_::side2</definition>
+        <argsstring></argsstring>
+        <name>side2</name>
+        <qualifiedname>EmbSatinOutline_::side2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="686" column="14" bodyfile="src/embroidery.h" bodystart="686" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="4">
+        <label>EmbArc_</label>
+        <link refid="structEmbArc__"/>
+        <childnode refid="5" relation="usage">
+          <edgelabel>end</edgelabel>
+          <edgelabel>mid</edgelabel>
+          <edgelabel>start</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>EmbArray_</label>
+        <link refid="structEmbArray__"/>
+        <childnode refid="3" relation="usage">
+          <edgelabel>geometry</edgelabel>
+        </childnode>
+        <childnode refid="14" relation="usage">
+          <edgelabel>stitch</edgelabel>
+        </childnode>
+        <childnode refid="15" relation="usage">
+          <edgelabel>thread</edgelabel>
+        </childnode>
+      </node>
+      <node id="6">
+        <label>EmbCircle_</label>
+        <link refid="structEmbCircle__"/>
+        <childnode refid="5" relation="usage">
+          <edgelabel>center</edgelabel>
+        </childnode>
+      </node>
+      <node id="7">
+        <label>EmbColor_</label>
+        <link refid="structEmbColor__"/>
+      </node>
+      <node id="8">
+        <label>EmbEllipse_</label>
+        <link refid="structEmbEllipse__"/>
+        <childnode refid="5" relation="usage">
+          <edgelabel>center</edgelabel>
+          <edgelabel>radius</edgelabel>
+        </childnode>
+      </node>
+      <node id="3">
+        <label>EmbGeometry_</label>
+        <link refid="structEmbGeometry__"/>
+        <childnode refid="4" relation="usage">
+          <edgelabel>arc</edgelabel>
+        </childnode>
+        <childnode refid="6" relation="usage">
+          <edgelabel>circle</edgelabel>
+        </childnode>
+        <childnode refid="7" relation="usage">
+          <edgelabel>color</edgelabel>
+        </childnode>
+        <childnode refid="8" relation="usage">
+          <edgelabel>ellipse</edgelabel>
+        </childnode>
+        <childnode refid="9" relation="usage">
+          <edgelabel>line</edgelabel>
+        </childnode>
+        <childnode refid="10" relation="usage">
+          <edgelabel>path</edgelabel>
+          <edgelabel>polygon</edgelabel>
+          <edgelabel>polyline</edgelabel>
+        </childnode>
+        <childnode refid="11" relation="usage">
+          <edgelabel>point</edgelabel>
+        </childnode>
+        <childnode refid="12" relation="usage">
+          <edgelabel>rect</edgelabel>
+        </childnode>
+        <childnode refid="13" relation="usage">
+          <edgelabel>spline</edgelabel>
+        </childnode>
+        <childnode refid="5" relation="usage">
+          <edgelabel>vector</edgelabel>
+        </childnode>
+      </node>
+      <node id="9">
+        <label>EmbLine_</label>
+        <link refid="structEmbLine__"/>
+        <childnode refid="5" relation="usage">
+          <edgelabel>end</edgelabel>
+          <edgelabel>start</edgelabel>
+        </childnode>
+        <childnode refid="7" relation="usage">
+          <edgelabel>color</edgelabel>
+        </childnode>
+      </node>
+      <node id="10">
+        <label>EmbPath_</label>
+        <link refid="structEmbPath__"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>flagList</edgelabel>
+          <edgelabel>pointList</edgelabel>
+        </childnode>
+        <childnode refid="7" relation="usage">
+          <edgelabel>color</edgelabel>
+        </childnode>
+      </node>
+      <node id="11">
+        <label>EmbPoint_</label>
+        <link refid="structEmbPoint__"/>
+        <childnode refid="5" relation="usage">
+          <edgelabel>position</edgelabel>
+        </childnode>
+        <childnode refid="7" relation="usage">
+          <edgelabel>color</edgelabel>
+        </childnode>
+      </node>
+      <node id="12">
+        <label>EmbRect_</label>
+        <link refid="structEmbRect__"/>
+      </node>
+      <node id="1">
+        <label>EmbSatinOutline_</label>
+        <link refid="structEmbSatinOutline__"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>side1</edgelabel>
+          <edgelabel>side2</edgelabel>
+        </childnode>
+      </node>
+      <node id="13">
+        <label>EmbSpline_</label>
+        <link refid="structEmbSpline__"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>beziers</edgelabel>
+        </childnode>
+      </node>
+      <node id="14">
+        <label>EmbStitch_</label>
+        <link refid="structEmbStitch__"/>
+      </node>
+      <node id="15">
+        <label>EmbThread_</label>
+        <link refid="structEmbThread__"/>
+        <childnode refid="7" relation="usage">
+          <edgelabel>color</edgelabel>
+        </childnode>
+      </node>
+      <node id="5">
+        <label>EmbVector_</label>
+        <link refid="structEmbVector__"/>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery.h" line="682" column="1" bodyfile="src/embroidery.h" bodystart="683" bodyend="687"/>
+    <listofallmembers>
+      <member refid="structEmbSatinOutline___1aaf9e13bd147a6bd48df6ad193ea80b7e" prot="public" virt="non-virtual"><scope>EmbSatinOutline_</scope><name>length</name></member>
+      <member refid="structEmbSatinOutline___1a82529bceec679dbe3b6f3db25d7f6804" prot="public" virt="non-virtual"><scope>EmbSatinOutline_</scope><name>side1</name></member>
+      <member refid="structEmbSatinOutline___1a2651281047a8b385386ebc61c34101b6" prot="public" virt="non-virtual"><scope>EmbSatinOutline_</scope><name>side2</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

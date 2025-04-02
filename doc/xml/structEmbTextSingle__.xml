@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structEmbTextSingle__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbTextSingle_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structEmbTextSingle___1a71b36c11de437b6566bb63f4e3e11835" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a16fa26764453571074cb85a7574738d4" kindref="member">EmbVector</ref></type>
+        <definition>EmbVector EmbTextSingle_::position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <qualifiedname>EmbTextSingle_::position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="592" column="15" bodyfile="src/embroidery.h" bodystart="592" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbTextSingle___1adcd8d4d095a5ef0eccc9908a7988bb4a" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a3cfa8eccd6eee11f9ffece9f64f79b59" kindref="member">EmbString</ref></type>
+        <definition>EmbString EmbTextSingle_::text</definition>
+        <argsstring></argsstring>
+        <name>text</name>
+        <qualifiedname>EmbTextSingle_::text</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="593" column="15" bodyfile="src/embroidery.h" bodystart="593" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>EmbTextSingle_</label>
+        <link refid="structEmbTextSingle__"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>position</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>EmbVector_</label>
+        <link refid="structEmbVector__"/>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery.h" line="591" column="1" bodyfile="src/embroidery.h" bodystart="591" bodyend="594"/>
+    <listofallmembers>
+      <member refid="structEmbTextSingle___1a71b36c11de437b6566bb63f4e3e11835" prot="public" virt="non-virtual"><scope>EmbTextSingle_</scope><name>position</name></member>
+      <member refid="structEmbTextSingle___1adcd8d4d095a5ef0eccc9908a7988bb4a" prot="public" virt="non-virtual"><scope>EmbTextSingle_</scope><name>text</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

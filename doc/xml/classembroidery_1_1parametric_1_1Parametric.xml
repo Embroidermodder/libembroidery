@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1parametric_1_1Parametric" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::parametric::Parametric</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1parametric_1_1Parametric_1a05c232ab376398ff409b99fd78a19c6b" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.parametric.Parametric::desc</definition>
+        <argsstring></argsstring>
+        <name>desc</name>
+        <qualifiedname>embroidery.parametric.Parametric.desc</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/parametric.py" line="36" column="1" bodyfile="python/embroidery/parametric.py" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1parametric_1_1Parametric_1a7871f13f150030bc5b6e6801ebfc77f2" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.parametric.Parametric::num_points</definition>
+        <argsstring></argsstring>
+        <name>num_points</name>
+        <qualifiedname>embroidery.parametric.Parametric.num_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/parametric.py" line="37" column="1" bodyfile="python/embroidery/parametric.py" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1parametric_1_1Parametric_1afc62b5cd8f2cd970951b5e57af9b3543" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.parametric.Parametric::center</definition>
+        <argsstring></argsstring>
+        <name>center</name>
+        <qualifiedname>embroidery.parametric.Parametric.center</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/parametric.py" line="39" column="1" bodyfile="python/embroidery/parametric.py" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1parametric_1_1Parametric_1a4200b7e297b271a60edd79788240b753" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.parametric.Parametric::scale</definition>
+        <argsstring></argsstring>
+        <name>scale</name>
+        <qualifiedname>embroidery.parametric.Parametric.scale</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/parametric.py" line="40" column="1" bodyfile="python/embroidery/parametric.py" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1parametric_1_1Parametric_1acc7b26c2f5e76205ef7d9e449f247034" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.parametric.Parametric::mode</definition>
+        <argsstring></argsstring>
+        <name>mode</name>
+        <qualifiedname>embroidery.parametric.Parametric.mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/parametric.py" line="41" column="1" bodyfile="python/embroidery/parametric.py" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1parametric_1_1Parametric_1a49a9ef1f217e6aca4ebc73447f1e41cc" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.parametric.Parametric::rubber_points</definition>
+        <argsstring></argsstring>
+        <name>rubber_points</name>
+        <qualifiedname>embroidery.parametric.Parametric.rubber_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/parametric.py" line="42" column="1" bodyfile="python/embroidery/parametric.py" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1parametric_1_1Parametric_1af6027aa1e36aae713318e57fc3d3d65f" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.parametric.Parametric::rubber_mode</definition>
+        <argsstring></argsstring>
+        <name>rubber_mode</name>
+        <qualifiedname>embroidery.parametric.Parametric.rubber_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/parametric.py" line="45" column="1" bodyfile="python/embroidery/parametric.py" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1parametric_1_1Parametric_1af9229512ad7f1148c46fc9b16585a91b" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.parametric.Parametric::spare_rubber</definition>
+        <argsstring></argsstring>
+        <name>spare_rubber</name>
+        <qualifiedname>embroidery.parametric.Parametric.spare_rubber</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/parametric.py" line="46" column="1" bodyfile="python/embroidery/parametric.py" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1parametric_1_1Parametric_1aefa4338b9bf4659167442281d6fdc171" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.parametric.Parametric::radius_outer</definition>
+        <argsstring></argsstring>
+        <name>radius_outer</name>
+        <qualifiedname>embroidery.parametric.Parametric.radius_outer</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/parametric.py" line="47" column="1" bodyfile="python/embroidery/parametric.py" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1parametric_1_1Parametric_1a381b33b07c14dd870c54dd75d9feccc2" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.parametric.Parametric::radius_inner</definition>
+        <argsstring></argsstring>
+        <name>radius_inner</name>
+        <qualifiedname>embroidery.parametric.Parametric.radius_inner</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/parametric.py" line="48" column="1" bodyfile="python/embroidery/parametric.py" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1parametric_1_1Parametric_1aabe68bd368785c855b0ec5b6c2d1dbbd" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.parametric.Parametric::rubber_text</definition>
+        <argsstring></argsstring>
+        <name>rubber_text</name>
+        <qualifiedname>embroidery.parametric.Parametric.rubber_text</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/parametric.py" line="49" column="1" bodyfile="python/embroidery/parametric.py" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1parametric_1_1Parametric_1ad2b4b68731684c684d09a18f5bd63ba5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.parametric.Parametric.__init__</definition>
+        <argsstring>(self, desc, center=Vector(math.nan, math.nan), mode=&quot;NUM_POINTS&quot;)</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.parametric.Parametric.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>desc</type>
+          <defname>desc</defname>
+        </param>
+        <param>
+          <type>center</type>
+          <defname>center</defname>
+          <defval>Vector(math.nan, math.nan)</defval>
+        </param>
+        <param>
+          <type>mode</type>
+          <defname>mode</defname>
+          <defval>&quot;NUM_POINTS&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/parametric.py" line="32" column="1" bodyfile="python/embroidery/parametric.py" bodystart="33" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1parametric_1_1Parametric_1a418748219b5c72779f0279e52e46eeb7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.parametric.Parametric.update</definition>
+        <argsstring>(self)</argsstring>
+        <name>update</name>
+        <qualifiedname>embroidery.parametric.Parametric.update</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/parametric.py" line="52" column="1" bodyfile="python/embroidery/parametric.py" bodystart="52" bodyend="68"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>The generic design primative class.
+
+To make a specific object use a call like this:
+
+dolphin = Parametric(settings[&quot;objects&quot;][&quot;dolphin&quot;])
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/parametric.py" line="24" column="1" bodyfile="python/embroidery/parametric.py" bodystart="24" bodyend="68"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1parametric_1_1Parametric_1ad2b4b68731684c684d09a18f5bd63ba5" prot="public" virt="non-virtual"><scope>embroidery::parametric::Parametric</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1parametric_1_1Parametric_1afc62b5cd8f2cd970951b5e57af9b3543" prot="public" virt="non-virtual"><scope>embroidery::parametric::Parametric</scope><name>center</name></member>
+      <member refid="classembroidery_1_1parametric_1_1Parametric_1a05c232ab376398ff409b99fd78a19c6b" prot="public" virt="non-virtual"><scope>embroidery::parametric::Parametric</scope><name>desc</name></member>
+      <member refid="classembroidery_1_1parametric_1_1Parametric_1acc7b26c2f5e76205ef7d9e449f247034" prot="public" virt="non-virtual"><scope>embroidery::parametric::Parametric</scope><name>mode</name></member>
+      <member refid="classembroidery_1_1parametric_1_1Parametric_1a7871f13f150030bc5b6e6801ebfc77f2" prot="public" virt="non-virtual"><scope>embroidery::parametric::Parametric</scope><name>num_points</name></member>
+      <member refid="classembroidery_1_1parametric_1_1Parametric_1a381b33b07c14dd870c54dd75d9feccc2" prot="public" virt="non-virtual"><scope>embroidery::parametric::Parametric</scope><name>radius_inner</name></member>
+      <member refid="classembroidery_1_1parametric_1_1Parametric_1aefa4338b9bf4659167442281d6fdc171" prot="public" virt="non-virtual"><scope>embroidery::parametric::Parametric</scope><name>radius_outer</name></member>
+      <member refid="classembroidery_1_1parametric_1_1Parametric_1af6027aa1e36aae713318e57fc3d3d65f" prot="public" virt="non-virtual"><scope>embroidery::parametric::Parametric</scope><name>rubber_mode</name></member>
+      <member refid="classembroidery_1_1parametric_1_1Parametric_1a49a9ef1f217e6aca4ebc73447f1e41cc" prot="public" virt="non-virtual"><scope>embroidery::parametric::Parametric</scope><name>rubber_points</name></member>
+      <member refid="classembroidery_1_1parametric_1_1Parametric_1aabe68bd368785c855b0ec5b6c2d1dbbd" prot="public" virt="non-virtual"><scope>embroidery::parametric::Parametric</scope><name>rubber_text</name></member>
+      <member refid="classembroidery_1_1parametric_1_1Parametric_1a4200b7e297b271a60edd79788240b753" prot="public" virt="non-virtual"><scope>embroidery::parametric::Parametric</scope><name>scale</name></member>
+      <member refid="classembroidery_1_1parametric_1_1Parametric_1af9229512ad7f1148c46fc9b16585a91b" prot="public" virt="non-virtual"><scope>embroidery::parametric::Parametric</scope><name>spare_rubber</name></member>
+      <member refid="classembroidery_1_1parametric_1_1Parametric_1a418748219b5c72779f0279e52e46eeb7" prot="public" virt="non-virtual"><scope>embroidery::parametric::Parametric</scope><name>update</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,330 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="struct__vp3Hoop" kind="struct" language="C++" prot="public">
+    <compoundname>_vp3Hoop</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct__vp3Hoop_1ad81b5fe4459515e732a6253b8e274ed9" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::right</definition>
+        <argsstring></argsstring>
+        <name>right</name>
+        <qualifiedname>_vp3Hoop::right</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="992" column="9" bodyfile="src/embroidery.h" bodystart="992" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a84a0b67eefa7a1bca3e5a18384c033fb" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::bottom</definition>
+        <argsstring></argsstring>
+        <name>bottom</name>
+        <qualifiedname>_vp3Hoop::bottom</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="993" column="9" bodyfile="src/embroidery.h" bodystart="993" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a46b7deb96582f06787147240b6cae1da" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::left</definition>
+        <argsstring></argsstring>
+        <name>left</name>
+        <qualifiedname>_vp3Hoop::left</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="994" column="9" bodyfile="src/embroidery.h" bodystart="994" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a637caa192a5163649f1e9e07d104d8aa" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::top</definition>
+        <argsstring></argsstring>
+        <name>top</name>
+        <qualifiedname>_vp3Hoop::top</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="995" column="9" bodyfile="src/embroidery.h" bodystart="995" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a1981ccc4e7378ff90ad25ff9c6c7dea3" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::threadLength</definition>
+        <argsstring></argsstring>
+        <name>threadLength</name>
+        <qualifiedname>_vp3Hoop::threadLength</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="996" column="9" bodyfile="src/embroidery.h" bodystart="996" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a4d32dd4879a8dedc4dae538ed3c790e5" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char _vp3Hoop::unknown2</definition>
+        <argsstring></argsstring>
+        <name>unknown2</name>
+        <qualifiedname>_vp3Hoop::unknown2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="997" column="10" bodyfile="src/embroidery.h" bodystart="997" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1ab01dc8cff26133c4c5684a1d18571293" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char _vp3Hoop::numberOfColors</definition>
+        <argsstring></argsstring>
+        <name>numberOfColors</name>
+        <qualifiedname>_vp3Hoop::numberOfColors</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="998" column="19" bodyfile="src/embroidery.h" bodystart="998" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1ab139884e108884667eb43fac2b213845" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short _vp3Hoop::unknown3</definition>
+        <argsstring></argsstring>
+        <name>unknown3</name>
+        <qualifiedname>_vp3Hoop::unknown3</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="999" column="20" bodyfile="src/embroidery.h" bodystart="999" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1af53088d606ce51a11a1b2ff198090f20" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::unknown4</definition>
+        <argsstring></argsstring>
+        <name>unknown4</name>
+        <qualifiedname>_vp3Hoop::unknown4</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1000" column="9" bodyfile="src/embroidery.h" bodystart="1000" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1ab199642857a5ef43c1899750aae56dd5" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::numberOfBytesRemaining</definition>
+        <argsstring></argsstring>
+        <name>numberOfBytesRemaining</name>
+        <qualifiedname>_vp3Hoop::numberOfBytesRemaining</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1001" column="9" bodyfile="src/embroidery.h" bodystart="1001" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1aadf0351dc779b9e2e5065e69ebff8d0d" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::xOffset</definition>
+        <argsstring></argsstring>
+        <name>xOffset</name>
+        <qualifiedname>_vp3Hoop::xOffset</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1003" column="9" bodyfile="src/embroidery.h" bodystart="1003" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a5b683d94ebc25edaebca1b960cc8666f" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::yOffset</definition>
+        <argsstring></argsstring>
+        <name>yOffset</name>
+        <qualifiedname>_vp3Hoop::yOffset</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1004" column="9" bodyfile="src/embroidery.h" bodystart="1004" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a48bf06233a64f51d519f4a7d09003b16" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char _vp3Hoop::byte1</definition>
+        <argsstring></argsstring>
+        <name>byte1</name>
+        <qualifiedname>_vp3Hoop::byte1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1006" column="19" bodyfile="src/embroidery.h" bodystart="1006" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a2f6062a35d92371222ec47a8fb236ad2" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char _vp3Hoop::byte2</definition>
+        <argsstring></argsstring>
+        <name>byte2</name>
+        <qualifiedname>_vp3Hoop::byte2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1007" column="19" bodyfile="src/embroidery.h" bodystart="1007" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a4fdd7f2c581bbcfffecc57d3aee9e762" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char _vp3Hoop::byte3</definition>
+        <argsstring></argsstring>
+        <name>byte3</name>
+        <qualifiedname>_vp3Hoop::byte3</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1008" column="19" bodyfile="src/embroidery.h" bodystart="1008" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a86e9f70d4b22efaa86f0dfd557f7d43e" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::right2</definition>
+        <argsstring></argsstring>
+        <name>right2</name>
+        <qualifiedname>_vp3Hoop::right2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1011" column="9" bodyfile="src/embroidery.h" bodystart="1011" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a03e4b078453463a37b92c71402c69496" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::left2</definition>
+        <argsstring></argsstring>
+        <name>left2</name>
+        <qualifiedname>_vp3Hoop::left2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1012" column="9" bodyfile="src/embroidery.h" bodystart="1012" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a37f186bd13d5e0e9f66e6b763beb22ed" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::bottom2</definition>
+        <argsstring></argsstring>
+        <name>bottom2</name>
+        <qualifiedname>_vp3Hoop::bottom2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1013" column="9" bodyfile="src/embroidery.h" bodystart="1013" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1af019c63f92076bbdcf8a1ae523c27127" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::top2</definition>
+        <argsstring></argsstring>
+        <name>top2</name>
+        <qualifiedname>_vp3Hoop::top2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1014" column="9" bodyfile="src/embroidery.h" bodystart="1014" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a2e8566f36268584378a967dc9a7aeb2f" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::width</definition>
+        <argsstring></argsstring>
+        <name>width</name>
+        <qualifiedname>_vp3Hoop::width</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1016" column="9" bodyfile="src/embroidery.h" bodystart="1016" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__vp3Hoop_1a33f9fde78d696ae30b9ecf767363d863" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _vp3Hoop::height</definition>
+        <argsstring></argsstring>
+        <name>height</name>
+        <qualifiedname>_vp3Hoop::height</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1017" column="9" bodyfile="src/embroidery.h" bodystart="1017" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="990" column="1" bodyfile="src/embroidery.h" bodystart="991" bodyend="1018"/>
+    <listofallmembers>
+      <member refid="struct__vp3Hoop_1a84a0b67eefa7a1bca3e5a18384c033fb" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>bottom</name></member>
+      <member refid="struct__vp3Hoop_1a37f186bd13d5e0e9f66e6b763beb22ed" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>bottom2</name></member>
+      <member refid="struct__vp3Hoop_1a48bf06233a64f51d519f4a7d09003b16" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>byte1</name></member>
+      <member refid="struct__vp3Hoop_1a2f6062a35d92371222ec47a8fb236ad2" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>byte2</name></member>
+      <member refid="struct__vp3Hoop_1a4fdd7f2c581bbcfffecc57d3aee9e762" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>byte3</name></member>
+      <member refid="struct__vp3Hoop_1a33f9fde78d696ae30b9ecf767363d863" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>height</name></member>
+      <member refid="struct__vp3Hoop_1a46b7deb96582f06787147240b6cae1da" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>left</name></member>
+      <member refid="struct__vp3Hoop_1a03e4b078453463a37b92c71402c69496" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>left2</name></member>
+      <member refid="struct__vp3Hoop_1ab199642857a5ef43c1899750aae56dd5" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>numberOfBytesRemaining</name></member>
+      <member refid="struct__vp3Hoop_1ab01dc8cff26133c4c5684a1d18571293" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>numberOfColors</name></member>
+      <member refid="struct__vp3Hoop_1ad81b5fe4459515e732a6253b8e274ed9" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>right</name></member>
+      <member refid="struct__vp3Hoop_1a86e9f70d4b22efaa86f0dfd557f7d43e" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>right2</name></member>
+      <member refid="struct__vp3Hoop_1a1981ccc4e7378ff90ad25ff9c6c7dea3" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>threadLength</name></member>
+      <member refid="struct__vp3Hoop_1a637caa192a5163649f1e9e07d104d8aa" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>top</name></member>
+      <member refid="struct__vp3Hoop_1af019c63f92076bbdcf8a1ae523c27127" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>top2</name></member>
+      <member refid="struct__vp3Hoop_1a4d32dd4879a8dedc4dae538ed3c790e5" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>unknown2</name></member>
+      <member refid="struct__vp3Hoop_1ab139884e108884667eb43fac2b213845" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>unknown3</name></member>
+      <member refid="struct__vp3Hoop_1af53088d606ce51a11a1b2ff198090f20" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>unknown4</name></member>
+      <member refid="struct__vp3Hoop_1a2e8566f36268584378a967dc9a7aeb2f" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>width</name></member>
+      <member refid="struct__vp3Hoop_1aadf0351dc779b9e2e5065e69ebff8d0d" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>xOffset</name></member>
+      <member refid="struct__vp3Hoop_1a5b683d94ebc25edaebca1b960cc8666f" prot="public" virt="non-virtual"><scope>_vp3Hoop</scope><name>yOffset</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,319 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1text_1_1Text" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::text::Text</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1ae0384deacea0533cd11cb3260df722c3" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::modes</definition>
+        <argsstring></argsstring>
+        <name>modes</name>
+        <qualifiedname>embroidery.text.Text.modes</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="30" column="1" bodyfile="python/embroidery/text.py" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1af839d55d97334e74723af8fcf930bf73" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::text</definition>
+        <argsstring></argsstring>
+        <name>text</name>
+        <qualifiedname>embroidery.text.Text.text</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="31" column="1" bodyfile="python/embroidery/text.py" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1a7cc791777b8f87bc43b1d9cc7eb1fbd7" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <qualifiedname>embroidery.text.Text.position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="32" column="1" bodyfile="python/embroidery/text.py" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1ac8f3e3091b2558fb7aac72d6eed35ce1" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::justify</definition>
+        <argsstring></argsstring>
+        <name>justify</name>
+        <qualifiedname>embroidery.text.Text.justify</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="33" column="1" bodyfile="python/embroidery/text.py" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1aadfc5bfea14513886268a95fde04cb5c" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::font</definition>
+        <argsstring></argsstring>
+        <name>font</name>
+        <qualifiedname>embroidery.text.Text.font</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="34" column="1" bodyfile="python/embroidery/text.py" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1aaaa27bed741b55e886d6c398829eb8d9" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::height</definition>
+        <argsstring></argsstring>
+        <name>height</name>
+        <qualifiedname>embroidery.text.Text.height</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="35" column="1" bodyfile="python/embroidery/text.py" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1acad34d4f36ee65c661283c4e3d7f64aa" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::rotation</definition>
+        <argsstring></argsstring>
+        <name>rotation</name>
+        <qualifiedname>embroidery.text.Text.rotation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="36" column="1" bodyfile="python/embroidery/text.py" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1af40266ec267c60ce15b62e929e13e36c" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::mode</definition>
+        <argsstring></argsstring>
+        <name>mode</name>
+        <qualifiedname>embroidery.text.Text.mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="37" column="1" bodyfile="python/embroidery/text.py" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1a34622d23cf123c970455d7d6acad6a06" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::rubber_points</definition>
+        <argsstring></argsstring>
+        <name>rubber_points</name>
+        <qualifiedname>embroidery.text.Text.rubber_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="38" column="1" bodyfile="python/embroidery/text.py" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1a6c116c08eee19491540d40f70cf537d9" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::rubber_texts</definition>
+        <argsstring></argsstring>
+        <name>rubber_texts</name>
+        <qualifiedname>embroidery.text.Text.rubber_texts</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="39" column="1" bodyfile="python/embroidery/text.py" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1a0b6225ea50240c54806419a736db7df6" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::rubber_mode</definition>
+        <argsstring></argsstring>
+        <name>rubber_mode</name>
+        <qualifiedname>embroidery.text.Text.rubber_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="53" column="1" bodyfile="python/embroidery/text.py" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1a34280f64b96abdfda713161822ff838e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::text_rotation</definition>
+        <argsstring></argsstring>
+        <name>text_rotation</name>
+        <qualifiedname>embroidery.text.Text.text_rotation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="64" column="1" bodyfile="python/embroidery/text.py" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1ad2c3e5121a5efbf9b10cf3132f86c396" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::textFont</definition>
+        <argsstring></argsstring>
+        <name>textFont</name>
+        <qualifiedname>embroidery.text.Text.textFont</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="214" column="1" bodyfile="python/embroidery/text.py" bodystart="214" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1a59fa9f8514377b1d3d4ef7160f1a2e75" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::textX</definition>
+        <argsstring></argsstring>
+        <name>textX</name>
+        <qualifiedname>embroidery.text.Text.textX</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="238" column="1" bodyfile="python/embroidery/text.py" bodystart="238" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1Text_1a9b913e354df422d02ffcf1494351fbd3" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.Text::textY</definition>
+        <argsstring></argsstring>
+        <name>textY</name>
+        <qualifiedname>embroidery.text.Text.textY</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="239" column="1" bodyfile="python/embroidery/text.py" bodystart="239" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1text_1_1Text_1a87e4a723919f3b4035072a00429e6509" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.Text.__init__</definition>
+        <argsstring>(self, pen=Pen(), font=&quot;Arial&quot;)</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.text.Text.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>pen</type>
+          <defname>pen</defname>
+          <defval>Pen()</defval>
+        </param>
+        <param>
+          <type>font</type>
+          <defname>font</defname>
+          <defval>&quot;Arial&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="28" column="1" bodyfile="python/embroidery/text.py" bodystart="28" bodyend="46"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1Text_1acc20df958fd981662c86608df530bc03" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.Text.click</definition>
+        <argsstring>(self, point)</argsstring>
+        <name>click</name>
+        <qualifiedname>embroidery.text.Text.click</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>point</type>
+          <defname>point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="47" column="1" bodyfile="python/embroidery/text.py" bodystart="47" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1Text_1afb2c2d5023085e992095d057824db55e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.Text.prompt</definition>
+        <argsstring>(self, cmd)</argsstring>
+        <name>prompt</name>
+        <qualifiedname>embroidery.text.Text.prompt</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>cmd</type>
+          <defname>cmd</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="85" column="1" bodyfile="python/embroidery/text.py" bodystart="85" bodyend="311"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>.
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/text.py" line="24" column="1" bodyfile="python/embroidery/text.py" bodystart="24" bodyend="311"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1text_1_1Text_1a87e4a723919f3b4035072a00429e6509" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1acc20df958fd981662c86608df530bc03" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>click</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1aadfc5bfea14513886268a95fde04cb5c" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>font</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1aaaa27bed741b55e886d6c398829eb8d9" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>height</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1ac8f3e3091b2558fb7aac72d6eed35ce1" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>justify</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1af40266ec267c60ce15b62e929e13e36c" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>mode</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1ae0384deacea0533cd11cb3260df722c3" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>modes</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1a7cc791777b8f87bc43b1d9cc7eb1fbd7" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>position</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1afb2c2d5023085e992095d057824db55e" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>prompt</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1acad34d4f36ee65c661283c4e3d7f64aa" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>rotation</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1a0b6225ea50240c54806419a736db7df6" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>rubber_mode</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1a34622d23cf123c970455d7d6acad6a06" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>rubber_points</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1a6c116c08eee19491540d40f70cf537d9" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>rubber_texts</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1af839d55d97334e74723af8fcf930bf73" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>text</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1a34280f64b96abdfda713161822ff838e" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>text_rotation</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1ad2c3e5121a5efbf9b10cf3132f86c396" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>textFont</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1a59fa9f8514377b1d3d4ef7160f1a2e75" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>textX</name></member>
+      <member refid="classembroidery_1_1text_1_1Text_1a9b913e354df422d02ffcf1494351fbd3" prot="public" virt="non-virtual"><scope>embroidery::text::Text</scope><name>textY</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="dir_4b37c35541aee0eec500a6f5b59dadfa" kind="dir">
+    <compoundname>asm</compoundname>
+    <innerfile refid="compress_8S">compress.S</innerfile>
+    <innerfile refid="data_8S">data.S</innerfile>
+    <innerfile refid="designs_8S">designs.S</innerfile>
+    <innerfile refid="embroider__elf64_8S">embroider_elf64.S</innerfile>
+    <innerfile refid="embroider__thumb_8S">embroider_thumb.S</innerfile>
+    <innerfile refid="embroidery_8S">embroidery.S</innerfile>
+    <innerfile refid="formats_8S">formats.S</innerfile>
+    <innerfile refid="geometry_8S">geometry.S</innerfile>
+    <innerfile refid="pattern_8S">pattern.S</innerfile>
+    <innerfile refid="script_8S">script.S</innerfile>
+    <innerfile refid="testing_8S">testing.S</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="asm/"/>
+  </compounddef>
+</doxygen>

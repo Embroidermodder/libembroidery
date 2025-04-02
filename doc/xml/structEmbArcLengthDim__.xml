@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structEmbArcLengthDim__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbArcLengthDim_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structEmbArcLengthDim___1a2db361ae45705c533519a44392c1161a" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a16fa26764453571074cb85a7574738d4" kindref="member">EmbVector</ref></type>
+        <definition>EmbVector EmbArcLengthDim_::position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <qualifiedname>EmbArcLengthDim_::position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="546" column="15" bodyfile="src/embroidery.h" bodystart="546" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>EmbArcLengthDim_</label>
+        <link refid="structEmbArcLengthDim__"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>position</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>EmbVector_</label>
+        <link refid="structEmbVector__"/>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery.h" line="545" column="1" bodyfile="src/embroidery.h" bodystart="545" bodyend="547"/>
+    <listofallmembers>
+      <member refid="structEmbArcLengthDim___1a2db361ae45705c533519a44392c1161a" prot="public" virt="non-virtual"><scope>EmbArcLengthDim_</scope><name>position</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="java_2README_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">Libembroidery<sp/>bindings<sp/>for<sp/>Java</highlight></codeline>
+<codeline><highlight class="normal">===============================</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>documentation<sp/>see<sp/>the<sp/>Embroidermodder<sp/>Reference<sp/>Manual</highlight></codeline>
+<codeline><highlight class="normal">here:<sp/>https://www.libembroidery.org</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+    </programlisting>
+    <location file="java/README.md"/>
+  </compounddef>
+</doxygen>

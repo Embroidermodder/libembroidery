@@ -1,4 +1,7 @@
-/*
+/*!
+ * \file embroider.c
+ * \brief .
+ *
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *
@@ -21,14 +24,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "data.c"
-#include "compress.c"
-#include "formats.c"
-#include "script.c"
-#include "geometry.c"
-#include "pattern.c"
-#include "testing.c"
 
 #include "embroidery.h"
 
@@ -61,20 +56,17 @@
 #define FLAG_SATIN_SHORT              25
 #define FLAG_STITCH                   26
 #define FLAG_STITCH_SHORT             27
-#define FLAG_TEST                     28
-#define FLAG_FULL_TEST_SUITE          29
-#define FLAG_CONVERT_TEST             30
-#define FLAG_HILBERT_CURVE            31
-#define FLAG_SIERPINSKI_TRIANGLE      32
-#define FLAG_FILL                     33
-#define FLAG_FILL_SHORT               34
-#define FLAG_SIMULATE                 35
-#define FLAG_COMBINE                  36
-#define FLAG_CROSS_STITCH             37
-#define FLAG_POSTSCRIPT               38
-#define FLAG_REPORT                   39
-#define FLAG_REPORT_SHORT             40
-#define NUM_FLAGS                     41
+#define FLAG_HILBERT_CURVE            28
+#define FLAG_SIERPINSKI_TRIANGLE      29
+#define FLAG_FILL                     30
+#define FLAG_FILL_SHORT               31
+#define FLAG_SIMULATE                 32
+#define FLAG_COMBINE                  33
+#define FLAG_CROSS_STITCH             34
+#define FLAG_POSTSCRIPT               35
+#define FLAG_REPORT                   36
+#define FLAG_REPORT_SHORT             37
+#define NUM_FLAGS                     38
 
 const char *help_msg[] = {
     "Usage: embroider [OPTIONS] fileToRead... ",
@@ -115,11 +107,6 @@ const char *help_msg[] = {
     "    -s, --satin      Fill the current geometry with satin stitches according",
     "                     to the defined algorithm.",
     "    -S, --stitch     Add a stitch defined by the arguments given to the current pattern.",
-    "",
-    "Quality Assurance:",
-    "        --test N           Run the test number N.",
-    "        --convert-test A N M Test conversion of test file A from format N to format M.",
-    "        --full-test-suite  Run all tests, even those we expect to fail.",
     "EOF"
 };
 
@@ -161,9 +148,6 @@ const EmbString flag_list[] = {
     "-s",
     "--stitch",
     "-S",
-    "--test",
-    "--full-test-suite",
-    "--convert-test",
     "--hilbert-curve",
     "--sierpinski-triangle",
     "--fill",
@@ -256,7 +240,7 @@ main(int argc, char *argv[])
                 break;
             }
             sprintf(script, "%s %s %s circle", argv[i+1], argv[i+2], argv[i+3]);
-            emb_actuator(current_pattern, script);
+            emb_actuator(current_pattern, script, LANG_PS);
             break;
         }
         case FLAG_ELLIPSE:
@@ -373,33 +357,6 @@ main(int argc, char *argv[])
             current_pattern = emb_pattern_create();
             hilbert_curve(current_pattern, 3);
             break;
-        case FLAG_TEST: {
-            if (i + 1 < argc) {
-                emb_pattern_free(current_pattern);
-                return testMain(atoi(argv[i+1]));
-            }
-            break;
-        }
-        case FLAG_FULL_TEST_SUITE: {
-			int t;
-			emb_pattern_free(current_pattern);
-            for (t=0; t<10; t++) {
-                int error = testMain(t);
-                if (error) {
-                    printf("Failed test %d with error %d.\n", t, error);
-					return 1;
-                }
-            }
-			return 0;
-		}
-        case FLAG_CONVERT_TEST: {
-			emb_pattern_free(current_pattern);
-            if (i + 3 < argc) {
-                return test_convert(atoi(argv[i+1]),
-                    atoi(argv[i+2]), atoi(argv[i+3]));
-            }
-			return 0;
-		}
         case FLAG_CROSS_STITCH: {
             if (i + 3 < argc) {
                 EmbImage image;

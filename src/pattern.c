@@ -1,4 +1,7 @@
-/*
+/*!
+ * \file pattern.c
+ * \brief The EmbPattern struct memory management and storage.
+ *
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *
@@ -880,7 +883,7 @@ emb_write_i16be(FILE* f, int16_t data)
 
 /* . */
 void
-emb_write_u16BE(FILE* f, uint16_t data)
+emb_write_u16be(FILE* f, uint16_t data)
 {
     char *b = (char*)(&data);
     fix_endian(b, 2, EMB_BIG_ENDIAN);
@@ -3212,6 +3215,9 @@ void
 emb_pattern_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int style)
 {
     EmbReal seperation = 0.1;
+    if (style > 0) {
+        puts("WARNING: Only style 0 has been implimented.");
+    }
     if (rect.w > rect.h) {
         float s;
         for (s=rect.y; s<rect.y + rect.h; s += seperation) {
@@ -3398,9 +3404,9 @@ image_diff(unsigned char *a, unsigned char *b, int size)
  * The caller is responsible for the memory in p.
  */
 int
-emb_pattern_render(EmbPattern * p, char *fname)
+emb_pattern_render(EmbPattern *p, char *fname)
 {
-    printf("fname %s", fname);
+    printf("Cannot render %p, %s\n", p, fname);
 /*
     const char *tmp_fname = "libembroidery_temp.svg";
     NSVGimage *image = NULL;
@@ -3452,8 +3458,9 @@ embImage_create(int width, int height)
 
 /* . */
 void
-embImage_read(EmbImage * image, char * fname)
+embImage_read(EmbImage *image, char *fname)
 {
+    printf("%d, %s\n", image->width, fname);
     /*
     int channels_in_file;
     image->data = stbi_load(
@@ -3467,9 +3474,10 @@ embImage_read(EmbImage * image, char * fname)
 
 /* . */
 int
-embImage_write(EmbImage * image, char * fname)
+embImage_write(EmbImage *image, char *fname)
 {
-/*
+    printf("%d, %s\n", image->width, fname);
+    /*
     return stbi_write_png(
          fname,
          image->width,

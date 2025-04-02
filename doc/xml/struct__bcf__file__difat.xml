@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="struct__bcf__file__difat" kind="struct" language="C++" prot="public">
+    <compoundname>_bcf_file_difat</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct__bcf__file__difat_1a9495373436f318bbe5cb988a7f6c049c" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_file_difat::fatSectorCount</definition>
+        <argsstring></argsstring>
+        <name>fatSectorCount</name>
+        <qualifiedname>_bcf_file_difat::fatSectorCount</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="912" column="18" bodyfile="src/embroidery.h" bodystart="912" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__difat_1a9cc6ee6974b84465f6aa8a33d74ac1be" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_file_difat::fatSectorEntries[109]</definition>
+        <argsstring>[109]</argsstring>
+        <name>fatSectorEntries</name>
+        <qualifiedname>_bcf_file_difat::fatSectorEntries</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="913" column="18" bodyfile="src/embroidery.h" bodystart="913" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__difat_1a94b234e7f7528306b1c526e0d72429cf" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_file_difat::sectorSize</definition>
+        <argsstring></argsstring>
+        <name>sectorSize</name>
+        <qualifiedname>_bcf_file_difat::sectorSize</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="914" column="18" bodyfile="src/embroidery.h" bodystart="914" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>double-indirection file allocation table references </para>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="910" column="1" bodyfile="src/embroidery.h" bodystart="911" bodyend="915"/>
+    <listofallmembers>
+      <member refid="struct__bcf__file__difat_1a9495373436f318bbe5cb988a7f6c049c" prot="public" virt="non-virtual"><scope>_bcf_file_difat</scope><name>fatSectorCount</name></member>
+      <member refid="struct__bcf__file__difat_1a9cc6ee6974b84465f6aa8a33d74ac1be" prot="public" virt="non-virtual"><scope>_bcf_file_difat</scope><name>fatSectorEntries</name></member>
+      <member refid="struct__bcf__file__difat_1a94b234e7f7528306b1c526e0d72429cf" prot="public" virt="non-virtual"><scope>_bcf_file_difat</scope><name>sectorSize</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

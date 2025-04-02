@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="md_docs_manual" kind="page">
+    <compoundname>md_docs_manual</compoundname>
+    <title>Libembroidery v1.0.0-alpha</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<sect1 id="md_docs_manual_1autotoc_md12">
+<title>Introduction</title>
+<para>It is advised that new progammers to our project and people using libembroidery for non-trivial integrations into their own project start by reading this file and the header. This library has one header and it does a lot of heavy lifting to keep libembroidery from having non-standard dependencies and reducing the number of functions in the API to keep upgrading to future versions trivial.</para>
+<para>If the header does not change outside of comments (and version data) then users of the library have to change nothing to upgrade their code. If only constants change then it is likely they won&apos;t have to change their code.</para>
+</sect1>
+<sect1 id="md_docs_manual_1autotoc_md13">
+<title>Data Storage</title>
+<para>The approach here is to make our code friendly towards being included in embedded, desktop and mobile applications. By making more data managed as compiler directives we reduce the overall code footprint.</para>
+<para>To protect against namespace pollution in more object oriented environments like mobile applications all new defines start with <computeroutput>EMB_</computeroutput>, all functions with <computeroutput>emb</computeroutput> and all typedefs with <computeroutput>Emb</computeroutput> . (INCOMPLETE)</para>
+<para>A fixed number is always a #define and any list of constant strings is stored as a <computeroutput>const char *[]</computeroutput> and has identifier integers for each entry. For example formats have various data associated with them, to access the extension for the filetype CSV we can use <computeroutput>emb_ext[EMB_FORMAT_CSV]</computeroutput>.</para>
+</sect1>
+<sect1 id="md_docs_manual_1autotoc_md14">
+<title>Geometry System</title>
+<para>Our geometry is designed on supporting 3 key systems which are generally more complex than what is needed for embroidery. They are DXF, SVG and PostScript. Each has it&apos;s own model for geometry and attempting to support them is the most complex task involved in writing software to support embroidery. They are chosen based on the reasoning that each has something to contribute PostScript is the language of printers, SVG a language of graphic designers with good open-source support and DXF the language of hardware design.</para>
+<para>We want to support: people that want to use their existing embroidery machines, other software embroidery projects, open-hardware development, existing graphic designers that want to translate their designs to embroidery and existing machine embroidery businesses that want to extend what they can do. Supporting 3 graphical systems is necessary to do this.</para>
+<para>Our approach to allow more freedom in altering how we do this without effecting all these users too much across versions is to assign all attributes an identifier and all geometric types accross these systems an identifier. Then we can seperate each task as a task accross the matrix combinations of these.</para>
+<sect2 id="md_docs_manual_1autotoc_md15">
+<title>EXAMPLE: GETTING AN ATTRIBUTE</title>
+<para>The attribute <computeroutput>EMB_ATTR_AREA</computeroutput> and the geometry <computeroutput>EMB_CIRCLE</computeroutput> are a valid combination and a user can determine this in their program by calling <computeroutput>emb_prop_get(EMB_ATTR_AREA, EMB_CIRCLE)</computeroutput> asking the question &quot;If I attempt to get the area of a circle, is that something
+that libembroidery can do?&quot;. In this case, it is and it returns 1.</para>
+<para>Then to get the area we know that it is a real number and therefore we use the real number version of getting an attribute of a geometric object: <computeroutput>emb_ggetr</computeroutput>. Calling <computeroutput>emb_ggetr</computeroutput> on this combination like <computeroutput>emb_ggetr(circle, EMB_ATTR_AREA)</computeroutput> will return the area calculated from the radius stored as <computeroutput>circle-&gt;object-&gt;circle.radius</computeroutput>.</para>
+</sect2>
+<sect2 id="md_docs_manual_1autotoc_md16">
+<title>EXAMPLE: SETTING AN ATTRIBUTE</title>
+<para>From the previous example</para>
+</sect2>
+</sect1>
+<sect1 id="md_docs_manual_1autotoc_md17">
+<title>The Header</title>
+<para>The header will be commented to guide you through how the header works and uses a view on dependency to order everything into:</para>
+<para><orderedlist>
+<listitem><para><computeroutput>#include</computeroutput>s</para>
+</listitem><listitem><para><computeroutput>#define</computeroutput>s</para>
+</listitem><listitem><para><computeroutput>typedef</computeroutput>s</para>
+</listitem><listitem><para>function prototypes</para>
+</listitem><listitem><para><computeroutput>extern</computeroutput>al data</para>
+</listitem></orderedlist>
+</para>
+<para>If you wish to add to this file please use the appropriate section.</para>
+</sect1>
+<sect1 id="md_docs_manual_1autotoc_md18">
+<title>Testing</title>
+</sect1>
+<sect1 id="md_docs_manual_1autotoc_md19">
+<title>Formats</title>
+</sect1>
+<sect1 id="md_docs_manual_1autotoc_md20">
+<title>DXF</title>
+<para>Based on the DraftSight color table. It doesn&apos;t appear to be authoratitive and there isn&apos;t much said in the official manual about colors 8-255: <ulink url="http://images.autodesk.com/adsk/files/autocad_2012_pdf_dxf-reference_enu.pdf">manual</ulink>.</para>
+<para>A possible &quot;standard&quot; solution here is to use xterm ESC color codes with the first 8 overridden for compatibility. That way a curious user may be able to guess and be <emphasis>almost</emphasis> right. See this script for how simple those codes are: <ulink url="https://gist.github.com/hSATAC/1095100">codes</ulink>.</para>
+<para>The first 8 are:</para>
+<para><programlisting><codeline><highlight class="normal">{<sp/><sp/><sp/>0,<sp/><sp/><sp/>0,<sp/><sp/><sp/>0<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;0&apos;<sp/>(BYBLOCK)<sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>255,<sp/><sp/><sp/>0,<sp/><sp/><sp/>0<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;1&apos;<sp/>(red)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>255,<sp/>255,<sp/><sp/><sp/>0<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;2&apos;<sp/>(yellow)<sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">{<sp/><sp/><sp/>0,<sp/>255,<sp/><sp/><sp/>0<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;3&apos;<sp/>(green)<sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">{<sp/><sp/><sp/>0,<sp/>255,<sp/>255<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;4&apos;<sp/>(cyan)<sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">{<sp/><sp/><sp/>0,<sp/><sp/><sp/>0,<sp/>255<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;5&apos;<sp/>(blue)<sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>255,<sp/><sp/><sp/>0,<sp/>255<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;6&apos;<sp/>(magenta)<sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>255,<sp/>255,<sp/>255<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;7&apos;<sp/>(white)<sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>128,<sp/>128,<sp/>128<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;8&apos;<sp/>(dark<sp/>gray)<sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>192,<sp/>192,<sp/>192<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;9&apos;<sp/>(light<sp/>gray)<sp/>*/</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_docs_manual_1autotoc_md21">
+<title>SVG</title>
+<para>Converted from the table at: <ulink url="https://www.w3.org/TR/SVGb/types.html#ColorKeywords">w3 standard</ulink> NOTE: This supports both UK and US English names, so the repeated values aren&apos;t an error.</para>
+</sect1>
+<sect1 id="md_docs_manual_1autotoc_md22">
+<title>Report pattern</title>
+<para>Report_pattern function that prints everything we know about the pattern at this point including details specific to the manufacturer like hoop size. Rather than scattershot details reported by each pattern. </para>
+</sect1>
+    </detaileddescription>
+    <location file="docs/manual.md"/>
+  </compounddef>
+</doxygen>

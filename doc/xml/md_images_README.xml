@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="md_images_README" kind="page">
+    <compoundname>md_images_README</compoundname>
+    <title>Source Images</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<sect1 id="md_images_README_1autotoc_md24">
+<title>Photographs</title>
+<para>The following photographs are public domain images from pixabay:</para>
+<para><table rows="4" cols="2"><row>
+<entry thead="no"><para><image type="html" name="snow-squirrel.png" alt="snow squirrel" inline="yes"></image>
+ </para>
+</entry><entry thead="no"><para>Source: <ulink url="https://pixabay.com/photos/snow-animal-squirrel-rodent-mammal-17854/">https://pixabay.com/photos/snow-animal-squirrel-rodent-mammal-17854/</ulink>  </para>
+</entry></row>
+<row>
+<entry thead="no"><para><image type="html" name="great-tit.png" alt="great tit" inline="yes"></image>
+ </para>
+</entry><entry thead="no"><para>Source: <ulink url="https://pixabay.com/photos/bird-fluttering-berries-wings-tit-1045954/">https://pixabay.com/photos/bird-fluttering-berries-wings-tit-1045954/</ulink>  </para>
+</entry></row>
+<row>
+<entry thead="no"><para><image type="html" name="owl.png" alt="owl face" inline="yes"></image>
+ </para>
+</entry><entry thead="no"><para>Source: <ulink url="https://pixabay.com/photos/owl-bird-animal-bird-of-prey-50267/">https://pixabay.com/photos/owl-bird-animal-bird-of-prey-50267/</ulink>  </para>
+</entry></row>
+<row>
+<entry thead="no"><para><image type="html" name="berries.png" alt="berries" inline="yes"></image>
+ </para>
+</entry><entry thead="no"><para>Source: <ulink url="https://pixabay.com/photos/berries-fruits-food-blackberries-2277/">https://pixabay.com/photos/berries-fruits-food-blackberries-2277/</ulink>  </para>
+</entry></row>
+</table>
+</para>
+<para>They have been converted to png files to aid further processing. </para>
+</sect1>
+    </detaileddescription>
+    <location file="images/README.md"/>
+  </compounddef>
+</doxygen>

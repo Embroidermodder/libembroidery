@@ -1,0 +1,194 @@
+\hypertarget{embroider_8c}{}\doxysection{src/embroider.c File Reference}
+\label{embroider_8c}\index{src/embroider.c@{src/embroider.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}embroidery.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{embroider_8c_a37407a0e43269433f885fdf943047fb6}\label{embroider_8c_a37407a0e43269433f885fdf943047fb6}} 
+\#define {\bfseries FLAG\+\_\+\+TO}~0
+\item 
+\mbox{\Hypertarget{embroider_8c_ae802a27a494d1b1a5d5a353fbb78383f}\label{embroider_8c_ae802a27a494d1b1a5d5a353fbb78383f}} 
+\#define {\bfseries FLAG\+\_\+\+TO\+\_\+\+SHORT}~1
+\item 
+\mbox{\Hypertarget{embroider_8c_ad571aa9682b7e17f8a5ffb568c386d9a}\label{embroider_8c_ad571aa9682b7e17f8a5ffb568c386d9a}} 
+\#define {\bfseries FLAG\+\_\+\+HELP}~2
+\item 
+\mbox{\Hypertarget{embroider_8c_a88da127a7c10c88c0cf14b3257c846a2}\label{embroider_8c_a88da127a7c10c88c0cf14b3257c846a2}} 
+\#define {\bfseries FLAG\+\_\+\+HELP\+\_\+\+SHORT}~3
+\item 
+\mbox{\Hypertarget{embroider_8c_a543edc262dc89320cb5ae1d7125cab6a}\label{embroider_8c_a543edc262dc89320cb5ae1d7125cab6a}} 
+\#define {\bfseries FLAG\+\_\+\+FORMATS}~4
+\item 
+\mbox{\Hypertarget{embroider_8c_a64478dbce225e58239780c80cd4436c5}\label{embroider_8c_a64478dbce225e58239780c80cd4436c5}} 
+\#define {\bfseries FLAG\+\_\+\+FORMATS\+\_\+\+SHORT}~5
+\item 
+\mbox{\Hypertarget{embroider_8c_a406df6c13be29ebe9b82ef1c0e61d64e}\label{embroider_8c_a406df6c13be29ebe9b82ef1c0e61d64e}} 
+\#define {\bfseries FLAG\+\_\+\+QUIET}~6
+\item 
+\mbox{\Hypertarget{embroider_8c_a7e6b98c4c0b01661909ee6b8383318cc}\label{embroider_8c_a7e6b98c4c0b01661909ee6b8383318cc}} 
+\#define {\bfseries FLAG\+\_\+\+QUIET\+\_\+\+SHORT}~7
+\item 
+\mbox{\Hypertarget{embroider_8c_a8c626d782e7f5efc8f4db596b41b2a59}\label{embroider_8c_a8c626d782e7f5efc8f4db596b41b2a59}} 
+\#define {\bfseries FLAG\+\_\+\+VERBOSE}~8
+\item 
+\mbox{\Hypertarget{embroider_8c_a30dd1740241f0ac17a62a7a729c10ee9}\label{embroider_8c_a30dd1740241f0ac17a62a7a729c10ee9}} 
+\#define {\bfseries FLAG\+\_\+\+VERBOSE\+\_\+\+SHORT}~9
+\item 
+\mbox{\Hypertarget{embroider_8c_a55b6c5dccc05b18aefb94fb686617308}\label{embroider_8c_a55b6c5dccc05b18aefb94fb686617308}} 
+\#define {\bfseries FLAG\+\_\+\+VERSION}~10
+\item 
+\mbox{\Hypertarget{embroider_8c_a1be58456ea7e5b7a38ebc02cdc183782}\label{embroider_8c_a1be58456ea7e5b7a38ebc02cdc183782}} 
+\#define {\bfseries FLAG\+\_\+\+VERSION\+\_\+\+SHORT}~11
+\item 
+\mbox{\Hypertarget{embroider_8c_afeeb658f38cdbb9e21df3c4878ece92b}\label{embroider_8c_afeeb658f38cdbb9e21df3c4878ece92b}} 
+\#define {\bfseries FLAG\+\_\+\+CIRCLE}~12
+\item 
+\mbox{\Hypertarget{embroider_8c_a97a16e67c5f13f0bc01f7a78755941fa}\label{embroider_8c_a97a16e67c5f13f0bc01f7a78755941fa}} 
+\#define {\bfseries FLAG\+\_\+\+CIRCLE\+\_\+\+SHORT}~13
+\item 
+\mbox{\Hypertarget{embroider_8c_aed141a0ec5ce8aafbbc7fbf04c7b4c78}\label{embroider_8c_aed141a0ec5ce8aafbbc7fbf04c7b4c78}} 
+\#define {\bfseries FLAG\+\_\+\+ELLIPSE}~14
+\item 
+\mbox{\Hypertarget{embroider_8c_af45a55ab5ac53bc1ae6fd1d0eb5e4a32}\label{embroider_8c_af45a55ab5ac53bc1ae6fd1d0eb5e4a32}} 
+\#define {\bfseries FLAG\+\_\+\+ELLIPSE\+\_\+\+SHORT}~15
+\item 
+\mbox{\Hypertarget{embroider_8c_a4bed7d9e28bf0449e970a99a27f4d8b2}\label{embroider_8c_a4bed7d9e28bf0449e970a99a27f4d8b2}} 
+\#define {\bfseries FLAG\+\_\+\+LINE}~16
+\item 
+\mbox{\Hypertarget{embroider_8c_ad39d2a0a05f8a0aa0f188df0a5ae7349}\label{embroider_8c_ad39d2a0a05f8a0aa0f188df0a5ae7349}} 
+\#define {\bfseries FLAG\+\_\+\+LINE\+\_\+\+SHORT}~17
+\item 
+\mbox{\Hypertarget{embroider_8c_af0123998cd5dcf3a3920a34e8e4952d9}\label{embroider_8c_af0123998cd5dcf3a3920a34e8e4952d9}} 
+\#define {\bfseries FLAG\+\_\+\+POLYGON}~18
+\item 
+\mbox{\Hypertarget{embroider_8c_a6a5e5b08bbc2a728ed34184c33c849dc}\label{embroider_8c_a6a5e5b08bbc2a728ed34184c33c849dc}} 
+\#define {\bfseries FLAG\+\_\+\+POLYGON\+\_\+\+SHORT}~19
+\item 
+\mbox{\Hypertarget{embroider_8c_aab9b4367da6ddf2b410223f3a36aff98}\label{embroider_8c_aab9b4367da6ddf2b410223f3a36aff98}} 
+\#define {\bfseries FLAG\+\_\+\+POLYLINE}~20
+\item 
+\mbox{\Hypertarget{embroider_8c_a6ac413798a1c7f8c6d42eff002341edd}\label{embroider_8c_a6ac413798a1c7f8c6d42eff002341edd}} 
+\#define {\bfseries FLAG\+\_\+\+POLYLINE\+\_\+\+SHORT}~21
+\item 
+\mbox{\Hypertarget{embroider_8c_a249f7e1db7ac11497fa91d738fa68ca4}\label{embroider_8c_a249f7e1db7ac11497fa91d738fa68ca4}} 
+\#define {\bfseries FLAG\+\_\+\+RENDER}~22
+\item 
+\mbox{\Hypertarget{embroider_8c_adc337aaa7056646fab6ef21119aaa39b}\label{embroider_8c_adc337aaa7056646fab6ef21119aaa39b}} 
+\#define {\bfseries FLAG\+\_\+\+RENDER\+\_\+\+SHORT}~23
+\item 
+\mbox{\Hypertarget{embroider_8c_ac7db01dce16a1c3f7162f04b12a94e6a}\label{embroider_8c_ac7db01dce16a1c3f7162f04b12a94e6a}} 
+\#define {\bfseries FLAG\+\_\+\+SATIN}~24
+\item 
+\mbox{\Hypertarget{embroider_8c_a641c237279594698bdad9f81cb247049}\label{embroider_8c_a641c237279594698bdad9f81cb247049}} 
+\#define {\bfseries FLAG\+\_\+\+SATIN\+\_\+\+SHORT}~25
+\item 
+\mbox{\Hypertarget{embroider_8c_af3cdd0c6849b499ebfd062e80b77435d}\label{embroider_8c_af3cdd0c6849b499ebfd062e80b77435d}} 
+\#define {\bfseries FLAG\+\_\+\+STITCH}~26
+\item 
+\mbox{\Hypertarget{embroider_8c_aafa9c92f88b2213f5791c566af9083e3}\label{embroider_8c_aafa9c92f88b2213f5791c566af9083e3}} 
+\#define {\bfseries FLAG\+\_\+\+STITCH\+\_\+\+SHORT}~27
+\item 
+\mbox{\Hypertarget{embroider_8c_a73adba977c278377b55c434b49e191f0}\label{embroider_8c_a73adba977c278377b55c434b49e191f0}} 
+\#define {\bfseries FLAG\+\_\+\+TEST}~28
+\item 
+\mbox{\Hypertarget{embroider_8c_a678935889663a0b2379045d4d87b9102}\label{embroider_8c_a678935889663a0b2379045d4d87b9102}} 
+\#define {\bfseries FLAG\+\_\+\+FULL\+\_\+\+TEST\+\_\+\+SUITE}~29
+\item 
+\mbox{\Hypertarget{embroider_8c_a56ab043938206dcde85ad5978ff6fbc7}\label{embroider_8c_a56ab043938206dcde85ad5978ff6fbc7}} 
+\#define {\bfseries FLAG\+\_\+\+CONVERT\+\_\+\+TEST}~30
+\item 
+\mbox{\Hypertarget{embroider_8c_a1ebfcac640d04fce645045405468e183}\label{embroider_8c_a1ebfcac640d04fce645045405468e183}} 
+\#define {\bfseries FLAG\+\_\+\+HILBERT\+\_\+\+CURVE}~31
+\item 
+\mbox{\Hypertarget{embroider_8c_a19d145f34926ea9075fdf003be1c6244}\label{embroider_8c_a19d145f34926ea9075fdf003be1c6244}} 
+\#define {\bfseries FLAG\+\_\+\+SIERPINSKI\+\_\+\+TRIANGLE}~32
+\item 
+\mbox{\Hypertarget{embroider_8c_aa6cb914042fbf5738294b33392d2e8c1}\label{embroider_8c_aa6cb914042fbf5738294b33392d2e8c1}} 
+\#define {\bfseries FLAG\+\_\+\+FILL}~33
+\item 
+\mbox{\Hypertarget{embroider_8c_aa76bbb413d43c205298cb92db9193b26}\label{embroider_8c_aa76bbb413d43c205298cb92db9193b26}} 
+\#define {\bfseries FLAG\+\_\+\+FILL\+\_\+\+SHORT}~34
+\item 
+\mbox{\Hypertarget{embroider_8c_a5522924b4aeacd58916a720c8f626cf7}\label{embroider_8c_a5522924b4aeacd58916a720c8f626cf7}} 
+\#define {\bfseries FLAG\+\_\+\+SIMULATE}~35
+\item 
+\mbox{\Hypertarget{embroider_8c_aad0493d79106b9b9d6506fa7eb931b48}\label{embroider_8c_aad0493d79106b9b9d6506fa7eb931b48}} 
+\#define {\bfseries FLAG\+\_\+\+COMBINE}~36
+\item 
+\mbox{\Hypertarget{embroider_8c_a97ba97bc8789baadc6b8e8a3a3c7b6f2}\label{embroider_8c_a97ba97bc8789baadc6b8e8a3a3c7b6f2}} 
+\#define {\bfseries FLAG\+\_\+\+CROSS\+\_\+\+STITCH}~37
+\item 
+\mbox{\Hypertarget{embroider_8c_acfaed69f0c0e2c77b6aa4ccc5a7844fb}\label{embroider_8c_acfaed69f0c0e2c77b6aa4ccc5a7844fb}} 
+\#define {\bfseries FLAG\+\_\+\+POSTSCRIPT}~38
+\item 
+\mbox{\Hypertarget{embroider_8c_a83f5e55cc591e1ec9078a9d0ae71e3c4}\label{embroider_8c_a83f5e55cc591e1ec9078a9d0ae71e3c4}} 
+\#define {\bfseries FLAG\+\_\+\+REPORT}~39
+\item 
+\mbox{\Hypertarget{embroider_8c_a974a0ca27690416e48b681eb609b79e6}\label{embroider_8c_a974a0ca27690416e48b681eb609b79e6}} 
+\#define {\bfseries FLAG\+\_\+\+REPORT\+\_\+\+SHORT}~40
+\item 
+\mbox{\Hypertarget{embroider_8c_aaea442f582a9863b593b63383773b548}\label{embroider_8c_aaea442f582a9863b593b63383773b548}} 
+\#define {\bfseries NUM\+\_\+\+FLAGS}~41
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{embroider_8c_ae8605e2b78cd4a81b6c6b5c30cb7366a}\label{embroider_8c_ae8605e2b78cd4a81b6c6b5c30cb7366a}} 
+void {\bfseries usage} (void)
+\item 
+\mbox{\Hypertarget{embroider_8c_a0ddf1224851353fc92bfbff6f499fa97}\label{embroider_8c_a0ddf1224851353fc92bfbff6f499fa97}} 
+int {\bfseries main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{embroider_8c_a46c287029252185befd6e6a642e96f27}\label{embroider_8c_a46c287029252185befd6e6a642e96f27}} 
+const char $\ast$ {\bfseries help\+\_\+msg} \mbox{[}$\,$\mbox{]}
+\item 
+const char $\ast$ \mbox{\hyperlink{embroider_8c_a375e8b3f51efbbcd18c4d7e7e33c0f75}{welcome\+\_\+message}}
+\item 
+\mbox{\Hypertarget{embroider_8c_a74c475f4faff7b6fd62924c6185e24c8}\label{embroider_8c_a74c475f4faff7b6fd62924c6185e24c8}} 
+const \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{Emb\+String}} {\bfseries flag\+\_\+list} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Libembroidery 1.\+0.\+0-\/alpha \href{https://www.libembroidery.org}{\texttt{ https\+://www.\+libembroidery.\+org}}
+
+A library for reading, writing, altering and otherwise processing machine embroidery files and designs.
+
+Also, the core library supporting the Embroidermodder Project\textquotesingle{}s family of machine embroidery interfaces.
+
+\DoxyHorRuler{0}
+
+
+Copyright 2018-\/2025 The Embroidermodder Team Licensed under the terms of the zlib license.
+
+\DoxyHorRuler{0}
+
+
+Frontend for compiling as the command line tool embroider. 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{embroider_8c_a375e8b3f51efbbcd18c4d7e7e33c0f75}\label{embroider_8c_a375e8b3f51efbbcd18c4d7e7e33c0f75}} 
+\index{embroider.c@{embroider.c}!welcome\_message@{welcome\_message}}
+\index{welcome\_message@{welcome\_message}!embroider.c@{embroider.c}}
+\doxysubsubsection{\texorpdfstring{welcome\_message}{welcome\_message}}
+{\footnotesize\ttfamily const char$\ast$ welcome\+\_\+message}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \textcolor{stringliteral}{"{}EMBROIDER\(\backslash\)n"{}}}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}    A command line program for machine embroidery.\(\backslash\)n"{}}}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}    Copyright 2018-\/2024 The Embroidermodder Team\(\backslash\)n"{}}}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}    Licensed under the terms of the zlib license.\(\backslash\)n"{}}}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}    https://github.com/Embroidermodder/libembroidery\(\backslash\)n"{}}}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}    https://www.libembroidery.org\(\backslash\)n"{}}}
+
+\end{DoxyCode}

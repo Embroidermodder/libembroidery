@@ -1,0 +1,170 @@
+\hypertarget{designs_8c}{}\doxysection{src/designs.c File Reference}
+\label{designs_8c}\index{src/designs.c@{src/designs.c}}
+
+
+Parametric descriptions of common curves used in embroidery patterns.  
+
+
+{\ttfamily \#include \char`\"{}embroidery.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{designs_8c_ae21b0f366cea907a3dffb5eafb39e500}{MODE\+\_\+\+NUM\+\_\+\+POINTS}}~0
+\item 
+\#define \mbox{\hyperlink{designs_8c_a39ea09bf106c5b0eb07c9f409a4958c9}{MODE\+\_\+\+XSCALE}}~1
+\item 
+\#define \mbox{\hyperlink{designs_8c_a6a406d14ff7c97f1463c385a6492aaa2}{MODE\+\_\+\+YSCALE}}~2
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{designs_8c_a4a535031619f63347f8ac7cd6f16b188}{sgn}} (float x)
+\begin{DoxyCompactList}\small\item\em The sign of a real number. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{designs_8c_a835ea04f58f1ddf40f09b811df6a5ff0}{theta}} (float x)
+\begin{DoxyCompactList}\small\item\em Indicator function that is 1 for all values greater than 0. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{embroidery_8h_a4071f7b235df13d44d6ad4f77ee771db}{Design}} \mbox{\hyperlink{designs_8c_a780a8be3791541ccfc2dcadd269151d2}{heart4}}
+\begin{DoxyCompactList}\small\item\em Dolphin curve. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{embroidery_8h_a4071f7b235df13d44d6ad4f77ee771db}{Design}} \mbox{\hyperlink{designs_8c_ab392e18b7eabfb0aca8270919d782da8}{heart5}}
+\item 
+\mbox{\hyperlink{embroidery_8h_a4071f7b235df13d44d6ad4f77ee771db}{Design}} \mbox{\hyperlink{designs_8c_afb69eaf5f3bd388e8d45a8056203f779}{designs}} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Parametric descriptions of common curves used in embroidery patterns. 
+
+libembroidery\+: designs
+
+Copyright 2018-\/2025 The Embroidermodder Team libembroidery is Open Source Software, see LICENSE.\+md for licensing terms.
+
+Read the reference manuals (\href{https://www.libembroidery.org/documentation}{\texttt{ https\+://www.\+libembroidery.\+org/documentation}}) for advice on altering this file. 
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{designs_8c_ae21b0f366cea907a3dffb5eafb39e500}\label{designs_8c_ae21b0f366cea907a3dffb5eafb39e500}} 
+\index{designs.c@{designs.c}!MODE\_NUM\_POINTS@{MODE\_NUM\_POINTS}}
+\index{MODE\_NUM\_POINTS@{MODE\_NUM\_POINTS}!designs.c@{designs.c}}
+\doxysubsubsection{\texorpdfstring{MODE\_NUM\_POINTS}{MODE\_NUM\_POINTS}}
+{\footnotesize\ttfamily \#define MODE\+\_\+\+NUM\+\_\+\+POINTS~0}
+
+How many points to use in the generated curve. \mbox{\Hypertarget{designs_8c_a39ea09bf106c5b0eb07c9f409a4958c9}\label{designs_8c_a39ea09bf106c5b0eb07c9f409a4958c9}} 
+\index{designs.c@{designs.c}!MODE\_XSCALE@{MODE\_XSCALE}}
+\index{MODE\_XSCALE@{MODE\_XSCALE}!designs.c@{designs.c}}
+\doxysubsubsection{\texorpdfstring{MODE\_XSCALE}{MODE\_XSCALE}}
+{\footnotesize\ttfamily \#define MODE\+\_\+\+XSCALE~1}
+
+\mbox{\Hypertarget{designs_8c_a6a406d14ff7c97f1463c385a6492aaa2}\label{designs_8c_a6a406d14ff7c97f1463c385a6492aaa2}} 
+\index{designs.c@{designs.c}!MODE\_YSCALE@{MODE\_YSCALE}}
+\index{MODE\_YSCALE@{MODE\_YSCALE}!designs.c@{designs.c}}
+\doxysubsubsection{\texorpdfstring{MODE\_YSCALE}{MODE\_YSCALE}}
+{\footnotesize\ttfamily \#define MODE\+\_\+\+YSCALE~2}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{designs_8c_a4a535031619f63347f8ac7cd6f16b188}\label{designs_8c_a4a535031619f63347f8ac7cd6f16b188}} 
+\index{designs.c@{designs.c}!sgn@{sgn}}
+\index{sgn@{sgn}!designs.c@{designs.c}}
+\doxysubsubsection{\texorpdfstring{sgn()}{sgn()}}
+{\footnotesize\ttfamily int sgn (\begin{DoxyParamCaption}\item[{float}]{x }\end{DoxyParamCaption})}
+
+
+
+The sign of a real number. 
+
+Basic mathematical function that goes by the same name in most texts. Often defined as x/$\vert$x$\vert$ for x not equal to 0 and 0 otherwise. \mbox{\Hypertarget{designs_8c_a835ea04f58f1ddf40f09b811df6a5ff0}\label{designs_8c_a835ea04f58f1ddf40f09b811df6a5ff0}} 
+\index{designs.c@{designs.c}!theta@{theta}}
+\index{theta@{theta}!designs.c@{designs.c}}
+\doxysubsubsection{\texorpdfstring{theta()}{theta()}}
+{\footnotesize\ttfamily int theta (\begin{DoxyParamCaption}\item[{float}]{x }\end{DoxyParamCaption})}
+
+
+
+Indicator function that is 1 for all values greater than 0. 
+
+Theta often occurs in parametric function descriptions of curves, similar to the general indicator function that takes a . 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{designs_8c_afb69eaf5f3bd388e8d45a8056203f779}\label{designs_8c_afb69eaf5f3bd388e8d45a8056203f779}} 
+\index{designs.c@{designs.c}!designs@{designs}}
+\index{designs@{designs}!designs.c@{designs.c}}
+\doxysubsubsection{\texorpdfstring{designs}{designs}}
+{\footnotesize\ttfamily \mbox{\hyperlink{embroidery_8h_a4071f7b235df13d44d6ad4f77ee771db}{Design}} designs\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \{}
+\DoxyCodeLine{        .command = END\_SYMBOL}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{designs_8c_a780a8be3791541ccfc2dcadd269151d2}\label{designs_8c_a780a8be3791541ccfc2dcadd269151d2}} 
+\index{designs.c@{designs.c}!heart4@{heart4}}
+\index{heart4@{heart4}!designs.c@{designs.c}}
+\doxysubsubsection{\texorpdfstring{heart4}{heart4}}
+{\footnotesize\ttfamily \mbox{\hyperlink{embroidery_8h_a4071f7b235df13d44d6ad4f77ee771db}{Design}} heart4}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    .command = \textcolor{stringliteral}{"{}heart4"{}},}
+\DoxyCodeLine{    .lower = 0.0,}
+\DoxyCodeLine{    .upper = 2.0,}
+\DoxyCodeLine{    .num\_points = 512,}
+\DoxyCodeLine{    .min\_points = 64,}
+\DoxyCodeLine{    .max\_points = 8192,}
+\DoxyCodeLine{    .xscale = 0.04,}
+\DoxyCodeLine{    .yscale = 0.04,}
+\DoxyCodeLine{    .parameter = \textcolor{stringliteral}{"{}t"{}},}
+\DoxyCodeLine{    .x = \textcolor{stringliteral}{"{}/t exch def"{}} }
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}(*"{}} }
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}(cos t)"{}} }
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}((sin(t)*sqrt(abs(cos(t))))/(sin(t)+7/5) -\/ 2*sin(t) + 2)"{}} }
+\DoxyCodeLine{        \textcolor{stringliteral}{"{})"{}},}
+\DoxyCodeLine{    .y = \textcolor{stringliteral}{"{}/t exch def"{}} }
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}(*"{}} }
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}(sin t)"{}} }
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}((sin(t)*sqrt(abs(cos(t))))/(sin(t)+7/5) -\/ 2*sin(t) + 2)"{}} }
+\DoxyCodeLine{        \textcolor{stringliteral}{"{})"{}}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Dolphin curve. 
+
+Command\+: DOLPHIN. \begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000001}{Todo}}]min\+:64 max\+:8192 \end{DoxyRefDesc}
+
+
+Parametric heart design based on postscript. \mbox{\Hypertarget{designs_8c_ab392e18b7eabfb0aca8270919d782da8}\label{designs_8c_ab392e18b7eabfb0aca8270919d782da8}} 
+\index{designs.c@{designs.c}!heart5@{heart5}}
+\index{heart5@{heart5}!designs.c@{designs.c}}
+\doxysubsubsection{\texorpdfstring{heart5}{heart5}}
+{\footnotesize\ttfamily \mbox{\hyperlink{embroidery_8h_a4071f7b235df13d44d6ad4f77ee771db}{Design}} heart5}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    .command = \textcolor{stringliteral}{"{}heart5"{}},}
+\DoxyCodeLine{    .lower = 0.0,}
+\DoxyCodeLine{    .upper = 2.0,}
+\DoxyCodeLine{    .num\_points = 512,}
+\DoxyCodeLine{    .min\_points = 64,}
+\DoxyCodeLine{    .max\_points = 8192,}
+\DoxyCodeLine{    .xscale = 0.04,}
+\DoxyCodeLine{    .yscale = 0.04,}
+\DoxyCodeLine{    .parameter = \textcolor{stringliteral}{"{}t"{}},}
+\DoxyCodeLine{    .x = \textcolor{stringliteral}{"{}16 t sin dup dup mul mul mul"{}},}
+\DoxyCodeLine{    .y = \textcolor{stringliteral}{"{}13 t cos mul "{}} }
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}5 2 t mul cos mul sub "{}} }
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}2 3 t mul cos mul sub "{}} }
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}4 t mul cos sub"{}}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

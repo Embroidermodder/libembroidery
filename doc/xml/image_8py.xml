@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="image_8py" kind="file" language="Python">
+    <compoundname>image.py</compoundname>
+    <innerclass refid="classembroidery_1_1image_1_1Image" prot="public">embroidery::image::Image</innerclass>
+    <innernamespace refid="namespaceembroidery">embroidery</innernamespace>
+    <innernamespace refid="namespaceembroidery_1_1image">embroidery::image</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1" refid="namespaceembroidery_1_1image" refkind="compound"><highlight class="comment">#!/usr/bin/env<sp/>python3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="stringliteral">r&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="4"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>Embroidermodder<sp/>2.</highlight></codeline>
+<codeline lineno="5"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="6"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>------------------------------------------------------------</highlight></codeline>
+<codeline lineno="7"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="8"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>Copyright<sp/>2013-2022<sp/>The<sp/>Embroidermodder<sp/>Team</highlight></codeline>
+<codeline lineno="9"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>Embroidermodder<sp/>2<sp/></highlight><highlight class="keywordflow">is</highlight><highlight class="normal"><sp/>Open<sp/>Source<sp/>Software.</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/>See<sp/>LICENSE<sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>licensing<sp/>terms.</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/>------------------------------------------------------------</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="stringliteral">&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="15"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="16"><highlight class="stringliteral">from<sp/>libembroider.tools<sp/>import<sp/>Pen,<sp/>debug_message</highlight></codeline>
+<codeline lineno="17"><highlight class="stringliteral">from<sp/>libembroidery.rect<sp/>import<sp/>Rect</highlight></codeline>
+<codeline lineno="18"><highlight class="stringliteral">from<sp/>libembroidery.tools<sp/>import<sp/>closest_vector</highlight></codeline>
+<codeline lineno="19"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="20"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="21" refid="classembroidery_1_1image_1_1Image" refkind="compound"><highlight class="stringliteral">class<sp/>Image():</highlight></codeline>
+<codeline lineno="22"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>r&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="23"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>The<sp/>Image<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">definition.</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="25"><highlight class="stringliteral"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="classembroidery_1_1image_1_1Image_1a627c94ccbc6b6e1a1c1193aef476f961" kindref="member">__init__</ref>(self,<sp/>position,<sp/>width,<sp/>height,<sp/>scene,<sp/>fname,<sp/>bg=&quot;#000000&quot;):</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">r&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="27"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="28"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>debug_message(&quot;Image<sp/>Constructor()&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a687b713621c5e3e0d2df075d5ac5841d" kindref="member">type</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Image&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a194ee6dd4b1d21100bee068b07400b8e" kindref="member">selectable</ref><sp/>=<sp/></highlight><highlight class="keyword">True</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1ae152642872a78b70253f3a101bc54351" kindref="member">rubber_points</ref><sp/>=<sp/>{}</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a7a18420910ea0c46c34f659b2715d8d4" kindref="member">rubber_mode</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;IMAGE&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a0f20dea33f2b8e757b861db69d68e965" kindref="member">scene</ref><sp/>=<sp/>scene</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1ad959d7a916f88615e4d33d6cdf52d54a" kindref="member">position</ref><sp/>=<sp/>position</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" kindref="member">rect</ref><sp/>=<sp/>Rect(position=self.<ref refid="classembroidery_1_1image_1_1Image_1ad959d7a916f88615e4d33d6cdf52d54a" kindref="member">position</ref>,<sp/>size=(width,<sp/>height))</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1ac5436457263e990b5ab820b7134bb39e" kindref="member">rgb</ref><sp/>=<sp/>bg</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a3212aad5c62a0335fca12da13e51dd2d" kindref="member">scale</ref><sp/>=<sp/>1.0</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a0c3747a1dbc5e1908e65534cc7127636" kindref="member">rotation</ref><sp/>=<sp/>0.0</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a08184c8c3e4438cdf4be6dab152c405b" kindref="member">pen</ref><sp/>=<sp/>Pen()</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1ac190aac9c256c4066b23a7cd14df118c" kindref="member">update_path</ref>()</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">copy(self,<sp/>obj,<sp/>parent):</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;<sp/>.<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>debug_message(</highlight><highlight class="stringliteral">&quot;Image<sp/>Constructor()&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>img<sp/>=<sp/><ref refid="classembroidery_1_1image_1_1Image" kindref="compound">Image</ref>(self.<ref refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" kindref="member">rect</ref>.position_x,<sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" kindref="member">rect</ref>.position_y,</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" kindref="member">rect</ref>.width,<sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" kindref="member">rect</ref>.height,<sp/>rgb=self.<ref refid="classembroidery_1_1image_1_1Image_1ac5436457263e990b5ab820b7134bb39e" kindref="member">rgb</ref>,</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>line_type=self.line_type,<sp/>line_weight=self.line_weight)</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>img.setRotation(self.<ref refid="classembroidery_1_1image_1_1Image_1a0c3747a1dbc5e1908e65534cc7127636" kindref="member">rotation</ref>())</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>img</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">area(self):</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">r&quot;<sp/>Returns<sp/>the<sp/>area<sp/>covered<sp/>by<sp/>the<sp/>image.<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>self.width<sp/>*<sp/>self.height</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">set_rect(self,<sp/>position,<sp/>size):</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;<sp/>.<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" kindref="member">rect</ref><sp/>=<sp/>Rect(position=position,<sp/>size=size)</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1ac190aac9c256c4066b23a7cd14df118c" kindref="member">update_path</ref>()</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="classembroidery_1_1image_1_1Image_1ac190aac9c256c4066b23a7cd14df118c" kindref="member">update_path</ref>(self):</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">r&quot;&quot;&quot;<sp/>NOTE:<sp/>Reverse<sp/>the<sp/>path<sp/>so<sp/>that<sp/>the<sp/>inside<sp/>area<sp/>isn&apos;t</highlight></codeline>
+<codeline lineno="62"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>considered<sp/>part<sp/>of<sp/>the<sp/>rectangle.</highlight></codeline>
+<codeline lineno="63"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="64"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>r<sp/>=<sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" kindref="member">rect</ref></highlight></codeline>
+<codeline lineno="65"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a869c67d6f55bd853bfdd9411e1d6a0ad" kindref="member">path</ref><sp/>=<sp/>[</highlight></codeline>
+<codeline lineno="66"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[&quot;move_to&quot;</highlight><highlight class="normal">,<sp/>r.bottom_left()],</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[</highlight><highlight class="stringliteral">&quot;line_to&quot;</highlight><highlight class="normal">,<sp/>r.bottom_right()],</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[</highlight><highlight class="stringliteral">&quot;line_to&quot;</highlight><highlight class="normal">,<sp/>r.top_right()],</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[</highlight><highlight class="stringliteral">&quot;line_to&quot;</highlight><highlight class="normal">,<sp/>r.top_left()],</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[</highlight><highlight class="stringliteral">&quot;line_to&quot;</highlight><highlight class="normal">,<sp/>r.bottom_left()],</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[</highlight><highlight class="stringliteral">&quot;line_to&quot;</highlight><highlight class="normal">,<sp/>r.top_left()],</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[</highlight><highlight class="stringliteral">&quot;line_to&quot;</highlight><highlight class="normal">,<sp/>r.top_right()],</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[</highlight><highlight class="stringliteral">&quot;line_to&quot;</highlight><highlight class="normal">,<sp/>r.bottom_right()],</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[</highlight><highlight class="stringliteral">&quot;move_to&quot;</highlight><highlight class="normal">,<sp/>r.bottom_left()]</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>]</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">paint(self,<sp/>painter,<sp/>option,<sp/>widget):</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;<sp/>.<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>obj_scene<sp/>=<sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a0f20dea33f2b8e757b861db69d68e965" kindref="member">scene</ref></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">not</highlight><highlight class="normal"><sp/>obj_scene:</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>paint_pen<sp/>=<sp/>Pen()</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>painter.pen<sp/>=<sp/>paint_pen</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a1c5e476f4e4ff0a9fa490d90082d8197" kindref="member">update_rubber</ref>(painter)</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>obj_scene.property(</highlight><highlight class="stringliteral">&quot;ENABLE_LWT&quot;</highlight><highlight class="normal">):</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>paint_pen<sp/>=<sp/>self.lwt_pen()</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="stringliteral">&quot;State_Selected&quot;</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>option.state:</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>paint_pen.set_style(</highlight><highlight class="stringliteral">&quot;dashed&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>painter.pen<sp/>=<sp/>paint_pen</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>painter.draw_rect(self.<ref refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" kindref="member">rect</ref>)</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">update_rubber(self,<sp/>painter):</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;<sp/>.<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a7a18420910ea0c46c34f659b2715d8d4" kindref="member">rubber_mode</ref><sp/>==<sp/></highlight><highlight class="stringliteral">&quot;IMAGE&quot;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>debug_message(</highlight><highlight class="stringliteral">&quot;IMAGE&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>scene_start_point<sp/>=<sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1ae152642872a78b70253f3a101bc54351" kindref="member">rubber_points</ref>[</highlight><highlight class="stringliteral">&quot;IMAGE_START&quot;</highlight><highlight class="normal">]</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>scene_end_point<sp/>=<sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1ae152642872a78b70253f3a101bc54351" kindref="member">rubber_points</ref>[</highlight><highlight class="stringliteral">&quot;IMAGE_END&quot;</highlight><highlight class="normal">]</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" kindref="member">rect</ref><sp/>=<sp/>Rect(scene_start_point,<sp/>scene_end_point)</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1ac190aac9c256c4066b23a7cd14df118c" kindref="member">update_path</ref>()</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">elif</highlight><highlight class="normal"><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a7a18420910ea0c46c34f659b2715d8d4" kindref="member">rubber_mode</ref><sp/>==<sp/></highlight><highlight class="stringliteral">&quot;GRIP&quot;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;<sp/>TODO:<sp/>self.update_rubber()<sp/>gripping<sp/>for<sp/>Image.<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>debug_message(</highlight><highlight class="stringliteral">&quot;GRIP&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">vulcanize(self):</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;<sp/>.<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>debug_message(</highlight><highlight class="stringliteral">&quot;Image<sp/>vulcanize()&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a1c5e476f4e4ff0a9fa490d90082d8197" kindref="member">update_rubber</ref>()</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a7a18420910ea0c46c34f659b2715d8d4" kindref="member">rubber_mode</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;OFF&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">mouse_snap_point(self,<sp/>mouse_point):</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;<sp/>Returns<sp/>the<sp/>closest<sp/>snap<sp/>point<sp/>to<sp/>the<sp/>mouse<sp/>point.<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>all_points<sp/>=<sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a2c66e0d80f54eaa821abf1a92f16b2d4" kindref="member">all_grip_points</ref>()</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>closest_vector(all_points,<sp/>mouse_point)</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">all_grip_points(self):</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;<sp/>.<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gripPoints<sp/>=<sp/>[</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" kindref="member">rect</ref>.top_left(),</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" kindref="member">rect</ref>.top_right(),</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" kindref="member">rect</ref>.bottom_left(),</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" kindref="member">rect</ref>.bottom_right()</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>]</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>gripPoints</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">grip_edit(self,<sp/>before,<sp/>after):</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;<sp/>TODO:<sp/>grip_edit()<sp/>for<sp/>Image<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="classembroidery_1_1image_1_1Image_1aa39070e72d93f577313458cf37ac963a" kindref="member">draw</ref>(self,<sp/>description):</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">r&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="134"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>This<sp/></highlight><highlight class="keywordflow">is</highlight><highlight class="normal"><sp/>similar<sp/>to<sp/>using<sp/>an<sp/>svg<sp/>path,<sp/>we<sp/>can<sp/>blend<sp/>these<sp/>systems</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>later.</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>int_buffer[4]</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>icon<sp/>=<sp/>0</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>painter<sp/>=<sp/>0</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>QPen<sp/>pen</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>get_n_ints(description,<sp/>int_buffer,<sp/>2)</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>icon<sp/>=<sp/>new<sp/>QPixmap(int_buffer[0],<sp/>int_buffer[1])</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>painter<sp/>=<sp/>new<sp/>QPainter(icon)</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pen.setWidth(10)</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>ptr<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>description:</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Other<sp/>functions<sp/>we<sp/>can<sp/>use<sp/>are<sp/>eraseRect,<sp/>drawArc<sp/>etc.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>https://doc.qt.io/qt-5/qpainter.html</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strncmp(ptr,<sp/></highlight><highlight class="stringliteral">&quot;rect&quot;</highlight><highlight class="normal">,<sp/>4)==0)<sp/>{</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pen.setColor(Color(QRgb(0x000000)))</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>painter.set_pen(pen)</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>get_n_ints(ptr+5,<sp/>int_buffer,<sp/>4)</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>painter.fillRect(int_buffer[0],<sp/>int_buffer[1],</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>int_buffer[2],<sp/>int_buffer[3],<sp/>Qt_SolidPattern);</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="155"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>icon<sp/>=<sp/>&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>icon</highlight></codeline>
+    </programlisting>
+    <location file="python/embroidery/image.py"/>
+  </compounddef>
+</doxygen>

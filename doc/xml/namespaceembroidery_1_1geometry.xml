@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="namespaceembroidery_1_1geometry" kind="namespace" language="Python">
+    <compoundname>embroidery::geometry</compoundname>
+    <innerclass refid="classembroidery_1_1geometry_1_1Arc" prot="public">embroidery::geometry::Arc</innerclass>
+    <innerclass refid="classembroidery_1_1geometry_1_1Circle" prot="public">embroidery::geometry::Circle</innerclass>
+    <innerclass refid="classembroidery_1_1geometry_1_1DimLeader" prot="public">embroidery::geometry::DimLeader</innerclass>
+    <innerclass refid="classembroidery_1_1geometry_1_1Ellipse" prot="public">embroidery::geometry::Ellipse</innerclass>
+    <innerclass refid="classembroidery_1_1geometry_1_1Line" prot="public">embroidery::geometry::Line</innerclass>
+    <innerclass refid="classembroidery_1_1geometry_1_1Path" prot="public">embroidery::geometry::Path</innerclass>
+    <innerclass refid="classembroidery_1_1geometry_1_1Point" prot="public">embroidery::geometry::Point</innerclass>
+    <innerclass refid="classembroidery_1_1geometry_1_1Polygon" prot="public">embroidery::geometry::Polygon</innerclass>
+    <innerclass refid="classembroidery_1_1geometry_1_1PolyLine" prot="public">embroidery::geometry::PolyLine</innerclass>
+    <innerclass refid="classembroidery_1_1geometry_1_1Rect" prot="public">embroidery::geometry::Rect</innerclass>
+    <innerclass refid="classembroidery_1_1geometry_1_1Rotate" prot="public">embroidery::geometry::Rotate</innerclass>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceembroidery_1_1geometry_1a2cf3ca52a9eba5112708f5d3f3edcda6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.vector_distance</definition>
+        <argsstring>(vector_a, vector_b)</argsstring>
+        <name>vector_distance</name>
+        <qualifiedname>embroidery.geometry.vector_distance</qualifiedname>
+        <param>
+          <type>vector_a</type>
+          <defname>vector_a</defname>
+        </param>
+        <param>
+          <type>vector_b</type>
+          <defname>vector_b</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="575" column="1" bodyfile="python/embroidery/geometry.py" bodystart="575" bodyend="580"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>    Embroidermodder 2.
+
+    ------------------------------------------------------------
+
+    Copyright 2013-2022 The Embroidermodder Team
+    Embroidermodder 2 is Open Source Software.
+    See LICENSE for licensing terms.
+
+    ------------------------------------------------------------</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/geometry.py" line="1" column="1"/>
+  </compounddef>
+</doxygen>

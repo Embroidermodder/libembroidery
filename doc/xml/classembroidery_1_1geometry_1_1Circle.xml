@@ -1,0 +1,1155 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1geometry_1_1Circle" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::geometry::Circle</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1ac2b35f61193487b5a05dbd2e2e2ee9d2" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::mode</definition>
+        <argsstring></argsstring>
+        <name>mode</name>
+        <qualifiedname>embroidery.geometry.Circle.mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1101" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1ab579be97a51c6097f1f53a943a535573" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::point1</definition>
+        <argsstring></argsstring>
+        <name>point1</name>
+        <qualifiedname>embroidery.geometry.Circle.point1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1102" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1a538c1104d805980be5fa5b22ca13f97a" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::point2</definition>
+        <argsstring></argsstring>
+        <name>point2</name>
+        <qualifiedname>embroidery.geometry.Circle.point2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1103" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1af766ca3e63eccc77300011286a3e9c1b" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::point3</definition>
+        <argsstring></argsstring>
+        <name>point3</name>
+        <qualifiedname>embroidery.geometry.Circle.point3</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1104" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1a7c32d1c935aa2b334589d4e09eafc743" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>embroidery.geometry.Circle.type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1105" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1a9d040686e2b6cd039a15031346fbbc6f" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::selectable</definition>
+        <argsstring></argsstring>
+        <name>selectable</name>
+        <qualifiedname>embroidery.geometry.Circle.selectable</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1106" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1a863eb88c0cb902bbd9b1898a4effbade" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::radius</definition>
+        <argsstring></argsstring>
+        <name>radius</name>
+        <qualifiedname>embroidery.geometry.Circle.radius</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1107" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1ab3d56f261833b4e0d6d6b6d867a53b43" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::center</definition>
+        <argsstring></argsstring>
+        <name>center</name>
+        <qualifiedname>embroidery.geometry.Circle.center</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1108" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1a2bc66bd079e31ef99830f56c5b214018" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::promptPrefix</definition>
+        <argsstring></argsstring>
+        <name>promptPrefix</name>
+        <qualifiedname>embroidery.geometry.Circle.promptPrefix</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1110" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1110" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1abe06fbfaaf09f4b3a5c263504ec5e834" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::pen</definition>
+        <argsstring></argsstring>
+        <name>pen</name>
+        <qualifiedname>embroidery.geometry.Circle.pen</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1111" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1111" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1a1cc8d3f799b35f21cbdd7b118d1bc687" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::lwt_pen</definition>
+        <argsstring></argsstring>
+        <name>lwt_pen</name>
+        <qualifiedname>embroidery.geometry.Circle.lwt_pen</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1112" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1112" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1abd1285e5db9b4e1ff7a1c941f9445d2d" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::obj_id</definition>
+        <argsstring></argsstring>
+        <name>obj_id</name>
+        <qualifiedname>embroidery.geometry.Circle.obj_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1113" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1113" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1a2f617ce786591e8ee1b18e853e992c12" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::rubber_mode</definition>
+        <argsstring></argsstring>
+        <name>rubber_mode</name>
+        <qualifiedname>embroidery.geometry.Circle.rubber_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1114" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1a41ac12e90cf970d9523972ace8e01655" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::rubber_points</definition>
+        <argsstring></argsstring>
+        <name>rubber_points</name>
+        <qualifiedname>embroidery.geometry.Circle.rubber_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1115" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1115" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1aaf556d3b23bd427c6e9ce54c7d377af1" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::rubber_texts</definition>
+        <argsstring></argsstring>
+        <name>rubber_texts</name>
+        <qualifiedname>embroidery.geometry.Circle.rubber_texts</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1116" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1116" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1a788598fd2d959fa82fbbb490db49541c" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::path</definition>
+        <argsstring></argsstring>
+        <name>path</name>
+        <qualifiedname>embroidery.geometry.Circle.path</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1131" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1131" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1a4b590ad087b1dfb4150a3de7791e857e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::obj_line</definition>
+        <argsstring></argsstring>
+        <name>obj_line</name>
+        <qualifiedname>embroidery.geometry.Circle.obj_line</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1156" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1156" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1a0836dccd18f7059e27405e09409e5356" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::rect</definition>
+        <argsstring></argsstring>
+        <name>rect</name>
+        <qualifiedname>embroidery.geometry.Circle.rect</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1311" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1311" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1a02c0d1e7a9a66700066b98e498bc40d7" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::rad</definition>
+        <argsstring></argsstring>
+        <name>rad</name>
+        <qualifiedname>embroidery.geometry.Circle.rad</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1617" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1617" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Circle_1a0d5e5b16185ad8560ebe797db32e5b32" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Circle::dia</definition>
+        <argsstring></argsstring>
+        <name>dia</name>
+        <qualifiedname>embroidery.geometry.Circle.dia</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1635" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1635" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1afa6ba0f225e3b1b291ebf58e931b4985" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.__init__</definition>
+        <argsstring>(self, center, radius, pen=tools.Pen())</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.geometry.Circle.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>center</type>
+          <defname>center</defname>
+        </param>
+        <param>
+          <type>radius</type>
+          <defname>radius</defname>
+        </param>
+        <param>
+          <type>pen</type>
+          <defname>pen</defname>
+          <defval><ref refid="classembroidery_1_1tools_1_1Pen" kindref="compound">tools.Pen</ref>()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1098" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1098" bodyend="1118"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a8644c630af0bc72c7e48b99f7490ba8a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.copy</definition>
+        <argsstring>(self)</argsstring>
+        <name>copy</name>
+        <qualifiedname>embroidery.geometry.Circle.copy</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1119" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1119" bodyend="1123"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a632e2f32219329c3a9fb71e67f22ec54" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.rect</definition>
+        <argsstring>(self)</argsstring>
+        <name>rect</name>
+        <qualifiedname>embroidery.geometry.Circle.rect</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1124" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1124" bodyend="1128"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a2f5cd985fd457025c8e057a2a5785187" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.update_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>update_path</name>
+        <qualifiedname>embroidery.geometry.Circle.update_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1129" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1129" bodyend="1132"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a9aa6fe4d23b1bee60c42a32ba6556fde" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.set_rect</definition>
+        <argsstring>(self, x, y, w, h)</argsstring>
+        <name>set_rect</name>
+        <qualifiedname>embroidery.geometry.Circle.set_rect</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <param>
+          <type>w</type>
+          <defname>w</defname>
+        </param>
+        <param>
+          <type>h</type>
+          <defname>h</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>def set_rect(self, r):
+    p = []
+    p.add_rect(r)
+    self.set_path(p)
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1133" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1133" bodyend="1143"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a6573ba676971645b90382a5077407847" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.set_line</definition>
+        <argsstring>(self, li)</argsstring>
+        <name>set_line</name>
+        <qualifiedname>embroidery.geometry.Circle.set_line</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>li</type>
+          <defname>li</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>p = []
+p.move_to(self.point1)
+p.line_to(self.point2)
+self.set_path(p)
+self.obj_line.set_line(self.point1, self.point2)
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1144" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1144" bodyend="1157"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a6ae13eeb2a78ebf3d748394045c12fac" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.set_path</definition>
+        <argsstring>(self, p)</argsstring>
+        <name>set_path</name>
+        <qualifiedname>embroidery.geometry.Circle.set_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>p</type>
+          <defname>p</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1158" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1158" bodyend="1162"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a1cb9bc7674e7b51b47b80e28ce856c35" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.set_color</definition>
+        <argsstring>(self, color)</argsstring>
+        <name>set_color</name>
+        <qualifiedname>embroidery.geometry.Circle.set_color</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>color</type>
+          <defname>color</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1163" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1163" bodyend="1168"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a8ced36f8550317b78e543c0c87baa467" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.set_color_rgb</definition>
+        <argsstring>(self, rgb)</argsstring>
+        <name>set_color_rgb</name>
+        <qualifiedname>embroidery.geometry.Circle.set_color_rgb</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>rgb</type>
+          <defname>rgb</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1169" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1169" bodyend="1173"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a743f29fe4d2f420e9d7d47a70436f7cb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.set_line_type</definition>
+        <argsstring>(self, line_type)</argsstring>
+        <name>set_line_type</name>
+        <qualifiedname>embroidery.geometry.Circle.set_line_type</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>line_type</type>
+          <defname>line_type</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1174" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1174" bodyend="1178"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a0eec16e72eda26cb81df61b5900b8680" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.set_line_weight</definition>
+        <argsstring>(self, line_weight)</argsstring>
+        <name>set_line_weight</name>
+        <qualifiedname>embroidery.geometry.Circle.set_line_weight</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>line_weight</type>
+          <defname>line_weight</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1179" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1179" bodyend="1202"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1ad0f3aa498cc95b7547235eff3efdd8ce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.rubber_point</definition>
+        <argsstring>(self, key)</argsstring>
+        <name>rubber_point</name>
+        <qualifiedname>embroidery.geometry.Circle.rubber_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>key</type>
+          <defname>key</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1203" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1203" bodyend="1212"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a861331747723281bbad9655563ccf42f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.rubber_text</definition>
+        <argsstring>(self, key)</argsstring>
+        <name>rubber_text</name>
+        <qualifiedname>embroidery.geometry.Circle.rubber_text</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>key</type>
+          <defname>key</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1213" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1213" bodyend="1218"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1aba6c40f69322be9577a2000aa789168a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.bounding_rect</definition>
+        <argsstring>(self)</argsstring>
+        <name>bounding_rect</name>
+        <qualifiedname>embroidery.geometry.Circle.bounding_rect</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1219" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1219" bodyend="1224"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a89697362778644d6525c8a9e0c3914a1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.draw_rubber_line</definition>
+        <argsstring>(self, rub_line, painter, colorFromScene)</argsstring>
+        <name>draw_rubber_line</name>
+        <qualifiedname>embroidery.geometry.Circle.draw_rubber_line</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>rub_line</type>
+          <defname>rub_line</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <param>
+          <type>colorFromScene</type>
+          <defname>colorFromScene</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1225" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1225" bodyend="1237"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a0c8b6e10c6723dbbde4c651764b0f877" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.real_render</definition>
+        <argsstring>(self, painter, render_path)</argsstring>
+        <name>real_render</name>
+        <qualifiedname>embroidery.geometry.Circle.real_render</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <param>
+          <type>render_path</type>
+          <defname>render_path</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1238" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1238" bodyend="1286"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a4bfe74380b1d3baa3f2543349a96a423" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.diameter</definition>
+        <argsstring>(self)</argsstring>
+        <name>diameter</name>
+        <qualifiedname>embroidery.geometry.Circle.diameter</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1287" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1287" bodyend="1290"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1aa056d2d2392467ec6a3cb3e6fe95a042" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.area</definition>
+        <argsstring>(self)</argsstring>
+        <name>area</name>
+        <qualifiedname>embroidery.geometry.Circle.area</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1291" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1291" bodyend="1294"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a79dfb266ad339f547343691843b49a1a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.circumference</definition>
+        <argsstring>(self)</argsstring>
+        <name>circumference</name>
+        <qualifiedname>embroidery.geometry.Circle.circumference</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1295" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1295" bodyend="1298"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1abc1dc01d993fe497f26e5c552b57c478" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.quadrant</definition>
+        <argsstring>(self, angle)</argsstring>
+        <name>quadrant</name>
+        <qualifiedname>embroidery.geometry.Circle.quadrant</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>angle</type>
+          <defname>angle</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1299" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1299" bodyend="1304"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a9c705fab04da8783222282c6a4332404" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.set_diameter</definition>
+        <argsstring>(self, diameter)</argsstring>
+        <name>set_diameter</name>
+        <qualifiedname>embroidery.geometry.Circle.set_diameter</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>diameter</type>
+          <defname>diameter</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1305" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1305" bodyend="1313"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a3f016b740e2665adca4774987e04ecc6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.set_area</definition>
+        <argsstring>(self, area)</argsstring>
+        <name>set_area</name>
+        <qualifiedname>embroidery.geometry.Circle.set_area</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>area</type>
+          <defname>area</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1314" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1314" bodyend="1318"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1ae8643311b657766446d4eebcae0b6293" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.set_circumference</definition>
+        <argsstring>(self, circumference)</argsstring>
+        <name>set_circumference</name>
+        <qualifiedname>embroidery.geometry.Circle.set_circumference</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>circumference</type>
+          <defname>circumference</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1319" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1319" bodyend="1323"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a2f5cd985fd457025c8e057a2a5785187" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.update_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>update_path</name>
+        <qualifiedname>embroidery.geometry.Circle.update_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1324" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1324" bodyend="1335"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1ae5de028cf9fa332ce3b0a7afb3f59769" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.paint</definition>
+        <argsstring>(self, painter, option, widget)</argsstring>
+        <name>paint</name>
+        <qualifiedname>embroidery.geometry.Circle.paint</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <param>
+          <type>option</type>
+          <defname>option</defname>
+        </param>
+        <param>
+          <type>widget</type>
+          <defname>widget</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1336" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1336" bodyend="1351"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a2adcc2d279d3532a5c4e25177560c517" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.update_rubber</definition>
+        <argsstring>(self, painter)</argsstring>
+        <name>update_rubber</name>
+        <qualifiedname>embroidery.geometry.Circle.update_rubber</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1352" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1352" bodyend="1420"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a1219c2c5d8a518c01ea9002eade30cb3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.vulcanize</definition>
+        <argsstring>()</argsstring>
+        <name>vulcanize</name>
+        <qualifiedname>embroidery.geometry.Circle.vulcanize</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1421" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1421" bodyend="1425"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a7471a87b2a883b06d871eeece8cf5473" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.mouse_snap_point</definition>
+        <argsstring>(self, mouse_point)</argsstring>
+        <name>mouse_snap_point</name>
+        <qualifiedname>embroidery.geometry.Circle.mouse_snap_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>mouse_point</type>
+          <defname>mouse_point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1426" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1426" bodyend="1430"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1ae787b076bb5ca4e03c94cbe56a564108" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.all_grip_points</definition>
+        <argsstring>(self)</argsstring>
+        <name>all_grip_points</name>
+        <qualifiedname>embroidery.geometry.Circle.all_grip_points</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1431" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1431" bodyend="1440"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1aa307c008c6e292062b208d268979b064" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.grip_edit</definition>
+        <argsstring>(self, before, after)</argsstring>
+        <name>grip_edit</name>
+        <qualifiedname>embroidery.geometry.Circle.grip_edit</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>before</type>
+          <defname>before</defname>
+        </param>
+        <param>
+          <type>after</type>
+          <defname>after</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1441" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1441" bodyend="1448"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1afbd095aec67eed4475062ac65a810ecb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.save_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>save_path</name>
+        <qualifiedname>embroidery.geometry.Circle.save_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1449" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1449" bodyend="1461"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1aa2debed9269ee8d1dec1f451f0ede132" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.mouse_callback</definition>
+        <argsstring>(self, button, state, x, y)</argsstring>
+        <name>mouse_callback</name>
+        <qualifiedname>embroidery.geometry.Circle.mouse_callback</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>button</type>
+          <defname>button</defname>
+        </param>
+        <param>
+          <type>state</type>
+          <defname>state</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1462" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1462" bodyend="1476"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1a30bf61a42b1fc64fc6ec8437e4b4b033" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.click</definition>
+        <argsstring>(self, x, y)</argsstring>
+        <name>click</name>
+        <qualifiedname>embroidery.geometry.Circle.click</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1477" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1477" bodyend="1566"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Circle_1abf1a649bc24d195d565e9c8623be0ca6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Circle.prompt</definition>
+        <argsstring>(self, args, cmd)</argsstring>
+        <name>prompt</name>
+        <qualifiedname>embroidery.geometry.Circle.prompt</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>args</type>
+          <defname>args</defname>
+        </param>
+        <param>
+          <type>cmd</type>
+          <defname>cmd</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1567" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1567" bodyend="1701"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>The circle class definition.
+def Save[]:
+
+def setRadius(radius)
+def set_diameter(diameter)
+def set_area(area)
+def setCircumference(circumference)
+def update_rubber(QPainter* painter = 0)
+
+def Color(): return self.pen.color()
+def line_weight(): return self.lwt_pen.widthF()
+def []: return []
+def rubber_mode(): return objrubber_mode
+def self.rubber_point(key):
+def rubber_text(key):
+
+def setrubber_mode(mode)  objrubber_mode = mode
+def setself.rubber_point(key, point)  objself.rubber_points.insert(key, point)
+def setrubber_text(key, txt)  self.rubber_texts.insert(key, txt)
+def bounding_rect() const
+def shape() const  return []
+def draw_rubber_line(rub_line, painter=0, colorFromScene=0)
+def vulcanize() = 0
+mouse_snap_point(mouse_point) = 0
+QList&lt;Vector&gt; all_grip_points() = 0
+def grip_edit(before, after) = 0
+Line obj_line
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/geometry.py" line="1068" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1068" bodyend="1701"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1afa6ba0f225e3b1b291ebf58e931b4985" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1ae787b076bb5ca4e03c94cbe56a564108" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>all_grip_points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1aa056d2d2392467ec6a3cb3e6fe95a042" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>area</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1aba6c40f69322be9577a2000aa789168a" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>bounding_rect</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1ab3d56f261833b4e0d6d6b6d867a53b43" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>center</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a79dfb266ad339f547343691843b49a1a" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>circumference</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a30bf61a42b1fc64fc6ec8437e4b4b033" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>click</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a8644c630af0bc72c7e48b99f7490ba8a" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>copy</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a0d5e5b16185ad8560ebe797db32e5b32" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>dia</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a4bfe74380b1d3baa3f2543349a96a423" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>diameter</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a89697362778644d6525c8a9e0c3914a1" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>draw_rubber_line</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1aa307c008c6e292062b208d268979b064" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>grip_edit</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a1cc8d3f799b35f21cbdd7b118d1bc687" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>lwt_pen</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1ac2b35f61193487b5a05dbd2e2e2ee9d2" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>mode</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1aa2debed9269ee8d1dec1f451f0ede132" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>mouse_callback</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a7471a87b2a883b06d871eeece8cf5473" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>mouse_snap_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1abd1285e5db9b4e1ff7a1c941f9445d2d" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>obj_id</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a4b590ad087b1dfb4150a3de7791e857e" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>obj_line</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1ae5de028cf9fa332ce3b0a7afb3f59769" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>paint</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a788598fd2d959fa82fbbb490db49541c" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1abe06fbfaaf09f4b3a5c263504ec5e834" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>pen</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1ab579be97a51c6097f1f53a943a535573" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>point1</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a538c1104d805980be5fa5b22ca13f97a" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>point2</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1af766ca3e63eccc77300011286a3e9c1b" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>point3</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1abf1a649bc24d195d565e9c8623be0ca6" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>prompt</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a2bc66bd079e31ef99830f56c5b214018" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>promptPrefix</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1abc1dc01d993fe497f26e5c552b57c478" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>quadrant</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a02c0d1e7a9a66700066b98e498bc40d7" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>rad</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a863eb88c0cb902bbd9b1898a4effbade" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>radius</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a0c8b6e10c6723dbbde4c651764b0f877" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>real_render</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a0836dccd18f7059e27405e09409e5356" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>rect</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a632e2f32219329c3a9fb71e67f22ec54" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>rect</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a2f617ce786591e8ee1b18e853e992c12" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>rubber_mode</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1ad0f3aa498cc95b7547235eff3efdd8ce" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>rubber_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a41ac12e90cf970d9523972ace8e01655" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>rubber_points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a861331747723281bbad9655563ccf42f" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>rubber_text</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1aaf556d3b23bd427c6e9ce54c7d377af1" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>rubber_texts</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1afbd095aec67eed4475062ac65a810ecb" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>save_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a9d040686e2b6cd039a15031346fbbc6f" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>selectable</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a3f016b740e2665adca4774987e04ecc6" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>set_area</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1ae8643311b657766446d4eebcae0b6293" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>set_circumference</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a1cb9bc7674e7b51b47b80e28ce856c35" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>set_color</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a8ced36f8550317b78e543c0c87baa467" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>set_color_rgb</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a9c705fab04da8783222282c6a4332404" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>set_diameter</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a6573ba676971645b90382a5077407847" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>set_line</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a743f29fe4d2f420e9d7d47a70436f7cb" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>set_line_type</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a0eec16e72eda26cb81df61b5900b8680" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>set_line_weight</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a6ae13eeb2a78ebf3d748394045c12fac" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>set_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a9aa6fe4d23b1bee60c42a32ba6556fde" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>set_rect</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a7c32d1c935aa2b334589d4e09eafc743" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>type</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a2f5cd985fd457025c8e057a2a5785187" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>update_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a2f5cd985fd457025c8e057a2a5785187" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>update_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a2adcc2d279d3532a5c4e25177560c517" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>update_rubber</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Circle_1a1219c2c5d8a518c01ea9002eade30cb3" prot="public" virt="non-virtual"><scope>embroidery::geometry::Circle</scope><name>vulcanize</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

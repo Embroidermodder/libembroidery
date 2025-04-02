@@ -1,0 +1,88 @@
+\hypertarget{namespaceembroidery_1_1fills}{}\doxysection{embroidery.\+fills Namespace Reference}
+\label{namespaceembroidery_1_1fills}\index{embroidery.fills@{embroidery.fills}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespaceembroidery_1_1fills_a14492c4cad0caf3aec20ec1f8febc93c}{satin\+\_\+fill}} (outline, direction, scale, max\+\_\+steps)
+\item 
+def \mbox{\hyperlink{namespaceembroidery_1_1fills_a150fe3e8293bb10ad478a3f0f456911f}{radial\+\_\+satin\+\_\+fill}} (outline, center, scale, max\+\_\+steps)
+\item 
+def \mbox{\hyperlink{namespaceembroidery_1_1fills_add3a42173ffe72a5a1b1ffb69f18f6d9}{herringbone\+\_\+fill}} (outline, scale, max\+\_\+steps)
+\item 
+def \mbox{\hyperlink{namespaceembroidery_1_1fills_aac96e6161bcfaeab65dd21f2485c3960}{join\+\_\+stitches}} (stitch\+\_\+list)
+\item 
+def \mbox{\hyperlink{namespaceembroidery_1_1fills_ae03a3e45aad4d600226da05fdb5a2ade}{clip\+\_\+path}} (outline, path)
+\item 
+def \mbox{\hyperlink{namespaceembroidery_1_1fills_a1e510650709d46f5118e0dfdd0a5d71a}{apply\+\_\+fill}} (outline, fill, $\ast$args)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}    Embroidermodder 2.
+
+    ------------------------------------------------------------
+
+    Copyright 2013-2022 The Embroidermodder Team
+    Embroidermodder 2 is Open Source Software.
+    See LICENSE for licensing terms.
+
+    ------------------------------------------------------------\end{DoxyVerb}
+ 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespaceembroidery_1_1fills_a1e510650709d46f5118e0dfdd0a5d71a}\label{namespaceembroidery_1_1fills_a1e510650709d46f5118e0dfdd0a5d71a}} 
+\index{embroidery.fills@{embroidery.fills}!apply\_fill@{apply\_fill}}
+\index{apply\_fill@{apply\_fill}!embroidery.fills@{embroidery.fills}}
+\doxysubsubsection{\texorpdfstring{apply\_fill()}{apply\_fill()}}
+{\footnotesize\ttfamily def embroidery.\+fills.\+apply\+\_\+fill (\begin{DoxyParamCaption}\item[{}]{outline,  }\item[{}]{fill,  }\item[{$\ast$}]{args }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Given a contour, overlay a fill pattern and clip out the inner part.
+
+    outline:
+        The contour is supplied as a polygon which is a list of vectors
+        anticlockwise about the polygon with the first and last point joined.
+
+        For example, a square could be encoded as:
+        [[0.0, 0.0], [0.0, 1.0], [1.0, 1.0], [1.0, 0.0]].
+
+    fill:
+        The fill is a program that generates a path with points that
+        mark where the needle sews. The fill continues until the outline
+        is covered.\end{DoxyVerb}
+ \mbox{\Hypertarget{namespaceembroidery_1_1fills_ae03a3e45aad4d600226da05fdb5a2ade}\label{namespaceembroidery_1_1fills_ae03a3e45aad4d600226da05fdb5a2ade}} 
+\index{embroidery.fills@{embroidery.fills}!clip\_path@{clip\_path}}
+\index{clip\_path@{clip\_path}!embroidery.fills@{embroidery.fills}}
+\doxysubsubsection{\texorpdfstring{clip\_path()}{clip\_path()}}
+{\footnotesize\ttfamily def embroidery.\+fills.\+clip\+\_\+path (\begin{DoxyParamCaption}\item[{}]{outline,  }\item[{}]{path }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    .\end{DoxyVerb}
+ \mbox{\Hypertarget{namespaceembroidery_1_1fills_add3a42173ffe72a5a1b1ffb69f18f6d9}\label{namespaceembroidery_1_1fills_add3a42173ffe72a5a1b1ffb69f18f6d9}} 
+\index{embroidery.fills@{embroidery.fills}!herringbone\_fill@{herringbone\_fill}}
+\index{herringbone\_fill@{herringbone\_fill}!embroidery.fills@{embroidery.fills}}
+\doxysubsubsection{\texorpdfstring{herringbone\_fill()}{herringbone\_fill()}}
+{\footnotesize\ttfamily def embroidery.\+fills.\+herringbone\+\_\+fill (\begin{DoxyParamCaption}\item[{}]{outline,  }\item[{}]{scale,  }\item[{}]{max\+\_\+steps }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    .\end{DoxyVerb}
+ \mbox{\Hypertarget{namespaceembroidery_1_1fills_aac96e6161bcfaeab65dd21f2485c3960}\label{namespaceembroidery_1_1fills_aac96e6161bcfaeab65dd21f2485c3960}} 
+\index{embroidery.fills@{embroidery.fills}!join\_stitches@{join\_stitches}}
+\index{join\_stitches@{join\_stitches}!embroidery.fills@{embroidery.fills}}
+\doxysubsubsection{\texorpdfstring{join\_stitches()}{join\_stitches()}}
+{\footnotesize\ttfamily def embroidery.\+fills.\+join\+\_\+stitches (\begin{DoxyParamCaption}\item[{}]{stitch\+\_\+list }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    .\end{DoxyVerb}
+ \mbox{\Hypertarget{namespaceembroidery_1_1fills_a150fe3e8293bb10ad478a3f0f456911f}\label{namespaceembroidery_1_1fills_a150fe3e8293bb10ad478a3f0f456911f}} 
+\index{embroidery.fills@{embroidery.fills}!radial\_satin\_fill@{radial\_satin\_fill}}
+\index{radial\_satin\_fill@{radial\_satin\_fill}!embroidery.fills@{embroidery.fills}}
+\doxysubsubsection{\texorpdfstring{radial\_satin\_fill()}{radial\_satin\_fill()}}
+{\footnotesize\ttfamily def embroidery.\+fills.\+radial\+\_\+satin\+\_\+fill (\begin{DoxyParamCaption}\item[{}]{outline,  }\item[{}]{center,  }\item[{}]{scale,  }\item[{}]{max\+\_\+steps }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    .\end{DoxyVerb}
+ \mbox{\Hypertarget{namespaceembroidery_1_1fills_a14492c4cad0caf3aec20ec1f8febc93c}\label{namespaceembroidery_1_1fills_a14492c4cad0caf3aec20ec1f8febc93c}} 
+\index{embroidery.fills@{embroidery.fills}!satin\_fill@{satin\_fill}}
+\index{satin\_fill@{satin\_fill}!embroidery.fills@{embroidery.fills}}
+\doxysubsubsection{\texorpdfstring{satin\_fill()}{satin\_fill()}}
+{\footnotesize\ttfamily def embroidery.\+fills.\+satin\+\_\+fill (\begin{DoxyParamCaption}\item[{}]{outline,  }\item[{}]{direction,  }\item[{}]{scale,  }\item[{}]{max\+\_\+steps }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}    A traditional directional satin fill, where the supplied
+    direction is the .\end{DoxyVerb}
+ 

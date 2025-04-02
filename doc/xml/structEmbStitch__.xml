@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structEmbStitch__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbStitch_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structEmbStitch___1a693b80008b48c37dd3a0f9a3a11b261c" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbStitch_::flags</definition>
+        <argsstring></argsstring>
+        <name>flags</name>
+        <qualifiedname>EmbStitch_::flags</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="625" column="9" bodyfile="src/embroidery.h" bodystart="625" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbStitch___1add1540d3cad43df02f74a11f8f90969b" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a2082be9aabfb541dff1825c4ca6a05cd" kindref="member">EmbReal</ref></type>
+        <definition>EmbReal EmbStitch_::x</definition>
+        <argsstring></argsstring>
+        <name>x</name>
+        <qualifiedname>EmbStitch_::x</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>uses codes defined above </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="626" column="13" bodyfile="src/embroidery.h" bodystart="626" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbStitch___1ae6c00f117de250bb617882a322eee8b4" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a2082be9aabfb541dff1825c4ca6a05cd" kindref="member">EmbReal</ref></type>
+        <definition>EmbReal EmbStitch_::y</definition>
+        <argsstring></argsstring>
+        <name>y</name>
+        <qualifiedname>EmbStitch_::y</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>absolute position (not relative) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="627" column="13" bodyfile="src/embroidery.h" bodystart="627" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbStitch___1a7ec28b66816a1998bdf3aa0d03438c93" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbStitch_::color</definition>
+        <argsstring></argsstring>
+        <name>color</name>
+        <qualifiedname>EmbStitch_::color</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>positive is up, units are in mm <linebreak/>
+ </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="628" column="9" bodyfile="src/embroidery.h" bodystart="628" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><xrefsect id="todo_1_todo000002"><xreftitle>Todo</xreftitle><xrefdescription><para><computeroutput>color</computeroutput> should be called colorIndex since it is not an EmbColor. </para>
+</xrefdescription></xrefsect></para>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="623" column="1" bodyfile="src/embroidery.h" bodystart="624" bodyend="629"/>
+    <listofallmembers>
+      <member refid="structEmbStitch___1a7ec28b66816a1998bdf3aa0d03438c93" prot="public" virt="non-virtual"><scope>EmbStitch_</scope><name>color</name></member>
+      <member refid="structEmbStitch___1a693b80008b48c37dd3a0f9a3a11b261c" prot="public" virt="non-virtual"><scope>EmbStitch_</scope><name>flags</name></member>
+      <member refid="structEmbStitch___1add1540d3cad43df02f74a11f8f90969b" prot="public" virt="non-virtual"><scope>EmbStitch_</scope><name>x</name></member>
+      <member refid="structEmbStitch___1ae6c00f117de250bb617882a322eee8b4" prot="public" virt="non-virtual"><scope>EmbStitch_</scope><name>y</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

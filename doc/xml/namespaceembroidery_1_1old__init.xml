@@ -1,0 +1,1468 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="namespaceembroidery_1_1old__init" kind="namespace" language="Python">
+    <compoundname>embroidery::old_init</compoundname>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="old__init_8py_1a72e3f1d00426cb15e055147fb1b6ac8c" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.NORMAL</definition>
+        <argsstring></argsstring>
+        <name>NORMAL</name>
+        <qualifiedname>embroidery.old_init.NORMAL</qualifiedname>
+        <initializer>=  0x00</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="13" column="1" bodyfile="python/embroidery/old_init.py" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a08ab3f7cb03ad19fe902d4186dd4b634" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.JUMP</definition>
+        <argsstring></argsstring>
+        <name>JUMP</name>
+        <qualifiedname>embroidery.old_init.JUMP</qualifiedname>
+        <initializer>=  0x01</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="15" column="1" bodyfile="python/embroidery/old_init.py" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a8bb0dc34b734c2368875cfa79e75930c" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.TRIM</definition>
+        <argsstring></argsstring>
+        <name>TRIM</name>
+        <qualifiedname>embroidery.old_init.TRIM</qualifiedname>
+        <initializer>=  0x02</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="17" column="1" bodyfile="python/embroidery/old_init.py" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a332eff6f842d9e5ebacac8a46691bbc0" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.STOP</definition>
+        <argsstring></argsstring>
+        <name>STOP</name>
+        <qualifiedname>embroidery.old_init.STOP</qualifiedname>
+        <initializer>=  0x04</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="19" column="1" bodyfile="python/embroidery/old_init.py" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a6506ba9dfe3b3f01417d080870fdb683" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.SEQUIN</definition>
+        <argsstring></argsstring>
+        <name>SEQUIN</name>
+        <qualifiedname>embroidery.old_init.SEQUIN</qualifiedname>
+        <initializer>=  0x08</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="21" column="1" bodyfile="python/embroidery/old_init.py" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a525176b0eebbff6cd6b67afeffdf4f13" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.END</definition>
+        <argsstring></argsstring>
+        <name>END</name>
+        <qualifiedname>embroidery.old_init.END</qualifiedname>
+        <initializer>=  0x10</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="23" column="1" bodyfile="python/embroidery/old_init.py" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a2ddfbb76a935e577841840a50b2d5ab1" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_100</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_100</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_100</qualifiedname>
+        <initializer>=  0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="27" column="1" bodyfile="python/embroidery/old_init.py" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a3631c632f77f73814ef3839bdb3e2fa1" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_10O</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_10O</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_10O</qualifiedname>
+        <initializer>=  1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="28" column="1" bodyfile="python/embroidery/old_init.py" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1aa71f26949e2682afd03bd40c265f8783" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_ART</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_ART</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_ART</qualifiedname>
+        <initializer>=  2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="29" column="1" bodyfile="python/embroidery/old_init.py" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a956acf27d2dd0d19fdd9fb59bbc06ce7" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_BMC</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_BMC</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_BMC</qualifiedname>
+        <initializer>=  3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="30" column="1" bodyfile="python/embroidery/old_init.py" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a60cea35f3a01f64af11e1b55f96a6f4e" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_BRO</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_BRO</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_BRO</qualifiedname>
+        <initializer>=  4</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="31" column="1" bodyfile="python/embroidery/old_init.py" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1addfa552e3c65604a97c1a3a1522a919a" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_CND</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_CND</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_CND</qualifiedname>
+        <initializer>=  5</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="32" column="1" bodyfile="python/embroidery/old_init.py" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1af114ccecca6e84762d3ecc7d68c6ace9" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_COL</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_COL</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_COL</qualifiedname>
+        <initializer>=  6</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="33" column="1" bodyfile="python/embroidery/old_init.py" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ab46fe3f1fa5d7edce69856b1e38a3782" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_CSD</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_CSD</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_CSD</qualifiedname>
+        <initializer>=  7</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="34" column="1" bodyfile="python/embroidery/old_init.py" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ad2d7cac871fe53664a4ddbf93ab10609" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_CSV</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_CSV</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_CSV</qualifiedname>
+        <initializer>=  8</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="35" column="1" bodyfile="python/embroidery/old_init.py" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1acc14df151f8632bfcb7de80359a71c81" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_DAT</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_DAT</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_DAT</qualifiedname>
+        <initializer>=  9</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="36" column="1" bodyfile="python/embroidery/old_init.py" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a02e667530b0cfe659752995699f15371" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_DEM</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_DEM</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_DEM</qualifiedname>
+        <initializer>=  10</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="37" column="1" bodyfile="python/embroidery/old_init.py" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a8ed946ba2adfaa9601d5f0c56b1ff697" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_DSB</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_DSB</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_DSB</qualifiedname>
+        <initializer>=  11</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="38" column="1" bodyfile="python/embroidery/old_init.py" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a033e13e76d4e8d63b186979e2fea282f" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_DST</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_DST</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_DST</qualifiedname>
+        <initializer>=  12</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="39" column="1" bodyfile="python/embroidery/old_init.py" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1aff194c9d57347aaf76906cd7288ef75c" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_DSZ</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_DSZ</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_DSZ</qualifiedname>
+        <initializer>=  13</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="40" column="1" bodyfile="python/embroidery/old_init.py" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1af437bcd4957c73fa74e587db4b4b4648" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_DXF</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_DXF</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_DXF</qualifiedname>
+        <initializer>=  14</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="41" column="1" bodyfile="python/embroidery/old_init.py" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1aefc050af8342c57a322939b1dbe8a3bf" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_EDR</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_EDR</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_EDR</qualifiedname>
+        <initializer>=  15</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="42" column="1" bodyfile="python/embroidery/old_init.py" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a7c172b5d1d500ce10c8017080f5aa0ff" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_EMD</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_EMD</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_EMD</qualifiedname>
+        <initializer>=  16</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="43" column="1" bodyfile="python/embroidery/old_init.py" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a6716994e0a1fcc9ac9eba6aef3d1b10b" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_EXP</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_EXP</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_EXP</qualifiedname>
+        <initializer>=  17</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="44" column="1" bodyfile="python/embroidery/old_init.py" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a9973a394c8d93399ed3a302e78a8efcd" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_EXY</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_EXY</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_EXY</qualifiedname>
+        <initializer>=  18</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="45" column="1" bodyfile="python/embroidery/old_init.py" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a59be6b43a06bfd2e5cb6cd749a40e062" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_EYS</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_EYS</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_EYS</qualifiedname>
+        <initializer>=  19</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="46" column="1" bodyfile="python/embroidery/old_init.py" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a831ae58dcfd48c86052677cd7b9f6c28" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_FXY</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_FXY</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_FXY</qualifiedname>
+        <initializer>=  20</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="47" column="1" bodyfile="python/embroidery/old_init.py" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1af791d9b782cb63f692ba3c1153097fe3" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_GC</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_GC</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_GC</qualifiedname>
+        <initializer>=  21</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="48" column="1" bodyfile="python/embroidery/old_init.py" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a8833ba62c66848562ffbd443541de689" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_GNC</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_GNC</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_GNC</qualifiedname>
+        <initializer>=  22</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="49" column="1" bodyfile="python/embroidery/old_init.py" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ae5ee251cb0b03cdfeca3b78b66b59d44" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_GT</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_GT</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_GT</qualifiedname>
+        <initializer>=  23</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="50" column="1" bodyfile="python/embroidery/old_init.py" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a4eed7feb6fe1e61a5c15bcebe6712dd2" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_HUS</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_HUS</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_HUS</qualifiedname>
+        <initializer>=  24</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="51" column="1" bodyfile="python/embroidery/old_init.py" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a8d7095d6ba8956e9ac489dcf92c469a7" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_INB</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_INB</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_INB</qualifiedname>
+        <initializer>=  25</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="52" column="1" bodyfile="python/embroidery/old_init.py" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ad7bb001d737c290b98aba10a64453dc4" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_INF</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_INF</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_INF</qualifiedname>
+        <initializer>=  26</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="53" column="1" bodyfile="python/embroidery/old_init.py" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1af0cc1c5aab9fb9119220799823bb2692" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_JEF</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_JEF</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_JEF</qualifiedname>
+        <initializer>=  27</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="54" column="1" bodyfile="python/embroidery/old_init.py" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ae90428d7ae5995baa236e67e35dd8926" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_KSM</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_KSM</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_KSM</qualifiedname>
+        <initializer>=  28</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="55" column="1" bodyfile="python/embroidery/old_init.py" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1aaa7e9e88ebd7479c2d2e43541a17ca00" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_MAX</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_MAX</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_MAX</qualifiedname>
+        <initializer>=  29</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="56" column="1" bodyfile="python/embroidery/old_init.py" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1af43624f2f19ce0bb7b515a25925909ee" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_MIT</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_MIT</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_MIT</qualifiedname>
+        <initializer>=  30</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="57" column="1" bodyfile="python/embroidery/old_init.py" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a483a783bb57daf7561d564c8991c3a4f" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_NEW</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_NEW</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_NEW</qualifiedname>
+        <initializer>=  31</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="58" column="1" bodyfile="python/embroidery/old_init.py" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a288331fe2b26702576bb3f40f3a27a6a" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_OFM</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_OFM</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_OFM</qualifiedname>
+        <initializer>=  32</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="59" column="1" bodyfile="python/embroidery/old_init.py" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a6183751b197bafcef45349b31394b71b" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_PCD</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_PCD</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_PCD</qualifiedname>
+        <initializer>=  33</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="60" column="1" bodyfile="python/embroidery/old_init.py" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a9b551046b4d73d28b75f6d367576dc30" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_PCM</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_PCM</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_PCM</qualifiedname>
+        <initializer>=  34</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="61" column="1" bodyfile="python/embroidery/old_init.py" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a709154e86f7dfe825e5c0dab6ec840a8" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_PCQ</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_PCQ</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_PCQ</qualifiedname>
+        <initializer>=  35</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="62" column="1" bodyfile="python/embroidery/old_init.py" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ac1004101125215aa86496a6eeb8ae81a" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_PCS</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_PCS</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_PCS</qualifiedname>
+        <initializer>=  36</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="63" column="1" bodyfile="python/embroidery/old_init.py" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a5684b0d8e187b2b469042921ef04f13d" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_PEC</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_PEC</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_PEC</qualifiedname>
+        <initializer>=  37</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="64" column="1" bodyfile="python/embroidery/old_init.py" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a0efcbcdfc4fb7be5866b108ddc927ee8" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_PEL</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_PEL</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_PEL</qualifiedname>
+        <initializer>=  38</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="65" column="1" bodyfile="python/embroidery/old_init.py" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ac5da2f78bd9933f47c15b8d64fb8c24d" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_PEM</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_PEM</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_PEM</qualifiedname>
+        <initializer>=  39</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="66" column="1" bodyfile="python/embroidery/old_init.py" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ad788bbadf65afd30b9c9f56dfcc044ae" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_PES</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_PES</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_PES</qualifiedname>
+        <initializer>=  40</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="67" column="1" bodyfile="python/embroidery/old_init.py" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a2dfdf19bb420df2661facc22cb2177b7" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_PHB</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_PHB</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_PHB</qualifiedname>
+        <initializer>=  41</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="68" column="1" bodyfile="python/embroidery/old_init.py" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a296b649f169368d501e9977c12710f5a" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_PHC</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_PHC</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_PHC</qualifiedname>
+        <initializer>=  42</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="69" column="1" bodyfile="python/embroidery/old_init.py" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a834bc0e23e961b67dd3fb51e203cb019" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_PLT</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_PLT</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_PLT</qualifiedname>
+        <initializer>=  43</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="70" column="1" bodyfile="python/embroidery/old_init.py" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a78ca5c50407b8649d7462f1cdadfca33" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_RGB</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_RGB</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_RGB</qualifiedname>
+        <initializer>=  44</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="71" column="1" bodyfile="python/embroidery/old_init.py" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a5c78503af9b3ecbf0caea42c8c91e82d" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_SEW</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_SEW</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_SEW</qualifiedname>
+        <initializer>=  45</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="72" column="1" bodyfile="python/embroidery/old_init.py" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1af76fad580fcf67e82ce67584837e5dde" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_SHV</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_SHV</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_SHV</qualifiedname>
+        <initializer>=  46</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="73" column="1" bodyfile="python/embroidery/old_init.py" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a49a4888d0e930233fcc7cbcc3bc271b2" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_SST</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_SST</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_SST</qualifiedname>
+        <initializer>=  47</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="74" column="1" bodyfile="python/embroidery/old_init.py" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a86f5cc83e06335b0425792e17405dffa" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_STX</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_STX</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_STX</qualifiedname>
+        <initializer>=  48</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="75" column="1" bodyfile="python/embroidery/old_init.py" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a392317b05e3ee8fc3569638d9b9abeb8" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_SVG</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_SVG</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_SVG</qualifiedname>
+        <initializer>=  49</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="76" column="1" bodyfile="python/embroidery/old_init.py" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ae177ea79d9d1f616f02e36f034971ef1" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_T01</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_T01</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_T01</qualifiedname>
+        <initializer>=  50</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="77" column="1" bodyfile="python/embroidery/old_init.py" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a80d018f117adb76b4fdb74eb095a2310" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_T09</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_T09</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_T09</qualifiedname>
+        <initializer>=  51</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="78" column="1" bodyfile="python/embroidery/old_init.py" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1acabf953e755f1541bcf06e69c9e22993" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_TAP</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_TAP</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_TAP</qualifiedname>
+        <initializer>=  52</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="79" column="1" bodyfile="python/embroidery/old_init.py" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1affe557fc3ec08f5a9f5ff51f6eeb1f6b" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_THR</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_THR</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_THR</qualifiedname>
+        <initializer>=  53</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="80" column="1" bodyfile="python/embroidery/old_init.py" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1af9309379389bd0056db907283b701e2e" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_TXT</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_TXT</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_TXT</qualifiedname>
+        <initializer>=  54</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="81" column="1" bodyfile="python/embroidery/old_init.py" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a709e5fb17a79a8018d386be5b2a80f70" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_U00</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_U00</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_U00</qualifiedname>
+        <initializer>=  55</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="82" column="1" bodyfile="python/embroidery/old_init.py" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a0aeffbfb26df622dfc502ebec32b4442" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_U01</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_U01</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_U01</qualifiedname>
+        <initializer>=  56</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="83" column="1" bodyfile="python/embroidery/old_init.py" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a7cb8047cff7c70c3054ae0461afc6992" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_VIP</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_VIP</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_VIP</qualifiedname>
+        <initializer>=  57</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="84" column="1" bodyfile="python/embroidery/old_init.py" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ab305a369d22a51b449a680435e1d77d4" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_VP3</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_VP3</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_VP3</qualifiedname>
+        <initializer>=  58</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="85" column="1" bodyfile="python/embroidery/old_init.py" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a98126d94b1af58fec675fcf3bf48f8d2" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_XXX</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_XXX</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_XXX</qualifiedname>
+        <initializer>=  59</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="86" column="1" bodyfile="python/embroidery/old_init.py" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1aa0761dfd38614055ba6fb2284fbf8578" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.EMB_FORMAT_ZSK</definition>
+        <argsstring></argsstring>
+        <name>EMB_FORMAT_ZSK</name>
+        <qualifiedname>embroidery.old_init.EMB_FORMAT_ZSK</qualifiedname>
+        <initializer>=  60</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="87" column="1" bodyfile="python/embroidery/old_init.py" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a4008b87c0eb3541c9649a5ca05889cbb" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Arc_Polyester</definition>
+        <argsstring></argsstring>
+        <name>Arc_Polyester</name>
+        <qualifiedname>embroidery.old_init.Arc_Polyester</qualifiedname>
+        <initializer>=  0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="91" column="1" bodyfile="python/embroidery/old_init.py" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ad7470a072e1fdeb32a68258da1bcfed3" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Arc_Rayon</definition>
+        <argsstring></argsstring>
+        <name>Arc_Rayon</name>
+        <qualifiedname>embroidery.old_init.Arc_Rayon</qualifiedname>
+        <initializer>=  1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="92" column="1" bodyfile="python/embroidery/old_init.py" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a8b29e1b40e18177ad267f073eb435ca7" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.CoatsAndClark_Rayon</definition>
+        <argsstring></argsstring>
+        <name>CoatsAndClark_Rayon</name>
+        <qualifiedname>embroidery.old_init.CoatsAndClark_Rayon</qualifiedname>
+        <initializer>=  2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="93" column="1" bodyfile="python/embroidery/old_init.py" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a7981fa4e1dbccc2dd4fc38a3e1d8d8e6" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Exquisite_Polyester</definition>
+        <argsstring></argsstring>
+        <name>Exquisite_Polyester</name>
+        <qualifiedname>embroidery.old_init.Exquisite_Polyester</qualifiedname>
+        <initializer>=  3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="94" column="1" bodyfile="python/embroidery/old_init.py" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a3c5292a9b46d489f02d90a3eb3095dd6" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Fufu_Polyester</definition>
+        <argsstring></argsstring>
+        <name>Fufu_Polyester</name>
+        <qualifiedname>embroidery.old_init.Fufu_Polyester</qualifiedname>
+        <initializer>=  4</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="95" column="1" bodyfile="python/embroidery/old_init.py" bodystart="95" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a4f3d2851c59fd00cd38835b971f9d21e" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Fufu_Rayon</definition>
+        <argsstring></argsstring>
+        <name>Fufu_Rayon</name>
+        <qualifiedname>embroidery.old_init.Fufu_Rayon</qualifiedname>
+        <initializer>=  5</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="96" column="1" bodyfile="python/embroidery/old_init.py" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ae99b3dbc98f4f7cb090066519038596a" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Hemingworth_Polyester</definition>
+        <argsstring></argsstring>
+        <name>Hemingworth_Polyester</name>
+        <qualifiedname>embroidery.old_init.Hemingworth_Polyester</qualifiedname>
+        <initializer>=  6</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="97" column="1" bodyfile="python/embroidery/old_init.py" bodystart="97" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a9ad9017c938a38e0ce843dc6a441f8cb" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Isacord_Polyester</definition>
+        <argsstring></argsstring>
+        <name>Isacord_Polyester</name>
+        <qualifiedname>embroidery.old_init.Isacord_Polyester</qualifiedname>
+        <initializer>=  7</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="98" column="1" bodyfile="python/embroidery/old_init.py" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a4ad7212db2e2ea1d0e5f58a9175fff09" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Isafil_Rayon</definition>
+        <argsstring></argsstring>
+        <name>Isafil_Rayon</name>
+        <qualifiedname>embroidery.old_init.Isafil_Rayon</qualifiedname>
+        <initializer>=  8</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="99" column="1" bodyfile="python/embroidery/old_init.py" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1afa8882ae62c8a5a90bab1f96151b977d" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Marathon_Polyester</definition>
+        <argsstring></argsstring>
+        <name>Marathon_Polyester</name>
+        <qualifiedname>embroidery.old_init.Marathon_Polyester</qualifiedname>
+        <initializer>=  9</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="100" column="1" bodyfile="python/embroidery/old_init.py" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a0ca542af2bc28b3d96c72f8913e9ec60" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Marathon_Rayon</definition>
+        <argsstring></argsstring>
+        <name>Marathon_Rayon</name>
+        <qualifiedname>embroidery.old_init.Marathon_Rayon</qualifiedname>
+        <initializer>=  10</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="101" column="1" bodyfile="python/embroidery/old_init.py" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a515ad43d74daea840858e51e0748b210" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Madeira_Polyester</definition>
+        <argsstring></argsstring>
+        <name>Madeira_Polyester</name>
+        <qualifiedname>embroidery.old_init.Madeira_Polyester</qualifiedname>
+        <initializer>=  11</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="102" column="1" bodyfile="python/embroidery/old_init.py" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a365e7cedae13b94a2256c5d4df1c2fa4" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Madeira_Rayon</definition>
+        <argsstring></argsstring>
+        <name>Madeira_Rayon</name>
+        <qualifiedname>embroidery.old_init.Madeira_Rayon</qualifiedname>
+        <initializer>=  12</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="103" column="1" bodyfile="python/embroidery/old_init.py" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ab7daf4b2f0eb8639163edbce1f8fbd3f" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Metro_Polyester</definition>
+        <argsstring></argsstring>
+        <name>Metro_Polyester</name>
+        <qualifiedname>embroidery.old_init.Metro_Polyester</qualifiedname>
+        <initializer>=  13</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="104" column="1" bodyfile="python/embroidery/old_init.py" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1affc40082a8ce6a4ee7881e1cd9713732" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Pantone</definition>
+        <argsstring></argsstring>
+        <name>Pantone</name>
+        <qualifiedname>embroidery.old_init.Pantone</qualifiedname>
+        <initializer>=  14</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="105" column="1" bodyfile="python/embroidery/old_init.py" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a7014c8d8e5ab6e61f5c50cc45f76a317" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.RobisonAnton_Polyester</definition>
+        <argsstring></argsstring>
+        <name>RobisonAnton_Polyester</name>
+        <qualifiedname>embroidery.old_init.RobisonAnton_Polyester</qualifiedname>
+        <initializer>=  15</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="106" column="1" bodyfile="python/embroidery/old_init.py" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a70b8a54b9bd2b1a460c9fdff76c1fc61" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.RobisonAnton_Rayon</definition>
+        <argsstring></argsstring>
+        <name>RobisonAnton_Rayon</name>
+        <qualifiedname>embroidery.old_init.RobisonAnton_Rayon</qualifiedname>
+        <initializer>=  16</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="107" column="1" bodyfile="python/embroidery/old_init.py" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ae9a1b2d1d1e3284eb395450ebbb00004" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Sigma_Polyester</definition>
+        <argsstring></argsstring>
+        <name>Sigma_Polyester</name>
+        <qualifiedname>embroidery.old_init.Sigma_Polyester</qualifiedname>
+        <initializer>=  17</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="108" column="1" bodyfile="python/embroidery/old_init.py" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a1f28b5a247b738670c6a01fed59ee479" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Sulky_Rayon</definition>
+        <argsstring></argsstring>
+        <name>Sulky_Rayon</name>
+        <qualifiedname>embroidery.old_init.Sulky_Rayon</qualifiedname>
+        <initializer>=  18</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="109" column="1" bodyfile="python/embroidery/old_init.py" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a12e0f1133691025ff36f59a1c247316e" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.ThreadArt_Rayon</definition>
+        <argsstring></argsstring>
+        <name>ThreadArt_Rayon</name>
+        <qualifiedname>embroidery.old_init.ThreadArt_Rayon</qualifiedname>
+        <initializer>=  19</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="110" column="1" bodyfile="python/embroidery/old_init.py" bodystart="110" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1acdb3b89b9cd44fb880d34bd073198535" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.ThreadArt_Polyester</definition>
+        <argsstring></argsstring>
+        <name>ThreadArt_Polyester</name>
+        <qualifiedname>embroidery.old_init.ThreadArt_Polyester</qualifiedname>
+        <initializer>=  20</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="111" column="1" bodyfile="python/embroidery/old_init.py" bodystart="111" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a73c4c94efeb7df51d3c44a313142c23d" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.ThreaDelight_Polyester</definition>
+        <argsstring></argsstring>
+        <name>ThreaDelight_Polyester</name>
+        <qualifiedname>embroidery.old_init.ThreaDelight_Polyester</qualifiedname>
+        <initializer>=  21</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="112" column="1" bodyfile="python/embroidery/old_init.py" bodystart="112" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1ac03e594a04a9f6aa8e6bdfd8a66b9691" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.Z102_Isacord_Polyester</definition>
+        <argsstring></argsstring>
+        <name>Z102_Isacord_Polyester</name>
+        <qualifiedname>embroidery.old_init.Z102_Isacord_Polyester</qualifiedname>
+        <initializer>=  22</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="113" column="1" bodyfile="python/embroidery/old_init.py" bodystart="113" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a6032dff7cb4418615bf4b45bb290e955" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.SVG_Colors</definition>
+        <argsstring></argsstring>
+        <name>SVG_Colors</name>
+        <qualifiedname>embroidery.old_init.SVG_Colors</qualifiedname>
+        <initializer>=  23</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="114" column="1" bodyfile="python/embroidery/old_init.py" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a211834864f106ffef847986eb820bcac" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.hus_thread</definition>
+        <argsstring></argsstring>
+        <name>hus_thread</name>
+        <qualifiedname>embroidery.old_init.hus_thread</qualifiedname>
+        <initializer>=  24</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="115" column="1" bodyfile="python/embroidery/old_init.py" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a6598825cfe76280ddb82eee3b8461d29" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.jef_thread</definition>
+        <argsstring></argsstring>
+        <name>jef_thread</name>
+        <qualifiedname>embroidery.old_init.jef_thread</qualifiedname>
+        <initializer>=  25</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="116" column="1" bodyfile="python/embroidery/old_init.py" bodystart="116" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a925850ecc183da0c46b9269722d31427" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.pcm_thread</definition>
+        <argsstring></argsstring>
+        <name>pcm_thread</name>
+        <qualifiedname>embroidery.old_init.pcm_thread</qualifiedname>
+        <initializer>=  26</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="117" column="1" bodyfile="python/embroidery/old_init.py" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a41848f580fde909ac165cb58de89d9dd" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.pec_thread</definition>
+        <argsstring></argsstring>
+        <name>pec_thread</name>
+        <qualifiedname>embroidery.old_init.pec_thread</qualifiedname>
+        <initializer>=  27</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="118" column="1" bodyfile="python/embroidery/old_init.py" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a8dc2c24a8fbc3c2770b152e5b2c257db" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.shv_thread</definition>
+        <argsstring></argsstring>
+        <name>shv_thread</name>
+        <qualifiedname>embroidery.old_init.shv_thread</qualifiedname>
+        <initializer>=  28</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="119" column="1" bodyfile="python/embroidery/old_init.py" bodystart="119" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="old__init_8py_1a0ddde62920097551fb9cb72a73f3e078" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int embroidery::old_init.dxf_color</definition>
+        <argsstring></argsstring>
+        <name>dxf_color</name>
+        <qualifiedname>embroidery.old_init.dxf_color</qualifiedname>
+        <initializer>=  29</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/old_init.py" line="120" column="1" bodyfile="python/embroidery/old_init.py" bodystart="120" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="python/embroidery/old_init.py" line="1" column="1"/>
+  </compounddef>
+</doxygen>

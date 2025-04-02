@@ -1,0 +1,1022 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1geometry_1_1PolyLine" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::geometry::PolyLine</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a5ed67a654461762f6f4109f25319ab2b" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::path</definition>
+        <argsstring></argsstring>
+        <name>path</name>
+        <qualifiedname>embroidery.geometry.PolyLine.path</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2941" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2941" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a4a6f95cdb565ade4a7a4c72a87fbebaf" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <qualifiedname>embroidery.geometry.PolyLine.position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2942" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2942" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1ad2fed0f7f949bbcbf4fdd15164211926" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::pen</definition>
+        <argsstring></argsstring>
+        <name>pen</name>
+        <qualifiedname>embroidery.geometry.PolyLine.pen</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2943" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2943" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1ac2119aaf7a65d59e812cca2633b4af87" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::rotation</definition>
+        <argsstring></argsstring>
+        <name>rotation</name>
+        <qualifiedname>embroidery.geometry.PolyLine.rotation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2944" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2944" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a3efaf5bd235fafdda22a60dc0ba581ea" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::scale</definition>
+        <argsstring></argsstring>
+        <name>scale</name>
+        <qualifiedname>embroidery.geometry.PolyLine.scale</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2945" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2945" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1ab18268c497abc00a9ffed07677ffdedc" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>embroidery.geometry.PolyLine.type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2946" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2946" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1ab08c2486bf6447ad2b376600dba1673b" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::selectable</definition>
+        <argsstring></argsstring>
+        <name>selectable</name>
+        <qualifiedname>embroidery.geometry.PolyLine.selectable</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2947" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2947" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a443377869d1e6d67920cbfcbfab89a72" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::grip_index</definition>
+        <argsstring></argsstring>
+        <name>grip_index</name>
+        <qualifiedname>embroidery.geometry.PolyLine.grip_index</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2948" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2948" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a3d04241103dc27fb0de1aca8a8c0ea7d" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::normal_path</definition>
+        <argsstring></argsstring>
+        <name>normal_path</name>
+        <qualifiedname>embroidery.geometry.PolyLine.normal_path</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2950" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2950" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a66a19a826af274d6e48ac26ba370c982" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::first_run</definition>
+        <argsstring></argsstring>
+        <name>first_run</name>
+        <qualifiedname>embroidery.geometry.PolyLine.first_run</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2953" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2953" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a564a49c85912b997356995503c5d64de" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::first</definition>
+        <argsstring></argsstring>
+        <name>first</name>
+        <qualifiedname>embroidery.geometry.PolyLine.first</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2954" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2954" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a36c652b82be3e21e8110b4d9fb9d4e47" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::prev</definition>
+        <argsstring></argsstring>
+        <name>prev</name>
+        <qualifiedname>embroidery.geometry.PolyLine.prev</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2955" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2955" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a28ad666b89c83136cfc9e7aa6c4cd339" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::num</definition>
+        <argsstring></argsstring>
+        <name>num</name>
+        <qualifiedname>embroidery.geometry.PolyLine.num</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2956" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2956" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a1ee49f0fa567e686226ad3ffa343f9be" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::reverse_path</definition>
+        <argsstring></argsstring>
+        <name>reverse_path</name>
+        <qualifiedname>embroidery.geometry.PolyLine.reverse_path</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2965" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2965" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a5f16daced4d879a46ba2bdf0de06fd2b" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::rubber_mode</definition>
+        <argsstring></argsstring>
+        <name>rubber_mode</name>
+        <qualifiedname>embroidery.geometry.PolyLine.rubber_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2992" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2992" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1ae0597031424a83916986afa134f9004d" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::prevX</definition>
+        <argsstring></argsstring>
+        <name>prevX</name>
+        <qualifiedname>embroidery.geometry.PolyLine.prevX</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3141" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3141" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a749924f7df7423eb8544ff193082d054" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::prevY</definition>
+        <argsstring></argsstring>
+        <name>prevY</name>
+        <qualifiedname>embroidery.geometry.PolyLine.prevY</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3142" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3142" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a7c36c8b4803dbcc9aceb0b663f7d8eb3" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::rubber</definition>
+        <argsstring></argsstring>
+        <name>rubber</name>
+        <qualifiedname>embroidery.geometry.PolyLine.rubber</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3275" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3275" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a26b827b4c01c61e9cb23aaa9cacc7cbb" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::base</definition>
+        <argsstring></argsstring>
+        <name>base</name>
+        <qualifiedname>embroidery.geometry.PolyLine.base</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3276" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3276" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1aa30f95161e04a3eba63f851eecc9ca12" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::dest</definition>
+        <argsstring></argsstring>
+        <name>dest</name>
+        <qualifiedname>embroidery.geometry.PolyLine.dest</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3277" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3277" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1aa7d6d2787469ce24eafc9e88e8dfbc39" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::delta</definition>
+        <argsstring></argsstring>
+        <name>delta</name>
+        <qualifiedname>embroidery.geometry.PolyLine.delta</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3278" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3278" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1PolyLine_1a0b485cc3b7328d13f0a3e8e70ab4e6b9" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.PolyLine::rubber_points</definition>
+        <argsstring></argsstring>
+        <name>rubber_points</name>
+        <qualifiedname>embroidery.geometry.PolyLine.rubber_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3280" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3280" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1aebf9f60f7a65e698c0a6b0599c82770f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.__init__</definition>
+        <argsstring>(self, x, y, pen=Pen())</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.geometry.PolyLine.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <param>
+          <type>pen</type>
+          <defname>pen</defname>
+          <defval>Pen()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>    Needs to work with the libembroidery polyline, if that&apos;s wrapped
+    in a class then this class extends that one and we call
+
+    super().__init__()
+
+    here.
+
+    Some of the functions here can then be ported to libembroidery.</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2929" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2929" bodyend="2958"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1aa63f3e61b86631c807b1c1529386fb6a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.update</definition>
+        <argsstring>(self, p)</argsstring>
+        <name>update</name>
+        <qualifiedname>embroidery.geometry.PolyLine.update</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>p</type>
+          <defname>p</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>    This is a straight translation and I&apos;m not sure what
+    it&apos;s doing -- Robin</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2959" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2959" bodyend="2968"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a4514b3baa0f4b4b6f71852f8ed996ec5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.paint</definition>
+        <argsstring>(self, painter, option, widget)</argsstring>
+        <name>paint</name>
+        <qualifiedname>embroidery.geometry.PolyLine.paint</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <param>
+          <type>option</type>
+          <defname>option</defname>
+        </param>
+        <param>
+          <type>widget</type>
+          <defname>widget</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>    </verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2969" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2969" bodyend="2989"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a08c7d9223ba9301643a537cb0e1ea394" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.update_rubber</definition>
+        <argsstring>(self, painter)</argsstring>
+        <name>update_rubber</name>
+        <qualifiedname>embroidery.geometry.PolyLine.update_rubber</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2990" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2990" bodyend="3053"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a56b9b79aa3472572a610f204989d9290" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.vulcanize</definition>
+        <argsstring>(self)</argsstring>
+        <name>vulcanize</name>
+        <qualifiedname>embroidery.geometry.PolyLine.vulcanize</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3054" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3054" bodyend="3063"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a5c63a95a020fcb745d96c07a11fce4b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.mouse_snap_point</definition>
+        <argsstring>(self, mouse_point)</argsstring>
+        <name>mouse_snap_point</name>
+        <qualifiedname>embroidery.geometry.PolyLine.mouse_snap_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>mouse_point</type>
+          <defname>mouse_point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3064" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3064" bodyend="3080"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a972a6174ba9f71821299bb281636ec01" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.all_grip_points</definition>
+        <argsstring>(self)</argsstring>
+        <name>all_grip_points</name>
+        <qualifiedname>embroidery.geometry.PolyLine.all_grip_points</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3081" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3081" bodyend="3088"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a6def2bf7ea7cdf61d76af2d41f775d4b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.Polyfind_index</definition>
+        <argsstring>(self, point)</argsstring>
+        <name>Polyfind_index</name>
+        <qualifiedname>embroidery.geometry.PolyLine.Polyfind_index</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>point</type>
+          <defname>point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3089" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3089" bodyend="3101"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1ac2bccd9365302dbd2368f5fa9bc4a274" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.Polygrip_edit</definition>
+        <argsstring>(self, before, after)</argsstring>
+        <name>Polygrip_edit</name>
+        <qualifiedname>embroidery.geometry.PolyLine.Polygrip_edit</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>before</type>
+          <defname>before</defname>
+        </param>
+        <param>
+          <type>after</type>
+          <defname>after</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3102" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3102" bodyend="3111"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a95012442837e6a34fedd7e597e80f35f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.PolyobjectCopyPath</definition>
+        <argsstring>()</argsstring>
+        <name>PolyobjectCopyPath</name>
+        <qualifiedname>embroidery.geometry.PolyLine.PolyobjectCopyPath</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3112" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3112" bodyend="3115"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a4646fc273b2f1ef8206bff28591fb002" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.PolyobjectSavePath</definition>
+        <argsstring>()</argsstring>
+        <name>PolyobjectSavePath</name>
+        <qualifiedname>embroidery.geometry.PolyLine.PolyobjectSavePath</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3116" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3116" bodyend="3123"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a4b6cf3240a8455d9b63fd17c6bcb61a3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.click</definition>
+        <argsstring>(self, x, y)</argsstring>
+        <name>click</name>
+        <qualifiedname>embroidery.geometry.PolyLine.click</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3124" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3124" bodyend="3143"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a08270cca3b5e8661ff0a937fbff9f283" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.a_click</definition>
+        <argsstring>(self, x, y)</argsstring>
+        <name>a_click</name>
+        <qualifiedname>embroidery.geometry.PolyLine.a_click</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3144" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3144" bodyend="3162"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a2bd01b5984287bb3cd96794a89117956" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.prompt</definition>
+        <argsstring>(self, cmd)</argsstring>
+        <name>prompt</name>
+        <qualifiedname>embroidery.geometry.PolyLine.prompt</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>cmd</type>
+          <defname>cmd</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3163" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3163" bodyend="3195"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1af095194664afaf8ec46d515f7a7d6578" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.a_prompt</definition>
+        <argsstring>(self, cmd)</argsstring>
+        <name>a_prompt</name>
+        <qualifiedname>embroidery.geometry.PolyLine.a_prompt</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>cmd</type>
+          <defname>cmd</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3196" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3196" bodyend="3227"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1ad4dbde546bec9ffa01754c80f1c3ae97" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.copy</definition>
+        <argsstring>(self)</argsstring>
+        <name>copy</name>
+        <qualifiedname>embroidery.geometry.PolyLine.copy</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3228" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3228" bodyend="3231"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a2c834eb432e5d0eee20116bc00ac285a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.copy_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>copy_path</name>
+        <qualifiedname>embroidery.geometry.PolyLine.copy_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3232" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3232" bodyend="3235"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a5a7b28d78c6ecaf922b73ea4fc57d0c0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.save_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>save_path</name>
+        <qualifiedname>embroidery.geometry.PolyLine.save_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3236" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3236" bodyend="3239"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a6bff0db1131acbae0b17696e12b25884" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.find_index</definition>
+        <argsstring>(self, point)</argsstring>
+        <name>find_index</name>
+        <qualifiedname>embroidery.geometry.PolyLine.find_index</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>point</type>
+          <defname>point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3240" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3240" bodyend="3243"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a6dd2f21f04f36d6909f3294c3e498970" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.update_rubber</definition>
+        <argsstring>(self, painter=0)</argsstring>
+        <name>update_rubber</name>
+        <qualifiedname>embroidery.geometry.PolyLine.update_rubber</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+          <defval>0</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3244" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3244" bodyend="3247"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a56b9b79aa3472572a610f204989d9290" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.vulcanize</definition>
+        <argsstring>(self)</argsstring>
+        <name>vulcanize</name>
+        <qualifiedname>embroidery.geometry.PolyLine.vulcanize</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3248" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3248" bodyend="3251"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a5c63a95a020fcb745d96c07a11fce4b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.mouse_snap_point</definition>
+        <argsstring>(self, mouse_point)</argsstring>
+        <name>mouse_snap_point</name>
+        <qualifiedname>embroidery.geometry.PolyLine.mouse_snap_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>mouse_point</type>
+          <defname>mouse_point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3252" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3252" bodyend="3255"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1afe5a18731a92c6f3e459f094d35c90e4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.all_grip_points</definition>
+        <argsstring>()</argsstring>
+        <name>all_grip_points</name>
+        <qualifiedname>embroidery.geometry.PolyLine.all_grip_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3256" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3256" bodyend="3259"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a625bea2a6677599b4e215aedfb0c1c32" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.grip_edit</definition>
+        <argsstring>(self, before, after)</argsstring>
+        <name>grip_edit</name>
+        <qualifiedname>embroidery.geometry.PolyLine.grip_edit</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>before</type>
+          <defname>before</defname>
+        </param>
+        <param>
+          <type>after</type>
+          <defname>after</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3260" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3260" bodyend="3263"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1af6fe358456907d8d9225df71b81004b1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.paint</definition>
+        <argsstring>(self, painter, options, widget)</argsstring>
+        <name>paint</name>
+        <qualifiedname>embroidery.geometry.PolyLine.paint</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <param>
+          <type>options</type>
+          <defname>options</defname>
+        </param>
+        <param>
+          <type>widget</type>
+          <defname>widget</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3264" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3264" bodyend="3267"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a102344e5d99253759d3d9f879c1fa21b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.update_path</definition>
+        <argsstring>(p)</argsstring>
+        <name>update_path</name>
+        <qualifiedname>embroidery.geometry.PolyLine.update_path</qualifiedname>
+        <param>
+          <type>p</type>
+          <defname>p</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3268" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3268" bodyend="3271"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1aba2f31b3ba6ea7e964c040d9ab9fd439" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.a__init__</definition>
+        <argsstring>(self)</argsstring>
+        <name>a__init__</name>
+        <qualifiedname>embroidery.geometry.PolyLine.a__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3272" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3272" bodyend="3289"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a08270cca3b5e8661ff0a937fbff9f283" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.a_click</definition>
+        <argsstring>(self, x, y)</argsstring>
+        <name>a_click</name>
+        <qualifiedname>embroidery.geometry.PolyLine.a_click</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3290" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3290" bodyend="3306"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1PolyLine_1a3e6d4082aae5cabf9e8539be603c9db7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.PolyLine.a_prompt</definition>
+        <argsstring>(self, user_string)</argsstring>
+        <name>a_prompt</name>
+        <qualifiedname>embroidery.geometry.PolyLine.a_prompt</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>user_string</type>
+          <defname>user_string</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3307" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3307" bodyend="3334"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>This is necessarily a class because we need the same
+functions for other geometry objects and supporting SVG means
+supporting every geometry object supported natively by it.
+
+We should be able to initialise using an existing one, maybe
+a copy() function?
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/geometry.py" line="2920" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2920" bodyend="3334"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1aebf9f60f7a65e698c0a6b0599c82770f" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1aba2f31b3ba6ea7e964c040d9ab9fd439" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>a__init__</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a08270cca3b5e8661ff0a937fbff9f283" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>a_click</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a08270cca3b5e8661ff0a937fbff9f283" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>a_click</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1af095194664afaf8ec46d515f7a7d6578" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>a_prompt</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a3e6d4082aae5cabf9e8539be603c9db7" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>a_prompt</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a972a6174ba9f71821299bb281636ec01" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>all_grip_points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1afe5a18731a92c6f3e459f094d35c90e4" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>all_grip_points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a26b827b4c01c61e9cb23aaa9cacc7cbb" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>base</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a4b6cf3240a8455d9b63fd17c6bcb61a3" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>click</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1ad4dbde546bec9ffa01754c80f1c3ae97" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>copy</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a2c834eb432e5d0eee20116bc00ac285a" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>copy_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1aa7d6d2787469ce24eafc9e88e8dfbc39" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>delta</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1aa30f95161e04a3eba63f851eecc9ca12" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>dest</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a6bff0db1131acbae0b17696e12b25884" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>find_index</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a564a49c85912b997356995503c5d64de" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>first</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a66a19a826af274d6e48ac26ba370c982" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>first_run</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a625bea2a6677599b4e215aedfb0c1c32" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>grip_edit</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a443377869d1e6d67920cbfcbfab89a72" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>grip_index</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a5c63a95a020fcb745d96c07a11fce4b6" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>mouse_snap_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a5c63a95a020fcb745d96c07a11fce4b6" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>mouse_snap_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a3d04241103dc27fb0de1aca8a8c0ea7d" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>normal_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a28ad666b89c83136cfc9e7aa6c4cd339" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>num</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a4514b3baa0f4b4b6f71852f8ed996ec5" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>paint</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1af6fe358456907d8d9225df71b81004b1" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>paint</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a5ed67a654461762f6f4109f25319ab2b" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1ad2fed0f7f949bbcbf4fdd15164211926" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>pen</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a6def2bf7ea7cdf61d76af2d41f775d4b" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>Polyfind_index</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1ac2bccd9365302dbd2368f5fa9bc4a274" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>Polygrip_edit</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a95012442837e6a34fedd7e597e80f35f" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>PolyobjectCopyPath</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a4646fc273b2f1ef8206bff28591fb002" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>PolyobjectSavePath</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a4a6f95cdb565ade4a7a4c72a87fbebaf" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>position</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a36c652b82be3e21e8110b4d9fb9d4e47" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>prev</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1ae0597031424a83916986afa134f9004d" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>prevX</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a749924f7df7423eb8544ff193082d054" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>prevY</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a2bd01b5984287bb3cd96794a89117956" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>prompt</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a1ee49f0fa567e686226ad3ffa343f9be" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>reverse_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1ac2119aaf7a65d59e812cca2633b4af87" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>rotation</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a7c36c8b4803dbcc9aceb0b663f7d8eb3" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>rubber</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a5f16daced4d879a46ba2bdf0de06fd2b" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>rubber_mode</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a0b485cc3b7328d13f0a3e8e70ab4e6b9" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>rubber_points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a5a7b28d78c6ecaf922b73ea4fc57d0c0" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>save_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a3efaf5bd235fafdda22a60dc0ba581ea" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>scale</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1ab08c2486bf6447ad2b376600dba1673b" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>selectable</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1ab18268c497abc00a9ffed07677ffdedc" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>type</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1aa63f3e61b86631c807b1c1529386fb6a" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>update</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a102344e5d99253759d3d9f879c1fa21b" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>update_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a08c7d9223ba9301643a537cb0e1ea394" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>update_rubber</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a6dd2f21f04f36d6909f3294c3e498970" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>update_rubber</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a56b9b79aa3472572a610f204989d9290" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>vulcanize</name></member>
+      <member refid="classembroidery_1_1geometry_1_1PolyLine_1a56b9b79aa3472572a610f204989d9290" prot="public" virt="non-virtual"><scope>embroidery::geometry::PolyLine</scope><name>vulcanize</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,523 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1image_1_1Image" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::image::Image</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1image_1_1Image_1a687b713621c5e3e0d2df075d5ac5841d" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.image.Image::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>embroidery.image.Image.type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="29" column="1" bodyfile="python/embroidery/image.py" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1image_1_1Image_1a194ee6dd4b1d21100bee068b07400b8e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.image.Image::selectable</definition>
+        <argsstring></argsstring>
+        <name>selectable</name>
+        <qualifiedname>embroidery.image.Image.selectable</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="30" column="1" bodyfile="python/embroidery/image.py" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1image_1_1Image_1ae152642872a78b70253f3a101bc54351" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.image.Image::rubber_points</definition>
+        <argsstring></argsstring>
+        <name>rubber_points</name>
+        <qualifiedname>embroidery.image.Image.rubber_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="31" column="1" bodyfile="python/embroidery/image.py" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1image_1_1Image_1a7a18420910ea0c46c34f659b2715d8d4" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.image.Image::rubber_mode</definition>
+        <argsstring></argsstring>
+        <name>rubber_mode</name>
+        <qualifiedname>embroidery.image.Image.rubber_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="32" column="1" bodyfile="python/embroidery/image.py" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1image_1_1Image_1a0f20dea33f2b8e757b861db69d68e965" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.image.Image::scene</definition>
+        <argsstring></argsstring>
+        <name>scene</name>
+        <qualifiedname>embroidery.image.Image.scene</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="33" column="1" bodyfile="python/embroidery/image.py" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1image_1_1Image_1ad959d7a916f88615e4d33d6cdf52d54a" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.image.Image::position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <qualifiedname>embroidery.image.Image.position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="34" column="1" bodyfile="python/embroidery/image.py" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.image.Image::rect</definition>
+        <argsstring></argsstring>
+        <name>rect</name>
+        <qualifiedname>embroidery.image.Image.rect</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="35" column="1" bodyfile="python/embroidery/image.py" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1image_1_1Image_1ac5436457263e990b5ab820b7134bb39e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.image.Image::rgb</definition>
+        <argsstring></argsstring>
+        <name>rgb</name>
+        <qualifiedname>embroidery.image.Image.rgb</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="36" column="1" bodyfile="python/embroidery/image.py" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1image_1_1Image_1a3212aad5c62a0335fca12da13e51dd2d" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.image.Image::scale</definition>
+        <argsstring></argsstring>
+        <name>scale</name>
+        <qualifiedname>embroidery.image.Image.scale</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="37" column="1" bodyfile="python/embroidery/image.py" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1image_1_1Image_1a0c3747a1dbc5e1908e65534cc7127636" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.image.Image::rotation</definition>
+        <argsstring></argsstring>
+        <name>rotation</name>
+        <qualifiedname>embroidery.image.Image.rotation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="38" column="1" bodyfile="python/embroidery/image.py" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1image_1_1Image_1a08184c8c3e4438cdf4be6dab152c405b" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.image.Image::pen</definition>
+        <argsstring></argsstring>
+        <name>pen</name>
+        <qualifiedname>embroidery.image.Image.pen</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="39" column="1" bodyfile="python/embroidery/image.py" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1image_1_1Image_1a869c67d6f55bd853bfdd9411e1d6a0ad" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.image.Image::path</definition>
+        <argsstring></argsstring>
+        <name>path</name>
+        <qualifiedname>embroidery.image.Image.path</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="65" column="1" bodyfile="python/embroidery/image.py" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1image_1_1Image_1a627c94ccbc6b6e1a1c1193aef476f961" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.image.Image.__init__</definition>
+        <argsstring>(self, position, width, height, scene, fname, bg=&quot;#000000&quot;)</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.image.Image.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>position</type>
+          <defname>position</defname>
+        </param>
+        <param>
+          <type>width</type>
+          <defname>width</defname>
+        </param>
+        <param>
+          <type>height</type>
+          <defname>height</defname>
+        </param>
+        <param>
+          <type>scene</type>
+          <defname>scene</defname>
+        </param>
+        <param>
+          <type>fname</type>
+          <defname>fname</defname>
+        </param>
+        <param>
+          <type>bg</type>
+          <defname>bg</defname>
+          <defval>&quot;#000000&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>    </verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="25" column="1" bodyfile="python/embroidery/image.py" bodystart="25" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1image_1_1Image_1a3083713f899e3a2c880432b81464efbb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.image.Image.copy</definition>
+        <argsstring>(self, obj, parent)</argsstring>
+        <name>copy</name>
+        <qualifiedname>embroidery.image.Image.copy</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>obj</type>
+          <defname>obj</defname>
+        </param>
+        <param>
+          <type>parent</type>
+          <defname>parent</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="42" column="1" bodyfile="python/embroidery/image.py" bodystart="42" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1image_1_1Image_1ab7c193d440b244a38ef8d63e6b13bfa9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.image.Image.area</definition>
+        <argsstring>(self)</argsstring>
+        <name>area</name>
+        <qualifiedname>embroidery.image.Image.area</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="51" column="1" bodyfile="python/embroidery/image.py" bodystart="51" bodyend="54"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1image_1_1Image_1a566a7dc6f8997ec0d517aa712ad4399c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.image.Image.set_rect</definition>
+        <argsstring>(self, position, size)</argsstring>
+        <name>set_rect</name>
+        <qualifiedname>embroidery.image.Image.set_rect</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>position</type>
+          <defname>position</defname>
+        </param>
+        <param>
+          <type>size</type>
+          <defname>size</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="55" column="1" bodyfile="python/embroidery/image.py" bodystart="55" bodyend="59"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1image_1_1Image_1ac190aac9c256c4066b23a7cd14df118c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.image.Image.update_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>update_path</name>
+        <qualifiedname>embroidery.image.Image.update_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim> NOTE: Reverse the path so that the inside area isn&apos;t
+considered part of the rectangle.
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="60" column="1" bodyfile="python/embroidery/image.py" bodystart="60" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1image_1_1Image_1a0400344a1893f452a7e3b479542ecad3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.image.Image.paint</definition>
+        <argsstring>(self, painter, option, widget)</argsstring>
+        <name>paint</name>
+        <qualifiedname>embroidery.image.Image.paint</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <param>
+          <type>option</type>
+          <defname>option</defname>
+        </param>
+        <param>
+          <type>widget</type>
+          <defname>widget</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="77" column="1" bodyfile="python/embroidery/image.py" bodystart="77" bodyend="93"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1image_1_1Image_1a1c5e476f4e4ff0a9fa490d90082d8197" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.image.Image.update_rubber</definition>
+        <argsstring>(self, painter)</argsstring>
+        <name>update_rubber</name>
+        <qualifiedname>embroidery.image.Image.update_rubber</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="94" column="1" bodyfile="python/embroidery/image.py" bodystart="94" bodyend="106"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1image_1_1Image_1a2b70e7f20e8c504bd1c84f34988c6a98" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.image.Image.vulcanize</definition>
+        <argsstring>(self)</argsstring>
+        <name>vulcanize</name>
+        <qualifiedname>embroidery.image.Image.vulcanize</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="107" column="1" bodyfile="python/embroidery/image.py" bodystart="107" bodyend="112"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1image_1_1Image_1a102fff94bd796980c8bc630ccde3ca9f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.image.Image.mouse_snap_point</definition>
+        <argsstring>(self, mouse_point)</argsstring>
+        <name>mouse_snap_point</name>
+        <qualifiedname>embroidery.image.Image.mouse_snap_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>mouse_point</type>
+          <defname>mouse_point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="113" column="1" bodyfile="python/embroidery/image.py" bodystart="113" bodyend="117"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1image_1_1Image_1a2c66e0d80f54eaa821abf1a92f16b2d4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.image.Image.all_grip_points</definition>
+        <argsstring>(self)</argsstring>
+        <name>all_grip_points</name>
+        <qualifiedname>embroidery.image.Image.all_grip_points</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="118" column="1" bodyfile="python/embroidery/image.py" bodystart="118" bodyend="127"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1image_1_1Image_1adde76754e27575601d6b23ae290d3ad8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.image.Image.grip_edit</definition>
+        <argsstring>(self, before, after)</argsstring>
+        <name>grip_edit</name>
+        <qualifiedname>embroidery.image.Image.grip_edit</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>before</type>
+          <defname>before</defname>
+        </param>
+        <param>
+          <type>after</type>
+          <defname>after</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="128" column="1" bodyfile="python/embroidery/image.py" bodystart="128" bodyend="131"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1image_1_1Image_1aa39070e72d93f577313458cf37ac963a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.image.Image.draw</definition>
+        <argsstring>(self, description)</argsstring>
+        <name>draw</name>
+        <qualifiedname>embroidery.image.Image.draw</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>description</type>
+          <defname>description</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>This is similar to using an svg path, we can blend these systems
+later.
+int_buffer[4]
+icon = 0
+painter = 0
+QPen pen
+get_n_ints(description, int_buffer, 2)
+icon = new QPixmap(int_buffer[0], int_buffer[1])
+painter = new QPainter(icon)
+pen.setWidth(10)
+for ptr in description:
+    # Other functions we can use are eraseRect, drawArc etc.
+    # https://doc.qt.io/qt-5/qpainter.html
+    if (strncmp(ptr, &quot;rect&quot;, 4)==0) {
+        pen.setColor(Color(QRgb(0x000000)))
+        painter.set_pen(pen)
+        get_n_ints(ptr+5, int_buffer, 4)
+        painter.fillRect(int_buffer[0], int_buffer[1],
+            int_buffer[2], int_buffer[3], Qt_SolidPattern);</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/image.py" line="132" column="1" bodyfile="python/embroidery/image.py" bodystart="132" bodyend="157"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>The Image class definition.
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/image.py" line="21" column="1" bodyfile="python/embroidery/image.py" bodystart="21" bodyend="157"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1image_1_1Image_1a627c94ccbc6b6e1a1c1193aef476f961" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a2c66e0d80f54eaa821abf1a92f16b2d4" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>all_grip_points</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1ab7c193d440b244a38ef8d63e6b13bfa9" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>area</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a3083713f899e3a2c880432b81464efbb" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>copy</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1aa39070e72d93f577313458cf37ac963a" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>draw</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1adde76754e27575601d6b23ae290d3ad8" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>grip_edit</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a102fff94bd796980c8bc630ccde3ca9f" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>mouse_snap_point</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a0400344a1893f452a7e3b479542ecad3" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>paint</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a869c67d6f55bd853bfdd9411e1d6a0ad" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>path</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a08184c8c3e4438cdf4be6dab152c405b" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>pen</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1ad959d7a916f88615e4d33d6cdf52d54a" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>position</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a3239780dc9895dfe309bd32eaccce202" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>rect</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1ac5436457263e990b5ab820b7134bb39e" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>rgb</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a0c3747a1dbc5e1908e65534cc7127636" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>rotation</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a7a18420910ea0c46c34f659b2715d8d4" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>rubber_mode</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1ae152642872a78b70253f3a101bc54351" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>rubber_points</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a3212aad5c62a0335fca12da13e51dd2d" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>scale</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a0f20dea33f2b8e757b861db69d68e965" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>scene</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a194ee6dd4b1d21100bee068b07400b8e" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>selectable</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a566a7dc6f8997ec0d517aa712ad4399c" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>set_rect</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a687b713621c5e3e0d2df075d5ac5841d" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>type</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1ac190aac9c256c4066b23a7cd14df118c" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>update_path</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a1c5e476f4e4ff0a9fa490d90082d8197" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>update_rubber</name></member>
+      <member refid="classembroidery_1_1image_1_1Image_1a2b70e7f20e8c504bd1c84f34988c6a98" prot="public" virt="non-virtual"><scope>embroidery::image::Image</scope><name>vulcanize</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

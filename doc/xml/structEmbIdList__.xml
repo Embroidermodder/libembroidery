@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structEmbIdList__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbIdList_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structEmbIdList___1a0c066f923ce3804f708bea91e7850fb7" prot="public" static="no" mutable="no">
+        <type>int32_t *</type>
+        <definition>int32_t* EmbIdList_::data</definition>
+        <argsstring></argsstring>
+        <name>data</name>
+        <qualifiedname>EmbIdList_::data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="779" column="13" bodyfile="src/embroidery.h" bodystart="779" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbIdList___1ad630c89ee4ebc5fe01f4cbbcd832765d" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbIdList_::count</definition>
+        <argsstring></argsstring>
+        <name>count</name>
+        <qualifiedname>EmbIdList_::count</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="780" column="9" bodyfile="src/embroidery.h" bodystart="780" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbIdList___1aca3aa5fe7ccb1d843abdd17b16433f7b" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbIdList_::size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <qualifiedname>EmbIdList_::size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="781" column="9" bodyfile="src/embroidery.h" bodystart="781" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="778" column="1" bodyfile="src/embroidery.h" bodystart="778" bodyend="782"/>
+    <listofallmembers>
+      <member refid="structEmbIdList___1ad630c89ee4ebc5fe01f4cbbcd832765d" prot="public" virt="non-virtual"><scope>EmbIdList_</scope><name>count</name></member>
+      <member refid="structEmbIdList___1a0c066f923ce3804f708bea91e7850fb7" prot="public" virt="non-virtual"><scope>EmbIdList_</scope><name>data</name></member>
+      <member refid="structEmbIdList___1aca3aa5fe7ccb1d843abdd17b16433f7b" prot="public" virt="non-virtual"><scope>EmbIdList_</scope><name>size</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

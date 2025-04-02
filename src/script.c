@@ -1,4 +1,7 @@
-/*
+/*!
+ * \file script.c
+ * \brief Basic Postscript support for libembroidery.
+ *
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *
@@ -24,14 +27,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
+#include <assert.h>
 #include <math.h>
+#include <time.h>
 
 #include "embroidery.h"
 #include "../extern/mpc/mpc.h"
 
+void embPattern_addArc(EmbPattern *pattern, EmbArc arc);
+int process_stack_head(EmbStack *stack);
+
 static EmbPattern *focussed_pattern = NULL;
 
-/* Internally, we use fixed-point arithmetic because it can be made more
+/*!
+ * Internally, we use fixed-point arithmetic because it can be made more
  * consistent.
  *
  * The maximum integer value is 32767, so with a place value of 0.1 the
@@ -71,6 +81,7 @@ static EmbPattern *focussed_pattern = NULL;
 #define NAME_TYPE                      5
 #define DICTIONARY_TYPE                6
 
+/*! Postscript data types */
 static char postscript_data_type[][20] = {
     "string",
     "array",
@@ -345,6 +356,56 @@ static char in_built_functions[][20] = {
     ""
 };
 
+/* . */
+ScriptValue
+script_bool(unsigned char b)
+{
+    ScriptValue value;
+    value.type = SCRIPT_BOOL;
+    value.b = b;
+    return value;
+}
+
+/* . */
+ScriptValue
+script_int(int i)
+{
+    ScriptValue value;
+    value.type = SCRIPT_INT;
+    value.i = i;
+    return value;
+}
+
+/* . */
+ScriptValue
+script_real(EmbReal r)
+{
+    ScriptValue value;
+    value.type = SCRIPT_REAL;
+    value.r = r;
+    return value;
+}
+
+/* . */
+ScriptValue
+script_string(char *s)
+{
+    ScriptValue value;
+    value.type = SCRIPT_STRING;
+    strncpy(value.s, s, MAX_STRING_LENGTH-1);
+    return value;
+}
+
+/* . */
+ScriptValue
+script_vector(EmbVector v)
+{
+    ScriptValue value;
+    value.type = SCRIPT_VECTOR;
+    value.v = v;
+    return value;
+}
+
 /* .
  */
 void
@@ -380,7 +441,7 @@ stack_push(EmbStack *stack, char *token)
     int all_digits = 1;
     int decimal_place_present = 0;
     if (token[0] == 0) {
-        return;
+        return -1;
     }
     strncpy(stack->stack[stack->position].s, token, 200);
     stack->position++;    
@@ -490,6 +551,228 @@ token_is_int(EmbStackElement arg)
         return 0;
     }
     return (arg.data_type == INT_TYPE);
+}
+
+/* Tests if char * matches a fixed string, often from compiled-in program
+ * data.
+ */
+bool
+string_equal(char *a, const char *b)
+{
+    return (strncmp(a, b, MAX_STRING_LENGTH) == 0);
+}
+
+
+/* . */
+int
+parse_floats(const char *line, float result[], int n)
+{
+    char substring[MAX_STRING_LENGTH];
+    const char *c;
+    int i = 0;
+    int pos = 0;
+    for (c=line; *c; c++) {
+        substring[pos] = *c;
+        if (*c == ',' || *c == ' ') {
+            substring[pos] = 0;
+            result[i] = atof(substring);
+            pos = 0;
+            i++;
+            if (i > n-1) {
+                return -1;
+            }
+        }
+        else {
+            pos++;
+        }
+    }
+    substring[pos] = 0;
+    result[i] = atof(substring);
+    return i+1;
+}
+
+int
+parse_vector(const char *line, EmbVector *v)
+{
+    float v_[2];
+    if (parse_floats(line, v_, 2) == 2) {
+        return 0;
+    }
+    v->x = v_[0];
+    v->y = v_[1];
+    return 1;
+}
+
+/* . */
+bool
+valid_rgb(float r, float g, float b)
+{
+    if (isnan(r)) {
+        return false;
+    }
+    if (isnan(g)) {
+        return false;
+    }
+    if (isnan(b)) {
+        return false;
+    }
+    if (r < 0 || r > 255) {
+        return false;
+    }
+    if (g < 0 || g > 255) {
+        return false;
+    }
+    if (b < 0 || b > 255) {
+        return false;
+    }
+    return true;
+}
+
+/* This version of string_array_length does not protect against the END_SYMBOL
+ * missing, because it is only to be used for compiled in constant tables.
+ *
+ * For string tables edited during run time, the END_SYMBOL is checked for during loops.
+ */
+int
+table_length(char *s[])
+{
+    int i;
+    for (i=0; i<1000; i++) {
+        if (s[i][0] == END_SYMBOL[0]) {
+            if (!strncmp(s[i], END_SYMBOL, MAX_STRING_LENGTH)) {
+                break;
+            }
+        }
+    }
+    if (i == 1000) {
+        puts("ERROR: Table is missing END_SYMBOL.");
+        return 1000;
+    }
+    return i;
+}
+
+/* . */
+unsigned char *
+load_file(char *fname)
+{
+    FILE *f = fopen(fname, "r");
+    if (!f) {
+        printf("ERROR: Failed to open \"%s\".\n", fname);
+        return NULL;
+    }
+    fseek(f, 0, SEEK_END);
+    size_t length = ftell(f);
+    unsigned char *data = malloc(length+1);
+    fseek(f, 0, SEEK_SET);
+    if (!read_n_bytes(f, data, length)) {
+        fclose(f);
+        return NULL;
+    }
+    fclose(f);
+    return data;
+}
+
+
+/* . */
+bool
+int32_underflow(int64_t a, int64_t b)
+{
+    int64_t c;
+    assert(LLONG_MAX>INT_MAX);
+    c = (int64_t)a-b;
+    if (c < INT_MIN || c > INT_MAX) {
+        return true;
+    }
+    return false;
+}
+
+/* . */
+bool
+int32_overflow(int64_t a, int64_t b)
+{
+    int64_t c;
+    assert(LLONG_MAX>INT_MAX);
+    c = (int64_t)a+b;
+    if (c < INT_MIN || c > INT_MAX) {
+        return true;
+    }
+    return false;
+}
+
+/* . */
+int
+round_to_multiple(bool roundUp, int numToRound, int multiple)
+{
+    if (multiple == 0) {
+        return numToRound;
+    }
+    int remainder = numToRound % multiple;
+    if (remainder == 0) {
+        return numToRound;
+    }
+
+    if (numToRound < 0 && roundUp) {
+        return numToRound - remainder;
+    }
+    if (roundUp) {
+        return numToRound + multiple - remainder;
+    }
+    /* else round down */
+    if (numToRound < 0 && !roundUp) {
+        return numToRound - multiple - remainder;
+    }
+    return numToRound - remainder;
+}
+
+/* Formats each message with a timestamp. */
+void
+debug_message(const char *msg, ...)
+{
+    char buffer[MAX_STRING_LENGTH], fname[MAX_STRING_LENGTH];
+    time_t t;
+    struct tm* tm_info;
+    sprintf(fname, "debug.log");
+    FILE *f = fopen(fname, "a");
+    if (!f) {
+        printf("Failed to write to debug.log.");
+        return;
+    }
+    t = time(NULL);
+    tm_info = localtime(&t);
+    strftime(buffer, 26, "%Y-%m-%d %H:%M:%S", tm_info);
+    fprintf(f, "%s ", buffer);
+
+    va_list args;
+    va_start(args, msg);
+    vfprintf(f, msg, args);
+    va_end(args);
+
+    fprintf(f, "\n");
+    fclose(f);
+}
+
+/* . */
+bool
+valid_file_format(char *fileName)
+{
+    if (emb_identify_format(fileName) >= 0) {
+        return true;
+    }
+    return false;
+}
+
+/* . */
+int
+get_id(char *data[], char *label)
+{
+    int id;
+    int n = table_length(data);
+    for (id=0; id<n; id++) {
+        if (string_equal(data[id], label)) {
+            return id;
+        }
+    }
+    return -1;
 }
 
 static int
@@ -1030,7 +1313,7 @@ emb_repl(void)
     while (running) {
         char line[200];
         int i = 0;
-        unsigned char c = 0;
+        int c = 0;
         printf("emb> ");
         while (c != EOF) {
             c = fgetc(stdin);
@@ -1131,6 +1414,7 @@ emb_processor(char *state, const char *program, int program_length)
             }
             EmbVector center = emb_vector_from_bytes(program, i+1);
             EmbReal r = emb_real_from_bytes(program, i+5);
+            printf("%f %f", center.x, r);
 
             i += 6;
             break;
@@ -1178,8 +1462,9 @@ emb_compiler(const char *program, int language, char *compiled_program)
 
 /* Calls the compiler, then runs the compiled program. */
 void
-emb_actuator(const char *program, int language)
+emb_actuator(EmbPattern *pattern, const char *program, int language)
 {
+    printf("%p\n", pattern);
     char *state = malloc(1000);
     char *compiled_program = malloc(1000);
     int output_length = emb_compiler(program, language, compiled_program);
@@ -1188,7 +1473,7 @@ emb_actuator(const char *program, int language)
     safe_free(state);
 }
 
-/* Create the ScriptValue tree to be used for this pattern.
+/*! Create the ScriptValue tree to be used for this pattern.
  */
 ScriptValue *
 emb_create_root(void)
@@ -1203,47 +1488,97 @@ emb_create_root(void)
     return root;
 }
 
-/* Add an ScriptValue as a leaf by describing it using a datatype, label for
+/*! Add an ScriptValue as a leaf by describing it using a datatype, label for
  * finding it and the data value as a C string.
  */
 int
 emb_create_leaf(ScriptValue *branch, int type, char *label, char *data)
 {
-    int n = branch->n_leaves + 1;
-    if (n >= branch->max_leaves) {
+    int n = branch->n_leaves;
+    if (n + 1 >= branch->max_leaves) {
         branch->max_leaves += CHUNK_SIZE;
-        branch->leaves = (ScriptValue *)realloc(branch->leaves, branch->max_leaves * sizeof(ScriptValue));
+        size_t new_size = branch->max_leaves * sizeof(ScriptValue);
+        branch->leaves = (ScriptValue *)realloc(branch->leaves, new_size);
     }
-    branch->type = type;
-    strcpy(branch->leaves[n].label, label);
-    strcpy(branch->leaves[n].s, data);
+    branch->n_leaves++;
+
+    ScriptValue *leaf = branch->leaves + n;
+    leaf->type = type;
+    strcpy(leaf->label, label);
+    strcpy(leaf->s, data);
+    leaf->n_leaves = 0;
+    leaf->max_leaves = 0;
+
     switch (type) {
     case EMB_DATATYPE_DICT:
     case EMB_DATATYPE_ARRAY: {
-        branch->leaves[n].leaves = (ScriptValue*)malloc(sizeof(ScriptValue) * CHUNK_SIZE);
-        branch->leaves[n].n_leaves = 0;
-        branch->leaves[n].max_leaves = 10;
+        size_t size = sizeof(ScriptValue) * CHUNK_SIZE;
+        leaf->leaves = (ScriptValue*)malloc(size);
+        leaf->max_leaves = 10;
         break;
     }
     case EMB_DATATYPE_INT: {
-        branch->leaves[n].i = atoi(data);
-        branch->leaves[n].max_leaves = 0;
+        leaf->i = atoi(data);
         break;
     }
     case EMB_DATATYPE_REAL: {
-        branch->leaves[n].r = atoi(data);
-        branch->leaves[n].max_leaves = 0;
+        leaf->r = atof(data);
         break;
     }
-    default: {
-        branch->leaves[n].max_leaves = 0;
+    default:
         break;
-    }
     }
     return 1;
 }
 
-/* Recursively free our tree.
+/*! \brief Recursively find the leaf within a tree matching a given key.
+ *
+ * First identify the leftmost chunk in dot chain, for example:
+ *
+ *     emb_find_leaf(branch, "collection.entry")
+ *
+ * After step one chunk will contain "collection", first_dot will be 10,
+ * so then the recursion is like this:
+ *
+ *     emb_find_leaf(branch->leaves + i, "collection.entry" + first_dot + 1)
+ *
+ * That is: `emb_find_leaf(match, "entry")`.
+ */
+ScriptValue *
+emb_find_leaf(ScriptValue *branch, char *key)
+{
+    int i;
+    EmbString chunk;
+    int first_dot;
+
+    /* Step one: check for dot operator, extract leftmost chunk. */
+    first_dot = -1;
+    strncpy(chunk, key, MAX_STRING_LENGTH-1);
+    for (i=0; key[i]; i++) {
+        if (key[i] == '.') {
+            chunk[i] = 0;
+            first_dot = i;
+            break;
+        }
+    }
+
+    /* Step two: loop for the first match of the chunk in the label entry. */
+    for (i=0; i<branch->n_leaves; i++) {
+        printf("(%d, %s)\n", i, branch->leaves[i].label);
+        if (strncmp(branch->leaves[i].label, chunk, MAX_STRING_LENGTH-1)) {
+            if (first_dot < 0) {
+                /* We're at the end of a chain here, so don't recurse. */
+                return branch->leaves + i;
+            }
+            return emb_find_leaf(branch->leaves + i, key + first_dot + 1);
+        }
+    }
+
+    /* Failure condition. No match found. */
+    return NULL;
+}
+
+/*! Recursively free our tree.
  */
 void
 emb_free_root(ScriptValue *root)
@@ -1274,25 +1609,29 @@ void
 emb_print_tree(ScriptValue *tree, int indent)
 {
     switch (tree->type) {
+    case EMB_DATATYPE_ROOT:
     case EMB_DATATYPE_DICT:
     case EMB_DATATYPE_ARRAY: {
         int i;
         for (i=0; i<tree->n_leaves; i++) {
-            emb_print_tree(tree, indent+1);
+            emb_print_tree(tree->leaves + i, indent+1);
         }
+        break;
+    }
+    case EMB_DATATYPE_STR: {
+        printf("%*c%s: \"%s\"\n", indent, ' ', tree->label, tree->s);
+        break;
+    }
+    case EMB_DATATYPE_INT: {
+        printf("%*c%s: %d\n", indent, ' ', tree->label, tree->i);
+        break;
+    }
+    case EMB_DATATYPE_REAL: {
+        printf("%*c%s: %f\n", indent, ' ', tree->label, tree->r);
         break;
     }
     default:
         break;
     }
-}
-
-void
-test_tree(void)
-{
-    ScriptValue *root = emb_create_root();
-    emb_create_leaf(root, EMB_DATATYPE_STR, "test", "value");
-    emb_print_tree(root, 0);
-    emb_free_root(root);
 }
 

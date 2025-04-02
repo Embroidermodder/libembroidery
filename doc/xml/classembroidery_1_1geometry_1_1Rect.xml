@@ -1,0 +1,628 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1geometry_1_1Rect" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::geometry::Rect</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rect_1a993a2feb1f73ac377d54172b9d2009ad" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rect::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>embroidery.geometry.Rect.type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="585" column="1" bodyfile="python/embroidery/geometry.py" bodystart="585" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rect_1a1758ec2d3ce47d65b096e74dc0332688" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rect::selectable</definition>
+        <argsstring></argsstring>
+        <name>selectable</name>
+        <qualifiedname>embroidery.geometry.Rect.selectable</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="586" column="1" bodyfile="python/embroidery/geometry.py" bodystart="586" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rect_1a2c4d66f34949bd1c40fdd14f41984a66" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rect::scale</definition>
+        <argsstring></argsstring>
+        <name>scale</name>
+        <qualifiedname>embroidery.geometry.Rect.scale</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="587" column="1" bodyfile="python/embroidery/geometry.py" bodystart="587" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rect_1af8e1599e0e592c3572c2855e53daecd6" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rect::rotation</definition>
+        <argsstring></argsstring>
+        <name>rotation</name>
+        <qualifiedname>embroidery.geometry.Rect.rotation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="588" column="1" bodyfile="python/embroidery/geometry.py" bodystart="588" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rect_1a77526dc93d61eee6304e68011782bf36" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rect::position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <qualifiedname>embroidery.geometry.Rect.position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="589" column="1" bodyfile="python/embroidery/geometry.py" bodystart="589" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rect_1a60dcc8f619519bce4893480c8e6b060f" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rect::dimensions</definition>
+        <argsstring></argsstring>
+        <name>dimensions</name>
+        <qualifiedname>embroidery.geometry.Rect.dimensions</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="590" column="1" bodyfile="python/embroidery/geometry.py" bodystart="590" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rect_1a9116e5eb085ec113d2907ac1ebc408df" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rect::pen</definition>
+        <argsstring></argsstring>
+        <name>pen</name>
+        <qualifiedname>embroidery.geometry.Rect.pen</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="591" column="1" bodyfile="python/embroidery/geometry.py" bodystart="591" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rect_1a035aac8f0ee91799c48cc733919ff696" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rect::new_rect</definition>
+        <argsstring></argsstring>
+        <name>new_rect</name>
+        <qualifiedname>embroidery.geometry.Rect.new_rect</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="594" column="1" bodyfile="python/embroidery/geometry.py" bodystart="594" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rect_1a71eca0d2fc330e0af6f5ca35970e2d84" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rect::rubber_mode</definition>
+        <argsstring></argsstring>
+        <name>rubber_mode</name>
+        <qualifiedname>embroidery.geometry.Rect.rubber_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="595" column="1" bodyfile="python/embroidery/geometry.py" bodystart="595" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rect_1a892869396dd3928a51431a81b67af206" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rect::path</definition>
+        <argsstring></argsstring>
+        <name>path</name>
+        <qualifiedname>embroidery.geometry.Rect.path</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="689" column="1" bodyfile="python/embroidery/geometry.py" bodystart="689" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1a0d3e8905fa5e0e22d9169c3cb0eaa18e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.__init__</definition>
+        <argsstring>(self, position_x, position_y, width, height, pen=Pen())</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.geometry.Rect.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>position_x</type>
+          <defname>position_x</defname>
+        </param>
+        <param>
+          <type>position_y</type>
+          <defname>position_y</defname>
+        </param>
+        <param>
+          <type>width</type>
+          <defname>width</defname>
+        </param>
+        <param>
+          <type>height</type>
+          <defname>height</defname>
+        </param>
+        <param>
+          <type>pen</type>
+          <defname>pen</defname>
+          <defval>Pen()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="583" column="1" bodyfile="python/embroidery/geometry.py" bodystart="583" bodyend="597"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1ae67d2103df556e26ab6611a54b64b060" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.width</definition>
+        <argsstring>(self)</argsstring>
+        <name>width</name>
+        <qualifiedname>embroidery.geometry.Rect.width</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="598" column="1" bodyfile="python/embroidery/geometry.py" bodystart="598" bodyend="601"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1abb2c11143970e9edda1bb53cc94829ef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.height</definition>
+        <argsstring>(self)</argsstring>
+        <name>height</name>
+        <qualifiedname>embroidery.geometry.Rect.height</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="602" column="1" bodyfile="python/embroidery/geometry.py" bodystart="602" bodyend="605"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1afb07976c4b41e3107f37216c62a55ece" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.area</definition>
+        <argsstring>(self)</argsstring>
+        <name>area</name>
+        <qualifiedname>embroidery.geometry.Rect.area</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="606" column="1" bodyfile="python/embroidery/geometry.py" bodystart="606" bodyend="609"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1a1520fc5bdf1c9c18c0357c58bf82b34b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.click</definition>
+        <argsstring>(self, point)</argsstring>
+        <name>click</name>
+        <qualifiedname>embroidery.geometry.Rect.click</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>point</type>
+          <defname>point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="610" column="1" bodyfile="python/embroidery/geometry.py" bodystart="610" bodyend="624"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1a371d8d2bb987ec460492d7690613800d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.prompt</definition>
+        <argsstring>(self, cmd)</argsstring>
+        <name>prompt</name>
+        <qualifiedname>embroidery.geometry.Rect.prompt</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>cmd</type>
+          <defname>cmd</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="625" column="1" bodyfile="python/embroidery/geometry.py" bodystart="625" bodyend="654"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1aaa0835f31c7650195d1c9348d60d5d29" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.copy</definition>
+        <argsstring>(self)</argsstring>
+        <name>copy</name>
+        <qualifiedname>embroidery.geometry.Rect.copy</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="655" column="1" bodyfile="python/embroidery/geometry.py" bodystart="655" bodyend="660"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1aa4d599113059c05a4c516969d0c562c0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.set_rect</definition>
+        <argsstring>(self, x, y, w, h)</argsstring>
+        <name>set_rect</name>
+        <qualifiedname>embroidery.geometry.Rect.set_rect</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <param>
+          <type>w</type>
+          <defname>w</defname>
+        </param>
+        <param>
+          <type>h</type>
+          <defname>h</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="661" column="1" bodyfile="python/embroidery/geometry.py" bodystart="661" bodyend="666"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1a30130612c02a033619302720fc815b39" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.top_left</definition>
+        <argsstring>(self)</argsstring>
+        <name>top_left</name>
+        <qualifiedname>embroidery.geometry.Rect.top_left</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="667" column="1" bodyfile="python/embroidery/geometry.py" bodystart="667" bodyend="670"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1abbfe750f6150d8bc613638a79532c96c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.top_right</definition>
+        <argsstring>(self)</argsstring>
+        <name>top_right</name>
+        <qualifiedname>embroidery.geometry.Rect.top_right</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="671" column="1" bodyfile="python/embroidery/geometry.py" bodystart="671" bodyend="676"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1aa7b95f14113606ea2f887f8c2cbebdb5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.bottom_left</definition>
+        <argsstring>(self)</argsstring>
+        <name>bottom_left</name>
+        <qualifiedname>embroidery.geometry.Rect.bottom_left</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="677" column="1" bodyfile="python/embroidery/geometry.py" bodystart="677" bodyend="682"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1a4179b249270e21f5f059cd53089264de" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.bottom_right</definition>
+        <argsstring>(self)</argsstring>
+        <name>bottom_right</name>
+        <qualifiedname>embroidery.geometry.Rect.bottom_right</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="683" column="1" bodyfile="python/embroidery/geometry.py" bodystart="683" bodyend="686"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1a65d182ba9b1f8979d68d54181152a0b1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.update_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>update_path</name>
+        <qualifiedname>embroidery.geometry.Rect.update_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="687" column="1" bodyfile="python/embroidery/geometry.py" bodystart="687" bodyend="702"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1a67d322da8e4b23620584c6c4932e6d35" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.paint</definition>
+        <argsstring>(self, painter, option, widget)</argsstring>
+        <name>paint</name>
+        <qualifiedname>embroidery.geometry.Rect.paint</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <param>
+          <type>option</type>
+          <defname>option</defname>
+        </param>
+        <param>
+          <type>widget</type>
+          <defname>widget</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="703" column="1" bodyfile="python/embroidery/geometry.py" bodystart="703" bodyend="719"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1a261cf6577121dd832bd694efc8c78aa8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.update_rubber</definition>
+        <argsstring>(self, painter)</argsstring>
+        <name>update_rubber</name>
+        <qualifiedname>embroidery.geometry.Rect.update_rubber</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="720" column="1" bodyfile="python/embroidery/geometry.py" bodystart="720" bodyend="756"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1a67acefb9ca0205d7a896bdaa4c01aa2a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.vulcanize</definition>
+        <argsstring>(self)</argsstring>
+        <name>vulcanize</name>
+        <qualifiedname>embroidery.geometry.Rect.vulcanize</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="757" column="1" bodyfile="python/embroidery/geometry.py" bodystart="757" bodyend="763"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1a9de3ff3813f8b9187d81ebc7f8b0dae1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.mouse_snap_point</definition>
+        <argsstring>(self, mouse_point)</argsstring>
+        <name>mouse_snap_point</name>
+        <qualifiedname>embroidery.geometry.Rect.mouse_snap_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>mouse_point</type>
+          <defname>mouse_point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="764" column="1" bodyfile="python/embroidery/geometry.py" bodystart="764" bodyend="768"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1ad69a686a04d7a6ebd5b9a1d45cca7141" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.all_grip_points</definition>
+        <argsstring>(self)</argsstring>
+        <name>all_grip_points</name>
+        <qualifiedname>embroidery.geometry.Rect.all_grip_points</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="769" column="1" bodyfile="python/embroidery/geometry.py" bodystart="769" bodyend="773"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1adecc5a320d3ab2d715066c4d26f75384" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.grip_edit</definition>
+        <argsstring>(self, before, after, tolerance=0.01)</argsstring>
+        <name>grip_edit</name>
+        <qualifiedname>embroidery.geometry.Rect.grip_edit</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>before</type>
+          <defname>before</defname>
+        </param>
+        <param>
+          <type>after</type>
+          <defname>after</defname>
+        </param>
+        <param>
+          <type>tolerance</type>
+          <defname>tolerance</defname>
+          <defval>0.01</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>The tolerance is how close the input needs to be to be considered
+a match to the given point.
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="774" column="1" bodyfile="python/embroidery/geometry.py" bodystart="774" bodyend="794"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rect_1a89611e657f413df033be9b04c97ccb0d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rect.save_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>save_path</name>
+        <qualifiedname>embroidery.geometry.Rect.save_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="795" column="1" bodyfile="python/embroidery/geometry.py" bodystart="795" bodyend="811"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="python/embroidery/geometry.py" line="581" column="1" bodyfile="python/embroidery/geometry.py" bodystart="581" bodyend="811"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a0d3e8905fa5e0e22d9169c3cb0eaa18e" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1ad69a686a04d7a6ebd5b9a1d45cca7141" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>all_grip_points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1afb07976c4b41e3107f37216c62a55ece" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>area</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1aa7b95f14113606ea2f887f8c2cbebdb5" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>bottom_left</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a4179b249270e21f5f059cd53089264de" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>bottom_right</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a1520fc5bdf1c9c18c0357c58bf82b34b" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>click</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1aaa0835f31c7650195d1c9348d60d5d29" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>copy</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a60dcc8f619519bce4893480c8e6b060f" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>dimensions</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1adecc5a320d3ab2d715066c4d26f75384" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>grip_edit</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1abb2c11143970e9edda1bb53cc94829ef" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>height</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a9de3ff3813f8b9187d81ebc7f8b0dae1" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>mouse_snap_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a035aac8f0ee91799c48cc733919ff696" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>new_rect</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a67d322da8e4b23620584c6c4932e6d35" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>paint</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a892869396dd3928a51431a81b67af206" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a9116e5eb085ec113d2907ac1ebc408df" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>pen</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a77526dc93d61eee6304e68011782bf36" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>position</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a371d8d2bb987ec460492d7690613800d" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>prompt</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1af8e1599e0e592c3572c2855e53daecd6" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>rotation</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a71eca0d2fc330e0af6f5ca35970e2d84" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>rubber_mode</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a89611e657f413df033be9b04c97ccb0d" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>save_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a2c4d66f34949bd1c40fdd14f41984a66" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>scale</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a1758ec2d3ce47d65b096e74dc0332688" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>selectable</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1aa4d599113059c05a4c516969d0c562c0" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>set_rect</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a30130612c02a033619302720fc815b39" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>top_left</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1abbfe750f6150d8bc613638a79532c96c" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>top_right</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a993a2feb1f73ac377d54172b9d2009ad" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>type</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a65d182ba9b1f8979d68d54181152a0b1" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>update_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a261cf6577121dd832bd694efc8c78aa8" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>update_rubber</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1a67acefb9ca0205d7a896bdaa4c01aa2a" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>vulcanize</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rect_1ae67d2103df556e26ab6611a54b64b060" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rect</scope><name>width</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

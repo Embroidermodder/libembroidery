@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="dir_68267d1309a1af8e8297ef4c3efbcdba" kind="dir">
+    <compoundname>src</compoundname>
+    <innerfile refid="compress_8c">compress.c</innerfile>
+    <innerfile refid="data_8c">data.c</innerfile>
+    <innerfile refid="designs_8c">designs.c</innerfile>
+    <innerfile refid="embroider_8c">embroider.c</innerfile>
+    <innerfile refid="embroidery_8h">embroidery.h</innerfile>
+    <innerfile refid="formats_8c">formats.c</innerfile>
+    <innerfile refid="geometry_8c">geometry.c</innerfile>
+    <innerfile refid="pattern_8c">pattern.c</innerfile>
+    <innerfile refid="script_8c">script.c</innerfile>
+    <innerfile refid="testing_8c">testing.c</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/"/>
+  </compounddef>
+</doxygen>

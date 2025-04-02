@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structThredExtension__" kind="struct" language="C++" prot="public">
+    <compoundname>ThredExtension_</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structThredExtension___1a132162bcb74df2dd0ba48ab7c8748f85" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float ThredExtension_::hoopX</definition>
+        <argsstring></argsstring>
+        <name>hoopX</name>
+        <qualifiedname>ThredExtension_::hoopX</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1033" column="11" bodyfile="src/embroidery.h" bodystart="1033" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structThredExtension___1aae7cbd00b02c8d31524365e8c8e2ade3" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float ThredExtension_::hoopY</definition>
+        <argsstring></argsstring>
+        <name>hoopY</name>
+        <qualifiedname>ThredExtension_::hoopY</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1034" column="11" bodyfile="src/embroidery.h" bodystart="1034" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structThredExtension___1a72af0051ac0eeda635d8a7b42893f5fb" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float ThredExtension_::stitchGranularity</definition>
+        <argsstring></argsstring>
+        <name>stitchGranularity</name>
+        <qualifiedname>ThredExtension_::stitchGranularity</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1035" column="11" bodyfile="src/embroidery.h" bodystart="1035" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structThredExtension___1acc413814bf3da0a745bfc81abf3aab7a" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char ThredExtension_::creatorName[50]</definition>
+        <argsstring>[50]</argsstring>
+        <name>creatorName</name>
+        <qualifiedname>ThredExtension_::creatorName</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1036" column="10" bodyfile="src/embroidery.h" bodystart="1036" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structThredExtension___1a5af7676b53a5ca2cc576a21d6e29c1c2" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char ThredExtension_::modifierName[50]</definition>
+        <argsstring>[50]</argsstring>
+        <name>modifierName</name>
+        <qualifiedname>ThredExtension_::modifierName</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1037" column="10" bodyfile="src/embroidery.h" bodystart="1037" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structThredExtension___1a64bf9443cea67eb3fb7f877a10602d72" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char ThredExtension_::auxFormat</definition>
+        <argsstring></argsstring>
+        <name>auxFormat</name>
+        <qualifiedname>ThredExtension_::auxFormat</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1038" column="10" bodyfile="src/embroidery.h" bodystart="1038" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structThredExtension___1a41a5ec7f3408d305cdff5870f2bb11cf" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char ThredExtension_::reserved[31]</definition>
+        <argsstring>[31]</argsstring>
+        <name>reserved</name>
+        <qualifiedname>ThredExtension_::reserved</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="1039" column="10" bodyfile="src/embroidery.h" bodystart="1039" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="1031" column="1" bodyfile="src/embroidery.h" bodystart="1032" bodyend="1040"/>
+    <listofallmembers>
+      <member refid="structThredExtension___1a64bf9443cea67eb3fb7f877a10602d72" prot="public" virt="non-virtual"><scope>ThredExtension_</scope><name>auxFormat</name></member>
+      <member refid="structThredExtension___1acc413814bf3da0a745bfc81abf3aab7a" prot="public" virt="non-virtual"><scope>ThredExtension_</scope><name>creatorName</name></member>
+      <member refid="structThredExtension___1a132162bcb74df2dd0ba48ab7c8748f85" prot="public" virt="non-virtual"><scope>ThredExtension_</scope><name>hoopX</name></member>
+      <member refid="structThredExtension___1aae7cbd00b02c8d31524365e8c8e2ade3" prot="public" virt="non-virtual"><scope>ThredExtension_</scope><name>hoopY</name></member>
+      <member refid="structThredExtension___1a5af7676b53a5ca2cc576a21d6e29c1c2" prot="public" virt="non-virtual"><scope>ThredExtension_</scope><name>modifierName</name></member>
+      <member refid="structThredExtension___1a41a5ec7f3408d305cdff5870f2bb11cf" prot="public" virt="non-virtual"><scope>ThredExtension_</scope><name>reserved</name></member>
+      <member refid="structThredExtension___1a72af0051ac0eeda635d8a7b42893f5fb" prot="public" virt="non-virtual"><scope>ThredExtension_</scope><name>stitchGranularity</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

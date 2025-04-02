@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="namespacetests" kind="namespace" language="Python">
+    <compoundname>tests</compoundname>
+    <innerclass refid="classtests_1_1TestLibembroidery" prot="public">tests::TestLibembroidery</innerclass>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespacetests_1ab46e5ea778b9e3f108c0e970ba717ecb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def tests.create_test_file_1</definition>
+        <argsstring>(outf=&quot;test01.csv&quot;)</argsstring>
+        <name>create_test_file_1</name>
+        <qualifiedname>tests.create_test_file_1</qualifiedname>
+        <param>
+          <type>outf</type>
+          <defname>outf</defname>
+          <defval>&quot;test01.csv&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>    .</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/tests.py" line="32" column="1" bodyfile="python/tests.py" bodystart="32" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacetests_1aea53f4f11f87cfcdac68edaf0667725a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def tests.create_test_file_2</definition>
+        <argsstring>(outf=&quot;test02.csv&quot;)</argsstring>
+        <name>create_test_file_2</name>
+        <qualifiedname>tests.create_test_file_2</qualifiedname>
+        <param>
+          <type>outf</type>
+          <defname>outf</defname>
+          <defval>&quot;test02.csv&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>.
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/tests.py" line="56" column="1" bodyfile="python/tests.py" bodystart="56" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacetests_1a2e2de3a0c2b474b8a08c53a9bd65fe4f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def tests.create_test_file_3</definition>
+        <argsstring>(outf=&quot;test03.csv&quot;)</argsstring>
+        <name>create_test_file_3</name>
+        <qualifiedname>tests.create_test_file_3</qualifiedname>
+        <param>
+          <type>outf</type>
+          <defname>outf</defname>
+          <defval>&quot;test03.csv&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim></verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/tests.py" line="74" column="1" bodyfile="python/tests.py" bodystart="74" bodyend="85"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacetests_1ac906298dfb3deb1e29d38b881535f40d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def tests.convert_test</definition>
+        <argsstring>(t, from_f, to_f)</argsstring>
+        <name>convert_test</name>
+        <qualifiedname>tests.convert_test</qualifiedname>
+        <param>
+          <type>t</type>
+          <defname>t</defname>
+        </param>
+        <param>
+          <type>from_f</type>
+          <defname>from_f</defname>
+        </param>
+        <param>
+          <type>to_f</type>
+          <defname>to_f</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim></verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/tests.py" line="86" column="1" bodyfile="python/tests.py" bodystart="86" bodyend="99"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacetests_1adcb7c6a020382d32edd73bae2db61b07" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def tests.convert_test_all</definition>
+        <argsstring>(from_f, to_f)</argsstring>
+        <name>convert_test_all</name>
+        <qualifiedname>tests.convert_test_all</qualifiedname>
+        <param>
+          <type>from_f</type>
+          <defname>from_f</defname>
+        </param>
+        <param>
+          <type>to_f</type>
+          <defname>to_f</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/tests.py" line="100" column="1" bodyfile="python/tests.py" bodystart="100" bodyend="106"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>    Libembroidery.
+
+    --------------------------------------------------
+
+    Copyright 2018-2022 The Embroidermodder Team
+    Libembroidery is Open Source Software.
+    See LICENSE for licensing terms.
+
+    --------------------------------------------------
+
+    The test suite for the libembroidery Python bindings.
+
+    Similar to, although not a replica of, the internal tests. This
+    cannot replace them because some systems that will run the library
+    won&apos;t support Python.
+
+    (Libembroidery may need to include some truly ancient PC in order
+    to deal with the older embroidery machines that they may talk to.)
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/tests.py" line="1" column="1"/>
+  </compounddef>
+</doxygen>

@@ -68,3 +68,14 @@ cmake --install .
 This builds both the static and shared versions of the library as well
 as the command line program `embroider`.
 
+### Testing
+
+Our test suite has been chained onto the Makefile directive `check`: so on
+building the software enter your build directory and enter:
+
+```sh
+$ make check
+```
+
+The suite requires that you have imagemagick installed to fully test
+the more image-processing based tasks, as does `needle` generally.

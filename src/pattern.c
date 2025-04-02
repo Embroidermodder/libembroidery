@@ -1,4 +1,7 @@
-/*
+/*!
+ * \file pattern.c
+ * \brief The EmbPattern struct memory management and storage.
+ *
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *
@@ -880,7 +883,7 @@ emb_write_i16be(FILE* f, int16_t data)
 
 /* . */
 void
-emb_write_u16BE(FILE* f, uint16_t data)
+emb_write_u16be(FILE* f, uint16_t data)
 {
     char *b = (char*)(&data);
     fix_endian(b, 2, EMB_BIG_ENDIAN);
@@ -2159,73 +2162,6 @@ to_flag(char **argv, int argc, int i)
     }
 }
 
-/* FILL ALGORITHMS
- */
-const char *rules[] = {"+BF-AFA-FB+", "-AF+BFB+FA-"};
-
-L_system hilbert_curve_l_system = {
-    'A', "AB", "F+-", (char**)rules
-};
-
-/* a L a state a iterations a complete
- * Returns int
- *
- * This is a slow generation algorithm.
- */
-int lindenmayer_system(L_system L, char *state, int iterations, int complete)
-{
-    /* We know that the full length of the curve has to fit within
-     * the number of stitches and we can cancel consecutive +-, -+
-     * etc.
-     *
-
-Potential reference:
-
-@book{Prusinkiewicz1996Mar,
-    author = {Prusinkiewicz, Przemyslaw and Lindenmayer, Aristid and Hanan, J. S. and Fracchia, F. D. and Fowler, D. R. and de Boer, M. J. M. and Mercer, L.},
-    title = {{The Algorithmic Beauty of Plants (The Virtual Laboratory)}},
-    year = {1996},
-    month = {Mar},
-    publisher = {Springer}
-}
-     */
-    char *new_state;
-    int j;
-
-    if (complete == 0) {
-        state[0] = L.axiom;
-        state[1] = 0;
-        lindenmayer_system(L, state, iterations, complete+1);
-        return 0;
-    }
-
-    new_state = state + MAX_STITCHES*5;
-
-    new_state[0] = 0;
-
-    /* replace letters using rules by copying to new_state */
-    for (j=0; j < (int)string_len(state); j++) {
-        if (state[j] >= 'A' && state[j] < 'F') {
-            strcat(new_state, L.rules[state[j]-'A']);
-        }
-        if (state[j] == 'F') {
-            strcat(new_state, "F");
-        }
-        if (state[j] == '+') {
-            strcat(new_state, "+");
-        }
-        if (state[j] == '-') {
-            strcat(new_state, "-");
-        }
-    }
-    memcpy(state, new_state, string_len(new_state)+1);
-
-    if (complete < iterations) {
-        lindenmayer_system(L, state, iterations, complete+1);
-    }
-    return 0;
-}
-
 /* a points a n_points a width a tolerence
  *
  * Remove points that lie in the middle of two short stitches that could
@@ -2425,108 +2361,6 @@ emb_pattern_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
     }
 
     emb_pattern_end(pattern);
-}
-
-/* a pattern a iterations
- *
- * https://en.wikipedia.org/wiki/Hilbert_curve
- *
- * Using the Lindenmayer System, so we can save work across
- * different functions.
- */
-int
-hilbert_curve(EmbPattern *pattern, int iterations)
-{
-    char *state;
-    int i, position[2], direction;
-    EmbReal scale = 1.0;
-
-    /* Make the n-th iteration. */
-    state = malloc(MAX_STITCHES*10);
-    lindenmayer_system(hilbert_curve_l_system, state, iterations, 0);
-
-    /* Convert to an embroidery pattern. */
-    position[0] = 0;
-    position[1] = 0;
-    direction = 0;
-
-    for (i = 0; i < (int)string_len(state); i++) {
-        if (state[i] == '+') {
-            direction = (direction + 1) % 4;
-            continue;
-        }
-        if (state[i] == '-') {
-            direction = (direction + 3) % 4;
-            continue;
-        }
-        if (state[i] == 'F') {
-            int flags = NORMAL;
-            switch (direction) {
-            case 0:
-            default:
-                position[0]--;
-                break;
-            case 1:
-                position[1]++;
-                break;
-            case 2:
-                position[0]++;
-                break;
-            case 3:
-                position[1]--;
-                break;
-            }
-            emb_pattern_addStitchAbs(pattern, position[0]*scale, position[1]*scale, flags, 0);
-        }
-    }
-    safe_free(state);
-    emb_pattern_end(pattern);
-    return 0;
-}
-
-/* a state a iterations
- *
- * using the "paper folding" method
- * \todo find citation for paper folding method
- */
-void generate_dragon_curve(char *state, int iterations)
-{
-    int i, length;
-    if (iterations == 1) {
-        state[0] = 'R';
-        state[1] = 0;
-        return;
-    }
-    length = string_len(state);
-    for (i=length-1; i>=0; i--) {
-        state[2*i+1] = state[i];
-        if (i%2 == 0) {
-            state[2*i] = 'R';
-        } else {
-            state[2*i] = 'L';
-        }
-    }
-    state[2*length+1] = 0;
-    generate_dragon_curve(state, iterations-1);
-}
-
-/* Create the dragon curve for a iterations.
- *
- * Returns 0 if the number of iterations is greater than 10
- * and 1 otherwise.
- */
-int
-dragon_curve(int iterations)
-{
-    char *state;
-    if (iterations > 10) {
-        puts("The dragon curve is only supported up to 10 iterations.");
-        return 0;
-    }
-    state = malloc(1<<(iterations+1));
-    generate_dragon_curve(state, iterations);
-    safe_free(state);
-    return 1;
 }
 
 #if 0
@@ -3212,6 +3046,9 @@ void
 emb_pattern_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int style)
 {
     EmbReal seperation = 0.1;
+    if (style > 0) {
+        puts("WARNING: Only style 0 has been implimented.");
+    }
     if (rect.w > rect.h) {
         float s;
         for (s=rect.y; s<rect.y + rect.h; s += seperation) {
@@ -3398,9 +3235,9 @@ image_diff(unsigned char *a, unsigned char *b, int size)
  * The caller is responsible for the memory in p.
  */
 int
-emb_pattern_render(EmbPattern * p, char *fname)
+emb_pattern_render(EmbPattern *p, char *fname)
 {
-    printf("fname %s", fname);
+    printf("Cannot render %p, %s\n", p, fname);
 /*
     const char *tmp_fname = "libembroidery_temp.svg";
     NSVGimage *image = NULL;
@@ -3452,8 +3289,9 @@ embImage_create(int width, int height)
 
 /* . */
 void
-embImage_read(EmbImage * image, char * fname)
+embImage_read(EmbImage *image, char *fname)
 {
+    printf("%d, %s\n", image->width, fname);
     /*
     int channels_in_file;
     image->data = stbi_load(
@@ -3467,9 +3305,10 @@ embImage_read(EmbImage * image, char * fname)
 
 /* . */
 int
-embImage_write(EmbImage * image, char * fname)
+embImage_write(EmbImage *image, char *fname)
 {
-/*
+    printf("%d, %s\n", image->width, fname);
+    /*
     return stbi_write_png(
          fname,
          image->width,

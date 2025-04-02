@@ -1,4 +1,6 @@
-/*
+/*! \file compress.c
+ * \brief Compression algorithms used in machine embroidery file formats.
+ *
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *
@@ -47,7 +49,8 @@
 
 int huffman_lookup_data[2];
 
-/* Compress data "data" of length "length" to "output" with length "output_length".
+/*!
+ * Compress data "data" of length "length" to "output" with length "output_length".
  * Returns whether it was successful as an int.
  *
  * This avoids the now unnecessary compression by placing a

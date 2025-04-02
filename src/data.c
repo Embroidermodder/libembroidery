@@ -1,4 +1,7 @@
-/*
+/*!
+ * \file data.c
+ * \brief Thread colors referred to by machine files.
+ *
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *

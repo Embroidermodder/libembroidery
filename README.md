@@ -4,55 +4,6 @@ Copyright (c) 2013-2024 The EmbroiderModder Team
 
 https://www.libembroidery.org
 
-<center>
-<table>
-<tr>
-<td> </td>
-<td><b>GNU/Linux</b></td>
-<td><b>Mac OS</b></td>
-<td><b>Windows</b></td>
-</tr>
-<tr>
-</tr>
-<tr>
-<td> Build </td>
-<td>
-    <a href="https://github.com/Embroidermodder/libembroidery/actions/workflows/build-linux.yml">
-        <img src="https://github.com/Embroidermodder/libembroidery/actions/workflows/build-linux.yml/badge.svg" title="Build on Linux Status">
-    </a>
-</td>
-<td>
-    <a href="https://github.com/Embroidermodder/libembroidery/actions/workflows/build-macos.yml">
-        <img src="https://github.com/Embroidermodder/libembroidery/actions/workflows/build-macos.yml/badge.svg" title="Build on Mac OS Status">
-    </a>
-</td>
-<td>
-    <a href="https://github.com/Embroidermodder/libembroidery/actions/workflows/build-windows.yml">
-        <img src="https://github.com/Embroidermodder/libembroidery/actions/workflows/build-windows.yml/badge.svg" title="Build on Windows Status">
-    </a>
-</td>
-</tr>
-<tr>
-<td> Build </td>
-<td>
-    <a href="https://github.com/Embroidermodder/libembroidery/actions/workflows/test-linux.yml">
-        <img src="https://github.com/Embroidermodder/libembroidery/actions/workflows/test-linux.yml/badge.svg" title="Test on Linux Status">
-    </a>
-</td>
-<td>
-    <a href="https://github.com/Embroidermodder/libembroidery/actions/workflows/test-macos.yml">
-        <img src="https://github.com/Embroidermodder/libembroidery/actions/workflows/test-macos.yml/badge.svg" title="Test on Mac OS Status">
-    </a>
-</td>
-<td>
-    <a href="https://github.com/Embroidermodder/libembroidery/actions/workflows/test-windows.yml">
-        <img src="https://github.com/Embroidermodder/libembroidery/actions/workflows/test-windows.yml/badge.svg" title="Test on Windows Status">
-    </a>
-</td>
-</tr>
-</table>
-</center>
-
 (Under construction, please wait for v1.0 release.)
 
 Libembroidery is a low-level library for reading, writing, 

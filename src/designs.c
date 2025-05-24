@@ -1,20 +1,28 @@
-/*
- * libembroidery
+/*!
+ * \file designs.h
+ * \brief Parametric descriptions of common curves used in embroidery patterns.
+ *
+ * libembroidery: designs
  *
  * Copyright 2018-2025 The Embroidermodder Team
  * libembroidery is Open Source Software, see LICENSE.md for licensing terms.
  *
- * Read the reference manual (https://www.libembroidery.org/downloads/emrm.pdf)
+ * Read the reference manuals (https://www.libembroidery.org/documentation)
  * for advice on altering this file.
- *
  */
 
 #include "embroidery.h"
 
-#define MODE_NUM_POINTS 0
-#define MODE_XSCALE     1
-#define MODE_YSCALE     2
+#define MODE_NUM_POINTS 0 /*!< How many points to use in the generated curve. */
+#define MODE_XSCALE     1 /*!< . */
+#define MODE_YSCALE     2 /*!< . */
 
+/*!
+ * \brief The sign of a real number.
+ *
+ * Basic mathematical function that goes by the same name in most texts.
+ * Often defined as x/|x| for x not equal to 0 and 0 otherwise.
+ */
 int
 sgn(float x)
 {
@@ -27,6 +35,12 @@ sgn(float x)
     return 0;
 }
 
+/*!
+ * \brief Indicator function that is 1 for all values greater than 0.
+ *
+ * Theta often occurs in parametric function descriptions of curves, similar to
+ * the general indicator function that takes a .
+ */
 int
 theta(float x)
 {
@@ -36,11 +50,13 @@ theta(float x)
     return 1;
 }
 
+/*!
+ * \brief Dolphin curve
+ *
+ * Command: DOLPHIN.
+ * \todo min:64 max:8192
+ */
 #if 0
-
-# Command: DOLPHIN.
-# TODO: min:64 max:8192
-
 ScriptValue
 dolphin_command(ScriptEnv *context)
 {
@@ -197,6 +213,10 @@ updateDolphin(int numPts, float xScale, float yScale)
 }
 #endif
 
+/*!
+ * \brief Parametric heart design based on postscript.
+ *
+ */
 Design heart4 = {
     .command = "heart4",
     .lower = 0.0,

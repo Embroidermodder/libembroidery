@@ -1,3 +1,6 @@
+;!
+; \file embroidery.inc
+; \brief Macro library for embroidery on embedded systems.
 ;
 ; Libembroidery 1.0.0-alpha
 ; https://www.libembroidery.org

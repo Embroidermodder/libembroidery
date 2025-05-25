@@ -1,0 +1,171 @@
+\hypertarget{testing_8c}{}\doxysection{src/testing.c File Reference}
+\label{testing_8c}\index{src/testing.c@{src/testing.c}}
+
+
+Internal testing routines.  
+
+
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}embroidery.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{testing_8c_ac0322614f1e9d1b95ae1b9d93bf6a5a2}\label{testing_8c_ac0322614f1e9d1b95ae1b9d93bf6a5a2}} 
+\#define {\bfseries N\+\_\+\+TESTS}~8
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{testing_8c_aaa2179a696081a8c943bd6ac3f7cd9ec}\label{testing_8c_aaa2179a696081a8c943bd6ac3f7cd9ec}} 
+typedef int($\ast$ {\bfseries test\+\_\+function}) (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{testing_8c_aa8cda149cc8f044ed7062bad071ac2d7}\label{testing_8c_aa8cda149cc8f044ed7062bad071ac2d7}} 
+void {\bfseries emb\+\_\+vector\+\_\+print} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} v, char $\ast$label)
+\item 
+\mbox{\Hypertarget{testing_8c_abaa3401fa5fc5390d765a32fd86f37c4}\label{testing_8c_abaa3401fa5fc5390d765a32fd86f37c4}} 
+void {\bfseries emb\+\_\+arc\+\_\+print} (\mbox{\hyperlink{embroidery_8h_a09945e6e919629c5787e61582c712ba1}{Emb\+Arc}} a)
+\item 
+\mbox{\Hypertarget{testing_8c_a34ded0767075a822dcdc893d8793e766}\label{testing_8c_a34ded0767075a822dcdc893d8793e766}} 
+int {\bfseries test\+\_\+convert\+\_\+from\+\_\+to} (int from\+\_\+, int to\+\_\+)
+\item 
+\mbox{\Hypertarget{testing_8c_aa3a43917000215d1d2c68c1b1ea6b016}\label{testing_8c_aa3a43917000215d1d2c68c1b1ea6b016}} 
+int {\bfseries test\+\_\+circle\+\_\+tangents} (void)
+\item 
+\mbox{\Hypertarget{testing_8c_a9f38b8bb52872d9b8eda2f3c00fec446}\label{testing_8c_a9f38b8bb52872d9b8eda2f3c00fec446}} 
+int {\bfseries test\+\_\+thread\+\_\+lookup} (void)
+\item 
+\mbox{\Hypertarget{testing_8c_aec2df2cebdf38480ac75fc32dd4e3137}\label{testing_8c_aec2df2cebdf38480ac75fc32dd4e3137}} 
+int {\bfseries test\+\_\+format\+\_\+table} (void)
+\item 
+\mbox{\Hypertarget{testing_8c_ae6fb4a83333c1fa77ec59aef7ee2aee1}\label{testing_8c_ae6fb4a83333c1fa77ec59aef7ee2aee1}} 
+int {\bfseries test\+\_\+convert\+\_\+csv\+\_\+svg} (void)
+\item 
+\mbox{\Hypertarget{testing_8c_a77f6f8499cd599639716ef2dfc45a979}\label{testing_8c_a77f6f8499cd599639716ef2dfc45a979}} 
+int {\bfseries test\+\_\+convert\+\_\+csv\+\_\+dst} (void)
+\item 
+\mbox{\Hypertarget{testing_8c_aa1e8cd39bab177e77a85e5560e7ffb5e}\label{testing_8c_aa1e8cd39bab177e77a85e5560e7ffb5e}} 
+int {\bfseries test\+\_\+create\+\_\+files} (void)
+\item 
+\mbox{\Hypertarget{testing_8c_ab93cdb51659515a4516a3ad0a85a20d0}\label{testing_8c_ab93cdb51659515a4516a3ad0a85a20d0}} 
+int {\bfseries test\+\_\+fractal\+\_\+generation} (void)
+\item 
+\mbox{\Hypertarget{testing_8c_ab4e07b5bfe035762ed3f0c0a4219836f}\label{testing_8c_ab4e07b5bfe035762ed3f0c0a4219836f}} 
+int {\bfseries test\+\_\+arc\+\_\+properties} (void)
+\item 
+\mbox{\Hypertarget{testing_8c_afa692aa73ee5b787db2ca71d786ba9c8}\label{testing_8c_afa692aa73ee5b787db2ca71d786ba9c8}} 
+int {\bfseries test\+\_\+vadd} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} v1, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} v2, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} result, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} tolerence)
+\item 
+\mbox{\Hypertarget{testing_8c_a06411d49072e6ed1bff16845f1b0299d}\label{testing_8c_a06411d49072e6ed1bff16845f1b0299d}} 
+int {\bfseries test\+\_\+vsubtract} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} v1, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} v2, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} result, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} tolerence)
+\item 
+\mbox{\Hypertarget{testing_8c_a1b62ab2600542b34f2e85284236cf6eb}\label{testing_8c_a1b62ab2600542b34f2e85284236cf6eb}} 
+int {\bfseries test\+\_\+ctangents} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} c, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} p, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} s0, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} s1, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} tolerence)
+\item 
+\mbox{\Hypertarget{testing_8c_ad6079c361bb28d753627b8816c5e24a5}\label{testing_8c_ad6079c361bb28d753627b8816c5e24a5}} 
+int {\bfseries test\+\_\+convert} (int test\+\_\+case, int from, int to)
+\item 
+\mbox{\Hypertarget{testing_8c_aa041c893db73d90f1bfd4d658e7e9502}\label{testing_8c_aa041c893db73d90f1bfd4d658e7e9502}} 
+\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} {\bfseries get\+\_\+circle} (float $\ast$data)
+\item 
+\mbox{\Hypertarget{testing_8c_a2db6411cbc915e4fe5f2666ab6df6a5c}\label{testing_8c_a2db6411cbc915e4fe5f2666ab6df6a5c}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries get\+\_\+vector} (float $\ast$data)
+\item 
+\mbox{\Hypertarget{testing_8c_acb08aae0a606fa104ff5f56f1b404750}\label{testing_8c_acb08aae0a606fa104ff5f56f1b404750}} 
+int {\bfseries test\+Main} (int test\+\_\+index)
+\item 
+\mbox{\Hypertarget{testing_8c_a82bc195f37e9dc319d7e138a3cfa3411}\label{testing_8c_a82bc195f37e9dc319d7e138a3cfa3411}} 
+void {\bfseries print\+Arc\+Results} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} bulge, \mbox{\hyperlink{embroidery_8h_a09945e6e919629c5787e61582c712ba1}{Emb\+Arc}} arc, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} center, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} radius, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} diameter, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} chord, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} chord\+Mid, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} sagitta, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} apothem, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} inc\+Angle, char clockwise)
+\item 
+\mbox{\Hypertarget{testing_8c_a7d5eaba82ab65f4ece8dee084fff3ca2}\label{testing_8c_a7d5eaba82ab65f4ece8dee084fff3ca2}} 
+int {\bfseries create\+\_\+test\+\_\+file} (int test\+\_\+file, int format)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+test\+\_\+function \mbox{\hyperlink{testing_8c_a6ad9a17439266b4fc19ac64f3eca3eee}{test\+\_\+functions}} \mbox{[}$\,$\mbox{]}
+\item 
+const char $\ast$ \mbox{\hyperlink{testing_8c_a3eb5f726cdf59abb8b0df20ce8902180}{tests}} \mbox{[}$\,$\mbox{]}
+\item 
+float \mbox{\hyperlink{testing_8c_a3daf819ff1a37a376117d3a06b981286}{cirtan\+\_\+test}} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Internal testing routines. 
+
+Libembroidery 1.\+0.\+0-\/alpha \href{https://www.libembroidery.org}{\texttt{ https\+://www.\+libembroidery.\+org}}
+
+A library for reading, writing, altering and otherwise processing machine embroidery files and designs.
+
+Also, the core library supporting the Embroidermodder Project\textquotesingle{}s family of machine embroidery interfaces.
+
+\DoxyHorRuler{0}
+
+
+Copyright 2018-\/2024 The Embroidermodder Team Licensed under the terms of the zlib license.
+
+\DoxyHorRuler{0}
+
+
+Only uses source from this directory or standard C libraries, not including POSIX headers like unistd since this library needs to support non-\/\+POSIX systems like Windows.
+
+\DoxyHorRuler{0}
+
+
+Testing 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{testing_8c_a3daf819ff1a37a376117d3a06b981286}\label{testing_8c_a3daf819ff1a37a376117d3a06b981286}} 
+\index{testing.c@{testing.c}!cirtan\_test@{cirtan\_test}}
+\index{cirtan\_test@{cirtan\_test}!testing.c@{testing.c}}
+\doxysubsubsection{\texorpdfstring{cirtan\_test}{cirtan\_test}}
+{\footnotesize\ttfamily float cirtan\+\_\+test\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    0.001f, 0.0f, 0.0f, 3.0f, 4.0f, 0.0f, 2.2500f, 1.9843f, 2.2500f, -\/1.9843f,}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{testing_8c_a6ad9a17439266b4fc19ac64f3eca3eee}\label{testing_8c_a6ad9a17439266b4fc19ac64f3eca3eee}} 
+\index{testing.c@{testing.c}!test\_functions@{test\_functions}}
+\index{test\_functions@{test\_functions}!testing.c@{testing.c}}
+\doxysubsubsection{\texorpdfstring{test\_functions}{test\_functions}}
+{\footnotesize\ttfamily test\+\_\+function test\+\_\+functions\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    test\_circle\_tangents,}
+\DoxyCodeLine{    test\_thread\_lookup,}
+\DoxyCodeLine{    test\_format\_table,}
+\DoxyCodeLine{    test\_create\_files,}
+\DoxyCodeLine{    test\_convert\_csv\_svg,}
+\DoxyCodeLine{    test\_convert\_csv\_dst,}
+\DoxyCodeLine{    test\_fractal\_generation,}
+\DoxyCodeLine{    test\_arc\_properties,}
+\DoxyCodeLine{    NULL}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{testing_8c_a3eb5f726cdf59abb8b0df20ce8902180}\label{testing_8c_a3eb5f726cdf59abb8b0df20ce8902180}} 
+\index{testing.c@{testing.c}!tests@{tests}}
+\index{tests@{tests}!testing.c@{testing.c}}
+\doxysubsubsection{\texorpdfstring{tests}{tests}}
+{\footnotesize\ttfamily const char$\ast$ tests\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}ctangent 0.001 0.0 0.0 3.0 4.0 0.0 2.25 1.9843 2.25 -\/1.9843"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}extension example.zsk .zsk"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}description example.zsk \(\backslash\)"{}ZSK USA Embroidery Format\(\backslash\)"{}"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}reader example.zsk U"{}}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

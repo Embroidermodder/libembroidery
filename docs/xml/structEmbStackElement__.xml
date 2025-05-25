@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structEmbStackElement__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbStackElement_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structEmbStackElement___1a4b7cdedc8438f591e0de1e3439c9de44" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbStackElement_::data_type</definition>
+        <argsstring></argsstring>
+        <name>data_type</name>
+        <qualifiedname>EmbStackElement_::data_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="896" column="9" bodyfile="src/embroidery.h" bodystart="896" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbStackElement___1af808e96610ccefaceb527e85be79ab1e" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbStackElement_::attribute</definition>
+        <argsstring></argsstring>
+        <name>attribute</name>
+        <qualifiedname>EmbStackElement_::attribute</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="897" column="9" bodyfile="src/embroidery.h" bodystart="897" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbStackElement___1aaccc9bbe0a7cef2c8ae219297f5c4f72" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbStackElement_::i</definition>
+        <argsstring></argsstring>
+        <name>i</name>
+        <qualifiedname>EmbStackElement_::i</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="898" column="9" bodyfile="src/embroidery.h" bodystart="898" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbStackElement___1a71c7fa43f58b7e13e7c000012e5bbffe" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float EmbStackElement_::r</definition>
+        <argsstring></argsstring>
+        <name>r</name>
+        <qualifiedname>EmbStackElement_::r</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="899" column="11" bodyfile="src/embroidery.h" bodystart="899" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbStackElement___1a2c384d344f387be1769a0f29151056cc" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char EmbStackElement_::s[100]</definition>
+        <argsstring>[100]</argsstring>
+        <name>s</name>
+        <qualifiedname>EmbStackElement_::s</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="900" column="10" bodyfile="src/embroidery.h" bodystart="900" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="895" column="1" bodyfile="src/embroidery.h" bodystart="895" bodyend="901"/>
+    <listofallmembers>
+      <member refid="structEmbStackElement___1af808e96610ccefaceb527e85be79ab1e" prot="public" virt="non-virtual"><scope>EmbStackElement_</scope><name>attribute</name></member>
+      <member refid="structEmbStackElement___1a4b7cdedc8438f591e0de1e3439c9de44" prot="public" virt="non-virtual"><scope>EmbStackElement_</scope><name>data_type</name></member>
+      <member refid="structEmbStackElement___1aaccc9bbe0a7cef2c8ae219297f5c4f72" prot="public" virt="non-virtual"><scope>EmbStackElement_</scope><name>i</name></member>
+      <member refid="structEmbStackElement___1a71c7fa43f58b7e13e7c000012e5bbffe" prot="public" virt="non-virtual"><scope>EmbStackElement_</scope><name>r</name></member>
+      <member refid="structEmbStackElement___1a2c384d344f387be1769a0f29151056cc" prot="public" virt="non-virtual"><scope>EmbStackElement_</scope><name>s</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

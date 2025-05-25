@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1vector" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::vector</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">ctypes.Structure</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">ctypes.Structure</basecompoundref>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1vector_1afbdb0c4de24bb9f5f9b55326aa180314" prot="private" static="yes" mutable="no">
+        <type>list</type>
+        <definition>list embroidery.vector::_fields_</definition>
+        <argsstring></argsstring>
+        <name>_fields_</name>
+        <qualifiedname>embroidery.vector._fields_</qualifiedname>
+        <initializer>=  [
+        (&apos;x&apos;, ctypes.c_float),
+        (&apos;y&apos;, ctypes.c_float)
+    ]</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="54" column="1" bodyfile="python/embroidery.py" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1vector_1afbfe5a7d0f719012ea13c9a20c5f3f7a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>str</type>
+        <definition> str embroidery.vector.__str__</definition>
+        <argsstring>(self)</argsstring>
+        <name>__str__</name>
+        <qualifiedname>embroidery.vector.__str__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="59" column="1" bodyfile="python/embroidery.py" bodystart="59" bodyend="61"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1vector_1afbfe5a7d0f719012ea13c9a20c5f3f7a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>str</type>
+        <definition> str embroidery.vector.__str__</definition>
+        <argsstring>(self)</argsstring>
+        <name>__str__</name>
+        <qualifiedname>embroidery.vector.__str__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/__init__.py" line="34" column="1" bodyfile="python/embroidery/__init__.py" bodystart="34" bodyend="36"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim> Wrapper for the EmbVector structure. </verbatim></para>
+<para><verbatim> Wrapper to the EmbVector structure. </verbatim> </para>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>ctypes::Structure</label>
+      </node>
+      <node id="1">
+        <label>embroidery.vector</label>
+        <link refid="classembroidery_1_1vector"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>ctypes::Structure</label>
+      </node>
+      <node id="1">
+        <label>embroidery.vector</label>
+        <link refid="classembroidery_1_1vector"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="python/embroidery.py" line="52" column="1" bodyfile="python/embroidery.py" bodystart="52" bodyend="61"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1vector_1afbfe5a7d0f719012ea13c9a20c5f3f7a" prot="public" virt="non-virtual"><scope>embroidery::vector</scope><name>__str__</name></member>
+      <member refid="classembroidery_1_1vector_1afbfe5a7d0f719012ea13c9a20c5f3f7a" prot="public" virt="non-virtual"><scope>embroidery::vector</scope><name>__str__</name></member>
+      <member refid="classembroidery_1_1vector_1afbdb0c4de24bb9f5f9b55326aa180314" prot="private" virt="non-virtual"><scope>embroidery::vector</scope><name>_fields_</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,254 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="namespaceembroidery" kind="namespace" language="Python">
+    <compoundname>embroidery</compoundname>
+    <innerclass refid="classembroidery_1_1TestLibembroidery" prot="public">embroidery::TestLibembroidery</innerclass>
+    <innerclass refid="classembroidery_1_1vector" prot="public">embroidery::vector</innerclass>
+    <innernamespace refid="namespaceembroidery_1_1fills">embroidery::fills</innernamespace>
+    <innernamespace refid="namespaceembroidery_1_1geometry">embroidery::geometry</innernamespace>
+    <innernamespace refid="namespaceembroidery_1_1image">embroidery::image</innernamespace>
+    <innernamespace refid="namespaceembroidery_1_1old__init">embroidery::old_init</innernamespace>
+    <innernamespace refid="namespaceembroidery_1_1parametric">embroidery::parametric</innernamespace>
+    <innernamespace refid="namespaceembroidery_1_1parser">embroidery::parser</innernamespace>
+    <innernamespace refid="namespaceembroidery_1_1text">embroidery::text</innernamespace>
+    <innernamespace refid="namespaceembroidery_1_1tools">embroidery::tools</innernamespace>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="namespaceembroidery_1aba3c253994e98c43ecfda0b54bee4a96" prot="public" static="no" mutable="no">
+        <type>def</type>
+        <definition>def embroidery.emb</definition>
+        <argsstring></argsstring>
+        <name>emb</name>
+        <qualifiedname>embroidery.emb</qualifiedname>
+        <initializer>=  <ref refid="namespaceembroidery_1ad484c1c046c3426689b026faec6f4362" kindref="member">load_library</ref>()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="62" column="1" bodyfile="python/embroidery.py" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespaceembroidery_1ae7fa40a16c5652b9759a046cd8ca33d2" prot="public" static="no" mutable="no">
+        <type>def</type>
+        <definition>def embroidery.libembroidery</definition>
+        <argsstring></argsstring>
+        <name>libembroidery</name>
+        <qualifiedname>embroidery.libembroidery</qualifiedname>
+        <initializer>=  <ref refid="namespaceembroidery_1ad484c1c046c3426689b026faec6f4362" kindref="member">load_library</ref>()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/__init__.py" line="37" column="1" bodyfile="python/embroidery/__init__.py" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespaceembroidery_1a1ae07157a9faf7a9900066e3e510274a" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.argtypes</definition>
+        <argsstring></argsstring>
+        <name>argtypes</name>
+        <qualifiedname>embroidery.argtypes</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/__init__.py" line="40" column="1" bodyfile="python/embroidery/__init__.py" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespaceembroidery_1a0d5c5512c84a599f3c0b5c428fd3684d" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.restype</definition>
+        <argsstring></argsstring>
+        <name>restype</name>
+        <qualifiedname>embroidery.restype</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/__init__.py" line="41" column="1" bodyfile="python/embroidery/__init__.py" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceembroidery_1ad484c1c046c3426689b026faec6f4362" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery::load_library</definition>
+        <argsstring>()</argsstring>
+        <name>load_library</name>
+        <qualifiedname>embroidery.load_library</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>TO DO: This needs to be operating system-dependent.
+Currently for testing reasons it assumes that the shared library is in the same
+directory.
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="38" column="1" bodyfile="python/embroidery.py" bodystart="38" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1a75c5082fe5db64b71b18cd923cea323e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.create_test_file_1</definition>
+        <argsstring>(outf=&quot;test01.csv&quot;)</argsstring>
+        <name>create_test_file_1</name>
+        <qualifiedname>embroidery.create_test_file_1</qualifiedname>
+        <param>
+          <type>outf</type>
+          <defname>outf</defname>
+          <defval>&quot;test01.csv&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>.
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="64" column="1" bodyfile="python/embroidery.py" bodystart="64" bodyend="87"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1affb61c7a99b968a25552a0c2e7f21db8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.create_test_file_2</definition>
+        <argsstring>(outf=&quot;test02.csv&quot;)</argsstring>
+        <name>create_test_file_2</name>
+        <qualifiedname>embroidery.create_test_file_2</qualifiedname>
+        <param>
+          <type>outf</type>
+          <defname>outf</defname>
+          <defval>&quot;test02.csv&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>.
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="88" column="1" bodyfile="python/embroidery.py" bodystart="88" bodyend="105"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1aca908a9e57e2139f30b4a4b1acd4a265" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.create_test_file_3</definition>
+        <argsstring>(outf=&quot;test03.csv&quot;)</argsstring>
+        <name>create_test_file_3</name>
+        <qualifiedname>embroidery.create_test_file_3</qualifiedname>
+        <param>
+          <type>outf</type>
+          <defname>outf</defname>
+          <defval>&quot;test03.csv&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim></verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="106" column="1" bodyfile="python/embroidery.py" bodystart="106" bodyend="117"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1ab83d00e83d76fbc33b24dc62dbd3c12e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.convert_test</definition>
+        <argsstring>(t, from_f, to_f)</argsstring>
+        <name>convert_test</name>
+        <qualifiedname>embroidery.convert_test</qualifiedname>
+        <param>
+          <type>t</type>
+          <defname>t</defname>
+        </param>
+        <param>
+          <type>from_f</type>
+          <defname>from_f</defname>
+        </param>
+        <param>
+          <type>to_f</type>
+          <defname>to_f</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim></verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="118" column="1" bodyfile="python/embroidery.py" bodystart="118" bodyend="131"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1abd7a854ecdc357ba2931f4ecd86d2538" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.convert_test_all</definition>
+        <argsstring>(from_f, to_f)</argsstring>
+        <name>convert_test_all</name>
+        <qualifiedname>embroidery.convert_test_all</qualifiedname>
+        <param>
+          <type>from_f</type>
+          <defname>from_f</defname>
+        </param>
+        <param>
+          <type>to_f</type>
+          <defname>to_f</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery.py" line="132" column="1" bodyfile="python/embroidery.py" bodystart="132" bodyend="138"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>Libembroidery
+1.0.0-alpha
+https://www.libembroidery.org
+
+---------------------------------------------------------------------------------
+
+Copyright 2018-2024 The Embroidermodder Team
+Libembroidery is Open Source Software.
+See LICENSE for licensing terms.
+
+---------------------------------------------------------------------------------
+
+Hand-written bindings to the C library for Python. This is manually updated.
+
+Documentation on the ctypes interface here:
+    https://docs.python.org/3.8/library/ctypes.html
+
+---------------------------------------------------------------------------------
+
+The test suite for the libembroidery Python bindings.
+
+Similar to, although not a replica of, the internal tests. This
+cannot replace them because some systems that will run the library
+won&apos;t support Python.
+
+(Libembroidery may need to include some truly ancient PC in order
+to deal with the older embroidery machines that they may talk to.)
+</verbatim></para>
+<para><verbatim>Libembroidery
+1.0.0-alpha
+https://www.libembroidery.org
+
+---------------------------------------------
+
+Copyright 2018-2024 The Embroidermodder Team
+Libembroidery is Open Source Software.
+See LICENSE for licensing terms.
+
+---------------------------------------------
+
+Hand-written bindings to the C library for Python. This is manually updated.
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery.py" line="1" column="1"/>
+  </compounddef>
+</doxygen>

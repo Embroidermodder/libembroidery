@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structEmbFormatList__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbFormatList_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structEmbFormatList___1a28dd6827bbc9d4a15e66bb3d481bd243" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a3cfa8eccd6eee11f9ffece9f64f79b59" kindref="member">EmbString</ref></type>
+        <definition>EmbString EmbFormatList_::extension</definition>
+        <argsstring></argsstring>
+        <name>extension</name>
+        <qualifiedname>EmbFormatList_::extension</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="871" column="15" bodyfile="src/embroidery.h" bodystart="871" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbFormatList___1a998a80bf163b87eb0ccbc84d8fa739db" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a3cfa8eccd6eee11f9ffece9f64f79b59" kindref="member">EmbString</ref></type>
+        <definition>EmbString EmbFormatList_::description</definition>
+        <argsstring></argsstring>
+        <name>description</name>
+        <qualifiedname>EmbFormatList_::description</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="872" column="15" bodyfile="src/embroidery.h" bodystart="872" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbFormatList___1a41d77f8397b30cb2b457f6f15bc06c96" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char EmbFormatList_::reader_state</definition>
+        <argsstring></argsstring>
+        <name>reader_state</name>
+        <qualifiedname>EmbFormatList_::reader_state</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="873" column="10" bodyfile="src/embroidery.h" bodystart="873" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbFormatList___1ae7f60807322ba914b68d53aef8427ed0" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char EmbFormatList_::writer_state</definition>
+        <argsstring></argsstring>
+        <name>writer_state</name>
+        <qualifiedname>EmbFormatList_::writer_state</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="874" column="10" bodyfile="src/embroidery.h" bodystart="874" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbFormatList___1afa4c7c17b68d9ad943b38b45ec10b38a" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbFormatList_::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>EmbFormatList_::type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="875" column="9" bodyfile="src/embroidery.h" bodystart="875" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbFormatList___1ac1a6a2a300064a0d76d3c62a69ab806e" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbFormatList_::color_only</definition>
+        <argsstring></argsstring>
+        <name>color_only</name>
+        <qualifiedname>EmbFormatList_::color_only</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="876" column="9" bodyfile="src/embroidery.h" bodystart="876" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbFormatList___1a2936bb3f578af23e25e272e1e77803af" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbFormatList_::check_for_color_file</definition>
+        <argsstring></argsstring>
+        <name>check_for_color_file</name>
+        <qualifiedname>EmbFormatList_::check_for_color_file</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="877" column="9" bodyfile="src/embroidery.h" bodystart="877" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbFormatList___1adc3fdd3c304deddd203abfb4946d08e0" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbFormatList_::write_external_color_file</definition>
+        <argsstring></argsstring>
+        <name>write_external_color_file</name>
+        <qualifiedname>EmbFormatList_::write_external_color_file</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="878" column="9" bodyfile="src/embroidery.h" bodystart="878" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="869" column="1" bodyfile="src/embroidery.h" bodystart="870" bodyend="879"/>
+    <listofallmembers>
+      <member refid="structEmbFormatList___1a2936bb3f578af23e25e272e1e77803af" prot="public" virt="non-virtual"><scope>EmbFormatList_</scope><name>check_for_color_file</name></member>
+      <member refid="structEmbFormatList___1ac1a6a2a300064a0d76d3c62a69ab806e" prot="public" virt="non-virtual"><scope>EmbFormatList_</scope><name>color_only</name></member>
+      <member refid="structEmbFormatList___1a998a80bf163b87eb0ccbc84d8fa739db" prot="public" virt="non-virtual"><scope>EmbFormatList_</scope><name>description</name></member>
+      <member refid="structEmbFormatList___1a28dd6827bbc9d4a15e66bb3d481bd243" prot="public" virt="non-virtual"><scope>EmbFormatList_</scope><name>extension</name></member>
+      <member refid="structEmbFormatList___1a41d77f8397b30cb2b457f6f15bc06c96" prot="public" virt="non-virtual"><scope>EmbFormatList_</scope><name>reader_state</name></member>
+      <member refid="structEmbFormatList___1afa4c7c17b68d9ad943b38b45ec10b38a" prot="public" virt="non-virtual"><scope>EmbFormatList_</scope><name>type</name></member>
+      <member refid="structEmbFormatList___1adc3fdd3c304deddd203abfb4946d08e0" prot="public" virt="non-virtual"><scope>EmbFormatList_</scope><name>write_external_color_file</name></member>
+      <member refid="structEmbFormatList___1ae7f60807322ba914b68d53aef8427ed0" prot="public" virt="non-virtual"><scope>EmbFormatList_</scope><name>writer_state</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="python__binding_8c" kind="file" language="C++">
+    <compoundname>python_binding.c</compoundname>
+    <includes local="no">stdio.h</includes>
+    <includes refid="embroidery_8h" local="yes">embroidery.h</includes>
+    <includes local="no">Python.h</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>python/embroidery/python_binding.c</label>
+        <link refid="python__binding_8c"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>embroidery.h</label>
+        <link refid="embroidery_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>Python.h</label>
+      </node>
+      <node id="7">
+        <label>inttypes.h</label>
+      </node>
+      <node id="6">
+        <label>stdarg.h</label>
+      </node>
+      <node id="5">
+        <label>stdbool.h</label>
+      </node>
+      <node id="4">
+        <label>stdint.h</label>
+      </node>
+      <node id="2">
+        <label>stdio.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="python__binding_8c_1ac9efdaac9411d0868b715edccca3269d" prot="public" static="no">
+        <name>PY_SSIZE_T_CLEAN</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/python_binding.c" line="16" column="9" bodyfile="python/embroidery/python_binding.c" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="python__binding_8c_1a798db6a0b149947f593ab94f57ae8863" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a168c2ed6c7e17dd1aa7755aabc1db314" kindref="member">EmbPattern</ref> *</type>
+        <definition>EmbPattern* patterns[100]</definition>
+        <argsstring>[100]</argsstring>
+        <name>patterns</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/python_binding.c" line="19" column="12" bodyfile="python/embroidery/python_binding.c" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="python__binding_8c_1a2e51f31f9ba7f19eeb3758c7725d5410" prot="public" static="yes" mutable="no">
+        <type>PyMethodDef</type>
+        <definition>PyMethodDef EmbroideryMethods[]</definition>
+        <argsstring>[]</argsstring>
+        <name>EmbroideryMethods</name>
+        <initializer>= {
+    {&quot;create_pattern&quot;, embroidery_create_pattern, METH_VARARGS, &quot;Create a new pattern object.&quot;},
+    {NULL, NULL, 0, NULL}
+}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/python_binding.c" line="27" column="20" bodyfile="python/embroidery/python_binding.c" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="python__binding_8c_1ad311e8bb10587b71852d190905a157e8" prot="public" static="yes" mutable="no">
+        <type>struct PyModuleDef</type>
+        <definition>struct PyModuleDef embroiderymodule</definition>
+        <argsstring></argsstring>
+        <name>embroiderymodule</name>
+        <initializer>= {
+
+}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/python_binding.c" line="32" column="25" bodyfile="python/embroidery/python_binding.c" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="python__binding_8c_1a783eb16c9c93d4aa0dbc93784a32f9a5" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>PyObject *</type>
+        <definition>static PyObject * embroidery_create_pattern</definition>
+        <argsstring>(PyObject *self, PyObject *args)</argsstring>
+        <name>embroidery_create_pattern</name>
+        <param>
+          <type>PyObject *</type>
+          <declname>self</declname>
+        </param>
+        <param>
+          <type>PyObject *</type>
+          <declname>args</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/python_binding.c" line="22" column="1" bodyfile="python/embroidery/python_binding.c" bodystart="22" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="function" id="python__binding_8c_1a1545c056772842d8d1bd295f78ea6aa8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>PyMODINIT_FUNC</type>
+        <definition>PyMODINIT_FUNC PyInit_embroidery</definition>
+        <argsstring>(void)</argsstring>
+        <name>PyInit_embroidery</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/python_binding.c" line="37" column="1" bodyfile="python/embroidery/python_binding.c" bodystart="37" bodyend="40"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>This<sp/>file<sp/>is<sp/>part<sp/>of<sp/>libembroidery.</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>2018-2022<sp/>The<sp/>Embroidermodder<sp/>Team</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>Licensed<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>zlib<sp/>license.</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/>---------------------------------------------------------</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/>The<sp/>bindings<sp/>for<sp/>libembroidery<sp/>on<sp/>Python.</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="embroidery_8h" kindref="compound">embroidery.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PY_SSIZE_T_CLEAN</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;Python.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><ref refid="structEmbPattern__" kindref="compound">EmbPattern</ref><sp/>*patterns[100];</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>PyObject<sp/>*</highlight></codeline>
+<codeline lineno="22"><highlight class="normal">embroidery_create_pattern(PyObject<sp/>*self,<sp/>PyObject<sp/>*args)</highlight></codeline>
+<codeline lineno="23"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>PyLong_fromLong(0);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>PyMethodDef<sp/>EmbroideryMethods[]<sp/>=<sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight><highlight class="stringliteral">&quot;create_pattern&quot;</highlight><highlight class="normal">,<sp/>embroidery_create_pattern,<sp/>METH_VARARGS,<sp/></highlight><highlight class="stringliteral">&quot;Create<sp/>a<sp/>new<sp/>pattern<sp/>object.&quot;</highlight><highlight class="normal">},</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/>{NULL,<sp/>NULL,<sp/>0,<sp/>NULL}</highlight></codeline>
+<codeline lineno="30"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">PyModuleDef<sp/>embroiderymodule<sp/>=<sp/>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal">PyMODINIT_FUNC</highlight></codeline>
+<codeline lineno="37"><highlight class="normal">PyInit_embroidery(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="38"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>PyModule_Create(&amp;embroiderymodule);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="python/embroidery/python_binding.c"/>
+  </compounddef>
+</doxygen>

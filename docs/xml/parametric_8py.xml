@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="parametric_8py" kind="file" language="Python">
+    <compoundname>parametric.py</compoundname>
+    <innerclass refid="classembroidery_1_1parametric_1_1Parametric" prot="public">embroidery::parametric::Parametric</innerclass>
+    <innernamespace refid="namespaceembroidery">embroidery</innernamespace>
+    <innernamespace refid="namespaceembroidery_1_1parametric">embroidery::parametric</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1" refid="namespaceembroidery_1_1parametric" refkind="compound"><highlight class="comment">#!/usr/bin/env<sp/>python3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="stringliteral">r&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="4"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>Embroidermodder<sp/>2.</highlight></codeline>
+<codeline lineno="5"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="6"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>------------------------------------------------------------</highlight></codeline>
+<codeline lineno="7"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="8"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>Copyright<sp/>2013-2022<sp/>The<sp/>Embroidermodder<sp/>Team</highlight></codeline>
+<codeline lineno="9"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>Embroidermodder<sp/>2<sp/></highlight><highlight class="keywordflow">is</highlight><highlight class="normal"><sp/>Open<sp/>Source<sp/>Software.</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/>See<sp/>LICENSE<sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>licensing<sp/>terms.</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/>------------------------------------------------------------</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/>The<sp/>support<sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>all<sp/>other<sp/>geometric<sp/>primatives.</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="stringliteral">&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="16"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="17"><highlight class="stringliteral">import<sp/>math</highlight></codeline>
+<codeline lineno="18"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="19"><highlight class="stringliteral">from<sp/>libembroidery.tools<sp/>import<sp/>Pen,<sp/>Vector,<sp/>clear_selection</highlight></codeline>
+<codeline lineno="20"><highlight class="stringliteral">from<sp/>libembroidery.line<sp/>import<sp/>Line</highlight></codeline>
+<codeline lineno="21"><highlight class="stringliteral">from<sp/>libembroidery.parser<sp/>import<sp/>list_processor</highlight></codeline>
+<codeline lineno="22"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="23"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="24" refid="classembroidery_1_1parametric_1_1Parametric" refkind="compound"><highlight class="stringliteral">class<sp/>Parametric():</highlight></codeline>
+<codeline lineno="25"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>r&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="26"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>The<sp/>generic<sp/>design<sp/>primative<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">.</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>To<sp/>make<sp/>a<sp/>specific<sp/>object<sp/>use<sp/>a<sp/>call<sp/>like<sp/>this:</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>dolphin<sp/>=<sp/><ref refid="classembroidery_1_1parametric_1_1Parametric" kindref="compound">Parametric</ref>(settings[</highlight><highlight class="stringliteral">&quot;objects&quot;</highlight><highlight class="normal">][</highlight><highlight class="stringliteral">&quot;dolphin&quot;</highlight><highlight class="normal">])</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="32"><highlight class="stringliteral"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>desc,<sp/>center=Vector(math.nan,<sp/>math.nan),</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mode=</highlight><highlight class="stringliteral">&quot;NUM_POINTS&quot;</highlight><highlight class="normal">):</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">r&quot;<sp/>Create<sp/>an<sp/>object.<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>clear_selection()</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a05c232ab376398ff409b99fd78a19c6b" kindref="member">desc</ref><sp/>=<sp/>desc</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a7871f13f150030bc5b6e6801ebfc77f2" kindref="member">num_points</ref><sp/>=<sp/>desc[</highlight><highlight class="stringliteral">&quot;num_points&quot;</highlight><highlight class="normal">]</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>min:64<sp/>max:8192</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1afc62b5cd8f2cd970951b5e57af9b3543" kindref="member">center</ref><sp/>=<sp/>center</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a4200b7e297b271a60edd79788240b753" kindref="member">scale</ref><sp/>=<sp/>Vector(desc[</highlight><highlight class="stringliteral">&quot;scale&quot;</highlight><highlight class="normal">][0],<sp/>desc[</highlight><highlight class="stringliteral">&quot;scale&quot;</highlight><highlight class="normal">][1])</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1acc7b26c2f5e76205ef7d9e449f247034" kindref="member">mode</ref><sp/>=<sp/>mode</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a49a9ef1f217e6aca4ebc73447f1e41cc" kindref="member">rubber_points</ref><sp/>=<sp/>{</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;POLYGON&quot;</highlight><highlight class="normal">:<sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1afc62b5cd8f2cd970951b5e57af9b3543" kindref="member">center</ref></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1af6027aa1e36aae713318e57fc3d3d65f" kindref="member">rubber_mode</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;POLYGON&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1af9229512ad7f1148c46fc9b16585a91b" kindref="member">spare_rubber</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;POLYGON&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1aefa4338b9bf4659167442281d6fdc171" kindref="member">radius_outer</ref><sp/>=<sp/>1.0</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a381b33b07c14dd870c54dd75d9feccc2" kindref="member">radius_inner</ref><sp/>=<sp/>1.0</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1aabe68bd368785c855b0ec5b6c2d1dbbd" kindref="member">rubber_text</ref><sp/>=<sp/>{}</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a418748219b5c72779f0279e52e46eeb7" kindref="member">update</ref>()</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">update(self):</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">r&quot;<sp/>Update<sp/>the<sp/>object<sp/>to<sp/>represent<sp/>the<sp/>current<sp/>data.<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>i<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>range(self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a7871f13f150030bc5b6e6801ebfc77f2" kindref="member">num_points</ref>+1):</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>t_parameter<sp/>=<sp/>(2*math.pi)/self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a7871f13f150030bc5b6e6801ebfc77f2" kindref="member">num_points</ref>*i</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rubber_point<sp/>=<sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1afc62b5cd8f2cd970951b5e57af9b3543" kindref="member">center</ref></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>curve_x<sp/>=<sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a05c232ab376398ff409b99fd78a19c6b" kindref="member">desc</ref>[</highlight><highlight class="stringliteral">&quot;x&quot;</highlight><highlight class="normal">]</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>exp<sp/>=<sp/>curve_x.replace(</highlight><highlight class="stringliteral">&quot;t&quot;</highlight><highlight class="normal">,<sp/>str(t_parameter))</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rubber_point.x<sp/>+=<sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a4200b7e297b271a60edd79788240b753" kindref="member">scale</ref>.x<sp/>*<sp/>list_processor(exp)</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>curve_y<sp/>=<sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a05c232ab376398ff409b99fd78a19c6b" kindref="member">desc</ref>[</highlight><highlight class="stringliteral">&quot;y&quot;</highlight><highlight class="normal">]</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>exp<sp/>=<sp/>curve_y.replace(</highlight><highlight class="stringliteral">&quot;t&quot;</highlight><highlight class="normal">,<sp/>str(t_parameter))</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rubber_point.y<sp/>+=<sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a4200b7e297b271a60edd79788240b753" kindref="member">scale</ref>.y<sp/>*<sp/>list_processor(exp)</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a49a9ef1f217e6aca4ebc73447f1e41cc" kindref="member">rubber_points</ref>[f</highlight><highlight class="stringliteral">&quot;POLYGON_POINT_{i}&quot;</highlight><highlight class="normal">]<sp/>=<sp/>rubber_point</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1aabe68bd368785c855b0ec5b6c2d1dbbd" kindref="member">rubber_text</ref>[</highlight><highlight class="stringliteral">&quot;POLYGON_NUM_POINTS&quot;</highlight><highlight class="normal">]<sp/>=<sp/>str(self.<ref refid="classembroidery_1_1parametric_1_1Parametric_1a7871f13f150030bc5b6e6801ebfc77f2" kindref="member">num_points</ref>)</highlight></codeline>
+    </programlisting>
+    <location file="python/embroidery/parametric.py"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="README_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Libembroidery<sp/>v1.0-alpha</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Copyright<sp/>(c)<sp/>2013-2024<sp/>The<sp/>EmbroiderModder<sp/>Team</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">https://www.libembroidery.org</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">(Under<sp/>construction,<sp/>please<sp/>wait<sp/>for<sp/>v1.0<sp/>release.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Libembroidery<sp/>is<sp/>a<sp/>low-level<sp/>library<sp/>for<sp/>reading,<sp/>writing,<sp/></highlight></codeline>
+<codeline><highlight class="normal">and<sp/>altering<sp/>digital<sp/>embroidery<sp/>files<sp/>in<sp/>C.<sp/>It<sp/>is<sp/>part<sp/>of<sp/>the<sp/>Embroidermodder<sp/>Project</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>open<sp/>source<sp/>machine<sp/>embroidery.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Libembroidery<sp/>is<sp/>the<sp/>underlying<sp/>library<sp/>that<sp/>is<sp/>used<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">[Embroidermodder<sp/>2](http://embroidermodder.org)<sp/>and<sp/>is<sp/>developed<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">[The<sp/>Embroidermodder<sp/>Team](#the-embroidermodder-team).</highlight></codeline>
+<codeline><highlight class="normal">A<sp/>full<sp/>list<sp/>of<sp/>contributors<sp/>to<sp/>the<sp/>project<sp/>is<sp/>maintained<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">[the<sp/>Embroidermodder<sp/>2<sp/>github](https://github.com/Embroidermodder/embroidermodder)</highlight></codeline>
+<codeline><highlight class="normal">in<sp/>the<sp/>file<sp/>`CREDITS.md`.</highlight></codeline>
+<codeline><highlight class="normal">It<sp/>handles<sp/>over<sp/>45<sp/>different<sp/>embroidery<sp/>specific<sp/>formats<sp/>as<sp/>well</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>several<sp/>non-embroidery<sp/>specific<sp/>vector<sp/>formats.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>also<sp/>includes<sp/>a<sp/>CLI<sp/>called<sp/>`embroider`<sp/>that<sp/>allows<sp/>for<sp/>better<sp/>automation<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">changes<sp/>to<sp/>embroidery<sp/>files<sp/>and<sp/>will<sp/>be<sp/>more<sp/>up-to<sp/>date<sp/>than</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>Embroidermodder<sp/>2<sp/>GUI.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Documentation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>basic<sp/>usage,<sp/>`embroider`<sp/>should<sp/>have<sp/>some<sp/>in-built<sp/>help<sp/>starting<sp/>with:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>$<sp/>embroider<sp/>--help</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>need<sp/>libembroidery<sp/>for<sp/>any<sp/>non-trivial<sp/>usage<sp/>or<sp/>want<sp/>to<sp/>contribute<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>library<sp/>we<sp/>advise<sp/>you<sp/>read<sp/>the<sp/>[manual](./manual.md)<sp/>first.</highlight></codeline>
+<codeline><highlight class="normal">Copies<sp/>of<sp/>this<sp/>manual<sp/>will<sp/>be<sp/>shipped<sp/>with<sp/>the<sp/>packaged<sp/>version<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">libembroidery.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Libembroidery<sp/>is<sp/>distributed<sp/>under<sp/>the<sp/>permissive<sp/>zlib<sp/>licence,<sp/>see<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[LICENCE](./LICENCE.md)<sp/>file.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Demos</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">We&apos;re<sp/>currently<sp/>trying<sp/>out<sp/>some<sp/>fill<sp/>techniques<sp/>which<sp/>will<sp/>be<sp/>demonstrated<sp/>here<sp/>and<sp/>in<sp/>the<sp/>script<sp/>`qa_test.sh`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">![images/logo-spirals.png](images/logo-spirals.png)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Converts<sp/>to:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">![images/logo_spirals_cross_stitch.png](images/logo_spirals_cross_stitch.png)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Build</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">libembroidery<sp/>and<sp/>EmbroiderModder<sp/>2<sp/>use<sp/>CMake<sp/>builds</highlight></codeline>
+<codeline><highlight class="normal">so<sp/>if<sp/>you<sp/>are<sp/>building<sp/>the<sp/>project<sp/>to<sp/>use<sp/>as<sp/>a<sp/>library<sp/>we<sp/>recommend</highlight></codeline>
+<codeline><highlight class="normal">you<sp/>run:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">git<sp/>clone<sp/>https://github.com/Embroidermodder/libembroidery</highlight></codeline>
+<codeline><highlight class="normal">cd<sp/>libembroidery</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>.</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--build<sp/>.</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--install<sp/>.</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>builds<sp/>both<sp/>the<sp/>static<sp/>and<sp/>shared<sp/>versions<sp/>of<sp/>the<sp/>library<sp/>as<sp/>well</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>the<sp/>command<sp/>line<sp/>program<sp/>`embroider`.</highlight></codeline>
+<codeline></codeline>
+    </programlisting>
+    <location file="README.md"/>
+  </compounddef>
+</doxygen>

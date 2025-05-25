@@ -1,10 +1,13 @@
 #
 # In order to more efficiently test routines designed for embedded systems,
-# there is a linux testing platform called emb_elf64_test.
+# there is a linux testing platform called embroider_elf64.
 #
 
-all:
-	nasm -felf64 -o emb_elf64_test.o emb_elf64_test.asm
-	ld emb_elf64_test.o -o emb_elf64_test
-	nasm -fbin -o emb_thumb emb_thumb.asm
+all: elf64
 
+elf64:
+	gcc embroider_elf64.S -o embroider_elf64
+
+thumb:
+	as -fbin -o embroider_thumb embroider_thumb.asm
+	ld embroider_thumb.o -o embroider_thumb

@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structIntMap__" kind="struct" language="C++" prot="public">
+    <compoundname>IntMap_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structIntMap___1ada41616dbe4742c787dd9a654cc50cfe" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int IntMap_::key</definition>
+        <argsstring></argsstring>
+        <name>key</name>
+        <qualifiedname>IntMap_::key</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="766" column="9" bodyfile="src/embroidery.h" bodystart="766" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structIntMap___1a667165b426478df3c1bf966ae1c5bdc1" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int IntMap_::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <qualifiedname>IntMap_::value</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="767" column="9" bodyfile="src/embroidery.h" bodystart="767" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="765" column="1" bodyfile="src/embroidery.h" bodystart="765" bodyend="768"/>
+    <listofallmembers>
+      <member refid="structIntMap___1ada41616dbe4742c787dd9a654cc50cfe" prot="public" virt="non-virtual"><scope>IntMap_</scope><name>key</name></member>
+      <member refid="structIntMap___1a667165b426478df3c1bf966ae1c5bdc1" prot="public" virt="non-virtual"><scope>IntMap_</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

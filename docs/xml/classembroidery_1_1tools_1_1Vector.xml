@@ -1,0 +1,256 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1tools_1_1Vector" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::tools::Vector</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1tools_1_1Vector_1a121527c9ba08e2cb81480761ebeddef0" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.tools.Vector::x</definition>
+        <argsstring></argsstring>
+        <name>x</name>
+        <qualifiedname>embroidery.tools.Vector.x</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="33" column="1" bodyfile="python/embroidery/tools.py" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1tools_1_1Vector_1a38470c3ae7fb8f4897c658aadd682d96" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.tools.Vector::y</definition>
+        <argsstring></argsstring>
+        <name>y</name>
+        <qualifiedname>embroidery.tools.Vector.y</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="34" column="1" bodyfile="python/embroidery/tools.py" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1tools_1_1Vector_1a5308bfd4520c7f9fe59dd511eb4962d6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.Vector.__init__</definition>
+        <argsstring>(self, *args)</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.tools.Vector.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>*</type>
+          <declname>args</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>    If one argument is supplied it is the
+    angle of a unit vector in the direction defined by &quot;angle&quot;,
+    measured anti-clockwise from the x axis.
+
+    If two arguments are supplied then they are the x and y co-ordinates.</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="25" column="1" bodyfile="python/embroidery/tools.py" bodystart="25" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1tools_1_1Vector_1a9f575435a616e58670f9fa4fe193d3a2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.Vector.__add__</definition>
+        <argsstring>(self, vector)</argsstring>
+        <name>__add__</name>
+        <qualifiedname>embroidery.tools.Vector.__add__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type><ref refid="classembroidery_1_1vector" kindref="compound">vector</ref></type>
+          <defname>vector</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="42" column="1" bodyfile="python/embroidery/tools.py" bodystart="42" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1tools_1_1Vector_1a246398c22892256137ed6f43da6d5928" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.Vector.__sub__</definition>
+        <argsstring>(self, vector)</argsstring>
+        <name>__sub__</name>
+        <qualifiedname>embroidery.tools.Vector.__sub__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type><ref refid="classembroidery_1_1vector" kindref="compound">vector</ref></type>
+          <defname>vector</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim> Subtract this vector from the supplied one,
+    overloading the - symbol. </verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="49" column="1" bodyfile="python/embroidery/tools.py" bodystart="49" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1tools_1_1Vector_1ad6ab08266f26d782b4b83f78b2414181" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.Vector.__mul__</definition>
+        <argsstring>(self, vector)</argsstring>
+        <name>__mul__</name>
+        <qualifiedname>embroidery.tools.Vector.__mul__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type><ref refid="classembroidery_1_1vector" kindref="compound">vector</ref></type>
+          <defname>vector</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>    Find the 2D version of a cross product for this and the supplied vector.</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="57" column="1" bodyfile="python/embroidery/tools.py" bodystart="57" bodyend="64"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1tools_1_1Vector_1ac08cea2c1fc9fd9ea34068483d7e830c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.Vector.__neg__</definition>
+        <argsstring>(self)</argsstring>
+        <name>__neg__</name>
+        <qualifiedname>embroidery.tools.Vector.__neg__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="65" column="1" bodyfile="python/embroidery/tools.py" bodystart="65" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1tools_1_1Vector_1a7b979a859b3641ff445036ed7aece6d3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.Vector.rotate</definition>
+        <argsstring>(self, angle)</argsstring>
+        <name>rotate</name>
+        <qualifiedname>embroidery.tools.Vector.rotate</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>angle</type>
+          <defname>angle</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="69" column="1" bodyfile="python/embroidery/tools.py" bodystart="69" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1tools_1_1Vector_1aa0ea7c737e731fc7cfc8483e71f032a5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.Vector.scale</definition>
+        <argsstring>(self, scale_factor)</argsstring>
+        <name>scale</name>
+        <qualifiedname>embroidery.tools.Vector.scale</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>scale_factor</type>
+          <defname>scale_factor</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="77" column="1" bodyfile="python/embroidery/tools.py" bodystart="77" bodyend="83"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1tools_1_1Vector_1ae3a8e6f0c15a62647f85000e6655212c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.Vector.dot</definition>
+        <argsstring>(self, output)</argsstring>
+        <name>dot</name>
+        <qualifiedname>embroidery.tools.Vector.dot</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>output</type>
+          <defname>output</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="84" column="1" bodyfile="python/embroidery/tools.py" bodystart="84" bodyend="87"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1tools_1_1Vector_1a56c9cac5d9edd77a69bfa7f6a7bdeaaf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.Vector.length</definition>
+        <argsstring>(self)</argsstring>
+        <name>length</name>
+        <qualifiedname>embroidery.tools.Vector.length</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="88" column="1" bodyfile="python/embroidery/tools.py" bodystart="88" bodyend="92"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>The basic vector class definition.
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/tools.py" line="21" column="1" bodyfile="python/embroidery/tools.py" bodystart="21" bodyend="92"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1tools_1_1Vector_1a9f575435a616e58670f9fa4fe193d3a2" prot="public" virt="non-virtual"><scope>embroidery::tools::Vector</scope><name>__add__</name></member>
+      <member refid="classembroidery_1_1tools_1_1Vector_1a5308bfd4520c7f9fe59dd511eb4962d6" prot="public" virt="non-virtual"><scope>embroidery::tools::Vector</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1tools_1_1Vector_1ad6ab08266f26d782b4b83f78b2414181" prot="public" virt="non-virtual"><scope>embroidery::tools::Vector</scope><name>__mul__</name></member>
+      <member refid="classembroidery_1_1tools_1_1Vector_1ac08cea2c1fc9fd9ea34068483d7e830c" prot="public" virt="non-virtual"><scope>embroidery::tools::Vector</scope><name>__neg__</name></member>
+      <member refid="classembroidery_1_1tools_1_1Vector_1a246398c22892256137ed6f43da6d5928" prot="public" virt="non-virtual"><scope>embroidery::tools::Vector</scope><name>__sub__</name></member>
+      <member refid="classembroidery_1_1tools_1_1Vector_1ae3a8e6f0c15a62647f85000e6655212c" prot="public" virt="non-virtual"><scope>embroidery::tools::Vector</scope><name>dot</name></member>
+      <member refid="classembroidery_1_1tools_1_1Vector_1a56c9cac5d9edd77a69bfa7f6a7bdeaaf" prot="public" virt="non-virtual"><scope>embroidery::tools::Vector</scope><name>length</name></member>
+      <member refid="classembroidery_1_1tools_1_1Vector_1a7b979a859b3641ff445036ed7aece6d3" prot="public" virt="non-virtual"><scope>embroidery::tools::Vector</scope><name>rotate</name></member>
+      <member refid="classembroidery_1_1tools_1_1Vector_1aa0ea7c737e731fc7cfc8483e71f032a5" prot="public" virt="non-virtual"><scope>embroidery::tools::Vector</scope><name>scale</name></member>
+      <member refid="classembroidery_1_1tools_1_1Vector_1a121527c9ba08e2cb81480761ebeddef0" prot="public" virt="non-virtual"><scope>embroidery::tools::Vector</scope><name>x</name></member>
+      <member refid="classembroidery_1_1tools_1_1Vector_1a38470c3ae7fb8f4897c658aadd682d96" prot="public" virt="non-virtual"><scope>embroidery::tools::Vector</scope><name>y</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

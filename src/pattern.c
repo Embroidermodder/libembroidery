@@ -1,4 +1,7 @@
-/*
+/*!
+ * \file pattern.c
+ * \brief The EmbPattern struct memory management and storage.
+ *
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *

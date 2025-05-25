@@ -1,0 +1,659 @@
+\hypertarget{pattern_8c}{}\doxysection{src/pattern.c File Reference}
+\label{pattern_8c}\index{src/pattern.c@{src/pattern.c}}
+
+
+The Emb\+Pattern struct memory management and storage.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$inttypes.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}embroidery.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{pattern_8c_adf4453c7baa44e9263eb554404a8f1e6}\label{pattern_8c_adf4453c7baa44e9263eb554404a8f1e6}} 
+int {\bfseries string\+\_\+whitespace} (const char $\ast$s)
+\item 
+\mbox{\Hypertarget{pattern_8c_a69e93fbf54409b609fffab0ea524d05d}\label{pattern_8c_a69e93fbf54409b609fffab0ea524d05d}} 
+int {\bfseries string\+\_\+len} (const char $\ast$src)
+\item 
+\mbox{\Hypertarget{pattern_8c_a5246ec5d40cd479b8a14d56a66331696}\label{pattern_8c_a5246ec5d40cd479b8a14d56a66331696}} 
+int {\bfseries string\+\_\+rchar} (const char $\ast$s, char c)
+\item 
+\mbox{\Hypertarget{pattern_8c_a49c180e69d4ac6d46e68b64adb74d7ae}\label{pattern_8c_a49c180e69d4ac6d46e68b64adb74d7ae}} 
+\mbox{\hyperlink{embroidery_8h_acde9d757854564332fd795a084ec88b3}{Emb\+Color}} {\bfseries emb\+Color\+\_\+from\+Hex\+Str} (char $\ast$val)
+\item 
+\mbox{\Hypertarget{pattern_8c_ae592d4ef2f61a582bb152d813c8b697d}\label{pattern_8c_ae592d4ef2f61a582bb152d813c8b697d}} 
+\mbox{\hyperlink{embroidery_8h_acde9d757854564332fd795a084ec88b3}{Emb\+Color}} {\bfseries emb\+Color\+\_\+make} (unsigned char red, unsigned char green, unsigned char blue)
+\item 
+\mbox{\Hypertarget{pattern_8c_a79553db3a938c97075b566a7bf80d615}\label{pattern_8c_a79553db3a938c97075b566a7bf80d615}} 
+void {\bfseries emb\+\_\+swap} (char $\ast$a, int i, int j)
+\item 
+\mbox{\Hypertarget{pattern_8c_a531ff0e159825c695fa9030329d64f4c}\label{pattern_8c_a531ff0e159825c695fa9030329d64f4c}} 
+void {\bfseries fix\+\_\+endian} (char $\ast$a, int bytes, int endian)
+\item 
+\mbox{\Hypertarget{pattern_8c_a727692464b7d1e25979261199a7d18aa}\label{pattern_8c_a727692464b7d1e25979261199a7d18aa}} 
+int16\+\_\+t {\bfseries emb\+\_\+read\+\_\+i16} (FILE $\ast$f)
+\item 
+\mbox{\Hypertarget{pattern_8c_a1cbd4330a1a8b402324da0ada59e470b}\label{pattern_8c_a1cbd4330a1a8b402324da0ada59e470b}} 
+uint16\+\_\+t {\bfseries emb\+\_\+read\+\_\+u16} (FILE $\ast$f)
+\item 
+\mbox{\Hypertarget{pattern_8c_aeada6ffc31d5dd0dcfd6ccb904ba4d19}\label{pattern_8c_aeada6ffc31d5dd0dcfd6ccb904ba4d19}} 
+int32\+\_\+t {\bfseries emb\+\_\+read\+\_\+i32} (FILE $\ast$f)
+\item 
+\mbox{\Hypertarget{pattern_8c_a36e964dc78d614d940bf0d6244cf546c}\label{pattern_8c_a36e964dc78d614d940bf0d6244cf546c}} 
+uint32\+\_\+t {\bfseries emb\+\_\+read\+\_\+u32} (FILE $\ast$f)
+\item 
+\mbox{\Hypertarget{pattern_8c_a8ff629a8ba722dd5ca0a555ceaa52631}\label{pattern_8c_a8ff629a8ba722dd5ca0a555ceaa52631}} 
+int16\+\_\+t {\bfseries emb\+\_\+read\+\_\+i16be} (FILE $\ast$f)
+\item 
+\mbox{\Hypertarget{pattern_8c_a042bb16ff7f4d22031a34b90695041be}\label{pattern_8c_a042bb16ff7f4d22031a34b90695041be}} 
+uint16\+\_\+t {\bfseries emb\+\_\+read\+\_\+u16be} (FILE $\ast$f)
+\item 
+\mbox{\Hypertarget{pattern_8c_aef68c0952c7ec6c8368427d883d031cf}\label{pattern_8c_aef68c0952c7ec6c8368427d883d031cf}} 
+int32\+\_\+t {\bfseries emb\+\_\+read\+\_\+i32be} (FILE $\ast$f)
+\item 
+\mbox{\Hypertarget{pattern_8c_ac095853417532c8759fafd47e0d710c9}\label{pattern_8c_ac095853417532c8759fafd47e0d710c9}} 
+uint32\+\_\+t {\bfseries emb\+\_\+read\+\_\+u32be} (FILE $\ast$f)
+\item 
+\mbox{\Hypertarget{pattern_8c_a9a4ef6979894437de607ac59967d6691}\label{pattern_8c_a9a4ef6979894437de607ac59967d6691}} 
+int {\bfseries decode\+\_\+t01\+\_\+record} (unsigned char b\mbox{[}3\mbox{]}, int $\ast$x, int $\ast$y, int $\ast$flags)
+\item 
+\mbox{\Hypertarget{pattern_8c_a185446b8993b1f6a16bca08cc0032cba}\label{pattern_8c_a185446b8993b1f6a16bca08cc0032cba}} 
+void {\bfseries encode\+\_\+t01\+\_\+record} (unsigned char b\mbox{[}3\mbox{]}, int x, int y, int flags)
+\item 
+\mbox{\Hypertarget{pattern_8c_a6f2eb7f943597426ecce56ce45c92896}\label{pattern_8c_a6f2eb7f943597426ecce56ce45c92896}} 
+int {\bfseries encode\+\_\+tajima\+\_\+ternary} (unsigned char b\mbox{[}3\mbox{]}, int x, int y)
+\item 
+\mbox{\Hypertarget{pattern_8c_aeead1c7cae8d2d87aa74a32f0eeae808}\label{pattern_8c_aeead1c7cae8d2d87aa74a32f0eeae808}} 
+void {\bfseries decode\+\_\+tajima\+\_\+ternary} (unsigned char b\mbox{[}3\mbox{]}, int $\ast$x, int $\ast$y)
+\item 
+\mbox{\Hypertarget{pattern_8c_a2b001600fdee799e57a8ea00e9b73583}\label{pattern_8c_a2b001600fdee799e57a8ea00e9b73583}} 
+void {\bfseries pfaff\+Encode} (FILE $\ast$file, int dx, int dy, int flags)
+\item 
+\mbox{\Hypertarget{pattern_8c_a43cfefba2fb750ffa5eca5b7749b53f9}\label{pattern_8c_a43cfefba2fb750ffa5eca5b7749b53f9}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries pfaff\+Decode} (unsigned char a1, unsigned char a2, unsigned char a3)
+\item 
+\mbox{\Hypertarget{pattern_8c_a558c902db31be6221139e394313e4a0c}\label{pattern_8c_a558c902db31be6221139e394313e4a0c}} 
+unsigned char {\bfseries mit\+Encode\+Stitch} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} value)
+\item 
+\mbox{\Hypertarget{pattern_8c_a896703c85b788f1c46053d826cdd3524}\label{pattern_8c_a896703c85b788f1c46053d826cdd3524}} 
+int {\bfseries mit\+Decode\+Stitch} (unsigned char value)
+\item 
+\mbox{\Hypertarget{pattern_8c_a1fe39861516c14e3142add13ce9929b1}\label{pattern_8c_a1fe39861516c14e3142add13ce9929b1}} 
+int {\bfseries decode\+New\+Stitch} (unsigned char value)
+\item 
+\mbox{\Hypertarget{pattern_8c_a7edd4650a0181a4c4c18d7949dd2f817}\label{pattern_8c_a7edd4650a0181a4c4c18d7949dd2f817}} 
+void {\bfseries fpad} (FILE $\ast$file, char c, int n)
+\item 
+\mbox{\Hypertarget{pattern_8c_a4a63e6bd393472672be5c36a91935f88}\label{pattern_8c_a4a63e6bd393472672be5c36a91935f88}} 
+void {\bfseries emb\+\_\+write\+\_\+i16} (FILE $\ast$f, int16\+\_\+t data)
+\item 
+\mbox{\Hypertarget{pattern_8c_a6273b9a716bbccc35ef7b76df834299a}\label{pattern_8c_a6273b9a716bbccc35ef7b76df834299a}} 
+void {\bfseries emb\+\_\+write\+\_\+u16} (FILE $\ast$f, uint16\+\_\+t data)
+\item 
+\mbox{\Hypertarget{pattern_8c_afe1376a25f3a2009bc3f4d52fa9bbc00}\label{pattern_8c_afe1376a25f3a2009bc3f4d52fa9bbc00}} 
+void {\bfseries emb\+\_\+write\+\_\+i16be} (FILE $\ast$f, int16\+\_\+t data)
+\item 
+\mbox{\Hypertarget{pattern_8c_aeabf321d06d301b3f33b6efa92a24029}\label{pattern_8c_aeabf321d06d301b3f33b6efa92a24029}} 
+void {\bfseries emb\+\_\+write\+\_\+u16be} (FILE $\ast$f, uint16\+\_\+t data)
+\item 
+\mbox{\Hypertarget{pattern_8c_a84def3332a7eee09f5385c83fbbf738c}\label{pattern_8c_a84def3332a7eee09f5385c83fbbf738c}} 
+void {\bfseries emb\+\_\+write\+\_\+i32} (FILE $\ast$f, int32\+\_\+t data)
+\item 
+\mbox{\Hypertarget{pattern_8c_a41d35ba3776ece3915a644d96278b1a8}\label{pattern_8c_a41d35ba3776ece3915a644d96278b1a8}} 
+void {\bfseries emb\+\_\+write\+\_\+u32} (FILE $\ast$f, uint32\+\_\+t data)
+\item 
+\mbox{\Hypertarget{pattern_8c_a86eb12f20c737dea62a7441bd315755b}\label{pattern_8c_a86eb12f20c737dea62a7441bd315755b}} 
+void {\bfseries emb\+\_\+write\+\_\+i32be} (FILE $\ast$f, int32\+\_\+t data)
+\item 
+\mbox{\Hypertarget{pattern_8c_ae391d4869ee927bb74ceb39be7e3d166}\label{pattern_8c_ae391d4869ee927bb74ceb39be7e3d166}} 
+void {\bfseries emb\+\_\+write\+\_\+u32be} (FILE $\ast$f, uint32\+\_\+t data)
+\item 
+\mbox{\Hypertarget{pattern_8c_a00792a62aad4ad9faa8d1daa1ed164ca}\label{pattern_8c_a00792a62aad4ad9faa8d1daa1ed164ca}} 
+\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$ {\bfseries emb\+\_\+array\+\_\+create} (int type)
+\item 
+\mbox{\Hypertarget{pattern_8c_a0598062e3c2861788f76db4e8a84ce61}\label{pattern_8c_a0598062e3c2861788f76db4e8a84ce61}} 
+int {\bfseries emb\+\_\+array\+\_\+resize} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a)
+\item 
+\mbox{\Hypertarget{pattern_8c_a05a2319dfae3553afe6366f16f7688c8}\label{pattern_8c_a05a2319dfae3553afe6366f16f7688c8}} 
+void {\bfseries emb\+\_\+array\+\_\+copy} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$dst, \mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$src)
+\item 
+\mbox{\Hypertarget{pattern_8c_a43c14274505d6ceaf96cc6d4f97c435f}\label{pattern_8c_a43c14274505d6ceaf96cc6d4f97c435f}} 
+int {\bfseries emb\+\_\+array\+\_\+add\+\_\+circle} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a, \mbox{\hyperlink{embroidery_8h_a87fc13ccd4dbaa7de7c85efde17bba0e}{Emb\+Circle}} b)
+\item 
+\mbox{\Hypertarget{pattern_8c_a34a2718696374b0d1d7920f92693eb62}\label{pattern_8c_a34a2718696374b0d1d7920f92693eb62}} 
+int {\bfseries emb\+\_\+array\+\_\+add\+\_\+ellipse} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a, \mbox{\hyperlink{embroidery_8h_a4e48ebde5bd4d82b875f98b347bdd62c}{Emb\+Ellipse}} b)
+\item 
+\mbox{\Hypertarget{pattern_8c_a4f86dd5fc5f173c41484b60cc58e1081}\label{pattern_8c_a4f86dd5fc5f173c41484b60cc58e1081}} 
+int {\bfseries emb\+\_\+array\+\_\+add\+\_\+flag} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a, \mbox{\hyperlink{embroidery_8h_aa8d187896cf7654438e8108ea481b11a}{Emb\+Flag}} b)
+\item 
+\mbox{\Hypertarget{pattern_8c_a9bbbc92cc783f6f474912d26039fd5e3}\label{pattern_8c_a9bbbc92cc783f6f474912d26039fd5e3}} 
+int {\bfseries emb\+\_\+array\+\_\+add\+Line} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a, \mbox{\hyperlink{embroidery_8h_a62e08237073617de993166ed4a9ab085}{Emb\+Line}} b)
+\item 
+\mbox{\Hypertarget{pattern_8c_a47a01a9f56d31ac2da1f3bfef6cbcb4e}\label{pattern_8c_a47a01a9f56d31ac2da1f3bfef6cbcb4e}} 
+int {\bfseries emb\+\_\+array\+\_\+add\+Path} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a, \mbox{\hyperlink{embroidery_8h_af29045dfeebafdcb66d114b390c4a686}{Emb\+Path}} b)
+\item 
+\mbox{\Hypertarget{pattern_8c_a39ca41c0fa25c279655a67357d67d169}\label{pattern_8c_a39ca41c0fa25c279655a67357d67d169}} 
+int {\bfseries emb\+\_\+array\+\_\+add\+Point} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a, \mbox{\hyperlink{embroidery_8h_a835ccc3aedf71b57dca6130be87ea463}{Emb\+Point}} b)
+\item 
+\mbox{\Hypertarget{pattern_8c_a8c5ec41142419088778ffdc6b9fa29dd}\label{pattern_8c_a8c5ec41142419088778ffdc6b9fa29dd}} 
+int {\bfseries emb\+\_\+array\+\_\+add\+Polyline} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a, \mbox{\hyperlink{embroidery_8h_ab5563c868d8f8174d5be764808a647dd}{Emb\+Polyline}} b)
+\item 
+\mbox{\Hypertarget{pattern_8c_a486c7afabf69ac285531565e3bcb87ae}\label{pattern_8c_a486c7afabf69ac285531565e3bcb87ae}} 
+int {\bfseries emb\+\_\+array\+\_\+add\+Polygon} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a, \mbox{\hyperlink{embroidery_8h_a2d6988a5f4ba24d26c7eff65dbc9d029}{Emb\+Polygon}} b)
+\item 
+\mbox{\Hypertarget{pattern_8c_a97e5d3ad487da2a70f0e14aa267245b7}\label{pattern_8c_a97e5d3ad487da2a70f0e14aa267245b7}} 
+int {\bfseries emb\+\_\+array\+\_\+add\+Rect} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a, \mbox{\hyperlink{embroidery_8h_ac2f33b151fc40a0da3b14379aa0ec653}{Emb\+Rect}} b)
+\item 
+\mbox{\Hypertarget{pattern_8c_a70548d96b7359d83390fc0f6a3e9ac44}\label{pattern_8c_a70548d96b7359d83390fc0f6a3e9ac44}} 
+int {\bfseries emb\+\_\+array\+\_\+add\+Stitch} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a, \mbox{\hyperlink{embroidery_8h_ae92ded87da0dcaaae8f7c7bc880fd1b0}{Emb\+Stitch}} b)
+\item 
+\mbox{\Hypertarget{pattern_8c_a6231778171ff1a18eb3147108083757e}\label{pattern_8c_a6231778171ff1a18eb3147108083757e}} 
+int {\bfseries emb\+\_\+array\+\_\+add\+\_\+geometry} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a, \mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} g)
+\item 
+\mbox{\Hypertarget{pattern_8c_ae1bedbe53840c05f49ad98dbfd178199}\label{pattern_8c_ae1bedbe53840c05f49ad98dbfd178199}} 
+int {\bfseries emb\+\_\+array\+\_\+add\+Vector} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} b)
+\item 
+\mbox{\Hypertarget{pattern_8c_a6a6e94f7f15f9040fe08c2155b6b28d2}\label{pattern_8c_a6a6e94f7f15f9040fe08c2155b6b28d2}} 
+void {\bfseries emb\+\_\+array\+\_\+free} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$a)
+\item 
+\mbox{\Hypertarget{pattern_8c_aa8cda149cc8f044ed7062bad071ac2d7}\label{pattern_8c_aa8cda149cc8f044ed7062bad071ac2d7}} 
+void {\bfseries emb\+\_\+vector\+\_\+print} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} v, char $\ast$label)
+\item 
+\mbox{\Hypertarget{pattern_8c_ab7d6d7d4346c6d6059cedfb2d7e4477a}\label{pattern_8c_ab7d6d7d4346c6d6059cedfb2d7e4477a}} 
+void {\bfseries emb\+\_\+arc\+\_\+print} (\mbox{\hyperlink{embroidery_8h_a09945e6e919629c5787e61582c712ba1}{Emb\+Arc}} arc)
+\item 
+\mbox{\Hypertarget{pattern_8c_ad6d5aaabb6637d271cec955c2dd42ded}\label{pattern_8c_ad6d5aaabb6637d271cec955c2dd42ded}} 
+int {\bfseries check\+\_\+header\+\_\+present} (FILE $\ast$file, int minimum\+\_\+header\+\_\+length)
+\item 
+\mbox{\Hypertarget{pattern_8c_a5da0013e5c2fb1d49c92d85fd8028109}\label{pattern_8c_a5da0013e5c2fb1d49c92d85fd8028109}} 
+unsigned int {\bfseries sector\+Size} (\mbox{\hyperlink{struct__bcf__file}{bcf\+\_\+file}} $\ast$bcf\+File)
+\item 
+\mbox{\Hypertarget{pattern_8c_aad299cf13841b348b13bcaea721734fc}\label{pattern_8c_aad299cf13841b348b13bcaea721734fc}} 
+int {\bfseries have\+Extra\+DIFATSectors} (\mbox{\hyperlink{struct__bcf__file}{bcf\+\_\+file}} $\ast$file)
+\item 
+\mbox{\Hypertarget{pattern_8c_a5abd59b3d55bc37d3c2094fede71a5cb}\label{pattern_8c_a5abd59b3d55bc37d3c2094fede71a5cb}} 
+int {\bfseries seek\+To\+Sector} (\mbox{\hyperlink{struct__bcf__file}{bcf\+\_\+file}} $\ast$bcf\+File, FILE $\ast$file, const unsigned int sector)
+\item 
+\mbox{\Hypertarget{pattern_8c_a2d0fa82cd8a6d6ad4e873f59e45c3b55}\label{pattern_8c_a2d0fa82cd8a6d6ad4e873f59e45c3b55}} 
+void {\bfseries parse\+DIFATSectors} (FILE $\ast$file, \mbox{\hyperlink{struct__bcf__file}{bcf\+\_\+file}} $\ast$bcf\+File)
+\item 
+\mbox{\Hypertarget{pattern_8c_a4acd18062065ffbee8f6cd9b00965cc2}\label{pattern_8c_a4acd18062065ffbee8f6cd9b00965cc2}} 
+int {\bfseries bcf\+File\+\_\+read} (FILE $\ast$file, \mbox{\hyperlink{struct__bcf__file}{bcf\+\_\+file}} $\ast$bcf\+File)
+\item 
+\mbox{\Hypertarget{pattern_8c_a7a5316dfb649ecc3198d262883cbd4b5}\label{pattern_8c_a7a5316dfb649ecc3198d262883cbd4b5}} 
+void $\ast$ {\bfseries Get\+File} (\mbox{\hyperlink{struct__bcf__file}{bcf\+\_\+file}} $\ast$bcf\+File, FILE $\ast$file, char $\ast$file\+To\+Find)
+\item 
+\mbox{\Hypertarget{pattern_8c_a491e7bc54a29532020548d6dcad3e57f}\label{pattern_8c_a491e7bc54a29532020548d6dcad3e57f}} 
+void {\bfseries bcf\+\_\+file\+\_\+free} (\mbox{\hyperlink{struct__bcf__file}{bcf\+\_\+file}} $\ast$bcf\+File)
+\item 
+\mbox{\Hypertarget{pattern_8c_a8277b359861dbbfe6c3244f28c894632}\label{pattern_8c_a8277b359861dbbfe6c3244f28c894632}} 
+\mbox{\hyperlink{embroidery_8h_a04a761d12d7ad0f1f0c7566dda49f354}{bcf\+\_\+file\+\_\+difat}} $\ast$ {\bfseries bcf\+\_\+difat\+\_\+create} (FILE $\ast$file, unsigned int fat\+Sectors, const unsigned int sector\+Size)
+\item 
+\mbox{\Hypertarget{pattern_8c_a5462a9cf780abd252021ca031a1f59af}\label{pattern_8c_a5462a9cf780abd252021ca031a1f59af}} 
+unsigned int {\bfseries entries\+In\+Difat\+Sector} (\mbox{\hyperlink{embroidery_8h_a04a761d12d7ad0f1f0c7566dda49f354}{bcf\+\_\+file\+\_\+difat}} $\ast$fat)
+\item 
+\mbox{\Hypertarget{pattern_8c_a842ff85875f8cc0833691ea1fc2505be}\label{pattern_8c_a842ff85875f8cc0833691ea1fc2505be}} 
+unsigned int {\bfseries read\+Full\+Sector} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a04a761d12d7ad0f1f0c7566dda49f354}{bcf\+\_\+file\+\_\+difat}} $\ast$bcf\+File, unsigned int $\ast$difat\+Entries\+To\+Read)
+\item 
+\mbox{\Hypertarget{pattern_8c_a4221460e3e8fca706df3420ed245e1d9}\label{pattern_8c_a4221460e3e8fca706df3420ed245e1d9}} 
+void {\bfseries parse\+Directory\+Entry\+Name} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_abb451c97faf6366fb733ff7b29054c19}{bcf\+\_\+directory\+\_\+entry}} $\ast$dir)
+\item 
+\mbox{\Hypertarget{pattern_8c_a66c717936143bb39229e9c5880dacaa1}\label{pattern_8c_a66c717936143bb39229e9c5880dacaa1}} 
+\mbox{\hyperlink{struct__bcf__directory}{bcf\+\_\+directory}} $\ast$ {\bfseries Compound\+File\+Directory} (const unsigned int max\+Number\+Of\+Directory\+Entries)
+\item 
+\mbox{\Hypertarget{pattern_8c_afa71579ab89ee63f1e0a1f85ced52759}\label{pattern_8c_afa71579ab89ee63f1e0a1f85ced52759}} 
+\mbox{\hyperlink{embroidery_8h_a3829b58c37eab5cd81529f1916adcd33}{Emb\+Time}} {\bfseries parse\+Time} (FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{pattern_8c_a3b7a815d54672417e902a05a3d7f7b3f}\label{pattern_8c_a3b7a815d54672417e902a05a3d7f7b3f}} 
+\mbox{\hyperlink{embroidery_8h_abb451c97faf6366fb733ff7b29054c19}{bcf\+\_\+directory\+\_\+entry}} $\ast$ {\bfseries Compound\+File\+Directory\+Entry} (FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{pattern_8c_a7a74138f5ffaa71deb934c3c407a6289}\label{pattern_8c_a7a74138f5ffaa71deb934c3c407a6289}} 
+void {\bfseries read\+Next\+Sector} (FILE $\ast$file, \mbox{\hyperlink{struct__bcf__directory}{bcf\+\_\+directory}} $\ast$dir)
+\item 
+\mbox{\Hypertarget{pattern_8c_a994645555ce8f1021b9efc280bffd6a9}\label{pattern_8c_a994645555ce8f1021b9efc280bffd6a9}} 
+void {\bfseries bcf\+\_\+directory\+\_\+free} (\mbox{\hyperlink{struct__bcf__directory}{bcf\+\_\+directory}} $\ast$$\ast$dir)
+\item 
+\mbox{\Hypertarget{pattern_8c_a4e7377ff59e275ae4dc1d80ede4837e9}\label{pattern_8c_a4e7377ff59e275ae4dc1d80ede4837e9}} 
+\mbox{\hyperlink{embroidery_8h_a9a00b74e77254af1f7af14c6e12007d7}{bcf\+\_\+file\+\_\+fat}} $\ast$ {\bfseries bcf\+File\+Fat\+\_\+create} (const unsigned int sector\+Size)
+\item 
+\mbox{\Hypertarget{pattern_8c_a71a5f4111bd3daa574148e2f45d4c893}\label{pattern_8c_a71a5f4111bd3daa574148e2f45d4c893}} 
+void {\bfseries load\+Fat\+From\+Sector} (\mbox{\hyperlink{embroidery_8h_a9a00b74e77254af1f7af14c6e12007d7}{bcf\+\_\+file\+\_\+fat}} $\ast$fat, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{pattern_8c_a6faf1e4138b3dba5948cb6da199babce}\label{pattern_8c_a6faf1e4138b3dba5948cb6da199babce}} 
+\mbox{\hyperlink{struct__bcf__file__header}{bcf\+\_\+file\+\_\+header}} {\bfseries bcf\+File\+Header\+\_\+read} (FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{pattern_8c_a7bb063cc44d9e4869cce66f4a97ec117}\label{pattern_8c_a7bb063cc44d9e4869cce66f4a97ec117}} 
+int {\bfseries emb\+\_\+generate\+\_\+satin\+\_\+outline} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$lines, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} thickness, \mbox{\hyperlink{embroidery_8h_af3d7bc78977c54ad019cf191aee0f276}{Emb\+Satin\+Outline}} $\ast$result)
+\item 
+\mbox{\Hypertarget{pattern_8c_add0c6973eae72d6fc59cd1abddd21f1f}\label{pattern_8c_add0c6973eae72d6fc59cd1abddd21f1f}} 
+\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$ {\bfseries emb\+\_\+satin\+\_\+outline\+\_\+render} (\mbox{\hyperlink{embroidery_8h_af3d7bc78977c54ad019cf191aee0f276}{Emb\+Satin\+Outline}} $\ast$result, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} density)
+\item 
+\mbox{\Hypertarget{pattern_8c_ad7ce8c6db5aed09b17a6a048e1d1c65c}\label{pattern_8c_ad7ce8c6db5aed09b17a6a048e1d1c65c}} 
+void {\bfseries write\+\_\+24bit} (FILE $\ast$file, int x)
+\item 
+\mbox{\Hypertarget{pattern_8c_ad9da4f78764c28784f04bf3b01861d60}\label{pattern_8c_ad9da4f78764c28784f04bf3b01861d60}} 
+int {\bfseries emb\+Color\+\_\+distance} (\mbox{\hyperlink{embroidery_8h_acde9d757854564332fd795a084ec88b3}{Emb\+Color}} a, \mbox{\hyperlink{embroidery_8h_acde9d757854564332fd795a084ec88b3}{Emb\+Color}} b)
+\item 
+\mbox{\Hypertarget{pattern_8c_a0ae38837ba0ae84bf07b5a375df72e1e}\label{pattern_8c_a0ae38837ba0ae84bf07b5a375df72e1e}} 
+void {\bfseries emb\+Color\+\_\+read} (void $\ast$f, \mbox{\hyperlink{embroidery_8h_acde9d757854564332fd795a084ec88b3}{Emb\+Color}} $\ast$c, int to\+Read)
+\item 
+\mbox{\Hypertarget{pattern_8c_a1f4313a08124028e73118cc48ba4147a}\label{pattern_8c_a1f4313a08124028e73118cc48ba4147a}} 
+void {\bfseries emb\+Color\+\_\+write} (void $\ast$f, \mbox{\hyperlink{embroidery_8h_acde9d757854564332fd795a084ec88b3}{Emb\+Color}} c, int to\+Write)
+\item 
+\mbox{\Hypertarget{pattern_8c_a8be75eb5a8ff24a7e375736dd55aa833}\label{pattern_8c_a8be75eb5a8ff24a7e375736dd55aa833}} 
+int {\bfseries emb\+\_\+find\+\_\+nearest\+\_\+color} (\mbox{\hyperlink{embroidery_8h_acde9d757854564332fd795a084ec88b3}{Emb\+Color}} color, \mbox{\hyperlink{embroidery_8h_acde9d757854564332fd795a084ec88b3}{Emb\+Color}} $\ast$color\+\_\+list, int n\+\_\+colors)
+\item 
+\mbox{\Hypertarget{pattern_8c_ac754a8542f37d99c3ee051944f2c9b31}\label{pattern_8c_ac754a8542f37d99c3ee051944f2c9b31}} 
+int {\bfseries emb\+\_\+find\+\_\+nearest\+\_\+thread} (\mbox{\hyperlink{embroidery_8h_acde9d757854564332fd795a084ec88b3}{Emb\+Color}} color, \mbox{\hyperlink{embroidery_8h_ab3faffce89b1a5043f8b4e3a001a70bd}{Emb\+Thread}} $\ast$thread\+\_\+list, int n\+\_\+threads)
+\item 
+\mbox{\Hypertarget{pattern_8c_a3ec18bd4bc8d40e0cd3c9845cd2163f9}\label{pattern_8c_a3ec18bd4bc8d40e0cd3c9845cd2163f9}} 
+\mbox{\hyperlink{embroidery_8h_ab3faffce89b1a5043f8b4e3a001a70bd}{Emb\+Thread}} {\bfseries emb\+\_\+get\+\_\+random\+\_\+thread} (void)
+\item 
+\mbox{\Hypertarget{pattern_8c_a0312900273cfed05bf6d7ed748940cdb}\label{pattern_8c_a0312900273cfed05bf6d7ed748940cdb}} 
+void {\bfseries binary\+Read\+String} (FILE $\ast$file, char $\ast$buffer, int max\+Length)
+\item 
+\mbox{\Hypertarget{pattern_8c_a33105f462fbb9892aebb284f35606c57}\label{pattern_8c_a33105f462fbb9892aebb284f35606c57}} 
+void {\bfseries binary\+Read\+Unicode\+String} (FILE $\ast$file, char $\ast$buffer, const int string\+Length)
+\item 
+\mbox{\Hypertarget{pattern_8c_aa08223cd2dd75ce77baf8d5e7f139e1a}\label{pattern_8c_aa08223cd2dd75ce77baf8d5e7f139e1a}} 
+int {\bfseries string\+In\+Array} (const char $\ast$s, const char $\ast$$\ast$array)
+\item 
+\mbox{\Hypertarget{pattern_8c_a7859b94e89cd2848d4116c7e8d662a14}\label{pattern_8c_a7859b94e89cd2848d4116c7e8d662a14}} 
+int {\bfseries emb\+\_\+readline} (FILE $\ast$file, char $\ast$line, int max\+Length)
+\item 
+\mbox{\Hypertarget{pattern_8c_a9f3bbc6f01263cd6f3d41fbc245d49b8}\label{pattern_8c_a9f3bbc6f01263cd6f3d41fbc245d49b8}} 
+void {\bfseries get\+\_\+trim\+\_\+bounds} (char const $\ast$s, char const $\ast$$\ast$first\+Word, char const $\ast$$\ast$trailing\+Space)
+\item 
+\mbox{\Hypertarget{pattern_8c_a5d7bf5f964ae87921bab916b871ea2dd}\label{pattern_8c_a5d7bf5f964ae87921bab916b871ea2dd}} 
+char $\ast$ {\bfseries copy\+\_\+trim} (char const $\ast$s)
+\item 
+\mbox{\Hypertarget{pattern_8c_a3f13f5d30ef64bf1f316f1cc5174b28b}\label{pattern_8c_a3f13f5d30ef64bf1f316f1cc5174b28b}} 
+char $\ast$ {\bfseries emb\+\_\+opt\+Out} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} num, char $\ast$str)
+\item 
+\mbox{\Hypertarget{pattern_8c_a1a113d80928c378c7347e73172eac33d}\label{pattern_8c_a1a113d80928c378c7347e73172eac33d}} 
+void {\bfseries emb\+Time\+\_\+init\+Now} (\mbox{\hyperlink{embroidery_8h_a3829b58c37eab5cd81529f1916adcd33}{Emb\+Time}} $\ast$t)
+\item 
+\mbox{\Hypertarget{pattern_8c_aac30715a74b82858ae1e7c1b3dd8b22a}\label{pattern_8c_aac30715a74b82858ae1e7c1b3dd8b22a}} 
+\mbox{\hyperlink{embroidery_8h_a3829b58c37eab5cd81529f1916adcd33}{Emb\+Time}} {\bfseries emb\+Time\+\_\+time} (\mbox{\hyperlink{embroidery_8h_a3829b58c37eab5cd81529f1916adcd33}{Emb\+Time}} $\ast$t)
+\item 
+\mbox{\Hypertarget{pattern_8c_a35b4d113285a029a6336fcbd0d64ef57}\label{pattern_8c_a35b4d113285a029a6336fcbd0d64ef57}} 
+void {\bfseries formats} (void)
+\item 
+\mbox{\Hypertarget{pattern_8c_a59c84909c99641f1142783746b9d45e4}\label{pattern_8c_a59c84909c99641f1142783746b9d45e4}} 
+void {\bfseries to\+\_\+flag} (char $\ast$$\ast$argv, int argc, int i)
+\item 
+\mbox{\Hypertarget{pattern_8c_af27a83a237ef6302cbfb5af534229e10}\label{pattern_8c_af27a83a237ef6302cbfb5af534229e10}} 
+int {\bfseries lindenmayer\+\_\+system} (\mbox{\hyperlink{embroidery_8h_a914404401c03a6bf0dac814661ba370c}{L\+\_\+system}} L, char $\ast$state, int iterations, int complete)
+\item 
+\mbox{\Hypertarget{pattern_8c_a433f010508cb80c3af485f7ad59c4ff6}\label{pattern_8c_a433f010508cb80c3af485f7ad59c4ff6}} 
+void {\bfseries emb\+\_\+pattern\+\_\+horizontal\+\_\+fill} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, \mbox{\hyperlink{embroidery_8h_a907d23c2268eff84b7c5146b2add1bb4}{Emb\+Image}} $\ast$image, int threshhold)
+\item 
+\mbox{\Hypertarget{pattern_8c_a998691c71270860f98884c8228423c88}\label{pattern_8c_a998691c71270860f98884c8228423c88}} 
+void {\bfseries emb\+\_\+pattern\+\_\+crossstitch} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, \mbox{\hyperlink{embroidery_8h_a907d23c2268eff84b7c5146b2add1bb4}{Emb\+Image}} $\ast$image, int threshhold)
+\item 
+\mbox{\Hypertarget{pattern_8c_a2f0cd5118998e9310252de0bd11c6fb2}\label{pattern_8c_a2f0cd5118998e9310252de0bd11c6fb2}} 
+int {\bfseries hilbert\+\_\+curve} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, int iterations)
+\item 
+\mbox{\Hypertarget{pattern_8c_ad02b5d945eacff708d2bf084c40044d8}\label{pattern_8c_ad02b5d945eacff708d2bf084c40044d8}} 
+void {\bfseries generate\+\_\+dragon\+\_\+curve} (char $\ast$state, int iterations)
+\item 
+\mbox{\Hypertarget{pattern_8c_a9f15f9548d56044f41aa91dd103c3914}\label{pattern_8c_a9f15f9548d56044f41aa91dd103c3914}} 
+int {\bfseries dragon\+\_\+curve} (int iterations)
+\item 
+\mbox{\Hypertarget{pattern_8c_accb8d958755abb87ae8fe5cb64241c5b}\label{pattern_8c_accb8d958755abb87ae8fe5cb64241c5b}} 
+void {\bfseries emb\+Polygon\+\_\+reduce\+By\+Distance} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$vertices, \mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$simplified, float distance)
+\item 
+\mbox{\Hypertarget{pattern_8c_aa25158aa39b36f6981756295d6601910}\label{pattern_8c_aa25158aa39b36f6981756295d6601910}} 
+void {\bfseries emb\+Polygon\+\_\+reduce\+By\+Nth} (\mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$vertices, \mbox{\hyperlink{embroidery_8h_aebe8b1561a59d167cfe6613863a671ca}{Emb\+Array}} $\ast$out, int nth)
+\item 
+\mbox{\Hypertarget{pattern_8c_ab0dc10ac460003b155324a4d99ea3d9e}\label{pattern_8c_ab0dc10ac460003b155324a4d99ea3d9e}} 
+\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$ {\bfseries emb\+\_\+pattern\+\_\+combine} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p1, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p2)
+\item 
+\mbox{\Hypertarget{pattern_8c_aa9e1028b33b655da69d013cf35003699}\label{pattern_8c_aa9e1028b33b655da69d013cf35003699}} 
+void {\bfseries emb\+\_\+pattern\+\_\+stitch\+Arc} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_a09945e6e919629c5787e61582c712ba1}{Emb\+Arc}} arc, int thread\+\_\+index, int style)
+\item 
+\mbox{\Hypertarget{pattern_8c_af984ae38419c6d46e3a693723d76b511}\label{pattern_8c_af984ae38419c6d46e3a693723d76b511}} 
+void {\bfseries emb\+\_\+pattern\+\_\+stitch\+Circle} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_a87fc13ccd4dbaa7de7c85efde17bba0e}{Emb\+Circle}} circle, int thread\+\_\+index, int style)
+\item 
+\mbox{\Hypertarget{pattern_8c_ab730a69f540dd15e2955b24873d6be45}\label{pattern_8c_ab730a69f540dd15e2955b24873d6be45}} 
+void {\bfseries emb\+\_\+pattern\+\_\+stitch\+Ellipse} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_a4e48ebde5bd4d82b875f98b347bdd62c}{Emb\+Ellipse}} ellipse, int thread\+\_\+index, int style)
+\item 
+\mbox{\Hypertarget{pattern_8c_abab4fc00fbacbdb5326369d11dd954dd}\label{pattern_8c_abab4fc00fbacbdb5326369d11dd954dd}} 
+void {\bfseries emb\+\_\+pattern\+\_\+stitch\+Path} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_af29045dfeebafdcb66d114b390c4a686}{Emb\+Path}} path, int thread\+\_\+index, int style)
+\item 
+\mbox{\Hypertarget{pattern_8c_a4d896eec3a1172a3346f02e287a29478}\label{pattern_8c_a4d896eec3a1172a3346f02e287a29478}} 
+void {\bfseries emb\+\_\+pattern\+\_\+stitch\+Polygon} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_a2d6988a5f4ba24d26c7eff65dbc9d029}{Emb\+Polygon}} polygon, int thread\+\_\+index, int style)
+\item 
+\mbox{\Hypertarget{pattern_8c_abf737a1d29b9dbecc9565dce044f22f6}\label{pattern_8c_abf737a1d29b9dbecc9565dce044f22f6}} 
+void {\bfseries emb\+\_\+pattern\+\_\+stitch\+Polyline} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_ab5563c868d8f8174d5be764808a647dd}{Emb\+Polyline}} polyline, int thread\+\_\+index, int style)
+\item 
+\mbox{\Hypertarget{pattern_8c_a481c54ed96486c86fdaae2368297762d}\label{pattern_8c_a481c54ed96486c86fdaae2368297762d}} 
+void {\bfseries emb\+\_\+pattern\+\_\+stitch\+Rect} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_ac2f33b151fc40a0da3b14379aa0ec653}{Emb\+Rect}} rect, int thread\+\_\+index, int style)
+\item 
+\mbox{\Hypertarget{pattern_8c_ac0b1f01d564e6f5876575fa5477bea7c}\label{pattern_8c_ac0b1f01d564e6f5876575fa5477bea7c}} 
+void {\bfseries emb\+\_\+pattern\+\_\+stitch\+Text} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_ac2f33b151fc40a0da3b14379aa0ec653}{Emb\+Rect}} rect, int thread\+\_\+index, int style)
+\item 
+\mbox{\Hypertarget{pattern_8c_ade9f8437ba0020c7dea19b549c132279}\label{pattern_8c_ade9f8437ba0020c7dea19b549c132279}} 
+void {\bfseries emb\+\_\+pattern\+\_\+convert\+Geometry} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{pattern_8c_a596a4ab45910b13ea2809999de4c6950}\label{pattern_8c_a596a4ab45910b13ea2809999de4c6950}} 
+void {\bfseries safe\+\_\+free} (void $\ast$data)
+\item 
+\mbox{\Hypertarget{pattern_8c_aa0c2eb88ec6f02792e37569a94cee49f}\label{pattern_8c_aa0c2eb88ec6f02792e37569a94cee49f}} 
+unsigned char {\bfseries char\+\_\+to\+\_\+lower} (unsigned char a)
+\item 
+\mbox{\Hypertarget{pattern_8c_acf5d4a6e72ad546b2502069adbf45c3b}\label{pattern_8c_acf5d4a6e72ad546b2502069adbf45c3b}} 
+void {\bfseries write\+Image} (FILE $\ast$file, unsigned char image\mbox{[}$\,$\mbox{]}\mbox{[}48\mbox{]})
+\item 
+\mbox{\Hypertarget{pattern_8c_ac932a13030ae86a36da67dde06da0917}\label{pattern_8c_ac932a13030ae86a36da67dde06da0917}} 
+float {\bfseries image\+\_\+diff} (unsigned char $\ast$a, unsigned char $\ast$b, int size)
+\item 
+\mbox{\Hypertarget{pattern_8c_af38712d911c6bf2f60991ef11104c6e7}\label{pattern_8c_af38712d911c6bf2f60991ef11104c6e7}} 
+int {\bfseries emb\+\_\+pattern\+\_\+render} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, char $\ast$fname)
+\item 
+\mbox{\Hypertarget{pattern_8c_a5267a8efed8b14ecef9050f819b97176}\label{pattern_8c_a5267a8efed8b14ecef9050f819b97176}} 
+int {\bfseries emb\+\_\+pattern\+\_\+simulate} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, char $\ast$fname)
+\item 
+\mbox{\Hypertarget{pattern_8c_af8f58831c4881d7ea2010646ffbefa42}\label{pattern_8c_af8f58831c4881d7ea2010646ffbefa42}} 
+\mbox{\hyperlink{embroidery_8h_a907d23c2268eff84b7c5146b2add1bb4}{Emb\+Image}} {\bfseries emb\+Image\+\_\+create} (int width, int height)
+\item 
+\mbox{\Hypertarget{pattern_8c_a7cd2da5edb18e2d653edc9e08d935c2d}\label{pattern_8c_a7cd2da5edb18e2d653edc9e08d935c2d}} 
+void {\bfseries emb\+Image\+\_\+read} (\mbox{\hyperlink{embroidery_8h_a907d23c2268eff84b7c5146b2add1bb4}{Emb\+Image}} $\ast$image, char $\ast$fname)
+\item 
+\mbox{\Hypertarget{pattern_8c_aecf51ba3f3b5a632a2791e0a433b2c70}\label{pattern_8c_aecf51ba3f3b5a632a2791e0a433b2c70}} 
+int {\bfseries emb\+Image\+\_\+write} (\mbox{\hyperlink{embroidery_8h_a907d23c2268eff84b7c5146b2add1bb4}{Emb\+Image}} $\ast$image, char $\ast$fname)
+\item 
+\mbox{\Hypertarget{pattern_8c_adc138c34926ce2010e148fb21fd4eb77}\label{pattern_8c_adc138c34926ce2010e148fb21fd4eb77}} 
+void {\bfseries emb\+Image\+\_\+free} (\mbox{\hyperlink{embroidery_8h_a907d23c2268eff84b7c5146b2add1bb4}{Emb\+Image}} $\ast$image)
+\item 
+\mbox{\Hypertarget{pattern_8c_a7e90666bc5e1ff11becb0742b8ba47e9}\label{pattern_8c_a7e90666bc5e1ff11becb0742b8ba47e9}} 
+\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$ {\bfseries emb\+\_\+pattern\+\_\+create} (void)
+\item 
+\mbox{\Hypertarget{pattern_8c_a9df4d032eb4362268b8b09ae7c69edf0}\label{pattern_8c_a9df4d032eb4362268b8b09ae7c69edf0}} 
+void {\bfseries emb\+\_\+pattern\+\_\+hide\+Stitches\+Over\+Length} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, int length)
+\item 
+\mbox{\Hypertarget{pattern_8c_aaea45848d8094c803ef21baec54a3c29}\label{pattern_8c_aaea45848d8094c803ef21baec54a3c29}} 
+int {\bfseries emb\+\_\+pattern\+\_\+add\+Thread} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, \mbox{\hyperlink{embroidery_8h_ab3faffce89b1a5043f8b4e3a001a70bd}{Emb\+Thread}} thread)
+\item 
+\mbox{\Hypertarget{pattern_8c_aa9118ace567718082967efdb7e851cee}\label{pattern_8c_aa9118ace567718082967efdb7e851cee}} 
+void {\bfseries emb\+\_\+pattern\+\_\+fix\+Color\+Count} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{pattern_8c_af978d4f09731bf6438ca22e3b636ca11}\label{pattern_8c_af978d4f09731bf6438ca22e3b636ca11}} 
+void {\bfseries emb\+\_\+pattern\+\_\+copystitch\+\_\+list\+To\+Polylines} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{pattern_8c_a87e84e871c22b3a92c071b1e3804193a}\label{pattern_8c_a87e84e871c22b3a92c071b1e3804193a}} 
+void {\bfseries emb\+\_\+pattern\+\_\+copy\+Polylines\+Tostitch\+\_\+list} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{pattern_8c_a0eb8db9608dc9459b639d5026c2a6022}\label{pattern_8c_a0eb8db9608dc9459b639d5026c2a6022}} 
+void {\bfseries emb\+\_\+pattern\+\_\+movestitch\+\_\+list\+To\+Polylines} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{pattern_8c_afb3f9ac474a036937ba0ca3fb7a4b3b0}\label{pattern_8c_afb3f9ac474a036937ba0ca3fb7a4b3b0}} 
+void {\bfseries emb\+\_\+pattern\+\_\+move\+Polylines\+Tostitch\+\_\+list} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{pattern_8c_a4c63d3407fed78b908bf72474a172300}\label{pattern_8c_a4c63d3407fed78b908bf72474a172300}} 
+void {\bfseries emb\+\_\+pattern\+\_\+add\+Stitch\+Abs} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} x, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} y, int flags, int is\+Auto\+Color\+Index)
+\item 
+\mbox{\Hypertarget{pattern_8c_a3ce225b77cad9d83de4e8fc782dcff98}\label{pattern_8c_a3ce225b77cad9d83de4e8fc782dcff98}} 
+void {\bfseries emb\+\_\+pattern\+\_\+add\+Stitch\+Rel} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} dx, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} dy, int flags, int is\+Auto\+Color\+Index)
+\item 
+\mbox{\Hypertarget{pattern_8c_a7103f641bd05edbebbd9ca5de8aefae7}\label{pattern_8c_a7103f641bd05edbebbd9ca5de8aefae7}} 
+void {\bfseries emb\+\_\+pattern\+\_\+change\+Color} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, int index)
+\item 
+\mbox{\Hypertarget{pattern_8c_a69d4bfb07e579d7be00081e5bbb15e3c}\label{pattern_8c_a69d4bfb07e579d7be00081e5bbb15e3c}} 
+void {\bfseries emb\+\_\+pattern\+\_\+scale} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} scale)
+\item 
+\mbox{\Hypertarget{pattern_8c_a03cc7b06d978cf1857db80763a4843cb}\label{pattern_8c_a03cc7b06d978cf1857db80763a4843cb}} 
+\mbox{\hyperlink{embroidery_8h_ac2f33b151fc40a0da3b14379aa0ec653}{Emb\+Rect}} {\bfseries emb\+\_\+pattern\+\_\+bounds} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{pattern_8c_a73086bc8eff62d28b97fe910f1a85e23}\label{pattern_8c_a73086bc8eff62d28b97fe910f1a85e23}} 
+void {\bfseries emb\+\_\+pattern\+\_\+flip\+Horizontal} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{pattern_8c_a51441b93b8196a54b2fa329b9ef8e957}\label{pattern_8c_a51441b93b8196a54b2fa329b9ef8e957}} 
+void {\bfseries emb\+\_\+pattern\+\_\+flip\+Vertical} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{pattern_8c_a677bb8e1cbfebd8295420d2c7452a309}\label{pattern_8c_a677bb8e1cbfebd8295420d2c7452a309}} 
+void {\bfseries emb\+\_\+pattern\+\_\+flip} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, int horz, int vert)
+\item 
+\mbox{\Hypertarget{pattern_8c_a32727f3e87e325d384ecd83d76d409c0}\label{pattern_8c_a32727f3e87e325d384ecd83d76d409c0}} 
+void {\bfseries emb\+\_\+pattern\+\_\+combine\+Jump\+Stitches} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{pattern_8c_a00d8447675dfbafb9bdebb8289337910}\label{pattern_8c_a00d8447675dfbafb9bdebb8289337910}} 
+void {\bfseries emb\+\_\+pattern\+\_\+correct\+For\+Max\+Stitch\+Length} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} max\+Stitch\+Length, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} max\+Jump\+Length)
+\item 
+\mbox{\Hypertarget{pattern_8c_a6dc31e082748b9fbf76635fc49e9320b}\label{pattern_8c_a6dc31e082748b9fbf76635fc49e9320b}} 
+void {\bfseries emb\+\_\+pattern\+\_\+center} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{pattern_8c_a32670c7e04bb1aaa3cb112b6adc342f0}\label{pattern_8c_a32670c7e04bb1aaa3cb112b6adc342f0}} 
+void {\bfseries emb\+\_\+pattern\+\_\+load\+External\+Color\+File} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, const char $\ast$file\+Name)
+\item 
+\mbox{\Hypertarget{pattern_8c_abb9a968eb2faa75520355bcbb8499297}\label{pattern_8c_abb9a968eb2faa75520355bcbb8499297}} 
+void {\bfseries emb\+\_\+pattern\+\_\+free} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{pattern_8c_a2d6cc694a75ef1e7844ebb2c2713c62f}\label{pattern_8c_a2d6cc694a75ef1e7844ebb2c2713c62f}} 
+void {\bfseries emb\+\_\+add\+\_\+geometry} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} g)
+\item 
+\mbox{\Hypertarget{pattern_8c_a3ffe34a1aa7cea56ef57bc0e94206506}\label{pattern_8c_a3ffe34a1aa7cea56ef57bc0e94206506}} 
+void {\bfseries emb\+\_\+add\+\_\+circle} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_a87fc13ccd4dbaa7de7c85efde17bba0e}{Emb\+Circle}} circle)
+\item 
+\mbox{\Hypertarget{pattern_8c_a98f8e38eb99ff0d4c2a2c773166e5aad}\label{pattern_8c_a98f8e38eb99ff0d4c2a2c773166e5aad}} 
+void {\bfseries emb\+\_\+add\+\_\+ellipse} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_a4e48ebde5bd4d82b875f98b347bdd62c}{Emb\+Ellipse}} ellipse)
+\item 
+\mbox{\Hypertarget{pattern_8c_af71101ef6044a931671c72f45a184cda}\label{pattern_8c_af71101ef6044a931671c72f45a184cda}} 
+void {\bfseries emb\+\_\+add\+\_\+line} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_a62e08237073617de993166ed4a9ab085}{Emb\+Line}} line)
+\item 
+\mbox{\Hypertarget{pattern_8c_ac789c76a9926f51d23042d381dde2a1f}\label{pattern_8c_ac789c76a9926f51d23042d381dde2a1f}} 
+void {\bfseries emb\+\_\+add\+\_\+path} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_af29045dfeebafdcb66d114b390c4a686}{Emb\+Path}} obj)
+\item 
+void \mbox{\hyperlink{pattern_8c_a3cd3006d95c9d2504dd9749e90b8d241}{emb\+\_\+pattern\+\_\+add\+Point\+Abs}} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_a835ccc3aedf71b57dca6130be87ea463}{Emb\+Point}} obj)
+\item 
+\mbox{\Hypertarget{pattern_8c_a49a72ddd4bcf98821aa79192686e7317}\label{pattern_8c_a49a72ddd4bcf98821aa79192686e7317}} 
+void {\bfseries emb\+\_\+pattern\+\_\+add\+Polygon\+Abs} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_a2d6988a5f4ba24d26c7eff65dbc9d029}{Emb\+Polygon}} obj)
+\item 
+\mbox{\Hypertarget{pattern_8c_aa77ec761feff96ae08cca6d8cbd3e91a}\label{pattern_8c_aa77ec761feff96ae08cca6d8cbd3e91a}} 
+void {\bfseries emb\+\_\+pattern\+\_\+add\+Polyline\+Object\+Abs} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_ab5563c868d8f8174d5be764808a647dd}{Emb\+Polyline}} obj)
+\item 
+\mbox{\Hypertarget{pattern_8c_aaa80ec2ff297724783c9ed0ca09552d8}\label{pattern_8c_aaa80ec2ff297724783c9ed0ca09552d8}} 
+void {\bfseries emb\+\_\+pattern\+\_\+add\+Rect\+Abs} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p, \mbox{\hyperlink{embroidery_8h_ac2f33b151fc40a0da3b14379aa0ec653}{Emb\+Rect}} rect)
+\item 
+\mbox{\Hypertarget{pattern_8c_a35e762d42077cf5883cd36861c67658b}\label{pattern_8c_a35e762d42077cf5883cd36861c67658b}} 
+void {\bfseries emb\+\_\+pattern\+\_\+end} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{pattern_8c_aa4de8d6ce23118cc49a67c745b171b44}\label{pattern_8c_aa4de8d6ce23118cc49a67c745b171b44}} 
+int {\bfseries convert} (const char $\ast$inf, const char $\ast$outf)
+\item 
+\mbox{\Hypertarget{pattern_8c_a6f848df248f2c25e233a1fb03801d078}\label{pattern_8c_a6f848df248f2c25e233a1fb03801d078}} 
+int {\bfseries emb\+\_\+pattern\+\_\+color\+\_\+count} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, \mbox{\hyperlink{embroidery_8h_acde9d757854564332fd795a084ec88b3}{Emb\+Color}} start\+Color)
+\item 
+\mbox{\Hypertarget{pattern_8c_a574c9c0731ec7f4430d6b9fa5aeb1f58}\label{pattern_8c_a574c9c0731ec7f4430d6b9fa5aeb1f58}} 
+void {\bfseries emb\+\_\+pattern\+\_\+details} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{pattern_8c_a6364b03d3e1059a6e06be302e9412fab}\label{pattern_8c_a6364b03d3e1059a6e06be302e9412fab}} 
+void {\bfseries emb\+\_\+pattern\+\_\+print} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{pattern_8c_af9f9231ffce1566fda5b63bfc8654f2f}\label{pattern_8c_af9f9231ffce1566fda5b63bfc8654f2f}} 
+void {\bfseries emb\+\_\+pattern\+\_\+length\+Histogram} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, int $\ast$bin, int NUMBINS)
+\item 
+\mbox{\Hypertarget{pattern_8c_a3fbc51fba1e274170c035d7b2201e5fc}\label{pattern_8c_a3fbc51fba1e274170c035d7b2201e5fc}} 
+int {\bfseries emb\+\_\+pattern\+\_\+real\+Stitches} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{pattern_8c_aba51a90239302f5608041d034e3fe15d}\label{pattern_8c_aba51a90239302f5608041d034e3fe15d}} 
+int {\bfseries emb\+\_\+pattern\+\_\+jump\+Stitches} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{pattern_8c_a85039c39c44c17f57f779f473da64a79}\label{pattern_8c_a85039c39c44c17f57f779f473da64a79}} 
+int {\bfseries emb\+\_\+pattern\+\_\+trim\+Stitches} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{pattern_8c_ae931e68a9dae7e904f4c38f43978578f}\label{pattern_8c_ae931e68a9dae7e904f4c38f43978578f}} 
+int {\bfseries thread\+Color} (const char $\ast$name, int brand)
+\item 
+\mbox{\Hypertarget{pattern_8c_a222aa0f0e27609e59f7cf534758a6436}\label{pattern_8c_a222aa0f0e27609e59f7cf534758a6436}} 
+int {\bfseries thread\+Color\+Num} (unsigned int color, int brand)
+\item 
+\mbox{\Hypertarget{pattern_8c_a3bce5f4edf41410fca570ef1ad2f24ff}\label{pattern_8c_a3bce5f4edf41410fca570ef1ad2f24ff}} 
+const char $\ast$ {\bfseries thread\+Color\+Name} (unsigned int color, int brand)
+\item 
+\mbox{\Hypertarget{pattern_8c_ae78776abbb2295ef307649fbf69ce7bd}\label{pattern_8c_ae78776abbb2295ef307649fbf69ce7bd}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries scale\+\_\+and\+\_\+rotate} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} v, double scale, double angle)
+\item 
+\mbox{\Hypertarget{pattern_8c_a0c6541c41c25b1da8c67e8323dbb2ba9}\label{pattern_8c_a0c6541c41c25b1da8c67e8323dbb2ba9}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+st\+\_\+pos} (\mbox{\hyperlink{embroidery_8h_ae92ded87da0dcaaae8f7c7bc880fd1b0}{Emb\+Stitch}} st)
+\item 
+\mbox{\Hypertarget{pattern_8c_a4a6880f5359742a1b2e3d9a10fae3988}\label{pattern_8c_a4a6880f5359742a1b2e3d9a10fae3988}} 
+double {\bfseries emb\+\_\+stitch\+\_\+length} (\mbox{\hyperlink{embroidery_8h_ae92ded87da0dcaaae8f7c7bc880fd1b0}{Emb\+Stitch}} prev\+\_\+st, \mbox{\hyperlink{embroidery_8h_ae92ded87da0dcaaae8f7c7bc880fd1b0}{Emb\+Stitch}} st)
+\item 
+\mbox{\Hypertarget{pattern_8c_ae800bd84d91e5744a85a2ad160304ee7}\label{pattern_8c_ae800bd84d91e5744a85a2ad160304ee7}} 
+int {\bfseries emb\+\_\+pattern\+\_\+real\+\_\+count} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{pattern_8c_a1d8532d84daf1638a5e1d77fe3b06f13}\label{pattern_8c_a1d8532d84daf1638a5e1d77fe3b06f13}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries emb\+\_\+pattern\+\_\+longest\+\_\+stitch} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{pattern_8c_a6dcdd462340754480eea1661f5c07ef3}\label{pattern_8c_a6dcdd462340754480eea1661f5c07ef3}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries emb\+\_\+pattern\+\_\+shortest\+\_\+stitch} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{pattern_8c_a6135f8e9add1ba78ad1f5790daae64c8}\label{pattern_8c_a6135f8e9add1ba78ad1f5790daae64c8}} 
+int {\bfseries emb\+\_\+pattern\+\_\+count\+\_\+type} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, int flag)
+\item 
+\mbox{\Hypertarget{pattern_8c_ad7cbe266bdaba273eec843c3842a6451}\label{pattern_8c_ad7cbe266bdaba273eec843c3842a6451}} 
+void {\bfseries emb\+\_\+length\+\_\+histogram} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, int $\ast$bins)
+\item 
+\mbox{\Hypertarget{pattern_8c_a359443a0aedcec4cbf99b1963ad66d71}\label{pattern_8c_a359443a0aedcec4cbf99b1963ad66d71}} 
+void {\bfseries emb\+\_\+color\+\_\+histogram} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, int $\ast$$\ast$bins)
+\item 
+\mbox{\Hypertarget{pattern_8c_afafe0f4dec7785478ed7de12a66e5623}\label{pattern_8c_afafe0f4dec7785478ed7de12a66e5623}} 
+double {\bfseries emb\+\_\+total\+\_\+thread\+\_\+length} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{pattern_8c_aec35837d92a6f9a663162bb0cb5097a7}\label{pattern_8c_aec35837d92a6f9a663162bb0cb5097a7}} 
+double {\bfseries emb\+\_\+total\+\_\+thread\+\_\+of\+\_\+color} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, int thread\+\_\+index)
+\item 
+\mbox{\Hypertarget{pattern_8c_a4981de03ba525a69bc51cd6df0404849}\label{pattern_8c_a4981de03ba525a69bc51cd6df0404849}} 
+char $\ast$ {\bfseries emb\+\_\+get\+\_\+svg\+\_\+token} (char $\ast$svg, char token\mbox{[}MAX\+\_\+\+STRING\+\_\+\+LENGTH\mbox{]})
+\item 
+\mbox{\Hypertarget{pattern_8c_ad34e0da52aa2dd296cc63f5ee9eae5eb}\label{pattern_8c_ad34e0da52aa2dd296cc63f5ee9eae5eb}} 
+char $\ast$ {\bfseries emb\+\_\+get\+\_\+svg\+\_\+vector} (char $\ast$svg, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} $\ast$v)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{pattern_8c_a8cb11404ce46501561f956d33f8dcf95}\label{pattern_8c_a8cb11404ce46501561f956d33f8dcf95}} 
+\mbox{\hyperlink{embroidery_8h_afb3d2c0a23933d1ce50c4ec598b31c56}{Emb\+Format\+List}} {\bfseries format\+Table} \mbox{[}number\+Of\+Formats\mbox{]}
+\item 
+\mbox{\Hypertarget{pattern_8c_a8042d0ef3deb220500d4c3a0c1382f07}\label{pattern_8c_a8042d0ef3deb220500d4c3a0c1382f07}} 
+const char $\ast$ {\bfseries version\+\_\+string} = \char`\"{}embroider v0.\+1\char`\"{}
+\item 
+\mbox{\Hypertarget{pattern_8c_a35edd4f1cefc81e20664f7493e4e8490}\label{pattern_8c_a35edd4f1cefc81e20664f7493e4e8490}} 
+const int {\bfseries NUMBINS} = 10
+\item 
+\mbox{\Hypertarget{pattern_8c_a4904cc82627458fdf6672ccc0b2802c7}\label{pattern_8c_a4904cc82627458fdf6672ccc0b2802c7}} 
+double {\bfseries epsilon} = 0.\+000000001
+\item 
+\mbox{\Hypertarget{pattern_8c_ae6a1199d8c3aad2464c3296ab902b4a9}\label{pattern_8c_ae6a1199d8c3aad2464c3296ab902b4a9}} 
+\mbox{\hyperlink{embroidery_8h_ab3faffce89b1a5043f8b4e3a001a70bd}{Emb\+Thread}} {\bfseries black\+\_\+thread} = \{ \{ 0, 0, 0 \}, \char`\"{}Black\char`\"{}, \char`\"{}Black\char`\"{} \}
+\item 
+\mbox{\Hypertarget{pattern_8c_a3e3a5b8efffea93c4268a39ee5690098}\label{pattern_8c_a3e3a5b8efffea93c4268a39ee5690098}} 
+int {\bfseries emb\+\_\+verbose} = 0
+\item 
+\mbox{\Hypertarget{pattern_8c_a052bcc45c7207b189a9fe6925ec76c99}\label{pattern_8c_a052bcc45c7207b189a9fe6925ec76c99}} 
+const \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries emb\+Constant\+Pi} = 3.\+1415926535
+\item 
+\mbox{\Hypertarget{pattern_8c_a250130545165a5ff7e416c0d9e3cb101}\label{pattern_8c_a250130545165a5ff7e416c0d9e3cb101}} 
+const unsigned int {\bfseries difat\+Entries\+In\+Header} = 109
+\item 
+\mbox{\Hypertarget{pattern_8c_aeffcb7cf2616f8a5bad2f683e9299fd3}\label{pattern_8c_aeffcb7cf2616f8a5bad2f683e9299fd3}} 
+const unsigned int {\bfseries size\+Of\+Fat\+Entry} = sizeof(unsigned int)
+\item 
+\mbox{\Hypertarget{pattern_8c_add631e44c8ce53262c8ed050c8f4f1fa}\label{pattern_8c_add631e44c8ce53262c8ed050c8f4f1fa}} 
+const unsigned int {\bfseries size\+Of\+Difat\+Entry} = 4
+\item 
+\mbox{\Hypertarget{pattern_8c_a199c1a6bb0538cdc9f990f8bf03db9d6}\label{pattern_8c_a199c1a6bb0538cdc9f990f8bf03db9d6}} 
+const unsigned int {\bfseries size\+Of\+Chaining\+Entry\+At\+End\+Of\+Difat\+Sector} = 4
+\item 
+\mbox{\Hypertarget{pattern_8c_a1108ef211702e6990edb3ade1a3305af}\label{pattern_8c_a1108ef211702e6990edb3ade1a3305af}} 
+const unsigned int {\bfseries size\+Of\+Directory\+Entry} = 128
+\item 
+\mbox{\Hypertarget{pattern_8c_a336fd7aa478d0e7dca8cd53dd8775cad}\label{pattern_8c_a336fd7aa478d0e7dca8cd53dd8775cad}} 
+\mbox{\hyperlink{embroidery_8h_a8801dbd0fc60662648650d4658b7b7d0}{thread\+\_\+color}} {\bfseries svg\+\_\+color\+\_\+codes} \mbox{[}200\mbox{]}
+\item 
+\mbox{\hyperlink{embroidery_8h_a18a8fbad6109f3953e18420a753e83d6}{Emb\+Brand}} \mbox{\hyperlink{pattern_8c_ab67488cb2896a14dd42ea2e6a51e3014}{brand\+\_\+codes}} \mbox{[}100\mbox{]}
+\item 
+\mbox{\Hypertarget{pattern_8c_add6424b0861a4e44ac11fc4cbf99d1d1}\label{pattern_8c_add6424b0861a4e44ac11fc4cbf99d1d1}} 
+const char $\ast$ {\bfseries rules} \mbox{[}$\,$\mbox{]} = \{\char`\"{}+BF-\/AFA-\/FB+\char`\"{}, \char`\"{}-\/AF+BFB+FA-\/\char`\"{}\}
+\item 
+\mbox{\hyperlink{embroidery_8h_a914404401c03a6bf0dac814661ba370c}{L\+\_\+system}} \mbox{\hyperlink{pattern_8c_a6e10b231de6baafee918b26f004d7327}{hilbert\+\_\+curve\+\_\+l\+\_\+system}}
+\item 
+\mbox{\Hypertarget{pattern_8c_a659abd7fd70a37a200df2665e35c7c89}\label{pattern_8c_a659abd7fd70a37a200df2665e35c7c89}} 
+const char {\bfseries image\+With\+Frame} \mbox{[}38\mbox{]}\mbox{[}48\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The Emb\+Pattern struct memory management and storage. 
+
+Libembroidery 1.\+0.\+0-\/alpha \href{https://www.libembroidery.org}{\texttt{ https\+://www.\+libembroidery.\+org}}
+
+A library for reading, writing, altering and otherwise processing machine embroidery files and designs.
+
+Also, the core library supporting the Embroidermodder Project\textquotesingle{}s family of machine embroidery interfaces.
+
+\DoxyHorRuler{0}
+
+
+Copyright 2018-\/2025 The Embroidermodder Team Licensed under the terms of the zlib license.
+
+\DoxyHorRuler{0}
+
+
+Only uses source from this directory or standard C libraries, not including POSIX headers like unistd since this library needs to support non-\/\+POSIX systems like Windows.
+
+\DoxyHorRuler{0}
+
+
+For the embedded systems version see the embedded/ directory. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{pattern_8c_a3cd3006d95c9d2504dd9749e90b8d241}\label{pattern_8c_a3cd3006d95c9d2504dd9749e90b8d241}} 
+\index{pattern.c@{pattern.c}!emb\_pattern\_addPointAbs@{emb\_pattern\_addPointAbs}}
+\index{emb\_pattern\_addPointAbs@{emb\_pattern\_addPointAbs}!pattern.c@{pattern.c}}
+\doxysubsubsection{\texorpdfstring{emb\_pattern\_addPointAbs()}{emb\_pattern\_addPointAbs()}}
+{\footnotesize\ttfamily void emb\+\_\+pattern\+\_\+add\+Point\+Abs (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$}]{p,  }\item[{\mbox{\hyperlink{embroidery_8h_a835ccc3aedf71b57dca6130be87ea463}{Emb\+Point}}}]{obj }\end{DoxyParamCaption})}
+
+Adds a point object to pattern (a p) at the absolute position (a x,a y). Positive y is up. Units are in millimeters. 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{pattern_8c_ab67488cb2896a14dd42ea2e6a51e3014}\label{pattern_8c_ab67488cb2896a14dd42ea2e6a51e3014}} 
+\index{pattern.c@{pattern.c}!brand\_codes@{brand\_codes}}
+\index{brand\_codes@{brand\_codes}!pattern.c@{pattern.c}}
+\doxysubsubsection{\texorpdfstring{brand\_codes}{brand\_codes}}
+{\footnotesize\ttfamily \mbox{\hyperlink{embroidery_8h_a18a8fbad6109f3953e18420a753e83d6}{Emb\+Brand}} brand\+\_\+codes\mbox{[}100\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \{svg\_color\_codes, 100, \textcolor{stringliteral}{"{}DXF"{}}\},}
+\DoxyCodeLine{    \{svg\_color\_codes, 100, \textcolor{stringliteral}{"{}HUS"{}}\},}
+\DoxyCodeLine{    \{svg\_color\_codes, 100, \textcolor{stringliteral}{"{}JEF"{}}\},}
+\DoxyCodeLine{    \{svg\_color\_codes, 100, \textcolor{stringliteral}{"{}SHV"{}}\},}
+\DoxyCodeLine{    \{svg\_color\_codes, 100, \textcolor{stringliteral}{"{}PCM"{}}\},}
+\DoxyCodeLine{    \{svg\_color\_codes, 100, \textcolor{stringliteral}{"{}PEC"{}}\},}
+\DoxyCodeLine{    \{svg\_color\_codes, 200, \textcolor{stringliteral}{"{}Scalable Vector Graphics"{}}\}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{pattern_8c_a6e10b231de6baafee918b26f004d7327}\label{pattern_8c_a6e10b231de6baafee918b26f004d7327}} 
+\index{pattern.c@{pattern.c}!hilbert\_curve\_l\_system@{hilbert\_curve\_l\_system}}
+\index{hilbert\_curve\_l\_system@{hilbert\_curve\_l\_system}!pattern.c@{pattern.c}}
+\doxysubsubsection{\texorpdfstring{hilbert\_curve\_l\_system}{hilbert\_curve\_l\_system}}
+{\footnotesize\ttfamily \mbox{\hyperlink{embroidery_8h_a914404401c03a6bf0dac814661ba370c}{L\+\_\+system}} hilbert\+\_\+curve\+\_\+l\+\_\+system}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{charliteral}{'A'}, \textcolor{stringliteral}{"{}AB"{}}, \textcolor{stringliteral}{"{}F+-\/"{}}, (\textcolor{keywordtype}{char}**)rules}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

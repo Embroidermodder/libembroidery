@@ -1,4 +1,7 @@
-/*
+/*!
+ * \file embroidery.h
+ * \brief The main interface to libembroidery.
+ *
  * LIBEMBROIDERY HEADER
  * version 1.0.0-alpha
  * This file is part of libembroidery.
@@ -22,15 +25,21 @@
 #ifndef EMB_LIBRARY_HEADER__
 #define EMB_LIBRARY_HEADER__
 
+#ifndef EMB_EMBEDDED_MODE__
+#define EMB_EMBEDDED_MODE__ 0
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#if (EMB_EMBEDDED_MODE__ != 1)
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdarg.h>
 #include <inttypes.h>
+#endif
 
 /* Version elements */
 #define EMB_LIB_VERSION_MAJOR          1
@@ -52,19 +61,13 @@ extern "C" {
  * machines.
  *
  * Missing change color?
- *
- * Stitch to (x, y). */
-#define NORMAL                      0x00
-/* Move to (x, y). */
-#define JUMP                        0x01
-/* Trim and move to (x, y). */
-#define TRIM                        0x02
-/* Pause machine for a thread change. */
-#define STOP                        0x04
-/* Add a sequin at the current co-ordinates. */
-#define SEQUIN                      0x08
-/* end of program */
-#define END                         0x10
+ */
+#define NORMAL                      0x00    /*!< Stitch to (x, y). */
+#define JUMP                        0x01    /*!< Move to (x, y). */
+#define TRIM                        0x02    /*!< Trim and move to (x, y). */
+#define STOP                        0x04    /*!< Pause machine for a thread change. */
+#define SEQUIN                      0x08    /*!< Add a sequin at the current co-ordinates. */
+#define END                         0x10    /*!< End of program. */
 
 /* Format identifiers */
 #define EMB_FORMAT_100                 0
@@ -163,37 +166,36 @@ extern "C" {
 #define SCRIPT_TABLE                   6
 #define SCRIPT_VECTOR                  7
 
-#define EMBFORMAT_UNSUPPORTED                   0
-#define EMBFORMAT_STITCHONLY                    1
-#define EMBFORMAT_OBJECTONLY                    2
-#define EMBFORMAT_STCHANDOBJ                    3 /* binary operation: 1+2=3 */
+#define EMBFORMAT_UNSUPPORTED          0
+#define EMBFORMAT_STITCHONLY           1
+#define EMBFORMAT_OBJECTONLY           2
+#define EMBFORMAT_STCHANDOBJ           3 /* binary operation: 1+2=3 */
 
-#define numberOfFormats                        61
+#define numberOfFormats               61
 
-#define EMB_MAX_LAYERS                         10
-#define MAX_THREADS                           256
-#define MAX_STRING_LENGTH                     200
-#define EMBFORMAT_MAXEXT                        3
+#define EMB_MAX_LAYERS                10
+#define MAX_THREADS                  256
+#define MAX_STRING_LENGTH            200
+#define EMBFORMAT_MAXEXT               3
 /* maximum length of extension without dot */
-#define EMBFORMAT_MAXDESC                      50
+#define EMBFORMAT_MAXDESC             50
 /* the longest possible description string length */
-#define MAX_STITCHES                      1000000
+#define MAX_STITCHES             1000000
 
 /* Libembroidery's handling of integer types.
  */
-#define EMB_LITTLE_ENDIAN                       0
-#define EMB_BIG_ENDIAN                          1
+#define EMB_LITTLE_ENDIAN              0
+#define EMB_BIG_ENDIAN                 1
 
 /* Most machines are little endian (including the developer's), so default to
  * that.
  */
-#define ENDIAN_HOST             EMB_LITTLE_ENDIAN
+#define ENDIAN_HOST    EMB_LITTLE_ENDIAN
 
 /* LANGUAGES */
 #define LANG_SVG                       0
 #define LANG_PS                        1
 #define LANG_PROMPT                    2
-
 
 /* Identifiers for different PES versions. */
 #define PES0001                     0
@@ -456,15 +458,16 @@ extern "C" {
     #endif
 #endif
 
+#if (EMB_EMBEDDED_MODE__ != 1)
 /* TYPEDEFS AND STRUCTS
  *******************************************************************/
 
-/* Should some platform need a different precision, this is typedef-ed
+/*! Should some platform need a different precision, this is typedef-ed
  * and used in place of all real types where possible.
  */
 typedef float EmbReal;
 
-/* EmbColor uses the light primaries: red, green, blue in that order. */
+/*! EmbColor uses the light primaries: red, green, blue in that order. */
 typedef struct EmbColor_
 {
     unsigned char r;
@@ -472,7 +475,7 @@ typedef struct EmbColor_
     unsigned char b;
 } EmbColor;
 
-/* The basic type to represent points absolutely or represent directions.
+/*! The basic type to represent points absolutely or represent directions.
  *
  * Positive y is up, units are in mm.
  */
@@ -482,14 +485,14 @@ typedef struct EmbVector_
     EmbReal y;
 } EmbVector;
 
-/* For our internal string library.
+/*! For our internal string library.
  *
  * Note that we cannot use this for any larger amount of data,
  * it's to ensure that the cap on the size is fixed at 200.
  */
 typedef char EmbString[200];
 
-/* To help new developers understand why we use "void *",
+/*! To help new developers understand why we use "void *",
  * when it is widely not recommended within C++.
  *
  * libembroidery is a low-level library: we need to do bit-level
@@ -498,10 +501,10 @@ typedef char EmbString[200];
  */
 typedef void *EmbMem;
 
-/* The basic array type. */
+/*! The basic array type. */
 typedef struct EmbArray_ EmbArray;
 
-/* . */
+/*! . */
 typedef struct EmbTime_
 {
     unsigned int year;
@@ -512,7 +515,7 @@ typedef struct EmbTime_
     unsigned int second;
 } EmbTime;
 
-/* . */
+/*! . */
 typedef struct EmbImage_ {
     EmbVector position;
     EmbVector dimensions;
@@ -523,74 +526,74 @@ typedef struct EmbImage_ {
     EmbString name;
 } EmbImage;
 
-/* . */
+/*! . */
 typedef struct EmbBlock_ {
     EmbVector position;
 } EmbBlock;
 
-/* . */
+/*! . */
 typedef struct EmbAlignedDim_ {
     EmbVector position;
 } EmbAlignedDim;
 
-/* . */
+/*! . */
 typedef struct EmbAngularDim_ {
     EmbVector position;
 } EmbAngularDim;
 
-/* . */
+/*! . */
 typedef struct EmbArcLengthDim_ {
     EmbVector position;
 } EmbArcLengthDim;
 
-/* . */
+/*! . */
 typedef struct EmbDiameterDim_ {
     EmbVector position;
 } EmbDiameterDim;
 
-/* . */
+/*! . */
 typedef struct EmbLeaderDim_ {
     EmbVector position;
 } EmbLeaderDim;
 
-/* . */
+/*! . */
 typedef struct EmbLinearDim_ {
     EmbVector position;
 } EmbLinearDim;
 
-/* . */
+/*! . */
 typedef struct EmbOrdinateDim_ {
     EmbVector position;
 } EmbOrdinateDim;
 
-/* . */
+/*! . */
 typedef struct EmbRadiusDim_ {
     EmbVector position;
 } EmbRadiusDim;
 
-/* . */
+/*! . */
 typedef struct EmbInfiniteLine_ {
     EmbVector position;
 } EmbInfiniteLine;
 
-/* . */
+/*! . */
 typedef struct EmbRay_ {
     EmbVector position;
 } EmbRay;
 
-/* . */
+/*! . */
 typedef struct EmbTextMulti_ {
     EmbVector position;
     EmbString text;
 } EmbTextMulti;
 
-/* . */
+/*! . */
 typedef struct EmbTextSingle_ {
     EmbVector position;
     EmbString text;
 } EmbTextSingle;
 
-/* . */
+/*! . */
 typedef struct EmbPoint_
 {
     EmbVector position;
@@ -598,7 +601,7 @@ typedef struct EmbPoint_
     EmbColor color;
 } EmbPoint;
 
-/* . */
+/*! . */
 typedef struct EmbLine_
 {
     EmbVector start;
@@ -607,7 +610,7 @@ typedef struct EmbLine_
     EmbColor color;
 } EmbLine;
 
-/* . */
+/*! . */
 typedef struct EmbPath_
 {
     EmbArray* pointList;
@@ -616,17 +619,16 @@ typedef struct EmbPath_
     EmbColor color;
 } EmbPath;
 
-/* . */
+/*! \todo `color` should be called colorIndex since it is not an EmbColor. */
 typedef struct EmbStitch_
 {
     int flags; /*! uses codes defined above */
     EmbReal x; /*! absolute position (not relative) */
     EmbReal y; /*! positive is up, units are in mm  */
     int color; /*! color number for this stitch */
-    /*! \todo this should be called colorIndex since it is not an EmbColor */
 } EmbStitch;
 
-/* . */
+/*! . */
 typedef struct EmbThread_
 {
     EmbColor color;
@@ -634,14 +636,14 @@ typedef struct EmbThread_
     EmbString catalogNumber;
 } EmbThread;
 
-/* . */
+/*! . */
 typedef struct thread_color_ {
     EmbString name;
     unsigned int hex_code;
     int manufacturer_code;
 } thread_color;
 
-/* absolute position (not relative) */
+/*! absolute position (not relative) */
 typedef struct EmbArc_
 {
     EmbVector start;
@@ -649,7 +651,7 @@ typedef struct EmbArc_
     EmbVector end;
 } EmbArc;
 
-/* . */
+/*! . */
 typedef struct EmbRect_
 {
     EmbReal x;
@@ -660,23 +662,23 @@ typedef struct EmbRect_
     EmbReal radius;
 } EmbRect;
 
-/* . */
+/*! . */
 typedef struct EmbCircle_
 {
     EmbVector center;
     EmbReal radius;
 } EmbCircle;
 
-/* . */
+/*! . */
 typedef EmbPath EmbPolygon;
 
-/* . */
+/*! . */
 typedef EmbPath EmbPolyline;
 
-/* . */
+/*! . */
 typedef int EmbFlag;
 
-/* . */
+/*! . */
 typedef struct EmbSatinOutline_
 {
     int length;
@@ -684,6 +686,7 @@ typedef struct EmbSatinOutline_
     EmbArray* side2;
 } EmbSatinOutline;
 
+/*! . */
 typedef struct EmbDimLeader_ {
     EmbVector start;
     EmbVector end;
@@ -692,28 +695,28 @@ typedef struct EmbDimLeader_ {
     EmbColor color;
 } EmbDimLeader;
 
-/* . */
+/*! Ellipse object. */
 typedef struct EmbEllipse_
 {
-    EmbVector center;
-    EmbVector radius;
-    EmbReal rotation;
+    EmbVector center; /*!< */
+    EmbVector radius; /*!< Represents the major and minor axes. */
+    EmbReal rotation; /*!< Determines the direction of the direction of the first axis given. */
 } EmbEllipse;
 
-/* . */
+/*! . */
 typedef struct EmbBezier_ {
-    EmbVector start;
-    EmbVector control1;
-    EmbVector control2;
-    EmbVector end;
+    EmbVector start;       /*!< */
+    EmbVector control1;    /*!< */
+    EmbVector control2;    /*!< */
+    EmbVector end;         /*!< */
 } EmbBezier;
 
-/* . */
+/*! . */
 typedef struct EmbSpline_ {
     EmbArray *beziers;
 } EmbSpline;
 
-/* . */
+/*! . */
 typedef struct LSYSTEM {
     char axiom;
     char *alphabet;
@@ -721,7 +724,7 @@ typedef struct LSYSTEM {
     char **rules;
 } L_system;
 
-/* . */
+/*! . */
 typedef struct EmbGeometry_ {
     union {
         EmbArc arc;
@@ -743,36 +746,42 @@ typedef struct EmbGeometry_ {
     EmbColor color;
 } EmbGeometry;
 
+/*! . */
 typedef char EmbStringTable[MAX_TABLE_LENGTH][MAX_STRING_LENGTH];
 
+/*! . */
 typedef struct LabelledVector_ {
     EmbString key;
     EmbVector vector;
 } LabelledVector;
 
+/*! . */
 typedef struct StringMap_ {
     EmbString key;
     EmbString value;
 } StringMap;
 
+/*! . */
 typedef struct IntMap_ {
     int key;
     int value;
 } IntMap;
 
+/*! . */
 typedef struct EmbVectorList_ {
     EmbVector *data;
     int count;
     int size;
 } EmbVectorList;
 
+/*! . */
 typedef struct EmbIdList_ {
     int32_t *data;
     int count;
     int size;
 } EmbIdList;
 
-/* . */
+/*! . */
 struct EmbArray_ {
     EmbGeometry *geometry;
     EmbStitch *stitch;
@@ -782,13 +791,14 @@ struct EmbArray_ {
     int type;
 };
 
-/* . */
+/*! . */
 typedef struct EmbLayer_
 {
     char name[100];
     EmbArray *geometry;
 } EmbLayer;
 
+/*! . */
 typedef struct ScriptValue_ {
     EmbReal r;
     int i;
@@ -802,6 +812,7 @@ typedef struct ScriptValue_ {
     char type;
 } ScriptValue;
 
+/*! . */
 typedef struct ScriptEnv_ {
     ScriptValue argument[MAX_ARGS];
     ScriptValue *variables;
@@ -812,6 +823,7 @@ typedef struct ScriptEnv_ {
     unsigned char firstRun;
 } ScriptEnv;
 
+/*! . */
 typedef struct Design_ {
     char *command;
     float lower;
@@ -828,7 +840,7 @@ typedef struct Design_ {
 
 #define END_SYMBOL            "__END__"
 
-/* The pattern type variable denotes the type that was read in and uses the
+/*! The pattern type variable denotes the type that was read in and uses the
  * EMB_FORMAT contants. Changing this type directly would break how data is
  * interpreted,
  */
@@ -853,7 +865,7 @@ typedef struct EmbPattern_
     EmbString comments;
 } EmbPattern;
 
-/* . */
+/*! . */
 typedef struct EmbFormatList_
 {
     EmbString extension;
@@ -866,7 +878,7 @@ typedef struct EmbFormatList_
     int write_external_color_file;
 } EmbFormatList;
 
-/* Thread colors that are subject to change are loaded at runtime,
+/*! Thread colors that are subject to change are loaded at runtime,
  * allowing us to update them as they change.
  *
  * However, in-builts that use indicies like the DXF, SVG or HUS
@@ -879,6 +891,7 @@ typedef struct BRAND {
     EmbString label;
 } EmbBrand;
 
+/*! . */
 typedef struct EmbStackElement_ {
     int data_type;
     int attribute;
@@ -887,13 +900,13 @@ typedef struct EmbStackElement_ {
     char s[100];
 } EmbStackElement;
 
-/* This uses about 100kb per instance because it's not dynamic. */
+/*! This uses about 100kb per instance because it's not dynamic. */
 typedef struct EmbStack_ {
     EmbStackElement stack[1000];
     int position;
 } EmbStack;
 
-/* double-indirection file allocation table references */
+/*! double-indirection file allocation table references */
 typedef struct _bcf_file_difat
 {
     unsigned int fatSectorCount;
@@ -901,7 +914,7 @@ typedef struct _bcf_file_difat
     unsigned int sectorSize;
 } bcf_file_difat;
 
-/* . */
+/*! . */
 typedef struct _bcf_file_fat
 {
     int          fatEntryCount;
@@ -909,14 +922,14 @@ typedef struct _bcf_file_fat
     unsigned int numberOfEntriesInFatSector;
 } bcf_file_fat;
 
-/* . */
+/*! . */
 typedef struct _bcf_directory_entry
 {
-    char                         directoryEntryName[32];
-    unsigned short               directoryEntryNameLength;
-    unsigned char                objectType;
-    unsigned char                colorFlag;
-    unsigned int                 leftSiblingId;
+    char directoryEntryName[32];
+    unsigned short directoryEntryNameLength;
+    unsigned char objectType;
+    unsigned char colorFlag;
+    unsigned int leftSiblingId;
     unsigned int                 rightSiblingId;
     unsigned int                 childId;
     unsigned char                CLSID[16];
@@ -1504,6 +1517,8 @@ extern const EmbThread pcm_colors[];
 extern const EmbThread pec_colors[];
 extern const EmbThread shv_colors[];
 extern const char imageWithFrame[38][48];
+
+#endif
 
 #ifdef __cplusplus
 }

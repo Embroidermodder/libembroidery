@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="images_2README_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Source<sp/>Images</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Photographs</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>following<sp/>photographs<sp/>are<sp/>public<sp/>domain<sp/>images<sp/>from<sp/>pixabay:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;table&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;tr&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&lt;td&gt;&lt;img<sp/>src=&quot;snow-squirrel.png&quot;<sp/>alt=&quot;snow<sp/>squirrel&quot;<sp/>width=&quot;300&quot;<sp/>/&gt;&lt;/td&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&lt;td&gt;Source:<sp/>https://pixabay.com/photos/snow-animal-squirrel-rodent-mammal-17854/&lt;/td&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;/tr&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;tr&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&lt;td&gt;&lt;img<sp/>src=&quot;great-tit.png&quot;<sp/>alt=&quot;great<sp/>tit&quot;<sp/>width=&quot;300&quot;<sp/>/&gt;&lt;/td&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&lt;td&gt;Source:<sp/>https://pixabay.com/photos/bird-fluttering-berries-wings-tit-1045954/&lt;/td&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;/tr&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;tr&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&lt;td&gt;&lt;img<sp/>src=&quot;owl.png&quot;<sp/>alt=&quot;owl<sp/>face&quot;<sp/>width=&quot;300&quot;<sp/>/&gt;&lt;/td&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&lt;td&gt;Source:<sp/>https://pixabay.com/photos/owl-bird-animal-bird-of-prey-50267/&lt;/td&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;/tr&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;tr&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&lt;td&gt;&lt;img<sp/>src=&quot;berries.png&quot;<sp/>alt=&quot;berries&quot;<sp/>width=&quot;300&quot;<sp/>/&gt;&lt;/td&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&lt;td&gt;Source:<sp/>https://pixabay.com/photos/berries-fruits-food-blackberries-2277/&lt;/td&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;/tr&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;/table&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">They<sp/>have<sp/>been<sp/>converted<sp/>to<sp/>png<sp/>files<sp/>to<sp/>aid<sp/>further<sp/>processing.</highlight></codeline>
+    </programlisting>
+    <location file="images/README.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,876 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1geometry_1_1Arc" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::geometry::Arc</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1a9e5fd0424661c42ff4623019fb67fd08" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::pen</definition>
+        <argsstring></argsstring>
+        <name>pen</name>
+        <qualifiedname>embroidery.geometry.Arc.pen</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="819" column="1" bodyfile="python/embroidery/geometry.py" bodystart="819" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1a47d5f7aa481b4429991fb98d9034e48e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::lwt_pen</definition>
+        <argsstring></argsstring>
+        <name>lwt_pen</name>
+        <qualifiedname>embroidery.geometry.Arc.lwt_pen</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="820" column="1" bodyfile="python/embroidery/geometry.py" bodystart="820" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1a035d9cfc3b56cd4d0f949595f4e9d5af" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::start</definition>
+        <argsstring></argsstring>
+        <name>start</name>
+        <qualifiedname>embroidery.geometry.Arc.start</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="821" column="1" bodyfile="python/embroidery/geometry.py" bodystart="821" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1a0ebdd0e8e527adc49915c92386c07995" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::mid</definition>
+        <argsstring></argsstring>
+        <name>mid</name>
+        <qualifiedname>embroidery.geometry.Arc.mid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="822" column="1" bodyfile="python/embroidery/geometry.py" bodystart="822" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1a06af4f203aeacde2fcc0bf3fe1b3fafc" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::end</definition>
+        <argsstring></argsstring>
+        <name>end</name>
+        <qualifiedname>embroidery.geometry.Arc.end</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="823" column="1" bodyfile="python/embroidery/geometry.py" bodystart="823" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1ac6ac53e32a8eb7332ed835214b3d6e84" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>embroidery.geometry.Arc.type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="824" column="1" bodyfile="python/embroidery/geometry.py" bodystart="824" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1a25d13c6fa8a8556c73c5848e6c132c1f" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::rotation</definition>
+        <argsstring></argsstring>
+        <name>rotation</name>
+        <qualifiedname>embroidery.geometry.Arc.rotation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="825" column="1" bodyfile="python/embroidery/geometry.py" bodystart="825" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1a0e433dc0b265befe2b5c5864f8a5ccc6" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::center</definition>
+        <argsstring></argsstring>
+        <name>center</name>
+        <qualifiedname>embroidery.geometry.Arc.center</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="826" column="1" bodyfile="python/embroidery/geometry.py" bodystart="826" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1a6404db2f275f64603329c78e65063504" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::rubber_mode</definition>
+        <argsstring></argsstring>
+        <name>rubber_mode</name>
+        <qualifiedname>embroidery.geometry.Arc.rubber_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="827" column="1" bodyfile="python/embroidery/geometry.py" bodystart="827" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1a1aece670e47431dbacc6f3c9c4d04b0c" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::start_angle</definition>
+        <argsstring></argsstring>
+        <name>start_angle</name>
+        <qualifiedname>embroidery.geometry.Arc.start_angle</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="828" column="1" bodyfile="python/embroidery/geometry.py" bodystart="828" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1a18758b1db24811963badfcb4272bed8d" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::end_angle</definition>
+        <argsstring></argsstring>
+        <name>end_angle</name>
+        <qualifiedname>embroidery.geometry.Arc.end_angle</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="829" column="1" bodyfile="python/embroidery/geometry.py" bodystart="829" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1a346a439168ad74c706349023a712777e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::radius</definition>
+        <argsstring></argsstring>
+        <name>radius</name>
+        <qualifiedname>embroidery.geometry.Arc.radius</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="830" column="1" bodyfile="python/embroidery/geometry.py" bodystart="830" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1a03f646c0f029d61c78002245984faac3" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::path</definition>
+        <argsstring></argsstring>
+        <name>path</name>
+        <qualifiedname>embroidery.geometry.Arc.path</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="831" column="1" bodyfile="python/embroidery/geometry.py" bodystart="831" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Arc_1a1b8336d1f4c93d9eb9af15b2c1899c90" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Arc::span_angle</definition>
+        <argsstring></argsstring>
+        <name>span_angle</name>
+        <qualifiedname>embroidery.geometry.Arc.span_angle</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1007" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1007" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1adcbae0e3e84b0988908127520c5a3683" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.__init__</definition>
+        <argsstring>(self, start, mid, end, pen=Pen(), path=Path(), rotation=0.0)</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.geometry.Arc.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>start</type>
+          <defname>start</defname>
+        </param>
+        <param>
+          <type>mid</type>
+          <defname>mid</defname>
+        </param>
+        <param>
+          <type>end</type>
+          <defname>end</defname>
+        </param>
+        <param>
+          <type>pen</type>
+          <defname>pen</defname>
+          <defval>Pen()</defval>
+        </param>
+        <param>
+          <type>path</type>
+          <defname>path</defname>
+          <defval><ref refid="classembroidery_1_1geometry_1_1Path" kindref="compound">Path</ref>()</defval>
+        </param>
+        <param>
+          <type>rotation</type>
+          <defname>rotation</defname>
+          <defval>0.0</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="816" column="1" bodyfile="python/embroidery/geometry.py" bodystart="817" bodyend="833"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a25ed1f40ecc7a4576d8e6bdeb6fe44d8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.update</definition>
+        <argsstring>(self)</argsstring>
+        <name>update</name>
+        <qualifiedname>embroidery.geometry.Arc.update</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="834" column="1" bodyfile="python/embroidery/geometry.py" bodystart="834" bodyend="846"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1aae9cab764b841e42dc13edb8fb85aa0f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.center</definition>
+        <argsstring>(self)</argsstring>
+        <name>center</name>
+        <qualifiedname>embroidery.geometry.Arc.center</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="847" column="1" bodyfile="python/embroidery/geometry.py" bodystart="847" bodyend="850"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a7318a754a1068233a3903e26bc0dc634" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.get_radius</definition>
+        <argsstring>(self)</argsstring>
+        <name>get_radius</name>
+        <qualifiedname>embroidery.geometry.Arc.get_radius</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="851" column="1" bodyfile="python/embroidery/geometry.py" bodystart="851" bodyend="854"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a443335b686775971340a1b8d9443671c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.set_start_angle</definition>
+        <argsstring>(self, angle)</argsstring>
+        <name>set_start_angle</name>
+        <qualifiedname>embroidery.geometry.Arc.set_start_angle</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>angle</type>
+          <defname>angle</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="855" column="1" bodyfile="python/embroidery/geometry.py" bodystart="855" bodyend="858"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a22787258a67249c0851cc6a099ca4afa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.set_end_angle</definition>
+        <argsstring>(self, angle)</argsstring>
+        <name>set_end_angle</name>
+        <qualifiedname>embroidery.geometry.Arc.set_end_angle</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>angle</type>
+          <defname>angle</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="859" column="1" bodyfile="python/embroidery/geometry.py" bodystart="859" bodyend="862"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a0489337d65983405c450e60889c58ce7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.set_start_point</definition>
+        <argsstring>(self, point)</argsstring>
+        <name>set_start_point</name>
+        <qualifiedname>embroidery.geometry.Arc.set_start_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>point</type>
+          <defname>point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="863" column="1" bodyfile="python/embroidery/geometry.py" bodystart="863" bodyend="867"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a080b0219a5c8eda88e78cfca4f424fd3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.set_mid_point</definition>
+        <argsstring>(self, point)</argsstring>
+        <name>set_mid_point</name>
+        <qualifiedname>embroidery.geometry.Arc.set_mid_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>point</type>
+          <defname>point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="868" column="1" bodyfile="python/embroidery/geometry.py" bodystart="868" bodyend="872"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a3efc2ab8330cd316a34276fb932c114f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.set_end_point</definition>
+        <argsstring>(self, point)</argsstring>
+        <name>set_end_point</name>
+        <qualifiedname>embroidery.geometry.Arc.set_end_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>point</type>
+          <defname>point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="873" column="1" bodyfile="python/embroidery/geometry.py" bodystart="873" bodyend="877"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a4f9784d38c7263d5912826ff3143915f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.update_rubber</definition>
+        <argsstring>(self, painter)</argsstring>
+        <name>update_rubber</name>
+        <qualifiedname>embroidery.geometry.Arc.update_rubber</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Update the rubber points to match the current data.
+# TODO: Arc Rubber Modes
+# TODO: self.update_rubber() gripping for Arc
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="878" column="1" bodyfile="python/embroidery/geometry.py" bodystart="878" bodyend="885"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1aefb768ed8261b173ac5dcaf4fdc46692" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.copy</definition>
+        <argsstring>(self)</argsstring>
+        <name>copy</name>
+        <qualifiedname>embroidery.geometry.Arc.copy</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Create a copy of the current Arc  from the perspective
+of the scene.
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="886" column="1" bodyfile="python/embroidery/geometry.py" bodystart="886" bodyend="894"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1afc8d5c40a2675a07a68632772bdae54b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.update_rect</definition>
+        <argsstring>(self, radius)</argsstring>
+        <name>update_rect</name>
+        <qualifiedname>embroidery.geometry.Arc.update_rect</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>radius</type>
+          <defname>radius</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="895" column="1" bodyfile="python/embroidery/geometry.py" bodystart="895" bodyend="902"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1af9b1ffb79faf6b8fac2afbcddc19ff95" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.set_radius</definition>
+        <argsstring>(self, radius)</argsstring>
+        <name>set_radius</name>
+        <qualifiedname>embroidery.geometry.Arc.set_radius</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>radius</type>
+          <defname>radius</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="903" column="1" bodyfile="python/embroidery/geometry.py" bodystart="903" bodyend="921"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1ac639108c8a797830b8a5e137508360e9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.start_angle</definition>
+        <argsstring>(self)</argsstring>
+        <name>start_angle</name>
+        <qualifiedname>embroidery.geometry.Arc.start_angle</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="922" column="1" bodyfile="python/embroidery/geometry.py" bodystart="922" bodyend="926"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a1fa3bb5f72ffc6dd29a1617f828b7dec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.end_angle</definition>
+        <argsstring>(self)</argsstring>
+        <name>end_angle</name>
+        <qualifiedname>embroidery.geometry.Arc.end_angle</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="927" column="1" bodyfile="python/embroidery/geometry.py" bodystart="927" bodyend="931"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1ac261c428032076a49ffaaf14106dda97" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.start_point</definition>
+        <argsstring>(self)</argsstring>
+        <name>start_point</name>
+        <qualifiedname>embroidery.geometry.Arc.start_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="932" column="1" bodyfile="python/embroidery/geometry.py" bodystart="932" bodyend="938"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a537ceef562150bd440c3692ec4e9abcf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.mid_point</definition>
+        <argsstring>(self)</argsstring>
+        <name>mid_point</name>
+        <qualifiedname>embroidery.geometry.Arc.mid_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="939" column="1" bodyfile="python/embroidery/geometry.py" bodystart="939" bodyend="945"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1aaccd47565baca80ec0996cfd3c5454fd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.end_point</definition>
+        <argsstring>(self)</argsstring>
+        <name>end_point</name>
+        <qualifiedname>embroidery.geometry.Arc.end_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="946" column="1" bodyfile="python/embroidery/geometry.py" bodystart="946" bodyend="952"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a4f1ce7ae9281ef47cc6a87a6013e18a6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.area</definition>
+        <argsstring>(self)</argsstring>
+        <name>area</name>
+        <qualifiedname>embroidery.geometry.Arc.area</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="953" column="1" bodyfile="python/embroidery/geometry.py" bodystart="953" bodyend="958"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a8d08b92a03eab14c82f59e598469a98f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.arc_length</definition>
+        <argsstring>(self)</argsstring>
+        <name>arc_length</name>
+        <qualifiedname>embroidery.geometry.Arc.arc_length</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="959" column="1" bodyfile="python/embroidery/geometry.py" bodystart="959" bodyend="962"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a377564a5b59ecaabfc5afcb4ca6113a7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.chord</definition>
+        <argsstring>(self)</argsstring>
+        <name>chord</name>
+        <qualifiedname>embroidery.geometry.Arc.chord</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="963" column="1" bodyfile="python/embroidery/geometry.py" bodystart="963" bodyend="966"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1aeda7bb18a281d59ae2a5777dc12a2d77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.included_angle</definition>
+        <argsstring>(self)</argsstring>
+        <name>included_angle</name>
+        <qualifiedname>embroidery.geometry.Arc.included_angle</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>NOTE:
+Due to floating point rounding errors, we need to clamp the
+quotient so it is in the range [-1, 1].
+If the quotient is out of that range, then the result of asin()
+will be NaN.
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="967" column="1" bodyfile="python/embroidery/geometry.py" bodystart="967" bodyend="992"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a0e1db858be6dcbf96bc9584b381bfb0a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.clockwise</definition>
+        <argsstring>(self)</argsstring>
+        <name>clockwise</name>
+        <qualifiedname>embroidery.geometry.Arc.clockwise</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="993" column="1" bodyfile="python/embroidery/geometry.py" bodystart="993" bodyend="1002"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1ae5830dfabf245533ee05b0e902e32fd3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.update_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>update_path</name>
+        <qualifiedname>embroidery.geometry.Arc.update_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1003" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1003" bodyend="1021"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a80ba3791dac1dccbf067b556ced94093" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.paint</definition>
+        <argsstring>(self, painter, option, widget)</argsstring>
+        <name>paint</name>
+        <qualifiedname>embroidery.geometry.Arc.paint</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <param>
+          <type>option</type>
+          <defname>option</defname>
+        </param>
+        <param>
+          <type>widget</type>
+          <defname>widget</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1022" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1022" bodyend="1046"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1acde18f94b8b3389da8251d93508c2962" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.vulcanize</definition>
+        <argsstring>(self)</argsstring>
+        <name>vulcanize</name>
+        <qualifiedname>embroidery.geometry.Arc.vulcanize</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1047" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1047" bodyend="1052"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a5acf8ac37e41bc6a0789e82d84e3e118" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.mouse_snap_point</definition>
+        <argsstring>(self, mouse_point)</argsstring>
+        <name>mouse_snap_point</name>
+        <qualifiedname>embroidery.geometry.Arc.mouse_snap_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>mouse_point</type>
+          <defname>mouse_point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1053" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1053" bodyend="1057"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a21ac31eadaae736bb70ef4320ea526d7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.all_grip_points</definition>
+        <argsstring>(self)</argsstring>
+        <name>all_grip_points</name>
+        <qualifiedname>embroidery.geometry.Arc.all_grip_points</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1058" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1058" bodyend="1062"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Arc_1a18051497ef62f37dfe11373fe349b839" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Arc.grip_edit</definition>
+        <argsstring>(self, before, after)</argsstring>
+        <name>grip_edit</name>
+        <qualifiedname>embroidery.geometry.Arc.grip_edit</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>before</type>
+          <defname>before</defname>
+        </param>
+        <param>
+          <type>after</type>
+          <defname>after</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1063" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1063" bodyend="1067"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>The Arc class definition.
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/geometry.py" line="812" column="1" bodyfile="python/embroidery/geometry.py" bodystart="812" bodyend="1067"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1adcbae0e3e84b0988908127520c5a3683" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a21ac31eadaae736bb70ef4320ea526d7" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>all_grip_points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a8d08b92a03eab14c82f59e598469a98f" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>arc_length</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a4f1ce7ae9281ef47cc6a87a6013e18a6" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>area</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a0e433dc0b265befe2b5c5864f8a5ccc6" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>center</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1aae9cab764b841e42dc13edb8fb85aa0f" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>center</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a377564a5b59ecaabfc5afcb4ca6113a7" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>chord</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a0e1db858be6dcbf96bc9584b381bfb0a" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>clockwise</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1aefb768ed8261b173ac5dcaf4fdc46692" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>copy</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a06af4f203aeacde2fcc0bf3fe1b3fafc" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>end</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a18758b1db24811963badfcb4272bed8d" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>end_angle</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a1fa3bb5f72ffc6dd29a1617f828b7dec" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>end_angle</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1aaccd47565baca80ec0996cfd3c5454fd" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>end_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a7318a754a1068233a3903e26bc0dc634" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>get_radius</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a18051497ef62f37dfe11373fe349b839" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>grip_edit</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1aeda7bb18a281d59ae2a5777dc12a2d77" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>included_angle</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a47d5f7aa481b4429991fb98d9034e48e" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>lwt_pen</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a0ebdd0e8e527adc49915c92386c07995" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>mid</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a537ceef562150bd440c3692ec4e9abcf" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>mid_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a5acf8ac37e41bc6a0789e82d84e3e118" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>mouse_snap_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a80ba3791dac1dccbf067b556ced94093" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>paint</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a03f646c0f029d61c78002245984faac3" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a9e5fd0424661c42ff4623019fb67fd08" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>pen</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a346a439168ad74c706349023a712777e" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>radius</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a25d13c6fa8a8556c73c5848e6c132c1f" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>rotation</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a6404db2f275f64603329c78e65063504" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>rubber_mode</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a22787258a67249c0851cc6a099ca4afa" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>set_end_angle</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a3efc2ab8330cd316a34276fb932c114f" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>set_end_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a080b0219a5c8eda88e78cfca4f424fd3" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>set_mid_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1af9b1ffb79faf6b8fac2afbcddc19ff95" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>set_radius</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a443335b686775971340a1b8d9443671c" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>set_start_angle</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a0489337d65983405c450e60889c58ce7" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>set_start_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a1b8336d1f4c93d9eb9af15b2c1899c90" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>span_angle</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a035d9cfc3b56cd4d0f949595f4e9d5af" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>start</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a1aece670e47431dbacc6f3c9c4d04b0c" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>start_angle</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1ac639108c8a797830b8a5e137508360e9" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>start_angle</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1ac261c428032076a49ffaaf14106dda97" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>start_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1ac6ac53e32a8eb7332ed835214b3d6e84" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>type</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a25ed1f40ecc7a4576d8e6bdeb6fe44d8" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>update</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1ae5830dfabf245533ee05b0e902e32fd3" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>update_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1afc8d5c40a2675a07a68632772bdae54b" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>update_rect</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1a4f9784d38c7263d5912826ff3143915f" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>update_rubber</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Arc_1acde18f94b8b3389da8251d93508c2962" prot="public" virt="non-virtual"><scope>embroidery::geometry::Arc</scope><name>vulcanize</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

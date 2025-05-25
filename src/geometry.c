@@ -1,4 +1,7 @@
-/*
+/*!
+ * \file geometry.c
+ * \brief .
+ *
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *
@@ -30,8 +33,7 @@
 
 #include "embroidery.h"
 
-/* Attribute Validation
- * --------------------
+/*! \brief Attribute Validation for getting data
  *
  * These tables use the bit within each number as the attribute axis and the
  * the number position in the array as the geometric object axis.
@@ -105,7 +107,9 @@ int32_t attribute_get_table[] = {
     0
 };
 
-/* These numbers fit within int32_t: you can test for a attribute being user
+/*! \brief Attribute Validation for setting data.
+ *
+ * These numbers fit within int32_t: you can test for a attribute being user
  * alterable by a geometric object by writing, for example:
  *
  *     if (attribute_set_table[EMB_TEXT_SINGLE] & EMB_AREA) {
@@ -199,7 +203,7 @@ int32_t attribute_types[] = {
 
 extern double epsilon;
 
-/* . */
+/*! \brief Create an EmbVector from data. */
 EmbVector
 emb_vector(EmbReal x, EmbReal y)
 {
@@ -209,9 +213,7 @@ emb_vector(EmbReal x, EmbReal y)
     return v;
 }
 
-/* Finds the unit length vector a result in the same direction as a vector.
- *
- * \todo make result return argument.
+/*! \brief Finds the unit length vector a result in the same direction as a vector.
  */
 EmbVector
 emb_vector_normalize(EmbVector vector)
@@ -223,10 +225,7 @@ emb_vector_normalize(EmbVector vector)
     return result;
 }
 
-/* The scalar multiple a magnitude of a vector a vector. Returned as
- * a result.
- *
- * TODO: make result return argument.
+/*! \brief The scalar multiple a magnitude of a vector. Returned as a vector.
  */
 EmbVector
 emb_vector_scale(EmbVector vector, EmbReal magnitude)
@@ -237,7 +236,7 @@ emb_vector_scale(EmbVector vector, EmbReal magnitude)
     return result;
 }
 
-/* The sum of vectors a a and a b returned as a vector. */
+/*! \brief The sum of two vectors returned as a vector. */
 EmbVector
 emb_vector_add(EmbVector a, EmbVector b)
 {
@@ -247,7 +246,7 @@ emb_vector_add(EmbVector a, EmbVector b)
     return result;
 }
 
-/* The average of vectors a v1 and a v2 returned as a vector. */
+/*! \brief The average of two vectors returned as a vector. */
 EmbVector
 emb_vector_average(EmbVector a, EmbVector b)
 {
@@ -257,7 +256,7 @@ emb_vector_average(EmbVector a, EmbVector b)
     return result;
 }
 
-/* The difference between vectors a v1 and a v2 returned as a result. */
+/*! \brief The difference between two vectors returned as a result. */
 EmbVector
 emb_vector_subtract(EmbVector v1, EmbVector v2)
 {
@@ -267,14 +266,14 @@ emb_vector_subtract(EmbVector v1, EmbVector v2)
     return result;
 }
 
-/* The dot product as vectors a v1 and a v2 returned as a EmbReal. */
+/*! \brief The dot product of two vectors returned as a EmbReal. */
 EmbReal
 emb_vector_dot(EmbVector a, EmbVector b)
 {
     return a.x * b.x + a.y * b.y;
 }
 
-/* The "cross product" as vectors a and b returned as a real value.
+/*! \brief The "cross product" as vectors a and b returned as a real value.
  *
  * Technically, this is the magnitude of the cross product when the
  * embroidery is placed in the z=0 plane (since the cross product is defined for
@@ -286,7 +285,7 @@ emb_vector_cross(EmbVector a, EmbVector b)
     return a.x * b.y - a.y * b.x;
 }
 
-/* Since we aren't using full 3D vector algebra here, all vectors are "vertical".
+/*! Since we aren't using full 3D vector algebra here, all vectors are "vertical".
  * so this is like the product v1^{T} I_{2} v2 for our vectors a v1 and v2
  * so a "component-wise product". The result is stored at the pointer a result.
  */
@@ -299,7 +298,7 @@ emb_vector_transpose_product(EmbVector v1, EmbVector v2)
     return result;
 }
 
-/* The length or absolute value of the vector a vector.
+/*! \brief The length or absolute value of the vector a vector.
  */
 EmbReal
 emb_vector_length(EmbVector vector)
@@ -334,7 +333,7 @@ emb_vector_angle(EmbVector v)
     return atan2(v.y, v.x);
 }
 
-/* The unit vector in the direction a angle. */
+/*! \brief The unit vector in the direction a angle. */
 EmbVector
 emb_vector_unit(EmbReal alpha)
 {

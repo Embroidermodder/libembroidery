@@ -1,5 +1,5 @@
 /*!
- * \file designs.h
+ * \file designs.c
  * \brief Parametric descriptions of common curves used in embroidery patterns.
  *
  * libembroidery: designs

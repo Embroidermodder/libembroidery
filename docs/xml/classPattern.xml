@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classPattern" kind="class" language="Java" prot="package">
+    <compoundname>Pattern</compoundname>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="classPattern_1a651a8db8e667bf99809c1e507daa145b" prot="private" static="yes" mutable="no">
+        <type>int</type>
+        <definition>int Pattern.a</definition>
+        <argsstring></argsstring>
+        <name>a</name>
+        <qualifiedname>Pattern.a</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/org/libembroidery/Pattern.java" line="21" column="24" bodyfile="java/org/libembroidery/Pattern.java" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classPattern_1abad2e99af997aa452b7ca39b34de8fe5" prot="private" static="yes" mutable="no">
+        <type>static</type>
+        <definition>Pattern.native</definition>
+        <argsstring></argsstring>
+        <name>native</name>
+        <qualifiedname>Pattern.native</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/Pattern.java" line="21" column="20" bodyfile="java/Pattern.java" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classPattern_1a2045130528e581deea737e9f2887117b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int Pattern.Pattern</definition>
+        <argsstring>()</argsstring>
+        <name>Pattern</name>
+        <qualifiedname>Pattern.Pattern</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/org/libembroidery/Pattern.java" line="13" column="16" bodyfile="java/org/libembroidery/Pattern.java" bodystart="13" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="classPattern_1aa8d7a7bb69bac953068eb4436065e602" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int Pattern.AddThread</definition>
+        <argsstring>()</argsstring>
+        <name>AddThread</name>
+        <qualifiedname>Pattern.AddThread</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/org/libembroidery/Pattern.java" line="17" column="16" bodyfile="java/org/libembroidery/Pattern.java" bodystart="17" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="classPattern_1a2c1393fc2d0cd28ecf25212ba0c9c16e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Pattern.Pattern</definition>
+        <argsstring>()</argsstring>
+        <name>Pattern</name>
+        <qualifiedname>Pattern.Pattern</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/Pattern.java" line="13" column="12" bodyfile="java/Pattern.java" bodystart="13" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="classPattern_1a65071ec65e2da3ed586a7ce00878a61e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Pattern.AddThread</definition>
+        <argsstring>()</argsstring>
+        <name>AddThread</name>
+        <qualifiedname>Pattern.AddThread</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/Pattern.java" line="17" column="12" bodyfile="java/Pattern.java" bodystart="17" bodyend="19"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="java/org/libembroidery/Pattern.java" line="12" column="1" bodyfile="java/org/libembroidery/Pattern.java" bodystart="12" bodyend="22"/>
+    <listofallmembers>
+      <member refid="classPattern_1a651a8db8e667bf99809c1e507daa145b" prot="private" virt="non-virtual"><scope>Pattern</scope><name>a</name></member>
+      <member refid="classPattern_1aa8d7a7bb69bac953068eb4436065e602" prot="public" virt="non-virtual"><scope>Pattern</scope><name>AddThread</name></member>
+      <member refid="classPattern_1a65071ec65e2da3ed586a7ce00878a61e" prot="public" virt="non-virtual"><scope>Pattern</scope><name>AddThread</name></member>
+      <member refid="classPattern_1abad2e99af997aa452b7ca39b34de8fe5" prot="private" virt="non-virtual"><scope>Pattern</scope><name>native</name></member>
+      <member refid="classPattern_1a2045130528e581deea737e9f2887117b" prot="public" virt="non-virtual"><scope>Pattern</scope><name>Pattern</name></member>
+      <member refid="classPattern_1a2c1393fc2d0cd28ecf25212ba0c9c16e" prot="public" virt="non-virtual"><scope>Pattern</scope><name>Pattern</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

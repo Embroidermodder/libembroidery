@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structEmbRect__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbRect_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structEmbRect___1ae9092fbafb605c9733ca7f1fc71c738d" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a2082be9aabfb541dff1825c4ca6a05cd" kindref="member">EmbReal</ref></type>
+        <definition>EmbReal EmbRect_::x</definition>
+        <argsstring></argsstring>
+        <name>x</name>
+        <qualifiedname>EmbRect_::x</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="657" column="13" bodyfile="src/embroidery.h" bodystart="657" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbRect___1a5188a52cf4dd991e54bac6400c6dbf0f" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a2082be9aabfb541dff1825c4ca6a05cd" kindref="member">EmbReal</ref></type>
+        <definition>EmbReal EmbRect_::y</definition>
+        <argsstring></argsstring>
+        <name>y</name>
+        <qualifiedname>EmbRect_::y</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="658" column="13" bodyfile="src/embroidery.h" bodystart="658" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbRect___1a753964fa1f162354f0dd05a883a0f449" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a2082be9aabfb541dff1825c4ca6a05cd" kindref="member">EmbReal</ref></type>
+        <definition>EmbReal EmbRect_::w</definition>
+        <argsstring></argsstring>
+        <name>w</name>
+        <qualifiedname>EmbRect_::w</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="659" column="13" bodyfile="src/embroidery.h" bodystart="659" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbRect___1aea860d1d3c59db40a0f724ce96594373" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a2082be9aabfb541dff1825c4ca6a05cd" kindref="member">EmbReal</ref></type>
+        <definition>EmbReal EmbRect_::h</definition>
+        <argsstring></argsstring>
+        <name>h</name>
+        <qualifiedname>EmbRect_::h</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="660" column="13" bodyfile="src/embroidery.h" bodystart="660" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbRect___1aadcd3e8d691b6e5dd9bdd351addf38ae" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a2082be9aabfb541dff1825c4ca6a05cd" kindref="member">EmbReal</ref></type>
+        <definition>EmbReal EmbRect_::rotation</definition>
+        <argsstring></argsstring>
+        <name>rotation</name>
+        <qualifiedname>EmbRect_::rotation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="661" column="13" bodyfile="src/embroidery.h" bodystart="661" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbRect___1a14ddfc48583a44e38f22ef2274c30075" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a2082be9aabfb541dff1825c4ca6a05cd" kindref="member">EmbReal</ref></type>
+        <definition>EmbReal EmbRect_::radius</definition>
+        <argsstring></argsstring>
+        <name>radius</name>
+        <qualifiedname>EmbRect_::radius</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="662" column="13" bodyfile="src/embroidery.h" bodystart="662" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="655" column="1" bodyfile="src/embroidery.h" bodystart="656" bodyend="663"/>
+    <listofallmembers>
+      <member refid="structEmbRect___1aea860d1d3c59db40a0f724ce96594373" prot="public" virt="non-virtual"><scope>EmbRect_</scope><name>h</name></member>
+      <member refid="structEmbRect___1a14ddfc48583a44e38f22ef2274c30075" prot="public" virt="non-virtual"><scope>EmbRect_</scope><name>radius</name></member>
+      <member refid="structEmbRect___1aadcd3e8d691b6e5dd9bdd351addf38ae" prot="public" virt="non-virtual"><scope>EmbRect_</scope><name>rotation</name></member>
+      <member refid="structEmbRect___1a753964fa1f162354f0dd05a883a0f449" prot="public" virt="non-virtual"><scope>EmbRect_</scope><name>w</name></member>
+      <member refid="structEmbRect___1ae9092fbafb605c9733ca7f1fc71c738d" prot="public" virt="non-virtual"><scope>EmbRect_</scope><name>x</name></member>
+      <member refid="structEmbRect___1a5188a52cf4dd991e54bac6400c6dbf0f" prot="public" virt="non-virtual"><scope>EmbRect_</scope><name>y</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

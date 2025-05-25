@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="struct__bcf__directory" kind="struct" language="C++" prot="public">
+    <compoundname>_bcf_directory</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct__bcf__directory_1a8cf6138e4996a2d19febf4dd04ea7991" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1abb451c97faf6366fb733ff7b29054c19" kindref="member">bcf_directory_entry</ref> *</type>
+        <definition>bcf_directory_entry* _bcf_directory::dirEntries</definition>
+        <argsstring></argsstring>
+        <name>dirEntries</name>
+        <qualifiedname>_bcf_directory::dirEntries</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="952" column="25" bodyfile="src/embroidery.h" bodystart="952" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__directory_1a57320034d422b0406e8bc5a01c9f4434" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_directory::maxNumberOfDirectoryEntries</definition>
+        <argsstring></argsstring>
+        <name>maxNumberOfDirectoryEntries</name>
+        <qualifiedname>_bcf_directory::maxNumberOfDirectoryEntries</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="953" column="26" bodyfile="src/embroidery.h" bodystart="953" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>_bcf_directory</label>
+        <link refid="struct__bcf__directory"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>dirEntries</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>_bcf_directory_entry</label>
+        <link refid="struct__bcf__directory__entry"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>next</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery.h" line="950" column="1" bodyfile="src/embroidery.h" bodystart="951" bodyend="954"/>
+    <listofallmembers>
+      <member refid="struct__bcf__directory_1a8cf6138e4996a2d19febf4dd04ea7991" prot="public" virt="non-virtual"><scope>_bcf_directory</scope><name>dirEntries</name></member>
+      <member refid="struct__bcf__directory_1a57320034d422b0406e8bc5a01c9f4434" prot="public" virt="non-virtual"><scope>_bcf_directory</scope><name>maxNumberOfDirectoryEntries</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structBRAND" kind="struct" language="C++" prot="public">
+    <compoundname>BRAND</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structBRAND_1a692c7badcc18d07c3a0e4667c7158013" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a8801dbd0fc60662648650d4658b7b7d0" kindref="member">thread_color</ref> *</type>
+        <definition>thread_color* BRAND::codes</definition>
+        <argsstring></argsstring>
+        <name>codes</name>
+        <qualifiedname>BRAND::codes</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="889" column="18" bodyfile="src/embroidery.h" bodystart="889" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBRAND_1a9d56df387600a0bca55995096a5d20bb" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int BRAND::length</definition>
+        <argsstring></argsstring>
+        <name>length</name>
+        <qualifiedname>BRAND::length</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="890" column="9" bodyfile="src/embroidery.h" bodystart="890" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBRAND_1a7e4a4ef6117672f5f5cbd348caf85fbb" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a3cfa8eccd6eee11f9ffece9f64f79b59" kindref="member">EmbString</ref></type>
+        <definition>EmbString BRAND::label</definition>
+        <argsstring></argsstring>
+        <name>label</name>
+        <qualifiedname>BRAND::label</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="891" column="15" bodyfile="src/embroidery.h" bodystart="891" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Thread colors that are subject to change are loaded at runtime, allowing us to update them as they change.</para>
+<para>However, in-builts that use indicies like the DXF, SVG or HUS tables are compiled in. This should help with embedded compatibility in both cases. </para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>BRAND</label>
+        <link refid="structBRAND"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>codes</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>thread_color_</label>
+        <link refid="structthread__color__"/>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery.h" line="888" column="1" bodyfile="src/embroidery.h" bodystart="888" bodyend="892"/>
+    <listofallmembers>
+      <member refid="structBRAND_1a692c7badcc18d07c3a0e4667c7158013" prot="public" virt="non-virtual"><scope>BRAND</scope><name>codes</name></member>
+      <member refid="structBRAND_1a7e4a4ef6117672f5f5cbd348caf85fbb" prot="public" virt="non-virtual"><scope>BRAND</scope><name>label</name></member>
+      <member refid="structBRAND_1a9d56df387600a0bca55995096a5d20bb" prot="public" virt="non-virtual"><scope>BRAND</scope><name>length</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

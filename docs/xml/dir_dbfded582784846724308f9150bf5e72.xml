@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="dir_dbfded582784846724308f9150bf5e72" kind="dir">
+    <compoundname>java/org</compoundname>
+    <innerdir refid="dir_c0fe8c1628e63d1e44fd8f07e8fda059">java/org/libembroidery</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="java/org/"/>
+  </compounddef>
+</doxygen>

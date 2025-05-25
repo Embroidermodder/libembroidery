@@ -1,0 +1,720 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1geometry_1_1Polygon" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::geometry::Polygon</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1a12781518d7a88260fdfa0a41c420db98" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::x</definition>
+        <argsstring></argsstring>
+        <name>x</name>
+        <qualifiedname>embroidery.geometry.Polygon.x</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2451" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2451" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1a198e3716dcef21df5bbf2f884f9a205a" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::y</definition>
+        <argsstring></argsstring>
+        <name>y</name>
+        <qualifiedname>embroidery.geometry.Polygon.y</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2452" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2452" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1a30141106418bcbbf86e8aa4506189cba" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::path</definition>
+        <argsstring></argsstring>
+        <name>path</name>
+        <qualifiedname>embroidery.geometry.Polygon.path</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2453" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2453" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1af2f18e6e55b0199e0c4abd15d528b2ae" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::rotation</definition>
+        <argsstring></argsstring>
+        <name>rotation</name>
+        <qualifiedname>embroidery.geometry.Polygon.rotation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2454" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2454" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1ac2f2e85509d16fe395f0ab30e92e1b53" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::scale</definition>
+        <argsstring></argsstring>
+        <name>scale</name>
+        <qualifiedname>embroidery.geometry.Polygon.scale</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2455" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2455" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1a470432cd7ae2311436fae16bb38c3eba" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>embroidery.geometry.Polygon.type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2456" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2456" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1a51ba68356f6aeae5c134ad5f156e782e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::selectable</definition>
+        <argsstring></argsstring>
+        <name>selectable</name>
+        <qualifiedname>embroidery.geometry.Polygon.selectable</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2457" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2457" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1a1b12ebafea8da8212c712debe02a7eb1" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::grip_index</definition>
+        <argsstring></argsstring>
+        <name>grip_index</name>
+        <qualifiedname>embroidery.geometry.Polygon.grip_index</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2458" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2458" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1afcf2b9523d73f879506c317088ff96a4" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::pen</definition>
+        <argsstring></argsstring>
+        <name>pen</name>
+        <qualifiedname>embroidery.geometry.Polygon.pen</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2459" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2459" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1a0a37a16a68612af7ea521dff987ece3c" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::normal_path</definition>
+        <argsstring></argsstring>
+        <name>normal_path</name>
+        <qualifiedname>embroidery.geometry.Polygon.normal_path</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2461" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2461" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1aa9fa0e14218fd62cecda473264e8ab7f" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::points</definition>
+        <argsstring></argsstring>
+        <name>points</name>
+        <qualifiedname>embroidery.geometry.Polygon.points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2462" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2462" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1a5907bd3dc45882a3f9cc8633f2ac0fb1" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::center</definition>
+        <argsstring></argsstring>
+        <name>center</name>
+        <qualifiedname>embroidery.geometry.Polygon.center</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2466" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2466" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1a66a6d229b6462f8301f22113c5d7204e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::side1</definition>
+        <argsstring></argsstring>
+        <name>side1</name>
+        <qualifiedname>embroidery.geometry.Polygon.side1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2467" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2467" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1afe8ff0f1ceca5cd2afd1763a3f05bc64" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::side2</definition>
+        <argsstring></argsstring>
+        <name>side2</name>
+        <qualifiedname>embroidery.geometry.Polygon.side2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2468" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2468" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1a0204752c7b7d0384bcf868679343f342" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::point_i</definition>
+        <argsstring></argsstring>
+        <name>point_i</name>
+        <qualifiedname>embroidery.geometry.Polygon.point_i</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2469" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2469" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1ac9118e4f42175a9e4333b4d5973e2c78" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::point_c</definition>
+        <argsstring></argsstring>
+        <name>point_c</name>
+        <qualifiedname>embroidery.geometry.Polygon.point_c</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2470" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2470" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1a877c95be150718168f9483a9989922d8" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::poly_type</definition>
+        <argsstring></argsstring>
+        <name>poly_type</name>
+        <qualifiedname>embroidery.geometry.Polygon.poly_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2471" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2471" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1ae3b04f5e095dc122d8d4527d3eb4f654" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::num_sides</definition>
+        <argsstring></argsstring>
+        <name>num_sides</name>
+        <qualifiedname>embroidery.geometry.Polygon.num_sides</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2472" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2472" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1a2095a9dab9de31d44df7709d262743ff" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::mode</definition>
+        <argsstring></argsstring>
+        <name>mode</name>
+        <qualifiedname>embroidery.geometry.Polygon.mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2473" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2473" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Polygon_1aef80e71c9f3125d5489aa5ebd8bb332d" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Polygon::rubber_mode</definition>
+        <argsstring></argsstring>
+        <name>rubber_mode</name>
+        <qualifiedname>embroidery.geometry.Polygon.rubber_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2514" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2514" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1acc3d4f25288c091d8e4cdf48c3e3249e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.__init__</definition>
+        <argsstring>(self, x=0, y=0, pen=Pen(), path=Path())</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.geometry.Polygon.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+          <defval>0</defval>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+          <defval>0</defval>
+        </param>
+        <param>
+          <type>pen</type>
+          <defname>pen</defname>
+          <defval>Pen()</defval>
+        </param>
+        <param>
+          <type>path</type>
+          <defname>path</defname>
+          <defval><ref refid="classembroidery_1_1geometry_1_1Path" kindref="compound">Path</ref>()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2449" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2449" bodyend="2475"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1aea06bad3388255221058ca6ede244de4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.copy</definition>
+        <argsstring>(self)</argsstring>
+        <name>copy</name>
+        <qualifiedname>embroidery.geometry.Polygon.copy</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2476" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2476" bodyend="2481"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1a927e2284f16b9b81a3f407f4291c2bfb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.update_path</definition>
+        <argsstring>(self, p)</argsstring>
+        <name>update_path</name>
+        <qualifiedname>embroidery.geometry.Polygon.update_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>p</type>
+          <defname>p</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2482" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2482" bodyend="2490"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1a0feca670a0991312524d0b0e33af9ae1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.paint</definition>
+        <argsstring>(self, painter, option, widget)</argsstring>
+        <name>paint</name>
+        <qualifiedname>embroidery.geometry.Polygon.paint</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <param>
+          <type>option</type>
+          <defname>option</defname>
+        </param>
+        <param>
+          <type>widget</type>
+          <defname>widget</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2491" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2491" bodyend="2511"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1aea8ae528ddbf49ee7a16dd874e514707" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.update_rubber</definition>
+        <argsstring>(self, painter)</argsstring>
+        <name>update_rubber</name>
+        <qualifiedname>embroidery.geometry.Polygon.update_rubber</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2512" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2512" bodyend="2626"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1a92884fa1f08be757e5c22aa99f7bb5f7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.vulcanize</definition>
+        <argsstring>(self)</argsstring>
+        <name>vulcanize</name>
+        <qualifiedname>embroidery.geometry.Polygon.vulcanize</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2627" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2627" bodyend="2638"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1a12cfede9676deec352b88c61b5ac20ac" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.mouse_snap_point</definition>
+        <argsstring>(self, mouse_point)</argsstring>
+        <name>mouse_snap_point</name>
+        <qualifiedname>embroidery.geometry.Polygon.mouse_snap_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>mouse_point</type>
+          <defname>mouse_point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2639" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2639" bodyend="2654"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1a8a2f803c8b062d518c8e1498bd34bad5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.all_grip_points</definition>
+        <argsstring>(self)</argsstring>
+        <name>all_grip_points</name>
+        <qualifiedname>embroidery.geometry.Polygon.all_grip_points</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2655" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2655" bodyend="2663"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1a6de3e1cd5e16831a39074c73bdc6c460" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.find_index</definition>
+        <argsstring>(self, point)</argsstring>
+        <name>find_index</name>
+        <qualifiedname>embroidery.geometry.Polygon.find_index</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>point</type>
+          <defname>point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2664" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2664" bodyend="2676"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1a1dc93985024894fa6b58b7a662c1cb59" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.find_index_2</definition>
+        <argsstring>(self, point)</argsstring>
+        <name>find_index_2</name>
+        <qualifiedname>embroidery.geometry.Polygon.find_index_2</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>point</type>
+          <defname>point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2677" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2677" bodyend="2686"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1a2155ab53574143be1aa764514701d97f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.grip_edit</definition>
+        <argsstring>(self, before, after)</argsstring>
+        <name>grip_edit</name>
+        <qualifiedname>embroidery.geometry.Polygon.grip_edit</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>before</type>
+          <defname>before</defname>
+        </param>
+        <param>
+          <type>after</type>
+          <defname>after</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2687" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2687" bodyend="2696"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1a8919f4d1e9b05a04efb887db504d4228" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.object_copy_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>object_copy_path</name>
+        <qualifiedname>embroidery.geometry.Polygon.object_copy_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2697" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2697" bodyend="2700"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1a87589ef0667111b8f12ac54c11ab059e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.object_save_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>object_save_path</name>
+        <qualifiedname>embroidery.geometry.Polygon.object_save_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2701" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2701" bodyend="2710"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1ac3f21d7287286b637d9544b4a67c2776" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.click</definition>
+        <argsstring>(self, x, y)</argsstring>
+        <name>click</name>
+        <qualifiedname>embroidery.geometry.Polygon.click</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2711" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2711" bodyend="2746"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1a88cc66b808b9fd3fde80200f4091424a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.prompt</definition>
+        <argsstring>(self, cmd)</argsstring>
+        <name>prompt</name>
+        <qualifiedname>embroidery.geometry.Polygon.prompt</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>cmd</type>
+          <defname>cmd</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2747" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2747" bodyend="2885"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1a12e98974a3989a326001c0c52ef0a288" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.find_center</definition>
+        <argsstring>(self)</argsstring>
+        <name>find_center</name>
+        <qualifiedname>embroidery.geometry.Polygon.find_center</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2886" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2886" bodyend="2892"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Polygon_1a8b54ccb4a222d836e9c0260a07da2817" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Polygon.translate</definition>
+        <argsstring>(self, vector)</argsstring>
+        <name>translate</name>
+        <qualifiedname>embroidery.geometry.Polygon.translate</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type><ref refid="classembroidery_1_1vector" kindref="compound">vector</ref></type>
+          <defname>vector</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="2893" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2893" bodyend="2899"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>The Polygon class definition.
+
+Needs to support the features available in the SVG spec.
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/geometry.py" line="2443" column="1" bodyfile="python/embroidery/geometry.py" bodystart="2443" bodyend="2912"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1acc3d4f25288c091d8e4cdf48c3e3249e" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a8a2f803c8b062d518c8e1498bd34bad5" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>all_grip_points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a5907bd3dc45882a3f9cc8633f2ac0fb1" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>center</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1ac3f21d7287286b637d9544b4a67c2776" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>click</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1aea06bad3388255221058ca6ede244de4" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>copy</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a12e98974a3989a326001c0c52ef0a288" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>find_center</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a6de3e1cd5e16831a39074c73bdc6c460" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>find_index</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a1dc93985024894fa6b58b7a662c1cb59" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>find_index_2</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a2155ab53574143be1aa764514701d97f" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>grip_edit</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a1b12ebafea8da8212c712debe02a7eb1" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>grip_index</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a2095a9dab9de31d44df7709d262743ff" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>mode</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a12cfede9676deec352b88c61b5ac20ac" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>mouse_snap_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a0a37a16a68612af7ea521dff987ece3c" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>normal_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1ae3b04f5e095dc122d8d4527d3eb4f654" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>num_sides</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a8919f4d1e9b05a04efb887db504d4228" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>object_copy_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a87589ef0667111b8f12ac54c11ab059e" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>object_save_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a0feca670a0991312524d0b0e33af9ae1" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>paint</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a30141106418bcbbf86e8aa4506189cba" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1afcf2b9523d73f879506c317088ff96a4" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>pen</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1ac9118e4f42175a9e4333b4d5973e2c78" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>point_c</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a0204752c7b7d0384bcf868679343f342" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>point_i</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1aa9fa0e14218fd62cecda473264e8ab7f" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a877c95be150718168f9483a9989922d8" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>poly_type</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a88cc66b808b9fd3fde80200f4091424a" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>prompt</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1af2f18e6e55b0199e0c4abd15d528b2ae" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>rotation</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1aef80e71c9f3125d5489aa5ebd8bb332d" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>rubber_mode</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1ac2f2e85509d16fe395f0ab30e92e1b53" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>scale</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a51ba68356f6aeae5c134ad5f156e782e" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>selectable</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a66a6d229b6462f8301f22113c5d7204e" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>side1</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1afe8ff0f1ceca5cd2afd1763a3f05bc64" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>side2</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a8b54ccb4a222d836e9c0260a07da2817" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>translate</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a470432cd7ae2311436fae16bb38c3eba" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>type</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a927e2284f16b9b81a3f407f4291c2bfb" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>update_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1aea8ae528ddbf49ee7a16dd874e514707" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>update_rubber</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a92884fa1f08be757e5c22aa99f7bb5f7" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>vulcanize</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a12781518d7a88260fdfa0a41c420db98" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>x</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Polygon_1a198e3716dcef21df5bbf2f884f9a205a" prot="public" virt="non-virtual"><scope>embroidery::geometry::Polygon</scope><name>y</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

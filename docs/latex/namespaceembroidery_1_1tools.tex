@@ -1,0 +1,74 @@
+\hypertarget{namespaceembroidery_1_1tools}{}\doxysection{embroidery.\+tools Namespace Reference}
+\label{namespaceembroidery_1_1tools}\index{embroidery.tools@{embroidery.tools}}
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classembroidery_1_1tools_1_1Pen}{Pen}}
+\item 
+class \mbox{\hyperlink{classembroidery_1_1tools_1_1Vector}{Vector}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespaceembroidery_1_1tools_ad14804862ff73e6d591f6d1408e5678f}\label{namespaceembroidery_1_1tools_ad14804862ff73e6d591f6d1408e5678f}} 
+def {\bfseries vector\+\_\+from\+\_\+str} (input\+\_\+string)
+\item 
+\mbox{\Hypertarget{namespaceembroidery_1_1tools_ac596e1d1ea86f4e6cbff0761b0219aee}\label{namespaceembroidery_1_1tools_ac596e1d1ea86f4e6cbff0761b0219aee}} 
+def {\bfseries closest\+\_\+vector} (vector\+\_\+list, mouse\+\_\+point)
+\item 
+\mbox{\Hypertarget{namespaceembroidery_1_1tools_a8a6a660622949c6b3be77d0aa96e6ccd}\label{namespaceembroidery_1_1tools_a8a6a660622949c6b3be77d0aa96e6ccd}} 
+def {\bfseries get\+\_\+n\+\_\+floats} (terms, index, n)
+\item 
+def \mbox{\hyperlink{namespaceembroidery_1_1tools_aa062873c491b5ba5317a11396e5ddd86}{path\+\_\+from\+\_\+command}} (command)
+\item 
+\mbox{\Hypertarget{namespaceembroidery_1_1tools_a864939c12c29d6961e4d490821222db8}\label{namespaceembroidery_1_1tools_a864939c12c29d6961e4d490821222db8}} 
+def {\bfseries convert} (src, dst)
+\item 
+\mbox{\Hypertarget{namespaceembroidery_1_1tools_acdb078a5f5d13fac4706c50c5b990e2a}\label{namespaceembroidery_1_1tools_acdb078a5f5d13fac4706c50c5b990e2a}} 
+def {\bfseries translate} (message)
+\item 
+\mbox{\Hypertarget{namespaceembroidery_1_1tools_a0609c67986738eefbc56c59149b67f4a}\label{namespaceembroidery_1_1tools_a0609c67986738eefbc56c59149b67f4a}} 
+def {\bfseries clear\+\_\+selection} ()
+\item 
+\mbox{\Hypertarget{namespaceembroidery_1_1tools_ab98acf6138d9b91b366d3cb61ab49d91}\label{namespaceembroidery_1_1tools_ab98acf6138d9b91b366d3cb61ab49d91}} 
+def {\bfseries debug\+\_\+message} (message, msgtype=\char`\"{}DEBUG\char`\"{})
+\item 
+\mbox{\Hypertarget{namespaceembroidery_1_1tools_aa906cfda39cc2f297dfd6aa7b953335f}\label{namespaceembroidery_1_1tools_aa906cfda39cc2f297dfd6aa7b953335f}} 
+def {\bfseries set\+\_\+prompt\+\_\+prefix} ($\ast$message)
+\item 
+\mbox{\Hypertarget{namespaceembroidery_1_1tools_ab77feb0509ed8562e319a8c3b5081ac6}\label{namespaceembroidery_1_1tools_ab77feb0509ed8562e319a8c3b5081ac6}} 
+def {\bfseries add\+\_\+rubber} ($\ast$message)
+\item 
+\mbox{\Hypertarget{namespaceembroidery_1_1tools_ad04414c5db9f8fc7d59e892e997812b4}\label{namespaceembroidery_1_1tools_ad04414c5db9f8fc7d59e892e997812b4}} 
+def {\bfseries append\+\_\+prompt\+\_\+history} ($\ast$message)
+\item 
+\mbox{\Hypertarget{namespaceembroidery_1_1tools_adf152afd5b23dfcdbf82741e83ab1f0f}\label{namespaceembroidery_1_1tools_adf152afd5b23dfcdbf82741e83ab1f0f}} 
+def {\bfseries load\+\_\+data} (fname)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}    Embroidermodder 2.
+
+    ------------------------------------------------------------
+
+    Copyright 2013-2022 The Embroidermodder Team
+    Embroidermodder 2 is Open Source Software.
+    See LICENSE for licensing terms.
+
+    ------------------------------------------------------------
+
+    The basis of the geometry class: Vector, Pen, Painter and Path.
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespaceembroidery_1_1tools_aa062873c491b5ba5317a11396e5ddd86}\label{namespaceembroidery_1_1tools_aa062873c491b5ba5317a11396e5ddd86}} 
+\index{embroidery.tools@{embroidery.tools}!path\_from\_command@{path\_from\_command}}
+\index{path\_from\_command@{path\_from\_command}!embroidery.tools@{embroidery.tools}}
+\doxysubsubsection{\texorpdfstring{path\_from\_command()}{path\_from\_command()}}
+{\footnotesize\ttfamily def embroidery.\+tools.\+path\+\_\+from\+\_\+command (\begin{DoxyParamCaption}\item[{}]{command }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Creates a path matching the SVG-style path string.
+\end{DoxyVerb}
+ 

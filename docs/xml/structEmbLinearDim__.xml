@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structEmbLinearDim__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbLinearDim_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structEmbLinearDim___1a24ba339ca5af79b535bb97ed726a79f4" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a16fa26764453571074cb85a7574738d4" kindref="member">EmbVector</ref></type>
+        <definition>EmbVector EmbLinearDim_::position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <qualifiedname>EmbLinearDim_::position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="561" column="15" bodyfile="src/embroidery.h" bodystart="561" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>EmbLinearDim_</label>
+        <link refid="structEmbLinearDim__"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>position</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>EmbVector_</label>
+        <link refid="structEmbVector__"/>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery.h" line="560" column="1" bodyfile="src/embroidery.h" bodystart="560" bodyend="562"/>
+    <listofallmembers>
+      <member refid="structEmbLinearDim___1a24ba339ca5af79b535bb97ed726a79f4" prot="public" virt="non-virtual"><scope>EmbLinearDim_</scope><name>position</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

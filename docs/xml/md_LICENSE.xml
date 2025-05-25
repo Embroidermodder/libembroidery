@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="md_LICENSE" kind="page">
+    <compoundname>md_LICENSE</compoundname>
+    <title>zlib/libpng License</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Copyright (c) <computeroutput>2018-2023</computeroutput> <computeroutput>Embroidermodder and Josh Varga</computeroutput></para>
+<para>This software is provided &apos;as-is&apos;, without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.</para>
+<para>Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:</para>
+<para><orderedlist>
+<listitem><para>The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.</para>
+</listitem><listitem><para>Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.</para>
+</listitem><listitem><para>This notice may not be removed or altered from any source distribution. </para>
+</listitem></orderedlist>
+</para>
+    </detaileddescription>
+    <location file="LICENSE.md"/>
+  </compounddef>
+</doxygen>

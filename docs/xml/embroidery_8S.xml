@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="embroidery_8S" kind="file" language="C++">
+    <compoundname>embroidery.S</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">/*!<sp/>\file<sp/>embroidery.S</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>\brief<sp/>Macro<sp/>library<sp/>for<sp/>embroidery<sp/>on<sp/>embedded<sp/>systems.</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>\warning<sp/>Do<sp/>not<sp/>use<sp/>this<sp/>if<sp/>the<sp/>main<sp/>libembroidery<sp/>compiles<sp/>and<sp/>runs<sp/>on</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>your<sp/>system.<sp/>It<sp/>is<sp/>for<sp/>very<sp/>small<sp/>memory<sp/>environments<sp/>(&lt;100kb).</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>Libembroidery<sp/>1.0.0-alpha</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>https://www.libembroidery.org</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>A<sp/>library<sp/>for<sp/>reading,<sp/>writing,<sp/>altering<sp/>and<sp/>otherwise</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>processing<sp/>machine<sp/>embroidery<sp/>files<sp/>and<sp/>designs.</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>Also,<sp/>the<sp/>core<sp/>library<sp/>supporting<sp/>the<sp/>Embroidermodder<sp/>Project&apos;s</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>family<sp/>of<sp/>machine<sp/>embroidery<sp/>interfaces.</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>-----------------------------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>Copyright<sp/>2018-2025<sp/>The<sp/>Embroidermodder<sp/>Team</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>Licensed<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>zlib<sp/>license.</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>-----------------------------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>Note<sp/>that<sp/>all<sp/>new<sp/>defines<sp/>start<sp/>with<sp/>&quot;EMB_&quot;,<sp/>all<sp/>functions<sp/>with<sp/>&quot;emb&quot;<sp/>and<sp/>all</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>typedefs<sp/>with<sp/>&quot;Emb&quot;<sp/>to<sp/>protect<sp/>against<sp/>namespace<sp/>pollution.<sp/>(INCOMPLETE)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*/</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#define<sp/>EMB_EMBEDDED_MODE__<sp/>1</highlight></codeline>
+<codeline><highlight class="normal">#include<sp/>&quot;../src/embroidery.h&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">.macro<sp/><sp/>zfill<sp/>size</highlight></codeline>
+<codeline><highlight class="normal">.zero<sp/><sp/><sp/>\size</highlight></codeline>
+<codeline><highlight class="normal">.endm</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#include<sp/>&quot;compress.S&quot;</highlight></codeline>
+<codeline><highlight class="normal">#include<sp/>&quot;data.S&quot;</highlight></codeline>
+<codeline><highlight class="normal">#include<sp/>&quot;designs.S&quot;</highlight></codeline>
+<codeline><highlight class="normal">#include<sp/>&quot;formats.S&quot;</highlight></codeline>
+<codeline><highlight class="normal">#include<sp/>&quot;geometry.S&quot;</highlight></codeline>
+<codeline><highlight class="normal">#include<sp/>&quot;pattern.S&quot;</highlight></codeline>
+<codeline><highlight class="normal">#include<sp/>&quot;script.S&quot;</highlight></codeline>
+<codeline><highlight class="normal">#include<sp/>&quot;testing.S&quot;</highlight></codeline>
+<codeline></codeline>
+    </programlisting>
+    <location file="asm/embroidery.S"/>
+  </compounddef>
+</doxygen>

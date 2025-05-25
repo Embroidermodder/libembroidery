@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="dir_93c6ba7fb77bae0709fae89c9c13b44a" kind="dir">
+    <compoundname>java</compoundname>
+    <innerdir refid="dir_dbfded582784846724308f9150bf5e72">java/org</innerdir>
+    <innerfile refid="embroidery__java_8h">embroidery_java.h</innerfile>
+    <innerfile refid="jni__wrapper_8c">jni_wrapper.c</innerfile>
+    <innerfile refid="Pattern_8java">Pattern.java</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="java/"/>
+  </compounddef>
+</doxygen>

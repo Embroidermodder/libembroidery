@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structthread__color__" kind="struct" language="C++" prot="public">
+    <compoundname>thread_color_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structthread__color___1a21391665597a78d962c3ed0262dc124a" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a3cfa8eccd6eee11f9ffece9f64f79b59" kindref="member">EmbString</ref></type>
+        <definition>EmbString thread_color_::name</definition>
+        <argsstring></argsstring>
+        <name>name</name>
+        <qualifiedname>thread_color_::name</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="641" column="15" bodyfile="src/embroidery.h" bodystart="641" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structthread__color___1afea21bcc0ca0a92993850e0424fc3262" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int thread_color_::hex_code</definition>
+        <argsstring></argsstring>
+        <name>hex_code</name>
+        <qualifiedname>thread_color_::hex_code</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="642" column="18" bodyfile="src/embroidery.h" bodystart="642" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structthread__color___1a8cff5181ca837af5f60a486491b6fba2" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int thread_color_::manufacturer_code</definition>
+        <argsstring></argsstring>
+        <name>manufacturer_code</name>
+        <qualifiedname>thread_color_::manufacturer_code</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="643" column="9" bodyfile="src/embroidery.h" bodystart="643" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="640" column="1" bodyfile="src/embroidery.h" bodystart="640" bodyend="644"/>
+    <listofallmembers>
+      <member refid="structthread__color___1afea21bcc0ca0a92993850e0424fc3262" prot="public" virt="non-virtual"><scope>thread_color_</scope><name>hex_code</name></member>
+      <member refid="structthread__color___1a8cff5181ca837af5f60a486491b6fba2" prot="public" virt="non-virtual"><scope>thread_color_</scope><name>manufacturer_code</name></member>
+      <member refid="structthread__color___1a21391665597a78d962c3ed0262dc124a" prot="public" virt="non-virtual"><scope>thread_color_</scope><name>name</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

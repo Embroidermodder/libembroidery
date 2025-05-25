@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="md_java_README" kind="page">
+    <compoundname>md_java_README</compoundname>
+    <title>Libembroidery bindings for Java</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>For documentation see the Embroidermodder Reference Manual here: <ulink url="https://www.libembroidery.org">https://www.libembroidery.org</ulink> </para>
+    </detaileddescription>
+    <location file="java/README.md"/>
+  </compounddef>
+</doxygen>

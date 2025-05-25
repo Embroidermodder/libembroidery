@@ -1,0 +1,1003 @@
+\hypertarget{formats_8c}{}\doxysection{src/formats.c File Reference}
+\label{formats_8c}\index{src/formats.c@{src/formats.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$assert.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}embroidery.\+h\char`\"{}}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structhoop__padding}{hoop\+\_\+padding}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{formats_8c_a51f0ecb30f9703fa28f335145766973e}{REPORT\+\_\+\+VALUE}}(X,  TYPE)
+\item 
+\mbox{\Hypertarget{formats_8c_a962d8811cc4f3415db98e7211ffe94db}\label{formats_8c_a962d8811cc4f3415db98e7211ffe94db}} 
+\#define {\bfseries REPORT\+\_\+\+INT}(X)~REPORT\+\_\+\+VALUE(X, d)
+\item 
+\mbox{\Hypertarget{formats_8c_a46a7c1bdee6f06ba8e472e5c0a1ca1a3}\label{formats_8c_a46a7c1bdee6f06ba8e472e5c0a1ca1a3}} 
+\#define {\bfseries REPORT\+\_\+\+FLOAT}(X)~REPORT\+\_\+\+VALUE(X, f)
+\item 
+\mbox{\Hypertarget{formats_8c_ab23e7a9edf4b25d18684182680a04e40}\label{formats_8c_ab23e7a9edf4b25d18684182680a04e40}} 
+\#define {\bfseries REPORT\+\_\+\+STR}(X)~REPORT\+\_\+\+VALUE(X, s)
+\item 
+\mbox{\Hypertarget{formats_8c_a2d63703042e135a6a9ef24b580bbb812}\label{formats_8c_a2d63703042e135a6a9ef24b580bbb812}} 
+\#define {\bfseries REPORT\+\_\+\+PTR}(X)~REPORT\+\_\+\+VALUE(X, p)
+\item 
+\#define \mbox{\hyperlink{formats_8c_a6e656acaa67d38da1fc636369a91f828}{LOAD\+\_\+\+U8}}(FILE,  X)
+\item 
+\mbox{\Hypertarget{formats_8c_a55d003581e29aa9502eb77ca72e2d413}\label{formats_8c_a55d003581e29aa9502eb77ca72e2d413}} 
+\#define {\bfseries LOAD\+\_\+\+I8}(FILE,  X)~LOAD\+\_\+\+U8(FILE, X)
+\item 
+\#define \mbox{\hyperlink{formats_8c_ab86ab7fb9f2d9853f9f25a498ba05e4c}{LOAD\+\_\+\+U16}}(FILE,  X)
+\item 
+\#define \mbox{\hyperlink{formats_8c_aaaed39211bf56c17cdd5870f156786c7}{LOAD\+\_\+\+I16}}(FILE,  X)
+\item 
+\#define \mbox{\hyperlink{formats_8c_a67b7c71d9a3bfd63871282840a97542f}{LOAD\+\_\+\+U32}}(FILE,  X)
+\item 
+\#define \mbox{\hyperlink{formats_8c_ab881fde76cc39ee5c2e0c0c635dc91d8}{LOAD\+\_\+\+I32}}(FILE,  X)
+\item 
+\#define \mbox{\hyperlink{formats_8c_a80e9d522baaf614ed823fa91ae2d10a5}{LOAD\+\_\+\+U16\+\_\+\+BE}}(FILE,  X)
+\item 
+\#define \mbox{\hyperlink{formats_8c_aa7625b67343aa6c142c60c1ac047f318}{LOAD\+\_\+\+I16\+\_\+\+BE}}(FILE,  X)
+\item 
+\#define \mbox{\hyperlink{formats_8c_ae34d541946c179a2070562766be2d35e}{LOAD\+\_\+\+U32\+\_\+\+BE}}(FILE,  X)
+\item 
+\#define \mbox{\hyperlink{formats_8c_a408e834900097c319990bbbf4e79c649}{LOAD\+\_\+\+I32\+\_\+\+BE}}(FILE,  X)
+\item 
+\mbox{\Hypertarget{formats_8c_a4fcf3ace27e69d89af9b5e3e786c7fbe}\label{formats_8c_a4fcf3ace27e69d89af9b5e3e786c7fbe}} 
+\#define {\bfseries Csd\+Sub\+Mask\+Size}~479
+\item 
+\mbox{\Hypertarget{formats_8c_af849ef7c88e1b71d667c96137faeee75}\label{formats_8c_af849ef7c88e1b71d667c96137faeee75}} 
+\#define {\bfseries Csd\+Xor\+Mask\+Size}~501
+\item 
+\mbox{\Hypertarget{formats_8c_a3a8b58c49032f7403303dd1bdabd8ead}\label{formats_8c_a3a8b58c49032f7403303dd1bdabd8ead}} 
+\#define {\bfseries cci}(c1,  c2)~(c1$\ast$256+c2)
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{formats_8c_a10eda0b35e892bed2280bd39c0bec018}\label{formats_8c_a10eda0b35e892bed2280bd39c0bec018}} 
+char {\bfseries read100} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a3244c1b6dce5f924143103b2cdc66827}\label{formats_8c_a3244c1b6dce5f924143103b2cdc66827}} 
+char {\bfseries write100} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a8485d821a18125c6b93af16d89be9cf8}\label{formats_8c_a8485d821a18125c6b93af16d89be9cf8}} 
+char {\bfseries read10o} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ac8a8de1c6518424fb6c7dd8366b2d161}\label{formats_8c_ac8a8de1c6518424fb6c7dd8366b2d161}} 
+char {\bfseries write10o} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a3e9fe16fae3abd456faf3d7c334638ce}\label{formats_8c_a3e9fe16fae3abd456faf3d7c334638ce}} 
+char {\bfseries read\+Art} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ab1f6a20dd5ef0db6a0e6483deba90711}\label{formats_8c_ab1f6a20dd5ef0db6a0e6483deba90711}} 
+char {\bfseries write\+Art} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a45253515e29719ca2acddb78e0f2e570}\label{formats_8c_a45253515e29719ca2acddb78e0f2e570}} 
+char {\bfseries read\+Bmc} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a49706bb997c3432b77ab315e4b73e840}\label{formats_8c_a49706bb997c3432b77ab315e4b73e840}} 
+char {\bfseries write\+Bmc} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_aaba467c4a66236b57f0ce2d42e94c107}\label{formats_8c_aaba467c4a66236b57f0ce2d42e94c107}} 
+char {\bfseries read\+Bro} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a23abf7de541eea9e0c7578e72a9f849e}\label{formats_8c_a23abf7de541eea9e0c7578e72a9f849e}} 
+char {\bfseries write\+Bro} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a2785e85f1161ac6195be0d30dab40ef6}\label{formats_8c_a2785e85f1161ac6195be0d30dab40ef6}} 
+char {\bfseries read\+Cnd} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a616e25844ff783d9aa2f6f93ba991cbe}\label{formats_8c_a616e25844ff783d9aa2f6f93ba991cbe}} 
+char {\bfseries write\+Cnd} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ae816f75c7dff738a16368f1d8a6c15f3}\label{formats_8c_ae816f75c7dff738a16368f1d8a6c15f3}} 
+char {\bfseries read\+Col} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ada015df275bd9197080a7c5eb2a776f4}\label{formats_8c_ada015df275bd9197080a7c5eb2a776f4}} 
+char {\bfseries write\+Col} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a13d793c9fa7f0366e371e2ba5bc795ce}\label{formats_8c_a13d793c9fa7f0366e371e2ba5bc795ce}} 
+char {\bfseries read\+Csd} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ac48ab7a06130111eabb754be9de5089b}\label{formats_8c_ac48ab7a06130111eabb754be9de5089b}} 
+char {\bfseries write\+Csd} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_af8562a6749be73de2791c54b1a7186bf}\label{formats_8c_af8562a6749be73de2791c54b1a7186bf}} 
+char {\bfseries read\+Csv} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_af19e960a6be43cc3e6b92f76a6372d36}\label{formats_8c_af19e960a6be43cc3e6b92f76a6372d36}} 
+char {\bfseries write\+Csv} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ad4f54b49cf4b63514206315befbad457}\label{formats_8c_ad4f54b49cf4b63514206315befbad457}} 
+char {\bfseries read\+Dat} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a2727829a6284f79df78fb06473af2a02}\label{formats_8c_a2727829a6284f79df78fb06473af2a02}} 
+char {\bfseries write\+Dat} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a7d8c7da6b95cd620d30763044d8424fb}\label{formats_8c_a7d8c7da6b95cd620d30763044d8424fb}} 
+char {\bfseries read\+Dem} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a1cd603a6e785da866ae8a8285bb20814}\label{formats_8c_a1cd603a6e785da866ae8a8285bb20814}} 
+char {\bfseries write\+Dem} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a4a33cd7c3d9250a7a32e6b6e5b835e36}\label{formats_8c_a4a33cd7c3d9250a7a32e6b6e5b835e36}} 
+char {\bfseries read\+Dsb} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ada695ccab5b0243b9b3944ce0b1e48db}\label{formats_8c_ada695ccab5b0243b9b3944ce0b1e48db}} 
+char {\bfseries write\+Dsb} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ab8db2805e9b776e2e9e2ffbcd05f4f90}\label{formats_8c_ab8db2805e9b776e2e9e2ffbcd05f4f90}} 
+char {\bfseries read\+Dst} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a5b971603eb8cc707cfd0167659fd8aab}\label{formats_8c_a5b971603eb8cc707cfd0167659fd8aab}} 
+char {\bfseries write\+Dst} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a8ac6da17c20cf5fdadbebac7cae64d3d}\label{formats_8c_a8ac6da17c20cf5fdadbebac7cae64d3d}} 
+char {\bfseries read\+Dsz} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ac92a7527dcb58b2a4679f85262b5f599}\label{formats_8c_ac92a7527dcb58b2a4679f85262b5f599}} 
+char {\bfseries write\+Dsz} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a78401eda12707709f8edd25f9688d765}\label{formats_8c_a78401eda12707709f8edd25f9688d765}} 
+char {\bfseries read\+Dxf} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a64522730f770c535927a909d2096d2d0}\label{formats_8c_a64522730f770c535927a909d2096d2d0}} 
+char {\bfseries write\+Dxf} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ad1b5e754d0d87bc567a73ba822369d49}\label{formats_8c_ad1b5e754d0d87bc567a73ba822369d49}} 
+char {\bfseries read\+Edr} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a5dbcd2fe9bc63bf80be42eede2226f28}\label{formats_8c_a5dbcd2fe9bc63bf80be42eede2226f28}} 
+char {\bfseries write\+Edr} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_af1b32ee820833549705cb80979fa788a}\label{formats_8c_af1b32ee820833549705cb80979fa788a}} 
+char {\bfseries read\+Emd} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a945a7c016d4fe4895792750b68aea4b6}\label{formats_8c_a945a7c016d4fe4895792750b68aea4b6}} 
+char {\bfseries write\+Emd} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a345b969babb388995a13966bacc17752}\label{formats_8c_a345b969babb388995a13966bacc17752}} 
+char {\bfseries read\+Exp} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_adf56e8ed06c62b24530dadd41c416a80}\label{formats_8c_adf56e8ed06c62b24530dadd41c416a80}} 
+char {\bfseries write\+Exp} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a479b5e33731d28c97c7f22339fb9d840}\label{formats_8c_a479b5e33731d28c97c7f22339fb9d840}} 
+char {\bfseries read\+Exy} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a61134b8c01e3f8e5f74d64cc9a657178}\label{formats_8c_a61134b8c01e3f8e5f74d64cc9a657178}} 
+char {\bfseries write\+Exy} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a0a55d579d546de337a8426abb53c616c}\label{formats_8c_a0a55d579d546de337a8426abb53c616c}} 
+char {\bfseries read\+Eys} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a2a1a000582cdf28e23038e66342358b0}\label{formats_8c_a2a1a000582cdf28e23038e66342358b0}} 
+char {\bfseries write\+Eys} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a229e11039db6cd9c2a795bc7fdb53502}\label{formats_8c_a229e11039db6cd9c2a795bc7fdb53502}} 
+char {\bfseries read\+Fxy} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a870dd637d9020555ea64f70e9208cada}\label{formats_8c_a870dd637d9020555ea64f70e9208cada}} 
+char {\bfseries write\+Fxy} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ae203b3932fa10a5da0fb787f435a33c6}\label{formats_8c_ae203b3932fa10a5da0fb787f435a33c6}} 
+char {\bfseries read\+Gc} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a450ada808df38064c920c47b887ce918}\label{formats_8c_a450ada808df38064c920c47b887ce918}} 
+char {\bfseries write\+Gc} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a0e5c2ad9e78a431b98617d6ada1141e3}\label{formats_8c_a0e5c2ad9e78a431b98617d6ada1141e3}} 
+char {\bfseries read\+Gnc} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ae818656de82af2d1a2e44ae24927b9f2}\label{formats_8c_ae818656de82af2d1a2e44ae24927b9f2}} 
+char {\bfseries write\+Gnc} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_aa9033ad4081f8675f03d07af284918a1}\label{formats_8c_aa9033ad4081f8675f03d07af284918a1}} 
+char {\bfseries read\+Gt} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a4f149ee0e18ac8c439db6401bf76171c}\label{formats_8c_a4f149ee0e18ac8c439db6401bf76171c}} 
+char {\bfseries write\+Gt} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a32dc0f3a80d04bf5da7e43ab8a0a2e9a}\label{formats_8c_a32dc0f3a80d04bf5da7e43ab8a0a2e9a}} 
+char {\bfseries read\+Hus} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_aaf00410a4837aac34d67149c659a33f8}\label{formats_8c_aaf00410a4837aac34d67149c659a33f8}} 
+char {\bfseries write\+Hus} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a5d18eaa45fe7be673bdc59b26c00b10f}\label{formats_8c_a5d18eaa45fe7be673bdc59b26c00b10f}} 
+char {\bfseries read\+Inb} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a08e7ef1dacff6ecf60085901a4a552eb}\label{formats_8c_a08e7ef1dacff6ecf60085901a4a552eb}} 
+char {\bfseries write\+Inb} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a4f8e1fe00b6af083e611f0b77ec309e5}\label{formats_8c_a4f8e1fe00b6af083e611f0b77ec309e5}} 
+char {\bfseries read\+Inf} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a0761079bd9431abb3af157aef06c3e7a}\label{formats_8c_a0761079bd9431abb3af157aef06c3e7a}} 
+char {\bfseries write\+Inf} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_aacabd0b28cfa6d3763a48eefd781f26b}\label{formats_8c_aacabd0b28cfa6d3763a48eefd781f26b}} 
+char {\bfseries read\+Jef} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a274f74d19265ef1b1fa04381145751db}\label{formats_8c_a274f74d19265ef1b1fa04381145751db}} 
+char {\bfseries write\+Jef} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a9d5b63aa6f56f38386d08a2c173b6bac}\label{formats_8c_a9d5b63aa6f56f38386d08a2c173b6bac}} 
+char {\bfseries read\+Ksm} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_aa8a6f858c45e0292d4e4dc3ac72a7f09}\label{formats_8c_aa8a6f858c45e0292d4e4dc3ac72a7f09}} 
+char {\bfseries write\+Ksm} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a600c8bbe02efd4b4636e3a3bf38cb330}\label{formats_8c_a600c8bbe02efd4b4636e3a3bf38cb330}} 
+char {\bfseries read\+Max} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_af3fabf424efeaf023fe5b222132c62d7}\label{formats_8c_af3fabf424efeaf023fe5b222132c62d7}} 
+char {\bfseries write\+Max} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a23bdb0e6cdb91630707963de10dc40d4}\label{formats_8c_a23bdb0e6cdb91630707963de10dc40d4}} 
+char {\bfseries read\+Mit} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ac7aeffea45a8f106fc9c9ee6729fbc0b}\label{formats_8c_ac7aeffea45a8f106fc9c9ee6729fbc0b}} 
+char {\bfseries write\+Mit} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ad8d1833c64f1fe7fc6a54cb062eeacfc}\label{formats_8c_ad8d1833c64f1fe7fc6a54cb062eeacfc}} 
+char {\bfseries read\+New} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a0d3604931b32756a51c035a04f317ea2}\label{formats_8c_a0d3604931b32756a51c035a04f317ea2}} 
+char {\bfseries write\+New} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ac2fee81b7f6864d67c43ff860b505704}\label{formats_8c_ac2fee81b7f6864d67c43ff860b505704}} 
+char {\bfseries read\+Ofm} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a25920ff259a61a23d0067b6007020a08}\label{formats_8c_a25920ff259a61a23d0067b6007020a08}} 
+char {\bfseries write\+Ofm} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a913a373fee024c4543632f40519b110e}\label{formats_8c_a913a373fee024c4543632f40519b110e}} 
+char {\bfseries read\+Pcd} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, const char $\ast$file\+Name, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a4318484cb126604dee4f4b1c3b4701a6}\label{formats_8c_a4318484cb126604dee4f4b1c3b4701a6}} 
+char {\bfseries write\+Pcd} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_aa281eddba209c498c68bcc590d66590c}\label{formats_8c_aa281eddba209c498c68bcc590d66590c}} 
+char {\bfseries read\+Pcm} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a75bab215266fe4dc889b1c51e8dfecac}\label{formats_8c_a75bab215266fe4dc889b1c51e8dfecac}} 
+char {\bfseries write\+Pcm} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_aad7cd54fc10be3e319f9128375c0ea3a}\label{formats_8c_aad7cd54fc10be3e319f9128375c0ea3a}} 
+char {\bfseries read\+Pcq} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, const char $\ast$file\+Name, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a4d4bb391eb6ded29c9b0d4955c4fa273}\label{formats_8c_a4d4bb391eb6ded29c9b0d4955c4fa273}} 
+char {\bfseries write\+Pcq} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a706d3a4d414c7e853deaeeec376627a2}\label{formats_8c_a706d3a4d414c7e853deaeeec376627a2}} 
+char {\bfseries read\+Pcs} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, const char $\ast$file\+Name, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ad85fd2d068a62b29b4351632110f5f33}\label{formats_8c_ad85fd2d068a62b29b4351632110f5f33}} 
+char {\bfseries write\+Pcs} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a8c5068feff7e317eff62044069b3579f}\label{formats_8c_a8c5068feff7e317eff62044069b3579f}} 
+char {\bfseries read\+Pec} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, const char $\ast$file\+Name, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a71c43f0a5b5fe6cc22feef360bde6415}\label{formats_8c_a71c43f0a5b5fe6cc22feef360bde6415}} 
+char {\bfseries write\+Pec} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, const char $\ast$file\+Name, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a3979d981419fab84724db2d7b65778d8}\label{formats_8c_a3979d981419fab84724db2d7b65778d8}} 
+char {\bfseries read\+Pel} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a00aceae57721ebd629ec05aeff6b2994}\label{formats_8c_a00aceae57721ebd629ec05aeff6b2994}} 
+char {\bfseries write\+Pel} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a9734476fee6ccdf9b104b333ba0529f5}\label{formats_8c_a9734476fee6ccdf9b104b333ba0529f5}} 
+char {\bfseries read\+Pem} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a618f361843cee144a512bf1acd7a69b3}\label{formats_8c_a618f361843cee144a512bf1acd7a69b3}} 
+char {\bfseries write\+Pem} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a21aba667fce5f4492d9ed1f418141a4f}\label{formats_8c_a21aba667fce5f4492d9ed1f418141a4f}} 
+char {\bfseries read\+Pes} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, const char $\ast$file\+Name, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a8a192471952e0860eb0d9eedefffe6e5}\label{formats_8c_a8a192471952e0860eb0d9eedefffe6e5}} 
+char {\bfseries write\+Pes} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, const char $\ast$file\+Name, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a1269ea24750ff4584b0cc750d47ccf5d}\label{formats_8c_a1269ea24750ff4584b0cc750d47ccf5d}} 
+char {\bfseries read\+Phb} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a5d148afd8188fa51fbcc7871d9b06a2b}\label{formats_8c_a5d148afd8188fa51fbcc7871d9b06a2b}} 
+char {\bfseries write\+Phb} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a4c98ff79f5a2aa3b1d388c687268c6f3}\label{formats_8c_a4c98ff79f5a2aa3b1d388c687268c6f3}} 
+char {\bfseries read\+Phc} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ae32ab3f6eb6dd3e90be9c7db0cfb5ec7}\label{formats_8c_ae32ab3f6eb6dd3e90be9c7db0cfb5ec7}} 
+char {\bfseries write\+Phc} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_af155ba77e59140dd758f2bec8d997221}\label{formats_8c_af155ba77e59140dd758f2bec8d997221}} 
+char {\bfseries read\+Plt} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ad7e8781a63629a4dd5eae996ea479bc4}\label{formats_8c_ad7e8781a63629a4dd5eae996ea479bc4}} 
+char {\bfseries write\+Plt} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a1ac7d582acd6765ee34baa8abb98e50a}\label{formats_8c_a1ac7d582acd6765ee34baa8abb98e50a}} 
+char {\bfseries read\+Rgb} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ab05cee5947c22c0256a9254ab6eb0b39}\label{formats_8c_ab05cee5947c22c0256a9254ab6eb0b39}} 
+char {\bfseries write\+Rgb} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ab9a9d10e6d39212013940c702e67ef32}\label{formats_8c_ab9a9d10e6d39212013940c702e67ef32}} 
+char {\bfseries read\+Sew} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ac5278f6e23361da6f752e89e99fb877a}\label{formats_8c_ac5278f6e23361da6f752e89e99fb877a}} 
+char {\bfseries write\+Sew} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_af6cc7070cab918e1587e08ec35974236}\label{formats_8c_af6cc7070cab918e1587e08ec35974236}} 
+char {\bfseries read\+Shv} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a2b7ac11373a51859a56c8b4bbfbd232c}\label{formats_8c_a2b7ac11373a51859a56c8b4bbfbd232c}} 
+char {\bfseries write\+Shv} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a51f31b5c0906f4014e375af7162c2048}\label{formats_8c_a51f31b5c0906f4014e375af7162c2048}} 
+char {\bfseries read\+Sst} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a624c472076dd5f278b8a23984b49a3d4}\label{formats_8c_a624c472076dd5f278b8a23984b49a3d4}} 
+char {\bfseries write\+Sst} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a306c767827e6efa1e4f79272532d010d}\label{formats_8c_a306c767827e6efa1e4f79272532d010d}} 
+char {\bfseries read\+Stx} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_acb22eba5328a408b3103bc457c828720}\label{formats_8c_acb22eba5328a408b3103bc457c828720}} 
+char {\bfseries write\+Stx} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a77e72b493a82e1f636b8b83bea0cb206}\label{formats_8c_a77e72b493a82e1f636b8b83bea0cb206}} 
+char {\bfseries read\+Svg} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+char \mbox{\hyperlink{formats_8c_a8ca7313902787e9ed94a23630033bee4}{write\+Svg}} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ad139d90af70e23471ad0dc83520cae36}\label{formats_8c_ad139d90af70e23471ad0dc83520cae36}} 
+char {\bfseries read\+T01} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_aa24e7962d3833a4d7b0997c983efa586}\label{formats_8c_aa24e7962d3833a4d7b0997c983efa586}} 
+char {\bfseries write\+T01} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_aa29ea5ab472bd0ac3320c55f46ee5202}\label{formats_8c_aa29ea5ab472bd0ac3320c55f46ee5202}} 
+char {\bfseries read\+T09} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a9f690526b9e9cc3e9451cb2b3337b8b2}\label{formats_8c_a9f690526b9e9cc3e9451cb2b3337b8b2}} 
+char {\bfseries write\+T09} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ad9e733d8ec10ca7a0a54ac3a07c59176}\label{formats_8c_ad9e733d8ec10ca7a0a54ac3a07c59176}} 
+char {\bfseries read\+Tap} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a12eeb8b8f072103c098b444d9b7e9930}\label{formats_8c_a12eeb8b8f072103c098b444d9b7e9930}} 
+char {\bfseries write\+Tap} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_adf6ddd7946e096591c03247d5cb83144}\label{formats_8c_adf6ddd7946e096591c03247d5cb83144}} 
+char {\bfseries read\+Thr} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a5ced5ab813f519871f02086692bb95e7}\label{formats_8c_a5ced5ab813f519871f02086692bb95e7}} 
+char {\bfseries write\+Thr} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_adc792ed47afef51048abc51495c11e82}\label{formats_8c_adc792ed47afef51048abc51495c11e82}} 
+char {\bfseries read\+Txt} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a374b7288a4fcc2caaf94095a846984cc}\label{formats_8c_a374b7288a4fcc2caaf94095a846984cc}} 
+char {\bfseries write\+Txt} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a8214503aa802682543a8e5a1cf869c6d}\label{formats_8c_a8214503aa802682543a8e5a1cf869c6d}} 
+char {\bfseries read\+U00} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ab7b8a775b4ed1e4b3d946369f288f2ce}\label{formats_8c_ab7b8a775b4ed1e4b3d946369f288f2ce}} 
+char {\bfseries write\+U00} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ac747f7b2e3c38cdfa219cf2e1179633c}\label{formats_8c_ac747f7b2e3c38cdfa219cf2e1179633c}} 
+char {\bfseries read\+U01} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_addd164e87c7916509eeb1223366a7d94}\label{formats_8c_addd164e87c7916509eeb1223366a7d94}} 
+char {\bfseries write\+U01} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a9dbe86a0803845f5995106d20deabc38}\label{formats_8c_a9dbe86a0803845f5995106d20deabc38}} 
+char {\bfseries read\+Vip} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a37f9056462dcb2c323f49e49fe78fa63}\label{formats_8c_a37f9056462dcb2c323f49e49fe78fa63}} 
+char {\bfseries write\+Vip} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a3154fc5825c5901e6251116dcc1378a8}\label{formats_8c_a3154fc5825c5901e6251116dcc1378a8}} 
+char {\bfseries read\+Vp3} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a7735b8a342f55e82de409eb30517d33c}\label{formats_8c_a7735b8a342f55e82de409eb30517d33c}} 
+char {\bfseries write\+Vp3} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a7a9d723388ea7ecc28a214a964c5a4ce}\label{formats_8c_a7a9d723388ea7ecc28a214a964c5a4ce}} 
+char {\bfseries read\+Xxx} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_aea15300b875a3f8ed110c66f52fae6a4}\label{formats_8c_aea15300b875a3f8ed110c66f52fae6a4}} 
+char {\bfseries write\+Xxx} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ae8dd99023565bcacbd72d69d7d4a9ad9}\label{formats_8c_ae8dd99023565bcacbd72d69d7d4a9ad9}} 
+char {\bfseries read\+Zsk} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_acd1bd4ba638716adbf4c45270bcfaac2}\label{formats_8c_acd1bd4ba638716adbf4c45270bcfaac2}} 
+char {\bfseries write\+Zsk} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a8ee89688baf660103e494f562e657f29}\label{formats_8c_a8ee89688baf660103e494f562e657f29}} 
+int {\bfseries read\+\_\+descriptions} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_ad8002a7b6d42d6d116f31943ea1f8d37}\label{formats_8c_ad8002a7b6d42d6d116f31943ea1f8d37}} 
+void {\bfseries read\+Hoop\+Name} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_ae47870c204671ff825f47b788c70cf3e}\label{formats_8c_ae47870c204671ff825f47b788c70cf3e}} 
+void {\bfseries read\+Image\+String} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_ab8d3fdac005d8603f800739d21fc20c6}\label{formats_8c_ab8d3fdac005d8603f800739d21fc20c6}} 
+void {\bfseries read\+Programmable\+Fills} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_a84e2f3d90de6e0d818201914aa1eea0d}\label{formats_8c_a84e2f3d90de6e0d818201914aa1eea0d}} 
+void {\bfseries read\+Motif\+Patterns} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_ae3a86c067644ce5f2e59c80ebae6f62e}\label{formats_8c_ae3a86c067644ce5f2e59c80ebae6f62e}} 
+void {\bfseries read\+Feather\+Patterns} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_a364fddf45e198a6aa8333e5867af3cc8}\label{formats_8c_a364fddf45e198a6aa8333e5867af3cc8}} 
+void {\bfseries read\+Threads} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_a80e9341e7b138005b46a14d192742d3e}\label{formats_8c_a80e9341e7b138005b46a14d192742d3e}} 
+void {\bfseries read\+PESHeader\+V5} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_aeb553d48f0a3b12d87f298d084b56253}\label{formats_8c_aeb553d48f0a3b12d87f298d084b56253}} 
+void {\bfseries read\+PESHeader\+V6} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_a18d87163e82fb0fdca61ea4ebe3ab21a}\label{formats_8c_a18d87163e82fb0fdca61ea4ebe3ab21a}} 
+void {\bfseries read\+PESHeader\+V7} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_a02acda8d5a95508fa005c0d775ca42a0}\label{formats_8c_a02acda8d5a95508fa005c0d775ca42a0}} 
+void {\bfseries read\+PESHeader\+V8} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_ac302af7f4bb37d91d46e586d66cdde61}\label{formats_8c_ac302af7f4bb37d91d46e586d66cdde61}} 
+void {\bfseries read\+PESHeader\+V9} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_aa6678c8d94b8da627da1df79854c738c}\label{formats_8c_aa6678c8d94b8da627da1df79854c738c}} 
+void {\bfseries read\+PESHeader\+V10} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_a41ea1bbfffd8c2b7a952078d1d8c2eb1}\label{formats_8c_a41ea1bbfffd8c2b7a952078d1d8c2eb1}} 
+unsigned char {\bfseries toyota\+\_\+position\+\_\+encode} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} a)
+\item 
+\mbox{\Hypertarget{formats_8c_a6680333d380af21348fc6b6992b55240}\label{formats_8c_a6680333d380af21348fc6b6992b55240}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries toyota\+\_\+position\+\_\+decode} (unsigned char a)
+\item 
+\mbox{\Hypertarget{formats_8c_aa0c2eb88ec6f02792e37569a94cee49f}\label{formats_8c_aa0c2eb88ec6f02792e37569a94cee49f}} 
+unsigned char {\bfseries char\+\_\+to\+\_\+lower} (unsigned char a)
+\item 
+\mbox{\Hypertarget{formats_8c_a2991b46620d0d2ee8d1c4bdbb5c88d3b}\label{formats_8c_a2991b46620d0d2ee8d1c4bdbb5c88d3b}} 
+int {\bfseries emb\+\_\+fname\+\_\+extension} (const char $\ast$file\+Name, char ending\mbox{[}5\mbox{]})
+\item 
+\mbox{\Hypertarget{formats_8c_a4552966a13bd17d268b2424a8dfc14ad}\label{formats_8c_a4552966a13bd17d268b2424a8dfc14ad}} 
+int {\bfseries emb\+\_\+identify\+\_\+format} (const char $\ast$file\+Name)
+\item 
+\mbox{\Hypertarget{formats_8c_a2d9582d6b011c339c0352990a289cda3}\label{formats_8c_a2d9582d6b011c339c0352990a289cda3}} 
+char {\bfseries read\+\_\+n\+\_\+bytes} (FILE $\ast$file, unsigned char $\ast$data, unsigned int length)
+\item 
+\mbox{\Hypertarget{formats_8c_aaa97ca960e39503bd6d346d7592dacd8}\label{formats_8c_aaa97ca960e39503bd6d346d7592dacd8}} 
+char {\bfseries emb\+\_\+pattern\+\_\+read} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, const char $\ast$file\+Name, int format)
+\item 
+\mbox{\Hypertarget{formats_8c_a5c7fc1674757e2c3658077398529e7a5}\label{formats_8c_a5c7fc1674757e2c3658077398529e7a5}} 
+char {\bfseries emb\+\_\+pattern\+\_\+write} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, const char $\ast$file\+Name, int format)
+\item 
+\mbox{\Hypertarget{formats_8c_a31e3223af895446efed2d0c8ffc90a6f}\label{formats_8c_a31e3223af895446efed2d0c8ffc90a6f}} 
+char {\bfseries emb\+\_\+pattern\+\_\+read\+Auto} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, const char $\ast$file\+Name)
+\item 
+\mbox{\Hypertarget{formats_8c_ace086da767c0839c3387e008a5ff03e7}\label{formats_8c_ace086da767c0839c3387e008a5ff03e7}} 
+char {\bfseries emb\+\_\+pattern\+\_\+write\+Auto} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, const char $\ast$file\+Name)
+\item 
+\mbox{\Hypertarget{formats_8c_ac51746f5cf90188f494419ffe291ce59}\label{formats_8c_ac51746f5cf90188f494419ffe291ce59}} 
+void {\bfseries Build\+Decryption\+Table} (int seed)
+\item 
+\mbox{\Hypertarget{formats_8c_a50f9ec4268b8a349c4519d0a91ae9c21}\label{formats_8c_a50f9ec4268b8a349c4519d0a91ae9c21}} 
+unsigned char {\bfseries Decode\+Csd\+Byte} (long file\+Offset, unsigned char val, int type)
+\item 
+\mbox{\Hypertarget{formats_8c_a016bdfecd3196adcb2a361a7588f0a58}\label{formats_8c_a016bdfecd3196adcb2a361a7588f0a58}} 
+char $\ast$ {\bfseries csv\+Stitch\+Flag\+To\+Str} (int flags)
+\item 
+\mbox{\Hypertarget{formats_8c_a1d6ba9a7e016e07f04527e9666eecb45}\label{formats_8c_a1d6ba9a7e016e07f04527e9666eecb45}} 
+int {\bfseries csv\+Str\+To\+Stitch\+Flag} (const char $\ast$str)
+\item 
+\mbox{\Hypertarget{formats_8c_aa57ada775f74c81ecd2dd436aa442829}\label{formats_8c_aa57ada775f74c81ecd2dd436aa442829}} 
+int {\bfseries decode\+\_\+record\+\_\+flags} (unsigned char b2)
+\item 
+\mbox{\Hypertarget{formats_8c_a689bda45b58b2922d890a1ddf669463b}\label{formats_8c_a689bda45b58b2922d890a1ddf669463b}} 
+void {\bfseries encode\+\_\+record} (FILE $\ast$file, int x, int y, int flags)
+\item 
+\mbox{\Hypertarget{formats_8c_aaa10e861e196d8f74ea00f21a4277e83}\label{formats_8c_aaa10e861e196d8f74ea00f21a4277e83}} 
+void {\bfseries set\+\_\+dst\+\_\+variable} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, char $\ast$var, char $\ast$val)
+\item 
+\mbox{\Hypertarget{formats_8c_a9586676ac877b3e1b9392e260b286a32}\label{formats_8c_a9586676ac877b3e1b9392e260b286a32}} 
+void {\bfseries read\+Line} (FILE $\ast$file, char $\ast$str)
+\item 
+\mbox{\Hypertarget{formats_8c_a5034bb9d12589acd7f7a62af25b61fbf}\label{formats_8c_a5034bb9d12589acd7f7a62af25b61fbf}} 
+char {\bfseries emd\+Decode} (unsigned char input\+Byte)
+\item 
+\mbox{\Hypertarget{formats_8c_ae9a7e4f91c359aaa0d08ac7390daf7c8}\label{formats_8c_ae9a7e4f91c359aaa0d08ac7390daf7c8}} 
+char {\bfseries exp\+Decode} (unsigned char a1)
+\item 
+\mbox{\Hypertarget{formats_8c_a577193a372c5f94c61ee27d272fc4a0d}\label{formats_8c_a577193a372c5f94c61ee27d272fc4a0d}} 
+int {\bfseries decode\+\_\+exy\+\_\+flags} (unsigned char b2)
+\item 
+\mbox{\Hypertarget{formats_8c_a7ec967d53a40e6d8e160b289edcf1e60}\label{formats_8c_a7ec967d53a40e6d8e160b289edcf1e60}} 
+int {\bfseries hus\+Decode\+Stitch\+Type} (unsigned char b)
+\item 
+\mbox{\Hypertarget{formats_8c_acb698d8b966efc749dc448453f7ac074}\label{formats_8c_acb698d8b966efc749dc448453f7ac074}} 
+unsigned char $\ast$ {\bfseries hus\+Decompress\+Data} (unsigned char $\ast$input, int compressed\+Input\+Length, int decompressed\+Content\+Length)
+\item 
+\mbox{\Hypertarget{formats_8c_a57846ef4f4df5008f4f89e42cc4356e8}\label{formats_8c_a57846ef4f4df5008f4f89e42cc4356e8}} 
+unsigned char $\ast$ {\bfseries hus\+Compress\+Data} (unsigned char $\ast$input, int decompressed\+Input\+Size, int $\ast$compressed\+Size)
+\item 
+\mbox{\Hypertarget{formats_8c_ae44da0506699f96fd891292f7e275a73}\label{formats_8c_ae44da0506699f96fd891292f7e275a73}} 
+int {\bfseries hus\+Decode\+Byte} (unsigned char b)
+\item 
+\mbox{\Hypertarget{formats_8c_a92976733ccfe804f5d9705e184cf7cc2}\label{formats_8c_a92976733ccfe804f5d9705e184cf7cc2}} 
+unsigned char {\bfseries hus\+Encode\+Byte} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} f)
+\item 
+\mbox{\Hypertarget{formats_8c_afb31a4deeebbe075c4cbeecbf2190bfe}\label{formats_8c_afb31a4deeebbe075c4cbeecbf2190bfe}} 
+unsigned char {\bfseries hus\+Encode\+Stitch\+Type} (int st)
+\item 
+\mbox{\Hypertarget{formats_8c_ae5f72fdf0b3aec855a9b6324cc9aaab0}\label{formats_8c_ae5f72fdf0b3aec855a9b6324cc9aaab0}} 
+int {\bfseries jef\+Get\+Hoop\+Size} (int width, int height)
+\item 
+\mbox{\Hypertarget{formats_8c_a5a786535b6161d47786b154225277772}\label{formats_8c_a5a786535b6161d47786b154225277772}} 
+char {\bfseries jef\+Decode} (unsigned char input\+Byte)
+\item 
+\mbox{\Hypertarget{formats_8c_a3eaf5dddc01c4443a6dbd9e8fba29955}\label{formats_8c_a3eaf5dddc01c4443a6dbd9e8fba29955}} 
+void {\bfseries jef\+Set\+Hoop\+From\+Id} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, int hoop\+Code)
+\item 
+\mbox{\Hypertarget{formats_8c_a145b0d40fc24679f1c125115e0bd059d}\label{formats_8c_a145b0d40fc24679f1c125115e0bd059d}} 
+void {\bfseries read\+\_\+hoop} (FILE $\ast$file, struct \mbox{\hyperlink{structhoop__padding}{hoop\+\_\+padding}} $\ast$hoop, char $\ast$label)
+\item 
+\mbox{\Hypertarget{formats_8c_a1e908dbc1516b1a6ddca42140a91bc60}\label{formats_8c_a1e908dbc1516b1a6ddca42140a91bc60}} 
+void {\bfseries jef\+Encode} (unsigned char $\ast$b, char dx, char dy, int flags)
+\item 
+\mbox{\Hypertarget{formats_8c_adb0a2a985da219ec26d32aa8772a6e1f}\label{formats_8c_adb0a2a985da219ec26d32aa8772a6e1f}} 
+void {\bfseries ksm\+Encode} (unsigned char $\ast$b, char dx, char dy, int flags)
+\item 
+\mbox{\Hypertarget{formats_8c_ad122fd27abac7102ae75f82d8e578129}\label{formats_8c_ad122fd27abac7102ae75f82d8e578129}} 
+char $\ast$ {\bfseries ofm\+Read\+Library} (FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a339d0ee5bedac508e9c90cf82c2c97cc}\label{formats_8c_a339d0ee5bedac508e9c90cf82c2c97cc}} 
+void {\bfseries ofm\+Read\+Block\+Header} (FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a2f785b4dddf30ee05e337df513452f4a}\label{formats_8c_a2f785b4dddf30ee05e337df513452f4a}} 
+void {\bfseries ofm\+Read\+Color\+Change} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern)
+\item 
+\mbox{\Hypertarget{formats_8c_afcdfe4c9bb0e551b1fa20ed9bc698bf4}\label{formats_8c_afcdfe4c9bb0e551b1fa20ed9bc698bf4}} 
+void {\bfseries ofm\+Read\+Threads} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{formats_8c_a97fa7e0123b3260800c7aec2e2168cab}\label{formats_8c_a97fa7e0123b3260800c7aec2e2168cab}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries ofm\+Decode} (unsigned char b1, unsigned char b2)
+\item 
+\mbox{\Hypertarget{formats_8c_a84260a236c94ae0a750864a2a2e0b09c}\label{formats_8c_a84260a236c94ae0a750864a2a2e0b09c}} 
+void {\bfseries ofm\+Read\+Expanded} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{formats_8c_ab4e327e66e701633f888a6d2cc855126}\label{formats_8c_ab4e327e66e701633f888a6d2cc855126}} 
+void {\bfseries read\+Pec\+Stitches} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ab0c9fc958442f49bf16e03aabeea6d39}\label{formats_8c_ab0c9fc958442f49bf16e03aabeea6d39}} 
+void {\bfseries pec\+Encode\+Jump} (FILE $\ast$file, int x, int types)
+\item 
+\mbox{\Hypertarget{formats_8c_afa9698043df8e301d440d6c8ff896028}\label{formats_8c_afa9698043df8e301d440d6c8ff896028}} 
+void {\bfseries pec\+Encode\+Stop} (FILE $\ast$file, unsigned char val)
+\item 
+\mbox{\Hypertarget{formats_8c_a29630bd31090c09996a3a42a8f71e34d}\label{formats_8c_a29630bd31090c09996a3a42a8f71e34d}} 
+void {\bfseries pec\+Encode} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\item 
+\mbox{\Hypertarget{formats_8c_acf5d4a6e72ad546b2502069adbf45c3b}\label{formats_8c_acf5d4a6e72ad546b2502069adbf45c3b}} 
+void {\bfseries write\+Image} (FILE $\ast$file, unsigned char image\mbox{[}$\,$\mbox{]}\mbox{[}48\mbox{]})
+\item 
+\mbox{\Hypertarget{formats_8c_a89a530bf68647cd84d29149f33d04c79}\label{formats_8c_a89a530bf68647cd84d29149f33d04c79}} 
+void {\bfseries write\+Pec\+Stitches} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file, const char $\ast$file\+Name)
+\item 
+\mbox{\Hypertarget{formats_8c_a084b69b38d9bb8f211f2899be34ff889}\label{formats_8c_a084b69b38d9bb8f211f2899be34ff889}} 
+void {\bfseries pes\+Write\+Sew\+Seg\+Section} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a88da481ff6657c0809aeed0f35c33e3c}\label{formats_8c_a88da481ff6657c0809aeed0f35c33e3c}} 
+void {\bfseries pes\+Write\+Emb\+One\+Section} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a5a73a0e3bbbcea9313125a8b0afc7618}\label{formats_8c_a5a73a0e3bbbcea9313125a8b0afc7618}} 
+char {\bfseries sew\+Decode} (unsigned char input\+Byte)
+\item 
+\mbox{\Hypertarget{formats_8c_a6de5ce2c6db99ac726c22fa5d6107dbe}\label{formats_8c_a6de5ce2c6db99ac726c22fa5d6107dbe}} 
+char {\bfseries shv\+Decode} (unsigned char input\+Byte)
+\item 
+\mbox{\Hypertarget{formats_8c_a672679121c4e2df700aa579ce2721037}\label{formats_8c_a672679121c4e2df700aa579ce2721037}} 
+short {\bfseries shv\+Decode\+Short} (unsigned short input\+Byte)
+\item 
+\mbox{\Hypertarget{formats_8c_a5497674e917bf74b821c6861b56acd38}\label{formats_8c_a5497674e917bf74b821c6861b56acd38}} 
+int {\bfseries stx\+Read\+Thread} (\mbox{\hyperlink{structStxThread__}{Stx\+Thread}} $\ast$thread, FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_ae45f1c5b3ac4d2ca288776d2c741870c}\label{formats_8c_ae45f1c5b3ac4d2ca288776d2c741870c}} 
+int {\bfseries svg\+\_\+identify\+\_\+element} (char $\ast$buff)
+\item 
+\mbox{\Hypertarget{formats_8c_a1da26e6a7c5e1c68660c4f07269c0421}\label{formats_8c_a1da26e6a7c5e1c68660c4f07269c0421}} 
+void {\bfseries encode\+\_\+tap\+\_\+record} (FILE $\ast$file, int x, int y, int flags)
+\item 
+\mbox{\Hypertarget{formats_8c_a3c64efbc0a04ffbb5d6c2d5e3616c68b}\label{formats_8c_a3c64efbc0a04ffbb5d6c2d5e3616c68b}} 
+int {\bfseries decode\+\_\+tap\+\_\+record\+\_\+flags} (unsigned char b2)
+\item 
+\mbox{\Hypertarget{formats_8c_a3fa7f6841a6db32ccbf25b61a79dfae4}\label{formats_8c_a3fa7f6841a6db32ccbf25b61a79dfae4}} 
+int {\bfseries vip\+Decode\+Byte} (unsigned char b)
+\item 
+\mbox{\Hypertarget{formats_8c_ab8a8a0db6dfbd0eadd353817d6a7c97b}\label{formats_8c_ab8a8a0db6dfbd0eadd353817d6a7c97b}} 
+int {\bfseries vip\+Decode\+Stitch\+Type} (unsigned char b)
+\item 
+\mbox{\Hypertarget{formats_8c_ae76df61dd8851eb72b97fa686092aa4d}\label{formats_8c_ae76df61dd8851eb72b97fa686092aa4d}} 
+unsigned char $\ast$ {\bfseries vip\+Decompress\+Data} (unsigned char $\ast$input, int compressed\+Input\+Length, int decompressed\+Content\+Length)
+\item 
+\mbox{\Hypertarget{formats_8c_a2bb028689b218cd7804bb43e0ad72a22}\label{formats_8c_a2bb028689b218cd7804bb43e0ad72a22}} 
+unsigned char $\ast$ {\bfseries vip\+Compress\+Data} (unsigned char $\ast$input, int decompressed\+Input\+Size, int $\ast$compressed\+Size)
+\item 
+\mbox{\Hypertarget{formats_8c_ae703ba782e9edbab5683301d6816ddc9}\label{formats_8c_ae703ba782e9edbab5683301d6816ddc9}} 
+unsigned char {\bfseries vip\+Encode\+Byte} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} f)
+\item 
+\mbox{\Hypertarget{formats_8c_a77aff66cc338f6b5988a7f4f9f00cc2d}\label{formats_8c_a77aff66cc338f6b5988a7f4f9f00cc2d}} 
+unsigned char {\bfseries vip\+Encode\+Stitch\+Type} (int st)
+\item 
+\mbox{\Hypertarget{formats_8c_a13411f08f22772228567e4f9a0dc5eca}\label{formats_8c_a13411f08f22772228567e4f9a0dc5eca}} 
+unsigned char $\ast$ {\bfseries vp3\+Read\+String} (FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_a9eda46b769612781b9a6e87d8404784c}\label{formats_8c_a9eda46b769612781b9a6e87d8404784c}} 
+int {\bfseries vp3\+Decode} (unsigned char input\+Byte)
+\item 
+\mbox{\Hypertarget{formats_8c_a1a52abbe22a689f5db8cf349aec63a98}\label{formats_8c_a1a52abbe22a689f5db8cf349aec63a98}} 
+short {\bfseries vp3\+Decode\+Int16} (unsigned short input\+Byte)
+\item 
+\mbox{\Hypertarget{formats_8c_a5f631dae3f569f62afbd6abb159dd6a9}\label{formats_8c_a5f631dae3f569f62afbd6abb159dd6a9}} 
+\mbox{\hyperlink{struct__vp3Hoop}{vp3\+Hoop}} {\bfseries vp3\+Read\+Hoop\+Section} (FILE $\ast$file)
+\item 
+\mbox{\Hypertarget{formats_8c_aca217004fbc8428d6ad7e8fbd5bad961}\label{formats_8c_aca217004fbc8428d6ad7e8fbd5bad961}} 
+void {\bfseries vp3\+Write\+String\+Len} (FILE $\ast$file, const char $\ast$str, int len)
+\item 
+\mbox{\Hypertarget{formats_8c_a877c8f55d09ddbc612fd7c9df354bd95}\label{formats_8c_a877c8f55d09ddbc612fd7c9df354bd95}} 
+void {\bfseries vp3\+Write\+String} (FILE $\ast$file, const char $\ast$str)
+\item 
+\mbox{\Hypertarget{formats_8c_a80945d33cd91d6fb0179e1a070472efc}\label{formats_8c_a80945d33cd91d6fb0179e1a070472efc}} 
+void {\bfseries vp3\+Patch\+Byte\+Count} (FILE $\ast$file, int offset, int adjustment)
+\item 
+\mbox{\Hypertarget{formats_8c_a2e6d41d7103a0895bb7bc4f55c68477d}\label{formats_8c_a2e6d41d7103a0895bb7bc4f55c68477d}} 
+char {\bfseries xxx\+Decode\+Byte} (unsigned char input\+Byte)
+\item 
+\mbox{\Hypertarget{formats_8c_ae490ae14716737e8565793080f6ee33f}\label{formats_8c_ae490ae14716737e8565793080f6ee33f}} 
+void {\bfseries xxx\+Encode\+Stop} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_ae92ded87da0dcaaae8f7c7bc880fd1b0}{Emb\+Stitch}} s)
+\item 
+\mbox{\Hypertarget{formats_8c_a6661780f3ebfcede90fb164bb3f193b4}\label{formats_8c_a6661780f3ebfcede90fb164bb3f193b4}} 
+void {\bfseries xxx\+Encode\+Stitch} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} deltaX, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} deltaY, int flags)
+\item 
+\mbox{\Hypertarget{formats_8c_a7caa5344443c95331ec49e247e55cb3b}\label{formats_8c_a7caa5344443c95331ec49e247e55cb3b}} 
+void {\bfseries xxx\+Encode\+Design} (FILE $\ast$file, \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$p)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{formats_8c_ac6cc44cb0eab5e1c3e63c4d028a0dea2}\label{formats_8c_ac6cc44cb0eab5e1c3e63c4d028a0dea2}} 
+const int {\bfseries shv\+Thread\+Count} = 42
+\item 
+\mbox{\Hypertarget{formats_8c_a0ddaecc4fc077a3db30ea5ffd20ac823}\label{formats_8c_a0ddaecc4fc077a3db30ea5ffd20ac823}} 
+const int {\bfseries pec\+Thread\+Count} = 65
+\item 
+\mbox{\Hypertarget{formats_8c_a423c4a85e6e184bafb11931bf48eb6d1}\label{formats_8c_a423c4a85e6e184bafb11931bf48eb6d1}} 
+char {\bfseries \+\_\+sub\+Mask} \mbox{[}Csd\+Sub\+Mask\+Size\mbox{]}
+\item 
+\mbox{\Hypertarget{formats_8c_aff300a9cd128bc0dd787d94b4dc9dca6}\label{formats_8c_aff300a9cd128bc0dd787d94b4dc9dca6}} 
+char {\bfseries \+\_\+xor\+Mask} \mbox{[}Csd\+Xor\+Mask\+Size\mbox{]}
+\item 
+const unsigned char \mbox{\hyperlink{formats_8c_a8088700999062a5c76345d7a8901c69b}{csd\+\_\+decrypt\+Array}} \mbox{[}$\,$\mbox{]}
+\item 
+const unsigned char \mbox{\hyperlink{formats_8c_a9151dab7c6fe6fee942bf95ece8428f8}{max\+\_\+header}} \mbox{[}$\,$\mbox{]}
+\item 
+const char $\ast$ \mbox{\hyperlink{formats_8c_aaefcb92fcd9151d360eaa1c6cd654f70}{pes\+\_\+version\+\_\+strings}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\Hypertarget{formats_8c_a62b3e1b23c769c2aa14a28db1b06a093}\label{formats_8c_a62b3e1b23c769c2aa14a28db1b06a093}} 
+int {\bfseries pes\+\_\+version} = PES0001
+\item 
+\mbox{\Hypertarget{formats_8c_a261a5202706a19aed19915ea00584287}\label{formats_8c_a261a5202706a19aed19915ea00584287}} 
+int {\bfseries svg\+Creator}
+\item 
+\mbox{\Hypertarget{formats_8c_afb24cd37a6361ef4102b790bfb04795a}\label{formats_8c_afb24cd37a6361ef4102b790bfb04795a}} 
+int {\bfseries svg\+Expect}
+\item 
+\mbox{\Hypertarget{formats_8c_af2739a92493016586a36d41c67c9e9e4}\label{formats_8c_af2739a92493016586a36d41c67c9e9e4}} 
+int {\bfseries svg\+Multi\+Value}
+\item 
+\mbox{\Hypertarget{formats_8c_a3732a0819af92d41ba15d1e843912baa}\label{formats_8c_a3732a0819af92d41ba15d1e843912baa}} 
+int {\bfseries current\+\_\+element\+\_\+id}
+\item 
+\mbox{\Hypertarget{formats_8c_af9d04983989935651b54a928660024e7}\label{formats_8c_af9d04983989935651b54a928660024e7}} 
+\mbox{\hyperlink{structSvgAttribute__}{Svg\+Attribute}} {\bfseries attribute\+List} \mbox{[}1000\mbox{]}
+\item 
+\mbox{\Hypertarget{formats_8c_aedc757fedd30c5470f56f7c9efed4112}\label{formats_8c_aedc757fedd30c5470f56f7c9efed4112}} 
+int {\bfseries n\+\_\+attributes} = 0
+\item 
+\mbox{\Hypertarget{formats_8c_a5ca69064432e28b0b57f5272cfa089a6}\label{formats_8c_a5ca69064432e28b0b57f5272cfa089a6}} 
+char {\bfseries current\+Attribute} \mbox{[}1000\mbox{]}
+\item 
+\mbox{\Hypertarget{formats_8c_a0a91524923521a7df3f7be107218dbf2}\label{formats_8c_a0a91524923521a7df3f7be107218dbf2}} 
+char {\bfseries current\+Value} \mbox{[}1000\mbox{]}
+\item 
+const unsigned char \mbox{\hyperlink{formats_8c_af343b92924aeba034403b37c3fcb8142}{vip\+Decoding\+Table}} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Libembroidery 1.\+0.\+0-\/alpha \href{https://www.libembroidery.org}{\texttt{ https\+://www.\+libembroidery.\+org}}
+
+A library for reading, writing, altering and otherwise processing machine embroidery files and designs.
+
+Also, the core library supporting the Embroidermodder Project\textquotesingle{}s family of machine embroidery interfaces.
+
+\DoxyHorRuler{0}
+
+
+Copyright 2018-\/2025 The Embroidermodder Team Licensed under the terms of the zlib license.
+
+\DoxyHorRuler{0}
+
+
+Formats 
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{formats_8c_aaaed39211bf56c17cdd5870f156786c7}\label{formats_8c_aaaed39211bf56c17cdd5870f156786c7}} 
+\index{formats.c@{formats.c}!LOAD\_I16@{LOAD\_I16}}
+\index{LOAD\_I16@{LOAD\_I16}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{LOAD\_I16}{LOAD\_I16}}
+{\footnotesize\ttfamily \#define LOAD\+\_\+\+I16(\begin{DoxyParamCaption}\item[{}]{FILE,  }\item[{}]{X }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    X = emb\_read\_i16(FILE); \(\backslash\)}
+\DoxyCodeLine{    REPORT\_INT(X)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{formats_8c_aa7625b67343aa6c142c60c1ac047f318}\label{formats_8c_aa7625b67343aa6c142c60c1ac047f318}} 
+\index{formats.c@{formats.c}!LOAD\_I16\_BE@{LOAD\_I16\_BE}}
+\index{LOAD\_I16\_BE@{LOAD\_I16\_BE}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{LOAD\_I16\_BE}{LOAD\_I16\_BE}}
+{\footnotesize\ttfamily \#define LOAD\+\_\+\+I16\+\_\+\+BE(\begin{DoxyParamCaption}\item[{}]{FILE,  }\item[{}]{X }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    X = emb\_read\_i16be(FILE); \(\backslash\)}
+\DoxyCodeLine{    REPORT\_INT(X)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{formats_8c_ab881fde76cc39ee5c2e0c0c635dc91d8}\label{formats_8c_ab881fde76cc39ee5c2e0c0c635dc91d8}} 
+\index{formats.c@{formats.c}!LOAD\_I32@{LOAD\_I32}}
+\index{LOAD\_I32@{LOAD\_I32}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{LOAD\_I32}{LOAD\_I32}}
+{\footnotesize\ttfamily \#define LOAD\+\_\+\+I32(\begin{DoxyParamCaption}\item[{}]{FILE,  }\item[{}]{X }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    X = emb\_read\_i32(FILE); \(\backslash\)}
+\DoxyCodeLine{    REPORT\_INT(X)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{formats_8c_a408e834900097c319990bbbf4e79c649}\label{formats_8c_a408e834900097c319990bbbf4e79c649}} 
+\index{formats.c@{formats.c}!LOAD\_I32\_BE@{LOAD\_I32\_BE}}
+\index{LOAD\_I32\_BE@{LOAD\_I32\_BE}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{LOAD\_I32\_BE}{LOAD\_I32\_BE}}
+{\footnotesize\ttfamily \#define LOAD\+\_\+\+I32\+\_\+\+BE(\begin{DoxyParamCaption}\item[{}]{FILE,  }\item[{}]{X }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    X = emb\_read\_i32be(FILE); \(\backslash\)}
+\DoxyCodeLine{    REPORT\_INT(X)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{formats_8c_ab86ab7fb9f2d9853f9f25a498ba05e4c}\label{formats_8c_ab86ab7fb9f2d9853f9f25a498ba05e4c}} 
+\index{formats.c@{formats.c}!LOAD\_U16@{LOAD\_U16}}
+\index{LOAD\_U16@{LOAD\_U16}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{LOAD\_U16}{LOAD\_U16}}
+{\footnotesize\ttfamily \#define LOAD\+\_\+\+U16(\begin{DoxyParamCaption}\item[{}]{FILE,  }\item[{}]{X }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    X = emb\_read\_u16(FILE); \(\backslash\)}
+\DoxyCodeLine{    REPORT\_INT(X)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{formats_8c_a80e9d522baaf614ed823fa91ae2d10a5}\label{formats_8c_a80e9d522baaf614ed823fa91ae2d10a5}} 
+\index{formats.c@{formats.c}!LOAD\_U16\_BE@{LOAD\_U16\_BE}}
+\index{LOAD\_U16\_BE@{LOAD\_U16\_BE}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{LOAD\_U16\_BE}{LOAD\_U16\_BE}}
+{\footnotesize\ttfamily \#define LOAD\+\_\+\+U16\+\_\+\+BE(\begin{DoxyParamCaption}\item[{}]{FILE,  }\item[{}]{X }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    X = emb\_read\_u16be(FILE); \(\backslash\)}
+\DoxyCodeLine{    REPORT\_INT(X)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{formats_8c_a67b7c71d9a3bfd63871282840a97542f}\label{formats_8c_a67b7c71d9a3bfd63871282840a97542f}} 
+\index{formats.c@{formats.c}!LOAD\_U32@{LOAD\_U32}}
+\index{LOAD\_U32@{LOAD\_U32}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{LOAD\_U32}{LOAD\_U32}}
+{\footnotesize\ttfamily \#define LOAD\+\_\+\+U32(\begin{DoxyParamCaption}\item[{}]{FILE,  }\item[{}]{X }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    X = emb\_read\_u32(FILE); \(\backslash\)}
+\DoxyCodeLine{    REPORT\_INT(X)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{formats_8c_ae34d541946c179a2070562766be2d35e}\label{formats_8c_ae34d541946c179a2070562766be2d35e}} 
+\index{formats.c@{formats.c}!LOAD\_U32\_BE@{LOAD\_U32\_BE}}
+\index{LOAD\_U32\_BE@{LOAD\_U32\_BE}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{LOAD\_U32\_BE}{LOAD\_U32\_BE}}
+{\footnotesize\ttfamily \#define LOAD\+\_\+\+U32\+\_\+\+BE(\begin{DoxyParamCaption}\item[{}]{FILE,  }\item[{}]{X }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    X = emb\_read\_u32be(FILE); \(\backslash\)}
+\DoxyCodeLine{    REPORT\_INT(X)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{formats_8c_a6e656acaa67d38da1fc636369a91f828}\label{formats_8c_a6e656acaa67d38da1fc636369a91f828}} 
+\index{formats.c@{formats.c}!LOAD\_U8@{LOAD\_U8}}
+\index{LOAD\_U8@{LOAD\_U8}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{LOAD\_U8}{LOAD\_U8}}
+{\footnotesize\ttfamily \#define LOAD\+\_\+\+U8(\begin{DoxyParamCaption}\item[{}]{FILE,  }\item[{}]{X }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \textcolor{keywordflow}{if} (fread(\&X, 1, 1, FILE) != 1) \{ \(\backslash\)}
+\DoxyCodeLine{        puts(\textcolor{stringliteral}{"{}ERROR: failed to read single byte from file."{}}); \(\backslash\)}
+\DoxyCodeLine{    \} \(\backslash\)}
+\DoxyCodeLine{    REPORT\_INT(X)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{formats_8c_a51f0ecb30f9703fa28f335145766973e}\label{formats_8c_a51f0ecb30f9703fa28f335145766973e}} 
+\index{formats.c@{formats.c}!REPORT\_VALUE@{REPORT\_VALUE}}
+\index{REPORT\_VALUE@{REPORT\_VALUE}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{REPORT\_VALUE}{REPORT\_VALUE}}
+{\footnotesize\ttfamily \#define REPORT\+\_\+\+VALUE(\begin{DoxyParamCaption}\item[{}]{X,  }\item[{}]{TYPE }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \textcolor{keywordflow}{if} (emb\_verbose>1) \{ \(\backslash\)}
+\DoxyCodeLine{        printf(\#X \textcolor{stringliteral}{"{}: \%"{}} \#TYPE \textcolor{stringliteral}{"{}\(\backslash\)n"{}}, X); \(\backslash\)}
+\DoxyCodeLine{    \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{formats_8c_a8ca7313902787e9ed94a23630033bee4}\label{formats_8c_a8ca7313902787e9ed94a23630033bee4}} 
+\index{formats.c@{formats.c}!writeSvg@{writeSvg}}
+\index{writeSvg@{writeSvg}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{writeSvg()}{writeSvg()}}
+{\footnotesize\ttfamily char write\+Svg (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$}]{pattern,  }\item[{FILE $\ast$}]{file }\end{DoxyParamCaption})}
+
+Writes the data from a pattern to a file with the given a file\+Name. Returns {\ttfamily true} if successful, otherwise returns {\ttfamily false}. 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{formats_8c_a8088700999062a5c76345d7a8901c69b}\label{formats_8c_a8088700999062a5c76345d7a8901c69b}} 
+\index{formats.c@{formats.c}!csd\_decryptArray@{csd\_decryptArray}}
+\index{csd\_decryptArray@{csd\_decryptArray}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{csd\_decryptArray}{csd\_decryptArray}}
+{\footnotesize\ttfamily const unsigned char csd\+\_\+decrypt\+Array\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    0x43, 0x6E, 0x72, 0x7A, 0x76, 0x6C, 0x61, 0x6F, 0x7C, 0x29, 0x5D, 0x62, 0x60, 0x6E, 0x61, 0x62,}
+\DoxyCodeLine{    0x20, 0x41, 0x66, 0x6A, 0x3A, 0x35, 0x5A, 0x63, 0x7C, 0x37, 0x3A, 0x2A, 0x25, 0x24, 0x2A, 0x33,}
+\DoxyCodeLine{    0x00, 0x10, 0x14, 0x03, 0x72, 0x4C, 0x48, 0x42, 0x08, 0x7A, 0x5E, 0x0B, 0x6F, 0x45, 0x47, 0x5F,}
+\DoxyCodeLine{    0x40, 0x54, 0x5C, 0x57, 0x55, 0x59, 0x53, 0x3A, 0x32, 0x6F, 0x53, 0x54, 0x50, 0x5C, 0x4A, 0x56,}
+\DoxyCodeLine{    0x2F, 0x2F, 0x62, 0x2C, 0x22, 0x65, 0x25, 0x28, 0x38, 0x30, 0x38, 0x22, 0x2B, 0x25, 0x3A, 0x6F,}
+\DoxyCodeLine{    0x27, 0x38, 0x3E, 0x3F, 0x74, 0x37, 0x33, 0x77, 0x2E, 0x30, 0x3D, 0x34, 0x2E, 0x32, 0x2B, 0x2C,}
+\DoxyCodeLine{    0x0C, 0x18, 0x42, 0x13, 0x16, 0x0A, 0x15, 0x02, 0x0B, 0x1C, 0x1E, 0x0E, 0x08, 0x60, 0x64, 0x0D,}
+\DoxyCodeLine{    0x09, 0x51, 0x25, 0x1A, 0x18, 0x16, 0x19, 0x1A, 0x58, 0x10, 0x14, 0x5B, 0x08, 0x15, 0x1B, 0x5F,}
+\DoxyCodeLine{    0xD5, 0xD2, 0xAE, 0xA3, 0xC1, 0xF0, 0xF4, 0xE8, 0xF8, 0xEC, 0xA6, 0xAB, 0xCD, 0xF8, 0xFD, 0xFB,}
+\DoxyCodeLine{    0xE2, 0xF0, 0xFE, 0xFA, 0xF5, 0xB5, 0xF7, 0xF9, 0xFC, 0xB9, 0xF5, 0xEF, 0xF4, 0xF8, 0xEC, 0xBF,}
+\DoxyCodeLine{    0xC3, 0xCE, 0xD7, 0xCD, 0xD0, 0xD7, 0xCF, 0xC2, 0xDB, 0xA4, 0xA0, 0xB0, 0xAF, 0xBE, 0x98, 0xE2,}
+\DoxyCodeLine{    0xC2, 0x91, 0xE5, 0xDC, 0xDA, 0xD2, 0x96, 0xC4, 0x98, 0xF8, 0xC9, 0xD2, 0xDD, 0xD3, 0x9E, 0xDE,}
+\DoxyCodeLine{    0xAE, 0xA5, 0xE2, 0x8C, 0xB6, 0xAC, 0xA3, 0xA9, 0xBC, 0xA8, 0xA6, 0xEB, 0x8B, 0xBF, 0xA1, 0xAC,}
+\DoxyCodeLine{    0xB5, 0xA3, 0xBB, 0xB6, 0xA7, 0xD8, 0xDC, 0x9A, 0xAA, 0xF9, 0x82, 0xFB, 0x9D, 0xB9, 0xAB, 0xB3,}
+\DoxyCodeLine{    0x94, 0xC1, 0xA0, 0x8C, 0x8B, 0x8E, 0x95, 0x8F, 0x87, 0x99, 0xE7, 0xE1, 0xA3, 0x83, 0x8B, 0xCF,}
+\DoxyCodeLine{    0xA3, 0x85, 0x9D, 0x83, 0xD4, 0xB7, 0x83, 0x84, 0x91, 0x97, 0x9F, 0x88, 0x8F, 0xDD, 0xAD, 0x90}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{formats_8c_a9151dab7c6fe6fee942bf95ece8428f8}\label{formats_8c_a9151dab7c6fe6fee942bf95ece8428f8}} 
+\index{formats.c@{formats.c}!max\_header@{max\_header}}
+\index{max\_header@{max\_header}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{max\_header}{max\_header}}
+{\footnotesize\ttfamily const unsigned char max\+\_\+header\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    0x56,0x43,0x53,0x4D,0xFC,0x03,0x00,0x00,0x01,0x00,0x00,0x00,0x01,0x00,0x00,0x00,}
+\DoxyCodeLine{    0xF6,0x25,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,}
+\DoxyCodeLine{    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,}
+\DoxyCodeLine{    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x08,0x00,0x00,0x00,0x05,0x00,0x00,0x00,}
+\DoxyCodeLine{    0x00,0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,}
+\DoxyCodeLine{    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,}
+\DoxyCodeLine{    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x31,0x33,0x37,0x38,}
+\DoxyCodeLine{    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,}
+\DoxyCodeLine{    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,}
+\DoxyCodeLine{    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x4D,0x61,0x64,0x65,0x69,0x72,0x61,0x20,}
+\DoxyCodeLine{    0x52,0x61,0x79,0x6F,0x6E,0x20,0x34,0x30,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,}
+\DoxyCodeLine{    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,}
+\DoxyCodeLine{    0x01,0x38,0x09,0x31,0x33,0x30,0x2F,0x37,0x30,0x35,0x20,0x48,0xFA,0x00,0x00,0x00,}
+\DoxyCodeLine{    0x00,0x00,0x00,0x00,0x00}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{formats_8c_aaefcb92fcd9151d360eaa1c6cd654f70}\label{formats_8c_aaefcb92fcd9151d360eaa1c6cd654f70}} 
+\index{formats.c@{formats.c}!pes\_version\_strings@{pes\_version\_strings}}
+\index{pes\_version\_strings@{pes\_version\_strings}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{pes\_version\_strings}{pes\_version\_strings}}
+{\footnotesize\ttfamily const char$\ast$ pes\+\_\+version\+\_\+strings\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\#PES0001"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\#PES0020"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\#PES0022"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\#PES0030"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\#PES0040"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\#PES0050"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\#PES0055"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\#PES0056"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\#PES0060"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\#PES0070"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\#PES0080"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\#PES0090"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}\#PES0100"{}},}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{formats_8c_af343b92924aeba034403b37c3fcb8142}\label{formats_8c_af343b92924aeba034403b37c3fcb8142}} 
+\index{formats.c@{formats.c}!vipDecodingTable@{vipDecodingTable}}
+\index{vipDecodingTable@{vipDecodingTable}!formats.c@{formats.c}}
+\doxysubsubsection{\texorpdfstring{vipDecodingTable}{vipDecodingTable}}
+{\footnotesize\ttfamily const unsigned char vip\+Decoding\+Table\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    0x2E, 0x82, 0xE4, 0x6F, 0x38, 0xA9, 0xDC, 0xC6, 0x7B, 0xB6, 0x28, 0xAC, 0xFD, 0xAA, 0x8A, 0x4E,}
+\DoxyCodeLine{    0x76, 0x2E, 0xF0, 0xE4, 0x25, 0x1B, 0x8A, 0x68, 0x4E, 0x92, 0xB9, 0xB4, 0x95, 0xF0, 0x3E, 0xEF,}
+\DoxyCodeLine{    0xF7, 0x40, 0x24, 0x18, 0x39, 0x31, 0xBB, 0xE1, 0x53, 0xA8, 0x1F, 0xB1, 0x3A, 0x07, 0xFB, 0xCB,}
+\DoxyCodeLine{    0xE6, 0x00, 0x81, 0x50, 0x0E, 0x40, 0xE1, 0x2C, 0x73, 0x50, 0x0D, 0x91, 0xD6, 0x0A, 0x5D, 0xD6,}
+\DoxyCodeLine{    0x8B, 0xB8, 0x62, 0xAE, 0x47, 0x00, 0x53, 0x5A, 0xB7, 0x80, 0xAA, 0x28, 0xF7, 0x5D, 0x70, 0x5E,}
+\DoxyCodeLine{    0x2C, 0x0B, 0x98, 0xE3, 0xA0, 0x98, 0x60, 0x47, 0x89, 0x9B, 0x82, 0xFB, 0x40, 0xC9, 0xB4, 0x00,}
+\DoxyCodeLine{    0x0E, 0x68, 0x6A, 0x1E, 0x09, 0x85, 0xC0, 0x53, 0x81, 0xD1, 0x98, 0x89, 0xAF, 0xE8, 0x85, 0x4F,}
+\DoxyCodeLine{    0xE3, 0x69, 0x89, 0x03, 0xA1, 0x2E, 0x8F, 0xCF, 0xED, 0x91, 0x9F, 0x58, 0x1E, 0xD6, 0x84, 0x3C,}
+\DoxyCodeLine{    0x09, 0x27, 0xBD, 0xF4, 0xC3, 0x90, 0xC0, 0x51, 0x1B, 0x2B, 0x63, 0xBC, 0xB9, 0x3D, 0x40, 0x4D,}
+\DoxyCodeLine{    0x62, 0x6F, 0xE0, 0x8C, 0xF5, 0x5D, 0x08, 0xFD, 0x3D, 0x50, 0x36, 0xD7, 0xC9, 0xC9, 0x43, 0xE4,}
+\DoxyCodeLine{    0x2D, 0xCB, 0x95, 0xB6, 0xF4, 0x0D, 0xEA, 0xC2, 0xFD, 0x66, 0x3F, 0x5E, 0xBD, 0x69, 0x06, 0x2A,}
+\DoxyCodeLine{    0x03, 0x19, 0x47, 0x2B, 0xDF, 0x38, 0xEA, 0x4F, 0x80, 0x49, 0x95, 0xB2, 0xD6, 0xF9, 0x9A, 0x75,}
+\DoxyCodeLine{    0xF4, 0xD8, 0x9B, 0x1D, 0xB0, 0xA4, 0x69, 0xDB, 0xA9, 0x21, 0x79, 0x6F, 0xD8, 0xDE, 0x33, 0xFE,}
+\DoxyCodeLine{    0x9F, 0x04, 0xE5, 0x9A, 0x6B, 0x9B, 0x73, 0x83, 0x62, 0x7C, 0xB9, 0x66, 0x76, 0xF2, 0x5B, 0xC9,}
+\DoxyCodeLine{    0x5E, 0xFC, 0x74, 0xAA, 0x6C, 0xF1, 0xCD, 0x93, 0xCE, 0xE9, 0x80, 0x53, 0x03, 0x3B, 0x97, 0x4B,}
+\DoxyCodeLine{    0x39, 0x76, 0xC2, 0xC1, 0x56, 0xCB, 0x70, 0xFD, 0x3B, 0x3E, 0x52, 0x57, 0x81, 0x5D, 0x56, 0x8D,}
+\DoxyCodeLine{    0x51, 0x90, 0xD4, 0x76, 0xD7, 0xD5, 0x16, 0x02, 0x6D, 0xF2, 0x4D, 0xE1, 0x0E, 0x96, 0x4F, 0xA1,}
+\DoxyCodeLine{    0x3A, 0xA0, 0x60, 0x59, 0x64, 0x04, 0x1A, 0xE4, 0x67, 0xB6, 0xED, 0x3F, 0x74, 0x20, 0x55, 0x1F,}
+\DoxyCodeLine{    0xFB, 0x23, 0x92, 0x91, 0x53, 0xC8, 0x65, 0xAB, 0x9D, 0x51, 0xD6, 0x73, 0xDE, 0x01, 0xB1, 0x80,}
+\DoxyCodeLine{    0xB7, 0xC0, 0xD6, 0x80, 0x1C, 0x2E, 0x3C, 0x83, 0x63, 0xEE, 0xBC, 0x33, 0x25, 0xE2, 0x0E, 0x7A,}
+\DoxyCodeLine{    0x67, 0xDE, 0x3F, 0x71, 0x14, 0x49, 0x9C, 0x92, 0x93, 0x0D, 0x26, 0x9A, 0x0E, 0xDA, 0xED, 0x6F,}
+\DoxyCodeLine{    0xA4, 0x89, 0x0C, 0x1B, 0xF0, 0xA1, 0xDF, 0xE1, 0x9E, 0x3C, 0x04, 0x78, 0xE4, 0xAB, 0x6D, 0xFF,}
+\DoxyCodeLine{    0x9C, 0xAF, 0xCA, 0xC7, 0x88, 0x17, 0x9C, 0xE5, 0xB7, 0x33, 0x6D, 0xDC, 0xED, 0x8F, 0x6C, 0x18,}
+\DoxyCodeLine{    0x1D, 0x71, 0x06, 0xB1, 0xC5, 0xE2, 0xCF, 0x13, 0x77, 0x81, 0xC5, 0xB7, 0x0A, 0x14, 0x0A, 0x6B,}
+\DoxyCodeLine{    0x40, 0x26, 0xA0, 0x88, 0xD1, 0x62, 0x6A, 0xB3, 0x50, 0x12, 0xB9, 0x9B, 0xB5, 0x83, 0x9B, 0x37}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

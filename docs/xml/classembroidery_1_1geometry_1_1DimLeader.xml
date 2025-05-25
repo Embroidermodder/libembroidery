@@ -1,0 +1,522 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1geometry_1_1DimLeader" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::geometry::DimLeader</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1DimLeader_1a649cd3b7adaa850ff067d1a9f248c857" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.DimLeader::point1</definition>
+        <argsstring></argsstring>
+        <name>point1</name>
+        <qualifiedname>embroidery.geometry.DimLeader.point1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1734" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1734" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1DimLeader_1a4e72bb84aa49da3de2e1e8e1be38fd76" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.DimLeader::point2</definition>
+        <argsstring></argsstring>
+        <name>point2</name>
+        <qualifiedname>embroidery.geometry.DimLeader.point2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1735" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1735" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1DimLeader_1a0d9e28691fa06cf04f92eec02a1cab96" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.DimLeader::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>embroidery.geometry.DimLeader.type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1736" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1736" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1DimLeader_1a5d2e797417346e7a3e49be876ae28fcc" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.DimLeader::pen</definition>
+        <argsstring></argsstring>
+        <name>pen</name>
+        <qualifiedname>embroidery.geometry.DimLeader.pen</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1737" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1737" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1DimLeader_1a69a5d78b4a2024cb8e32dd7453820d6e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.DimLeader::selectable</definition>
+        <argsstring></argsstring>
+        <name>selectable</name>
+        <qualifiedname>embroidery.geometry.DimLeader.selectable</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1738" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1738" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1DimLeader_1a7b4685d0708d9d19b05f74d30008b25c" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.DimLeader::rubber_mode</definition>
+        <argsstring></argsstring>
+        <name>rubber_mode</name>
+        <qualifiedname>embroidery.geometry.DimLeader.rubber_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1739" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1739" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1DimLeader_1ac68d4e4b52b01825e78fe663428c845f" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.DimLeader::rubber_points</definition>
+        <argsstring></argsstring>
+        <name>rubber_points</name>
+        <qualifiedname>embroidery.geometry.DimLeader.rubber_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1740" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1740" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1DimLeader_1af2354eb08c43602419168bd0c42b47cf" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.DimLeader::arrow_style</definition>
+        <argsstring></argsstring>
+        <name>arrow_style</name>
+        <qualifiedname>embroidery.geometry.DimLeader.arrow_style</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1742" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1742" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1DimLeader_1a7adf761ee1a38d9d25bf855d423ec0ab" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.DimLeader::line_style</definition>
+        <argsstring></argsstring>
+        <name>line_style</name>
+        <qualifiedname>embroidery.geometry.DimLeader.line_style</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1744" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1744" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1DimLeader_1a63493427a8298aa78695b4470d93d775" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.DimLeader::curved</definition>
+        <argsstring></argsstring>
+        <name>curved</name>
+        <qualifiedname>embroidery.geometry.DimLeader.curved</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1745" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1745" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1DimLeader_1a72243dd0f73197340df33e0f603f5684" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.DimLeader::filled</definition>
+        <argsstring></argsstring>
+        <name>filled</name>
+        <qualifiedname>embroidery.geometry.DimLeader.filled</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1746" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1746" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1DimLeader_1a3bca9e12be729b38c9d27ead8027fa1b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.DimLeader.__init__</definition>
+        <argsstring>(self, x1=math.nan, y1=math.nan, x2=math.nan, y2=math.nan, pen=Pen())</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.geometry.DimLeader.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x1</type>
+          <defname>x1</defname>
+          <defval>math.nan</defval>
+        </param>
+        <param>
+          <type>y1</type>
+          <defname>y1</defname>
+          <defval>math.nan</defval>
+        </param>
+        <param>
+          <type>x2</type>
+          <defname>x2</defname>
+          <defval>math.nan</defval>
+        </param>
+        <param>
+          <type>y2</type>
+          <defname>y2</defname>
+          <defval>math.nan</defval>
+        </param>
+        <param>
+          <type>pen</type>
+          <defname>pen</defname>
+          <defval>Pen()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1732" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1733" bodyend="1752"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1DimLeader_1af8e38a589c950a49ad40eb67138d7684" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.DimLeader.click</definition>
+        <argsstring>(self, x, y)</argsstring>
+        <name>click</name>
+        <qualifiedname>embroidery.geometry.DimLeader.click</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1753" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1753" bodyend="1766"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1DimLeader_1ab095afffff542169b8cdfc25f854b2a2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.DimLeader.prompt</definition>
+        <argsstring>(self, cmd)</argsstring>
+        <name>prompt</name>
+        <qualifiedname>embroidery.geometry.DimLeader.prompt</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>cmd</type>
+          <defname>cmd</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1767" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1767" bodyend="1789"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1DimLeader_1a739d0fd0b24617c04c6d39efa21f9a70" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.DimLeader.copy</definition>
+        <argsstring>(self)</argsstring>
+        <name>copy</name>
+        <qualifiedname>embroidery.geometry.DimLeader.copy</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1790" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1790" bodyend="1799"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1DimLeader_1a7dfe2ea54804f1343ebf0fb58d7b1a41" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.DimLeader.midpoint</definition>
+        <argsstring>(self)</argsstring>
+        <name>midpoint</name>
+        <qualifiedname>embroidery.geometry.DimLeader.midpoint</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1800" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1800" bodyend="1803"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1DimLeader_1a4e12ae93193b8a5b4c002d14ca615864" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.DimLeader.angle</definition>
+        <argsstring>(self)</argsstring>
+        <name>angle</name>
+        <qualifiedname>embroidery.geometry.DimLeader.angle</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1804" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1804" bodyend="1808"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1DimLeader_1ac41990ddf6226ea9ee0ab46d30103e52" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.DimLeader.update_leader</definition>
+        <argsstring>(self)</argsstring>
+        <name>update_leader</name>
+        <qualifiedname>embroidery.geometry.DimLeader.update_leader</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1809" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1809" bodyend="1898"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1DimLeader_1abccefb4b1e48d6f42b8633f528c198b7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.DimLeader.paint</definition>
+        <argsstring>(self, painter, option, widget)</argsstring>
+        <name>paint</name>
+        <qualifiedname>embroidery.geometry.DimLeader.paint</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <param>
+          <type>option</type>
+          <defname>option</defname>
+        </param>
+        <param>
+          <type>widget</type>
+          <defname>widget</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1899" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1899" bodyend="1918"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1DimLeader_1ac9645bd973c722c0ad6afd2c46dbee3e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.DimLeader.update_rubber</definition>
+        <argsstring>(self, painter)</argsstring>
+        <name>update_rubber</name>
+        <qualifiedname>embroidery.geometry.DimLeader.update_rubber</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1919" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1919" bodyend="1938"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1DimLeader_1acb5289a0609726c2203260c528ac8196" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.DimLeader.vulcanize</definition>
+        <argsstring>(self)</argsstring>
+        <name>vulcanize</name>
+        <qualifiedname>embroidery.geometry.DimLeader.vulcanize</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1939" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1939" bodyend="1944"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1DimLeader_1a154d289776e104aa5e5e7139524cd778" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.DimLeader.mouse_snap_point</definition>
+        <argsstring>(self, mouse_point)</argsstring>
+        <name>mouse_snap_point</name>
+        <qualifiedname>embroidery.geometry.DimLeader.mouse_snap_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>mouse_point</type>
+          <defname>mouse_point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1945" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1945" bodyend="1949"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1DimLeader_1a36d41df50c18da250969592a8fc28d34" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.DimLeader.all_grip_points</definition>
+        <argsstring>(self)</argsstring>
+        <name>all_grip_points</name>
+        <qualifiedname>embroidery.geometry.DimLeader.all_grip_points</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1950" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1950" bodyend="1956"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1DimLeader_1a0a813539676d64626fe5088fc473a201" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.DimLeader.grip_edit</definition>
+        <argsstring>(self, before, after)</argsstring>
+        <name>grip_edit</name>
+        <qualifiedname>embroidery.geometry.DimLeader.grip_edit</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>before</type>
+          <defname>before</defname>
+        </param>
+        <param>
+          <type>after</type>
+          <defname>after</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="1957" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1957" bodyend="1966"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>The DimLeader class definition.
+
+EndPoint1() const
+obj_end_point_2() const
+MidPoint()  const
+def X1(): return EndPoint1().x()
+def Y1(): return EndPoint1().y()
+def X2(): return obj_end_point_2().x()
+def Y2(): return obj_end_point_2().y()
+def DeltaX(): return (obj_end_point_2().x() - EndPoint1().x())
+def DeltaY(): return (obj_end_point_2().y() - EndPoint1().y())
+def Angle():
+def Length(): return Line().length()
+
+def setEndPoint1(EmbVector v)
+def setobj_end_point_2(EmbVector v)
+
+def grip_edit(before, after)
+def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+
+def update_leader()
+Path line_stylePath
+Path arrow_style_path
+arrow_style_angle
+arrow_style_length
+line_styleAngle
+line_style_length
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/geometry.py" line="1702" column="1" bodyfile="python/embroidery/geometry.py" bodystart="1702" bodyend="1966"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a3bca9e12be729b38c9d27ead8027fa1b" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a36d41df50c18da250969592a8fc28d34" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>all_grip_points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a4e12ae93193b8a5b4c002d14ca615864" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>angle</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1af2354eb08c43602419168bd0c42b47cf" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>arrow_style</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1af8e38a589c950a49ad40eb67138d7684" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>click</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a739d0fd0b24617c04c6d39efa21f9a70" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>copy</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a63493427a8298aa78695b4470d93d775" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>curved</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a72243dd0f73197340df33e0f603f5684" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>filled</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a0a813539676d64626fe5088fc473a201" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>grip_edit</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a7adf761ee1a38d9d25bf855d423ec0ab" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>line_style</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a7dfe2ea54804f1343ebf0fb58d7b1a41" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>midpoint</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a154d289776e104aa5e5e7139524cd778" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>mouse_snap_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1abccefb4b1e48d6f42b8633f528c198b7" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>paint</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a5d2e797417346e7a3e49be876ae28fcc" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>pen</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a649cd3b7adaa850ff067d1a9f248c857" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>point1</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a4e72bb84aa49da3de2e1e8e1be38fd76" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>point2</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1ab095afffff542169b8cdfc25f854b2a2" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>prompt</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a7b4685d0708d9d19b05f74d30008b25c" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>rubber_mode</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1ac68d4e4b52b01825e78fe663428c845f" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>rubber_points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a69a5d78b4a2024cb8e32dd7453820d6e" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>selectable</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1a0d9e28691fa06cf04f92eec02a1cab96" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>type</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1ac41990ddf6226ea9ee0ab46d30103e52" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>update_leader</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1ac9645bd973c722c0ad6afd2c46dbee3e" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>update_rubber</name></member>
+      <member refid="classembroidery_1_1geometry_1_1DimLeader_1acb5289a0609726c2203260c528ac8196" prot="public" virt="non-virtual"><scope>embroidery::geometry::DimLeader</scope><name>vulcanize</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

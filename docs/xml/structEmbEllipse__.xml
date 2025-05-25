@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structEmbEllipse__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbEllipse_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structEmbEllipse___1ac73c807bcbb77b58a78cafa070f30bcb" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a16fa26764453571074cb85a7574738d4" kindref="member">EmbVector</ref></type>
+        <definition>EmbVector EmbEllipse_::center</definition>
+        <argsstring></argsstring>
+        <name>center</name>
+        <qualifiedname>EmbEllipse_::center</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="701" column="15" bodyfile="src/embroidery.h" bodystart="701" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbEllipse___1ae3220fa7d7e934bce49153c7767a84cf" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a16fa26764453571074cb85a7574738d4" kindref="member">EmbVector</ref></type>
+        <definition>EmbVector EmbEllipse_::radius</definition>
+        <argsstring></argsstring>
+        <name>radius</name>
+        <qualifiedname>EmbEllipse_::radius</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Represents the major and minor axes. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="702" column="15" bodyfile="src/embroidery.h" bodystart="702" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbEllipse___1a91c2fb9bf449fd7055e87b0ed92ad1a9" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a2082be9aabfb541dff1825c4ca6a05cd" kindref="member">EmbReal</ref></type>
+        <definition>EmbReal EmbEllipse_::rotation</definition>
+        <argsstring></argsstring>
+        <name>rotation</name>
+        <qualifiedname>EmbEllipse_::rotation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Determines the direction of the direction of the first axis given. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="703" column="13" bodyfile="src/embroidery.h" bodystart="703" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Ellipse object. </para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>EmbEllipse_</label>
+        <link refid="structEmbEllipse__"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>center</edgelabel>
+          <edgelabel>radius</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>EmbVector_</label>
+        <link refid="structEmbVector__"/>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery.h" line="699" column="1" bodyfile="src/embroidery.h" bodystart="700" bodyend="704"/>
+    <listofallmembers>
+      <member refid="structEmbEllipse___1ac73c807bcbb77b58a78cafa070f30bcb" prot="public" virt="non-virtual"><scope>EmbEllipse_</scope><name>center</name></member>
+      <member refid="structEmbEllipse___1ae3220fa7d7e934bce49153c7767a84cf" prot="public" virt="non-virtual"><scope>EmbEllipse_</scope><name>radius</name></member>
+      <member refid="structEmbEllipse___1a91c2fb9bf449fd7055e87b0ed92ad1a9" prot="public" virt="non-virtual"><scope>EmbEllipse_</scope><name>rotation</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

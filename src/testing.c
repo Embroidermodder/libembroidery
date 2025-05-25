@@ -1,4 +1,7 @@
-/*
+/*!
+ * \file testing.c
+ * \brief Internal testing routines.
+ *
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *

@@ -1,0 +1,285 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="struct__bcf__file__header" kind="struct" language="C++" prot="public">
+    <compoundname>_bcf_file_header</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct__bcf__file__header_1a6a6daf26af9aa595ed25607204197a51" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char _bcf_file_header::signature[8]</definition>
+        <argsstring>[8]</argsstring>
+        <name>signature</name>
+        <qualifiedname>_bcf_file_header::signature</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="960" column="20" bodyfile="src/embroidery.h" bodystart="960" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a9e175ae15ec669b334d57d2b419cac11" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char _bcf_file_header::CLSID[16]</definition>
+        <argsstring>[16]</argsstring>
+        <name>CLSID</name>
+        <qualifiedname>_bcf_file_header::CLSID</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="961" column="20" bodyfile="src/embroidery.h" bodystart="961" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a9c7b0867a0040504f9e521a6a8819164" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short _bcf_file_header::minorVersion</definition>
+        <argsstring></argsstring>
+        <name>minorVersion</name>
+        <qualifiedname>_bcf_file_header::minorVersion</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="962" column="20" bodyfile="src/embroidery.h" bodystart="962" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a9bfb28b3802c47e8fa7551823008d784" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short _bcf_file_header::majorVersion</definition>
+        <argsstring></argsstring>
+        <name>majorVersion</name>
+        <qualifiedname>_bcf_file_header::majorVersion</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="963" column="20" bodyfile="src/embroidery.h" bodystart="963" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a49967c63e48613d1e4d53f7f8df226eb" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short _bcf_file_header::byteOrder</definition>
+        <argsstring></argsstring>
+        <name>byteOrder</name>
+        <qualifiedname>_bcf_file_header::byteOrder</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="964" column="20" bodyfile="src/embroidery.h" bodystart="964" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a009a208e630d0259de59c842144aab7c" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short _bcf_file_header::sectorShift</definition>
+        <argsstring></argsstring>
+        <name>sectorShift</name>
+        <qualifiedname>_bcf_file_header::sectorShift</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="965" column="20" bodyfile="src/embroidery.h" bodystart="965" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a8c197e47a91043e8af9679cf14d05654" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short _bcf_file_header::miniSectorShift</definition>
+        <argsstring></argsstring>
+        <name>miniSectorShift</name>
+        <qualifiedname>_bcf_file_header::miniSectorShift</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="966" column="20" bodyfile="src/embroidery.h" bodystart="966" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a1a9908706b0410dd8a0e038038783bc4" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short _bcf_file_header::reserved1</definition>
+        <argsstring></argsstring>
+        <name>reserved1</name>
+        <qualifiedname>_bcf_file_header::reserved1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="967" column="20" bodyfile="src/embroidery.h" bodystart="967" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1ae2039b13311b3ee491d99e578b8537da" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_file_header::reserved2</definition>
+        <argsstring></argsstring>
+        <name>reserved2</name>
+        <qualifiedname>_bcf_file_header::reserved2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="968" column="20" bodyfile="src/embroidery.h" bodystart="968" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a207b30c91a2158cfb2df01af1bdd1cb8" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_file_header::numberOfDirectorySectors</definition>
+        <argsstring></argsstring>
+        <name>numberOfDirectorySectors</name>
+        <qualifiedname>_bcf_file_header::numberOfDirectorySectors</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="969" column="20" bodyfile="src/embroidery.h" bodystart="969" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a27a869609901b9ca301c54c9ca10117a" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_file_header::numberOfFATSectors</definition>
+        <argsstring></argsstring>
+        <name>numberOfFATSectors</name>
+        <qualifiedname>_bcf_file_header::numberOfFATSectors</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="970" column="20" bodyfile="src/embroidery.h" bodystart="970" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a8ec0495c0c40288819692801d5600624" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_file_header::firstDirectorySectorLocation</definition>
+        <argsstring></argsstring>
+        <name>firstDirectorySectorLocation</name>
+        <qualifiedname>_bcf_file_header::firstDirectorySectorLocation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="971" column="20" bodyfile="src/embroidery.h" bodystart="971" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a8285945dc7a7ea2aa5ec036db11c19f4" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_file_header::transactionSignatureNumber</definition>
+        <argsstring></argsstring>
+        <name>transactionSignatureNumber</name>
+        <qualifiedname>_bcf_file_header::transactionSignatureNumber</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="972" column="20" bodyfile="src/embroidery.h" bodystart="972" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a0fb9dbe1a28c26493d25bc881ceb6da0" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_file_header::miniStreamCutoffSize</definition>
+        <argsstring></argsstring>
+        <name>miniStreamCutoffSize</name>
+        <qualifiedname>_bcf_file_header::miniStreamCutoffSize</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="973" column="20" bodyfile="src/embroidery.h" bodystart="973" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a9575046b664055fc07c8a0f18806d60f" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_file_header::firstMiniFATSectorLocation</definition>
+        <argsstring></argsstring>
+        <name>firstMiniFATSectorLocation</name>
+        <qualifiedname>_bcf_file_header::firstMiniFATSectorLocation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="974" column="20" bodyfile="src/embroidery.h" bodystart="974" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a7551ad4c222ec6e557a0fa6d262f6097" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_file_header::numberOfMiniFatSectors</definition>
+        <argsstring></argsstring>
+        <name>numberOfMiniFatSectors</name>
+        <qualifiedname>_bcf_file_header::numberOfMiniFatSectors</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="975" column="20" bodyfile="src/embroidery.h" bodystart="975" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a818bb6168c1f496eece22acbdd174167" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_file_header::firstDifatSectorLocation</definition>
+        <argsstring></argsstring>
+        <name>firstDifatSectorLocation</name>
+        <qualifiedname>_bcf_file_header::firstDifatSectorLocation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="976" column="20" bodyfile="src/embroidery.h" bodystart="976" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__bcf__file__header_1a6b934d7f5ac9c6316800a197cfd69af6" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int _bcf_file_header::numberOfDifatSectors</definition>
+        <argsstring></argsstring>
+        <name>numberOfDifatSectors</name>
+        <qualifiedname>_bcf_file_header::numberOfDifatSectors</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="977" column="20" bodyfile="src/embroidery.h" bodystart="977" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/embroidery.h" line="958" column="1" bodyfile="src/embroidery.h" bodystart="959" bodyend="978"/>
+    <listofallmembers>
+      <member refid="struct__bcf__file__header_1a49967c63e48613d1e4d53f7f8df226eb" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>byteOrder</name></member>
+      <member refid="struct__bcf__file__header_1a9e175ae15ec669b334d57d2b419cac11" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>CLSID</name></member>
+      <member refid="struct__bcf__file__header_1a818bb6168c1f496eece22acbdd174167" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>firstDifatSectorLocation</name></member>
+      <member refid="struct__bcf__file__header_1a8ec0495c0c40288819692801d5600624" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>firstDirectorySectorLocation</name></member>
+      <member refid="struct__bcf__file__header_1a9575046b664055fc07c8a0f18806d60f" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>firstMiniFATSectorLocation</name></member>
+      <member refid="struct__bcf__file__header_1a9bfb28b3802c47e8fa7551823008d784" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>majorVersion</name></member>
+      <member refid="struct__bcf__file__header_1a8c197e47a91043e8af9679cf14d05654" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>miniSectorShift</name></member>
+      <member refid="struct__bcf__file__header_1a0fb9dbe1a28c26493d25bc881ceb6da0" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>miniStreamCutoffSize</name></member>
+      <member refid="struct__bcf__file__header_1a9c7b0867a0040504f9e521a6a8819164" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>minorVersion</name></member>
+      <member refid="struct__bcf__file__header_1a6b934d7f5ac9c6316800a197cfd69af6" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>numberOfDifatSectors</name></member>
+      <member refid="struct__bcf__file__header_1a207b30c91a2158cfb2df01af1bdd1cb8" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>numberOfDirectorySectors</name></member>
+      <member refid="struct__bcf__file__header_1a27a869609901b9ca301c54c9ca10117a" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>numberOfFATSectors</name></member>
+      <member refid="struct__bcf__file__header_1a7551ad4c222ec6e557a0fa6d262f6097" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>numberOfMiniFatSectors</name></member>
+      <member refid="struct__bcf__file__header_1a1a9908706b0410dd8a0e038038783bc4" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>reserved1</name></member>
+      <member refid="struct__bcf__file__header_1ae2039b13311b3ee491d99e578b8537da" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>reserved2</name></member>
+      <member refid="struct__bcf__file__header_1a009a208e630d0259de59c842144aab7c" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>sectorShift</name></member>
+      <member refid="struct__bcf__file__header_1a6a6daf26af9aa595ed25607204197a51" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>signature</name></member>
+      <member refid="struct__bcf__file__header_1a8285945dc7a7ea2aa5ec036db11c19f4" prot="public" virt="non-virtual"><scope>_bcf_file_header</scope><name>transactionSignatureNumber</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

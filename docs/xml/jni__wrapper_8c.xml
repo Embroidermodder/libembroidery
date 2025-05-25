@@ -1,0 +1,1719 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="jni__wrapper_8c" kind="file" language="C++">
+    <compoundname>jni_wrapper.c</compoundname>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">jni.h</includes>
+    <includes refid="embroidery_8h" local="yes">embroidery.h</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>java/jni_wrapper.c</label>
+        <link refid="jni__wrapper_8c"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>embroidery.h</label>
+        <link refid="embroidery_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>inttypes.h</label>
+      </node>
+      <node id="5">
+        <label>jni.h</label>
+      </node>
+      <node id="9">
+        <label>stdarg.h</label>
+      </node>
+      <node id="8">
+        <label>stdbool.h</label>
+      </node>
+      <node id="7">
+        <label>stdint.h</label>
+      </node>
+      <node id="2">
+        <label>stdio.h</label>
+      </node>
+      <node id="3">
+        <label>stdlib.h</label>
+      </node>
+      <node id="4">
+        <label>string.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="jni__wrapper_8c_1a798db6a0b149947f593ab94f57ae8863" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a168c2ed6c7e17dd1aa7755aabc1db314" kindref="member">EmbPattern</ref> *</type>
+        <definition>EmbPattern* patterns[100]</definition>
+        <argsstring>[100]</argsstring>
+        <name>patterns</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="19" column="12" bodyfile="java/jni_wrapper.c" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="jni__wrapper_8c_1a245300631ba55a20fef19b2b6066b364" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_emb_identify_format</definition>
+        <argsstring>(const char *ending)</argsstring>
+        <name>c_emb_identify_format</name>
+        <param>
+          <type>const char *</type>
+          <declname>ending</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="21" column="5" bodyfile="java/jni_wrapper.c" bodystart="21" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a46120928b928f7e0d3151797f8554ed1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_embThread_findNearestColor</definition>
+        <argsstring>(EmbColor color, EmbArray *colors, int mode)</argsstring>
+        <name>c_embThread_findNearestColor</name>
+        <param>
+          <type><ref refid="embroidery_8h_1acde9d757854564332fd795a084ec88b3" kindref="member">EmbColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1aebe8b1561a59d167cfe6613863a671ca" kindref="member">EmbArray</ref> *</type>
+          <declname>colors</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>mode</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="26" column="5" bodyfile="java/jni_wrapper.c" bodystart="26" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a231ca5a3a1e84bf51a98b6bb3cb609c5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_embThread_findNearestColor_fromThread</definition>
+        <argsstring>(EmbColor color, EmbThread *colors, int length)</argsstring>
+        <name>c_embThread_findNearestColor_fromThread</name>
+        <param>
+          <type><ref refid="embroidery_8h_1acde9d757854564332fd795a084ec88b3" kindref="member">EmbColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1ab3faffce89b1a5043f8b4e3a001a70bd" kindref="member">EmbThread</ref> *</type>
+          <declname>colors</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>length</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="31" column="5" bodyfile="java/jni_wrapper.c" bodystart="31" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1acdc8eeb311fdc582c75bda84df5b5901" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="embroidery_8h_1ab3faffce89b1a5043f8b4e3a001a70bd" kindref="member">EmbThread</ref></type>
+        <definition>EmbThread c_embThread_getRandom</definition>
+        <argsstring>(void)</argsstring>
+        <name>c_embThread_getRandom</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="36" column="11" bodyfile="java/jni_wrapper.c" bodystart="36" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a990cd5c51e4d6f7dbd6a97c10dd9574a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_testMain</definition>
+        <argsstring>(int level)</argsstring>
+        <name>c_testMain</name>
+        <param>
+          <type>int</type>
+          <declname>level</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="41" column="6" bodyfile="java/jni_wrapper.c" bodystart="41" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1aa7aa53b3ff4b369858cd6a623d2ddda1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_convert</definition>
+        <argsstring>(const char *inf, const char *outf)</argsstring>
+        <name>c_convert</name>
+        <param>
+          <type>const char *</type>
+          <declname>inf</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>outf</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="46" column="5" bodyfile="java/jni_wrapper.c" bodystart="46" bodyend="49"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a63313525d3c3224a1cb8a66f0a57efff" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="embroidery_8h_1acde9d757854564332fd795a084ec88b3" kindref="member">EmbColor</ref></type>
+        <definition>EmbColor c_embColor_make</definition>
+        <argsstring>(unsigned char r, unsigned char g, unsigned char b)</argsstring>
+        <name>c_embColor_make</name>
+        <param>
+          <type>unsigned char</type>
+          <declname>r</declname>
+        </param>
+        <param>
+          <type>unsigned char</type>
+          <declname>g</declname>
+        </param>
+        <param>
+          <type>unsigned char</type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="51" column="10" bodyfile="java/jni_wrapper.c" bodystart="51" bodyend="54"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1ad06238524c6945890cd5b97b512022fc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="embroidery_8h_1acde9d757854564332fd795a084ec88b3" kindref="member">EmbColor</ref> *</type>
+        <definition>EmbColor * c_embColor_create</definition>
+        <argsstring>(unsigned char r, unsigned char g, unsigned char b)</argsstring>
+        <name>c_embColor_create</name>
+        <param>
+          <type>unsigned char</type>
+          <declname>r</declname>
+        </param>
+        <param>
+          <type>unsigned char</type>
+          <declname>g</declname>
+        </param>
+        <param>
+          <type>unsigned char</type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="56" column="10" bodyfile="java/jni_wrapper.c" bodystart="56" bodyend="59"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a768579954404ff689fa80d28a8f030bc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="embroidery_8h_1acde9d757854564332fd795a084ec88b3" kindref="member">EmbColor</ref></type>
+        <definition>EmbColor c_embColor_fromHexStr</definition>
+        <argsstring>(char *val)</argsstring>
+        <name>c_embColor_fromHexStr</name>
+        <param>
+          <type>char *</type>
+          <declname>val</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="61" column="10" bodyfile="java/jni_wrapper.c" bodystart="61" bodyend="64"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a9b041d087f4e89cda958334527500895" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_embColor_distance</definition>
+        <argsstring>(EmbColor a, EmbColor b)</argsstring>
+        <name>c_embColor_distance</name>
+        <param>
+          <type><ref refid="embroidery_8h_1acde9d757854564332fd795a084ec88b3" kindref="member">EmbColor</ref></type>
+          <declname>a</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1acde9d757854564332fd795a084ec88b3" kindref="member">EmbColor</ref></type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="66" column="5" bodyfile="java/jni_wrapper.c" bodystart="66" bodyend="69"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1acc99403ec6158dda3646611be9b5fc28" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="embroidery_8h_1a4e48ebde5bd4d82b875f98b347bdd62c" kindref="member">EmbEllipse</ref></type>
+        <definition>EmbEllipse c_embEllipse_make</definition>
+        <argsstring>(double cx, double cy, double rx, double ry)</argsstring>
+        <name>c_embEllipse_make</name>
+        <param>
+          <type>double</type>
+          <declname>cx</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>cy</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>rx</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>ry</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="71" column="12" bodyfile="java/jni_wrapper.c" bodystart="71" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1ac7eb042fcb615f7aca6599d5a535d5cd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_threadColor</definition>
+        <argsstring>(const char *, int brand)</argsstring>
+        <name>c_threadColor</name>
+        <param>
+          <type>const char *</type>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>brand</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="76" column="5" bodyfile="java/jni_wrapper.c" bodystart="76" bodyend="79"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a1bd1dd37de7a9cffa34c166dd8a678a1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_threadColorNum</definition>
+        <argsstring>(unsigned int color, int brand)</argsstring>
+        <name>c_threadColorNum</name>
+        <param>
+          <type>unsigned int</type>
+          <declname>color</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>brand</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="81" column="5" bodyfile="java/jni_wrapper.c" bodystart="81" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a13736c5ccda3c9950b6c90519d70681a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>const char *</type>
+        <definition>const char * c_threadColorName</definition>
+        <argsstring>(unsigned int color, int brand)</argsstring>
+        <name>c_threadColorName</name>
+        <param>
+          <type>unsigned int</type>
+          <declname>color</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>brand</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="86" column="12" bodyfile="java/jni_wrapper.c" bodystart="86" bodyend="89"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1aefe244296088de39ee3068c7af649a01" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embSatinOutline_generateSatinOutline</definition>
+        <argsstring>(EmbArray *lines, double thickness, EmbSatinOutline *result)</argsstring>
+        <name>c_embSatinOutline_generateSatinOutline</name>
+        <param>
+          <type><ref refid="embroidery_8h_1aebe8b1561a59d167cfe6613863a671ca" kindref="member">EmbArray</ref> *</type>
+          <declname>lines</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>thickness</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1af3d7bc78977c54ad019cf191aee0f276" kindref="member">EmbSatinOutline</ref> *</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="91" column="6" bodyfile="java/jni_wrapper.c" bodystart="91" bodyend="94"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a6b41a5140bab5ae2ecc6af0bc6708c2a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="embroidery_8h_1aebe8b1561a59d167cfe6613863a671ca" kindref="member">EmbArray</ref> *</type>
+        <definition>EmbArray * c_embSatinOutline_renderStitches</definition>
+        <argsstring>(EmbSatinOutline *result, double density)</argsstring>
+        <name>c_embSatinOutline_renderStitches</name>
+        <param>
+          <type><ref refid="embroidery_8h_1af3d7bc78977c54ad019cf191aee0f276" kindref="member">EmbSatinOutline</ref> *</type>
+          <declname>result</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>density</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="96" column="10" bodyfile="java/jni_wrapper.c" bodystart="96" bodyend="99"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a65ee4362243cd60db786f50c2604c56b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_embPattern_create</definition>
+        <argsstring>(void)</argsstring>
+        <name>c_embPattern_create</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="101" column="5" bodyfile="java/jni_wrapper.c" bodystart="101" bodyend="104"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a2fae937f1b8e3575092b9fb1a95aa443" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_hideStitchesOverLength</definition>
+        <argsstring>(int p, int length)</argsstring>
+        <name>c_embPattern_hideStitchesOverLength</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>length</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="106" column="6" bodyfile="java/jni_wrapper.c" bodystart="106" bodyend="109"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1acda5cc6bbc393cce28b8d5108942b183" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_fixColorCount</definition>
+        <argsstring>(int p)</argsstring>
+        <name>c_embPattern_fixColorCount</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="111" column="6" bodyfile="java/jni_wrapper.c" bodystart="111" bodyend="114"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a4d2bad60a57c0791d1b8de44dc40a062" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_embPattern_addThread</definition>
+        <argsstring>(int p, EmbThread thread)</argsstring>
+        <name>c_embPattern_addThread</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1ab3faffce89b1a5043f8b4e3a001a70bd" kindref="member">EmbThread</ref></type>
+          <declname>thread</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="116" column="5" bodyfile="java/jni_wrapper.c" bodystart="116" bodyend="119"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a41e85a5665614c00a61264ac171cbc9d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_addStitchAbs</definition>
+        <argsstring>(int p, double x, double y, int flags, int isAutoColorIndex)</argsstring>
+        <name>c_embPattern_addStitchAbs</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>y</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>flags</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>isAutoColorIndex</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="121" column="6" bodyfile="java/jni_wrapper.c" bodystart="121" bodyend="124"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1ad404f368b2e1f308aede704940ca5b19" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_addStitchRel</definition>
+        <argsstring>(int p, double dx, double dy, int flags, int isAutoColorIndex)</argsstring>
+        <name>c_embPattern_addStitchRel</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dx</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dy</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>flags</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>isAutoColorIndex</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="126" column="6" bodyfile="java/jni_wrapper.c" bodystart="126" bodyend="129"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a0eacedb3eee963476d5ffbee32352a0e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_changeColor</definition>
+        <argsstring>(int p, int index)</argsstring>
+        <name>c_embPattern_changeColor</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="131" column="6" bodyfile="java/jni_wrapper.c" bodystart="131" bodyend="134"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1aab434a833b30d5d99938e36132091ffa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_free</definition>
+        <argsstring>(int p)</argsstring>
+        <name>c_embPattern_free</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="136" column="6" bodyfile="java/jni_wrapper.c" bodystart="136" bodyend="139"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1afbf630cdb3182bb816920b7d392ada06" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_scale</definition>
+        <argsstring>(int p, double scale)</argsstring>
+        <name>c_embPattern_scale</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>scale</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="141" column="6" bodyfile="java/jni_wrapper.c" bodystart="141" bodyend="144"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a1262c11a6fa7e2a7a8db3cd6028489c3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="embroidery_8h_1ac2f33b151fc40a0da3b14379aa0ec653" kindref="member">EmbRect</ref></type>
+        <definition>EmbRect embPattern_calcBoundingBox</definition>
+        <argsstring>(int p)</argsstring>
+        <name>embPattern_calcBoundingBox</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="146" column="9" bodyfile="java/jni_wrapper.c" bodystart="146" bodyend="149"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a4705db05b79ee0452a826e7f3d60ec5d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_flipHorizontal</definition>
+        <argsstring>(int p)</argsstring>
+        <name>c_embPattern_flipHorizontal</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="151" column="6" declfile="java/jni_wrapper.c" declline="151" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1aeeb3ab4411fa26a2bd48fbafbbc4fb8a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_flipVertical</definition>
+        <argsstring>(int p)</argsstring>
+        <name>c_embPattern_flipVertical</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="153" column="6" declfile="java/jni_wrapper.c" declline="153" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a20a9bb983c91cd8313580c671f9a20b4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_flip</definition>
+        <argsstring>(int p, int horz, int vert)</argsstring>
+        <name>c_embPattern_flip</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>horz</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>vert</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="155" column="6" declfile="java/jni_wrapper.c" declline="155" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1ac2542916d9e55a3583f3fbedf1f3f5bb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_combineJumpStitches</definition>
+        <argsstring>(int p)</argsstring>
+        <name>c_embPattern_combineJumpStitches</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="157" column="6" declfile="java/jni_wrapper.c" declline="157" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a6570e27a05be7207544f1dbc89ea29ed" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_correctForMaxStitchLength</definition>
+        <argsstring>(int p, double maxStitchLength, double maxJumpLength)</argsstring>
+        <name>c_embPattern_correctForMaxStitchLength</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>maxStitchLength</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>maxJumpLength</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="159" column="6" declfile="java/jni_wrapper.c" declline="159" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a06c14dd8702aa0b4b778f5439dd9b0ff" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_center</definition>
+        <argsstring>(int p)</argsstring>
+        <name>c_embPattern_center</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="162" column="6" bodyfile="java/jni_wrapper.c" bodystart="162" bodyend="165"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a47948e5911b4f6d4ba4a5ee072f9573b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_loadExternalColorFile</definition>
+        <argsstring>(int p, const char *fileName)</argsstring>
+        <name>c_embPattern_loadExternalColorFile</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>fileName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="167" column="6" bodyfile="java/jni_wrapper.c" bodystart="167" bodyend="170"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a537d2769483a28b053002655349ae44d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_convertGeometry</definition>
+        <argsstring>(int p)</argsstring>
+        <name>c_embPattern_convertGeometry</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="172" column="6" declfile="java/jni_wrapper.c" declline="172" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1aaaf8705058f4a35cdfd51502e699f4af" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_designDetails</definition>
+        <argsstring>(int p)</argsstring>
+        <name>c_embPattern_designDetails</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="174" column="6" declfile="java/jni_wrapper.c" declline="174" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1ab866e25fb7b8193b4b13b10925f4f305" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int embPattern_combine</definition>
+        <argsstring>(int p1, int p2)</argsstring>
+        <name>embPattern_combine</name>
+        <param>
+          <type>int</type>
+          <declname>p1</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>p2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="176" column="5" declfile="java/jni_wrapper.c" declline="176" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1ab71d8036ca8eb7c09c6ab621da17dfbc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_embPattern_color_count</definition>
+        <argsstring>(int pattern, EmbColor startColor)</argsstring>
+        <name>c_embPattern_color_count</name>
+        <param>
+          <type>int</type>
+          <declname>pattern</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1acde9d757854564332fd795a084ec88b3" kindref="member">EmbColor</ref></type>
+          <declname>startColor</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="178" column="5" declfile="java/jni_wrapper.c" declline="178" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a3732751d9dd333aee6165ba7bf235a9b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_end</definition>
+        <argsstring>(int p)</argsstring>
+        <name>c_embPattern_end</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="180" column="6" declfile="java/jni_wrapper.c" declline="180" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1ae63c2aea03de2a3c672b16c244db94e0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_crossstitch</definition>
+        <argsstring>(int pattern, int, int threshhold)</argsstring>
+        <name>c_embPattern_crossstitch</name>
+        <param>
+          <type>int</type>
+          <declname>pattern</declname>
+        </param>
+        <param>
+          <type>int</type>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>threshhold</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="182" column="6" declfile="java/jni_wrapper.c" declline="182" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a2b8dbcbd3d915e321500a0e290b9a32f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_horizontal_fill</definition>
+        <argsstring>(int pattern, int, int threshhold)</argsstring>
+        <name>c_embPattern_horizontal_fill</name>
+        <param>
+          <type>int</type>
+          <declname>pattern</declname>
+        </param>
+        <param>
+          <type>int</type>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>threshhold</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="184" column="6" declfile="java/jni_wrapper.c" declline="184" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a91c86b1878bba496e79d9dc301303321" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_embPattern_render</definition>
+        <argsstring>(int pattern, char *fname)</argsstring>
+        <name>c_embPattern_render</name>
+        <param>
+          <type>int</type>
+          <declname>pattern</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="186" column="5" declfile="java/jni_wrapper.c" declline="186" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a6e00b3ab0a7bac44e63ab93516e08746" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_embPattern_simulate</definition>
+        <argsstring>(int pattern, char *fname)</argsstring>
+        <name>c_embPattern_simulate</name>
+        <param>
+          <type>int</type>
+          <declname>pattern</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="188" column="5" bodyfile="java/jni_wrapper.c" bodystart="188" bodyend="191"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a2deaa6ec95d737ed6056ab6727c68922" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_addCircleAbs</definition>
+        <argsstring>(int p, EmbCircle obj)</argsstring>
+        <name>c_embPattern_addCircleAbs</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1a87fc13ccd4dbaa7de7c85efde17bba0e" kindref="member">EmbCircle</ref></type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="193" column="6" bodyfile="java/jni_wrapper.c" bodystart="193" bodyend="196"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1ad7d09149289be29bbdb7d39a98a985d7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_addEllipseAbs</definition>
+        <argsstring>(int p, EmbEllipse obj)</argsstring>
+        <name>c_embPattern_addEllipseAbs</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1a4e48ebde5bd4d82b875f98b347bdd62c" kindref="member">EmbEllipse</ref></type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="198" column="6" bodyfile="java/jni_wrapper.c" bodystart="198" bodyend="201"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1aaf940be4e1eaf0693e0fd1d4a6ab9cbf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_addLineAbs</definition>
+        <argsstring>(int p, EmbLine obj)</argsstring>
+        <name>c_embPattern_addLineAbs</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1a62e08237073617de993166ed4a9ab085" kindref="member">EmbLine</ref></type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="203" column="6" bodyfile="java/jni_wrapper.c" bodystart="203" bodyend="206"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a0126b56783a78c7758ee57a53f613591" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_addPathAbs</definition>
+        <argsstring>(int p, EmbPath obj)</argsstring>
+        <name>c_embPattern_addPathAbs</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1af29045dfeebafdcb66d114b390c4a686" kindref="member">EmbPath</ref></type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="208" column="6" bodyfile="java/jni_wrapper.c" bodystart="208" bodyend="211"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a2585f74ec03fabe3b466fe059c2de7cc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_addPointAbs</definition>
+        <argsstring>(int p, EmbPoint obj)</argsstring>
+        <name>c_embPattern_addPointAbs</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1a835ccc3aedf71b57dca6130be87ea463" kindref="member">EmbPoint</ref></type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="213" column="6" bodyfile="java/jni_wrapper.c" bodystart="213" bodyend="216"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a8bac61a920f7d9c8f181a665c3409d8a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_addPolygonAbs</definition>
+        <argsstring>(int p, EmbPolygon obj)</argsstring>
+        <name>c_embPattern_addPolygonAbs</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1a2d6988a5f4ba24d26c7eff65dbc9d029" kindref="member">EmbPolygon</ref></type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="218" column="6" bodyfile="java/jni_wrapper.c" bodystart="218" bodyend="221"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a61f18db208416ed0220cb6e2363c6f83" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_addPolylineAbs</definition>
+        <argsstring>(int p, EmbPolyline obj)</argsstring>
+        <name>c_embPattern_addPolylineAbs</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1ab5563c868d8f8174d5be764808a647dd" kindref="member">EmbPolyline</ref></type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="223" column="6" bodyfile="java/jni_wrapper.c" bodystart="223" bodyend="226"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a0b438e1d8c992a327e08c804080780d7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_addRectAbs</definition>
+        <argsstring>(int p, EmbRect obj)</argsstring>
+        <name>c_embPattern_addRectAbs</name>
+        <param>
+          <type>int</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type><ref refid="embroidery_8h_1ac2f33b151fc40a0da3b14379aa0ec653" kindref="member">EmbRect</ref></type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="228" column="6" bodyfile="java/jni_wrapper.c" bodystart="228" bodyend="231"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1ab7c00fdd69e6f67f5ec9497329069c7f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_copyStitchListToPolylines</definition>
+        <argsstring>(int pattern)</argsstring>
+        <name>c_embPattern_copyStitchListToPolylines</name>
+        <param>
+          <type>int</type>
+          <declname>pattern</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="233" column="6" bodyfile="java/jni_wrapper.c" bodystart="233" bodyend="236"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a3f5156df05b17b7b653507000b30ed93" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_copyPolylinesToStitchList</definition>
+        <argsstring>(int pattern)</argsstring>
+        <name>c_embPattern_copyPolylinesToStitchList</name>
+        <param>
+          <type>int</type>
+          <declname>pattern</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="238" column="6" bodyfile="java/jni_wrapper.c" bodystart="238" bodyend="241"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1af36e122efc960c5cfbb7d1db9cf2c84a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_moveStitchListToPolylines</definition>
+        <argsstring>(int pattern)</argsstring>
+        <name>c_embPattern_moveStitchListToPolylines</name>
+        <param>
+          <type>int</type>
+          <declname>pattern</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="243" column="6" bodyfile="java/jni_wrapper.c" bodystart="243" bodyend="246"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1aa79ecec30270fedd4fdf36059c4a001a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embPattern_movePolylinesToStitchList</definition>
+        <argsstring>(int pattern)</argsstring>
+        <name>c_embPattern_movePolylinesToStitchList</name>
+        <param>
+          <type>int</type>
+          <declname>pattern</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="248" column="6" bodyfile="java/jni_wrapper.c" bodystart="248" bodyend="251"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a920c9aebe29588c31fc9f4abb2e6da2b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char</type>
+        <definition>char c_embPattern_read</definition>
+        <argsstring>(int pattern, const char *fileName, int format)</argsstring>
+        <name>c_embPattern_read</name>
+        <param>
+          <type>int</type>
+          <declname>pattern</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>fileName</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>format</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="253" column="6" bodyfile="java/jni_wrapper.c" bodystart="253" bodyend="256"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1af090f4f1d1ffad1566e55753a1e707db" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char</type>
+        <definition>char c_embPattern_write</definition>
+        <argsstring>(int pattern, const char *fileName, int format)</argsstring>
+        <name>c_embPattern_write</name>
+        <param>
+          <type>int</type>
+          <declname>pattern</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>fileName</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>format</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="258" column="6" bodyfile="java/jni_wrapper.c" bodystart="258" bodyend="261"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a622989f7e0e77d7d4501244482c6cd94" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char</type>
+        <definition>char c_embPattern_readAuto</definition>
+        <argsstring>(int pattern, const char *fileName)</argsstring>
+        <name>c_embPattern_readAuto</name>
+        <param>
+          <type>int</type>
+          <declname>pattern</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>fileName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="263" column="6" bodyfile="java/jni_wrapper.c" bodystart="263" bodyend="266"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a2e85ed61c5b4f755a7bcbed152a2d04d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char</type>
+        <definition>char c_embPattern_writeAuto</definition>
+        <argsstring>(int pattern, const char *fileName)</argsstring>
+        <name>c_embPattern_writeAuto</name>
+        <param>
+          <type>int</type>
+          <declname>pattern</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>fileName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="268" column="6" bodyfile="java/jni_wrapper.c" bodystart="268" bodyend="271"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1adf836e80e95a0ad9c898d34d7558b2f4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_report</definition>
+        <argsstring>(int result, char *label)</argsstring>
+        <name>c_report</name>
+        <param>
+          <type>int</type>
+          <declname>result</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>label</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="273" column="6" bodyfile="java/jni_wrapper.c" bodystart="273" bodyend="276"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a917f99569701cbb355e8d312d70d4b04" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_full_test_matrix</definition>
+        <argsstring>(char *fname)</argsstring>
+        <name>c_full_test_matrix</name>
+        <param>
+          <type>char *</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="278" column="5" bodyfile="java/jni_wrapper.c" bodystart="278" bodyend="281"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a0d157a0241f2edb714d5d9429e15a9a1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="embroidery_8h_1a907d23c2268eff84b7c5146b2add1bb4" kindref="member">EmbImage</ref></type>
+        <definition>EmbImage c_embImage_create</definition>
+        <argsstring>(int, int)</argsstring>
+        <name>c_embImage_create</name>
+        <param>
+          <type>int</type>
+        </param>
+        <param>
+          <type>int</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="283" column="10" bodyfile="java/jni_wrapper.c" bodystart="283" bodyend="286"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1afd25dea2bc8a326e6a542bf981e5a6ec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embImage_read</definition>
+        <argsstring>(int image, char *fname)</argsstring>
+        <name>c_embImage_read</name>
+        <param>
+          <type>int</type>
+          <declname>image</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="288" column="6" bodyfile="java/jni_wrapper.c" bodystart="288" bodyend="291"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1a5201b26e9e6869f4c0c83f0e6db2bb8c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int c_embImage_write</definition>
+        <argsstring>(int image, char *fname)</argsstring>
+        <name>c_embImage_write</name>
+        <param>
+          <type>int</type>
+          <declname>image</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="293" column="5" bodyfile="java/jni_wrapper.c" bodystart="293" bodyend="296"/>
+      </memberdef>
+      <memberdef kind="function" id="jni__wrapper_8c_1affef2ae6c7bb72fcb38a7b18e73290f6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void c_embImage_free</definition>
+        <argsstring>(int image)</argsstring>
+        <name>c_embImage_free</name>
+        <param>
+          <type>int</type>
+          <declname>image</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="java/jni_wrapper.c" line="298" column="6" bodyfile="java/jni_wrapper.c" bodystart="298" bodyend="301"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>This<sp/>file<sp/>is<sp/>part<sp/>of<sp/>libembroidery.</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>2018-2022<sp/>The<sp/>Embroidermodder<sp/>Team</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>Licensed<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>zlib<sp/>license.</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/>---------------------------------------------------------</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/>The<sp/>bindings<sp/>for<sp/>libembroidery<sp/>on<sp/>Java:<sp/>for<sp/>Android<sp/>app<sp/>support.</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;jni.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="embroidery_8h" kindref="compound">embroidery.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><ref refid="structEmbPattern__" kindref="compound">EmbPattern</ref><sp/>*patterns[100];</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_emb_identify_format(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*ending)</highlight></codeline>
+<codeline lineno="22"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_embThread_findNearestColor(<ref refid="structEmbColor__" kindref="compound">EmbColor</ref><sp/>color,<sp/><ref refid="structEmbArray__" kindref="compound">EmbArray</ref>*<sp/>colors,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>mode)</highlight></codeline>
+<codeline lineno="27"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_embThread_findNearestColor_fromThread(<ref refid="structEmbColor__" kindref="compound">EmbColor</ref><sp/>color,<sp/><ref refid="structEmbThread__" kindref="compound">EmbThread</ref>*<sp/>colors,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>length)</highlight></codeline>
+<codeline lineno="32"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><ref refid="structEmbThread__" kindref="compound">EmbThread</ref><sp/>c_embThread_getRandom(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="37"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_testMain(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>level)</highlight></codeline>
+<codeline lineno="42"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_convert(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*inf,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*outf)</highlight></codeline>
+<codeline lineno="47"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><ref refid="structEmbColor__" kindref="compound">EmbColor</ref><sp/>c_embColor_make(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>r,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>g,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>b)</highlight></codeline>
+<codeline lineno="52"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><ref refid="structEmbColor__" kindref="compound">EmbColor</ref>*<sp/>c_embColor_create(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>r,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>g,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>b)</highlight></codeline>
+<codeline lineno="57"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><ref refid="structEmbColor__" kindref="compound">EmbColor</ref><sp/>c_embColor_fromHexStr(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>val)</highlight></codeline>
+<codeline lineno="62"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_embColor_distance(<ref refid="structEmbColor__" kindref="compound">EmbColor</ref><sp/>a,<sp/><ref refid="structEmbColor__" kindref="compound">EmbColor</ref><sp/>b)</highlight></codeline>
+<codeline lineno="67"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><ref refid="structEmbEllipse__" kindref="compound">EmbEllipse</ref><sp/>c_embEllipse_make(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>cx,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>cy,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>rx,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>ry)</highlight></codeline>
+<codeline lineno="72"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_threadColor(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>brand)</highlight></codeline>
+<codeline lineno="77"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_threadColorNum(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>color,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>brand)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>c_threadColorName(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>color,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>brand)</highlight></codeline>
+<codeline lineno="87"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embSatinOutline_generateSatinOutline(<ref refid="structEmbArray__" kindref="compound">EmbArray</ref>*<sp/>lines,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>thickness,<sp/><ref refid="structEmbSatinOutline__" kindref="compound">EmbSatinOutline</ref>*<sp/>result)</highlight></codeline>
+<codeline lineno="92"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><ref refid="structEmbArray__" kindref="compound">EmbArray</ref>*<sp/>c_embSatinOutline_renderStitches(<ref refid="structEmbSatinOutline__" kindref="compound">EmbSatinOutline</ref>*<sp/>result,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>density)</highlight></codeline>
+<codeline lineno="97"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_embPattern_create(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="102"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_hideStitchesOverLength(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>length)</highlight></codeline>
+<codeline lineno="107"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_fixColorCount(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p)</highlight></codeline>
+<codeline lineno="112"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_embPattern_addThread(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/><ref refid="structEmbThread__" kindref="compound">EmbThread</ref><sp/>thread)</highlight></codeline>
+<codeline lineno="117"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_addStitchAbs(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>y,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>flags,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>isAutoColorIndex)</highlight></codeline>
+<codeline lineno="122"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_addStitchRel(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dx,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dy,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>flags,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>isAutoColorIndex)</highlight></codeline>
+<codeline lineno="127"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_changeColor(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>index)</highlight></codeline>
+<codeline lineno="132"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_free(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p)</highlight></codeline>
+<codeline lineno="137"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_scale(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>scale)</highlight></codeline>
+<codeline lineno="142"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><ref refid="structEmbRect__" kindref="compound">EmbRect</ref><sp/>embPattern_calcBoundingBox(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p)</highlight></codeline>
+<codeline lineno="147"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_flipHorizontal(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p);</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_flipVertical(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p);</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight></codeline>
+<codeline lineno="155"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_flip(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>horz,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>vert);</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_combineJumpStitches(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p);</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_correctForMaxStitchLength(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>maxStitchLength,<sp/></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>maxJumpLength);</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_center(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p)</highlight></codeline>
+<codeline lineno="163"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"></highlight></codeline>
+<codeline lineno="165"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_loadExternalColorFile(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>fileName)</highlight></codeline>
+<codeline lineno="168"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="170"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"></highlight></codeline>
+<codeline lineno="172"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_convertGeometry(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p);</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"></highlight></codeline>
+<codeline lineno="174"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_designDetails(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p);</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"></highlight></codeline>
+<codeline lineno="176"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>embPattern_combine(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p1,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p2);</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"></highlight></codeline>
+<codeline lineno="178"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_embPattern_color_count(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pattern,<sp/><ref refid="structEmbColor__" kindref="compound">EmbColor</ref><sp/>startColor);</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"></highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_end(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p);</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight></codeline>
+<codeline lineno="182"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_crossstitch(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pattern,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>threshhold);</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"></highlight></codeline>
+<codeline lineno="184"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_horizontal_fill(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pattern,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>threshhold);</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"></highlight></codeline>
+<codeline lineno="186"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_embPattern_render(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pattern,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*fname);</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"></highlight></codeline>
+<codeline lineno="188"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_embPattern_simulate(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pattern,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*fname)</highlight></codeline>
+<codeline lineno="189"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"></highlight></codeline>
+<codeline lineno="191"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"></highlight></codeline>
+<codeline lineno="193"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_addCircleAbs(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/><ref refid="structEmbCircle__" kindref="compound">EmbCircle</ref><sp/>obj)</highlight></codeline>
+<codeline lineno="194"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"></highlight></codeline>
+<codeline lineno="196"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"></highlight></codeline>
+<codeline lineno="198"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_addEllipseAbs(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/><ref refid="structEmbEllipse__" kindref="compound">EmbEllipse</ref><sp/>obj)</highlight></codeline>
+<codeline lineno="199"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"></highlight></codeline>
+<codeline lineno="201"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"></highlight></codeline>
+<codeline lineno="203"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_addLineAbs(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/><ref refid="structEmbLine__" kindref="compound">EmbLine</ref><sp/>obj)</highlight></codeline>
+<codeline lineno="204"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"></highlight></codeline>
+<codeline lineno="206"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"></highlight></codeline>
+<codeline lineno="208"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_addPathAbs(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/><ref refid="structEmbPath__" kindref="compound">EmbPath</ref><sp/>obj)</highlight></codeline>
+<codeline lineno="209"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"></highlight></codeline>
+<codeline lineno="211"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"></highlight></codeline>
+<codeline lineno="213"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_addPointAbs(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/><ref refid="structEmbPoint__" kindref="compound">EmbPoint</ref><sp/>obj)</highlight></codeline>
+<codeline lineno="214"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"></highlight></codeline>
+<codeline lineno="216"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"></highlight></codeline>
+<codeline lineno="218"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_addPolygonAbs(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/><ref refid="structEmbPath__" kindref="compound">EmbPolygon</ref><sp/>obj)</highlight></codeline>
+<codeline lineno="219"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight></codeline>
+<codeline lineno="221"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"></highlight></codeline>
+<codeline lineno="223"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_addPolylineAbs(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/><ref refid="structEmbPath__" kindref="compound">EmbPolyline</ref><sp/>obj)</highlight></codeline>
+<codeline lineno="224"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"></highlight></codeline>
+<codeline lineno="226"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"></highlight></codeline>
+<codeline lineno="228"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_addRectAbs(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p,<sp/><ref refid="structEmbRect__" kindref="compound">EmbRect</ref><sp/>obj)</highlight></codeline>
+<codeline lineno="229"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"></highlight></codeline>
+<codeline lineno="231"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"></highlight></codeline>
+<codeline lineno="233"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_copyStitchListToPolylines(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pattern)</highlight></codeline>
+<codeline lineno="234"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"></highlight></codeline>
+<codeline lineno="236"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"></highlight></codeline>
+<codeline lineno="238"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_copyPolylinesToStitchList(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pattern)</highlight></codeline>
+<codeline lineno="239"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"></highlight></codeline>
+<codeline lineno="241"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"></highlight></codeline>
+<codeline lineno="243"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_moveStitchListToPolylines(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pattern)</highlight></codeline>
+<codeline lineno="244"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"></highlight></codeline>
+<codeline lineno="246"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"></highlight></codeline>
+<codeline lineno="248"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embPattern_movePolylinesToStitchList(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pattern)</highlight></codeline>
+<codeline lineno="249"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"></highlight></codeline>
+<codeline lineno="251"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"></highlight></codeline>
+<codeline lineno="253"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>c_embPattern_read(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pattern,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>fileName,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>format)</highlight></codeline>
+<codeline lineno="254"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"></highlight></codeline>
+<codeline lineno="256"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"></highlight></codeline>
+<codeline lineno="258"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>c_embPattern_write(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pattern,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>fileName,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>format)</highlight></codeline>
+<codeline lineno="259"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"></highlight></codeline>
+<codeline lineno="261"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"></highlight></codeline>
+<codeline lineno="263"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>c_embPattern_readAuto(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pattern,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>fileName)</highlight></codeline>
+<codeline lineno="264"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="265"><highlight class="normal"></highlight></codeline>
+<codeline lineno="266"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"></highlight></codeline>
+<codeline lineno="268"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>c_embPattern_writeAuto(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pattern,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>fileName)</highlight></codeline>
+<codeline lineno="269"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"></highlight></codeline>
+<codeline lineno="271"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"></highlight></codeline>
+<codeline lineno="273"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_report(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>result,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*label)</highlight></codeline>
+<codeline lineno="274"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"></highlight></codeline>
+<codeline lineno="276"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"></highlight></codeline>
+<codeline lineno="278"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_full_test_matrix(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*fname)</highlight></codeline>
+<codeline lineno="279"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="280"><highlight class="normal"></highlight></codeline>
+<codeline lineno="281"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="282"><highlight class="normal"></highlight></codeline>
+<codeline lineno="283"><highlight class="normal"><ref refid="structEmbImage__" kindref="compound">EmbImage</ref><sp/>c_embImage_create(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="284"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="285"><highlight class="normal"></highlight></codeline>
+<codeline lineno="286"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="287"><highlight class="normal"></highlight></codeline>
+<codeline lineno="288"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embImage_read(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>image,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*fname)</highlight></codeline>
+<codeline lineno="289"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="290"><highlight class="normal"></highlight></codeline>
+<codeline lineno="291"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="292"><highlight class="normal"></highlight></codeline>
+<codeline lineno="293"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c_embImage_write(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>image,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*fname)</highlight></codeline>
+<codeline lineno="294"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="295"><highlight class="normal"></highlight></codeline>
+<codeline lineno="296"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="297"><highlight class="normal"></highlight></codeline>
+<codeline lineno="298"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>c_embImage_free(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>image)</highlight></codeline>
+<codeline lineno="299"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="300"><highlight class="normal"></highlight></codeline>
+<codeline lineno="301"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="java/jni_wrapper.c"/>
+  </compounddef>
+</doxygen>

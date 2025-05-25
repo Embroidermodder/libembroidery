@@ -1,0 +1,516 @@
+\hypertarget{script_8c}{}\doxysection{src/script.c File Reference}
+\label{script_8c}\index{src/script.c@{src/script.c}}
+
+
+Basic Postscript support for libembroidery.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$limits.\+h$>$}\newline
+{\ttfamily \#include $<$assert.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}embroidery.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../extern/mpc/mpc.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{script_8c_ae3474c51d41c4a04c9431d455f81a95f}{DEFAULT\+\_\+\+PLACE\+\_\+\+VALUE}}~(0.\+1)
+\item 
+\mbox{\Hypertarget{script_8c_ab5eb05d3b545c8fc57952cb4afb121ca}\label{script_8c_ab5eb05d3b545c8fc57952cb4afb121ca}} 
+\#define {\bfseries STRING\+\_\+\+TYPE}~0
+\item 
+\mbox{\Hypertarget{script_8c_a72b714d656e535bd40be1da6d39565b7}\label{script_8c_a72b714d656e535bd40be1da6d39565b7}} 
+\#define {\bfseries ARRAY\+\_\+\+TYPE}~1
+\item 
+\mbox{\Hypertarget{script_8c_a7db5e8ee7c27e6fb5c9caf9d674ea949}\label{script_8c_a7db5e8ee7c27e6fb5c9caf9d674ea949}} 
+\#define {\bfseries REAL\+\_\+\+TYPE}~2
+\item 
+\mbox{\Hypertarget{script_8c_ac29eb1421065a6544048e884e95a61c6}\label{script_8c_ac29eb1421065a6544048e884e95a61c6}} 
+\#define {\bfseries INT\+\_\+\+TYPE}~3
+\item 
+\mbox{\Hypertarget{script_8c_a68bced17f9b5865715256306d56be383}\label{script_8c_a68bced17f9b5865715256306d56be383}} 
+\#define {\bfseries BOOL\+\_\+\+TYPE}~4
+\item 
+\mbox{\Hypertarget{script_8c_a32178dab204cbacbc9733c56e7ab6354}\label{script_8c_a32178dab204cbacbc9733c56e7ab6354}} 
+\#define {\bfseries NAME\+\_\+\+TYPE}~5
+\item 
+\mbox{\Hypertarget{script_8c_a5168ca5a00971f2189fe0234b474e075}\label{script_8c_a5168ca5a00971f2189fe0234b474e075}} 
+\#define {\bfseries DICTIONARY\+\_\+\+TYPE}~6
+\item 
+\mbox{\Hypertarget{script_8c_ab0129ef351f0c27fdec1840101cfd86f}\label{script_8c_ab0129ef351f0c27fdec1840101cfd86f}} 
+\#define {\bfseries LITERAL\+\_\+\+ATTR}~0
+\item 
+\mbox{\Hypertarget{script_8c_ae339bd0453042ae416a03c1ad57c14aa}\label{script_8c_ae339bd0453042ae416a03c1ad57c14aa}} 
+\#define {\bfseries EXEC\+\_\+\+ATTR}~1
+\item 
+\mbox{\Hypertarget{script_8c_a392d5d88e65003cb961d3a965dbe1aeb}\label{script_8c_a392d5d88e65003cb961d3a965dbe1aeb}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+DUP}~0
+\item 
+\mbox{\Hypertarget{script_8c_aa6a195804f1a8b05b77776b478dd3ff6}\label{script_8c_aa6a195804f1a8b05b77776b478dd3ff6}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+EXCH}~1
+\item 
+\mbox{\Hypertarget{script_8c_a96db3bd2f87f317e8d61784b18ded44e}\label{script_8c_a96db3bd2f87f317e8d61784b18ded44e}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+POP}~2
+\item 
+\mbox{\Hypertarget{script_8c_ad4cf0ed4565dd0cb54693c060dc27af0}\label{script_8c_ad4cf0ed4565dd0cb54693c060dc27af0}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+COPY}~3
+\item 
+\mbox{\Hypertarget{script_8c_ac4390e250c060263b788da50aba823d2}\label{script_8c_ac4390e250c060263b788da50aba823d2}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+ROLL}~4
+\item 
+\mbox{\Hypertarget{script_8c_aee50b1b864d77ed4250fb754fd9677ea}\label{script_8c_aee50b1b864d77ed4250fb754fd9677ea}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+INDEX}~5
+\item 
+\mbox{\Hypertarget{script_8c_afddd620a8a6deac8c9cf340e898ec69e}\label{script_8c_afddd620a8a6deac8c9cf340e898ec69e}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+MARK}~6
+\item 
+\mbox{\Hypertarget{script_8c_aeb24b4919b15669543d218179852fc0b}\label{script_8c_aeb24b4919b15669543d218179852fc0b}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+CLEAR}~7
+\item 
+\mbox{\Hypertarget{script_8c_a42e0cdef0c99aad618f8a3a57c725982}\label{script_8c_a42e0cdef0c99aad618f8a3a57c725982}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+COUNT}~8
+\item 
+\mbox{\Hypertarget{script_8c_a857e2a9afb983853d24137eb5d42dba6}\label{script_8c_a857e2a9afb983853d24137eb5d42dba6}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+COUNTTOMARK}~9
+\item 
+\mbox{\Hypertarget{script_8c_a22badca85242d29d30760f6f7dc0203c}\label{script_8c_a22badca85242d29d30760f6f7dc0203c}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+ADD}~10
+\item 
+\mbox{\Hypertarget{script_8c_ac41b4b043dd95ddc10dd3298b070b98b}\label{script_8c_ac41b4b043dd95ddc10dd3298b070b98b}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+SUB}~11
+\item 
+\mbox{\Hypertarget{script_8c_aa930a5b34cf5b45efc5949816ed5c560}\label{script_8c_aa930a5b34cf5b45efc5949816ed5c560}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+MUL}~12
+\item 
+\mbox{\Hypertarget{script_8c_a973c817fdecafca719b208614399e8f5}\label{script_8c_a973c817fdecafca719b208614399e8f5}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+DIV}~13
+\item 
+\mbox{\Hypertarget{script_8c_a397a557e6828da313a41b22310277697}\label{script_8c_a397a557e6828da313a41b22310277697}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+IDIV}~14
+\item 
+\mbox{\Hypertarget{script_8c_a3f7df8fb9b7f08af425237d0ae2f4028}\label{script_8c_a3f7df8fb9b7f08af425237d0ae2f4028}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+MOD}~15
+\item 
+\mbox{\Hypertarget{script_8c_a7ee7a19ee6357be493f6685eced223f5}\label{script_8c_a7ee7a19ee6357be493f6685eced223f5}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+ABS}~16
+\item 
+\mbox{\Hypertarget{script_8c_a1582721d3381c41ce8cc9eac744ecbad}\label{script_8c_a1582721d3381c41ce8cc9eac744ecbad}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+NEG}~17
+\item 
+\mbox{\Hypertarget{script_8c_ac3b2befcbc0d897938b38196fe3b3513}\label{script_8c_ac3b2befcbc0d897938b38196fe3b3513}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+CEILING}~18
+\item 
+\mbox{\Hypertarget{script_8c_ad2e81bce0301d1e7ad2a3fe746a56701}\label{script_8c_ad2e81bce0301d1e7ad2a3fe746a56701}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+FLOOR}~19
+\item 
+\mbox{\Hypertarget{script_8c_aae807c33638d7524312ca94c3332b09b}\label{script_8c_aae807c33638d7524312ca94c3332b09b}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+ROUND}~20
+\item 
+\mbox{\Hypertarget{script_8c_a0a9f72ba9935e031f227b172bb5f6017}\label{script_8c_a0a9f72ba9935e031f227b172bb5f6017}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+TRUNCATE}~21
+\item 
+\mbox{\Hypertarget{script_8c_a70fa4adc39cfa4ebfc3238e4a7706d24}\label{script_8c_a70fa4adc39cfa4ebfc3238e4a7706d24}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+SQRT}~22
+\item 
+\mbox{\Hypertarget{script_8c_ad6bd5d0b7b76661d5b8458ebfdd1a8e1}\label{script_8c_ad6bd5d0b7b76661d5b8458ebfdd1a8e1}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+EXP}~23
+\item 
+\mbox{\Hypertarget{script_8c_a5ebe2f442f5f15892b90950eaa8b991b}\label{script_8c_a5ebe2f442f5f15892b90950eaa8b991b}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+LN}~24
+\item 
+\mbox{\Hypertarget{script_8c_a3e2f383d02f3101fcb3b6180b70f0459}\label{script_8c_a3e2f383d02f3101fcb3b6180b70f0459}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+LOG}~25
+\item 
+\mbox{\Hypertarget{script_8c_a422ce639217751d451f4efa09ab355c6}\label{script_8c_a422ce639217751d451f4efa09ab355c6}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+sin}~26
+\item 
+\mbox{\Hypertarget{script_8c_ae51558890525e2935814aa3f4a693090}\label{script_8c_ae51558890525e2935814aa3f4a693090}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+cos}~27
+\item 
+\mbox{\Hypertarget{script_8c_a765f8a5da7138206c0f5c8221389f92c}\label{script_8c_a765f8a5da7138206c0f5c8221389f92c}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+atan}~28
+\item 
+\mbox{\Hypertarget{script_8c_a6d429906ddd5c490afb7650ece453f8c}\label{script_8c_a6d429906ddd5c490afb7650ece453f8c}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+rand}~29
+\item 
+\mbox{\Hypertarget{script_8c_a6f62079e6d9413c6d78ea522dae3f735}\label{script_8c_a6f62079e6d9413c6d78ea522dae3f735}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+srand}~30
+\item 
+\mbox{\Hypertarget{script_8c_a436d148534a096473f018abe4c4ae590}\label{script_8c_a436d148534a096473f018abe4c4ae590}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+rrand}~31
+\item 
+\mbox{\Hypertarget{script_8c_abd563991d08b0dbe60e23f870bb379f5}\label{script_8c_abd563991d08b0dbe60e23f870bb379f5}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+get}~32
+\item 
+\mbox{\Hypertarget{script_8c_a3bc092e98d9312388531d4b947028a5e}\label{script_8c_a3bc092e98d9312388531d4b947028a5e}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+put}~33
+\item 
+\mbox{\Hypertarget{script_8c_a7d8b31691ea74bbc0efc2b42905f97f4}\label{script_8c_a7d8b31691ea74bbc0efc2b42905f97f4}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+copy}~34
+\item 
+\mbox{\Hypertarget{script_8c_ab01acbc232c30df243643ebad9e107d7}\label{script_8c_ab01acbc232c30df243643ebad9e107d7}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+length}~35
+\item 
+\mbox{\Hypertarget{script_8c_aaea2dc0dca8e27f468094807b209ab7e}\label{script_8c_aaea2dc0dca8e27f468094807b209ab7e}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+getinterval}~36
+\item 
+\mbox{\Hypertarget{script_8c_aab17d5b03c67fbb389cd2f9ed37866f6}\label{script_8c_aab17d5b03c67fbb389cd2f9ed37866f6}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+putinterval}~37
+\item 
+\mbox{\Hypertarget{script_8c_acc63d26be2aa1d1fb3bf8abd78d35d18}\label{script_8c_acc63d26be2aa1d1fb3bf8abd78d35d18}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+aload}~38
+\item 
+\mbox{\Hypertarget{script_8c_a9a9cd927f7852dbe7e0e9c88bb6a891d}\label{script_8c_a9a9cd927f7852dbe7e0e9c88bb6a891d}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+astore}~39
+\item 
+\mbox{\Hypertarget{script_8c_a8ed5c6b6dbbb310886235610f9e11652}\label{script_8c_a8ed5c6b6dbbb310886235610f9e11652}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+OPEN\+\_\+\+SQ}~40
+\item 
+\mbox{\Hypertarget{script_8c_a90cdd5b4fd6d491ca1242d3760510f2f}\label{script_8c_a90cdd5b4fd6d491ca1242d3760510f2f}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+\+CLOSE\+\_\+\+SQ}~41
+\item 
+\mbox{\Hypertarget{script_8c_a35d082369816c1994be0c7ed61c782f4}\label{script_8c_a35d082369816c1994be0c7ed61c782f4}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+setpacking}~42
+\item 
+\mbox{\Hypertarget{script_8c_acb74f8ae4a9f655092ea2e8f0bb5497b}\label{script_8c_acb74f8ae4a9f655092ea2e8f0bb5497b}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+currentpacking}~43
+\item 
+\mbox{\Hypertarget{script_8c_a2ee4fd15dddd08741ba1337425ba6bef}\label{script_8c_a2ee4fd15dddd08741ba1337425ba6bef}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+begin}~44
+\item 
+\mbox{\Hypertarget{script_8c_a238a491aabb5bc7802d5aa6c0254255f}\label{script_8c_a238a491aabb5bc7802d5aa6c0254255f}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+end}~45
+\item 
+\mbox{\Hypertarget{script_8c_aa2152a0c8b674960ec389af1a2d2005d}\label{script_8c_aa2152a0c8b674960ec389af1a2d2005d}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+def}~46
+\item 
+\mbox{\Hypertarget{script_8c_acebcaafc6731662738dd8daf0a49cd14}\label{script_8c_acebcaafc6731662738dd8daf0a49cd14}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+store}~47
+\item 
+\mbox{\Hypertarget{script_8c_afeea8073196cd32935542d4f8e165fb9}\label{script_8c_afeea8073196cd32935542d4f8e165fb9}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+load}~48
+\item 
+\mbox{\Hypertarget{script_8c_a9e9918b375edc6d1cd6f076e6e06e45a}\label{script_8c_a9e9918b375edc6d1cd6f076e6e06e45a}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+where}~49
+\item 
+\mbox{\Hypertarget{script_8c_a5e0e1d5be016c28149ca9e2abbb72f09}\label{script_8c_a5e0e1d5be016c28149ca9e2abbb72f09}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+countdictstack}~50
+\item 
+\mbox{\Hypertarget{script_8c_a1c40b3e934d3f6621fffa06f9fedce10}\label{script_8c_a1c40b3e934d3f6621fffa06f9fedce10}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+cleardictstack}~51
+\item 
+\mbox{\Hypertarget{script_8c_a83c2c5cc2988a37cb90c86509c532e2f}\label{script_8c_a83c2c5cc2988a37cb90c86509c532e2f}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+dictstack}~52
+\item 
+\mbox{\Hypertarget{script_8c_ae4d9028882a75fbf6e3abb364d6bbdbe}\label{script_8c_ae4d9028882a75fbf6e3abb364d6bbdbe}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+known}~53
+\item 
+\mbox{\Hypertarget{script_8c_a10f54ed6cc262cff20e8141d071b72e6}\label{script_8c_a10f54ed6cc262cff20e8141d071b72e6}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+maxlength}~54
+\item 
+\mbox{\Hypertarget{script_8c_a42b196a160660c7701f13ade8c08d7b5}\label{script_8c_a42b196a160660c7701f13ade8c08d7b5}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+undef}~55 /$\ast$ Level 2 $\ast$/
+\item 
+\mbox{\Hypertarget{script_8c_a0b2360b32c405405d25159b99e1811cf}\label{script_8c_a0b2360b32c405405d25159b99e1811cf}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+left\+\_\+arrow}~56 /$\ast$ Level 2 $\ast$/
+\item 
+\mbox{\Hypertarget{script_8c_aa3431a7b5fd95feb1f6ddcd52e22f988}\label{script_8c_aa3431a7b5fd95feb1f6ddcd52e22f988}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+right\+\_\+arrow}~57 /$\ast$ Level 2 $\ast$/
+\item 
+\mbox{\Hypertarget{script_8c_af8c33c85bd02ccb74901006cc5d4fa30}\label{script_8c_af8c33c85bd02ccb74901006cc5d4fa30}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+search}~58
+\item 
+\mbox{\Hypertarget{script_8c_a532a91cac69639b5b40091b4fccba2b4}\label{script_8c_a532a91cac69639b5b40091b4fccba2b4}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+anchorsearch}~59
+\item 
+\mbox{\Hypertarget{script_8c_a72efb7f406cbd7c24ea20fbba9771b30}\label{script_8c_a72efb7f406cbd7c24ea20fbba9771b30}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+token}~60
+\item 
+\mbox{\Hypertarget{script_8c_ad3665ff7ca87ec6e465c8d50efedcf5c}\label{script_8c_ad3665ff7ca87ec6e465c8d50efedcf5c}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+eq}~61
+\item 
+\mbox{\Hypertarget{script_8c_a4155a3ab55c20aed6390b93218dd85ed}\label{script_8c_a4155a3ab55c20aed6390b93218dd85ed}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+ne}~62
+\item 
+\mbox{\Hypertarget{script_8c_a1a2c8deab1822597ef4e2935871ecf96}\label{script_8c_a1a2c8deab1822597ef4e2935871ecf96}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+gt}~63
+\item 
+\mbox{\Hypertarget{script_8c_a0c9f62b9b2791123220f05fb24c8e8d8}\label{script_8c_a0c9f62b9b2791123220f05fb24c8e8d8}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+ge}~64
+\item 
+\mbox{\Hypertarget{script_8c_a7e5e97c95c63c6abfdea28231cabd2a7}\label{script_8c_a7e5e97c95c63c6abfdea28231cabd2a7}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+le}~65
+\item 
+\mbox{\Hypertarget{script_8c_a7ecb9a1821e0a40f8618441d7172f07e}\label{script_8c_a7ecb9a1821e0a40f8618441d7172f07e}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+lt}~66
+\item 
+\mbox{\Hypertarget{script_8c_a3c3d24afd8d6e5e776a08740dee4c409}\label{script_8c_a3c3d24afd8d6e5e776a08740dee4c409}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+and}~67
+\item 
+\mbox{\Hypertarget{script_8c_a688eddf6dc1dc587f27f10f7446a58b9}\label{script_8c_a688eddf6dc1dc587f27f10f7446a58b9}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+or}~68
+\item 
+\mbox{\Hypertarget{script_8c_a27a04783e4ebc19782c864e45d30625a}\label{script_8c_a27a04783e4ebc19782c864e45d30625a}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+xor}~69
+\item 
+\mbox{\Hypertarget{script_8c_a1d086163210ebd1888f3f4b96d64354b}\label{script_8c_a1d086163210ebd1888f3f4b96d64354b}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+true}~70
+\item 
+\mbox{\Hypertarget{script_8c_ac564a3904444f457e6b40e9d01bcf062}\label{script_8c_ac564a3904444f457e6b40e9d01bcf062}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+false}~71
+\item 
+\mbox{\Hypertarget{script_8c_a94c10cf8806b16208864872439cecb40}\label{script_8c_a94c10cf8806b16208864872439cecb40}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+not}~72
+\item 
+\mbox{\Hypertarget{script_8c_a757bbe3a562aff95a78c368869c5d0b6}\label{script_8c_a757bbe3a562aff95a78c368869c5d0b6}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+if}~73
+\item 
+\mbox{\Hypertarget{script_8c_af7bf8a7989096adf47f355f4ca18e8a8}\label{script_8c_af7bf8a7989096adf47f355f4ca18e8a8}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+ifelse}~74
+\item 
+\mbox{\Hypertarget{script_8c_aeca63e81aeca5ca700591e2a9964adba}\label{script_8c_aeca63e81aeca5ca700591e2a9964adba}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+exec}~75
+\item 
+\mbox{\Hypertarget{script_8c_aa2dee417b266608b6b6090c0013bad52}\label{script_8c_aa2dee417b266608b6b6090c0013bad52}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+for}~76
+\item 
+\mbox{\Hypertarget{script_8c_ad48584a6e82e4bac7c026cbe3d0e8acb}\label{script_8c_ad48584a6e82e4bac7c026cbe3d0e8acb}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+repeat}~77
+\item 
+\mbox{\Hypertarget{script_8c_a0221ad10316bc9700a5dfbaaae1f490d}\label{script_8c_a0221ad10316bc9700a5dfbaaae1f490d}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+loop}~78
+\item 
+\mbox{\Hypertarget{script_8c_a944cfe45b59c5f4410b98ff7e83208f1}\label{script_8c_a944cfe45b59c5f4410b98ff7e83208f1}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+forall}~79
+\item 
+\mbox{\Hypertarget{script_8c_ac39a2d9bbb457e5554beb4d23be396d6}\label{script_8c_ac39a2d9bbb457e5554beb4d23be396d6}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+exit}~80
+\item 
+\mbox{\Hypertarget{script_8c_a8df47adfb04e9ea67aeb05b4b6e94134}\label{script_8c_a8df47adfb04e9ea67aeb05b4b6e94134}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+countexecstack}~81
+\item 
+\mbox{\Hypertarget{script_8c_af8e43cedb09b3ea40617604a3353222f}\label{script_8c_af8e43cedb09b3ea40617604a3353222f}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+execstack}~82
+\item 
+\mbox{\Hypertarget{script_8c_a2cb4722df0c9a755518742301afaa55f}\label{script_8c_a2cb4722df0c9a755518742301afaa55f}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+stop}~83
+\item 
+\mbox{\Hypertarget{script_8c_a55c835a815f81af440785fb6f06d1932}\label{script_8c_a55c835a815f81af440785fb6f06d1932}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+type}~84
+\item 
+\mbox{\Hypertarget{script_8c_a5078b31884a4c1328533f9cf27ad8d37}\label{script_8c_a5078b31884a4c1328533f9cf27ad8d37}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+xcheck}~85
+\item 
+\mbox{\Hypertarget{script_8c_ab4ec026db1206681543052a791a7b783}\label{script_8c_ab4ec026db1206681543052a791a7b783}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+rcheck}~86
+\item 
+\mbox{\Hypertarget{script_8c_a97e4e15b713749f053975de1d6ca897a}\label{script_8c_a97e4e15b713749f053975de1d6ca897a}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+wcheck}~87
+\item 
+\mbox{\Hypertarget{script_8c_a26091324bfe2b96ec6820f69ce3e9990}\label{script_8c_a26091324bfe2b96ec6820f69ce3e9990}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+cvlit}~88
+\item 
+\mbox{\Hypertarget{script_8c_a7d5c433bfb39b560296f813d66490513}\label{script_8c_a7d5c433bfb39b560296f813d66490513}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+cvx}~89
+\item 
+\mbox{\Hypertarget{script_8c_aa7d9c102a7ec131bb9a04ffcb6b1d69e}\label{script_8c_aa7d9c102a7ec131bb9a04ffcb6b1d69e}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+readonly}~90
+\item 
+\mbox{\Hypertarget{script_8c_ab06ecd0032bd4105d37a5fa299e2ee90}\label{script_8c_ab06ecd0032bd4105d37a5fa299e2ee90}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+executeonly}~91
+\item 
+\mbox{\Hypertarget{script_8c_a0151841d6c99062c024b93d731501ee6}\label{script_8c_a0151841d6c99062c024b93d731501ee6}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+noaccess}~92
+\item 
+\mbox{\Hypertarget{script_8c_ab71fe4b571abd88819f6115c434a2374}\label{script_8c_ab71fe4b571abd88819f6115c434a2374}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+cvi}~93
+\item 
+\mbox{\Hypertarget{script_8c_aadfa4481b26b01de6e4fc77e827e0fd0}\label{script_8c_aadfa4481b26b01de6e4fc77e827e0fd0}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+cvr}~94
+\item 
+\mbox{\Hypertarget{script_8c_a46ec9fdcf6942287c2cb5350071eb845}\label{script_8c_a46ec9fdcf6942287c2cb5350071eb845}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+cvn}~95
+\item 
+\mbox{\Hypertarget{script_8c_ac5e770b2a32cd74db1b3e7df21f2ed94}\label{script_8c_ac5e770b2a32cd74db1b3e7df21f2ed94}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+cvs}~96
+\item 
+\mbox{\Hypertarget{script_8c_a2f290461448c2c617897b93385b0d7e9}\label{script_8c_a2f290461448c2c617897b93385b0d7e9}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+cvrs}~97
+\item 
+\mbox{\Hypertarget{script_8c_ad36bf506a77ed6fa4d5d4b610eae388f}\label{script_8c_ad36bf506a77ed6fa4d5d4b610eae388f}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+array}~98
+\item 
+\mbox{\Hypertarget{script_8c_a6eefe2bb66aa911d87f53ac7a22c6fdc}\label{script_8c_a6eefe2bb66aa911d87f53ac7a22c6fdc}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+packedarray}~99
+\item 
+\mbox{\Hypertarget{script_8c_a7fa3818ac50977213e19511f3710e5a9}\label{script_8c_a7fa3818ac50977213e19511f3710e5a9}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+dict}~100
+\item 
+\mbox{\Hypertarget{script_8c_a5f993994822e5e17efd38c0ad10c4417}\label{script_8c_a5f993994822e5e17efd38c0ad10c4417}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+string}~101
+\item 
+\mbox{\Hypertarget{script_8c_a0b0d648b6baffc0d69f6a8358f321788}\label{script_8c_a0b0d648b6baffc0d69f6a8358f321788}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+gstate}~102
+\item 
+\mbox{\Hypertarget{script_8c_a6983ca066a8e9ca6fdb7e01a5e7c2e8a}\label{script_8c_a6983ca066a8e9ca6fdb7e01a5e7c2e8a}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+save}~103
+\item 
+\mbox{\Hypertarget{script_8c_aaed7adad3c8a82ff0ead264478869b3e}\label{script_8c_aaed7adad3c8a82ff0ead264478869b3e}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+restore}~104
+\item 
+\mbox{\Hypertarget{script_8c_a3470940bb37497e408ea25bde3faa589}\label{script_8c_a3470940bb37497e408ea25bde3faa589}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+userdict}~105
+\item 
+\mbox{\Hypertarget{script_8c_add4e19e9ffb9e649982711f4657c590d}\label{script_8c_add4e19e9ffb9e649982711f4657c590d}} 
+\#define {\bfseries PS\+\_\+\+FUNC\+\_\+gcheck}~106
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{script_8c_ac1c020a58e48ac21f8b2b432edcedecb}\label{script_8c_ac1c020a58e48ac21f8b2b432edcedecb}} 
+void {\bfseries emb\+Pattern\+\_\+add\+Arc} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, \mbox{\hyperlink{embroidery_8h_a09945e6e919629c5787e61582c712ba1}{Emb\+Arc}} arc)
+\item 
+\mbox{\Hypertarget{script_8c_a9b9c385d4187ebfcd08515c913ba1a66}\label{script_8c_a9b9c385d4187ebfcd08515c913ba1a66}} 
+int {\bfseries process\+\_\+stack\+\_\+head} (\mbox{\hyperlink{embroidery_8h_a00cafd90b0ca88ecb6016df664c3b4db}{Emb\+Stack}} $\ast$stack)
+\item 
+\mbox{\Hypertarget{script_8c_a9ab7fa1b191a6af615b6de5883b16463}\label{script_8c_a9ab7fa1b191a6af615b6de5883b16463}} 
+int {\bfseries emb\+\_\+repl} (void)
+\item 
+\mbox{\Hypertarget{script_8c_ad6a3eb3d092f07a27ff3e5dc483a7512}\label{script_8c_ad6a3eb3d092f07a27ff3e5dc483a7512}} 
+void {\bfseries execute\+\_\+postscript} (\mbox{\hyperlink{embroidery_8h_a00cafd90b0ca88ecb6016df664c3b4db}{Emb\+Stack}} $\ast$stack, char line\mbox{[}200\mbox{]})
+\item 
+\mbox{\Hypertarget{script_8c_ab8afc734ee864d75ba09bdae94c6261b}\label{script_8c_ab8afc734ee864d75ba09bdae94c6261b}} 
+void {\bfseries analyse\+\_\+stack} (\mbox{\hyperlink{embroidery_8h_a00cafd90b0ca88ecb6016df664c3b4db}{Emb\+Stack}} $\ast$stack)
+\item 
+\mbox{\Hypertarget{script_8c_abff185557d3d66ea3003733874dce044}\label{script_8c_abff185557d3d66ea3003733874dce044}} 
+\mbox{\hyperlink{embroidery_8h_a0bf136de0d4aee27e616ffb618aef307}{Script\+Value}} {\bfseries script\+\_\+bool} (unsigned char b)
+\item 
+\mbox{\Hypertarget{script_8c_a910e379c3fe0a3c79ef8aaed9ec81e3d}\label{script_8c_a910e379c3fe0a3c79ef8aaed9ec81e3d}} 
+\mbox{\hyperlink{embroidery_8h_a0bf136de0d4aee27e616ffb618aef307}{Script\+Value}} {\bfseries script\+\_\+int} (int i)
+\item 
+\mbox{\Hypertarget{script_8c_a91c84f2a6c38032b52edd8e5f4802655}\label{script_8c_a91c84f2a6c38032b52edd8e5f4802655}} 
+\mbox{\hyperlink{embroidery_8h_a0bf136de0d4aee27e616ffb618aef307}{Script\+Value}} {\bfseries script\+\_\+real} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} r)
+\item 
+\mbox{\Hypertarget{script_8c_a3443a07b02dbc3d6ceca0253b039e310}\label{script_8c_a3443a07b02dbc3d6ceca0253b039e310}} 
+\mbox{\hyperlink{embroidery_8h_a0bf136de0d4aee27e616ffb618aef307}{Script\+Value}} {\bfseries script\+\_\+string} (char $\ast$s)
+\item 
+\mbox{\Hypertarget{script_8c_a288fc9e5e8030d617e1fdc958afe57ed}\label{script_8c_a288fc9e5e8030d617e1fdc958afe57ed}} 
+\mbox{\hyperlink{embroidery_8h_a0bf136de0d4aee27e616ffb618aef307}{Script\+Value}} {\bfseries script\+\_\+vector} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} v)
+\item 
+\mbox{\Hypertarget{script_8c_a600702ca239479c2c86832551fa595a5}\label{script_8c_a600702ca239479c2c86832551fa595a5}} 
+int {\bfseries stack\+\_\+push} (\mbox{\hyperlink{embroidery_8h_a00cafd90b0ca88ecb6016df664c3b4db}{Emb\+Stack}} $\ast$stack, char $\ast$token)
+\item 
+\mbox{\Hypertarget{script_8c_ae61364722cfd44863e435a39f0a8fa4d}\label{script_8c_ae61364722cfd44863e435a39f0a8fa4d}} 
+\mbox{\hyperlink{embroidery_8h_ad1f42fc3cf28e63405d745828569e963}{Emb\+Stack\+Element}} {\bfseries stack\+\_\+pop} (\mbox{\hyperlink{embroidery_8h_a00cafd90b0ca88ecb6016df664c3b4db}{Emb\+Stack}} $\ast$stack)
+\item 
+\mbox{\Hypertarget{script_8c_a2912c9c892eff2ddf97a883e72ed4265}\label{script_8c_a2912c9c892eff2ddf97a883e72ed4265}} 
+int {\bfseries queue\+\_\+token} (\mbox{\hyperlink{embroidery_8h_a00cafd90b0ca88ecb6016df664c3b4db}{Emb\+Stack}} $\ast$stack, char token\mbox{[}200\mbox{]})
+\item 
+\mbox{\Hypertarget{script_8c_aa51c49f3d87b5a73fef9112eafdf444c}\label{script_8c_aa51c49f3d87b5a73fef9112eafdf444c}} 
+void {\bfseries queue\+\_\+token\+\_\+list} (\mbox{\hyperlink{embroidery_8h_a00cafd90b0ca88ecb6016df664c3b4db}{Emb\+Stack}} $\ast$stack, char line\mbox{[}200\mbox{]})
+\item 
+\mbox{\Hypertarget{script_8c_aa0ec8a56787af9d55471bd25790c8d97}\label{script_8c_aa0ec8a56787af9d55471bd25790c8d97}} 
+int {\bfseries token\+\_\+is\+\_\+int} (\mbox{\hyperlink{embroidery_8h_ad1f42fc3cf28e63405d745828569e963}{Emb\+Stack\+Element}} arg)
+\item 
+\mbox{\Hypertarget{script_8c_afef855e7a96a86d4311370207616ae13}\label{script_8c_afef855e7a96a86d4311370207616ae13}} 
+bool {\bfseries string\+\_\+equal} (char $\ast$a, const char $\ast$b)
+\item 
+\mbox{\Hypertarget{script_8c_a8a000ad57fa1aa89cc5713d4341cdfdd}\label{script_8c_a8a000ad57fa1aa89cc5713d4341cdfdd}} 
+int {\bfseries parse\+\_\+floats} (const char $\ast$line, float result\mbox{[}$\,$\mbox{]}, int n)
+\item 
+\mbox{\Hypertarget{script_8c_afec5335e3cc57e04e31e0b51cf2a1fc5}\label{script_8c_afec5335e3cc57e04e31e0b51cf2a1fc5}} 
+int {\bfseries parse\+\_\+vector} (const char $\ast$line, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} $\ast$v)
+\item 
+\mbox{\Hypertarget{script_8c_a51e701c81d6529fa6e7f5464f2f6f2c2}\label{script_8c_a51e701c81d6529fa6e7f5464f2f6f2c2}} 
+bool {\bfseries valid\+\_\+rgb} (float r, float g, float b)
+\item 
+\mbox{\Hypertarget{script_8c_ab06f95e2934df3ec1925602597f7b23a}\label{script_8c_ab06f95e2934df3ec1925602597f7b23a}} 
+int {\bfseries table\+\_\+length} (char $\ast$s\mbox{[}$\,$\mbox{]})
+\item 
+\mbox{\Hypertarget{script_8c_a74074625dc2da45b0ad241c8c80b2d85}\label{script_8c_a74074625dc2da45b0ad241c8c80b2d85}} 
+unsigned char $\ast$ {\bfseries load\+\_\+file} (char $\ast$fname)
+\item 
+\mbox{\Hypertarget{script_8c_a18a613729103ad81c5dd63bae50c1d4a}\label{script_8c_a18a613729103ad81c5dd63bae50c1d4a}} 
+bool {\bfseries int32\+\_\+underflow} (int64\+\_\+t a, int64\+\_\+t b)
+\item 
+\mbox{\Hypertarget{script_8c_a384cfa270bee9b3ec51daafbec39791a}\label{script_8c_a384cfa270bee9b3ec51daafbec39791a}} 
+bool {\bfseries int32\+\_\+overflow} (int64\+\_\+t a, int64\+\_\+t b)
+\item 
+\mbox{\Hypertarget{script_8c_a21715a0851c263dcf4947db73ad0af9e}\label{script_8c_a21715a0851c263dcf4947db73ad0af9e}} 
+int {\bfseries round\+\_\+to\+\_\+multiple} (bool round\+Up, int num\+To\+Round, int multiple)
+\item 
+\mbox{\Hypertarget{script_8c_acbb5a57c9a3555ad86b0f2d6aab0f464}\label{script_8c_acbb5a57c9a3555ad86b0f2d6aab0f464}} 
+void {\bfseries debug\+\_\+message} (const char $\ast$msg,...)
+\item 
+\mbox{\Hypertarget{script_8c_ab17e403b3077462d9450323af70c096c}\label{script_8c_ab17e403b3077462d9450323af70c096c}} 
+bool {\bfseries valid\+\_\+file\+\_\+format} (char $\ast$file\+Name)
+\item 
+\mbox{\Hypertarget{script_8c_a982c384d3a4ce2bb38de8993078fc9f3}\label{script_8c_a982c384d3a4ce2bb38de8993078fc9f3}} 
+int {\bfseries get\+\_\+id} (char $\ast$data\mbox{[}$\,$\mbox{]}, char $\ast$label)
+\item 
+\mbox{\Hypertarget{script_8c_a4e6fdecd8b21c7e7554337c6fba9d5de}\label{script_8c_a4e6fdecd8b21c7e7554337c6fba9d5de}} 
+int {\bfseries get\+\_\+int\+\_\+tokens} (\mbox{\hyperlink{embroidery_8h_a00cafd90b0ca88ecb6016df664c3b4db}{Emb\+Stack}} $\ast$stack, \mbox{\hyperlink{embroidery_8h_ad1f42fc3cf28e63405d745828569e963}{Emb\+Stack\+Element}} $\ast$args, int n\+\_\+tokens)
+\item 
+\mbox{\Hypertarget{script_8c_a15c21807f9e3c24bbb1c96c19896a332}\label{script_8c_a15c21807f9e3c24bbb1c96c19896a332}} 
+void {\bfseries emb\+\_\+processor} (char $\ast$state, const char $\ast$program, int program\+\_\+length)
+\item 
+\mbox{\Hypertarget{script_8c_ae31403e6983634c0e141ef5e2cd32a46}\label{script_8c_ae31403e6983634c0e141ef5e2cd32a46}} 
+void {\bfseries emb\+\_\+postscript\+\_\+compiler} (const char $\ast$program, char $\ast$compiled\+\_\+program)
+\item 
+\mbox{\Hypertarget{script_8c_ac7ae9cde74abd99568af83b383e88a7c}\label{script_8c_ac7ae9cde74abd99568af83b383e88a7c}} 
+int {\bfseries emb\+\_\+compiler} (const char $\ast$program, int language, char $\ast$compiled\+\_\+program)
+\item 
+\mbox{\Hypertarget{script_8c_a8bb2595aa66e8a228e3de65512ecde23}\label{script_8c_a8bb2595aa66e8a228e3de65512ecde23}} 
+void {\bfseries emb\+\_\+actuator} (\mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{Emb\+Pattern}} $\ast$pattern, const char $\ast$program, int language)
+\item 
+\mbox{\Hypertarget{script_8c_a09a82e4c3859e3e6a9951a333ead2742}\label{script_8c_a09a82e4c3859e3e6a9951a333ead2742}} 
+\mbox{\hyperlink{embroidery_8h_a0bf136de0d4aee27e616ffb618aef307}{Script\+Value}} $\ast$ {\bfseries emb\+\_\+create\+\_\+root} (void)
+\item 
+\mbox{\Hypertarget{script_8c_a4de14a28696f9cd39eb56e7a74b3b2a9}\label{script_8c_a4de14a28696f9cd39eb56e7a74b3b2a9}} 
+int {\bfseries emb\+\_\+create\+\_\+leaf} (\mbox{\hyperlink{embroidery_8h_a0bf136de0d4aee27e616ffb618aef307}{Script\+Value}} $\ast$branch, int type, char $\ast$label, char $\ast$data)
+\item 
+\mbox{\Hypertarget{script_8c_a0bebdd0c207cd82cf18612668cbe29ac}\label{script_8c_a0bebdd0c207cd82cf18612668cbe29ac}} 
+void {\bfseries emb\+\_\+free\+\_\+root} (\mbox{\hyperlink{embroidery_8h_a0bf136de0d4aee27e616ffb618aef307}{Script\+Value}} $\ast$root)
+\item 
+\mbox{\Hypertarget{script_8c_af79506ed7b414f10ba2781d34b8d3e96}\label{script_8c_af79506ed7b414f10ba2781d34b8d3e96}} 
+void {\bfseries emb\+\_\+print\+\_\+tree} (\mbox{\hyperlink{embroidery_8h_a0bf136de0d4aee27e616ffb618aef307}{Script\+Value}} $\ast$tree, int indent)
+\item 
+\mbox{\Hypertarget{script_8c_a109734aae61aafd7ad8b97c1e71f2595}\label{script_8c_a109734aae61aafd7ad8b97c1e71f2595}} 
+void {\bfseries test\+\_\+tree} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Basic Postscript support for libembroidery. 
+
+Libembroidery 1.\+0.\+0-\/alpha \href{https://www.libembroidery.org}{\texttt{ https\+://www.\+libembroidery.\+org}}
+
+A library for reading, writing, altering and otherwise processing machine embroidery files and designs.
+
+Also, the core library supporting the Embroidermodder Project\textquotesingle{}s family of machine embroidery interfaces.
+
+\DoxyHorRuler{0}
+
+
+Copyright 2018-\/2025 The Embroidermodder Team Licensed under the terms of the zlib license.
+
+\DoxyHorRuler{0}
+
+
+In order to support postscript and allow for certain path operations we need a minimal scripting environment. This needs to be kept fairly simple, as it will be a more bug prone way to work than in straightforward C. 
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{script_8c_ae3474c51d41c4a04c9431d455f81a95f}\label{script_8c_ae3474c51d41c4a04c9431d455f81a95f}} 
+\index{script.c@{script.c}!DEFAULT\_PLACE\_VALUE@{DEFAULT\_PLACE\_VALUE}}
+\index{DEFAULT\_PLACE\_VALUE@{DEFAULT\_PLACE\_VALUE}!script.c@{script.c}}
+\doxysubsubsection{\texorpdfstring{DEFAULT\_PLACE\_VALUE}{DEFAULT\_PLACE\_VALUE}}
+{\footnotesize\ttfamily \#define DEFAULT\+\_\+\+PLACE\+\_\+\+VALUE~(0.\+1)}
+
+Internally, we use fixed-\/point arithmetic because it can be made more consistent.
+
+The maximum integer value is 32767, so with a place value of 0.\+1 the maximum distance is 3276.\+7 mm which is around 3 metres. In longer calculations this means that we can have stacked errors that cause issues.
+
+However, since 2 byte, fixed-\/point real types are appropriate for most scenarios\+: if this is a issue for a specific calculation then we recommend that authors scale up then scale down what they\textquotesingle{}re working on. If it continues to be an issue please describe your use case, along with a description of your art, to us at the issues page on\+: \href{https://github.com/embroidermodder/libembroidery}{\texttt{ https\+://github.\+com/embroidermodder/libembroidery}} 

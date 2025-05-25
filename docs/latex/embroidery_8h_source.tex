@@ -1,0 +1,1415 @@
+\hypertarget{embroidery_8h_source}{}\doxysection{embroidery.\+h}
+\label{embroidery_8h_source}\index{src/embroidery.h@{src/embroidery.h}}
+\mbox{\hyperlink{embroidery_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#ifndef EMB\_LIBRARY\_HEADER\_\_}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#define EMB\_LIBRARY\_HEADER\_\_}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#ifndef EMB\_EMBEDDED\_MODE\_\_}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#define EMB\_EMBEDDED\_MODE\_\_ 0}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{33 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \{}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#if (EMB\_EMBEDDED\_MODE\_\_ != 1)}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#include <stdbool.h>}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#include <stdarg.h>}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#include <inttypes.h>}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{comment}{/* Version elements */}}
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#define EMB\_LIB\_VERSION\_MAJOR          1}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#define EMB\_LIB\_VERSION\_MINOR          0}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#define EMB\_LIB\_VERSION\_PATCH          0}}
+\DoxyCodeLine{48 \textcolor{preprocessor}{\#define EMB\_LIB\_VERSION\_TAG      "{}alpha"{}}}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50 \textcolor{comment}{/* Memory allocation sizes */}}
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#define MAX\_ARGS                      10}}
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#define MAX\_TABLE\_LENGTH             500}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#define CHUNK\_SIZE                   128}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#define MAX\_PATTERN\_VARIABLES         20}}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56 \textcolor{comment}{/* MACROS}}
+\DoxyCodeLine{57 \textcolor{comment}{ *****************************************************************************}}
+\DoxyCodeLine{58 \textcolor{comment}{ *}}
+\DoxyCodeLine{59 \textcolor{comment}{ * Machine codes for stitch flags.}}
+\DoxyCodeLine{60 \textcolor{comment}{ * These all represent distinct bits as some of them can be combined on some}}
+\DoxyCodeLine{61 \textcolor{comment}{ * machines.}}
+\DoxyCodeLine{62 \textcolor{comment}{ *}}
+\DoxyCodeLine{63 \textcolor{comment}{ * Missing change color?}}
+\DoxyCodeLine{64 \textcolor{comment}{ */}}
+\DoxyCodeLine{65 \textcolor{preprocessor}{\#define NORMAL                      0x00    }}
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#define JUMP                        0x01    }}
+\DoxyCodeLine{67 \textcolor{preprocessor}{\#define TRIM                        0x02    }}
+\DoxyCodeLine{68 \textcolor{preprocessor}{\#define STOP                        0x04    }}
+\DoxyCodeLine{69 \textcolor{preprocessor}{\#define SEQUIN                      0x08    }}
+\DoxyCodeLine{70 \textcolor{preprocessor}{\#define END                         0x10    }}
+\DoxyCodeLine{72 \textcolor{comment}{/* Format identifiers */}}
+\DoxyCodeLine{73 \textcolor{preprocessor}{\#define EMB\_FORMAT\_100                 0}}
+\DoxyCodeLine{74 \textcolor{preprocessor}{\#define EMB\_FORMAT\_10O                 1}}
+\DoxyCodeLine{75 \textcolor{preprocessor}{\#define EMB\_FORMAT\_ART                 2}}
+\DoxyCodeLine{76 \textcolor{preprocessor}{\#define EMB\_FORMAT\_BMC                 3}}
+\DoxyCodeLine{77 \textcolor{preprocessor}{\#define EMB\_FORMAT\_BRO                 4}}
+\DoxyCodeLine{78 \textcolor{preprocessor}{\#define EMB\_FORMAT\_CND                 5}}
+\DoxyCodeLine{79 \textcolor{preprocessor}{\#define EMB\_FORMAT\_COL                 6}}
+\DoxyCodeLine{80 \textcolor{preprocessor}{\#define EMB\_FORMAT\_CSD                 7}}
+\DoxyCodeLine{81 \textcolor{preprocessor}{\#define EMB\_FORMAT\_CSV                 8}}
+\DoxyCodeLine{82 \textcolor{preprocessor}{\#define EMB\_FORMAT\_DAT                 9}}
+\DoxyCodeLine{83 \textcolor{preprocessor}{\#define EMB\_FORMAT\_DEM                10}}
+\DoxyCodeLine{84 \textcolor{preprocessor}{\#define EMB\_FORMAT\_DSB                11}}
+\DoxyCodeLine{85 \textcolor{preprocessor}{\#define EMB\_FORMAT\_DST                12}}
+\DoxyCodeLine{86 \textcolor{preprocessor}{\#define EMB\_FORMAT\_DSZ                13}}
+\DoxyCodeLine{87 \textcolor{preprocessor}{\#define EMB\_FORMAT\_DXF                14}}
+\DoxyCodeLine{88 \textcolor{preprocessor}{\#define EMB\_FORMAT\_EDR                15}}
+\DoxyCodeLine{89 \textcolor{preprocessor}{\#define EMB\_FORMAT\_EMD                16}}
+\DoxyCodeLine{90 \textcolor{preprocessor}{\#define EMB\_FORMAT\_EXP                17}}
+\DoxyCodeLine{91 \textcolor{preprocessor}{\#define EMB\_FORMAT\_EXY                18}}
+\DoxyCodeLine{92 \textcolor{preprocessor}{\#define EMB\_FORMAT\_EYS                19}}
+\DoxyCodeLine{93 \textcolor{preprocessor}{\#define EMB\_FORMAT\_FXY                20}}
+\DoxyCodeLine{94 \textcolor{preprocessor}{\#define EMB\_FORMAT\_GC                 21}}
+\DoxyCodeLine{95 \textcolor{preprocessor}{\#define EMB\_FORMAT\_GNC                22}}
+\DoxyCodeLine{96 \textcolor{preprocessor}{\#define EMB\_FORMAT\_GT                 23}}
+\DoxyCodeLine{97 \textcolor{preprocessor}{\#define EMB\_FORMAT\_HUS                24}}
+\DoxyCodeLine{98 \textcolor{preprocessor}{\#define EMB\_FORMAT\_INB                25}}
+\DoxyCodeLine{99 \textcolor{preprocessor}{\#define EMB\_FORMAT\_INF                26}}
+\DoxyCodeLine{100 \textcolor{preprocessor}{\#define EMB\_FORMAT\_JEF                27}}
+\DoxyCodeLine{101 \textcolor{preprocessor}{\#define EMB\_FORMAT\_KSM                28}}
+\DoxyCodeLine{102 \textcolor{preprocessor}{\#define EMB\_FORMAT\_MAX                29}}
+\DoxyCodeLine{103 \textcolor{preprocessor}{\#define EMB\_FORMAT\_MIT                30}}
+\DoxyCodeLine{104 \textcolor{preprocessor}{\#define EMB\_FORMAT\_NEW                31}}
+\DoxyCodeLine{105 \textcolor{preprocessor}{\#define EMB\_FORMAT\_OFM                32}}
+\DoxyCodeLine{106 \textcolor{preprocessor}{\#define EMB\_FORMAT\_PCD                33}}
+\DoxyCodeLine{107 \textcolor{preprocessor}{\#define EMB\_FORMAT\_PCM                34}}
+\DoxyCodeLine{108 \textcolor{preprocessor}{\#define EMB\_FORMAT\_PCQ                35}}
+\DoxyCodeLine{109 \textcolor{preprocessor}{\#define EMB\_FORMAT\_PCS                36}}
+\DoxyCodeLine{110 \textcolor{preprocessor}{\#define EMB\_FORMAT\_PEC                37}}
+\DoxyCodeLine{111 \textcolor{preprocessor}{\#define EMB\_FORMAT\_PEL                38}}
+\DoxyCodeLine{112 \textcolor{preprocessor}{\#define EMB\_FORMAT\_PEM                39}}
+\DoxyCodeLine{113 \textcolor{preprocessor}{\#define EMB\_FORMAT\_PES                40}}
+\DoxyCodeLine{114 \textcolor{preprocessor}{\#define EMB\_FORMAT\_PHB                41}}
+\DoxyCodeLine{115 \textcolor{preprocessor}{\#define EMB\_FORMAT\_PHC                42}}
+\DoxyCodeLine{116 \textcolor{preprocessor}{\#define EMB\_FORMAT\_PLT                43}}
+\DoxyCodeLine{117 \textcolor{preprocessor}{\#define EMB\_FORMAT\_RGB                44}}
+\DoxyCodeLine{118 \textcolor{preprocessor}{\#define EMB\_FORMAT\_SEW                45}}
+\DoxyCodeLine{119 \textcolor{preprocessor}{\#define EMB\_FORMAT\_SHV                46}}
+\DoxyCodeLine{120 \textcolor{preprocessor}{\#define EMB\_FORMAT\_SST                47}}
+\DoxyCodeLine{121 \textcolor{preprocessor}{\#define EMB\_FORMAT\_STX                48}}
+\DoxyCodeLine{122 \textcolor{preprocessor}{\#define EMB\_FORMAT\_SVG                49}}
+\DoxyCodeLine{123 \textcolor{preprocessor}{\#define EMB\_FORMAT\_T01                50}}
+\DoxyCodeLine{124 \textcolor{preprocessor}{\#define EMB\_FORMAT\_T09                51}}
+\DoxyCodeLine{125 \textcolor{preprocessor}{\#define EMB\_FORMAT\_TAP                52}}
+\DoxyCodeLine{126 \textcolor{preprocessor}{\#define EMB\_FORMAT\_THR                53}}
+\DoxyCodeLine{127 \textcolor{preprocessor}{\#define EMB\_FORMAT\_TXT                54}}
+\DoxyCodeLine{128 \textcolor{preprocessor}{\#define EMB\_FORMAT\_U00                55}}
+\DoxyCodeLine{129 \textcolor{preprocessor}{\#define EMB\_FORMAT\_U01                56}}
+\DoxyCodeLine{130 \textcolor{preprocessor}{\#define EMB\_FORMAT\_VIP                57}}
+\DoxyCodeLine{131 \textcolor{preprocessor}{\#define EMB\_FORMAT\_VP3                58}}
+\DoxyCodeLine{132 \textcolor{preprocessor}{\#define EMB\_FORMAT\_XXX                59}}
+\DoxyCodeLine{133 \textcolor{preprocessor}{\#define EMB\_FORMAT\_ZSK                60}}
+\DoxyCodeLine{134 }
+\DoxyCodeLine{135 \textcolor{comment}{/* EmbGeometry types, should include all of the possible rendering types}}
+\DoxyCodeLine{136 \textcolor{comment}{ * for EmbroiderModder and internal types for stitch processing (like}}
+\DoxyCodeLine{137 \textcolor{comment}{ * fills).}}
+\DoxyCodeLine{138 \textcolor{comment}{ */}}
+\DoxyCodeLine{139 \textcolor{preprocessor}{\#define EMB\_ARRAY                      0}}
+\DoxyCodeLine{140 \textcolor{preprocessor}{\#define EMB\_ARC                        1}}
+\DoxyCodeLine{141 \textcolor{preprocessor}{\#define EMB\_CIRCLE                     2}}
+\DoxyCodeLine{142 \textcolor{preprocessor}{\#define EMB\_DIM\_DIAMETER               3}}
+\DoxyCodeLine{143 \textcolor{preprocessor}{\#define EMB\_DIM\_LEADER                 4}}
+\DoxyCodeLine{144 \textcolor{preprocessor}{\#define EMB\_ELLIPSE                    5}}
+\DoxyCodeLine{145 \textcolor{preprocessor}{\#define EMB\_FLAG                       6}}
+\DoxyCodeLine{146 \textcolor{preprocessor}{\#define EMB\_LINE                       7}}
+\DoxyCodeLine{147 \textcolor{preprocessor}{\#define EMB\_IMAGE                      8}}
+\DoxyCodeLine{148 \textcolor{preprocessor}{\#define EMB\_PATH                       9}}
+\DoxyCodeLine{149 \textcolor{preprocessor}{\#define EMB\_POINT                     10}}
+\DoxyCodeLine{150 \textcolor{preprocessor}{\#define EMB\_POLYGON                   11}}
+\DoxyCodeLine{151 \textcolor{preprocessor}{\#define EMB\_POLYLINE                  12}}
+\DoxyCodeLine{152 \textcolor{preprocessor}{\#define EMB\_RECT                      13}}
+\DoxyCodeLine{153 \textcolor{preprocessor}{\#define EMB\_SPLINE                    14}}
+\DoxyCodeLine{154 \textcolor{preprocessor}{\#define EMB\_STITCH                    15}}
+\DoxyCodeLine{155 \textcolor{preprocessor}{\#define EMB\_TEXT\_SINGLE               16}}
+\DoxyCodeLine{156 \textcolor{preprocessor}{\#define EMB\_TEXT\_MULTI                17}}
+\DoxyCodeLine{157 \textcolor{preprocessor}{\#define EMB\_VECTOR                    18}}
+\DoxyCodeLine{158 \textcolor{preprocessor}{\#define EMB\_THREAD                    19}}
+\DoxyCodeLine{159 }
+\DoxyCodeLine{160 \textcolor{preprocessor}{\#define SCRIPT\_NULL                    0}}
+\DoxyCodeLine{161 \textcolor{preprocessor}{\#define SCRIPT\_INT                     1}}
+\DoxyCodeLine{162 \textcolor{preprocessor}{\#define SCRIPT\_REAL                    2}}
+\DoxyCodeLine{163 \textcolor{preprocessor}{\#define SCRIPT\_COMMAND                 3}}
+\DoxyCodeLine{164 \textcolor{preprocessor}{\#define SCRIPT\_STRING                  4}}
+\DoxyCodeLine{165 \textcolor{preprocessor}{\#define SCRIPT\_BOOL                    5}}
+\DoxyCodeLine{166 \textcolor{preprocessor}{\#define SCRIPT\_TABLE                   6}}
+\DoxyCodeLine{167 \textcolor{preprocessor}{\#define SCRIPT\_VECTOR                  7}}
+\DoxyCodeLine{168 }
+\DoxyCodeLine{169 \textcolor{preprocessor}{\#define EMBFORMAT\_UNSUPPORTED          0}}
+\DoxyCodeLine{170 \textcolor{preprocessor}{\#define EMBFORMAT\_STITCHONLY           1}}
+\DoxyCodeLine{171 \textcolor{preprocessor}{\#define EMBFORMAT\_OBJECTONLY           2}}
+\DoxyCodeLine{172 \textcolor{preprocessor}{\#define EMBFORMAT\_STCHANDOBJ           3 }\textcolor{comment}{/* binary operation: 1+2=3 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{173 }
+\DoxyCodeLine{174 \textcolor{preprocessor}{\#define numberOfFormats               61}}
+\DoxyCodeLine{175 }
+\DoxyCodeLine{176 \textcolor{preprocessor}{\#define EMB\_MAX\_LAYERS                10}}
+\DoxyCodeLine{177 \textcolor{preprocessor}{\#define MAX\_THREADS                  256}}
+\DoxyCodeLine{178 \textcolor{preprocessor}{\#define MAX\_STRING\_LENGTH            200}}
+\DoxyCodeLine{179 \textcolor{preprocessor}{\#define EMBFORMAT\_MAXEXT               3}}
+\DoxyCodeLine{180 \textcolor{comment}{/* maximum length of extension without dot */}}
+\DoxyCodeLine{181 \textcolor{preprocessor}{\#define EMBFORMAT\_MAXDESC             50}}
+\DoxyCodeLine{182 \textcolor{comment}{/* the longest possible description string length */}}
+\DoxyCodeLine{183 \textcolor{preprocessor}{\#define MAX\_STITCHES             1000000}}
+\DoxyCodeLine{184 }
+\DoxyCodeLine{185 \textcolor{comment}{/* Libembroidery's handling of integer types.}}
+\DoxyCodeLine{186 \textcolor{comment}{ */}}
+\DoxyCodeLine{187 \textcolor{preprocessor}{\#define EMB\_LITTLE\_ENDIAN              0}}
+\DoxyCodeLine{188 \textcolor{preprocessor}{\#define EMB\_BIG\_ENDIAN                 1}}
+\DoxyCodeLine{189 }
+\DoxyCodeLine{190 \textcolor{comment}{/* Most machines are little endian (including the developer's), so default to}}
+\DoxyCodeLine{191 \textcolor{comment}{ * that.}}
+\DoxyCodeLine{192 \textcolor{comment}{ */}}
+\DoxyCodeLine{193 \textcolor{preprocessor}{\#define ENDIAN\_HOST    EMB\_LITTLE\_ENDIAN}}
+\DoxyCodeLine{194 }
+\DoxyCodeLine{195 \textcolor{comment}{/* LANGUAGES */}}
+\DoxyCodeLine{196 \textcolor{preprocessor}{\#define LANG\_SVG                       0}}
+\DoxyCodeLine{197 \textcolor{preprocessor}{\#define LANG\_PS                        1}}
+\DoxyCodeLine{198 \textcolor{preprocessor}{\#define LANG\_PROMPT                    2}}
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200 \textcolor{comment}{/* Identifiers for different PES versions. */}}
+\DoxyCodeLine{201 \textcolor{preprocessor}{\#define PES0001                     0}}
+\DoxyCodeLine{202 \textcolor{preprocessor}{\#define PES0020                     1}}
+\DoxyCodeLine{203 \textcolor{preprocessor}{\#define PES0022                     2}}
+\DoxyCodeLine{204 \textcolor{preprocessor}{\#define PES0030                     3}}
+\DoxyCodeLine{205 \textcolor{preprocessor}{\#define PES0040                     4}}
+\DoxyCodeLine{206 \textcolor{preprocessor}{\#define PES0050                     5}}
+\DoxyCodeLine{207 \textcolor{preprocessor}{\#define PES0055                     6}}
+\DoxyCodeLine{208 \textcolor{preprocessor}{\#define PES0056                     7}}
+\DoxyCodeLine{209 \textcolor{preprocessor}{\#define PES0060                     8}}
+\DoxyCodeLine{210 \textcolor{preprocessor}{\#define PES0070                     9}}
+\DoxyCodeLine{211 \textcolor{preprocessor}{\#define PES0080                    10}}
+\DoxyCodeLine{212 \textcolor{preprocessor}{\#define PES0090                    11}}
+\DoxyCodeLine{213 \textcolor{preprocessor}{\#define PES0100                    12}}
+\DoxyCodeLine{214 \textcolor{preprocessor}{\#define N\_PES\_VERSIONS             13}}
+\DoxyCodeLine{215 }
+\DoxyCodeLine{220 \textcolor{preprocessor}{\#define CompoundFileSector\_MaxRegSector 0xFFFFFFFA}}
+\DoxyCodeLine{221 \textcolor{preprocessor}{\#define CompoundFileSector\_DIFAT\_Sector 0xFFFFFFFC}}
+\DoxyCodeLine{222 \textcolor{preprocessor}{\#define CompoundFileSector\_FAT\_Sector   0xFFFFFFFD}}
+\DoxyCodeLine{223 \textcolor{preprocessor}{\#define CompoundFileSector\_EndOfChain   0xFFFFFFFE}}
+\DoxyCodeLine{224 \textcolor{preprocessor}{\#define CompoundFileSector\_FreeSector   0xFFFFFFFF}}
+\DoxyCodeLine{225 }
+\DoxyCodeLine{229 \textcolor{preprocessor}{\#define ObjectTypeUnknown   0x00 }}
+\DoxyCodeLine{230 \textcolor{preprocessor}{\#define ObjectTypeStorage   0x01 }}
+\DoxyCodeLine{231 \textcolor{preprocessor}{\#define ObjectTypeStream    0x02 }}
+\DoxyCodeLine{232 \textcolor{preprocessor}{\#define ObjectTypeRootEntry 0x05 }}
+\DoxyCodeLine{237 \textcolor{preprocessor}{\#define CompoundFileStreamId\_MaxRegularStreamId 0xFFFFFFFA }}
+\DoxyCodeLine{238 \textcolor{preprocessor}{\#define CompoundFileStreamId\_NoStream           0xFFFFFFFF }}
+\DoxyCodeLine{240 \textcolor{preprocessor}{\#define ELEMENT\_XML              0}}
+\DoxyCodeLine{241 \textcolor{preprocessor}{\#define ELEMENT\_A                1}}
+\DoxyCodeLine{242 \textcolor{preprocessor}{\#define ELEMENT\_ANIMATE          2}}
+\DoxyCodeLine{243 \textcolor{preprocessor}{\#define ELEMENT\_ANIMATECOLOR     3}}
+\DoxyCodeLine{244 \textcolor{preprocessor}{\#define ELEMENT\_ANIMATEMOTION    4}}
+\DoxyCodeLine{245 \textcolor{preprocessor}{\#define ELEMENT\_ANIMATETRANSFORM 5}}
+\DoxyCodeLine{246 \textcolor{preprocessor}{\#define ELEMENT\_ANIMATION        6}}
+\DoxyCodeLine{247 \textcolor{preprocessor}{\#define ELEMENT\_AUDIO            7}}
+\DoxyCodeLine{248 \textcolor{preprocessor}{\#define ELEMENT\_CIRCLE           8}}
+\DoxyCodeLine{249 \textcolor{preprocessor}{\#define ELEMENT\_DEFS             9}}
+\DoxyCodeLine{250 \textcolor{preprocessor}{\#define ELEMENT\_DESC            10}}
+\DoxyCodeLine{251 \textcolor{preprocessor}{\#define ELEMENT\_DISCARD         11}}
+\DoxyCodeLine{252 \textcolor{preprocessor}{\#define ELEMENT\_ELLIPSE         12}}
+\DoxyCodeLine{253 \textcolor{preprocessor}{\#define ELEMENT\_FONT            13}}
+\DoxyCodeLine{254 \textcolor{preprocessor}{\#define ELEMENT\_FONT\_FACE       14}}
+\DoxyCodeLine{255 \textcolor{preprocessor}{\#define ELEMENT\_FONT\_FACE\_SRC   15}}
+\DoxyCodeLine{256 \textcolor{preprocessor}{\#define ELEMENT\_FONT\_FACE\_URI   16}}
+\DoxyCodeLine{257 \textcolor{preprocessor}{\#define ELEMENT\_FOREIGN\_OBJECT  17}}
+\DoxyCodeLine{258 \textcolor{preprocessor}{\#define ELEMENT\_G               18}}
+\DoxyCodeLine{259 \textcolor{preprocessor}{\#define ELEMENT\_GLYPH           19}}
+\DoxyCodeLine{260 \textcolor{preprocessor}{\#define ELEMENT\_HANDLER         20}}
+\DoxyCodeLine{261 \textcolor{preprocessor}{\#define ELEMENT\_HKERN           21}}
+\DoxyCodeLine{262 \textcolor{preprocessor}{\#define ELEMENT\_IMAGE           22}}
+\DoxyCodeLine{263 \textcolor{preprocessor}{\#define ELEMENT\_LINE            23}}
+\DoxyCodeLine{264 \textcolor{preprocessor}{\#define ELEMENT\_LINEAR\_GRADIENT 24}}
+\DoxyCodeLine{265 \textcolor{preprocessor}{\#define ELEMENT\_LISTENER        25}}
+\DoxyCodeLine{266 \textcolor{preprocessor}{\#define ELEMENT\_METADATA        26}}
+\DoxyCodeLine{267 \textcolor{preprocessor}{\#define ELEMENT\_MISSING\_GLYPH   27}}
+\DoxyCodeLine{268 \textcolor{preprocessor}{\#define ELEMENT\_MPATH           28}}
+\DoxyCodeLine{269 \textcolor{preprocessor}{\#define ELEMENT\_PATH            29}}
+\DoxyCodeLine{270 \textcolor{preprocessor}{\#define ELEMENT\_POLYGON         30}}
+\DoxyCodeLine{271 \textcolor{preprocessor}{\#define ELEMENT\_POLYLINE        31}}
+\DoxyCodeLine{272 \textcolor{preprocessor}{\#define ELEMENT\_PREFETCH        32}}
+\DoxyCodeLine{273 \textcolor{preprocessor}{\#define ELEMENT\_RADIAL\_GRADIENT 33}}
+\DoxyCodeLine{274 \textcolor{preprocessor}{\#define ELEMENT\_RECT            34}}
+\DoxyCodeLine{275 \textcolor{preprocessor}{\#define ELEMENT\_SCRIPT          35}}
+\DoxyCodeLine{276 \textcolor{preprocessor}{\#define ELEMENT\_SET             36}}
+\DoxyCodeLine{277 \textcolor{preprocessor}{\#define ELEMENT\_SOLID\_COLOR     37}}
+\DoxyCodeLine{278 \textcolor{preprocessor}{\#define ELEMENT\_STOP            38}}
+\DoxyCodeLine{279 \textcolor{preprocessor}{\#define ELEMENT\_SVG             39}}
+\DoxyCodeLine{280 \textcolor{preprocessor}{\#define ELEMENT\_SWITCH          40}}
+\DoxyCodeLine{281 \textcolor{preprocessor}{\#define ELEMENT\_TBREAK          41}}
+\DoxyCodeLine{282 \textcolor{preprocessor}{\#define ELEMENT\_TEXT            42}}
+\DoxyCodeLine{283 \textcolor{preprocessor}{\#define ELEMENT\_TEXT\_AREA       43}}
+\DoxyCodeLine{284 \textcolor{preprocessor}{\#define ELEMENT\_TITLE           44}}
+\DoxyCodeLine{285 \textcolor{preprocessor}{\#define ELEMENT\_TSPAN           45}}
+\DoxyCodeLine{286 \textcolor{preprocessor}{\#define ELEMENT\_USE             46}}
+\DoxyCodeLine{287 \textcolor{preprocessor}{\#define ELEMENT\_VIDEO                 47}}
+\DoxyCodeLine{288 }
+\DoxyCodeLine{289 \textcolor{preprocessor}{\#define HOOP\_126X110                   0}}
+\DoxyCodeLine{290 \textcolor{preprocessor}{\#define HOOP\_110X110                   1}}
+\DoxyCodeLine{291 \textcolor{preprocessor}{\#define HOOP\_50X50                     2}}
+\DoxyCodeLine{292 \textcolor{preprocessor}{\#define HOOP\_140X200                   3}}
+\DoxyCodeLine{293 \textcolor{preprocessor}{\#define HOOP\_230X200                   4}}
+\DoxyCodeLine{294 }
+\DoxyCodeLine{295 \textcolor{comment}{/* DXF Version Identifiers */}}
+\DoxyCodeLine{296 \textcolor{preprocessor}{\#define DXF\_VERSION\_R10         "{}AC1006"{}}}
+\DoxyCodeLine{297 \textcolor{preprocessor}{\#define DXF\_VERSION\_R11         "{}AC1009"{}}}
+\DoxyCodeLine{298 \textcolor{preprocessor}{\#define DXF\_VERSION\_R12         "{}AC1009"{}}}
+\DoxyCodeLine{299 \textcolor{preprocessor}{\#define DXF\_VERSION\_R13         "{}AC1012"{}}}
+\DoxyCodeLine{300 \textcolor{preprocessor}{\#define DXF\_VERSION\_R14         "{}AC1014"{}}}
+\DoxyCodeLine{301 \textcolor{preprocessor}{\#define DXF\_VERSION\_R15         "{}AC1015"{}}}
+\DoxyCodeLine{302 \textcolor{preprocessor}{\#define DXF\_VERSION\_R18         "{}AC1018"{}}}
+\DoxyCodeLine{303 \textcolor{preprocessor}{\#define DXF\_VERSION\_R21         "{}AC1021"{}}}
+\DoxyCodeLine{304 \textcolor{preprocessor}{\#define DXF\_VERSION\_R24         "{}AC1024"{}}}
+\DoxyCodeLine{305 \textcolor{preprocessor}{\#define DXF\_VERSION\_R27         "{}AC1027"{}}}
+\DoxyCodeLine{306 }
+\DoxyCodeLine{307 \textcolor{preprocessor}{\#define DXF\_VERSION\_2000        "{}AC1015"{}}}
+\DoxyCodeLine{308 \textcolor{preprocessor}{\#define DXF\_VERSION\_2002        "{}AC1015"{}}}
+\DoxyCodeLine{309 \textcolor{preprocessor}{\#define DXF\_VERSION\_2004        "{}AC1018"{}}}
+\DoxyCodeLine{310 \textcolor{preprocessor}{\#define DXF\_VERSION\_2006        "{}AC1018"{}}}
+\DoxyCodeLine{311 \textcolor{preprocessor}{\#define DXF\_VERSION\_2007        "{}AC1021"{}}}
+\DoxyCodeLine{312 \textcolor{preprocessor}{\#define DXF\_VERSION\_2009        "{}AC1021"{}}}
+\DoxyCodeLine{313 \textcolor{preprocessor}{\#define DXF\_VERSION\_2010        "{}AC1024"{}}}
+\DoxyCodeLine{314 \textcolor{preprocessor}{\#define DXF\_VERSION\_2013        "{}AC1027"{}}}
+\DoxyCodeLine{315 }
+\DoxyCodeLine{316 \textcolor{preprocessor}{\#define SVG\_CREATOR\_NULL               0}}
+\DoxyCodeLine{317 \textcolor{preprocessor}{\#define SVG\_CREATOR\_EMBROIDERMODDER    1}}
+\DoxyCodeLine{318 \textcolor{preprocessor}{\#define SVG\_CREATOR\_ILLUSTRATOR        2}}
+\DoxyCodeLine{319 \textcolor{preprocessor}{\#define SVG\_CREATOR\_INKSCAPE           3}}
+\DoxyCodeLine{320 }
+\DoxyCodeLine{321 \textcolor{preprocessor}{\#define SVG\_EXPECT\_NULL                0}}
+\DoxyCodeLine{322 \textcolor{preprocessor}{\#define SVG\_EXPECT\_ELEMENT             1}}
+\DoxyCodeLine{323 \textcolor{preprocessor}{\#define SVG\_EXPECT\_ATTRIBUTE           2}}
+\DoxyCodeLine{324 \textcolor{preprocessor}{\#define SVG\_EXPECT\_VALUE               3}}
+\DoxyCodeLine{325 }
+\DoxyCodeLine{326 \textcolor{comment}{/*  SVG\_TYPES}}
+\DoxyCodeLine{327 \textcolor{comment}{ *  -\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{328 \textcolor{comment}{ */}}
+\DoxyCodeLine{329 \textcolor{preprocessor}{\#define SVG\_NULL                      0}}
+\DoxyCodeLine{330 \textcolor{preprocessor}{\#define SVG\_ELEMENT                   1}}
+\DoxyCodeLine{331 \textcolor{preprocessor}{\#define SVG\_PROPERTY                  2}}
+\DoxyCodeLine{332 \textcolor{preprocessor}{\#define SVG\_MEDIA\_PROPERTY            3}}
+\DoxyCodeLine{333 \textcolor{preprocessor}{\#define SVG\_ATTRIBUTE                 4}}
+\DoxyCodeLine{334 \textcolor{preprocessor}{\#define SVG\_CATCH\_ALL                 5}}
+\DoxyCodeLine{335 }
+\DoxyCodeLine{336 \textcolor{comment}{/* path flag codes */}}
+\DoxyCodeLine{337 \textcolor{preprocessor}{\#define LINETO                     0x000}}
+\DoxyCodeLine{338 \textcolor{preprocessor}{\#define MOVETO                     0x001}}
+\DoxyCodeLine{339 \textcolor{preprocessor}{\#define BULGETOCONTROL             0x002}}
+\DoxyCodeLine{340 \textcolor{preprocessor}{\#define BULGETOEND                 0x004}}
+\DoxyCodeLine{341 \textcolor{preprocessor}{\#define ELLIPSETORAD               0x008}}
+\DoxyCodeLine{342 \textcolor{preprocessor}{\#define ELLIPSETOEND               0x010}}
+\DoxyCodeLine{343 \textcolor{preprocessor}{\#define CUBICTOCONTROL1            0x020}}
+\DoxyCodeLine{344 \textcolor{preprocessor}{\#define CUBICTOCONTROL2            0x040}}
+\DoxyCodeLine{345 \textcolor{preprocessor}{\#define CUBICTOEND                 0x080}}
+\DoxyCodeLine{346 \textcolor{preprocessor}{\#define QUADTOCONTROL              0x100}}
+\DoxyCodeLine{347 \textcolor{preprocessor}{\#define QUADTOEND                  0x200}}
+\DoxyCodeLine{348 }
+\DoxyCodeLine{349 \textcolor{comment}{/* COMMANDS}}
+\DoxyCodeLine{350 \textcolor{comment}{ *}}
+\DoxyCodeLine{351 \textcolor{comment}{ * These identifiers are subject to change since they are in alphabetical order}}
+\DoxyCodeLine{352 \textcolor{comment}{ * and the numbers are increasing.}}
+\DoxyCodeLine{353 \textcolor{comment}{ *}}
+\DoxyCodeLine{354 \textcolor{comment}{ * Note that GUI-\/only commands are present here because this is for operations}}
+\DoxyCodeLine{355 \textcolor{comment}{ * available in all frontends.}}
+\DoxyCodeLine{356 \textcolor{comment}{ *}}
+\DoxyCodeLine{357 \textcolor{comment}{ * The actuator uses}}
+\DoxyCodeLine{358 \textcolor{comment}{ */}}
+\DoxyCodeLine{359 \textcolor{preprocessor}{\#define EMB\_CMD\_ABOUT                  0}}
+\DoxyCodeLine{360 \textcolor{preprocessor}{\#define EMB\_CMD\_ARC                    1}}
+\DoxyCodeLine{361 \textcolor{preprocessor}{\#define EMB\_CMD\_CIRCLE                 2}}
+\DoxyCodeLine{362 \textcolor{preprocessor}{\#define N\_COMMANDS                     3}}
+\DoxyCodeLine{363 }
+\DoxyCodeLine{364 \textcolor{comment}{/* Brand identifiers. */}}
+\DoxyCodeLine{365 \textcolor{preprocessor}{\#define EMB\_BRAND\_DXF                  0}}
+\DoxyCodeLine{366 \textcolor{preprocessor}{\#define EMB\_BRAND\_HUS                  1}}
+\DoxyCodeLine{367 \textcolor{preprocessor}{\#define EMB\_BRAND\_JEF                  2}}
+\DoxyCodeLine{368 \textcolor{preprocessor}{\#define EMB\_BRAND\_SHV                  3}}
+\DoxyCodeLine{369 \textcolor{preprocessor}{\#define EMB\_BRAND\_PCM                  4}}
+\DoxyCodeLine{370 \textcolor{preprocessor}{\#define EMB\_BRAND\_PEC                  5}}
+\DoxyCodeLine{371 \textcolor{preprocessor}{\#define EMB\_BRAND\_SVG                  6}}
+\DoxyCodeLine{372 }
+\DoxyCodeLine{373 \textcolor{comment}{/* ScriptValue types */}}
+\DoxyCodeLine{374 \textcolor{preprocessor}{\#define EMB\_DATATYPE\_NULL              0}}
+\DoxyCodeLine{375 \textcolor{preprocessor}{\#define EMB\_DATATYPE\_DICT              1}}
+\DoxyCodeLine{376 \textcolor{preprocessor}{\#define EMB\_DATATYPE\_STR               2}}
+\DoxyCodeLine{377 \textcolor{preprocessor}{\#define EMB\_DATATYPE\_ARRAY             3}}
+\DoxyCodeLine{378 \textcolor{preprocessor}{\#define EMB\_DATATYPE\_INT               4}}
+\DoxyCodeLine{379 \textcolor{preprocessor}{\#define EMB\_DATATYPE\_REAL              5}}
+\DoxyCodeLine{380 \textcolor{preprocessor}{\#define EMB\_DATATYPE\_VECTOR            6}}
+\DoxyCodeLine{381 \textcolor{preprocessor}{\#define EMB\_DATATYPE\_ROOT              7}}
+\DoxyCodeLine{382 }
+\DoxyCodeLine{383 \textcolor{comment}{/* Justification */}}
+\DoxyCodeLine{384 \textcolor{preprocessor}{\#define EMB\_JUST\_LEFT                  0}}
+\DoxyCodeLine{385 \textcolor{preprocessor}{\#define EMB\_JUST\_CENTER                1}}
+\DoxyCodeLine{386 \textcolor{preprocessor}{\#define EMB\_JUST\_RIGHT                 2}}
+\DoxyCodeLine{387 \textcolor{preprocessor}{\#define EMB\_JUST\_ALIGNED               3}}
+\DoxyCodeLine{388 \textcolor{preprocessor}{\#define EMB\_JUST\_MIDDLE                4}}
+\DoxyCodeLine{389 \textcolor{preprocessor}{\#define EMB\_JUST\_FIT                   5}}
+\DoxyCodeLine{390 \textcolor{preprocessor}{\#define EMB\_JUST\_TOPLEFT               6}}
+\DoxyCodeLine{391 \textcolor{preprocessor}{\#define EMB\_JUST\_TOPCENTER             7}}
+\DoxyCodeLine{392 \textcolor{preprocessor}{\#define EMB\_JUST\_TOPRIGHT              8}}
+\DoxyCodeLine{393 \textcolor{preprocessor}{\#define EMB\_JUST\_MIDLEFT               9}}
+\DoxyCodeLine{394 \textcolor{preprocessor}{\#define EMB\_JUST\_MIDCENTER            10}}
+\DoxyCodeLine{395 \textcolor{preprocessor}{\#define EMB\_JUST\_MIDRIGHT             11}}
+\DoxyCodeLine{396 \textcolor{preprocessor}{\#define EMB\_JUST\_BOTLEFT              12}}
+\DoxyCodeLine{397 \textcolor{preprocessor}{\#define EMB\_JUST\_BOTCENTER            13}}
+\DoxyCodeLine{398 \textcolor{preprocessor}{\#define EMB\_JUST\_BOTRIGHT             14}}
+\DoxyCodeLine{399 }
+\DoxyCodeLine{400 \textcolor{comment}{/* Attribute identifier. These numbers fit within int32\_t: that is, there are}}
+\DoxyCodeLine{401 \textcolor{comment}{ * up to 31 flags we can set this way.}}
+\DoxyCodeLine{402 \textcolor{comment}{ *}}
+\DoxyCodeLine{403 \textcolor{comment}{ * WARNING: please do not rely on the specific ordering of these attributes,}}
+\DoxyCodeLine{404 \textcolor{comment}{ * they are subject to change.}}
+\DoxyCodeLine{405 \textcolor{comment}{ */}}
+\DoxyCodeLine{406 \textcolor{preprocessor}{\#define EMB\_START                   0x1}}
+\DoxyCodeLine{407 \textcolor{preprocessor}{\#define EMB\_MID                     0x2}}
+\DoxyCodeLine{408 \textcolor{preprocessor}{\#define EMB\_END                     0x4}}
+\DoxyCodeLine{409 \textcolor{preprocessor}{\#define EMB\_POSITION                0x8}}
+\DoxyCodeLine{410 \textcolor{preprocessor}{\#define EMB\_CENTER                 0x10}}
+\DoxyCodeLine{411 \textcolor{preprocessor}{\#define EMB\_WIDTH                  0x20}}
+\DoxyCodeLine{412 \textcolor{preprocessor}{\#define EMB\_HEIGHT                 0x40}}
+\DoxyCodeLine{413 \textcolor{preprocessor}{\#define EMB\_RADIUS                 0x80}}
+\DoxyCodeLine{414 \textcolor{preprocessor}{\#define EMB\_DIAMETER              0x100}}
+\DoxyCodeLine{415 \textcolor{preprocessor}{\#define EMB\_AREA                  0x200}}
+\DoxyCodeLine{416 \textcolor{preprocessor}{\#define EMB\_PERIMETER             0x400}}
+\DoxyCodeLine{417 \textcolor{preprocessor}{\#define EMB\_CIRCUMFERENCE         0x800}}
+\DoxyCodeLine{418 \textcolor{preprocessor}{\#define EMB\_BOLD                 0x1000}}
+\DoxyCodeLine{419 \textcolor{preprocessor}{\#define EMB\_ITALIC               0x2000}}
+\DoxyCodeLine{420 \textcolor{preprocessor}{\#define EMB\_UPSIDEDOWN           0x4000}}
+\DoxyCodeLine{421 \textcolor{preprocessor}{\#define EMB\_BACKWARDS            0x8000}}
+\DoxyCodeLine{422 \textcolor{preprocessor}{\#define EMB\_STRIKEOUT           0x10000}}
+\DoxyCodeLine{423 \textcolor{preprocessor}{\#define EMB\_UNDERLINE           0x20000}}
+\DoxyCodeLine{424 \textcolor{preprocessor}{\#define EMB\_OVERLINE            0x40000}}
+\DoxyCodeLine{425 \textcolor{preprocessor}{\#define EMB\_BULGE               0x80000}}
+\DoxyCodeLine{426 \textcolor{preprocessor}{\#define EMB\_SAGITTA            0x100000}}
+\DoxyCodeLine{427 \textcolor{preprocessor}{\#define EMB\_SIZE               0x200000}}
+\DoxyCodeLine{428 \textcolor{preprocessor}{\#define EMB\_FONT               0x400000}}
+\DoxyCodeLine{429 \textcolor{preprocessor}{\#define EMB\_CHORDMID           0x800000}}
+\DoxyCodeLine{430 \textcolor{preprocessor}{\#define EMB\_INCANGLE          0x1000000}}
+\DoxyCodeLine{431 \textcolor{preprocessor}{\#define EMB\_APOTHEM           0x2000000}}
+\DoxyCodeLine{432 \textcolor{preprocessor}{\#define EMB\_CHORDANGLE        0x4000000}}
+\DoxyCodeLine{433 \textcolor{preprocessor}{\#define EMB\_CHORD             0x8000000}}
+\DoxyCodeLine{434 \textcolor{preprocessor}{\#define EMB\_CLOCKWISE        0x10000000}}
+\DoxyCodeLine{435 }
+\DoxyCodeLine{436 \textcolor{comment}{/* UTILITY MACROS}}
+\DoxyCodeLine{437 \textcolor{comment}{ * -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{438 \textcolor{comment}{ */}}
+\DoxyCodeLine{439 \textcolor{preprocessor}{\#define EMB\_MIN(A, B)     (((A) < (B)) ? (A) : (B))}}
+\DoxyCodeLine{440 \textcolor{preprocessor}{\#define EMB\_MAX(A, B)     (((A) > (B)) ? (A) : (B))}}
+\DoxyCodeLine{441 }
+\DoxyCodeLine{442 \textcolor{comment}{/* COMPILATION SETTINGS}}
+\DoxyCodeLine{443 \textcolor{comment}{ * -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{444 \textcolor{comment}{ */}}
+\DoxyCodeLine{445 \textcolor{preprocessor}{\#if defined(\_WIN32) \&\& !defined(WIN32)}}
+\DoxyCodeLine{446 \textcolor{preprocessor}{\#define WIN32}}
+\DoxyCodeLine{447 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{448 }
+\DoxyCodeLine{449 \textcolor{comment}{/* When building a shared library,}}
+\DoxyCodeLine{450 \textcolor{comment}{ * use the proper export keyword depending on the compiler */}}
+\DoxyCodeLine{451 \textcolor{preprocessor}{\#define EMB\_PUBLIC}}
+\DoxyCodeLine{452 \textcolor{preprocessor}{\#if defined(LIBEMBROIDERY\_SHARED)}}
+\DoxyCodeLine{453 \textcolor{preprocessor}{    \#undef EMB\_PUBLIC}}
+\DoxyCodeLine{454 \textcolor{preprocessor}{    \#if defined(\_\_WIN32\_\_) || defined(WIN32)}}
+\DoxyCodeLine{455 \textcolor{preprocessor}{        \#define EMB\_PUBLIC \_\_declspec(dllexport)}}
+\DoxyCodeLine{456 \textcolor{preprocessor}{    \#else}}
+\DoxyCodeLine{457 \textcolor{preprocessor}{        \#define EMB\_PUBLIC \_\_attribute\_\_ ((visibility("{}default"{}})))}
+\DoxyCodeLine{458 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{459 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{460 }
+\DoxyCodeLine{461 \textcolor{preprocessor}{\#if (EMB\_EMBEDDED\_MODE\_\_ != 1)}}
+\DoxyCodeLine{462 \textcolor{comment}{/* TYPEDEFS AND STRUCTS}}
+\DoxyCodeLine{463 \textcolor{comment}{ *******************************************************************/}}
+\DoxyCodeLine{464 }
+\DoxyCodeLine{468 \textcolor{keyword}{typedef} \textcolor{keywordtype}{float} \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}};}
+\DoxyCodeLine{469 }
+\DoxyCodeLine{471 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbColor__}{EmbColor\_}}}
+\DoxyCodeLine{472 \{}
+\DoxyCodeLine{473     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} r;}
+\DoxyCodeLine{474     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} g;}
+\DoxyCodeLine{475     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} b;}
+\DoxyCodeLine{476 \} \mbox{\hyperlink{embroidery_8h_acde9d757854564332fd795a084ec88b3}{EmbColor}};}
+\DoxyCodeLine{477 }
+\DoxyCodeLine{482 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbVector__}{EmbVector\_}}}
+\DoxyCodeLine{483 \{}
+\DoxyCodeLine{484     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} x;}
+\DoxyCodeLine{485     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} y;}
+\DoxyCodeLine{486 \} \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{EmbVector}};}
+\DoxyCodeLine{487 }
+\DoxyCodeLine{493 \textcolor{keyword}{typedef} \textcolor{keywordtype}{char} \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}}[200];}
+\DoxyCodeLine{494 }
+\DoxyCodeLine{502 \textcolor{keyword}{typedef} \textcolor{keywordtype}{void} *\mbox{\hyperlink{embroidery_8h_a30324482e3fae87b9409e1eb02f46c95}{EmbMem}};}
+\DoxyCodeLine{503 }
+\DoxyCodeLine{505 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbArray__}{EmbArray\_}} \mbox{\hyperlink{structEmbArray__}{EmbArray}};}
+\DoxyCodeLine{506 }
+\DoxyCodeLine{508 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbTime__}{EmbTime\_}}}
+\DoxyCodeLine{509 \{}
+\DoxyCodeLine{510     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} year;}
+\DoxyCodeLine{511     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} month;}
+\DoxyCodeLine{512     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} day;}
+\DoxyCodeLine{513     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} hour;}
+\DoxyCodeLine{514     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} minute;}
+\DoxyCodeLine{515     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} second;}
+\DoxyCodeLine{516 \} \mbox{\hyperlink{embroidery_8h_a3829b58c37eab5cd81529f1916adcd33}{EmbTime}};}
+\DoxyCodeLine{517 }
+\DoxyCodeLine{519 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbImage__}{EmbImage\_}} \{}
+\DoxyCodeLine{520     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{521     \mbox{\hyperlink{structEmbVector__}{EmbVector}} dimensions;}
+\DoxyCodeLine{522     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}* data;}
+\DoxyCodeLine{523     \textcolor{keywordtype}{int} width;}
+\DoxyCodeLine{524     \textcolor{keywordtype}{int} height;}
+\DoxyCodeLine{525     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} path;}
+\DoxyCodeLine{526     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} name;}
+\DoxyCodeLine{527 \} \mbox{\hyperlink{embroidery_8h_a907d23c2268eff84b7c5146b2add1bb4}{EmbImage}};}
+\DoxyCodeLine{528 }
+\DoxyCodeLine{530 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbBlock__}{EmbBlock\_}} \{}
+\DoxyCodeLine{531     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{532 \} \mbox{\hyperlink{embroidery_8h_a7b204205a9ec60b1b56f3ce0acbf538e}{EmbBlock}};}
+\DoxyCodeLine{533 }
+\DoxyCodeLine{535 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbAlignedDim__}{EmbAlignedDim\_}} \{}
+\DoxyCodeLine{536     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{537 \} \mbox{\hyperlink{embroidery_8h_ad79623d9216ea209ca9b1f1fbd74896c}{EmbAlignedDim}};}
+\DoxyCodeLine{538 }
+\DoxyCodeLine{540 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbAngularDim__}{EmbAngularDim\_}} \{}
+\DoxyCodeLine{541     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{542 \} \mbox{\hyperlink{embroidery_8h_a2ce32bb393b049f2339e6e73abfc3e22}{EmbAngularDim}};}
+\DoxyCodeLine{543 }
+\DoxyCodeLine{545 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbArcLengthDim__}{EmbArcLengthDim\_}} \{}
+\DoxyCodeLine{546     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{547 \} \mbox{\hyperlink{embroidery_8h_a74cd0955e53f79b57458454a6f81ae1e}{EmbArcLengthDim}};}
+\DoxyCodeLine{548 }
+\DoxyCodeLine{550 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbDiameterDim__}{EmbDiameterDim\_}} \{}
+\DoxyCodeLine{551     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{552 \} \mbox{\hyperlink{embroidery_8h_ac33f06fbbd044b81fc6f6928667579c5}{EmbDiameterDim}};}
+\DoxyCodeLine{553 }
+\DoxyCodeLine{555 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbLeaderDim__}{EmbLeaderDim\_}} \{}
+\DoxyCodeLine{556     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{557 \} \mbox{\hyperlink{embroidery_8h_a774eabe5cd19f9bd7323b34269fe4cfc}{EmbLeaderDim}};}
+\DoxyCodeLine{558 }
+\DoxyCodeLine{560 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbLinearDim__}{EmbLinearDim\_}} \{}
+\DoxyCodeLine{561     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{562 \} \mbox{\hyperlink{embroidery_8h_af3974aedd29610caa9cc6092a9a3319f}{EmbLinearDim}};}
+\DoxyCodeLine{563 }
+\DoxyCodeLine{565 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbOrdinateDim__}{EmbOrdinateDim\_}} \{}
+\DoxyCodeLine{566     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{567 \} \mbox{\hyperlink{embroidery_8h_a2bd77bdc7eae4a4605a27a73cb624a13}{EmbOrdinateDim}};}
+\DoxyCodeLine{568 }
+\DoxyCodeLine{570 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbRadiusDim__}{EmbRadiusDim\_}} \{}
+\DoxyCodeLine{571     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{572 \} \mbox{\hyperlink{embroidery_8h_aae68919fdb850b157647e11c00ba0d58}{EmbRadiusDim}};}
+\DoxyCodeLine{573 }
+\DoxyCodeLine{575 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbInfiniteLine__}{EmbInfiniteLine\_}} \{}
+\DoxyCodeLine{576     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{577 \} \mbox{\hyperlink{embroidery_8h_aeb08870ef4c206beeea71dfe84b774de}{EmbInfiniteLine}};}
+\DoxyCodeLine{578 }
+\DoxyCodeLine{580 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbRay__}{EmbRay\_}} \{}
+\DoxyCodeLine{581     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{582 \} \mbox{\hyperlink{embroidery_8h_a678e60955aec52bb2623a55afee14dab}{EmbRay}};}
+\DoxyCodeLine{583 }
+\DoxyCodeLine{585 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbTextMulti__}{EmbTextMulti\_}} \{}
+\DoxyCodeLine{586     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{587     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} text;}
+\DoxyCodeLine{588 \} \mbox{\hyperlink{embroidery_8h_a69ffc2160eb315de93eb634a18925dd5}{EmbTextMulti}};}
+\DoxyCodeLine{589 }
+\DoxyCodeLine{591 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbTextSingle__}{EmbTextSingle\_}} \{}
+\DoxyCodeLine{592     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{593     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} text;}
+\DoxyCodeLine{594 \} \mbox{\hyperlink{embroidery_8h_a93c0b1083acdf358c6c73136607a4304}{EmbTextSingle}};}
+\DoxyCodeLine{595 }
+\DoxyCodeLine{597 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbPoint__}{EmbPoint\_}}}
+\DoxyCodeLine{598 \{}
+\DoxyCodeLine{599     \mbox{\hyperlink{structEmbVector__}{EmbVector}} position;}
+\DoxyCodeLine{600     \textcolor{keywordtype}{int} lineType;}
+\DoxyCodeLine{601     \mbox{\hyperlink{structEmbColor__}{EmbColor}} color;}
+\DoxyCodeLine{602 \} \mbox{\hyperlink{embroidery_8h_a835ccc3aedf71b57dca6130be87ea463}{EmbPoint}};}
+\DoxyCodeLine{603 }
+\DoxyCodeLine{605 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbLine__}{EmbLine\_}}}
+\DoxyCodeLine{606 \{}
+\DoxyCodeLine{607     \mbox{\hyperlink{structEmbVector__}{EmbVector}} start;}
+\DoxyCodeLine{608     \mbox{\hyperlink{structEmbVector__}{EmbVector}} end;}
+\DoxyCodeLine{609     \textcolor{keywordtype}{int} lineType;}
+\DoxyCodeLine{610     \mbox{\hyperlink{structEmbColor__}{EmbColor}} color;}
+\DoxyCodeLine{611 \} \mbox{\hyperlink{embroidery_8h_a62e08237073617de993166ed4a9ab085}{EmbLine}};}
+\DoxyCodeLine{612 }
+\DoxyCodeLine{614 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbPath__}{EmbPath\_}}}
+\DoxyCodeLine{615 \{}
+\DoxyCodeLine{616     \mbox{\hyperlink{structEmbArray__}{EmbArray}}* pointList;}
+\DoxyCodeLine{617     \mbox{\hyperlink{structEmbArray__}{EmbArray}}* flagList;}
+\DoxyCodeLine{618     \textcolor{keywordtype}{int} lineType;}
+\DoxyCodeLine{619     \mbox{\hyperlink{structEmbColor__}{EmbColor}} color;}
+\DoxyCodeLine{620 \} \mbox{\hyperlink{embroidery_8h_af29045dfeebafdcb66d114b390c4a686}{EmbPath}};}
+\DoxyCodeLine{621 }
+\DoxyCodeLine{623 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbStitch__}{EmbStitch\_}}}
+\DoxyCodeLine{624 \{}
+\DoxyCodeLine{625     \textcolor{keywordtype}{int} flags; }
+\DoxyCodeLine{626     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} \mbox{\hyperlink{structEmbStitch___add1540d3cad43df02f74a11f8f90969b}{x}}; }
+\DoxyCodeLine{627     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} \mbox{\hyperlink{structEmbStitch___ae6c00f117de250bb617882a322eee8b4}{y}}; }
+\DoxyCodeLine{628     \textcolor{keywordtype}{int} \mbox{\hyperlink{structEmbStitch___a7ec28b66816a1998bdf3aa0d03438c93}{color}}; }
+\DoxyCodeLine{629 \} \mbox{\hyperlink{embroidery_8h_ae92ded87da0dcaaae8f7c7bc880fd1b0}{EmbStitch}};}
+\DoxyCodeLine{630 }
+\DoxyCodeLine{632 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbThread__}{EmbThread\_}}}
+\DoxyCodeLine{633 \{}
+\DoxyCodeLine{634     \mbox{\hyperlink{structEmbColor__}{EmbColor}} color;}
+\DoxyCodeLine{635     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} description;}
+\DoxyCodeLine{636     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} catalogNumber;}
+\DoxyCodeLine{637 \} \mbox{\hyperlink{embroidery_8h_ab3faffce89b1a5043f8b4e3a001a70bd}{EmbThread}};}
+\DoxyCodeLine{638 }
+\DoxyCodeLine{640 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structthread__color__}{thread\_color\_}} \{}
+\DoxyCodeLine{641     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} name;}
+\DoxyCodeLine{642     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} hex\_code;}
+\DoxyCodeLine{643     \textcolor{keywordtype}{int} manufacturer\_code;}
+\DoxyCodeLine{644 \} \mbox{\hyperlink{embroidery_8h_a8801dbd0fc60662648650d4658b7b7d0}{thread\_color}};}
+\DoxyCodeLine{645 }
+\DoxyCodeLine{647 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbArc__}{EmbArc\_}}}
+\DoxyCodeLine{648 \{}
+\DoxyCodeLine{649     \mbox{\hyperlink{structEmbVector__}{EmbVector}} start;}
+\DoxyCodeLine{650     \mbox{\hyperlink{structEmbVector__}{EmbVector}} mid;}
+\DoxyCodeLine{651     \mbox{\hyperlink{structEmbVector__}{EmbVector}} end;}
+\DoxyCodeLine{652 \} \mbox{\hyperlink{embroidery_8h_a09945e6e919629c5787e61582c712ba1}{EmbArc}};}
+\DoxyCodeLine{653 }
+\DoxyCodeLine{655 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbRect__}{EmbRect\_}}}
+\DoxyCodeLine{656 \{}
+\DoxyCodeLine{657     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} x;}
+\DoxyCodeLine{658     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} y;}
+\DoxyCodeLine{659     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} w;}
+\DoxyCodeLine{660     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} h;}
+\DoxyCodeLine{661     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} rotation;}
+\DoxyCodeLine{662     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} radius;}
+\DoxyCodeLine{663 \} \mbox{\hyperlink{embroidery_8h_ac2f33b151fc40a0da3b14379aa0ec653}{EmbRect}};}
+\DoxyCodeLine{664 }
+\DoxyCodeLine{666 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbCircle__}{EmbCircle\_}}}
+\DoxyCodeLine{667 \{}
+\DoxyCodeLine{668     \mbox{\hyperlink{structEmbVector__}{EmbVector}} center;}
+\DoxyCodeLine{669     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} radius;}
+\DoxyCodeLine{670 \} \mbox{\hyperlink{embroidery_8h_a87fc13ccd4dbaa7de7c85efde17bba0e}{EmbCircle}};}
+\DoxyCodeLine{671 }
+\DoxyCodeLine{673 \textcolor{keyword}{typedef} \mbox{\hyperlink{structEmbPath__}{EmbPath}} \mbox{\hyperlink{embroidery_8h_a2d6988a5f4ba24d26c7eff65dbc9d029}{EmbPolygon}};}
+\DoxyCodeLine{674 }
+\DoxyCodeLine{676 \textcolor{keyword}{typedef} \mbox{\hyperlink{structEmbPath__}{EmbPath}} \mbox{\hyperlink{embroidery_8h_ab5563c868d8f8174d5be764808a647dd}{EmbPolyline}};}
+\DoxyCodeLine{677 }
+\DoxyCodeLine{679 \textcolor{keyword}{typedef} \textcolor{keywordtype}{int} \mbox{\hyperlink{embroidery_8h_aa8d187896cf7654438e8108ea481b11a}{EmbFlag}};}
+\DoxyCodeLine{680 }
+\DoxyCodeLine{682 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbSatinOutline__}{EmbSatinOutline\_}}}
+\DoxyCodeLine{683 \{}
+\DoxyCodeLine{684     \textcolor{keywordtype}{int} length;}
+\DoxyCodeLine{685     \mbox{\hyperlink{structEmbArray__}{EmbArray}}* side1;}
+\DoxyCodeLine{686     \mbox{\hyperlink{structEmbArray__}{EmbArray}}* side2;}
+\DoxyCodeLine{687 \} \mbox{\hyperlink{embroidery_8h_af3d7bc78977c54ad019cf191aee0f276}{EmbSatinOutline}};}
+\DoxyCodeLine{688 }
+\DoxyCodeLine{690 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbDimLeader__}{EmbDimLeader\_}} \{}
+\DoxyCodeLine{691     \mbox{\hyperlink{structEmbVector__}{EmbVector}} start;}
+\DoxyCodeLine{692     \mbox{\hyperlink{structEmbVector__}{EmbVector}} end;}
+\DoxyCodeLine{693     \textcolor{keywordtype}{int} arrow\_style;}
+\DoxyCodeLine{694     \textcolor{keywordtype}{int} line\_style;}
+\DoxyCodeLine{695     \mbox{\hyperlink{structEmbColor__}{EmbColor}} color;}
+\DoxyCodeLine{696 \} \mbox{\hyperlink{embroidery_8h_a335d96744383936838c8f2d01b91ab0e}{EmbDimLeader}};}
+\DoxyCodeLine{697 }
+\DoxyCodeLine{699 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbEllipse__}{EmbEllipse\_}}}
+\DoxyCodeLine{700 \{}
+\DoxyCodeLine{701     \mbox{\hyperlink{structEmbVector__}{EmbVector}} center; }
+\DoxyCodeLine{702     \mbox{\hyperlink{structEmbVector__}{EmbVector}} \mbox{\hyperlink{structEmbEllipse___ae3220fa7d7e934bce49153c7767a84cf}{radius}}; }
+\DoxyCodeLine{703     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} \mbox{\hyperlink{structEmbEllipse___a91c2fb9bf449fd7055e87b0ed92ad1a9}{rotation}}; }
+\DoxyCodeLine{704 \} \mbox{\hyperlink{embroidery_8h_a4e48ebde5bd4d82b875f98b347bdd62c}{EmbEllipse}};}
+\DoxyCodeLine{705 }
+\DoxyCodeLine{707 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbBezier__}{EmbBezier\_}} \{}
+\DoxyCodeLine{708     \mbox{\hyperlink{structEmbVector__}{EmbVector}} start;       }
+\DoxyCodeLine{709     \mbox{\hyperlink{structEmbVector__}{EmbVector}} control1;    }
+\DoxyCodeLine{710     \mbox{\hyperlink{structEmbVector__}{EmbVector}} control2;    }
+\DoxyCodeLine{711     \mbox{\hyperlink{structEmbVector__}{EmbVector}} end;         }
+\DoxyCodeLine{712 \} \mbox{\hyperlink{embroidery_8h_a4ec971140fa4eef5a57a5dfe1112ed42}{EmbBezier}};}
+\DoxyCodeLine{713 }
+\DoxyCodeLine{715 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbSpline__}{EmbSpline\_}} \{}
+\DoxyCodeLine{716     \mbox{\hyperlink{structEmbArray__}{EmbArray}} *beziers;}
+\DoxyCodeLine{717 \} \mbox{\hyperlink{embroidery_8h_ada60f3e4b416da22524211bc2f242434}{EmbSpline}};}
+\DoxyCodeLine{718 }
+\DoxyCodeLine{720 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structLSYSTEM}{LSYSTEM}} \{}
+\DoxyCodeLine{721     \textcolor{keywordtype}{char} axiom;}
+\DoxyCodeLine{722     \textcolor{keywordtype}{char} *alphabet;}
+\DoxyCodeLine{723     \textcolor{keywordtype}{char} *constants;}
+\DoxyCodeLine{724     \textcolor{keywordtype}{char} **rules;}
+\DoxyCodeLine{725 \} \mbox{\hyperlink{embroidery_8h_a914404401c03a6bf0dac814661ba370c}{L\_system}};}
+\DoxyCodeLine{726 }
+\DoxyCodeLine{728 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry\_}} \{}
+\DoxyCodeLine{729     \textcolor{keyword}{union }\{}
+\DoxyCodeLine{730         \mbox{\hyperlink{structEmbArc__}{EmbArc}} arc;}
+\DoxyCodeLine{731         \mbox{\hyperlink{structEmbCircle__}{EmbCircle}} circle;}
+\DoxyCodeLine{732         \mbox{\hyperlink{structEmbColor__}{EmbColor}} color;}
+\DoxyCodeLine{733         \mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} ellipse;}
+\DoxyCodeLine{734         \mbox{\hyperlink{structEmbLine__}{EmbLine}} line;}
+\DoxyCodeLine{735         \mbox{\hyperlink{structEmbPath__}{EmbPath}} path;}
+\DoxyCodeLine{736         \mbox{\hyperlink{structEmbPoint__}{EmbPoint}} point;}
+\DoxyCodeLine{737         \mbox{\hyperlink{structEmbPath__}{EmbPolygon}} polygon;}
+\DoxyCodeLine{738         \mbox{\hyperlink{structEmbPath__}{EmbPolyline}} polyline;}
+\DoxyCodeLine{739         \mbox{\hyperlink{structEmbRect__}{EmbRect}} rect;}
+\DoxyCodeLine{740         \mbox{\hyperlink{structEmbSpline__}{EmbSpline}} spline;}
+\DoxyCodeLine{741         \mbox{\hyperlink{structEmbVector__}{EmbVector}} vector;}
+\DoxyCodeLine{742     \} object;}
+\DoxyCodeLine{743     \textcolor{keywordtype}{int} flag;}
+\DoxyCodeLine{744     \textcolor{keywordtype}{int} type;}
+\DoxyCodeLine{745     \textcolor{keywordtype}{int} lineType;}
+\DoxyCodeLine{746     \mbox{\hyperlink{structEmbColor__}{EmbColor}} color;}
+\DoxyCodeLine{747 \} \mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{EmbGeometry}};}
+\DoxyCodeLine{748 }
+\DoxyCodeLine{750 \textcolor{keyword}{typedef} \textcolor{keywordtype}{char} \mbox{\hyperlink{embroidery_8h_adda7aeffb65a3441233b36aca78f39f8}{EmbStringTable}}[MAX\_TABLE\_LENGTH][MAX\_STRING\_LENGTH];}
+\DoxyCodeLine{751 }
+\DoxyCodeLine{753 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structLabelledVector__}{LabelledVector\_}} \{}
+\DoxyCodeLine{754     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} key;}
+\DoxyCodeLine{755     \mbox{\hyperlink{structEmbVector__}{EmbVector}} vector;}
+\DoxyCodeLine{756 \} \mbox{\hyperlink{embroidery_8h_a84c84f84e1b6f595b5d0d5dc1db33795}{LabelledVector}};}
+\DoxyCodeLine{757 }
+\DoxyCodeLine{759 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structStringMap__}{StringMap\_}} \{}
+\DoxyCodeLine{760     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} key;}
+\DoxyCodeLine{761     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} value;}
+\DoxyCodeLine{762 \} \mbox{\hyperlink{embroidery_8h_aed8dd70d64be65443955625b105fb7f5}{StringMap}};}
+\DoxyCodeLine{763 }
+\DoxyCodeLine{765 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structIntMap__}{IntMap\_}} \{}
+\DoxyCodeLine{766     \textcolor{keywordtype}{int} key;}
+\DoxyCodeLine{767     \textcolor{keywordtype}{int} value;}
+\DoxyCodeLine{768 \} \mbox{\hyperlink{embroidery_8h_ab8d60f380a8539cd4b2b64ea48ab680f}{IntMap}};}
+\DoxyCodeLine{769 }
+\DoxyCodeLine{771 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbVectorList__}{EmbVectorList\_}} \{}
+\DoxyCodeLine{772     \mbox{\hyperlink{structEmbVector__}{EmbVector}} *data;}
+\DoxyCodeLine{773     \textcolor{keywordtype}{int} count;}
+\DoxyCodeLine{774     \textcolor{keywordtype}{int} size;}
+\DoxyCodeLine{775 \} \mbox{\hyperlink{embroidery_8h_aa463067a54ad6a48c93d5e777c1dbb2f}{EmbVectorList}};}
+\DoxyCodeLine{776 }
+\DoxyCodeLine{778 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbIdList__}{EmbIdList\_}} \{}
+\DoxyCodeLine{779     int32\_t *data;}
+\DoxyCodeLine{780     \textcolor{keywordtype}{int} count;}
+\DoxyCodeLine{781     \textcolor{keywordtype}{int} size;}
+\DoxyCodeLine{782 \} \mbox{\hyperlink{embroidery_8h_a3d99b4b496847f6557a1c8a9f89c6a73}{EmbIdList}};}
+\DoxyCodeLine{783 }
+\DoxyCodeLine{785 \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbArray__}{EmbArray\_}} \{}
+\DoxyCodeLine{786     \mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry;}
+\DoxyCodeLine{787     \mbox{\hyperlink{structEmbStitch__}{EmbStitch}} *stitch;}
+\DoxyCodeLine{788     \mbox{\hyperlink{structEmbThread__}{EmbThread}} *thread;}
+\DoxyCodeLine{789     \textcolor{keywordtype}{int} count;}
+\DoxyCodeLine{790     \textcolor{keywordtype}{int} length;}
+\DoxyCodeLine{791     \textcolor{keywordtype}{int} type;}
+\DoxyCodeLine{792 \};}
+\DoxyCodeLine{793 }
+\DoxyCodeLine{795 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbLayer__}{EmbLayer\_}}}
+\DoxyCodeLine{796 \{}
+\DoxyCodeLine{797     \textcolor{keywordtype}{char} name[100];}
+\DoxyCodeLine{798     \mbox{\hyperlink{structEmbArray__}{EmbArray}} *geometry;}
+\DoxyCodeLine{799 \} \mbox{\hyperlink{embroidery_8h_ad51904d4455a12fd99025319c5f8caae}{EmbLayer}};}
+\DoxyCodeLine{800 }
+\DoxyCodeLine{802 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structScriptValue__}{ScriptValue\_}} \{}
+\DoxyCodeLine{803     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} r;}
+\DoxyCodeLine{804     \textcolor{keywordtype}{int} i;}
+\DoxyCodeLine{805     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} b;}
+\DoxyCodeLine{806     \mbox{\hyperlink{structEmbVector__}{EmbVector}} v;}
+\DoxyCodeLine{807     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} s;}
+\DoxyCodeLine{808     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} label;}
+\DoxyCodeLine{809     \textcolor{keyword}{struct }\mbox{\hyperlink{structScriptValue__}{ScriptValue\_}}* leaves;}
+\DoxyCodeLine{810     \textcolor{keywordtype}{int} n\_leaves;}
+\DoxyCodeLine{811     \textcolor{keywordtype}{int} max\_leaves;}
+\DoxyCodeLine{812     \textcolor{keywordtype}{char} type;}
+\DoxyCodeLine{813 \} \mbox{\hyperlink{embroidery_8h_a0bf136de0d4aee27e616ffb618aef307}{ScriptValue}};}
+\DoxyCodeLine{814 }
+\DoxyCodeLine{816 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structScriptEnv__}{ScriptEnv\_}} \{}
+\DoxyCodeLine{817     \mbox{\hyperlink{structScriptValue__}{ScriptValue}} argument[MAX\_ARGS];}
+\DoxyCodeLine{818     \mbox{\hyperlink{structScriptValue__}{ScriptValue}} *variables;}
+\DoxyCodeLine{819     \textcolor{keywordtype}{int} n\_variables;}
+\DoxyCodeLine{820     \textcolor{keywordtype}{int} argumentCount;}
+\DoxyCodeLine{821     \textcolor{keywordtype}{int} context;}
+\DoxyCodeLine{822     \textcolor{keywordtype}{int} mode;}
+\DoxyCodeLine{823     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} firstRun;}
+\DoxyCodeLine{824 \} \mbox{\hyperlink{embroidery_8h_a74e22ae3be41fafa2275b0e4fded2df4}{ScriptEnv}};}
+\DoxyCodeLine{825 }
+\DoxyCodeLine{827 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structDesign__}{Design\_}} \{}
+\DoxyCodeLine{828     \textcolor{keywordtype}{char} *command;}
+\DoxyCodeLine{829     \textcolor{keywordtype}{float} lower;}
+\DoxyCodeLine{830     \textcolor{keywordtype}{float} upper;}
+\DoxyCodeLine{831     \textcolor{keywordtype}{int} num\_points;}
+\DoxyCodeLine{832     \textcolor{keywordtype}{int} min\_points;}
+\DoxyCodeLine{833     \textcolor{keywordtype}{int} max\_points;}
+\DoxyCodeLine{834     \textcolor{keywordtype}{float} xscale;}
+\DoxyCodeLine{835     \textcolor{keywordtype}{float} yscale;}
+\DoxyCodeLine{836     \textcolor{keywordtype}{char} *parameter;}
+\DoxyCodeLine{837     \textcolor{keywordtype}{char} *x;}
+\DoxyCodeLine{838     \textcolor{keywordtype}{char} *y;}
+\DoxyCodeLine{839 \} \mbox{\hyperlink{embroidery_8h_a4071f7b235df13d44d6ad4f77ee771db}{Design}};}
+\DoxyCodeLine{840 }
+\DoxyCodeLine{841 \textcolor{preprocessor}{\#define END\_SYMBOL            "{}\_\_END\_\_"{}}}
+\DoxyCodeLine{842 }
+\DoxyCodeLine{847 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbPattern__}{EmbPattern\_}}}
+\DoxyCodeLine{848 \{}
+\DoxyCodeLine{849     \textcolor{keywordtype}{int} type;}
+\DoxyCodeLine{850     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} dstJumpsPerTrim;}
+\DoxyCodeLine{851     \mbox{\hyperlink{structEmbVector__}{EmbVector}} home;}
+\DoxyCodeLine{852     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} hoop\_width;}
+\DoxyCodeLine{853     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} hoop\_height;}
+\DoxyCodeLine{854     \mbox{\hyperlink{structEmbArray__}{EmbArray}} *thread\_list;}
+\DoxyCodeLine{855     \mbox{\hyperlink{structEmbArray__}{EmbArray}} *stitch\_list;}
+\DoxyCodeLine{856     \mbox{\hyperlink{structEmbArray__}{EmbArray}} *geometry;}
+\DoxyCodeLine{857     \mbox{\hyperlink{structEmbLayer__}{EmbLayer}} layer[EMB\_MAX\_LAYERS];}
+\DoxyCodeLine{858     \textcolor{keywordtype}{int} currentColorIndex;}
+\DoxyCodeLine{859     \mbox{\hyperlink{structScriptValue__}{ScriptValue}} variable[MAX\_PATTERN\_VARIABLES];}
+\DoxyCodeLine{860 }
+\DoxyCodeLine{861     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} design\_name;}
+\DoxyCodeLine{862     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} category;}
+\DoxyCodeLine{863     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} author;}
+\DoxyCodeLine{864     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} keywords;}
+\DoxyCodeLine{865     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} comments;}
+\DoxyCodeLine{866 \} \mbox{\hyperlink{embroidery_8h_a168c2ed6c7e17dd1aa7755aabc1db314}{EmbPattern}};}
+\DoxyCodeLine{867 }
+\DoxyCodeLine{869 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbFormatList__}{EmbFormatList\_}}}
+\DoxyCodeLine{870 \{}
+\DoxyCodeLine{871     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} extension;}
+\DoxyCodeLine{872     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} description;}
+\DoxyCodeLine{873     \textcolor{keywordtype}{char} reader\_state;}
+\DoxyCodeLine{874     \textcolor{keywordtype}{char} writer\_state;}
+\DoxyCodeLine{875     \textcolor{keywordtype}{int} type;}
+\DoxyCodeLine{876     \textcolor{keywordtype}{int} color\_only;}
+\DoxyCodeLine{877     \textcolor{keywordtype}{int} check\_for\_color\_file;}
+\DoxyCodeLine{878     \textcolor{keywordtype}{int} write\_external\_color\_file;}
+\DoxyCodeLine{879 \} \mbox{\hyperlink{embroidery_8h_afb3d2c0a23933d1ce50c4ec598b31c56}{EmbFormatList}};}
+\DoxyCodeLine{880 }
+\DoxyCodeLine{888 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structBRAND}{BRAND}} \{}
+\DoxyCodeLine{889     \mbox{\hyperlink{structthread__color__}{thread\_color}} *codes;}
+\DoxyCodeLine{890     \textcolor{keywordtype}{int} length;}
+\DoxyCodeLine{891     \mbox{\hyperlink{embroidery_8h_a3cfa8eccd6eee11f9ffece9f64f79b59}{EmbString}} label;}
+\DoxyCodeLine{892 \} \mbox{\hyperlink{embroidery_8h_a18a8fbad6109f3953e18420a753e83d6}{EmbBrand}};}
+\DoxyCodeLine{893 }
+\DoxyCodeLine{895 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbStackElement__}{EmbStackElement\_}} \{}
+\DoxyCodeLine{896     \textcolor{keywordtype}{int} data\_type;}
+\DoxyCodeLine{897     \textcolor{keywordtype}{int} attribute;}
+\DoxyCodeLine{898     \textcolor{keywordtype}{int} i;}
+\DoxyCodeLine{899     \textcolor{keywordtype}{float} r;}
+\DoxyCodeLine{900     \textcolor{keywordtype}{char} s[100];}
+\DoxyCodeLine{901 \} \mbox{\hyperlink{embroidery_8h_ad1f42fc3cf28e63405d745828569e963}{EmbStackElement}};}
+\DoxyCodeLine{902 }
+\DoxyCodeLine{904 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structEmbStack__}{EmbStack\_}} \{}
+\DoxyCodeLine{905     \mbox{\hyperlink{structEmbStackElement__}{EmbStackElement}} stack[1000];}
+\DoxyCodeLine{906     \textcolor{keywordtype}{int} position;}
+\DoxyCodeLine{907 \} \mbox{\hyperlink{embroidery_8h_a00cafd90b0ca88ecb6016df664c3b4db}{EmbStack}};}
+\DoxyCodeLine{908 }
+\DoxyCodeLine{910 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct__bcf__file__difat}{\_bcf\_file\_difat}}}
+\DoxyCodeLine{911 \{}
+\DoxyCodeLine{912     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} fatSectorCount;}
+\DoxyCodeLine{913     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} fatSectorEntries[109];}
+\DoxyCodeLine{914     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} sectorSize;}
+\DoxyCodeLine{915 \} \mbox{\hyperlink{embroidery_8h_a04a761d12d7ad0f1f0c7566dda49f354}{bcf\_file\_difat}};}
+\DoxyCodeLine{916 }
+\DoxyCodeLine{918 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct__bcf__file__fat}{\_bcf\_file\_fat}}}
+\DoxyCodeLine{919 \{}
+\DoxyCodeLine{920     \textcolor{keywordtype}{int}          fatEntryCount;}
+\DoxyCodeLine{921     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} fatEntries[255]; \textcolor{comment}{/* maybe make this dynamic */}}
+\DoxyCodeLine{922     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} numberOfEntriesInFatSector;}
+\DoxyCodeLine{923 \} \mbox{\hyperlink{embroidery_8h_a9a00b74e77254af1f7af14c6e12007d7}{bcf\_file\_fat}};}
+\DoxyCodeLine{924 }
+\DoxyCodeLine{926 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct__bcf__directory__entry}{\_bcf\_directory\_entry}}}
+\DoxyCodeLine{927 \{}
+\DoxyCodeLine{928     \textcolor{keywordtype}{char} directoryEntryName[32];}
+\DoxyCodeLine{929     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} directoryEntryNameLength;}
+\DoxyCodeLine{930     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} objectType;}
+\DoxyCodeLine{931     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} colorFlag;}
+\DoxyCodeLine{932     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} leftSiblingId;}
+\DoxyCodeLine{933     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}                 rightSiblingId;}
+\DoxyCodeLine{934     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}                 childId;}
+\DoxyCodeLine{935     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}                CLSID[16];}
+\DoxyCodeLine{936     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}                 stateBits;}
+\DoxyCodeLine{937     uint32\_t creationTime[6];}
+\DoxyCodeLine{938     uint32\_t modifiedTime[6];}
+\DoxyCodeLine{939     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}                 startingSectorLocation;}
+\DoxyCodeLine{940     \textcolor{comment}{/* streamSize should be long long but in our case we shouldn't need it,}}
+\DoxyCodeLine{941 \textcolor{comment}{     * and hard to support on c89 cross platform. */}}
+\DoxyCodeLine{942     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long}                streamSize;}
+\DoxyCodeLine{943     \textcolor{comment}{/* Store the high int of streamsize. */}}
+\DoxyCodeLine{944     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}                 streamSizeHigh;}
+\DoxyCodeLine{945     \textcolor{keyword}{struct }\mbox{\hyperlink{struct__bcf__directory__entry}{\_bcf\_directory\_entry}}* next;}
+\DoxyCodeLine{946 \} \mbox{\hyperlink{embroidery_8h_abb451c97faf6366fb733ff7b29054c19}{bcf\_directory\_entry}};}
+\DoxyCodeLine{947 }
+\DoxyCodeLine{948 \textcolor{comment}{/* TODO: possibly add a directory tree in the future.}}
+\DoxyCodeLine{949 \textcolor{comment}{ */}}
+\DoxyCodeLine{950 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct__bcf__directory}{\_bcf\_directory}}}
+\DoxyCodeLine{951 \{}
+\DoxyCodeLine{952     \mbox{\hyperlink{struct__bcf__directory__entry}{bcf\_directory\_entry}}* dirEntries;}
+\DoxyCodeLine{953     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}         maxNumberOfDirectoryEntries;}
+\DoxyCodeLine{954 \} \mbox{\hyperlink{struct__bcf__directory}{bcf\_directory}};}
+\DoxyCodeLine{955 }
+\DoxyCodeLine{956 \textcolor{comment}{/* TODO: CLSID should be a separate type.}}
+\DoxyCodeLine{957 \textcolor{comment}{ */}}
+\DoxyCodeLine{958 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct__bcf__file__header}{\_bcf\_file\_header}}}
+\DoxyCodeLine{959 \{}
+\DoxyCodeLine{960     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}  signature[8];}
+\DoxyCodeLine{961     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}  CLSID[16];}
+\DoxyCodeLine{962     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} minorVersion;}
+\DoxyCodeLine{963     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} majorVersion;}
+\DoxyCodeLine{964     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} byteOrder;}
+\DoxyCodeLine{965     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} sectorShift;}
+\DoxyCodeLine{966     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} miniSectorShift;}
+\DoxyCodeLine{967     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} reserved1;}
+\DoxyCodeLine{968     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}   reserved2;}
+\DoxyCodeLine{969     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}   numberOfDirectorySectors;}
+\DoxyCodeLine{970     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}   numberOfFATSectors;}
+\DoxyCodeLine{971     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}   firstDirectorySectorLocation;}
+\DoxyCodeLine{972     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}   transactionSignatureNumber;}
+\DoxyCodeLine{973     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}   miniStreamCutoffSize;}
+\DoxyCodeLine{974     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}   firstMiniFATSectorLocation;}
+\DoxyCodeLine{975     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}   numberOfMiniFatSectors;}
+\DoxyCodeLine{976     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}   firstDifatSectorLocation;}
+\DoxyCodeLine{977     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}   numberOfDifatSectors;}
+\DoxyCodeLine{978 \} \mbox{\hyperlink{struct__bcf__file__header}{bcf\_file\_header}};}
+\DoxyCodeLine{979 }
+\DoxyCodeLine{980 \textcolor{comment}{/* . */}}
+\DoxyCodeLine{981 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct__bcf__file}{\_bcf\_file}}}
+\DoxyCodeLine{982 \{}
+\DoxyCodeLine{983     \mbox{\hyperlink{struct__bcf__file__header}{bcf\_file\_header}} header;   }
+\DoxyCodeLine{984     \mbox{\hyperlink{struct__bcf__file__difat}{bcf\_file\_difat}}* \mbox{\hyperlink{struct__bcf__file_aef6d3e02e2c736400d5ba041a60b1116}{difat}};    }
+\DoxyCodeLine{985     \mbox{\hyperlink{struct__bcf__file__fat}{bcf\_file\_fat}}* \mbox{\hyperlink{struct__bcf__file_a2b063446112bb65f564250a209d6d05b}{fat}};        }
+\DoxyCodeLine{986     \mbox{\hyperlink{struct__bcf__directory}{bcf\_directory}}* \mbox{\hyperlink{struct__bcf__file_a859904e8b413043739a83cfbb39c342e}{directory}}; }
+\DoxyCodeLine{987 \} \mbox{\hyperlink{struct__bcf__file}{bcf\_file}};}
+\DoxyCodeLine{988 }
+\DoxyCodeLine{989 \textcolor{comment}{/* . */}}
+\DoxyCodeLine{990 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct__vp3Hoop}{\_vp3Hoop}}}
+\DoxyCodeLine{991 \{}
+\DoxyCodeLine{992     \textcolor{keywordtype}{int} right;}
+\DoxyCodeLine{993     \textcolor{keywordtype}{int} bottom;}
+\DoxyCodeLine{994     \textcolor{keywordtype}{int} left;}
+\DoxyCodeLine{995     \textcolor{keywordtype}{int} top;}
+\DoxyCodeLine{996     \textcolor{keywordtype}{int} threadLength;}
+\DoxyCodeLine{997     \textcolor{keywordtype}{char} unknown2;}
+\DoxyCodeLine{998     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} numberOfColors;}
+\DoxyCodeLine{999     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} unknown3;}
+\DoxyCodeLine{1000     \textcolor{keywordtype}{int} unknown4;}
+\DoxyCodeLine{1001     \textcolor{keywordtype}{int} numberOfBytesRemaining;}
+\DoxyCodeLine{1002 }
+\DoxyCodeLine{1003     \textcolor{keywordtype}{int} xOffset;}
+\DoxyCodeLine{1004     \textcolor{keywordtype}{int} yOffset;}
+\DoxyCodeLine{1005 }
+\DoxyCodeLine{1006     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} byte1;}
+\DoxyCodeLine{1007     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} byte2;}
+\DoxyCodeLine{1008     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} byte3;}
+\DoxyCodeLine{1009 }
+\DoxyCodeLine{1010     \textcolor{comment}{/* Centered hoop dimensions */}}
+\DoxyCodeLine{1011     \textcolor{keywordtype}{int} right2;}
+\DoxyCodeLine{1012     \textcolor{keywordtype}{int} left2;}
+\DoxyCodeLine{1013     \textcolor{keywordtype}{int} bottom2;}
+\DoxyCodeLine{1014     \textcolor{keywordtype}{int} top2;}
+\DoxyCodeLine{1015 }
+\DoxyCodeLine{1016     \textcolor{keywordtype}{int} width;}
+\DoxyCodeLine{1017     \textcolor{keywordtype}{int} height;}
+\DoxyCodeLine{1018 \} \mbox{\hyperlink{struct__vp3Hoop}{vp3Hoop}};}
+\DoxyCodeLine{1019 }
+\DoxyCodeLine{1020 \textcolor{comment}{/* . */}}
+\DoxyCodeLine{1021 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structThredHeader__}{ThredHeader\_}}     \textcolor{comment}{/* thred file header */}}
+\DoxyCodeLine{1022 \{}
+\DoxyCodeLine{1023     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} sigVersion;    \textcolor{comment}{/* signature and version */}}
+\DoxyCodeLine{1024     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} length;        \textcolor{comment}{/* length of ThredHeader + length of stitch data */}}
+\DoxyCodeLine{1025     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} numStiches;  \textcolor{comment}{/* number of stitches */}}
+\DoxyCodeLine{1026     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} hoopSize;    \textcolor{comment}{/* size of hoop */}}
+\DoxyCodeLine{1027     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} reserved[7]; \textcolor{comment}{/* reserved for expansion */}}
+\DoxyCodeLine{1028 \} \mbox{\hyperlink{structThredHeader__}{ThredHeader}};}
+\DoxyCodeLine{1029 }
+\DoxyCodeLine{1030 \textcolor{comment}{/* . */}}
+\DoxyCodeLine{1031 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structThredExtension__}{ThredExtension\_}}  \textcolor{comment}{/* thred v1.0 file header extension */}}
+\DoxyCodeLine{1032 \{}
+\DoxyCodeLine{1033     \textcolor{keywordtype}{float} hoopX;                \textcolor{comment}{/* hoop size x dimension in 1/6 mm units */}}
+\DoxyCodeLine{1034     \textcolor{keywordtype}{float} hoopY;                \textcolor{comment}{/* hoop size y dimension in 1/6 mm units */}}
+\DoxyCodeLine{1035     \textcolor{keywordtype}{float} stitchGranularity;    \textcolor{comment}{/* stitches per millimeter-\/-\/not implemented */}}
+\DoxyCodeLine{1036     \textcolor{keywordtype}{char} creatorName[50];       \textcolor{comment}{/* name of the file creator */}}
+\DoxyCodeLine{1037     \textcolor{keywordtype}{char} modifierName[50];      \textcolor{comment}{/* name of last file modifier */}}
+\DoxyCodeLine{1038     \textcolor{keywordtype}{char} auxFormat;             \textcolor{comment}{/* auxiliary file format, 0=PCS,1=DST,2=PES */}}
+\DoxyCodeLine{1039     \textcolor{keywordtype}{char} reserved[31];          \textcolor{comment}{/* reserved for expansion */}}
+\DoxyCodeLine{1040 \} \mbox{\hyperlink{structThredExtension__}{ThredExtension}};}
+\DoxyCodeLine{1041 }
+\DoxyCodeLine{1042 \textcolor{comment}{/* . */}}
+\DoxyCodeLine{1043 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structSubDescriptor__}{SubDescriptor\_}}}
+\DoxyCodeLine{1044 \{}
+\DoxyCodeLine{1045     \textcolor{keywordtype}{int} someNum;      }
+\DoxyCodeLine{1046     \textcolor{keywordtype}{int} \mbox{\hyperlink{structSubDescriptor___ac51ebc277f92c038a85467cc77ad3fcb}{someInt}};      }
+\DoxyCodeLine{1047     \textcolor{keywordtype}{int} \mbox{\hyperlink{structSubDescriptor___ad2373ecaa71179dccd7d10a4b8c48cb7}{someOtherInt}}; }
+\DoxyCodeLine{1048     \textcolor{keywordtype}{char}* \mbox{\hyperlink{structSubDescriptor___a38fd406a9a90eadf0a7493f544c96936}{colorCode}};}
+\DoxyCodeLine{1049     \textcolor{keywordtype}{char}* colorName;}
+\DoxyCodeLine{1050 \} \mbox{\hyperlink{structSubDescriptor__}{SubDescriptor}};}
+\DoxyCodeLine{1051 }
+\DoxyCodeLine{1052 \textcolor{comment}{/* . */}}
+\DoxyCodeLine{1053 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structVipHeader__}{VipHeader\_}} \{}
+\DoxyCodeLine{1054     \textcolor{keywordtype}{int} magicCode;}
+\DoxyCodeLine{1055     \textcolor{keywordtype}{int} numberOfStitches;}
+\DoxyCodeLine{1056     \textcolor{keywordtype}{int} numberOfColors;}
+\DoxyCodeLine{1057     \textcolor{keywordtype}{short} postitiveXHoopSize;}
+\DoxyCodeLine{1058     \textcolor{keywordtype}{short} postitiveYHoopSize;}
+\DoxyCodeLine{1059     \textcolor{keywordtype}{short} negativeXHoopSize;}
+\DoxyCodeLine{1060     \textcolor{keywordtype}{short} negativeYHoopSize;}
+\DoxyCodeLine{1061     \textcolor{keywordtype}{int} attributeOffset;}
+\DoxyCodeLine{1062     \textcolor{keywordtype}{int} xOffset;}
+\DoxyCodeLine{1063     \textcolor{keywordtype}{int} yOffset;}
+\DoxyCodeLine{1064     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} stringVal[8];}
+\DoxyCodeLine{1065     \textcolor{keywordtype}{short} unknown;}
+\DoxyCodeLine{1066     \textcolor{keywordtype}{int} colorLength;}
+\DoxyCodeLine{1067 \} \mbox{\hyperlink{structVipHeader__}{VipHeader}};}
+\DoxyCodeLine{1068 }
+\DoxyCodeLine{1069 \textcolor{comment}{/* . */}}
+\DoxyCodeLine{1070 \textcolor{keyword}{typedef} \textcolor{keyword}{enum}}
+\DoxyCodeLine{1071 \{}
+\DoxyCodeLine{1072     CSV\_EXPECT\_NULL,}
+\DoxyCodeLine{1073     CSV\_EXPECT\_QUOTE1,}
+\DoxyCodeLine{1074     CSV\_EXPECT\_QUOTE2,}
+\DoxyCodeLine{1075     CSV\_EXPECT\_COMMA}
+\DoxyCodeLine{1076 \} CSV\_EXPECT;}
+\DoxyCodeLine{1077 }
+\DoxyCodeLine{1078 \textcolor{comment}{/* . */}}
+\DoxyCodeLine{1079 \textcolor{keyword}{typedef} \textcolor{keyword}{enum}}
+\DoxyCodeLine{1080 \{}
+\DoxyCodeLine{1081     CSV\_MODE\_NULL,}
+\DoxyCodeLine{1082     CSV\_MODE\_COMMENT,}
+\DoxyCodeLine{1083     CSV\_MODE\_VARIABLE,}
+\DoxyCodeLine{1084     CSV\_MODE\_THREAD,}
+\DoxyCodeLine{1085     CSV\_MODE\_STITCH}
+\DoxyCodeLine{1086 \} CSV\_MODE;}
+\DoxyCodeLine{1087 }
+\DoxyCodeLine{1088 \textcolor{comment}{/* . */}}
+\DoxyCodeLine{1089 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structStxThread__}{StxThread\_}}}
+\DoxyCodeLine{1090 \{}
+\DoxyCodeLine{1091     \textcolor{keywordtype}{char}* colorCode;}
+\DoxyCodeLine{1092     \textcolor{keywordtype}{char}* colorName;}
+\DoxyCodeLine{1093     \textcolor{keywordtype}{char}* sectionName;}
+\DoxyCodeLine{1094     \mbox{\hyperlink{structSubDescriptor__}{SubDescriptor}}* subDescriptors;}
+\DoxyCodeLine{1095     \mbox{\hyperlink{structEmbColor__}{EmbColor}} stxColor;}
+\DoxyCodeLine{1096 \} \mbox{\hyperlink{structStxThread__}{StxThread}};}
+\DoxyCodeLine{1097 }
+\DoxyCodeLine{1098 \textcolor{comment}{/* . */}}
+\DoxyCodeLine{1099 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structSvgAttribute__}{SvgAttribute\_}}}
+\DoxyCodeLine{1100 \{}
+\DoxyCodeLine{1101     \textcolor{keywordtype}{char}* name;}
+\DoxyCodeLine{1102     \textcolor{keywordtype}{char}* value;}
+\DoxyCodeLine{1103 \} \mbox{\hyperlink{structSvgAttribute__}{SvgAttribute}};}
+\DoxyCodeLine{1104 }
+\DoxyCodeLine{1105 \textcolor{comment}{/* . */}}
+\DoxyCodeLine{1106 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structHuffman}{Huffman}} \{}
+\DoxyCodeLine{1107     \textcolor{keywordtype}{int} default\_value;}
+\DoxyCodeLine{1108     \textcolor{keywordtype}{int} lengths[1000];}
+\DoxyCodeLine{1109     \textcolor{keywordtype}{int} nlengths;}
+\DoxyCodeLine{1110     \textcolor{keywordtype}{int} table[1000];}
+\DoxyCodeLine{1111     \textcolor{keywordtype}{int} table\_width;}
+\DoxyCodeLine{1112     \textcolor{keywordtype}{int} ntable;}
+\DoxyCodeLine{1113 \} \mbox{\hyperlink{structHuffman}{huffman}};}
+\DoxyCodeLine{1114 }
+\DoxyCodeLine{1115 \textcolor{comment}{/* . */}}
+\DoxyCodeLine{1116 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structCompress}{Compress}} \{}
+\DoxyCodeLine{1117     \textcolor{keywordtype}{int} bit\_position;}
+\DoxyCodeLine{1118     \textcolor{keywordtype}{char} *input\_data;}
+\DoxyCodeLine{1119     \textcolor{keywordtype}{int} input\_length;}
+\DoxyCodeLine{1120     \textcolor{keywordtype}{int} bits\_total;}
+\DoxyCodeLine{1121     \textcolor{keywordtype}{int} block\_elements;}
+\DoxyCodeLine{1122     \mbox{\hyperlink{structHuffman}{huffman}} character\_length\_huffman;}
+\DoxyCodeLine{1123     \mbox{\hyperlink{structHuffman}{huffman}} character\_huffman;}
+\DoxyCodeLine{1124     \mbox{\hyperlink{structHuffman}{huffman}} distance\_huffman;}
+\DoxyCodeLine{1125 \} \mbox{\hyperlink{structCompress}{compress}};}
+\DoxyCodeLine{1126 }
+\DoxyCodeLine{1127 \textcolor{comment}{/* Function Declarations}}
+\DoxyCodeLine{1128 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{1129 EMB\_PUBLIC \textcolor{keywordtype}{int} lindenmayer\_system(\mbox{\hyperlink{structLSYSTEM}{L\_system}} L, \textcolor{keywordtype}{char}* state, \textcolor{keywordtype}{int} iteration, \textcolor{keywordtype}{int} complete);}
+\DoxyCodeLine{1130 EMB\_PUBLIC \textcolor{keywordtype}{int} hilbert\_curve(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \textcolor{keywordtype}{int} iterations);}
+\DoxyCodeLine{1131 }
+\DoxyCodeLine{1132 \textcolor{comment}{/* Set or get geometric object's attributes. */}}
+\DoxyCodeLine{1133 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_gset(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *g, \textcolor{keywordtype}{int} attribute, \mbox{\hyperlink{structScriptValue__}{ScriptValue}} value);}
+\DoxyCodeLine{1134 EMB\_PUBLIC \mbox{\hyperlink{structScriptValue__}{ScriptValue}} emb\_gget(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *g, \textcolor{keywordtype}{int} attribute);}
+\DoxyCodeLine{1135 }
+\DoxyCodeLine{1136 \mbox{\hyperlink{structScriptValue__}{ScriptValue}} *emb\_create\_root(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{1137 \textcolor{keywordtype}{int} emb\_create\_leaf(\mbox{\hyperlink{structScriptValue__}{ScriptValue}} *branch, \textcolor{keywordtype}{int} type, \textcolor{keywordtype}{char} *label, \textcolor{keywordtype}{char} *data);}
+\DoxyCodeLine{1138 \textcolor{keywordtype}{void} emb\_free\_root(\mbox{\hyperlink{structScriptValue__}{ScriptValue}} *root);}
+\DoxyCodeLine{1139 \textcolor{keywordtype}{void} emb\_print\_tree(\mbox{\hyperlink{structScriptValue__}{ScriptValue}} *tree, \textcolor{keywordtype}{int} indent);}
+\DoxyCodeLine{1140 }
+\DoxyCodeLine{1141 EMB\_PUBLIC \textcolor{keywordtype}{void} to\_flag(\textcolor{keywordtype}{char} **argv, \textcolor{keywordtype}{int} argc, \textcolor{keywordtype}{int} i);}
+\DoxyCodeLine{1142 EMB\_PUBLIC \textcolor{keywordtype}{void} formats(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{1143 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_identify\_format(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *ending);}
+\DoxyCodeLine{1144 EMB\_PUBLIC \textcolor{keywordtype}{int} convert(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *inf, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *outf);}
+\DoxyCodeLine{1145 }
+\DoxyCodeLine{1146 EMB\_PUBLIC \mbox{\hyperlink{structEmbVector__}{EmbVector}} \mbox{\hyperlink{embroidery_8h_ae279d89a7692201def3d13ff6976181b}{emb\_vector}}(\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} x, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} y);}
+\DoxyCodeLine{1147 }
+\DoxyCodeLine{1148 EMB\_PUBLIC \textcolor{keywordtype}{int} test\_convert(\textcolor{keywordtype}{int} test\_case, \textcolor{keywordtype}{int} from, \textcolor{keywordtype}{int} to);}
+\DoxyCodeLine{1149 }
+\DoxyCodeLine{1150 EMB\_PUBLIC \textcolor{keywordtype}{char} read\_n\_bytes(FILE *file, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} *data, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} length);}
+\DoxyCodeLine{1151 EMB\_PUBLIC \textcolor{keywordtype}{bool} string\_equal(\textcolor{keywordtype}{char} *a, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *b);}
+\DoxyCodeLine{1152 EMB\_PUBLIC \textcolor{keywordtype}{int} parse\_floats(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *line, \textcolor{keywordtype}{float} result[], \textcolor{keywordtype}{int} n);}
+\DoxyCodeLine{1153 EMB\_PUBLIC \textcolor{keywordtype}{int} parse\_vector(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *line, \mbox{\hyperlink{structEmbVector__}{EmbVector}} *v);}
+\DoxyCodeLine{1154 EMB\_PUBLIC \textcolor{keywordtype}{bool} valid\_rgb(\textcolor{keywordtype}{float} r, \textcolor{keywordtype}{float} g, \textcolor{keywordtype}{float} b);}
+\DoxyCodeLine{1155 EMB\_PUBLIC \textcolor{keywordtype}{int} table\_length(\textcolor{keywordtype}{char} *s[]);}
+\DoxyCodeLine{1156 EMB\_PUBLIC \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} *load\_file(\textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{1157 EMB\_PUBLIC \textcolor{keywordtype}{bool} int32\_underflow(int64\_t a, int64\_t b);}
+\DoxyCodeLine{1158 EMB\_PUBLIC \textcolor{keywordtype}{bool} int32\_overflow(int64\_t a, int64\_t b);}
+\DoxyCodeLine{1159 EMB\_PUBLIC \textcolor{keywordtype}{int} round\_to\_multiple(\textcolor{keywordtype}{bool} roundUp, \textcolor{keywordtype}{int} numToRound, \textcolor{keywordtype}{int} multiple);}
+\DoxyCodeLine{1160 EMB\_PUBLIC \textcolor{keywordtype}{void} debug\_message(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *msg, ...);}
+\DoxyCodeLine{1161 EMB\_PUBLIC \textcolor{keywordtype}{bool} valid\_file\_format(\textcolor{keywordtype}{char} *fileName);}
+\DoxyCodeLine{1162 EMB\_PUBLIC \textcolor{keywordtype}{int} get\_id(\textcolor{keywordtype}{char} *data[], \textcolor{keywordtype}{char} *label);}
+\DoxyCodeLine{1163 }
+\DoxyCodeLine{1164 \textcolor{comment}{/* Scripting */}}
+\DoxyCodeLine{1165 EMB\_PUBLIC \textcolor{keywordtype}{void} execute\_postscript(\mbox{\hyperlink{structEmbStack__}{EmbStack}} *stack, \textcolor{keywordtype}{char} line[200]);}
+\DoxyCodeLine{1166 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_repl(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{1167 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_processor(\textcolor{keywordtype}{char} *state, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *program, \textcolor{keywordtype}{int} program\_length);}
+\DoxyCodeLine{1168 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_compiler(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *program, \textcolor{keywordtype}{int} language, \textcolor{keywordtype}{char} *compiled\_program);}
+\DoxyCodeLine{1169 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_actuator(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *program, \textcolor{keywordtype}{int} language);}
+\DoxyCodeLine{1170 }
+\DoxyCodeLine{1171 \textcolor{comment}{/* Colors */}}
+\DoxyCodeLine{1172 EMB\_PUBLIC \mbox{\hyperlink{structEmbColor__}{EmbColor}} embColor\_make(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} r, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} g, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} b);}
+\DoxyCodeLine{1173 EMB\_PUBLIC \mbox{\hyperlink{structEmbColor__}{EmbColor}} embColor\_fromHexStr(\textcolor{keywordtype}{char}* val);}
+\DoxyCodeLine{1174 EMB\_PUBLIC \textcolor{keywordtype}{int} embColor\_distance(\mbox{\hyperlink{structEmbColor__}{EmbColor}} a, \mbox{\hyperlink{structEmbColor__}{EmbColor}} b);}
+\DoxyCodeLine{1175 }
+\DoxyCodeLine{1176 \textcolor{comment}{/* Arrays */}}
+\DoxyCodeLine{1177 EMB\_PUBLIC \mbox{\hyperlink{structEmbArray__}{EmbArray}}* emb\_array\_create(\textcolor{keywordtype}{int} type);}
+\DoxyCodeLine{1178 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_resize(\mbox{\hyperlink{structEmbArray__}{EmbArray}} *g);}
+\DoxyCodeLine{1179 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_array\_copy(\mbox{\hyperlink{structEmbArray__}{EmbArray}} *dst, \mbox{\hyperlink{structEmbArray__}{EmbArray}} *src);}
+\DoxyCodeLine{1180 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_add\_geometry(\mbox{\hyperlink{structEmbArray__}{EmbArray}} *a, \mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} g);}
+\DoxyCodeLine{1181 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_add\_arc(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* g, \mbox{\hyperlink{structEmbArc__}{EmbArc}} arc);}
+\DoxyCodeLine{1182 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_add\_circle(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* g, \mbox{\hyperlink{structEmbCircle__}{EmbCircle}} circle);}
+\DoxyCodeLine{1183 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_add\_ellipse(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* g, \mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} ellipse);}
+\DoxyCodeLine{1184 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_add\_flag(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* g, \textcolor{keywordtype}{int} flag);}
+\DoxyCodeLine{1185 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_addLine(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* g, \mbox{\hyperlink{structEmbLine__}{EmbLine}} line);}
+\DoxyCodeLine{1186 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_addRect(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* g, \mbox{\hyperlink{structEmbRect__}{EmbRect}} rect);}
+\DoxyCodeLine{1187 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_addPath(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* g, \mbox{\hyperlink{structEmbPath__}{EmbPath}} p);}
+\DoxyCodeLine{1188 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_addPoint(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* g, \mbox{\hyperlink{structEmbPoint__}{EmbPoint}} p);}
+\DoxyCodeLine{1189 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_addPolygon(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* g, \mbox{\hyperlink{structEmbPath__}{EmbPolygon}} p);}
+\DoxyCodeLine{1190 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_addPolyline(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* g, \mbox{\hyperlink{structEmbPath__}{EmbPolyline}} p);}
+\DoxyCodeLine{1191 \textcolor{comment}{/* EMB\_PUBLIC int emb\_array\_addSpline(EmbArray* g, EmbSpline p); */}}
+\DoxyCodeLine{1192 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_addStitch(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* g, \mbox{\hyperlink{structEmbStitch__}{EmbStitch}} st);}
+\DoxyCodeLine{1193 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_addThread(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* g, \mbox{\hyperlink{structEmbThread__}{EmbThread}} p);}
+\DoxyCodeLine{1194 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_array\_addVector(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* g, \mbox{\hyperlink{structEmbVector__}{EmbVector}});}
+\DoxyCodeLine{1195 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_array\_free(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* p);}
+\DoxyCodeLine{1196 }
+\DoxyCodeLine{1197 EMB\_PUBLIC \mbox{\hyperlink{structEmbLine__}{EmbLine}} emb\_line\_make(\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} x1, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} y1, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} x2, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} y2);}
+\DoxyCodeLine{1198 }
+\DoxyCodeLine{1199 EMB\_PUBLIC \mbox{\hyperlink{structEmbVector__}{EmbVector}} emb\_line\_normalVector(\mbox{\hyperlink{structEmbLine__}{EmbLine}} line, \textcolor{keywordtype}{int} clockwise);}
+\DoxyCodeLine{1200 EMB\_PUBLIC \mbox{\hyperlink{structEmbVector__}{EmbVector}} emb\_line\_intersectionPoint(\mbox{\hyperlink{structEmbLine__}{EmbLine}} line1, \mbox{\hyperlink{structEmbLine__}{EmbLine}} line2, \textcolor{keywordtype}{int} *error\_code);}
+\DoxyCodeLine{1201 }
+\DoxyCodeLine{1202 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_find\_nearest\_color(\mbox{\hyperlink{structEmbColor__}{EmbColor}} color, \mbox{\hyperlink{structEmbColor__}{EmbColor}}* colors, \textcolor{keywordtype}{int} n\_colors);}
+\DoxyCodeLine{1203 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_find\_nearest\_thread(\mbox{\hyperlink{structEmbColor__}{EmbColor}} color, \mbox{\hyperlink{structEmbThread__}{EmbThread}}* threads, \textcolor{keywordtype}{int} n\_threads);}
+\DoxyCodeLine{1204 EMB\_PUBLIC \mbox{\hyperlink{structEmbThread__}{EmbThread}} emb\_get\_random\_thread(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{1205 }
+\DoxyCodeLine{1206 EMB\_PUBLIC \mbox{\hyperlink{structEmbVector__}{EmbVector}} \mbox{\hyperlink{embroidery_8h_acb052f13bcb49891b426ddc83a708a0d}{emb\_vector\_normalize}}(\mbox{\hyperlink{structEmbVector__}{EmbVector}} vector);}
+\DoxyCodeLine{1207 EMB\_PUBLIC \mbox{\hyperlink{structEmbVector__}{EmbVector}} \mbox{\hyperlink{embroidery_8h_a52fa8ae098928b36418c3ef4a51b0f2b}{emb\_vector\_scale}}(\mbox{\hyperlink{structEmbVector__}{EmbVector}} vector, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} magnitude);}
+\DoxyCodeLine{1208 EMB\_PUBLIC \mbox{\hyperlink{structEmbVector__}{EmbVector}} \mbox{\hyperlink{embroidery_8h_ae87654f6077b2e045165968e52966971}{emb\_vector\_add}}(\mbox{\hyperlink{structEmbVector__}{EmbVector}} v1, \mbox{\hyperlink{structEmbVector__}{EmbVector}} v2);}
+\DoxyCodeLine{1209 EMB\_PUBLIC \mbox{\hyperlink{structEmbVector__}{EmbVector}} \mbox{\hyperlink{embroidery_8h_aa31dbf322a9d706e57e82e7fdde8eba4}{emb\_vector\_average}}(\mbox{\hyperlink{structEmbVector__}{EmbVector}} v1, \mbox{\hyperlink{structEmbVector__}{EmbVector}} v2);}
+\DoxyCodeLine{1210 EMB\_PUBLIC \mbox{\hyperlink{structEmbVector__}{EmbVector}} \mbox{\hyperlink{embroidery_8h_ab49ab0013feba4e91452ed822fa1fa39}{emb\_vector\_subtract}}(\mbox{\hyperlink{structEmbVector__}{EmbVector}} v1, \mbox{\hyperlink{structEmbVector__}{EmbVector}} v2);}
+\DoxyCodeLine{1211 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} \mbox{\hyperlink{embroidery_8h_ace2f20c74187c3d12927853b256f53a6}{emb\_vector\_dot}}(\mbox{\hyperlink{structEmbVector__}{EmbVector}} v1, \mbox{\hyperlink{structEmbVector__}{EmbVector}} v2);}
+\DoxyCodeLine{1212 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} \mbox{\hyperlink{embroidery_8h_a4d7022d7352ecc2781e09218cf887ed4}{emb\_vector\_cross}}(\mbox{\hyperlink{structEmbVector__}{EmbVector}} v1, \mbox{\hyperlink{structEmbVector__}{EmbVector}} v2);}
+\DoxyCodeLine{1213 EMB\_PUBLIC \mbox{\hyperlink{structEmbVector__}{EmbVector}} \mbox{\hyperlink{embroidery_8h_ab4236e43611190493bd2b8576e37a9bf}{emb\_vector\_transpose\_product}}(\mbox{\hyperlink{structEmbVector__}{EmbVector}} v1, \mbox{\hyperlink{structEmbVector__}{EmbVector}} v2);}
+\DoxyCodeLine{1214 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} \mbox{\hyperlink{embroidery_8h_ab96bf6ceda49356654a67e81dfa64384}{emb\_vector\_length}}(\mbox{\hyperlink{structEmbVector__}{EmbVector}} vector);}
+\DoxyCodeLine{1215 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} emb\_vector\_relativeX(\mbox{\hyperlink{structEmbVector__}{EmbVector}} a1, \mbox{\hyperlink{structEmbVector__}{EmbVector}} a2, \mbox{\hyperlink{structEmbVector__}{EmbVector}} a3);}
+\DoxyCodeLine{1216 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} emb\_vector\_relativeY(\mbox{\hyperlink{structEmbVector__}{EmbVector}} a1, \mbox{\hyperlink{structEmbVector__}{EmbVector}} a2, \mbox{\hyperlink{structEmbVector__}{EmbVector}} a3);}
+\DoxyCodeLine{1217 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} emb\_vector\_angle(\mbox{\hyperlink{structEmbVector__}{EmbVector}} v);}
+\DoxyCodeLine{1218 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} emb\_vector\_distance(\mbox{\hyperlink{structEmbVector__}{EmbVector}} a, \mbox{\hyperlink{structEmbVector__}{EmbVector}} b);}
+\DoxyCodeLine{1219 EMB\_PUBLIC \mbox{\hyperlink{structEmbVector__}{EmbVector}} \mbox{\hyperlink{embroidery_8h_ab60c1e6ac8c9880a09d3cd6e1e6b331e}{emb\_vector\_unit}}(\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} angle);}
+\DoxyCodeLine{1220 }
+\DoxyCodeLine{1221 EMB\_PUBLIC \mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} emb\_arc(\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}}, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}}, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}}, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}}, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}}, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}});}
+\DoxyCodeLine{1222 EMB\_PUBLIC \textcolor{keywordtype}{char} emb\_arc\_clockwise(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} arc);}
+\DoxyCodeLine{1223 }
+\DoxyCodeLine{1224 EMB\_PUBLIC \mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} emb\_circle(\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} x, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} y, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} r);}
+\DoxyCodeLine{1225 EMB\_PUBLIC \textcolor{keywordtype}{int} getCircleCircleIntersections(}
+\DoxyCodeLine{1226      \mbox{\hyperlink{structEmbCircle__}{EmbCircle}} c0, \mbox{\hyperlink{structEmbCircle__}{EmbCircle}} c1, \mbox{\hyperlink{structEmbVector__}{EmbVector}} *v0, \mbox{\hyperlink{structEmbVector__}{EmbVector}} *v1);}
+\DoxyCodeLine{1227 EMB\_PUBLIC \textcolor{keywordtype}{int} getCircleTangentPoints(}
+\DoxyCodeLine{1228      \mbox{\hyperlink{structEmbCircle__}{EmbCircle}} c, \mbox{\hyperlink{structEmbVector__}{EmbVector}} p, \mbox{\hyperlink{structEmbVector__}{EmbVector}} *v0, \mbox{\hyperlink{structEmbVector__}{EmbVector}} *v1);}
+\DoxyCodeLine{1229 }
+\DoxyCodeLine{1230 EMB\_PUBLIC \mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} embEllipse\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{1231 EMB\_PUBLIC \mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} embEllipse\_make(\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} cx, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} cy, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} rx, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} ry);}
+\DoxyCodeLine{1232 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} embEllipse\_diameterX(\mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} ellipse);}
+\DoxyCodeLine{1233 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} embEllipse\_diameterY(\mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} ellipse);}
+\DoxyCodeLine{1234 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} embEllipse\_area(\mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} ellipse);}
+\DoxyCodeLine{1235 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} embEllipse\_perimeter(\mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} ellipse);}
+\DoxyCodeLine{1236 }
+\DoxyCodeLine{1237 EMB\_PUBLIC \mbox{\hyperlink{structEmbImage__}{EmbImage}} embImage\_create(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{1238 EMB\_PUBLIC \textcolor{keywordtype}{void} embImage\_read(\mbox{\hyperlink{structEmbImage__}{EmbImage}} *image, \textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{1239 EMB\_PUBLIC \textcolor{keywordtype}{int} embImage\_write(\mbox{\hyperlink{structEmbImage__}{EmbImage}} *image, \textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{1240 EMB\_PUBLIC \textcolor{keywordtype}{void} embImage\_free(\mbox{\hyperlink{structEmbImage__}{EmbImage}} *image);}
+\DoxyCodeLine{1241 }
+\DoxyCodeLine{1242 EMB\_PUBLIC \mbox{\hyperlink{structEmbRect__}{EmbRect}} emb\_rect(\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}}, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}}, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}}, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}});}
+\DoxyCodeLine{1243 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} embRect\_area(\mbox{\hyperlink{structEmbRect__}{EmbRect}});}
+\DoxyCodeLine{1244 }
+\DoxyCodeLine{1245 EMB\_PUBLIC \textcolor{keywordtype}{int} threadColor(\textcolor{keyword}{const} \textcolor{keywordtype}{char}*, \textcolor{keywordtype}{int} brand);}
+\DoxyCodeLine{1246 EMB\_PUBLIC \textcolor{keywordtype}{int} threadColorNum(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} color, \textcolor{keywordtype}{int} brand);}
+\DoxyCodeLine{1247 EMB\_PUBLIC \textcolor{keyword}{const} \textcolor{keywordtype}{char}* threadColorName(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} color, \textcolor{keywordtype}{int} brand);}
+\DoxyCodeLine{1248 }
+\DoxyCodeLine{1249 EMB\_PUBLIC \textcolor{keywordtype}{void} embTime\_initNow(\mbox{\hyperlink{structEmbTime__}{EmbTime}}* t);}
+\DoxyCodeLine{1250 EMB\_PUBLIC \mbox{\hyperlink{structEmbTime__}{EmbTime}} embTime\_time(\mbox{\hyperlink{structEmbTime__}{EmbTime}}* t);}
+\DoxyCodeLine{1251 }
+\DoxyCodeLine{1252 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_generate\_satin\_outline(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* lines,}
+\DoxyCodeLine{1253     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} thickness, \mbox{\hyperlink{structEmbSatinOutline__}{EmbSatinOutline}}* result);}
+\DoxyCodeLine{1254 EMB\_PUBLIC \mbox{\hyperlink{structEmbArray__}{EmbArray}}* emb\_satin\_outline\_render(\mbox{\hyperlink{structEmbSatinOutline__}{EmbSatinOutline}}* result,}
+\DoxyCodeLine{1255     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} density);}
+\DoxyCodeLine{1256 }
+\DoxyCodeLine{1257 EMB\_PUBLIC \mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *emb\_geometry\_init(\textcolor{keywordtype}{int} type\_in);}
+\DoxyCodeLine{1258 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_geometry\_free(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *obj);}
+\DoxyCodeLine{1259 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_geometry\_move(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *obj, \mbox{\hyperlink{structEmbVector__}{EmbVector}} delta);}
+\DoxyCodeLine{1260 EMB\_PUBLIC \mbox{\hyperlink{structEmbRect__}{EmbRect}} embGeometry\_boundingRect(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *obj);}
+\DoxyCodeLine{1261 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_vulcanize(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *obj);}
+\DoxyCodeLine{1262 }
+\DoxyCodeLine{1263 EMB\_PUBLIC \mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* emb\_pattern\_create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{1264 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_hideStitchesOverLength(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \textcolor{keywordtype}{int} length);}
+\DoxyCodeLine{1265 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_fixColorCount(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p);}
+\DoxyCodeLine{1266 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_pattern\_addThread(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \mbox{\hyperlink{structEmbThread__}{EmbThread}} thread);}
+\DoxyCodeLine{1267 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_addStitchAbs(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} x, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} y,}
+\DoxyCodeLine{1268     \textcolor{keywordtype}{int} flags, \textcolor{keywordtype}{int} isAutoColorIndex);}
+\DoxyCodeLine{1269 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_addStitchRel(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} dx, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} dy, \textcolor{keywordtype}{int} flags, \textcolor{keywordtype}{int} isAutoColorIndex);}
+\DoxyCodeLine{1270 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_changeColor(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \textcolor{keywordtype}{int} index);}
+\DoxyCodeLine{1271 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_free(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p);}
+\DoxyCodeLine{1272 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_print(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern);}
+\DoxyCodeLine{1273 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_scale(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} scale);}
+\DoxyCodeLine{1274 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} emb\_pattern\_shortest\_stitch(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern);}
+\DoxyCodeLine{1275 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} emb\_pattern\_longest\_stitch(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern);}
+\DoxyCodeLine{1276 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_lengthHistogram(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \textcolor{keywordtype}{int} *bin, \textcolor{keywordtype}{int} NUMBINS);}
+\DoxyCodeLine{1277 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_pattern\_realStitches(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern);}
+\DoxyCodeLine{1278 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_pattern\_jumpStitches(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern);}
+\DoxyCodeLine{1279 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_pattern\_trimStitches(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern);}
+\DoxyCodeLine{1280 EMB\_PUBLIC \mbox{\hyperlink{structEmbRect__}{EmbRect}} emb\_pattern\_bounds(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p);}
+\DoxyCodeLine{1281 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_flipHorizontal(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p);}
+\DoxyCodeLine{1282 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_flipVertical(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p);}
+\DoxyCodeLine{1283 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_flip(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \textcolor{keywordtype}{int} horz, \textcolor{keywordtype}{int} vert);}
+\DoxyCodeLine{1284 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_combineJumpStitches(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p);}
+\DoxyCodeLine{1285 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_correctForMaxStitchLength(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} maxStitchLength, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} maxJumpLength);}
+\DoxyCodeLine{1286 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_center(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p);}
+\DoxyCodeLine{1287 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_loadExternalColorFile(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* fileName);}
+\DoxyCodeLine{1288 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_convertGeometry(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p);}
+\DoxyCodeLine{1289 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_details(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *p);}
+\DoxyCodeLine{1290 EMB\_PUBLIC \mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *emb\_pattern\_combine(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *p1, \mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *p2);}
+\DoxyCodeLine{1291 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_pattern\_color\_count(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \mbox{\hyperlink{structEmbColor__}{EmbColor}} startColor);}
+\DoxyCodeLine{1292 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_end(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p);}
+\DoxyCodeLine{1293 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_crossstitch(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \mbox{\hyperlink{structEmbImage__}{EmbImage}} *, \textcolor{keywordtype}{int} threshhold);}
+\DoxyCodeLine{1294 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_horizontal\_fill(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \mbox{\hyperlink{structEmbImage__}{EmbImage}} *, \textcolor{keywordtype}{int} threshhold);}
+\DoxyCodeLine{1295 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_pattern\_render(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{1296 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_pattern\_simulate(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{1297 }
+\DoxyCodeLine{1298 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_add\_circle(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \mbox{\hyperlink{structEmbCircle__}{EmbCircle}} obj);}
+\DoxyCodeLine{1299 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_add\_ellipse(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} obj);}
+\DoxyCodeLine{1300 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_add\_line(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \mbox{\hyperlink{structEmbLine__}{EmbLine}} obj);}
+\DoxyCodeLine{1301 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_add\_path(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \mbox{\hyperlink{structEmbPath__}{EmbPath}} obj);}
+\DoxyCodeLine{1302 EMB\_PUBLIC \textcolor{keywordtype}{void} \mbox{\hyperlink{embroidery_8h_adeef5776a7c9396e52a2bf0c0f10d785}{emb\_pattern\_addPointAbs}}(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \mbox{\hyperlink{structEmbPoint__}{EmbPoint}} obj);}
+\DoxyCodeLine{1303 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_addPolygonAbs(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \mbox{\hyperlink{structEmbPath__}{EmbPolygon}} obj);}
+\DoxyCodeLine{1304 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_addPolylineAbs(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \mbox{\hyperlink{structEmbPath__}{EmbPolyline}} obj);}
+\DoxyCodeLine{1305 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_pattern\_addRectAbs(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* p, \mbox{\hyperlink{structEmbRect__}{EmbRect}} obj);}
+\DoxyCodeLine{1306 }
+\DoxyCodeLine{1307 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_copy\_stitches\_to\_polylines(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* pattern);}
+\DoxyCodeLine{1308 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_copy\_polylines\_to\_stitches(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* pattern);}
+\DoxyCodeLine{1309 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_move\_stitches\_to\_polylines(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* pattern);}
+\DoxyCodeLine{1310 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_move\_polylines\_to\_stitches(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* pattern);}
+\DoxyCodeLine{1311 }
+\DoxyCodeLine{1312 EMB\_PUBLIC \textcolor{keywordtype}{char} emb\_pattern\_read(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* fileName, \textcolor{keywordtype}{int} format);}
+\DoxyCodeLine{1313 EMB\_PUBLIC \textcolor{keywordtype}{char} emb\_pattern\_write(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* fileName, \textcolor{keywordtype}{int} format);}
+\DoxyCodeLine{1314 }
+\DoxyCodeLine{1315 EMB\_PUBLIC \textcolor{keywordtype}{char} emb\_pattern\_readAuto(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* fileName);}
+\DoxyCodeLine{1316 EMB\_PUBLIC \textcolor{keywordtype}{char} emb\_pattern\_writeAuto(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* fileName);}
+\DoxyCodeLine{1317 }
+\DoxyCodeLine{1318 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_round(\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} x);}
+\DoxyCodeLine{1319 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} radians(\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} degree);}
+\DoxyCodeLine{1320 EMB\_PUBLIC \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} degrees(\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} radian);}
+\DoxyCodeLine{1321 }
+\DoxyCodeLine{1322 \textcolor{comment}{/* -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ Geometry -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ */}}
+\DoxyCodeLine{1323 }
+\DoxyCodeLine{1324 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_pattern\_real\_count(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern);}
+\DoxyCodeLine{1325 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_pattern\_count\_type(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \textcolor{keywordtype}{int} flags);}
+\DoxyCodeLine{1326 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_color\_histogram(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \textcolor{keywordtype}{int} **bins);}
+\DoxyCodeLine{1327 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_length\_histogram(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \textcolor{keywordtype}{int} *bins);}
+\DoxyCodeLine{1328 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_total\_thread\_length(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern);}
+\DoxyCodeLine{1329 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_total\_thread\_of\_color(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}} *pattern, \textcolor{keywordtype}{int} thread\_index);}
+\DoxyCodeLine{1330 }
+\DoxyCodeLine{1331 EMB\_PUBLIC \textcolor{keywordtype}{int} emb\_approx(\mbox{\hyperlink{structEmbVector__}{EmbVector}} point1, \mbox{\hyperlink{structEmbVector__}{EmbVector}} point2);}
+\DoxyCodeLine{1332 }
+\DoxyCodeLine{1333 EMB\_PUBLIC \mbox{\hyperlink{structEmbVector__}{EmbVector}} scale\_and\_rotate(\mbox{\hyperlink{structEmbVector__}{EmbVector}} v, \textcolor{keywordtype}{double} angle, \textcolor{keywordtype}{double} scale);}
+\DoxyCodeLine{1334 }
+\DoxyCodeLine{1335 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_width(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1336 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_height(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1337 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_radius(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1338 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_radius\_major(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1339 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_radius\_minor(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1340 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_diameter(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1341 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_diameter\_major(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1342 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_diameter\_minor(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1343 EMB\_PUBLIC \mbox{\hyperlink{structEmbVector__}{EmbVector}} emb\_quadrant(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \textcolor{keywordtype}{int} degrees);}
+\DoxyCodeLine{1344 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_angle(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1345 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_start\_angle(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1346 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_end\_angle(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1347 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_arc\_length(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1348 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_area(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1349 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_chord(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1350 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_included\_angle(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1351 EMB\_PUBLIC \textcolor{keywordtype}{char} emb\_clockwise(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1352 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_circumference(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1353 EMB\_PUBLIC \textcolor{keywordtype}{double} emb\_included\_angle(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry);}
+\DoxyCodeLine{1354 }
+\DoxyCodeLine{1355 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_set\_start\_angle(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \textcolor{keywordtype}{double} angle);}
+\DoxyCodeLine{1356 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_set\_end\_angle(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \textcolor{keywordtype}{double} angle);}
+\DoxyCodeLine{1357 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_set\_start\_point(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \mbox{\hyperlink{structEmbVector__}{EmbVector}} point);}
+\DoxyCodeLine{1358 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_set\_mid\_point(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \mbox{\hyperlink{structEmbVector__}{EmbVector}} point);}
+\DoxyCodeLine{1359 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_set\_end\_point(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \mbox{\hyperlink{structEmbVector__}{EmbVector}} point);}
+\DoxyCodeLine{1360 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_set\_diameter(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \textcolor{keywordtype}{double} diameter);}
+\DoxyCodeLine{1361 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_set\_area(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \textcolor{keywordtype}{double} area);}
+\DoxyCodeLine{1362 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_set\_circumference(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \textcolor{keywordtype}{double} circumference);}
+\DoxyCodeLine{1363 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_set\_radius(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \textcolor{keywordtype}{double} radius);}
+\DoxyCodeLine{1364 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_set\_radius\_major(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \textcolor{keywordtype}{double} radius);}
+\DoxyCodeLine{1365 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_set\_radius\_minor(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \textcolor{keywordtype}{double} radius);}
+\DoxyCodeLine{1366 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_set\_diameter\_major(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \textcolor{keywordtype}{double} diameter);}
+\DoxyCodeLine{1367 EMB\_PUBLIC \textcolor{keywordtype}{void} emb\_set\_diameter\_minor(\mbox{\hyperlink{structEmbGeometry__}{EmbGeometry}} *geometry, \textcolor{keywordtype}{double} diameter);}
+\DoxyCodeLine{1368 }
+\DoxyCodeLine{1369 EMB\_PUBLIC \textcolor{keywordtype}{char} *emb\_get\_svg\_token(\textcolor{keywordtype}{char} *svg, \textcolor{keywordtype}{char} token[MAX\_STRING\_LENGTH]);}
+\DoxyCodeLine{1370 EMB\_PUBLIC \textcolor{keywordtype}{char} *emb\_get\_svg\_vector(\textcolor{keywordtype}{char} *svg, \mbox{\hyperlink{structEmbVector__}{EmbVector}} *v);}
+\DoxyCodeLine{1371 }
+\DoxyCodeLine{1372 \textcolor{comment}{/* Internal function declarations.}}
+\DoxyCodeLine{1373 \textcolor{comment}{ * -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{1374 \textcolor{comment}{ * TODO: UTF-\/8 support.}}
+\DoxyCodeLine{1375 \textcolor{comment}{ */}}
+\DoxyCodeLine{1376 EMB\_PUBLIC \textcolor{keywordtype}{int} string\_rchar(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *s1, \textcolor{keywordtype}{char} c);}
+\DoxyCodeLine{1377 EMB\_PUBLIC \textcolor{keywordtype}{void} char\_ptr\_to\_string(\textcolor{keywordtype}{char} *dst, \textcolor{keywordtype}{char} *src);}
+\DoxyCodeLine{1378 }
+\DoxyCodeLine{1379 \textcolor{comment}{/* Utility Functions: merge first three with string library */}}
+\DoxyCodeLine{1380 EMB\_PUBLIC \textcolor{keywordtype}{int} stringInArray(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *s, \textcolor{keyword}{const} \textcolor{keywordtype}{char} **array);}
+\DoxyCodeLine{1381 EMB\_PUBLIC \textcolor{keywordtype}{char} *copy\_trim(\textcolor{keywordtype}{char} \textcolor{keyword}{const} *s);}
+\DoxyCodeLine{1382 EMB\_PUBLIC \textcolor{keywordtype}{char}* emb\_optOut(\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} num, \textcolor{keywordtype}{char}* str);}
+\DoxyCodeLine{1383 EMB\_PUBLIC \textcolor{keywordtype}{void} safe\_free(\textcolor{keywordtype}{void} *data);}
+\DoxyCodeLine{1384 }
+\DoxyCodeLine{1385 EMB\_PUBLIC \textcolor{keywordtype}{int} testMain(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{1386 }
+\DoxyCodeLine{1387 \textcolor{comment}{/* DIFAT functions */}}
+\DoxyCodeLine{1388 EMB\_PUBLIC \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} entriesInDifatSector(\mbox{\hyperlink{struct__bcf__file__difat}{bcf\_file\_difat}}* fat);}
+\DoxyCodeLine{1389 EMB\_PUBLIC \mbox{\hyperlink{struct__bcf__file__fat}{bcf\_file\_fat}}* bcfFileFat\_create(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} sectorSize);}
+\DoxyCodeLine{1390 EMB\_PUBLIC \textcolor{keywordtype}{void} loadFatFromSector(\mbox{\hyperlink{struct__bcf__file__fat}{bcf\_file\_fat}}* fat, FILE* file);}
+\DoxyCodeLine{1391 EMB\_PUBLIC \textcolor{keywordtype}{void} bcf\_file\_fat\_free(\mbox{\hyperlink{struct__bcf__file__fat}{bcf\_file\_fat}}** fat);}
+\DoxyCodeLine{1392 EMB\_PUBLIC \mbox{\hyperlink{struct__bcf__directory}{bcf\_directory}}* CompoundFileDirectory(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} maxNumberOfDirectoryEntries);}
+\DoxyCodeLine{1393 EMB\_PUBLIC \textcolor{keywordtype}{void} bcf\_directory\_free(\mbox{\hyperlink{struct__bcf__directory}{bcf\_directory}}** dir);}
+\DoxyCodeLine{1394 EMB\_PUBLIC \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} numberOfEntriesInDifatSector(\mbox{\hyperlink{struct__bcf__file__difat}{bcf\_file\_difat}}* fat);}
+\DoxyCodeLine{1395 \textcolor{keywordtype}{void} bcf\_file\_difat\_free(\mbox{\hyperlink{struct__bcf__file__difat}{bcf\_file\_difat}}* difat);}
+\DoxyCodeLine{1396 \mbox{\hyperlink{struct__bcf__file__header}{bcf\_file\_header}} bcfFileHeader\_read(FILE* file);}
+\DoxyCodeLine{1397 \textcolor{keywordtype}{int} bcfFileHeader\_isValid(\mbox{\hyperlink{struct__bcf__file__header}{bcf\_file\_header}} header);}
+\DoxyCodeLine{1398 \textcolor{keywordtype}{void} bcf\_file\_free(\mbox{\hyperlink{struct__bcf__file}{bcf\_file}}* bcfFile);}
+\DoxyCodeLine{1399 }
+\DoxyCodeLine{1400 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1401 printArcResults(}
+\DoxyCodeLine{1402     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} bulge,}
+\DoxyCodeLine{1403     \mbox{\hyperlink{structEmbArc__}{EmbArc}} arc,}
+\DoxyCodeLine{1404     \mbox{\hyperlink{structEmbVector__}{EmbVector}} center,}
+\DoxyCodeLine{1405     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} radius,}
+\DoxyCodeLine{1406     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} diameter,}
+\DoxyCodeLine{1407     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} chord,}
+\DoxyCodeLine{1408     \mbox{\hyperlink{structEmbVector__}{EmbVector}} chordMid,}
+\DoxyCodeLine{1409     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} sagitta,}
+\DoxyCodeLine{1410     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} apothem,}
+\DoxyCodeLine{1411     \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} incAngle,}
+\DoxyCodeLine{1412     \textcolor{keywordtype}{char} clockwise);}
+\DoxyCodeLine{1413 \textcolor{keywordtype}{int} testTangentPoints(\mbox{\hyperlink{structEmbCircle__}{EmbCircle}} c, \mbox{\hyperlink{structEmbVector__}{EmbVector}} p, \mbox{\hyperlink{structEmbVector__}{EmbVector}} *t0, \mbox{\hyperlink{structEmbVector__}{EmbVector}} *t1);}
+\DoxyCodeLine{1414 \textcolor{keywordtype}{int} create\_test\_file(\textcolor{keywordtype}{int} test\_file, \textcolor{keywordtype}{int} format);}
+\DoxyCodeLine{1415 }
+\DoxyCodeLine{1416 \textcolor{keywordtype}{double} emb\_stitch\_length(\mbox{\hyperlink{structEmbStitch__}{EmbStitch}} prev\_st, \mbox{\hyperlink{structEmbStitch__}{EmbStitch}} st);}
+\DoxyCodeLine{1417 }
+\DoxyCodeLine{1418 \textcolor{keywordtype}{int} emb\_readline(FILE* file, \textcolor{keywordtype}{char} *line, \textcolor{keywordtype}{int} maxLength);}
+\DoxyCodeLine{1419 }
+\DoxyCodeLine{1420 \mbox{\hyperlink{structScriptValue__}{ScriptValue}} script\_bool(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} b);}
+\DoxyCodeLine{1421 \mbox{\hyperlink{structScriptValue__}{ScriptValue}} script\_int(\textcolor{keywordtype}{int} i);}
+\DoxyCodeLine{1422 \mbox{\hyperlink{structScriptValue__}{ScriptValue}} script\_real(\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} r);}
+\DoxyCodeLine{1423 \mbox{\hyperlink{structScriptValue__}{ScriptValue}} script\_string(\textcolor{keywordtype}{char} *s);}
+\DoxyCodeLine{1424 \mbox{\hyperlink{structScriptValue__}{ScriptValue}} script\_vector(\mbox{\hyperlink{structEmbVector__}{EmbVector}} v);}
+\DoxyCodeLine{1425 }
+\DoxyCodeLine{1426 int16\_t emb\_read\_i16(FILE* f);}
+\DoxyCodeLine{1427 uint16\_t emb\_read\_u16(FILE* f);}
+\DoxyCodeLine{1428 int32\_t emb\_read\_i32(FILE* f);}
+\DoxyCodeLine{1429 uint32\_t emb\_read\_u32(FILE* f);}
+\DoxyCodeLine{1430 int16\_t emb\_read\_i16be(FILE* f);}
+\DoxyCodeLine{1431 uint16\_t emb\_read\_u16be(FILE* f);}
+\DoxyCodeLine{1432 int32\_t emb\_read\_i32be(FILE* f);}
+\DoxyCodeLine{1433 uint32\_t emb\_read\_u32be(FILE* f);}
+\DoxyCodeLine{1434 }
+\DoxyCodeLine{1435 \textcolor{keywordtype}{void} emb\_write\_i16(FILE* f, int16\_t data);}
+\DoxyCodeLine{1436 \textcolor{keywordtype}{void} emb\_write\_u16(FILE* f, uint16\_t data);}
+\DoxyCodeLine{1437 \textcolor{keywordtype}{void} emb\_write\_i32(FILE* f, int32\_t data);}
+\DoxyCodeLine{1438 \textcolor{keywordtype}{void} emb\_write\_u32(FILE* f, uint32\_t data);}
+\DoxyCodeLine{1439 \textcolor{keywordtype}{void} emb\_write\_i16be(FILE* f, int16\_t data);}
+\DoxyCodeLine{1440 \textcolor{keywordtype}{void} emb\_write\_u16be(FILE* f, uint16\_t data);}
+\DoxyCodeLine{1441 \textcolor{keywordtype}{void} emb\_write\_i32be(FILE* f, int32\_t data);}
+\DoxyCodeLine{1442 \textcolor{keywordtype}{void} emb\_write\_u32be(FILE* f, uint32\_t data);}
+\DoxyCodeLine{1443 }
+\DoxyCodeLine{1444 \textcolor{keywordtype}{void} embColor\_read(\textcolor{keywordtype}{void} *f, \mbox{\hyperlink{structEmbColor__}{EmbColor}} *c, \textcolor{keywordtype}{int} toRead);}
+\DoxyCodeLine{1445 \textcolor{keywordtype}{void} embColor\_write(\textcolor{keywordtype}{void} *f, \mbox{\hyperlink{structEmbColor__}{EmbColor}} c, \textcolor{keywordtype}{int} toWrite);}
+\DoxyCodeLine{1446 }
+\DoxyCodeLine{1447 \textcolor{comment}{/* Encoding/decoding and compression functions. */}}
+\DoxyCodeLine{1448 \textcolor{keywordtype}{int} \mbox{\hyperlink{embroidery_8h_acc6ad43e9cf396ef9fc41b57a2cab32f}{hus\_compress}}(\textcolor{keywordtype}{char}* input, \textcolor{keywordtype}{int} size, \textcolor{keywordtype}{char}* output, \textcolor{keywordtype}{int} *out\_size);}
+\DoxyCodeLine{1449 \textcolor{keywordtype}{int} hus\_decompress(\textcolor{keywordtype}{char}* input, \textcolor{keywordtype}{int} size, \textcolor{keywordtype}{char}* output, \textcolor{keywordtype}{int} *out\_size);}
+\DoxyCodeLine{1450 }
+\DoxyCodeLine{1451 \textcolor{keywordtype}{void} huffman\_build\_table(\mbox{\hyperlink{structHuffman}{huffman}} *h);}
+\DoxyCodeLine{1452 \textcolor{keywordtype}{int} *huffman\_table\_lookup(\mbox{\hyperlink{structHuffman}{huffman}} *h, \textcolor{keywordtype}{int} byte\_lookup, \textcolor{keywordtype}{int} *lengths);}
+\DoxyCodeLine{1453 }
+\DoxyCodeLine{1454 \textcolor{keywordtype}{int} compress\_get\_bits(\mbox{\hyperlink{structCompress}{compress}} *c, \textcolor{keywordtype}{int} length);}
+\DoxyCodeLine{1455 \textcolor{keywordtype}{int} compress\_pop(\mbox{\hyperlink{structCompress}{compress}} *c, \textcolor{keywordtype}{int} bit\_count);}
+\DoxyCodeLine{1456 \textcolor{keywordtype}{int} compress\_read\_variable\_length(\mbox{\hyperlink{structCompress}{compress}} *c);}
+\DoxyCodeLine{1457 \textcolor{keywordtype}{void} compress\_load\_character\_length\_huffman(\mbox{\hyperlink{structCompress}{compress}} *c);}
+\DoxyCodeLine{1458 \textcolor{keywordtype}{void} compress\_load\_character\_huffman(\mbox{\hyperlink{structCompress}{compress}} *c);}
+\DoxyCodeLine{1459 \textcolor{keywordtype}{void} compress\_load\_distance\_huffman(\mbox{\hyperlink{structCompress}{compress}} *c);}
+\DoxyCodeLine{1460 \textcolor{keywordtype}{void} compress\_load\_block(\mbox{\hyperlink{structCompress}{compress}} *c);}
+\DoxyCodeLine{1461 \textcolor{keywordtype}{int} compress\_get\_token(\mbox{\hyperlink{structCompress}{compress}} *c);}
+\DoxyCodeLine{1462 \textcolor{keywordtype}{int} compress\_get\_position(\mbox{\hyperlink{structCompress}{compress}} *c);}
+\DoxyCodeLine{1463 }
+\DoxyCodeLine{1464 \textcolor{comment}{/* Function Declarations */}}
+\DoxyCodeLine{1465 \textcolor{keywordtype}{void} readPecStitches(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* pattern, FILE* file);}
+\DoxyCodeLine{1466 \textcolor{keywordtype}{void} writePecStitches(\mbox{\hyperlink{structEmbPattern__}{EmbPattern}}* pattern, FILE* file, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* filename);}
+\DoxyCodeLine{1467 }
+\DoxyCodeLine{1468 \textcolor{keywordtype}{void} pfaffEncode(FILE* file, \textcolor{keywordtype}{int} x, \textcolor{keywordtype}{int} y, \textcolor{keywordtype}{int} flags);}
+\DoxyCodeLine{1469 }
+\DoxyCodeLine{1470 \textcolor{keywordtype}{int} read\_bytes(FILE *file, \textcolor{keywordtype}{int} n, \textcolor{keywordtype}{char} *str);}
+\DoxyCodeLine{1471 \textcolor{keywordtype}{int} write\_bytes(FILE *file, \textcolor{keywordtype}{int} n, \textcolor{keywordtype}{char} *str);}
+\DoxyCodeLine{1472 }
+\DoxyCodeLine{1473 \textcolor{keywordtype}{int} bcfFile\_read(FILE* file, \mbox{\hyperlink{struct__bcf__file}{bcf\_file}}* bcfFile);}
+\DoxyCodeLine{1474 \textcolor{keywordtype}{void}* GetFile(\mbox{\hyperlink{struct__bcf__file}{bcf\_file}}* bcfFile, FILE* file, \textcolor{keywordtype}{char}* fileToFind);}
+\DoxyCodeLine{1475 }
+\DoxyCodeLine{1476 \textcolor{keywordtype}{void} binaryReadString(FILE* file, \textcolor{keywordtype}{char} *buffer, \textcolor{keywordtype}{int} maxLength);}
+\DoxyCodeLine{1477 \textcolor{keywordtype}{void} binaryReadUnicodeString(FILE* file, \textcolor{keywordtype}{char} *buffer, \textcolor{keyword}{const} \textcolor{keywordtype}{int} stringLength);}
+\DoxyCodeLine{1478 }
+\DoxyCodeLine{1479 \textcolor{keywordtype}{void} fpad(FILE* f, \textcolor{keywordtype}{char} c, \textcolor{keywordtype}{int} n);}
+\DoxyCodeLine{1480 }
+\DoxyCodeLine{1481 \textcolor{keywordtype}{void} write\_24bit(FILE* file, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{1482 \textcolor{keywordtype}{int} check\_header\_present(FILE* file, \textcolor{keywordtype}{int} minimum\_header\_length);}
+\DoxyCodeLine{1483 }
+\DoxyCodeLine{1484 \mbox{\hyperlink{struct__bcf__file__difat}{bcf\_file\_difat}}* bcf\_difat\_create(FILE* file, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} fatSectors, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} sectorSize);}
+\DoxyCodeLine{1485 \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} readFullSector(FILE* file, \mbox{\hyperlink{struct__bcf__file__difat}{bcf\_file\_difat}}* bcfFile, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}* numberOfDifatEntriesStillToRead);}
+\DoxyCodeLine{1486 \mbox{\hyperlink{struct__bcf__directory__entry}{bcf\_directory\_entry}}* CompoundFileDirectoryEntry(FILE* file);}
+\DoxyCodeLine{1487 \textcolor{keywordtype}{void} readNextSector(FILE* file, \mbox{\hyperlink{struct__bcf__directory}{bcf\_directory}}* dir);}
+\DoxyCodeLine{1488 }
+\DoxyCodeLine{1489 \textcolor{keywordtype}{void} write\_24bit(FILE* file, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{1490 }
+\DoxyCodeLine{1491 \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} pfaffDecode(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} a1, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} a2, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} a3);}
+\DoxyCodeLine{1492 }
+\DoxyCodeLine{1493 \textcolor{keywordtype}{int} decodeNewStitch(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} value);}
+\DoxyCodeLine{1494 }
+\DoxyCodeLine{1495 \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} mitEncodeStitch(\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} value);}
+\DoxyCodeLine{1496 \textcolor{keywordtype}{int} mitDecodeStitch(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} value);}
+\DoxyCodeLine{1497 }
+\DoxyCodeLine{1498 \textcolor{keywordtype}{void} encode\_t01\_record(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} b[3], \textcolor{keywordtype}{int} x, \textcolor{keywordtype}{int} y, \textcolor{keywordtype}{int} flags);}
+\DoxyCodeLine{1499 \textcolor{keywordtype}{int} decode\_t01\_record(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} b[3], \textcolor{keywordtype}{int} *x, \textcolor{keywordtype}{int} *y, \textcolor{keywordtype}{int} *flags);}
+\DoxyCodeLine{1500 }
+\DoxyCodeLine{1501 \textcolor{keywordtype}{int} encode\_tajima\_ternary(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} b[3], \textcolor{keywordtype}{int} x, \textcolor{keywordtype}{int} y);}
+\DoxyCodeLine{1502 \textcolor{keywordtype}{void} decode\_tajima\_ternary(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} b[3], \textcolor{keywordtype}{int} *x, \textcolor{keywordtype}{int} *y);}
+\DoxyCodeLine{1503 }
+\DoxyCodeLine{1504 \textcolor{comment}{/* NON-\/MACRO CONSTANTS}}
+\DoxyCodeLine{1505 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{1506 }
+\DoxyCodeLine{1507 \textcolor{keyword}{extern} \mbox{\hyperlink{structEmbFormatList__}{EmbFormatList}} formatTable[numberOfFormats];}
+\DoxyCodeLine{1508 \textcolor{keyword}{extern} \textcolor{keyword}{const} \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{EmbReal}} embConstantPi;}
+\DoxyCodeLine{1509 \textcolor{keyword}{extern} \mbox{\hyperlink{structBRAND}{EmbBrand}} brand\_codes[100];}
+\DoxyCodeLine{1510 \textcolor{keyword}{extern} \mbox{\hyperlink{structEmbThread__}{EmbThread}} black\_thread;}
+\DoxyCodeLine{1511 \textcolor{keyword}{extern} \textcolor{keywordtype}{int} emb\_verbose;}
+\DoxyCodeLine{1512 \textcolor{keyword}{extern} \textcolor{keyword}{const} \textcolor{keywordtype}{char} *version\_string;}
+\DoxyCodeLine{1513 \textcolor{keyword}{extern} \textcolor{keyword}{const} \mbox{\hyperlink{structEmbThread__}{EmbThread}} dxf\_colors[];}
+\DoxyCodeLine{1514 \textcolor{keyword}{extern} \textcolor{keyword}{const} \mbox{\hyperlink{structEmbThread__}{EmbThread}} jef\_colors[];}
+\DoxyCodeLine{1515 \textcolor{keyword}{extern} \textcolor{keyword}{const} \mbox{\hyperlink{structEmbThread__}{EmbThread}} hus\_colors[];}
+\DoxyCodeLine{1516 \textcolor{keyword}{extern} \textcolor{keyword}{const} \mbox{\hyperlink{structEmbThread__}{EmbThread}} pcm\_colors[];}
+\DoxyCodeLine{1517 \textcolor{keyword}{extern} \textcolor{keyword}{const} \mbox{\hyperlink{structEmbThread__}{EmbThread}} pec\_colors[];}
+\DoxyCodeLine{1518 \textcolor{keyword}{extern} \textcolor{keyword}{const} \mbox{\hyperlink{structEmbThread__}{EmbThread}} shv\_colors[];}
+\DoxyCodeLine{1519 \textcolor{keyword}{extern} \textcolor{keyword}{const} \textcolor{keywordtype}{char} imageWithFrame[38][48];}
+\DoxyCodeLine{1520 }
+\DoxyCodeLine{1521 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{1522 }
+\DoxyCodeLine{1523 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{1524 \}}
+\DoxyCodeLine{1525 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_cplusplus */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{1526 }
+\DoxyCodeLine{1527 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* LIBEMBROIDERY\_HEADER\_\_ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{1528 }
+
+\end{DoxyCode}

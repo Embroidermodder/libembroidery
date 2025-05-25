@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="dir_c0fe8c1628e63d1e44fd8f07e8fda059" kind="dir">
+    <compoundname>java/org/libembroidery</compoundname>
+    <innerfile refid="org_2libembroidery_2embroidery__java_8h">embroidery_java.h</innerfile>
+    <innerfile refid="org_2libembroidery_2jni__wrapper_8c">jni_wrapper.c</innerfile>
+    <innerfile refid="Main_8java">Main.java</innerfile>
+    <innerfile refid="org_2libembroidery_2Pattern_8java">Pattern.java</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="java/org/libembroidery/"/>
+  </compounddef>
+</doxygen>

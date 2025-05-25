@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structEmbImage__" kind="struct" language="C++" prot="public">
+    <compoundname>EmbImage_</compoundname>
+    <includes refid="embroidery_8h" local="no">embroidery.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structEmbImage___1a48c795c6981b0d8b647b8c8ebdf1555b" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a16fa26764453571074cb85a7574738d4" kindref="member">EmbVector</ref></type>
+        <definition>EmbVector EmbImage_::position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <qualifiedname>EmbImage_::position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="520" column="15" bodyfile="src/embroidery.h" bodystart="520" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbImage___1ac0b1c9f9fc39d8f0d5900d729073e9e7" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a16fa26764453571074cb85a7574738d4" kindref="member">EmbVector</ref></type>
+        <definition>EmbVector EmbImage_::dimensions</definition>
+        <argsstring></argsstring>
+        <name>dimensions</name>
+        <qualifiedname>EmbImage_::dimensions</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="521" column="15" bodyfile="src/embroidery.h" bodystart="521" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbImage___1ac0ee452ff0582784f1fa533441fc7231" prot="public" static="no" mutable="no">
+        <type>unsigned char *</type>
+        <definition>unsigned char* EmbImage_::data</definition>
+        <argsstring></argsstring>
+        <name>data</name>
+        <qualifiedname>EmbImage_::data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="522" column="19" bodyfile="src/embroidery.h" bodystart="522" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbImage___1acf873538e659c27c49125e16b194159b" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbImage_::width</definition>
+        <argsstring></argsstring>
+        <name>width</name>
+        <qualifiedname>EmbImage_::width</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="523" column="9" bodyfile="src/embroidery.h" bodystart="523" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbImage___1a789c183c486941c25a7d518871043ed2" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int EmbImage_::height</definition>
+        <argsstring></argsstring>
+        <name>height</name>
+        <qualifiedname>EmbImage_::height</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="524" column="9" bodyfile="src/embroidery.h" bodystart="524" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbImage___1ac39fc16f9a4ecd8f76525d1dd410cda4" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a3cfa8eccd6eee11f9ffece9f64f79b59" kindref="member">EmbString</ref></type>
+        <definition>EmbString EmbImage_::path</definition>
+        <argsstring></argsstring>
+        <name>path</name>
+        <qualifiedname>EmbImage_::path</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="525" column="15" bodyfile="src/embroidery.h" bodystart="525" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structEmbImage___1af257ec71e281f5da8dc1b2c3d2635f18" prot="public" static="no" mutable="no">
+        <type><ref refid="embroidery_8h_1a3cfa8eccd6eee11f9ffece9f64f79b59" kindref="member">EmbString</ref></type>
+        <definition>EmbString EmbImage_::name</definition>
+        <argsstring></argsstring>
+        <name>name</name>
+        <qualifiedname>EmbImage_::name</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/embroidery.h" line="526" column="15" bodyfile="src/embroidery.h" bodystart="526" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>EmbImage_</label>
+        <link refid="structEmbImage__"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>dimensions</edgelabel>
+          <edgelabel>position</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>EmbVector_</label>
+        <link refid="structEmbVector__"/>
+      </node>
+    </collaborationgraph>
+    <location file="src/embroidery.h" line="519" column="1" bodyfile="src/embroidery.h" bodystart="519" bodyend="527"/>
+    <listofallmembers>
+      <member refid="structEmbImage___1ac0ee452ff0582784f1fa533441fc7231" prot="public" virt="non-virtual"><scope>EmbImage_</scope><name>data</name></member>
+      <member refid="structEmbImage___1ac0b1c9f9fc39d8f0d5900d729073e9e7" prot="public" virt="non-virtual"><scope>EmbImage_</scope><name>dimensions</name></member>
+      <member refid="structEmbImage___1a789c183c486941c25a7d518871043ed2" prot="public" virt="non-virtual"><scope>EmbImage_</scope><name>height</name></member>
+      <member refid="structEmbImage___1af257ec71e281f5da8dc1b2c3d2635f18" prot="public" virt="non-virtual"><scope>EmbImage_</scope><name>name</name></member>
+      <member refid="structEmbImage___1ac39fc16f9a4ecd8f76525d1dd410cda4" prot="public" virt="non-virtual"><scope>EmbImage_</scope><name>path</name></member>
+      <member refid="structEmbImage___1a48c795c6981b0d8b647b8c8ebdf1555b" prot="public" virt="non-virtual"><scope>EmbImage_</scope><name>position</name></member>
+      <member refid="structEmbImage___1acf873538e659c27c49125e16b194159b" prot="public" virt="non-virtual"><scope>EmbImage_</scope><name>width</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

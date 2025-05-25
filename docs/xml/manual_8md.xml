@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="manual_8md" kind="file" language="Markdown">
+    <compoundname>manual.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">Libembroidery<sp/>v1.0.0-alpha</highlight></codeline>
+<codeline><highlight class="normal">==========================</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Introduction</highlight></codeline>
+<codeline><highlight class="normal">------------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>is<sp/>advised<sp/>that<sp/>new<sp/>progammers<sp/>to<sp/>our<sp/>project<sp/>and<sp/>people<sp/>using</highlight></codeline>
+<codeline><highlight class="normal">libembroidery<sp/>for<sp/>non-trivial<sp/>integrations<sp/>into<sp/>their<sp/>own<sp/>project<sp/>start<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">reading<sp/>this<sp/>file<sp/>and<sp/>the<sp/>header.<sp/>This<sp/>library<sp/>has<sp/>one<sp/>header<sp/>and<sp/>it<sp/>does<sp/>a<sp/>lot</highlight></codeline>
+<codeline><highlight class="normal">of<sp/>heavy<sp/>lifting<sp/>to<sp/>keep<sp/>libembroidery<sp/>from<sp/>having<sp/>non-standard<sp/>dependencies<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">reducing<sp/>the<sp/>number<sp/>of<sp/>functions<sp/>in<sp/>the<sp/>API<sp/>to<sp/>keep<sp/>upgrading<sp/>to<sp/>future<sp/>versions</highlight></codeline>
+<codeline><highlight class="normal">trivial.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>the<sp/>header<sp/>does<sp/>not<sp/>change<sp/>outside<sp/>of<sp/>comments<sp/>(and<sp/>version<sp/>data)<sp/>then</highlight></codeline>
+<codeline><highlight class="normal">users<sp/>of<sp/>the<sp/>library<sp/>have<sp/>to<sp/>change<sp/>nothing<sp/>to<sp/>upgrade<sp/>their<sp/>code.<sp/>If<sp/>only</highlight></codeline>
+<codeline><highlight class="normal">constants<sp/>change<sp/>then<sp/>it<sp/>is<sp/>likely<sp/>they<sp/>won&apos;t<sp/>have<sp/>to<sp/>change<sp/>their<sp/>code.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Data<sp/>Storage</highlight></codeline>
+<codeline><highlight class="normal">------------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>approach<sp/>here<sp/>is<sp/>to<sp/>make<sp/>our<sp/>code<sp/>friendly<sp/>towards<sp/>being<sp/>included<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">embedded,<sp/>desktop<sp/>and<sp/>mobile<sp/>applications.<sp/>By<sp/>making<sp/>more<sp/>data<sp/>managed<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">compiler<sp/>directives<sp/>we<sp/>reduce<sp/>the<sp/>overall<sp/>code<sp/>footprint.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>protect<sp/>against<sp/>namespace<sp/>pollution<sp/>in<sp/>more<sp/>object<sp/>oriented<sp/>environments</highlight></codeline>
+<codeline><highlight class="normal">like<sp/>mobile<sp/>applications<sp/>all<sp/>new<sp/>defines<sp/>start<sp/>with<sp/>`EMB_`,<sp/>all<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>`emb`<sp/>and<sp/>all<sp/>typedefs<sp/>with<sp/>`Emb`<sp/>.<sp/>(INCOMPLETE)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>fixed<sp/>number<sp/>is<sp/>always<sp/>a<sp/>#define<sp/>and<sp/>any<sp/>list<sp/>of<sp/>constant<sp/>strings<sp/>is<sp/>stored</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>a<sp/>`const<sp/>char<sp/>*[]`<sp/>and<sp/>has<sp/>identifier<sp/>integers<sp/>for<sp/>each<sp/>entry.<sp/>For<sp/>example</highlight></codeline>
+<codeline><highlight class="normal">formats<sp/>have<sp/>various<sp/>data<sp/>associated<sp/>with<sp/>them,<sp/>to<sp/>access<sp/>the<sp/>extension<sp/>for<sp/></highlight></codeline>
+<codeline><highlight class="normal">the<sp/>filetype<sp/>CSV<sp/>we<sp/>can<sp/>use<sp/>`emb_ext[EMB_FORMAT_CSV]`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Geometry<sp/>System</highlight></codeline>
+<codeline><highlight class="normal">---------------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Our<sp/>geometry<sp/>is<sp/>designed<sp/>on<sp/>supporting<sp/>3<sp/>key<sp/>systems<sp/>which<sp/>are<sp/>generally<sp/>more</highlight></codeline>
+<codeline><highlight class="normal">complex<sp/>than<sp/>what<sp/>is<sp/>needed<sp/>for<sp/>embroidery.<sp/>They<sp/>are<sp/>DXF,<sp/>SVG<sp/>and<sp/>PostScript.</highlight></codeline>
+<codeline><highlight class="normal">Each<sp/>has<sp/>it&apos;s<sp/>own<sp/>model<sp/>for<sp/>geometry<sp/>and<sp/>attempting<sp/>to<sp/>support<sp/>them<sp/>is<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">most<sp/>complex<sp/>task<sp/>involved<sp/>in<sp/>writing<sp/>software<sp/>to<sp/>support<sp/>embroidery.<sp/>They</highlight></codeline>
+<codeline><highlight class="normal">are<sp/>chosen<sp/>based<sp/>on<sp/>the<sp/>reasoning<sp/>that<sp/>each<sp/>has<sp/>something<sp/>to<sp/>contribute</highlight></codeline>
+<codeline><highlight class="normal">PostScript<sp/>is<sp/>the<sp/>language<sp/>of<sp/>printers,<sp/>SVG<sp/>a<sp/>language<sp/>of<sp/>graphic<sp/>designers</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>good<sp/>open-source<sp/>support<sp/>and<sp/>DXF<sp/>the<sp/>language<sp/>of<sp/>hardware<sp/>design.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">We<sp/>want<sp/>to<sp/>support:<sp/>people<sp/>that<sp/>want<sp/>to<sp/>use<sp/>their<sp/>existing<sp/>embroidery</highlight></codeline>
+<codeline><highlight class="normal">machines,<sp/>other<sp/>software<sp/>embroidery<sp/>projects,<sp/>open-hardware<sp/>development,</highlight></codeline>
+<codeline><highlight class="normal">existing<sp/>graphic<sp/>designers<sp/>that<sp/>want<sp/>to<sp/>translate<sp/>their<sp/>designs<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">embroidery<sp/>and<sp/>existing<sp/>machine<sp/>embroidery<sp/>businesses<sp/>that<sp/>want<sp/>to<sp/>extend</highlight></codeline>
+<codeline><highlight class="normal">what<sp/>they<sp/>can<sp/>do.<sp/>Supporting<sp/>3<sp/>graphical<sp/>systems<sp/>is<sp/>necessary<sp/>to<sp/>do<sp/>this.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Our<sp/>approach<sp/>to<sp/>allow<sp/>more<sp/>freedom<sp/>in<sp/>altering<sp/>how<sp/>we<sp/>do<sp/>this<sp/>without</highlight></codeline>
+<codeline><highlight class="normal">effecting<sp/>all<sp/>these<sp/>users<sp/>too<sp/>much<sp/>across<sp/>versions<sp/>is<sp/>to<sp/>assign<sp/>all</highlight></codeline>
+<codeline><highlight class="normal">attributes<sp/>an<sp/>identifier<sp/>and<sp/>all<sp/>geometric<sp/>types<sp/>accross<sp/>these<sp/>systems<sp/>an</highlight></codeline>
+<codeline><highlight class="normal">identifier.<sp/>Then<sp/>we<sp/>can<sp/>seperate<sp/>each<sp/>task<sp/>as<sp/>a<sp/>task<sp/>accross<sp/>the<sp/>matrix</highlight></codeline>
+<codeline><highlight class="normal">combinations<sp/>of<sp/>these.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>EXAMPLE:<sp/>GETTING<sp/>AN<sp/>ATTRIBUTE</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>attribute<sp/>`EMB_ATTR_AREA`<sp/>and<sp/>the<sp/>geometry</highlight></codeline>
+<codeline><highlight class="normal">`EMB_CIRCLE`<sp/>are<sp/>a<sp/>valid<sp/>combination<sp/>and<sp/>a<sp/>user<sp/>can<sp/>determine<sp/>this</highlight></codeline>
+<codeline><highlight class="normal">in<sp/>their<sp/>program<sp/>by<sp/>calling<sp/>`emb_prop_get(EMB_ATTR_AREA,<sp/>EMB_CIRCLE)`<sp/>asking</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>question<sp/>&quot;If<sp/>I<sp/>attempt<sp/>to<sp/>get<sp/>the<sp/>area<sp/>of<sp/>a<sp/>circle,<sp/>is<sp/>that<sp/>something</highlight></codeline>
+<codeline><highlight class="normal">that<sp/>libembroidery<sp/>can<sp/>do?&quot;.<sp/>In<sp/>this<sp/>case,<sp/>it<sp/>is<sp/>and<sp/>it<sp/>returns<sp/>1.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Then<sp/>to<sp/>get<sp/>the<sp/>area<sp/>we<sp/>know<sp/>that<sp/>it<sp/>is<sp/>a<sp/>real<sp/>number<sp/>and<sp/>therefore<sp/>we<sp/>use</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>real<sp/>number<sp/>version<sp/>of<sp/>getting<sp/>an<sp/>attribute<sp/>of<sp/>a<sp/>geometric<sp/>object:</highlight></codeline>
+<codeline><highlight class="normal">`emb_ggetr`.<sp/>Calling<sp/>`emb_ggetr`<sp/>on<sp/>this<sp/>combination<sp/>like</highlight></codeline>
+<codeline><highlight class="normal">`emb_ggetr(circle,<sp/>EMB_ATTR_AREA)`<sp/>will<sp/>return<sp/>the<sp/>area<sp/>calculated<sp/>from</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>radius<sp/>stored<sp/>as<sp/>`circle-&gt;object-&gt;circle.radius`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>EXAMPLE:<sp/>SETTING<sp/>AN<sp/>ATTRIBUTE</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">From<sp/>the<sp/>previous<sp/>example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>Header</highlight></codeline>
+<codeline><highlight class="normal">----------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>header<sp/>will<sp/>be<sp/>commented<sp/>to<sp/>guide<sp/>you<sp/>through<sp/>how<sp/>the<sp/>header</highlight></codeline>
+<codeline><highlight class="normal">works<sp/>and<sp/>uses<sp/>a<sp/>view<sp/>on<sp/>dependency<sp/>to<sp/>order<sp/>everything<sp/>into:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">1.<sp/>`#include`s</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>`#define`s</highlight></codeline>
+<codeline><highlight class="normal">3.<sp/>`typedef`s</highlight></codeline>
+<codeline><highlight class="normal">4.<sp/>function<sp/>prototypes</highlight></codeline>
+<codeline><highlight class="normal">5.<sp/>`extern`al<sp/>data</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>wish<sp/>to<sp/>add<sp/>to<sp/>this<sp/>file<sp/>please<sp/>use<sp/>the<sp/>appropriate<sp/>section.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Testing</highlight></codeline>
+<codeline><highlight class="normal">-------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Formats</highlight></codeline>
+<codeline><highlight class="normal">-------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>DXF</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Based<sp/>on<sp/>the<sp/>DraftSight<sp/>color<sp/>table.<sp/>It<sp/>doesn&apos;t<sp/>appear<sp/>to<sp/>be<sp/>authoratitive</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>there<sp/>isn&apos;t<sp/>much<sp/>said<sp/>in<sp/>the<sp/>official<sp/>manual<sp/>about<sp/>colors<sp/>8-255:</highlight></codeline>
+<codeline><highlight class="normal">[manual](http://images.autodesk.com/adsk/files/autocad_2012_pdf_dxf-reference_enu.pdf).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>possible<sp/>&quot;standard&quot;<sp/>solution<sp/>here<sp/>is<sp/>to<sp/>use<sp/>xterm<sp/>ESC<sp/>color<sp/>codes<sp/>with<sp/>the<sp/>first</highlight></codeline>
+<codeline><highlight class="normal">8<sp/>overridden<sp/>for<sp/>compatibility.<sp/>That<sp/>way<sp/>a<sp/>curious<sp/>user<sp/>may<sp/>be<sp/>able<sp/>to<sp/>guess</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>be<sp/>_almost_<sp/>right.<sp/>See<sp/>this<sp/>script<sp/>for<sp/>how<sp/>simple<sp/>those<sp/>codes<sp/>are:</highlight></codeline>
+<codeline><highlight class="normal">[codes](https://gist.github.com/hSATAC/1095100).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>first<sp/>8<sp/>are:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/><sp/><sp/>0,<sp/><sp/><sp/>0,<sp/><sp/><sp/>0<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;0&apos;<sp/>(BYBLOCK)<sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>255,<sp/><sp/><sp/>0,<sp/><sp/><sp/>0<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;1&apos;<sp/>(red)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>255,<sp/>255,<sp/><sp/><sp/>0<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;2&apos;<sp/>(yellow)<sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/><sp/><sp/>0,<sp/>255,<sp/><sp/><sp/>0<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;3&apos;<sp/>(green)<sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/><sp/><sp/>0,<sp/>255,<sp/>255<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;4&apos;<sp/>(cyan)<sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/><sp/><sp/>0,<sp/><sp/><sp/>0,<sp/>255<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;5&apos;<sp/>(blue)<sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>255,<sp/><sp/><sp/>0,<sp/>255<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;6&apos;<sp/>(magenta)<sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>255,<sp/>255,<sp/>255<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;7&apos;<sp/>(white)<sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>128,<sp/>128,<sp/>128<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;8&apos;<sp/>(dark<sp/>gray)<sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>192,<sp/>192,<sp/>192<sp/>},<sp/>/*<sp/><sp/><sp/>&apos;9&apos;<sp/>(light<sp/>gray)<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>SVG</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Converted<sp/>from<sp/>the<sp/>table<sp/>at:</highlight></codeline>
+<codeline><highlight class="normal">[w3<sp/>standard](https://www.w3.org/TR/SVGb/types.html#ColorKeywords)</highlight></codeline>
+<codeline><highlight class="normal">NOTE:<sp/>This<sp/>supports<sp/>both<sp/>UK<sp/>and<sp/>US<sp/>English<sp/>names,<sp/>so<sp/>the<sp/>repeated<sp/>values<sp/>aren&apos;t<sp/>an<sp/>error.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Report<sp/>pattern</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Report_pattern<sp/>function<sp/>that<sp/>prints<sp/>everything<sp/>we<sp/>know<sp/>about<sp/>the<sp/>pattern<sp/>at<sp/>this</highlight></codeline>
+<codeline><highlight class="normal">point<sp/>including<sp/>details<sp/>specific<sp/>to<sp/>the<sp/>manufacturer<sp/>like<sp/>hoop<sp/>size.<sp/>Rather</highlight></codeline>
+<codeline><highlight class="normal">than<sp/>scattershot<sp/>details<sp/>reported<sp/>by<sp/>each<sp/>pattern.</highlight></codeline>
+    </programlisting>
+    <location file="docs/manual.md"/>
+  </compounddef>
+</doxygen>

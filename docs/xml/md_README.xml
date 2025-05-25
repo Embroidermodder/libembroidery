@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="md_README" kind="page">
+    <compoundname>md_README</compoundname>
+    <title>Libembroidery v1.0-alpha</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Copyright (c) 2013-2024 The EmbroiderModder Team</para>
+<para><ulink url="https://www.libembroidery.org">https://www.libembroidery.org</ulink></para>
+<para>(Under construction, please wait for v1.0 release.)</para>
+<para>Libembroidery is a low-level library for reading, writing, and altering digital embroidery files in C. It is part of the Embroidermodder Project for open source machine embroidery.</para>
+<para>Libembroidery is the underlying library that is used by <ulink url="http://embroidermodder.org">Embroidermodder 2</ulink> and is developed by The Embroidermodder Team. A full list of contributors to the project is maintained in <ulink url="https://github.com/Embroidermodder/embroidermodder">the Embroidermodder 2 github</ulink> in the file <computeroutput>CREDITS.md</computeroutput>. It handles over 45 different embroidery specific formats as well as several non-embroidery specific vector formats.</para>
+<para>It also includes a CLI called <computeroutput>embroider</computeroutput> that allows for better automation of changes to embroidery files and will be more up-to date than the Embroidermodder 2 GUI.</para>
+<sect1 id="md_README_1autotoc_md35">
+<title>Documentation</title>
+<para>For basic usage, <computeroutput>embroider</computeroutput> should have some in-built help starting with:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>embroider<sp/>--help</highlight></codeline>
+</programlisting></para>
+<para>If you need libembroidery for any non-trivial usage or want to contribute to the library we advise you read the manual first. Copies of this manual will be shipped with the packaged version of libembroidery.</para>
+<sect2 id="md_README_1autotoc_md36">
+<title>License</title>
+<para>Libembroidery is distributed under the permissive zlib licence, see the LICENCE file.</para>
+</sect2>
+</sect1>
+<sect1 id="md_README_1autotoc_md37">
+<title>Demos</title>
+<para>We&apos;re currently trying out some fill techniques which will be demonstrated here and in the script <computeroutput>qa_test.sh</computeroutput>.</para>
+<para><image type="html" name="images/logo-spirals.png" alt="images/logo-spirals.png" inline="yes"></image>
+</para>
+<para>Converts to:</para>
+<para><image type="html" name="images/logo_spirals_cross_stitch.png" alt="images/logo_spirals_cross_stitch.png" inline="yes"></image>
+</para>
+<sect2 id="md_README_1autotoc_md38">
+<title>Build</title>
+<para>libembroidery and EmbroiderModder 2 use CMake builds so if you are building the project to use as a library we recommend you run:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">git<sp/>clone<sp/>https://github.com/Embroidermodder/libembroidery</highlight></codeline>
+<codeline><highlight class="normal">cd<sp/>libembroidery</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>.</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--build<sp/>.</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--install<sp/>.</highlight></codeline>
+</programlisting></para>
+<para>This builds both the static and shared versions of the library as well as the command line program <computeroutput>embroider</computeroutput>. </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="README.md"/>
+  </compounddef>
+</doxygen>

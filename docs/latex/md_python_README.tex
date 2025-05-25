@@ -1,0 +1,60 @@
+Copyright (c) 2013-\/2022 The Embroider\+Modder Team
+
+\href{https://embroidermodder.org}{\texttt{ https\+://embroidermodder.\+org}}
+
+(Under construction, please wait for v1.\+0 release.)
+
+libembroidery is a low-\/level library for reading, writing, and altering digital embroidery files in C.
+
+libembroidery is the underlying library that is used by \href{http://embroidermodder.org}{\texttt{ Embroidermodder 2}} and is developed by The Embroidermodder Team. It handles over 45 different embroidery specific formats as well as several non-\/embroidery specific vector formats.
+
+It also includes a CLI called {\ttfamily embroider} that allows for better automation of changes to embroidery files and will be more up-\/to date than the Embroidermodder 2 GUI.
+
+If you want to learn more about building, using and developing this software read the manual (included as the file \href{embroidermodder_manual.pdf}{\texttt{ embroidermodder\+\_\+manual.\+pdf}}).\hypertarget{md_python_README_autotoc_md26}{}\doxysection{Libembroidery 1.\+0 On Python (\+Alpha)}\label{md_python_README_autotoc_md26}
+The Official binding for libembroidery on Python.
+
+This is a stub to save the name on the Python Package Index.
+
+Usage would be something like\+: \begin{DoxyVerb}import libembroidery as emb
+
+p = emb.createPattern()
+p.add_circle([2, 4], 5, color="blue")
+p.save("circle.dst", emb.FORMAT_DST)
+\end{DoxyVerb}
+ For more see our website\+: \href{https://embroidermodder.org}{\texttt{ https\+://embroidermodder.\+org}}.
+
+To support this and other Embroidermodder projects see \mbox{[}\href{https://opencollective.com/embroidermodder}{\texttt{ https\+://opencollective.\+com/embroidermodder}}\mbox{]}(our Open Collective page).\hypertarget{md_python_README_autotoc_md27}{}\doxysubsection{Installation}\label{md_python_README_autotoc_md27}
+We recommend you install the working draft using \begin{DoxyVerb}python3 setup.py install --user
+\end{DoxyVerb}
+ from the top level.
+
+In the future we\textquotesingle{}d recommend that you use the current most up-\/to-\/date version on Py\+PI using\+: \begin{DoxyVerb}python3 -m pip install libembroidery
+\end{DoxyVerb}
+ or \begin{DoxyVerb}py -m pip install libembroidery
+\end{DoxyVerb}
+ on Windows.\hypertarget{md_python_README_autotoc_md28}{}\doxysubsection{A seperate folder for each language}\label{md_python_README_autotoc_md28}
+In theory, for every language that people actively write in a well-\/made binding should be supplied for something as low-\/level as libembroidery. Practically, the Embroidermodder Team will only know so many languages and for those languages won\textquotesingle{}t necessarily know about writing bindings.
+
+We can have experts on individual languages take more control of the support of this work without it affecting the overall support and core library and the levels of completion can be different for each language.
+
+While this problem could be solved by the generation of bindings from a specification like SWIG, we feel that this doesn\textquotesingle{}t account for the object oriented structure that we want to apply to the bound functions. Also writing good documentation is helped by that generation step. Calling conventions may be different between languages and we\textquotesingle{}d rather have a human make sure that the documentation is written with an awareness of the language being written for. \begin{DoxyVerb}all:
+    swig -Wall -python embroidery.i
+    python3 setup.py build
+    python3 setup.py install --user
+    python3 test.py
+
+clean:
+    rm -fr build dist libembroidery.egg-info __pycache__
+    rm -fr libembroidery_core.py embroidery_wrap.c
+\end{DoxyVerb}
+ \hypertarget{md_python_README_autotoc_md29}{}\doxysection{Emscripten Version}\label{md_python_README_autotoc_md29}
+\href{https://www.sitepoint.com/getting-started-emscripten-transpiling-c-c-javascript-html5/}{\texttt{ https\+://www.\+sitepoint.\+com/getting-\/started-\/emscripten-\/transpiling-\/c-\/c-\/javascript-\/html5/}}\hypertarget{md_python_README_autotoc_md30}{}\doxysection{Other versions}\label{md_python_README_autotoc_md30}
+\hypertarget{md_python_README_autotoc_md31}{}\doxysubsection{Java Version}\label{md_python_README_autotoc_md31}
+\hypertarget{md_python_README_autotoc_md32}{}\doxysubsubsection{Ideas}\label{md_python_README_autotoc_md32}
+To support Java perhaps the best approach would be an interface similar to the command line like a labelled pipe that Java sends instructions to.
+
+Then when the java program needs to know the current state of the pattern in RAM it\textquotesingle{}s spit out in a Java byte-\/code friendly way?\hypertarget{md_python_README_autotoc_md33}{}\doxysubsection{Swift bindings}\label{md_python_README_autotoc_md33}
+Find a source for making the binding. \begin{DoxyVerb}# Libembroidery 1.0 binding for Swift
+# Copyright 2022 The Embroidermodder Team
+\end{DoxyVerb}
+ 

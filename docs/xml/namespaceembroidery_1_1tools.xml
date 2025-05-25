@@ -1,0 +1,262 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="namespaceembroidery_1_1tools" kind="namespace" language="Python">
+    <compoundname>embroidery::tools</compoundname>
+    <innerclass refid="classembroidery_1_1tools_1_1Pen" prot="public">embroidery::tools::Pen</innerclass>
+    <innerclass refid="classembroidery_1_1tools_1_1Vector" prot="public">embroidery::tools::Vector</innerclass>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceembroidery_1_1tools_1ad14804862ff73e6d591f6d1408e5678f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.vector_from_str</definition>
+        <argsstring>(input_string)</argsstring>
+        <name>vector_from_str</name>
+        <qualifiedname>embroidery.tools.vector_from_str</qualifiedname>
+        <param>
+          <type>input_string</type>
+          <defname>input_string</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="93" column="1" bodyfile="python/embroidery/tools.py" bodystart="93" bodyend="102"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1tools_1ac596e1d1ea86f4e6cbff0761b0219aee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.closest_vector</definition>
+        <argsstring>(vector_list, mouse_point)</argsstring>
+        <name>closest_vector</name>
+        <qualifiedname>embroidery.tools.closest_vector</qualifiedname>
+        <param>
+          <type>vector_list</type>
+          <defname>vector_list</defname>
+        </param>
+        <param>
+          <type>mouse_point</type>
+          <defname>mouse_point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="103" column="1" bodyfile="python/embroidery/tools.py" bodystart="103" bodyend="114"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1tools_1a8a6a660622949c6b3be77d0aa96e6ccd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.get_n_floats</definition>
+        <argsstring>(terms, index, n)</argsstring>
+        <name>get_n_floats</name>
+        <qualifiedname>embroidery.tools.get_n_floats</qualifiedname>
+        <param>
+          <type>terms</type>
+          <defname>terms</defname>
+        </param>
+        <param>
+          <type>index</type>
+          <defname>index</defname>
+        </param>
+        <param>
+          <type>n</type>
+          <defname>n</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="132" column="1" bodyfile="python/embroidery/tools.py" bodystart="132" bodyend="139"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1tools_1aa062873c491b5ba5317a11396e5ddd86" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.path_from_command</definition>
+        <argsstring>(command)</argsstring>
+        <name>path_from_command</name>
+        <qualifiedname>embroidery.tools.path_from_command</qualifiedname>
+        <param>
+          <type>command</type>
+          <defname>command</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Creates a path matching the SVG-style path string.
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="140" column="1" bodyfile="python/embroidery/tools.py" bodystart="140" bodyend="169"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1tools_1a864939c12c29d6961e4d490821222db8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.convert</definition>
+        <argsstring>(src, dst)</argsstring>
+        <name>convert</name>
+        <qualifiedname>embroidery.tools.convert</qualifiedname>
+        <param>
+          <type>src</type>
+          <defname>src</defname>
+        </param>
+        <param>
+          <type>dst</type>
+          <defname>dst</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="170" column="1" bodyfile="python/embroidery/tools.py" bodystart="170" bodyend="174"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1tools_1acdb078a5f5d13fac4706c50c5b990e2a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.translate</definition>
+        <argsstring>(message)</argsstring>
+        <name>translate</name>
+        <qualifiedname>embroidery.tools.translate</qualifiedname>
+        <param>
+          <type>message</type>
+          <defname>message</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="175" column="1" bodyfile="python/embroidery/tools.py" bodystart="175" bodyend="179"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1tools_1a0609c67986738eefbc56c59149b67f4a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.clear_selection</definition>
+        <argsstring>()</argsstring>
+        <name>clear_selection</name>
+        <qualifiedname>embroidery.tools.clear_selection</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="180" column="1" bodyfile="python/embroidery/tools.py" bodystart="180" bodyend="184"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1tools_1ab98acf6138d9b91b366d3cb61ab49d91" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.debug_message</definition>
+        <argsstring>(message, msgtype=&quot;DEBUG&quot;)</argsstring>
+        <name>debug_message</name>
+        <qualifiedname>embroidery.tools.debug_message</qualifiedname>
+        <param>
+          <type>message</type>
+          <defname>message</defname>
+        </param>
+        <param>
+          <type>msgtype</type>
+          <defname>msgtype</defname>
+          <defval>&quot;DEBUG&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="185" column="1" bodyfile="python/embroidery/tools.py" bodystart="185" bodyend="199"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1tools_1aa906cfda39cc2f297dfd6aa7b953335f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.set_prompt_prefix</definition>
+        <argsstring>(*message)</argsstring>
+        <name>set_prompt_prefix</name>
+        <qualifiedname>embroidery.tools.set_prompt_prefix</qualifiedname>
+        <param>
+          <type>*</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="200" column="1" bodyfile="python/embroidery/tools.py" bodystart="200" bodyend="204"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1tools_1ab77feb0509ed8562e319a8c3b5081ac6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.add_rubber</definition>
+        <argsstring>(*message)</argsstring>
+        <name>add_rubber</name>
+        <qualifiedname>embroidery.tools.add_rubber</qualifiedname>
+        <param>
+          <type>*</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="205" column="1" bodyfile="python/embroidery/tools.py" bodystart="205" bodyend="209"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1tools_1ad04414c5db9f8fc7d59e892e997812b4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.append_prompt_history</definition>
+        <argsstring>(*message)</argsstring>
+        <name>append_prompt_history</name>
+        <qualifiedname>embroidery.tools.append_prompt_history</qualifiedname>
+        <param>
+          <type>*</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="210" column="1" bodyfile="python/embroidery/tools.py" bodystart="210" bodyend="214"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1tools_1adf152afd5b23dfcdbf82741e83ab1f0f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.load_data</definition>
+        <argsstring>(fname)</argsstring>
+        <name>load_data</name>
+        <qualifiedname>embroidery.tools.load_data</qualifiedname>
+        <param>
+          <type>fname</type>
+          <defname>fname</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="215" column="1" bodyfile="python/embroidery/tools.py" bodystart="215" bodyend="218"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>    Embroidermodder 2.
+
+    ------------------------------------------------------------
+
+    Copyright 2013-2022 The Embroidermodder Team
+    Embroidermodder 2 is Open Source Software.
+    See LICENSE for licensing terms.
+
+    ------------------------------------------------------------
+
+    The basis of the geometry class: Vector, Pen, Painter and Path.
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/tools.py" line="1" column="1"/>
+  </compounddef>
+</doxygen>

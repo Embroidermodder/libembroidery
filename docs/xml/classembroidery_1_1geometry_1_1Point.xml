@@ -1,0 +1,348 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1geometry_1_1Point" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::geometry::Point</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Point_1a1185264496a674598d5c2c22315b3ed4" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Point::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>embroidery.geometry.Point.type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3516" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3516" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Point_1a2f9e536de1034506b4d84860f724ff2e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Point::position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <qualifiedname>embroidery.geometry.Point.position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3517" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3517" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Point_1a6c5f8760592db0f8075b1400c0b35484" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Point::pen</definition>
+        <argsstring></argsstring>
+        <name>pen</name>
+        <qualifiedname>embroidery.geometry.Point.pen</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3518" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3518" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Point_1a8a2a3260331ff23e0b5e2c522aa5ab97" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Point::first_run</definition>
+        <argsstring></argsstring>
+        <name>first_run</name>
+        <qualifiedname>embroidery.geometry.Point.first_run</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3525" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3525" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Point_1a65910b4bc4ae751a9348eb35a990fc7b" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Point::rubber_mode</definition>
+        <argsstring></argsstring>
+        <name>rubber_mode</name>
+        <qualifiedname>embroidery.geometry.Point.rubber_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3613" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3613" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Point_1a2de93a4c30b2837cba1db10e87471ab7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Point.__init__</definition>
+        <argsstring>(self, x, y, pen=Pen())</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.geometry.Point.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <param>
+          <type>pen</type>
+          <defname>pen</defname>
+          <defval>Pen()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3513" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3513" bodyend="3529"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Point_1ae22153bace81508c2ccface33d4da3f2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Point.click</definition>
+        <argsstring>(self, x, y)</argsstring>
+        <name>click</name>
+        <qualifiedname>embroidery.geometry.Point.click</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3530" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3530" bodyend="3545"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Point_1a7cd88c011314c36ea6f0c0b4eaaa8340" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Point.prompt</definition>
+        <argsstring>(self, cmd)</argsstring>
+        <name>prompt</name>
+        <qualifiedname>embroidery.geometry.Point.prompt</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>cmd</type>
+          <defname>cmd</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3546" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3546" bodyend="3585"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Point_1a47c2973c1910695517cd58db91cb5810" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Point.copy</definition>
+        <argsstring>(self)</argsstring>
+        <name>copy</name>
+        <qualifiedname>embroidery.geometry.Point.copy</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3586" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3586" bodyend="3593"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Point_1aa9f6e319615aa21844c550d187a2971d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Point.paint</definition>
+        <argsstring>(self, painter, option, widget)</argsstring>
+        <name>paint</name>
+        <qualifiedname>embroidery.geometry.Point.paint</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <param>
+          <type>option</type>
+          <defname>option</defname>
+        </param>
+        <param>
+          <type>widget</type>
+          <defname>widget</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3594" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3594" bodyend="3610"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Point_1ad05265943b26e752488010523ce43208" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Point.update_rubber</definition>
+        <argsstring>(painter)</argsstring>
+        <name>update_rubber</name>
+        <qualifiedname>embroidery.geometry.Point.update_rubber</qualifiedname>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3611" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3611" bodyend="3620"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Point_1acadf08e265318554962a430a5cc95887" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Point.vulcanize</definition>
+        <argsstring>(self)</argsstring>
+        <name>vulcanize</name>
+        <qualifiedname>embroidery.geometry.Point.vulcanize</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3621" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3621" bodyend="3627"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Point_1a0dae63474b797db2a683806faef07f10" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Point.mouse_snap_point</definition>
+        <argsstring>(self, mouse_point)</argsstring>
+        <name>mouse_snap_point</name>
+        <qualifiedname>embroidery.geometry.Point.mouse_snap_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>mouse_point</type>
+          <defname>mouse_point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3628" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3628" bodyend="3631"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Point_1a7de18f6a1f883c660a3967f82932ced6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Point.all_grip_points</definition>
+        <argsstring>()</argsstring>
+        <name>all_grip_points</name>
+        <qualifiedname>embroidery.geometry.Point.all_grip_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3632" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3632" bodyend="3635"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Point_1a75f7e49a77ac1cb48def24f270664886" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Point.grip_edit</definition>
+        <argsstring>(self, before, after)</argsstring>
+        <name>grip_edit</name>
+        <qualifiedname>embroidery.geometry.Point.grip_edit</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>before</type>
+          <defname>before</defname>
+        </param>
+        <param>
+          <type>after</type>
+          <defname>after</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3636" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3636" bodyend="3641"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Point_1a7c8195b6a5c20259586c7e3e5c1362b9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Point.save_path</definition>
+        <argsstring>(self)</argsstring>
+        <name>save_path</name>
+        <qualifiedname>embroidery.geometry.Point.save_path</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3642" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3642" bodyend="3647"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>The point class definition.
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/geometry.py" line="3509" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3509" bodyend="3647"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1geometry_1_1Point_1a2de93a4c30b2837cba1db10e87471ab7" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1a7de18f6a1f883c660a3967f82932ced6" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>all_grip_points</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1ae22153bace81508c2ccface33d4da3f2" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>click</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1a47c2973c1910695517cd58db91cb5810" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>copy</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1a8a2a3260331ff23e0b5e2c522aa5ab97" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>first_run</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1a75f7e49a77ac1cb48def24f270664886" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>grip_edit</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1a0dae63474b797db2a683806faef07f10" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>mouse_snap_point</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1aa9f6e319615aa21844c550d187a2971d" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>paint</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1a6c5f8760592db0f8075b1400c0b35484" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>pen</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1a2f9e536de1034506b4d84860f724ff2e" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>position</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1a7cd88c011314c36ea6f0c0b4eaaa8340" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>prompt</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1a65910b4bc4ae751a9348eb35a990fc7b" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>rubber_mode</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1a7c8195b6a5c20259586c7e3e5c1362b9" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>save_path</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1a1185264496a674598d5c2c22315b3ed4" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>type</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1ad05265943b26e752488010523ce43208" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>update_rubber</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Point_1acadf08e265318554962a430a5cc95887" prot="public" virt="non-virtual"><scope>embroidery::geometry::Point</scope><name>vulcanize</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

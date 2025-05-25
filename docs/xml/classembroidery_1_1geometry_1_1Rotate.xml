@@ -1,0 +1,271 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1geometry_1_1Rotate" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::geometry::Rotate</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rotate_1a10645d57cb99dd5e0e2bf919c147aa7c" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rotate::mode</definition>
+        <argsstring></argsstring>
+        <name>mode</name>
+        <qualifiedname>embroidery.geometry.Rotate.mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3344" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3344" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rotate_1a4700f7aca04f7e15c487a4dd495a99b8" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rotate::modes</definition>
+        <argsstring></argsstring>
+        <name>modes</name>
+        <qualifiedname>embroidery.geometry.Rotate.modes</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3345" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3345" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rotate_1aa008e674205b8ab73f273dea52838c10" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rotate::first_run</definition>
+        <argsstring></argsstring>
+        <name>first_run</name>
+        <qualifiedname>embroidery.geometry.Rotate.first_run</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3346" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3346" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rotate_1a79209aeca57588f9c1f9e52e16408290" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rotate::base</definition>
+        <argsstring></argsstring>
+        <name>base</name>
+        <qualifiedname>embroidery.geometry.Rotate.base</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3347" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3347" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rotate_1a98bea83b0a116c2550ff7d2cb4a430c6" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rotate::dest</definition>
+        <argsstring></argsstring>
+        <name>dest</name>
+        <qualifiedname>embroidery.geometry.Rotate.dest</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3348" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3348" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rotate_1a8c1e35b47dc07c57805831305e932159" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rotate::angle</definition>
+        <argsstring></argsstring>
+        <name>angle</name>
+        <qualifiedname>embroidery.geometry.Rotate.angle</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3349" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3349" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rotate_1a92d1fd0f7022baefec7841564cb7604d" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rotate::base_r</definition>
+        <argsstring></argsstring>
+        <name>base_r</name>
+        <qualifiedname>embroidery.geometry.Rotate.base_r</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3350" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3350" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rotate_1ac0347c2affc0d5637e6c7b301872f901" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rotate::dest_r</definition>
+        <argsstring></argsstring>
+        <name>dest_r</name>
+        <qualifiedname>embroidery.geometry.Rotate.dest_r</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3351" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3351" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rotate_1a905650cb78f74db1e4c853c4d2e08dac" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rotate::angle_ref</definition>
+        <argsstring></argsstring>
+        <name>angle_ref</name>
+        <qualifiedname>embroidery.geometry.Rotate.angle_ref</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3352" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3352" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rotate_1aa37ebcd98b57ecbc4b59973eebea342e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rotate::angle_new</definition>
+        <argsstring></argsstring>
+        <name>angle_new</name>
+        <qualifiedname>embroidery.geometry.Rotate.angle_new</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3353" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3353" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rotate_1abf136f7ed2398f55e2c824d36f1ed6d9" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rotate::rubber_mode</definition>
+        <argsstring></argsstring>
+        <name>rubber_mode</name>
+        <qualifiedname>embroidery.geometry.Rotate.rubber_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3354" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3354" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1geometry_1_1Rotate_1a620a5355b4632b1d86543825c399b8c9" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.geometry.Rotate::rubber_points</definition>
+        <argsstring></argsstring>
+        <name>rubber_points</name>
+        <qualifiedname>embroidery.geometry.Rotate.rubber_points</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3355" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3355" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rotate_1a116b68033a7148603153532bf8410a9f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rotate.__init__</definition>
+        <argsstring>(self)</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.geometry.Rotate.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3342" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3342" bodyend="3366"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rotate_1a2ab0fd1e3ce9802475c2c5b4b7a64c37" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rotate.click</definition>
+        <argsstring>(self, x, y)</argsstring>
+        <name>click</name>
+        <qualifiedname>embroidery.geometry.Rotate.click</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3367" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3367" bodyend="3408"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1geometry_1_1Rotate_1a58a99c78c987c5c6945b253a166c4dfe" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.geometry.Rotate.prompt</definition>
+        <argsstring>(self, cmd)</argsstring>
+        <name>prompt</name>
+        <qualifiedname>embroidery.geometry.Rotate.prompt</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>cmd</type>
+          <defname>cmd</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/geometry.py" line="3409" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3409" bodyend="3508"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>The Rotate class definition file.
+
+This was here to facilitate the ROTATE command for the
+in-built console. This may not be used in the 2.0.0 version.
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/geometry.py" line="3335" column="1" bodyfile="python/embroidery/geometry.py" bodystart="3335" bodyend="3508"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1a116b68033a7148603153532bf8410a9f" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1a8c1e35b47dc07c57805831305e932159" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>angle</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1aa37ebcd98b57ecbc4b59973eebea342e" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>angle_new</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1a905650cb78f74db1e4c853c4d2e08dac" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>angle_ref</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1a79209aeca57588f9c1f9e52e16408290" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>base</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1a92d1fd0f7022baefec7841564cb7604d" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>base_r</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1a2ab0fd1e3ce9802475c2c5b4b7a64c37" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>click</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1a98bea83b0a116c2550ff7d2cb4a430c6" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>dest</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1ac0347c2affc0d5637e6c7b301872f901" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>dest_r</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1aa008e674205b8ab73f273dea52838c10" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>first_run</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1a10645d57cb99dd5e0e2bf919c147aa7c" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>mode</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1a4700f7aca04f7e15c487a4dd495a99b8" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>modes</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1a58a99c78c987c5c6945b253a166c4dfe" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>prompt</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1abf136f7ed2398f55e2c824d36f1ed6d9" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>rubber_mode</name></member>
+      <member refid="classembroidery_1_1geometry_1_1Rotate_1a620a5355b4632b1d86543825c399b8c9" prot="public" virt="non-virtual"><scope>embroidery::geometry::Rotate</scope><name>rubber_points</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

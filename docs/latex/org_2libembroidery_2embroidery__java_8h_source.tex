@@ -1,0 +1,104 @@
+\hypertarget{org_2libembroidery_2embroidery__java_8h_source}{}\doxysection{embroidery\+\_\+java.\+h}
+\label{org_2libembroidery_2embroidery__java_8h_source}\index{java/org/libembroidery/embroidery\_java.h@{java/org/libembroidery/embroidery\_java.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ * This file is part of libembroidery.}}
+\DoxyCodeLine{3 \textcolor{comment}{ *}}
+\DoxyCodeLine{4 \textcolor{comment}{ * Copyright 2018-\/2022 The Embroidermodder Team}}
+\DoxyCodeLine{5 \textcolor{comment}{ * Licensed under the terms of the zlib license.}}
+\DoxyCodeLine{6 \textcolor{comment}{ *}}
+\DoxyCodeLine{7 \textcolor{comment}{ * -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{8 \textcolor{comment}{ *}}
+\DoxyCodeLine{9 \textcolor{comment}{ * The array management for libembroidery's arrays.}}
+\DoxyCodeLine{10 \textcolor{comment}{ */}}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#ifndef \_\_EMBROIDERY\_JAVA\_H\_\_}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#define \_\_EMBROIDERY\_JAVA\_H\_\_}}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{keywordtype}{int} c\_emb\_identify\_format(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *ending);}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{keywordtype}{int} c\_embThread\_findNearestColor(\mbox{\hyperlink{structEmbColor__}{EmbColor}} color, \mbox{\hyperlink{structEmbArray__}{EmbArray}}* colors, \textcolor{keywordtype}{int} mode);}
+\DoxyCodeLine{18 \textcolor{keywordtype}{int} c\_embThread\_findNearestColor\_fromThread(\mbox{\hyperlink{structEmbColor__}{EmbColor}} color, \mbox{\hyperlink{structEmbThread__}{EmbThread}}* colors, \textcolor{keywordtype}{int} length);}
+\DoxyCodeLine{19 \mbox{\hyperlink{structEmbThread__}{EmbThread}} c\_embThread\_getRandom(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 \textcolor{keywordtype}{void} c\_testMain(\textcolor{keywordtype}{int} level);}
+\DoxyCodeLine{22 \textcolor{keywordtype}{int} c\_convert(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *inf, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *outf);}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 \mbox{\hyperlink{structEmbColor__}{EmbColor}} c\_embColor\_make(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} r, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} g, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} b);}
+\DoxyCodeLine{25 \mbox{\hyperlink{structEmbColor__}{EmbColor}}* c\_embColor\_create(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} r, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} g, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} b);}
+\DoxyCodeLine{26 \mbox{\hyperlink{structEmbColor__}{EmbColor}} c\_embColor\_fromHexStr(\textcolor{keywordtype}{char}* val);}
+\DoxyCodeLine{27 \textcolor{keywordtype}{int} c\_embColor\_distance(\mbox{\hyperlink{structEmbColor__}{EmbColor}} a, \mbox{\hyperlink{structEmbColor__}{EmbColor}} b);}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 \textcolor{keywordtype}{double} c\_embEllipse\_diameterX(\mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} ellipse);}
+\DoxyCodeLine{30 \textcolor{keywordtype}{double} c\_embEllipse\_diameterY(\mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} ellipse);}
+\DoxyCodeLine{31 \textcolor{keywordtype}{double} c\_embEllipse\_width(\mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} ellipse);}
+\DoxyCodeLine{32 \textcolor{keywordtype}{double} c\_embEllipse\_height(\mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} ellipse);}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 \mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} c\_embEllipse\_make(\textcolor{keywordtype}{double} cx, \textcolor{keywordtype}{double} cy, \textcolor{keywordtype}{double} rx, \textcolor{keywordtype}{double} ry);}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{keywordtype}{int} c\_threadColor(\textcolor{keyword}{const} \textcolor{keywordtype}{char}*, \textcolor{keywordtype}{int} brand);}
+\DoxyCodeLine{37 \textcolor{keywordtype}{int} c\_threadColorNum(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} color, \textcolor{keywordtype}{int} brand);}
+\DoxyCodeLine{38 \textcolor{keyword}{const} \textcolor{keywordtype}{char}* c\_threadColorName(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} color, \textcolor{keywordtype}{int} brand);}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{keywordtype}{void} c\_embSatinOutline\_generateSatinOutline(\mbox{\hyperlink{structEmbArray__}{EmbArray}}* lines, \textcolor{keywordtype}{double} thickness, \mbox{\hyperlink{structEmbSatinOutline__}{EmbSatinOutline}}* result);}
+\DoxyCodeLine{41 \mbox{\hyperlink{structEmbArray__}{EmbArray}}* c\_embSatinOutline\_renderStitches(\mbox{\hyperlink{structEmbSatinOutline__}{EmbSatinOutline}}* result, \textcolor{keywordtype}{double} density);}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43 \textcolor{keywordtype}{int} c\_embPattern\_create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{44 \textcolor{keywordtype}{void} c\_embPattern\_hideStitchesOverLength(\textcolor{keywordtype}{int} p, \textcolor{keywordtype}{int} length);}
+\DoxyCodeLine{45 \textcolor{keywordtype}{void} c\_embPattern\_fixColorCount(\textcolor{keywordtype}{int} p);}
+\DoxyCodeLine{46 \textcolor{keywordtype}{int} c\_embPattern\_addThread(\textcolor{keywordtype}{int} p, \mbox{\hyperlink{structEmbThread__}{EmbThread}} thread);}
+\DoxyCodeLine{47 \textcolor{keywordtype}{void} c\_embPattern\_addStitchAbs(\textcolor{keywordtype}{int} p, \textcolor{keywordtype}{double} x, \textcolor{keywordtype}{double} y, \textcolor{keywordtype}{int} flags, \textcolor{keywordtype}{int} isAutoColorIndex);}
+\DoxyCodeLine{48 \textcolor{keywordtype}{void} c\_embPattern\_addStitchRel(\textcolor{keywordtype}{int} p, \textcolor{keywordtype}{double} dx, \textcolor{keywordtype}{double} dy, \textcolor{keywordtype}{int} flags, \textcolor{keywordtype}{int} isAutoColorIndex);}
+\DoxyCodeLine{49 \textcolor{keywordtype}{void} c\_embPattern\_changeColor(\textcolor{keywordtype}{int} p, \textcolor{keywordtype}{int} index);}
+\DoxyCodeLine{50 \textcolor{keywordtype}{void} c\_embPattern\_free(\textcolor{keywordtype}{int} p);}
+\DoxyCodeLine{51 \textcolor{keywordtype}{void} c\_embPattern\_scale(\textcolor{keywordtype}{int} p, \textcolor{keywordtype}{double} scale);}
+\DoxyCodeLine{52 \mbox{\hyperlink{structEmbRect__}{EmbRect}} embPattern\_calcBoundingBox(\textcolor{keywordtype}{int} p);}
+\DoxyCodeLine{53 \textcolor{keywordtype}{void} c\_embPattern\_flipHorizontal(\textcolor{keywordtype}{int} p);}
+\DoxyCodeLine{54 \textcolor{keywordtype}{void} c\_embPattern\_flipVertical(\textcolor{keywordtype}{int} p);}
+\DoxyCodeLine{55 \textcolor{keywordtype}{void} c\_embPattern\_flip(\textcolor{keywordtype}{int} p, \textcolor{keywordtype}{int} horz, \textcolor{keywordtype}{int} vert);}
+\DoxyCodeLine{56 \textcolor{keywordtype}{void} c\_embPattern\_combineJumpStitches(\textcolor{keywordtype}{int} p);}
+\DoxyCodeLine{57 \textcolor{keywordtype}{void} c\_embPattern\_correctForMaxStitchLength(\textcolor{keywordtype}{int} p, \textcolor{keywordtype}{double} maxStitchLength, \textcolor{keywordtype}{double} maxJumpLength);}
+\DoxyCodeLine{58 \textcolor{keywordtype}{void} c\_embPattern\_center(\textcolor{keywordtype}{int} p);}
+\DoxyCodeLine{59 \textcolor{keywordtype}{void} c\_embPattern\_loadExternalColorFile(\textcolor{keywordtype}{int} p, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* fileName);}
+\DoxyCodeLine{60 \textcolor{keywordtype}{void} c\_embPattern\_convertGeometry(\textcolor{keywordtype}{int} p);}
+\DoxyCodeLine{61 \textcolor{keywordtype}{void} c\_embPattern\_designDetails(\textcolor{keywordtype}{int} p);}
+\DoxyCodeLine{62 \textcolor{keywordtype}{int} embPattern\_combine(\textcolor{keywordtype}{int} p1, \textcolor{keywordtype}{int} p2);}
+\DoxyCodeLine{63 \textcolor{keywordtype}{int} c\_embPattern\_color\_count(\textcolor{keywordtype}{int} pattern, \mbox{\hyperlink{structEmbColor__}{EmbColor}} startColor);}
+\DoxyCodeLine{64 \textcolor{keywordtype}{void} c\_embPattern\_end(\textcolor{keywordtype}{int} p);}
+\DoxyCodeLine{65 \textcolor{keywordtype}{void} c\_embPattern\_crossstitch(\textcolor{keywordtype}{int} pattern, \textcolor{keywordtype}{int} , \textcolor{keywordtype}{int} threshhold);}
+\DoxyCodeLine{66 \textcolor{keywordtype}{void} c\_embPattern\_horizontal\_fill(\textcolor{keywordtype}{int} pattern, \textcolor{keywordtype}{int} , \textcolor{keywordtype}{int} threshhold);}
+\DoxyCodeLine{67 \textcolor{keywordtype}{int} c\_embPattern\_render(\textcolor{keywordtype}{int} pattern, \textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{68 \textcolor{keywordtype}{int} c\_embPattern\_simulate(\textcolor{keywordtype}{int} pattern, \textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 \textcolor{keywordtype}{void} c\_embPattern\_addCircleAbs(\textcolor{keywordtype}{int} p, \mbox{\hyperlink{structEmbCircle__}{EmbCircle}} obj);}
+\DoxyCodeLine{71 \textcolor{keywordtype}{void} c\_embPattern\_addEllipseAbs(\textcolor{keywordtype}{int} p, \mbox{\hyperlink{structEmbEllipse__}{EmbEllipse}} obj);}
+\DoxyCodeLine{72 \textcolor{keywordtype}{void} c\_embPattern\_addLineAbs(\textcolor{keywordtype}{int} p, \mbox{\hyperlink{structEmbLine__}{EmbLine}} obj);}
+\DoxyCodeLine{73 \textcolor{keywordtype}{void} c\_embPattern\_addPathAbs(\textcolor{keywordtype}{int} p, \mbox{\hyperlink{structEmbPath__}{EmbPath}} obj);}
+\DoxyCodeLine{74 \textcolor{keywordtype}{void} c\_embPattern\_addPointAbs(\textcolor{keywordtype}{int} p, \mbox{\hyperlink{structEmbPoint__}{EmbPoint}} obj);}
+\DoxyCodeLine{75 \textcolor{keywordtype}{void} c\_embPattern\_addPolygonAbs(\textcolor{keywordtype}{int} p, \mbox{\hyperlink{structEmbPath__}{EmbPolygon}} obj);}
+\DoxyCodeLine{76 \textcolor{keywordtype}{void} c\_embPattern\_addPolylineAbs(\textcolor{keywordtype}{int} p, \mbox{\hyperlink{structEmbPath__}{EmbPolyline}} obj);}
+\DoxyCodeLine{77 \textcolor{keywordtype}{void} c\_embPattern\_addRectAbs(\textcolor{keywordtype}{int} p, \mbox{\hyperlink{structEmbRect__}{EmbRect}} obj);}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79 \textcolor{keywordtype}{void} c\_embPattern\_copyStitchListToPolylines(\textcolor{keywordtype}{int} pattern);}
+\DoxyCodeLine{80 \textcolor{keywordtype}{void} c\_embPattern\_copyPolylinesToStitchList(\textcolor{keywordtype}{int} pattern);}
+\DoxyCodeLine{81 \textcolor{keywordtype}{void} c\_embPattern\_moveStitchListToPolylines(\textcolor{keywordtype}{int} pattern);}
+\DoxyCodeLine{82 \textcolor{keywordtype}{void} c\_embPattern\_movePolylinesToStitchList(\textcolor{keywordtype}{int} pattern);}
+\DoxyCodeLine{83 }
+\DoxyCodeLine{84 \textcolor{keywordtype}{char} c\_embPattern\_read(\textcolor{keywordtype}{int} pattern, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* fileName, \textcolor{keywordtype}{int} format);}
+\DoxyCodeLine{85 \textcolor{keywordtype}{char} c\_embPattern\_write(\textcolor{keywordtype}{int} pattern, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* fileName, \textcolor{keywordtype}{int} format);}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{87 \textcolor{keywordtype}{char} c\_embPattern\_readAuto(\textcolor{keywordtype}{int} pattern, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* fileName);}
+\DoxyCodeLine{88 \textcolor{keywordtype}{char} c\_embPattern\_writeAuto(\textcolor{keywordtype}{int} pattern, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* fileName);}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{90 \textcolor{keywordtype}{void} c\_report(\textcolor{keywordtype}{int} result, \textcolor{keywordtype}{char} *label);}
+\DoxyCodeLine{91 \textcolor{keywordtype}{int} c\_full\_test\_matrix(\textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{92 }
+\DoxyCodeLine{93 \mbox{\hyperlink{structEmbImage__}{EmbImage}} c\_embImage\_create(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{94 \textcolor{keywordtype}{void} c\_embImage\_read(\textcolor{keywordtype}{int} image, \textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{95 \textcolor{keywordtype}{int} c\_embImage\_write(\textcolor{keywordtype}{int} image, \textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{96 \textcolor{keywordtype}{void} c\_embImage\_free(\textcolor{keywordtype}{int} image);}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

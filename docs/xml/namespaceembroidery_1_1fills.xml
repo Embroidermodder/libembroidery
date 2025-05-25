@@ -1,0 +1,193 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="namespaceembroidery_1_1fills" kind="namespace" language="Python">
+    <compoundname>embroidery::fills</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceembroidery_1_1fills_1a14492c4cad0caf3aec20ec1f8febc93c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.fills.satin_fill</definition>
+        <argsstring>(outline, direction, scale, max_steps)</argsstring>
+        <name>satin_fill</name>
+        <qualifiedname>embroidery.fills.satin_fill</qualifiedname>
+        <param>
+          <type>outline</type>
+          <defname>outline</defname>
+        </param>
+        <param>
+          <type>direction</type>
+          <defname>direction</defname>
+        </param>
+        <param>
+          <type>scale</type>
+          <defname>scale</defname>
+        </param>
+        <param>
+          <type>max_steps</type>
+          <defname>max_steps</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>    A traditional directional satin fill, where the supplied
+    direction is the .</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/fills.py" line="17" column="1" bodyfile="python/embroidery/fills.py" bodystart="17" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1fills_1a150fe3e8293bb10ad478a3f0f456911f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.fills.radial_satin_fill</definition>
+        <argsstring>(outline, center, scale, max_steps)</argsstring>
+        <name>radial_satin_fill</name>
+        <qualifiedname>embroidery.fills.radial_satin_fill</qualifiedname>
+        <param>
+          <type>outline</type>
+          <defname>outline</defname>
+        </param>
+        <param>
+          <type>center</type>
+          <defname>center</defname>
+        </param>
+        <param>
+          <type>scale</type>
+          <defname>scale</defname>
+        </param>
+        <param>
+          <type>max_steps</type>
+          <defname>max_steps</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>    .</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/fills.py" line="25" column="1" bodyfile="python/embroidery/fills.py" bodystart="25" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1fills_1add3a42173ffe72a5a1b1ffb69f18f6d9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.fills.herringbone_fill</definition>
+        <argsstring>(outline, scale, max_steps)</argsstring>
+        <name>herringbone_fill</name>
+        <qualifiedname>embroidery.fills.herringbone_fill</qualifiedname>
+        <param>
+          <type>outline</type>
+          <defname>outline</defname>
+        </param>
+        <param>
+          <type>scale</type>
+          <defname>scale</defname>
+        </param>
+        <param>
+          <type>max_steps</type>
+          <defname>max_steps</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>    .</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/fills.py" line="32" column="1" bodyfile="python/embroidery/fills.py" bodystart="32" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1fills_1aac96e6161bcfaeab65dd21f2485c3960" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.fills.join_stitches</definition>
+        <argsstring>(stitch_list)</argsstring>
+        <name>join_stitches</name>
+        <qualifiedname>embroidery.fills.join_stitches</qualifiedname>
+        <param>
+          <type>stitch_list</type>
+          <defname>stitch_list</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>    .</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/fills.py" line="39" column="1" bodyfile="python/embroidery/fills.py" bodystart="39" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1fills_1ae03a3e45aad4d600226da05fdb5a2ade" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.fills.clip_path</definition>
+        <argsstring>(outline, path)</argsstring>
+        <name>clip_path</name>
+        <qualifiedname>embroidery.fills.clip_path</qualifiedname>
+        <param>
+          <type>outline</type>
+          <defname>outline</defname>
+        </param>
+        <param>
+          <type>path</type>
+          <defname>path</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>    .</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/fills.py" line="46" column="1" bodyfile="python/embroidery/fills.py" bodystart="46" bodyend="52"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceembroidery_1_1fills_1a1e510650709d46f5118e0dfdd0a5d71a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.fills.apply_fill</definition>
+        <argsstring>(outline, fill, *args)</argsstring>
+        <name>apply_fill</name>
+        <qualifiedname>embroidery.fills.apply_fill</qualifiedname>
+        <param>
+          <type>outline</type>
+          <defname>outline</defname>
+        </param>
+        <param>
+          <type>fill</type>
+          <defname>fill</defname>
+        </param>
+        <param>
+          <type>*</type>
+          <declname>args</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Given a contour, overlay a fill pattern and clip out the inner part.
+
+    outline:
+        The contour is supplied as a polygon which is a list of vectors
+        anticlockwise about the polygon with the first and last point joined.
+
+        For example, a square could be encoded as:
+        [[0.0, 0.0], [0.0, 1.0], [1.0, 1.0], [1.0, 0.0]].
+
+    fill:
+        The fill is a program that generates a path with points that
+        mark where the needle sews. The fill continues until the outline
+        is covered.</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/fills.py" line="53" column="1" bodyfile="python/embroidery/fills.py" bodystart="53" bodyend="72"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>    Embroidermodder 2.
+
+    ------------------------------------------------------------
+
+    Copyright 2013-2022 The Embroidermodder Team
+    Embroidermodder 2 is Open Source Software.
+    See LICENSE for licensing terms.
+
+    ------------------------------------------------------------</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/fills.py" line="1" column="1"/>
+  </compounddef>
+</doxygen>

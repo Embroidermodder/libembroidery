@@ -1,4 +1,7 @@
-/*
+/*!
+ * \file script.c
+ * \brief Basic Postscript support for libembroidery.
+ *
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *
@@ -37,7 +40,8 @@ int process_stack_head(EmbStack *stack);
 
 static EmbPattern *focussed_pattern = NULL;
 
-/* Internally, we use fixed-point arithmetic because it can be made more
+/*!
+ * Internally, we use fixed-point arithmetic because it can be made more
  * consistent.
  *
  * The maximum integer value is 32767, so with a place value of 0.1 the
@@ -77,6 +81,7 @@ static EmbPattern *focussed_pattern = NULL;
 #define NAME_TYPE                      5
 #define DICTIONARY_TYPE                6
 
+/*! Postscript data types */
 static char postscript_data_type[][20] = {
     "string",
     "array",

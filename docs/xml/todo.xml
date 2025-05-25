@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="todo" kind="page">
+    <compoundname>todo</compoundname>
+    <title>Todo List</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><variablelist>
+<varlistentry><term>Global <ref refid="embroidery_8h_1ae92ded87da0dcaaae8f7c7bc880fd1b0" kindref="member">EmbStitch</ref>  </term></varlistentry>
+<listitem><para><anchor id="todo_1_todo000002"/><computeroutput>color</computeroutput> should be called colorIndex since it is not an EmbColor.  </para>
+</listitem>
+<varlistentry><term>Global <ref refid="designs_8c_1a780a8be3791541ccfc2dcadd269151d2" kindref="member">heart4</ref>  </term></varlistentry>
+<listitem><para><anchor id="todo_1_todo000001"/>min:64 max:8192  </para>
+</listitem>
+<varlistentry><term>Global <ref refid="structSubDescriptor___1a38fd406a9a90eadf0a7493f544c96936" kindref="member">SubDescriptor_::colorCode</ref>  </term></varlistentry>
+<listitem><para><anchor id="todo_1_todo000005"/>better variable naming  </para>
+</listitem>
+<varlistentry><term>Global <ref refid="structSubDescriptor___1ac51ebc277f92c038a85467cc77ad3fcb" kindref="member">SubDescriptor_::someInt</ref>  </term></varlistentry>
+<listitem><para><anchor id="todo_1_todo000003"/>better variable naming  </para>
+</listitem>
+<varlistentry><term>Global <ref refid="structSubDescriptor___1ad2373ecaa71179dccd7d10a4b8c48cb7" kindref="member">SubDescriptor_::someOtherInt</ref>  </term></varlistentry>
+<listitem><para><anchor id="todo_1_todo000004"/>better variable naming </para>
+</listitem>
+</variablelist>
+</para>
+    </detaileddescription>
+    <location file="todo"/>
+  </compounddef>
+</doxygen>

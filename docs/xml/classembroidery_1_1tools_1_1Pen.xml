@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1tools_1_1Pen" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::tools::Pen</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1tools_1_1Pen_1afe917c0d76c90831c60da61f9f5578cf" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.tools.Pen::rgb</definition>
+        <argsstring></argsstring>
+        <name>rgb</name>
+        <qualifiedname>embroidery.tools.Pen.rgb</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="121" column="1" bodyfile="python/embroidery/tools.py" bodystart="121" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1tools_1_1Pen_1a18ae1cf1f7118e9c6e622ad47defa60e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.tools.Pen::line_weight</definition>
+        <argsstring></argsstring>
+        <name>line_weight</name>
+        <qualifiedname>embroidery.tools.Pen.line_weight</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="122" column="1" bodyfile="python/embroidery/tools.py" bodystart="122" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1tools_1_1Pen_1af10793967d1b986f840939a983e30516" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.tools.Pen::line_type</definition>
+        <argsstring></argsstring>
+        <name>line_type</name>
+        <qualifiedname>embroidery.tools.Pen.line_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="123" column="1" bodyfile="python/embroidery/tools.py" bodystart="123" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1tools_1_1Pen_1a9880ad308bb6a4c6ee13c156e78f5253" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.tools.Pen::cap_style</definition>
+        <argsstring></argsstring>
+        <name>cap_style</name>
+        <qualifiedname>embroidery.tools.Pen.cap_style</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="124" column="1" bodyfile="python/embroidery/tools.py" bodystart="124" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1tools_1_1Pen_1a53d72cc9490d35c9f828df7026967fec" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.tools.Pen::join_style</definition>
+        <argsstring></argsstring>
+        <name>join_style</name>
+        <qualifiedname>embroidery.tools.Pen.join_style</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="125" column="1" bodyfile="python/embroidery/tools.py" bodystart="125" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1tools_1_1Pen_1a2cc92b07be6da5e31295261cf6dff0b8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.Pen.__init__</definition>
+        <argsstring>(self, rgb=&quot;#FFFFFF&quot;, line_type=&quot;solid&quot;, line_weight=0.35)</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.tools.Pen.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>rgb</type>
+          <defname>rgb</defname>
+          <defval>&quot;#FFFFFF&quot;</defval>
+        </param>
+        <param>
+          <type>line_type</type>
+          <defname>line_type</defname>
+          <defval>&quot;solid&quot;</defval>
+        </param>
+        <param>
+          <type>line_weight</type>
+          <defname>line_weight</defname>
+          <defval>0.35</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="119" column="1" bodyfile="python/embroidery/tools.py" bodystart="119" bodyend="126"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1tools_1_1Pen_1a62db1c041cca50bbe97fcf1094c69503" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.tools.Pen.paint</definition>
+        <argsstring>(self)</argsstring>
+        <name>paint</name>
+        <qualifiedname>embroidery.tools.Pen.paint</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/tools.py" line="127" column="1" bodyfile="python/embroidery/tools.py" bodystart="127" bodyend="131"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>The Pen class definition.
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/tools.py" line="115" column="1" bodyfile="python/embroidery/tools.py" bodystart="115" bodyend="131"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1tools_1_1Pen_1a2cc92b07be6da5e31295261cf6dff0b8" prot="public" virt="non-virtual"><scope>embroidery::tools::Pen</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1tools_1_1Pen_1a9880ad308bb6a4c6ee13c156e78f5253" prot="public" virt="non-virtual"><scope>embroidery::tools::Pen</scope><name>cap_style</name></member>
+      <member refid="classembroidery_1_1tools_1_1Pen_1a53d72cc9490d35c9f828df7026967fec" prot="public" virt="non-virtual"><scope>embroidery::tools::Pen</scope><name>join_style</name></member>
+      <member refid="classembroidery_1_1tools_1_1Pen_1af10793967d1b986f840939a983e30516" prot="public" virt="non-virtual"><scope>embroidery::tools::Pen</scope><name>line_type</name></member>
+      <member refid="classembroidery_1_1tools_1_1Pen_1a18ae1cf1f7118e9c6e622ad47defa60e" prot="public" virt="non-virtual"><scope>embroidery::tools::Pen</scope><name>line_weight</name></member>
+      <member refid="classembroidery_1_1tools_1_1Pen_1a62db1c041cca50bbe97fcf1094c69503" prot="public" virt="non-virtual"><scope>embroidery::tools::Pen</scope><name>paint</name></member>
+      <member refid="classembroidery_1_1tools_1_1Pen_1afe917c0d76c90831c60da61f9f5578cf" prot="public" virt="non-virtual"><scope>embroidery::tools::Pen</scope><name>rgb</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

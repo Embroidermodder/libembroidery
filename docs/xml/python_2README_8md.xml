@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="python_2README_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Libembroidery<sp/>v1.0-alpha</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Copyright<sp/>(c)<sp/>2013-2022<sp/>The<sp/>EmbroiderModder<sp/>Team</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">https://embroidermodder.org</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">(Under<sp/>construction,<sp/>please<sp/>wait<sp/>for<sp/>v1.0<sp/>release.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">libembroidery<sp/>is<sp/>a<sp/>low-level<sp/>library<sp/>for<sp/>reading,<sp/>writing,<sp/></highlight></codeline>
+<codeline><highlight class="normal">and<sp/>altering<sp/>digital<sp/>embroidery<sp/>files<sp/>in<sp/>C.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">libembroidery<sp/>is<sp/>the<sp/>underlying<sp/>library<sp/>that<sp/>is<sp/>used<sp/>by<sp/>[Embroidermodder<sp/>2](http://embroidermodder.org)</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>is<sp/>developed<sp/>by<sp/>[The<sp/>Embroidermodder<sp/>Team](#the-embroidermodder-team).</highlight></codeline>
+<codeline><highlight class="normal">It<sp/>handles<sp/>over<sp/>45<sp/>different<sp/>embroidery<sp/>specific<sp/>formats<sp/>as<sp/>well</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>several<sp/>non-embroidery<sp/>specific<sp/>vector<sp/>formats.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>also<sp/>includes<sp/>a<sp/>CLI<sp/>called<sp/>`embroider`<sp/>that<sp/>allows<sp/>for<sp/>better<sp/>automation<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">changes<sp/>to<sp/>embroidery<sp/>files<sp/>and<sp/>will<sp/>be<sp/>more<sp/>up-to<sp/>date<sp/>than</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>Embroidermodder<sp/>2<sp/>GUI.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>want<sp/>to<sp/>learn<sp/>more<sp/>about<sp/>building,<sp/>using<sp/>and<sp/>developing<sp/>this<sp/>software<sp/>read<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">manual<sp/>(included<sp/>as<sp/>the<sp/>file<sp/>[embroidermodder_manual.pdf](embroidermodder_manual.pdf)).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Libembroidery<sp/>1.0<sp/>On<sp/>Python<sp/>(Alpha)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>Official<sp/>binding<sp/>for<sp/>libembroidery<sp/>on<sp/>Python.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>stub<sp/>to<sp/>save<sp/>the<sp/>name<sp/>on<sp/>the<sp/>Python<sp/>Package<sp/>Index.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Usage<sp/>would<sp/>be<sp/>something<sp/>like:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>import<sp/>libembroidery<sp/>as<sp/>emb</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>p<sp/>=<sp/>emb.createPattern()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>p.add_circle([2,<sp/>4],<sp/>5,<sp/>color=&quot;blue&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>p.save(&quot;circle.dst&quot;,<sp/>emb.FORMAT_DST)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>more<sp/>see<sp/>our<sp/>website:<sp/>https://embroidermodder.org.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>support<sp/>this<sp/>and<sp/>other<sp/>Embroidermodder<sp/>projects<sp/>see</highlight></codeline>
+<codeline><highlight class="normal">[https://opencollective.com/embroidermodder](our<sp/>Open<sp/>Collective<sp/>page).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">We<sp/>recommend<sp/>you<sp/>install<sp/>the<sp/>working<sp/>draft<sp/>using</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>python3<sp/>setup.py<sp/>install<sp/>--user</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">from<sp/>the<sp/>top<sp/>level.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">In<sp/>the<sp/>future<sp/>we&apos;d<sp/>recommend<sp/>that<sp/>you<sp/>use<sp/>the<sp/>current<sp/>most</highlight></codeline>
+<codeline><highlight class="normal">up-to-date<sp/>version<sp/>on<sp/>PyPI<sp/>using:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>python3<sp/>-m<sp/>pip<sp/>install<sp/>libembroidery</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">or</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>py<sp/>-m<sp/>pip<sp/>install<sp/>libembroidery</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">on<sp/>Windows.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>A<sp/>seperate<sp/>folder<sp/>for<sp/>each<sp/>language</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">In<sp/>theory,<sp/>for<sp/>every<sp/>language<sp/>that<sp/>people<sp/>actively<sp/>write<sp/>in<sp/>a<sp/></highlight></codeline>
+<codeline><highlight class="normal">well-made<sp/>binding<sp/>should<sp/>be<sp/>supplied<sp/>for<sp/>something<sp/>as<sp/>low-level<sp/></highlight></codeline>
+<codeline><highlight class="normal">as<sp/>libembroidery.<sp/>Practically,<sp/>the<sp/>Embroidermodder<sp/>Team<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">only<sp/>know<sp/>so<sp/>many<sp/>languages<sp/>and<sp/>for<sp/>those<sp/>languages<sp/>won&apos;t<sp/>necessarily</highlight></codeline>
+<codeline><highlight class="normal">know<sp/>about<sp/>writing<sp/>bindings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">We<sp/>can<sp/>have<sp/>experts<sp/>on<sp/>individual<sp/>languages<sp/>take<sp/>more<sp/></highlight></codeline>
+<codeline><highlight class="normal">control<sp/>of<sp/>the<sp/>support<sp/>of<sp/>this<sp/>work<sp/>without<sp/>it<sp/>affecting<sp/>the<sp/>overall<sp/></highlight></codeline>
+<codeline><highlight class="normal">support<sp/>and<sp/>core<sp/>library<sp/>and<sp/>the<sp/>levels<sp/>of<sp/>completion<sp/>can<sp/>be<sp/>different<sp/></highlight></codeline>
+<codeline><highlight class="normal">for<sp/>each<sp/>language.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">While<sp/>this<sp/>problem<sp/>could<sp/>be<sp/>solved<sp/>by<sp/>the<sp/>generation<sp/>of<sp/>bindings</highlight></codeline>
+<codeline><highlight class="normal">from<sp/>a<sp/>specification<sp/>like<sp/>SWIG,<sp/>we<sp/>feel<sp/>that<sp/>this<sp/>doesn&apos;t<sp/>account</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>the<sp/>object<sp/>oriented<sp/>structure<sp/>that<sp/>we<sp/>want<sp/>to<sp/>apply<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">bound<sp/>functions.<sp/>Also<sp/>writing<sp/>good<sp/>documentation<sp/>is<sp/>helped<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">that<sp/>generation<sp/>step.<sp/>Calling<sp/>conventions<sp/>may<sp/>be<sp/>different<sp/>between</highlight></codeline>
+<codeline><highlight class="normal">languages<sp/>and<sp/>we&apos;d<sp/>rather<sp/>have<sp/>a<sp/>human<sp/>make<sp/>sure<sp/>that<sp/>the<sp/>documentation</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>written<sp/>with<sp/>an<sp/>awareness<sp/>of<sp/>the<sp/>language<sp/>being<sp/>written<sp/>for.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>all:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>swig<sp/>-Wall<sp/>-python<sp/>embroidery.i</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>python3<sp/>setup.py<sp/>build</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>python3<sp/>setup.py<sp/>install<sp/>--user</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>python3<sp/>test.py</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>clean:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rm<sp/>-fr<sp/>build<sp/>dist<sp/>libembroidery.egg-info<sp/>__pycache__</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rm<sp/>-fr<sp/>libembroidery_core.py<sp/>embroidery_wrap.c</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Emscripten<sp/>Version</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">https://www.sitepoint.com/getting-started-emscripten-transpiling-c-c-javascript-html5/</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Other<sp/>versions</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Java<sp/>Version</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Ideas</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>support<sp/>Java<sp/>perhaps<sp/>the<sp/>best<sp/>approach<sp/>would<sp/>be<sp/>an<sp/>interface<sp/>similar</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>the<sp/>command<sp/>line<sp/>like<sp/>a<sp/>labelled<sp/>pipe<sp/>that<sp/>Java<sp/>sends<sp/>instructions</highlight></codeline>
+<codeline><highlight class="normal">to.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Then<sp/>when<sp/>the<sp/>java<sp/>program<sp/>needs<sp/>to<sp/>know<sp/>the<sp/>current<sp/>state<sp/>of<sp/>the<sp/>pattern</highlight></codeline>
+<codeline><highlight class="normal">in<sp/>RAM<sp/>it&apos;s<sp/>spit<sp/>out<sp/>in<sp/>a<sp/>Java<sp/>byte-code<sp/>friendly<sp/>way?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Swift<sp/>bindings</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Find<sp/>a<sp/>source<sp/>for<sp/>making<sp/>the<sp/>binding.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>#<sp/>Libembroidery<sp/>1.0<sp/>binding<sp/>for<sp/>Swift</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>#<sp/>Copyright<sp/>2022<sp/>The<sp/>Embroidermodder<sp/>Team</highlight></codeline>
+    </programlisting>
+    <location file="python/README.md"/>
+  </compounddef>
+</doxygen>

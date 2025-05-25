@@ -1,0 +1,415 @@
+\hypertarget{geometry_8c}{}\doxysection{src/geometry.c File Reference}
+\label{geometry_8c}\index{src/geometry.c@{src/geometry.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}embroidery.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{geometry_8c_a134f89992462223fad45965ce2c5432d}\label{geometry_8c_a134f89992462223fad45965ce2c5432d}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+vector} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} x, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} y)
+\begin{DoxyCompactList}\small\item\em Create an Emb\+Vector from data. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{geometry_8c_a965d8a075bb012fa234b93318b907044}\label{geometry_8c_a965d8a075bb012fa234b93318b907044}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+vector\+\_\+normalize} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} vector)
+\begin{DoxyCompactList}\small\item\em Finds the unit length vector a result in the same direction as a vector. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{geometry_8c_a219313effcdb6c038605c775250008a2}\label{geometry_8c_a219313effcdb6c038605c775250008a2}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+vector\+\_\+scale} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} vector, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} magnitude)
+\begin{DoxyCompactList}\small\item\em The scalar multiple a magnitude of a vector. Returned as a vector. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{geometry_8c_a567fc2059c952634415800a4e3673709}\label{geometry_8c_a567fc2059c952634415800a4e3673709}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+vector\+\_\+add} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} a, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} b)
+\begin{DoxyCompactList}\small\item\em The sum of two vectors returned as a vector. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{geometry_8c_ad1946f903cbac8faf1af79d7b2309620}\label{geometry_8c_ad1946f903cbac8faf1af79d7b2309620}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+vector\+\_\+average} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} a, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} b)
+\begin{DoxyCompactList}\small\item\em The average of two vectors returned as a vector. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{geometry_8c_ab3f370ea32f94b616563aa50d7125490}\label{geometry_8c_ab3f370ea32f94b616563aa50d7125490}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+vector\+\_\+subtract} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} v1, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} v2)
+\begin{DoxyCompactList}\small\item\em The difference between two vectors returned as a result. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{geometry_8c_a04059dbfbf21a665c26de14fb5cb16de}\label{geometry_8c_a04059dbfbf21a665c26de14fb5cb16de}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries emb\+\_\+vector\+\_\+dot} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} a, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} b)
+\begin{DoxyCompactList}\small\item\em The dot product of two vectors returned as a Emb\+Real. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} \mbox{\hyperlink{geometry_8c_ab63994f171dcba441f5eff676492e053}{emb\+\_\+vector\+\_\+cross}} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} a, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} b)
+\begin{DoxyCompactList}\small\item\em The \char`\"{}cross product\char`\"{} as vectors a and b returned as a real value. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} \mbox{\hyperlink{geometry_8c_a54640b84a350c204803cd3ce61585481}{emb\+\_\+vector\+\_\+transpose\+\_\+product}} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} v1, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} v2)
+\item 
+\mbox{\Hypertarget{geometry_8c_a5397e7f8e651514c438af07930e1459e}\label{geometry_8c_a5397e7f8e651514c438af07930e1459e}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries emb\+\_\+vector\+\_\+length} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} vector)
+\begin{DoxyCompactList}\small\item\em The length or absolute value of the vector a vector. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{geometry_8c_a88af649f9bc31d5578bbab57b9272275}\label{geometry_8c_a88af649f9bc31d5578bbab57b9272275}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries emb\+\_\+vector\+\_\+relativeX} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} a1, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} a2, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} a3)
+\item 
+\mbox{\Hypertarget{geometry_8c_a4b1b420f5ffe9002b22a5132d67d96b5}\label{geometry_8c_a4b1b420f5ffe9002b22a5132d67d96b5}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries emb\+\_\+vector\+\_\+relativeY} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} a1, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} a2, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} a3)
+\item 
+\mbox{\Hypertarget{geometry_8c_a7bd515865e19a603a323d46aaeddda4a}\label{geometry_8c_a7bd515865e19a603a323d46aaeddda4a}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries emb\+\_\+vector\+\_\+angle} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} v)
+\item 
+\mbox{\Hypertarget{geometry_8c_af5c9f7e10b04f53d27bbdb15b8aaf334}\label{geometry_8c_af5c9f7e10b04f53d27bbdb15b8aaf334}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+vector\+\_\+unit} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} alpha)
+\begin{DoxyCompactList}\small\item\em The unit vector in the direction a angle. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{geometry_8c_ac717569890aaf52ac0e010370deac454}\label{geometry_8c_ac717569890aaf52ac0e010370deac454}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries emb\+\_\+vector\+\_\+distance} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} a, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} b)
+\item 
+\mbox{\Hypertarget{geometry_8c_a18c1d774ddc94735a894a8d932e7e576}\label{geometry_8c_a18c1d774ddc94735a894a8d932e7e576}} 
+void {\bfseries emb\+\_\+geometry\+\_\+move} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$obj, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} delta)
+\item 
+\mbox{\Hypertarget{geometry_8c_ac10b7dbbdcabfa60292d63fefc98d6fc}\label{geometry_8c_ac10b7dbbdcabfa60292d63fefc98d6fc}} 
+int {\bfseries emb\+\_\+approx} (\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} point1, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} point2)
+\item 
+\mbox{\Hypertarget{geometry_8c_a0f77387d44198237c2000771a4c7e1e1}\label{geometry_8c_a0f77387d44198237c2000771a4c7e1e1}} 
+double {\bfseries emb\+\_\+width} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g)
+\item 
+\mbox{\Hypertarget{geometry_8c_a1c07a3a3d4c5b8c890c944542e4051a4}\label{geometry_8c_a1c07a3a3d4c5b8c890c944542e4051a4}} 
+double {\bfseries emb\+\_\+height} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g)
+\item 
+\mbox{\Hypertarget{geometry_8c_a8281184d0ae215968ec3c598f057872f}\label{geometry_8c_a8281184d0ae215968ec3c598f057872f}} 
+double {\bfseries emb\+\_\+radius} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g)
+\item 
+\mbox{\Hypertarget{geometry_8c_ab03fc5887adb4da20a869162c3804031}\label{geometry_8c_ab03fc5887adb4da20a869162c3804031}} 
+double {\bfseries emb\+\_\+radius\+\_\+major} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g)
+\item 
+\mbox{\Hypertarget{geometry_8c_a42ff4f6a265a75126d3a5b561dbfdbdb}\label{geometry_8c_a42ff4f6a265a75126d3a5b561dbfdbdb}} 
+double {\bfseries emb\+\_\+radius\+\_\+minor} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g)
+\item 
+\mbox{\Hypertarget{geometry_8c_aeab3cd3cd3d9bcb4c6b11e3875d84167}\label{geometry_8c_aeab3cd3cd3d9bcb4c6b11e3875d84167}} 
+double {\bfseries emb\+\_\+diameter\+\_\+major} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g)
+\item 
+\mbox{\Hypertarget{geometry_8c_a9a665372a7d4d0e24af659f42d69a033}\label{geometry_8c_a9a665372a7d4d0e24af659f42d69a033}} 
+double {\bfseries emb\+\_\+diameter\+\_\+minor} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g)
+\item 
+\mbox{\Hypertarget{geometry_8c_a59e9ac5462417e09e17fc5da79c4b399}\label{geometry_8c_a59e9ac5462417e09e17fc5da79c4b399}} 
+double {\bfseries emb\+\_\+diameter} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g)
+\item 
+\mbox{\Hypertarget{geometry_8c_a09818dd35cbbc08a0658d7cc167a8766}\label{geometry_8c_a09818dd35cbbc08a0658d7cc167a8766}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+quadrant} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, int degrees)
+\item 
+\mbox{\Hypertarget{geometry_8c_a7fdb981613276bee4162304eb0a37ace}\label{geometry_8c_a7fdb981613276bee4162304eb0a37ace}} 
+double {\bfseries emb\+\_\+angle} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry)
+\item 
+\mbox{\Hypertarget{geometry_8c_ab25671e45801ad10be1fd2424f9be032}\label{geometry_8c_ab25671e45801ad10be1fd2424f9be032}} 
+double {\bfseries emb\+\_\+start\+\_\+angle} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry)
+\item 
+\mbox{\Hypertarget{geometry_8c_a2bf4124112e4180c6a335b7d379b7cba}\label{geometry_8c_a2bf4124112e4180c6a335b7d379b7cba}} 
+double {\bfseries emb\+\_\+end\+\_\+angle} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry)
+\item 
+\mbox{\Hypertarget{geometry_8c_a68c0d09d55daf183d0804ae2eea1fd6a}\label{geometry_8c_a68c0d09d55daf183d0804ae2eea1fd6a}} 
+double {\bfseries emb\+\_\+arc\+\_\+length} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry)
+\item 
+\mbox{\Hypertarget{geometry_8c_adb1486164805463e6425de38bc09358f}\label{geometry_8c_adb1486164805463e6425de38bc09358f}} 
+double {\bfseries emb\+\_\+area} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g)
+\item 
+\mbox{\Hypertarget{geometry_8c_a8c6b33ac149b3a07948cf9692311eeb7}\label{geometry_8c_a8c6b33ac149b3a07948cf9692311eeb7}} 
+double {\bfseries emb\+\_\+chord} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry)
+\item 
+\mbox{\Hypertarget{geometry_8c_a2d1e5d02e74da65a6ce339ef91e39db4}\label{geometry_8c_a2d1e5d02e74da65a6ce339ef91e39db4}} 
+double {\bfseries emb\+\_\+included\+\_\+angle} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry)
+\item 
+\mbox{\Hypertarget{geometry_8c_a4e3e72a20df03c8aff76f621a8b540b8}\label{geometry_8c_a4e3e72a20df03c8aff76f621a8b540b8}} 
+char {\bfseries emb\+\_\+clockwise} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry)
+\item 
+\mbox{\Hypertarget{geometry_8c_a4cbf59757f2894229b551cb869a50587}\label{geometry_8c_a4cbf59757f2894229b551cb869a50587}} 
+void {\bfseries emb\+\_\+set\+\_\+start\+\_\+angle} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, double angle)
+\item 
+\mbox{\Hypertarget{geometry_8c_a05392b190b5ff9f56b46b5fd3c126af2}\label{geometry_8c_a05392b190b5ff9f56b46b5fd3c126af2}} 
+void {\bfseries emb\+\_\+set\+\_\+end\+\_\+angle} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, double angle)
+\item 
+\mbox{\Hypertarget{geometry_8c_a9fbdad246b3e022bf469f6815d32f6e8}\label{geometry_8c_a9fbdad246b3e022bf469f6815d32f6e8}} 
+void {\bfseries emb\+\_\+set\+\_\+start\+\_\+point} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} point)
+\item 
+\mbox{\Hypertarget{geometry_8c_a6fc85f2ea91fcdd11dfd3f9b0553ad22}\label{geometry_8c_a6fc85f2ea91fcdd11dfd3f9b0553ad22}} 
+void {\bfseries emb\+\_\+set\+\_\+mid\+\_\+point} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} point)
+\item 
+\mbox{\Hypertarget{geometry_8c_a1ee798f203c5b7f5e4542de27f00a5fe}\label{geometry_8c_a1ee798f203c5b7f5e4542de27f00a5fe}} 
+void {\bfseries emb\+\_\+set\+\_\+end\+\_\+point} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} point)
+\item 
+\mbox{\Hypertarget{geometry_8c_acbd1b623070600582ff8ea62aeebe981}\label{geometry_8c_acbd1b623070600582ff8ea62aeebe981}} 
+void {\bfseries emb\+\_\+set\+\_\+radius} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, double radius)
+\item 
+\mbox{\Hypertarget{geometry_8c_ab9f78083ecc3acaba2b10c07b8c01026}\label{geometry_8c_ab9f78083ecc3acaba2b10c07b8c01026}} 
+void {\bfseries emb\+\_\+set\+\_\+diameter} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, double diameter)
+\item 
+\mbox{\Hypertarget{geometry_8c_aa9bde53abaea5a0142673f3fae049062}\label{geometry_8c_aa9bde53abaea5a0142673f3fae049062}} 
+void {\bfseries emb\+\_\+set\+\_\+area} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, double area)
+\item 
+\mbox{\Hypertarget{geometry_8c_a125c981c92687544b8da21dcc2ef8f74}\label{geometry_8c_a125c981c92687544b8da21dcc2ef8f74}} 
+void {\bfseries emb\+\_\+set\+\_\+circumference} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, double circumference)
+\item 
+\mbox{\Hypertarget{geometry_8c_a9e519f0a527d1107ce0542c274bccc8d}\label{geometry_8c_a9e519f0a527d1107ce0542c274bccc8d}} 
+void {\bfseries emb\+\_\+set\+\_\+radius\+\_\+major} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, double radius)
+\item 
+\mbox{\Hypertarget{geometry_8c_a6ca1fd0e3683e3fc6395f2c251373243}\label{geometry_8c_a6ca1fd0e3683e3fc6395f2c251373243}} 
+void {\bfseries emb\+\_\+set\+\_\+radius\+\_\+minor} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, double radius)
+\item 
+\mbox{\Hypertarget{geometry_8c_a4b0c59d2e72ae8d9511208172959ef45}\label{geometry_8c_a4b0c59d2e72ae8d9511208172959ef45}} 
+void {\bfseries emb\+\_\+set\+\_\+diameter\+\_\+major} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, double diameter)
+\item 
+\mbox{\Hypertarget{geometry_8c_a5dc022c2f4bbf039dc02ec014f3aad83}\label{geometry_8c_a5dc022c2f4bbf039dc02ec014f3aad83}} 
+void {\bfseries emb\+\_\+set\+\_\+diameter\+\_\+minor} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry, double diameter)
+\item 
+\mbox{\Hypertarget{geometry_8c_a3678b669ccf5ebbdb30ae362827cf745}\label{geometry_8c_a3678b669ccf5ebbdb30ae362827cf745}} 
+double {\bfseries emb\+\_\+circumference} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$geometry)
+\item 
+\mbox{\Hypertarget{geometry_8c_a85a825da7fbe0f04460724b80cc5844c}\label{geometry_8c_a85a825da7fbe0f04460724b80cc5844c}} 
+\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$ {\bfseries emb\+Geometry\+\_\+init} (int type\+\_\+in)
+\item 
+\mbox{\Hypertarget{geometry_8c_a9946219466f0f6a7b5a506703bc34e9d}\label{geometry_8c_a9946219466f0f6a7b5a506703bc34e9d}} 
+void {\bfseries emb\+Geometry\+\_\+free} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$obj)
+\item 
+\mbox{\Hypertarget{geometry_8c_afe82721878628886585c5a6d8db7d55e}\label{geometry_8c_afe82721878628886585c5a6d8db7d55e}} 
+\mbox{\hyperlink{embroidery_8h_ac2f33b151fc40a0da3b14379aa0ec653}{Emb\+Rect}} {\bfseries emb\+Geometry\+\_\+bounding\+Rect} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$obj)
+\item 
+\mbox{\Hypertarget{geometry_8c_a67cf4c5f854a25ec6e0ed19ca2be5742}\label{geometry_8c_a67cf4c5f854a25ec6e0ed19ca2be5742}} 
+\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} {\bfseries emb\+\_\+arc} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} x1, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} y1, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} x2, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} y2, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} x3, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} y3)
+\item 
+\mbox{\Hypertarget{geometry_8c_aca34688e08f590f53ac7873560b8e050}\label{geometry_8c_aca34688e08f590f53ac7873560b8e050}} 
+char {\bfseries emb\+\_\+arc\+\_\+clockwise} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} g)
+\item 
+\mbox{\Hypertarget{geometry_8c_a730b429452b397277e1aaa47525671ce}\label{geometry_8c_a730b429452b397277e1aaa47525671ce}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+arc\+\_\+center} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} g)
+\item 
+\mbox{\Hypertarget{geometry_8c_a9f9293e34dd97d6d346da32451790bb2}\label{geometry_8c_a9f9293e34dd97d6d346da32451790bb2}} 
+void {\bfseries emb\+\_\+arc\+\_\+set\+Center} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} point)
+\item 
+\mbox{\Hypertarget{geometry_8c_a97b119fddabccfb721485cb9085feb1b}\label{geometry_8c_a97b119fddabccfb721485cb9085feb1b}} 
+void {\bfseries emb\+\_\+arc\+\_\+set\+Radius} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g, float radius)
+\item 
+\mbox{\Hypertarget{geometry_8c_a444df93b2d444f1b3a55ebbc7da27edf}\label{geometry_8c_a444df93b2d444f1b3a55ebbc7da27edf}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries emb\+\_\+arc\+\_\+arc\+Length} (\mbox{\hyperlink{embroidery_8h_a09945e6e919629c5787e61582c712ba1}{Emb\+Arc}} arc)
+\item 
+\mbox{\Hypertarget{geometry_8c_a25812baed4c22b4ebaa5c546ff4df0c6}\label{geometry_8c_a25812baed4c22b4ebaa5c546ff4df0c6}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries emb\+\_\+arc\+\_\+included\+Angle} (\mbox{\hyperlink{embroidery_8h_a09945e6e919629c5787e61582c712ba1}{Emb\+Arc}} arc)
+\item 
+\mbox{\Hypertarget{geometry_8c_a99bcc468f59bdc9e449eb2d430d0ac2f}\label{geometry_8c_a99bcc468f59bdc9e449eb2d430d0ac2f}} 
+void {\bfseries set\+\_\+object\+\_\+color} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$obj, \mbox{\hyperlink{embroidery_8h_acde9d757854564332fd795a084ec88b3}{Emb\+Color}} color)
+\item 
+\mbox{\Hypertarget{geometry_8c_a45fd9d45b3f9e87fb7f6ee6cbb796048}\label{geometry_8c_a45fd9d45b3f9e87fb7f6ee6cbb796048}} 
+void {\bfseries emb\+Geometry\+\_\+set\+Color\+RGB} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$obj, unsigned int rgb)
+\item 
+\mbox{\Hypertarget{geometry_8c_aedc53b9c12b57e0d5d77676784bc84ee}\label{geometry_8c_aedc53b9c12b57e0d5d77676784bc84ee}} 
+void {\bfseries emb\+Geometry\+\_\+set\+Line\+Type} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$obj, int line\+Type)
+\item 
+\mbox{\Hypertarget{geometry_8c_af2c416da01a5500b12b1c551670ffa96}\label{geometry_8c_af2c416da01a5500b12b1c551670ffa96}} 
+void {\bfseries emb\+Geometry\+\_\+set\+Line\+Weight} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$obj, float line\+Weight)
+\item 
+\mbox{\Hypertarget{geometry_8c_a9f2181ff99d8f71a454ead592b748dbd}\label{geometry_8c_a9f2181ff99d8f71a454ead592b748dbd}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+base\+\_\+rubber\+\_\+point} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$obj, const char $\ast$key)
+\item 
+\mbox{\Hypertarget{geometry_8c_a15dc10936943d9e1b3e32cb51bd93447}\label{geometry_8c_a15dc10936943d9e1b3e32cb51bd93447}} 
+const char $\ast$ {\bfseries emb\+\_\+base\+\_\+rubber\+\_\+text} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$obj, const char $\ast$key)
+\item 
+\mbox{\Hypertarget{geometry_8c_a784d61df9d452eec480ad24e3c72d75d}\label{geometry_8c_a784d61df9d452eec480ad24e3c72d75d}} 
+void {\bfseries emb\+\_\+circle\+\_\+main} (void)
+\item 
+\mbox{\Hypertarget{geometry_8c_a14b8ccd74e7272966f1fd3f0c32f249e}\label{geometry_8c_a14b8ccd74e7272966f1fd3f0c32f249e}} 
+void {\bfseries emb\+\_\+circle\+\_\+set\+\_\+area} (\mbox{\hyperlink{embroidery_8h_a87fc13ccd4dbaa7de7c85efde17bba0e}{Emb\+Circle}} $\ast$circle, float area)
+\item 
+\mbox{\Hypertarget{geometry_8c_ad65e9258a260dd0bb2af64f01d0b0086}\label{geometry_8c_ad65e9258a260dd0bb2af64f01d0b0086}} 
+void {\bfseries emb\+\_\+ellipse\+\_\+main} (void)
+\item 
+\mbox{\Hypertarget{geometry_8c_ae5aca3dd4b1108020a9299dc25b59b6b}\label{geometry_8c_ae5aca3dd4b1108020a9299dc25b59b6b}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+Rect\+\_\+bottom\+Left} (\mbox{\hyperlink{embroidery_8h_ac2f33b151fc40a0da3b14379aa0ec653}{Emb\+Rect}} rect)
+\item 
+\mbox{\Hypertarget{geometry_8c_a8f5774773f9e760899f84cb8f831ded4}\label{geometry_8c_a8f5774773f9e760899f84cb8f831ded4}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+Rect\+\_\+bottom\+Right} (\mbox{\hyperlink{embroidery_8h_ac2f33b151fc40a0da3b14379aa0ec653}{Emb\+Rect}} rect)
+\item 
+\mbox{\Hypertarget{geometry_8c_a4f7302b510ce1fc4a78c22d1842008e1}\label{geometry_8c_a4f7302b510ce1fc4a78c22d1842008e1}} 
+\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} {\bfseries emb\+\_\+circle} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} x, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} y, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} radius)
+\item 
+\mbox{\Hypertarget{geometry_8c_a02d84117276c09a6d557ee1b64e6cf7f}\label{geometry_8c_a02d84117276c09a6d557ee1b64e6cf7f}} 
+int {\bfseries get\+Circle\+Circle\+Intersections} (\mbox{\hyperlink{embroidery_8h_a87fc13ccd4dbaa7de7c85efde17bba0e}{Emb\+Circle}} c0, \mbox{\hyperlink{embroidery_8h_a87fc13ccd4dbaa7de7c85efde17bba0e}{Emb\+Circle}} c1, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} $\ast$p0, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} $\ast$p1)
+\item 
+\mbox{\Hypertarget{geometry_8c_adda14071875745c5b1610ec895db46a0}\label{geometry_8c_adda14071875745c5b1610ec895db46a0}} 
+int {\bfseries get\+Circle\+Tangent\+Points} (\mbox{\hyperlink{embroidery_8h_a87fc13ccd4dbaa7de7c85efde17bba0e}{Emb\+Circle}} c, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} point, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} $\ast$t0, \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} $\ast$t1)
+\item 
+\mbox{\Hypertarget{geometry_8c_a1a26e31f7355597f907dc4ebef187f3d}\label{geometry_8c_a1a26e31f7355597f907dc4ebef187f3d}} 
+\mbox{\hyperlink{embroidery_8h_a4e48ebde5bd4d82b875f98b347bdd62c}{Emb\+Ellipse}} {\bfseries emb\+\_\+ellipse\+\_\+init} (void)
+\item 
+\mbox{\Hypertarget{geometry_8c_a1fa991565e30b09e0c1d3ffa52642832}\label{geometry_8c_a1fa991565e30b09e0c1d3ffa52642832}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries emb\+\_\+ellipse\+\_\+diameterX} (\mbox{\hyperlink{embroidery_8h_a4e48ebde5bd4d82b875f98b347bdd62c}{Emb\+Ellipse}} ellipse)
+\item 
+\mbox{\Hypertarget{geometry_8c_a12c41ae5adc6ae812129ff77e39ea224}\label{geometry_8c_a12c41ae5adc6ae812129ff77e39ea224}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries emb\+\_\+ellipse\+\_\+diameterY} (\mbox{\hyperlink{embroidery_8h_a4e48ebde5bd4d82b875f98b347bdd62c}{Emb\+Ellipse}} ellipse)
+\item 
+\mbox{\Hypertarget{geometry_8c_a6d9683a02f0fc2b8058eb709d67a114a}\label{geometry_8c_a6d9683a02f0fc2b8058eb709d67a114a}} 
+void {\bfseries emb\+\_\+ellipse\+\_\+set\+Size} (float width, float height)
+\item 
+\mbox{\Hypertarget{geometry_8c_abdd8bb46c68ebbc748db4d7408dde1b2}\label{geometry_8c_abdd8bb46c68ebbc748db4d7408dde1b2}} 
+int {\bfseries emb\+\_\+round} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} x)
+\item 
+\mbox{\Hypertarget{geometry_8c_a64370c5330c6b14e0632383a5f24d9b0}\label{geometry_8c_a64370c5330c6b14e0632383a5f24d9b0}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries radians} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} degree)
+\item 
+\mbox{\Hypertarget{geometry_8c_adcca277c330aa3d7c85b93894c16eb9a}\label{geometry_8c_adcca277c330aa3d7c85b93894c16eb9a}} 
+\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} {\bfseries degrees} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} radian)
+\item 
+\mbox{\Hypertarget{geometry_8c_ae83d78a8ea82f0117e7ad0ba0fe9be38}\label{geometry_8c_ae83d78a8ea82f0117e7ad0ba0fe9be38}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+line\+\_\+normal\+Vector} (\mbox{\hyperlink{embroidery_8h_a62e08237073617de993166ed4a9ab085}{Emb\+Line}} line, int clockwise)
+\item 
+\mbox{\Hypertarget{geometry_8c_abde44a257849ce75815799de0f9a58b9}\label{geometry_8c_abde44a257849ce75815799de0f9a58b9}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+line\+\_\+to\+Vector} (\mbox{\hyperlink{embroidery_8h_a62e08237073617de993166ed4a9ab085}{Emb\+Line}} line)
+\item 
+\mbox{\Hypertarget{geometry_8c_a01dbd77657e78be0522929c9719be33c}\label{geometry_8c_a01dbd77657e78be0522929c9719be33c}} 
+\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} {\bfseries emb\+\_\+line\+\_\+intersection\+Point} (\mbox{\hyperlink{embroidery_8h_a62e08237073617de993166ed4a9ab085}{Emb\+Line}} line1, \mbox{\hyperlink{embroidery_8h_a62e08237073617de993166ed4a9ab085}{Emb\+Line}} line2, int $\ast$emb\+\_\+error)
+\item 
+\mbox{\Hypertarget{geometry_8c_a9768b98763684c4b851f856281857004}\label{geometry_8c_a9768b98763684c4b851f856281857004}} 
+\mbox{\hyperlink{embroidery_8h_ac2f33b151fc40a0da3b14379aa0ec653}{Emb\+Rect}} {\bfseries emb\+\_\+rect} (\mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} x, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} y, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} w, \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} h)
+\item 
+\mbox{\Hypertarget{geometry_8c_a57587525f5dc4bc9b864443c501120de}\label{geometry_8c_a57587525f5dc4bc9b864443c501120de}} 
+void {\bfseries text\+Single\+\_\+set\+Justify} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g, const char $\ast$justify)
+\item 
+\mbox{\Hypertarget{geometry_8c_a62ad1fe6e30234b2cc2fc706e6251c93}\label{geometry_8c_a62ad1fe6e30234b2cc2fc706e6251c93}} 
+\mbox{\hyperlink{embroidery_8h_a0bf136de0d4aee27e616ffb618aef307}{Script\+Value}} {\bfseries emb\+\_\+gget} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g, int attribute)
+\item 
+\mbox{\Hypertarget{geometry_8c_a16df8b4c159918f1cd335790072bfa3c}\label{geometry_8c_a16df8b4c159918f1cd335790072bfa3c}} 
+int {\bfseries emb\+\_\+gset} (\mbox{\hyperlink{embroidery_8h_aca7cafe21cb651b77560fece69fb1984}{Emb\+Geometry}} $\ast$g, int attribute, \mbox{\hyperlink{embroidery_8h_a0bf136de0d4aee27e616ffb618aef307}{Script\+Value}} value)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int32\+\_\+t \mbox{\hyperlink{geometry_8c_a26fff707409ecfe999baea1c24492cde}{attribute\+\_\+get\+\_\+table}} \mbox{[}$\,$\mbox{]}
+\begin{DoxyCompactList}\small\item\em Attribute Validation for getting data. \end{DoxyCompactList}\item 
+int32\+\_\+t \mbox{\hyperlink{geometry_8c_a06b1c5d5fccdd263851f8732ef9b4141}{attribute\+\_\+set\+\_\+table}} \mbox{[}$\,$\mbox{]}
+\begin{DoxyCompactList}\small\item\em Attribute Validation for setting data. \end{DoxyCompactList}\item 
+int32\+\_\+t \mbox{\hyperlink{geometry_8c_a5e8f437429ed46e9dcb9aad2410688e7}{attribute\+\_\+types}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\Hypertarget{geometry_8c_a4904cc82627458fdf6672ccc0b2802c7}\label{geometry_8c_a4904cc82627458fdf6672ccc0b2802c7}} 
+double {\bfseries epsilon}
+\item 
+const char $\ast$ \mbox{\hyperlink{geometry_8c_ac207a5a987a885da375233529392de6e}{justify\+\_\+options}} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Libembroidery 1.\+0.\+0-\/alpha \href{https://www.libembroidery.org}{\texttt{ https\+://www.\+libembroidery.\+org}}
+
+A library for reading, writing, altering and otherwise processing machine embroidery files and designs.
+
+Also, the core library supporting the Embroidermodder Project\textquotesingle{}s family of machine embroidery interfaces.
+
+\DoxyHorRuler{0}
+
+
+Copyright 2018-\/2025 The Embroidermodder Team Licensed under the terms of the zlib license.
+
+\DoxyHorRuler{0}
+
+
+Only uses source from this directory or standard C libraries, not including POSIX headers like unistd since this library needs to support non-\/\+POSIX systems like Windows.
+
+\DoxyHorRuler{0}
+
+
+The Geometry System 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{geometry_8c_ab63994f171dcba441f5eff676492e053}\label{geometry_8c_ab63994f171dcba441f5eff676492e053}} 
+\index{geometry.c@{geometry.c}!emb\_vector\_cross@{emb\_vector\_cross}}
+\index{emb\_vector\_cross@{emb\_vector\_cross}!geometry.c@{geometry.c}}
+\doxysubsubsection{\texorpdfstring{emb\_vector\_cross()}{emb\_vector\_cross()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{embroidery_8h_a2082be9aabfb541dff1825c4ca6a05cd}{Emb\+Real}} emb\+\_\+vector\+\_\+cross (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}}}]{a,  }\item[{\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}}}]{b }\end{DoxyParamCaption})}
+
+
+
+The \char`\"{}cross product\char`\"{} as vectors a and b returned as a real value. 
+
+Technically, this is the magnitude of the cross product when the embroidery is placed in the z=0 plane (since the cross product is defined for 3-\/dimensional vectors). \mbox{\Hypertarget{geometry_8c_a54640b84a350c204803cd3ce61585481}\label{geometry_8c_a54640b84a350c204803cd3ce61585481}} 
+\index{geometry.c@{geometry.c}!emb\_vector\_transpose\_product@{emb\_vector\_transpose\_product}}
+\index{emb\_vector\_transpose\_product@{emb\_vector\_transpose\_product}!geometry.c@{geometry.c}}
+\doxysubsubsection{\texorpdfstring{emb\_vector\_transpose\_product()}{emb\_vector\_transpose\_product()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}} emb\+\_\+vector\+\_\+transpose\+\_\+product (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}}}]{v1,  }\item[{\mbox{\hyperlink{embroidery_8h_a16fa26764453571074cb85a7574738d4}{Emb\+Vector}}}]{v2 }\end{DoxyParamCaption})}
+
+Since we aren\textquotesingle{}t using full 3D vector algebra here, all vectors are \char`\"{}vertical\char`\"{}. so this is like the product v1$^\wedge$\{T\} I\+\_\+\{2\} v2 for our vectors a v1 and v2 so a \char`\"{}component-\/wise product\char`\"{}. The result is stored at the pointer a result. 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{geometry_8c_a26fff707409ecfe999baea1c24492cde}\label{geometry_8c_a26fff707409ecfe999baea1c24492cde}} 
+\index{geometry.c@{geometry.c}!attribute\_get\_table@{attribute\_get\_table}}
+\index{attribute\_get\_table@{attribute\_get\_table}!geometry.c@{geometry.c}}
+\doxysubsubsection{\texorpdfstring{attribute\_get\_table}{attribute\_get\_table}}
+{\footnotesize\ttfamily int32\+\_\+t attribute\+\_\+get\+\_\+table\mbox{[}$\,$\mbox{]}}
+
+
+
+Attribute Validation for getting data. 
+
+These tables use the bit within each number as the attribute axis and the the number position in the array as the geometric object axis.
+
+These numbers fit within int32\+\_\+t\+: you can test for a attribute being available for a geometric object by writing, for example\+: \begin{DoxyVerb}if (attribute_get_table[EMB_TEXT_SINGLE] & EMB_AREA) {
+    // Code that runs if text objects can have a known area.
+}
+\end{DoxyVerb}
+ \mbox{\Hypertarget{geometry_8c_a06b1c5d5fccdd263851f8732ef9b4141}\label{geometry_8c_a06b1c5d5fccdd263851f8732ef9b4141}} 
+\index{geometry.c@{geometry.c}!attribute\_set\_table@{attribute\_set\_table}}
+\index{attribute\_set\_table@{attribute\_set\_table}!geometry.c@{geometry.c}}
+\doxysubsubsection{\texorpdfstring{attribute\_set\_table}{attribute\_set\_table}}
+{\footnotesize\ttfamily int32\+\_\+t attribute\+\_\+set\+\_\+table\mbox{[}$\,$\mbox{]}}
+
+
+
+Attribute Validation for setting data. 
+
+These numbers fit within int32\+\_\+t\+: you can test for a attribute being user alterable by a geometric object by writing, for example\+: \begin{DoxyVerb}if (attribute_set_table[EMB_TEXT_SINGLE] & EMB_AREA) {
+    // Code that runs if text objects can have their area set.
+}
+\end{DoxyVerb}
+ \mbox{\Hypertarget{geometry_8c_a5e8f437429ed46e9dcb9aad2410688e7}\label{geometry_8c_a5e8f437429ed46e9dcb9aad2410688e7}} 
+\index{geometry.c@{geometry.c}!attribute\_types@{attribute\_types}}
+\index{attribute\_types@{attribute\_types}!geometry.c@{geometry.c}}
+\doxysubsubsection{\texorpdfstring{attribute\_types}{attribute\_types}}
+{\footnotesize\ttfamily int32\+\_\+t attribute\+\_\+types\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    EMB\_DATATYPE\_VECTOR, }
+\DoxyCodeLine{    EMB\_DATATYPE\_VECTOR, }
+\DoxyCodeLine{    EMB\_DATATYPE\_VECTOR, }
+\DoxyCodeLine{    EMB\_DATATYPE\_REAL, }
+\DoxyCodeLine{    EMB\_DATATYPE\_REAL, }
+\DoxyCodeLine{    EMB\_DATATYPE\_REAL, }
+\DoxyCodeLine{    EMB\_DATATYPE\_REAL, }
+\DoxyCodeLine{    EMB\_DATATYPE\_REAL, }
+\DoxyCodeLine{    EMB\_DATATYPE\_REAL, }
+\DoxyCodeLine{    EMB\_DATATYPE\_REAL, }
+\DoxyCodeLine{    EMB\_DATATYPE\_REAL, }
+\DoxyCodeLine{    EMB\_DATATYPE\_REAL, }
+\DoxyCodeLine{    EMB\_DATATYPE\_REAL, }
+\DoxyCodeLine{    EMB\_DATATYPE\_REAL, }
+\DoxyCodeLine{    EMB\_DATATYPE\_REAL, }
+\DoxyCodeLine{    EMB\_DATATYPE\_REAL, }
+\DoxyCodeLine{    EMB\_DATATYPE\_INT, }
+\DoxyCodeLine{    EMB\_DATATYPE\_INT, }
+\DoxyCodeLine{    EMB\_DATATYPE\_INT, }
+\DoxyCodeLine{    EMB\_DATATYPE\_INT }
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{geometry_8c_ac207a5a987a885da375233529392de6e}\label{geometry_8c_ac207a5a987a885da375233529392de6e}} 
+\index{geometry.c@{geometry.c}!justify\_options@{justify\_options}}
+\index{justify\_options@{justify\_options}!geometry.c@{geometry.c}}
+\doxysubsubsection{\texorpdfstring{justify\_options}{justify\_options}}
+{\footnotesize\ttfamily const char$\ast$ justify\+\_\+options\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Left"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Center"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Right"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Aligned"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Middle"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Fit"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Top Left"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Top Center"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Top Right"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Middle Left"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Middle Center"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Middle Right"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Bottom Left"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Bottom Center"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}Bottom Right"{}},}
+\DoxyCodeLine{    END\_SYMBOL}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

@@ -1,0 +1,736 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classembroidery_1_1text_1_1TextSingle" kind="class" language="Python" prot="public">
+    <compoundname>embroidery::text::TextSingle</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1TextSingle_1ab8154df61f089b73a0aac4c5bc8667de" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.TextSingle::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>embroidery.text.TextSingle.type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="362" column="1" bodyfile="python/embroidery/text.py" bodystart="362" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1TextSingle_1acc883f72a450afda05f1c554595910a6" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.TextSingle::selectable</definition>
+        <argsstring></argsstring>
+        <name>selectable</name>
+        <qualifiedname>embroidery.text.TextSingle.selectable</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="363" column="1" bodyfile="python/embroidery/text.py" bodystart="363" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1TextSingle_1aeb77a0ac62970994a55fa09d9a15c9f1" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.TextSingle::justify</definition>
+        <argsstring></argsstring>
+        <name>justify</name>
+        <qualifiedname>embroidery.text.TextSingle.justify</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="364" column="1" bodyfile="python/embroidery/text.py" bodystart="364" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1TextSingle_1adb41a81b330417d0d3908484bfdc1f96" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.TextSingle::text</definition>
+        <argsstring></argsstring>
+        <name>text</name>
+        <qualifiedname>embroidery.text.TextSingle.text</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="365" column="1" bodyfile="python/embroidery/text.py" bodystart="365" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1TextSingle_1a493a534f3ac0ad6bdfc865d42a997279" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.TextSingle::font</definition>
+        <argsstring></argsstring>
+        <name>font</name>
+        <qualifiedname>embroidery.text.TextSingle.font</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="366" column="1" bodyfile="python/embroidery/text.py" bodystart="366" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1TextSingle_1a4d91059ccdf8d8ca1d27414aa6675b4d" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.TextSingle::path</definition>
+        <argsstring></argsstring>
+        <name>path</name>
+        <qualifiedname>embroidery.text.TextSingle.path</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="367" column="1" bodyfile="python/embroidery/text.py" bodystart="367" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1TextSingle_1a95f746326181938551f71593b3d8e904" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.TextSingle::position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <qualifiedname>embroidery.text.TextSingle.position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="368" column="1" bodyfile="python/embroidery/text.py" bodystart="368" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1TextSingle_1a3ea35def9b936af4a939b439b6e10569" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.TextSingle::pen</definition>
+        <argsstring></argsstring>
+        <name>pen</name>
+        <qualifiedname>embroidery.text.TextSingle.pen</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="369" column="1" bodyfile="python/embroidery/text.py" bodystart="369" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1TextSingle_1a3a590e63afbaea8e10feb661ca3b6f12" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.TextSingle::rotation</definition>
+        <argsstring></argsstring>
+        <name>rotation</name>
+        <qualifiedname>embroidery.text.TextSingle.rotation</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="370" column="1" bodyfile="python/embroidery/text.py" bodystart="370" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1TextSingle_1a9440f2f5ba4e2e274f8053e91ca68dd4" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.TextSingle::size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <qualifiedname>embroidery.text.TextSingle.size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="371" column="1" bodyfile="python/embroidery/text.py" bodystart="371" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1TextSingle_1ae1e84c973016751dce195de63a8dd35a" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.TextSingle::justify_list</definition>
+        <argsstring></argsstring>
+        <name>justify_list</name>
+        <qualifiedname>embroidery.text.TextSingle.justify_list</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="373" column="1" bodyfile="python/embroidery/text.py" bodystart="373" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classembroidery_1_1text_1_1TextSingle_1a4a831fb47d5c2c37340f41c3301961a8" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>embroidery.text.TextSingle::rubber_mode</definition>
+        <argsstring></argsstring>
+        <name>rubber_mode</name>
+        <qualifiedname>embroidery.text.TextSingle.rubber_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="561" column="1" bodyfile="python/embroidery/text.py" bodystart="561" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1aab08a310c5027075b1d810ca3706f19c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.__init__</definition>
+        <argsstring>(self, x, y, text=&quot;Text Single&quot;, rgb=&quot;#FFFFFF&quot;, parent=0, line_type=&quot;solid&quot;, line_weight=0.35, size=16.0, font=&quot;Arial&quot;, justify=&quot;Left&quot;)</argsstring>
+        <name>__init__</name>
+        <qualifiedname>embroidery.text.TextSingle.__init__</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>x</type>
+          <defname>x</defname>
+        </param>
+        <param>
+          <type>y</type>
+          <defname>y</defname>
+        </param>
+        <param>
+          <type>text</type>
+          <defname>text</defname>
+          <defval>&quot;Text Single&quot;</defval>
+        </param>
+        <param>
+          <type>rgb</type>
+          <defname>rgb</defname>
+          <defval>&quot;#FFFFFF&quot;</defval>
+        </param>
+        <param>
+          <type>parent</type>
+          <defname>parent</defname>
+          <defval>0</defval>
+        </param>
+        <param>
+          <type>line_type</type>
+          <defname>line_type</defname>
+          <defval>&quot;solid&quot;</defval>
+        </param>
+        <param>
+          <type>line_weight</type>
+          <defname>line_weight</defname>
+          <defval>0.35</defval>
+        </param>
+        <param>
+          <type>size</type>
+          <defname>size</defname>
+          <defval>16.0</defval>
+        </param>
+        <param>
+          <type>font</type>
+          <defname>font</defname>
+          <defval>&quot;Arial&quot;</defval>
+        </param>
+        <param>
+          <type>justify</type>
+          <defname>justify</defname>
+          <defval>&quot;Left&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="357" column="1" bodyfile="python/embroidery/text.py" bodystart="359" bodyend="379"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1a9156e94a3fc53ff2fb1375ecb3153965" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.copy</definition>
+        <argsstring>(self, parent)</argsstring>
+        <name>copy</name>
+        <qualifiedname>embroidery.text.TextSingle.copy</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>parent</type>
+          <defname>parent</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="380" column="1" bodyfile="python/embroidery/text.py" bodystart="380" bodyend="393"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1a54178503e87f1dfe91b6730823e1a58b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.set_text</definition>
+        <argsstring>(self)</argsstring>
+        <name>set_text</name>
+        <qualifiedname>embroidery.text.TextSingle.set_text</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="394" column="1" bodyfile="python/embroidery/text.py" bodystart="394" bodyend="489"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1ad05bf8e8838a11eb20976a721cf12b77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.set_font</definition>
+        <argsstring>(self, font)</argsstring>
+        <name>set_font</name>
+        <qualifiedname>embroidery.text.TextSingle.set_font</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>font</type>
+          <defname>font</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="490" column="1" bodyfile="python/embroidery/text.py" bodystart="490" bodyend="494"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1a9061963567ade6c49e51dbd8d17f58b4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.set_object_text_justify</definition>
+        <argsstring>(self, justify)</argsstring>
+        <name>set_object_text_justify</name>
+        <qualifiedname>embroidery.text.TextSingle.set_object_text_justify</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>justify</type>
+          <defname>justify</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="495" column="1" bodyfile="python/embroidery/text.py" bodystart="495" bodyend="503"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1a5e9dfeaf9e2f854650784b7c6ca91983" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.set_object_text_size</definition>
+        <argsstring>(size)</argsstring>
+        <name>set_object_text_size</name>
+        <qualifiedname>embroidery.text.TextSingle.set_object_text_size</qualifiedname>
+        <param>
+          <type>size</type>
+          <defname>size</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="504" column="1" bodyfile="python/embroidery/text.py" bodystart="504" bodyend="508"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1a6c8cfbf73218e7f603e2ecf48e4a39fb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.set_object_textBold</definition>
+        <argsstring>(self, val)</argsstring>
+        <name>set_object_textBold</name>
+        <qualifiedname>embroidery.text.TextSingle.set_object_textBold</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>val</type>
+          <defname>val</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="509" column="1" bodyfile="python/embroidery/text.py" bodystart="509" bodyend="513"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1a637db5cc66431d08477b822ca7eef41b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.set_object_textItalic</definition>
+        <argsstring>(self, val)</argsstring>
+        <name>set_object_textItalic</name>
+        <qualifiedname>embroidery.text.TextSingle.set_object_textItalic</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>val</type>
+          <defname>val</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="514" column="1" bodyfile="python/embroidery/text.py" bodystart="514" bodyend="518"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1ad5a9cd58ce9c867a4ef711745069f2db" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.set_object_textUnderline</definition>
+        <argsstring>(self, val)</argsstring>
+        <name>set_object_textUnderline</name>
+        <qualifiedname>embroidery.text.TextSingle.set_object_textUnderline</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>val</type>
+          <defname>val</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="519" column="1" bodyfile="python/embroidery/text.py" bodystart="519" bodyend="523"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1ad03a3771ef3662bf369e5fe2803bd50c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.set_object_textStrikeOut</definition>
+        <argsstring>(self, val)</argsstring>
+        <name>set_object_textStrikeOut</name>
+        <qualifiedname>embroidery.text.TextSingle.set_object_textStrikeOut</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>val</type>
+          <defname>val</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="524" column="1" bodyfile="python/embroidery/text.py" bodystart="524" bodyend="528"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1ac2df9cb0e1116f5f061db43c8f84ce67" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.set_object_textOverline</definition>
+        <argsstring>(self, val)</argsstring>
+        <name>set_object_textOverline</name>
+        <qualifiedname>embroidery.text.TextSingle.set_object_textOverline</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>val</type>
+          <defname>val</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="529" column="1" bodyfile="python/embroidery/text.py" bodystart="529" bodyend="533"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1a694986b7efce656b67b0474de88cb35c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.set_object_text_backward</definition>
+        <argsstring>(self, val)</argsstring>
+        <name>set_object_text_backward</name>
+        <qualifiedname>embroidery.text.TextSingle.set_object_text_backward</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>val</type>
+          <defname>val</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="534" column="1" bodyfile="python/embroidery/text.py" bodystart="534" bodyend="538"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1a956a6cfa9eb3d822e50aa460442efe4a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.set_object_textUpsideDown</definition>
+        <argsstring>(self, val)</argsstring>
+        <name>set_object_textUpsideDown</name>
+        <qualifiedname>embroidery.text.TextSingle.set_object_textUpsideDown</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>val</type>
+          <defname>val</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="539" column="1" bodyfile="python/embroidery/text.py" bodystart="539" bodyend="543"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1a1f1de1b735a103d1d0aeef03c8e2719d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.paint</definition>
+        <argsstring>(self, painter, option, widget)</argsstring>
+        <name>paint</name>
+        <qualifiedname>embroidery.text.TextSingle.paint</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <param>
+          <type>option</type>
+          <defname>option</defname>
+        </param>
+        <param>
+          <type>widget</type>
+          <defname>widget</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="544" column="1" bodyfile="python/embroidery/text.py" bodystart="544" bodyend="559"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1af03d8a0c3285d47a72a7496258a66bc1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.update_rubber</definition>
+        <argsstring>(self, painter)</argsstring>
+        <name>update_rubber</name>
+        <qualifiedname>embroidery.text.TextSingle.update_rubber</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>painter</type>
+          <defname>painter</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="560" column="1" bodyfile="python/embroidery/text.py" bodystart="560" bodyend="578"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1ab4fb5942fa7ff3a8126ac7021f00b786" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.vulcanize</definition>
+        <argsstring>(self)</argsstring>
+        <name>vulcanize</name>
+        <qualifiedname>embroidery.text.TextSingle.vulcanize</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="579" column="1" bodyfile="python/embroidery/text.py" bodystart="579" bodyend="584"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1a1fd47b4ba9dd4af8d8f449bf5df80529" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.mouse_snap_point</definition>
+        <argsstring>(self, mouse_point)</argsstring>
+        <name>mouse_snap_point</name>
+        <qualifiedname>embroidery.text.TextSingle.mouse_snap_point</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>mouse_point</type>
+          <defname>mouse_point</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="585" column="1" bodyfile="python/embroidery/text.py" bodystart="585" bodyend="588"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1af8175075f8439257078bd2b7de98312c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.all_grip_points</definition>
+        <argsstring>(self)</argsstring>
+        <name>all_grip_points</name>
+        <qualifiedname>embroidery.text.TextSingle.all_grip_points</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="589" column="1" bodyfile="python/embroidery/text.py" bodystart="589" bodyend="592"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1a0547222f64a15f50b535b4ef4ce8dd3c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.grip_edit</definition>
+        <argsstring>(self, before, after)</argsstring>
+        <name>grip_edit</name>
+        <qualifiedname>embroidery.text.TextSingle.grip_edit</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <param>
+          <type>before</type>
+          <defname>before</defname>
+        </param>
+        <param>
+          <type>after</type>
+          <defname>after</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="593" column="1" bodyfile="python/embroidery/text.py" bodystart="593" bodyend="597"/>
+      </memberdef>
+      <memberdef kind="function" id="classembroidery_1_1text_1_1TextSingle_1ad5f964a56863516a79c36164d73450c3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def embroidery.text.TextSingle.sub_path_list</definition>
+        <argsstring>(self)</argsstring>
+        <name>sub_path_list</name>
+        <qualifiedname>embroidery.text.TextSingle.sub_path_list</qualifiedname>
+        <param>
+          <type>self</type>
+          <defname>self</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python/embroidery/text.py" line="598" column="1" bodyfile="python/embroidery/text.py" bodystart="598" bodyend="639"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><verbatim>def objectSavePathList() const  return subPathList()
+def subPathList() const
+
+objectPos()    const  return scenePos()
+  objectX()  const  return scenePos().x()
+  objectY()  const  return scenePos().y()
+
+QStringList objectTextJustifyList() const
+
+def set_object_text(self, str)
+def set_object_textFont(self, font)
+def set_object_text_justify(self, justify):
+    return
+
+def set_object_text_size(size):
+    return
+
+def set_object_textStyle(bold, italic, under, strike, over):
+    return
+
+def set_object_textBold(val):
+    return
+
+def set_object_textItalic(self, val):
+    return
+
+def set_object_textUnderline(self, val):
+    return
+
+def set_object_textStrikeOut(self, val):
+    return
+
+def set_object_textOverline(self, val):
+    return
+
+def set_object_textBackward(self, val):
+    return
+
+def set_object_textUpsideDown(self, val):
+    return
+def grip_edit(before, after)
+def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+</verbatim> </para>
+    </detaileddescription>
+    <location file="python/embroidery/text.py" line="312" column="1" bodyfile="python/embroidery/text.py" bodystart="312" bodyend="639"/>
+    <listofallmembers>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1aab08a310c5027075b1d810ca3706f19c" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>__init__</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1af8175075f8439257078bd2b7de98312c" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>all_grip_points</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a9156e94a3fc53ff2fb1375ecb3153965" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>copy</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a493a534f3ac0ad6bdfc865d42a997279" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>font</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a0547222f64a15f50b535b4ef4ce8dd3c" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>grip_edit</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1aeb77a0ac62970994a55fa09d9a15c9f1" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>justify</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1ae1e84c973016751dce195de63a8dd35a" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>justify_list</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a1fd47b4ba9dd4af8d8f449bf5df80529" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>mouse_snap_point</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a1f1de1b735a103d1d0aeef03c8e2719d" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>paint</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a4d91059ccdf8d8ca1d27414aa6675b4d" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>path</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a3ea35def9b936af4a939b439b6e10569" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>pen</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a95f746326181938551f71593b3d8e904" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>position</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a3a590e63afbaea8e10feb661ca3b6f12" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>rotation</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a4a831fb47d5c2c37340f41c3301961a8" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>rubber_mode</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1acc883f72a450afda05f1c554595910a6" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>selectable</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1ad05bf8e8838a11eb20976a721cf12b77" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>set_font</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a694986b7efce656b67b0474de88cb35c" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>set_object_text_backward</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a9061963567ade6c49e51dbd8d17f58b4" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>set_object_text_justify</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a5e9dfeaf9e2f854650784b7c6ca91983" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>set_object_text_size</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a6c8cfbf73218e7f603e2ecf48e4a39fb" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>set_object_textBold</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a637db5cc66431d08477b822ca7eef41b" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>set_object_textItalic</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1ac2df9cb0e1116f5f061db43c8f84ce67" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>set_object_textOverline</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1ad03a3771ef3662bf369e5fe2803bd50c" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>set_object_textStrikeOut</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1ad5a9cd58ce9c867a4ef711745069f2db" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>set_object_textUnderline</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a956a6cfa9eb3d822e50aa460442efe4a" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>set_object_textUpsideDown</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a54178503e87f1dfe91b6730823e1a58b" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>set_text</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1a9440f2f5ba4e2e274f8053e91ca68dd4" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>size</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1ad5f964a56863516a79c36164d73450c3" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>sub_path_list</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1adb41a81b330417d0d3908484bfdc1f96" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>text</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1ab8154df61f089b73a0aac4c5bc8667de" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>type</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1af03d8a0c3285d47a72a7496258a66bc1" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>update_rubber</name></member>
+      <member refid="classembroidery_1_1text_1_1TextSingle_1ab4fb5942fa7ff3a8126ac7021f00b786" prot="public" virt="non-virtual"><scope>embroidery::text::TextSingle</scope><name>vulcanize</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

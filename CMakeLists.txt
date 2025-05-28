@@ -5,9 +5,11 @@ project(libembroidery VERSION 1.0.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 90)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
+# When used as a dependency we advice you statically link your
+# project and in this case you may want to deactivate all of these options
+# in release builds (leave them on for debug mode).
 option( EMBROIDERY_BUILD_SHARED_LIBS "Build shared library." ON )
 option( EMBROIDERY_BUILD_CLI "Build embroider command line tool." ON )
-option( EMBROIDERY_TESTING "Run tests." ON )
 
 if (WIN32)
 #add_compile_options(
@@ -31,7 +33,6 @@ set(LIBRARY_SRC
 	src/formats.c
 	src/geometry.c
 	src/script.c
-	src/testing.c
 	src/data.c
 	src/designs.c
 	src/embroidery.h
@@ -43,21 +44,45 @@ set(LIBRARY_SRC
 add_library(embroidery_static STATIC ${LIBRARY_SRC})
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
-add_library(embroidery SHARED ${LIBRARY_SRC})
-
-target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
+    add_library(embroidery SHARED ${LIBRARY_SRC})
+    target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
 endif()
 
 if(EMBROIDERY_BUILD_CLI)
-add_executable(embroider src/embroider.c)
+    add_executable(embroider src/embroider.c)
 
-target_link_libraries(embroider PRIVATE embroidery_static)
+    # We link against the static version. If shared is disabled this
+    # still works.
+    target_link_libraries(embroider PRIVATE embroidery_static)
 
-if (WIN32)
-else (WIN32)
-target_link_libraries(embroider PRIVATE m)
-endif (WIN32)
+    if (WIN32)
+    else (WIN32)
+        target_link_libraries(embroider PRIVATE m)
+    endif (WIN32)
 endif()
+
+function(new_test NAME)
+    add_executable(test_${NAME} EXCLUDE_FROM_ALL test/${NAME}.c)
+
+    target_link_libraries(test_${NAME} PRIVATE embroidery_static)
+
+    if (WIN32)
+    else (WIN32)
+        target_link_libraries(test_${NAME} PRIVATE m)
+    endif (WIN32)
+
+    add_test(test_${NAME} test_${NAME})
+    add_dependencies(check test_${NAME})
+endfunction()
+
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+
+new_test(arc)
+new_test(circle_tangent)
+new_test(convert)
+new_test(fractal_generation)
+new_test(format_table)
+new_test(thread_color)
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
 if(WIN32)

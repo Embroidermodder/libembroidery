@@ -1145,8 +1145,6 @@ EMB_PUBLIC int convert(const char *inf, const char *outf);
 
 EMB_PUBLIC EmbVector emb_vector(EmbReal x, EmbReal y);
 
-EMB_PUBLIC int test_convert(int test_case, int from, int to);
-
 EMB_PUBLIC char read_n_bytes(FILE *file, unsigned char *data, unsigned int length);
 EMB_PUBLIC bool string_equal(char *a, const char *b);
 EMB_PUBLIC int parse_floats(const char *line, float result[], int n);
@@ -1382,8 +1380,6 @@ EMB_PUBLIC char *copy_trim(char const *s);
 EMB_PUBLIC char* emb_optOut(EmbReal num, char* str);
 EMB_PUBLIC void safe_free(void *data);
 
-EMB_PUBLIC int testMain(int);
-
 /* DIFAT functions */
 EMB_PUBLIC unsigned int entriesInDifatSector(bcf_file_difat* fat);
 EMB_PUBLIC bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
@@ -1396,22 +1392,6 @@ void bcf_file_difat_free(bcf_file_difat* difat);
 bcf_file_header bcfFileHeader_read(FILE* file);
 int bcfFileHeader_isValid(bcf_file_header header);
 void bcf_file_free(bcf_file* bcfFile);
-
-void
-printArcResults(
-    EmbReal bulge,
-    EmbArc arc,
-    EmbVector center,
-    EmbReal radius,
-    EmbReal diameter,
-    EmbReal chord,
-    EmbVector chordMid,
-    EmbReal sagitta,
-    EmbReal apothem,
-    EmbReal incAngle,
-    char clockwise);
-int testTangentPoints(EmbCircle c, EmbVector p, EmbVector *t0, EmbVector *t1);
-int create_test_file(int test_file, int format);
 
 double emb_stitch_length(EmbStitch prev_st, EmbStitch st);
 

@@ -1497,16 +1497,18 @@ emb_create_leaf(ScriptValue *branch, int type, char *label, char *data)
     int n = branch->n_leaves + 1;
     if (n >= branch->max_leaves) {
         branch->max_leaves += CHUNK_SIZE;
-        branch->leaves = (ScriptValue *)realloc(branch->leaves, branch->max_leaves * sizeof(ScriptValue));
+        size_t new_size = branch->max_leaves * sizeof(ScriptValue);
+        branch->leaves = (ScriptValue *)realloc(branch->leaves, new_size);
     }
     branch->n_leaves++;
-    branch->type = type;
+    branch->leaves[n].type = type;
     strcpy(branch->leaves[n].label, label);
     strcpy(branch->leaves[n].s, data);
     switch (type) {
     case EMB_DATATYPE_DICT:
     case EMB_DATATYPE_ARRAY: {
-        branch->leaves[n].leaves = (ScriptValue*)malloc(sizeof(ScriptValue) * CHUNK_SIZE);
+        size_t size = sizeof(ScriptValue) * CHUNK_SIZE;
+        branch->leaves[n].leaves = (ScriptValue*)malloc(size);
         branch->leaves[n].n_leaves = 0;
         branch->leaves[n].max_leaves = 10;
         break;
@@ -1517,7 +1519,7 @@ emb_create_leaf(ScriptValue *branch, int type, char *label, char *data)
         break;
     }
     case EMB_DATATYPE_REAL: {
-        branch->leaves[n].r = atoi(data);
+        branch->leaves[n].r = atof(data);
         branch->leaves[n].max_leaves = 0;
         break;
     }

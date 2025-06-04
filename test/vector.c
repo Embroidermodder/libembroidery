@@ -36,61 +36,10 @@ int test_vsubtract(EmbVector v1, EmbVector v2, EmbVector result,
 int test_ctangents(EmbGeometry c, EmbVector p, EmbVector s0, EmbVector s1,
     EmbReal tolerence);
 
-/* Currently just crash testing. */
 int
-test_convert(int test_case, int from, int to)
+main(void)
 {
-    EmbString fname_from;
-    EmbString fname_to;
-    sprintf(fname_from, "test%02d%s", test_case, formatTable[from].extension);
-    sprintf(fname_to, "test%02d_out%s", test_case, formatTable[to].extension);
-    printf("Converting test case %d: %s to %s.\n",
-        test_case, fname_from, fname_to);
-    if (create_test_file(test_case, from)) {
-        return 1;
-    }
-    convert(fname_from, fname_to);
     return 0;
-}
-
-int
-test_create_files(void)
-{
-    int i;
-    for (i=0; i<3; i++) {
-        int result = create_test_file(0, EMB_FORMAT_CSV);
-        if (result) {
-            return result;
-        }
-    }
-    return 0;
-}
-
-int
-test_convert_from_to(int from_, int to_)
-{
-    int i;
-    for (i=0; i<3; i++) {
-        int result = test_convert(i, from_, to_);
-        if (result) {
-            return result;
-        }
-    }
-    return 0;
-}
-
-/* . */
-int
-test_convert_csv_svg(void)
-{
-    return test_convert_from_to(EMB_FORMAT_CSV, EMB_FORMAT_SVG);
-}
-
-/* . */
-int
-test_convert_csv_dst(void)
-{
-    return test_convert_from_to(EMB_FORMAT_CSV, EMB_FORMAT_SVG);
 }
 
 int

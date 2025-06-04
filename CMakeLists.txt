@@ -77,12 +77,17 @@ endfunction()
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 
-new_test(arc)
-new_test(circle_tangent)
-new_test(convert)
-new_test(fractal_generation)
-new_test(format_table)
-new_test(thread_color)
+# Generate tests by removing the ".c" extension from the filenames in
+# "test/" then passing to "new_test".
+file(GLOB TEST_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/test "test/*")
+foreach(FILE ${TEST_FILES})
+	string(REPLACE ".c" "" TEST_NAME ${FILE})
+	message("-- Adding test ${TEST_NAME}.")
+	new_test("${TEST_NAME}")
+endforeach()
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/CTestTestfile.cmake"
+     DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 if(EMBROIDERY_BUILD_SHARED_LIBS)
 if(WIN32)

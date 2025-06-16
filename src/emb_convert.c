@@ -1,6 +1,6 @@
 /*!
- * \file embroider.c
- * \brief .
+ * \file emb_convert.c
+ * \brief Utility for converting between and rendering machine embroidery file formats.
  *
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
@@ -40,43 +40,23 @@
 #define FLAG_VERBOSE_SHORT             9
 #define FLAG_VERSION                  10
 #define FLAG_VERSION_SHORT            11
-#define FLAG_CIRCLE                   12
-#define FLAG_CIRCLE_SHORT             13
-#define FLAG_ELLIPSE                  14
-#define FLAG_ELLIPSE_SHORT            15
-#define FLAG_LINE                     16
-#define FLAG_LINE_SHORT               17
-#define FLAG_POLYGON                  18
-#define FLAG_POLYGON_SHORT            19
-#define FLAG_POLYLINE                 20
-#define FLAG_POLYLINE_SHORT           21
-#define FLAG_RENDER                   22
-#define FLAG_RENDER_SHORT             23
-#define FLAG_SATIN                    24
-#define FLAG_SATIN_SHORT              25
-#define FLAG_STITCH                   26
-#define FLAG_STITCH_SHORT             27
-#define FLAG_HILBERT_CURVE            28
-#define FLAG_SIERPINSKI_TRIANGLE      29
-#define FLAG_FILL                     30
-#define FLAG_FILL_SHORT               31
-#define FLAG_SIMULATE                 32
-#define FLAG_COMBINE                  33
-#define FLAG_CROSS_STITCH             34
-#define FLAG_POSTSCRIPT               35
-#define FLAG_REPORT                   36
-#define FLAG_REPORT_SHORT             37
-#define NUM_FLAGS                     38
+#define FLAG_RENDER                   12
+#define FLAG_RENDER_SHORT             13
+#define FLAG_SIMULATE                 14
+#define FLAG_COMBINE                  15
+#define FLAG_REPORT                   16
+#define FLAG_REPORT_SHORT             17
+#define NUM_FLAGS                     18
 
 const char *help_msg[] = {
-    "Usage: embroider [OPTIONS] fileToRead... ",
+    "Usage: emb_convert [OPTIONS] fileToRead... ",
     "",
     "Conversion:",
-    "    -t, --to        Convert all files given to the format specified",
-    "                    by the arguments to the flag, for example:",
+    "    -t, --to        Convert all files given to the format specified by the arguments to",
+    "                    the flag, for example:",
     "                        $ embroider -t dst input.pes",
-    "                    would convert \"input.pes\" to \"input.dst\"",
-    "                    in the same directory the program runs in.",
+    "                    would convert \"input.pes\" to \"input.dst\" in the same directory",
+    "                    the program runs in.",
     "",
     "                    The accepted input formats are (TO BE DETERMINED).",
     "                    The accepted output formats are (TO BE DETERMINED).",
@@ -86,7 +66,7 @@ const char *help_msg[] = {
     "",
     "Output:",
     "    -h, --help       Print this message.",
-    "    -F, --formats     Print help on the formats that embroider can deal with.",
+    "    -F, --formats    Print help on the formats that embroider can deal with.",
     "    -q, --quiet      Only print fatal errors.",
     "    -V, --verbose    Print everything that has reporting.",
     "    -v, --version    Print the version.",
@@ -96,22 +76,11 @@ const char *help_msg[] = {
     "                     two by placing them atop each other and",
     "                     outputs to the third",
     "                        $ embroider --combine a.dst b.dst output.dst",
-    "",
-    "Graphics:",
-    "    -c, --circle     Add a circle defined by the arguments given to the current pattern.",
-    "    -e, --ellipse    Add a circle defined by the arguments given to the current pattern.",
-    "    -l, --line       Add a line defined by the arguments given to the current pattern.",
-    "    -P, --polyline   Add a polyline.",
-    "    -p, --polygon    Add a polygon.",
-    "    -r, --render     Create an image in PNG format of what the embroidery should look like.",
-    "    -s, --satin      Fill the current geometry with satin stitches according",
-    "                     to the defined algorithm.",
-    "    -S, --stitch     Add a stitch defined by the arguments given to the current pattern.",
     "EOF"
 };
 
-const char *welcome_message = "EMBROIDER\n"
-    "    A command line program for machine embroidery.\n"
+const char *welcome_message = "emb_convert\n"
+    "    A command line program for converting between machine embroidery file formats.\n"
     "    Copyright 2018-2024 The Embroidermodder Team\n"
     "    Licensed under the terms of the zlib license.\n"
     "\n"
@@ -132,40 +101,20 @@ const EmbString flag_list[] = {
     "-V",
     "--version",
     "-v",
-    "--circle",
-    "-c",
-    "--ellipse",
-    "-e",
-    "--line",
-    "-l",
-    "--polyline",
-    "-P",
-    "--polygon",
-    "-p",
     "--render",
     "-r",
-    "--satin",
-    "-s",
-    "--stitch",
-    "-S",
-    "--hilbert-curve",
-    "--sierpinski-triangle",
-    "--fill",
-    "-f",
     "--simulate",
     "--combine",
-    "--cross-stitch",
-    "--ps",
-    "--render",
+    "--report",
     "-R"
 };
 
-/* TODO: Add capability for converting multiple files of various types to a
+/*! TODO: Add capability for converting multiple files of various types to a
  * single format.
  * Currently, we only convert a single file to multiple formats.
  */
 
-/* Construct from tables above somehow, like how getopt_long works,
+/*! Construct from tables above somehow, like how getopt_long works,
  * but we're avoiding that for compatibility
  * (C90, standard libraries only).
  */
@@ -179,7 +128,7 @@ usage(void)
     }
 }
 
-/* TODO: Add capability for converting multiple files of various types to a
+/*! TODO: Add capability for converting multiple files of various types to a
  * single format. Currently, we only convert a single file to multiple formats.
  */
 int
@@ -231,60 +180,6 @@ main(int argc, char *argv[])
             emb_verbose = 1;
             break;
         }
-        case FLAG_CIRCLE:
-        case FLAG_CIRCLE_SHORT: {
-            char script[200];
-            if (i + 3 >= argc) {
-                puts("Not enough arguments supplied to circle command: 3 required.");
-                i = argc - 1;
-                break;
-            }
-            sprintf(script, "%s %s %s circle", argv[i+1], argv[i+2], argv[i+3]);
-            emb_actuator(current_pattern, script, LANG_PS);
-            break;
-        }
-        case FLAG_ELLIPSE:
-        case FLAG_ELLIPSE_SHORT:
-            puts("This flag is not implemented.");
-            break;
-        case FLAG_LINE:
-        case FLAG_LINE_SHORT:
-            puts("This flag is not implemented.");
-            break;
-        case FLAG_POLYGON:
-        case FLAG_POLYGON_SHORT:
-            puts("This flag is not implemented.");
-            break;
-        case FLAG_POLYLINE:
-        case FLAG_POLYLINE_SHORT:
-            puts("This flag is not implemented.");
-            break;
-        case FLAG_SATIN:
-        case FLAG_SATIN_SHORT:
-            puts("This flag is not implemented.");
-            break;
-        case FLAG_STITCH:
-        case FLAG_STITCH_SHORT:
-            puts("This flag is not implemented.");
-            break;
-        case FLAG_SIERPINSKI_TRIANGLE:
-            puts("This flag is not implemented.");
-            break;
-        case FLAG_FILL:
-            if (i + 3 < argc) {
-                EmbImage image;
-                /* the user appears to have entered the needed arguments */
-                i++;
-                /* to stb command */
-                image = embImage_create(2000, 2000);
-                embImage_read(&image, argv[i]);
-                i++;
-                emb_pattern_horizontal_fill(current_pattern, &image, atoi(argv[i]));
-                embImage_free(&image);
-                i++;
-                emb_pattern_writeAuto(current_pattern, argv[i]);
-            }
-            break;
         case FLAG_RENDER:
         case FLAG_RENDER_SHORT: {
             if (i + 2 < argc) {
@@ -312,7 +207,7 @@ main(int argc, char *argv[])
             }
             break;
         }
-        case FLAG_SIMULATE:
+        case FLAG_SIMULATE: {
             if (i + 1 < argc) {
                 /* the user appears to have entered a filename after render */
                 i++;
@@ -332,7 +227,8 @@ main(int argc, char *argv[])
                 emb_pattern_simulate(current_pattern, "output.avi");
             }
             break;
-        case FLAG_COMBINE:
+        }
+        case FLAG_COMBINE: {
             if (i + 3 < argc) {
                 EmbPattern *out;
                 EmbPattern *p1 = emb_pattern_create();
@@ -349,39 +245,10 @@ main(int argc, char *argv[])
                 puts("--combine takes 3 arguments and you have supplied <3.");
             }
             break;
-        case FLAG_VERSION:
-        case FLAG_VERSION_SHORT:
-            puts(version_string);
-            break;
-        case FLAG_HILBERT_CURVE:
-            current_pattern = emb_pattern_create();
-            hilbert_curve(current_pattern, 3);
-            break;
-        case FLAG_CROSS_STITCH: {
-            if (i + 3 < argc) {
-                EmbImage image;
-                /* the user appears to have entered the needed arguments */
-                image = embImage_create(2000, 2000);
-                /* to stb command */
-                embImage_read(&image, argv[i]);
-                emb_pattern_crossstitch(current_pattern, &image, atoi(argv[i+1]));
-                embImage_free(&image);
-                emb_pattern_writeAuto(current_pattern, argv[i+2]);
-                i += 3;
-            }
-            break;
         }
-        case FLAG_POSTSCRIPT: {
-            EmbStack stack;
-            int j;
-            char command[200];
-            stack.position = 0;
-            command[0] = 0;
-            for (j=i+1; j<argc; j++) {
-                strcat(command, argv[j]);
-                strcat(command, " ");
-            }
-            execute_postscript(&stack, command);
+        case FLAG_VERSION:
+        case FLAG_VERSION_SHORT: {
+            puts(version_string);
             break;
         }
         case FLAG_REPORT:

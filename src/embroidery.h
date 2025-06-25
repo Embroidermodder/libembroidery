@@ -812,16 +812,38 @@ typedef struct ScriptValue_ {
     char type;
 } ScriptValue;
 
+typedef struct ScriptEnv_ ScriptEnv;
+typedef ScriptValue Command(ScriptEnv* context);
+
+typedef struct CommandData_ {
+    char command[1000];
+    char arguments[MAX_ARGS+1];
+    char icon[1000];
+    char tooltip[1000];
+    char statustip[1000];
+    char alias[1000];
+    char shortcut[1000];
+    int32_t flags;
+    void *action;
+} CommandData;
+
 /*! . */
-typedef struct ScriptEnv_ {
+struct ScriptEnv_ {
     ScriptValue argument[MAX_ARGS];
-    ScriptValue *variables;
+    ScriptValue *state;
+    CommandData *command_list;
+    ScriptValue script_true;
+    ScriptValue script_false;
+    ScriptValue script_null;
+    EmbString curcmd;
+    int n_commands;
+    int command_mem;
     int n_variables;
     int argumentCount;
     int context;
     int mode;
     unsigned char firstRun;
-} ScriptEnv;
+};
 
 /*! . */
 typedef struct Design_ {
@@ -1129,15 +1151,22 @@ typedef struct Compress {
 EMB_PUBLIC int lindenmayer_system(L_system L, char* state, int iteration, int complete);
 EMB_PUBLIC int hilbert_curve(EmbPattern *pattern, int iterations);
 
+EMB_PUBLIC ScriptEnv *create_script_env(void);
+EMB_PUBLIC ScriptEnv *pack(ScriptEnv *context, const char *fmt, ...);
+EMB_PUBLIC void script_add_command(ScriptEnv *context, CommandData *cmd);
+EMB_PUBLIC ScriptValue call(ScriptEnv *context, const char *function);
+EMB_PUBLIC int argument_checks(ScriptEnv *context, const char *function, const char *args);
+EMB_PUBLIC void free_script_env(ScriptEnv *env);
+
 /* Set or get geometric object's attributes. */
 EMB_PUBLIC int emb_gset(EmbGeometry *g, int attribute, ScriptValue value);
 EMB_PUBLIC ScriptValue emb_gget(EmbGeometry *g, int attribute);
 
-ScriptValue *emb_create_root(void);
-int emb_create_leaf(ScriptValue *branch, int type, char *label, char *data);
-void emb_free_root(ScriptValue *root);
-void emb_print_tree(ScriptValue *tree, int indent);
-ScriptValue *emb_find_leaf(ScriptValue *tree, char *key);
+EMB_PUBLIC ScriptValue *emb_create_root(void);
+EMB_PUBLIC int emb_create_leaf(ScriptValue *branch, int type, char *label, char *data);
+EMB_PUBLIC void emb_free_root(ScriptValue *root);
+EMB_PUBLIC void emb_print_tree(ScriptValue *tree, int indent);
+EMB_PUBLIC ScriptValue *emb_find_leaf(ScriptValue *tree, char *key);
 
 EMB_PUBLIC void to_flag(char **argv, int argc, int i);
 EMB_PUBLIC void formats(void);
@@ -1498,6 +1527,10 @@ extern const EmbThread pcm_colors[];
 extern const EmbThread pec_colors[];
 extern const EmbThread shv_colors[];
 extern const char imageWithFrame[38][48];
+
+extern const ScriptValue script_null;
+extern const ScriptValue script_true;
+extern const ScriptValue script_false;
 
 #endif
 

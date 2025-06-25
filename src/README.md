@@ -1,9 +1,3 @@
-@title embroider
-
-@node Top
-A tool for creating and altering machine embroidery files.
-
-@node test
 Libembroidery v1.0.0-alpha
 ==========================
 

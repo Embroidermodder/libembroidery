@@ -40,6 +40,16 @@ int process_stack_head(EmbStack *stack);
 
 static EmbPattern *focussed_pattern = NULL;
 
+const char *index_th_name[] = {
+    "first",
+    "second",
+    "third",
+    "fourth",
+    "fifth",
+    "sixth",
+    "seventh"
+};
+
 /*!
  * Internally, we use fixed-point arithmetic because it can be made more
  * consistent.
@@ -356,6 +366,47 @@ static char in_built_functions[][20] = {
     ""
 };
 
+/*! The default internal scripting of programs that use libembroidery is our
+ * internal scheme dialect that we will attempt to keep in line with R5RS.
+ * Ideally, the .arguments term would match the specification somehow so
+ * argument checking on ... TODO
+ */
+const CommandData builtins_data[] = {
+    {
+        .command="+",
+        .arguments="nn" /* Can work work with either number type, so we need
+                         * to allow different arguments to pass.
+                         */
+    }
+};
+
+const ScriptValue script_true = {
+    .r = 0.0F,
+    .i = 1,
+    .b = true,
+    .s = "",
+    .label = "true",
+    .type = SCRIPT_BOOL
+};
+
+const ScriptValue script_false = {
+    .r = 0.0F,
+    .i = 0,
+    .b = false,
+    .s = "",
+    .label = "false",
+    .type = SCRIPT_BOOL
+};
+
+const ScriptValue script_null = {
+    .r = 0.0F,
+    .i = 0,
+    .b = false,
+    .s = "",
+    .label = "false",
+    .type = SCRIPT_NULL
+};
+
 /* . */
 ScriptValue
 script_bool(unsigned char b)
@@ -404,6 +455,212 @@ script_vector(EmbVector v)
     value.type = SCRIPT_VECTOR;
     value.v = v;
     return value;
+}
+
+ScriptEnv *
+create_script_env(void)
+{
+    ScriptEnv *context = (ScriptEnv*)malloc(sizeof(ScriptEnv));
+    context->argumentCount = 0;
+    context->script_true = script_true;
+    context->script_false = script_false;
+    context->script_null = script_null;
+    context->state = emb_create_root();
+    context->n_commands = 0;
+    context->command_mem = 100;
+    context->command_list = (CommandData*)malloc(context->command_mem*sizeof(CommandData));
+    strncpy(context->curcmd, "null", MAX_STRING_LENGTH-1);
+    return context;
+}
+
+/* . */
+void
+free_script_env(ScriptEnv* context)
+{
+    free(context->command_list);
+    free(context);
+}
+
+/* . */
+void
+script_add_command(ScriptEnv *context, CommandData *cmd)
+{
+    if (context->n_commands > context->command_mem - 2) {
+        context->command_mem += 100;
+        context->command_list = (CommandData*)realloc(context->command_list,
+            context->command_mem*sizeof(CommandData));
+    }
+    memcpy(context->command_list + context->n_commands, cmd, sizeof(CommandData));
+    context->n_commands++;
+}
+
+/* Using stdarg we can pack arguments into the context using the above functions.
+ *
+ * https://pubs.opengroup.org/onlinepubs/009695399/basedefs/stdarg.h.html
+ */
+ScriptEnv *
+pack(ScriptEnv *context, const char *fmt, ...)
+{
+    va_list a;
+    int argno;
+    context->argumentCount = 0;
+    va_start(a, fmt);
+    for (argno = 0; fmt[argno]; argno++) {
+        switch (fmt[argno]) {
+        case 's': {
+            const char *s = va_arg(a, const char *);
+            strncpy(context->argument[context->argumentCount].s, s, MAX_STRING_LENGTH);
+            context->argument[context->argumentCount].type = SCRIPT_STRING;
+            break;
+        }
+        case 'i': {
+            int i = va_arg(a, int);
+            context->argument[context->argumentCount].i = i;
+            context->argument[context->argumentCount].type = SCRIPT_INT;
+            break;
+        }
+        case 'r': {
+            EmbReal r = va_arg(a, double);
+            context->argument[context->argumentCount].r = r;
+            context->argument[context->argumentCount].type = SCRIPT_REAL;
+            break;
+        }
+        default:
+            break;
+        }
+        context->argumentCount++;
+    }
+    va_end(a);
+    return context;
+}
+
+/* Using a similar approach to pack we can now create a caller that also packs
+ * the arguments.
+ */
+ScriptValue
+call(ScriptEnv *context, const char *cmd)
+{
+    int id = -1, i;
+    for (i=0; i<context->n_commands; i++) {
+        if (!strcmp(context->command_list[i].command, cmd)) {
+            id = i;
+            break;
+        }
+    }
+    if (id < 0) {
+        debug_message("ERROR: failed to find function %s", cmd);
+        return script_false;
+    }
+    if (!argument_checks(context, cmd, context->command_list[id].arguments)) {
+        debug_message("ERROR: Failed argument checks for %s.", cmd);
+        return script_false;
+    }
+    strncpy(context->curcmd, cmd, MAX_STRING_LENGTH-1);
+    Command *command = context->command_list[id].action;
+    return command(context);
+}
+
+/* TODO: remove args command, use the command_data table
+ */
+int
+argument_checks(ScriptEnv *context, const char *function, const char *args)
+{
+    char s[200];
+    int i;
+    if (context->argumentCount != strlen(args)) {
+        sprintf(s, "%s() requires %d arguments.", function, context->argumentCount);
+        puts(s);
+        return 0;
+    }
+    for (i=0; args[i]; i++) {
+        if (args[i] == 'r') {
+            if (context->argument[i].type != SCRIPT_REAL) {
+                sprintf(s,
+                    "TYPE_ERROR, %s(): %s argument is not a real number.",
+                    function, index_th_name[i]);
+                puts(s);
+                return 0;
+            }
+            float variable = context->argument[i].r;
+            if (isnan(variable)) {
+                sprintf(s,
+                    "TYPE_ERROR, %s(): %s argument is not a real number.",
+                    function, index_th_name[i]);
+                puts(s);
+                return 0;
+            }
+        }
+        if (args[i] == 'i') {
+            if (context->argument[i].type != SCRIPT_INT) {
+                sprintf(s,
+                    "TYPE_ERROR, %s(): %s argument is not an integer.",
+                    function, index_th_name[i]);
+                puts(s);
+                return 0;
+            }
+        }
+        if (args[i] == 'b') {
+            if (context->argument[i].type != SCRIPT_BOOL) {
+                sprintf(s,
+                    "TYPE_ERROR, %s(): %s argument is not a boolean.",
+                    function, index_th_name[i]);
+                puts(s);
+                return 0;
+            }
+        }
+        if (args[i] == 's') {
+            if (context->argument[i].type != SCRIPT_STRING) {
+                sprintf(s,
+                    "TYPE_ERROR, %s(): %s argument is not a string.",
+                    function, index_th_name[i]);
+                puts(s);
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+/*!  . */
+ScriptValue
+plus_command(ScriptEnv *context)
+{
+    return script_null;
+}
+
+/*!  . */
+ScriptValue
+minus_command(ScriptEnv *context)
+{
+    return script_null;
+}
+
+/*!  . */
+ScriptValue
+lambda_command(ScriptEnv *context)
+{
+    return script_null;
+}
+
+/*!  . */
+ScriptValue
+if_command(ScriptEnv *context)
+{
+    return script_null;
+}
+
+/*!  . */
+ScriptValue
+and_command(ScriptEnv *context)
+{
+    return script_null;
+}
+
+/*!  . */
+ScriptValue
+cond_command(ScriptEnv *context)
+{
+    return script_null;
 }
 
 /* .

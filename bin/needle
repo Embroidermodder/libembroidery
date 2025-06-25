@@ -38,6 +38,22 @@ function help_msg () {
 
 }
 
+function list_commands () {
+
+    cat << EOF
+--circle, -c
+--line, -l
+--generate
+--help
+--render
+--report, -R
+--simulate
+--test
+--todo
+EOF
+
+}
+
 function todo_msg () {
 
     cat <<EOF
@@ -75,6 +91,12 @@ EOF
 
 }
 
+function testing () {
+
+    echo "."
+
+}
+
 if [ $# -lt 1 ]; then
     basic_help_msg
     exit
@@ -108,6 +130,8 @@ while [ $# -gt 0 ]; do
         emb_convert $2 $3
         shift
         shift;;
+    --commands)
+        list_commands;;
     --render)
         emb_convert --render $2
         shift;;
@@ -118,6 +142,8 @@ while [ $# -gt 0 ]; do
         help_msg;;
     --todo)
         todo_msg;;
+    --test)
+        testing;;
     *)
         echo "ERROR: flag $1 not recognised, try --commands.";;
     esac

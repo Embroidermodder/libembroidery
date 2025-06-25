@@ -43,9 +43,13 @@ target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
 add_executable(emb_convert src/emb_convert.c)
 target_link_libraries(emb_convert PRIVATE embroidery_static)
 
+add_executable(emb_repl src/emb_repl.c)
+target_link_libraries(emb_repl PRIVATE embroidery_static)
+
 if (WIN32)
 else (WIN32)
     target_link_libraries(emb_convert PRIVATE m)
+    target_link_libraries(emb_repl PRIVATE m)
 endif (WIN32)
 
 function(new_test NAME)

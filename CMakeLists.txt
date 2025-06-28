@@ -28,7 +28,6 @@ set(LIBRARY_SRC
 	src/geometry.c
 	src/script.c
 	src/data.c
-	src/designs.c
 	src/embroidery.h
 
 	extern/mpc/mpc.c

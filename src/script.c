@@ -32,25 +32,6 @@ int process_stack_head(EmbStack *stack);
 
 static EmbPattern *focussed_pattern = NULL;
 
-ScriptValue
-script_real(EmbReal r)
-{
-    ScriptValue value;
-    value.r = r;
-    value.type = SCRIPT_REAL;
-    return value;
-}
-
-ScriptValue
-script_vector(EmbVector v)
-{
-    ScriptValue value;
-    value.v = v;
-    value.type = SCRIPT_VECTOR;
-    return value;
-}
-
-
 /* Tests if char * matches a fixed string, often from compiled-in program
  * data.
  */

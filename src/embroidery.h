@@ -157,14 +157,10 @@ extern "C" {
 #define EMB_VECTOR                    18
 #define EMB_THREAD                    19
 
-#define SCRIPT_NULL                    0
-#define SCRIPT_INT                     1
-#define SCRIPT_REAL                    2
-#define SCRIPT_COMMAND                 3
-#define SCRIPT_STRING                  4
-#define SCRIPT_BOOL                    5
-#define SCRIPT_TABLE                   6
-#define SCRIPT_VECTOR                  7
+#define EMB_NO_ERR                     0
+#define EMB_WRONG_TYPE_ERR             1
+#define EMB_DIV_ZERO_ERR               2
+#define EMB_UNFINISHED_ERR             3
 
 #define EMBFORMAT_UNSUPPORTED          0
 #define EMBFORMAT_STITCHONLY           1
@@ -370,16 +366,6 @@ extern "C" {
 #define EMB_BRAND_PEC                  5
 #define EMB_BRAND_SVG                  6
 
-/* ScriptValue types */
-#define EMB_DATATYPE_NULL              0
-#define EMB_DATATYPE_DICT              1
-#define EMB_DATATYPE_STR               2
-#define EMB_DATATYPE_ARRAY             3
-#define EMB_DATATYPE_INT               4
-#define EMB_DATATYPE_REAL              5
-#define EMB_DATATYPE_VECTOR            6
-#define EMB_DATATYPE_ROOT              7
-
 /* Justification */
 #define EMB_JUST_LEFT                  0
 #define EMB_JUST_CENTER                1
@@ -396,42 +382,6 @@ extern "C" {
 #define EMB_JUST_BOTLEFT              12
 #define EMB_JUST_BOTCENTER            13
 #define EMB_JUST_BOTRIGHT             14
-
-/* Attribute identifier. These numbers fit within int32_t: that is, there are
- * up to 31 flags we can set this way.
- *
- * WARNING: please do not rely on the specific ordering of these attributes,
- * they are subject to change.
- */
-#define EMB_START                   0x1
-#define EMB_MID                     0x2
-#define EMB_END                     0x4
-#define EMB_POSITION                0x8
-#define EMB_CENTER                 0x10
-#define EMB_WIDTH                  0x20
-#define EMB_HEIGHT                 0x40
-#define EMB_RADIUS                 0x80
-#define EMB_DIAMETER              0x100
-#define EMB_AREA                  0x200
-#define EMB_PERIMETER             0x400
-#define EMB_CIRCUMFERENCE         0x800
-#define EMB_BOLD                 0x1000
-#define EMB_ITALIC               0x2000
-#define EMB_UPSIDEDOWN           0x4000
-#define EMB_BACKWARDS            0x8000
-#define EMB_STRIKEOUT           0x10000
-#define EMB_UNDERLINE           0x20000
-#define EMB_OVERLINE            0x40000
-#define EMB_BULGE               0x80000
-#define EMB_SAGITTA            0x100000
-#define EMB_SIZE               0x200000
-#define EMB_FONT               0x400000
-#define EMB_CHORDMID           0x800000
-#define EMB_INCANGLE          0x1000000
-#define EMB_APOTHEM           0x2000000
-#define EMB_CHORDANGLE        0x4000000
-#define EMB_CHORD             0x8000000
-#define EMB_CLOCKWISE        0x10000000
 
 /* UTILITY MACROS
  * --------------
@@ -717,14 +667,6 @@ typedef struct EmbSpline_ {
 } EmbSpline;
 
 /*! . */
-typedef struct LSYSTEM {
-    char axiom;
-    char *alphabet;
-    char *constants;
-    char **rules;
-} L_system;
-
-/*! . */
 typedef struct EmbGeometry_ {
     union {
         EmbArc arc;
@@ -799,53 +741,6 @@ typedef struct EmbLayer_
 } EmbLayer;
 
 /*! . */
-typedef struct ScriptValue_ {
-    EmbReal r;
-    int i;
-    unsigned char b;
-    EmbVector v;
-    EmbString s;
-    EmbString label;
-    struct ScriptValue_* leaves;
-    int n_leaves;
-    int max_leaves;
-    char type;
-} ScriptValue;
-
-typedef struct ScriptEnv_ ScriptEnv;
-typedef ScriptValue Command(ScriptEnv* context);
-
-typedef struct CommandData_ {
-    char command[1000];
-    char arguments[MAX_ARGS+1];
-    char icon[1000];
-    char tooltip[1000];
-    char statustip[1000];
-    char alias[1000];
-    char shortcut[1000];
-    int32_t flags;
-    void *action;
-} CommandData;
-
-/*! . */
-struct ScriptEnv_ {
-    ScriptValue argument[MAX_ARGS];
-    ScriptValue *state;
-    CommandData *command_list;
-    ScriptValue script_true;
-    ScriptValue script_false;
-    ScriptValue script_null;
-    EmbString curcmd;
-    int n_commands;
-    int command_mem;
-    int n_variables;
-    int argumentCount;
-    int context;
-    int mode;
-    unsigned char firstRun;
-};
-
-/*! . */
 typedef struct Design_ {
     char *command;
     float lower;
@@ -878,7 +773,6 @@ typedef struct EmbPattern_
     EmbArray *geometry;
     EmbLayer layer[EMB_MAX_LAYERS];
     int currentColorIndex;
-    ScriptValue variable[MAX_PATTERN_VARIABLES];
 
     EmbString design_name;
     EmbString category;
@@ -1148,26 +1042,6 @@ typedef struct Compress {
 
 /* Function Declarations
  *****************************************************************************/
-EMB_PUBLIC int lindenmayer_system(L_system L, char* state, int iteration, int complete);
-EMB_PUBLIC int hilbert_curve(EmbPattern *pattern, int iterations);
-
-EMB_PUBLIC ScriptEnv *create_script_env(void);
-EMB_PUBLIC ScriptEnv *pack(ScriptEnv *context, const char *fmt, ...);
-EMB_PUBLIC void script_add_command(ScriptEnv *context, CommandData *cmd);
-EMB_PUBLIC ScriptValue call(ScriptEnv *context, const char *function);
-EMB_PUBLIC int argument_checks(ScriptEnv *context, const char *function, const char *args);
-EMB_PUBLIC void free_script_env(ScriptEnv *env);
-
-/* Set or get geometric object's attributes. */
-EMB_PUBLIC int emb_gset(EmbGeometry *g, int attribute, ScriptValue value);
-EMB_PUBLIC ScriptValue emb_gget(EmbGeometry *g, int attribute);
-
-EMB_PUBLIC ScriptValue *emb_create_root(void);
-EMB_PUBLIC int emb_create_leaf(ScriptValue *branch, int type, char *label, char *data);
-EMB_PUBLIC void emb_free_root(ScriptValue *root);
-EMB_PUBLIC void emb_print_tree(ScriptValue *tree, int indent);
-EMB_PUBLIC ScriptValue *emb_find_leaf(ScriptValue *tree, char *key);
-
 EMB_PUBLIC void to_flag(char **argv, int argc, int i);
 EMB_PUBLIC void formats(void);
 EMB_PUBLIC int emb_identify_format(const char *ending);
@@ -1360,39 +1234,46 @@ EMB_PUBLIC int emb_approx(EmbVector point1, EmbVector point2);
 
 EMB_PUBLIC EmbVector scale_and_rotate(EmbVector v, double angle, double scale);
 
-EMB_PUBLIC double emb_width(EmbGeometry *geometry);
-EMB_PUBLIC double emb_height(EmbGeometry *geometry);
-EMB_PUBLIC double emb_radius(EmbGeometry *geometry);
-EMB_PUBLIC double emb_radius_major(EmbGeometry *geometry);
-EMB_PUBLIC double emb_radius_minor(EmbGeometry *geometry);
-EMB_PUBLIC double emb_diameter(EmbGeometry *geometry);
-EMB_PUBLIC double emb_diameter_major(EmbGeometry *geometry);
-EMB_PUBLIC double emb_diameter_minor(EmbGeometry *geometry);
-EMB_PUBLIC EmbVector emb_quadrant(EmbGeometry *geometry, int degrees);
-EMB_PUBLIC double emb_angle(EmbGeometry *geometry);
-EMB_PUBLIC double emb_start_angle(EmbGeometry *geometry);
-EMB_PUBLIC double emb_end_angle(EmbGeometry *geometry);
-EMB_PUBLIC double emb_arc_length(EmbGeometry *geometry);
-EMB_PUBLIC double emb_area(EmbGeometry *geometry);
-EMB_PUBLIC double emb_chord(EmbGeometry *geometry);
-EMB_PUBLIC double emb_included_angle(EmbGeometry *geometry);
-EMB_PUBLIC char emb_clockwise(EmbGeometry *geometry);
-EMB_PUBLIC double emb_circumference(EmbGeometry *geometry);
-EMB_PUBLIC double emb_included_angle(EmbGeometry *geometry);
+/* Get attributes */
+EMB_PUBLIC EmbReal emb_angle(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_arc_length(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_area(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbVector emb_center(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbVector emb_chord(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_chord_length(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_diameter(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_diameter_major(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_diameter_minor(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbVector emb_end(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_height(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_radius(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_radius_major(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_radius_minor(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_sagitta(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbVector emb_start(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_width(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbVector emb_quadrant(EmbGeometry *geometry, int degrees, int *error);
+EMB_PUBLIC EmbReal emb_start_angle(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_end_angle(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_included_angle(EmbGeometry *geometry, int *error);
+EMB_PUBLIC char emb_clockwise(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_circumference(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_included_angle(EmbGeometry *geometry, int *error);
 
-EMB_PUBLIC void emb_set_start_angle(EmbGeometry *geometry, double angle);
-EMB_PUBLIC void emb_set_end_angle(EmbGeometry *geometry, double angle);
-EMB_PUBLIC void emb_set_start_point(EmbGeometry *geometry, EmbVector point);
-EMB_PUBLIC void emb_set_mid_point(EmbGeometry *geometry, EmbVector point);
-EMB_PUBLIC void emb_set_end_point(EmbGeometry *geometry, EmbVector point);
-EMB_PUBLIC void emb_set_diameter(EmbGeometry *geometry, double diameter);
-EMB_PUBLIC void emb_set_area(EmbGeometry *geometry, double area);
-EMB_PUBLIC void emb_set_circumference(EmbGeometry *geometry, double circumference);
-EMB_PUBLIC void emb_set_radius(EmbGeometry *geometry, double radius);
-EMB_PUBLIC void emb_set_radius_major(EmbGeometry *geometry, double radius);
-EMB_PUBLIC void emb_set_radius_minor(EmbGeometry *geometry, double radius);
-EMB_PUBLIC void emb_set_diameter_major(EmbGeometry *geometry, double diameter);
-EMB_PUBLIC void emb_set_diameter_minor(EmbGeometry *geometry, double diameter);
+/* Set attributes */
+EMB_PUBLIC int emb_set_area(EmbGeometry *geometry, EmbReal area);
+EMB_PUBLIC int emb_set_start_angle(EmbGeometry *geometry, EmbReal angle);
+EMB_PUBLIC int emb_set_end_angle(EmbGeometry *geometry, EmbReal angle);
+EMB_PUBLIC int emb_set_start_point(EmbGeometry *geometry, EmbVector point);
+EMB_PUBLIC int emb_set_mid_point(EmbGeometry *geometry, EmbVector point);
+EMB_PUBLIC int emb_set_end_point(EmbGeometry *geometry, EmbVector point);
+EMB_PUBLIC int emb_set_diameter(EmbGeometry *geometry, EmbReal diameter);
+EMB_PUBLIC int emb_set_circumference(EmbGeometry *geometry, EmbReal circumference);
+EMB_PUBLIC int emb_set_radius(EmbGeometry *geometry, EmbReal radius);
+EMB_PUBLIC int emb_set_radius_major(EmbGeometry *geometry, EmbReal radius);
+EMB_PUBLIC int emb_set_radius_minor(EmbGeometry *geometry, EmbReal radius);
+EMB_PUBLIC int emb_set_diameter_major(EmbGeometry *geometry, EmbReal diameter);
+EMB_PUBLIC int emb_set_diameter_minor(EmbGeometry *geometry, EmbReal diameter);
 
 EMB_PUBLIC char *emb_get_svg_token(char *svg, char token[MAX_STRING_LENGTH]);
 EMB_PUBLIC char *emb_get_svg_vector(char *svg, EmbVector *v);
@@ -1426,12 +1307,6 @@ void bcf_file_free(bcf_file* bcfFile);
 double emb_stitch_length(EmbStitch prev_st, EmbStitch st);
 
 int emb_readline(FILE* file, char *line, int maxLength);
-
-ScriptValue script_bool(unsigned char b);
-ScriptValue script_int(int i);
-ScriptValue script_real(EmbReal r);
-ScriptValue script_string(char *s);
-ScriptValue script_vector(EmbVector v);
 
 int16_t emb_read_i16(FILE* f);
 uint16_t emb_read_u16(FILE* f);
@@ -1527,10 +1402,6 @@ extern const EmbThread pcm_colors[];
 extern const EmbThread pec_colors[];
 extern const EmbThread shv_colors[];
 extern const char imageWithFrame[38][48];
-
-extern const ScriptValue script_null;
-extern const ScriptValue script_true;
-extern const ScriptValue script_false;
 
 #endif
 

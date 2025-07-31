@@ -8,52 +8,24 @@
 #include "../src/embroidery.h"
 
 void emb_vector_print(EmbVector v, char *label);
-void emb_arc_print(EmbArc a);
-
-int test_convert_from_to(int from_, int to_);
-
-int test_convert_csv_svg(void);
-int test_convert_csv_dst(void);
-int test_create_files(void);
-int test_fractal_generation(void);
-int test_arc_properties(void);
-
-/*
- * Format: the first token is the function call, the next n tokens are the
- * number required by that function then the remaining tokens are the expected
- * output up to some stated tolerence.
- */
-const char *tests[] = {
-    "ctangent 0.001 0.0 0.0 3.0 4.0 0.0 2.25 1.9843 2.25 -1.9843",
-    "extension example.zsk .zsk",
-    "description example.zsk \"ZSK USA Embroidery Format\"",
-    "reader example.zsk U"
-};
 
 int test_vadd(EmbVector v1, EmbVector v2, EmbVector result, EmbReal tolerence);
 int test_vsubtract(EmbVector v1, EmbVector v2, EmbVector result,
-    EmbReal tolerence);
-int test_ctangents(EmbGeometry c, EmbVector p, EmbVector s0, EmbVector s1,
     EmbReal tolerence);
 
 int
 main(void)
 {
-    return 0;
-}
+    float epsilon = 0.0000000001;
+    EmbVector v1 = emb_vector(1.6, 3.21);
+    EmbVector v2 = emb_vector(1.64, 3.11);
+    EmbVector result_add = emb_vector(3.24, 6.32);
 
-int
-test_fractal_generation(void)
-{
-    EmbPattern *pattern = emb_pattern_create();
-    int hilbertCurveResult = hilbert_curve(pattern, 3);
-    int renderResult = emb_pattern_render(pattern, "hilbert_level_3.png");
-    int simulateResult = emb_pattern_simulate(pattern, "hilbert_level_3.avi");
-    printf("hilbert curve result: %d\n", hilbertCurveResult);
-    printf("render result: %d\n", renderResult);
-    printf("simulate result: %d\n", simulateResult);
-    emb_pattern_free(pattern);
-    return hilbertCurveResult;
+    if (!test_vadd(v1, v2, result_add, epsilon)) {
+        return 1;
+    }
+
+    return 0;
 }
 
 /* . */
@@ -93,43 +65,3 @@ test_vsubtract(EmbVector v1, EmbVector v2, EmbVector result, EmbReal tolerence)
     }
     return 0;
 }
-
-/* . */
-void
-printArcResults(
-    EmbReal bulge,
-    EmbArc arc,
-    EmbVector center,
-    EmbReal radius,
-    EmbReal diameter,
-    EmbReal chord,
-    EmbVector chordMid,
-    EmbReal sagitta,
-    EmbReal apothem,
-    EmbReal incAngle,
-    char clockwise)
-{
-    printf("test_arc:");
-    emb_arc_print(arc);
-    emb_vector_print(center, "center");
-    emb_vector_print(chordMid, "chordMid");
-    printf(
-        "bulge     = %f\n"
-        "radius    = %f\n"
-        "diameter  = %f\n"
-        "chord     = %f\n"
-        "sagitta   = %f\n"
-        "apothem   = %f\n"
-        "incAngle  = %f\n"
-        "clockwise = %d\n"
-        "\n",
-        bulge,
-        radius,
-        diameter,
-        chord,
-        sagitta,
-        apothem,
-        incAngle,
-        clockwise);
-}
-

@@ -1,5 +1,5 @@
 /*
- * Testing
+ * Testing if all arc attributes can be created without error.
  */
 
 #include <string.h>
@@ -7,90 +7,81 @@
 
 #include "../src/embroidery.h"
 
-void
-printArcResults(
-    EmbReal bulge,
-    EmbArc arc,
-    EmbVector center,
-    EmbReal radius,
-    EmbReal diameter,
-    EmbReal chord,
-    EmbVector chordMid,
-    EmbReal sagitta,
-    EmbReal apothem,
-    EmbReal incAngle,
-    char clockwise);
+int arc_attributes(EmbGeometry arc);
 
 void emb_vector_print(EmbVector v, char *label);
 void emb_arc_print(EmbArc a);
 
-/* TODO: */
+/* TODO: a clockwise and a anti-clockwise test. */
 int
 main(void)
 {
-    return 0;
     EmbGeometry g = emb_arc(1.0, 0.0, 0.0, 0.0, 2.0, 1.0);
-    EmbVector center, chordMid;
-    EmbReal bulge, radius, diameter, chord, sagitta, apothem, incAngle;
-    unsigned char clockwise;
+    if (arc_attributes(g)) {
+        return 1;
+    }
 
-    bulge = -0.414213562373095f;
-    center = emb_gget(&g, EMB_CENTER).v;
-    chord = emb_gget(&g, EMB_CHORD).r;
-    radius = emb_gget(&g, EMB_RADIUS).r;
-    diameter = emb_gget(&g, EMB_DIAMETER).r;
-    chordMid = emb_gget(&g, EMB_CHORDMID).v;
-    sagitta = emb_gget(&g, EMB_SAGITTA).r;
-    apothem = emb_gget(&g, EMB_APOTHEM).r;
-    incAngle = emb_gget(&g, EMB_INCANGLE).r;
-    clockwise = emb_gget(&g, EMB_CLOCKWISE).b;
-    /* bulge = emb_arc_bulge(g); */
-    printf("Clockwise Test:\n");
-    printArcResults(bulge, g.object.arc, center,
-                radius, diameter,
-                chord, chordMid,
-                sagitta,   apothem,
-                incAngle,  clockwise);
-
-    bulge  = 2.414213562373095f;
-    /* FIXME: midpoints */
     g = emb_arc(4.0, 0.0, 0.0, 0.0, 5.0, 1.0);
-    center = emb_gget(&g, EMB_CENTER).v;
-    chord = emb_gget(&g, EMB_CHORD).r;
-    radius = emb_gget(&g, EMB_RADIUS).r;
-    diameter = emb_gget(&g, EMB_DIAMETER).r;
-    chordMid = emb_gget(&g, EMB_CHORDMID).v;
-    sagitta = emb_gget(&g, EMB_SAGITTA).r;
-    apothem = emb_gget(&g, EMB_APOTHEM).r;
-    incAngle = emb_gget(&g, EMB_INCANGLE).r;
-    clockwise = emb_gget(&g, EMB_CLOCKWISE).b;
-    /* bulge = emb_arc_bulge(g); */
-    printf("Counter-Clockwise Test:\n");
-    printArcResults(bulge, g.object.arc, center,
-                radius, diameter, chord,
-                chordMid, sagitta,   apothem,
-                incAngle, clockwise);
+    if (arc_attributes(g)) {
+        return 1;
+    }
 
     return 0;
 }
 
 /* . */
-void
-printArcResults(
-    EmbReal bulge,
-    EmbArc arc,
-    EmbVector center,
-    EmbReal radius,
-    EmbReal diameter,
-    EmbReal chord,
-    EmbVector chordMid,
-    EmbReal sagitta,
-    EmbReal apothem,
-    EmbReal incAngle,
-    char clockwise)
+int
+arc_attributes(EmbGeometry g)
 {
+    EmbVector center, chordMid;
+    EmbReal bulge, radius, diameter, chord, sagitta, apothem, incAngle;
+    unsigned char clockwise;
+    int error = EMB_NO_ERR;
+    bulge = -0.414213562373095f;
+    /* bulge = emb_arc_bulge(g); */
+    center = emb_center(&g, &error);
+    if (error) {
+        return 1;
+    }
+    chord = emb_vector_length(emb_chord(&g, &error));
+    if (error) {
+        return 1;
+    }
+    radius = emb_radius(&g, &error);
+    if (error) {
+        return 1;
+    }
+    diameter = emb_diameter(&g, &error);
+    if (error) {
+        return 1;
+    }
+/* FIXME:
+    chordMid = emb_chord_mid(&g, &error);
+    if (error) {
+        return 1;
+    }
+*/
+    sagitta = emb_sagitta(&g, &error);
+    if (error) {
+        return 1;
+    }
+/* FIXME:
+    apothem = emb_apothem(&g, &error);
+    if (error) {
+        return 1;
+    }
+    incAngle = emb_inc_angle(&g, &error);
+    if (error) {
+        return 1;
+    }
+*/
+    clockwise = emb_clockwise(&g, &error);
+    if (error) {
+        return 1;
+    }
+
     printf("test_arc:");
-    emb_arc_print(arc);
+// FIXME:    emb_arc_print(g);
     emb_vector_print(center, "center");
     emb_vector_print(chordMid, "chordMid");
     printf(
@@ -112,4 +103,3 @@ printArcResults(
         incAngle,
         clockwise);
 }
-

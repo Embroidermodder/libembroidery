@@ -27,9 +27,6 @@
 
 #include "embroidery.h"
 
-void embPattern_addArc(EmbPattern *pattern, EmbArc arc);
-int process_stack_head(EmbStack *stack);
-
 static EmbPattern *focussed_pattern = NULL;
 
 /* Tests if char * matches a fixed string, often from compiled-in program

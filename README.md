@@ -1,6 +1,6 @@
 # Libembroidery v1.0-alpha
 
-Copyright (c) 2013-2024 The EmbroiderModder Team
+Copyright (c) 2018-2025 The Embroidermodder Team and Josh Varga
 
 https://www.libembroidery.org
 
@@ -40,16 +40,6 @@ libembroidery.
 
 Libembroidery is distributed under the permissive zlib licence, see the
 [LICENCE](./LICENCE.md) file.
-
-## Demos
-
-We're currently trying out some fill techniques which will be demonstrated here and in the script `qa_test.sh`.
-
-![images/logo-spirals.png](images/logo-spirals.png)
-
-Converts to:
-
-![images/logo_spirals_cross_stitch.png](images/logo_spirals_cross_stitch.png)
 
 ### Build
 

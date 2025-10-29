@@ -1,6 +1,4 @@
-/*! \file compress.c
- * \brief Compression algorithms used in machine embroidery file formats.
- *
+/*
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *
@@ -16,6 +14,8 @@
  * Licensed under the terms of the zlib license.
  *
  * -----------------------------------------------------------------------------
+ *
+ * Compression algorithms used in machine embroidery file formats.
  *
  * Only uses source from this directory or standard C libraries,
  * not including POSIX headers like unistd since this library

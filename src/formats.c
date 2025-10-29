@@ -1,7 +1,4 @@
-/*!
- * \file formats.c
- * \brief .
- *
+/*
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *
@@ -19,7 +16,6 @@
  * -----------------------------------------------------------------------------
  *
  * Formats
- *
  */
 
 #include <stdio.h>

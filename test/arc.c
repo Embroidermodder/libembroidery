@@ -36,7 +36,7 @@ arc_attributes(EmbGeometry g)
     EmbVector center, chordMid;
     EmbReal bulge, radius, diameter, chord, sagitta, apothem, incAngle;
     unsigned char clockwise;
-    int error = EMB_NO_ERR;
+    EmbError error = EMB_NO_ERR;
     bulge = -0.414213562373095f;
     /* bulge = emb_arc_bulge(g); */
     center = emb_center(&g, &error);

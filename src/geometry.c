@@ -1,7 +1,4 @@
-/*!
- * \file geometry.c
- * \brief .
- *
+/*
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *
@@ -54,7 +51,14 @@ const char *justify_options[] = {
     END_SYMBOL
 };
 
-/*! \brief Create an EmbVector from data. */
+const char *emb_error_desc[] = {
+    "No error.",
+    "Wrong type: this is unsupported usage.",
+    "Division by zero.",
+    "Unfinished."
+};
+
+/* Create an EmbVector from data. */
 EmbVector
 emb_vector(EmbReal x, EmbReal y)
 {
@@ -64,8 +68,7 @@ emb_vector(EmbReal x, EmbReal y)
     return v;
 }
 
-/*! \brief Finds the unit length vector a result in the same direction as a vector.
- */
+/* Finds the unit length vector a result in the same direction as a vector. */
 EmbVector
 emb_vector_normalize(EmbVector vector)
 {
@@ -76,8 +79,7 @@ emb_vector_normalize(EmbVector vector)
     return result;
 }
 
-/*! \brief The scalar multiple a magnitude of a vector. Returned as a vector.
- */
+/* The scalar multiple a magnitude of a vector. Returned as a vector. */
 EmbVector
 emb_vector_scale(EmbVector vector, EmbReal magnitude)
 {
@@ -87,7 +89,7 @@ emb_vector_scale(EmbVector vector, EmbReal magnitude)
     return result;
 }
 
-/*! \brief The sum of two vectors returned as a vector. */
+/* The sum of two vectors returned as a vector. */
 EmbVector
 emb_vector_add(EmbVector a, EmbVector b)
 {
@@ -97,7 +99,7 @@ emb_vector_add(EmbVector a, EmbVector b)
     return result;
 }
 
-/*! \brief The average of two vectors returned as a vector. */
+/* The average of two vectors returned as a vector. */
 EmbVector
 emb_vector_average(EmbVector a, EmbVector b)
 {
@@ -107,7 +109,7 @@ emb_vector_average(EmbVector a, EmbVector b)
     return result;
 }
 
-/*! \brief The difference between two vectors returned as a result. */
+/* The difference between two vectors returned as a result. */
 EmbVector
 emb_vector_subtract(EmbVector v1, EmbVector v2)
 {
@@ -117,14 +119,15 @@ emb_vector_subtract(EmbVector v1, EmbVector v2)
     return result;
 }
 
-/*! \brief The dot product of two vectors returned as a EmbReal. */
+/* The dot product of two vectors returned as a EmbReal. */
 EmbReal
 emb_vector_dot(EmbVector a, EmbVector b)
 {
     return a.x * b.x + a.y * b.y;
 }
 
-/*! \brief The "cross product" as vectors a and b returned as a real value.
+/*
+ * The "cross product" as vectors a and b returned as a real value.
  *
  * Technically, this is the magnitude of the cross product when the
  * embroidery is placed in the z=0 plane (since the cross product is defined for
@@ -136,7 +139,8 @@ emb_vector_cross(EmbVector a, EmbVector b)
     return a.x * b.y - a.y * b.x;
 }
 
-/*! Since we aren't using full 3D vector algebra here, all vectors are "vertical".
+/*
+ * Since we aren't using full 3D vector algebra here, all vectors are "vertical".
  * so this is like the product v1^{T} I_{2} v2 for our vectors a v1 and v2
  * so a "component-wise product". The result is stored at the pointer a result.
  */
@@ -149,8 +153,7 @@ emb_vector_transpose_product(EmbVector v1, EmbVector v2)
     return result;
 }
 
-/*! \brief The length or absolute value of the vector a vector.
- */
+/* The length or absolute value of the vector a vector. */
 EmbReal
 emb_vector_length(EmbVector vector)
 {
@@ -184,7 +187,7 @@ emb_vector_angle(EmbVector v)
     return atan2(v.y, v.x);
 }
 
-/*! \brief The unit vector in the direction a angle. */
+/* The unit vector in the direction a angle. */
 EmbVector
 emb_vector_unit(EmbReal alpha)
 {
@@ -194,7 +197,7 @@ emb_vector_unit(EmbReal alpha)
     return a;
 }
 
-/* The distance between a and b returned as a real value. */
+/* The distance between vectors "a" and "b" returned as a real value. */
 EmbReal
 emb_vector_distance(EmbVector a, EmbVector b)
 {
@@ -202,11 +205,7 @@ emb_vector_distance(EmbVector a, EmbVector b)
     return emb_vector_length(delta);
 }
 
-/* Translate a obj by the vector a delta.
- *
- * obj: A pointer to the geometry memory.
- * delta: A vector in the 0.1mm scale to offset the geometry by.
- */
+/* Translate a geometric object by the vector "delta". */
 void
 emb_geometry_move(EmbGeometry *obj, EmbVector delta)
 {
@@ -228,15 +227,16 @@ emb_geometry_move(EmbGeometry *obj, EmbVector delta)
     }
 }
 
+/* Approximate equals for vectors. */
 int
 emb_approx(EmbVector point1, EmbVector point2)
 {
     return (emb_vector_distance(point1, point2) < epsilon);
 }
 
-/*! . */
+/* . */
 EmbReal
-emb_apothem(EmbGeometry *g, int *error)
+emb_apothem(EmbGeometry *g, EmbError *error)
 {
     switch (g->type) {
     case EMB_ARC: {
@@ -260,7 +260,7 @@ emb_apothem(EmbGeometry *g, int *error)
 
 /* FIXME */
 EmbReal
-emb_sagitta(EmbGeometry *g, int *error)
+emb_sagitta(EmbGeometry *g, EmbError *error)
 {
    *error = EMB_UNFINISHED_ERR;
    return 0.0;
@@ -268,7 +268,7 @@ emb_sagitta(EmbGeometry *g, int *error)
 
 /* FIXME */
 EmbVector
-emb_start(EmbGeometry *g, int *error)
+emb_start(EmbGeometry *g, EmbError *error)
 {
    *error = EMB_UNFINISHED_ERR;
    return emb_vector(0.0, 0.0);
@@ -276,7 +276,7 @@ emb_start(EmbGeometry *g, int *error)
 
 /* FIXME */
 EmbVector
-emb_end(EmbGeometry *g, int *error)
+emb_end(EmbGeometry *g, EmbError *error)
 {
    *error = EMB_UNFINISHED_ERR;
    return emb_vector(0.0, 0.0);
@@ -284,15 +284,14 @@ emb_end(EmbGeometry *g, int *error)
 
 /* FIXME */
 EmbReal
-emb_width(EmbGeometry *g, int *error)
+emb_width(EmbGeometry *g, EmbError *error)
 {
+    *error = EMB_NO_ERR;
     switch (g->type) {
     case EMB_CIRCLE: {
-        *error = EMB_NO_ERR;
         return 2.0f * g->object.circle.radius;
     }
     case EMB_ELLIPSE: {
-        *error = EMB_NO_ERR;
         return 2.0f * g->object.ellipse.radius.x;
     }
     default:
@@ -304,15 +303,14 @@ emb_width(EmbGeometry *g, int *error)
 
 /* FIXME: finish all types. */
 EmbReal
-emb_height(EmbGeometry *g, int *error)
+emb_height(EmbGeometry *g, EmbError *error)
 {
+    *error = EMB_NO_ERR;
     switch (g->type) {
     case EMB_CIRCLE: {
-        *error = EMB_NO_ERR;
         return 2.0f * g->object.circle.radius;
     }
     case EMB_ELLIPSE: {
-        *error = EMB_NO_ERR;
         return 2.0f * g->object.ellipse.radius.y;
     }
     default:
@@ -324,10 +322,15 @@ emb_height(EmbGeometry *g, int *error)
 
 /* FIXME: finish all types. */
 EmbReal
-emb_radius(EmbGeometry *g, int *error)
+emb_radius(EmbGeometry *g, EmbError *error)
 {
+    *error = EMB_NO_ERR;
     switch (g->type) {
-    
+    case EMB_ARC: {
+        EmbReal incAngle = emb_included_angle(g, error);
+        EmbReal chord = emb_vector_length(emb_chord(g, error));
+        return fabs(chord / (2.0 * sin(incAngle / 2.0)));
+    }
     default:
         *error = EMB_WRONG_TYPE_ERR;
         break;
@@ -337,8 +340,9 @@ emb_radius(EmbGeometry *g, int *error)
 
 /* FIXME */
 EmbReal
-emb_radius_major(EmbGeometry *g, int *error)
+emb_radius_major(EmbGeometry *g, EmbError *error)
 {
+    *error = EMB_NO_ERR;
     switch (g->type) {
     default:
         *error = EMB_WRONG_TYPE_ERR;
@@ -349,7 +353,31 @@ emb_radius_major(EmbGeometry *g, int *error)
 
 /* FIXME */
 EmbReal
-emb_radius_minor(EmbGeometry *g, int *error)
+emb_radius_minor(EmbGeometry *g, EmbError *error)
+{
+    *error = EMB_NO_ERR;
+    switch (g->type) {
+    default:
+        break;
+    }
+    return 1.0;
+}
+
+/* FIXME */
+EmbReal
+emb_diameter_major(EmbGeometry *g, EmbError *error)
+{
+    *error = EMB_NO_ERR;
+    switch (g->type) {
+    default:
+        break;
+    }
+    return 1.0;
+}
+
+/* FIXME */
+EmbReal
+emb_diameter_minor(EmbGeometry *g, EmbError *error)
 {
     switch (g->type) {
     default:
@@ -360,29 +388,7 @@ emb_radius_minor(EmbGeometry *g, int *error)
 
 /* FIXME */
 EmbReal
-emb_diameter_major(EmbGeometry *g, int *error)
-{
-    switch (g->type) {
-    default:
-        break;
-    }
-    return 1.0;
-}
-
-/* FIXME */
-EmbReal
-emb_diameter_minor(EmbGeometry *g, int *error)
-{
-    switch (g->type) {
-    default:
-        break;
-    }
-    return 1.0;
-}
-
-/* FIXME */
-EmbReal
-emb_diameter(EmbGeometry *g, int *error)
+emb_diameter(EmbGeometry *g, EmbError *error)
 {
     switch (g->type) {
     default:
@@ -393,7 +399,7 @@ emb_diameter(EmbGeometry *g, int *error)
 
 /* . */
 EmbVector
-emb_quadrant(EmbGeometry *geometry, int degrees, int *error)
+emb_quadrant(EmbGeometry *geometry, int degrees, EmbError *error)
 {
     EmbVector v;
     EmbReal radius = 1.0;
@@ -426,7 +432,7 @@ emb_quadrant(EmbGeometry *geometry, int degrees, int *error)
 
 /* . */
 EmbReal
-emb_angle(EmbGeometry *geometry, int *error)
+emb_angle(EmbGeometry *geometry, EmbError *error)
 {
     EmbVector v = emb_vector_subtract(geometry->object.line.end, geometry->object.line.start);
     EmbReal angle = emb_vector_angle(v) /* - rotation() */;
@@ -435,7 +441,7 @@ emb_angle(EmbGeometry *geometry, int *error)
 
 /* . */
 EmbReal
-emb_start_angle(EmbGeometry *geometry, int *error)
+emb_start_angle(EmbGeometry *geometry, EmbError *error)
 {
     switch (geometry->type) {
     case EMB_ARC: {
@@ -456,7 +462,7 @@ emb_start_angle(EmbGeometry *geometry, int *error)
 
 /* . */
 EmbReal
-emb_end_angle(EmbGeometry *geometry, int *error)
+emb_end_angle(EmbGeometry *geometry, EmbError *error)
 {
     switch (geometry->type) {
     case EMB_ARC: {
@@ -477,7 +483,7 @@ emb_end_angle(EmbGeometry *geometry, int *error)
 
 /* . */
 EmbReal
-emb_arc_length(EmbGeometry *g, int *error)
+emb_arc_length(EmbGeometry *g, EmbError *error)
 {
     switch (g->type) {
     case EMB_ARC: {
@@ -500,7 +506,7 @@ emb_arc_length(EmbGeometry *g, int *error)
 
 /* . */
 EmbReal
-emb_area(EmbGeometry *g, int *error)
+emb_area(EmbGeometry *g, EmbError *error)
 {
     switch (g->type) {
     case EMB_ARC: {
@@ -527,6 +533,9 @@ emb_area(EmbGeometry *g, int *error)
     default:
         break;
     }
+    /* The area of most objects defaults to the area of the rectangle described by the
+     * object's width and height.
+     */
     EmbReal width = emb_width(g, error);
     if (*error) {
         return 0.0;
@@ -540,7 +549,7 @@ emb_area(EmbGeometry *g, int *error)
 
 /* FIXME */
 EmbVector
-emb_center(EmbGeometry *g, int *error)
+emb_center(EmbGeometry *g, EmbError *error)
 {
     switch (g->type) {
     case EMB_ARC: {
@@ -572,10 +581,10 @@ emb_center(EmbGeometry *g, int *error)
     line2.start = bMid_vec;
     line2.end = bPerp_vec;
     center = emb_line_intersectionPoint(line1, line2, &emb_error);
-    if (emb_error) {
-        puts("ERROR: no intersection, cannot find arcCenter.");
-    }
-    return center;
+        if (emb_error) {
+            puts("ERROR: no intersection, cannot find arcCenter.");
+        }
+        return center;
     #endif
         *error = EMB_UNFINISHED_ERR;
         break;
@@ -589,7 +598,7 @@ emb_center(EmbGeometry *g, int *error)
 
 /* . */
 EmbVector
-emb_chord(EmbGeometry *g, int *error)
+emb_chord(EmbGeometry *g, EmbError *error)
 {
     switch (g->type) {
     case EMB_ARC:
@@ -616,7 +625,7 @@ emb_chord(EmbGeometry *g, int *error)
 
 /* . */
 EmbReal
-emb_included_angle(EmbGeometry *g, int *error)
+emb_included_angle(EmbGeometry *g, EmbError *error)
 {
     switch (g->type) {
     case EMB_ARC: {
@@ -658,7 +667,7 @@ emb_included_angle(EmbGeometry *g, int *error)
 
 /* . */
 char
-emb_clockwise(EmbGeometry *geometry, int *error)
+emb_clockwise(EmbGeometry *geometry, EmbError *error)
 {
     switch (geometry->type) {
     case EMB_ARC: {
@@ -675,7 +684,7 @@ emb_clockwise(EmbGeometry *geometry, int *error)
 }
 
 /* . */
-int
+EmbError
 emb_set_start_angle(EmbGeometry *geometry, EmbReal angle)
 {
     printf("%f\n", angle);
@@ -691,7 +700,7 @@ emb_set_start_angle(EmbGeometry *geometry, EmbReal angle)
 }
 
 /* . */
-int
+EmbError
 emb_set_end_angle(EmbGeometry *geometry, EmbReal angle)
 {
     printf("%f\n", angle);
@@ -707,7 +716,7 @@ emb_set_end_angle(EmbGeometry *geometry, EmbReal angle)
 }
 
 /* . */
-int
+EmbError
 emb_set_start_point(EmbGeometry *geometry, EmbVector point)
 {
     switch (geometry->type) {
@@ -723,7 +732,7 @@ emb_set_start_point(EmbGeometry *geometry, EmbVector point)
 }
 
 /* . */
-int
+EmbError
 emb_set_mid_point(EmbGeometry *geometry, EmbVector point)
 {
     switch (geometry->type) {
@@ -739,7 +748,7 @@ emb_set_mid_point(EmbGeometry *geometry, EmbVector point)
 }
 
 /* . */
-int
+EmbError
 emb_set_end_point(EmbGeometry *geometry, EmbVector point)
 {
     switch (geometry->type) {
@@ -755,7 +764,7 @@ emb_set_end_point(EmbGeometry *geometry, EmbVector point)
 }
 
 /* . */
-int
+EmbError
 emb_set_radius(EmbGeometry *g, EmbReal radius)
 {
     switch (g->type) {
@@ -769,7 +778,7 @@ emb_set_radius(EmbGeometry *g, EmbReal radius)
             rad = radius;
         }
 
-        int error = EMB_NO_ERR;
+        EmbError error = EMB_NO_ERR;
         EmbVector center = emb_center(g, &error);
         if (error) {
             return error;
@@ -802,7 +811,7 @@ emb_set_radius(EmbGeometry *g, EmbReal radius)
 }
 
 /* . */
-int
+EmbError
 emb_set_diameter(EmbGeometry *geometry, EmbReal diameter)
 {
     switch (geometry->type) {
@@ -817,40 +826,46 @@ emb_set_diameter(EmbGeometry *geometry, EmbReal diameter)
     return EMB_NO_ERR;
 }
 
-/* . */
-int
+/*
+ * Sets the area of the geometry if that is meaningful, otherwise
+ * return EMB_WRONG_TYPE_ERR.
+ */
+EmbError
 emb_set_area(EmbGeometry *geometry, EmbReal area)
 {
     switch (geometry->type) {
     case EMB_CIRCLE: {
         EmbReal radius = sqrt(area / embConstantPi);
         emb_set_radius(geometry, radius);
-        break;
+        return EMB_NO_ERR;
     }
     default:
         break;
     }
-    return EMB_NO_ERR;
+    return EMB_WRONG_TYPE_ERR;
 }
 
-/* . */
-int
+/*
+ * Sets the circumference of the geometry if that is meaningful, otherwise
+ * return EMB_WRONG_TYPE_ERR.
+ */
+EmbError
 emb_set_circumference(EmbGeometry *geometry, EmbReal circumference)
 {
     switch (geometry->type) {
     case EMB_CIRCLE: {
         EmbReal diameter = circumference / embConstantPi;
         emb_set_diameter(geometry, diameter);
-        break;
+        return EMB_NO_ERR;
     }
     default:
         break;
     }
-    return EMB_NO_ERR;
+    return EMB_WRONG_TYPE_ERR;
 }
 
 /* . */
-int
+EmbError
 emb_set_radius_major(EmbGeometry *geometry, EmbReal radius)
 {
     emb_set_diameter_major(geometry, radius*2.0);
@@ -858,7 +873,7 @@ emb_set_radius_major(EmbGeometry *geometry, EmbReal radius)
 }
 
 /* . */
-int
+EmbError
 emb_set_radius_minor(EmbGeometry *geometry, EmbReal radius)
 {
     emb_set_diameter_minor(geometry, radius*2.0);
@@ -866,7 +881,7 @@ emb_set_radius_minor(EmbGeometry *geometry, EmbReal radius)
 }
 
 /* . */
-int
+EmbError
 emb_set_diameter_major(EmbGeometry *geometry, EmbReal diameter)
 {
     switch (geometry->type) {
@@ -881,7 +896,7 @@ emb_set_diameter_major(EmbGeometry *geometry, EmbReal diameter)
 }
 
 /* . */
-int
+EmbError
 emb_set_diameter_minor(EmbGeometry *geometry, EmbReal diameter)
 {
     switch (geometry->type) {
@@ -895,6 +910,11 @@ emb_set_diameter_minor(EmbGeometry *geometry, EmbReal diameter)
     return EMB_NO_ERR;
 }
 
+/* . */
+void
+emb_geometry_path(EmbGeometry *geometry, char *path, EmbError *error)
+{
+}
 
 #if 0
 /* . */
@@ -923,13 +943,6 @@ EmbReal
 emb_line_weight(EmbGeometry *geometry)
 {
     return data.lwtPen.widthF();
-}
-
-/* . */
-QPainterPath
-emb_path(EmbGeometry *geometry)
-{
-    return path();
 }
 
 /* . */
@@ -1005,7 +1018,7 @@ emb_diameter(EmbGeometry *geometry)
 
 /* . */
 EmbReal
-emb_circumference(EmbGeometry *geometry, int *error)
+emb_circumference(EmbGeometry *geometry, EmbError *error)
 {
     switch (geometry->type) {
     case EMB_CIRCLE: {
@@ -1512,7 +1525,7 @@ emb_boundingRect(EmbGeometry *obj)
 }
 
 /*
- * ARC GEOMETRY
+ * Create an arc from data.
  *
  * ------------------------------------------------------------
  *
@@ -1577,12 +1590,12 @@ emb_arc_clockwise(EmbGeometry g)
 }
  */
 
-int
+EmbError
 emb_set_center(EmbGeometry *g, EmbVector point)
 {
     switch (g->type) {
     case EMB_ARC: {
-        int error = EMB_NO_ERR;
+        EmbError error = EMB_NO_ERR;
         EmbVector delta;
         EmbVector old_center = emb_center(g, &error);
         delta = emb_vector_subtract(point, old_center);
@@ -1597,7 +1610,8 @@ emb_set_center(EmbGeometry *g, EmbVector point)
     return EMB_NO_ERR;
 }
 
-void emb_set_color(EmbGeometry *obj, EmbColor color)
+void
+emb_set_color(EmbGeometry *obj, EmbColor color)
 {
     obj->color = color;
     /*
@@ -2778,9 +2792,9 @@ textSingle_setJustify(EmbGeometry *g, const char *justify)
     */
 }
 
-/*! . */
+/* . */
 int
-emb_backwards(EmbGeometry *g, int *error)
+emb_backwards(EmbGeometry *g, EmbError *error)
 {
     /*
     objTextBackward = value;
@@ -2791,7 +2805,7 @@ emb_backwards(EmbGeometry *g, int *error)
 }
 
 int
-emb_bold(EmbGeometry *g, int *error)
+emb_bold(EmbGeometry *g, EmbError *error)
 {
     /*
     objTextBold = val;
@@ -2802,14 +2816,14 @@ emb_bold(EmbGeometry *g, int *error)
 }
 
 int
-emb_bulge(EmbGeometry *g, int *error)
+emb_bulge(EmbGeometry *g, EmbError *error)
 {
     *error = EMB_NO_ERR;
     return 0;
 }
 
 EmbReal
-emb_chord_length(EmbGeometry *g, int *error)
+emb_chord_length(EmbGeometry *g, EmbError *error)
 {
     EmbVector v = emb_chord(g, error);
     if (*error) {
@@ -2817,6 +2831,12 @@ emb_chord_length(EmbGeometry *g, int *error)
     }
     *error = EMB_NO_ERR;
     return emb_vector_length(v);
+}
+
+EmbReal
+emb_chord_angle(EmbGeometry *g, EmbError *error)
+{
+    return 0.0;
 }
 
 #if 0
@@ -2833,14 +2853,6 @@ emb_chord_length(EmbGeometry *g, int *error)
     case EMB_DIAMETER: {
         v = emb_radius(g, error);
         v.r = fabs(v.r * 2.0);
-        break;
-    }
-    case EMB_RADIUS: {
-        if (g->type == EMB_ARC) {
-            EmbReal incAngle = emb_included_angle(g, EMB_INCANGLE).r;
-            EmbReal chord = emb_vector_length(emb_chord(g, EMB_CHORD).v);
-            v = script_real(fabs(chord / (2.0 * sin(incAngle / 2.0))));
-        }
         break;
     }
     case EMB_INCANGLE: {

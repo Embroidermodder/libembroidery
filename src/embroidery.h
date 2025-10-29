@@ -1,7 +1,4 @@
-/*!
- * \file embroidery.h
- * \brief The main interface to libembroidery.
- *
+/*
  * LIBEMBROIDERY HEADER
  * version 1.0.0-alpha
  * This file is part of libembroidery.
@@ -19,7 +16,6 @@
  *
  * Note that all new defines start with "EMB_", all functions with "emb" and all
  * typedefs with "Emb" to protect against namespace pollution. (INCOMPLETE)
- *
  */
 
 #ifndef EMB_LIBRARY_HEADER__
@@ -62,12 +58,12 @@ extern "C" {
  *
  * Missing change color?
  */
-#define NORMAL                      0x00    /*!< Stitch to (x, y). */
-#define JUMP                        0x01    /*!< Move to (x, y). */
-#define TRIM                        0x02    /*!< Trim and move to (x, y). */
-#define STOP                        0x04    /*!< Pause machine for a thread change. */
-#define SEQUIN                      0x08    /*!< Add a sequin at the current co-ordinates. */
-#define END                         0x10    /*!< End of program. */
+#define NORMAL                      0x00    /* Stitch to (x, y). */
+#define JUMP                        0x01    /* Move to (x, y). */
+#define TRIM                        0x02    /* Trim and move to (x, y). */
+#define STOP                        0x04    /* Pause machine for a thread change. */
+#define SEQUIN                      0x08    /* Add a sequin at the current co-ordinates. */
+#define END                         0x10    /* End of program. */
 
 /* Format identifiers */
 #define EMB_FORMAT_100                 0
@@ -222,16 +218,16 @@ extern "C" {
 /**
  * Type of directory object
  */
-#define ObjectTypeUnknown   0x00 /*!< Probably unallocated    */
-#define ObjectTypeStorage   0x01 /*!< a directory type object */
-#define ObjectTypeStream    0x02 /*!< a file type object      */
-#define ObjectTypeRootEntry 0x05 /*!< the root entry          */
+#define ObjectTypeUnknown   0x00 /* Probably unallocated    */
+#define ObjectTypeStorage   0x01 /* a directory type object */
+#define ObjectTypeStream    0x02 /* a file type object      */
+#define ObjectTypeRootEntry 0x05 /* the root entry          */
 
 /**
  * Special values for Stream Identifiers
  */
-#define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /*!< All real stream Ids are less than this */
-#define CompoundFileStreamId_NoStream           0xFFFFFFFF /*!< There is no valid stream Id            */
+#define CompoundFileStreamId_MaxRegularStreamId 0xFFFFFFFA /* All real stream Ids are less than this */
+#define CompoundFileStreamId_NoStream           0xFFFFFFFF /* There is no valid stream Id            */
 
 #define ELEMENT_XML              0
 #define ELEMENT_A                1
@@ -342,21 +338,6 @@ extern "C" {
 #define QUADTOCONTROL              0x100
 #define QUADTOEND                  0x200
 
-/* COMMANDS
- *
- * These identifiers are subject to change since they are in alphabetical order
- * and the numbers are increasing.
- *
- * Note that GUI-only commands are present here because this is for operations
- * available in all frontends.
- *
- * The actuator uses
- */
-#define EMB_CMD_ABOUT                  0
-#define EMB_CMD_ARC                    1
-#define EMB_CMD_CIRCLE                 2
-#define N_COMMANDS                     3
-
 /* Brand identifiers. */
 #define EMB_BRAND_DXF                  0
 #define EMB_BRAND_HUS                  1
@@ -412,20 +393,22 @@ extern "C" {
 /* TYPEDEFS AND STRUCTS
  *******************************************************************/
 
-/*! Should some platform need a different precision, this is typedef-ed
+/* Should some platform need a different precision, this is typedef-ed
  * and used in place of all real types where possible.
  */
 typedef float EmbReal;
 
-/*! EmbColor uses the light primaries: red, green, blue in that order. */
+typedef uint8_t EmbError;
+
+/* EmbColor uses the light primaries: red, green, blue in that order. */
 typedef struct EmbColor_
 {
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
 } EmbColor;
 
-/*! The basic type to represent points absolutely or represent directions.
+/* The basic type to represent points absolutely or represent directions.
  *
  * Positive y is up, units are in mm.
  */
@@ -435,14 +418,14 @@ typedef struct EmbVector_
     EmbReal y;
 } EmbVector;
 
-/*! For our internal string library.
+/* For our internal string library.
  *
  * Note that we cannot use this for any larger amount of data,
  * it's to ensure that the cap on the size is fixed at 200.
  */
 typedef char EmbString[200];
 
-/*! To help new developers understand why we use "void *",
+/* To help new developers understand why we use "void *",
  * when it is widely not recommended within C++.
  *
  * libembroidery is a low-level library: we need to do bit-level
@@ -451,10 +434,10 @@ typedef char EmbString[200];
  */
 typedef void *EmbMem;
 
-/*! The basic array type. */
+/* The basic array type. */
 typedef struct EmbArray_ EmbArray;
 
-/*! . */
+/* . */
 typedef struct EmbTime_
 {
     unsigned int year;
@@ -465,85 +448,85 @@ typedef struct EmbTime_
     unsigned int second;
 } EmbTime;
 
-/*! . */
+/* . */
 typedef struct EmbImage_ {
     EmbVector position;
     EmbVector dimensions;
-    unsigned char* data;
+    uint8_t* data;
     int width;
     int height;
     EmbString path;
     EmbString name;
 } EmbImage;
 
-/*! . */
+/* . */
 typedef struct EmbBlock_ {
     EmbVector position;
 } EmbBlock;
 
-/*! . */
+/* . */
 typedef struct EmbAlignedDim_ {
     EmbVector position;
 } EmbAlignedDim;
 
-/*! . */
+/* . */
 typedef struct EmbAngularDim_ {
     EmbVector position;
 } EmbAngularDim;
 
-/*! . */
+/* . */
 typedef struct EmbArcLengthDim_ {
     EmbVector position;
 } EmbArcLengthDim;
 
-/*! . */
+/* . */
 typedef struct EmbDiameterDim_ {
     EmbVector position;
 } EmbDiameterDim;
 
-/*! . */
+/* . */
 typedef struct EmbLeaderDim_ {
     EmbVector position;
 } EmbLeaderDim;
 
-/*! . */
+/* . */
 typedef struct EmbLinearDim_ {
     EmbVector position;
 } EmbLinearDim;
 
-/*! . */
+/* . */
 typedef struct EmbOrdinateDim_ {
     EmbVector position;
 } EmbOrdinateDim;
 
-/*! . */
+/* . */
 typedef struct EmbRadiusDim_ {
     EmbVector position;
 } EmbRadiusDim;
 
-/*! . */
+/* . */
 typedef struct EmbInfiniteLine_ {
     EmbVector position;
 } EmbInfiniteLine;
 
-/*! . */
+/* . */
 typedef struct EmbRay_ {
     EmbVector position;
 } EmbRay;
 
-/*! . */
+/* . */
 typedef struct EmbTextMulti_ {
     EmbVector position;
     EmbString text;
 } EmbTextMulti;
 
-/*! . */
+/* . */
 typedef struct EmbTextSingle_ {
     EmbVector position;
     EmbString text;
 } EmbTextSingle;
 
-/*! . */
+/* . */
 typedef struct EmbPoint_
 {
     EmbVector position;
@@ -551,7 +534,7 @@ typedef struct EmbPoint_
     EmbColor color;
 } EmbPoint;
 
-/*! . */
+/* . */
 typedef struct EmbLine_
 {
     EmbVector start;
@@ -560,7 +543,7 @@ typedef struct EmbLine_
     EmbColor color;
 } EmbLine;
 
-/*! . */
+/* . */
 typedef struct EmbPath_
 {
     EmbArray* pointList;
@@ -569,16 +552,16 @@ typedef struct EmbPath_
     EmbColor color;
 } EmbPath;
 
-/*! \todo `color` should be called colorIndex since it is not an EmbColor. */
+/* \todo `color` should be called colorIndex since it is not an EmbColor. */
 typedef struct EmbStitch_
 {
-    int flags; /*! uses codes defined above */
-    EmbReal x; /*! absolute position (not relative) */
-    EmbReal y; /*! positive is up, units are in mm  */
-    int color; /*! color number for this stitch */
+    int flags; /* uses codes defined above */
+    EmbReal x; /* absolute position (not relative) */
+    EmbReal y; /* positive is up, units are in mm  */
+    int color; /* color number for this stitch */
 } EmbStitch;
 
-/*! . */
+/* . */
 typedef struct EmbThread_
 {
     EmbColor color;
@@ -586,14 +569,14 @@ typedef struct EmbThread_
     EmbString catalogNumber;
 } EmbThread;
 
-/*! . */
+/* . */
 typedef struct thread_color_ {
     EmbString name;
     unsigned int hex_code;
     int manufacturer_code;
 } thread_color;
 
-/*! absolute position (not relative) */
+/* absolute position (not relative) */
 typedef struct EmbArc_
 {
     EmbVector start;
@@ -601,7 +584,7 @@ typedef struct EmbArc_
     EmbVector end;
 } EmbArc;
 
-/*! . */
+/* . */
 typedef struct EmbRect_
 {
     EmbReal x;
@@ -612,23 +595,23 @@ typedef struct EmbRect_
     EmbReal radius;
 } EmbRect;
 
-/*! . */
+/* . */
 typedef struct EmbCircle_
 {
     EmbVector center;
     EmbReal radius;
 } EmbCircle;
 
-/*! . */
+/* . */
 typedef EmbPath EmbPolygon;
 
-/*! . */
+/* . */
 typedef EmbPath EmbPolyline;
 
-/*! . */
+/* . */
 typedef int EmbFlag;
 
-/*! . */
+/* . */
 typedef struct EmbSatinOutline_
 {
     int length;
@@ -636,7 +619,7 @@ typedef struct EmbSatinOutline_
     EmbArray* side2;
 } EmbSatinOutline;
 
-/*! . */
+/* . */
 typedef struct EmbDimLeader_ {
     EmbVector start;
     EmbVector end;
@@ -645,28 +628,28 @@ typedef struct EmbDimLeader_ {
     EmbColor color;
 } EmbDimLeader;
 
-/*! Ellipse object. */
+/* Ellipse object. */
 typedef struct EmbEllipse_
 {
-    EmbVector center; /*!< */
-    EmbVector radius; /*!< Represents the major and minor axes. */
-    EmbReal rotation; /*!< Determines the direction of the direction of the first axis given. */
+    EmbVector center; /* */
+    EmbVector radius; /* Represents the major and minor axes. */
+    EmbReal rotation; /* Determines the direction of the direction of the first axis given. */
 } EmbEllipse;
 
-/*! . */
+/* . */
 typedef struct EmbBezier_ {
-    EmbVector start;       /*!< */
-    EmbVector control1;    /*!< */
-    EmbVector control2;    /*!< */
-    EmbVector end;         /*!< */
+    EmbVector start;       /* */
+    EmbVector control1;    /* */
+    EmbVector control2;    /* */
+    EmbVector end;         /* */
 } EmbBezier;
 
-/*! . */
+/* . */
 typedef struct EmbSpline_ {
     EmbArray *beziers;
 } EmbSpline;
 
-/*! . */
+/* . */
 typedef struct EmbGeometry_ {
     union {
         EmbArc arc;
@@ -688,42 +671,42 @@ typedef struct EmbGeometry_ {
     EmbColor color;
 } EmbGeometry;
 
-/*! . */
+/* . */
 typedef char EmbStringTable[MAX_TABLE_LENGTH][MAX_STRING_LENGTH];
 
-/*! . */
+/* . */
 typedef struct LabelledVector_ {
     EmbString key;
     EmbVector vector;
 } LabelledVector;
 
-/*! . */
+/* . */
 typedef struct StringMap_ {
     EmbString key;
     EmbString value;
 } StringMap;
 
-/*! . */
+/* . */
 typedef struct IntMap_ {
     int key;
     int value;
 } IntMap;
 
-/*! . */
+/* . */
 typedef struct EmbVectorList_ {
     EmbVector *data;
     int count;
     int size;
 } EmbVectorList;
 
-/*! . */
+/* . */
 typedef struct EmbIdList_ {
     int32_t *data;
     int count;
     int size;
 } EmbIdList;
 
-/*! . */
+/* . */
 struct EmbArray_ {
     EmbGeometry *geometry;
     EmbStitch *stitch;
@@ -733,14 +716,14 @@ struct EmbArray_ {
     int type;
 };
 
-/*! . */
+/* . */
 typedef struct EmbLayer_
 {
     char name[100];
     EmbArray *geometry;
 } EmbLayer;
 
-/*! . */
+/* . */
 typedef struct Design_ {
     char *command;
     float lower;
@@ -757,7 +740,7 @@ typedef struct Design_ {
 
 #define END_SYMBOL            "__END__"
 
-/*! The pattern type variable denotes the type that was read in and uses the
+/* The pattern type variable denotes the type that was read in and uses the
  * EMB_FORMAT contants. Changing this type directly would break how data is
  * interpreted,
  */
@@ -781,7 +764,7 @@ typedef struct EmbPattern_
     EmbString comments;
 } EmbPattern;
 
-/*! . */
+/* . */
 typedef struct EmbFormatList_
 {
     EmbString extension;
@@ -794,7 +777,7 @@ typedef struct EmbFormatList_
     int write_external_color_file;
 } EmbFormatList;
 
-/*! Thread colors that are subject to change are loaded at runtime,
+/* Thread colors that are subject to change are loaded at runtime,
  * allowing us to update them as they change.
  *
  * However, in-builts that use indicies like the DXF, SVG or HUS
@@ -807,7 +790,7 @@ typedef struct BRAND {
     EmbString label;
 } EmbBrand;
 
-/*! . */
+/* . */
 typedef struct EmbStackElement_ {
     int data_type;
     int attribute;
@@ -816,13 +799,13 @@ typedef struct EmbStackElement_ {
     char s[100];
 } EmbStackElement;
 
-/*! This uses about 100kb per instance because it's not dynamic. */
+/* This uses about 100kb per instance because it's not dynamic. */
 typedef struct EmbStack_ {
     EmbStackElement stack[1000];
     int position;
 } EmbStack;
 
-/*! double-indirection file allocation table references */
+/* double-indirection file allocation table references */
 typedef struct _bcf_file_difat
 {
     unsigned int fatSectorCount;
@@ -830,7 +813,7 @@ typedef struct _bcf_file_difat
     unsigned int sectorSize;
 } bcf_file_difat;
 
-/*! . */
+/* . */
 typedef struct _bcf_file_fat
 {
     int          fatEntryCount;
@@ -838,17 +821,17 @@ typedef struct _bcf_file_fat
     unsigned int numberOfEntriesInFatSector;
 } bcf_file_fat;
 
-/*! . */
+/* . */
 typedef struct _bcf_directory_entry
 {
     char directoryEntryName[32];
     unsigned short directoryEntryNameLength;
-    unsigned char objectType;
-    unsigned char colorFlag;
+    uint8_t objectType;
+    uint8_t colorFlag;
     unsigned int leftSiblingId;
     unsigned int                 rightSiblingId;
     unsigned int                 childId;
-    unsigned char                CLSID[16];
+    uint8_t                CLSID[16];
     unsigned int                 stateBits;
     uint32_t creationTime[6];
     uint32_t modifiedTime[6];
@@ -873,8 +856,8 @@ typedef struct _bcf_directory
  */
 typedef struct _bcf_file_header
 {
-    unsigned char  signature[8];
-    unsigned char  CLSID[16];
+    uint8_t  signature[8];
+    uint8_t  CLSID[16];
     unsigned short minorVersion;
     unsigned short majorVersion;
     unsigned short byteOrder;
@@ -896,10 +879,10 @@ typedef struct _bcf_file_header
 /* . */
 typedef struct _bcf_file
 {
-    bcf_file_header header;   /*! The header for the CompoundFile */
-    bcf_file_difat* difat;    /*! The "Double Indirect FAT" for the CompoundFile */
-    bcf_file_fat* fat;        /*! The File Allocation Table for the Compound File */
-    bcf_directory* directory; /*! The directory for the CompoundFile */
+    bcf_file_header header;   /* The header for the CompoundFile */
+    bcf_file_difat* difat;    /* The "Double Indirect FAT" for the CompoundFile */
+    bcf_file_fat* fat;        /* The File Allocation Table for the Compound File */
+    bcf_directory* directory; /* The directory for the CompoundFile */
 } bcf_file;
 
 /* . */
@@ -911,7 +894,7 @@ typedef struct _vp3Hoop
     int top;
     int threadLength;
     char unknown2;
-    unsigned char numberOfColors;
+    uint8_t numberOfColors;
     unsigned short unknown3;
     int unknown4;
     int numberOfBytesRemaining;
@@ -919,9 +902,9 @@ typedef struct _vp3Hoop
     int xOffset;
     int yOffset;
 
-    unsigned char byte1;
-    unsigned char byte2;
-    unsigned char byte3;
+    uint8_t byte1;
+    uint8_t byte2;
+    uint8_t byte3;
 
     /* Centered hoop dimensions */
     int right2;
@@ -958,9 +941,9 @@ typedef struct ThredExtension_  /* thred v1.0 file header extension */
 /* . */
 typedef struct SubDescriptor_
 {
-    int someNum;      /*! \todo better variable naming */
-    int someInt;      /*! \todo better variable naming */
-    int someOtherInt; /*! \todo better variable naming */
+    int someNum;      /* \todo better variable naming */
+    int someInt;      /* \todo better variable naming */
+    int someOtherInt; /* \todo better variable naming */
     char* colorCode;
     char* colorName;
 } SubDescriptor;
@@ -977,7 +960,7 @@ typedef struct VipHeader_ {
     int attributeOffset;
     int xOffset;
     int yOffset;
-    unsigned char stringVal[8];
+    uint8_t stringVal[8];
     short unknown;
     int colorLength;
 } VipHeader;
@@ -1049,13 +1032,13 @@ EMB_PUBLIC int convert(const char *inf, const char *outf);
 
 EMB_PUBLIC EmbVector emb_vector(EmbReal x, EmbReal y);
 
-EMB_PUBLIC char read_n_bytes(FILE *file, unsigned char *data, unsigned int length);
+EMB_PUBLIC char read_n_bytes(FILE *file, uint8_t *data, unsigned int length);
 EMB_PUBLIC bool string_equal(char *a, const char *b);
 EMB_PUBLIC int parse_floats(const char *line, float result[], int n);
 EMB_PUBLIC int parse_vector(const char *line, EmbVector *v);
 EMB_PUBLIC bool valid_rgb(float r, float g, float b);
 EMB_PUBLIC int table_length(char *s[]);
-EMB_PUBLIC unsigned char *load_file(char *fname);
+EMB_PUBLIC uint8_t *load_file(char *fname);
 EMB_PUBLIC bool int32_underflow(int64_t a, int64_t b);
 EMB_PUBLIC bool int32_overflow(int64_t a, int64_t b);
 EMB_PUBLIC int round_to_multiple(bool roundUp, int numToRound, int multiple);
@@ -1071,7 +1054,7 @@ EMB_PUBLIC int emb_compiler(const char *program, int language, char *compiled_pr
 EMB_PUBLIC void emb_actuator(EmbPattern *pattern, const char *program, int language);
 
 /* Colors */
-EMB_PUBLIC EmbColor embColor_make(unsigned char r, unsigned char g, unsigned char b);
+EMB_PUBLIC EmbColor embColor_make(uint8_t r, uint8_t g, uint8_t b);
 EMB_PUBLIC EmbColor embColor_fromHexStr(char* val);
 EMB_PUBLIC int embColor_distance(EmbColor a, EmbColor b);
 
@@ -1235,45 +1218,45 @@ EMB_PUBLIC int emb_approx(EmbVector point1, EmbVector point2);
 EMB_PUBLIC EmbVector scale_and_rotate(EmbVector v, double angle, double scale);
 
 /* Get attributes */
-EMB_PUBLIC EmbReal emb_angle(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_arc_length(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_area(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbVector emb_center(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbVector emb_chord(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_chord_length(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_diameter(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_diameter_major(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_diameter_minor(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbVector emb_end(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_height(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_radius(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_radius_major(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_radius_minor(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_sagitta(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbVector emb_start(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_width(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbVector emb_quadrant(EmbGeometry *geometry, int degrees, int *error);
-EMB_PUBLIC EmbReal emb_start_angle(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_end_angle(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_included_angle(EmbGeometry *geometry, int *error);
-EMB_PUBLIC char emb_clockwise(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_circumference(EmbGeometry *geometry, int *error);
-EMB_PUBLIC EmbReal emb_included_angle(EmbGeometry *geometry, int *error);
+EMB_PUBLIC EmbReal emb_angle(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_arc_length(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_area(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbVector emb_center(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbVector emb_chord(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_chord_length(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_diameter(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_diameter_major(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_diameter_minor(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbVector emb_end(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_height(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_radius(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_radius_major(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_radius_minor(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_sagitta(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbVector emb_start(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_width(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbVector emb_quadrant(EmbGeometry *geometry, int degrees, EmbError *error);
+EMB_PUBLIC EmbReal emb_start_angle(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_end_angle(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_included_angle(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC char emb_clockwise(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_circumference(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbReal emb_included_angle(EmbGeometry *geometry, EmbError *error);
 
 /* Set attributes */
-EMB_PUBLIC int emb_set_area(EmbGeometry *geometry, EmbReal area);
-EMB_PUBLIC int emb_set_start_angle(EmbGeometry *geometry, EmbReal angle);
-EMB_PUBLIC int emb_set_end_angle(EmbGeometry *geometry, EmbReal angle);
-EMB_PUBLIC int emb_set_start_point(EmbGeometry *geometry, EmbVector point);
-EMB_PUBLIC int emb_set_mid_point(EmbGeometry *geometry, EmbVector point);
-EMB_PUBLIC int emb_set_end_point(EmbGeometry *geometry, EmbVector point);
-EMB_PUBLIC int emb_set_diameter(EmbGeometry *geometry, EmbReal diameter);
-EMB_PUBLIC int emb_set_circumference(EmbGeometry *geometry, EmbReal circumference);
-EMB_PUBLIC int emb_set_radius(EmbGeometry *geometry, EmbReal radius);
-EMB_PUBLIC int emb_set_radius_major(EmbGeometry *geometry, EmbReal radius);
-EMB_PUBLIC int emb_set_radius_minor(EmbGeometry *geometry, EmbReal radius);
-EMB_PUBLIC int emb_set_diameter_major(EmbGeometry *geometry, EmbReal diameter);
-EMB_PUBLIC int emb_set_diameter_minor(EmbGeometry *geometry, EmbReal diameter);
+EMB_PUBLIC EmbError emb_set_area(EmbGeometry *geometry, EmbReal area);
+EMB_PUBLIC EmbError emb_set_start_angle(EmbGeometry *geometry, EmbReal angle);
+EMB_PUBLIC EmbError emb_set_end_angle(EmbGeometry *geometry, EmbReal angle);
+EMB_PUBLIC EmbError emb_set_start_point(EmbGeometry *geometry, EmbVector point);
+EMB_PUBLIC EmbError emb_set_mid_point(EmbGeometry *geometry, EmbVector point);
+EMB_PUBLIC EmbError emb_set_end_point(EmbGeometry *geometry, EmbVector point);
+EMB_PUBLIC EmbError emb_set_diameter(EmbGeometry *geometry, EmbReal diameter);
+EMB_PUBLIC EmbError emb_set_circumference(EmbGeometry *geometry, EmbReal circumference);
+EMB_PUBLIC EmbError emb_set_radius(EmbGeometry *geometry, EmbReal radius);
+EMB_PUBLIC EmbError emb_set_radius_major(EmbGeometry *geometry, EmbReal radius);
+EMB_PUBLIC EmbError emb_set_radius_minor(EmbGeometry *geometry, EmbReal radius);
+EMB_PUBLIC EmbError emb_set_diameter_major(EmbGeometry *geometry, EmbReal diameter);
+EMB_PUBLIC EmbError emb_set_diameter_minor(EmbGeometry *geometry, EmbReal diameter);
 
 EMB_PUBLIC char *emb_get_svg_token(char *svg, char token[MAX_STRING_LENGTH]);
 EMB_PUBLIC char *emb_get_svg_vector(char *svg, EmbVector *v);
@@ -1373,18 +1356,18 @@ void readNextSector(FILE* file, bcf_directory* dir);
 
 void write_24bit(FILE* file, int);
 
-EmbReal pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3);
+EmbReal pfaffDecode(uint8_t a1, uint8_t a2, uint8_t a3);
 
-int decodeNewStitch(unsigned char value);
+int decodeNewStitch(uint8_t value);
 
-unsigned char mitEncodeStitch(EmbReal value);
-int mitDecodeStitch(unsigned char value);
+uint8_t mitEncodeStitch(EmbReal value);
+int mitDecodeStitch(uint8_t value);
 
-void encode_t01_record(unsigned char b[3], int x, int y, int flags);
-int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags);
+void encode_t01_record(uint8_t b[3], int x, int y, int flags);
+int decode_t01_record(uint8_t b[3], int *x, int *y, int *flags);
 
-int encode_tajima_ternary(unsigned char b[3], int x, int y);
-void decode_tajima_ternary(unsigned char b[3], int *x, int *y);
+int encode_tajima_ternary(uint8_t b[3], int x, int y);
+void decode_tajima_ternary(uint8_t b[3], int *x, int *y);
 
 /* NON-MACRO CONSTANTS
  ******************************************************************************/
@@ -1395,6 +1378,7 @@ extern EmbBrand brand_codes[100];
 extern EmbThread black_thread;
 extern int emb_verbose;
 extern const char *version_string;
+extern const char *emb_error_desc[];
 extern const EmbThread dxf_colors[];
 extern const EmbThread jef_colors[];
 extern const EmbThread hus_colors[];

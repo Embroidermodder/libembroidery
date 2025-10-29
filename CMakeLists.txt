@@ -36,41 +36,22 @@ add_library(embroidery_static STATIC ${LIBRARY_SRC})
 add_library(embroidery SHARED ${LIBRARY_SRC})
 target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
 
-add_executable(emb_convert src/emb_convert.c)
+add_executable(emb_convert src/convert.c)
 target_link_libraries(emb_convert PRIVATE embroidery_static)
+
+add_executable(emb_test src/test.c)
+target_link_libraries(emb_test PRIVATE embroidery_static)
 
 if (WIN32)
 else (WIN32)
     target_link_libraries(emb_convert PRIVATE m)
+    target_link_libraries(emb_test PRIVATE m)
 endif (WIN32)
 
-function(new_test NAME)
-    add_executable(test_${NAME} EXCLUDE_FROM_ALL test/${NAME}.c)
-
-    target_link_libraries(test_${NAME} PRIVATE embroidery_static)
-
-    if (WIN32)
-    else (WIN32)
-        target_link_libraries(test_${NAME} PRIVATE m)
-    endif (WIN32)
-
-    add_test(test_${NAME} test_${NAME})
-    add_dependencies(check test_${NAME})
-endfunction()
-
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-
-# Generate tests by removing the ".c" extension from the filenames in
-# "test/" then passing to "new_test".
-file(GLOB TEST_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/test "test/*")
-foreach(FILE ${TEST_FILES})
-	string(REPLACE ".c" "" TEST_NAME ${FILE})
-	message("-- Adding test ${TEST_NAME}.")
-	new_test("${TEST_NAME}")
-endforeach()
-
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/CTestTestfile.cmake"
-     DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+# add_test(emb_test emb_test)
+# add_dependencies(check emb_test)
+#
+# add_custom_target(check COMMAND emb_test)
 
 if(WIN32)
 

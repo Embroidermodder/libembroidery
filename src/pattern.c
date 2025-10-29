@@ -1,7 +1,4 @@
-/*!
- * \file pattern.c
- * \brief The EmbPattern struct memory management and storage.
- *
+/*
  * Libembroidery 1.0.0-alpha
  * https://www.libembroidery.org
  *
@@ -18,13 +15,11 @@
  *
  * -----------------------------------------------------------------------------
  *
+ * The EmbPattern struct memory management and storage.
+ *
  * Only uses source from this directory or standard C libraries,
  * not including POSIX headers like unistd since this library
  * needs to support non-POSIX systems like Windows.
- *
- * -----------------------------------------------------------------------------
- *
- * For the embedded systems version see the embedded/ directory.
  */
 
 #include <stdio.h>

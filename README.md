@@ -1,13 +1,29 @@
-# Libembroidery v1.0-alpha
+<h1 align="center">
+Libembroidery
+</h1>
 
-Copyright (c) 2018-2025 The Embroidermodder Team and Josh Varga
+<p align="center">
+`v1.0-alpha`
+</p>
 
-https://www.libembroidery.org
+<h4 align="center">
+  A library for working with machine embroidery files.
+</h4>
 
+<p align="center">
 (Under construction, please wait for v1.0 release.)
+<br>
+[![Build](https://github.com/Embroidermodder/libembroidery/actions/workflows/build.yml/badge.svg)](https://github.com/Embroidermodder/libembroidery/actions/workflows/build.yml)
+<br>
+Copyright (c) 2018-2025 The Embroidermodder Team and Josh Varga
+<br>
+https://www.libembroidery.org
+</p>
 
 Libembroidery is a low-level library for reading, writing, 
-and altering digital embroidery files in C. It is part of the Embroidermodder Project
+and altering digital embroidery files in C. It is implemented in a single-file
+so you can add it to your project by dropping `embroidery.h` in your source code.
+It is part of the Embroidermodder Project
 for open source machine embroidery.
 
 Libembroidery is the underlying library that is used by
@@ -32,15 +48,15 @@ help starting with:
     $ sew --help
 ```
 
-If you need libembroidery for any non-trivial usage or want to contribute to
-the library we advise you read the [manual](./manual.md) first.
-Copies of this manual will be shipped with the packaged version of
-libembroidery.
+If you need libembroidery for any non-trivial usage the source code is ordered
+in literate program style
 
 ### License
 
 Libembroidery is distributed under the permissive zlib licence, see the
-[LICENCE](./LICENCE.md) file.
+[LICENCE](./LICENCE.md) file. You are not required to supply this file in your
+source code when adding the library but you are required to keep the license message
+in the comment within `embroidery.h` in place as it clarifies the same rights.
 
 ### Build
 

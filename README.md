@@ -2,18 +2,20 @@
 Libembroidery
 </h1>
 
-<p align="center">
-`v1.0-alpha`
-</p>
-
 <h4 align="center">
-  A library for working with machine embroidery files.
+A library for working with machine embroidery files.
 </h4>
 
 <p align="center">
+<code>v1.0-alpha</code>
+<br>
 (Under construction, please wait for v1.0 release.)
 <br>
-[![Build](https://github.com/Embroidermodder/libembroidery/actions/workflows/build.yml/badge.svg)](https://github.com/Embroidermodder/libembroidery/actions/workflows/build.yml)
+<a href="https://github.com/Embroidermodder/libembroidery/actions/workflows/build.yml">
+  <img src="https://github.com/Embroidermodder/libembroidery/actions/workflows/build.yml/badge.svg">
+    Build status
+  </img>
+</a>
 <br>
 Copyright (c) 2018-2025 The Embroidermodder Team and Josh Varga
 <br>
@@ -35,7 +37,7 @@ in the file `CREDITS.md`.
 It handles over 45 different embroidery specific formats as well
 as several non-embroidery specific vector formats.
 
-It also includes a CLI called `embroider` that allows for better automation of
+It also includes a CLI called `sew` that allows for better automation of
 changes to embroidery files and will be more up-to date than
 the Embroidermodder 2 GUI.
 

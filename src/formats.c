@@ -24,8 +24,6 @@
 #include <assert.h>
 #include <math.h>
 
-#include "embroidery.h"
-
 /* For debugging purposes. */
 #define REPORT_VALUE(X, TYPE) \
     if (emb_verbose>1) { \

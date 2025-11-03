@@ -30,8 +30,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "embroidery.h"
-
 /* Internal Data
  * ----------------------------------------------------------------------------
  *
@@ -110,7 +108,7 @@ const char *version_string = "embroider v0.1";
 
 const int NUMBINS = 10;
 
-double epsilon = 0.000000001;
+EmbReal epsilon = 0.000000001;
 
 EmbThread black_thread = { { 0, 0, 0 }, "Black", "Black" };
 int emb_verbose = 0;

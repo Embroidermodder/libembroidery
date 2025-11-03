@@ -21,8 +21,6 @@
  * Data
  */
 
-#include "embroidery.h"
-
 const EmbThread arc_polyester_colors[] = {
     {{0, 0, 0}, "TODO", "TODO"}
 };

@@ -23,7 +23,7 @@ jobs:
         run: |
           git clone https://github.com/embroidermodder/libembroidery
           cd libembroidery
-          bash bin/build.sh "Ubuntu"
+          bash build.sh "Ubuntu"
 
   build-macos:
     runs-on: macos-latest
@@ -35,7 +35,7 @@ jobs:
         run: |
           git clone https://github.com/embroidermodder/libembroidery
           cd libembroidery
-          bash bin/build.sh "MacOS"
+          bash build.sh "MacOS"
 
   build-windows:
     runs-on: windows-latest
@@ -47,4 +47,4 @@ jobs:
         run: |
           git clone https://github.com/embroidermodder/libembroidery
           cd libembroidery
-          bash bin/build.sh "Windows"
+          bash build.sh "Windows"

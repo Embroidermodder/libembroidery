@@ -25,10 +25,11 @@ the Embroidermodder 2 GUI.
 
 ## Documentation
 
-For basic usage, `embroider` should have some in-built help starting with:
+For basic usage, the `sew` command line program should have some in-built
+help starting with:
 
 ```sh
-    $ embroider --help
+    $ sew --help
 ```
 
 If you need libembroidery for any non-trivial usage or want to contribute to
@@ -60,12 +61,13 @@ as the command line program `embroider`.
 
 ### Testing
 
-Our test suite has been chained onto the Makefile directive `check`: so on
-building the software enter your build directory and enter:
+On building the software, enter your build directory and type:
 
 ```sh
-$ make check
+$ sew --test
 ```
 
-The suite requires that you have imagemagick installed to fully test
-the more image-processing based tasks, as does `needle` generally.
+for a suite basic diagnostics on your system.
+
+The full suite requires that you have imagemagick installed to fully test
+the more image-processing based tasks, as does `sew` generally.

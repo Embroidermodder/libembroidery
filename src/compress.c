@@ -45,8 +45,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "embroidery.h"
-
 int huffman_lookup_data[2];
 
 /*!

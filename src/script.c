@@ -23,8 +23,6 @@
 #include <math.h>
 #include <time.h>
 
-#include "embroidery.h"
-
 static EmbPattern *focussed_pattern = NULL;
 
 /* Tests if char * matches a fixed string, often from compiled-in program

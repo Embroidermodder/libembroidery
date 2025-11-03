@@ -28,8 +28,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "embroidery.h"
-
 extern EmbReal epsilon;
 
 const char *justify_options[] = {

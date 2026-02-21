@@ -11219,6 +11219,7 @@ readVp3(EmbPattern* pattern, FILE* file)
     LOAD_I8(file, some) /* 0 */
     softwareVendorString = vp3ReadString(file);
     REPORT_STR(softwareVendorString)
+	safe_free(softwareVendorString);
     LOAD_I16(file, someShort)
     LOAD_I8(file, someByte)
     LOAD_I32(file, bytesRemainingInFile)
@@ -11230,6 +11231,7 @@ readVp3(EmbPattern* pattern, FILE* file)
 
     anotherCommentString = vp3ReadString(file);
     REPORT_STR(anotherCommentString);
+	safe_free(anotherCommentString);
 
     /* TODO: review v1 thru v18 variables and use emb_unused() if needed */
     for (i = 0; i < 18; i++) {
@@ -11249,6 +11251,7 @@ readVp3(EmbPattern* pattern, FILE* file)
 
     anotherSoftwareVendorString = vp3ReadString(file);
     REPORT_STR(anotherSoftwareVendorString);
+	safe_free(anotherSoftwareVendorString);
 
     numberOfColors = emb_read_i16be(file);
     colorSectionOffset = (int)ftell(file);
@@ -11300,6 +11303,10 @@ readVp3(EmbPattern* pattern, FILE* file)
             printf("fileCommentString: %s\n", fileCommentString);
         }
 
+		safe_free(threadColorNumber);
+		safe_free(colorName);
+		safe_free(threadVendor);
+
         while (ftell(file) < colorSectionOffset - 1) {
             int lastFilePosition = ftell(file);
             int x = vp3Decode((char)fgetc(file));
@@ -11335,6 +11342,7 @@ readVp3(EmbPattern* pattern, FILE* file)
             emb_pattern_addStitchRel(pattern, 0, 0, STOP, 1);
         }
     }
+	safe_free(fileCommentString);
     emb_pattern_flipVertical(pattern);
     return 1;
 }

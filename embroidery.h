@@ -3623,7 +3623,6 @@ emb_pattern_readAuto(EmbPattern* pattern, const char* fileName)
     int format = emb_identify_format(fileName);
     if (format < 0) {
         printf("ERROR: convert(), unsupported read file type: %s\n", fileName);
-        emb_pattern_free(pattern);
         return 0;
     }
     return emb_pattern_read(pattern, fileName, format);
@@ -3637,7 +3636,6 @@ emb_pattern_writeAuto(EmbPattern* pattern, const char* fileName)
     printf("emb_pattern_writeAuto %d %s\n", format, fileName);
     if (format < 0) {
         printf("ERROR: convert(), unsupported write file type: %s\n", fileName);
-        emb_pattern_free(pattern);
         return 0;
     }
     return emb_pattern_write(pattern, fileName, format);

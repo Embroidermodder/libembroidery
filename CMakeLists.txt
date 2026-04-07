@@ -22,16 +22,46 @@ add_compile_options(
 endif (WIN32)
 
 set(LIBRARY_SRC
-	embroidery.c
-	embroidery.h
+	${CMAKE_SOURCE_DIR}/src/formats/autodesk.c
+	${CMAKE_SOURCE_DIR}/src/formats/barudan.c
+	${CMAKE_SOURCE_DIR}/src/formats/bernina.c
+	${CMAKE_SOURCE_DIR}/src/formats/bitmap_cache.c
+	${CMAKE_SOURCE_DIR}/src/formats/bits_and_volts.c
+	${CMAKE_SOURCE_DIR}/src/formats/brother.c
+	${CMAKE_SOURCE_DIR}/src/formats/colors.c
+	${CMAKE_SOURCE_DIR}/src/formats/csv.c
+	${CMAKE_SOURCE_DIR}/src/formats/eltac.c
+	${CMAKE_SOURCE_DIR}/src/formats/janome.c
+	${CMAKE_SOURCE_DIR}/src/formats/gold_thread.c
+	${CMAKE_SOURCE_DIR}/src/formats/great_notions.c
+	${CMAKE_SOURCE_DIR}/src/formats/melco.c
+	${CMAKE_SOURCE_DIR}/src/formats/pfaff.c
+	${CMAKE_SOURCE_DIR}/src/formats/sierra.c
+	${CMAKE_SOURCE_DIR}/src/formats/singer.c
+	${CMAKE_SOURCE_DIR}/src/formats/smoothie.c
+	${CMAKE_SOURCE_DIR}/src/formats/toyota.c
+	${CMAKE_SOURCE_DIR}/src/formats/svg.c
+	${CMAKE_SOURCE_DIR}/src/formats/zsk_usa.c
+
+	${CMAKE_SOURCE_DIR}/src/circle.c
+	${CMAKE_SOURCE_DIR}/src/compress.c
+	${CMAKE_SOURCE_DIR}/src/data.c
+	${CMAKE_SOURCE_DIR}/src/encoding.c
+	${CMAKE_SOURCE_DIR}/src/file.c
+	${CMAKE_SOURCE_DIR}/src/image.c
+	${CMAKE_SOURCE_DIR}/src/pattern.c
+	${CMAKE_SOURCE_DIR}/src/thread_colors.c
+	${CMAKE_SOURCE_DIR}/src/unsorted.c
 )
+
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_library(embroidery_static STATIC ${LIBRARY_SRC})
 
 add_library(embroidery SHARED ${LIBRARY_SRC})
 target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
 
-add_executable(sew sew.c)
+add_executable(sew src/sew.c)
 target_link_libraries(sew PRIVATE embroidery_static)
 
 if (WIN32)
@@ -98,3 +128,28 @@ set(CPACK_PACKAGE_VENDOR "The Embroidermodder Team")
 set(CPACK_SOURCE_IGNORE_FILES .git .github)
 
 include(CPack)
+
+enable_testing()
+
+function(make_test name)
+	set(execname test_${name})
+	set(testname ${name}_test)
+	add_executable(${execname} ${CMAKE_SOURCE_DIR}/test/${name}.c)
+	target_link_libraries(${execname} PRIVATE embroidery_static)
+	if (WIN32)
+	else (WIN32)
+		target_link_libraries(${execname} PRIVATE m)
+	endif (WIN32)
+	add_test(${testname} ${execname})
+endfunction()
+
+make_test(arc)
+make_test(circle)
+make_test(convert)
+make_test(ellipse)
+make_test(fill)
+make_test(format_table)
+make_test(render)
+make_test(thread_color)
+make_test(vector)
+

@@ -82,10 +82,22 @@ as the command line program `embroider`.
 On building the software, enter your build directory and type:
 
 ```sh
-$ sew --test
+$ ctest
 ```
 
-for a suite basic diagnostics on your system.
+to run a suite basic diagnostics on your system.
 
-The full suite requires that you have imagemagick installed to fully test
-the more image-processing based tasks, as does `sew` generally.
+## Development
+
+We defer to the linux style guide
+[here](https://www.kernel.org/doc/html/v4.10/process/coding-style.html).
+If you find it too difficult to both contribute your patch and keep within the guide,
+we can adjust it to comply in the PR.
+
+Before submitting a patch use the `style.sh` utility in the top directory like this:
+
+```sh
+bash style.sh
+```
+
+this fixes the indentation to match the linux style.

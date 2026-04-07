@@ -22,16 +22,19 @@ add_compile_options(
 endif (WIN32)
 
 set(LIBRARY_SRC
-	embroidery.c
-	embroidery.h
+	${CMAKE_SOURCE_DIR}/src/circle.c
+	${CMAKE_SOURCE_DIR}/src/data.c
+	${CMAKE_SOURCE_DIR}/src/embroidery.c
 )
+
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_library(embroidery_static STATIC ${LIBRARY_SRC})
 
 add_library(embroidery SHARED ${LIBRARY_SRC})
 target_compile_definitions(embroidery PUBLIC LIBEMBROIDERY_SHARED)
 
-add_executable(sew sew.c)
+add_executable(sew src/sew.c)
 target_link_libraries(sew PRIVATE embroidery_static)
 
 if (WIN32)
@@ -98,3 +101,28 @@ set(CPACK_PACKAGE_VENDOR "The Embroidermodder Team")
 set(CPACK_SOURCE_IGNORE_FILES .git .github)
 
 include(CPack)
+
+enable_testing()
+
+function(make_test name)
+	set(execname test_${name})
+	set(testname ${name}_test)
+	add_executable(${execname} ${CMAKE_SOURCE_DIR}/test/${name}.c)
+	target_link_libraries(${execname} PRIVATE embroidery_static)
+	if (WIN32)
+	else (WIN32)
+		target_link_libraries(${execname} PRIVATE m)
+	endif (WIN32)
+	add_test(${testname} ${execname})
+endfunction()
+
+make_test(arc)
+make_test(circle)
+make_test(convert)
+make_test(ellipse)
+make_test(fill)
+make_test(format_table)
+make_test(render)
+make_test(thread_color)
+make_test(vector)
+

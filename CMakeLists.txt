@@ -22,9 +22,15 @@ add_compile_options(
 endif (WIN32)
 
 set(LIBRARY_SRC
+	${CMAKE_SOURCE_DIR}/src/formats/exp.c
+	${CMAKE_SOURCE_DIR}/src/formats/exy.c
+	${CMAKE_SOURCE_DIR}/src/formats/eys.c
+
 	${CMAKE_SOURCE_DIR}/src/circle.c
+	${CMAKE_SOURCE_DIR}/src/compress.c
 	${CMAKE_SOURCE_DIR}/src/data.c
 	${CMAKE_SOURCE_DIR}/src/embroidery.c
+	${CMAKE_SOURCE_DIR}/src/thread_colors.c
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/include)

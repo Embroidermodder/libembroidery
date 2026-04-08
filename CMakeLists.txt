@@ -38,6 +38,7 @@ set(LIBRARY_SRC
 	${CMAKE_SOURCE_DIR}/src/image.c
 	${CMAKE_SOURCE_DIR}/src/pattern.c
 	${CMAKE_SOURCE_DIR}/src/thread_colors.c
+	${CMAKE_SOURCE_DIR}/src/unsorted.c
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/include)

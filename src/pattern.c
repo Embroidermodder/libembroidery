@@ -1,7 +1,5 @@
 #include <math.h>
 
-/* TODO: factor this out */
-#define LIBEMBROIDERY_IMPLEMENTATION
 #include "embroidery.h"
 
 /* The Pattern Properties

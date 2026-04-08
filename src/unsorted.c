@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,6 +11,24 @@
 
 #include "embroidery.h"
 
+char readRgb(EmbPattern * pattern, FILE * file);
+char writeRgb(EmbPattern * pattern, FILE * file);
+
+char readDst(EmbPattern * pattern, FILE * file);
+char writeDst(EmbPattern * pattern, FILE * file);
+
+char readInf(EmbPattern * pattern, FILE * file);
+char writeInf(EmbPattern * pattern, FILE * file);
+
+char readPhb(EmbPattern * pattern, FILE * file);
+char writePhb(EmbPattern * pattern, FILE * file);
+char readPec(EmbPattern * pattern, FILE * file);
+char writePec(EmbPattern * pattern, FILE * file);
+char readPel(EmbPattern * pattern, FILE * file);
+char writePel(EmbPattern * pattern, FILE * file);
+char readPem(EmbPattern * pattern, FILE * file);
+char writePem(EmbPattern * pattern, FILE * file);
+
 /*
  * Script section
  */
@@ -21,75 +38,70 @@ static EmbPattern *focussed_pattern = NULL;
 /* Tests if char * matches a fixed string, often from compiled-in program
  * data.
  */
-bool
-string_equal(char *a, const char *b)
+bool string_equal(char *a, const char *b)
 {
-    return (strncmp(a, b, MAX_STRING_LENGTH) == 0);
+        return (strncmp(a, b, MAX_STRING_LENGTH) == 0);
 }
 
 /* . */
-int
-parse_floats(const char *line, float result[], int n)
+int parse_floats(const char *line, float result[], int n)
 {
-    char substring[MAX_STRING_LENGTH];
-    const char *c;
-    int i = 0;
-    int pos = 0;
-    for (c=line; *c; c++) {
-        substring[pos] = *c;
-        if (*c == ',' || *c == ' ') {
-            substring[pos] = 0;
-            result[i] = atof(substring);
-            pos = 0;
-            i++;
-            if (i > n-1) {
-                return -1;
-            }
+        char substring[MAX_STRING_LENGTH];
+        const char *c;
+        int i = 0;
+        int pos = 0;
+        for (c = line; *c; c++) {
+                substring[pos] = *c;
+                if (*c == ',' || *c == ' ') {
+                        substring[pos] = 0;
+                        result[i] = atof(substring);
+                        pos = 0;
+                        i++;
+                        if (i > n - 1) {
+                                return -1;
+                        }
+                } else {
+                        pos++;
+                }
         }
-        else {
-            pos++;
-        }
-    }
-    substring[pos] = 0;
-    result[i] = atof(substring);
-    return i+1;
+        substring[pos] = 0;
+        result[i] = atof(substring);
+        return i + 1;
 }
 
-int
-parse_vector(const char *line, EmbVector *v)
+int parse_vector(const char *line, EmbVector *v)
 {
-    float v_[2];
-    if (parse_floats(line, v_, 2) == 2) {
-        return 0;
-    }
-    v->x = v_[0];
-    v->y = v_[1];
-    return 1;
+        float v_[2];
+        if (parse_floats(line, v_, 2) == 2) {
+                return 0;
+        }
+        v->x = v_[0];
+        v->y = v_[1];
+        return 1;
 }
 
 /* . */
-bool
-valid_rgb(float r, float g, float b)
+bool valid_rgb(float r, float g, float b)
 {
-    if (isnan(r)) {
-        return false;
-    }
-    if (isnan(g)) {
-        return false;
-    }
-    if (isnan(b)) {
-        return false;
-    }
-    if (r < 0 || r > 255) {
-        return false;
-    }
-    if (g < 0 || g > 255) {
-        return false;
-    }
-    if (b < 0 || b > 255) {
-        return false;
-    }
-    return true;
+        if (isnan(r)) {
+                return false;
+        }
+        if (isnan(g)) {
+                return false;
+        }
+        if (isnan(b)) {
+                return false;
+        }
+        if (r < 0 || r > 255) {
+                return false;
+        }
+        if (g < 0 || g > 255) {
+                return false;
+        }
+        if (b < 0 || b > 255) {
+                return false;
+        }
+        return true;
 }
 
 /* This version of string_array_length does not protect against the END_SYMBOL
@@ -97,1067 +109,127 @@ valid_rgb(float r, float g, float b)
  *
  * For string tables edited during run time, the END_SYMBOL is checked for during loops.
  */
-int
-table_length(char *s[])
+int table_length(char *s[])
 {
-    int i;
-    for (i=0; i<1000; i++) {
-        if (s[i][0] == END_SYMBOL[0]) {
-            if (!strncmp(s[i], END_SYMBOL, MAX_STRING_LENGTH)) {
-                break;
-            }
+        int i;
+        for (i = 0; i < 1000; i++) {
+                if (s[i][0] == END_SYMBOL[0]) {
+                        if (!strncmp(s[i], END_SYMBOL, MAX_STRING_LENGTH)) {
+                                break;
+                        }
+                }
         }
-    }
-    if (i == 1000) {
-        puts("ERROR: Table is missing END_SYMBOL.");
-        return 1000;
-    }
-    return i;
+        if (i == 1000) {
+                puts("ERROR: Table is missing END_SYMBOL.");
+                return 1000;
+        }
+        return i;
 }
 
 /* . */
-unsigned char *
-load_file(char *fname)
+unsigned char *load_file(char *fname)
 {
-    FILE *f = fopen(fname, "r");
-    if (!f) {
-        printf("ERROR: Failed to open \"%s\".\n", fname);
-        return NULL;
-    }
-    fseek(f, 0, SEEK_END);
-    size_t length = ftell(f);
-    unsigned char *data = malloc(length+1);
-    fseek(f, 0, SEEK_SET);
-    if (!read_n_bytes(f, data, length)) {
+        FILE *f = fopen(fname, "r");
+        if (!f) {
+                printf("ERROR: Failed to open \"%s\".\n", fname);
+                return NULL;
+        }
+        fseek(f, 0, SEEK_END);
+        size_t length = ftell(f);
+        unsigned char *data = malloc(length + 1);
+        fseek(f, 0, SEEK_SET);
+        if (!read_n_bytes(f, data, length)) {
+                fclose(f);
+                return NULL;
+        }
         fclose(f);
-        return NULL;
-    }
-    fclose(f);
-    return data;
-}
-
-
-/* . */
-bool
-int32_underflow(int64_t a, int64_t b)
-{
-    int64_t c;
-    assert(LLONG_MAX>INT_MAX);
-    c = (int64_t)a-b;
-    if (c < INT_MIN || c > INT_MAX) {
-        return true;
-    }
-    return false;
+        return data;
 }
 
 /* . */
-bool
-int32_overflow(int64_t a, int64_t b)
+bool int32_underflow(int64_t a, int64_t b)
 {
-    int64_t c;
-    assert(LLONG_MAX>INT_MAX);
-    c = (int64_t)a+b;
-    if (c < INT_MIN || c > INT_MAX) {
-        return true;
-    }
-    return false;
+        int64_t c;
+        assert(LLONG_MAX > INT_MAX);
+        c = (int64_t) a - b;
+        if (c < INT_MIN || c > INT_MAX) {
+                return true;
+        }
+        return false;
 }
 
 /* . */
-int
-round_to_multiple(bool roundUp, int numToRound, int multiple)
+bool int32_overflow(int64_t a, int64_t b)
 {
-    if (multiple == 0) {
-        return numToRound;
-    }
-    int remainder = numToRound % multiple;
-    if (remainder == 0) {
-        return numToRound;
-    }
+        int64_t c;
+        assert(LLONG_MAX > INT_MAX);
+        c = (int64_t) a + b;
+        if (c < INT_MIN || c > INT_MAX) {
+                return true;
+        }
+        return false;
+}
 
-    if (numToRound < 0 && roundUp) {
+/* . */
+int round_to_multiple(bool roundUp, int numToRound, int multiple)
+{
+        if (multiple == 0) {
+                return numToRound;
+        }
+        int remainder = numToRound % multiple;
+        if (remainder == 0) {
+                return numToRound;
+        }
+
+        if (numToRound < 0 && roundUp) {
+                return numToRound - remainder;
+        }
+        if (roundUp) {
+                return numToRound + multiple - remainder;
+        }
+        /* else round down */
+        if (numToRound < 0 && !roundUp) {
+                return numToRound - multiple - remainder;
+        }
         return numToRound - remainder;
-    }
-    if (roundUp) {
-        return numToRound + multiple - remainder;
-    }
-    /* else round down */
-    if (numToRound < 0 && !roundUp) {
-        return numToRound - multiple - remainder;
-    }
-    return numToRound - remainder;
 }
 
 /* Formats each message with a timestamp. */
-void
-debug_message(const char *msg, ...)
+void debug_message(const char *msg, ...)
 {
-    char buffer[MAX_STRING_LENGTH], fname[MAX_STRING_LENGTH];
-    time_t t;
-    struct tm* tm_info;
-    sprintf(fname, "debug.log");
-    FILE *f = fopen(fname, "a");
-    if (!f) {
-        printf("Failed to write to debug.log.");
-        return;
-    }
-    t = time(NULL);
-    tm_info = localtime(&t);
-    strftime(buffer, 26, "%Y-%m-%d %H:%M:%S", tm_info);
-    fprintf(f, "%s ", buffer);
+        char buffer[MAX_STRING_LENGTH], fname[MAX_STRING_LENGTH];
+        time_t t;
+        struct tm *tm_info;
+        sprintf(fname, "debug.log");
+        FILE *f = fopen(fname, "a");
+        if (!f) {
+                printf("Failed to write to debug.log.");
+                return;
+        }
+        t = time(NULL);
+        tm_info = localtime(&t);
+        strftime(buffer, 26, "%Y-%m-%d %H:%M:%S", tm_info);
+        fprintf(f, "%s ", buffer);
 
-    va_list args;
-    va_start(args, msg);
-    vfprintf(f, msg, args);
-    va_end(args);
+        va_list args;
+        va_start(args, msg);
+        vfprintf(f, msg, args);
+        va_end(args);
 
-    fprintf(f, "\n");
-    fclose(f);
+        fprintf(f, "\n");
+        fclose(f);
 }
 
 /* . */
-bool
-valid_file_format(char *fileName)
+bool valid_file_format(char *fileName)
 {
-    if (emb_identify_format(fileName) >= 0) {
-        return true;
-    }
-    return false;
+        if (emb_identify_format(fileName) >= 0) {
+                return true;
+        }
+        return false;
 }
-
-/*
- * Formats
- */
-
-char read100(EmbPattern *pattern, FILE* file);
-char write100(EmbPattern *pattern, FILE* file);
-char read10o(EmbPattern *pattern, FILE* file);
-char write10o(EmbPattern *pattern, FILE* file);
-char readArt(EmbPattern *pattern, FILE* file);
-char writeArt(EmbPattern *pattern, FILE* file);
-char readBmc(EmbPattern *pattern, FILE* file);
-char writeBmc(EmbPattern *pattern, FILE* file);
-char readBro(EmbPattern *pattern, FILE* file);
-char writeBro(EmbPattern *pattern, FILE* file);
-char readCnd(EmbPattern *pattern, FILE* file);
-char writeCnd(EmbPattern *pattern, FILE* file);
-char readCol(EmbPattern *pattern, FILE* file);
-char writeCol(EmbPattern *pattern, FILE* file);
-char readCsd(EmbPattern *pattern, FILE* file);
-char writeCsd(EmbPattern *pattern, FILE* file);
-char readCsv(EmbPattern *pattern, FILE* file);
-char writeCsv(EmbPattern *pattern, FILE* file);
-char readDat(EmbPattern *pattern, FILE* file);
-char writeDat(EmbPattern *pattern, FILE* file);
-char readDem(EmbPattern *pattern, FILE* file);
-char writeDem(EmbPattern *pattern, FILE* file);
-char readDsb(EmbPattern *pattern, FILE* file);
-char writeDsb(EmbPattern *pattern, FILE* file);
-char readDst(EmbPattern *pattern, FILE* file);
-char writeDst(EmbPattern *pattern, FILE* file);
-char readDsz(EmbPattern *pattern, FILE* file);
-char writeDsz(EmbPattern *pattern, FILE* file);
-char readDxf(EmbPattern *pattern, FILE* file);
-char writeDxf(EmbPattern *pattern, FILE* file);
-char readEdr(EmbPattern *pattern, FILE* file);
-char writeEdr(EmbPattern *pattern, FILE* file);
-char readEmd(EmbPattern *pattern, FILE* file);
-char writeEmd(EmbPattern *pattern, FILE* file);
-char readExp(EmbPattern *pattern, FILE* file);
-char writeExp(EmbPattern *pattern, FILE* file);
-char readExy(EmbPattern *pattern, FILE* file);
-char writeExy(EmbPattern *pattern, FILE* file);
-char readEys(EmbPattern *pattern, FILE* file);
-char writeEys(EmbPattern *pattern, FILE* file);
-char readFxy(EmbPattern *pattern, FILE* file);
-char writeFxy(EmbPattern *pattern, FILE* file);
-char readGc(EmbPattern *pattern, FILE* file);
-char writeGc(EmbPattern *pattern, FILE* file);
-char readGnc(EmbPattern *pattern, FILE* file);
-char writeGnc(EmbPattern *pattern, FILE* file);
-char readGt(EmbPattern *pattern, FILE* file);
-char writeGt(EmbPattern *pattern, FILE* file);
-char readHus(EmbPattern *pattern, FILE* file);
-char writeHus(EmbPattern *pattern, FILE* file);
-char readInb(EmbPattern *pattern, FILE* file);
-char writeInb(EmbPattern *pattern, FILE* file);
-char readInf(EmbPattern *pattern, FILE* file);
-char writeInf(EmbPattern *pattern, FILE* file);
-char readJef(EmbPattern *pattern, FILE* file);
-char writeJef(EmbPattern *pattern, FILE* file);
-char readKsm(EmbPattern *pattern, FILE* file);
-char writeKsm(EmbPattern *pattern, FILE* file);
-char readMax(EmbPattern *pattern, FILE* file);
-char writeMax(EmbPattern *pattern, FILE* file);
-char readMit(EmbPattern *pattern, FILE* file);
-char writeMit(EmbPattern *pattern, FILE* file);
-char readNew(EmbPattern *pattern, FILE* file);
-char writeNew(EmbPattern *pattern, FILE* file);
-char readOfm(EmbPattern *pattern, FILE* file);
-char writeOfm(EmbPattern *pattern, FILE* file);
-char readPcd(EmbPattern *pattern, const char *fileName, FILE* file);
-char writePcd(EmbPattern *pattern, FILE* file);
-char readPcm(EmbPattern *pattern, FILE* file);
-char writePcm(EmbPattern *pattern, FILE* file);
-char readPcq(EmbPattern *pattern, const char *fileName, FILE* file);
-char writePcq(EmbPattern *pattern, FILE* file);
-char readPcs(EmbPattern *pattern, const char *fileName, FILE* file);
-char writePcs(EmbPattern *pattern, FILE* file);
-char readPec(EmbPattern *pattern, const char *fileName, FILE* file);
-char writePec(EmbPattern *pattern, const char *fileName,  FILE* file);
-char readPel(EmbPattern *pattern, FILE* file);
-char writePel(EmbPattern *pattern, FILE* file);
-char readPem(EmbPattern *pattern, FILE* file);
-char writePem(EmbPattern *pattern, FILE* file);
-char readPes(EmbPattern *pattern, const char *fileName, FILE* file);
-char writePes(EmbPattern *pattern, const char *fileName, FILE* file);
-char readPhb(EmbPattern *pattern, FILE* file);
-char writePhb(EmbPattern *pattern, FILE* file);
-char readPhc(EmbPattern *pattern, FILE* file);
-char writePhc(EmbPattern *pattern, FILE* file);
-char readPlt(EmbPattern *pattern, FILE* file);
-char writePlt(EmbPattern *pattern, FILE* file);
-char readRgb(EmbPattern *pattern, FILE* file);
-char writeRgb(EmbPattern *pattern, FILE* file);
-char readSew(EmbPattern *pattern, FILE* file);
-char writeSew(EmbPattern *pattern, FILE* file);
-char readShv(EmbPattern *pattern, FILE* file);
-char writeShv(EmbPattern *pattern, FILE* file);
-char readSst(EmbPattern *pattern, FILE* file);
-char writeSst(EmbPattern *pattern, FILE* file);
-char readStx(EmbPattern *pattern, FILE* file);
-char writeStx(EmbPattern *pattern, FILE* file);
-char readSvg(EmbPattern *pattern, FILE* file);
-char writeSvg(EmbPattern *pattern, FILE* file);
-char readT01(EmbPattern *pattern, FILE* file);
-char writeT01(EmbPattern *pattern, FILE* file);
-char readT09(EmbPattern *pattern, FILE* file);
-char writeT09(EmbPattern *pattern, FILE* file);
-char readTap(EmbPattern *pattern, FILE* file);
-char writeTap(EmbPattern *pattern, FILE* file);
-char readThr(EmbPattern *pattern, FILE* file);
-char writeThr(EmbPattern *pattern, FILE* file);
-char readTxt(EmbPattern *pattern, FILE* file);
-char writeTxt(EmbPattern *pattern, FILE* file);
-char readU00(EmbPattern *pattern, FILE* file);
-char writeU00(EmbPattern *pattern, FILE* file);
-char readU01(EmbPattern *pattern, FILE* file);
-char writeU01(EmbPattern *pattern, FILE* file);
-char readVip(EmbPattern *pattern, FILE* file);
-char writeVip(EmbPattern *pattern, FILE* file);
-char readVp3(EmbPattern *pattern, FILE* file);
-char writeVp3(EmbPattern *pattern, FILE* file);
-char readXxx(EmbPattern *pattern, FILE* file);
-char writeXxx(EmbPattern *pattern, FILE* file);
-char readZsk(EmbPattern *pattern, FILE* file);
-char writeZsk(EmbPattern *pattern, FILE* file);
-
-int read_descriptions(FILE* file, EmbPattern* pattern);
-void readHoopName(FILE* file, EmbPattern* pattern);
-void readImageString(FILE* file, EmbPattern* pattern);
-void readProgrammableFills(FILE* file, EmbPattern* pattern);
-void readMotifPatterns(FILE* file, EmbPattern* pattern);
-void readFeatherPatterns(FILE* file, EmbPattern* pattern);
-void readThreads(FILE* file, EmbPattern* pattern);
-
-void readPESHeaderV5(FILE* file, EmbPattern* pattern);
-void readPESHeaderV6(FILE* file, EmbPattern* pattern);
-void readPESHeaderV7(FILE* file, EmbPattern* pattern);
-void readPESHeaderV8(FILE* file, EmbPattern* pattern);
-void readPESHeaderV9(FILE* file, EmbPattern* pattern);
-void readPESHeaderV10(FILE* file, EmbPattern* pattern);
 
 const int shvThreadCount = 42;
-const int pecThreadCount = 65;
-
-/* WARNING: Not unicode safe. */
-unsigned char char_to_lower(unsigned char a);
-
-/* Get extension from file name. */
-int
-emb_fname_extension(const char *fileName, char ending[5])
-{
-    int i;
-
-    if (!fileName) {
-        puts("ERROR: emb_fname_extension(), fileName argument is null.\n");
-        return 0;
-    }
-
-    if (fileName[0] == 0) {
-        puts("ERROR: emb_fname_extension(), fileName argument is an empty string.\n");
-        return 0;
-    }
-
-    int offset = string_rchar(fileName, '.');
-    if (offset == 0) {
-        puts("ERROR: emb_fname_extension(), filename has no stub.\n");
-        return 0;
-    }
-
-    i = 0;
-    while (fileName[offset+i]) {
-        ending[i] = char_to_lower(fileName[offset+i]);
-        i++;
-    }
-    ending[i] = 0; /* terminate the string */
-    return 1;
-}
-
-/* Identify format from the file name. */
-int
-emb_identify_format(const char *fileName)
-{
-    int i;
-    char ending[5];
-    if (!emb_fname_extension(fileName, ending)) {
-        puts("Failed to isolate the extension of the supplied fileName.");
-        return -1;
-    }
-    for (i = 0; i < numberOfFormats; i++) {
-        if (!strncmp(ending, formatTable[i].extension, 10)) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-/* . */
-char
-read_n_bytes(FILE *file, unsigned char *data, unsigned int length)
-{
-    if (fread(data, 1, length, file) != length) {
-        printf("ERROR: failed to read %d bytes from file.", length);
-        return 0;
-    }
-    return 1;
-}
-
-/* . */
-char
-embp_read(EmbPattern* pattern, const char *fileName, int format)
-{
-    int result;
-    FILE *file;
-    result = 0;
-    if (!pattern) {
-        printf("ERROR: embp_read(), pattern argument is null.\n");
-        return 0;
-    }
-    if (!fileName) {
-        printf("ERROR: embp_read(), fileName argument is null.\n");
-        return 0;
-    }
-    file = fopen(fileName, "rb");
-    if (!file) {
-        if ((format != EMB_FORMAT_EDR) &&
-            (format != EMB_FORMAT_RGB) &&
-            (format != EMB_FORMAT_COL) &&
-            (format != EMB_FORMAT_INF)) {
-            printf("ERROR: Failed to open file with name: %s.\n", fileName);
-        }
-        return 0;
-    }
-    if (formatTable[format].check_for_color_file) {
-        embp_loadExternalColorFile(pattern, fileName);
-    }
-    switch (format) {
-    case EMB_FORMAT_100:
-        result = read100(pattern, file);
-        break;
-    case EMB_FORMAT_10O:
-        result = read10o(pattern, file);
-        break;
-    case EMB_FORMAT_ART:
-        result = readArt(pattern, file);
-        break;
-    case EMB_FORMAT_BMC:
-        result = readBmc(pattern, file);
-        break;
-    case EMB_FORMAT_BRO:
-        result = readBro(pattern, file);
-        break;
-    case EMB_FORMAT_CND:
-        result = readCnd(pattern, file);
-        break;
-    case EMB_FORMAT_COL:
-        result = readCol(pattern, file);
-        break;
-    case EMB_FORMAT_CSD:
-        result = readCsd(pattern, file);
-        break;
-    case EMB_FORMAT_CSV:
-        result = readCsv(pattern, file);
-        break;
-    case EMB_FORMAT_DAT:
-        result = readDat(pattern, file);
-        break;
-    case EMB_FORMAT_DEM:
-        result = readDem(pattern, file);
-        break;
-    case EMB_FORMAT_DSB:
-        result = readDsb(pattern, file);
-        break;
-    case EMB_FORMAT_DST:
-        result = readDst(pattern, file);
-        break;
-    case EMB_FORMAT_DSZ:
-        result = readDsz(pattern, file);
-        break;
-    case EMB_FORMAT_DXF:
-        result = readDxf(pattern, file);
-        break;
-    case EMB_FORMAT_EDR:
-        result = readEdr(pattern, file);
-        break;
-    case EMB_FORMAT_EMD:
-        result = readEmd(pattern, file);
-        break;
-    case EMB_FORMAT_EXP:
-        result = readExp(pattern, file);
-        break;
-    case EMB_FORMAT_EXY:
-        result = readExy(pattern, file);
-        break;
-    case EMB_FORMAT_EYS:
-        result = readEys(pattern, file);
-        break;
-    case EMB_FORMAT_FXY:
-        result = readFxy(pattern, file);
-        break;
-    case EMB_FORMAT_GC:
-        result = readGc(pattern, file);
-        break;
-    case EMB_FORMAT_GNC:
-        result = readGnc(pattern, file);
-        break;
-    case EMB_FORMAT_GT:
-        result = readGt(pattern, file);
-        break;
-    case EMB_FORMAT_HUS:
-        result = readHus(pattern, file);
-        break;
-    case EMB_FORMAT_INB:
-        result = readInb(pattern, file);
-        break;
-    case EMB_FORMAT_INF:
-        result = readInf(pattern, file);
-        break;
-    case EMB_FORMAT_JEF:
-        result = readJef(pattern, file);
-        break;
-    case EMB_FORMAT_KSM:
-        result = readKsm(pattern, file);
-        break;
-    case EMB_FORMAT_MAX:
-        result = readMax(pattern, file);
-        break;
-    case EMB_FORMAT_MIT:
-        result = readMit(pattern, file);
-        break;
-    case EMB_FORMAT_NEW:
-        result = readNew(pattern, file);
-        break;
-    case EMB_FORMAT_OFM:
-        result = readOfm(pattern, file);
-        break;
-    case EMB_FORMAT_PCD:
-        result = readPcd(pattern, fileName, file);
-        break;
-    case EMB_FORMAT_PCM:
-        result = readPcm(pattern, file);
-        break;
-    case EMB_FORMAT_PCQ:
-        result = readPcq(pattern, fileName, file);
-        break;
-    case EMB_FORMAT_PCS:
-        result = readPcs(pattern, fileName, file);
-        break;
-    case EMB_FORMAT_PEC:
-        result = readPec(pattern, fileName, file);
-        break;
-    case EMB_FORMAT_PEL:
-        result = readPel(pattern, file);
-        break;
-    case EMB_FORMAT_PEM:
-        result = readPem(pattern, file);
-        break;
-    case EMB_FORMAT_PES:
-        result = readPes(pattern, fileName, file);
-        break;
-    case EMB_FORMAT_PHB:
-        result = readPhb(pattern, file);
-        break;
-    case EMB_FORMAT_PHC:
-        result = readPhc(pattern, file);
-        break;
-    case EMB_FORMAT_PLT:
-        result = readPlt(pattern, file);
-        break;
-    case EMB_FORMAT_RGB:
-        result = readRgb(pattern, file);
-        break;
-    case EMB_FORMAT_SEW:
-        result = readSew(pattern, file);
-        break;
-    case EMB_FORMAT_SHV:
-        result = readShv(pattern, file);
-        break;
-    case EMB_FORMAT_SST:
-        result = readSst(pattern, file);
-        break;
-    case EMB_FORMAT_STX:
-        result = readStx(pattern, file);
-        break;
-    case EMB_FORMAT_SVG:
-        result = readSvg(pattern, file);
-        break;
-    case EMB_FORMAT_T01:
-        result = readT01(pattern, file);
-        break;
-    case EMB_FORMAT_T09:
-        result = readT09(pattern, file);
-        break;
-    case EMB_FORMAT_TAP:
-        result = readTap(pattern, file);
-        break;
-    case EMB_FORMAT_THR:
-        result = readThr(pattern, file);
-        break;
-    case EMB_FORMAT_TXT:
-        result = readTxt(pattern, file);
-        break;
-    case EMB_FORMAT_U00:
-        result = readU00(pattern, file);
-        break;
-    case EMB_FORMAT_U01:
-        result = readU01(pattern, file);
-        break;
-    case EMB_FORMAT_VIP:
-        result = readVip(pattern, file);
-        break;
-    case EMB_FORMAT_VP3:
-        result = readVp3(pattern, file);
-        break;
-    case EMB_FORMAT_XXX:
-        result = readXxx(pattern, file);
-        break;
-    case EMB_FORMAT_ZSK:
-        result = readZsk(pattern, file);
-        break;
-    default:
-        break;
-    }
-    fclose(file);
-    if (!formatTable[format].color_only) {
-        embp_end(pattern);
-    }
-    return result;
-}
-
-/* . */
-char
-embp_write(EmbPattern* pattern, const char *fileName, int format)
-{
-    FILE *file;
-    int result = 0;
-    if (!pattern) {
-        printf("ERROR: embp_write(), pattern argument is null\n");
-        return 0;
-    }
-    if (!fileName) {
-        printf("ERROR: embp_write(), fileName argument is null\n");
-        return 0;
-    }
-    if (pattern->stitch_list->count == 0) {
-        printf("ERROR: embp_write(), pattern contains no stitches\n");
-        return 0;
-    }
-    if (!formatTable[format].color_only) {
-        embp_end(pattern);
-    }
-
-    file = fopen(fileName, "wb");
-    if (!file) {
-        printf("Failed to open file with name: %s.", fileName);
-        return 0;
-    }
-    switch (format) {
-    case EMB_FORMAT_100:
-        result = write100(pattern, file);
-        break;
-    case EMB_FORMAT_10O:
-        result = write10o(pattern, file);
-        break;
-    case EMB_FORMAT_ART:
-        result = writeArt(pattern, file);
-        break;
-    case EMB_FORMAT_BMC:
-        result = writeBmc(pattern, file);
-        break;
-    case EMB_FORMAT_BRO:
-        result = writeBro(pattern, file);
-        break;
-    case EMB_FORMAT_CND:
-        result = writeCnd(pattern, file);
-        break;
-    case EMB_FORMAT_COL:
-        result = writeCol(pattern, file);
-        break;
-    case EMB_FORMAT_CSD:
-        result = writeCsd(pattern, file);
-        break;
-    case EMB_FORMAT_CSV:
-        result = writeCsv(pattern, file);
-        break;
-    case EMB_FORMAT_DAT:
-        result = writeDat(pattern, file);
-        break;
-    case EMB_FORMAT_DEM:
-        result = writeDem(pattern, file);
-        break;
-    case EMB_FORMAT_DSB:
-        result = writeDsb(pattern, file);
-        break;
-    case EMB_FORMAT_DST:
-        result = writeDst(pattern, file);
-        break;
-    case EMB_FORMAT_DSZ:
-        result = writeDsz(pattern, file);
-        break;
-    case EMB_FORMAT_DXF:
-        result = writeDxf(pattern, file);
-        break;
-    case EMB_FORMAT_EDR:
-        result = writeEdr(pattern, file);
-        break;
-    case EMB_FORMAT_EMD:
-        result = writeEmd(pattern, file);
-        break;
-    case EMB_FORMAT_EXP:
-        result = writeExp(pattern, file);
-        break;
-    case EMB_FORMAT_EXY:
-        result = writeExy(pattern, file);
-        break;
-    case EMB_FORMAT_EYS:
-        result = writeEys(pattern, file);
-        break;
-    case EMB_FORMAT_FXY:
-        result = writeFxy(pattern, file);
-        break;
-    case EMB_FORMAT_GC:
-        result = writeGc(pattern, file);
-        break;
-    case EMB_FORMAT_GNC:
-        result = writeGnc(pattern, file);
-        break;
-    case EMB_FORMAT_GT:
-        result = writeGt(pattern, file);
-        break;
-    case EMB_FORMAT_HUS:
-        result = writeHus(pattern, file);
-        break;
-    case EMB_FORMAT_INB:
-        result = writeInb(pattern, file);
-        break;
-    case EMB_FORMAT_INF:
-        result = writeInf(pattern, file);
-        break;
-    case EMB_FORMAT_JEF:
-        result = writeJef(pattern, file);
-        break;
-    case EMB_FORMAT_KSM:
-        result = writeKsm(pattern, file);
-        break;
-    case EMB_FORMAT_MAX:
-        result = writeMax(pattern, file);
-        break;
-    case EMB_FORMAT_MIT:
-        result = writeMit(pattern, file);
-        break;
-    case EMB_FORMAT_NEW:
-        result = writeNew(pattern, file);
-        break;
-    case EMB_FORMAT_OFM:
-        result = writeOfm(pattern, file);
-        break;
-    case EMB_FORMAT_PCD:
-        result = writePcd(pattern, file);
-        break;
-    case EMB_FORMAT_PCM:
-        result = writePcm(pattern, file);
-        break;
-    case EMB_FORMAT_PCQ:
-        result = writePcq(pattern, file);
-        break;
-    case EMB_FORMAT_PCS:
-        result = writePcs(pattern, file);
-        break;
-    case EMB_FORMAT_PEC:
-        result = writePec(pattern, fileName, file);
-        break;
-    case EMB_FORMAT_PEL:
-        result = writePel(pattern, file);
-        break;
-    case EMB_FORMAT_PEM:
-        result = writePem(pattern, file);
-        break;
-    case EMB_FORMAT_PES:
-        result = writePes(pattern, fileName, file);
-        break;
-    case EMB_FORMAT_PHB:
-        result = writePhb(pattern, file);
-        break;
-    case EMB_FORMAT_PHC:
-        result = writePhc(pattern, file);
-        break;
-    case EMB_FORMAT_PLT:
-        result = writePlt(pattern, file);
-        break;
-    case EMB_FORMAT_RGB:
-        result = writeRgb(pattern, file);
-        break;
-    case EMB_FORMAT_SEW:
-        result = writeSew(pattern, file);
-        break;
-    case EMB_FORMAT_SHV:
-        result = writeShv(pattern, file);
-        break;
-    case EMB_FORMAT_SST:
-        result = writeSst(pattern, file);
-        break;
-    case EMB_FORMAT_STX:
-        result = writeStx(pattern, file);
-        break;
-    case EMB_FORMAT_SVG:
-        result = writeSvg(pattern, file);
-        break;
-    case EMB_FORMAT_T01:
-        result = writeT01(pattern, file);
-        break;
-    case EMB_FORMAT_T09:
-        result = writeT09(pattern, file);
-        break;
-    case EMB_FORMAT_TAP:
-        result = writeTap(pattern, file);
-        break;
-    case EMB_FORMAT_THR:
-        result = writeThr(pattern, file);
-        break;
-    case EMB_FORMAT_TXT:
-        result = writeTxt(pattern, file);
-        break;
-    case EMB_FORMAT_U00:
-        result = writeU00(pattern, file);
-        break;
-    case EMB_FORMAT_U01:
-        result = writeU01(pattern, file);
-        break;
-    case EMB_FORMAT_VIP:
-        result = writeVip(pattern, file);
-        break;
-    case EMB_FORMAT_VP3:
-        result = writeVp3(pattern, file);
-        break;
-    case EMB_FORMAT_XXX:
-        result = writeXxx(pattern, file);
-        break;
-    case EMB_FORMAT_ZSK:
-        result = writeZsk(pattern, file);
-        break;
-    default:
-        break;
-    }
-    if (formatTable[format].write_external_color_file) {
-        char externalFileName[1000];
-        int stub_length;
-        strncpy(externalFileName, fileName, 200);
-        stub_length = strlen(fileName) - strlen(formatTable[format].extension);
-        externalFileName[stub_length] = 0;
-        strcat(externalFileName, ".rgb");
-        embp_write(pattern, externalFileName, EMB_FORMAT_RGB);
-    }
-    fclose(file);
-    return result;
-}
-
-/* . */
-char
-embp_readAuto(EmbPattern* pattern, const char* fileName)
-{
-    int format = emb_identify_format(fileName);
-    if (format < 0) {
-        printf("ERROR: convert(), unsupported read file type: %s\n", fileName);
-        return 0;
-    }
-    return embp_read(pattern, fileName, format);
-}
-
-/* . */
-char
-embp_writeAuto(EmbPattern* pattern, const char* fileName)
-{
-    int format = emb_identify_format(fileName);
-    printf("embp_writeAuto %d %s\n", format, fileName);
-    if (format < 0) {
-        printf("ERROR: convert(), unsupported write file type: %s\n", fileName);
-        return 0;
-    }
-    return embp_write(pattern, fileName, format);
-}
-
-/* The Toyota 100 format is a stitch-only format that uses an external color
- * file.
- *
- * The stitch encoding is in 4 byte chunks.
- */
-char
-read100(EmbPattern *pattern, FILE* file)
-{
-    unsigned char b[10];
-    while (fread(b, 1, 3, file) == 3) {
-        EmbStitch st;
-        st.x = toyota_position_decode(b[2]);
-        st.y = toyota_position_decode(b[3]);
-        st.flags = NORMAL;
-        /*
-        if (!(b[0] & 0xFC)) {
-            st.flags = JUMP;
-            TODO: review & fix
-        }
-        */
-        if (!(b[0] & 0x01)) {
-            st.flags = STOP;
-        }
-        if (b[0] == 0x1F) {
-            st.flags = END;
-        }
-
-        embp_addStitchRel(pattern, st.x, st.y, st.flags, 1);
-    }
-    return 1;
-}
-
-char
-write100(EmbPattern *pattern, FILE* file)
-{
-    int i;
-    EmbVector position;
-
-    position = pattern->home;
-    for (i=0; i<pattern->stitch_list->count; i++) {
-        unsigned char b[10];
-        EmbStitch st = pattern->stitch_list->stitch[i];
-
-        EmbVector delta;
-        delta.x = st.x - position.x;
-        delta.y = st.y - position.y;
-        position = emb_vector_add(position, delta);
-        b[0] = 0;
-        b[1] = 0;
-        b[2] = toyota_position_encode(delta.x);
-        b[3] = toyota_position_encode(delta.y);
-        if (!(st.flags & STOP)) {
-            b[0] |= 0x01;
-        }
-        if (st.flags & END) {
-            b[0] = 0x1F;
-        }
-
-        if (fwrite(b, 1, 4, file) != 4) {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-/* The Toyota 10o format is a stitch-only format that uses an external color
- * file.
- *
- * The stitch encoding is in 3 byte chunks.
- */
-char
-read10o(EmbPattern *pattern, FILE* file)
-{
-    unsigned char b[10];
-    while (fread(b, 1, 3, file) == 3) {
-        EmbStitch st;
-
-        unsigned char ctrl = b[0];
-        st.y = 0.1 * b[1];
-        st.x = 0.1 * b[2];
-        st.flags = NORMAL;
-
-        if (ctrl & 0x20) {
-            st.x = -st.x;
-        }
-        if (ctrl & 0x40) {
-            st.y = -st.y;
-        }
-        if (ctrl & 0x01) {
-            st.flags = TRIM;
-        }
-        if ((ctrl & 0x5) == 5) {
-            st.flags = STOP;
-        }
-        if (ctrl == 0xF8 || ctrl == 0x91 || ctrl == 0x87) {
-            st.flags = END;
-        }
-
-        embp_addStitchRel(pattern, st.x, st.y, st.flags, 1);
-    }
-    return 1;
-}
-
-/* . */
-char
-write10o(EmbPattern *pattern, FILE* file)
-{
-    int i;
-    for (i=0; i<pattern->stitch_list->count; i++) {
-        unsigned char b[10];
-        EmbStitch st = pattern->stitch_list->stitch[i];
-
-        b[0] = 0;
-        b[1] = 0;
-        b[2] = 0;
-        if (st.x < 0) {
-            b[2] |= 0x20;
-            b[0] = -st.x;
-        }
-        else {
-            b[0] = st.x;
-        }
-        if (st.y < 0) {
-            b[2] |= 0x40;
-            b[1] = -st.y;
-        }
-        else {
-            b[1] = st.y;
-        }
-        if (st.flags == TRIM) {
-            b[2] |= 1;
-        }
-        if (st.flags == STOP) {
-            b[2] |= 5;
-        }
-        if (st.flags == END) {
-            b[2] = 0xF8;
-        }
-
-        if (fwrite(b, 1, 3, file) != 3) {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-/* The Bernina Embroidery Format (.art)
- *
- * We don't know much about this format. \todo Find a source.
- */
-char
-readArt(EmbPattern *pattern, FILE* file)
-{
-    puts("ERROR: readArt is not supported yet.");
-    printf("Cannot read %p %p\n", pattern, file);
-    return 0;
-}
-
-char
-writeArt(EmbPattern * pattern, FILE* file)
-{
-    puts("ERROR: writeArt is not supported yet.");
-    printf("Cannot write %p %p\n", pattern, file);
-    return 0;
-}
-
-/* The Bitmap Cache Embroidery Format (.bmc)
- *
- * We don't know much about this format. \todo Find a source.
- */
-char
-readBmc(EmbPattern* pattern , FILE* file)
-{
-    puts("ERROR: readBmc is not supported.");
-    printf("Cannot read %p %p\n", pattern, file);
-    return 0; /*TODO: finish readBmc */
-}
-
-char
-writeBmc(EmbPattern* pattern , FILE* file)
-{
-    puts("writeBmc is not implemented");
-    printf("Cannot write %p %p\n", pattern, file);
-    return 0; /*TODO: finish writeBmc */
-}
-
-/* The Bits and Volts Embroidery Format (.bro)
- *
- * The Bits and Volts bro format is a stitch-only format that
- * uses an external color file.
- *
- * The header is 256 bytes.
- * There's a series of unknown variables in the header.
- *
- * The stitch list uses a variable length encoding which is
- * 2 bytes for any stitch.
- */
-char
-readBro(EmbPattern* pattern, FILE* file)
-{
-    unsigned char header[19];
-    unsigned char *ptr = header;
-    if (fread(header, 1, 19, file) != 19) {
-        return 0;
-    }
-    /* TODO: determine what this unknown data is.
-     * In positions 0x0-0x4, 0xC-0xC+0x8
-     */
-    ptr += 3;
-    char *name = (char*)ptr; /* 8 chars long */
-    printf("readBro: %s\n", name);
-
-    fseek(file, 0x100, SEEK_SET);
-
-    while (!feof(file)) {
-        short b1, b2;
-        int stitchType = NORMAL;
-        b1 = (unsigned char)fgetc(file);
-        b2 = (unsigned char)fgetc(file);
-        if (b1 == -128) {
-            unsigned char bCode = (unsigned char)fgetc(file);
-            if (fread(&b1, 2, 1, file) != 1) {
-                puts("ERROR");
-                return 0;
-            }
-            if (fread(&b2, 2, 1, file) != 1) {
-                puts("ERROR");
-                return 0;
-            }
-            /* Embird uses 0x02 and Wilcom uses 0xE1 */
-            if (bCode == 0x02 || bCode == 0xE1) {
-                stitchType = STOP;
-            } else if (bCode == 3) {
-                stitchType = TRIM;
-            } else if (bCode == 0x7E) {
-                embp_addStitchRel(pattern, 0, 0, END, 1);
-                break;
-            }
-        }
-        embp_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
-    }
-    return 1;
-}
-
-char
-writeBro(EmbPattern* pattern , FILE* file)
-{
-    puts("writeBro is not implemented");
-    printf("Cannot write %p %p\n", pattern, file);
-    return 0; /*TODO: finish writeBro */
-}
 
 /* The Melco Embroidery Format (.cnd)
  *
@@ -1167,278 +239,18 @@ writeBro(EmbPattern* pattern , FILE* file)
  *
  * \todo Find a source.
  */
-char
-readCnd(EmbPattern* pattern , FILE* file)
+char readCnd(EmbPattern *pattern, FILE *file)
 {
-    puts("readCnd is not implemented");
-    printf("Cannot read %p %p\n", pattern, file);
-    return 0; /*TODO: finish readCnd */
+        puts("readCnd is not implemented");
+        printf("Cannot read %p %p\n", pattern, file);
+        return 0;               /*TODO: finish readCnd */
 }
 
-char
-writeCnd(EmbPattern* pattern , FILE* file)
+char writeCnd(EmbPattern *pattern, FILE *file)
 {
-    puts("writeCnd is not implemented");
-    printf("Cannot write %p %p\n", pattern, file);
-    return 0; /*TODO: finish writeCnd */
-}
-
-/* The Embroidery Thread Color Format (.col)
- *
- * An external color file format for formats that do not record
- * their own colors.
- *
- * It is a human-readable format that has a header that is
- * a single line containing only the number of threads in decimal
- * followed by the windows line break "\r\n".
- *
- * Then the rest of the file is a comma seperated value list of
- * all threads with 4 values per line: the index of the thread
- * then the red, green and blue channels of the color in that order.
- *
- * ## Example
- *
- * If we had a pattern called "example" with four colors:
- * black, red, magenta and cyan in that order then the file is
- * (with the white space written out):
- *
- *    example.col
- *
- *    4\r\n
- *    0,0,0,0\r\n
- *    1,255,0,0\r\n
- *    2,0,255,0\r\n
- *    3,0,0,255\r\n
- */
-char
-readCol(EmbPattern* pattern, FILE* file)
-{
-    int numberOfColors, i;
-    int num, blue, green, red;
-    EmbThread t;
-    char line[30];
-
-    pattern->thread_list->count = 0;
-
-    emb_readline(file, line, 30);
-    numberOfColors = atoi(line);
-    if (numberOfColors < 1) {
-        printf("ERROR: Number of colors is zero.");
-        return 0;
-    }
-    for (i = 0; i < numberOfColors; i++) {
-        emb_readline(file, line, 30);
-        if (line[0] == 0) {
-            printf("ERROR: Empty line in col file.");
-            return 0;
-        }
-        /* TODO: replace all scanf code */
-        if (sscanf(line,"%d,%d,%d,%d", &num, &blue, &green, &red) != 4) {
-            break;
-        }
-        t.color.r = (unsigned char)red;
-        t.color.g = (unsigned char)green;
-        t.color.b = (unsigned char)blue;
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
-        embp_addThread(pattern, t);
-    }
-    return 1;
-}
-
-char
-writeCol(EmbPattern* pattern, FILE* file)
-{
-    int i;
-
-    fprintf(file, "%d\r\n", pattern->thread_list->count);
-    for (i = 0; i < pattern->thread_list->count; i++) {
-        EmbColor c;
-        c = pattern->thread_list->thread[i].color;
-        fprintf(file, "%d,%d,%d,%d\r\n", i, (int)c.r, (int)c.g, (int)c.b);
-    }
-    return 1;
-}
-
-/* The Singer Embroidery Format (.csd)
- *
- * Stitch Only Format.
- */
-#define CsdSubMaskSize  479
-#define CsdXorMaskSize  501
-
-char _subMask[CsdSubMaskSize];
-char _xorMask[CsdXorMaskSize];
-
-const unsigned char csd_decryptArray[] = {
-    0x43, 0x6E, 0x72, 0x7A, 0x76, 0x6C, 0x61, 0x6F, 0x7C, 0x29, 0x5D, 0x62, 0x60, 0x6E, 0x61, 0x62,
-    0x20, 0x41, 0x66, 0x6A, 0x3A, 0x35, 0x5A, 0x63, 0x7C, 0x37, 0x3A, 0x2A, 0x25, 0x24, 0x2A, 0x33,
-    0x00, 0x10, 0x14, 0x03, 0x72, 0x4C, 0x48, 0x42, 0x08, 0x7A, 0x5E, 0x0B, 0x6F, 0x45, 0x47, 0x5F,
-    0x40, 0x54, 0x5C, 0x57, 0x55, 0x59, 0x53, 0x3A, 0x32, 0x6F, 0x53, 0x54, 0x50, 0x5C, 0x4A, 0x56,
-    0x2F, 0x2F, 0x62, 0x2C, 0x22, 0x65, 0x25, 0x28, 0x38, 0x30, 0x38, 0x22, 0x2B, 0x25, 0x3A, 0x6F,
-    0x27, 0x38, 0x3E, 0x3F, 0x74, 0x37, 0x33, 0x77, 0x2E, 0x30, 0x3D, 0x34, 0x2E, 0x32, 0x2B, 0x2C,
-    0x0C, 0x18, 0x42, 0x13, 0x16, 0x0A, 0x15, 0x02, 0x0B, 0x1C, 0x1E, 0x0E, 0x08, 0x60, 0x64, 0x0D,
-    0x09, 0x51, 0x25, 0x1A, 0x18, 0x16, 0x19, 0x1A, 0x58, 0x10, 0x14, 0x5B, 0x08, 0x15, 0x1B, 0x5F,
-    0xD5, 0xD2, 0xAE, 0xA3, 0xC1, 0xF0, 0xF4, 0xE8, 0xF8, 0xEC, 0xA6, 0xAB, 0xCD, 0xF8, 0xFD, 0xFB,
-    0xE2, 0xF0, 0xFE, 0xFA, 0xF5, 0xB5, 0xF7, 0xF9, 0xFC, 0xB9, 0xF5, 0xEF, 0xF4, 0xF8, 0xEC, 0xBF,
-    0xC3, 0xCE, 0xD7, 0xCD, 0xD0, 0xD7, 0xCF, 0xC2, 0xDB, 0xA4, 0xA0, 0xB0, 0xAF, 0xBE, 0x98, 0xE2,
-    0xC2, 0x91, 0xE5, 0xDC, 0xDA, 0xD2, 0x96, 0xC4, 0x98, 0xF8, 0xC9, 0xD2, 0xDD, 0xD3, 0x9E, 0xDE,
-    0xAE, 0xA5, 0xE2, 0x8C, 0xB6, 0xAC, 0xA3, 0xA9, 0xBC, 0xA8, 0xA6, 0xEB, 0x8B, 0xBF, 0xA1, 0xAC,
-    0xB5, 0xA3, 0xBB, 0xB6, 0xA7, 0xD8, 0xDC, 0x9A, 0xAA, 0xF9, 0x82, 0xFB, 0x9D, 0xB9, 0xAB, 0xB3,
-    0x94, 0xC1, 0xA0, 0x8C, 0x8B, 0x8E, 0x95, 0x8F, 0x87, 0x99, 0xE7, 0xE1, 0xA3, 0x83, 0x8B, 0xCF,
-    0xA3, 0x85, 0x9D, 0x83, 0xD4, 0xB7, 0x83, 0x84, 0x91, 0x97, 0x9F, 0x88, 0x8F, 0xDD, 0xAD, 0x90
-};
-
-
-void
-BuildDecryptionTable(int seed) {
-    int i;
-    const int mul1 = 0x41C64E6D;
-    const int add1 = 0x3039;
-
-    for (i = 0; i < CsdSubMaskSize; i++) {
-        seed *= mul1;
-        seed += add1;
-        _subMask[i] = (char) ((seed >> 16) & 0xFF);
-    }
-    for (i = 0; i < CsdXorMaskSize; i++) {
-        seed *= mul1;
-        seed += add1;
-        _xorMask[i] = (char) ((seed >> 16) & 0xFF);
-    }
-}
-
-unsigned char
-DecodeCsdByte(long fileOffset, unsigned char val, int type)
-{
-    int newOffset;
-
-    fileOffset = fileOffset - 1;
-    if (type != 0) {
-        int final;
-        int fileOffsetHigh = (int) (fileOffset & 0xFFFFFF00);
-        int fileOffsetLow = (int) (fileOffset & 0xFF);
-
-        newOffset = fileOffsetLow;
-        fileOffsetLow = fileOffsetHigh;
-        final = fileOffsetLow%0x300;
-        if (final != 0x100 && final != 0x200) {
-            newOffset = csd_decryptArray[newOffset] | fileOffsetHigh;
-        } else if (final != 0x100 && final == 0x200) {
-            if (newOffset == 0) {
-                fileOffsetHigh = fileOffsetHigh - 0x100;
-            }
-            newOffset = csd_decryptArray[newOffset] | fileOffsetHigh;
-        } else if (newOffset != 1 && newOffset != 0) {
-            newOffset = csd_decryptArray[newOffset] | fileOffsetHigh;
-        } else {
-            fileOffsetHigh = fileOffsetHigh - 0x100;
-            newOffset = csd_decryptArray[newOffset] | fileOffsetHigh;
-        }
-    }
-    else {
-        newOffset = (int) fileOffset;
-    }
-    return ((unsigned char) ((unsigned char)
-        (val ^ _xorMask[newOffset%CsdXorMaskSize]) -
-            _subMask[newOffset%CsdSubMaskSize]));
-}
-
-char
-readCsd(EmbPattern* pattern, FILE* file)
-{
-    int i, type = 0;
-    unsigned char identifier[8];
-    unsigned char unknown1, unknown2;
-    char dx = 0, dy = 0;
-    int colorChange = -1;
-    int flags;
-    unsigned char colorOrder[14];
-
-    if (fread(identifier, 1, 8, file) != 8) {
-        puts("ERROR");
-        return 0;
-    }
-    /* TODO: check return value */
-
-    if (identifier[0] != 0x7C && identifier[2] != 0xC3) {
-        type = 1;
-    }
-    if (type == 0) {
-        BuildDecryptionTable(0xC);
-    }
-    else {
-        BuildDecryptionTable(identifier[0]);
-    }
-
-    for (i = 0; i < 16; i++) {
-        EmbThread thread;
-        thread.color.r = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
-        thread.color.g = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
-        thread.color.b = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
-        strcpy(thread.catalogNumber, "");
-        strcpy(thread.description, "");
-        embp_addThread(pattern, thread);
-    }
-    unknown1 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
-    unknown2 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
-    if (emb_verbose>1) {
-        printf("unknown bytes to decode: %c %c", unknown1, unknown2);
-    }
-
-    for (i = 0; i < 14; i++) {
-        colorOrder[i] = (unsigned char) DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
-    }
-    for (i = 0; !feof(file); i++) {
-        char negativeX, negativeY;
-        unsigned char b0 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
-        unsigned char b1 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
-        unsigned char b2 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
-
-        if (b0 == 0xF8 || b0 == 0x87 || b0 == 0x91) {
-            break;
-        }
-        negativeX = ((b0 & 0x20) > 0);
-        negativeY = ((b0 & 0x40) > 0);
-        b0 = (unsigned char)(b0 & (0xFF ^ 0xE0));
-
-        if ((b0 & 0x1F) == 0) {
-            flags = NORMAL;
-        } else if ((b0 & 0x0C) > 0) {
-            flags = STOP;
-            if (colorChange >= 14) {
-                printf("Invalid color change detected\n");
-            }
-            embp_changeColor(pattern, colorOrder[colorChange  % 14]);
-            colorChange += 1;
-        } else if ((b0 & 0x1F) > 0) {
-            flags = TRIM;
-        } else {
-            flags = NORMAL;
-        }
-        dx = (char) b2;
-        dy = (char) b1;
-        if (negativeX) {
-            dx = (char) -dx;
-        }
-        if (negativeY) {
-            dy = (char) -dy;
-        }
-        if (flags == STOP) {
-            embp_addStitchRel(pattern, 0, 0, flags, 1);
-        } else {
-            embp_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
-        }
-    }
-    return 1;
-}
-
-char
-writeCsd(EmbPattern* pattern, FILE* file) {
-    puts("writeCsd is not implemented.");
-    puts("Overridden, defaulting to dst.");
-    writeDst(pattern, file);
-    return 0; /*TODO: finish writeCsd */
+        puts("writeCnd is not implemented");
+        printf("Cannot write %p %p\n", pattern, file);
+        return 0;               /*TODO: finish writeCnd */
 }
 
 /* Comma Separated Values (.csv)
@@ -1465,355 +277,364 @@ writeCsd(EmbPattern* pattern, FILE* file) {
  * ## EmBird CSV Dialect
  *
  */
-char*
-csvStitchFlagToStr(int flags)
+char *csvStitchFlagToStr(int flags)
 {
-    switch (flags) {
-    case NORMAL:
-        return "STITCH";
-        break;
-    case JUMP:
-        return "JUMP";
-        break;
-    case TRIM:
-        return "TRIM";
-        break;
-    case STOP:
-        return "COLOR";
-        break;
-    case END:
-        return "END";
-        break;
-    default:
-        return "UNKNOWN";
-        break;
-    }
-}
-
-int
-csvStrToStitchFlag(const char* str)
-{
-    if (!str) {
-        printf("ERROR: format-csv.c csvStrToStitchFlag(), str argument is null\n");
-        return -1;
-    }
-    if (!strncmp(str, "STITCH", 10)) {
-        return NORMAL;
-    }
-    if (!strncmp(str, "JUMP", 10)) {
-        return JUMP;
-    }
-    if (!strncmp(str, "TRIM", 10)) {
-        return TRIM;
-    }
-    if (!strncmp(str, "COLOR", 10)) {
-        return STOP;
-    }
-    if (!strncmp(str, "END", 10)) {
-        return END;
-    }
-    if (!strncmp(str, "UNKNOWN", 10)) {
-        return STOP;
-    }
-    return -1;
-}
-
-char
-readCsv(EmbPattern* pattern, FILE* file)
-{
-    int numColorChanges = 0;
-    int pos = 0;
-    int c = 0;
-    int cellNum = 0;
-    int process = 0;
-    int csvMode = CSV_MODE_NULL;
-    int expect = CSV_EXPECT_QUOTE1;
-    int flags = 0;
-    EmbReal xx = 0.0;
-    EmbReal yy = 0.0;
-    unsigned char r = 0, g = 0, b = 0;
-    EmbString buff;
-
-    pos = 0;
-    while (!feof(file)) {
-        c = fgetc(file);
-        switch(c) {
-            case '"':
-                if (expect == CSV_EXPECT_QUOTE1) {
-                    expect = CSV_EXPECT_QUOTE2;
-                } else if (expect == CSV_EXPECT_QUOTE2) {
-                    expect = CSV_EXPECT_COMMA;
-                }
+        switch (flags) {
+        case NORMAL:
+                return "STITCH";
                 break;
-            case ',':
-                if (expect == CSV_EXPECT_COMMA) {
-                    process = 1;
-                }
+        case JUMP:
+                return "JUMP";
                 break;
-            case '\n':
-                if (expect == CSV_EXPECT_COMMA) {
-                    process = 1;
-                } else if (expect == CSV_EXPECT_QUOTE1) {
-                        /* Do Nothing. We encountered a blank line. */
-                } else {
-                    printf("ERROR: format-csv.c readCsv(), premature newline\n");
-                    return 0;
-                }
+        case TRIM:
+                return "TRIM";
                 break;
-            default:
+        case STOP:
+                return "COLOR";
+                break;
+        case END:
+                return "END";
+                break;
+        default:
+                return "UNKNOWN";
                 break;
         }
-
-        if (process) {
-            buff[pos] = 0;
-            pos = 0;
-            process = 0;
-            cellNum++;
-            expect = CSV_EXPECT_QUOTE1;
-                if (csvMode == CSV_MODE_NULL) {
-                    if     (!strcmp(buff, "#")) {
-                        csvMode = CSV_MODE_COMMENT;
-                    } else if (!strcmp(buff, ">")) {
-                        csvMode = CSV_MODE_VARIABLE;
-                    } else if (!strcmp(buff, "$")) {
-                        csvMode = CSV_MODE_THREAD;
-                    } else if (!strcmp(buff, "*")) {
-                        csvMode = CSV_MODE_STITCH;
-                    } else {/* TODO: error */
-                        return 0;
-                    }
-                } else if (csvMode == CSV_MODE_COMMENT) {
-                    /* Do Nothing */
-                } else if (csvMode == CSV_MODE_VARIABLE) {
-                    /* Do Nothing */
-                } else if (csvMode == CSV_MODE_THREAD) {
-                    if (cellNum == 2) {
-                        /* Do Nothing. Ignore Thread Number */
-                    } else if (cellNum == 3) {
-                        r = (unsigned char)atoi(buff);
-                    } else if (cellNum == 4) {
-                        g = (unsigned char)atoi(buff);
-                    } else if (cellNum == 5) {
-                        b = (unsigned char)atoi(buff);
-                    } else if (cellNum == 6) {
-                        /* TODO: Thread Description */
-                    } else if (cellNum == 7) {
-                        /* TODO: Thread Catalog Number */
-                        EmbThread t;
-                        t.color.r = r;
-                        t.color.g = g;
-                        t.color.b = b;
-                        strcpy(t.description, "TODO:DESCRIPTION");
-                        strcpy(t.catalogNumber, "TODO:CATALOG_NUMBER");
-                        embp_addThread(pattern, t);
-                        csvMode = CSV_MODE_NULL;
-                        cellNum = 0;
-                    } else {
-                        /* TODO: error */
-                        return 0;
-                    }
-                } else if (csvMode == CSV_MODE_STITCH) {
-                    /* printf("%s\n", buff); */
-                    if (cellNum == 2) {
-                        flags = csvStrToStitchFlag(buff);
-                        if (flags == STOP) {
-                            numColorChanges++;
-                        }
-                    } else if (cellNum == 3) {
-                        xx = atof(buff);
-                    } else if (cellNum == 4) {
-                        yy = atof(buff);
-                        /* printf("%d %d %f %f\n",
-                            pattern->stitch_list->count, flags, xx, yy); */
-                        embp_addStitchAbs(pattern, xx, yy, flags, 1);
-                        csvMode = CSV_MODE_NULL;
-                        cellNum = 0;
-                    } else {
-                        /* TODO: error */
-                        return 0;
-                    }
-                }
-                if (c == '\n') {
-                    csvMode = CSV_MODE_NULL;
-                    cellNum = 0;
-                }
-            } else {
-                if (expect == CSV_EXPECT_QUOTE2 && c != '"') {
-                    buff[pos++] = (char)c;
-                }
-            }
-    }
-
-    return 1;
 }
 
-char
-writeCsv(EmbPattern* pattern, FILE* file)
+int csvStrToStitchFlag(const char *str)
 {
-    EmbRect boundingRect;
-    int i;
+        if (!str) {
+                printf
+                    ("ERROR: format-csv.c csvStrToStitchFlag(), str argument is null\n");
+                return -1;
+        }
+        if (!strncmp(str, "STITCH", 10)) {
+                return NORMAL;
+        }
+        if (!strncmp(str, "JUMP", 10)) {
+                return JUMP;
+        }
+        if (!strncmp(str, "TRIM", 10)) {
+                return TRIM;
+        }
+        if (!strncmp(str, "COLOR", 10)) {
+                return STOP;
+        }
+        if (!strncmp(str, "END", 10)) {
+                return END;
+        }
+        if (!strncmp(str, "UNKNOWN", 10)) {
+                return STOP;
+        }
+        return -1;
+}
 
-    boundingRect = embp_bounds(pattern);
+char readCsv(EmbPattern *pattern, FILE *file)
+{
+        int numColorChanges = 0;
+        int pos = 0;
+        int c = 0;
+        int cellNum = 0;
+        int process = 0;
+        int csvMode = CSV_MODE_NULL;
+        int expect = CSV_EXPECT_QUOTE1;
+        int flags = 0;
+        EmbReal xx = 0.0;
+        EmbReal yy = 0.0;
+        unsigned char r = 0, g = 0, b = 0;
+        EmbString buff;
 
-    fprintf(file, "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n");
-    fprintf(file, "\"#\",\"http://embroidermodder.github.io\"\n");
-    fprintf(file, "\"#\",\" \"\n");
-    fprintf(file, "\"#\",\"General Notes:\"\n");
-    fprintf(file, "\"#\",\"This file can be read by Excel or LibreOffice as CSV (Comma Separated Value) or with a text editor.\"\n");
-    fprintf(file, "\"#\",\"Lines beginning with # are comments.\"\n");
-    fprintf(file, "\"#\",\"Lines beginning with > are variables: [VAR_NAME], [VAR_VALUE]\"\n");
-    fprintf(file, "\"#\",\"Lines beginning with $ are threads: [THREAD_NUMBER], [RED], [GREEN], [BLUE], [DESCRIPTION], [CATALOG_NUMBER]\"\n");
-    fprintf(file, "\"#\",\"Lines beginning with * are stitch entries: [STITCH_TYPE], [X], [Y]\"\n");
-    fprintf(file, "\"#\",\" \"\n");
-    fprintf(file, "\"#\",\"Stitch Entry Notes:\"\n");
-    fprintf(file, "\"#\",\"STITCH instructs the machine to move to the position [X][Y] and then make a stitch.\"\n");
-    fprintf(file, "\"#\",\"JUMP instructs the machine to move to the position [X][Y] without making a stitch.\"\n");
-    fprintf(file, "\"#\",\"TRIM instructs the machine to cut the thread before moving to the position [X][Y] without making a stitch.\"\n");
-    fprintf(file, "\"#\",\"COLOR instructs the machine to stop temporarily so that the user can change to a different color thread before resuming.\"\n");
-    fprintf(file, "\"#\",\"END instructs the machine that the design is completed and there are no further instructions.\"\n");
-    fprintf(file, "\"#\",\"UNKNOWN encompasses instructions that may not be supported currently.\"\n");
-    fprintf(file, "\"#\",\"[X] and [Y] are absolute coordinates in millimeters (mm).\"\n");
-    fprintf(file, "\"#\",\" \"\n");
+        pos = 0;
+        while (!feof(file)) {
+                c = fgetc(file);
+                switch (c) {
+                case '"':
+                        if (expect == CSV_EXPECT_QUOTE1) {
+                                expect = CSV_EXPECT_QUOTE2;
+                        } else if (expect == CSV_EXPECT_QUOTE2) {
+                                expect = CSV_EXPECT_COMMA;
+                        }
+                        break;
+                case ',':
+                        if (expect == CSV_EXPECT_COMMA) {
+                                process = 1;
+                        }
+                        break;
+                case '\n':
+                        if (expect == CSV_EXPECT_COMMA) {
+                                process = 1;
+                        } else if (expect == CSV_EXPECT_QUOTE1) {
+                                /* Do Nothing. We encountered a blank line. */
+                        } else {
+                                printf
+                                    ("ERROR: format-csv.c readCsv(), premature newline\n");
+                                return 0;
+                        }
+                        break;
+                default:
+                        break;
+                }
 
-    /* write variables */
-    fprintf(file,"\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");
-    fprintf(file, "\">\",\"STITCH_COUNT:\",\"%u\"\n", (unsigned int)pattern->stitch_list->count);
-    fprintf(file, "\">\",\"THREAD_COUNT:\",\"%u\"\n", (unsigned int)pattern->thread_list->count);
-    fprintf(file, "\">\",\"EXTENTS_LEFT:\",\"%f\"\n", boundingRect.x);
-    fprintf(file, "\">\",\"EXTENTS_TOP:\",\"%f\"\n", boundingRect.y);
-    fprintf(file, "\">\",\"EXTENTS_RIGHT:\",\"%f\"\n", boundingRect.x + boundingRect.w);
-    fprintf(file, "\">\",\"EXTENTS_BOTTOM:\",\"%f\"\n", boundingRect.y + boundingRect.h);
-    fprintf(file, "\">\",\"EXTENTS_WIDTH:\",\"%f\"\n", boundingRect.w);
-    fprintf(file, "\">\",\"EXTENTS_HEIGHT:\",\"%f\"\n", boundingRect.h);
-    fprintf(file,"\n");
+                if (process) {
+                        buff[pos] = 0;
+                        pos = 0;
+                        process = 0;
+                        cellNum++;
+                        expect = CSV_EXPECT_QUOTE1;
+                        if (csvMode == CSV_MODE_NULL) {
+                                if (!strcmp(buff, "#")) {
+                                        csvMode = CSV_MODE_COMMENT;
+                                } else if (!strcmp(buff, ">")) {
+                                        csvMode = CSV_MODE_VARIABLE;
+                                } else if (!strcmp(buff, "$")) {
+                                        csvMode = CSV_MODE_THREAD;
+                                } else if (!strcmp(buff, "*")) {
+                                        csvMode = CSV_MODE_STITCH;
+                                } else {        /* TODO: error */
+                                        return 0;
+                                }
+                        } else if (csvMode == CSV_MODE_COMMENT) {
+                                /* Do Nothing */
+                        } else if (csvMode == CSV_MODE_VARIABLE) {
+                                /* Do Nothing */
+                        } else if (csvMode == CSV_MODE_THREAD) {
+                                if (cellNum == 2) {
+                                        /* Do Nothing. Ignore Thread Number */
+                                } else if (cellNum == 3) {
+                                        r = (unsigned char)atoi(buff);
+                                } else if (cellNum == 4) {
+                                        g = (unsigned char)atoi(buff);
+                                } else if (cellNum == 5) {
+                                        b = (unsigned char)atoi(buff);
+                                } else if (cellNum == 6) {
+                                        /* TODO: Thread Description */
+                                } else if (cellNum == 7) {
+                                        /* TODO: Thread Catalog Number */
+                                        EmbThread t;
+                                        t.color.r = r;
+                                        t.color.g = g;
+                                        t.color.b = b;
+                                        strcpy(t.description,
+                                               "TODO:DESCRIPTION");
+                                        strcpy(t.catalogNumber,
+                                               "TODO:CATALOG_NUMBER");
+                                        embp_addThread(pattern, t);
+                                        csvMode = CSV_MODE_NULL;
+                                        cellNum = 0;
+                                } else {
+                                        /* TODO: error */
+                                        return 0;
+                                }
+                        } else if (csvMode == CSV_MODE_STITCH) {
+                                /* printf("%s\n", buff); */
+                                if (cellNum == 2) {
+                                        flags = csvStrToStitchFlag(buff);
+                                        if (flags == STOP) {
+                                                numColorChanges++;
+                                        }
+                                } else if (cellNum == 3) {
+                                        xx = atof(buff);
+                                } else if (cellNum == 4) {
+                                        yy = atof(buff);
+                                        /* printf("%d %d %f %f\n",
+                                           pattern->stitch_list->count, flags, xx, yy); */
+                                        embp_addStitchAbs(pattern, xx, yy,
+                                                          flags, 1);
+                                        csvMode = CSV_MODE_NULL;
+                                        cellNum = 0;
+                                } else {
+                                        /* TODO: error */
+                                        return 0;
+                                }
+                        }
+                        if (c == '\n') {
+                                csvMode = CSV_MODE_NULL;
+                                cellNum = 0;
+                        }
+                } else {
+                        if (expect == CSV_EXPECT_QUOTE2 && c != '"') {
+                                buff[pos++] = (char)c;
+                        }
+                }
+        }
 
-    /* write colors */
-    fprintf(file, "\"#\",\"[THREAD_NUMBER]\",\"[RED]\",\"[GREEN]\",");
-    fprintf(file, "\"[BLUE]\",\"[DESCRIPTION]\",\"[CATALOG_NUMBER]\"\n");
+        return 1;
+}
 
-    for (i = 0; i < pattern->thread_list->count; i++) {
-        EmbThread thr = pattern->thread_list->thread[i];
-        /* TODO: fix segfault that backtraces here when
-            libembroidery-convert from dst to csv. */
-        fprintf(file, "\"$\",\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
-            i+1,
-            (int)thr.color.r,
-            (int)thr.color.g,
-            (int)thr.color.b,
-            thr.description,
-            thr.catalogNumber);
-    }
-    fprintf(file, "\n");
+char writeCsv(EmbPattern *pattern, FILE *file)
+{
+        EmbRect boundingRect;
+        int i;
 
-    /* write stitches */
-    fprintf(file, "\"#\",\"[STITCH_TYPE]\",\"[X]\",\"[Y]\"\n");
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbStitch s = pattern->stitch_list->stitch[i];
-        fprintf(file, "\"*\",\"%s\",\"%f\",\"%f\"\n",
-            csvStitchFlagToStr(s.flags), s.x, s.y);
-    }
-    return 1;
+        boundingRect = embp_bounds(pattern);
+
+        fprintf(file, "\"#\",\"Embroidermodder 2 CSV Embroidery File\"\n");
+        fprintf(file, "\"#\",\"http://embroidermodder.github.io\"\n");
+        fprintf(file, "\"#\",\" \"\n");
+        fprintf(file, "\"#\",\"General Notes:\"\n");
+        fprintf(file,
+                "\"#\",\"This file can be read by Excel or LibreOffice as CSV (Comma Separated Value) or with a text editor.\"\n");
+        fprintf(file, "\"#\",\"Lines beginning with # are comments.\"\n");
+        fprintf(file,
+                "\"#\",\"Lines beginning with > are variables: [VAR_NAME], [VAR_VALUE]\"\n");
+        fprintf(file,
+                "\"#\",\"Lines beginning with $ are threads: [THREAD_NUMBER], [RED], [GREEN], [BLUE], [DESCRIPTION], [CATALOG_NUMBER]\"\n");
+        fprintf(file,
+                "\"#\",\"Lines beginning with * are stitch entries: [STITCH_TYPE], [X], [Y]\"\n");
+        fprintf(file, "\"#\",\" \"\n");
+        fprintf(file, "\"#\",\"Stitch Entry Notes:\"\n");
+        fprintf(file,
+                "\"#\",\"STITCH instructs the machine to move to the position [X][Y] and then make a stitch.\"\n");
+        fprintf(file,
+                "\"#\",\"JUMP instructs the machine to move to the position [X][Y] without making a stitch.\"\n");
+        fprintf(file,
+                "\"#\",\"TRIM instructs the machine to cut the thread before moving to the position [X][Y] without making a stitch.\"\n");
+        fprintf(file,
+                "\"#\",\"COLOR instructs the machine to stop temporarily so that the user can change to a different color thread before resuming.\"\n");
+        fprintf(file,
+                "\"#\",\"END instructs the machine that the design is completed and there are no further instructions.\"\n");
+        fprintf(file,
+                "\"#\",\"UNKNOWN encompasses instructions that may not be supported currently.\"\n");
+        fprintf(file,
+                "\"#\",\"[X] and [Y] are absolute coordinates in millimeters (mm).\"\n");
+        fprintf(file, "\"#\",\" \"\n");
+
+        /* write variables */
+        fprintf(file, "\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");
+        fprintf(file, "\">\",\"STITCH_COUNT:\",\"%u\"\n",
+                (unsigned int)pattern->stitch_list->count);
+        fprintf(file, "\">\",\"THREAD_COUNT:\",\"%u\"\n",
+                (unsigned int)pattern->thread_list->count);
+        fprintf(file, "\">\",\"EXTENTS_LEFT:\",\"%f\"\n", boundingRect.x);
+        fprintf(file, "\">\",\"EXTENTS_TOP:\",\"%f\"\n", boundingRect.y);
+        fprintf(file, "\">\",\"EXTENTS_RIGHT:\",\"%f\"\n",
+                boundingRect.x + boundingRect.w);
+        fprintf(file, "\">\",\"EXTENTS_BOTTOM:\",\"%f\"\n",
+                boundingRect.y + boundingRect.h);
+        fprintf(file, "\">\",\"EXTENTS_WIDTH:\",\"%f\"\n", boundingRect.w);
+        fprintf(file, "\">\",\"EXTENTS_HEIGHT:\",\"%f\"\n", boundingRect.h);
+        fprintf(file, "\n");
+
+        /* write colors */
+        fprintf(file, "\"#\",\"[THREAD_NUMBER]\",\"[RED]\",\"[GREEN]\",");
+        fprintf(file, "\"[BLUE]\",\"[DESCRIPTION]\",\"[CATALOG_NUMBER]\"\n");
+
+        for (i = 0; i < pattern->thread_list->count; i++) {
+                EmbThread thr = pattern->thread_list->thread[i];
+                /* TODO: fix segfault that backtraces here when
+                   libembroidery-convert from dst to csv. */
+                fprintf(file,
+                        "\"$\",\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
+                        i + 1, (int)thr.color.r, (int)thr.color.g,
+                        (int)thr.color.b, thr.description, thr.catalogNumber);
+        }
+        fprintf(file, "\n");
+
+        /* write stitches */
+        fprintf(file, "\"#\",\"[STITCH_TYPE]\",\"[X]\",\"[Y]\"\n");
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                EmbStitch s = pattern->stitch_list->stitch[i];
+                fprintf(file, "\"*\",\"%s\",\"%f\",\"%f\"\n",
+                        csvStitchFlagToStr(s.flags), s.x, s.y);
+        }
+        return 1;
 }
 
 /* The Barudan Embroidery Format (.dat)
  *
  * Stitch Only Format.
  */
-char
-readDat(EmbPattern* pattern, FILE* file)
+char readDat(EmbPattern *pattern, FILE *file)
 {
-    unsigned char b0;
-    int fileLength, stitchesRemaining, b1, b2, stitchType;
+        unsigned char b0;
+        int fileLength, stitchesRemaining, b1, b2, stitchType;
 
-    fseek(file, 0x00, SEEK_END);
-    fileLength = ftell(file);
-    if (fileLength < 0x100) {
-        puts("ERROR: dat file too short to contain header.");
-        return 0;
-    }
-    fseek(file, 0x02, SEEK_SET);
-    LOAD_U16(file, stitchesRemaining)
-    fseek(file, 0x100, SEEK_SET);
-
-    while (!feof(file)) {
-        b1 = (int)fgetc(file);
-        b2 = (int)fgetc(file);
-        b0 = fgetc(file);
-
-        stitchType = NORMAL;
-
-        if ((b0 & 0x02) == 0) stitchType = TRIM;
-
-        if (b0 == 0x87) {
-            stitchType = STOP;
+        fseek(file, 0x00, SEEK_END);
+        fileLength = ftell(file);
+        if (fileLength < 0x100) {
+                puts("ERROR: dat file too short to contain header.");
+                return 0;
         }
-        if (b0 == 0xF8) {
-            break;
-        }
-        if (b1 >= 0x80) {
-            b1 = -(b1 & 0x7F);
-        }
-        if (b2 >= 0x80) {
-            b2 = -(b2 & 0x7F);
-        }
-        embp_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
-    }
+        fseek(file, 0x02, SEEK_SET);
+        LOAD_U16(file, stitchesRemaining)
+            fseek(file, 0x100, SEEK_SET);
 
-    return 1;
+        while (!feof(file)) {
+                b1 = (int)fgetc(file);
+                b2 = (int)fgetc(file);
+                b0 = fgetc(file);
+
+                stitchType = NORMAL;
+
+                if ((b0 & 0x02) == 0)
+                        stitchType = TRIM;
+
+                if (b0 == 0x87) {
+                        stitchType = STOP;
+                }
+                if (b0 == 0xF8) {
+                        break;
+                }
+                if (b1 >= 0x80) {
+                        b1 = -(b1 & 0x7F);
+                }
+                if (b2 >= 0x80) {
+                        b2 = -(b2 & 0x7F);
+                }
+                embp_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
+        }
+
+        return 1;
 }
 
-char
-writeDat(EmbPattern* pattern, FILE* file)
+char writeDat(EmbPattern *pattern, FILE *file)
 {
-    int i;
-    fpad(file, 0x00, 0x100);
-    for (i=0; i<pattern->stitch_list->count; i++) {
-        unsigned char b[3];
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        b[0] = 0;
-        b[1] = 0;
-        b[2] = 0;
-        if (st.flags == STOP) {
-            b[2] = 0x87;
+        int i;
+        fpad(file, 0x00, 0x100);
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                unsigned char b[3];
+                EmbStitch st = pattern->stitch_list->stitch[i];
+                b[0] = 0;
+                b[1] = 0;
+                b[2] = 0;
+                if (st.flags == STOP) {
+                        b[2] = 0x87;
+                }
+                if (st.flags == END) {
+                        b[2] |= 0xF8;
+                } else {
+                        if (st.flags != TRIM) {
+                                b[2] |= 0x02;
+                        }
+                }
+                /* TODO: check that this works */
+                if (st.x < 0) {
+                        b[0] = st.x + 0xFF;
+                }
+                if (st.y < 0) {
+                        b[1] = st.y + 0xFF;
+                }
+                fwrite(b, 1, 3, file);
         }
-        if (st.flags == END) {
-            b[2] |= 0xF8;
-        }
-        else {
-            if (st.flags != TRIM) {
-                b[2] |= 0x02;
-            }
-        }
-        /* TODO: check that this works */
-        if (st.x < 0) {
-            b[0] = st.x+0xFF;
-        }
-        if (st.y < 0) {
-            b[1] = st.y+0xFF;
-        }
-        fwrite(b, 1, 3, file);
-    }
-    return 1; /*TODO: finish writeDat */
+        return 1;               /*TODO: finish writeDat */
 }
 
 /* The Melco Embroidery Format (.dem)
  *
  * Stitch Only Format
  */
-char
-readDem(EmbPattern* pattern, FILE* file)
+char readDem(EmbPattern *pattern, FILE *file)
 {
-    puts("readDem is not implemented.");
-    puts("Overridden, defaulting to dst.");
-    return readDst(pattern, file); /*TODO: finish readDem */
+        puts("readDem is not implemented.");
+        puts("Overridden, defaulting to dst.");
+        return readDst(pattern, file);  /*TODO: finish readDem */
 }
 
-char
-writeDem(EmbPattern* pattern, FILE* file)
+char writeDem(EmbPattern *pattern, FILE *file)
 {
-    puts("writeDem is not implemented.");
-    puts("Overridden, defaulting to dst.");
-    return writeDst(pattern, file); /*TODO: finish writeDem */
+        puts("writeDem is not implemented.");
+        puts("Overridden, defaulting to dst.");
+        return writeDst(pattern, file); /*TODO: finish writeDem */
 }
 
 /* The Barudan Embroidery Format (.dsb)
@@ -1824,49 +645,50 @@ writeDem(EmbPattern* pattern, FILE* file)
  * [o] Well Tested Read
  * [o] Well Tested Write
  */
-char
-readDsb(EmbPattern* pattern, FILE* file)
+char readDsb(EmbPattern *pattern, FILE *file)
 {
-    char header[512+1];
-    unsigned char buffer[3];
+        char header[512 + 1];
+        unsigned char buffer[3];
 
-    if (fread(header, 1, 512, file) != 512) {
-        puts("ERROR");
-        return 0;
-    }
-
-    while (fread(buffer, 1, 3, file) == 3) {
-        int x, y;
-        unsigned char ctrl;
-        int stitchType = NORMAL;
-
-        ctrl = buffer[0];
-        y = buffer[1];
-        x = buffer[2];
-        if (ctrl & 0x01) stitchType = TRIM;
-        if (ctrl & 0x20) x = -x;
-        if (ctrl & 0x40) y = -y;
-        /* ctrl & 0x02 - Speed change? */ /* TODO: review this line */
-        /* ctrl & 0x04 - Clutch? */       /* TODO: review this line */
-        if ((ctrl & 0x05) == 0x05) {
-            stitchType = STOP;
+        if (fread(header, 1, 512, file) != 512) {
+                puts("ERROR");
+                return 0;
         }
-        if (ctrl == 0xF8 || ctrl == 0x91 || ctrl == 0x87) {
-            embp_addStitchRel(pattern, 0, 0, END, 1);
-            break;
+
+        while (fread(buffer, 1, 3, file) == 3) {
+                int x, y;
+                unsigned char ctrl;
+                int stitchType = NORMAL;
+
+                ctrl = buffer[0];
+                y = buffer[1];
+                x = buffer[2];
+                if (ctrl & 0x01)
+                        stitchType = TRIM;
+                if (ctrl & 0x20)
+                        x = -x;
+                if (ctrl & 0x40)
+                        y = -y;
+                /* ctrl & 0x02 - Speed change? *//* TODO: review this line */
+                /* ctrl & 0x04 - Clutch? *//* TODO: review this line */
+                if ((ctrl & 0x05) == 0x05) {
+                        stitchType = STOP;
+                }
+                if (ctrl == 0xF8 || ctrl == 0x91 || ctrl == 0x87) {
+                        embp_addStitchRel(pattern, 0, 0, END, 1);
+                        break;
+                }
+                embp_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
         }
-        embp_addStitchRel(pattern, x / 10.0, y / 10.0, stitchType, 1);
-    }
-    return 1;
+        return 1;
 }
 
-char
-writeDsb(EmbPattern* pattern, FILE* file)
+char writeDsb(EmbPattern *pattern, FILE *file)
 {
-    puts("writeDsb is not implemented");
-    puts("Overridden, defaulting to dst.");
-    writeDst(pattern, file);
-    return 0; /*TODO: finish writeDsb */
+        puts("writeDsb is not implemented");
+        puts("Overridden, defaulting to dst.");
+        writeDst(pattern, file);
+        return 0;               /*TODO: finish writeDsb */
 }
 
 /*
@@ -1935,19 +757,18 @@ writeDsb(EmbPattern* pattern, FILE* file)
  * where the unit length is 0.1mm so 12.1mm. The coordinate system is right handed.
  *
  */
-int
-decode_record_flags(unsigned char b2)
+int decode_record_flags(unsigned char b2)
 {
-    if (b2 == 0xF3) {
-        return END;
-    }
-    if (b2 & 0x40) {
-        return STOP;
-    }
-    if (b2 & 0x80) {
-        return JUMP;
-    }
-    return NORMAL;
+        if (b2 == 0xF3) {
+                return END;
+        }
+        if (b2 & 0x40) {
+                return STOP;
+        }
+        if (b2 & 0x80) {
+                return JUMP;
+        }
+        return NORMAL;
 }
 
 /* TODO: review this then remove since emb-pattern.c has a similar function */
@@ -2003,108 +824,107 @@ combine_jump_stitches(EmbPattern* p, int jumpsPerTrim)
 }
 */
 
-void
-encode_record(FILE* file, int x, int y, int flags)
+void encode_record(FILE *file, int x, int y, int flags)
 {
-    unsigned char b[3];
-    encode_tajima_ternary(b, x, y);
+        unsigned char b[3];
+        encode_tajima_ternary(b, x, y);
 
-    b[2] |= 0x03;
+        b[2] |= 0x03;
 
-    if (flags & END) {
-        /* 0b10001101 = -13 = 0x8D */
-        b[0] = 0;
-        b[1] = 0;
-        b[2] = 0x8D;
-    }
-
-    /* make the variable v configurable for the pattern */
-    if (flags & TRIM) {
-        int dx, dy, i, v = 5;
-        dx = x/v;
-        dy = y/v;
-        for (i = 1; i < v; i++) {
-            encode_record(file, dx, dy, JUMP);
+        if (flags & END) {
+                /* 0b10001101 = -13 = 0x8D */
+                b[0] = 0;
+                b[1] = 0;
+                b[2] = 0x8D;
         }
-        encode_record(file, x - (dx * (v - 1)), y - (dy * (v - 1)), JUMP);
-        return;
-    }
-    if (flags & (JUMP | TRIM)) {
-        b[2] = (char) (b[2] | 0x83);
-    }
-    if (flags & STOP) {
-        b[2] = (char) (b[2] | 0xC3);
-    }
 
-    fwrite(b, 1, 3, file);
+        /* make the variable v configurable for the pattern */
+        if (flags & TRIM) {
+                int dx, dy, i, v = 5;
+                dx = x / v;
+                dy = y / v;
+                for (i = 1; i < v; i++) {
+                        encode_record(file, dx, dy, JUMP);
+                }
+                encode_record(file, x - (dx * (v - 1)), y - (dy * (v - 1)),
+                              JUMP);
+                return;
+        }
+        if (flags & (JUMP | TRIM)) {
+                b[2] = (char)(b[2] | 0x83);
+        }
+        if (flags & STOP) {
+                b[2] = (char)(b[2] | 0xC3);
+        }
+
+        fwrite(b, 1, 3, file);
 }
 
 /*convert 2 characters into 1 int for case statement */
 /*#define cci(s) (s[0]*256+s[1]) */
 #define cci(c1, c2) (c1*256+c2)
 
-void
-set_dst_variable(EmbPattern* pattern, char* var, char* val)
+void set_dst_variable(EmbPattern *pattern, char *var, char *val)
 {
-    unsigned int i;
-    EmbThread t;
-    for (i = 0; i <= (unsigned int)strlen(var); i++) {
-        /* uppercase the var */
-        if (var[i] >= 'a' && var[i] <= 'z') {
-            var[i] += 'A' - 'a';
+        unsigned int i;
+        EmbThread t;
+        for (i = 0; i <= (unsigned int)strlen(var); i++) {
+                /* uppercase the var */
+                if (var[i] >= 'a' && var[i] <= 'z') {
+                        var[i] += 'A' - 'a';
+                }
         }
-    }
 
-    /* macro converts 2 characters to 1 int, allows case statement... */
-    switch(cci(var[0],var[1])) {
-    case cci('L','A'): /* Design Name (LA) */
-        /*pattern->set_variable("Design_Name",val); TODO: review this line. */
-        break;
-    case cci('S','T'): /* Stitch count, 7 digits padded by leading 0's */
-    case cci('C','O'): /* Color change count, 3 digits padded by leading 0's */
-    case cci('+','X'): /* Design extents (+/-X,+/-Y), 5 digits padded by leading 0's */
-    case cci('-','X'):
-    case cci('+','Y'):
-    case cci('-','Y'):
-        /* don't store these variables, they are recalculated at save */
-        break;
-    case cci('A','X'): /* Relative coordinates of last point, 6 digits, padded with leading spaces, first char may be +/- */
-    case cci('A','Y'):
-    case cci('M','X'): /* Coordinates of last point in previous file of multi-volume design, 6 digits, padded with leading spaces, first char may be +/- */
-    case cci('M','Y'):
-        /* store these variables as-is, they will be converted to numbers and back at save; */
-        /*pattern->set_variable(var,val); TODO: review this line. */
-        break;
-    case cci('P','D'):
-        /* store this string as-is, it will be saved as-is, 6 characters */
-        if (strlen(val) != 6) {
-            /*pattern->messages.add("Warning: in DST file read,
-                PD is not 6 characters, but ",(int)strlen(val)); */
+        /* macro converts 2 characters to 1 int, allows case statement... */
+        switch (cci(var[0], var[1])) {
+        case cci('L', 'A'):    /* Design Name (LA) */
+                /*pattern->set_variable("Design_Name",val); TODO: review this line. */
+                break;
+        case cci('S', 'T'):    /* Stitch count, 7 digits padded by leading 0's */
+        case cci('C', 'O'):    /* Color change count, 3 digits padded by leading 0's */
+        case cci('+', 'X'):    /* Design extents (+/-X,+/-Y), 5 digits padded by leading 0's */
+        case cci('-', 'X'):
+        case cci('+', 'Y'):
+        case cci('-', 'Y'):
+                /* don't store these variables, they are recalculated at save */
+                break;
+        case cci('A', 'X'):    /* Relative coordinates of last point, 6 digits, padded with leading spaces, first char may be +/- */
+        case cci('A', 'Y'):
+        case cci('M', 'X'):    /* Coordinates of last point in previous file of multi-volume design, 6 digits, padded with leading spaces, first char may be +/- */
+        case cci('M', 'Y'):
+                /* store these variables as-is, they will be converted to numbers and back at save; */
+                /*pattern->set_variable(var,val); TODO: review this line. */
+                break;
+        case cci('P', 'D'):
+                /* store this string as-is, it will be saved as-is, 6 characters */
+                if (strlen(val) != 6) {
+                        /*pattern->messages.add("Warning: in DST file read,
+                           PD is not 6 characters, but ",(int)strlen(val)); */
+                }
+                /*pattern->set_variable(var,val); */
+                break;
+                /* Begin extended fields section */
+        case cci('A', 'U'):    /* Author string, arbitrary length */
+        case cci('C', 'P'):    /* Copyright string, arbitrary length */
+                /*pattern->set_variable(var,val); TODO: review this line. */
+                break;
+                /*Thread Color: #RRGGBB,Description,Catalog Number (1st field RGB
+                   hex values, 2nd&3rd fields optional arbitrary length) */
+        case cci('T', 'C'):
+                /* TODO: review these lines below.
+                   description=split_cell_str(val,2);
+                   catalog_number=split_cell_str(val,3);
+                 */
+                t.color = embColor_fromHexStr(val);
+                strcpy(t.description, "");
+                strcpy(t.catalogNumber, "");
+                embp_addThread(pattern, t);
+                break;
+        default:
+                /* unknown field, just save it. */
+                /*pattern->set_variable(var,val); TODO: review this line. */
+                break;
         }
-        /*pattern->set_variable(var,val);*/
-        break;
-        /* Begin extended fields section */
-    case cci('A','U'): /* Author string, arbitrary length */
-    case cci('C','P'): /* Copyright string, arbitrary length */
-        /*pattern->set_variable(var,val); TODO: review this line. */
-        break;
-        /*Thread Color: #RRGGBB,Description,Catalog Number (1st field RGB
-            hex values, 2nd&3rd fields optional arbitrary length) */
-    case cci('T','C'):
-        /* TODO: review these lines below.
-        description=split_cell_str(val,2);
-        catalog_number=split_cell_str(val,3);
-        */
-        t.color = embColor_fromHexStr(val);
-        strcpy(t.description, "");
-        strcpy(t.catalogNumber, "");
-        embp_addThread(pattern, t);
-        break;
-    default:
-        /* unknown field, just save it. */
-        /*pattern->set_variable(var,val); TODO: review this line. */
-        break;
-    }
 }
 
 /*
@@ -2152,1540 +972,1031 @@ set_dst_variable(EmbPattern* pattern, char* var, char* val)
  *
  * char PD[9+1];   PD is also storing some information for multi-volume design.
  */
-char
-readDst(EmbPattern* pattern, FILE* file) {
-    char var[3];   /* temporary storage variable name */
-    char val[512]; /* temporary storage variable value */
-    int valpos;
-    unsigned char b[3];
-    char header[512 + 1];
-    int i = 0, flags;
+char readDst(EmbPattern *pattern, FILE *file)
+{
+        char var[3];            /* temporary storage variable name */
+        char val[512];          /* temporary storage variable value */
+        int valpos;
+        unsigned char b[3];
+        char header[512 + 1];
+        int i = 0, flags;
 
-    /* TODO: review commented code below
-    pattern->clear();
-    pattern->set_variable("file_name",filename);
-    */
+        /* TODO: review commented code below
+           pattern->clear();
+           pattern->set_variable("file_name",filename);
+         */
 
-    if (fread(header, 1, 512, file) != 512) {
-        puts("ERROR: Failed to read header bytes.");
-        return 0;
-    }
+        if (fread(header, 1, 512, file) != 512) {
+                puts("ERROR: Failed to read header bytes.");
+                return 0;
+        }
 
-    /*TODO:It would probably be a good idea to
-        validate file before accepting it. */
-    /* fill variables from header fields */
-    for (i = 0; i < 512; i++) {
-        if (header[i] == ':' && i > 1) {
-            var[0] = header[i - 2];
-            var[1] = header[i - 1];
-            var[2] = '\0';
-            valpos = i + 1;
-            for (i++; i < 512; i++)
-            {
-                /* don't accept : without CR because there's a bug below: i-valpos must be > 0 which is not the case if the : is before the third character. */
-                if (header[i] == 13/*||header[i]==':'*/) { /* 0x0d = carriage return */
-                    /* : indicates another variable, CR was missing! */
-                    if (header[i] == ':') {
-                        i -= 2;
-                    }
-                    /* TODO: used to be strncpy, make sure this is a safe substitution. */
-                    memcpy(val, &header[valpos], (size_t)(i - valpos));
-                    val[i - valpos] = '\0';
-                    set_dst_variable(pattern, var, val);
-                    break;
+        /*TODO:It would probably be a good idea to
+           validate file before accepting it. */
+        /* fill variables from header fields */
+        for (i = 0; i < 512; i++) {
+                if (header[i] == ':' && i > 1) {
+                        var[0] = header[i - 2];
+                        var[1] = header[i - 1];
+                        var[2] = '\0';
+                        valpos = i + 1;
+                        for (i++; i < 512; i++) {
+                                /* don't accept : without CR because there's a bug below: i-valpos must be > 0 which is not the case if the : is before the third character. */
+                                if (header[i] == 13 /*||header[i]==':' */ ) {   /* 0x0d = carriage return */
+                                        /* : indicates another variable, CR was missing! */
+                                        if (header[i] == ':') {
+                                                i -= 2;
+                                        }
+                                        /* TODO: used to be strncpy, make sure this is a safe substitution. */
+                                        memcpy(val, &header[valpos],
+                                               (size_t)(i - valpos));
+                                        val[i - valpos] = '\0';
+                                        set_dst_variable(pattern, var, val);
+                                        break;
+                                }
+                        }
                 }
-            }
         }
-    }
 
-    while (fread(b, 1, 3, file) == 3) {
-        int x, y;
-        decode_tajima_ternary(b, &x, &y);
-        flags = decode_record_flags(b[2]);
-        if (flags == END) {
-            break;
+        while (fread(b, 1, 3, file) == 3) {
+                int x, y;
+                decode_tajima_ternary(b, &x, &y);
+                flags = decode_record_flags(b[2]);
+                if (flags == END) {
+                        break;
+                }
+                embp_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
         }
-        embp_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
-    }
 
-    /* combine_jump_stitches(pattern, 5); */
-    return 1;
+        /* combine_jump_stitches(pattern, 5); */
+        return 1;
 }
 
-char
-writeDst(EmbPattern* pattern, FILE* file)
+char writeDst(EmbPattern *pattern, FILE *file)
 {
-    EmbRect boundingRect;
-    int i, ax, ay, mx, my;
-    EmbVector pos;
-    EmbString pd;
+        EmbRect boundingRect;
+        int i, ax, ay, mx, my;
+        EmbVector pos;
+        EmbString pd;
 
-    embp_correctForMaxStitchLength(pattern, 12.1f, 12.1f);
+        embp_correctForMaxStitchLength(pattern, 12.1f, 12.1f);
 
-    /* TODO: make sure that pattern->thread_list->count
-     * defaults to 1 in new patterns */
-    boundingRect = embp_bounds(pattern);
-    /* TODO: review the code below
-    if (pattern->get_variable("design_name") != NULL) {
-        char *la = stralloccopy(pattern->get_variable("design_name"));
-        if (strlen(la)>16) la[16]='\0';
+        /* TODO: make sure that pattern->thread_list->count
+         * defaults to 1 in new patterns */
+        boundingRect = embp_bounds(pattern);
+        /* TODO: review the code below
+           if (pattern->get_variable("design_name") != NULL) {
+           char *la = stralloccopy(pattern->get_variable("design_name"));
+           if (strlen(la)>16) la[16]='\0';
 
-        fprintf(file,"LA:%-16s\x0d",la);
-        safe_free(la);
-    }
-    */
-    fprintf(file, "LA:%-16s\x0d", "Untitled");
-    fprintf(file, "ST:%7d\x0d", pattern->stitch_list->count);
-    /* number of color changes, not number of colors! */
-    fprintf(file, "CO:%3d\x0d", pattern->thread_list->count - 1);
-    fprintf(file,
-        "+X:%5d\x0d"
-        "-X:%5d\x0d"
-        "+Y:%5d\x0d"
-        "-Y:%5d\x0d",
-        (int)((boundingRect.x + boundingRect.w) * 10.0),
-        (int)(fabs(boundingRect.x) * 10.0),
-        (int)((boundingRect.y + boundingRect.h) * 10.0),
-        (int)(fabs(boundingRect.y) * 10.0));
+           fprintf(file,"LA:%-16s\x0d",la);
+           safe_free(la);
+           }
+         */
+        fprintf(file, "LA:%-16s\x0d", "Untitled");
+        fprintf(file, "ST:%7d\x0d", pattern->stitch_list->count);
+        /* number of color changes, not number of colors! */
+        fprintf(file, "CO:%3d\x0d", pattern->thread_list->count - 1);
+        fprintf(file,
+                "+X:%5d\x0d"
+                "-X:%5d\x0d"
+                "+Y:%5d\x0d"
+                "-Y:%5d\x0d",
+                (int)((boundingRect.x + boundingRect.w) * 10.0),
+                (int)(fabs(boundingRect.x) * 10.0),
+                (int)((boundingRect.y + boundingRect.h) * 10.0),
+                (int)(fabs(boundingRect.y) * 10.0));
 
-    ax = ay = mx = my = 0;
-    /* TODO: review the code below */
-    /*ax=pattern->get_variable_int("ax"); */ /* will return 0 if not defined */
-    /*ay=pattern->get_variable_int("ay"); */
-    /*mx=pattern->get_variable_int("mx"); */
-    /*my=pattern->get_variable_int("my"); */
+        ax = ay = mx = my = 0;
+        /* TODO: review the code below */
+        /*ax=pattern->get_variable_int("ax"); *//* will return 0 if not defined */
+        /*ay=pattern->get_variable_int("ay"); */
+        /*mx=pattern->get_variable_int("mx"); */
+        /*my=pattern->get_variable_int("my"); */
 
-    /*pd=pattern->get_variable("pd");*/ /* will return null pointer if not defined */
-   /* pd = 0;
-    if (pd == 0 || strlen(pd) != 6) { */
+        /*pd=pattern->get_variable("pd"); *//* will return null pointer if not defined */
+        /* pd = 0;
+           if (pd == 0 || strlen(pd) != 6) { */
         /* pd is not valid, so fill in a default consisting of "******" */
         strcpy(pd, "******");
-    /*}*/
-    fprintf(file,
-        "AX:+%5d\x0d"
-        "AY:+%5d\x0d"
-        "MX:+%5d\x0d"
-        "MY:+%5d\x0d"
-        "PD:%6s\x0d\x1a",
-        ax, ay, mx, my, pd);
+        /*} */
+        fprintf(file,
+                "AX:+%5d\x0d"
+                "AY:+%5d\x0d"
+                "MX:+%5d\x0d"
+                "MY:+%5d\x0d" "PD:%6s\x0d\x1a", ax, ay, mx, my, pd);
 
-    /* pad out header to proper length */
-    fpad(file, ' ', 512-125);
+        /* pad out header to proper length */
+        fpad(file, ' ', 512 - 125);
 
-    /* write stitches */
-    pos.x = 0.0;
-    pos.y = 0.0;
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbStitch st;
-        int dx, dy;
-        st = pattern->stitch_list->stitch[i];
-        /* convert from mm to 0.1mm for file format */
-        dx = (int)emb_round(10.0f * (st.x - pos.x));
-        dy = (int)emb_round(10.0f * (st.y - pos.y));
-        pos.x += 0.1f * dx;
-        pos.y += 0.1f * dy;
-        if (emb_verbose > 0) {
-            printf("%d %f %f %d %d %f %f %d\n", i, st.x, st.y, dx, dy, pos.x, pos.y, st.flags);
+        /* write stitches */
+        pos.x = 0.0;
+        pos.y = 0.0;
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                EmbStitch st;
+                int dx, dy;
+                st = pattern->stitch_list->stitch[i];
+                /* convert from mm to 0.1mm for file format */
+                dx = (int)emb_round(10.0f * (st.x - pos.x));
+                dy = (int)emb_round(10.0f * (st.y - pos.y));
+                pos.x += 0.1f * dx;
+                pos.y += 0.1f * dy;
+                if (emb_verbose > 0) {
+                        printf("%d %f %f %d %d %f %f %d\n", i, st.x, st.y, dx,
+                               dy, pos.x, pos.y, st.flags);
+                }
+                encode_record(file, dx, dy, st.flags);
         }
-        encode_record(file, dx, dy, st.flags);
-    }
 
-    /* Finish file with a terminator character and two zeros to
-     * keep the post header part a multiple of three.
-     */
-    fwrite("\xa1\0\0", 1, 3, file);
-    return 1;
+        /* Finish file with a terminator character and two zeros to
+         * keep the post header part a multiple of three.
+         */
+        fwrite("\xa1\0\0", 1, 3, file);
+        return 1;
 }
-
-
-
 
 /* Embird Embroidery Format (.edr)
  * Stitch Only Format
  */
-char
-readEdr(EmbPattern* pattern, FILE* file)
+char readEdr(EmbPattern *pattern, FILE *file)
 {
-    /* appears identical to readRgb, so backends to that */
-    return readRgb(pattern, file);
+        /* appears identical to readRgb, so backends to that */
+        return readRgb(pattern, file);
 }
 
-char
-writeEdr(EmbPattern* pattern, FILE* file)
+char writeEdr(EmbPattern *pattern, FILE *file)
 {
-    /* appears identical to writeRgb, so backends to that */
-    return writeRgb(pattern, file);
+        /* appears identical to writeRgb, so backends to that */
+        return writeRgb(pattern, file);
 }
 
 /* The Elna Embroidery Format (.emd)
  * Stitch Only Format.
  */
 
-char
-emdDecode(unsigned char inputByte)
+char emdDecode(unsigned char inputByte)
 {
-    if (inputByte >= 0x80) {
-        return (-~inputByte) - 1;
-    }
-    return inputByte;
+        if (inputByte >= 0x80) {
+                return (-~inputByte) - 1;
+        }
+        return inputByte;
 }
 
 /* . */
-char
-readEmd(EmbPattern* pattern, FILE* file)
+char readEmd(EmbPattern *pattern, FILE *file)
 {
-    unsigned char b[2];
-    unsigned char jemd0[6]; /* TODO: more descriptive name */
-    int width, height, colors, length;
+        unsigned char b[2];
+        unsigned char jemd0[6]; /* TODO: more descriptive name */
+        int width, height, colors, length;
 
-    fseek(file, 0, SEEK_END);
-    length = ftell(file);
-    if (length < 0x30) {
-        puts("File invalid: shorter than the header.");
-        return 0;
-    }
-    fseek(file, 0, SEEK_SET);
-
-    if (fread(jemd0, 1, 6, file) != 6) {
-        puts("ERROR: Failed to read 6 bytes for jemd0");
-        return 0;
-    }
-    width = emb_read_i16(file);
-    height = emb_read_i16(file);
-    colors = emb_read_i16(file);
-    printf("%d %d %d\n", width, height, colors);
-
-    fseek(file, 0x30, SEEK_SET);
-
-    while (!feof(file)) {
-        char dx, dy;
-        int flags = NORMAL;
-        if (fread(b, 1, 2, file) != 2) {
-            puts("ERROR: Failed to read 2 bytes for stitch.");
-            return 0;
+        fseek(file, 0, SEEK_END);
+        length = ftell(file);
+        if (length < 0x30) {
+                puts("File invalid: shorter than the header.");
+                return 0;
         }
-        
-        if (b[0] == 0x80) {
-            if (b[1] == 0x2A) {
-                embp_addStitchRel(pattern, 0, 0, STOP, 1);
-                continue;
-            }
-            else if (b[1] == 0x80) {
+        fseek(file, 0, SEEK_SET);
+
+        if (fread(jemd0, 1, 6, file) != 6) {
+                puts("ERROR: Failed to read 6 bytes for jemd0");
+                return 0;
+        }
+        width = emb_read_i16(file);
+        height = emb_read_i16(file);
+        colors = emb_read_i16(file);
+        printf("%d %d %d\n", width, height, colors);
+
+        fseek(file, 0x30, SEEK_SET);
+
+        while (!feof(file)) {
+                char dx, dy;
+                int flags = NORMAL;
                 if (fread(b, 1, 2, file) != 2) {
-                    puts("ERROR: Failed to read 2 bytes for stitch.");
-                    return 0;
+                        puts("ERROR: Failed to read 2 bytes for stitch.");
+                        return 0;
                 }
-                flags = TRIM;
-            }
-            else if (b[1] == 0xFD) {
-                embp_addStitchRel(pattern, 0, 0, END, 1);
-                break;
-            }
-            else {
-                continue;
-            }
+
+                if (b[0] == 0x80) {
+                        if (b[1] == 0x2A) {
+                                embp_addStitchRel(pattern, 0, 0, STOP, 1);
+                                continue;
+                        } else if (b[1] == 0x80) {
+                                if (fread(b, 1, 2, file) != 2) {
+                                        puts("ERROR: Failed to read 2 bytes for stitch.");
+                                        return 0;
+                                }
+                                flags = TRIM;
+                        } else if (b[1] == 0xFD) {
+                                embp_addStitchRel(pattern, 0, 0, END, 1);
+                                break;
+                        } else {
+                                continue;
+                        }
+                }
+                dx = emdDecode(b[0]);
+                dy = emdDecode(b[1]);
+                embp_addStitchRel(pattern, dx / 10.0f, dy / 10.0f, flags, 1);
         }
-        dx = emdDecode(b[0]);
-        dy = emdDecode(b[1]);
-        embp_addStitchRel(pattern, dx / 10.0f, dy / 10.0f, flags, 1);
-    }
-    return 1;
+        return 1;
 }
 
-char
-writeEmd(EmbPattern* pattern, FILE* file)
+char writeEmd(EmbPattern *pattern, FILE *file)
 {
-    puts("writeEmd not implemented.");
-    if (emb_verbose > 1) {
-        printf("Called with %p %p\n", (void*)pattern, (void*)file);
-    }
-    return 0; /*TODO: finish writeEmd */
+        puts("writeEmd not implemented.");
+        if (emb_verbose > 1) {
+                printf("Called with %p %p\n", (void *)pattern, (void *)file);
+        }
+        return 0;               /*TODO: finish writeEmd */
 }
 
 /* Fortron Embroidery Format (.fxy)
  * Stitch Only Format.
  */
-char
-readFxy(EmbPattern* pattern, FILE* file)
+char readFxy(EmbPattern *pattern, FILE *file)
 {
-    /* TODO: review for combining code. This line appears
-        to be the only difference from the GT format. */
-    fseek(file, 0x100, SEEK_SET);
+        /* TODO: review for combining code. This line appears
+           to be the only difference from the GT format. */
+        fseek(file, 0x100, SEEK_SET);
 
-    while (!feof(file)) {
-        int stitchType = NORMAL;
-        int b1 = fgetc(file);
-        int b2 = fgetc(file);
-        unsigned char commandByte = (unsigned char)fgetc(file);
+        while (!feof(file)) {
+                int stitchType = NORMAL;
+                int b1 = fgetc(file);
+                int b2 = fgetc(file);
+                unsigned char commandByte = (unsigned char)fgetc(file);
 
-        if (commandByte == 0x91) {
-            embp_addStitchRel(pattern, 0, 0, END, 1);
-            break;
+                if (commandByte == 0x91) {
+                        embp_addStitchRel(pattern, 0, 0, END, 1);
+                        break;
+                }
+                if ((commandByte & 0x01) == 0x01)
+                        stitchType = TRIM;
+                if ((commandByte & 0x02) == 0x02)
+                        stitchType = STOP;
+                if ((commandByte & 0x20) == 0x20)
+                        b1 = -b1;
+                if ((commandByte & 0x40) == 0x40)
+                        b2 = -b2;
+                embp_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
         }
-        if ((commandByte & 0x01) == 0x01)
-            stitchType = TRIM;
-        if ((commandByte & 0x02) == 0x02)
-            stitchType = STOP;
-        if ((commandByte & 0x20) == 0x20)
-            b1 = -b1;
-        if ((commandByte & 0x40) == 0x40)
-            b2 = -b2;
-        embp_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
-    }
-    return 1;
+        return 1;
 }
 
-char
-writeFxy(EmbPattern* pattern, FILE* file)
+char writeFxy(EmbPattern *pattern, FILE *file)
 {
-    puts("Overridden, defaulting to dst.");
-    printf("%p %p\n", pattern, file);
-    return 0; /*TODO: finish writeFxy */
+        puts("Overridden, defaulting to dst.");
+        printf("%p %p\n", pattern, file);
+        return 0;               /*TODO: finish writeFxy */
 }
 
 /* Husqvarna Viking Embroidery Format (.hus)
  *
  * Stitch Only Format.
  */
-int
-husDecodeStitchType(unsigned char b)
+int husDecodeStitchType(unsigned char b)
 {
-    switch(b) {
-    case 0x80:
-        return NORMAL;
-    case 0x81:
-        return JUMP;
-    case 0x84:
-        return STOP;
-    case 0x90:
-        return END;
-    default:
-        return NORMAL;
-    }
+        switch (b) {
+        case 0x80:
+                return NORMAL;
+        case 0x81:
+                return JUMP;
+        case 0x84:
+                return STOP;
+        case 0x90:
+                return END;
+        default:
+                return NORMAL;
+        }
 }
 
-unsigned char*
-husDecompressData(unsigned char* input, int compressedInputLength, int decompressedContentLength)
+unsigned char *husDecompressData(unsigned char *input,
+                                 int compressedInputLength,
+                                 int decompressedContentLength)
 {
-    char* decompressedData = (char*)malloc(sizeof(char)*decompressedContentLength);
-    if (!decompressedData) {
-        printf("ERROR: husDecompressData(), cannot allocate memory for decompressedData\n");
-        return 0;
-    }
-    hus_decompress((char*)input, compressedInputLength, decompressedData, &decompressedContentLength);
-    return (unsigned char *)decompressedData;
+        char *decompressedData =
+            (char *)malloc(sizeof(char) * decompressedContentLength);
+        if (!decompressedData) {
+                printf
+                    ("ERROR: husDecompressData(), cannot allocate memory for decompressedData\n");
+                return 0;
+        }
+        hus_decompress((char *)input, compressedInputLength, decompressedData,
+                       &decompressedContentLength);
+        return (unsigned char *)decompressedData;
 }
 
-unsigned char*
-husCompressData(unsigned char* input, int decompressedInputSize, int* compressedSize)
+unsigned char *husCompressData(unsigned char *input, int decompressedInputSize,
+                               int *compressedSize)
 {
-    char* compressedData = (char*)malloc(sizeof(char)*decompressedInputSize*2);
-    if (!compressedData) {
-        printf("ERROR: husCompressData(), cannot allocate memory for compressedData\n");
-        return 0;
-    }
-    hus_compress((char*)input, decompressedInputSize, compressedData, compressedSize);
-    return (unsigned char *)compressedData;
+        char *compressedData =
+            (char *)malloc(sizeof(char) * decompressedInputSize * 2);
+        if (!compressedData) {
+                printf
+                    ("ERROR: husCompressData(), cannot allocate memory for compressedData\n");
+                return 0;
+        }
+        hus_compress((char *)input, decompressedInputSize, compressedData,
+                     compressedSize);
+        return (unsigned char *)compressedData;
 }
 
-int
-husDecodeByte(unsigned char b)
+int husDecodeByte(unsigned char b)
 {
-    return (char)b;
+        return (char)b;
 }
 
-unsigned char
-husEncodeByte(EmbReal f)
+unsigned char husEncodeByte(EmbReal f)
 {
-    return (unsigned char)(int)emb_round(f);
+        return (unsigned char)(int)emb_round(f);
 }
 
-unsigned char
-husEncodeStitchType(int st)
+unsigned char husEncodeStitchType(int st)
 {
-    switch(st) {
-    case NORMAL:
-        return (0x80);
-    case JUMP:
-    case TRIM:
-        return (0x81);
-    case STOP:
-        return (0x84);
-    case END:
-        return (0x90);
-    default:
-        return (0x80);
-    }
+        switch (st) {
+        case NORMAL:
+                return (0x80);
+        case JUMP:
+        case TRIM:
+                return (0x81);
+        case STOP:
+                return (0x84);
+        case END:
+                return (0x90);
+        default:
+                return (0x80);
+        }
 }
 
-char
-readHus(EmbPattern* pattern, FILE* file)
+char readHus(EmbPattern *pattern, FILE *file)
 {
-    int fileLength;
-    int magicCode, numberOfStitches, numberOfColors;
-    int positiveXHoopSize, positiveYHoopSize, negativeXHoopSize, negativeYHoopSize;
-    int attributeOffset, xOffset, yOffset;
-    unsigned char *attributeData, *xData , *yData;
-    unsigned char* attributeDataDecompressed = 0;
-    unsigned char* xDecompressed = 0;
-    unsigned char* yDecompressed = 0;
-    unsigned char* stringVal = 0;
+        int fileLength;
+        int magicCode, numberOfStitches, numberOfColors;
+        int positiveXHoopSize, positiveYHoopSize, negativeXHoopSize,
+            negativeYHoopSize;
+        int attributeOffset, xOffset, yOffset;
+        unsigned char *attributeData, *xData, *yData;
+        unsigned char *attributeDataDecompressed = 0;
+        unsigned char *xDecompressed = 0;
+        unsigned char *yDecompressed = 0;
+        unsigned char *stringVal = 0;
 
-    int unknown, i = 0;
+        int unknown, i = 0;
 
-    fseek(file, 0x00, SEEK_END);
-    fileLength = ftell(file);
-    fseek(file, 0x00, SEEK_SET);
+        fseek(file, 0x00, SEEK_END);
+        fileLength = ftell(file);
+        fseek(file, 0x00, SEEK_SET);
 
-    magicCode = emb_read_i32(file);
-    numberOfStitches = emb_read_i32(file);
-    numberOfColors = emb_read_i32(file);
+        magicCode = emb_read_i32(file);
+        numberOfStitches = emb_read_i32(file);
+        numberOfColors = emb_read_i32(file);
 
-    /* These should be put in the EmbPattern. */
-    positiveXHoopSize = emb_read_i16(file);
-    positiveYHoopSize = emb_read_i16(file);
-    negativeXHoopSize = emb_read_i16(file);
-    negativeYHoopSize = emb_read_i16(file);
-    
-    attributeOffset = emb_read_i32(file);
-    xOffset = emb_read_i32(file);
-    yOffset = emb_read_i32(file);
+        /* These should be put in the EmbPattern. */
+        positiveXHoopSize = emb_read_i16(file);
+        positiveYHoopSize = emb_read_i16(file);
+        negativeXHoopSize = emb_read_i16(file);
+        negativeYHoopSize = emb_read_i16(file);
 
-    REPORT_INT(magicCode)
-    REPORT_INT(numberOfStitches)
-    REPORT_INT(numberOfColors)
-    REPORT_INT(positiveXHoopSize)
-    REPORT_INT(positiveYHoopSize)
-    REPORT_INT(negativeXHoopSize)
-    REPORT_INT(negativeYHoopSize)
-    REPORT_INT(attributeOffset)
-    REPORT_INT(xOffset)
-    REPORT_INT(yOffset)
+        attributeOffset = emb_read_i32(file);
+        xOffset = emb_read_i32(file);
+        yOffset = emb_read_i32(file);
 
-    stringVal = (unsigned char*)malloc(sizeof(unsigned char)*8);
-    if (!stringVal) {
-        printf("ERROR: format-hus.c readHus(), cannot allocate memory for stringVal\n");
-        return 0;
-    }
-    size_t size = 8;
-    if (fread(stringVal, 1, size, file) != size) {
-        puts("Ran out of bytes before full file read.");
-        return 0;
-    }
+        REPORT_INT(magicCode)
+            REPORT_INT(numberOfStitches)
+            REPORT_INT(numberOfColors)
+            REPORT_INT(positiveXHoopSize)
+            REPORT_INT(positiveYHoopSize)
+            REPORT_INT(negativeXHoopSize)
+            REPORT_INT(negativeYHoopSize)
+            REPORT_INT(attributeOffset)
+            REPORT_INT(xOffset)
+            REPORT_INT(yOffset)
+            stringVal = (unsigned char *)malloc(sizeof(unsigned char) * 8);
+        if (!stringVal) {
+                printf
+                    ("ERROR: format-hus.c readHus(), cannot allocate memory for stringVal\n");
+                return 0;
+        }
+        size_t size = 8;
+        if (fread(stringVal, 1, size, file) != size) {
+                puts("Ran out of bytes before full file read.");
+                return 0;
+        }
 
-    unknown = emb_read_i16(file);
-    printf("unknown: %d\n", unknown);
-    for (i = 0; i < numberOfColors; i++) {
-        short pos = emb_read_i16(file);
-        embp_addThread(pattern, hus_colors[pos]);
-    }
+        unknown = emb_read_i16(file);
+        printf("unknown: %d\n", unknown);
+        for (i = 0; i < numberOfColors; i++) {
+                short pos = emb_read_i16(file);
+                embp_addThread(pattern, hus_colors[pos]);
+        }
 
-    attributeData = (unsigned char*)malloc(sizeof(unsigned char)*(xOffset - attributeOffset + 1));
-    if (!attributeData) {
-        printf("ERROR: format-hus.c readHus(), cannot allocate memory for attributeData\n");
-        return 0;
-    }
-    size = xOffset - attributeOffset;
-    if (fread(attributeData, 1, size, file) != size) {
-        puts("Ran out of bytes before full file read.");
-        return 0;
-    }
-    attributeDataDecompressed = husDecompressData(attributeData, size, numberOfStitches + 1);
+        attributeData =
+            (unsigned char *)malloc(sizeof(unsigned char) *
+                                    (xOffset - attributeOffset + 1));
+        if (!attributeData) {
+                printf
+                    ("ERROR: format-hus.c readHus(), cannot allocate memory for attributeData\n");
+                return 0;
+        }
+        size = xOffset - attributeOffset;
+        if (fread(attributeData, 1, size, file) != size) {
+                puts("Ran out of bytes before full file read.");
+                return 0;
+        }
+        attributeDataDecompressed =
+            husDecompressData(attributeData, size, numberOfStitches + 1);
 
-    xData = (unsigned char*)malloc(sizeof(unsigned char)*(yOffset - xOffset + 1));
-    if (!xData) {
-        printf("ERROR: format-hus.c readHus(), cannot allocate memory for xData\n");
-        return 0;
-    }
-    size = yOffset - xOffset;
-    if (fread(xData, 1, size, file) != size) {
-        puts("Ran out of bytes before full file read.");
-        return 0;
-    }
-    xDecompressed = husDecompressData(xData, size, numberOfStitches);
+        xData =
+            (unsigned char *)malloc(sizeof(unsigned char) *
+                                    (yOffset - xOffset + 1));
+        if (!xData) {
+                printf
+                    ("ERROR: format-hus.c readHus(), cannot allocate memory for xData\n");
+                return 0;
+        }
+        size = yOffset - xOffset;
+        if (fread(xData, 1, size, file) != size) {
+                puts("Ran out of bytes before full file read.");
+                return 0;
+        }
+        xDecompressed = husDecompressData(xData, size, numberOfStitches);
 
-    yData = (unsigned char*)malloc(sizeof(unsigned char)*(fileLength - yOffset + 1));
-    if (!yData) {
-        printf("ERROR: format-hus.c readHus(), cannot allocate memory for yData\n");
-        return 0;
-    }
-    size = fileLength - yOffset;
-    if (fread(yData, 1, size, file) != size) {
-        puts("Ran out of bytes before full file read.");
-        return 0;
-    }
-    yDecompressed = husDecompressData(yData, size, numberOfStitches);
+        yData =
+            (unsigned char *)malloc(sizeof(unsigned char) *
+                                    (fileLength - yOffset + 1));
+        if (!yData) {
+                printf
+                    ("ERROR: format-hus.c readHus(), cannot allocate memory for yData\n");
+                return 0;
+        }
+        size = fileLength - yOffset;
+        if (fread(yData, 1, size, file) != size) {
+                puts("Ran out of bytes before full file read.");
+                return 0;
+        }
+        yDecompressed = husDecompressData(yData, size, numberOfStitches);
 
-    for (i = 0; i < numberOfStitches; i++) {
-        int flag;
-        EmbVector v;
-        v.x = husDecodeByte(xDecompressed[i]) / 10.0;
-        v.y = husDecodeByte(yDecompressed[i]) / 10.0;
-        flag = husDecodeStitchType(attributeDataDecompressed[i]);
-        embp_addStitchRel(pattern, v.x, v.y, flag, 1);
-    }
+        for (i = 0; i < numberOfStitches; i++) {
+                int flag;
+                EmbVector v;
+                v.x = husDecodeByte(xDecompressed[i]) / 10.0;
+                v.y = husDecodeByte(yDecompressed[i]) / 10.0;
+                flag = husDecodeStitchType(attributeDataDecompressed[i]);
+                embp_addStitchRel(pattern, v.x, v.y, flag, 1);
+        }
 
-    safe_free(stringVal);
-    safe_free(xData);
-    safe_free(xDecompressed);
-    safe_free(yData);
-    safe_free(yDecompressed);
-    safe_free(attributeData);
-    safe_free(attributeDataDecompressed);
+        safe_free(stringVal);
+        safe_free(xData);
+        safe_free(xDecompressed);
+        safe_free(yData);
+        safe_free(yDecompressed);
+        safe_free(attributeData);
+        safe_free(attributeDataDecompressed);
 
-    return 1;
+        return 1;
 }
 
-char
-writeHus(EmbPattern* pattern, FILE* file)
+char writeHus(EmbPattern *pattern, FILE *file)
 {
-    EmbRect boundingRect;
-    int stitchCount, minColors, patternColor, attributeSize, xCompressedSize, yCompressedSize, i;
-    EmbReal previousX, previousY;
-    short right, top, bottom, left;
-    unsigned int code, colors, offset1, offset2;
-    unsigned char *xValues = 0, *yValues = 0, *attributeValues = 0,
-        *attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
+        EmbRect boundingRect;
+        int stitchCount, minColors, patternColor, attributeSize,
+            xCompressedSize, yCompressedSize, i;
+        EmbReal previousX, previousY;
+        short right, top, bottom, left;
+        unsigned int code, colors, offset1, offset2;
+        unsigned char *xValues = 0, *yValues = 0, *attributeValues = 0,
+            *attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
 
-    stitchCount = pattern->stitch_list->count;
-    /* embp_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
-    minColors = pattern->thread_list->count;
-    patternColor = minColors;
-    if (minColors > 24) minColors = 24;
-    code = 0x00C8AF5B;
-    emb_write_i32(file, code);
-    emb_write_i32(file, stitchCount);
-    emb_write_i32(file, minColors);
+        stitchCount = pattern->stitch_list->count;
+        /* embp_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
+        minColors = pattern->thread_list->count;
+        patternColor = minColors;
+        if (minColors > 24)
+                minColors = 24;
+        code = 0x00C8AF5B;
+        emb_write_i32(file, code);
+        emb_write_i32(file, stitchCount);
+        emb_write_i32(file, minColors);
 
-    boundingRect = embp_bounds(pattern);
-    right = (int16_t) emb_round((boundingRect.w + boundingRect.x) * 10.0);
-    top = (int16_t) -emb_round(boundingRect.y * 10.0);
-    left = (int16_t) emb_round(boundingRect.x * 10.0);
-    bottom = (int16_t) -emb_round((boundingRect.h + boundingRect.y) * 10.0);
-    emb_write_i16(file, right);
-    emb_write_i16(file, top);
-    emb_write_i16(file, left);
-    emb_write_i16(file, bottom);
+        boundingRect = embp_bounds(pattern);
+        right = (int16_t) emb_round((boundingRect.w + boundingRect.x) * 10.0);
+        top = (int16_t) - emb_round(boundingRect.y * 10.0);
+        left = (int16_t) emb_round(boundingRect.x * 10.0);
+        bottom =
+            (int16_t) - emb_round((boundingRect.h + boundingRect.y) * 10.0);
+        emb_write_i16(file, right);
+        emb_write_i16(file, top);
+        emb_write_i16(file, left);
+        emb_write_i16(file, bottom);
 
-    colors = 0x2A + 2 * minColors;
-    emb_write_i32(file, colors);
+        colors = 0x2A + 2 * minColors;
+        emb_write_i32(file, colors);
 
-    xValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
-    if (!xValues) {
-        printf("ERROR: format-hus.c writeHus(), cannot allocate memory for xValues\n");
-        return 0;
-    }
-    yValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
-    if (!yValues) {
-        printf("ERROR: format-hus.c writeHus(), cannot allocate memory for yValues\n");
-        return 0;
-    }
-    attributeValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
-    if (!attributeValues) {
-        printf("ERROR: format-hus.c writeHus(), cannot allocate memory for attributeValues\n");
-        return 0;
-    }
+        xValues =
+            (unsigned char *)malloc(sizeof(unsigned char) * (stitchCount));
+        if (!xValues) {
+                printf
+                    ("ERROR: format-hus.c writeHus(), cannot allocate memory for xValues\n");
+                return 0;
+        }
+        yValues =
+            (unsigned char *)malloc(sizeof(unsigned char) * (stitchCount));
+        if (!yValues) {
+                printf
+                    ("ERROR: format-hus.c writeHus(), cannot allocate memory for yValues\n");
+                return 0;
+        }
+        attributeValues =
+            (unsigned char *)malloc(sizeof(unsigned char) * (stitchCount));
+        if (!attributeValues) {
+                printf
+                    ("ERROR: format-hus.c writeHus(), cannot allocate memory for attributeValues\n");
+                return 0;
+        }
 
-    previousX = 0.0;
-    previousY = 0.0;
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbStitch st;
-        st = pattern->stitch_list->stitch[i];
-        xValues[i] = husEncodeByte((st.x - previousX) * 10.0);
-        previousX = st.x;
-        yValues[i] = husEncodeByte((st.y - previousY) * 10.0);
-        previousY = st.y;
-        attributeValues[i] = husEncodeStitchType(st.flags);
-    }
-    attributeCompressed = husCompressData(attributeValues, stitchCount, &attributeSize);
-    xCompressed = husCompressData(xValues, stitchCount, &xCompressedSize);
-    yCompressed = husCompressData(yValues, stitchCount, &yCompressedSize);
-    /* TODO: error if husCompressData returns zero? */
+        previousX = 0.0;
+        previousY = 0.0;
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                EmbStitch st;
+                st = pattern->stitch_list->stitch[i];
+                xValues[i] = husEncodeByte((st.x - previousX) * 10.0);
+                previousX = st.x;
+                yValues[i] = husEncodeByte((st.y - previousY) * 10.0);
+                previousY = st.y;
+                attributeValues[i] = husEncodeStitchType(st.flags);
+        }
+        attributeCompressed =
+            husCompressData(attributeValues, stitchCount, &attributeSize);
+        xCompressed = husCompressData(xValues, stitchCount, &xCompressedSize);
+        yCompressed = husCompressData(yValues, stitchCount, &yCompressedSize);
+        /* TODO: error if husCompressData returns zero? */
 
-    offset1 = (unsigned int) (0x2A + 2 * patternColor + attributeSize);
-    offset2 = (unsigned int) (0x2A + 2 * patternColor + attributeSize + xCompressedSize);
-    emb_write_i32(file, offset1);
-    emb_write_i32(file, offset2);
-    fpad(file, 0, 10);
+        offset1 = (unsigned int)(0x2A + 2 * patternColor + attributeSize);
+        offset2 =
+            (unsigned int)(0x2A + 2 * patternColor + attributeSize +
+                           xCompressedSize);
+        emb_write_i32(file, offset1);
+        emb_write_i32(file, offset2);
+        fpad(file, 0, 10);
 
-    for (i = 0; i < patternColor; i++) {
-        short color_index = (int16_t)emb_find_nearest_thread(pattern->thread_list->thread[i].color, (EmbThread*)hus_colors, 29);
-        emb_write_i16(file, color_index);
-    }
+        for (i = 0; i < patternColor; i++) {
+                short color_index =
+                    (int16_t) emb_find_nearest_thread(pattern->
+                                                      thread_list->thread[i].
+                                                      color,
+                                                      (EmbThread *) hus_colors,
+                                                      29);
+                emb_write_i16(file, color_index);
+        }
 
-    fwrite(attributeCompressed, 1, attributeSize, file);
-    fwrite(xCompressed, 1, xCompressedSize, file);
-    fwrite(yCompressed, 1, yCompressedSize, file);
+        fwrite(attributeCompressed, 1, attributeSize, file);
+        fwrite(xCompressed, 1, xCompressedSize, file);
+        fwrite(yCompressed, 1, yCompressedSize, file);
 
-    safe_free(xValues);
-    safe_free(xCompressed);
-    safe_free(yValues);
-    safe_free(yCompressed);
-    safe_free(attributeValues);
-    safe_free(attributeCompressed);
+        safe_free(xValues);
+        safe_free(xCompressed);
+        safe_free(yValues);
+        safe_free(yCompressed);
+        safe_free(attributeValues);
+        safe_free(attributeCompressed);
 
-    return 1;
+        return 1;
 }
 
 /*
  * Inbro Embroidery Format (.inb)
  * Stitch Only Format.
  */
-char
-readInb(EmbPattern* pattern, FILE* file)
+char readInb(EmbPattern *pattern, FILE *file)
 {
-    /* TODO: determine what this represents */
-    unsigned char fileDescription[8], nullVal, bytesUnknown[300];
-    int stitchCount, x, y, i, fileLength;
-    short width, height, colorCount, unknown3, unknown2,
-        nullbyte, left, right, top, bottom, imageWidth, imageHeight;
+        /* TODO: determine what this represents */
+        unsigned char fileDescription[8], nullVal, bytesUnknown[300];
+        int stitchCount, x, y, i, fileLength;
+        short width, height, colorCount, unknown3, unknown2,
+            nullbyte, left, right, top, bottom, imageWidth, imageHeight;
 
-    fseek(file, 0, SEEK_END);
-    fileLength = ftell(file);
-    fread(fileDescription, 1, 8, file); /* TODO: check return value */
-    LOAD_U8(file, nullVal)
-    fgetc(file);
-    fgetc(file);
-    LOAD_I32(file, stitchCount)
-    LOAD_I16(file, width)
-    LOAD_I16(file, height)
-    LOAD_I16(file, colorCount)
-    LOAD_I16(file, unknown3)
-    LOAD_I16(file, unknown2)
-    LOAD_I16(file, imageWidth)
-    LOAD_I16(file, imageHeight)
-    fread(bytesUnknown, 1, 300, file); /* TODO: check return value */
-    LOAD_I16(file, nullbyte)
-    LOAD_I16(file, left)
-    LOAD_I16(file, right)
-    LOAD_I16(file, top)
-    LOAD_I16(file, bottom)
-
-    fseek(file, 0x2000, SEEK_SET);
-    /* Calculate stitch count since header has been seen to be blank */
-    stitchCount = (int)((fileLength - 0x2000) / 3);
-    for (i = 0; i < stitchCount; i++) {
-        unsigned char type;
-        int stitch = NORMAL;
-        x = (char)fgetc(file);
-        y = (char)fgetc(file);
-        type = (char)fgetc(file);
-        if ((type & 0x40) > 0)
-            x = -x;
-        if ((type & 0x10) > 0)
-            y = -y;
-        if ((type & 1) > 0)
-            stitch = STOP;
-        if ((type & 2) > 0)
-            stitch = TRIM;
-        embp_addStitchRel(pattern, x / 10.0, y / 10.0, stitch, 1);
-    }
-    embp_flipVertical(pattern);
-
-    return 1;
-}
-
-char
-writeInb(EmbPattern* pattern, FILE* file)
-{
-    puts("ERROR: writeInb not implemented.");
-    REPORT_PTR(pattern)
-    REPORT_PTR(file)
-    return 0; /*TODO: finish writeInb */
-}
-
-/*
- * Embroidery Color Format (.inf)
- *
- * Stitch Only Format.
- */
-
-char
-readInf(EmbPattern* pattern, FILE* file)
-{
-    int nColors, i;
-    char colorType[50];
-    char colorDescription[50];
-    EmbThread t;
-
-    fseek(file, 12, SEEK_CUR);
-    nColors = emb_read_i32be(file);
-
-    pattern->thread_list->count = 0;
-
-    for (i = 0; i < nColors; i++) {
-        fseek(file, 4, SEEK_CUR);
-        embColor_read(file, &(t.color), 3);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
-        embp_addThread(pattern, t);
-        fseek(file, 2, SEEK_CUR);
-        binaryReadString(file, colorType, 50);
-        binaryReadString(file, colorDescription, 50);
-    }
-    return 1;
-}
-
-char
-writeInf(EmbPattern* pattern, FILE* file)
-{
-    int i, bytesRemaining;
-
-    emb_write_u32be(file, 0x01);
-    emb_write_u32be(file, 0x08);
-    /* write place holder offset */
-    emb_write_u32be(file, 0x00);
-    emb_write_u32be(file, pattern->thread_list->count);
-
-    for (i = 0; i < pattern->thread_list->count; i++) {
-        EmbString buffer;
-        unsigned short record_length, record_number, needle_number;
-        EmbColor c;
-        c = pattern->thread_list->thread[i].color;
-        sprintf(buffer, "RGB(%d,%d,%d)", (int)c.r, (int)c.g, (int)c.b);
-        record_length = 14 + strlen(buffer);
-        record_number = i;
-        needle_number = i;
-        emb_write_i16be(file, record_length);
-        emb_write_i16be(file, record_number);
-        embColor_write(file, c, 3);
-        emb_write_i16be(file, needle_number);
-        fwrite("RGB\0", 1, 4, file);
-        fprintf(file, "%s", buffer);
-        fwrite("\0", 1, 1, file);
-    }
-    /* It appears that there should be a pad here otherwise it clips into
-     * the color description. */
-    fpad(file, 0, 8);
-    fseek(file, -8, SEEK_END);
-    bytesRemaining = ftell(file);
-    fseek(file, 8, SEEK_SET);
-    emb_write_u32be(file, bytesRemaining);
-    return 1;
-}
-
-/*
- * Janome Embroidery Format (.jef)
- * Stitch Only Format.
- */
-int
-jefGetHoopSize(int width, int height)
-{
-    if (width < 50 && height < 50) {
-        return HOOP_50X50;
-    }
-    if (width < 110 && height < 110) {
-        return HOOP_110X110;
-    }
-    if (width < 140 && height < 200) {
-        return HOOP_140X200;
-    }
-    return ((int) HOOP_110X110);
-}
-
-char
-jefDecode(unsigned char inputByte) {
-    if (inputByte >= 0x80) {
-        return (char) ((-~inputByte) - 1);
-    }
-    return ((char) inputByte);
-}
-
-void
-jefSetHoopFromId(EmbPattern* pattern, int hoopCode)
-{
-    if (!pattern) {
-        printf("ERROR: format-jef.c jefSetHoopFromId(), pattern argument is null\n");
-        return;
-    }
-    switch (hoopCode) {
-    case HOOP_126X110:
-        pattern->hoop_height = 126.0;
-        pattern->hoop_width = 110.0;
-        break;
-    case HOOP_50X50:
-        pattern->hoop_height = 50.0;
-        pattern->hoop_width = 50.0;
-        break;
-    case HOOP_110X110:
-        pattern->hoop_height = 110.0;
-        pattern->hoop_width = 110.0;
-        break;
-    case HOOP_140X200:
-        pattern->hoop_height = 140.0;
-        pattern->hoop_width = 200.0;
-        break;
-    default:
-    case HOOP_230X200:
-        pattern->hoop_height = 230.0;
-        pattern->hoop_width = 200.0;
-        break;
-    }
-}
-
-struct hoop_padding
-{
-    int left;
-    int right;
-    int top;
-    int bottom;
-};
-
-void
-read_hoop(FILE* file, struct hoop_padding *hoop, char *label)
-{
-    if (emb_verbose>1) {
-        printf("%s\n", label);
-    }
-    hoop->left = emb_read_i32(file);
-    hoop->top = emb_read_i32(file);
-    hoop->right = emb_read_i32(file);
-    hoop->bottom = emb_read_i32(file);
-}
-
-char
-readJef(EmbPattern* pattern, FILE* file)
-{
-    int stitchOffset, formatFlags, numberOfColors, numberOfStitchs;
-    int hoopSize, i, stitchCount;
-    struct hoop_padding bounds, rectFrom110x110;
-    struct hoop_padding rectFrom50x50, rectFrom200x140, rect_from_custom;
-    EmbString date;
-    EmbString time;
-
-    stitchOffset = emb_read_i32(file);
-    formatFlags = emb_read_i32(file); /* TODO: find out what this means */
-
-    fread(date, 1, 8, file); /* TODO: check return value */
-    fread(time, 1, 8, file); /* TODO: check return value */
-    numberOfColors = emb_read_i32(file);
-    numberOfStitchs = emb_read_i32(file);
-    hoopSize = emb_read_i32(file);
-    jefSetHoopFromId(pattern, hoopSize);
-    if (numberOfStitchs > MAX_STITCHES) {
-        numberOfStitchs = MAX_STITCHES;
-        puts("ERROR: this file is corrupted or has too many stitches.");
-        return 0;
-    }
-    if (emb_verbose>1) {
-        printf("format flags = %d\n", formatFlags);
-        printf("number of colors = %d\n", numberOfColors);
-        printf("number of stitches = %d\n", numberOfStitchs);
-    }
-
-    read_hoop(file, &bounds, "bounds");
-    read_hoop(file, &rectFrom110x110, "rectFrom110x110");
-    read_hoop(file, &rectFrom50x50, "rectFrom50x50");
-    read_hoop(file, &rectFrom200x140, "rectFrom200x140");
-    read_hoop(file, &rect_from_custom, "rect_from_custom");
-
-    for (i = 0; i < numberOfColors; i++) {
-        int thread_num = emb_read_i32(file);
-        embp_addThread(pattern, jef_colors[thread_num % 79]);
-    }
-    fseek(file, stitchOffset, SEEK_SET);
-    stitchCount = 0;
-    while (stitchCount < numberOfStitchs + 100) {
-        unsigned char b[2];
-        char dx = 0, dy = 0;
-        int flags = NORMAL;
-        if (fread(b, 1, 2, file) != 2) {
-            break;
+        fseek(file, 0, SEEK_END);
+        fileLength = ftell(file);
+        fread(fileDescription, 1, 8, file);     /* TODO: check return value */
+        LOAD_U8(file, nullVal)
+            fgetc(file);
+        fgetc(file);
+        LOAD_I32(file, stitchCount)
+            LOAD_I16(file, width)
+            LOAD_I16(file, height)
+            LOAD_I16(file, colorCount)
+            LOAD_I16(file, unknown3)
+            LOAD_I16(file, unknown2)
+            LOAD_I16(file, imageWidth)
+            LOAD_I16(file, imageHeight)
+            fread(bytesUnknown, 1, 300, file);  /* TODO: check return value */
+        LOAD_I16(file, nullbyte)
+            LOAD_I16(file, left)
+            LOAD_I16(file, right)
+            LOAD_I16(file, top)
+            LOAD_I16(file, bottom)
+            fseek(file, 0x2000, SEEK_SET);
+        /* Calculate stitch count since header has been seen to be blank */
+        stitchCount = (int)((fileLength - 0x2000) / 3);
+        for (i = 0; i < stitchCount; i++) {
+                unsigned char type;
+                int stitch = NORMAL;
+                x = (char)fgetc(file);
+                y = (char)fgetc(file);
+                type = (char)fgetc(file);
+                if ((type & 0x40) > 0)
+                        x = -x;
+                if ((type & 0x10) > 0)
+                        y = -y;
+                if ((type & 1) > 0)
+                        stitch = STOP;
+                if ((type & 2) > 0)
+                        stitch = TRIM;
+                embp_addStitchRel(pattern, x / 10.0, y / 10.0, stitch, 1);
         }
+        embp_flipVertical(pattern);
 
-        if (b[0] == 0x80) {
-            if (b[1] & 1) {
-                if (fread(b, 1, 2, file) != 2) {
-                    break;
-                }
-                flags = STOP;
-            }
-            else if ((b[1] == 2) || (b[1] == 4) || b[1] == 6) {
-                if (fread(b, 1, 2, file) != 2) {
-                    break;
-                }
-                flags = TRIM;
-            }
-            else if (b[1] == 0x10) {
-                embp_addStitchRel(pattern, 0.0, 0.0, END, 1);
-                break;
-            }
-        }
-        dx = jefDecode(b[0]);
-        dy = jefDecode(b[1]);
-        embp_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
-        stitchCount++;
-    }
-    return 1;
+        return 1;
 }
 
-void
-jefEncode(unsigned char* b, char dx, char dy, int flags)
+char writeInb(EmbPattern *pattern, FILE *file)
 {
-    if (!b) {
-        printf("ERROR: format-jef.c expEncode(), b argument is null\n");
-        return;
-    }
-    if (flags == STOP) {
-        b[0] = 0x80;
-        b[1] = 1;
-        b[2] = dx;
-        b[3] = dy;
-    }
-    else if (flags == END) {
-        b[0] = 0x80;
-        b[1] = 0x10;
-        b[2] = 0;
-        b[3] = 0;
-    }
-    else if (flags == TRIM || flags == JUMP) {
-        b[0] = 0x80;
-        b[1] = 2;
-        b[2] = dx;
-        b[3] = dy;
-    }
-    else {
-        b[0] = dx;
-        b[1] = dy;
-    }
-}
-
-char
-writeJef(EmbPattern* pattern, FILE* file)
-{
-    int colorlistSize, minColors, designWidth, designHeight, i;
-    EmbRect boundingRect;
-    EmbTime time;
-    EmbReal width, height;
-    int data;
-    EmbVector pos;
-
-    embp_correctForMaxStitchLength(pattern, 12.7, 12.7);
-
-    colorlistSize = pattern->thread_list->count;
-    minColors = EMB_MAX(colorlistSize, 6);
-    emb_write_i32(file, 0x74 + (minColors * 4));
-    emb_write_i32(file, 0x0A);
-
-    embTime_initNow(&time);
-
-    fprintf(file, "%04d%02d%02d%02d%02d%02d", (int)(time.year + 1900),
-            (int)(time.month + 1), (int)(time.day), (int)(time.hour),
-            (int)(time.minute), (int)(time.second));
-    fpad(file, 0, 2);
-    emb_write_i32(file, pattern->thread_list->count);
-    data = pattern->stitch_list->count + EMB_MAX(0, (6 - colorlistSize) * 2) + 1;
-    emb_write_i32(file, data);
-
-    boundingRect = embp_bounds(pattern);
-    width = boundingRect.w;
-    height = boundingRect.h;
-    designWidth = (int)(width * 10.0);
-    designHeight = (int)(height * 10.0);
-
-    emb_write_i32(file, jefGetHoopSize(designWidth, designHeight));
-
-    /* Distance from center of Hoop */
-    emb_write_i32(file, (int) (designWidth / 2));  /* left */
-    emb_write_i32(file, (int) (designHeight / 2)); /* top */
-    emb_write_i32(file, (int) (designWidth / 2));  /* right */
-    emb_write_i32(file, (int) (designHeight / 2)); /* bottom */
-
-    /* Distance from default 110 x 110 Hoop */
-    if (EMB_MIN(550 - designWidth / 2, 550 - designHeight / 2) >= 0) {
-        emb_write_i32(file, EMB_MAX(-1, 550 - designWidth / 2));  /* left */
-        emb_write_i32(file, EMB_MAX(-1, 550 - designHeight / 2)); /* top */
-        emb_write_i32(file, EMB_MAX(-1, 550 - designWidth / 2));  /* right */
-        emb_write_i32(file, EMB_MAX(-1, 550 - designHeight / 2)); /* bottom */
-    } else {
-        emb_write_i32(file, -1);
-        emb_write_i32(file, -1);
-        emb_write_i32(file, -1);
-        emb_write_i32(file, -1);
-    }
-
-    /* Distance from default 50 x 50 Hoop */
-    if (EMB_MIN(250 - designWidth / 2, 250 - designHeight / 2) >= 0) {
-        emb_write_i32(file, (int) EMB_MAX(-1, 250 - designWidth / 2));  /* left */
-        emb_write_i32(file, (int) EMB_MAX(-1, 250 - designHeight / 2)); /* top */
-        emb_write_i32(file, (int) EMB_MAX(-1, 250 - designWidth / 2));  /* right */
-        emb_write_i32(file, (int) EMB_MAX(-1, 250 - designHeight / 2)); /* bottom */
-    } else {
-        emb_write_i32(file, -1);
-        emb_write_i32(file, -1);
-        emb_write_i32(file, -1);
-        emb_write_i32(file, -1);
-    }
-
-    /* Distance from default 140 x 200 Hoop */
-    emb_write_i32(file, (int) (700 - designWidth / 2));   /* left */
-    emb_write_i32(file, (int) (1000 - designHeight / 2)); /* top */
-    emb_write_i32(file, (int) (700 - designWidth / 2));   /* right */
-    emb_write_i32(file, (int) (1000 - designHeight / 2)); /* bottom */
-
-    /* repeated Distance from default 140 x 200 Hoop */
-    /* TODO: Actually should be distance to custom hoop */
-    emb_write_i32(file, (int) (630 - designWidth / 2));  /* left */
-    emb_write_i32(file, (int) (550 - designHeight / 2)); /* top */
-    emb_write_i32(file, (int) (630 - designWidth / 2));  /* right */
-    emb_write_i32(file, (int) (550 - designHeight / 2)); /* bottom */
-
-    for (i = 0; i < pattern->thread_list->count; i++) {
-        int j = emb_find_nearest_thread(pattern->thread_list->thread[i].color, (EmbThread *)jef_colors, 79);
-        emb_write_i32(file, j);
-    }
-
-    for (i = 0; i < (minColors - colorlistSize); i++) {
-        int a = 0x0D;
-        emb_write_i32(file, a);
-    }
-
-    pos.x = 0.0;
-    pos.y = 0.0;
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        unsigned char b[4];
-        EmbStitch st;
-        char dx, dy;
-        b[0] = 0;
-        b[1] = 0;
-        b[2] = 0;
-        b[3] = 0;
-        st = pattern->stitch_list->stitch[i];
-        dx = (char)emb_round(10.0*(st.x - pos.x));
-        dy = (char)emb_round(10.0*(st.y - pos.y));
-        pos.x += 0.1*dx;
-        pos.y += 0.1*dy;
-        jefEncode(b, dx, dy, st.flags);
-        if ((b[0] == 0x80) && ((b[1] == 1) || (b[1] == 2) || (b[1] == 4) || (b[1] == 0x10))) {
-            fwrite(b, 1, 4, file);
-        } else {
-            fwrite(b, 1, 2, file);
-        }
-    }
-    return 1;
-}
-
-/*
-\subsection pfaff-ksm-format Pfaff professional Design format (.ksm)
-
-Stitch Only Format.
- */
-
-void
-ksmEncode(unsigned char* b, char dx, char dy, int flags)
-{
-    if (!b) {
-        printf("ERROR: format-ksm.c ksmEncode(), b argument is null\n");
-        return;
-    }
-    /* TODO: How to encode JUMP stitches? JUMP must be handled.
-    Also check this for the EXP format since it appears to be similar */
-    if (flags == TRIM) {
-        b[0] = 128;
-        b[1] = 2;
-        b[2] = dx;
-        b[3] = dy;
-    } else if (flags == STOP) {
-        b[0] = 128;
-        b[1] = 1;
-        b[2] = dx;
-        b[3] = dy;
-    } else {
-        b[0] = dx;
-        b[1] = dy;
-    }
-}
-
-char
-readKsm(EmbPattern* pattern, FILE* file)
-{
-    int prevStitchType = NORMAL;
-    char b[3];
-    fseek(file, 0x200, SEEK_SET);
-    while (fread(b, 1, 3, file) == 3) {
-        int flags = NORMAL;
-
-        if (((prevStitchType & 0x08) == 0x08) && (b[2] & 0x08) == 0x08) {
-            flags = STOP;
-        } else if ((b[2] & 0x1F) != 0) {
-            flags = TRIM;
-        }
-        prevStitchType = b[2];
-        if (b[2] & 0x40) {
-            b[1] = -b[1];
-        }
-        if (b[2] & 0x20) {
-            b[0] = -b[0];
-        }
-        embp_addStitchRel(pattern, b[1] / 10.0, b[0] / 10.0, flags, 1);
-    }
-    return 1;
-}
-
-char
-writeKsm(EmbPattern* pattern, FILE* file)
-{
-    EmbVector pos;
-    int i;
-
-    fpad(file, 0, 0x200);
-    /* write stitches */
-    pos.x = 0.0;
-    pos.y = 0.0;
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        unsigned char b[4];
-        char dx, dy;
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        dx = (char)(10.0*(st.x - pos.x));
-        dy = (char)(10.0*(st.y - pos.y));
-        pos.x += 0.1*dx;
-        pos.y += 0.1*dy;
-        ksmEncode(b, dx, dy, st.flags);
-        fprintf(file, "%c%c", b[0], b[1]);
-    }
-    fprintf(file, "\x1a");
-    return 1;
-}
-
-/* Pfaff Embroidery Format (.max)
- * Stitch Only Format.
- */
-const unsigned char max_header[] = {
-    0x56,0x43,0x53,0x4D,0xFC,0x03,0x00,0x00,0x01,0x00,0x00,0x00,0x01,0x00,0x00,0x00,
-    0xF6,0x25,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x08,0x00,0x00,0x00,0x05,0x00,0x00,0x00,
-    0x00,0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x31,0x33,0x37,0x38,
-    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x4D,0x61,0x64,0x65,0x69,0x72,0x61,0x20,
-    0x52,0x61,0x79,0x6F,0x6E,0x20,0x34,0x30,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-    0x01,0x38,0x09,0x31,0x33,0x30,0x2F,0x37,0x30,0x35,0x20,0x48,0xFA,0x00,0x00,0x00,
-    0x00,0x00,0x00,0x00,0x00
-};
-
-
-/* ---------------------------------------------------------------- */
-/* format max */
-
-/* Pfaff MAX embroidery file format */
-char
-readMax(EmbPattern* pattern, FILE* file)
-{
-    unsigned char b[8];
-
-    fseek(file, 0xD5, SEEK_SET);
-    /* stitchCount = emb_read_i32(file); CHECK IF THIS IS PRESENT */
-    /* READ STITCH RECORDS */
-    while (fread(b, 1, 8, file) == 8) {
-        EmbReal dx, dy;
-        int flags;
-        flags = NORMAL;
-        dx = pfaffDecode(b[0], b[1], b[2]);
-        dy = pfaffDecode(b[4], b[5], b[6]);
-        embp_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
-    }
-    embp_flipVertical(pattern);
-    return 1;
-}
-
-char
-writeMax(EmbPattern* pattern, FILE* file)
-{
-    int i;
-    EmbReal x, y;
-    EmbStitch st;
-
-    fwrite(max_header, 1, 0xD5, file);
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        st = pattern->stitch_list->stitch[i];
-        x = (int)emb_round(st.x * 10.0);
-        y = (int)emb_round(st.y * 10.0);
-        write_24bit(file, x);
-        write_24bit(file, y);
-    }
-    return 1;
+        puts("ERROR: writeInb not implemented.");
+        REPORT_PTR(pattern)
+            REPORT_PTR(file)
+            return 0;           /*TODO: finish writeInb */
 }
 
 /* Mitsubishi Embroidery Format (.mit)
  *
  * Stitch Only Format.
  */
-char
-readMit(EmbPattern* pattern, FILE* file)
+char readMit(EmbPattern *pattern, FILE *file)
 {
-    unsigned char data[2];
+        unsigned char data[2];
 
-    while (fread(data, 1, 2, file) == 2) {
-        int x = mitDecodeStitch(data[0]);
-        int y = mitDecodeStitch(data[1]);
-        embp_addStitchRel(pattern, x / 10.0, y / 10.0, NORMAL, 1);
-    }
-    return 1;
+        while (fread(data, 1, 2, file) == 2) {
+                int x = mitDecodeStitch(data[0]);
+                int y = mitDecodeStitch(data[1]);
+                embp_addStitchRel(pattern, x / 10.0, y / 10.0, NORMAL, 1);
+        }
+        return 1;
 }
 
-char
-writeMit(EmbPattern* pattern, FILE* file)
+char writeMit(EmbPattern *pattern, FILE *file)
 {
-    EmbReal xx, yy;
-    int i;
+        EmbReal xx, yy;
+        int i;
 
-    embp_correctForMaxStitchLength(pattern, 0x1F, 0x1F);
-    xx = 0;
-    yy = 0;
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        unsigned char b[2];
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        b[0] = mitEncodeStitch(st.x - xx);
-        b[1] = mitEncodeStitch(st.y - yy);
-        xx = st.x;
-        yy = st.y;
-        fwrite(b, 1, 2, file);
-    }
-    return 1;
+        embp_correctForMaxStitchLength(pattern, 0x1F, 0x1F);
+        xx = 0;
+        yy = 0;
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                unsigned char b[2];
+                EmbStitch st = pattern->stitch_list->stitch[i];
+                b[0] = mitEncodeStitch(st.x - xx);
+                b[1] = mitEncodeStitch(st.y - yy);
+                xx = st.x;
+                yy = st.y;
+                fwrite(b, 1, 2, file);
+        }
+        return 1;
 }
 
 /* Ameco Embroidery Format (.new)
  *
  * Stitch Only Format.
  */
-char
-readNew(EmbPattern* pattern, FILE* file)
+char readNew(EmbPattern *pattern, FILE *file)
 {
-    unsigned int stitchCount;
-    unsigned char data[3];
+        unsigned int stitchCount;
+        unsigned char data[3];
 
-    LOAD_I16(file, stitchCount)
-    while (fread(data, 1, 3, file) == 3) {
-        int x = decodeNewStitch(data[0]);
-        int y = decodeNewStitch(data[1]);
-        int flag = NORMAL;
-        char val = data[2];
-        if (data[2] & 0x40) {
-            x = -x;
+        LOAD_I16(file, stitchCount)
+            while (fread(data, 1, 3, file) == 3) {
+                int x = decodeNewStitch(data[0]);
+                int y = decodeNewStitch(data[1]);
+                int flag = NORMAL;
+                char val = data[2];
+                if (data[2] & 0x40) {
+                        x = -x;
+                }
+                if (data[2] & 0x20) {
+                        y = -y;
+                }
+                if (data[2] & 0x10) {
+                        flag = TRIM;
+                }
+                if (data[2] & 0x01) {
+                        flag = JUMP;
+                }
+                if ((val & 0x1E) == 0x02) {
+                        flag = STOP;
+                }
+                /* Unknown values, possibly TRIM
+                   155 = 1001 1011 = 0x9B
+                   145 = 1001 0001 = 0x91
+                 */
+                /*val = (data[2] & 0x1C);
+                   if (val != 0 && data[2] != 0x9B && data[2] != 0x91) {
+                   int z = 1;
+                   } */
+                embp_addStitchRel(pattern, x / 10.0, y / 10.0, flag, 1);
         }
-        if (data[2] & 0x20) {
-            y = -y;
-        }
-        if (data[2] & 0x10) {
-            flag = TRIM;
-        }
-        if (data[2] & 0x01) {
-            flag = JUMP;
-        }
-        if ((val & 0x1E) == 0x02) {
-            flag = STOP;
-        }
-        /* Unknown values, possibly TRIM
-        155 = 1001 1011 = 0x9B
-        145 = 1001 0001 = 0x91
-        */
-        /*val = (data[2] & 0x1C);
-        if (val != 0 && data[2] != 0x9B && data[2] != 0x91) {
-            int z = 1;
-        }*/
-        embp_addStitchRel(pattern, x / 10.0, y / 10.0, flag, 1);
-    }
 
-    return 1;
+        return 1;
 }
 
 /* . */
-char
-writeNew(EmbPattern* pattern, FILE* file)
+char writeNew(EmbPattern *pattern, FILE *file)
 {
-    puts("Overridden, defaulting to dst.");
-    writeDst(pattern, file);
-    return 0; /*TODO: finish writeNew */
+        puts("Overridden, defaulting to dst.");
+        writeDst(pattern, file);
+        return 0;               /*TODO: finish writeNew */
 }
 
 /* Melco Embroidery Format (.ofm)
  *
  * Stitch Only Format.
  */
-char*
-ofmReadLibrary(FILE* file)
+char *ofmReadLibrary(FILE *file)
 {
-    int stringLength = 0;
-    char* libraryName = 0;
-    /* FF FE FF */
-    unsigned char leadIn[3];
+        int stringLength = 0;
+        char *libraryName = 0;
+        /* FF FE FF */
+        unsigned char leadIn[3];
 
-    if (!file) {
-        printf("ERROR: format-ofm.c ofmReadLibrary(), file argument is null\n");
-        return 0;
-    }
+        if (!file) {
+                printf
+                    ("ERROR: format-ofm.c ofmReadLibrary(), file argument is null\n");
+                return 0;
+        }
 
-    fread(leadIn, 1, 3, file); /* TODO: check return value */
-    unsigned char a;
-    fread(&a, 1, 1, file);
-    stringLength = a;
-    libraryName = (char*)malloc(sizeof(char) * stringLength * 2);
-    if (!libraryName) {
-        printf("ERROR: format-ofm.c ofmReadLibrary(), unable to allocate memory for libraryName\n");
-        return 0;
-    }
-    fread((unsigned char*)libraryName, 1, stringLength * 2, file); /* TODO: check return value */
-    return libraryName;
+        fread(leadIn, 1, 3, file);      /* TODO: check return value */
+        unsigned char a;
+        fread(&a, 1, 1, file);
+        stringLength = a;
+        libraryName = (char *)malloc(sizeof(char) * stringLength * 2);
+        if (!libraryName) {
+                printf
+                    ("ERROR: format-ofm.c ofmReadLibrary(), unable to allocate memory for libraryName\n");
+                return 0;
+        }
+        fread((unsigned char *)libraryName, 1, stringLength * 2, file); /* TODO: check return value */
+        return libraryName;
 }
 
-static int
-ofmReadClass(FILE* file)
+static int ofmReadClass(FILE *file)
 {
-    int len;
-    EmbString s;
+        int len;
+        EmbString s;
 
-    if (!file) {
-        printf("ERROR: format-ofm.c ofmReadClass(), file argument is null\n");
+        if (!file) {
+                printf
+                    ("ERROR: format-ofm.c ofmReadClass(), file argument is null\n");
+                return 0;
+        }
+
+        emb_read_i16(file);
+        len = emb_read_i16(file);
+
+        fread((unsigned char *)s, 1, len, file);
+        /* TODO: check return value */
+        s[len] = '\0';
+        if (!strcmp(s, "CExpStitch")) {
+                return 0x809C;
+        }
+        if (!strcmp(s, "CColorChange")) {
+                return 0xFFFF;
+        }
         return 0;
-    }
-
-    emb_read_i16(file);
-    len = emb_read_i16(file);
-
-    fread((unsigned char*)s, 1, len, file);
-    /* TODO: check return value */
-    s[len] = '\0';
-    if (!strcmp(s, "CExpStitch")) {
-        return 0x809C;
-    }
-    if (!strcmp(s, "CColorChange")) {
-        return 0xFFFF;
-    }
-    return 0;
 }
 
-void
-ofmReadBlockHeader(FILE* file)
+void ofmReadBlockHeader(FILE *file)
 {
-    int val[10], i; /* TODO: determine what these represent */
-    unsigned char len;
-    char* s = 0;
-    unsigned short short1;
-    short unknown1;
-    /* TODO: determine what the unknown variables represent */
-    int unknown3, unknown2;
-    /* TODO: determine what this represents */
+        int val[10], i;         /* TODO: determine what these represent */
+        unsigned char len;
+        char *s = 0;
+        unsigned short short1;
+        short unknown1;
+        /* TODO: determine what the unknown variables represent */
+        int unknown3, unknown2;
+        /* TODO: determine what this represents */
 
-    if (!file) {
-        printf("ERROR: format-ofm.c ofmReadBlockHeader(), file argument is null\n");
-        return;
-    }
+        if (!file) {
+                printf
+                    ("ERROR: format-ofm.c ofmReadBlockHeader(), file argument is null\n");
+                return;
+        }
 
-    LOAD_I16(file, unknown1)
-    LOAD_I32(file, unknown2)
-    LOAD_I32(file, unknown3)
-
-    /* int v = fread(&v, 1, 3, file)?; TODO: review */
-    emb_read_i16(file);
-    fseek(file, 1, SEEK_CUR);
-    len = (char)fgetc(file);
-    s = (char*)malloc(2 * len);
-    if (!s) {
-        printf("ERROR: format-ofm.c ofmReadBlockHeader(), unable to allocate memory for s\n");
-        return;
-    }
-    fread((unsigned char *)s, 1, 2 * len, file);
-    /* TODO: check return value */
-    /* 0, 0, 0, 0, 1, 1, 1, 0, 64, 64 */
-    for (i=0; i<10; i++) {
-        val[i] = emb_read_i32(file);
-        printf("%d", val[i]);
-    }
-    LOAD_I16(file, short1) /*  0 */
+        LOAD_I16(file, unknown1)
+            LOAD_I32(file, unknown2)
+            LOAD_I32(file, unknown3)
+            /* int v = fread(&v, 1, 3, file)?; TODO: review */
+            emb_read_i16(file);
+        fseek(file, 1, SEEK_CUR);
+        len = (char)fgetc(file);
+        s = (char *)malloc(2 * len);
+        if (!s) {
+                printf
+                    ("ERROR: format-ofm.c ofmReadBlockHeader(), unable to allocate memory for s\n");
+                return;
+        }
+        fread((unsigned char *)s, 1, 2 * len, file);
+        /* TODO: check return value */
+        /* 0, 0, 0, 0, 1, 1, 1, 0, 64, 64 */
+        for (i = 0; i < 10; i++) {
+                val[i] = emb_read_i32(file);
+                printf("%d", val[i]);
+        }
+        LOAD_I16(file, short1)  /*  0 */
 }
 
 /* . */
-void
-ofmReadColorChange(FILE* file, EmbPattern* pattern)
+void ofmReadColorChange(FILE *file, EmbPattern *pattern)
 {
-    if (!file) {
-        printf("ERROR: format-ofm.c ofmReadColorChange(), file argument is null\n");
-        return;
-    }
-    if (!pattern) {
-        printf("ERROR: format-ofm.c ofmReadColorChange(), pattern argument is null\n");
-        return;
-    }
+        if (!file) {
+                printf
+                    ("ERROR: format-ofm.c ofmReadColorChange(), file argument is null\n");
+                return;
+        }
+        if (!pattern) {
+                printf
+                    ("ERROR: format-ofm.c ofmReadColorChange(), pattern argument is null\n");
+                return;
+        }
 
-    ofmReadBlockHeader(file);
-    embp_addStitchRel(pattern, 0.0, 0.0, STOP, 1);
+        ofmReadBlockHeader(file);
+        embp_addStitchRel(pattern, 0.0, 0.0, STOP, 1);
 }
 
-void
-ofmReadThreads(FILE* file, EmbPattern* p)
+void ofmReadThreads(FILE *file, EmbPattern *p)
 {
-    int i, numberOfColors, stringLen, numberOfLibraries;
-    char* primaryLibraryName = 0;
-    char* expandedString = 0;
+        int i, numberOfColors, stringLen, numberOfLibraries;
+        char *primaryLibraryName = 0;
+        char *expandedString = 0;
 
-    if (!file) {
-        printf("ERROR: ofm_read_threads(), file argument is null\n");
-        return;
-    }
-    if (!p) {
-        printf("ERROR: ofm_read_threads(), p argument is null\n");
-        return;
-    }
+        if (!file) {
+                printf("ERROR: ofm_read_threads(), file argument is null\n");
+                return;
+        }
+        if (!p) {
+                printf("ERROR: ofm_read_threads(), p argument is null\n");
+                return;
+        }
 
-    /* FF FE FF 00 */
-    fseek(file, 4, SEEK_CUR);
+        /* FF FE FF 00 */
+        fseek(file, 4, SEEK_CUR);
 
-    numberOfColors = emb_read_i16(file);
+        numberOfColors = emb_read_i16(file);
 
-    fseek(file, 4, SEEK_CUR);
-    stringLen = emb_read_i16(file);
-    expandedString = (char*)malloc(stringLen);
-    if (!expandedString) {
-        printf("ERROR: format-ofm.c ofm_read_threads(), unable to allocate memory for expandedString\n");
-        return;
-    }
-    fread((unsigned char*)expandedString, 1, stringLen, file);
-    /* TODO: check return value */
-    for (i = 0; i < numberOfColors; i++) {
-        EmbThread thread;
-        char colorNumberText[11], colorName[512];
-        int threadLibrary, colorNameLength, colorNumber;
-        embColor_read(file, &(thread.color), 4);
-        LOAD_I16(file, threadLibrary)
-        fseek(file, 2, SEEK_CUR);
-        LOAD_I32(file, colorNumber)
-        fseek(file, 3, SEEK_CUR);
-        LOAD_I8(file, colorNameLength)
-        fread(colorName, 1, colorNameLength*2, file);
+        fseek(file, 4, SEEK_CUR);
+        stringLen = emb_read_i16(file);
+        expandedString = (char *)malloc(stringLen);
+        if (!expandedString) {
+                printf
+                    ("ERROR: format-ofm.c ofm_read_threads(), unable to allocate memory for expandedString\n");
+                return;
+        }
+        fread((unsigned char *)expandedString, 1, stringLen, file);
         /* TODO: check return value */
+        for (i = 0; i < numberOfColors; i++) {
+                EmbThread thread;
+                char colorNumberText[11], colorName[512];
+                int threadLibrary, colorNameLength, colorNumber;
+                embColor_read(file, &(thread.color), 4);
+                LOAD_I16(file, threadLibrary)
+                    fseek(file, 2, SEEK_CUR);
+                LOAD_I32(file, colorNumber)
+                    fseek(file, 3, SEEK_CUR);
+                LOAD_I8(file, colorNameLength)
+                    fread(colorName, 1, colorNameLength * 2, file);
+                /* TODO: check return value */
+                fseek(file, 2, SEEK_CUR);
+                sprintf(colorNumberText, "%10d", colorNumber);
+                strcpy(thread.catalogNumber, colorNumberText);
+                strcpy(thread.description, colorName);
+                embp_addThread(p, thread);
+        }
         fseek(file, 2, SEEK_CUR);
-        sprintf(colorNumberText, "%10d", colorNumber);
-        strcpy(thread.catalogNumber, colorNumberText);
-        strcpy(thread.description, colorName);
-        embp_addThread(p, thread);
-    }
-    fseek(file, 2, SEEK_CUR);
-    primaryLibraryName = ofmReadLibrary(file);
-    numberOfLibraries = emb_read_i16(file);
+        primaryLibraryName = ofmReadLibrary(file);
+        numberOfLibraries = emb_read_i16(file);
 
-    if (emb_verbose>1) {
-        printf("primary library name: %s\n", primaryLibraryName);
-    }
+        if (emb_verbose > 1) {
+                printf("primary library name: %s\n", primaryLibraryName);
+        }
 
-    for (i = 0; i < numberOfLibraries; i++) {
-        /*libraries.Add( TODO: review */
-        char* libName = ofmReadLibrary(file);
-        safe_free(libName);
-    }
+        for (i = 0; i < numberOfLibraries; i++) {
+                /*libraries.Add( TODO: review */
+                char *libName = ofmReadLibrary(file);
+                safe_free(libName);
+        }
 }
 
-EmbReal
-ofmDecode(unsigned char b1, unsigned char b2)
+EmbReal ofmDecode(unsigned char b1, unsigned char b2)
 {
-    EmbReal val = (EmbReal)(int16_t)(b1 << 8 | b2);
-    return val;
+        EmbReal val = (EmbReal) (int16_t) (b1 << 8 | b2);
+        return val;
 }
 
-void
-ofmReadExpanded(FILE* file, EmbPattern* p)
+void ofmReadExpanded(FILE *file, EmbPattern *p)
 {
-    int i, numberOfStitches = 0;
+        int i, numberOfStitches = 0;
 
-    if (!file) {
-        printf("ERROR: format-ofm.c ofmReadExpanded(), file argument is null\n");
-        return;
-    }
-    if (!p) {
-        printf("ERROR: format-ofm.c ofmReadExpanded(), p argument is null\n");
-        return;
-    }
-
-    ofmReadBlockHeader(file);
-    numberOfStitches = emb_read_i32(file);
-
-    for (i = 0; i < numberOfStitches; i++) {
-        unsigned char stitch[5];
-        fread(stitch, 1, 5, file); /* TODO: check return value */
-        if (stitch[0] == 0) {
-            EmbReal x = ofmDecode(stitch[1], stitch[2]) / 10.0;
-            EmbReal y = ofmDecode(stitch[3], stitch[4]) / 10.0;
-            embp_addStitchAbs(p, x, y, i == 0 ? JUMP : NORMAL, 1);
+        if (!file) {
+                printf
+                    ("ERROR: format-ofm.c ofmReadExpanded(), file argument is null\n");
+                return;
         }
-        else if (stitch[0] == 32) {
-            EmbReal x = ofmDecode(stitch[1], stitch[2]) / 10.0;
-            EmbReal y = ofmDecode(stitch[3], stitch[4]) / 10.0;
-            embp_addStitchAbs(p, x, y, i == 0 ? TRIM : NORMAL, 1);
+        if (!p) {
+                printf
+                    ("ERROR: format-ofm.c ofmReadExpanded(), p argument is null\n");
+                return;
         }
-    }
+
+        ofmReadBlockHeader(file);
+        numberOfStitches = emb_read_i32(file);
+
+        for (i = 0; i < numberOfStitches; i++) {
+                unsigned char stitch[5];
+                fread(stitch, 1, 5, file);      /* TODO: check return value */
+                if (stitch[0] == 0) {
+                        EmbReal x = ofmDecode(stitch[1], stitch[2]) / 10.0;
+                        EmbReal y = ofmDecode(stitch[3], stitch[4]) / 10.0;
+                        embp_addStitchAbs(p, x, y, i == 0 ? JUMP : NORMAL, 1);
+                } else if (stitch[0] == 32) {
+                        EmbReal x = ofmDecode(stitch[1], stitch[2]) / 10.0;
+                        EmbReal y = ofmDecode(stitch[3], stitch[4]) / 10.0;
+                        embp_addStitchAbs(p, x, y, i == 0 ? TRIM : NORMAL, 1);
+                }
+        }
 }
 
-char
-readOfm(EmbPattern* pattern, FILE* fileCompound)
+char readOfm(EmbPattern *pattern, FILE *fileCompound)
 {
-    int unknownCount, key = 0, classNameLength;
-    char* s = 0;
-    FILE* file;
-    bcf_file* bcfFile = 0;
+        int unknownCount, key = 0, classNameLength;
+        char *s = 0;
+        FILE *file;
+        bcf_file *bcfFile = 0;
 
-    if (emb_verbose>1) {
-        puts("Overridden during development.");
-        return 0;
-    }
-
-    bcfFile = (bcf_file*)malloc(sizeof(bcf_file));
-    if (!bcfFile) {
-        printf("ERROR: format-ofm.c readOfm(), unable to allocate memory for bcfFile\n");
-        return 0;
-    }
-    bcfFile_read(fileCompound, bcfFile);
-    file = GetFile(bcfFile, fileCompound, "EdsIV Object");
-    bcf_file_free(bcfFile);
-    bcfFile = 0;
-    fseek(file, 0x1C6, SEEK_SET);
-    ofmReadThreads(file, pattern);
-    fseek(file, 0x110, SEEK_CUR);
-    fseek(file, 0x4, SEEK_CUR); /* EMB_INT32_LITTLE */
-    classNameLength = emb_read_i16(file);
-    s = (char*)malloc(sizeof(char) * classNameLength);
-    if (!s) {
-        printf("ERROR: format-ofm.c readOfm(), unable to allocate memory for s\n");
-        return 0;
-    }
-    fread((unsigned char*)s, 1, classNameLength, file); /* TODO: check return value */
-    unknownCount = emb_read_i16(file);
-    /* TODO: determine what unknown count represents */
-    if (emb_verbose>1) {
-        printf("unknownCount = %d\n", unknownCount);
-    }
-
-    emb_read_i16(file);
-    key = ofmReadClass(file);
-    while (1) {
-        if (key == 0xFEFF) {
-            break;
+        if (emb_verbose > 1) {
+                puts("Overridden during development.");
+                return 0;
         }
-        if (key == 0x809C) {
-            ofmReadExpanded(file, pattern);
-        }
-        else {
-            ofmReadColorChange(file, pattern);
-        }
-        LOAD_U16(file, key)
-        if (key == 0xFFFF) {
-            ofmReadClass(file);
-        }
-    }
 
-    embp_flip(pattern, 1, 1);
+        bcfFile = (bcf_file *) malloc(sizeof(bcf_file));
+        if (!bcfFile) {
+                printf
+                    ("ERROR: format-ofm.c readOfm(), unable to allocate memory for bcfFile\n");
+                return 0;
+        }
+        bcfFile_read(fileCompound, bcfFile);
+        file = GetFile(bcfFile, fileCompound, "EdsIV Object");
+        bcf_file_free(bcfFile);
+        bcfFile = 0;
+        fseek(file, 0x1C6, SEEK_SET);
+        ofmReadThreads(file, pattern);
+        fseek(file, 0x110, SEEK_CUR);
+        fseek(file, 0x4, SEEK_CUR);     /* EMB_INT32_LITTLE */
+        classNameLength = emb_read_i16(file);
+        s = (char *)malloc(sizeof(char) * classNameLength);
+        if (!s) {
+                printf
+                    ("ERROR: format-ofm.c readOfm(), unable to allocate memory for s\n");
+                return 0;
+        }
+        fread((unsigned char *)s, 1, classNameLength, file);    /* TODO: check return value */
+        unknownCount = emb_read_i16(file);
+        /* TODO: determine what unknown count represents */
+        if (emb_verbose > 1) {
+                printf("unknownCount = %d\n", unknownCount);
+        }
 
-    return 1;
+        emb_read_i16(file);
+        key = ofmReadClass(file);
+        while (1) {
+                if (key == 0xFEFF) {
+                        break;
+                }
+                if (key == 0x809C) {
+                        ofmReadExpanded(file, pattern);
+                } else {
+                        ofmReadColorChange(file, pattern);
+                }
+                LOAD_U16(file, key)
+                    if (key == 0xFFFF) {
+                        ofmReadClass(file);
+                }
+        }
+
+        embp_flip(pattern, 1, 1);
+
+        return 1;
 }
 
-char
-writeOfm(EmbPattern* pattern, FILE* file)
+char writeOfm(EmbPattern *pattern, FILE *file)
 {
-    puts("Overridden, defaulting to dst.");
-    writeDst(pattern, file);
-    return 0; /*TODO: finish writeOfm */
+        puts("Overridden, defaulting to dst.");
+        writeDst(pattern, file);
+        return 0;               /*TODO: finish writeOfm */
 }
 
 /* Pfaff PCD File Format (.pcd)
@@ -3699,88 +2010,87 @@ writeOfm(EmbPattern* pattern, FILE* file)
  * For an example of the format see ([11](11)).
  *
  */
-char
-readPcd(EmbPattern* pattern, const char *fileName, FILE* file)
+char readPcd(EmbPattern *pattern, const char *fileName, FILE *file)
 {
-    char allZeroColor = 1;
-    int i = 0;
-    unsigned char b[9];
-    EmbReal dx = 0, dy = 0;
-    int st = 0;
-    unsigned char version, hoopSize;
-    unsigned short colorCount = 0;
+        char allZeroColor = 1;
+        int i = 0;
+        unsigned char b[9];
+        EmbReal dx = 0, dy = 0;
+        int st = 0;
+        unsigned char version, hoopSize;
+        unsigned short colorCount = 0;
 
-    version = (char)fgetc(file);
-    /* 0 for PCD
-     * 1 for PCQ (MAXI)
-     * 2 for PCS with small hoop(80x80)
-     * 3 for PCS with large hoop (115x120)
-     */
-    hoopSize = (char)fgetc(file);
-    LOAD_U16(file, colorCount)
-    if (emb_verbose>1) {
-        printf("version: %d\n", version);
-        printf("hoop size: %d\n", hoopSize);
-    }
+        version = (char)fgetc(file);
+        /* 0 for PCD
+         * 1 for PCQ (MAXI)
+         * 2 for PCS with small hoop(80x80)
+         * 3 for PCS with large hoop (115x120)
+         */
+        hoopSize = (char)fgetc(file);
+        LOAD_U16(file, colorCount)
+            if (emb_verbose > 1) {
+                printf("version: %d\n", version);
+                printf("hoop size: %d\n", hoopSize);
+        }
 
-    for (i = 0; i < colorCount; i++) {
-        EmbThread t;
-        embColor_read(file, &(t.color), 4);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
-        if (t.color.r || t.color.g || t.color.b) {
-            allZeroColor = 0;
+        for (i = 0; i < colorCount; i++) {
+                EmbThread t;
+                embColor_read(file, &(t.color), 4);
+                strcpy(t.catalogNumber, "");
+                strcpy(t.description, "");
+                if (t.color.r || t.color.g || t.color.b) {
+                        allZeroColor = 0;
+                }
+                embp_addThread(pattern, t);
         }
-        embp_addThread(pattern, t);
-    }
-    if (allZeroColor) {
-        embp_loadExternalColorFile(pattern, fileName);
-    }
-    LOAD_U16(file, st)
-    /* READ STITCH RECORDS */
-    for (i = 0; i < st; i++) {
-        int flags;
-        if (fread(b, 1, 9, file) != 9) {
-            break;
+        if (allZeroColor) {
+                embp_loadExternalColorFile(pattern, fileName);
         }
-        flags = NORMAL;
-        if (b[8] & 0x01) {
-            flags = STOP;
-        } else if (b[8] & 0x04) {
-            flags = TRIM;
-        } else if (b[8] != 0) {
-        /* TODO: ONLY INTERESTED IN THIS CASE TO LEARN MORE ABOUT THE FORMAT */
+        LOAD_U16(file, st)
+            /* READ STITCH RECORDS */
+            for (i = 0; i < st; i++) {
+                int flags;
+                if (fread(b, 1, 9, file) != 9) {
+                        break;
+                }
+                flags = NORMAL;
+                if (b[8] & 0x01) {
+                        flags = STOP;
+                } else if (b[8] & 0x04) {
+                        flags = TRIM;
+                } else if (b[8] != 0) {
+                        /* TODO: ONLY INTERESTED IN THIS CASE TO LEARN MORE ABOUT THE FORMAT */
+                }
+                dx = pfaffDecode(b[1], b[2], b[3]);
+                dy = pfaffDecode(b[5], b[6], b[7]);
+                embp_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
         }
-        dx = pfaffDecode(b[1], b[2], b[3]);
-        dy = pfaffDecode(b[5], b[6], b[7]);
-        embp_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
-    }
-    return 1;
+        return 1;
 }
 
-char
-writePcd(EmbPattern* pattern, FILE* file)
+char writePcd(EmbPattern *pattern, FILE *file)
 {
-    int i;
+        int i;
 
-    /* TODO: select hoop size defaulting to Large PCS hoop */
-    fwrite("2\x03", 1, 2, file);
-    emb_write_u16(file, (unsigned short)pattern->thread_list->count);
-    for (i = 0; i < pattern->thread_list->count; i++) {
-        EmbColor color = pattern->thread_list->thread[i].color;
-        embColor_write(file, color, 4);
-    }
+        /* TODO: select hoop size defaulting to Large PCS hoop */
+        fwrite("2\x03", 1, 2, file);
+        emb_write_u16(file, (unsigned short)pattern->thread_list->count);
+        for (i = 0; i < pattern->thread_list->count; i++) {
+                EmbColor color = pattern->thread_list->thread[i].color;
+                embColor_write(file, color, 4);
+        }
 
-    fpad(file, 0, 4*(16-i));
-    /* write remaining colors to reach 16 */
+        fpad(file, 0, 4 * (16 - i));
+        /* write remaining colors to reach 16 */
 
-    emb_write_u16(file, (unsigned short)pattern->stitch_list->count);
-    /* write stitches */
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        pfaffEncode(file, (int)emb_round(st.x * 10.0), (int)emb_round(st.y * 10.0), st.flags);
-    }
-    return 1;
+        emb_write_u16(file, (unsigned short)pattern->stitch_list->count);
+        /* write stitches */
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                EmbStitch st = pattern->stitch_list->stitch[i];
+                pfaffEncode(file, (int)emb_round(st.x * 10.0),
+                            (int)emb_round(st.y * 10.0), st.flags);
+        }
+        return 1;
 }
 
 /*
@@ -3788,54 +2098,52 @@ writePcd(EmbPattern* pattern, FILE* file)
  *
  * The Pfaff pcm format is stitch-only.
  */
-char
-readPcm(EmbPattern* pattern, FILE* file)
+char readPcm(EmbPattern *pattern, FILE *file)
 {
-    int i = 0, st;
-    EmbReal dx = 0, dy = 0;
-    int header_size = 16*2+6;
+        int i = 0, st;
+        EmbReal dx = 0, dy = 0;
+        int header_size = 16 * 2 + 6;
 
-    if (emb_verbose>1) {
-        printf("TODO: check header_size %d\n", header_size);
-    }
+        if (emb_verbose > 1) {
+                printf("TODO: check header_size %d\n", header_size);
+        }
 
-    fseek(file, 4, SEEK_SET);
-    for (i = 0; i < 16; i++) {
-        int colorNumber;
-        (void)fgetc(file); /* zero */
-        colorNumber = fgetc(file);
-        embp_addThread(pattern, pcm_colors[colorNumber]);
-    }
-    st = emb_read_i16be(file);
-    st = EMB_MIN(st, MAX_STITCHES);
-    /* READ STITCH RECORDS */
-    for (i = 0; i < st; i++) {
-        int flags;
-        unsigned char b[9];
-        flags = NORMAL;
-        if (fread(b, 1, 9, file) != 9) {
-            break;
+        fseek(file, 4, SEEK_SET);
+        for (i = 0; i < 16; i++) {
+                int colorNumber;
+                (void)fgetc(file);      /* zero */
+                colorNumber = fgetc(file);
+                embp_addThread(pattern, pcm_colors[colorNumber]);
         }
-        if (b[8] & 0x01) {
-            flags = STOP;
-        } else if (b[8] & 0x04) {
-            flags = TRIM;
-        } else if (b[8] != 0) {
-        /* TODO: ONLY INTERESTED IN THIS CASE TO LEARN MORE ABOUT THE FORMAT */
+        st = emb_read_i16be(file);
+        st = EMB_MIN(st, MAX_STITCHES);
+        /* READ STITCH RECORDS */
+        for (i = 0; i < st; i++) {
+                int flags;
+                unsigned char b[9];
+                flags = NORMAL;
+                if (fread(b, 1, 9, file) != 9) {
+                        break;
+                }
+                if (b[8] & 0x01) {
+                        flags = STOP;
+                } else if (b[8] & 0x04) {
+                        flags = TRIM;
+                } else if (b[8] != 0) {
+                        /* TODO: ONLY INTERESTED IN THIS CASE TO LEARN MORE ABOUT THE FORMAT */
+                }
+                dx = pfaffDecode(b[2], b[1], b[0]);
+                dy = pfaffDecode(b[6], b[5], b[4]);
+                embp_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
         }
-        dx = pfaffDecode(b[2], b[1], b[0]);
-        dy = pfaffDecode(b[6], b[5], b[4]);
-        embp_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
-    }
-    return 1;
+        return 1;
 }
 
-char
-writePcm(EmbPattern* pattern, FILE* file)
+char writePcm(EmbPattern *pattern, FILE *file)
 {
-    puts("overridden, defaulting to dst");
-    writeDst(pattern, file);
-    return 0; /*TODO: finish writePcm */
+        puts("overridden, defaulting to dst");
+        writeDst(pattern, file);
+        return 0;               /*TODO: finish writePcm */
 }
 
 /*
@@ -3843,90 +2151,87 @@ writePcm(EmbPattern* pattern, FILE* file)
  *
  * The Pfaff pcq format is stitch-only.
  */
-char
-readPcq(EmbPattern* pattern, const char* fileName, FILE* file)
+char readPcq(EmbPattern *pattern, const char *fileName, FILE *file)
 {
-    char allZeroColor = 1;
-    int i = 0;
-    unsigned char b[9];
-    EmbReal dx = 0, dy = 0;
-    int flags = 0, st = 0;
-    unsigned char version, hoopSize;
-    unsigned short colorCount;
+        char allZeroColor = 1;
+        int i = 0;
+        unsigned char b[9];
+        EmbReal dx = 0, dy = 0;
+        int flags = 0, st = 0;
+        unsigned char version, hoopSize;
+        unsigned short colorCount;
 
-    version = (char)fgetc(file);
-    hoopSize = (char)fgetc(file);
-    /* 0 for PCD
-     * 1 for PCQ (MAXI)
-     * 2 for PCS with small hoop(80x80)
-     * 3 for PCS with large hoop (115x120)
-     */
-    LOAD_U16(file, colorCount)
-    if (emb_verbose>1) {
-        printf("version: %d\n", version);
-        printf("hoop size: %d\n", hoopSize);
-    }
-
-    for (i = 0; i < colorCount; i++) {
-        EmbThread t;
-        embColor_read(file, &(t.color), 4);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
-        if (t.color.r || t.color.g || t.color.b) {
-            allZeroColor = 0;
-        }
-        embp_addThread(pattern, t);
-    }
-    if (allZeroColor) {
-        embp_loadExternalColorFile(pattern, fileName);
-    }
-    LOAD_U16(file, st)
-    /* READ STITCH RECORDS */
-    for (i = 0; i < st; i++) {
-        flags = NORMAL;
-        if (fread(b, 1, 9, file) != 9) {
-            break;
+        version = (char)fgetc(file);
+        hoopSize = (char)fgetc(file);
+        /* 0 for PCD
+         * 1 for PCQ (MAXI)
+         * 2 for PCS with small hoop(80x80)
+         * 3 for PCS with large hoop (115x120)
+         */
+        LOAD_U16(file, colorCount)
+            if (emb_verbose > 1) {
+                printf("version: %d\n", version);
+                printf("hoop size: %d\n", hoopSize);
         }
 
-        if (b[8] & 0x01) {
-            flags = STOP;
+        for (i = 0; i < colorCount; i++) {
+                EmbThread t;
+                embColor_read(file, &(t.color), 4);
+                strcpy(t.catalogNumber, "");
+                strcpy(t.description, "");
+                if (t.color.r || t.color.g || t.color.b) {
+                        allZeroColor = 0;
+                }
+                embp_addThread(pattern, t);
         }
-        else if (b[8] & 0x04) {
-            flags = TRIM;
+        if (allZeroColor) {
+                embp_loadExternalColorFile(pattern, fileName);
         }
-        else if (b[8] != 0) {
-            /* TODO: ONLY INTERESTED IN THIS CASE TO LEARN MORE ABOUT THE FORMAT */
+        LOAD_U16(file, st)
+            /* READ STITCH RECORDS */
+            for (i = 0; i < st; i++) {
+                flags = NORMAL;
+                if (fread(b, 1, 9, file) != 9) {
+                        break;
+                }
+
+                if (b[8] & 0x01) {
+                        flags = STOP;
+                } else if (b[8] & 0x04) {
+                        flags = TRIM;
+                } else if (b[8] != 0) {
+                        /* TODO: ONLY INTERESTED IN THIS CASE TO LEARN MORE ABOUT THE FORMAT */
+                }
+                dx = pfaffDecode(b[1], b[2], b[3]);
+                dy = pfaffDecode(b[5], b[6], b[7]);
+                embp_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
         }
-        dx = pfaffDecode(b[1], b[2], b[3]);
-        dy = pfaffDecode(b[5], b[6], b[7]);
-        embp_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
-    }
-    return 1;
+        return 1;
 }
 
-char
-writePcq(EmbPattern* pattern, FILE* file)
+char writePcq(EmbPattern *pattern, FILE *file)
 {
-    int i;
+        int i;
 
-    /* TODO: select hoop size defaulting to Large PCS hoop */
-    fwrite("2\x03", 1, 2, file);
-    emb_write_u16(file, (unsigned short)pattern->thread_list->count);
-    for (i = 0; i < pattern->thread_list->count; i++) {
-        EmbColor color = pattern->thread_list->thread[i].color;
-        embColor_write(file, color, 4);
-    }
+        /* TODO: select hoop size defaulting to Large PCS hoop */
+        fwrite("2\x03", 1, 2, file);
+        emb_write_u16(file, (unsigned short)pattern->thread_list->count);
+        for (i = 0; i < pattern->thread_list->count; i++) {
+                EmbColor color = pattern->thread_list->thread[i].color;
+                embColor_write(file, color, 4);
+        }
 
-    /* write remaining colors to reach 16 */
-    fpad(file, 0, (16-i)*4);
+        /* write remaining colors to reach 16 */
+        fpad(file, 0, (16 - i) * 4);
 
-    emb_write_u16(file, (unsigned short)pattern->stitch_list->count);
-    /* write stitches */
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        pfaffEncode(file, (int)emb_round(st.x * 10.0), (int)emb_round(st.y * 10.0), st.flags);
-    }
-    return 1;
+        emb_write_u16(file, (unsigned short)pattern->stitch_list->count);
+        /* write stitches */
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                EmbStitch st = pattern->stitch_list->stitch[i];
+                pfaffEncode(file, (int)emb_round(st.x * 10.0),
+                            (int)emb_round(st.y * 10.0), st.flags);
+        }
+        return 1;
 }
 
 /*
@@ -3934,1185 +2239,203 @@ writePcq(EmbPattern* pattern, FILE* file)
  *
  * The Pfaff pcs format is stitch-only.
  */
-char
-readPcs(EmbPattern* pattern, const char* fileName, FILE* file)
+char readPcs(EmbPattern *pattern, const char *fileName, FILE *file)
 {
-    char allZeroColor = 1;
-    int i = 0;
-    unsigned char b[9];
-    EmbReal dx = 0, dy = 0;
-    int flags = 0, st = 0;
-    unsigned char version, hoopSize;
-    unsigned short colorCount;
+        char allZeroColor = 1;
+        int i = 0;
+        unsigned char b[9];
+        EmbReal dx = 0, dy = 0;
+        int flags = 0, st = 0;
+        unsigned char version, hoopSize;
+        unsigned short colorCount;
 
-    version = (char)fgetc(file);
+        version = (char)fgetc(file);
 
-    /* 0 for PCD
-     * 1 for PCQ (MAXI)
-     * 2 for PCS with small hoop(80x80)
-     * 3 for PCS with large hoop (115x120)
-     */
-    hoopSize = (char)fgetc(file);
-    switch(hoopSize) {
+        /* 0 for PCD
+         * 1 for PCQ (MAXI)
+         * 2 for PCS with small hoop(80x80)
+         * 3 for PCS with large hoop (115x120)
+         */
+        hoopSize = (char)fgetc(file);
+        switch (hoopSize) {
         case 2:
-            pattern->hoop_width = 80.0;
-            pattern->hoop_height = 80.0;
-            break;
+                pattern->hoop_width = 80.0;
+                pattern->hoop_height = 80.0;
+                break;
         case 3:
-            pattern->hoop_width = 115.0;
-            pattern->hoop_height = 120.0;
-            break;
-    }
-
-    LOAD_U16(file, colorCount)
-    if (emb_verbose>1) {
-        printf("version: %d\n", version);
-        printf("hoop size: %d\n", hoopSize);
-        printf("color count: %d\n", colorCount);
-    }
-
-    for (i = 0; i < colorCount; i++) {
-        EmbThread t;
-        embColor_read(file, &(t.color), 4);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
-        if (t.color.r || t.color.g || t.color.b) {
-            allZeroColor = 0;
-        }
-        embp_addThread(pattern, t);
-    }
-    if (allZeroColor) {
-        embp_loadExternalColorFile(pattern, fileName);
-    }
-    LOAD_U16(file, st)
-    /* READ STITCH RECORDS */
-    for (i = 0; i < st; i++) {
-        flags = NORMAL;
-        if (fread(b, 1, 9, file) != 9)
-            break;
-
-        if (b[8] & 0x01) {
-            flags = STOP;
-        }
-        else if (b[8] & 0x04) {
-            flags = TRIM;
-        }
-        else if (b[8] != 0) {
-            /* TODO: ONLY INTERESTED IN THIS CASE TO LEARN MORE ABOUT THE FORMAT */
-        }
-        dx = pfaffDecode(b[1], b[2], b[3]);
-        dy = pfaffDecode(b[5], b[6], b[7]);
-        embp_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
-    }
-
-    return 1;
-}
-
-char
-writePcs(EmbPattern* pattern, FILE* file)
-{
-    int i;
-
-    /* TODO: select hoop size defaulting to Large PCS hoop */
-    fwrite("2\x03", 1, 2, file);
-    emb_write_u16(file, (unsigned short)pattern->thread_list->count);
-    for (i = 0; i < pattern->thread_list->count; i++) {
-        EmbColor color = pattern->thread_list->thread[i].color;
-        embColor_write(file, color, 4);
-    }
-
-    /* write remaining colors to reach 16 */
-    /* fpad(file, 0, 4*(16-i)); */
-
-    emb_write_u16(file, (unsigned short)pattern->stitch_list->count);
-    /* write stitches */
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        pfaffEncode(file, (int)emb_round(st.x * 10.0), (int)emb_round(st.y * 10.0), st.flags);
-    }
-    return 1;
-}
-
-/*
- * Brother Embroidery Format (.pec)
- * The Brother pec format is stitch-only.
- */
-void
-readPecStitches(EmbPattern* pattern, FILE* file)
-{
-    void *f = file;
-    unsigned char b[2];
-
-    while (fread(b, 1, 2, f)==2) {
-        int val1 = (int)b[0];
-        int val2 = (int)b[1];
-
-        int stitchType = NORMAL;
-        if (b[0] == 0xFF && b[1] == 0x00) {
-            embp_end(pattern);
-            return;
-        }
-        if (b[0] == 0xFE && b[1] == 0xB0) {
-            (void)fgetc(f);
-            embp_addStitchRel(pattern, 0.0, 0.0, STOP, 1);
-            continue;
-        }
-        /* High bit set means 12-bit offset, otherwise 7-bit signed delta */
-        if (val1 & 0x80) {
-            if (val1 & 0x20) stitchType = TRIM;
-            if (val1 & 0x10) stitchType = JUMP;
-            val1 = ((val1 & 0x0F) << 8) + val2;
-
-            /* Signed 12-bit arithmetic */
-            if (val1 & 0x800) {
-                val1 -= 0x1000;
-            }
-        }
-        else if (val1 >= 0x40) {
-            val1 -= 0x80;
-        }
-        if (val2 & 0x80) {
-            if (val2 & 0x20) stitchType = TRIM;
-            if (val2 & 0x10) stitchType = JUMP;
-            val2 = ((val2 & 0x0F) << 8) + fgetc(file);
-
-            /* Signed 12-bit arithmetic */
-            if (val2 & 0x800) {
-                val2 -= 0x1000;
-            }
-        }
-        else if (val2 >= 0x40) {
-            val2 -= 0x80;
-        }
-
-        embp_addStitchRel(pattern, val1 / 10.0,
-                val2 / 10.0, stitchType, 1);
-    }
-}
-
-void
-pecEncodeJump(FILE* file, int x, int types)
-{
-    int outputVal = abs(x) & 0x7FF;
-    unsigned int orPart = 0x80;
-    unsigned char toWrite;
-
-    if (!file) {
-        printf("ERROR: format-pec.c pecEncodeJump(), file argument is null\n");
-        return;
-    }
-    if (types & TRIM) {
-        orPart |= 0x20;
-    }
-    if (types & JUMP) {
-        orPart |= 0x10;
-    }
-    if (x < 0) {
-        outputVal = (x + 0x1000) & 0x7FF;
-        outputVal |= 0x800;
-    }
-    toWrite = (unsigned char)(((outputVal >> 8) & 0x0F) | orPart);
-    fwrite(&toWrite, 1, 1, file);
-    toWrite = (unsigned char)(outputVal & 0xFF);
-    fwrite(&toWrite, 1, 1, file);
-}
-
-void
-pecEncodeStop(FILE* file, unsigned char val)
-{
-    if (!file) {
-        printf("ERROR: format-pec.c pecEncodeStop(), file argument is null\n");
-        return;
-    }
-    fwrite("\xFE\xB0", 1, 2, file);
-    fwrite(&val, 1, 1, file);
-}
-
-char
-readPec(EmbPattern* pattern, const char *fileName, FILE* file)
-{
-    unsigned int graphicsOffset;
-    unsigned char colorChanges;
-    int i;
-
-    if (emb_verbose>1) {
-        printf("fileName: %s\n", fileName);
-    }
-
-    if (!check_header_present(file, 0x20A)) {
-        return 0;
-    }
-
-    fseek(file, 0x38, SEEK_SET);
-    colorChanges = (unsigned char)(char)fgetc(file);
-    for (i = 0; i <= colorChanges; i++) {
-        embp_addThread(pattern, pec_colors[(char)fgetc(file) % 65]);
-    }
-
-    /* Get Graphics offset */
-    fseek(file, 0x20A, SEEK_SET);
-
-    graphicsOffset = (unsigned int)(fgetc(file));
-    graphicsOffset |= (fgetc(file) << 8);
-    graphicsOffset |= (fgetc(file) << 16);
-    REPORT_INT(graphicsOffset)
-
-    (void)(char)fgetc(file); /* 0x31 */
-    (void)(char)fgetc(file); /* 0xFF */
-    (void)(char)fgetc(file); /* 0xF0 */
-    /* Get X and Y size in .1 mm */
-    /* 0x210 */
-    emb_read_i16(file); /* x size */
-    emb_read_i16(file); /* y size */
-
-    emb_read_i16(file); /* 0x01E0 */
-    emb_read_i16(file); /* 0x01B0 */
-    emb_read_i16(file); /* distance left from start */
-    emb_read_i16(file); /* distance up from start */
-
-    /* Begin Stitch Data */
-    /* 0x21C */
-    /*unsigned int end = graphicsOffset + 0x208; */
-    readPecStitches(pattern, file);
-    embp_flipVertical(pattern);
-    return 1;
-}
-
-void
-pecEncode(FILE* file, EmbPattern* p)
-{
-    EmbReal thisX = 0.0;
-    EmbReal thisY = 0.0;
-    unsigned char stopCode = 2;
-    int i;
-
-    if (!file) {
-        printf("ERROR: format-pec.c pecEncode(), file argument is null\n");
-        return;
-    }
-    if (!p) {
-        printf("ERROR: format-pec.c pecEncode(), p argument is null\n");
-        return;
-    }
-
-    for (i = 0; i < p->stitch_list->count; i++) {
-        int deltaX, deltaY;
-        EmbStitch s = p->stitch_list->stitch[i];
-
-        deltaX = (int)emb_round(s.x - thisX);
-        deltaY = (int)emb_round(s.y - thisY);
-        thisX += (EmbReal)deltaX;
-        thisY += (EmbReal)deltaY;
-
-        if (s.flags & STOP) {
-            pecEncodeStop(file, stopCode);
-            if (stopCode == (unsigned char)2) {
-                stopCode = (unsigned char)1;
-            } else {
-                stopCode = (unsigned char)2;
-            }
-        } else if (s.flags & END) {
-            fwrite("\xFF", 1, 1, file);
-            break;
-        } else if (deltaX < 63 && deltaX > -64 && deltaY < 63 && deltaY > -64 && (!(s.flags & (JUMP | TRIM)))) {
-            unsigned char out[2];
-            if (deltaX < 0) {
-                out[0] = (unsigned char)(deltaX + 0x80);
-            }
-            else {
-                out[0] = (unsigned char)deltaX;
-            }
-            if (deltaY < 0) {
-                out[1] = (unsigned char)(deltaY + 0x80);
-            }
-            else {
-                out[1] = (unsigned char)deltaY;
-            }
-            fwrite(out, 1, 2, file);
-        }
-        else {
-            pecEncodeJump(file, deltaX, s.flags);
-            pecEncodeJump(file, deltaY, s.flags);
-        }
-    }
-}
-
-void writeImage(FILE* file, unsigned char image[][48]);
-
-void
-writePecStitches(EmbPattern* pattern, FILE* file, const char *fileName)
-{
-    EmbRect bounds;
-    unsigned char image[38][48], toWrite;
-    int i, j, flen, graphicsOffsetLocation;
-    int graphicsOffsetValue, height, width;
-    EmbReal xFactor, yFactor;
-    const char* forwardSlashPos = fileName + string_rchar(fileName, '/');
-    const char* backSlashPos = fileName + string_rchar(fileName, '\\');
-    const char* dotPos = fileName + string_rchar(fileName, '.');
-    const char* start = 0;
-
-    start = fileName;
-    if (forwardSlashPos) {
-        start = forwardSlashPos + 1;
-    }
-    if (backSlashPos && backSlashPos > start) {
-        start = backSlashPos + 1;
-    }
-    fwrite("LA:", 1, 3, file);
-    flen = (int)(dotPos - start);
-
-    while (start < dotPos) {
-        fwrite(start, 1, 1, file);
-        start++;
-    }
-    fpad(file, 0x20, 16-flen);
-    fwrite("\x0D", 1, 1, file);
-    fpad(file, 0x20, 12);
-    fwrite("\xff\x00\x06\x26", 1, 4, file);
-
-    fpad(file, 0x20, 12);
-    toWrite = (unsigned char)(pattern->thread_list->count-1);
-    fwrite(&toWrite, 1, 1, file);
-
-    for (i = 0; i < pattern->thread_list->count; i++) {
-        EmbColor thr = pattern->thread_list->thread[i].color;
-        unsigned char color = (unsigned char)
-            emb_find_nearest_thread(thr,
-            (EmbThread*)pec_colors, pecThreadCount);
-        fwrite(&color, 1, 1, file);
-    }
-    fpad(file, 0x20, (int)(0x1CF - pattern->thread_list->count));
-    fpad(file, 0x00, 2);
-
-    graphicsOffsetLocation = ftell(file);
-    /* placeholder bytes to be overwritten */
-    fpad(file, 0x00, 3);
-
-    fwrite("\x31\xff\xf0", 1, 3, file);
-
-    bounds = embp_bounds(pattern);
-
-    height = (int)emb_round(bounds.h);
-    width = (int)emb_round(bounds.w);
-    unsigned short top = (unsigned short)(0x9000 | -(int)emb_round(bounds.x));
-    unsigned short bottom = (unsigned short)(0x9000 | -(int)emb_round(bounds.y));
-    /* write 2 byte x size */
-    emb_write_i16(file, width);
-    /* write 2 byte y size */
-    emb_write_i16(file, height);
-
-    /* Write 4 miscellaneous int16's */
-    fwrite("\x01\xe0\x01\xb0", 1, 4, file);
-
-    /* CHECK: is this really big endian? */
-    emb_write_i16be(file, top);
-    emb_write_i16be(file, bottom);
-
-    pecEncode(file, pattern);
-    graphicsOffsetValue = ftell(file) - graphicsOffsetLocation + 2;
-    fseek(file, graphicsOffsetLocation, SEEK_SET);
-
-    fputc((unsigned char)(graphicsOffsetValue & 0xFF), file);
-    fputc((unsigned char)((graphicsOffsetValue >> 8) & 0xFF), file);
-    fputc((unsigned char)((graphicsOffsetValue >> 16) & 0xFF), file);
-
-    fseek(file, 0x00, SEEK_END);
-
-    /* Writing all colors */
-    memcpy(image, imageWithFrame, 48*38);
-
-    yFactor = 32.0 / height;
-    xFactor = 42.0 / width;
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        int x = (int)emb_round((st.x - bounds.x) * xFactor) + 3;
-        int y = (int)emb_round((st.y - bounds.y) * yFactor) + 3;
-        if (x<=0 || x>48) continue;
-        if (y<=0 || y>38) continue;
-        image[y][x] = 1;
-    }
-    writeImage(file, image);
-
-    /* Writing each individual color */
-    j = 0;
-    for (i = 0; i < pattern->thread_list->count; i++) {
-        memcpy(image, imageWithFrame, 48*38);
-        for (; j < pattern->stitch_list->count; j++) {
-            EmbStitch st = pattern->stitch_list->stitch[j];
-            int x = (int)emb_round((st.x - bounds.x) * xFactor) + 3;
-            int y = (int)emb_round((st.y - bounds.y) * yFactor) + 3;
-            if (x<=0 || x>48) continue;
-            if (y<=0 || y>38) continue;
-            if (st.flags & STOP) {
+                pattern->hoop_width = 115.0;
+                pattern->hoop_height = 120.0;
                 break;
-            }
-            image[y][x] = 1;
-        }
-        writeImage(file, image);
-    }
-}
-
-char
-writePec(EmbPattern* pattern, const char* fileName, FILE* file)
-{
-    /* TODO: There needs to be a matching flipVertical() call after the write
-        to ensure multiple writes from the same pattern work properly */
-    embp_flipVertical(pattern);
-    embp_fixColorCount(pattern);
-    embp_correctForMaxStitchLength(pattern, 12.7, 204.7);
-    embp_scale(pattern, 10.0);
-    fwrite("#PEC0001", 1, 8, file);
-    writePecStitches(pattern, file, fileName);
-    return 1;
-}
-
-/*
- * Brother Embroidery Format (.pel)
- * The Brother pel format is stitch-only.
- */
-char
-readPel(EmbPattern *pattern, FILE* file)
-{
-    puts("ERROR: readPel is not implemented.");
-    printf("%p, %p\n", pattern, file);
-    return 0; /*TODO: finish readPel */
-}
-
-char
-writePel(EmbPattern * pattern, FILE* file)
-{
-    puts("ERROR: writePel is not implemented.");
-    printf("%p, %p\n", pattern, file);
-    return 0; /*TODO: finish writePel */
-}
-
-/*
- * Brother Embroidery Format (.pem)
- * The Brother pem format is stitch-only.
- */
-char
-readPem(EmbPattern *pattern, FILE* file)
-{
-    puts("ERROR: readPem is not implemented.");
-    printf("%p, %p\n", pattern, file);
-    return 0; /*TODO: finish ReadPem */
-}
-
-char
-writePem(EmbPattern *pattern, FILE* file)
-{
-    puts("ERROR: writePem is not implemented.");
-    printf("%p, %p\n", pattern, file);
-    return 0; /*TODO: finish writePem */
-}
-
-/*
- * Brother Embroidery Format (.pes)
- * The Brother pes format is stitch-only.
- */
-
-const char *pes_version_strings[] = {
-    "#PES0001",
-    "#PES0020",
-    "#PES0022",
-    "#PES0030",
-    "#PES0040",
-    "#PES0050",
-    "#PES0055",
-    "#PES0056",
-    "#PES0060",
-    "#PES0070",
-    "#PES0080",
-    "#PES0090",
-    "#PES0100",
-};
-
-/* ---------------------------------------------------------------- */
-/* format pes */
-
-int pes_version = PES0001;
-
-char
-readPes(EmbPattern* pattern, const char *fileName, FILE* file)
-{
-    printf("%s", fileName);
-    int pecstart, numColors, x, version, i;
-    char signature[9];
-    if (fread(signature, 1, 8, file) != 8) {
-        puts("ERROR PES: failed to read signature.");
-        return 0;
-    }
-    signature[8] = 0;
-    pecstart = emb_read_i32(file);
-
-    version = 0;
-    for (i=0; i<N_PES_VERSIONS; i++) {
-        if (!strcmp(signature, pes_version_strings[i])) {
-            version = i;
-            break;
-        }
-    }
-
-    if (version >= PES0040) {
-        fseek(file, 0x10, SEEK_SET);
-        if (!read_descriptions(file, pattern)) {
-            puts("ERROR PES: failed to read descriptions.");
-            return 0;
-        }
-    }
-
-    switch (version) {
-    case PES0100:
-        readPESHeaderV10(file, pattern);
-        break;
-    case PES0090:
-        readPESHeaderV9(file, pattern);
-        break;
-    case PES0080:
-        readPESHeaderV8(file, pattern);
-        break;
-    case PES0070:
-        readPESHeaderV7(file, pattern);
-        break;
-    case PES0060:
-        readPESHeaderV6(file, pattern);
-        break;
-    case PES0056:
-    case PES0055:
-    case PES0050:
-        readPESHeaderV5(file, pattern);
-        break;
-    default:
-        break;
-    }
-
-    /* fseek(file, pecstart + 48, SEEK_SET);
-     * This seems wrong based on the readPESHeader functions. */
-    fseek(file, pecstart, SEEK_SET);
-
-    numColors = fgetc(file) + 1;
-    for (x = 0; x < numColors; x++) {
-        int color_index = fgetc(file);
-        if (color_index >= pecThreadCount) {
-            color_index = 0;
-        }
-        embp_addThread(pattern, pec_colors[color_index]);
-    }
-
-    fseek(file, pecstart + 528, SEEK_SET);
-    readPecStitches(pattern, file);
-
-    embp_flipVertical(pattern);
-
-    return 1;
-}
-
-int
-read_descriptions(FILE* file, EmbPattern* pattern)
-{
-    size_t n;
-    n = (size_t)fgetc(file);
-    if (fread(pattern->design_name, 1, n, file) != n) {
-        return 0;
-    }
-    n = (size_t)fgetc(file);
-    if (fread(pattern->category, 1, n, file) != n) {
-        return 0;
-    }
-    n = (size_t)fgetc(file);
-    if (fread(pattern->author, 1, n, file) != n) {
-        return 0;
-    }
-    n = (size_t)fgetc(file);
-    if (fread(pattern->keywords, 1, n, file) != n) {
-        return 0;
-    }
-    n = (size_t)fgetc(file);
-    if (fread(pattern->comments, 1, n, file) != n) {
-        return 0;
-    }
-    return 1;
-}
-
-void
-readPESHeaderV5(FILE* file, EmbPattern* pattern)
-{
-    int fromImageStringLength;
-    fseek(file, 24, SEEK_CUR);
-    fromImageStringLength = fgetc(file);
-    fseek(file, fromImageStringLength, SEEK_CUR);
-    fseek(file, 24, SEEK_CUR);
-    readProgrammableFills(file, pattern);
-    readMotifPatterns(file, pattern);
-    readFeatherPatterns(file, pattern);
-    readThreads(file, pattern);
-}
-
-void
-readPESHeaderV6(FILE* file, EmbPattern* pattern)
-{
-    fseek(file, 36, SEEK_CUR);
-    readImageString(file, pattern);
-    fseek(file, 24, SEEK_CUR);
-    readProgrammableFills(file, pattern);
-    readMotifPatterns(file, pattern);
-    readFeatherPatterns(file, pattern);
-    readThreads(file, pattern);
-}
-
-void
-readPESHeaderV7(FILE* file, EmbPattern* pattern)
-{
-    fseek(file, 36, SEEK_CUR);
-    readImageString(file, pattern);
-    fseek(file, 24, SEEK_CUR);
-    readProgrammableFills(file, pattern);
-    readMotifPatterns(file, pattern);
-    readFeatherPatterns(file, pattern);
-    readThreads(file, pattern);
-}
-
-void
-readPESHeaderV8(FILE* file, EmbPattern* pattern)
-{
-    fseek(file, 38, SEEK_CUR);
-    readImageString(file, pattern);
-    fseek(file, 26, SEEK_CUR);
-    readProgrammableFills(file, pattern);
-    readMotifPatterns(file, pattern);
-    readFeatherPatterns(file, pattern);
-    readThreads(file, pattern);
-}
-
-void
-readPESHeaderV9(FILE* file, EmbPattern* pattern)
-{
-    fseek(file, 14, SEEK_CUR);
-    readHoopName(file, pattern);
-    fseek(file, 30, SEEK_CUR);
-    readImageString(file, pattern);
-    fseek(file, 34, SEEK_CUR);
-    readProgrammableFills(file, pattern);
-    readMotifPatterns(file, pattern);
-    readFeatherPatterns(file, pattern);
-    readThreads(file, pattern);
-}
-
-void
-readPESHeaderV10(FILE* file, EmbPattern* pattern)
-{
-    fseek(file, 14, SEEK_CUR);
-    readHoopName(file, pattern);
-    fseek(file, 38, SEEK_CUR);
-    readImageString(file, pattern);
-    fseek(file, 34, SEEK_CUR);
-    readProgrammableFills(file, pattern);
-    readMotifPatterns(file, pattern);
-    readFeatherPatterns(file, pattern);
-    readThreads(file, pattern);
-}
-
-void
-readHoopName(FILE* file, EmbPattern* pattern)
-{
-    if (emb_verbose > 1) {
-        printf("Called with: (%p, %p)", (void*)file, (void*)pattern);
-    }
-    /*
-    int hoopNameStringLength = fgetc(file);
-    EmbString hoopNameString = readString(hoopNameStringLength);
-    if (hoopNameString.length() != 0) {
-        pattern.setMetadata("hoop_name", hoopNameString);
-    }
-    */
-}
-
-void
-readImageString(FILE* file, EmbPattern* pattern)
-{
-    if (emb_verbose > 1) {
-        printf("Called with: (%p, %p)", (void*)file, (void*)pattern);
-    }
-    /*
-    int fromImageStringLength = fgetc(file);
-    EmbString fromImageString = readString(fromImageStringLength);
-    if (fromImageString.length() != 0) {
-        pattern.setMetadata("image_file", fromImageString);
-    }
-    */
-}
-
-void
-readProgrammableFills(FILE* file, EmbPattern* pattern)
-{
-    int numberOfProgrammableFillPatterns;
-    if (emb_verbose > 1) {
-        printf("Called with: (%p, %p)", (void*)file, (void*)pattern);
-    }
-    numberOfProgrammableFillPatterns = emb_read_i16(file);
-    if (numberOfProgrammableFillPatterns != 0) {
-        return;
-    }
-}
-
-void
-readMotifPatterns(FILE* file, EmbPattern* pattern)
-{
-    int numberOfMotifPatterns;
-    if (emb_verbose > 1) {
-        printf("Called with: (%p, %p)", (void*)file, (void*)pattern);
-    }
-    numberOfMotifPatterns = emb_read_i16(file);
-    if (numberOfMotifPatterns != 0) {
-        return;
-    }
-}
-
-void
-readFeatherPatterns(FILE* file, EmbPattern* pattern)
-{
-    int featherPatternCount;
-    if (emb_verbose > 1) {
-        printf("Called with: (%p, %p)", (void*)file, (void*)pattern);
-    }
-    featherPatternCount = emb_read_i16(file);
-    if (featherPatternCount != 0) {
-        return;
-    }
-}
-
-void
-readThreads(FILE* file, EmbPattern* pattern)
-{
-    int numberOfColors, i;
-    if (emb_verbose > 1) {
-        printf("Called with: (%p, %p)", (void*)file, (void*)pattern);
-    }
-    numberOfColors = emb_read_i16(file);
-    for (i=0; i<numberOfColors; i++) {
-        EmbThread thread;
-        int color_code_length;
-        int descriptionStringLength;
-        int brandStringLength;
-        int threadChartStringLength;
-        color_code_length = fgetc(file);
-        /* strcpy(thread.color_code, readString(color_code_length)); */
-        thread.color.r = fgetc(file);
-        thread.color.g = fgetc(file);
-        thread.color.b = fgetc(file);
-        fseek(file, 5, SEEK_CUR);
-        descriptionStringLength = fgetc(file);
-        /* strcpy(thread.description, readString(descriptionStringLength)); */
-
-        brandStringLength = fgetc(file);
-        /* strcpy(thread.brand, readString(brandStringLength)); */
-
-        threadChartStringLength = fgetc(file);
-        /* strcpy(thread.threadChart, readString(threadChartStringLength)); */
-
-        if (emb_verbose > 1) {
-            printf("color code length: %d\n", color_code_length);
-            printf("description string length: %d\n", descriptionStringLength);
-            printf("brand string length: %d\n", brandStringLength);
-            printf("thread chart string length: %d\n", threadChartStringLength);
-        }
-        embp_addThread(pattern, thread);
-    }
-}
-
-
-void
-pesWriteSewSegSection(EmbPattern* pattern, FILE* file)
-{
-    /* TODO: pointer safety */
-    short* colorInfo = 0;
-    int flag = 0;
-    int count = 0;
-    int colorCode = -1;
-    int stitchType = 0;
-    int blockCount = 0;
-    int colorCount = 0;
-    int newColorCode = 0;
-    int colorInfoIndex = 0;
-    int i, j;
-    EmbRect bounds = embp_bounds(pattern);
-
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbColor color;
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        flag = st.flags;
-        if (st.color < pattern->thread_list->count) {
-            color = pattern->thread_list->thread[st.color].color;
-        }
-        else {
-            color = pec_colors[0].color;
-        }
-        newColorCode = emb_find_nearest_thread(color, (EmbThread*)pec_colors, pecThreadCount);
-        if (newColorCode != colorCode) {
-            colorCount++;
-            colorCode = newColorCode;
-        }
-        while (i < pattern->stitch_list->count && (flag == st.flags)) {
-            st = pattern->stitch_list->stitch[i];
-            count++;
-            i++;
-        }
-        blockCount++;
-    }
-
-    emb_write_i16(file, (int16_t)blockCount); /* block count */
-    emb_write_u16(file, 0xFFFF);
-    emb_write_i16(file, 0x00);
-
-    emb_write_i16(file, 0x07); /* string length */
-    fwrite("CSewSeg", 1, 7, file);
-
-    if (colorCount > 1000) {
-        puts("Color count exceeds 1000 this is likely an error. Truncating to 1000.");
-        colorCount = 1000;
-    }
-
-    colorInfo = (short *) calloc(colorCount * 2, sizeof(int16_t));
-    colorCode = -1;
-    blockCount = 0;
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbColor color;
-        EmbStitch st;
-        st = pattern->stitch_list->stitch[i];
-        j = i;
-        flag = st.flags;
-        color = pattern->thread_list->thread[st.color].color;
-        newColorCode = emb_find_nearest_thread(color, (EmbThread*)pec_colors, pecThreadCount);
-        if (newColorCode != colorCode) {
-            if (colorInfoIndex+2 > colorCount * 2) {
-                puts("Ran out of memory for color info.");
-                break;
-            }
-            colorInfo[colorInfoIndex++] = (int16_t)blockCount;
-            colorInfo[colorInfoIndex++] = (int16_t)newColorCode;
-            colorCode = newColorCode;
-        }
-        count = 0;
-        while (j < pattern->stitch_list->count && (flag == st.flags)) {
-            st = pattern->stitch_list->stitch[j];
-            count++;
-            j++;
-        }
-        if (flag & JUMP) {
-            stitchType = 1;
-        }
-        else {
-            stitchType = 0;
         }
 
-        emb_write_i16(file, (int16_t)stitchType); /* 1 for jump, 0 for normal */
-        emb_write_i16(file, (int16_t)colorCode); /* color code */
-        emb_write_i16(file, (int16_t)count); /* stitches in block */
-        for (j = i; j < pattern->stitch_list->count; ++j) {
-            st = pattern->stitch_list->stitch[j];
-            if (st.flags != flag) {
-                break;
-            }
-            emb_write_i16(file, (int16_t)(st.x - bounds.x));
-            emb_write_i16(file, (int16_t)(st.y + bounds.y));
+        LOAD_U16(file, colorCount)
+            if (emb_verbose > 1) {
+                printf("version: %d\n", version);
+                printf("hoop size: %d\n", hoopSize);
+                printf("color count: %d\n", colorCount);
         }
-        if (j < pattern->stitch_list->count ) {
-            emb_write_u16(file, 0x8003);
+
+        for (i = 0; i < colorCount; i++) {
+                EmbThread t;
+                embColor_read(file, &(t.color), 4);
+                strcpy(t.catalogNumber, "");
+                strcpy(t.description, "");
+                if (t.color.r || t.color.g || t.color.b) {
+                        allZeroColor = 0;
+                }
+                embp_addThread(pattern, t);
         }
-        blockCount++;
-        i = j;
-    }
-    emb_write_i16(file, (int16_t)colorCount);
-    for (i = 0; i < colorCount; i++) {
-        emb_write_i16(file, colorInfo[i * 2]);
-        emb_write_i16(file, colorInfo[i * 2 + 1]);
-    }
-    emb_write_i32(file, 0);
-    safe_free(colorInfo);
-}
-
-void
-pesWriteEmbOneSection(EmbPattern* pattern, FILE* file)
-{
-    /* TODO: pointer safety */
-    //float x, width, height;
-    int hoopHeight = 1800, hoopWidth = 1300;
-    EmbRect bounds;
-    emb_write_i16(file, 0x07); /* string length */
-    fwrite("CEmbOne", 1, 7, file);
-    bounds = embp_bounds(pattern);
-
-    fpad(file, 0, 16);
-
-    /* AffineTransform */
-    emb_write_i32(file, 1.0);
-    emb_write_i32(file, 0.0);
-    emb_write_i32(file, 0.0);
-    emb_write_i32(file, 1.0);
-    emb_write_i32(file, (float)((bounds.w - hoopWidth) / 2));
-    emb_write_i32(file, (float)((bounds.h + hoopHeight) / 2));
-
-    emb_write_i16(file, 1);
-    emb_write_i16(file, 0); /* Translate X */
-    emb_write_i16(file, 0); /* Translate Y */
-    emb_write_i16(file, (int16_t)bounds.w);
-    emb_write_i16(file, (int16_t)bounds.h);
-
-    fpad(file, 0, 8);
-    /*WriteSubObjects(br, pes, SubBlocks); */
-}
-
-char
-writePes(EmbPattern* pattern,  const char *fileName, FILE* file)
-{
-    int pecLocation;
-    embp_flipVertical(pattern);
-    embp_scale(pattern, 10.0);
-    fwrite("#PES0001", 1, 8, file);
-    /* WRITE PECPointer 32 bit int */
-    emb_write_i32(file, 0x00);
-
-    emb_write_i16(file, 0x01);
-    emb_write_i16(file, 0x01);
-
-    /* Write object count */
-    emb_write_i16(file, 0x01);
-    emb_write_u16(file, 0xFFFF); /* command */
-    emb_write_i16(file, 0x00); /* unknown */
-
-    pesWriteEmbOneSection(pattern, file);
-    pesWriteSewSegSection(pattern, file);
-
-    pecLocation = ftell(file);
-    fseek(file, 0x08, SEEK_SET);
-    fputc((unsigned char)(pecLocation & 0xFF), file);
-    fputc((unsigned char)(pecLocation >> 8) & 0xFF, file);
-    fputc((unsigned char)(pecLocation >> 16) & 0xFF, file);
-    fseek(file, 0x00, SEEK_END);
-    writePecStitches(pattern, file, fileName);
-    return 1;
-}
-
-/*
- * Brother Embroidery Format (.phb)
- * The Brother phb format is stitch-only.
- */
-
-char
-readPhb(EmbPattern* pattern, FILE* file)
-{
-    unsigned int fileOffset;
-    short colorCount;
-    int i;
-
-    fseek(file, 0x71, SEEK_SET);
-    colorCount = emb_read_i16(file);
-
-    for (i = 0; i < colorCount; i++) {
-        EmbThread t = pec_colors[fgetc(file)];
-        embp_addThread(pattern, t);
-    }
-
-    /* TODO: check that file begins with #PHB */
-    fseek(file, 0x54, SEEK_SET);
-    fileOffset = 0x52;
-    fileOffset += emb_read_i32(file);
-
-    fseek(file, fileOffset, SEEK_SET);
-    fileOffset += emb_read_i32(file) + 2;
-
-    fseek(file, fileOffset, SEEK_SET);
-    fileOffset += emb_read_i32(file);
-
-    fseek(file, fileOffset + 14, SEEK_SET); /* 28 */
-
-    colorCount = (int16_t)(char)fgetc(file);
-    for (i = 0; i <  colorCount; i++) {
-        char stor;
-        stor = (char)fgetc(file);
-        if (emb_verbose>1) {
-            printf("stor: %d\n", stor);
+        if (allZeroColor) {
+                embp_loadExternalColorFile(pattern, fileName);
         }
-    }
-    fseek(file, 4, SEEK_CUR); /* bytes to end of file */
-    fseek(file, 17, SEEK_CUR);
+        LOAD_U16(file, st)
+            /* READ STITCH RECORDS */
+            for (i = 0; i < st; i++) {
+                flags = NORMAL;
+                if (fread(b, 1, 9, file) != 9)
+                        break;
 
-    readPecStitches(pattern, file);
+                if (b[8] & 0x01) {
+                        flags = STOP;
+                } else if (b[8] & 0x04) {
+                        flags = TRIM;
+                } else if (b[8] != 0) {
+                        /* TODO: ONLY INTERESTED IN THIS CASE TO LEARN MORE ABOUT THE FORMAT */
+                }
+                dx = pfaffDecode(b[1], b[2], b[3]);
+                dy = pfaffDecode(b[5], b[6], b[7]);
+                embp_addStitchAbs(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        }
 
-    embp_flipVertical(pattern);
-    return 1; /*TODO: finish ReadPhb */
+        return 1;
 }
 
-char
-writePhb(EmbPattern* pattern, FILE* file)
+char writePcs(EmbPattern *pattern, FILE *file)
 {
-    puts("ERROR: writePhb is not implemented.");
-    if (emb_verbose > 1) {
-        printf("Called with %p %p\n", (void*)pattern, (void*)file);
-    }
-    return 0; /*TODO: finish writePhb */
-}
+        int i;
 
-/*
- * Brother Embroidery Format (.phc)
- * The Brother phc format is stitch-only.
- */
+        /* TODO: select hoop size defaulting to Large PCS hoop */
+        fwrite("2\x03", 1, 2, file);
+        emb_write_u16(file, (unsigned short)pattern->thread_list->count);
+        for (i = 0; i < pattern->thread_list->count; i++) {
+                EmbColor color = pattern->thread_list->thread[i].color;
+                embColor_write(file, color, 4);
+        }
 
-char
-readPhc(EmbPattern* pattern, FILE* file)
-{
-    int colorChanges, version, bytesInSection2;
-    unsigned int fileLength;
-    unsigned short pecOffset, bytesInSection, bytesInSection3;
-    char pecAdd;
-    int i;
+        /* write remaining colors to reach 16 */
+        /* fpad(file, 0, 4*(16-i)); */
 
-    fseek(file, 0x07, SEEK_SET);
-    version = (char)fgetc(file) - 0x30; /* converting from ansi number */
-    fseek(file, 0x4D, SEEK_SET);
-    LOAD_U16(file, colorChanges)
-
-    for (i = 0; i < colorChanges; i++) {
-        EmbThread t = pec_colors[(int)(char)fgetc(file)];
-        embp_addThread(pattern, t);
-    }
-    fseek(file, 0x2B, SEEK_SET);
-    pecAdd = (char)fgetc(file);
-    LOAD_I32(file, fileLength)
-    LOAD_U16(file, pecOffset)
-    fseek(file, pecOffset + pecAdd, SEEK_SET);
-    LOAD_U16(file, bytesInSection)
-    fseek(file, bytesInSection, SEEK_CUR);
-    bytesInSection2 = emb_read_i32(file);
-    fseek(file, bytesInSection2, SEEK_CUR);
-    LOAD_U16(file, bytesInSection3)
-    fseek(file, bytesInSection3 + 0x12, SEEK_CUR);
-
-    if (emb_verbose>1) {
-        printf("version: %d\n", version);
-    }
-
-    readPecStitches(pattern, file);
-
-    embp_flipVertical(pattern);
-    return 1; /*TODO: finish ReadPhc */
-}
-
-char
-writePhc(EmbPattern* pattern, FILE* file)
-{
-    puts("ERROR: writePhc is not implemented.");
-    if (emb_verbose > 1) {
-        printf("Called with %p %p\n", (void*)pattern, (void*)file);
-    }
-    return 0; /*TODO: finish writePhc */
+        emb_write_u16(file, (unsigned short)pattern->stitch_list->count);
+        /* write stitches */
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                EmbStitch st = pattern->stitch_list->stitch[i];
+                pfaffEncode(file, (int)emb_round(st.x * 10.0),
+                            (int)emb_round(st.y * 10.0), st.flags);
+        }
+        return 1;
 }
 
 /*
  * AutoCAD Embroidery Format (.plt)
  * The AutoCAD plt format is stitch-only.
  */
-char
-readPlt(EmbPattern* pattern, FILE* file)
+char readPlt(EmbPattern *pattern, FILE *file)
 {
-    EmbReal x, y;
-    EmbReal scalingFactor = 40;
-    char input[512];
+        EmbReal x, y;
+        EmbReal scalingFactor = 40;
+        char input[512];
 
-    /* TODO: replace all scanf code */
-    while (emb_readline(file, input, 511)) {
-        if (input[0] == 'P' && input[1] == 'D') {
-            /* TODO: replace all scanf code */
-            if (sscanf(input, "PD%f,%f;", &x, &y) < 2) {
-                break;
-            }
-            embp_addStitchAbs(pattern, x / scalingFactor,
-                            y / scalingFactor, NORMAL, 1);
-        } else if (input[0] == 'P' && input[1] == 'U') {
-            /* TODO: replace all scanf code */
-            if (sscanf(input, "PU%f,%f;", &x, &y) < 2) {
-                break;
-            }
-            embp_addStitchAbs(pattern, x / scalingFactor,
-                    y / scalingFactor, STOP, 1);
+        /* TODO: replace all scanf code */
+        while (emb_readline(file, input, 511)) {
+                if (input[0] == 'P' && input[1] == 'D') {
+                        /* TODO: replace all scanf code */
+                        if (sscanf(input, "PD%f,%f;", &x, &y) < 2) {
+                                break;
+                        }
+                        embp_addStitchAbs(pattern, x / scalingFactor,
+                                          y / scalingFactor, NORMAL, 1);
+                } else if (input[0] == 'P' && input[1] == 'U') {
+                        /* TODO: replace all scanf code */
+                        if (sscanf(input, "PU%f,%f;", &x, &y) < 2) {
+                                break;
+                        }
+                        embp_addStitchAbs(pattern, x / scalingFactor,
+                                          y / scalingFactor, STOP, 1);
+                }
         }
-    }
-    return 1;
+        return 1;
 }
 
-char
-writePlt(EmbPattern* pattern, FILE* file) {
-    /* TODO: pointer safety */
-    EmbReal scalingFactor = 40;
-    char firstStitchOfBlock = 1;
-    int i;
+char writePlt(EmbPattern *pattern, FILE *file)
+{
+        /* TODO: pointer safety */
+        EmbReal scalingFactor = 40;
+        char firstStitchOfBlock = 1;
+        int i;
 
-    fprintf(file, "IN;");
-    fprintf(file, "ND;");
+        fprintf(file, "IN;");
+        fprintf(file, "ND;");
 
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbStitch stitch;
-        stitch = pattern->stitch_list->stitch[i];
-        if (stitch.flags & STOP) {
-            firstStitchOfBlock = 1;
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                EmbStitch stitch;
+                stitch = pattern->stitch_list->stitch[i];
+                if (stitch.flags & STOP) {
+                        firstStitchOfBlock = 1;
+                }
+                if (firstStitchOfBlock) {
+                        fprintf(file, "PU%f,%f;", stitch.x * scalingFactor,
+                                stitch.y * scalingFactor);
+                        fprintf(file, "ST0.00,0.00;");
+                        fprintf(file, "SP0;");
+                        fprintf(file, "HT0;");
+                        fprintf(file, "HS0;");
+                        fprintf(file, "TT0;");
+                        fprintf(file, "TS0;");
+                        firstStitchOfBlock = 0;
+                } else {
+                        fprintf(file, "PD%f,%f;", stitch.x * scalingFactor,
+                                stitch.y * scalingFactor);
+                }
         }
-        if (firstStitchOfBlock) {
-            fprintf(file, "PU%f,%f;", stitch.x * scalingFactor,
-                    stitch.y * scalingFactor);
-            fprintf(file, "ST0.00,0.00;");
-            fprintf(file, "SP0;");
-            fprintf(file, "HT0;");
-            fprintf(file, "HS0;");
-            fprintf(file, "TT0;");
-            fprintf(file, "TS0;");
-            firstStitchOfBlock = 0;
-        } else {
-            fprintf(file, "PD%f,%f;", stitch.x * scalingFactor,
-                stitch.y * scalingFactor);
-        }
-    }
-    fprintf(file, "PU0.0,0.0;");
-    fprintf(file, "PU0.0,0.0;");
-    return 1; /*TODO: finish WritePlt */
+        fprintf(file, "PU0.0,0.0;");
+        fprintf(file, "PU0.0,0.0;");
+        return 1;               /*TODO: finish WritePlt */
 }
 
 /*
  * RGB Color File (.rgb)
  * The RGB format is a color-only format to act as an external color file for other formats.
  */
-char
-readRgb(EmbPattern* pattern, FILE* file)
+char readRgb(EmbPattern *pattern, FILE *file)
 {
-    int i, numberOfColors;
+        int i, numberOfColors;
 
-    fseek(file, 0x00, SEEK_END);
-    numberOfColors = ftell(file) / 4;
+        fseek(file, 0x00, SEEK_END);
+        numberOfColors = ftell(file) / 4;
 
-    pattern->thread_list->count = 0;
+        pattern->thread_list->count = 0;
 
-    printf("numberOfColors: %d\n", numberOfColors);
+        printf("numberOfColors: %d\n", numberOfColors);
 
-    fseek(file, 0x00, SEEK_SET);
-    for (i = 0; i < numberOfColors; i++) {
-        EmbThread t;
-        embColor_read(file, &(t.color), 4);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
-        embp_addThread(pattern, t);
-    }
-    return 1;
+        fseek(file, 0x00, SEEK_SET);
+        for (i = 0; i < numberOfColors; i++) {
+                EmbThread t;
+                embColor_read(file, &(t.color), 4);
+                strcpy(t.catalogNumber, "");
+                strcpy(t.description, "");
+                embp_addThread(pattern, t);
+        }
+        return 1;
 }
 
-char
-writeRgb(EmbPattern* pattern, FILE* file)
+char writeRgb(EmbPattern *pattern, FILE *file)
 {
-    int i;
-    for (i = 0; i < pattern->thread_list->count; i++) {
-        EmbColor c = pattern->thread_list->thread[i].color;
-        embColor_write(file, c, 4);
-    }
-    return 1;
+        int i;
+        for (i = 0; i < pattern->thread_list->count; i++) {
+                EmbColor c = pattern->thread_list->thread[i].color;
+                embColor_write(file, c, 4);
+        }
+        return 1;
 }
 
 /*
@@ -5120,1713 +2443,554 @@ writeRgb(EmbPattern* pattern, FILE* file)
  * The Janome sew format is stitch-only.
  */
 
-char
-sewDecode(unsigned char inputByte)
+char sewDecode(unsigned char inputByte)
 {
-    /* TODO: fix return statement */
-    return (inputByte >= 0x80) ? (char) (-~(inputByte - 1)) : (char) inputByte;
+        /* TODO: fix return statement */
+        return (inputByte >=
+                0x80) ? (char)(-~(inputByte - 1)) : (char)inputByte;
 }
 
-char
-readSew(EmbPattern* pattern, FILE* file)
+char readSew(EmbPattern *pattern, FILE *file)
 {
-    int i, flags, numberOfColors, fileLength;
-    char dx, dy, thisStitchIsJump = 0;
+        int i, flags, numberOfColors, fileLength;
+        char dx, dy, thisStitchIsJump = 0;
 
-    fseek(file, 0x00, SEEK_END);
-    fileLength = ftell(file);
-    fseek(file, 0x00, SEEK_SET);
-    numberOfColors = fgetc(file);
-    numberOfColors += (fgetc(file) << 8);
+        fseek(file, 0x00, SEEK_END);
+        fileLength = ftell(file);
+        fseek(file, 0x00, SEEK_SET);
+        numberOfColors = fgetc(file);
+        numberOfColors += (fgetc(file) << 8);
 
-
-    for (i = 0; i < numberOfColors; i++) {
-        int color = emb_read_i16(file);
-        embp_addThread(pattern, jef_colors[color%78]);
-    }
-    fseek(file, 0x1D78, SEEK_SET);
-
-    for (i = 0; ftell(file) < fileLength; i++) {
-        unsigned char b[2];
-        fread(b, 1, 2, file);
-
-        flags = NORMAL;
-        if (thisStitchIsJump) {
-            flags = TRIM;
-            thisStitchIsJump = 0;
+        for (i = 0; i < numberOfColors; i++) {
+                int color = emb_read_i16(file);
+                embp_addThread(pattern, jef_colors[color % 78]);
         }
-        if (b[0] == 0x80) {
-            if (b[1] == 1) {
+        fseek(file, 0x1D78, SEEK_SET);
+
+        for (i = 0; ftell(file) < fileLength; i++) {
+                unsigned char b[2];
                 fread(b, 1, 2, file);
-                flags = STOP;
-            }
-            else if ((b[1] == 0x02) || (b[1] == 0x04)) {
-                thisStitchIsJump = 1;
-                fread(b, 1, 2, file);
-                flags = TRIM;
-            }
-            else if (b[1] == 0x10) {
-               break;
-            }
+
+                flags = NORMAL;
+                if (thisStitchIsJump) {
+                        flags = TRIM;
+                        thisStitchIsJump = 0;
+                }
+                if (b[0] == 0x80) {
+                        if (b[1] == 1) {
+                                fread(b, 1, 2, file);
+                                flags = STOP;
+                        } else if ((b[1] == 0x02) || (b[1] == 0x04)) {
+                                thisStitchIsJump = 1;
+                                fread(b, 1, 2, file);
+                                flags = TRIM;
+                        } else if (b[1] == 0x10) {
+                                break;
+                        }
+                }
+                dx = sewDecode(b[0]);
+                dy = sewDecode(b[1]);
+                if (abs(dx) == 127 || abs(dy) == 127) {
+                        thisStitchIsJump = 1;
+                        flags = TRIM;
+                }
+                embp_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
         }
-        dx = sewDecode(b[0]);
-        dy = sewDecode(b[1]);
-        if (abs(dx) == 127 || abs(dy) == 127) {
-            thisStitchIsJump = 1;
-            flags = TRIM;
-        }
-        embp_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
-    }
-    printf("current position: %ld\n", ftell(file));
-    return 1;
+        printf("current position: %ld\n", ftell(file));
+        return 1;
 }
 
-char
-writeSew(EmbPattern* pattern, FILE* file)
+char writeSew(EmbPattern *pattern, FILE *file)
 {
-    int i;
-    EmbReal xx = 0.0, yy = 0.0;
-    emb_write_i16(file, pattern->thread_list->count);
+        int i;
+        EmbReal xx = 0.0, yy = 0.0;
+        emb_write_i16(file, pattern->thread_list->count);
 
-    if (emb_verbose>1) {
-        printf("Debugging Information\n");
-        printf("number of colors = %d\n", pattern->thread_list->count);
-        printf("number of stitches = %d\n", pattern->stitch_list->count);
-    }
+        if (emb_verbose > 1) {
+                printf("Debugging Information\n");
+                printf("number of colors = %d\n", pattern->thread_list->count);
+                printf("number of stitches = %d\n",
+                       pattern->stitch_list->count);
+        }
 
-    for (i = 0; i < pattern->thread_list->count; i++) {
-        short thr;
-        EmbColor col;
-        col = pattern->thread_list->thread[i].color;
-        thr = emb_find_nearest_thread(col, (EmbThread *)jef_colors, 79);
-        emb_write_i16(file, thr);
-    }
-    fpad(file, 0, 0x1D78 - 2 - pattern->thread_list->count * 2);
+        for (i = 0; i < pattern->thread_list->count; i++) {
+                short thr;
+                EmbColor col;
+                col = pattern->thread_list->thread[i].color;
+                thr =
+                    emb_find_nearest_thread(col, (EmbThread *) jef_colors, 79);
+                emb_write_i16(file, thr);
+        }
+        fpad(file, 0, 0x1D78 - 2 - pattern->thread_list->count * 2);
 
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbStitch st;
-        unsigned char b[4];
-        char dx, dy;
-        st = pattern->stitch_list->stitch[i];
-        dx = (char)emb_round(10.0*(st.x - xx));
-        dy = (char)emb_round(10.0*(st.y - yy));
-        xx += 0.1*dx;
-        yy += 0.1*dy;
-        if (st.flags & STOP) {
-            b[0] = 0x80;
-            b[1] = 0x01;
-            b[2] = dx;
-            b[3] = dy;
-            fwrite(b, 1, 4, file);
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                EmbStitch st;
+                unsigned char b[4];
+                char dx, dy;
+                st = pattern->stitch_list->stitch[i];
+                dx = (char)emb_round(10.0 * (st.x - xx));
+                dy = (char)emb_round(10.0 * (st.y - yy));
+                xx += 0.1 * dx;
+                yy += 0.1 * dy;
+                if (st.flags & STOP) {
+                        b[0] = 0x80;
+                        b[1] = 0x01;
+                        b[2] = dx;
+                        b[3] = dy;
+                        fwrite(b, 1, 4, file);
+                } else if (st.flags & END) {
+                        b[0] = 0x80;
+                        b[1] = 0x10;
+                        b[2] = 0;
+                        b[3] = 0;
+                        fwrite(b, 1, 4, file);
+                } else if ((st.flags & TRIM) || (st.flags & JUMP)) {
+                        b[0] = 0x80;
+                        b[1] = 2;
+                        b[2] = dx;
+                        b[3] = dy;
+                        fwrite(b, 1, 4, file);
+                } else {
+                        b[0] = dx;
+                        b[1] = dy;
+                        fwrite(b, 1, 2, file);
+                }
         }
-        else if (st.flags & END) {
-            b[0] = 0x80;
-            b[1] = 0x10;
-            b[2] = 0;
-            b[3] = 0;
-            fwrite(b, 1, 4, file);
-        }
-        else if ((st.flags & TRIM) || (st.flags & JUMP)) {
-            b[0] = 0x80;
-            b[1] = 2;
-            b[2] = dx;
-            b[3] = dy;
-            fwrite(b, 1, 4, file);
-        }
-        else {
-            b[0] = dx;
-            b[1] = dy;
-            fwrite(b, 1, 2, file);
-        }
-    }
-    return 1;
+        return 1;
 }
 
 /*
  * Husqvarna Viking Embroidery Format (.shv)
  * The Husqvarna Viking shv format is stitch-only.
  */
-char
-shvDecode(unsigned char inputByte)
+char shvDecode(unsigned char inputByte)
 {
-    if (inputByte >= 0x80) {
-        return (char)-((unsigned char)((~inputByte) + 1));
-    }
-    return ((char)inputByte);
+        if (inputByte >= 0x80) {
+                return (char)-((unsigned char)((~inputByte) + 1));
+        }
+        return ((char)inputByte);
 }
 
 short shvDecodeShort(unsigned short inputByte)
 {
-    if (inputByte > 0x8000) {
-        return (int16_t)-((unsigned short)((~inputByte) + 1));
-    }
-    return ((int16_t)inputByte);
+        if (inputByte > 0x8000) {
+                return (int16_t) - ((unsigned short)((~inputByte) + 1));
+        }
+        return ((int16_t) inputByte);
 }
 
-char
-readShv(EmbPattern* pattern, FILE* file)
+char readShv(EmbPattern *pattern, FILE *file)
 {
-    int i;
-    char inJump = 0;
-    unsigned char fileNameLength, designWidth, designHeight;
-    char halfDesignWidth, halfDesignHeight, halfDesignWidth2, halfDesignHeight2;
-    char* headerText = "Embroidery disk created using software licensed from Viking Sewing Machines AB, Sweden";
-    char dx = 0, dy = 0;
-    char numberOfColors;
-    unsigned short magicCode;
-    int something;
-    short left,top,right,bottom;
-    char something2, numberOfSections, something3;
-    int stitchesPerColor[256];
-    int stitchesSinceChange = 0;
-    int currColorIndex = 0;
-    unsigned short sx, sy;
+        int i;
+        char inJump = 0;
+        unsigned char fileNameLength, designWidth, designHeight;
+        char halfDesignWidth, halfDesignHeight, halfDesignWidth2,
+            halfDesignHeight2;
+        char *headerText =
+            "Embroidery disk created using software licensed from Viking Sewing Machines AB, Sweden";
+        char dx = 0, dy = 0;
+        char numberOfColors;
+        unsigned short magicCode;
+        int something;
+        short left, top, right, bottom;
+        char something2, numberOfSections, something3;
+        int stitchesPerColor[256];
+        int stitchesSinceChange = 0;
+        int currColorIndex = 0;
+        unsigned short sx, sy;
 
-    if (!check_header_present(file, 25)) {
-        return 0;
-    }
-
-    fseek(file, strlen(headerText), SEEK_SET);
-    fileNameLength = fgetc(file);
-    fseek(file, fileNameLength, SEEK_CUR);
-    designWidth = fgetc(file);
-    designHeight = fgetc(file);
-    LOAD_I8(file, halfDesignWidth)
-    LOAD_I8(file, halfDesignHeight)
-    LOAD_I8(file, halfDesignWidth2)
-    LOAD_I8(file, halfDesignHeight2)
-    if ((designHeight % 2) == 1) {
-        fseek(file, ((designHeight + 1)*designWidth)/2, SEEK_CUR);
-    }
-    else {
-        fseek(file, (designHeight*designWidth)/2, SEEK_CUR);
-    }
-    numberOfColors = fgetc(file);
-    LOAD_U16(file, magicCode)
-    fseek(file, 1, SEEK_CUR);
-    LOAD_I32(file, something)
-    LOAD_I16(file, left)
-    LOAD_U16(file, top)
-    LOAD_U16(file, right)
-    LOAD_U16(file, bottom)
-
-    LOAD_I8(file, something2)
-    LOAD_I8(file, numberOfSections)
-    LOAD_I8(file, something3)
-
-    for (i = 0; i < numberOfColors; i++) {
-        unsigned int stitchCount, colorNumber;
-        stitchCount = emb_read_i32be(file);
-        colorNumber = fgetc(file);
-        embp_addThread(pattern, shv_colors[colorNumber % 43]);
-        stitchesPerColor[i] = stitchCount;
-        fseek(file, 9, SEEK_CUR);
-    }
-
-    fseek(file, -2, SEEK_CUR);
-
-    for (i = 0; !feof(file); i++) {
-        unsigned char b0, b1;
-        int flags;
-        flags = NORMAL;
-        if (inJump) {
-            flags = JUMP;
+        if (!check_header_present(file, 25)) {
+                return 0;
         }
-        b0 = fgetc(file);
-        b1 = fgetc(file);
-        if (stitchesSinceChange >= stitchesPerColor[currColorIndex]) {
-            embp_addStitchRel(pattern, 0, 0, STOP, 1);
-            currColorIndex++;
-            stitchesSinceChange = 0;
-        }
-        if (b0 == 0x80) {
-            stitchesSinceChange++;
-            if (b1 == 3) {
-                continue;
-            }
-            else if (b1 == 0x02) {
-                inJump = 0;
-                continue;
-            }
-            else if (b1 == 0x01) {
-                stitchesSinceChange += 2;
-                sx = fgetc(file);
-                sx = (unsigned short)(sx << 8 | fgetc(file));
-                sy = fgetc(file);
-                sy = (unsigned short)(sy << 8 | fgetc(file));
-                flags = TRIM;
-                inJump = 1;
-                embp_addStitchRel(pattern, shvDecodeShort(sx) / 10.0, shvDecodeShort(sy) / 10.0, flags, 1);
-                continue;
-            }
-        }
-        dx = shvDecode(b0);
-        dy = shvDecode(b1);
-    stitchesSinceChange++;
-        embp_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
-    }
-    embp_flipVertical(pattern);
 
-    return 1;
+        fseek(file, strlen(headerText), SEEK_SET);
+        fileNameLength = fgetc(file);
+        fseek(file, fileNameLength, SEEK_CUR);
+        designWidth = fgetc(file);
+        designHeight = fgetc(file);
+        LOAD_I8(file, halfDesignWidth)
+            LOAD_I8(file, halfDesignHeight)
+            LOAD_I8(file, halfDesignWidth2)
+            LOAD_I8(file, halfDesignHeight2)
+            if ((designHeight % 2) == 1) {
+                fseek(file, ((designHeight + 1) * designWidth) / 2, SEEK_CUR);
+        } else {
+                fseek(file, (designHeight * designWidth) / 2, SEEK_CUR);
+        }
+        numberOfColors = fgetc(file);
+        LOAD_U16(file, magicCode)
+            fseek(file, 1, SEEK_CUR);
+        LOAD_I32(file, something)
+            LOAD_I16(file, left)
+            LOAD_U16(file, top)
+            LOAD_U16(file, right)
+            LOAD_U16(file, bottom)
+            LOAD_I8(file, something2)
+            LOAD_I8(file, numberOfSections)
+            LOAD_I8(file, something3)
+            for (i = 0; i < numberOfColors; i++) {
+                unsigned int stitchCount, colorNumber;
+                stitchCount = emb_read_i32be(file);
+                colorNumber = fgetc(file);
+                embp_addThread(pattern, shv_colors[colorNumber % 43]);
+                stitchesPerColor[i] = stitchCount;
+                fseek(file, 9, SEEK_CUR);
+        }
+
+        fseek(file, -2, SEEK_CUR);
+
+        for (i = 0; !feof(file); i++) {
+                unsigned char b0, b1;
+                int flags;
+                flags = NORMAL;
+                if (inJump) {
+                        flags = JUMP;
+                }
+                b0 = fgetc(file);
+                b1 = fgetc(file);
+                if (stitchesSinceChange >= stitchesPerColor[currColorIndex]) {
+                        embp_addStitchRel(pattern, 0, 0, STOP, 1);
+                        currColorIndex++;
+                        stitchesSinceChange = 0;
+                }
+                if (b0 == 0x80) {
+                        stitchesSinceChange++;
+                        if (b1 == 3) {
+                                continue;
+                        } else if (b1 == 0x02) {
+                                inJump = 0;
+                                continue;
+                        } else if (b1 == 0x01) {
+                                stitchesSinceChange += 2;
+                                sx = fgetc(file);
+                                sx = (unsigned short)(sx << 8 | fgetc(file));
+                                sy = fgetc(file);
+                                sy = (unsigned short)(sy << 8 | fgetc(file));
+                                flags = TRIM;
+                                inJump = 1;
+                                embp_addStitchRel(pattern,
+                                                  shvDecodeShort(sx) / 10.0,
+                                                  shvDecodeShort(sy) / 10.0,
+                                                  flags, 1);
+                                continue;
+                        }
+                }
+                dx = shvDecode(b0);
+                dy = shvDecode(b1);
+                stitchesSinceChange++;
+                embp_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        }
+        embp_flipVertical(pattern);
+
+        return 1;
 }
 
-char
-writeShv(EmbPattern* pattern, FILE* file)
+char writeShv(EmbPattern *pattern, FILE *file)
 {
-    puts("writeShv not implemented.");
-    if (emb_verbose > 1) {
-        printf("Called with %p %p\n", (void*)pattern, (void*)file);
-    }
-    return 0; /*TODO: finish writeShv */
+        puts("writeShv not implemented.");
+        if (emb_verbose > 1) {
+                printf("Called with %p %p\n", (void *)pattern, (void *)file);
+        }
+        return 0;               /*TODO: finish writeShv */
 }
 
 /*
  * Sunstar Embroidery Format (.sst)
  * The Sunstar sst format is stitch-only.
  */
-char
-readSst(EmbPattern* pattern, FILE* file)
+char readSst(EmbPattern *pattern, FILE *file)
 {
-    int fileLength;
+        int fileLength;
 
-    fseek(file, 0, SEEK_END);
-    fileLength = ftell(file);
-    fseek(file, 0xA0, SEEK_SET); /* skip the all zero header */
-    while (ftell(file) < fileLength) {
-        int stitchType = NORMAL;
+        fseek(file, 0, SEEK_END);
+        fileLength = ftell(file);
+        fseek(file, 0xA0, SEEK_SET);    /* skip the all zero header */
+        while (ftell(file) < fileLength) {
+                int stitchType = NORMAL;
 
-        int b1 = fgetc(file);
-        int b2 = fgetc(file);
-        unsigned char commandByte = (unsigned char)fgetc(file);
+                int b1 = fgetc(file);
+                int b2 = fgetc(file);
+                unsigned char commandByte = (unsigned char)fgetc(file);
 
-        if (commandByte == 0x04) {
-            embp_addStitchRel(pattern, 0, 0, END, 1);
-            break;
+                if (commandByte == 0x04) {
+                        embp_addStitchRel(pattern, 0, 0, END, 1);
+                        break;
+                }
+
+                if ((commandByte & 0x01) == 0x01)
+                        stitchType = STOP;
+                if ((commandByte & 0x02) == 0x02)
+                        stitchType = JUMP;
+                if ((commandByte & 0x10) != 0x10)
+                        b2 = -b2;
+                if ((commandByte & 0x40) == 0x40)
+                        b1 = -b1;
+                embp_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
         }
 
-        if ((commandByte & 0x01) == 0x01)
-            stitchType = STOP;
-        if ((commandByte & 0x02) == 0x02)
-            stitchType = JUMP;
-        if ((commandByte & 0x10) != 0x10)
-            b2 = -b2;
-        if ((commandByte & 0x40) == 0x40)
-            b1 = -b1;
-        embp_addStitchRel(pattern, b1 / 10.0, b2 / 10.0, stitchType, 1);
-    }
-
-    return 1; /*TODO: finish readSst */
+        return 1;               /*TODO: finish readSst */
 }
 
-char
-writeSst(EmbPattern* pattern, FILE* file)
+char writeSst(EmbPattern *pattern, FILE *file)
 {
-    int i;
-    int head_length = 0xA0;
-    for (i=0; i<head_length; i++) {
-        fprintf(file, " ");
-    }
-    for (i=0; i<pattern->stitch_list->count; i++) {
-        printf(".");
-    }
-    return 0; /*TODO: finish writeSst */
+        int i;
+        int head_length = 0xA0;
+        for (i = 0; i < head_length; i++) {
+                fprintf(file, " ");
+        }
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                printf(".");
+        }
+        return 0;               /*TODO: finish writeSst */
 }
 
 /*
  * Data Stitch Embroidery Format (.stx)
  * The Data Stitch stx format is stitch-only.
  */
-int
-stxReadThread(StxThread* thread, FILE* file)
+int stxReadThread(StxThread *thread, FILE *file)
 {
-    int j, colorNameLength, sectionNameLength;
-    int somethingSomething, somethingSomething2, somethingElse, numberOfOtherDescriptors; /* TODO: determine what these represent */
-    int codeLength = 0;
-    char* codeBuff = 0;
-    char* codeNameBuff = 0;
-    EmbColor col;
-    char* sectionNameBuff = 0;
-
-    if (!thread) {
-        printf("ERROR: format-stx.c stxReadThread(), thread argument is null\n");
-        return 0;
-    }
-    if (!file) { printf("ERROR: format-stx.c stxReadThread(), file argument is null\n"); return 0; }
-
-    codeLength = fgetc(file);
-    codeBuff = (char*)malloc(codeLength);
-    if (!codeBuff) {
-        printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for codeBuff\n");
-        return 0;
-    }
-    /* TODO: check return value */
-    fread(codeBuff, 1, codeLength, file);
-    thread->colorCode = codeBuff;
-    colorNameLength = fgetc(file);
-    codeNameBuff = (char*)malloc(colorNameLength);
-    if (!codeNameBuff) {
-        printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for codeNameBuff\n");
-        return 0;
-    }
-    fread((unsigned char*)codeNameBuff, 1, colorNameLength, file); /* TODO: check return value */
-    thread->colorName = codeNameBuff;
-
-    embColor_read(file, &col, 4);
-    if (emb_verbose>1) {
-        printf("col red: %d\n", col.r);
-        printf("col green: %d\n", col.g);
-        printf("col blue: %d\n", col.b);
-    }
-
-    sectionNameLength = fgetc(file);
-    sectionNameBuff = (char*)malloc(sectionNameLength);
-    if (!sectionNameBuff) {
-        printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for sectionNameBuff\n");
-        return 0;
-    }
-    fread((unsigned char*)sectionNameBuff, 1, sectionNameLength, file); /* TODO: check return value */
-    thread->sectionName = sectionNameBuff;
-
-    LOAD_I32(file, somethingSomething)
-    LOAD_I32(file, somethingSomething2)
-    LOAD_I32(file, somethingElse)
-    LOAD_I16(file, numberOfOtherDescriptors)
-
-    thread->subDescriptors = (SubDescriptor*)malloc(sizeof(SubDescriptor) * numberOfOtherDescriptors);
-    if (!thread->subDescriptors) {
-        printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for thread->subDescriptors\n");
-        return 0;
-    }
-    for (j = 0; j < numberOfOtherDescriptors; j++) {
-        SubDescriptor sd;
-        char* subCodeBuff, *subColorNameBuff;
-        int subCodeLength, subColorNameLength;
-
-        sd.someNum = emb_read_i16(file);
-        /* Debug.Assert(sd.someNum == 1); TODO: review */
-        sd.someInt = emb_read_i32(file);
-        subCodeLength = fgetc(file);
-        subCodeBuff = (char*)malloc(subCodeLength);
-        if (!subCodeBuff) {
-            printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for subCodeBuff\n");
-            return 0;
-        }
-        fread((unsigned char*)subCodeBuff, 1, subCodeLength, file); /* TODO: check return value */
-        sd.colorCode = subCodeBuff;
-        subColorNameLength = fgetc(file);
-        subColorNameBuff = (char*)malloc(subColorNameLength);
-        if (!subColorNameBuff) {
-            printf("ERROR: format-stx.c stxReadThread(), unable to allocate memory for subColorNameBuff\n");
-            return 0;
-        }
-        fread((unsigned char*)subColorNameBuff, 1, subColorNameLength, file); /* TODO: check return value */
-        sd.colorName = subColorNameBuff;
-        sd.someOtherInt = emb_read_i32(file);
-        thread->subDescriptors[j] = sd;
-    }
-    return 1;
-}
-
-char
-readStx(EmbPattern* pattern, FILE* file)
-{
-    int i, threadCount;
-    unsigned char* gif = 0;
-    /* public Bitmap Image; */
-    StxThread* stxThreads = 0;
-    unsigned char headerBytes[7];
-    char* header = 0;
-    char stor;
-    char filetype[4], version[5];
-    int paletteLength, imageLength, something1, stitchDataOffset, something3;
-    int threadDescriptionOffset, stitchCount, left, right, colors;
-    int val[12];
-    int bottom, top;
-
-    if (!check_header_present(file, 15)) {
-        puts("ERROR: header is not present.");
-        return 0;
-    }
-
-    /* bytes 0-6 */
-    if (!read_n_bytes(file, headerBytes, 7)) {
-        return 0;
-    }
-    header = (char*)headerBytes;
-
-    /* bytes 7-9 */
-    memcpy(filetype, &header[0], 3);
-    /* bytes 10-13 */
-    memcpy(version, &header[3], 4);
-    filetype[3] = '\0';
-    version[4] = '\0';
-    /* byte 14 */
-    stor = (char)fgetc(file);
-    if (emb_verbose>1) {
-        printf("stor: %d\n", stor);
-    }
-
-    /* bytes 15- */
-    LOAD_I32(file, paletteLength)
-    LOAD_I32(file, imageLength)
-    LOAD_I32(file, something1)
-    LOAD_I32(file, stitchDataOffset)
-    LOAD_I32(file, something3)
-    LOAD_I32(file, threadDescriptionOffset)
-    LOAD_I32(file, stitchCount)
-    LOAD_I32(file, colors)
-    LOAD_I16(file, right)
-    LOAD_I16(file, left)
-    LOAD_I16(file, bottom)
-    LOAD_I16(file, top)
-
-    gif = (unsigned char*)malloc(imageLength);
-    if (!gif) {
-        printf("ERROR: format-stx.c readStx(), unable to allocate memory for gif\n");
-        return 0;
-    }
-    if (!read_n_bytes(file, gif, imageLength)) {
-        return 0;
-    }
-    /*Stream s2 = new MemoryStream(gif); TODO: review */
-    /*Image = new Bitmap(s2); TODO: review */
-
-    threadCount = emb_read_i16(file);
-    stxThreads = (StxThread*)malloc(sizeof(StxThread) * threadCount);
-    if (!stxThreads) {
-        printf("ERROR: format-stx.c readStx(), unable ");
-        printf("to allocate memory for stxThreads\n");
-        return 0;
-    }
-    for (i = 0; i < threadCount; i++) {
-        EmbThread t;
-        StxThread st;
-        stxReadThread(&st, file);
-
-        t.color = st.stxColor;
-        strcpy(t.description, st.colorName);
-        strcpy(t.catalogNumber, st.colorCode);
-        embp_addThread(pattern, t);
-        stxThreads[i] = st;
-    }
-
-    fseek(file, 15, SEEK_CUR);
-
-    for (i = 0; i < 12; i++) {
-        val[i] = emb_read_i16(file);
-        if (emb_verbose>1) {
-            printf("identify val[%d] = %d", i, val[i]);
-        }
-    }
-    if (emb_verbose>1) {
-        puts("val[4] == val[5] == 0");
-        puts("val[10] == val[11] == 0");
-    }
-    fseek(file, 8, SEEK_CUR); /* 0 0 */
-    /* br.BaseStream.Position = stitchDataOffset; TODO: review */
-    for (i = 1; i < stitchCount; ) {
-        char b0 = (char)fgetc(file);
-        char b1 = (char)fgetc(file);
-        if (b0 == -128) {
-            switch (b1) {
-                case 1:
-                    b0 = (char)fgetc(file);
-                    b1 = (char)fgetc(file);
-                    /*embp_addStitchRel(b0, b1, STOP); TODO: review */
-
-                    i++;
-                    break;
-                case 2:
-                    b0 = (char)fgetc(file);
-                    b1 = (char)fgetc(file);
-                    embp_addStitchRel(pattern, b0 / 10.0,
-                        b1 / 10.0, JUMP, 1);
-                    i++;
-                    break;
-                case -94:
-                    /* TODO: Is this a synchronize?
-                        If so document it in the comments. */
-                    break;
-                default:
-                    /*Debugger.Break(); TODO: review */
-                    break;
-            }
-        } else {
-            embp_addStitchRel(pattern, b0 / 10.0, b1 / 10.0, NORMAL, 1);
-            i++;
-        }
-    }
-    embp_flipVertical(pattern);
-    return 1;
-}
-
-char
-writeStx(EmbPattern* pattern, FILE* file)
-{
-    puts("ERROR: writeStx is not implemented.");
-    if (emb_verbose > 1) {
-        printf("Called with %p %p\n", (void*)pattern, (void*)file);
-    }
-    return 0; /*TODO: finish writeStx */
-}
-
-/*
- * Scalable Vector Graphics (.svg)
- * The scalable vector graphics (SVG) format is a graphics format maintained by ...
- */
-int svgCreator;
-
-int svgExpect;
-int svgMultiValue;
-
-int current_element_id;
-SvgAttribute attributeList[1000];
-int n_attributes = 0;
-char currentAttribute[1000];
-char currentValue[1000];
-
-int svg_identify_element(char *buff);
-
-#if 0
-EmbColor
-svgColorToEmbColor(char* colorString)
-{
-    EmbColor c;
-    char* pEnd = 0;
-    char* colorStr = copy_trim(colorString); /* Trim out any junk spaces */
-    int length = strlen(colorStr);
-    int tableColor;
-
-    /* SVGTiny1.2 Spec Section 11.13.1 syntax for color values */
-    if (length == 7 && colorStr[0] == '#') /* Six digit hex — #rrggbb */ {
-        while (*colorStr=='#' && *colorStr!=0) {
-            colorStr++;
-        }
-        c = embColor_fromHexStr(colorStr);
-    }
-    else if (length == 4 && colorStr[0] == '#') /* Three digit hex — #rgb */ {
-        /* Convert the 3 digit hex to a six digit hex */
-        char hex[7];
-        sprintf(hex, "%c%c%c%c%c%c", colorStr[1], colorStr[1], colorStr[2],
-            colorStr[2], colorStr[3], colorStr[3]);
-
-        c = embColor_fromHexStr(hex);
-    }
-    else if (strstr(colorStr, "%")) /* Float functional — rgb(R%, G%, B%) */ {
-        char *s = colorStr;
-        /* replace characters we aren't using with spaces */
-        for (; *s; s++) {
-            if (*s == 'r' || *s == 'g' || *s == 'b' || *s == ','
-                || *s == '(' || *s == ')' || *s == '%') {
-                *s = ' ';
-            }
-        }
-        c.r = (unsigned char)emb_round(255.0/100.0 * strtod(colorStr, &pEnd));
-        c.g = (unsigned char)emb_round(255.0/100.0 * strtod(pEnd,     &pEnd));
-        c.b = (unsigned char)emb_round(255.0/100.0 * strtod(pEnd,     &pEnd));
-    }
-    else if (length > 3 && colorStr[0] == 'r' && colorStr[1] == 'g' && colorStr[2] == 'b') {
-        /* Integer functional — rgb(rrr, ggg, bbb) */
-        char *s = colorStr;
-        /* replace characters we aren't using with spaces */
-        for (; *s; s++) {
-            if (*s == 'r' || *s == 'g' || *s == 'b' || *s == ','
-                || *s == '(' || *s == ')') {
-                *s = ' ';
-            }
-        }
-        c.r = (unsigned char)strtol(colorStr, &pEnd, 10);
-        c.g = (unsigned char)strtol(pEnd,     &pEnd, 10);
-        c.b = (unsigned char)strtol(pEnd,     &pEnd, 10);
-    }
-    else /* Color keyword */ {
-        tableColor = threadColor(colorStr, SVG_Colors);
-        if (tableColor < 0) {
-            printf("SVG color string not found: %s.\n", colorStr);
-            c.r = 0;
-            c.g = 0;
-            c.b = 0;
-        }
-        else {
-            c.r = (tableColor >> 16) & 0xFF;
-            c.g = (tableColor >> 8) & 0xFF;
-            c.b = tableColor & 0xFF;
-        }
-    }
-
-    safe_free(colorStr);
-    /* Returns black if all else fails */
-    return c;
-}
-
-int
-toUpper(char cmd)
-{
-    if (cmd >= 'a' && cmd <= 'z') {
-        return cmd - 'a' + 'A';
-    }
-    return cmd;
-}
-
-int svgPathCmdToEmbPathFlag(char cmd)
-{
-    /* TODO: This function needs some work */
-    if     (toUpper(cmd) == 'M') return MOVETO;
-    else if (toUpper(cmd) == 'L') return LINETO;
-    /*
-    else if (toUpper(cmd) == 'C') return CUBICTOCONTROL1;
-    else if (toUpper(cmd) == 'CC') return CUBICTOCONTROL2;
-    else if (toUpper(cmd) == 'CCC') return CUBICTOEND;
-    else if (toUpper(cmd) == 'A') return ELLIPSETORAD;
-    else if (toUpper(cmd) == 'AA') return ELLIPSETOEND;
-    else if (toUpper(cmd) == 'Q') return QUADTOCONTROL;
-    else if (toUpper(cmd) == 'QQ') return QUADTOEND;
-    else if (toUpper(cmd) == 'Z') return LINETO;
-    */
-
-    /*else if (toUpper(cmd) == 'B') return BULGETOCONTROL; */ /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
-    /*else if (toUpper(cmd) == 'BB') return BULGETOEND; */   /* NOTE: This is not part of the SVG spec, but hopefully Bulges will be added to the SVG spec someday */
-    /*else { printf("ERROR: svgPathCmdToEmbPathFlag(), unknown command '%c'\n", cmd); return MOVETO; } */
-
-    return LINETO;
-}
-
-char* svgAttribute_getValue(const char* name) {
-    int i;
-    for (i=0; i<n_attributes; i++) {
-        if (!strcmp(attributeList[i].name, name)) {
-            return attributeList[i].value;
-        }
-    }
-    return "none";
-}
-
-void
-parse_circle(EmbPattern *p)
-{
-    EmbCircle circle;
-    circle.center.x = atof(svgAttribute_getValue("cx"));
-    circle.center.y = atof(svgAttribute_getValue("cy"));
-    circle.radius = atof(svgAttribute_getValue("r"));
-    emb_add_circle(p, circle);
-}
-
-void
-parse_ellipse(EmbPattern *p)
-{
-    EmbEllipse ellipse;
-    ellipse.center.x = atof(svgAttribute_getValue("cx"));
-    ellipse.center.y = atof(svgAttribute_getValue("cy"));
-    ellipse.radius.x = atof(svgAttribute_getValue("rx"));
-    ellipse.radius.y = atof(svgAttribute_getValue("ry"));
-    emb_add_ellipse(p, ellipse);
-}
-
-void
-parse_line(EmbPattern *p)
-{
-    char *x1, *x2, *y1, *y2;
-    x1 = svgAttribute_getValue("x1");
-    y1 = svgAttribute_getValue("y1");
-    x2 = svgAttribute_getValue("x2");
-    y2 = svgAttribute_getValue("y2");
-
-    /* If the starting and ending points are the same, it is a point */
-    if (!strcmp(x1, x2) && !strcmp(y1, y2)) {
-        EmbPoint point;
-        point.position.x = atof(x1);
-        point.position.y = atof(y1);
-        embp_addPointAbs(p, point);
-    }
-    else {
-        EmbLine line;
-        line.start.x = atof(x1);
-        line.start.y = atof(y1);
-        line.end.x = atof(x2);
-        line.end.y = atof(y2);
-        emb_add_line(p, line);
-    }
-
-}
-
-void
-parse_path(EmbPattern *p)
-{
-    /* TODO: finish */
-    EmbVector position, f_point, l_point, c1_point, c2_point;
-    int cmd, i, pos, reset, trip;
-    EmbReal pathData[7];
-    unsigned int numMoves;
-    EmbColor color;
-    EmbArray* flagList = 0;
-    EmbPath path;
-    char* pointStr = svgAttribute_getValue("d");
-    char* mystrok = svgAttribute_getValue("stroke");
-    int last = strlen(pointStr);
-    int size = 32;
-    int pendingTask = 0;
-    int relative = 0;
-    char* pathbuff = 0;
-
-    EmbArray* pointList = 0;
-    pos = 0;
-    /* An odometer aka 'tripometer' used for stepping thru the pathData */
-    trip = -1;
-    /* count of float[] that has been filled.
-     * 0 = first item of array
-     * -1 = not filled = empty array
-     */
-    reset = -1;
-    position.x = 0.0;
-    position.y = 0.0;
-    f_point.x = 0.0;
-    f_point.y = 0.0;
-    l_point.x = 0.0;
-    l_point.y = 0.0;
-    c1_point.x = 0.0;
-    c1_point.y = 0.0;
-    c2_point.x = 0.0;
-    c2_point.y = 0.0;
-    cmd = 0;
-    numMoves = 0;
-
-    pathbuff = (char*)malloc(size);
-    if (!pathbuff) {
-        printf("ERROR: svgAddToPattern(), cannot allocate memory for pathbuff\n");
-        return;
-    }
-
-    printf("stroke:%s\n", mystrok);
-
-    for (i = 0; i < last; i++) {
-        char c = pointStr[i];
-        if (emb_verbose>1) {
-            printf("relative %d\n", relative);
-            printf("c1.x %f\n", c1_point.x);
-            printf("c2.x %f\n", c2_point.x);
-        }
-        switch (c) {
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-            case '.':
-                pathbuff[pos++] = (char)c;                  /* add a more char */
-                break;
-
-            case ' ':
-            case ',':
-
-                /*printf("    ,'%s'    ~POS=%d  ~TRIP=%d  ~[pos]=%d\n", pathbuff,pos,trip, pathbuff[pos]);*/
-                if (pos > 0) {         /* append float to array, if it not yet stored */
-                    pathbuff[pos] = 0;
-                    pos = 0;
-                    printf("    ,val:%s\n", pathbuff);
-                    pathData[++trip] = atof(pathbuff);
-                }
-                break;
-
-            case '-':
-
-                if (pos > 0) {
-                    /* append float to array, if it not yet stored */
-                    pathbuff[pos] = 0;
-                    pos = 0;
-                    printf("    -val:%s\n", pathbuff);
-                    pathData[++trip] = atof(pathbuff);
-                }
-                pathbuff[pos++] = (char)c;
-                /* add a more char */
-                break;
-
-            default:
-                    /*** ASSUMED ANY COMMAND FOUND ***/
-
-
-                    if (pos > 0) {
-                        /* just make sure: append float to array,
-                         * if it not yet stored
-                         */
-                        pathbuff[pos] = 0;
-                        pos = 0;
-                        printf("    >val:%s\n", pathbuff);
-                        pathData[++trip] = atof(pathbuff);
-                    }
-
-                    /**** Compose Point List ****/
-
-                    /* below "while" is for avoid losing last 'z'
-                     * command that maybe never accommodated.
-                     */
-                    pendingTask = 1; if (i==last-1) {pendingTask = 2;}
-
-                    while (pendingTask > 0) {
-                        pendingTask -= 1;
-
-                    /* Check whether prior command need to be saved */
-                    if (trip>=0) {
-                        EmbPoint test;
-                        trip = -1;
-                        reset = -1;
-
-                        relative = 0;
-                        /* relative to prior coordinate point
-                         * or absolute coordinate? */
-
-                        if (cmd >= 'a' && cmd <= 'z') {
-                            relative = 1;
-                        }
-
-                        if (cmd == 'M' || cmd == 'm') {
-                            position.x = pathData[0];
-                            position.y = pathData[1];
-                            f_point = position;
-                        }
-                        else if (cmd == 'L' || cmd == 'l') {
-                            position.x = pathData[0];
-                            position.y = pathData[1];
-                        }
-                        else if (cmd == 'H' || cmd == 'h') {
-                            position.x = pathData[0];
-                            position.y = l_point.y;
-                        }
-                        else if (cmd == 'V'  || cmd == 'v') {
-                            position.x = l_point.x;
-                            position.y = pathData[1];
-                        }
-                        else if (cmd == 'C' || cmd == 'c') {
-                            position.x = pathData[4];
-                            position.y = pathData[5];
-                            c1_point.x = pathData[0];
-                            c1_point.y = pathData[1];
-                            c2_point.x = pathData[2];
-                            c2_point.y = pathData[3];
-                        }
-                        /*
-                        else if (cmd == 'S') {
-                            position.x = pathData[0];
-                            position.y = pathData[1];
-                        }
-                        else if (cmd == 's') {
-                            position.x = pathData[0];
-                            position.y = pathData[1];
-                        }
-                        else if (cmd == 'Q') {
-                            position.x = pathData[0];
-                            position.y = pathData[1];
-                        }
-                        else if (cmd == 'q') {
-                            position.x = pathData[0];
-                            position.y = pathData[1];
-                        }
-                        else if (cmd == 'T') {
-                            position.x = pathData[0];
-                            position.y = pathData[1];
-                        }
-                        else if (cmd == 't') {
-                            position.x = pathData[0];
-                            position.y = pathData[1];
-                        }
-                        else if (cmd == 'A') {
-                            position.x = pathData[0];
-                            position.y = pathData[1];
-                        }
-                        else if (cmd == 'a') {
-                            position.x = pathData[0];
-                            position.y = pathData[1];
-                        }
-                        */
-                        else if (cmd == 'Z' || cmd == 'z') {
-                            position = f_point;
-                        }
-
-                        if (!pointList && !flagList) {
-                            pointList = emb_array_create(EMB_POINT);
-                            flagList = emb_array_create(EMB_FLAG);
-                        }
-                        test.position = position;
-                        emb_array_addPoint(pointList, test);
-                        emb_array_add_flag(flagList, svgPathCmdToEmbPathFlag(cmd));
-                        l_point = position;
-
-                        pathbuff[0] = (char)cmd; /* set the command for compare */
-                        pathbuff[1] = 0;
-                        pos = 0;
-
-                        printf("*prior:%s (%f, %f,  %f, %f,     %f,%f,  %f) \n", pathbuff,
-                            pathData[0],
-                            pathData[1],
-                            pathData[2],
-                            pathData[3],
-                            pathData[4],
-                            pathData[5],
-                            pathData[6]);
-                    }
-
-                    /* assign new command */
-                    if (trip == -1 && reset == -1) {
-                        /* set the command for compare */
-                        pathbuff[0] = (char)c;
-                        pathbuff[1] = 0;
-
-                        printf("cmd:%s\n", pathbuff);
-                        if (c == 'M' || c == 'm' || c == 'L' || c == 'l') {
-                            cmd = c;
-                            reset = 2;
-                            numMoves++;
-                        }
-                        else if (c == 'C' || c == 'c') {
-                            cmd = c;
-                            reset = 6;
-                        }
-                        else if (c == 'H' || c == 'h' || c == 'V' || c == 'v') {
-                            cmd = c;
-                            reset = 1;
-                        }
-                        else if (c == 'S' || c == 's' || c == 'Q' || c == 'q') {
-                            cmd = c;
-                            reset = 4;
-                        }
-                        else if (c == 'T' || c == 't') {
-                            cmd = c;
-                            reset = 2;
-                        }
-                        else if (c == 'A' || c == 'a') {
-                            cmd = c;
-                            reset = 7;
-                        }
-                        else if (c == 'Z' || c == 'z') {
-                            cmd = c;
-                            reset = 0;
-                        }
-                        else {
-                            printf("ERROR: svgAddToPattern(), %s is not a valid svg path command, skipping...\n", pathbuff);
-                            trip = -1;
-                            reset = -1;
-                        }
-                    }
-                    /* avoid losing 'z' command that maybe never accommodated. */
-                        if (i==last-1) {
-                            trip = 2;
-                        }
-                    } /* while pendingTask */
-
-
-                    break;
-        }
-        if (pos >= size - 1) {
-            /* increase pathbuff length - leave room for 0 */
-            size *= 2;
-            pathbuff = (char*)realloc(pathbuff, size);
-            if (!pathbuff) {
-                printf("ERROR: svgAddToPattern(), cannot re-allocate memory for pathbuff\n");
-                return;
-            }
-        }
-    }
-    safe_free(pathbuff);
-
-    /* TODO: subdivide numMoves > 1 */
-
-    color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
-
-    path.pointList = pointList;
-    path.flagList = flagList;
-    path.color = color;
-    path.lineType = 1;
-    emb_add_path(p, path);
-}
-
-EmbArray *
-parse_pointlist(EmbPattern *p)
-{
-    char* pointStr = svgAttribute_getValue("points");
-    int last = strlen(pointStr);
-    int size = 32;
-    int i = 0;
-    int pos = 0;
-    unsigned char odd = 1;
-    EmbReal xx = 0.0;
-    EmbReal yy = 0.0;
-
-    EmbArray* pointList = 0;
-
-    char* polybuff = 0;
-
-    if (emb_verbose > 1) {
-        printf("Called with %p\n", (void*)p);
-    }
-
-    polybuff = (char*)malloc(size);
-    if (!polybuff) {
-        printf("ERROR: svgAddToPattern(), cannot allocate memory for polybuff\n");
-        return pointList;
-    }
-    for (i = 0; i < last; i++) {
-        char c = pointStr[i];
-        switch (c) {
-            case ' ':
-                if (pos == 0) {
-                    break;
-                }
-                polybuff[pos] = 0;
-                pos = 0;
-                /*Compose Point List */
-                if (odd) {
-                    odd = 0;
-                    xx = atof(polybuff);
-                }
-                else {
-                    EmbPoint a;
-                    odd = 1;
-                    yy = atof(polybuff);
-
-                    if (!pointList) {
-                        pointList = emb_array_create(EMB_POINT);
-                    }
-                    a.position.x = xx;
-                    a.position.y = yy;
-                    emb_array_addPoint(pointList, a);
-                }
-
-                break;
-            default:
-                polybuff[pos++] = (char)c;
-                break;
-        }
-        if (pos >= size - 1) {
-             /* increase polybuff length - leave room for 0 */
-             size *= 2;
-             polybuff = (char*)realloc(polybuff, size);
-             if (!polybuff) {
-                 printf("ERROR: svgAddToPattern(), cannot re-allocate memory for polybuff\n");
-                 return NULL;
-             }
-        }
-    }
-    safe_free(polybuff);
-    return pointList;
-}
-
-void
-parse_polygon(EmbPattern *p)
-{
-    if (emb_verbose > 1) {
-        printf("Called with %p\n", (void*)p);
-    }
-    /*
-    EmbPolygonObject polygonObj;
-    polygonObj.pointList = emb_array_create(EMB_POINT);
-    BROKEN: polygonObj.pointList = parse_pointlist(p);
-    polygonObj.color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
-    polygonObj.lineType = 1; TODO: use lineType enum
-    embp_addPolygonObjectAbs(p, &polygonObj);
-    */
-}
-
-void
-parse_polyline(EmbPattern *p)
-{
-    if (emb_verbose > 1) {
-        printf("Called with %p\n", (void*)p);
-    }
-    /* BROKEN
-    EmbPolylineObject* polylineObj;
-    polylineObj = (EmbPolylineObject*)malloc(sizeof(EmbPolylineObject));
-    polylineObj->pointList = parse_pointlist(p);
-    polylineObj->color = svgColorToEmbColor(svgAttribute_getValue("stroke"));
-    polylineObj->lineType = 1; TODO: use lineType enum
-    embp_addPolylineObjectAbs(p, polylineObj);
-    */
-}
-
-void
-parse_rect(EmbPattern *p)
-{
-    EmbRect rect;
-    float width, height;
-    rect.x = atof(svgAttribute_getValue("x"));
-    rect.y = atof(svgAttribute_getValue("y"));
-    width = atof(svgAttribute_getValue("width"));
-    height = atof(svgAttribute_getValue("height"));
-    rect.right = rect.x + width;
-    rect.bottom = rect.y + height;
-    embp_addRectAbs(p, rect);
-}
-
-void
-svgAddToPattern(EmbPattern* p)
-{
-    if (!p) {
-        printf("ERROR: svgAddToPattern(), p argument is null\n");
-        return;
-    }
-    switch (current_element_id) {
-    case ELEMENT_CIRCLE:
-        parse_circle(p);
-        break;
-    case ELEMENT_ELLIPSE:
-        parse_ellipse(p);
-        break;
-    case ELEMENT_LINE:
-        parse_line(p);
-        break;
-    case ELEMENT_PATH:
-        parse_path(p);
-        break;
-    case ELEMENT_POLYGON:
-        parse_polygon(p);
-        break;
-    case ELEMENT_POLYLINE:
-        parse_polygon(p);
-        break;
-    case ELEMENT_RECT:
-        parse_rect(p);
-        break;
-    default:
-        break;
-    }
-}
-
-int svg_identify_element(char *buff)
-{
-    int i;
-    for (i=0; svg_element_tokens[i][0]; i++) {
-        if (!strcmp(buff, svg_element_tokens[i])) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-int svgIsElement(const char* buff) {
-    if (stringInArray(buff, svg_element_tokens)) {
-        return SVG_ELEMENT;
-    }
-    /* Attempt to identify the program that created the SVG file.
-     * This should be in a comment at that occurs before the svg element. */
-    else if (!strcmp(buff, "Embroidermodder")) {
-        svgCreator = SVG_CREATOR_EMBROIDERMODDER;
-    }
-    else if (!strcmp(buff, "Illustrator")) {
-        svgCreator = SVG_CREATOR_ILLUSTRATOR;
-    }
-    else if (!strcmp(buff, "Inkscape")) {
-        svgCreator = SVG_CREATOR_INKSCAPE;
-    }
-
-    return SVG_NULL;
-}
-
-/*
-int
-svgIsSvgAttribute(const char* buff)
-{
-    const char *inkscape_tokens[] = {
-        "xmlns:dc", "xmlns:cc", "xmlns:rdf", "xmlns:svg", "xmlns", "\0"
-    };
-    if (stringInArray(buff, svg_attribute_tokens)) {
-        return SVG_ATTRIBUTE;
-    }
-    if (svgCreator == SVG_CREATOR_INKSCAPE) {
-        if (stringInArray(buff, inkscape_tokens)) {
-            return SVG_ATTRIBUTE;
-        }
-    }
-    printf("svgIsSvgAttribute(), unknown: %s\n", buff);
-    return SVG_NULL;
-}
-*/
-
-void
-svgProcess(int c, const char* buff)
-{
-    if (svgExpect == SVG_EXPECT_ELEMENT) {
-        char advance = 0;
-        if (buff[0] == '/') {
-            return;
-        }
-        advance = (char)svgIsElement(buff);
-        if (advance) {
-            printf("ELEMENT:\n");
-            svgExpect = SVG_EXPECT_ATTRIBUTE;
-            current_element_id = svg_identify_element((char*)buff);
-        } else {
-            return;
-        }
-    } else if (svgExpect == SVG_EXPECT_ATTRIBUTE) {
-        char advance = 0;
-        switch (current_element_id) {
-        case ELEMENT_A:
-        case ELEMENT_CIRCLE:
-        case ELEMENT_DEFS:
-        case ELEMENT_ELLIPSE:
-        case ELEMENT_FOREIGN_OBJECT:
-        case ELEMENT_G:
-        case ELEMENT_LINE:
-        case ELEMENT_LINEAR_GRADIENT:
-        case ELEMENT_PATH:
-        case ELEMENT_POLYGON:
-        case ELEMENT_POLYLINE:
-        case ELEMENT_RADIAL_GRADIENT:
-        case ELEMENT_RECT:
-        case ELEMENT_SOLID_COLOR:
-        case ELEMENT_STOP:
-        case ELEMENT_SVG:
-        case ELEMENT_SWITCH:
-        case ELEMENT_TEXT:
-        case ELEMENT_TEXT_AREA:
-        case ELEMENT_TSPAN:
-        case ELEMENT_USE:
-            if (stringInArray(buff, svg_property_tokens)) {
-                advance = SVG_PROPERTY;
-            }
-            break;
-        case ELEMENT_ANIMATION:
-        case ELEMENT_AUDIO:
-        case ELEMENT_DESC:
-        case ELEMENT_IMAGE:
-        case ELEMENT_METADATA:
-        case ELEMENT_TITLE:
-        case ELEMENT_VIDEO:
-            if (stringInArray(buff, svg_media_property_tokens)) {
-                advance = SVG_MEDIA_PROPERTY;
-            }
-            break;
-            default: break;
-        }
-        if (!advance) {
-            if (stringInArray(buff, (const char **)svg_attribute_table[current_element_id])) {
-                advance = SVG_ATTRIBUTE;
-            }
-            printf("ERROR %s not found in svg_attribute_table[%d].\n",
-                buff, current_element_id);
-        }
-        if (advance) {
-            printf("ATTRIBUTE:\n");
-            svgExpect = SVG_EXPECT_VALUE;
-            strcpy(currentAttribute, buff);
-        }
-    } else if (svgExpect == SVG_EXPECT_VALUE) {
-        int last = strlen(buff) - 1;
-        printf("VALUE:\n");
-
-        /* single-value */
-        if ((buff[0] == '"' || buff[0] == '\'') && (buff[last] == '/' || buff[last] == '"' || buff[last] == '\'') && !svgMultiValue) {
-            svgExpect = SVG_EXPECT_ATTRIBUTE;
-            strcpy(attributeList[n_attributes].name, currentAttribute);
-            strcpy(attributeList[n_attributes].value, buff);
-            n_attributes++;
-        } else { /* multi-value */
-            svgMultiValue = 1;
-            if (strlen(currentValue)==0) {
-                strcpy(currentValue, buff);
-            }
-            else {
-                strcat(currentValue, " ");
-                strcat(currentValue, buff);
-            }
-            if (buff[last] == '/' || buff[last] == '"' || buff[last] == '\'') {
-                svgMultiValue = 0;
-                svgExpect = SVG_EXPECT_ATTRIBUTE;
-                strcpy(attributeList[n_attributes].name, currentAttribute);
-                strcpy(attributeList[n_attributes].value, currentValue);
-                n_attributes++;
-            }
-        }
-    }
-    if (svgExpect != SVG_EXPECT_NULL) {
-        printf("%s\n", buff);
-    }
-    if (c == '>') {
-        svgExpect = SVG_EXPECT_NULL;
-    }
-}
-#endif
-
-/* . */
-char
-readSvg(EmbPattern* pattern, FILE* file)
-{
-    REPORT_PTR(pattern)
-    REPORT_PTR(file)
-#if 0
-    int size, pos, i;
-    char* buff = 0, c;
-    size = 1024;
-
-    for (i=0; i<1000; i++) {
-        attributeList[i].name = (char*)malloc(size);
-        attributeList[i].value = (char*)malloc(size);
-    }
-
-    buff = (char*)malloc(size);
-    if (!buff) {
-        printf("ERROR: readSvg(), cannot allocate memory for buff\n");
-        return 0;
-    }
-    svgCreator = SVG_CREATOR_NULL;
-    svgExpect = SVG_EXPECT_NULL;
-    svgMultiValue = 0;
-
-    currentAttribute[0] = 0;
-    currentValue[0] = 0;
-
-    /* Pre-flip in case of multiple reads on the same pattern */
-    embp_flipVertical(pattern);
-
-    pos = 0;
-    while (fread(&c, 1, 1, file)) {
-        switch (c) {
-        case '<':
-            if (svgExpect == SVG_EXPECT_NULL) {
-                svgAddToPattern(pattern);
-                svgExpect = SVG_EXPECT_ELEMENT;
-            }
-            break;
-        case '>':
-            /* abnormal case that may occur in svg element where '>' is all by itself */
-            if (pos == 0) {
-                /*TODO: log a warning about this absurdity! */
-                svgExpect = SVG_EXPECT_ELEMENT;
-            }
-            break;
-        case ' ':
-        case '\t':
-        case '\r':
-        case '\n':
-        case '=':
-            if (pos == 0)
-                break;
-            buff[pos] = 0;
-            pos = 0;
-            svgProcess(c, buff);
-            break;
-        default:
-            buff[pos++] = (char)c;
-            break;
-        }
-        if (pos >= size - 1) {
-            /* increase buff length - leave room for 0 */
-            size *= 2;
-            buff = (char*)realloc(buff, size);
-            if (!buff) {
-                printf("ERROR: readSvg(), cannot re-allocate memory for buff\n");
+        int j, colorNameLength, sectionNameLength;
+        int somethingSomething, somethingSomething2, somethingElse, numberOfOtherDescriptors;   /* TODO: determine what these represent */
+        int codeLength = 0;
+        char *codeBuff = 0;
+        char *codeNameBuff = 0;
+        EmbColor col;
+        char *sectionNameBuff = 0;
+
+        if (!thread) {
+                printf
+                    ("ERROR: format-stx.c stxReadThread(), thread argument is null\n");
                 return 0;
-            }
         }
-    }
+        if (!file) {
+                printf
+                    ("ERROR: format-stx.c stxReadThread(), file argument is null\n");
+                return 0;
+        }
 
-    safe_free(buff);
+        codeLength = fgetc(file);
+        codeBuff = (char *)malloc(codeLength);
+        if (!codeBuff) {
+                printf
+                    ("ERROR: format-stx.c stxReadThread(), unable to allocate memory for codeBuff\n");
+                return 0;
+        }
+        /* TODO: check return value */
+        fread(codeBuff, 1, codeLength, file);
+        thread->colorCode = codeBuff;
+        colorNameLength = fgetc(file);
+        codeNameBuff = (char *)malloc(colorNameLength);
+        if (!codeNameBuff) {
+                printf
+                    ("ERROR: format-stx.c stxReadThread(), unable to allocate memory for codeNameBuff\n");
+                return 0;
+        }
+        fread((unsigned char *)codeNameBuff, 1, colorNameLength, file); /* TODO: check return value */
+        thread->colorName = codeNameBuff;
 
-    if (emb_verbose>1) {
-        printf("OBJECT SUMMARY:\n");
-        if (pattern->circles) {
-            for (i = 0; i < pattern->circles->count; i++) {
-                EmbCircle c = pattern->circles->circle[i];
-                printf("circle %f %f %f\n", c.center.x, c.center.y, c.radius);
-            }
+        embColor_read(file, &col, 4);
+        if (emb_verbose > 1) {
+                printf("col red: %d\n", col.r);
+                printf("col green: %d\n", col.g);
+                printf("col blue: %d\n", col.b);
         }
-        if (pattern->ellipses) {
-            for (i = 0; i < pattern->ellipses->count; i++) {
-                EmbEllipse e = pattern->ellipses->ellipse[i];
-                printf("ellipse %f %f %f %f\n", e.center.x, e.center.y, e.radius.x, e.radius.y);
-            }
-        }
-        if (pattern->geometry) {
-            for (i = 0; i < pattern->geometry->count; i++) {
-                EmbLine li = pattern->geometry->geometry[i].object.line;
-                printf("line %f %f %f %f\n", li.start.x, li.start.y, li.end.x, li.end.y);
-            }
-        }
-        if (pattern->points) {
-            for (i = 0; i < pattern->points->count; i++) {
-                EmbVector po = pattern->points->point[i].position;
-                printf("point %f %f\n", po.x, po.y);
-            }
-        }
-        if (pattern->polygons) {
-            for (i = 0; i < pattern->polygons->count; i++) {
-                EmbArray *verts = pattern->polygons->polygon[i].pointList;
-                printf("polygon %d\n", verts->count);
-            }
-        }
-        if (pattern->polylines) {
-            for (i = 0; i < pattern->polylines->count; i++) {
-                EmbArray * verts = pattern->polylines->polyline[i].pointList;
-                printf("polyline %d\n", verts->count);
-            }
-        }
-        if (pattern->rects) {
-            for (i = 0; i < pattern->rects->count; i++) {
-                EmbRect r = pattern->rects->rect[i];
-                printf("rect %f %f %f %f\n", r.x, r.y, r.w, r.h);
-            }
-        }
-    }
 
-    for (i=0; i<1000; i++) {
-        safe_free(attributeList[i].name);
-        safe_free(attributeList[i].value);
-    }
-    /* Flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
-    embp_flipVertical(pattern);
-#endif
-    return 1; /*TODO: finish readSvg */
+        sectionNameLength = fgetc(file);
+        sectionNameBuff = (char *)malloc(sectionNameLength);
+        if (!sectionNameBuff) {
+                printf
+                    ("ERROR: format-stx.c stxReadThread(), unable to allocate memory for sectionNameBuff\n");
+                return 0;
+        }
+        fread((unsigned char *)sectionNameBuff, 1, sectionNameLength, file);    /* TODO: check return value */
+        thread->sectionName = sectionNameBuff;
+
+        LOAD_I32(file, somethingSomething)
+            LOAD_I32(file, somethingSomething2)
+            LOAD_I32(file, somethingElse)
+            LOAD_I16(file, numberOfOtherDescriptors)
+            thread->subDescriptors =
+            (SubDescriptor *) malloc(sizeof(SubDescriptor) *
+                                     numberOfOtherDescriptors);
+        if (!thread->subDescriptors) {
+                printf
+                    ("ERROR: format-stx.c stxReadThread(), unable to allocate memory for thread->subDescriptors\n");
+                return 0;
+        }
+        for (j = 0; j < numberOfOtherDescriptors; j++) {
+                SubDescriptor sd;
+                char *subCodeBuff, *subColorNameBuff;
+                int subCodeLength, subColorNameLength;
+
+                sd.someNum = emb_read_i16(file);
+                /* Debug.Assert(sd.someNum == 1); TODO: review */
+                sd.someInt = emb_read_i32(file);
+                subCodeLength = fgetc(file);
+                subCodeBuff = (char *)malloc(subCodeLength);
+                if (!subCodeBuff) {
+                        printf
+                            ("ERROR: format-stx.c stxReadThread(), unable to allocate memory for subCodeBuff\n");
+                        return 0;
+                }
+                fread((unsigned char *)subCodeBuff, 1, subCodeLength, file);    /* TODO: check return value */
+                sd.colorCode = subCodeBuff;
+                subColorNameLength = fgetc(file);
+                subColorNameBuff = (char *)malloc(subColorNameLength);
+                if (!subColorNameBuff) {
+                        printf
+                            ("ERROR: format-stx.c stxReadThread(), unable to allocate memory for subColorNameBuff\n");
+                        return 0;
+                }
+                fread((unsigned char *)subColorNameBuff, 1, subColorNameLength, file);  /* TODO: check return value */
+                sd.colorName = subColorNameBuff;
+                sd.someOtherInt = emb_read_i32(file);
+                thread->subDescriptors[j] = sd;
+        }
+        return 1;
 }
 
-/*! Writes the data from a pattern to a file with the given a fileName.
- *  Returns \c true if successful, otherwise returns \c false. */
-char
-writeSvg(EmbPattern* pattern, FILE* file)
+char readStx(EmbPattern *pattern, FILE *file)
 {
-    EmbRect boundingRect;
-    EmbRect rect;
-    EmbColor color;
-    int i, j;
-    char isNormal, tmpX[32], tmpY[32];
-    EmbRect border;
+        int i, threadCount;
+        unsigned char *gif = 0;
+        /* public Bitmap Image; */
+        StxThread *stxThreads = 0;
+        unsigned char headerBytes[7];
+        char *header = 0;
+        char stor;
+        char filetype[4], version[5];
+        int paletteLength, imageLength, something1, stitchDataOffset,
+            something3;
+        int threadDescriptionOffset, stitchCount, left, right, colors;
+        int val[12];
+        int bottom, top;
 
-    /* Pre-flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
-    embp_flipVertical(pattern);
-    boundingRect = embp_bounds(pattern);
-    fprintf(file, "<?xml version=\"1.0\"?>\n");
-    fprintf(file, "<!-- Embroidermodder 2 SVG Embroidery File -->\n");
-    fprintf(file, "<!-- http://embroidermodder.github.io -->\n");
-    fprintf(file, "<svg ");
-
-    /* TODO: See the SVG Tiny Version 1.2 Specification Section 7.14.
-    *       Until all of the formats and API is stable, the width, height and viewBox attributes need to be left unspecified.
-    *       If the attribute values are incorrect, some applications wont open it at all.
-    */
-
-    /* Add a margin of 10%. */
-    border = boundingRect;
-    border.x *= 10.0;
-    border.y *= 10.0;
-    border.w *= 10.0;
-    border.h *= 10.0;
-    border.x -= 0.1 * border.w;
-    border.w += 0.2 * border.w;
-    border.y -= 0.1 * border.h;
-    border.h += 0.2 * border.h;
-    /* Sanity check here? */
-    fprintf(file, "viewBox=\"%f %f %f %f\" ",
-            border.x, border.y, border.w, border.h);
-
-    fprintf(file, "xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\">");
-    fprintf(file, "\n<g transform=\"scale(10)\">");
-    /*TODO: Low Priority Optimization:
-    *      Using %g in embFile_printf just doesn't work good enough at trimming trailing zeroes.
-    *      It's precision refers to significant digits, not decimal places (which is what we want).
-    *      We need to roll our own function for trimming trailing zeroes to keep
-    *      the precision as high as possible if needed, but help reduce file size also. */
-
-    /*TODO: Low Priority Optimization:
-    *      Make sure that the line length that is output doesn't exceed 1000 characters. */
-
-    /*TODO: Low Priority: Indent output properly. */
-
-    /* write circles, ellipses and lines */
-    for (i = 0; i < pattern->geometry->count; i++) {
-        EmbGeometry g = pattern->geometry->geometry[i];
-        switch (g.type) {
-        case EMB_CIRCLE: {
-            EmbCircle circle = g.object.circle;
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            fprintf(file, "\n<circle stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" r=\"%f\" />",
-                g.color.r,
-                g.color.g,
-                g.color.b,
-                circle.center.x,
-                circle.center.y,
-                circle.radius);
-            break;
+        if (!check_header_present(file, 15)) {
+                puts("ERROR: header is not present.");
+                return 0;
         }
-        case EMB_ELLIPSE: {
-            EmbEllipse ellipse = g.object.ellipse;
-            color = g.color;
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            fprintf(file, "\n<ellipse stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" cx=\"%f\" cy=\"%f\" rx=\"%f\" ry=\"%f\" />",
-                        color.r,
-                        color.g,
-                        color.b,
-                        ellipse.center.x,
-                        ellipse.center.y,
-                        ellipse.radius.x,
-                        ellipse.radius.y);
-            break;
-        }
-        case EMB_LINE: {
-            EmbLine line = g.object.line;
-            color = g.color;
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            fprintf(file,
-                "\n<line stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
-                color.r, color.g, color.b,
-                line.start.x, line.start.y, line.end.x, line.end.y);
-            break;
-        }
-        case EMB_POINT: {
-            EmbPoint p = g.object.point;
-            /* See SVG Tiny 1.2 Spec:
-             * Section 9.5 The 'line' element
-             * Section C.6 'path' element implementation notes */
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-            fprintf(file,
-                "\n<line stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" />",
-                p.color.r, p.color.g, p.color.b,
-                p.position.x, p.position.y, p.position.x, p.position.y);
-            break;
-        }
-        case EMB_POLYGON: {
-            EmbArray *pointList = g.object.polygon.pointList;
-            color = g.object.color;
-            /* TODO: use proper thread width for stoke-width rather than just 0.2 */
-                fprintf(file, "\n<polygon stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
-                    color.r, color.g, color.b,
-                    emb_optOut(pointList->geometry[0].object.point.position.x, tmpX),
-                    emb_optOut(pointList->geometry[0].object.point.position.y, tmpY));
-            for (j=1; j < pointList->count; j++) {
-                fprintf(file, " %s,%s",
-                    emb_optOut(pointList->geometry[j].object.point.position.x, tmpX),
-                    emb_optOut(pointList->geometry[j].object.point.position.y, tmpY));
-            }
-            fprintf(file, "\"/>");
-            break;
-        }
-        case EMB_POLYLINE: {
-            EmbArray *pointList = g.object.polyline.pointList;
-            color = g.object.polyline.color;
-            /* TODO: use proper thread width for stoke-width rather
-             * than just 0.2.
-             */
-            fprintf(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
-                    color.r,
-                    color.g,
-                    color.b,
-                    emb_optOut(pointList->geometry[0].object.point.position.x, tmpX),
-                    emb_optOut(pointList->geometry[0].object.point.position.y, tmpY));
-            for (j=1; j < pointList->count; j++) {
-                fprintf(file, " %s,%s",
-                    emb_optOut(pointList->geometry[j].object.point.position.x, tmpX),
-                    emb_optOut(pointList->geometry[j].object.point.position.y, tmpY));
-            }
-            fprintf(file, "\"/>");
-            break;
-        }
-        case EMB_RECT: {
-            rect = g.object.rect;
-            color = g.object.color;
-            /* TODO: use proper thread width for stoke-width rather
-             * than just 0.2.
-             */
-            fprintf(file, "\n<rect stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" />",
-                color.r, color.g, color.b,
-                rect.x, rect.y, rect.w, rect.h);
-            break;
-        }
-        default:
-            break;
-        }
-    }
 
-    isNormal = 0;
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        /* TODO:
-         * #ifdef SVG_DEBUG for Josh which outputs
-         * JUMPS/TRIMS instead of chopping them out.
-         */
-        if (st.flags == NORMAL && !isNormal) {
-            isNormal = 1;
-            color = pattern->thread_list->thread[st.color].color;
-            /* TODO: use proper thread width for stoke-width rather
-             * than just 0.2.
-             */
-              fprintf(file, "\n<polyline stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"0.2\" stroke=\"#%02x%02x%02x\" fill=\"none\" points=\"%s,%s",
-                                color.r,
-                                color.g,
-                                color.b,
-                                emb_optOut(st.x, tmpX),
-                                emb_optOut(st.y, tmpY));
-            }
-            else if (st.flags == NORMAL && isNormal)
-            {
-                fprintf(file, " %s,%s", emb_optOut(st.x, tmpX), emb_optOut(st.y, tmpY));
-            }
-            else if (st.flags != NORMAL && isNormal)
-            {
-                isNormal = 0;
-                fprintf(file, "\"/>");
-            }
-    }
-    fprintf(file, "\n</g>\n</svg>\n");
+        /* bytes 0-6 */
+        if (!read_n_bytes(file, headerBytes, 7)) {
+                return 0;
+        }
+        header = (char *)headerBytes;
 
-    /* Reset the pattern so future writes(regardless of format)
-     * are not flipped.
-     */
-    embp_flipVertical(pattern);
+        /* bytes 7-9 */
+        memcpy(filetype, &header[0], 3);
+        /* bytes 10-13 */
+        memcpy(version, &header[3], 4);
+        filetype[3] = '\0';
+        version[4] = '\0';
+        /* byte 14 */
+        stor = (char)fgetc(file);
+        if (emb_verbose > 1) {
+                printf("stor: %d\n", stor);
+        }
 
-    return 1;
+        /* bytes 15- */
+        LOAD_I32(file, paletteLength)
+            LOAD_I32(file, imageLength)
+            LOAD_I32(file, something1)
+            LOAD_I32(file, stitchDataOffset)
+            LOAD_I32(file, something3)
+            LOAD_I32(file, threadDescriptionOffset)
+            LOAD_I32(file, stitchCount)
+            LOAD_I32(file, colors)
+            LOAD_I16(file, right)
+            LOAD_I16(file, left)
+            LOAD_I16(file, bottom)
+            LOAD_I16(file, top)
+            gif = (unsigned char *)malloc(imageLength);
+        if (!gif) {
+                printf
+                    ("ERROR: format-stx.c readStx(), unable to allocate memory for gif\n");
+                return 0;
+        }
+        if (!read_n_bytes(file, gif, imageLength)) {
+                return 0;
+        }
+        /*Stream s2 = new MemoryStream(gif); TODO: review */
+        /*Image = new Bitmap(s2); TODO: review */
+
+        threadCount = emb_read_i16(file);
+        stxThreads = (StxThread *) malloc(sizeof(StxThread) * threadCount);
+        if (!stxThreads) {
+                printf("ERROR: format-stx.c readStx(), unable ");
+                printf("to allocate memory for stxThreads\n");
+                return 0;
+        }
+        for (i = 0; i < threadCount; i++) {
+                EmbThread t;
+                StxThread st;
+                stxReadThread(&st, file);
+
+                t.color = st.stxColor;
+                strcpy(t.description, st.colorName);
+                strcpy(t.catalogNumber, st.colorCode);
+                embp_addThread(pattern, t);
+                stxThreads[i] = st;
+        }
+
+        fseek(file, 15, SEEK_CUR);
+
+        for (i = 0; i < 12; i++) {
+                val[i] = emb_read_i16(file);
+                if (emb_verbose > 1) {
+                        printf("identify val[%d] = %d", i, val[i]);
+                }
+        }
+        if (emb_verbose > 1) {
+                puts("val[4] == val[5] == 0");
+                puts("val[10] == val[11] == 0");
+        }
+        fseek(file, 8, SEEK_CUR);       /* 0 0 */
+        /* br.BaseStream.Position = stitchDataOffset; TODO: review */
+        for (i = 1; i < stitchCount;) {
+                char b0 = (char)fgetc(file);
+                char b1 = (char)fgetc(file);
+                if (b0 == -128) {
+                        switch (b1) {
+                        case 1:
+                                b0 = (char)fgetc(file);
+                                b1 = (char)fgetc(file);
+                                /*embp_addStitchRel(b0, b1, STOP); TODO: review */
+
+                                i++;
+                                break;
+                        case 2:
+                                b0 = (char)fgetc(file);
+                                b1 = (char)fgetc(file);
+                                embp_addStitchRel(pattern, b0 / 10.0,
+                                                  b1 / 10.0, JUMP, 1);
+                                i++;
+                                break;
+                        case -94:
+                                /* TODO: Is this a synchronize?
+                                   If so document it in the comments. */
+                                break;
+                        default:
+                                /*Debugger.Break(); TODO: review */
+                                break;
+                        }
+                } else {
+                        embp_addStitchRel(pattern, b0 / 10.0, b1 / 10.0, NORMAL,
+                                          1);
+                        i++;
+                }
+        }
+        embp_flipVertical(pattern);
+        return 1;
 }
 
-/*
- * Pfaff Embroidery Format (.t01)
- * The Pfaff t01 format is stitch-only.
- */
-
-char
-readT01(EmbPattern* pattern, FILE* file)
+char writeStx(EmbPattern *pattern, FILE *file)
 {
-    unsigned char b[3];
-
-    while (fread(b, 1, 3, file) == 3) {
-        int flags, x, y;
-        decode_t01_record(b, &flags, &x, &y);
-        embp_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
-        if (flags == END) {
-            break;
+        puts("ERROR: writeStx is not implemented.");
+        if (emb_verbose > 1) {
+                printf("Called with %p %p\n", (void *)pattern, (void *)file);
         }
-    }
-    return 1;
-}
-
-char
-writeT01(EmbPattern* pattern, FILE* file)
-{
-    EmbRect boundingRect;
-    int i;
-    EmbVector pos;
-
-    embp_correctForMaxStitchLength(pattern, 12.1, 12.1);
-
-    boundingRect = embp_bounds(pattern);
-    if (emb_verbose>1) {
-        printf("bounding rectangle with top %f not used ", boundingRect.x);
-        printf("in the function writeT01\n");
-    }
-    pos.x = 0.0;
-    pos.y = 0.0;
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        unsigned char b[3];
-        int dx, dy;
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        /* convert from mm to 0.1mm for file format */
-        dx = (int)emb_round(10.0*(st.x - pos.x));
-        dy = (int)emb_round(10.0*(st.y - pos.y));
-        pos.x += 0.1*dx;
-        pos.y += 0.1*dy;
-        encode_t01_record(b, dx, dy, st.flags);
-        fwrite(b, 1, 3, file);
-    }
-    return 1;
+        return 0;               /*TODO: finish writeStx */
 }
 
 /*
@@ -6834,76 +2998,74 @@ writeT01(EmbPattern* pattern, FILE* file)
  * The Pfaff t09 format is stitch-only.
  */
 
-char
-readT09(EmbPattern* pattern, FILE* file)
+char readT09(EmbPattern *pattern, FILE *file)
 {
-    unsigned char b[3];
+        unsigned char b[3];
 
-    fseek(file, 0x0C, SEEK_SET);
+        fseek(file, 0x0C, SEEK_SET);
 
-    while (fread(b, 1, 3, file) == 3) {
-        int stitchType = NORMAL;
-        int b1 = b[0];
-        int b2 = b[1];
-        unsigned char commandByte = b[2];
-        if (commandByte == 0x00) {
-            break;
+        while (fread(b, 1, 3, file) == 3) {
+                int stitchType = NORMAL;
+                int b1 = b[0];
+                int b2 = b[1];
+                unsigned char commandByte = b[2];
+                if (commandByte == 0x00) {
+                        break;
+                }
+                if (commandByte & 0x10) {
+                        stitchType = STOP;
+                }
+                if (commandByte & 0x20) {
+                        b1 = -b1;
+                }
+                if (commandByte & 0x40) {
+                        b2 = -b2;
+                }
+                embp_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
         }
-        if (commandByte & 0x10) {
-            stitchType = STOP;
-        }
-        if (commandByte & 0x20) {
-            b1 = -b1;
-        }
-        if (commandByte & 0x40) {
-            b2 = -b2;
-        }
-        embp_addStitchRel(pattern, b2 / 10.0, b1 / 10.0, stitchType, 1);
-    }
-    return 1;
+        return 1;
 }
 
-char
-writeT09(EmbPattern* pattern, FILE* file)
+char writeT09(EmbPattern *pattern, FILE *file)
 {
-    int i;
-    EmbVector pos;
-    fpad(file, 0x00, 0x0C);
+        int i;
+        EmbVector pos;
+        fpad(file, 0x00, 0x0C);
 
-    pos.x = 0.0;
-    pos.y = 0.0;
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        unsigned char b[3];
-        int dx, dy;
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        /* convert from mm to 0.1mm for file format */
-        dx = (int)emb_round(10.0*(st.x - pos.x));
-        dy = (int)emb_round(10.0*(st.y - pos.y));
-        pos.x += 0.1*dx;
-        pos.y += 0.1*dy;
+        pos.x = 0.0;
+        pos.y = 0.0;
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                unsigned char b[3];
+                int dx, dy;
+                EmbStitch st = pattern->stitch_list->stitch[i];
+                /* convert from mm to 0.1mm for file format */
+                dx = (int)emb_round(10.0 * (st.x - pos.x));
+                dy = (int)emb_round(10.0 * (st.y - pos.y));
+                pos.x += 0.1 * dx;
+                pos.y += 0.1 * dy;
 
-        b[0] = dx;
-        b[1] = dy;
-        b[2] = 0;
-        if (st.flags & NORMAL) {
-            /* guessing based on T01 here */
-            b[2] |= 0x03;
+                b[0] = dx;
+                b[1] = dy;
+                b[2] = 0;
+                if (st.flags & NORMAL) {
+                        /* guessing based on T01 here */
+                        b[2] |= 0x03;
+                }
+                /* inferred from readT09 */
+                if (st.flags & STOP) {
+                        b[2] |= 0x10;
+                }
+                if (dx < 0) {
+                        b[0] = -dx;
+                        b[2] |= 0x20;
+                }
+                if (dy < 0) {
+                        b[0] = -dy;
+                        b[2] |= 0x40;
+                }
+                fwrite(b, 1, 3, file);
         }
-        /* inferred from readT09 */
-        if (st.flags & STOP) {
-            b[2] |= 0x10;
-        }
-        if (dx < 0) {
-            b[0] = -dx;
-            b[2] |= 0x20;
-        }
-        if (dy < 0) {
-            b[0] = -dy;
-            b[2] |= 0x40;
-        }
-        fwrite(b, 1, 3, file);
-    }
-    return 1;
+        return 1;
 }
 
 /*
@@ -6911,82 +3073,79 @@ writeT09(EmbPattern* pattern, FILE* file)
  * The Happy tap format is stitch-only.
  */
 
-void
-encode_tap_record(FILE* file, int x, int y, int flags)
+void encode_tap_record(FILE *file, int x, int y, int flags)
 {
-    unsigned char b[3];
-    encode_tajima_ternary(b, x, y);
+        unsigned char b[3];
+        encode_tajima_ternary(b, x, y);
 
-    b[2] |= (char)3;
-    if (flags & END) {
-        b[0] = 0;
-        b[1] = 0;
-        b[2] = 0xF3;
-    }
-    if (flags & (JUMP | TRIM)) {
-        b[2] = (char)(b[2] | 0x83);
-    }
-    if (flags & STOP) {
-        b[2] = (char)(b[2] | 0xC3);
-    }
-    fwrite(b, 1, 3, file);
-}
-
-int
-decode_tap_record_flags(unsigned char b2)
-{
-    if (b2 == 0xF3) {
-        return END;
-    }
-    switch (b2 & 0xC3) {
-        case 0x03:
-            return NORMAL;
-        case 0x83:
-            return TRIM;
-        case 0xC3:
-            return STOP;
-        default:
-            return NORMAL;
-    }
-}
-
-char
-readTap(EmbPattern* pattern, FILE* file) {
-    unsigned char b[3];
-
-    while (fread(b, 1, 3, file) == 3) {
-        int flags, x, y;
-        decode_tajima_ternary(b, &x, &y);
-        flags = decode_tap_record_flags(b[2]);
-        embp_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
-        if (flags == END) {
-            break;
+        b[2] |= (char)3;
+        if (flags & END) {
+                b[0] = 0;
+                b[1] = 0;
+                b[2] = 0xF3;
         }
-    }
-    return 1;
+        if (flags & (JUMP | TRIM)) {
+                b[2] = (char)(b[2] | 0x83);
+        }
+        if (flags & STOP) {
+                b[2] = (char)(b[2] | 0xC3);
+        }
+        fwrite(b, 1, 3, file);
 }
 
-char
-writeTap(EmbPattern* pattern, FILE* file)
+int decode_tap_record_flags(unsigned char b2)
 {
-    int i;
-    EmbVector pos;
+        if (b2 == 0xF3) {
+                return END;
+        }
+        switch (b2 & 0xC3) {
+        case 0x03:
+                return NORMAL;
+        case 0x83:
+                return TRIM;
+        case 0xC3:
+                return STOP;
+        default:
+                return NORMAL;
+        }
+}
 
-    embp_correctForMaxStitchLength(pattern, 12.1, 12.1);
+char readTap(EmbPattern *pattern, FILE *file)
+{
+        unsigned char b[3];
 
-    pos.x = 0.0;
-    pos.y = 0.0;
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        int dx, dy;
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        /* convert from mm to 0.1mm for file format */
-        dx = (int)emb_round(10.0*(st.x - pos.x));
-        dy = (int)emb_round(10.0*(st.y - pos.y));
-        pos.x += 0.1*dx;
-        pos.y += 0.1*dy;
-        encode_tap_record(file, dx, dy, st.flags);
-    }
-    return 1;
+        while (fread(b, 1, 3, file) == 3) {
+                int flags, x, y;
+                decode_tajima_ternary(b, &x, &y);
+                flags = decode_tap_record_flags(b[2]);
+                embp_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
+                if (flags == END) {
+                        break;
+                }
+        }
+        return 1;
+}
+
+char writeTap(EmbPattern *pattern, FILE *file)
+{
+        int i;
+        EmbVector pos;
+
+        embp_correctForMaxStitchLength(pattern, 12.1, 12.1);
+
+        pos.x = 0.0;
+        pos.y = 0.0;
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                int dx, dy;
+                EmbStitch st = pattern->stitch_list->stitch[i];
+                /* convert from mm to 0.1mm for file format */
+                dx = (int)emb_round(10.0 * (st.x - pos.x));
+                dy = (int)emb_round(10.0 * (st.y - pos.y));
+                pos.x += 0.1 * dx;
+                pos.y += 0.1 * dy;
+                encode_tap_record(file, dx, dy, st.flags);
+        }
+        return 1;
 }
 
 /*
@@ -7012,273 +3171,269 @@ writeTap(EmbPattern* pattern, FILE* file)
  *             11=applique stitches
  * 31      set for user edited stitches
  */
-char
-readThr(EmbPattern* pattern, FILE* file)
+char readThr(EmbPattern *pattern, FILE *file)
 {
-    ThredHeader header;
-    EmbColor background;
-    int currentColor;
-    int i;
+        ThredHeader header;
+        EmbColor background;
+        int currentColor;
+        int i;
 
-    header.sigVersion = emb_read_i32(file);
-    header.length = emb_read_i32(file);
-    header.numStiches = emb_read_i16(file);
-    LOAD_U16(file, header.hoopSize)
-    for (i=0; i<7; i++) {
-        header.reserved[i] = emb_read_u16(file);
-        printf("header.reserved[%d] = %d\n", i, header.reserved[i]);
-    }
-
-    if ((header.sigVersion & 0xffffff) == 0x746872) {
-        unsigned int verVar = (header.sigVersion & 0xff000000) >> 24;
-        switch (verVar) {
-            case 0:
-                break;
-            case 1:
-            case 2:
-                /* skip the file header extension */
-                fseek(file, 144, SEEK_CUR);
-                break;
-            default:
-                return 0; /* unsupported version */
+        header.sigVersion = emb_read_i32(file);
+        header.length = emb_read_i32(file);
+        header.numStiches = emb_read_i16(file);
+        LOAD_U16(file, header.hoopSize)
+            for (i = 0; i < 7; i++) {
+                header.reserved[i] = emb_read_u16(file);
+                printf("header.reserved[%d] = %d\n", i, header.reserved[i]);
         }
-    }
-    currentColor = -1;
-    for (i = 0; i < header.numStiches; i++) {
-        int type = NORMAL;
-        float x, y;
-        unsigned int color;
-        x = emb_read_i32(file);
-        y = emb_read_i32(file);
-        color = emb_read_i32(file);
-        x /= 10.0;
-        y /= 10.0;
 
-        if ((int)(color & 0xF) != currentColor) {
-            currentColor = (int)color & 0xF;
-            embp_changeColor(pattern, currentColor);
-            type = STOP | TRIM;
+        if ((header.sigVersion & 0xffffff) == 0x746872) {
+                unsigned int verVar = (header.sigVersion & 0xff000000) >> 24;
+                switch (verVar) {
+                case 0:
+                        break;
+                case 1:
+                case 2:
+                        /* skip the file header extension */
+                        fseek(file, 144, SEEK_CUR);
+                        break;
+                default:
+                        return 0;       /* unsupported version */
+                }
         }
-        embp_addStitchAbs(pattern, x, y, type, 0);
-    }
-    fseek(file, 16, SEEK_CUR); /* skip bitmap name (16 chars) */
+        currentColor = -1;
+        for (i = 0; i < header.numStiches; i++) {
+                int type = NORMAL;
+                float x, y;
+                unsigned int color;
+                x = emb_read_i32(file);
+                y = emb_read_i32(file);
+                color = emb_read_i32(file);
+                x /= 10.0;
+                y /= 10.0;
 
-    embColor_read(file, &background, 4);
-    if (emb_verbose>1) {
-        printf("background: %c %c %c\n", background.r, background.g, background.b);
-    }
-    for (i = 0; i < 16; i++) {
-        EmbThread thread;
-        strcpy(thread.description, "NULL");
-        strcpy(thread.catalogNumber, "NULL");
-        embColor_read(file, &(thread.color), 4);
-        embp_addThread(pattern, thread);
-    }
-    /*  64 bytes of rgbx(4 bytes) colors (16 custom colors) */
-    /*  16 bytes of thread size (ascii representation ie. '4') */
-    return 1;
+                if ((int)(color & 0xF) != currentColor) {
+                        currentColor = (int)color & 0xF;
+                        embp_changeColor(pattern, currentColor);
+                        type = STOP | TRIM;
+                }
+                embp_addStitchAbs(pattern, x, y, type, 0);
+        }
+        fseek(file, 16, SEEK_CUR);      /* skip bitmap name (16 chars) */
+
+        embColor_read(file, &background, 4);
+        if (emb_verbose > 1) {
+                printf("background: %c %c %c\n", background.r, background.g,
+                       background.b);
+        }
+        for (i = 0; i < 16; i++) {
+                EmbThread thread;
+                strcpy(thread.description, "NULL");
+                strcpy(thread.catalogNumber, "NULL");
+                embColor_read(file, &(thread.color), 4);
+                embp_addThread(pattern, thread);
+        }
+        /*  64 bytes of rgbx(4 bytes) colors (16 custom colors) */
+        /*  16 bytes of thread size (ascii representation ie. '4') */
+        return 1;
 }
 
-char
-writeThr(EmbPattern* pattern, FILE* file)
+char writeThr(EmbPattern *pattern, FILE *file)
 {
-    int i, stitchCount;
-    unsigned char version = 0;
-    ThredHeader header;
-    ThredExtension extension;
-    char bitmapName[16];
+        int i, stitchCount;
+        unsigned char version = 0;
+        ThredHeader header;
+        ThredExtension extension;
+        char bitmapName[16];
 
-    stitchCount = pattern->stitch_list->count;
+        stitchCount = pattern->stitch_list->count;
 
-    memset(&header, 0, sizeof(ThredHeader));
-    header.sigVersion = 0x746872 | (version << 24);
-    header.length = stitchCount * 12 + 16;
-    if (version == 1 || version == 2) {
-        header.length = header.length + sizeof(ThredHeader);
-    }
-    header.numStiches = (unsigned short)stitchCount; /* number of stitches in design */
-    header.hoopSize = 5;
+        memset(&header, 0, sizeof(ThredHeader));
+        header.sigVersion = 0x746872 | (version << 24);
+        header.length = stitchCount * 12 + 16;
+        if (version == 1 || version == 2) {
+                header.length = header.length + sizeof(ThredHeader);
+        }
+        header.numStiches = (unsigned short)stitchCount;        /* number of stitches in design */
+        header.hoopSize = 5;
 
-    emb_write_u32(file, header.sigVersion);
-    emb_write_u32(file, header.length);
-    emb_write_u16(file, header.numStiches);
-    emb_write_u16(file, header.hoopSize);
-    for (i=0; i<7; i++) {
-        emb_write_u16(file, header.reserved[i]);
-    }
+        emb_write_u32(file, header.sigVersion);
+        emb_write_u32(file, header.length);
+        emb_write_u16(file, header.numStiches);
+        emb_write_u16(file, header.hoopSize);
+        for (i = 0; i < 7; i++) {
+                emb_write_u16(file, header.reserved[i]);
+        }
 
-    if (version == 1 || version == 2) {
-        memset(&extension, 0, sizeof(ThredExtension));
-        extension.auxFormat = 1;
-        extension.hoopX = 640;
-        extension.hoopY = 640;
+        if (version == 1 || version == 2) {
+                memset(&extension, 0, sizeof(ThredExtension));
+                extension.auxFormat = 1;
+                extension.hoopX = 640;
+                extension.hoopY = 640;
 
-        emb_write_i32(file, extension.hoopX);
-        emb_write_i32(file, extension.hoopY);
-        emb_write_i32(file, extension.stitchGranularity);
-        fwrite(extension.creatorName, 1, 50, file);
-        fwrite(extension.modifierName, 1, 50, file);
-        fputc(extension.auxFormat, file);
-        fwrite(extension.reserved, 1, 31, file);
-    }
+                emb_write_i32(file, extension.hoopX);
+                emb_write_i32(file, extension.hoopY);
+                emb_write_i32(file, extension.stitchGranularity);
+                fwrite(extension.creatorName, 1, 50, file);
+                fwrite(extension.modifierName, 1, 50, file);
+                fputc(extension.auxFormat, file);
+                fwrite(extension.reserved, 1, 31, file);
+        }
 
-    /* write stitches */
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        unsigned int NOTFRM = 0x00080000;
-        EmbStitch st = pattern->stitch_list->stitch[i];
-        float x, y;
-        x = (float)(st.x * 10.0);
-        y = (float)(st.y * 10.0);
-        emb_write_i32(file, x);
-        emb_write_i32(file, y);
-        emb_write_u32(file, NOTFRM | (st.color & 0x0F));
-    }
-    fwrite(bitmapName, 1, 16, file);
-    /* background color */
-    fwrite("\xFF\xFF\xFF\x00", 1, 4, file);
+        /* write stitches */
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                unsigned int NOTFRM = 0x00080000;
+                EmbStitch st = pattern->stitch_list->stitch[i];
+                float x, y;
+                x = (float)(st.x * 10.0);
+                y = (float)(st.y * 10.0);
+                emb_write_i32(file, x);
+                emb_write_i32(file, y);
+                emb_write_u32(file, NOTFRM | (st.color & 0x0F));
+        }
+        fwrite(bitmapName, 1, 16, file);
+        /* background color */
+        fwrite("\xFF\xFF\xFF\x00", 1, 4, file);
 
-    for (i = 0; i < pattern->thread_list->count; i++) {
-        EmbColor c = pattern->thread_list->thread[i].color;
-        embColor_write(file, c, 4);
-        if (i >= 16) break;
-    }
+        for (i = 0; i < pattern->thread_list->count; i++) {
+                EmbColor c = pattern->thread_list->thread[i].color;
+                embColor_write(file, c, 4);
+                if (i >= 16)
+                        break;
+        }
 
-    /* write remaining colors if not yet 16 */
-    fpad(file, 0, 4*(16-i));
+        /* write remaining colors if not yet 16 */
+        fpad(file, 0, 4 * (16 - i));
 
-    fpad(file, '4', 16);
-    return 1;
+        fpad(file, '4', 16);
+        return 1;
 }
 
 /*
  * Text File (.txt)
  * The txt format is stitch-only and isn't associated with a specific company.
  */
-char
-readTxt(EmbPattern* pattern, FILE* file)
+char readTxt(EmbPattern *pattern, FILE *file)
 {
-    EmbString line;
-    int stated_count, i;
-    emb_readline(file, line, 99);
-    stated_count = atoi(line);
-    for (i=0; i<stated_count; i++) {
-        EmbStitch st;
-        char *p, *y, *color, *flags;
-        int state = 0;
+        EmbString line;
+        int stated_count, i;
         emb_readline(file, line, 99);
-        p = line;
-        y = line;
-        color = line;
-        flags = line;
-        for (p=line; *p; p++) {
-            if (*p == ',' || *p == ' ') {
-                *p = 0;
-                switch (state) {
-                case 0:
-                    y = p+1;
-                    break;
-                case 1:
-                    color = p+7;
-                    break;
-                case 2:
-                    flags = p+7;
-                    break;
-                default:
-                    break;
+        stated_count = atoi(line);
+        for (i = 0; i < stated_count; i++) {
+                EmbStitch st;
+                char *p, *y, *color, *flags;
+                int state = 0;
+                emb_readline(file, line, 99);
+                p = line;
+                y = line;
+                color = line;
+                flags = line;
+                for (p = line; *p; p++) {
+                        if (*p == ',' || *p == ' ') {
+                                *p = 0;
+                                switch (state) {
+                                case 0:
+                                        y = p + 1;
+                                        break;
+                                case 1:
+                                        color = p + 7;
+                                        break;
+                                case 2:
+                                        flags = p + 7;
+                                        break;
+                                default:
+                                        break;
+                                }
+                                state++;
+                        }
                 }
-                state++;
-            }
+                st.x = atof(line);
+                st.y = atof(y);
+                st.color = atoi(color);
+                st.flags = atoi(flags);
+                embp_addStitchAbs(pattern, st.x, st.y, st.flags, st.color);
         }
-        st.x = atof(line);
-        st.y = atof(y);
-        st.color = atoi(color);
-        st.flags = atoi(flags);
-        embp_addStitchAbs(pattern, st.x, st.y, st.flags, st.color);
-    }
-    puts("Overridden, defaulting to dst.");
-    readDst(pattern, file);
-    return 0; /*TODO: finish readTxt */
+        puts("Overridden, defaulting to dst.");
+        readDst(pattern, file);
+        return 0;               /*TODO: finish readTxt */
 }
 
-char
-writeTxt(EmbPattern* pattern, FILE* file)
+char writeTxt(EmbPattern *pattern, FILE *file)
 {
-    int i;
-    fprintf(file, "%u\n", (unsigned int) pattern->stitch_list->count);
+        int i;
+        fprintf(file, "%u\n", (unsigned int)pattern->stitch_list->count);
 
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbStitch s = pattern->stitch_list->stitch[i];
-        fprintf(file, "%.1f,%.1f color:%i flags:%i\n",
-                s.x, s.y, s.color, s.flags);
-    }
-    return 1;
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                EmbStitch s = pattern->stitch_list->stitch[i];
+                fprintf(file, "%.1f,%.1f color:%i flags:%i\n",
+                        s.x, s.y, s.color, s.flags);
+        }
+        return 1;
 }
 
 /*
  * Barudan Embroidery Format (.u00)
  * The Barudan u00 format is stitch-only.
  */
-char
-readU00(EmbPattern* pattern, FILE* file)
+char readU00(EmbPattern *pattern, FILE *file)
 {
-    int i;
-    char dx = 0, dy = 0;
-    int flags = NORMAL;
-    unsigned char b[3];
+        int i;
+        char dx = 0, dy = 0;
+        int flags = NORMAL;
+        unsigned char b[3];
 
-    if (!check_header_present(file, 0x100)) {
-        return 0;
-    }
-
-    /* 16 3byte RGB's start @ 0x08 followed by 14 bytes between
-        0 and 15 with index of color for each color change */
-    fseek(file, 0x08, SEEK_SET);
-    for (i = 0; i < 16; i++) {
-        EmbThread t;
-        embColor_read(file, &(t.color), 3);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
-        embp_addThread(pattern, t);
-    }
-
-    fseek(file, 0x100, SEEK_SET);
-    while (fread(b, 1, 3, file) == 3) {
-        char negativeX , negativeY;
-
-        if (b[0] == 0xF8 || b[0] == 0x87 || b[0] == 0x91) {
-            break;
+        if (!check_header_present(file, 0x100)) {
+                return 0;
         }
-        if ((b[0] & 0x0F) == 0) {
-            flags = NORMAL;
-        } else if ((b[0] & 0x1f) == 1) {
-            flags = JUMP;
-        } else if ((b[0] & 0x0F) > 0) {
-            flags = STOP;
-        }
-        negativeX = ((b[0] & 0x20) > 0);
-        negativeY = ((b[0] & 0x40) > 0);
 
-        dx = (char) b[2];
-        dy = (char) b[1];
-        if (negativeX) {
-            dx = (char) -dx;
+        /* 16 3byte RGB's start @ 0x08 followed by 14 bytes between
+           0 and 15 with index of color for each color change */
+        fseek(file, 0x08, SEEK_SET);
+        for (i = 0; i < 16; i++) {
+                EmbThread t;
+                embColor_read(file, &(t.color), 3);
+                strcpy(t.catalogNumber, "");
+                strcpy(t.description, "");
+                embp_addThread(pattern, t);
         }
-        if (negativeY) {
-            dy = (char) -dy;
+
+        fseek(file, 0x100, SEEK_SET);
+        while (fread(b, 1, 3, file) == 3) {
+                char negativeX, negativeY;
+
+                if (b[0] == 0xF8 || b[0] == 0x87 || b[0] == 0x91) {
+                        break;
+                }
+                if ((b[0] & 0x0F) == 0) {
+                        flags = NORMAL;
+                } else if ((b[0] & 0x1f) == 1) {
+                        flags = JUMP;
+                } else if ((b[0] & 0x0F) > 0) {
+                        flags = STOP;
+                }
+                negativeX = ((b[0] & 0x20) > 0);
+                negativeY = ((b[0] & 0x40) > 0);
+
+                dx = (char)b[2];
+                dy = (char)b[1];
+                if (negativeX) {
+                        dx = (char)-dx;
+                }
+                if (negativeY) {
+                        dy = (char)-dy;
+                }
+                embp_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
         }
-        embp_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
-    }
-    return 1;
+        return 1;
 }
 
-char
-writeU00(EmbPattern* pattern, FILE* file)
+char writeU00(EmbPattern *pattern, FILE *file)
 {
-    puts("writeU00 not implemented.");
-    if (emb_verbose > 1) {
-        printf("Called with %p %p\n", (void*)pattern, (void*)file);
-    }
-    return 0; /*TODO: finish WriteU00 */
+        puts("writeU00 not implemented.");
+        if (emb_verbose > 1) {
+                printf("Called with %p %p\n", (void *)pattern, (void *)file);
+        }
+        return 0;               /*TODO: finish WriteU00 */
 }
 
 /*
@@ -7288,59 +3443,57 @@ writeU00(EmbPattern* pattern, FILE* file)
  * TODO: AFAIK this is a duplicate of U00. Review for differences and merge
  * files and handle accordingly.
  */
-char
-readU01(EmbPattern* pattern, FILE* file)
+char readU01(EmbPattern *pattern, FILE *file)
 {
-    int fileLength, negativeX = 0, negativeY = 0, flags = NORMAL;
-    char dx, dy;
-    unsigned char data[3];
+        int fileLength, negativeX = 0, negativeY = 0, flags = NORMAL;
+        char dx, dy;
+        unsigned char data[3];
 
-    if (!check_header_present(file, 0x100)) {
-        return 0;
-    }
-
-    fseek(file, 0, SEEK_END);
-    fileLength = ftell(file);
-    fseek(file, 0x100, SEEK_SET);
-
-    if (emb_verbose>1) {
-        printf("file length: %d\n", fileLength);
-    }
-
-    while (fread(data, 1, 3, file) == 3) {
-        if (data[0] == 0xF8 || data[0] == 0x87 || data[0] == 0x91) {
-            break;
+        if (!check_header_present(file, 0x100)) {
+                return 0;
         }
-        if ((data[0] & 0x0F) == 0) {
-            flags = NORMAL;
-        } else if ((data[0] & 0x1f) == 1) {
-            flags = JUMP;
-        } else if ((data[0] & 0x0F) > 0) {
-            flags = STOP;
-        }
-        negativeX = ((data[0] & 0x20) > 0);
-        negativeY = ((data[0] & 0x40) > 0);
 
-        dx = (char) data[2];
-        dy = (char) data[1];
-        if (negativeX) {
-            dx = (char) -dx;
+        fseek(file, 0, SEEK_END);
+        fileLength = ftell(file);
+        fseek(file, 0x100, SEEK_SET);
+
+        if (emb_verbose > 1) {
+                printf("file length: %d\n", fileLength);
         }
-        if (negativeY) {
-            dy = (char) -dy;
+
+        while (fread(data, 1, 3, file) == 3) {
+                if (data[0] == 0xF8 || data[0] == 0x87 || data[0] == 0x91) {
+                        break;
+                }
+                if ((data[0] & 0x0F) == 0) {
+                        flags = NORMAL;
+                } else if ((data[0] & 0x1f) == 1) {
+                        flags = JUMP;
+                } else if ((data[0] & 0x0F) > 0) {
+                        flags = STOP;
+                }
+                negativeX = ((data[0] & 0x20) > 0);
+                negativeY = ((data[0] & 0x40) > 0);
+
+                dx = (char)data[2];
+                dy = (char)data[1];
+                if (negativeX) {
+                        dx = (char)-dx;
+                }
+                if (negativeY) {
+                        dy = (char)-dy;
+                }
+                embp_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
         }
-        embp_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
-    }
-    return 1;
+        return 1;
 }
 
-char
-writeU01(EmbPattern* pattern, FILE* file)
+char writeU01(EmbPattern *pattern, FILE *file)
 {
-    if (emb_verbose > 1) {
-        printf("Called with %p %p\n", (void*)pattern, (void*)file);
-    }
-    return 0; /*TODO: finish writeU01 */
+        if (emb_verbose > 1) {
+                printf("Called with %p %p\n", (void *)pattern, (void *)file);
+        }
+        return 0;               /*TODO: finish writeU01 */
 }
 
 /*
@@ -7348,318 +3501,381 @@ writeU01(EmbPattern* pattern, FILE* file)
  */
 
 const unsigned char vipDecodingTable[] = {
-    0x2E, 0x82, 0xE4, 0x6F, 0x38, 0xA9, 0xDC, 0xC6, 0x7B, 0xB6, 0x28, 0xAC, 0xFD, 0xAA, 0x8A, 0x4E,
-    0x76, 0x2E, 0xF0, 0xE4, 0x25, 0x1B, 0x8A, 0x68, 0x4E, 0x92, 0xB9, 0xB4, 0x95, 0xF0, 0x3E, 0xEF,
-    0xF7, 0x40, 0x24, 0x18, 0x39, 0x31, 0xBB, 0xE1, 0x53, 0xA8, 0x1F, 0xB1, 0x3A, 0x07, 0xFB, 0xCB,
-    0xE6, 0x00, 0x81, 0x50, 0x0E, 0x40, 0xE1, 0x2C, 0x73, 0x50, 0x0D, 0x91, 0xD6, 0x0A, 0x5D, 0xD6,
-    0x8B, 0xB8, 0x62, 0xAE, 0x47, 0x00, 0x53, 0x5A, 0xB7, 0x80, 0xAA, 0x28, 0xF7, 0x5D, 0x70, 0x5E,
-    0x2C, 0x0B, 0x98, 0xE3, 0xA0, 0x98, 0x60, 0x47, 0x89, 0x9B, 0x82, 0xFB, 0x40, 0xC9, 0xB4, 0x00,
-    0x0E, 0x68, 0x6A, 0x1E, 0x09, 0x85, 0xC0, 0x53, 0x81, 0xD1, 0x98, 0x89, 0xAF, 0xE8, 0x85, 0x4F,
-    0xE3, 0x69, 0x89, 0x03, 0xA1, 0x2E, 0x8F, 0xCF, 0xED, 0x91, 0x9F, 0x58, 0x1E, 0xD6, 0x84, 0x3C,
-    0x09, 0x27, 0xBD, 0xF4, 0xC3, 0x90, 0xC0, 0x51, 0x1B, 0x2B, 0x63, 0xBC, 0xB9, 0x3D, 0x40, 0x4D,
-    0x62, 0x6F, 0xE0, 0x8C, 0xF5, 0x5D, 0x08, 0xFD, 0x3D, 0x50, 0x36, 0xD7, 0xC9, 0xC9, 0x43, 0xE4,
-    0x2D, 0xCB, 0x95, 0xB6, 0xF4, 0x0D, 0xEA, 0xC2, 0xFD, 0x66, 0x3F, 0x5E, 0xBD, 0x69, 0x06, 0x2A,
-    0x03, 0x19, 0x47, 0x2B, 0xDF, 0x38, 0xEA, 0x4F, 0x80, 0x49, 0x95, 0xB2, 0xD6, 0xF9, 0x9A, 0x75,
-    0xF4, 0xD8, 0x9B, 0x1D, 0xB0, 0xA4, 0x69, 0xDB, 0xA9, 0x21, 0x79, 0x6F, 0xD8, 0xDE, 0x33, 0xFE,
-    0x9F, 0x04, 0xE5, 0x9A, 0x6B, 0x9B, 0x73, 0x83, 0x62, 0x7C, 0xB9, 0x66, 0x76, 0xF2, 0x5B, 0xC9,
-    0x5E, 0xFC, 0x74, 0xAA, 0x6C, 0xF1, 0xCD, 0x93, 0xCE, 0xE9, 0x80, 0x53, 0x03, 0x3B, 0x97, 0x4B,
-    0x39, 0x76, 0xC2, 0xC1, 0x56, 0xCB, 0x70, 0xFD, 0x3B, 0x3E, 0x52, 0x57, 0x81, 0x5D, 0x56, 0x8D,
-    0x51, 0x90, 0xD4, 0x76, 0xD7, 0xD5, 0x16, 0x02, 0x6D, 0xF2, 0x4D, 0xE1, 0x0E, 0x96, 0x4F, 0xA1,
-    0x3A, 0xA0, 0x60, 0x59, 0x64, 0x04, 0x1A, 0xE4, 0x67, 0xB6, 0xED, 0x3F, 0x74, 0x20, 0x55, 0x1F,
-    0xFB, 0x23, 0x92, 0x91, 0x53, 0xC8, 0x65, 0xAB, 0x9D, 0x51, 0xD6, 0x73, 0xDE, 0x01, 0xB1, 0x80,
-    0xB7, 0xC0, 0xD6, 0x80, 0x1C, 0x2E, 0x3C, 0x83, 0x63, 0xEE, 0xBC, 0x33, 0x25, 0xE2, 0x0E, 0x7A,
-    0x67, 0xDE, 0x3F, 0x71, 0x14, 0x49, 0x9C, 0x92, 0x93, 0x0D, 0x26, 0x9A, 0x0E, 0xDA, 0xED, 0x6F,
-    0xA4, 0x89, 0x0C, 0x1B, 0xF0, 0xA1, 0xDF, 0xE1, 0x9E, 0x3C, 0x04, 0x78, 0xE4, 0xAB, 0x6D, 0xFF,
-    0x9C, 0xAF, 0xCA, 0xC7, 0x88, 0x17, 0x9C, 0xE5, 0xB7, 0x33, 0x6D, 0xDC, 0xED, 0x8F, 0x6C, 0x18,
-    0x1D, 0x71, 0x06, 0xB1, 0xC5, 0xE2, 0xCF, 0x13, 0x77, 0x81, 0xC5, 0xB7, 0x0A, 0x14, 0x0A, 0x6B,
-    0x40, 0x26, 0xA0, 0x88, 0xD1, 0x62, 0x6A, 0xB3, 0x50, 0x12, 0xB9, 0x9B, 0xB5, 0x83, 0x9B, 0x37
+        0x2E, 0x82, 0xE4, 0x6F, 0x38, 0xA9, 0xDC, 0xC6, 0x7B, 0xB6, 0x28, 0xAC,
+        0xFD, 0xAA, 0x8A, 0x4E,
+        0x76, 0x2E, 0xF0, 0xE4, 0x25, 0x1B, 0x8A, 0x68, 0x4E, 0x92, 0xB9, 0xB4,
+        0x95, 0xF0, 0x3E, 0xEF,
+        0xF7, 0x40, 0x24, 0x18, 0x39, 0x31, 0xBB, 0xE1, 0x53, 0xA8, 0x1F, 0xB1,
+        0x3A, 0x07, 0xFB, 0xCB,
+        0xE6, 0x00, 0x81, 0x50, 0x0E, 0x40, 0xE1, 0x2C, 0x73, 0x50, 0x0D, 0x91,
+        0xD6, 0x0A, 0x5D, 0xD6,
+        0x8B, 0xB8, 0x62, 0xAE, 0x47, 0x00, 0x53, 0x5A, 0xB7, 0x80, 0xAA, 0x28,
+        0xF7, 0x5D, 0x70, 0x5E,
+        0x2C, 0x0B, 0x98, 0xE3, 0xA0, 0x98, 0x60, 0x47, 0x89, 0x9B, 0x82, 0xFB,
+        0x40, 0xC9, 0xB4, 0x00,
+        0x0E, 0x68, 0x6A, 0x1E, 0x09, 0x85, 0xC0, 0x53, 0x81, 0xD1, 0x98, 0x89,
+        0xAF, 0xE8, 0x85, 0x4F,
+        0xE3, 0x69, 0x89, 0x03, 0xA1, 0x2E, 0x8F, 0xCF, 0xED, 0x91, 0x9F, 0x58,
+        0x1E, 0xD6, 0x84, 0x3C,
+        0x09, 0x27, 0xBD, 0xF4, 0xC3, 0x90, 0xC0, 0x51, 0x1B, 0x2B, 0x63, 0xBC,
+        0xB9, 0x3D, 0x40, 0x4D,
+        0x62, 0x6F, 0xE0, 0x8C, 0xF5, 0x5D, 0x08, 0xFD, 0x3D, 0x50, 0x36, 0xD7,
+        0xC9, 0xC9, 0x43, 0xE4,
+        0x2D, 0xCB, 0x95, 0xB6, 0xF4, 0x0D, 0xEA, 0xC2, 0xFD, 0x66, 0x3F, 0x5E,
+        0xBD, 0x69, 0x06, 0x2A,
+        0x03, 0x19, 0x47, 0x2B, 0xDF, 0x38, 0xEA, 0x4F, 0x80, 0x49, 0x95, 0xB2,
+        0xD6, 0xF9, 0x9A, 0x75,
+        0xF4, 0xD8, 0x9B, 0x1D, 0xB0, 0xA4, 0x69, 0xDB, 0xA9, 0x21, 0x79, 0x6F,
+        0xD8, 0xDE, 0x33, 0xFE,
+        0x9F, 0x04, 0xE5, 0x9A, 0x6B, 0x9B, 0x73, 0x83, 0x62, 0x7C, 0xB9, 0x66,
+        0x76, 0xF2, 0x5B, 0xC9,
+        0x5E, 0xFC, 0x74, 0xAA, 0x6C, 0xF1, 0xCD, 0x93, 0xCE, 0xE9, 0x80, 0x53,
+        0x03, 0x3B, 0x97, 0x4B,
+        0x39, 0x76, 0xC2, 0xC1, 0x56, 0xCB, 0x70, 0xFD, 0x3B, 0x3E, 0x52, 0x57,
+        0x81, 0x5D, 0x56, 0x8D,
+        0x51, 0x90, 0xD4, 0x76, 0xD7, 0xD5, 0x16, 0x02, 0x6D, 0xF2, 0x4D, 0xE1,
+        0x0E, 0x96, 0x4F, 0xA1,
+        0x3A, 0xA0, 0x60, 0x59, 0x64, 0x04, 0x1A, 0xE4, 0x67, 0xB6, 0xED, 0x3F,
+        0x74, 0x20, 0x55, 0x1F,
+        0xFB, 0x23, 0x92, 0x91, 0x53, 0xC8, 0x65, 0xAB, 0x9D, 0x51, 0xD6, 0x73,
+        0xDE, 0x01, 0xB1, 0x80,
+        0xB7, 0xC0, 0xD6, 0x80, 0x1C, 0x2E, 0x3C, 0x83, 0x63, 0xEE, 0xBC, 0x33,
+        0x25, 0xE2, 0x0E, 0x7A,
+        0x67, 0xDE, 0x3F, 0x71, 0x14, 0x49, 0x9C, 0x92, 0x93, 0x0D, 0x26, 0x9A,
+        0x0E, 0xDA, 0xED, 0x6F,
+        0xA4, 0x89, 0x0C, 0x1B, 0xF0, 0xA1, 0xDF, 0xE1, 0x9E, 0x3C, 0x04, 0x78,
+        0xE4, 0xAB, 0x6D, 0xFF,
+        0x9C, 0xAF, 0xCA, 0xC7, 0x88, 0x17, 0x9C, 0xE5, 0xB7, 0x33, 0x6D, 0xDC,
+        0xED, 0x8F, 0x6C, 0x18,
+        0x1D, 0x71, 0x06, 0xB1, 0xC5, 0xE2, 0xCF, 0x13, 0x77, 0x81, 0xC5, 0xB7,
+        0x0A, 0x14, 0x0A, 0x6B,
+        0x40, 0x26, 0xA0, 0x88, 0xD1, 0x62, 0x6A, 0xB3, 0x50, 0x12, 0xB9, 0x9B,
+        0xB5, 0x83, 0x9B, 0x37
 };
 
-int
-vipDecodeByte(unsigned char b)
+int vipDecodeByte(unsigned char b)
 {
-    if (b >= 0x80) return (-(unsigned char) (~b + 1));
-    return b;
+        if (b >= 0x80)
+                return (-(unsigned char)(~b + 1));
+        return b;
 }
 
-int
-vipDecodeStitchType(unsigned char b)
+int vipDecodeStitchType(unsigned char b)
 {
-    switch (b) {
+        switch (b) {
         case 0x80:
-            return NORMAL;
+                return NORMAL;
         case 0x81:
-            return TRIM;
+                return TRIM;
         case 0x84:
-            return STOP;
+                return STOP;
         case 0x90:
-            return END;
+                return END;
         default:
-            return NORMAL;
-    }
+                return NORMAL;
+        }
 }
 
-unsigned char*
-vipDecompressData(unsigned char* input, int compressedInputLength, int decompressedContentLength)
+unsigned char *vipDecompressData(unsigned char *input,
+                                 int compressedInputLength,
+                                 int decompressedContentLength)
 {
-    unsigned char* decompressedData = (unsigned char*)malloc(decompressedContentLength);
-    if (!decompressedData) {
-        printf("ERROR: format-vip.c vipDecompressData(), cannot allocate memory for decompressedData\n");
-        return 0;
-    }
-    hus_decompress((char*)input, compressedInputLength, (char *)decompressedData, &decompressedContentLength);
-    return decompressedData;
+        unsigned char *decompressedData =
+            (unsigned char *)malloc(decompressedContentLength);
+        if (!decompressedData) {
+                printf
+                    ("ERROR: format-vip.c vipDecompressData(), cannot allocate memory for decompressedData\n");
+                return 0;
+        }
+        hus_decompress((char *)input, compressedInputLength,
+                       (char *)decompressedData, &decompressedContentLength);
+        return decompressedData;
 }
 
-char
-readVip(EmbPattern* pattern, FILE* file)
+char readVip(EmbPattern *pattern, FILE *file)
 {
-    int fileLength;
-    int i;
-    unsigned char prevByte = 0;
-    unsigned char *attributeData = 0, *decodedColors = 0;
-    unsigned char *attributeDataDecompressed = 0;
-    unsigned char *xData = 0, *xDecompressed = 0, *yData = 0, *yDecompressed = 0;
-    VipHeader header;
+        int fileLength;
+        int i;
+        unsigned char prevByte = 0;
+        unsigned char *attributeData = 0, *decodedColors = 0;
+        unsigned char *attributeDataDecompressed = 0;
+        unsigned char *xData = 0, *xDecompressed = 0, *yData =
+            0, *yDecompressed = 0;
+        VipHeader header;
 
-    fileLength = check_header_present(file, 32);
-    if (!fileLength) {
-        printf("ERROR: file shorter than header.");
-        return 0;
-    }
+        fileLength = check_header_present(file, 32);
+        if (!fileLength) {
+                printf("ERROR: file shorter than header.");
+                return 0;
+        }
 
-    header.magicCode = emb_read_i32(file);
-    header.numberOfStitches = emb_read_i32(file);
-    header.numberOfColors = emb_read_i32(file);
+        header.magicCode = emb_read_i32(file);
+        header.numberOfStitches = emb_read_i32(file);
+        header.numberOfColors = emb_read_i32(file);
 
-    header.postitiveXHoopSize = emb_read_i16(file);
-    header.postitiveYHoopSize = emb_read_i16(file);
-    header.negativeXHoopSize = emb_read_i16(file);
-    header.negativeYHoopSize = emb_read_i16(file);
-    header.attributeOffset = emb_read_i32(file);
-    header.xOffset = emb_read_i32(file);
-    header.yOffset = emb_read_i32(file);
+        header.postitiveXHoopSize = emb_read_i16(file);
+        header.postitiveYHoopSize = emb_read_i16(file);
+        header.negativeXHoopSize = emb_read_i16(file);
+        header.negativeYHoopSize = emb_read_i16(file);
+        header.attributeOffset = emb_read_i32(file);
+        header.xOffset = emb_read_i32(file);
+        header.yOffset = emb_read_i32(file);
 
-    if (!read_n_bytes(file, header.stringVal, 8)) {
-        return 0;
-    }
+        if (!read_n_bytes(file, header.stringVal, 8)) {
+                return 0;
+        }
 
-    header.unknown = emb_read_i16(file);
+        header.unknown = emb_read_i16(file);
 
-    header.colorLength = emb_read_i32(file);
-    decodedColors = (unsigned char*)malloc(header.numberOfColors*4);
-    if (!decodedColors) {
-        printf("ERROR: format-vip.c readVip(), ");
-        printf("cannot allocate memory for decodedColors\n");
-        return 0;
-    }
-    for (i = 0; i < header.numberOfColors*4; ++i) {
-        unsigned char inputByte = (char)fgetc(file);
-        unsigned char tmpByte = (unsigned char) (inputByte ^ vipDecodingTable[i]);
-        decodedColors[i] = (unsigned char) (tmpByte ^ prevByte);
-        prevByte = inputByte;
-    }
-    for (i = 0; i < header.numberOfColors; i++) {
-        EmbThread thread;
-        int startIndex = i << 2;
-        thread.color.r = decodedColors[startIndex];
-        thread.color.g = decodedColors[startIndex + 1];
-        thread.color.b = decodedColors[startIndex + 2];
-        /* printf("%d\n", decodedColors[startIndex + 3]); */
-        embp_addThread(pattern, thread);
-    }
-    fseek(file, header.attributeOffset, SEEK_SET);
-    attributeData = (unsigned char*)malloc(header.xOffset - header.attributeOffset);
-    if (!attributeData) {
-        printf("ERROR: format-vip.c readVip(), cannot allocate memory for attributeData\n");
-        return 0;
-    }
-    fread(attributeData, 1, header.xOffset - header.attributeOffset, file); /* TODO: check return value */
-    attributeDataDecompressed = vipDecompressData(attributeData, header.xOffset - header.attributeOffset, header.numberOfStitches);
+        header.colorLength = emb_read_i32(file);
+        decodedColors = (unsigned char *)malloc(header.numberOfColors * 4);
+        if (!decodedColors) {
+                printf("ERROR: format-vip.c readVip(), ");
+                printf("cannot allocate memory for decodedColors\n");
+                return 0;
+        }
+        for (i = 0; i < header.numberOfColors * 4; ++i) {
+                unsigned char inputByte = (char)fgetc(file);
+                unsigned char tmpByte =
+                    (unsigned char)(inputByte ^ vipDecodingTable[i]);
+                decodedColors[i] = (unsigned char)(tmpByte ^ prevByte);
+                prevByte = inputByte;
+        }
+        for (i = 0; i < header.numberOfColors; i++) {
+                EmbThread thread;
+                int startIndex = i << 2;
+                thread.color.r = decodedColors[startIndex];
+                thread.color.g = decodedColors[startIndex + 1];
+                thread.color.b = decodedColors[startIndex + 2];
+                /* printf("%d\n", decodedColors[startIndex + 3]); */
+                embp_addThread(pattern, thread);
+        }
+        fseek(file, header.attributeOffset, SEEK_SET);
+        attributeData =
+            (unsigned char *)malloc(header.xOffset - header.attributeOffset);
+        if (!attributeData) {
+                printf
+                    ("ERROR: format-vip.c readVip(), cannot allocate memory for attributeData\n");
+                return 0;
+        }
+        fread(attributeData, 1, header.xOffset - header.attributeOffset, file); /* TODO: check return value */
+        attributeDataDecompressed =
+            vipDecompressData(attributeData,
+                              header.xOffset - header.attributeOffset,
+                              header.numberOfStitches);
 
-    fseek(file, header.xOffset, SEEK_SET);
-    xData = (unsigned char*)malloc(header.yOffset - header.xOffset);
-    if (!xData) {
-        printf("ERROR: format-vip.c readVip(), cannot allocate memory for xData\n");
-        return 0;
-    }
-    fread(xData, 1, header.yOffset - header.xOffset, file); /* TODO: check return value */
-    xDecompressed = vipDecompressData(xData, header.yOffset - header.xOffset, header.numberOfStitches);
+        fseek(file, header.xOffset, SEEK_SET);
+        xData = (unsigned char *)malloc(header.yOffset - header.xOffset);
+        if (!xData) {
+                printf
+                    ("ERROR: format-vip.c readVip(), cannot allocate memory for xData\n");
+                return 0;
+        }
+        fread(xData, 1, header.yOffset - header.xOffset, file); /* TODO: check return value */
+        xDecompressed =
+            vipDecompressData(xData, header.yOffset - header.xOffset,
+                              header.numberOfStitches);
 
-    fseek(file, header.yOffset, SEEK_SET);
-    yData = (unsigned char*)malloc(fileLength - header.yOffset);
-    if (!yData) { printf("ERROR: format-vip.c readVip(), cannot allocate memory for yData\n"); return 0; }
-    fread(yData, 1, fileLength - header.yOffset, file); /* TODO: check return value */
-    yDecompressed = vipDecompressData(yData, fileLength - header.yOffset, header.numberOfStitches);
+        fseek(file, header.yOffset, SEEK_SET);
+        yData = (unsigned char *)malloc(fileLength - header.yOffset);
+        if (!yData) {
+                printf
+                    ("ERROR: format-vip.c readVip(), cannot allocate memory for yData\n");
+                return 0;
+        }
+        fread(yData, 1, fileLength - header.yOffset, file);     /* TODO: check return value */
+        yDecompressed =
+            vipDecompressData(yData, fileLength - header.yOffset,
+                              header.numberOfStitches);
 
-    for (i = 0; i < header.numberOfStitches; i++) {
-        embp_addStitchRel(pattern,
-                    vipDecodeByte(xDecompressed[i]) / 10.0,
-                    vipDecodeByte(yDecompressed[i]) / 10.0,
-                    vipDecodeStitchType(attributeDataDecompressed[i]), 1);
-    }
-    embp_addStitchRel(pattern, 0, 0, END, 1);
+        for (i = 0; i < header.numberOfStitches; i++) {
+                embp_addStitchRel(pattern,
+                                  vipDecodeByte(xDecompressed[i]) / 10.0,
+                                  vipDecodeByte(yDecompressed[i]) / 10.0,
+                                  vipDecodeStitchType(attributeDataDecompressed
+                                                      [i]), 1);
+        }
+        embp_addStitchRel(pattern, 0, 0, END, 1);
 
-    safe_free(attributeData);
-    safe_free(xData);
-    safe_free(yData);
-    safe_free(attributeDataDecompressed);
-    safe_free(xDecompressed);
-    safe_free(yDecompressed);
-    return 1;
+        safe_free(attributeData);
+        safe_free(xData);
+        safe_free(yData);
+        safe_free(attributeDataDecompressed);
+        safe_free(xDecompressed);
+        safe_free(yDecompressed);
+        return 1;
 }
 
-unsigned char*
-vipCompressData(unsigned char* input, int decompressedInputSize, int* compressedSize)
+unsigned char *vipCompressData(unsigned char *input, int decompressedInputSize,
+                               int *compressedSize)
 {
-    unsigned char* compressedData = (unsigned char*)malloc(decompressedInputSize*2);
-    if (!compressedData) {
-        printf("ERROR: format-vip.c vipCompressData(), cannot allocate memory for compressedData\n");
+        unsigned char *compressedData =
+            (unsigned char *)malloc(decompressedInputSize * 2);
+        if (!compressedData) {
+                printf
+                    ("ERROR: format-vip.c vipCompressData(), cannot allocate memory for compressedData\n");
+                return 0;
+        }
+        hus_compress((char *)input, decompressedInputSize,
+                     (char *)compressedData, compressedSize);
+        return compressedData;
+}
+
+unsigned char vipEncodeByte(EmbReal f)
+{
+        return (unsigned char)(int)emb_round(f);
+}
+
+unsigned char vipEncodeStitchType(int st)
+{
+        switch (st) {
+        case NORMAL:
+                return (0x80);
+        case JUMP:
+        case TRIM:
+                return (0x81);
+        case STOP:
+                return (0x84);
+        case END:
+                return (0x90);
+        default:
+                return (0x80);
+        }
+}
+
+char writeVip(EmbPattern *pattern, FILE *file)
+{
+        EmbRect boundingRect;
+        int stitchCount, minColors, patternColor;
+        int attributeSize = 0;
+        int xCompressedSize = 0;
+        int yCompressedSize = 0;
+        EmbReal previousX = 0;
+        EmbReal previousY = 0;
+        unsigned char *xValues = 0, *yValues = 0, *attributeValues = 0;
+        EmbReal xx = 0.0;
+        EmbReal yy = 0.0;
+        int flags = 0;
+        int i = 0;
+        unsigned char *attributeCompressed = 0, *xCompressed = 0;
+        unsigned char *yCompressed = 0, *decodedColors = 0, *encodedColors = 0;
+        unsigned char prevByte = 0;
+
+        puts("VIP not yet implemented.");
         return 0;
-    }
-    hus_compress((char*)input, decompressedInputSize, (char *)compressedData, compressedSize);
-    return compressedData;
-}
 
-unsigned char
-vipEncodeByte(EmbReal f)
-{
-    return (unsigned char)(int)emb_round(f);
-}
+        stitchCount = pattern->stitch_list->count;
+        minColors = pattern->thread_list->count;
+        decodedColors = (unsigned char *)malloc(minColors << 2);
+        if (!decodedColors) {
+                return 0;
+        }
+        encodedColors = (unsigned char *)malloc(minColors << 2);
+        if (!encodedColors) {
+                safe_free(decodedColors);
+                return 0;
+        }
+        /* embp_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
 
-unsigned char
-vipEncodeStitchType(int st)
-{
-    switch (st) {
-    case NORMAL:
-        return (0x80);
-    case JUMP:
-    case TRIM:
-        return (0x81);
-    case STOP:
-        return (0x84);
-    case END:
-        return (0x90);
-    default:
-        return (0x80);
-    }
-}
+        patternColor = minColors;
+        if (emb_verbose > 1) {
+                printf("patternColor: %d\n", patternColor);
+        }
+        if (minColors > 24) {
+                minColors = 24;
+        }
+        emb_write_u32(file, 0x0190FC5D);
+        emb_write_u32(file, stitchCount);
+        emb_write_u32(file, minColors);
 
-char
-writeVip(EmbPattern* pattern, FILE* file)
-{
-    EmbRect boundingRect;
-    int stitchCount, minColors, patternColor;
-    int attributeSize = 0;
-    int xCompressedSize = 0;
-    int yCompressedSize = 0;
-    EmbReal previousX = 0;
-    EmbReal previousY = 0;
-    unsigned char* xValues = 0, *yValues = 0, *attributeValues = 0;
-    EmbReal xx = 0.0;
-    EmbReal yy = 0.0;
-    int flags = 0;
-    int i = 0;
-    unsigned char* attributeCompressed = 0, *xCompressed = 0;
-    unsigned char* yCompressed = 0, *decodedColors = 0, *encodedColors = 0;
-    unsigned char prevByte = 0;
+        boundingRect = embp_bounds(pattern);
+        emb_write_i16(file,
+                      (int16_t) emb_round((boundingRect.x + boundingRect.w) *
+                                          10.0));
+        emb_write_i16(file, (int16_t) - emb_round(boundingRect.y * 10.0 - 1.0));
+        emb_write_i16(file, (int16_t) emb_round(boundingRect.x * 10.0));
+        emb_write_i16(file,
+                      (int16_t) -
+                      emb_round((boundingRect.y + boundingRect.h) * 10.0 -
+                                1.0));
 
-    puts("VIP not yet implemented.");
-    return 0;
+        emb_write_u32(file, 0x38 + (minColors << 3));
 
-    stitchCount = pattern->stitch_list->count;
-    minColors = pattern->thread_list->count;
-    decodedColors = (unsigned char*)malloc(minColors << 2);
-    if (!decodedColors) {
-        return 0;
-    }
-    encodedColors = (unsigned char*)malloc(minColors << 2);
-    if (!encodedColors) {
+        xValues =
+            (unsigned char *)malloc(sizeof(unsigned char) * (stitchCount));
+        yValues =
+            (unsigned char *)malloc(sizeof(unsigned char) * (stitchCount));
+        attributeValues =
+            (unsigned char *)malloc(sizeof(unsigned char) * (stitchCount));
+        if (xValues && yValues && attributeValues) {
+                for (i = 0; i < pattern->stitch_list->count; i++) {
+                        EmbStitch st;
+                        st = pattern->stitch_list->stitch[i];
+                        xx = st.x;
+                        yy = st.y;
+                        flags = st.flags;
+                        xValues[i] = vipEncodeByte((xx - previousX) * 10.0);
+                        previousX = xx;
+                        yValues[i] = vipEncodeByte((yy - previousY) * 10.0);
+                        previousY = yy;
+                        attributeValues[i] = vipEncodeStitchType(flags);
+                }
+                attributeCompressed =
+                    vipCompressData(attributeValues, stitchCount,
+                                    &attributeSize);
+                xCompressed =
+                    vipCompressData(xValues, stitchCount, &xCompressedSize);
+                yCompressed =
+                    vipCompressData(yValues, stitchCount, &yCompressedSize);
+
+                emb_write_u32(file,
+                              (unsigned int)(0x38 + (minColors << 3) +
+                                             attributeSize));
+                emb_write_u32(file,
+                              (unsigned int)(0x38 + (minColors << 3) +
+                                             attributeSize + xCompressedSize));
+                emb_write_u32(file, 0x00000000);
+                emb_write_u32(file, 0x00000000);
+                emb_write_u16(file, 0x0000);
+
+                emb_write_i32(file, minColors << 2);
+
+                for (i = 0; i < minColors; i++) {
+                        int byteChunk = i << 2;
+                        EmbColor currentColor =
+                            pattern->thread_list->thread[i].color;
+                        decodedColors[byteChunk] = currentColor.r;
+                        decodedColors[byteChunk + 1] = currentColor.g;
+                        decodedColors[byteChunk + 2] = currentColor.b;
+                        decodedColors[byteChunk + 3] = 0x01;
+                }
+
+                for (i = 0; i < minColors << 2; ++i) {
+                        unsigned char tmpByte =
+                            (unsigned char)(decodedColors[i] ^
+                                            vipDecodingTable[i]);
+                        prevByte = (unsigned char)(tmpByte ^ prevByte);
+                        fputc(prevByte, file);
+                }
+                for (i = 0; i <= minColors; i++) {
+                        emb_write_i32(file, 1);
+                }
+                emb_write_u32(file, 0); /* string length */
+                emb_write_i16(file, 0);
+                fwrite((char *)attributeCompressed, 1, attributeSize, file);
+                fwrite((char *)xCompressed, 1, xCompressedSize, file);
+                fwrite((char *)yCompressed, 1, yCompressedSize, file);
+        }
+
+        safe_free(attributeCompressed);
+        safe_free(xCompressed);
+        safe_free(yCompressed);
+        safe_free(attributeValues);
+        safe_free(xValues);
+        safe_free(yValues);
         safe_free(decodedColors);
-        return 0;
-    }
-    /* embp_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
-
-    patternColor = minColors;
-    if (emb_verbose>1) {
-        printf("patternColor: %d\n", patternColor);
-    }
-    if (minColors > 24) {
-        minColors = 24;
-    }
-    emb_write_u32(file, 0x0190FC5D);
-    emb_write_u32(file, stitchCount);
-    emb_write_u32(file, minColors);
-
-    boundingRect = embp_bounds(pattern);
-    emb_write_i16(file, (int16_t) emb_round((boundingRect.x+boundingRect.w) * 10.0));
-    emb_write_i16(file, (int16_t) -emb_round(boundingRect.y * 10.0 - 1.0));
-    emb_write_i16(file, (int16_t) emb_round(boundingRect.x * 10.0));
-    emb_write_i16(file, (int16_t) -emb_round((boundingRect.y+boundingRect.h) * 10.0 - 1.0));
-
-    emb_write_u32(file, 0x38 + (minColors << 3));
-
-    xValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
-    yValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
-    attributeValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
-    if (xValues && yValues && attributeValues) {
-        for (i = 0; i < pattern->stitch_list->count; i++) {
-            EmbStitch st;
-            st = pattern->stitch_list->stitch[i];
-            xx = st.x;
-            yy = st.y;
-            flags = st.flags;
-            xValues[i] = vipEncodeByte((xx - previousX) * 10.0);
-            previousX = xx;
-            yValues[i] = vipEncodeByte((yy - previousY) * 10.0);
-            previousY = yy;
-            attributeValues[i] = vipEncodeStitchType(flags);
-        }
-        attributeCompressed = vipCompressData(attributeValues, stitchCount, &attributeSize);
-        xCompressed = vipCompressData(xValues, stitchCount, &xCompressedSize);
-        yCompressed = vipCompressData(yValues, stitchCount, &yCompressedSize);
-
-        emb_write_u32(file, (unsigned int) (0x38 + (minColors << 3) + attributeSize));
-        emb_write_u32(file, (unsigned int) (0x38 + (minColors << 3) + attributeSize + xCompressedSize));
-        emb_write_u32(file, 0x00000000);
-        emb_write_u32(file, 0x00000000);
-        emb_write_u16(file, 0x0000);
-
-        emb_write_i32(file, minColors << 2);
-
-        for (i = 0; i < minColors; i++) {
-            int byteChunk = i << 2;
-            EmbColor currentColor = pattern->thread_list->thread[i].color;
-            decodedColors[byteChunk] = currentColor.r;
-            decodedColors[byteChunk + 1] = currentColor.g;
-            decodedColors[byteChunk + 2] = currentColor.b;
-            decodedColors[byteChunk + 3] = 0x01;
-        }
-
-        for (i = 0; i < minColors << 2; ++i) {
-            unsigned char tmpByte = (unsigned char) (decodedColors[i] ^ vipDecodingTable[i]);
-            prevByte = (unsigned char) (tmpByte ^ prevByte);
-            fputc(prevByte, file);
-        }
-        for (i = 0; i <= minColors; i++) {
-            emb_write_i32(file, 1);
-        }
-        emb_write_u32(file, 0); /* string length */
-        emb_write_i16(file, 0);
-        fwrite((char*) attributeCompressed, 1, attributeSize, file);
-        fwrite((char*) xCompressed, 1, xCompressedSize, file);
-        fwrite((char*) yCompressed, 1, yCompressedSize, file);
-    }
-
-    safe_free(attributeCompressed);
-    safe_free(xCompressed);
-    safe_free(yCompressed);
-    safe_free(attributeValues);
-    safe_free(xValues);
-    safe_free(yValues);
-    safe_free(decodedColors);
-    safe_free(encodedColors);
-    return 1;
+        safe_free(encodedColors);
+        return 1;
 }
 
 /*
@@ -7668,466 +3884,475 @@ writeVip(EmbPattern* pattern, FILE* file)
  *
  * The Pfaff vp3 format is stitch-only.
  */
-unsigned char*
-vp3ReadString(FILE* file)
+unsigned char *vp3ReadString(FILE *file)
 {
-    short stringLength;
-    unsigned char* charString = 0;
-    if (!file) {
-        printf("ERROR: format-vp3.c vp3ReadString(), file argument is null\n");
-        return 0;
-    }
-    stringLength = emb_read_i16be(file);
-    charString = (unsigned char*)malloc(stringLength);
-    if (!charString) {
-        printf("ERROR: format-vp3.c vp3ReadString(), cannot allocate memory for charString\n");
-        return 0;
-    }
-    fread(charString, 1, stringLength, file); /* TODO: check return value */
-    return charString;
-}
-
-int
-vp3Decode(unsigned char inputByte)
-{
-    if (inputByte > 0x80) {
-        return (int)-((unsigned char)((~inputByte) + 1));
-    }
-    return ((int)inputByte);
-}
-
-short
-vp3DecodeInt16(unsigned short inputByte)
-{
-    if (inputByte > 0x8000) {
-        return -((int16_t) ((~inputByte) + 1));
-    }
-    return ((int16_t)inputByte);
-}
-
-vp3Hoop
-vp3ReadHoopSection(FILE* file)
-{
-    vp3Hoop hoop;
-
-    if (!file) {
-        printf("ERROR: format-vp3.c vp3ReadHoopSection(), file argument is null\n");
-        hoop.bottom = 0;
-        hoop.left = 0;
-        hoop.right = 0;
-        hoop.top = 0;
-        hoop.threadLength = 0;
-        hoop.unknown2 = 0;
-        hoop.numberOfColors = 0;
-        hoop.unknown3 = 0;
-        hoop.unknown4 = 0;
-        hoop.numberOfBytesRemaining = 0;
-
-        hoop.xOffset = 0;
-        hoop.yOffset = 0;
-
-        hoop.byte1 = 0;
-        hoop.byte2 = 0;
-        hoop.byte3 = 0;
-        hoop.right2 = 0;
-        hoop.left2 = 0;
-        hoop.bottom2 = 0;
-        hoop.top2 = 0;
-        hoop.height = 0;
-        hoop.width = 0;
-        return hoop;
-    }
-
-    hoop.right = emb_read_i32be(file);
-    hoop.bottom = emb_read_i32be(file);
-    hoop.left = emb_read_i32be(file);
-    hoop.top = emb_read_i32be(file);
-
-    /* yes, it seems this is _not_ big endian */
-    hoop.threadLength = emb_read_i32(file);
-    hoop.unknown2 = (char)fgetc(file);
-    hoop.numberOfColors = (char)fgetc(file);
-    hoop.unknown3 = emb_read_i16be(file);
-    hoop.unknown4 = emb_read_i32be(file);
-    hoop.numberOfBytesRemaining = emb_read_i32be(file);
-
-    hoop.xOffset = emb_read_i32be(file);
-    hoop.yOffset = emb_read_i32be(file);
-
-    hoop.byte1 = (char)fgetc(file);
-    hoop.byte2 = (char)fgetc(file);
-    hoop.byte3 = (char)fgetc(file);
-
-    /* Centered hoop dimensions */
-    hoop.right2 = emb_read_i32be(file);
-    hoop.left2 = emb_read_i32be(file);
-    hoop.bottom2 = emb_read_i32be(file);
-    hoop.top2 = emb_read_i32be(file);
-
-    hoop.width = emb_read_i32be(file);
-    hoop.height = emb_read_i32be(file);
-    return hoop;
-}
-
-char
-readVp3(EmbPattern* pattern, FILE* file)
-{
-    unsigned char magicString[5];
-    unsigned char some;
-    unsigned char* softwareVendorString = 0;
-    /* unsigned char v2, ..., v18; */
-    unsigned char* anotherSoftwareVendorString = 0;
-    int numberOfColors;
-    long colorSectionOffset;
-    unsigned char magicCode[6];
-    short someShort;
-    unsigned char someByte;
-    int bytesRemainingInFile, hoopConfigurationOffset;
-    unsigned char* fileCommentString = 0; /* some software writes used settings here */
-    unsigned char* anotherCommentString = 0;
-    int i;
-
-    fread(magicString, 1, 5, file); /* %vsm% */ /* TODO: check return value */
-    LOAD_I8(file, some) /* 0 */
-    softwareVendorString = vp3ReadString(file);
-    REPORT_STR(softwareVendorString)
-	safe_free(softwareVendorString);
-    LOAD_I16(file, someShort)
-    LOAD_I8(file, someByte)
-    LOAD_I32(file, bytesRemainingInFile)
-    fileCommentString = vp3ReadString(file);
-    hoopConfigurationOffset = (int)ftell(file);
-    REPORT_INT(hoopConfigurationOffset);
-
-    vp3ReadHoopSection(file);
-
-    anotherCommentString = vp3ReadString(file);
-    REPORT_STR(anotherCommentString);
-	safe_free(anotherCommentString);
-
-    /* TODO: review v1 thru v18 variables and use emb_unused() if needed */
-    for (i = 0; i < 18; i++) {
-        unsigned char v1;
-        v1 = (char)fgetc(file);
-        if (emb_verbose>1) {
-            printf("v%d = %d\n", i, v1);
-        }
-    }
-
-    /* TODO: check return value */
-    /* 0x78 0x78 0x55 0x55 0x01 0x00 */
-    if (fread(magicCode, 1, 6, file) != 6) {
-        puts("ERROR: Failed to read magicCode.");
-        return 0;
-    }
-
-    anotherSoftwareVendorString = vp3ReadString(file);
-    REPORT_STR(anotherSoftwareVendorString);
-	safe_free(anotherSoftwareVendorString);
-
-    numberOfColors = emb_read_i16be(file);
-    colorSectionOffset = (int)ftell(file);
-
-    for (i = 0; i < numberOfColors; i++) {
-        EmbThread t;
-        char tableSize;
-        int startX, startY, offsetToNextColorX, offsetToNextColorY;
-        unsigned char* threadColorNumber, *colorName, *threadVendor;
-        int unknownThreadString, numberOfBytesInColor;
-
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
-        fseek(file, colorSectionOffset, SEEK_SET);
-        printf("ERROR: format-vp3.c Color Check Byte #1: 0 == %d\n", (char)fgetc(file));
-        printf("ERROR: format-vp3.c Color Check Byte #2: 5 == %d\n", (char)fgetc(file));
-        printf("ERROR: format-vp3.c Color Check Byte #3: 0 == %d\n", (char)fgetc(file));
-        colorSectionOffset = emb_read_i32be(file);
-        colorSectionOffset += ftell(file);
-        startX = emb_read_i32be(file);
-        startY = emb_read_i32be(file);
-        embp_addStitchAbs(pattern, startX / 1000.0, -startY / 1000.0, JUMP, 1);
-
-        tableSize = (char)fgetc(file);
-        fseek(file, 1, SEEK_CUR);
-        embColor_read(file, &(t.color), 3);
-        embp_addThread(pattern, t);
-        fseek(file, 6*tableSize - 1, SEEK_CUR);
-
-        threadColorNumber = vp3ReadString(file);
-        colorName = vp3ReadString(file);
-        threadVendor = vp3ReadString(file);
-
-        offsetToNextColorX = emb_read_i32be(file);
-        offsetToNextColorY = emb_read_i32be(file);
-
-        unknownThreadString = emb_read_i16be(file);
-        fseek(file, unknownThreadString, SEEK_CUR);
-        numberOfBytesInColor = emb_read_i32be(file);
-        fseek(file, 0x3, SEEK_CUR);
-
-        if (emb_verbose>1) {
-            printf("number of bytes in color: %d\n", numberOfBytesInColor);
-            printf("thread color number: %s\n", threadColorNumber);
-            printf("offset to next color x: %d\n", offsetToNextColorX);
-            printf("offset to next color y: %d\n", offsetToNextColorY);
-            printf("color name: %s\n", colorName);
-            printf("thread vendor: %s\n", threadVendor);
-            printf("fileCommentString: %s\n", fileCommentString);
-        }
-
-		safe_free(threadColorNumber);
-		safe_free(colorName);
-		safe_free(threadVendor);
-
-        while (ftell(file) < colorSectionOffset - 1) {
-            int lastFilePosition = ftell(file);
-            int x = vp3Decode((char)fgetc(file));
-            int y = vp3Decode((char)fgetc(file));
-            short readIn;
-            if (x == 0x80) {
-                switch (y) {
-                    case 0x00:
-                    case 0x03:
-                        break;
-                    case 0x01: {
-                        readIn = emb_read_i16be(file);
-                        x = vp3DecodeInt16(readIn);
-                        readIn = emb_read_i16be(file);
-                        y = vp3DecodeInt16(readIn);
-                        fseek(file, 2, SEEK_CUR);
-                        embp_addStitchRel(pattern, x/ 10.0, y / 10.0, TRIM, 1);
-                        break;
-                    }
-                    default:
-                        break;
-                }
-            } else {
-                embp_addStitchRel(pattern, x / 10.0, y / 10.0, NORMAL, 1);
-            }
-
-            if (ftell(file) == lastFilePosition) {
-                printf("ERROR: format-vp3.c could not read stitch block in entirety\n");
+        short stringLength;
+        unsigned char *charString = 0;
+        if (!file) {
+                printf
+                    ("ERROR: format-vp3.c vp3ReadString(), file argument is null\n");
                 return 0;
-            }
         }
-        if (i + 1 < numberOfColors) {
-            embp_addStitchRel(pattern, 0, 0, STOP, 1);
+        stringLength = emb_read_i16be(file);
+        charString = (unsigned char *)malloc(stringLength);
+        if (!charString) {
+                printf
+                    ("ERROR: format-vp3.c vp3ReadString(), cannot allocate memory for charString\n");
+                return 0;
         }
-    }
-	safe_free(fileCommentString);
-    embp_flipVertical(pattern);
-    return 1;
+        fread(charString, 1, stringLength, file);       /* TODO: check return value */
+        return charString;
 }
 
-void
-vp3WriteStringLen(FILE* file, const char* str, int len)
+int vp3Decode(unsigned char inputByte)
 {
-    emb_write_u16be(file, len);
-    fwrite(str, 1, len, file);
-}
-
-void
-vp3WriteString(FILE* file, const char* str)
-{
-    vp3WriteStringLen(file, str, strlen(str));
-}
-
-void
-vp3PatchByteCount(FILE* file, int offset, int adjustment)
-{
-    int currentPos = ftell(file);
-    fseek(file, offset, SEEK_SET);
-    printf("Patching byte count: %d\n", currentPos - offset + adjustment);
-    emb_write_i32be(file, currentPos - offset + adjustment);
-    fseek(file, currentPos, SEEK_SET);
-}
-
-char
-writeVp3(EmbPattern* pattern, FILE* file)
-{
-    EmbRect bounds;
-    int remainingBytesPos, remainingBytesPos2;
-    int colorSectionStitchBytes, first = 1, i, numberOfColors;
-    EmbColor color;
-    color.r = 0xFE;
-    color.g = 0xFE;
-    color.b = 0xFE;
-
-    bounds = embp_bounds(pattern);
-
-    embp_correctForMaxStitchLength(pattern, 3200.0, 3200.0); /* VP3 can encode signed 16bit deltas */
-
-    embp_flipVertical(pattern);
-
-    fwrite("%vsm%\0", 1, 6, file);
-    vp3WriteString(file, "Embroidermodder");
-    fwrite("\x00\x02\x00", 1, 3, file);
-
-    remainingBytesPos = ftell(file);
-    emb_write_i32(file, 0); /* placeholder */
-    vp3WriteString(file, "");
-    emb_write_i32be(file, (bounds.x + bounds.w) * 1000);
-    emb_write_i32be(file, (bounds.y + bounds.h) * 1000);
-    emb_write_i32be(file, bounds.x * 1000);
-    emb_write_i32be(file, bounds.y * 1000);
-    emb_write_i32(file, 0); /* this would be some (unknown) function of thread length */
-    fputc(0, file);
-
-    numberOfColors = embp_color_count(pattern, color);
-    fputc(numberOfColors, file);
-    fwrite("\x0C\x00\x01\x00\x03\x00", 1, 6, file);
-
-    remainingBytesPos2 = ftell(file);
-    emb_write_i32(file, 0); /* placeholder */
-
-    emb_write_i32be(file, 0); /* origin X */
-    emb_write_i32be(file, 0); /* origin Y */
-    fpad(file, 0, 3);
-
-    emb_write_i32be(file, (bounds.x + bounds.w) * 1000);
-    emb_write_i32be(file, (bounds.y + bounds.h) * 1000);
-    emb_write_i32be(file, bounds.x * 1000);
-    emb_write_i32be(file, bounds.y * 1000);
-
-    emb_write_i32be(file, bounds.w * 1000);
-    emb_write_i32be(file, bounds.h * 1000);
-
-    vp3WriteString(file, "");
-    emb_write_i16be(file, 25700);
-    emb_write_i32be(file, 4096);
-    emb_write_i32be(file, 0);
-    emb_write_i32be(file, 0);
-    emb_write_i32be(file, 4096);
-
-    fwrite("xxPP\x01\0", 1, 6, file);
-    vp3WriteString(file, "");
-    emb_write_i16be(file, numberOfColors);
-
-    for (i=0; i<pattern->stitch_list->count; i++) {
-        char colorName[8] = { 0 };
-        EmbReal lastX, lastY;
-        int colorSectionLengthPos, j;
-        EmbStitch s;
-        int lastColor;
-
-        j = 0;
-        s.x = 0.0;
-        s.y = 0.0;
-        s.color = 0;
-        s.flags = 0;
-
-        if (!first) {
-            fputc(0, file);
+        if (inputByte > 0x80) {
+                return (int)-((unsigned char)((~inputByte) + 1));
         }
+        return ((int)inputByte);
+}
+
+short vp3DecodeInt16(unsigned short inputByte)
+{
+        if (inputByte > 0x8000) {
+                return -((int16_t) ((~inputByte) + 1));
+        }
+        return ((int16_t) inputByte);
+}
+
+vp3Hoop vp3ReadHoopSection(FILE *file)
+{
+        vp3Hoop hoop;
+
+        if (!file) {
+                printf
+                    ("ERROR: format-vp3.c vp3ReadHoopSection(), file argument is null\n");
+                hoop.bottom = 0;
+                hoop.left = 0;
+                hoop.right = 0;
+                hoop.top = 0;
+                hoop.threadLength = 0;
+                hoop.unknown2 = 0;
+                hoop.numberOfColors = 0;
+                hoop.unknown3 = 0;
+                hoop.unknown4 = 0;
+                hoop.numberOfBytesRemaining = 0;
+
+                hoop.xOffset = 0;
+                hoop.yOffset = 0;
+
+                hoop.byte1 = 0;
+                hoop.byte2 = 0;
+                hoop.byte3 = 0;
+                hoop.right2 = 0;
+                hoop.left2 = 0;
+                hoop.bottom2 = 0;
+                hoop.top2 = 0;
+                hoop.height = 0;
+                hoop.width = 0;
+                return hoop;
+        }
+
+        hoop.right = emb_read_i32be(file);
+        hoop.bottom = emb_read_i32be(file);
+        hoop.left = emb_read_i32be(file);
+        hoop.top = emb_read_i32be(file);
+
+        /* yes, it seems this is _not_ big endian */
+        hoop.threadLength = emb_read_i32(file);
+        hoop.unknown2 = (char)fgetc(file);
+        hoop.numberOfColors = (char)fgetc(file);
+        hoop.unknown3 = emb_read_i16be(file);
+        hoop.unknown4 = emb_read_i32be(file);
+        hoop.numberOfBytesRemaining = emb_read_i32be(file);
+
+        hoop.xOffset = emb_read_i32be(file);
+        hoop.yOffset = emb_read_i32be(file);
+
+        hoop.byte1 = (char)fgetc(file);
+        hoop.byte2 = (char)fgetc(file);
+        hoop.byte3 = (char)fgetc(file);
+
+        /* Centered hoop dimensions */
+        hoop.right2 = emb_read_i32be(file);
+        hoop.left2 = emb_read_i32be(file);
+        hoop.bottom2 = emb_read_i32be(file);
+        hoop.top2 = emb_read_i32be(file);
+
+        hoop.width = emb_read_i32be(file);
+        hoop.height = emb_read_i32be(file);
+        return hoop;
+}
+
+char readVp3(EmbPattern *pattern, FILE *file)
+{
+        unsigned char magicString[5];
+        unsigned char some;
+        unsigned char *softwareVendorString = 0;
+        /* unsigned char v2, ..., v18; */
+        unsigned char *anotherSoftwareVendorString = 0;
+        int numberOfColors;
+        long colorSectionOffset;
+        unsigned char magicCode[6];
+        short someShort;
+        unsigned char someByte;
+        int bytesRemainingInFile, hoopConfigurationOffset;
+        unsigned char *fileCommentString = 0;   /* some software writes used settings here */
+        unsigned char *anotherCommentString = 0;
+        int i;
+
+        fread(magicString, 1, 5, file); /* %vsm% *//* TODO: check return value */
+        LOAD_I8(file, some)     /* 0 */
+            softwareVendorString = vp3ReadString(file);
+        REPORT_STR(softwareVendorString)
+            safe_free(softwareVendorString);
+        LOAD_I16(file, someShort)
+            LOAD_I8(file, someByte)
+            LOAD_I32(file, bytesRemainingInFile)
+            fileCommentString = vp3ReadString(file);
+        hoopConfigurationOffset = (int)ftell(file);
+        REPORT_INT(hoopConfigurationOffset);
+
+        vp3ReadHoopSection(file);
+
+        anotherCommentString = vp3ReadString(file);
+        REPORT_STR(anotherCommentString);
+        safe_free(anotherCommentString);
+
+        /* TODO: review v1 thru v18 variables and use emb_unused() if needed */
+        for (i = 0; i < 18; i++) {
+                unsigned char v1;
+                v1 = (char)fgetc(file);
+                if (emb_verbose > 1) {
+                        printf("v%d = %d\n", i, v1);
+                }
+        }
+
+        /* TODO: check return value */
+        /* 0x78 0x78 0x55 0x55 0x01 0x00 */
+        if (fread(magicCode, 1, 6, file) != 6) {
+                puts("ERROR: Failed to read magicCode.");
+                return 0;
+        }
+
+        anotherSoftwareVendorString = vp3ReadString(file);
+        REPORT_STR(anotherSoftwareVendorString);
+        safe_free(anotherSoftwareVendorString);
+
+        numberOfColors = emb_read_i16be(file);
+        colorSectionOffset = (int)ftell(file);
+
+        for (i = 0; i < numberOfColors; i++) {
+                EmbThread t;
+                char tableSize;
+                int startX, startY, offsetToNextColorX, offsetToNextColorY;
+                unsigned char *threadColorNumber, *colorName, *threadVendor;
+                int unknownThreadString, numberOfBytesInColor;
+
+                strcpy(t.catalogNumber, "");
+                strcpy(t.description, "");
+                fseek(file, colorSectionOffset, SEEK_SET);
+                printf("ERROR: format-vp3.c Color Check Byte #1: 0 == %d\n",
+                       (char)fgetc(file));
+                printf("ERROR: format-vp3.c Color Check Byte #2: 5 == %d\n",
+                       (char)fgetc(file));
+                printf("ERROR: format-vp3.c Color Check Byte #3: 0 == %d\n",
+                       (char)fgetc(file));
+                colorSectionOffset = emb_read_i32be(file);
+                colorSectionOffset += ftell(file);
+                startX = emb_read_i32be(file);
+                startY = emb_read_i32be(file);
+                embp_addStitchAbs(pattern, startX / 1000.0, -startY / 1000.0,
+                                  JUMP, 1);
+
+                tableSize = (char)fgetc(file);
+                fseek(file, 1, SEEK_CUR);
+                embColor_read(file, &(t.color), 3);
+                embp_addThread(pattern, t);
+                fseek(file, 6 * tableSize - 1, SEEK_CUR);
+
+                threadColorNumber = vp3ReadString(file);
+                colorName = vp3ReadString(file);
+                threadVendor = vp3ReadString(file);
+
+                offsetToNextColorX = emb_read_i32be(file);
+                offsetToNextColorY = emb_read_i32be(file);
+
+                unknownThreadString = emb_read_i16be(file);
+                fseek(file, unknownThreadString, SEEK_CUR);
+                numberOfBytesInColor = emb_read_i32be(file);
+                fseek(file, 0x3, SEEK_CUR);
+
+                if (emb_verbose > 1) {
+                        printf("number of bytes in color: %d\n",
+                               numberOfBytesInColor);
+                        printf("thread color number: %s\n", threadColorNumber);
+                        printf("offset to next color x: %d\n",
+                               offsetToNextColorX);
+                        printf("offset to next color y: %d\n",
+                               offsetToNextColorY);
+                        printf("color name: %s\n", colorName);
+                        printf("thread vendor: %s\n", threadVendor);
+                        printf("fileCommentString: %s\n", fileCommentString);
+                }
+
+                safe_free(threadColorNumber);
+                safe_free(colorName);
+                safe_free(threadVendor);
+
+                while (ftell(file) < colorSectionOffset - 1) {
+                        int lastFilePosition = ftell(file);
+                        int x = vp3Decode((char)fgetc(file));
+                        int y = vp3Decode((char)fgetc(file));
+                        short readIn;
+                        if (x == 0x80) {
+                                switch (y) {
+                                case 0x00:
+                                case 0x03:
+                                        break;
+                                case 0x01:{
+                                                readIn = emb_read_i16be(file);
+                                                x = vp3DecodeInt16(readIn);
+                                                readIn = emb_read_i16be(file);
+                                                y = vp3DecodeInt16(readIn);
+                                                fseek(file, 2, SEEK_CUR);
+                                                embp_addStitchRel(pattern,
+                                                                  x / 10.0,
+                                                                  y / 10.0,
+                                                                  TRIM, 1);
+                                                break;
+                                        }
+                                default:
+                                        break;
+                                }
+                        } else {
+                                embp_addStitchRel(pattern, x / 10.0, y / 10.0,
+                                                  NORMAL, 1);
+                        }
+
+                        if (ftell(file) == lastFilePosition) {
+                                printf
+                                    ("ERROR: format-vp3.c could not read stitch block in entirety\n");
+                                return 0;
+                        }
+                }
+                if (i + 1 < numberOfColors) {
+                        embp_addStitchRel(pattern, 0, 0, STOP, 1);
+                }
+        }
+        safe_free(fileCommentString);
+        embp_flipVertical(pattern);
+        return 1;
+}
+
+void vp3WriteStringLen(FILE *file, const char *str, int len)
+{
+        emb_write_u16be(file, len);
+        fwrite(str, 1, len, file);
+}
+
+void vp3WriteString(FILE *file, const char *str)
+{
+        vp3WriteStringLen(file, str, strlen(str));
+}
+
+void vp3PatchByteCount(FILE *file, int offset, int adjustment)
+{
+        int currentPos = ftell(file);
+        fseek(file, offset, SEEK_SET);
+        printf("Patching byte count: %d\n", currentPos - offset + adjustment);
+        emb_write_i32be(file, currentPos - offset + adjustment);
+        fseek(file, currentPos, SEEK_SET);
+}
+
+char writeVp3(EmbPattern *pattern, FILE *file)
+{
+        EmbRect bounds;
+        int remainingBytesPos, remainingBytesPos2;
+        int colorSectionStitchBytes, first = 1, i, numberOfColors;
+        EmbColor color;
+        color.r = 0xFE;
+        color.g = 0xFE;
+        color.b = 0xFE;
+
+        bounds = embp_bounds(pattern);
+
+        embp_correctForMaxStitchLength(pattern, 3200.0, 3200.0);        /* VP3 can encode signed 16bit deltas */
+
+        embp_flipVertical(pattern);
+
+        fwrite("%vsm%\0", 1, 6, file);
+        vp3WriteString(file, "Embroidermodder");
+        fwrite("\x00\x02\x00", 1, 3, file);
+
+        remainingBytesPos = ftell(file);
+        emb_write_i32(file, 0); /* placeholder */
+        vp3WriteString(file, "");
+        emb_write_i32be(file, (bounds.x + bounds.w) * 1000);
+        emb_write_i32be(file, (bounds.y + bounds.h) * 1000);
+        emb_write_i32be(file, bounds.x * 1000);
+        emb_write_i32be(file, bounds.y * 1000);
+        emb_write_i32(file, 0); /* this would be some (unknown) function of thread length */
         fputc(0, file);
-        fputc(5, file);
-        fputc(0, file);
 
-        colorSectionLengthPos = ftell(file);
+        numberOfColors = embp_color_count(pattern, color);
+        fputc(numberOfColors, file);
+        fwrite("\x0C\x00\x01\x00\x03\x00", 1, 6, file);
+
+        remainingBytesPos2 = ftell(file);
         emb_write_i32(file, 0); /* placeholder */
 
-        /*
-        pointer = mainPointer;
-        color = pattern->thread_list->thread[pointer->stitch.color].color;
+        emb_write_i32be(file, 0);       /* origin X */
+        emb_write_i32be(file, 0);       /* origin Y */
+        fpad(file, 0, 3);
 
-        if (first && pointer->stitch.flags & JUMP && pointer->next->stitch.flags & JUMP) {
-            pointer = pointer->next;
-        }
+        emb_write_i32be(file, (bounds.x + bounds.w) * 1000);
+        emb_write_i32be(file, (bounds.y + bounds.h) * 1000);
+        emb_write_i32be(file, bounds.x * 1000);
+        emb_write_i32be(file, bounds.y * 1000);
 
-        s = pointer->stitch;
-        */
-        if (emb_verbose>1) {
-            printf("%d\n", j);
-            printf("format-vp3.c DEBUG %d, %f, %f\n", s.flags, s.x, s.y);
-        }
-        emb_write_i32be(file, s.x * 1000);
-        emb_write_i32be(file, -s.y * 1000);
-        /* pointer = pointer->next; */
-
-        first = 0;
-
-        lastX = s.x;
-        lastY = s.y;
-        lastColor = s.color;
-        if (emb_verbose>1) {
-            printf("last %f %f %d\n", lastX, lastY, lastColor);
-        }
-
-        fwrite("\x01\x00", 1, 2, file);
-
-        printf("format-vp3.c writeVp3(), switching to color (%d, %d, %d)\n", color.r, color.g, color.b);
-        embColor_write(file, color, 4);
-
-        fwrite("\x00\x00\x05", 1, 3, file);
-        fputc(40, file);
+        emb_write_i32be(file, bounds.w * 1000);
+        emb_write_i32be(file, bounds.h * 1000);
 
         vp3WriteString(file, "");
+        emb_write_i16be(file, 25700);
+        emb_write_i32be(file, 4096);
+        emb_write_i32be(file, 0);
+        emb_write_i32be(file, 0);
+        emb_write_i32be(file, 4096);
 
-        sprintf(colorName, "#%02x%02x%02x", color.b, color.g, color.r);
-
-        vp3WriteString(file, colorName);
+        fwrite("xxPP\x01\0", 1, 6, file);
         vp3WriteString(file, "");
+        emb_write_i16be(file, numberOfColors);
 
-        emb_write_i32be(file, 0);
-        emb_write_i32be(file, 0);
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                char colorName[8] = { 0 };
+                EmbReal lastX, lastY;
+                int colorSectionLengthPos, j;
+                EmbStitch s;
+                int lastColor;
 
-        vp3WriteStringLen(file, "\0", 1);
+                j = 0;
+                s.x = 0.0;
+                s.y = 0.0;
+                s.color = 0;
+                s.flags = 0;
 
-        colorSectionStitchBytes = ftell(file);
-        emb_write_i32(file, 0); /* placeholder */
+                if (!first) {
+                        fputc(0, file);
+                }
+                fputc(0, file);
+                fputc(5, file);
+                fputc(0, file);
 
-        fputc(10, file);
-        fputc(246, file);
-        fputc(0, file);
+                colorSectionLengthPos = ftell(file);
+                emb_write_i32(file, 0); /* placeholder */
 
-        /*
-        for (j=i; j<pattern->stitch_list->count; j++) {
-        while (pointer) {
-            short dx, dy;
+                /*
+                   pointer = mainPointer;
+                   color = pattern->thread_list->thread[pointer->stitch.color].color;
 
-            EmbStitch s = pointer->stitch;
-            if (s.color != lastColor) {
-                break;
-            }
-            if (s.flags & END || s.flags & STOP) {
-                break;
-            }
-            dx = (s.x - lastX) * 10;
-            dy = (s.y - lastY) * 10;
-            // output is in ints, ensure rounding errors do not sum up.
-            lastX = lastX + dx / 10.0;
-            lastY = lastY + dy / 10.0;
+                   if (first && pointer->stitch.flags & JUMP && pointer->next->stitch.flags & JUMP) {
+                   pointer = pointer->next;
+                   }
 
-            if (dx < -127 || dx > 127 || dy < -127 || dy > 127) {
-                fputc(128, file);
-                fputc(1, file);
-                emb_write_i16be(file, dx);
-                emb_write_i16be(file, dy);
-                fputc(128, file);
-                fputc(2, file);
-            }
-            else {
-                char b[2];
-                b[0] = dx;
-                b[1] = dy;
-                fwrite(b, 1, 2, file);
-            }
+                   s = pointer->stitch;
+                 */
+                if (emb_verbose > 1) {
+                        printf("%d\n", j);
+                        printf("format-vp3.c DEBUG %d, %f, %f\n", s.flags, s.x,
+                               s.y);
+                }
+                emb_write_i32be(file, s.x * 1000);
+                emb_write_i32be(file, -s.y * 1000);
+                /* pointer = pointer->next; */
 
-            pointer = pointer->next;
+                first = 0;
+
+                lastX = s.x;
+                lastY = s.y;
+                lastColor = s.color;
+                if (emb_verbose > 1) {
+                        printf("last %f %f %d\n", lastX, lastY, lastColor);
+                }
+
+                fwrite("\x01\x00", 1, 2, file);
+
+                printf
+                    ("format-vp3.c writeVp3(), switching to color (%d, %d, %d)\n",
+                     color.r, color.g, color.b);
+                embColor_write(file, color, 4);
+
+                fwrite("\x00\x00\x05", 1, 3, file);
+                fputc(40, file);
+
+                vp3WriteString(file, "");
+
+                sprintf(colorName, "#%02x%02x%02x", color.b, color.g, color.r);
+
+                vp3WriteString(file, colorName);
+                vp3WriteString(file, "");
+
+                emb_write_i32be(file, 0);
+                emb_write_i32be(file, 0);
+
+                vp3WriteStringLen(file, "\0", 1);
+
+                colorSectionStitchBytes = ftell(file);
+                emb_write_i32(file, 0); /* placeholder */
+
+                fputc(10, file);
+                fputc(246, file);
+                fputc(0, file);
+
+                /*
+                   for (j=i; j<pattern->stitch_list->count; j++) {
+                   while (pointer) {
+                   short dx, dy;
+
+                   EmbStitch s = pointer->stitch;
+                   if (s.color != lastColor) {
+                   break;
+                   }
+                   if (s.flags & END || s.flags & STOP) {
+                   break;
+                   }
+                   dx = (s.x - lastX) * 10;
+                   dy = (s.y - lastY) * 10;
+                   // output is in ints, ensure rounding errors do not sum up.
+                   lastX = lastX + dx / 10.0;
+                   lastY = lastY + dy / 10.0;
+
+                   if (dx < -127 || dx > 127 || dy < -127 || dy > 127) {
+                   fputc(128, file);
+                   fputc(1, file);
+                   emb_write_i16be(file, dx);
+                   emb_write_i16be(file, dy);
+                   fputc(128, file);
+                   fputc(2, file);
+                   }
+                   else {
+                   char b[2];
+                   b[0] = dx;
+                   b[1] = dy;
+                   fwrite(b, 1, 2, file);
+                   }
+
+                   pointer = pointer->next;
+                   }
+                 */
+
+                vp3PatchByteCount(file, colorSectionStitchBytes, -4);
+                vp3PatchByteCount(file, colorSectionLengthPos, -3);
+
+                /* mainPointer = pointer; */
         }
-        */
 
-        vp3PatchByteCount(file, colorSectionStitchBytes, -4);
-        vp3PatchByteCount(file, colorSectionLengthPos, -3);
+        vp3PatchByteCount(file, remainingBytesPos2, -4);
+        vp3PatchByteCount(file, remainingBytesPos, -4);
 
-        /* mainPointer = pointer; */
-    }
-
-    vp3PatchByteCount(file, remainingBytesPos2, -4);
-    vp3PatchByteCount(file, remainingBytesPos, -4);
-
-    embp_flipVertical(pattern);
-    return 0;
+        embp_flipVertical(pattern);
+        return 0;
 }
 
 /*
@@ -8135,191 +4360,188 @@ writeVp3(EmbPattern* pattern, FILE* file)
  * The Singer xxx format is stitch-only.
  */
 
-char
-xxxDecodeByte(unsigned char inputByte)
+char xxxDecodeByte(unsigned char inputByte)
 {
-    if (inputByte >= 0x80) {
-        return (char) ((-~inputByte) - 1);
-    }
-    return ((char) inputByte);
+        if (inputByte >= 0x80) {
+                return (char)((-~inputByte) - 1);
+        }
+        return ((char)inputByte);
 }
 
-char
-readXxx(EmbPattern* pattern, FILE* file)
+char readXxx(EmbPattern *pattern, FILE *file)
 {
-    int dx = 0, dy = 0, numberOfColors, paletteOffset, i;
-    char thisStitchJump = 0;
+        int dx = 0, dy = 0, numberOfColors, paletteOffset, i;
+        char thisStitchJump = 0;
 
-    if (emb_verbose>1) {
-        puts("readXxx has been overridden.");
-        return 0;
-    }
+        if (emb_verbose > 1) {
+                puts("readXxx has been overridden.");
+                return 0;
+        }
 
-    fseek(file, 0x27, SEEK_SET);
-    numberOfColors = emb_read_i16(file);
-    fseek(file, 0xFC, SEEK_SET);
-    paletteOffset = emb_read_i32(file);
-    fseek(file, paletteOffset + 6, SEEK_SET);
+        fseek(file, 0x27, SEEK_SET);
+        numberOfColors = emb_read_i16(file);
+        fseek(file, 0xFC, SEEK_SET);
+        paletteOffset = emb_read_i32(file);
+        fseek(file, paletteOffset + 6, SEEK_SET);
 
-    for (i = 0; i < numberOfColors; i++) {
-        EmbThread thread;
-        strcpy(thread.catalogNumber, "NULL");
-        strcpy(thread.description, "NULL");
-        fseek(file, 1, SEEK_CUR);
-        embColor_read(file, &(thread.color), 3);
-        embp_addThread(pattern, thread);
-    }
-    fseek(file, 0x100, SEEK_SET);
+        for (i = 0; i < numberOfColors; i++) {
+                EmbThread thread;
+                strcpy(thread.catalogNumber, "NULL");
+                strcpy(thread.description, "NULL");
+                fseek(file, 1, SEEK_CUR);
+                embColor_read(file, &(thread.color), 3);
+                embp_addThread(pattern, thread);
+        }
+        fseek(file, 0x100, SEEK_SET);
 
-    for (i = 0; !feof(file) && ftell(file) < paletteOffset; i++) {
-        unsigned char b0, b1;
-        int flags;
-        flags = NORMAL;
-        if (thisStitchJump) flags = TRIM;
-        thisStitchJump = 0;
-        b0 = (char)fgetc(file);
-        b1 = (char)fgetc(file);
-        /* TODO: ARE THERE OTHER BIG JUMP CODES? */
-        if (b0 == 0x7E || b0 == 0x7D) {
-            dx = b1 + ((char)fgetc(file) << 8);
-            dx = ((int16_t) dx);
-            dy = emb_read_i16(file);
-            flags = TRIM;
-        } else if (b0 == 0x7F) {
-            /* TODO: LOOKS LIKE THESE CODES ARE IN THE HEADER */
-            if (b1 != 0x17 && b1 != 0x46 && b1 >= 8) {
-                b0 = 0;
-                b1 = 0;
-                thisStitchJump = 1;
-                flags = STOP;
-            } else if (b1 == 1) {
-                flags = TRIM;
+        for (i = 0; !feof(file) && ftell(file) < paletteOffset; i++) {
+                unsigned char b0, b1;
+                int flags;
+                flags = NORMAL;
+                if (thisStitchJump)
+                        flags = TRIM;
+                thisStitchJump = 0;
                 b0 = (char)fgetc(file);
                 b1 = (char)fgetc(file);
-            } else {
-                continue;
-            }
-            dx = xxxDecodeByte(b0);
-            dy = xxxDecodeByte(b1);
-        } else {
-            dx = xxxDecodeByte(b0);
-            dy = xxxDecodeByte(b1);
+                /* TODO: ARE THERE OTHER BIG JUMP CODES? */
+                if (b0 == 0x7E || b0 == 0x7D) {
+                        dx = b1 + ((char)fgetc(file) << 8);
+                        dx = ((int16_t) dx);
+                        dy = emb_read_i16(file);
+                        flags = TRIM;
+                } else if (b0 == 0x7F) {
+                        /* TODO: LOOKS LIKE THESE CODES ARE IN THE HEADER */
+                        if (b1 != 0x17 && b1 != 0x46 && b1 >= 8) {
+                                b0 = 0;
+                                b1 = 0;
+                                thisStitchJump = 1;
+                                flags = STOP;
+                        } else if (b1 == 1) {
+                                flags = TRIM;
+                                b0 = (char)fgetc(file);
+                                b1 = (char)fgetc(file);
+                        } else {
+                                continue;
+                        }
+                        dx = xxxDecodeByte(b0);
+                        dy = xxxDecodeByte(b1);
+                } else {
+                        dx = xxxDecodeByte(b0);
+                        dy = xxxDecodeByte(b1);
+                }
+                embp_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
         }
-        embp_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
-    }
-    /* TODO: check end of pattern for multiple STOPs */
-    return 1;
+        /* TODO: check end of pattern for multiple STOPs */
+        return 1;
 }
 
-void
-xxxEncodeStop(FILE* file, EmbStitch s)
+void xxxEncodeStop(FILE *file, EmbStitch s)
 {
-    fputc((unsigned char)0x7F, file);
-    fputc((unsigned char)(s.color + 8), file);
+        fputc((unsigned char)0x7F, file);
+        fputc((unsigned char)(s.color + 8), file);
 }
 
-void
-xxxEncodeStitch(FILE* file, EmbReal deltaX, EmbReal deltaY, int flags)
+void xxxEncodeStitch(FILE *file, EmbReal deltaX, EmbReal deltaY, int flags)
 {
-    if ((flags & (JUMP | TRIM)) && (fabs(deltaX) > 124 || fabs(deltaY) > 124)) {
-        fputc(0x7E, file);
-        /* Does this cast work right? */
-        emb_write_i16(file, (int16_t)deltaX);
-        emb_write_i16(file, (int16_t)deltaY);
-    } else {
-        /* TODO: Verify this works after changing this to unsigned char */
-        fputc((unsigned char)emb_round(deltaX), file);
-        fputc((unsigned char)emb_round(deltaY), file);
-    }
-}
-
-void
-xxxEncodeDesign(FILE* file, EmbPattern* p)
-{
-    int i;
-    EmbReal thisX = 0.0f;
-    EmbReal thisY = 0.0f;
-
-    if (p->stitch_list->count > 0) {
-        thisX = (float)p->stitch_list->stitch[0].x;
-        thisY = (float)p->stitch_list->stitch[0].y;
-    }
-    for (i = 0; i < p->stitch_list->count; i++) {
-        EmbStitch s = p->stitch_list->stitch[i];
-        EmbReal deltaX, deltaY;
-        EmbReal previousX = thisX;
-        EmbReal previousY = thisY;
-        thisX = s.x;
-        thisY = s.y;
-        deltaX = thisX - previousX;
-        deltaY = thisY - previousY;
-        if (s.flags & STOP) {
-            xxxEncodeStop(file, s);
-        } else if (s.flags & END) {
+        if ((flags & (JUMP | TRIM))
+            && (fabs(deltaX) > 124 || fabs(deltaY) > 124)) {
+                fputc(0x7E, file);
+                /* Does this cast work right? */
+                emb_write_i16(file, (int16_t) deltaX);
+                emb_write_i16(file, (int16_t) deltaY);
         } else {
-            xxxEncodeStitch(file, deltaX * 10.0f, deltaY * 10.0f, s.flags);
+                /* TODO: Verify this works after changing this to unsigned char */
+                fputc((unsigned char)emb_round(deltaX), file);
+                fputc((unsigned char)emb_round(deltaY), file);
         }
-    }
 }
 
-char
-writeXxx(EmbPattern* pattern, FILE* file)
+void xxxEncodeDesign(FILE *file, EmbPattern *p)
 {
-    int i;
-    EmbRect rect;
-    int endOfStitches;
-    EmbReal width, height;
-    //short to_write;
-    //unsigned int n_stitches;
-    //unsigned short n_threads;
+        int i;
+        EmbReal thisX = 0.0f;
+        EmbReal thisY = 0.0f;
 
-    embp_correctForMaxStitchLength(pattern, 124, 127);
+        if (p->stitch_list->count > 0) {
+                thisX = (float)p->stitch_list->stitch[0].x;
+                thisY = (float)p->stitch_list->stitch[0].y;
+        }
+        for (i = 0; i < p->stitch_list->count; i++) {
+                EmbStitch s = p->stitch_list->stitch[i];
+                EmbReal deltaX, deltaY;
+                EmbReal previousX = thisX;
+                EmbReal previousY = thisY;
+                thisX = s.x;
+                thisY = s.y;
+                deltaX = thisX - previousX;
+                deltaY = thisY - previousY;
+                if (s.flags & STOP) {
+                        xxxEncodeStop(file, s);
+                } else if (s.flags & END) {
+                } else {
+                        xxxEncodeStitch(file, deltaX * 10.0f, deltaY * 10.0f,
+                                        s.flags);
+                }
+        }
+}
 
-    fpad(file, 0, 0x17);
-    emb_write_i32(file, (unsigned int)pattern->stitch_list->count);
+char writeXxx(EmbPattern *pattern, FILE *file)
+{
+        int i;
+        EmbRect rect;
+        int endOfStitches;
+        EmbReal width, height;
+        //short to_write;
+        //unsigned int n_stitches;
+        //unsigned short n_threads;
 
-    fpad(file, 0, 0x0C);
-    emb_write_i16(file, (unsigned short)pattern->thread_list->count);
+        embp_correctForMaxStitchLength(pattern, 124, 127);
 
-    fpad(file, 0, 0x02);
+        fpad(file, 0, 0x17);
+        emb_write_i32(file, (unsigned int)pattern->stitch_list->count);
 
-    rect = embp_bounds(pattern);
-    width = rect.w;
-    height = rect.h;
-    emb_write_i16(file, (int16_t)(width * 10.0));
-    emb_write_i16(file, (int16_t)(height * 10.0));
+        fpad(file, 0, 0x0C);
+        emb_write_i16(file, (unsigned short)pattern->thread_list->count);
 
-    /* TODO: xEnd from start point x=0 */
-    emb_write_i16(file, (int16_t)(width / 2.0 * 10));
-    /* TODO: yEnd from start point y=0 */
-    emb_write_i16(file, (int16_t)(height / 2.0 * 10));
-    /* TODO: left from start x = 0 */
-    emb_write_i16(file, (int16_t)(width / 2.0 * 10));
-    /* TODO: bottom from start y = 0 */
-    emb_write_i16(file, (int16_t)(height / 2.0 * 10));
+        fpad(file, 0, 0x02);
 
-    fpad(file, 0, 0xC5);
+        rect = embp_bounds(pattern);
+        width = rect.w;
+        height = rect.h;
+        emb_write_i16(file, (int16_t) (width * 10.0));
+        emb_write_i16(file, (int16_t) (height * 10.0));
 
-    /* place holder for end of stitches */
-    emb_write_i32(file, 0x0000);
-    xxxEncodeDesign(file, pattern);
-    endOfStitches = ftell(file);
-    fseek(file, 0xFC, SEEK_SET);
-    emb_write_u32(file, endOfStitches);
-    fseek(file, 0, SEEK_END);
-    /* is this really correct? */
-    fwrite("\x7F\x7F\x03\x14\x00\x00", 1, 6, file);
+        /* TODO: xEnd from start point x=0 */
+        emb_write_i16(file, (int16_t) (width / 2.0 * 10));
+        /* TODO: yEnd from start point y=0 */
+        emb_write_i16(file, (int16_t) (height / 2.0 * 10));
+        /* TODO: left from start x = 0 */
+        emb_write_i16(file, (int16_t) (width / 2.0 * 10));
+        /* TODO: bottom from start y = 0 */
+        emb_write_i16(file, (int16_t) (height / 2.0 * 10));
 
-    for (i = 0; i < pattern->thread_list->count; i++) {
-        EmbColor c = pattern->thread_list->thread[i].color;
-        fputc(0x00, file);
-        embColor_write(file, c, 3);
-    }
-    for (i = 0; i < (22 - pattern->thread_list->count); i++) {
-        emb_write_u32(file, 0x01000000);
-    }
-    fwrite("\x00\x01", 1, 2, file);
-    return 1;
+        fpad(file, 0, 0xC5);
+
+        /* place holder for end of stitches */
+        emb_write_i32(file, 0x0000);
+        xxxEncodeDesign(file, pattern);
+        endOfStitches = ftell(file);
+        fseek(file, 0xFC, SEEK_SET);
+        emb_write_u32(file, endOfStitches);
+        fseek(file, 0, SEEK_END);
+        /* is this really correct? */
+        fwrite("\x7F\x7F\x03\x14\x00\x00", 1, 6, file);
+
+        for (i = 0; i < pattern->thread_list->count; i++) {
+                EmbColor c = pattern->thread_list->thread[i].color;
+                fputc(0x00, file);
+                embColor_write(file, c, 3);
+        }
+        for (i = 0; i < (22 - pattern->thread_list->count); i++) {
+                emb_write_u32(file, 0x01000000);
+        }
+        fwrite("\x00\x01", 1, 2, file);
+        return 1;
 }
 
 /*
@@ -8329,121 +4551,118 @@ writeXxx(EmbPattern* pattern, FILE* file)
  * The ZSK USA zsk format is stitch-only.
  */
 
-char
-readZsk(EmbPattern* pattern, FILE* file)
+char readZsk(EmbPattern *pattern, FILE *file)
 {
-    char b[3];
-    unsigned char colorNumber;
+        char b[3];
+        unsigned char colorNumber;
 
-    fseek(file, 0, SEEK_END);
-    if (ftell(file) < 0x230) {
-        return 0;
-    }
+        fseek(file, 0, SEEK_END);
+        if (ftell(file) < 0x230) {
+                return 0;
+        }
 
-    fseek(file, 0x230, SEEK_SET);
-    colorNumber = fgetc(file);
-    while (colorNumber != 0) {
-        EmbThread t;
-        embColor_read(file, &(t.color), 3);
-        strcpy(t.catalogNumber, "");
-        strcpy(t.description, "");
-        embp_addThread(pattern, t);
-        fseek(file, 0x48, SEEK_CUR);
+        fseek(file, 0x230, SEEK_SET);
         colorNumber = fgetc(file);
-    }
-    fseek(file, 0x2E, SEEK_CUR);
+        while (colorNumber != 0) {
+                EmbThread t;
+                embColor_read(file, &(t.color), 3);
+                strcpy(t.catalogNumber, "");
+                strcpy(t.description, "");
+                embp_addThread(pattern, t);
+                fseek(file, 0x48, SEEK_CUR);
+                colorNumber = fgetc(file);
+        }
+        fseek(file, 0x2E, SEEK_CUR);
 
-    while (fread(b, 1, 3, file) == 3) {
-        int stitchType = NORMAL;
-        if (b[0] & 0x04) {
-            b[2] = -b[2];
-        }
-        if (b[0] & 0x08) {
-            b[1] = -b[1];
-        }
-        if (b[0] & 0x02) {
-            stitchType = JUMP;
-        }
-        if (b[0] & 0x20) {
-            if (b[1] == 2) {
-                stitchType = TRIM;
-            } else if (b[1] == -1) {
-                break;
-            } else {
-                if (b[2] != 0) {
-                    colorNumber = b[2];
+        while (fread(b, 1, 3, file) == 3) {
+                int stitchType = NORMAL;
+                if (b[0] & 0x04) {
+                        b[2] = -b[2];
                 }
-                /* TODO: need to determine what b[1] is used for.*/
-                stitchType = STOP;
-                embp_changeColor(pattern, colorNumber - 1);
-            }
-            b[1] = 0;
-            b[2] = 0;
+                if (b[0] & 0x08) {
+                        b[1] = -b[1];
+                }
+                if (b[0] & 0x02) {
+                        stitchType = JUMP;
+                }
+                if (b[0] & 0x20) {
+                        if (b[1] == 2) {
+                                stitchType = TRIM;
+                        } else if (b[1] == -1) {
+                                break;
+                        } else {
+                                if (b[2] != 0) {
+                                        colorNumber = b[2];
+                                }
+                                /* TODO: need to determine what b[1] is used for. */
+                                stitchType = STOP;
+                                embp_changeColor(pattern, colorNumber - 1);
+                        }
+                        b[1] = 0;
+                        b[2] = 0;
+                }
+                embp_addStitchRel(pattern, b[1] / 10.0,
+                                  b[2] / 10.0, stitchType, 0);
         }
-        embp_addStitchRel(pattern, b[1] / 10.0,
-            b[2] / 10.0, stitchType, 0);
-    }
 
-    return 1;
+        return 1;
 }
 
 /* based on the readZsk function */
-char
-writeZsk(EmbPattern* pattern, FILE* file)
+char writeZsk(EmbPattern *pattern, FILE *file)
 {
-    int i;
-    fpad(file, 0x00, 0x230);
+        int i;
+        fpad(file, 0x00, 0x230);
 
-    fprintf(file, "%c", pattern->thread_list->count);
-    for (i=pattern->thread_list->count; i>0; i--) {
-        EmbThread t = pattern->thread_list->thread[i-1];
-        embColor_write(file, t.color, 3);
-        fpad(file, 0x00, 0x48);
-        fprintf(file, "%c", i-1);
-    }
+        fprintf(file, "%c", pattern->thread_list->count);
+        for (i = pattern->thread_list->count; i > 0; i--) {
+                EmbThread t = pattern->thread_list->thread[i - 1];
+                embColor_write(file, t.color, 3);
+                fpad(file, 0x00, 0x48);
+                fprintf(file, "%c", i - 1);
+        }
 
-    fpad(file, 0x00, 0x2E);
+        fpad(file, 0x00, 0x2E);
 
-    for (i=0; i<pattern->stitch_list->count; i++) {
-        EmbStitch st;
-        unsigned char b[3];
-        st = pattern->stitch_list->stitch[i];
-        b[0] = 0;
-        b[1] = st.x;
-        b[2] = st.y;
-        if (st.flags & JUMP) {
-            b[0] |= 0x02;
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                EmbStitch st;
+                unsigned char b[3];
+                st = pattern->stitch_list->stitch[i];
+                b[0] = 0;
+                b[1] = st.x;
+                b[2] = st.y;
+                if (st.flags & JUMP) {
+                        b[0] |= 0x02;
+                }
+                if (st.x < 0) {
+                        b[0] |= 0x08;
+                        b[1] = -st.x;
+                }
+                if (st.y < 0) {
+                        b[0] |= 0x04;
+                        b[2] = -st.y;
+                }
+                if (st.flags & TRIM) {
+                        b[0] |= 0x20;
+                        b[1] = 0x00;
+                        b[2] = 0x00;
+                }
+                if (st.flags & STOP) {
+                        b[0] |= 0x20;
+                        b[1] = 0x00;
+                        b[2] = st.color;
+                }
+                if (st.flags & END) {
+                        b[0] |= 0x20;
+                        b[1] = 0x80;
+                        b[2] = 0x00;
+                        fwrite(b, 1, 3, file);
+                        break;
+                }
+                fwrite(b, 1, 3, file);
         }
-        if (st.x < 0) {
-            b[0] |= 0x08;
-            b[1] = -st.x;
-        }
-        if (st.y < 0) {
-            b[0] |= 0x04;
-            b[2] = -st.y;
-        }
-        if (st.flags & TRIM) {
-            b[0] |= 0x20;
-            b[1] = 0x00;
-            b[2] = 0x00;
-        }
-        if (st.flags & STOP) {
-            b[0] |= 0x20;
-            b[1] = 0x00;
-            b[2] = st.color;
-        }
-        if (st.flags & END) {
-            b[0] |= 0x20;
-            b[1] = 0x80;
-            b[2] = 0x00;
-            fwrite(b, 1, 3, file);
-            break;
-        }
-        fwrite(b, 1, 3, file);
-    }
-    return 1;
+        return 1;
 }
-
 
 /*
  * Libembroidery 1.0.0-alpha
@@ -8474,97 +4693,90 @@ writeZsk(EmbPattern* pattern, FILE* file)
 extern EmbReal epsilon;
 
 const char *justify_options[] = {
-    "Left",
-    "Center",
-    "Right",
-    "Aligned",
-    "Middle",
-    "Fit",
-    "Top Left",
-    "Top Center",
-    "Top Right",
-    "Middle Left",
-    "Middle Center",
-    "Middle Right",
-    "Bottom Left",
-    "Bottom Center",
-    "Bottom Right",
-    END_SYMBOL
+        "Left",
+        "Center",
+        "Right",
+        "Aligned",
+        "Middle",
+        "Fit",
+        "Top Left",
+        "Top Center",
+        "Top Right",
+        "Middle Left",
+        "Middle Center",
+        "Middle Right",
+        "Bottom Left",
+        "Bottom Center",
+        "Bottom Right",
+        END_SYMBOL
 };
 
 const char *emb_error_desc[] = {
-    "No error.",
-    "Wrong type: this is unsupported usage.",
-    "Division by zero.",
-    "Unfinished."
+        "No error.",
+        "Wrong type: this is unsupported usage.",
+        "Division by zero.",
+        "Unfinished."
 };
 
 /* Create an EmbVector from data. */
-EmbVector
-emb_vector(EmbReal x, EmbReal y)
+EmbVector emb_vector(EmbReal x, EmbReal y)
 {
-    EmbVector v;
-    v.x = x;
-    v.y = y;
-    return v;
+        EmbVector v;
+        v.x = x;
+        v.y = y;
+        return v;
 }
 
 /* Finds the unit length vector a result in the same direction as a vector. */
-EmbVector
-emb_vector_normalize(EmbVector vector)
+EmbVector emb_vector_normalize(EmbVector vector)
 {
-    EmbVector result;
-    EmbReal length = emb_vector_length(vector);
-    result.x = vector.x / length;
-    result.y = vector.y / length;
-    return result;
+        EmbVector result;
+        EmbReal length = emb_vector_length(vector);
+        result.x = vector.x / length;
+        result.y = vector.y / length;
+        return result;
 }
 
 /* The scalar multiple a magnitude of a vector. Returned as a vector. */
-EmbVector
-emb_vector_scale(EmbVector vector, EmbReal magnitude)
+EmbVector emb_vector_scale(EmbVector vector, EmbReal magnitude)
 {
-    EmbVector result;
-    result.x = vector.x * magnitude;
-    result.y = vector.y * magnitude;
-    return result;
+        EmbVector result;
+        result.x = vector.x * magnitude;
+        result.y = vector.y * magnitude;
+        return result;
 }
 
 /* The sum of two vectors returned as a vector. */
-EmbVector
-emb_vector_add(EmbVector a, EmbVector b)
+EmbVector emb_vector_add(EmbVector a, EmbVector b)
 {
-    EmbVector result;
-    result.x = a.x + b.x;
-    result.y = a.y + b.y;
-    return result;
+        EmbVector result;
+        result.x = a.x + b.x;
+        result.y = a.y + b.y;
+        return result;
 }
 
 /* The average of two vectors returned as a vector. */
-EmbVector
-emb_vector_average(EmbVector a, EmbVector b)
+EmbVector emb_vector_average(EmbVector a, EmbVector b)
 {
-    EmbVector result;
-    result.x = 0.5*(a.x + b.x);
-    result.y = 0.5*(a.y + b.y);
-    return result;
+        EmbVector result;
+        result.x = 0.5 * (a.x + b.x);
+        result.y = 0.5 * (a.y + b.y);
+        return result;
 }
 
 /* The difference between two vectors returned as a result. */
-EmbVector
-emb_vector_subtract(EmbVector v1, EmbVector v2)
+EmbVector emb_vector_subtract(EmbVector v1, EmbVector v2)
 {
-    EmbVector result;
-    result.x = v1.x - v2.x;
-    result.y = v1.y - v2.y;
-    return result;
+        EmbVector result;
+        result.x = v1.x - v2.x;
+        result.y = v1.y - v2.y;
+        return result;
 }
 
 /* The dot product of two vectors returned as a EmbReal. */
-EmbReal
-emb_vector_dot(EmbVector a, EmbVector b)
+EmbReal emb_vector_dot(EmbVector a, EmbVector b)
 {
-    return a.x * b.x + a.y * b.y;
+        return a.x * b.x + a.y * b.y;
 }
 
 /*
@@ -8574,10 +4786,9 @@ emb_vector_dot(EmbVector a, EmbVector b)
  * embroidery is placed in the z=0 plane (since the cross product is defined for
  * 3-dimensional vectors).
  */
-EmbReal
-emb_vector_cross(EmbVector a, EmbVector b)
+EmbReal emb_vector_cross(EmbVector a, EmbVector b)
 {
-    return a.x * b.y - a.y * b.x;
+        return a.x * b.y - a.y * b.x;
 }
 
 /*
@@ -8585,1133 +4796,1052 @@ emb_vector_cross(EmbVector a, EmbVector b)
  * so this is like the product v1^{T} I_{2} v2 for our vectors a v1 and v2
  * so a "component-wise product". The result is stored at the pointer a result.
  */
-EmbVector
-emb_vector_transpose_product(EmbVector v1, EmbVector v2)
+EmbVector emb_vector_transpose_product(EmbVector v1, EmbVector v2)
 {
-    EmbVector result;
-    result.x = v1.x * v2.x;
-    result.y = v1.y * v2.y;
-    return result;
+        EmbVector result;
+        result.x = v1.x * v2.x;
+        result.y = v1.y * v2.y;
+        return result;
 }
 
 /* The length or absolute value of the vector a vector. */
-EmbReal
-emb_vector_length(EmbVector vector)
+EmbReal emb_vector_length(EmbVector vector)
 {
-    return sqrt(vector.x * vector.x + vector.y * vector.y);
+        return sqrt(vector.x * vector.x + vector.y * vector.y);
 }
 
 /* The x-component of the vector. */
-EmbReal
-emb_vector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3)
+EmbReal emb_vector_relativeX(EmbVector a1, EmbVector a2, EmbVector a3)
 {
-    EmbVector b, c;
-    b = emb_vector_subtract(a1, a2);
-    c = emb_vector_subtract(a3, a2);
-    return emb_vector_dot(b, c);
+        EmbVector b, c;
+        b = emb_vector_subtract(a1, a2);
+        c = emb_vector_subtract(a3, a2);
+        return emb_vector_dot(b, c);
 }
 
 /* The y-component of the vector. */
-EmbReal
-emb_vector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3)
+EmbReal emb_vector_relativeY(EmbVector a1, EmbVector a2, EmbVector a3)
 {
-    EmbVector b, c;
-    b = emb_vector_subtract(a1, a2);
-    c = emb_vector_subtract(a3, a2);
-    return emb_vector_cross(b, c);
+        EmbVector b, c;
+        b = emb_vector_subtract(a1, a2);
+        c = emb_vector_subtract(a3, a2);
+        return emb_vector_cross(b, c);
 }
 
 /* The angle, measured anti-clockwise from the x-axis, of a vector v. */
-EmbReal
-emb_vector_angle(EmbVector v)
+EmbReal emb_vector_angle(EmbVector v)
 {
-    return atan2(v.y, v.x);
+        return atan2(v.y, v.x);
 }
 
 /* The unit vector in the direction a angle. */
-EmbVector
-emb_vector_unit(EmbReal alpha)
+EmbVector emb_vector_unit(EmbReal alpha)
 {
-    EmbVector a;
-    a.x = cos(alpha);
-    a.y = sin(alpha);
-    return a;
+        EmbVector a;
+        a.x = cos(alpha);
+        a.y = sin(alpha);
+        return a;
 }
 
 /* The distance between vectors "a" and "b" returned as a real value. */
-EmbReal
-emb_vector_distance(EmbVector a, EmbVector b)
+EmbReal emb_vector_distance(EmbVector a, EmbVector b)
 {
-    EmbVector delta = emb_vector_subtract(a, b);
-    return emb_vector_length(delta);
+        EmbVector delta = emb_vector_subtract(a, b);
+        return emb_vector_length(delta);
 }
 
 /* Translate a geometric object by the vector "delta". */
-void
-emb_geometry_move(EmbGeometry *obj, EmbVector delta)
+void emb_geometry_move(EmbGeometry *obj, EmbVector delta)
 {
-    switch (obj->type) {
-    case EMB_ARC: {
-        EmbArc *arc = &(obj->object.arc);
-        arc->start = emb_vector_add(arc->start, delta);
-        arc->mid = emb_vector_add(arc->mid, delta);
-        arc->end = emb_vector_add(arc->end, delta);
-        return;
-    }
-    case EMB_CIRCLE: {
-        EmbCircle *circle = &(obj->object.circle);
-        circle->center = emb_vector_add(circle->center, delta);
-        return;
-    }
-    default:
-        break;
-    }
+        switch (obj->type) {
+        case EMB_ARC:{
+                        EmbArc *arc = &(obj->object.arc);
+                        arc->start = emb_vector_add(arc->start, delta);
+                        arc->mid = emb_vector_add(arc->mid, delta);
+                        arc->end = emb_vector_add(arc->end, delta);
+                        return;
+                }
+        case EMB_CIRCLE:{
+                        EmbCircle *circle = &(obj->object.circle);
+                        circle->center = emb_vector_add(circle->center, delta);
+                        return;
+                }
+        default:
+                break;
+        }
 }
 
 /* Approximate equals for vectors. */
-int
-emb_approx(EmbVector point1, EmbVector point2)
+int emb_approx(EmbVector point1, EmbVector point2)
 {
-    return (emb_vector_distance(point1, point2) < epsilon);
+        return (emb_vector_distance(point1, point2) < epsilon);
 }
 
 /* . */
-EmbReal
-emb_apothem(EmbGeometry *g, EmbError *error)
+EmbReal emb_apothem(EmbGeometry *g, EmbError *error)
 {
-    switch (g->type) {
-    case EMB_ARC: {
+        switch (g->type) {
+        case EMB_ARC:{
+                        *error = EMB_NO_ERR;
+                        EmbReal radius = emb_radius(g, error);
+                        if (*error) {
+                                return 0.0;
+                        }
+                        EmbReal sagitta = emb_sagitta(g, error);
+                        if (*error) {
+                                return 0.0;
+                        }
+                        return fabs(radius - sagitta);
+                }
+        default:
+                *error = EMB_WRONG_TYPE_ERR;
+                break;
+        }
+        return 0.0;
+}
+
+/* FIXME */
+EmbReal emb_sagitta(EmbGeometry *g, EmbError *error)
+{
+        *error = EMB_UNFINISHED_ERR;
+        return 0.0;
+}
+
+/* FIXME */
+EmbVector emb_start(EmbGeometry *g, EmbError *error)
+{
+        *error = EMB_UNFINISHED_ERR;
+        return emb_vector(0.0, 0.0);
+}
+
+/* FIXME */
+EmbVector emb_end(EmbGeometry *g, EmbError *error)
+{
+        *error = EMB_UNFINISHED_ERR;
+        return emb_vector(0.0, 0.0);
+}
+
+/* FIXME */
+EmbReal emb_width(EmbGeometry *g, EmbError *error)
+{
         *error = EMB_NO_ERR;
-        EmbReal radius = emb_radius(g, error);
-        if (*error) {
-            return 0.0;
+        switch (g->type) {
+        case EMB_CIRCLE:{
+                        return 2.0f * g->object.circle.radius;
+                }
+        case EMB_ELLIPSE:{
+                        return 2.0f * g->object.ellipse.radius.x;
+                }
+        default:
+                *error = EMB_WRONG_TYPE_ERR;
+                break;
         }
-        EmbReal sagitta = emb_sagitta(g, error);
-        if (*error) {
-            return 0.0;
-        }
-        return fabs(radius - sagitta);
-    }
-    default:
-        *error = EMB_WRONG_TYPE_ERR;
-        break;
-    }
-    return 0.0;
-}
-
-/* FIXME */
-EmbReal
-emb_sagitta(EmbGeometry *g, EmbError *error)
-{
-   *error = EMB_UNFINISHED_ERR;
-   return 0.0;
-}
-
-/* FIXME */
-EmbVector
-emb_start(EmbGeometry *g, EmbError *error)
-{
-   *error = EMB_UNFINISHED_ERR;
-   return emb_vector(0.0, 0.0);
-}
-
-/* FIXME */
-EmbVector
-emb_end(EmbGeometry *g, EmbError *error)
-{
-   *error = EMB_UNFINISHED_ERR;
-   return emb_vector(0.0, 0.0);
-}
-
-/* FIXME */
-EmbReal
-emb_width(EmbGeometry *g, EmbError *error)
-{
-    *error = EMB_NO_ERR;
-    switch (g->type) {
-    case EMB_CIRCLE: {
-        return 2.0f * g->object.circle.radius;
-    }
-    case EMB_ELLIPSE: {
-        return 2.0f * g->object.ellipse.radius.x;
-    }
-    default:
-        *error = EMB_WRONG_TYPE_ERR;
-        break;
-    }
-    return 1.0;
+        return 1.0;
 }
 
 /* FIXME: finish all types. */
-EmbReal
-emb_height(EmbGeometry *g, EmbError *error)
+EmbReal emb_height(EmbGeometry *g, EmbError *error)
 {
-    *error = EMB_NO_ERR;
-    switch (g->type) {
-    case EMB_CIRCLE: {
-        return 2.0f * g->object.circle.radius;
-    }
-    case EMB_ELLIPSE: {
-        return 2.0f * g->object.ellipse.radius.y;
-    }
-    default:
-        *error = EMB_WRONG_TYPE_ERR;
-        break;
-    }
-    return 1.0;
+        *error = EMB_NO_ERR;
+        switch (g->type) {
+        case EMB_CIRCLE:{
+                        return 2.0f * g->object.circle.radius;
+                }
+        case EMB_ELLIPSE:{
+                        return 2.0f * g->object.ellipse.radius.y;
+                }
+        default:
+                *error = EMB_WRONG_TYPE_ERR;
+                break;
+        }
+        return 1.0;
 }
 
 /* FIXME: finish all types. */
-EmbReal
-emb_radius(EmbGeometry *g, EmbError *error)
+EmbReal emb_radius(EmbGeometry *g, EmbError *error)
 {
-    *error = EMB_NO_ERR;
-    switch (g->type) {
-    case EMB_ARC: {
-        EmbReal incAngle = emb_included_angle(g, error);
-        EmbReal chord = emb_vector_length(emb_chord(g, error));
-        return fabs(chord / (2.0 * sin(incAngle / 2.0)));
-    }
-    default:
-        *error = EMB_WRONG_TYPE_ERR;
-        break;
-    }
-    return 1.0;
-}
-
-/* FIXME */
-EmbReal
-emb_radius_major(EmbGeometry *g, EmbError *error)
-{
-    *error = EMB_NO_ERR;
-    switch (g->type) {
-    default:
-        *error = EMB_WRONG_TYPE_ERR;
-        break;
-    }
-    return 1.0;
-}
-
-/* FIXME */
-EmbReal
-emb_radius_minor(EmbGeometry *g, EmbError *error)
-{
-    *error = EMB_NO_ERR;
-    switch (g->type) {
-    default:
-        break;
-    }
-    return 1.0;
-}
-
-/* FIXME */
-EmbReal
-emb_diameter_major(EmbGeometry *g, EmbError *error)
-{
-    *error = EMB_NO_ERR;
-    switch (g->type) {
-    default:
-        break;
-    }
-    return 1.0;
-}
-
-/* FIXME */
-EmbReal
-emb_diameter_minor(EmbGeometry *g, EmbError *error)
-{
-    switch (g->type) {
-    default:
-        break;
-    }
-    return 1.0;
-}
-
-/* FIXME */
-EmbReal
-emb_diameter(EmbGeometry *g, EmbError *error)
-{
-    switch (g->type) {
-    default:
-        break;
-    }
-    return 1.0;
-}
-
-/* . */
-EmbVector
-emb_quadrant(EmbGeometry *geometry, int degrees, EmbError *error)
-{
-    EmbVector v;
-    EmbReal radius = 1.0;
-    v.x = 0.0;
-    v.y = 0.0;
-    switch (geometry->type) {
-    case EMB_CIRCLE: {
-        v = geometry->object.circle.center;
-        radius = geometry->object.circle.radius;
-        break;
-    }
-    case EMB_ELLIPSE: {
-        v = geometry->object.ellipse.center;
-        if (degrees % 180 == 0) {
-            radius = geometry->object.ellipse.radius.x;
-        }
-        else {
-            radius = geometry->object.ellipse.radius.y;
-        }
-        break;
-    }
-    default:
-        break;
-    }
-    EmbReal rot = radians(/* rotation() + */ degrees);
-    v.x += radius * cos(rot);
-    v.y += radius * sin(rot);
-    return v;
-}
-
-/* . */
-EmbReal
-emb_angle(EmbGeometry *geometry, EmbError *error)
-{
-    EmbVector v = emb_vector_subtract(geometry->object.line.end, geometry->object.line.start);
-    EmbReal angle = emb_vector_angle(v) /* - rotation() */;
-    return fmod(angle+360.0, 360.0);
-}
-
-/* . */
-EmbReal
-emb_start_angle(EmbGeometry *geometry, EmbError *error)
-{
-    switch (geometry->type) {
-    case EMB_ARC: {
         *error = EMB_NO_ERR;
-        EmbVector center = emb_center(geometry, error);
-        if (*error) {
-            return 0.0;
+        switch (g->type) {
+        case EMB_ARC:{
+                        EmbReal incAngle = emb_included_angle(g, error);
+                        EmbReal chord = emb_vector_length(emb_chord(g, error));
+                        return fabs(chord / (2.0 * sin(incAngle / 2.0)));
+                }
+        default:
+                *error = EMB_WRONG_TYPE_ERR;
+                break;
         }
-        EmbVector v = emb_vector_subtract(center, geometry->object.arc.start);
-        EmbReal angle = emb_vector_angle(v) /* - rotation() */;
-        return fmod(angle+360.0, 360.0);
-    }
-    default:
-        break;
-    }
-    return 0.0f;
+        return 1.0;
+}
+
+/* FIXME */
+EmbReal emb_radius_major(EmbGeometry *g, EmbError *error)
+{
+        *error = EMB_NO_ERR;
+        switch (g->type) {
+        default:
+                *error = EMB_WRONG_TYPE_ERR;
+                break;
+        }
+        return 1.0;
+}
+
+/* FIXME */
+EmbReal emb_radius_minor(EmbGeometry *g, EmbError *error)
+{
+        *error = EMB_NO_ERR;
+        switch (g->type) {
+        default:
+                break;
+        }
+        return 1.0;
+}
+
+/* FIXME */
+EmbReal emb_diameter_major(EmbGeometry *g, EmbError *error)
+{
+        *error = EMB_NO_ERR;
+        switch (g->type) {
+        default:
+                break;
+        }
+        return 1.0;
+}
+
+/* FIXME */
+EmbReal emb_diameter_minor(EmbGeometry *g, EmbError *error)
+{
+        switch (g->type) {
+        default:
+                break;
+        }
+        return 1.0;
+}
+
+/* FIXME */
+EmbReal emb_diameter(EmbGeometry *g, EmbError *error)
+{
+        switch (g->type) {
+        default:
+                break;
+        }
+        return 1.0;
 }
 
 /* . */
-EmbReal
-emb_end_angle(EmbGeometry *geometry, EmbError *error)
+EmbVector emb_quadrant(EmbGeometry *geometry, int degrees, EmbError *error)
 {
-    switch (geometry->type) {
-    case EMB_ARC: {
-        *error = EMB_NO_ERR;
-        EmbVector center = emb_center(geometry, error);
-        if (*error) {
-            return 0.0;
+        EmbVector v;
+        EmbReal radius = 1.0;
+        v.x = 0.0;
+        v.y = 0.0;
+        switch (geometry->type) {
+        case EMB_CIRCLE:{
+                        v = geometry->object.circle.center;
+                        radius = geometry->object.circle.radius;
+                        break;
+                }
+        case EMB_ELLIPSE:{
+                        v = geometry->object.ellipse.center;
+                        if (degrees % 180 == 0) {
+                                radius = geometry->object.ellipse.radius.x;
+                        } else {
+                                radius = geometry->object.ellipse.radius.y;
+                        }
+                        break;
+                }
+        default:
+                break;
         }
-        EmbVector v = emb_vector_subtract(center, geometry->object.arc.end);
-        EmbReal angle = emb_vector_angle(v) /* - rotation() */;
-        return fmod(angle+360.0, 360.0);
-    }
-    default:
-        break;
-    }
-    return 0.0f;
+        EmbReal rot = radians( /* rotation() + */ degrees);
+        v.x += radius * cos(rot);
+        v.y += radius * sin(rot);
+        return v;
 }
 
 /* . */
-EmbReal
-emb_arc_length(EmbGeometry *g, EmbError *error)
+EmbReal emb_angle(EmbGeometry *geometry, EmbError *error)
 {
-    switch (g->type) {
-    case EMB_ARC: {
-        *error = EMB_NO_ERR;
-        EmbReal radius = emb_radius(g, error);
-        if (*error) {
-            return 0.0;
-        }
-        EmbReal angle = emb_included_angle(g, error);
-        if (*error) {
-            return 0.0;
-        }
-        return radians(angle) * radius;
-    }
-    default:
-        break;
-    }
-    return 0.0;
+        EmbVector v = emb_vector_subtract(geometry->object.line.end,
+                                          geometry->object.line.start);
+        EmbReal angle = emb_vector_angle(v) /* - rotation() */ ;
+        return fmod(angle + 360.0, 360.0);
 }
 
 /* . */
-EmbReal
-emb_area(EmbGeometry *g, EmbError *error)
+EmbReal emb_start_angle(EmbGeometry *geometry, EmbError *error)
 {
-    switch (g->type) {
-    case EMB_ARC: {
-        /* Area of a circular segment */
-        *error = EMB_NO_ERR;
-        EmbReal r = emb_radius(g, error);
-        if (*error) {
-            return 0.0;
+        switch (geometry->type) {
+        case EMB_ARC:{
+                        *error = EMB_NO_ERR;
+                        EmbVector center = emb_center(geometry, error);
+                        if (*error) {
+                                return 0.0;
+                        }
+                        EmbVector v = emb_vector_subtract(center,
+                                                          geometry->object.arc.
+                                                          start);
+                        EmbReal angle = emb_vector_angle(v) /* - rotation() */ ;
+                        return fmod(angle + 360.0, 360.0);
+                }
+        default:
+                break;
         }
-        EmbReal theta = emb_included_angle(g, error);
-        if (*error) {
-            return 0.0;
+        return 0.0f;
+}
+
+/* . */
+EmbReal emb_end_angle(EmbGeometry *geometry, EmbError *error)
+{
+        switch (geometry->type) {
+        case EMB_ARC:{
+                        *error = EMB_NO_ERR;
+                        EmbVector center = emb_center(geometry, error);
+                        if (*error) {
+                                return 0.0;
+                        }
+                        EmbVector v = emb_vector_subtract(center,
+                                                          geometry->object.arc.
+                                                          end);
+                        EmbReal angle = emb_vector_angle(v) /* - rotation() */ ;
+                        return fmod(angle + 360.0, 360.0);
+                }
+        default:
+                break;
         }
-        theta = radians(theta);
-        return ((r*r)/2) * (theta - sin(theta));
-    }
-    case EMB_CIRCLE: {
-        EmbReal r = g->object.circle.radius;
-        return embConstantPi * r * r;
-    }
-    case EMB_RECT:
-        return g->object.rect.w * g->object.rect.h;
-    case EMB_IMAGE:
-    default:
-        break;
-    }
-    /* The area of most objects defaults to the area of the rectangle described by the
-     * object's width and height.
-     */
-    EmbReal width = emb_width(g, error);
-    if (*error) {
+        return 0.0f;
+}
+
+/* . */
+EmbReal emb_arc_length(EmbGeometry *g, EmbError *error)
+{
+        switch (g->type) {
+        case EMB_ARC:{
+                        *error = EMB_NO_ERR;
+                        EmbReal radius = emb_radius(g, error);
+                        if (*error) {
+                                return 0.0;
+                        }
+                        EmbReal angle = emb_included_angle(g, error);
+                        if (*error) {
+                                return 0.0;
+                        }
+                        return radians(angle) * radius;
+                }
+        default:
+                break;
+        }
         return 0.0;
-    }
-    EmbReal height = emb_height(g, error);
-    if (*error) {
-        return 0.0;
-    }
-    return fabs(width * height);
+}
+
+/* . */
+EmbReal emb_area(EmbGeometry *g, EmbError *error)
+{
+        switch (g->type) {
+        case EMB_ARC:{
+                        /* Area of a circular segment */
+                        *error = EMB_NO_ERR;
+                        EmbReal r = emb_radius(g, error);
+                        if (*error) {
+                                return 0.0;
+                        }
+                        EmbReal theta = emb_included_angle(g, error);
+                        if (*error) {
+                                return 0.0;
+                        }
+                        theta = radians(theta);
+                        return ((r * r) / 2) * (theta - sin(theta));
+                }
+        case EMB_CIRCLE:{
+                        EmbReal r = g->object.circle.radius;
+                        return embConstantPi * r * r;
+                }
+        case EMB_RECT:
+                return g->object.rect.w * g->object.rect.h;
+        case EMB_IMAGE:
+        default:
+                break;
+        }
+        /* The area of most objects defaults to the area of the rectangle described by the
+         * object's width and height.
+         */
+        EmbReal width = emb_width(g, error);
+        if (*error) {
+                return 0.0;
+        }
+        EmbReal height = emb_height(g, error);
+        if (*error) {
+                return 0.0;
+        }
+        return fabs(width * height);
 }
 
 /* FIXME */
-EmbVector
-emb_center(EmbGeometry *g, EmbError *error)
+EmbVector emb_center(EmbGeometry *g, EmbError *error)
 {
-    switch (g->type) {
-    case EMB_ARC: {
+        switch (g->type) {
+        case EMB_ARC:{
 /* FIXME: Calculates the CenterPoint of the Arc */
 
-    #if 0
-    EmbArc arc = g.object.arc;
-    int emb_error = 0;
-    EmbVector center;
-    EmbVector a_vec, b_vec, aMid_vec, bMid_vec, aPerp_vec, bPerp_vec, pa, pb;
-    EmbLine line1, line2;
-    EmbReal paAngleInRadians, pbAngleInRadians;
-    a_vec = emb_vector_subtract(arc.mid, arc.start);
-    aMid_vec = emb_vector_average(arc.mid, arc.start);
+#if 0
+                        EmbArc arc = g.object.arc;
+                        int emb_error = 0;
+                        EmbVector center;
+                        EmbVector a_vec, b_vec, aMid_vec, bMid_vec, aPerp_vec,
+                            bPerp_vec, pa, pb;
+                        EmbLine line1, line2;
+                        EmbReal paAngleInRadians, pbAngleInRadians;
+                        a_vec = emb_vector_subtract(arc.mid, arc.start);
+                        aMid_vec = emb_vector_average(arc.mid, arc.start);
 
-    paAngleInRadians = emb_vector_angle(a_vec) + (embConstantPi/2.0);
-    pa = emb_vector_unit(paAngleInRadians);
-    aPerp_vec = emb_vector_add(aMid_vec, pa);
+                        paAngleInRadians =
+                            emb_vector_angle(a_vec) + (embConstantPi / 2.0);
+                        pa = emb_vector_unit(paAngleInRadians);
+                        aPerp_vec = emb_vector_add(aMid_vec, pa);
 
-    b_vec = emb_vector_subtract(arc.end, arc.mid);
-    bMid_vec = emb_vector_average(arc.end, arc.mid);
+                        b_vec = emb_vector_subtract(arc.end, arc.mid);
+                        bMid_vec = emb_vector_average(arc.end, arc.mid);
 
-    pbAngleInRadians = emb_vector_angle(b_vec) + (embConstantPi/2.0);
-    pb = emb_vector_unit(pbAngleInRadians);
-    bPerp_vec = emb_vector_add(bMid_vec, pb);
+                        pbAngleInRadians =
+                            emb_vector_angle(b_vec) + (embConstantPi / 2.0);
+                        pb = emb_vector_unit(pbAngleInRadians);
+                        bPerp_vec = emb_vector_add(bMid_vec, pb);
 
-    line1.start = aMid_vec;
-    line1.end = aPerp_vec;
-    line2.start = bMid_vec;
-    line2.end = bPerp_vec;
-    center = emb_line_intersectionPoint(line1, line2, &emb_error);
-        if (emb_error) {
-            puts("ERROR: no intersection, cannot find arcCenter.");
+                        line1.start = aMid_vec;
+                        line1.end = aPerp_vec;
+                        line2.start = bMid_vec;
+                        line2.end = bPerp_vec;
+                        center =
+                            emb_line_intersectionPoint(line1, line2,
+                                                       &emb_error);
+                        if (emb_error) {
+                                puts("ERROR: no intersection, cannot find arcCenter.");
+                        }
+                        return center;
+#endif
+                        *error = EMB_UNFINISHED_ERR;
+                        break;
+                }
+        default:
+                *error = EMB_WRONG_TYPE_ERR;
+                break;
         }
-        return center;
-    #endif
-        *error = EMB_UNFINISHED_ERR;
-        break;
-    }
-    default:
-        *error = EMB_WRONG_TYPE_ERR;
-        break;
-    }
-    return emb_vector(0.0, 0.0);
+        return emb_vector(0.0, 0.0);
 }
 
 /* . */
-EmbVector
-emb_chord(EmbGeometry *g, EmbError *error)
+EmbVector emb_chord(EmbGeometry *g, EmbError *error)
 {
-    switch (g->type) {
-    case EMB_ARC:
-    case EMB_LINE:
-    case EMB_PATH:
-    case EMB_POLYLINE: {
-        *error = EMB_NO_ERR;
-        EmbVector start = emb_start(g, error);
-        if (*error) {
-            return emb_vector(0.0, 0.0);
+        switch (g->type) {
+        case EMB_ARC:
+        case EMB_LINE:
+        case EMB_PATH:
+        case EMB_POLYLINE:{
+                        *error = EMB_NO_ERR;
+                        EmbVector start = emb_start(g, error);
+                        if (*error) {
+                                return emb_vector(0.0, 0.0);
+                        }
+                        EmbVector end = emb_end(g, error);
+                        if (*error) {
+                                return emb_vector(0.0, 0.0);
+                        }
+                        return emb_vector_subtract(end, start);
+                }
+        default:
+                *error = EMB_WRONG_TYPE_ERR;
+                break;
         }
-        EmbVector end = emb_end(g, error);
-        if (*error) {
-            return emb_vector(0.0, 0.0);
-        }
-        return emb_vector_subtract(end, start);
-    }
-    default:
-        *error = EMB_WRONG_TYPE_ERR;
-        break;
-    }
-    return emb_vector(0.0, 0.0);
+        return emb_vector(0.0, 0.0);
 }
 
 /* . */
-EmbReal
-emb_included_angle(EmbGeometry *g, EmbError *error)
+EmbReal emb_included_angle(EmbGeometry *g, EmbError *error)
 {
-    switch (g->type) {
-    case EMB_ARC: {
-        /* Properties of a Circle - Get the Included Angle - Reference: ASD9 */
-        *error = EMB_NO_ERR;
-        EmbReal chord = emb_chord_length(g, error);
-        if (*error) {
-            return 0.0;
+        switch (g->type) {
+        case EMB_ARC:{
+                        /* Properties of a Circle - Get the Included Angle - Reference: ASD9 */
+                        *error = EMB_NO_ERR;
+                        EmbReal chord = emb_chord_length(g, error);
+                        if (*error) {
+                                return 0.0;
+                        }
+                        EmbReal rad = emb_radius(g, error);
+                        if (*error) {
+                                return 0.0;
+                        }
+                        if (chord <= 0 || rad <= 0) {
+                                /* Prevents division by zero and non-existant circles. */
+                                *error = EMB_DIV_ZERO_ERR;
+                                return 0.0;
+                        }
+
+                        /* NOTE: Due to floating point rounding errors, we need to clamp the
+                         * quotient so it is in the range [-1, 1]
+                         * If the quotient is out of that range, then the result of asin()
+                         * will be NaN.
+                         */
+                        EmbReal quotient = chord / (2.0 * rad);
+                        quotient = EMB_MIN(1.0, quotient);
+                        /* NOTE: 0 rather than -1 since we are enforcing a positive chord and
+                         * radius
+                         */
+                        quotient = EMB_MAX(0.0, quotient);
+
+                        return degrees(2.0 * asin(quotient));
+                }
+        default:
+                break;
         }
-        EmbReal rad = emb_radius(g, error);
-        if (*error) {
-            return 0.0;
+        return 0.0;
+}
+
+/* . */
+char emb_clockwise(EmbGeometry *geometry, EmbError *error)
+{
+        switch (geometry->type) {
+        case EMB_ARC:{
+                        /* NOTE: Y values are inverted here on purpose. */
+                        geometry->object.arc.start.y =
+                            -geometry->object.arc.start.y;
+                        geometry->object.arc.mid.y =
+                            -geometry->object.arc.start.y;
+                        geometry->object.arc.end.y =
+                            -geometry->object.arc.end.y;
+                        return emb_arc_clockwise(*geometry);
+                }
+        default:
+                break;
         }
-        if (chord <= 0 || rad <= 0) {
-            /* Prevents division by zero and non-existant circles. */
-            *error = EMB_DIV_ZERO_ERR;
-            return 0.0;
+        return 0;
+}
+
+/* . */
+EmbError emb_set_start_angle(EmbGeometry *geometry, EmbReal angle)
+{
+        printf("%f\n", angle);
+        switch (geometry->type) {
+        case EMB_ARC:{
+                        /* TODO: ArcObject setObjectStartAngle */
+                        break;
+                }
+        default:
+                break;
         }
-
-        /* NOTE: Due to floating point rounding errors, we need to clamp the
-         * quotient so it is in the range [-1, 1]
-         * If the quotient is out of that range, then the result of asin()
-         * will be NaN.
-         */
-        EmbReal quotient = chord/(2.0*rad);
-        quotient = EMB_MIN(1.0, quotient);
-        /* NOTE: 0 rather than -1 since we are enforcing a positive chord and
-         * radius
-         */
-        quotient = EMB_MAX(0.0, quotient);
-
-        return degrees(2.0*asin(quotient));
-    }
-    default:
-        break;
-    }
-    return 0.0;
-}
-
-/* . */
-char
-emb_clockwise(EmbGeometry *geometry, EmbError *error)
-{
-    switch (geometry->type) {
-    case EMB_ARC: {
-        /* NOTE: Y values are inverted here on purpose. */
-        geometry->object.arc.start.y = -geometry->object.arc.start.y;
-        geometry->object.arc.mid.y = -geometry->object.arc.start.y;
-        geometry->object.arc.end.y = -geometry->object.arc.end.y;
-        return emb_arc_clockwise(*geometry);
-    }
-    default:
-        break;
-    }
-    return 0;
-}
-
-/* . */
-EmbError
-emb_set_start_angle(EmbGeometry *geometry, EmbReal angle)
-{
-    printf("%f\n", angle);
-    switch (geometry->type) {
-    case EMB_ARC: {
-        /* TODO: ArcObject setObjectStartAngle */
-        break;
-    }
-    default:
-        break;
-    }
-    return EMB_NO_ERR;
-}
-
-/* . */
-EmbError
-emb_set_end_angle(EmbGeometry *geometry, EmbReal angle)
-{
-    printf("%f\n", angle);
-    switch (geometry->type) {
-    case EMB_ARC: {
-        /* TODO: ArcObject setObjectEndAngle */
-        break;
-    }
-    default:
-        break;
-    }
-    return EMB_NO_ERR;
-}
-
-/* . */
-EmbError
-emb_set_start_point(EmbGeometry *geometry, EmbVector point)
-{
-    switch (geometry->type) {
-    case EMB_ARC: {
-        geometry->object.arc.start = point;
-        /* calculateData(); */
-        break;
-    }
-    default:
-        break;
-    }
-    return EMB_NO_ERR;
-}
-
-/* . */
-EmbError
-emb_set_mid_point(EmbGeometry *geometry, EmbVector point)
-{
-    switch (geometry->type) {
-    case EMB_ARC: {
-        geometry->object.arc.mid = point;
-        /* calculateData(); */
-        break;
-    }
-    default:
-        break;
-    }
-    return EMB_NO_ERR;
-}
-
-/* . */
-EmbError
-emb_set_end_point(EmbGeometry *geometry, EmbVector point)
-{
-    switch (geometry->type) {
-    case EMB_ARC: {
-        geometry->object.arc.end = point;
-        /* calculateData(); */
-        break;
-    }
-    default:
-        break;
-    }
-    return EMB_NO_ERR;
-}
-
-/* . */
-EmbError
-emb_set_radius(EmbGeometry *g, EmbReal radius)
-{
-    switch (g->type) {
-    case EMB_ARC: {
-        EmbVector delta;
-        float rad;
-        if (radius <= 0.0f) {
-            rad = 0.0000001f;
-        }
-        else {
-            rad = radius;
-        }
-
-        EmbError error = EMB_NO_ERR;
-        EmbVector center = emb_center(g, &error);
-        if (error) {
-            return error;
-        }
-        EmbReal delta_length;
-
-        delta = emb_vector_subtract(g->object.arc.start, center);
-        delta_length = emb_vector_length(delta);
-        delta = emb_vector_scale(delta, rad/delta_length);
-        g->object.arc.start = emb_vector_add(center, delta);
-
-        delta = emb_vector_subtract(g->object.arc.mid, center);
-        delta_length = emb_vector_length(delta);
-        delta = emb_vector_scale(delta, rad/delta_length);
-        g->object.arc.mid = emb_vector_add(center, delta);
-
-        delta = emb_vector_subtract(g->object.arc.end, center);
-        delta_length = emb_vector_length(delta);
-        delta = emb_vector_scale(delta, rad/delta_length);
-        g->object.arc.end = emb_vector_add(center, delta);
         return EMB_NO_ERR;
-    }
-    case EMB_CIRCLE:
-        g->object.circle.radius = radius;
-        return EMB_NO_ERR;
-    default:
-        break;
-    }
-    return EMB_WRONG_TYPE_ERR;
 }
 
 /* . */
-EmbError
-emb_set_diameter(EmbGeometry *geometry, EmbReal diameter)
+EmbError emb_set_end_angle(EmbGeometry *geometry, EmbReal angle)
 {
-    switch (geometry->type) {
-    case EMB_CIRCLE: {
-        geometry->object.circle.radius = diameter / 2.0;
-        /* FIXME: updatePath(); */
-        break;
-    }
-    default:
-        break;
-    }
-    return EMB_NO_ERR;
+        printf("%f\n", angle);
+        switch (geometry->type) {
+        case EMB_ARC:{
+                        /* TODO: ArcObject setObjectEndAngle */
+                        break;
+                }
+        default:
+                break;
+        }
+        return EMB_NO_ERR;
+}
+
+/* . */
+EmbError emb_set_start_point(EmbGeometry *geometry, EmbVector point)
+{
+        switch (geometry->type) {
+        case EMB_ARC:{
+                        geometry->object.arc.start = point;
+                        /* calculateData(); */
+                        break;
+                }
+        default:
+                break;
+        }
+        return EMB_NO_ERR;
+}
+
+/* . */
+EmbError emb_set_mid_point(EmbGeometry *geometry, EmbVector point)
+{
+        switch (geometry->type) {
+        case EMB_ARC:{
+                        geometry->object.arc.mid = point;
+                        /* calculateData(); */
+                        break;
+                }
+        default:
+                break;
+        }
+        return EMB_NO_ERR;
+}
+
+/* . */
+EmbError emb_set_end_point(EmbGeometry *geometry, EmbVector point)
+{
+        switch (geometry->type) {
+        case EMB_ARC:{
+                        geometry->object.arc.end = point;
+                        /* calculateData(); */
+                        break;
+                }
+        default:
+                break;
+        }
+        return EMB_NO_ERR;
+}
+
+/* . */
+EmbError emb_set_radius(EmbGeometry *g, EmbReal radius)
+{
+        switch (g->type) {
+        case EMB_ARC:{
+                        EmbVector delta;
+                        float rad;
+                        if (radius <= 0.0f) {
+                                rad = 0.0000001f;
+                        } else {
+                                rad = radius;
+                        }
+
+                        EmbError error = EMB_NO_ERR;
+                        EmbVector center = emb_center(g, &error);
+                        if (error) {
+                                return error;
+                        }
+                        EmbReal delta_length;
+
+                        delta =
+                            emb_vector_subtract(g->object.arc.start, center);
+                        delta_length = emb_vector_length(delta);
+                        delta = emb_vector_scale(delta, rad / delta_length);
+                        g->object.arc.start = emb_vector_add(center, delta);
+
+                        delta = emb_vector_subtract(g->object.arc.mid, center);
+                        delta_length = emb_vector_length(delta);
+                        delta = emb_vector_scale(delta, rad / delta_length);
+                        g->object.arc.mid = emb_vector_add(center, delta);
+
+                        delta = emb_vector_subtract(g->object.arc.end, center);
+                        delta_length = emb_vector_length(delta);
+                        delta = emb_vector_scale(delta, rad / delta_length);
+                        g->object.arc.end = emb_vector_add(center, delta);
+                        return EMB_NO_ERR;
+                }
+        case EMB_CIRCLE:
+                g->object.circle.radius = radius;
+                return EMB_NO_ERR;
+        default:
+                break;
+        }
+        return EMB_WRONG_TYPE_ERR;
+}
+
+/* . */
+EmbError emb_set_diameter(EmbGeometry *geometry, EmbReal diameter)
+{
+        switch (geometry->type) {
+        case EMB_CIRCLE:{
+                        geometry->object.circle.radius = diameter / 2.0;
+                        /* FIXME: updatePath(); */
+                        break;
+                }
+        default:
+                break;
+        }
+        return EMB_NO_ERR;
 }
 
 /*
  * Sets the area of the geometry if that is meaningful, otherwise
  * return EMB_WRONG_TYPE_ERR.
  */
-EmbError
-emb_set_area(EmbGeometry *geometry, EmbReal area)
+EmbError emb_set_area(EmbGeometry *geometry, EmbReal area)
 {
-    switch (geometry->type) {
-    case EMB_CIRCLE: {
-        EmbReal radius = sqrt(area / embConstantPi);
-        emb_set_radius(geometry, radius);
-        return EMB_NO_ERR;
-    }
-    default:
-        break;
-    }
-    return EMB_WRONG_TYPE_ERR;
+        switch (geometry->type) {
+        case EMB_CIRCLE:{
+                        EmbReal radius = sqrt(area / embConstantPi);
+                        emb_set_radius(geometry, radius);
+                        return EMB_NO_ERR;
+                }
+        default:
+                break;
+        }
+        return EMB_WRONG_TYPE_ERR;
 }
 
 /*
  * Sets the circumference of the geometry if that is meaningful, otherwise
  * return EMB_WRONG_TYPE_ERR.
  */
-EmbError
-emb_set_circumference(EmbGeometry *geometry, EmbReal circumference)
+EmbError emb_set_circumference(EmbGeometry *geometry, EmbReal circumference)
 {
-    switch (geometry->type) {
-    case EMB_CIRCLE: {
-        EmbReal diameter = circumference / embConstantPi;
-        emb_set_diameter(geometry, diameter);
+        switch (geometry->type) {
+        case EMB_CIRCLE:{
+                        EmbReal diameter = circumference / embConstantPi;
+                        emb_set_diameter(geometry, diameter);
+                        return EMB_NO_ERR;
+                }
+        default:
+                break;
+        }
+        return EMB_WRONG_TYPE_ERR;
+}
+
+/* . */
+EmbError emb_set_radius_major(EmbGeometry *geometry, EmbReal radius)
+{
+        emb_set_diameter_major(geometry, radius * 2.0);
         return EMB_NO_ERR;
-    }
-    default:
-        break;
-    }
-    return EMB_WRONG_TYPE_ERR;
 }
 
 /* . */
-EmbError
-emb_set_radius_major(EmbGeometry *geometry, EmbReal radius)
+EmbError emb_set_radius_minor(EmbGeometry *geometry, EmbReal radius)
 {
-    emb_set_diameter_major(geometry, radius*2.0);
-    return EMB_NO_ERR;
+        emb_set_diameter_minor(geometry, radius * 2.0);
+        return EMB_NO_ERR;
 }
 
 /* . */
-EmbError
-emb_set_radius_minor(EmbGeometry *geometry, EmbReal radius)
+EmbError emb_set_diameter_major(EmbGeometry *geometry, EmbReal diameter)
 {
-    emb_set_diameter_minor(geometry, radius*2.0);
-    return EMB_NO_ERR;
+        switch (geometry->type) {
+        case EMB_ELLIPSE:
+                /* FIXME: Identify longer axis and replace. */
+                geometry->object.ellipse.radius.x = diameter;
+                break;
+        default:
+                break;
+        }
+        return EMB_NO_ERR;
 }
 
 /* . */
-EmbError
-emb_set_diameter_major(EmbGeometry *geometry, EmbReal diameter)
+EmbError emb_set_diameter_minor(EmbGeometry *geometry, EmbReal diameter)
 {
-    switch (geometry->type) {
-    case EMB_ELLIPSE:
-        /* FIXME: Identify longer axis and replace. */
-        geometry->object.ellipse.radius.x = diameter;
-        break;
-    default:
-        break;
-    }
-    return EMB_NO_ERR;
+        switch (geometry->type) {
+        case EMB_ELLIPSE:
+                /* FIXME: Identify longer axis and replace. */
+                geometry->object.ellipse.radius.x = diameter;
+                break;
+        default:
+                break;
+        }
+        return EMB_NO_ERR;
 }
 
 /* . */
-EmbError
-emb_set_diameter_minor(EmbGeometry *geometry, EmbReal diameter)
-{
-    switch (geometry->type) {
-    case EMB_ELLIPSE:
-        /* FIXME: Identify longer axis and replace. */
-        geometry->object.ellipse.radius.x = diameter;
-        break;
-    default:
-        break;
-    }
-    return EMB_NO_ERR;
-}
-
-/* . */
-void
-emb_geometry_path(EmbGeometry *geometry, char *path, EmbError *error)
+void emb_geometry_path(EmbGeometry *geometry, char *path, EmbError *error)
 {
 }
 
 #if 0
 /* . */
-QColor
-emb_color(EmbGeometry *geometry)
+QColor emb_color(EmbGeometry *geometry)
 {
-    return data.objPen.color();
+        return data.objPen.color();
 }
 
 /* . */
-QRgb
-emb_color_rgb(EmbGeometry *geometry)
+QRgb emb_color_rgb(EmbGeometry *geometry)
 {
-    return data.objPen.color().rgb();
+        return data.objPen.color().rgb();
 }
 
 /* . */
-Qt::PenStyle
-emb_line_type(EmbGeometry *geometry)
+Qt::PenStyle emb_line_type(EmbGeometry *geometry)
 {
-    return data.objPen.style();
+        return data.objPen.style();
 }
 
 /* . */
-EmbReal
-emb_line_weight(EmbGeometry *geometry)
+EmbReal emb_line_weight(EmbGeometry *geometry)
 {
-    return data.lwtPen.widthF();
+        return data.lwtPen.widthF();
 }
 
 /* . */
-EmbVector
-emb_rubber_point(EmbGeometry *geometry, const char *key)
+EmbVector emb_rubber_point(EmbGeometry *geometry, const char *key)
 {
-    return ;
+        return;
 }
 
 /* . */
-QString
-emb_rubber_text(EmbGeometry *geometry, const char *key)
+QString emb_rubber_text(EmbGeometry *geometry, const char *key)
 {
-    return ;
+        return;
 }
 
 /* . */
-EmbVector
-emb_pos(EmbGeometry *geometry)
+EmbVector emb_pos(EmbGeometry *geometry)
 {
-    return scenePos();
+        return scenePos();
 }
 
 /* . */
-EmbReal
-emb_x(EmbGeometry *geometry)
+EmbReal emb_x(EmbGeometry *geometry)
 {
-    return scenePos().x();
+        return scenePos().x();
 }
 
 /* . */
-EmbReal
-emb_y(EmbGeometry *geometry)
+EmbReal emb_y(EmbGeometry *geometry)
 {
-    return scenePos().y();
+        return scenePos().y();
 }
 
 /* . */
-EmbVector
-emb_center(EmbGeometry *geometry)
+EmbVector emb_center(EmbGeometry *geometry)
 {
-    return ;
+        return;
 }
 
 /* . */
-EmbReal
-emb_center_x(EmbGeometry *geometry)
+EmbReal emb_center_x(EmbGeometry *geometry)
 {
-    return scenePos().x();
+        return scenePos().x();
 }
 
 /* . */
-EmbReal
-emb_center_y(EmbGeometry *geometry)
+EmbReal emb_center_y(EmbGeometry *geometry)
 {
-    return scenePos().y();
+        return scenePos().y();
 }
 
 /* . */
-EmbReal
-emb_radius(EmbGeometry *geometry)
+EmbReal emb_radius(EmbGeometry *geometry)
 {
-    return rect().width()/2.0*scale();
+        return rect().width() / 2.0 * scale();
 }
 
 /* . */
-EmbReal
-emb_diameter(EmbGeometry *geometry)
+EmbReal emb_diameter(EmbGeometry *geometry)
 {
-    return rect().width()*scale();
+        return rect().width() * scale();
 }
 #endif
 
 /* . */
-EmbReal
-emb_circumference(EmbGeometry *geometry, EmbError *error)
+EmbReal emb_circumference(EmbGeometry *geometry, EmbError *error)
 {
-    switch (geometry->type) {
-    case EMB_CIRCLE: {
-        return 2.0 * embConstantPi * geometry->object.circle.radius;
-    }
-    default:
-        break;
-    }
-    return 1.0;
+        switch (geometry->type) {
+        case EMB_CIRCLE:{
+                        return 2.0 * embConstantPi *
+                            geometry->object.circle.radius;
+                }
+        default:
+                break;
+        }
+        return 1.0;
 }
 
 #if 0
 /* . */
-EmbVector
-emb_end_point_1(EmbGeometry *geometry)
+EmbVector emb_end_point_1(EmbGeometry *geometry)
 {
-    return emb_pos(geometry);
+        return emb_pos(geometry);
 }
 
 /* . */
-EmbVector
-emb_end_point_2(EmbGeometry *geometry)
+EmbVector emb_end_point_2(EmbGeometry *geometry)
 {
-    return emb_pos(geometry);
+        return emb_pos(geometry);
 }
 
 /* . */
-EmbVector
-emb_start_point(EmbGeometry *geometry)
+EmbVector emb_start_point(EmbGeometry *geometry)
 {
-    return ;
+        return;
 }
 
 /* . */
-EmbVector
-emb_mid_point(EmbGeometry *geometry)
+EmbVector emb_mid_point(EmbGeometry *geometry)
 {
-    return ;
+        return;
 }
 
 /* . */
-EmbVector
-emb_end_point(EmbGeometry *geometry)
+EmbVector emb_end_point(EmbGeometry *geometry)
 {
-    return ;
+        return;
 }
 
 /* . */
-EmbVector
-emb_delta(EmbGeometry *geometry)
+EmbVector emb_delta(EmbGeometry *geometry)
 {
-    return objectEndPoint2(geometry) - objectEndPoint1(geometry);
+        return objectEndPoint2(geometry) - objectEndPoint1(geometry);
 }
 
 /* . */
-EmbVector
-top_left(EmbGeometry *geometry)
+EmbVector top_left(EmbGeometry *geometry)
 {
 }
 
 /* . */
-EmbVector
-top_right(EmbGeometry *geometry)
+EmbVector top_right(EmbGeometry *geometry)
 {
 }
 
 /* . */
-EmbVector
-bottom_left(EmbGeometry *geometry)
+EmbVector bottom_left(EmbGeometry *geometry)
 {
 }
 
 /* . */
-EmbVector
-bottom_right(EmbGeometry *geometry)
+EmbVector bottom_right(EmbGeometry *geometry)
 {
 }
 
 /* . */
-void
-update_rubber(QPainter* painter);
+void update_rubber(QPainter * painter);
 {
 }
 
 /* . */
-void
-update_rubber_grip(QPainter *painter);
+void update_rubber_grip(QPainter * painter);
 {
 }
 
 /* . */
-void
-update_leader(EmbGeometry *geometry);
+void update_leader(EmbGeometry * geometry);
 {
 }
 
 /* . */
-void
-update_path(EmbGeometry *geometry);
+void update_path(EmbGeometry * geometry);
 {
 }
 
 /* . */
-void
-update_path(const QPainterPath& p);
+void update_path(const QPainterPath & p);
 {
 }
 
 /* . */
-void
-update_arc_rect(EmbReal radius);
+void update_arc_rect(EmbReal radius);
 {
 }
 
 /* . */
-EmbReal
-emb_length(EmbGeometry *geometry)
+EmbReal emb_length(EmbGeometry *geometry)
 {
-    return line().length()*scale();
+        return line().length() * scale();
 }
 
 /* . */
-void
-emb_set_end_point_1(EmbGeometry *geometry, const QPointF& endPt1)
-{
-}
-
-/* . */
-void
-emb_set_end_point_1(EmbGeometry *geometry, EmbReal x1, EmbReal y1)
+void emb_set_end_point_1(EmbGeometry *geometry, const QPointF & endPt1)
 {
 }
 
 /* . */
-void
-emb_set_end_point_2(EmbGeometry *geometry, QPointF endPt2)
+void emb_set_end_point_1(EmbGeometry *geometry, EmbReal x1, EmbReal y1)
 {
 }
 
 /* . */
-void
-emb_set_end_point_2(EmbGeometry *geometry, EmbReal x2, EmbReal y2)
+void emb_set_end_point_2(EmbGeometry *geometry, QPointF endPt2)
 {
 }
 
 /* . */
-void
-emb_set_x1(EmbReal x)
+void emb_set_end_point_2(EmbGeometry *geometry, EmbReal x2, EmbReal y2)
 {
-    emb_set_EndPoint1(x, objectEndPoint1().y());
 }
 
 /* . */
-void
-emb_set_y1(EmbReal y)
+void emb_set_x1(EmbReal x)
 {
-    emb_set_EndPoint1(objectEndPoint1().x(), y);
+        emb_set_EndPoint1(x, objectEndPoint1().y());
 }
 
 /* . */
-void
-emb_set_x2(EmbReal x)
+void emb_set_y1(EmbReal y)
 {
-    emb_set_EndPoint2(x, objectEndPoint2().y());
+        emb_set_EndPoint1(objectEndPoint1().x(), y);
 }
 
 /* . */
-void
-emb_set_y2(EmbReal y)
+void emb_set_x2(EmbReal x)
 {
-    emb_set_EndPoint2(objectEndPoint2().x(), y);
+        emb_set_EndPoint2(x, objectEndPoint2().y());
 }
 
 /* . */
-QRectF
-emb_rect(EmbGeometry *geometry)
+void emb_set_y2(EmbReal y)
 {
-    return path().boundingRect();
+        emb_set_EndPoint2(objectEndPoint2().x(), y);
 }
 
 /* . */
-void
-emb_setRect(const QRectF& r)
+QRectF emb_rect(EmbGeometry *geometry)
 {
-    QPainterPath p;
-    p.addRect(r);
-    setPath(p);
+        return path().boundingRect();
 }
 
 /* . */
-void
-emb_setRect(EmbReal x, EmbReal y, EmbReal w, EmbReal h)
+void emb_setRect(const QRectF & r)
 {
-    QPainterPath p;
-    p.addRect(x,y,w,h);
-    setPath(p);
+        QPainterPath p;
+        p.addRect(r);
+        setPath(p);
+}
+
+/* . */
+void emb_setRect(EmbReal x, EmbReal y, EmbReal w, EmbReal h)
+{
+        QPainterPath p;
+        p.addRect(x, y, w, h);
+        setPath(p);
 }
 
 /* . */
 QLineF line(EmbGeometry *geometry)
 {
-    return data.objLine;
+        return data.objLine;
 }
 
 /* . */
-void
-emb_setLine(const QLineF& li)
+void emb_setLine(const QLineF & li)
 {
-    QPainterPath p;
-    p.moveTo(li.p1());
-    p.lineTo(li.p2());
-    setPath(p);
-    data.objLine = li;
+        QPainterPath p;
+        p.moveTo(li.p1());
+        p.lineTo(li.p2());
+        setPath(p);
+        data.objLine = li;
 }
 
 /* . */
-void
-emb_set_line(EmbReal x1, EmbReal y1, EmbReal x2, EmbReal y2)
+void emb_set_line(EmbReal x1, EmbReal y1, EmbReal x2, EmbReal y2)
 {
-    QPainterPath p;
-    p.moveTo(x1, y1);
-    p.lineTo(x2, y2);
-    setPath(p);
-    data.objLine.setLine(x1,y1,x2,y2);
+        QPainterPath p;
+        p.moveTo(x1, y1);
+        p.lineTo(x2, y2);
+        setPath(p);
+        data.objLine.setLine(x1, y1, x2, y2);
 }
 
 /* . */
-void
-emb_set_pos(QPointF point)
+void emb_set_pos(QPointF point)
 {
-    setPos(point.x(), point.y());
+        setPos(point.x(), point.y());
 }
 
 /* . */
-void
-emb_set_pos(EmbGeometry *geometry, EmbReal x, EmbReal y)
+void emb_set_pos(EmbGeometry *geometry, EmbReal x, EmbReal y)
 {
-    setPos(x, y);
+        setPos(x, y);
 }
 
 /* . */
-void
-emb_set_x(EmbGeometry *geometry, EmbReal x)
+void emb_set_x(EmbGeometry *geometry, EmbReal x)
 {
-    emb_set_pos(geometry, x, emb_y(geometry));
+        emb_set_pos(geometry, x, emb_y(geometry));
 }
 
 /* . */
-void
-emb_set_y(EmbGeometry *geometry, EmbReal y)
+void emb_set_y(EmbGeometry *geometry, EmbReal y)
 {
-    emb_set_pos(geometry, emb_x(geometry), y);
+        emb_set_pos(geometry, emb_x(geometry), y);
 }
 
 /* . */
@@ -9726,138 +5856,122 @@ virtual QRectF boundingRect(EmbGeometry *geometry)
 
 /* . */
 virtual QPainterPath shape(EmbGeometry *geometry)
-{ return path(); }
+{
+        return path();
+}
 
 /* . */
-void
-emb_set_Color(const QColor& color)
+void emb_set_Color(const QColor & color)
 {
+}
+
+/* . */
+void emb_set_ColorRGB(QRgb rgb)
+{
+}
+
+/* . */
+void emb_set_LineType(Qt::PenStyle lineType)
+{
+}
+
+/* . */
+void emb_set_LineWeight(EmbReal lineWeight)
+{
+}
+
+/* . */
+void emb_set_Path(const QPainterPath & p)
+{
+        setPath(p);
+}
+
+/* . */
+void emb_set_rubber_mode(int mode)
+{
+        data.objRubberMode = mode;
+}
+
+/* . */
+void emb_set_rubber_point(const QString & key, const QPointF & point)
+{
+        data.objRubberPoints.insert(key, point);
+}
+
+/* . */
+void emb_set_rubber_text(const QString & key, const QString & txt)
+{
+        data.objRubberTexts.insert(key, txt);
 }
 
 /* . */
 void
-emb_set_ColorRGB(QRgb rgb)
+draw_rubber_line(const QLineF & rubLine, QPainter *painter =
+                 0, const char *colorFromScene = 0)
 {
 }
 
 /* . */
-void
-emb_set_LineType(Qt::PenStyle lineType)
+QPen lineWeightPen(EmbGeometry *geometry)
+{
+        return data.lwtPen;
+}
+
+/* . */
+void emb_real_render(QPainter *painter, const QPainterPath & renderPath)
 {
 }
 
 /* . */
-void
-emb_set_LineWeight(EmbReal lineWeight)
+void emb_set_center(EmbVector point)
 {
 }
 
 /* . */
-void
-emb_set_Path(const QPainterPath& p)
-{
-    setPath(p);
-}
-
-/* . */
-void
-emb_set_rubber_mode(int mode)
-{
-    data.objRubberMode = mode;
-}
-
-/* . */
-void
-emb_set_rubber_point(const QString& key, const QPointF& point)
-{
-    data.objRubberPoints.insert(key, point);
-}
-
-/* . */
-void
-emb_set_rubber_text(const QString& key, const QString& txt)
-{
-    data.objRubberTexts.insert(key, txt);
-}
-
-/* . */
-void
-draw_rubber_line(const QLineF& rubLine, QPainter* painter = 0, const char* colorFromScene = 0)
+void emb_set_center(const QPointF & center)
 {
 }
 
 /* . */
-QPen
-lineWeightPen(EmbGeometry *geometry)
-{
-    return data.lwtPen;
-}
-
-/* . */
-void emb_real_render(QPainter* painter, const QPainterPath& renderPath)
+void emb_set_center_x(EmbGeometry *geometry, EmbReal centerX)
 {
 }
 
 /* . */
-void
-emb_set_center(EmbVector point)
+void emb_set_center_y(EmbGeometry *geometry, EmbReal centerY)
 {
 }
 
 /* . */
-void
-emb_set_center(const QPointF& center)
+void emb_calculate_data(EmbGeometry *geometry)
 {
 }
 
 /* . */
-void
-emb_set_center_x(EmbGeometry *geometry, EmbReal centerX)
+void emb_set_size(EmbGeometry *geometry, EmbReal width, EmbReal height)
 {
 }
 
 /* . */
-void
-emb_set_center_y(EmbGeometry *geometry, EmbReal centerY)
+QPainterPath emb_object_copy_path(EmbGeometry *geometry)
 {
 }
 
 /* . */
-void
-emb_calculate_data(EmbGeometry *geometry)
+QPainterPath emb_object_save_path(EmbGeometry *geometry)
 {
 }
 
 /* . */
-void
-emb_set_size(EmbGeometry *geometry, EmbReal width, EmbReal height)
+QList < QPainterPath > emb_object_save_path_list(EmbGeometry *geometry)
 {
+        return subPathList();
 }
 
 /* . */
-QPainterPath
-emb_object_copy_path(EmbGeometry *geometry)
+QList < QPainterPath > emb_sub_path_list(EmbGeometry *geometry)
 {
-}
-
-/* . */
-QPainterPath
-emb_object_save_path(EmbGeometry *geometry)
-{
-}
-
-/* . */
-QList<QPainterPath>
-emb_object_save_path_list(EmbGeometry *geometry)
-{
-    return subPathList();
-}
-
-/* . */
-QList<QPainterPath>
-emb_sub_path_list(EmbGeometry *geometry)
-{
-    return;
+        return;
 }
 
 #endif
@@ -9865,69 +5979,67 @@ emb_sub_path_list(EmbGeometry *geometry)
 /* Our generic object interface backends to each individual type.
  * The caller defines what the type is.
  */
-EmbGeometry *
-emb_init(int type_in)
+EmbGeometry *emb_init(int type_in)
 {
-    EmbGeometry *obj = (EmbGeometry*)malloc(sizeof(EmbGeometry));
-    obj->type = type_in;
-    obj->color.r = 0;
-    obj->color.g = 0;
-    obj->color.b = 0;
+        EmbGeometry *obj = (EmbGeometry *) malloc(sizeof(EmbGeometry));
+        obj->type = type_in;
+        obj->color.r = 0;
+        obj->color.g = 0;
+        obj->color.b = 0;
 
-    /*
-    // QGraphicsItem* parent
-    debug_message("BaseObject Constructor()");
-
-    objPen.setCapStyle(RoundCap);
-    objPen.setJoinStyle(RoundJoin);
-    lwtPen.setCapStyle(RoundCap);
-    lwtPen.setJoinStyle(RoundJoin);
-
-    objID = QDateTime::currentMSecsSinceEpoch();
-    */
-
-    switch (obj->type) {
-    case EMB_ARC: {
         /*
-        obj = emb_arc(1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-        emb_arc_init(EmbArc arc_in, unsigned int rgb, int lineType)
-        arc = arc_in;
+           // QGraphicsItem* parent
+           debug_message("BaseObject Constructor()");
 
-        setFlag(ItemIsSelectable, true);
+           objPen.setCapStyle(RoundCap);
+           objPen.setJoinStyle(RoundJoin);
+           lwtPen.setCapStyle(RoundCap);
+           lwtPen.setJoinStyle(RoundJoin);
 
-        calculateArcData(arc);
+           objID = QDateTime::currentMSecsSinceEpoch();
+         */
 
-        setColor(rgb);
-        setLineType(lineType);
-        setLineWeight(0.35); //TODO: pass in proper lineweight
-        setPen(objPen);
-        */
-        break;
-    }
-    }
-    return obj;
+        switch (obj->type) {
+        case EMB_ARC:{
+                        /*
+                           obj = emb_arc(1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+                           emb_arc_init(EmbArc arc_in, unsigned int rgb, int lineType)
+                           arc = arc_in;
+
+                           setFlag(ItemIsSelectable, true);
+
+                           calculateArcData(arc);
+
+                           setColor(rgb);
+                           setLineType(lineType);
+                           setLineWeight(0.35); //TODO: pass in proper lineweight
+                           setPen(objPen);
+                         */
+                        break;
+                }
+        }
+        return obj;
 }
 
 /* Free the memory occupied by a non-stitch geometry object.
  *
  * Pointer to geometry memory.
  */
-void
-emb_free(EmbGeometry *obj)
+void emb_free(EmbGeometry *obj)
 {
-    switch (obj->type) {
-    case EMB_ARC: {
-        return;
-    }
-    case EMB_CIRCLE: {
-        return;
-    }
-    case EMB_ELLIPSE: {
-        return;
-    }
-    default:
-        return;
-    }
+        switch (obj->type) {
+        case EMB_ARC:{
+                        return;
+                }
+        case EMB_CIRCLE:{
+                        return;
+                }
+        case EMB_ELLIPSE:{
+                        return;
+                }
+        default:
+                return;
+        }
 }
 
 /* Calculate the bounding box of geometry a obj based on what kind of
@@ -9939,30 +6051,29 @@ emb_free(EmbGeometry *obj)
  * In the case of a failure the bounding box returned is always the unit square
  * with top left corner at (0, 0).
  */
-EmbRect
-emb_boundingRect(EmbGeometry *obj)
+EmbRect emb_boundingRect(EmbGeometry *obj)
 {
-    EmbRect r;
-    if (obj->type == EMB_ARC) {
+        EmbRect r;
+        if (obj->type == EMB_ARC) {
+                /*
+                   arcRect.setWidth(radius*2.0);
+                   arcRect.setHeight(radius*2.0);
+                   arcRect.moveCenter(EmbVector(0,0));
+                   setRect(arcRect);
+                 */
+        }
+        r.y = 0.0;
+        r.x = 0.0;
+        r.w = 1.0;
+        r.h = 1.0;
         /*
-        arcRect.setWidth(radius*2.0);
-        arcRect.setHeight(radius*2.0);
-        arcRect.moveCenter(EmbVector(0,0));
-        setRect(arcRect);
-        */
-    }
-    r.y = 0.0;
-    r.x = 0.0;
-    r.w = 1.0;
-    r.h = 1.0;
-    /*
-    "Base"
-    //If gripped, force this object to be drawn even if it is offscreen
-    if (objectRubberMode() == OBJ_RUBBER_GRIP)
-        return scene()->sceneRect();
-    return path().boundingRect();
-    */
-    return r;
+           "Base"
+           //If gripped, force this object to be drawn even if it is offscreen
+           if (objectRubberMode() == OBJ_RUBBER_GRIP)
+           return scene()->sceneRect();
+           return path().boundingRect();
+         */
+        return r;
 }
 
 /*
@@ -9985,31 +6096,30 @@ emb_boundingRect(EmbGeometry *obj)
 EmbGeometry
 emb_arc(EmbReal x1, EmbReal y1, EmbReal x2, EmbReal y2, EmbReal x3, EmbReal y3)
 {
-    EmbGeometry g;
-    g.object.arc.start = emb_vector(x1, y1);
-    g.object.arc.mid = emb_vector(x2, y2);
-    g.object.arc.end = emb_vector(x3, y3);
-    g.type = EMB_ARC;
-    return g;
+        EmbGeometry g;
+        g.object.arc.start = emb_vector(x1, y1);
+        g.object.arc.mid = emb_vector(x2, y2);
+        g.object.arc.end = emb_vector(x3, y3);
+        g.type = EMB_ARC;
+        return g;
 }
 
 /* Calculus based approach at determining whether a polygon is clockwise or counterclockwise.
  * Returns true if arc is clockwise.
  */
-char
-emb_arc_clockwise(EmbGeometry g)
+char emb_arc_clockwise(EmbGeometry g)
 {
-    if (g.type != EMB_ARC) {
+        if (g.type != EMB_ARC) {
+                return 0;
+        }
+        EmbArc arc = g.object.arc;
+        EmbReal edge1 = (arc.mid.x - arc.start.x) * (arc.mid.y + arc.start.y);
+        EmbReal edge2 = (arc.end.x - arc.mid.x) * (arc.end.y + arc.mid.y);
+        EmbReal edge3 = (arc.start.x - arc.end.x) * (arc.start.y + arc.end.y);
+        if (edge1 + edge2 + edge3 >= 0.0) {
+                return 1;
+        }
         return 0;
-    }
-    EmbArc arc = g.object.arc;
-    EmbReal edge1 = (arc.mid.x-arc.start.x) * (arc.mid.y+arc.start.y);
-    EmbReal edge2 = (arc.end.x-arc.mid.x) * (arc.end.y+arc.mid.y);
-    EmbReal edge3 = (arc.start.x-arc.end.x) * (arc.start.y+arc.end.y);
-    if (edge1 + edge2 + edge3 >= 0.0) {
-        return 1;
-    }
-    return 0;
 }
 
 /* Calculates Arc Geometry from Bulge Data.
@@ -10031,114 +6141,110 @@ emb_arc_clockwise(EmbGeometry g)
 }
  */
 
-EmbError
-emb_set_center(EmbGeometry *g, EmbVector point)
+EmbError emb_set_center(EmbGeometry *g, EmbVector point)
 {
-    switch (g->type) {
-    case EMB_ARC: {
-        EmbError error = EMB_NO_ERR;
-        EmbVector delta;
-        EmbVector old_center = emb_center(g, &error);
-        delta = emb_vector_subtract(point, old_center);
-        g->object.arc.start = emb_vector_add(g->object.arc.start, delta);
-        g->object.arc.mid = emb_vector_add(g->object.arc.mid, delta);
-        g->object.arc.end = emb_vector_add(g->object.arc.end, delta);
-        break;
-    }
-    default:
-        break;
-    }
-    return EMB_NO_ERR;
-}
-
-void
-emb_set_color(EmbGeometry *obj, EmbColor color)
-{
-    obj->color = color;
-    /*
-    objPen.setColor(color);
-    lwtPen.setColor(color);
-    */
-}
-
-void
-emb_set_color_rgb(EmbGeometry *obj, unsigned int rgb)
-{
-    printf("%p", obj);
-    printf("%d", rgb);
-    /*
-    objPen.setColor(QColor(rgb));
-    lwtPen.setColor(QColor(rgb));
-    */
-}
-
-void
-emb_set_linetype(EmbGeometry *obj, int lineType)
-{
-    printf("%p %d\n", obj, lineType);
-    /*
-    objPen.setStyle(lineType);
-    lwtPen.setStyle(lineType);
-    */
-}
-
-void
-emb_set_line_weight(EmbGeometry *obj, float lineWeight)
-{
-    printf("%p %f\n", obj, lineWeight);
-    /*
-    objPen.setWidthF(0); //NOTE: The objPen will always be cosmetic
-
-    if (lineWeight < 0) {
-        if (lineWeight == OBJ_LWT_BYLAYER) {
-            lwtPen.setWidthF(0.35); //TODO: getLayerLineWeight
+        switch (g->type) {
+        case EMB_ARC:{
+                        EmbError error = EMB_NO_ERR;
+                        EmbVector delta;
+                        EmbVector old_center = emb_center(g, &error);
+                        delta = emb_vector_subtract(point, old_center);
+                        g->object.arc.start =
+                            emb_vector_add(g->object.arc.start, delta);
+                        g->object.arc.mid =
+                            emb_vector_add(g->object.arc.mid, delta);
+                        g->object.arc.end =
+                            emb_vector_add(g->object.arc.end, delta);
+                        break;
+                }
+        default:
+                break;
         }
-        else if (lineWeight == OBJ_LWT_BYBLOCK) {
-            lwtPen.setWidthF(0.35); //TODO: getBlockLineWeight
-        }
-        else {
-            QMessageBox::warning(0, translate("Error - Negative Lineweight"),
-                                    translate("Lineweight: %1")
-                                    .arg(std::string().setNum(lineWeight)));
-            debug_message("Lineweight cannot be negative! Inverting sign.");
-            lwtPen.setWidthF(-lineWeight);
-        }
-    }
-    else {
-        lwtPen.setWidthF(lineWeight);
-    }
-    */
+        return EMB_NO_ERR;
 }
 
-EmbVector
-emb_base_rubber_point(EmbGeometry *obj, const char *key)
+void emb_set_color(EmbGeometry *obj, EmbColor color)
 {
-    EmbVector v;
-    v.x = 0.0;
-    v.y = 0.0;
-    printf("%p %s\n", obj, key);
-    /*
-    if (objRubberPoints.contains(key)) {
-        return objRubberPoints.value(key);
-    }
-
-    QGraphicsScene* gscene = scene();
-    if (gscene) {
-        return scene()->attribute("SCENE_QSNAP_POINT").toPointF();
-    }
-    */
-    return v;
+        obj->color = color;
+        /*
+           objPen.setColor(color);
+           lwtPen.setColor(color);
+         */
 }
 
-const char *
-emb_base_rubber_text(EmbGeometry *obj, const char *key)
+void emb_set_color_rgb(EmbGeometry *obj, unsigned int rgb)
 {
-    printf("%p %s\n", obj, key);
-    /*
-    if (objRubberTexts.contains(key))
-        return objRubberTexts.value(key);
-    */
-    return "";
+        printf("%p", obj);
+        printf("%d", rgb);
+        /*
+           objPen.setColor(QColor(rgb));
+           lwtPen.setColor(QColor(rgb));
+         */
+}
+
+void emb_set_linetype(EmbGeometry *obj, int lineType)
+{
+        printf("%p %d\n", obj, lineType);
+        /*
+           objPen.setStyle(lineType);
+           lwtPen.setStyle(lineType);
+         */
+}
+
+void emb_set_line_weight(EmbGeometry *obj, float lineWeight)
+{
+        printf("%p %f\n", obj, lineWeight);
+        /*
+           objPen.setWidthF(0); //NOTE: The objPen will always be cosmetic
+
+           if (lineWeight < 0) {
+           if (lineWeight == OBJ_LWT_BYLAYER) {
+           lwtPen.setWidthF(0.35); //TODO: getLayerLineWeight
+           }
+           else if (lineWeight == OBJ_LWT_BYBLOCK) {
+           lwtPen.setWidthF(0.35); //TODO: getBlockLineWeight
+           }
+           else {
+           QMessageBox::warning(0, translate("Error - Negative Lineweight"),
+           translate("Lineweight: %1")
+           .arg(std::string().setNum(lineWeight)));
+           debug_message("Lineweight cannot be negative! Inverting sign.");
+           lwtPen.setWidthF(-lineWeight);
+           }
+           }
+           else {
+           lwtPen.setWidthF(lineWeight);
+           }
+         */
+}
+
+EmbVector emb_base_rubber_point(EmbGeometry *obj, const char *key)
+{
+        EmbVector v;
+        v.x = 0.0;
+        v.y = 0.0;
+        printf("%p %s\n", obj, key);
+        /*
+           if (objRubberPoints.contains(key)) {
+           return objRubberPoints.value(key);
+           }
+
+           QGraphicsScene* gscene = scene();
+           if (gscene) {
+           return scene()->attribute("SCENE_QSNAP_POINT").toPointF();
+           }
+         */
+        return v;
+}
+
+const char *emb_base_rubber_text(EmbGeometry *obj, const char *key)
+{
+        printf("%p %s\n", obj, key);
+        /*
+           if (objRubberTexts.contains(key))
+           return objRubberTexts.value(key);
+         */
+        return "";
 }
 
 /*
@@ -10303,17 +6409,16 @@ dimleader_updateLeader()
 }
 */
 
-void
-emb_ellipse_main(void)
+void emb_ellipse_main(void)
 {
-    /*
-    initCommand();
-    clearSelection();
-    view.ui_mode = "ELLIPSE_MODE_MAJORDIAMETER_MINORRADIUS";
-    global.point1 = zero_vector;
-    global.point2 = zero_vector;
-    global.point3 = zero_vector;
-    */
+        /*
+           initCommand();
+           clearSelection();
+           view.ui_mode = "ELLIPSE_MODE_MAJORDIAMETER_MINORRADIUS";
+           global.point1 = zero_vector;
+           global.point2 = zero_vector;
+           global.point3 = zero_vector;
+         */
 }
 
 /*
@@ -10654,63 +6759,58 @@ rect_topRight()
 }
 */
 
-EmbVector
-embRect_bottomLeft(EmbRect rect)
+EmbVector embRect_bottomLeft(EmbRect rect)
 {
-    printf("%f", rect.x);
-    EmbVector v;
-    v.x = 0.0;
-    v.y = 0.0;
-    /*
-    float alpha = radians(rotation());
-    EmbVector bl = rect().bottomLeft() * scale();
-    EmbVector pblrot = emb_vector_rotate(b1, alpha);
-    return scenePos() + pblrot;
-    */
-    return v;
+        printf("%f", rect.x);
+        EmbVector v;
+        v.x = 0.0;
+        v.y = 0.0;
+        /*
+           float alpha = radians(rotation());
+           EmbVector bl = rect().bottomLeft() * scale();
+           EmbVector pblrot = emb_vector_rotate(b1, alpha);
+           return scenePos() + pblrot;
+         */
+        return v;
 }
 
-EmbVector
-embRect_bottomRight(EmbRect rect)
+EmbVector embRect_bottomRight(EmbRect rect)
 {
-    printf("%f", rect.x);
-    EmbVector v;
-    v.x = 0.0;
-    v.y = 0.0;
-    /*
-    float alpha = radians(rotation());
-    EmbVector br = rect().bottomRight() * scale();
-    EmbVector pbrrot = emb_vector_rotate(br, alpha);
-    return scenePos() + pbrrot;
-    */
-    return v;
+        printf("%f", rect.x);
+        EmbVector v;
+        v.x = 0.0;
+        v.y = 0.0;
+        /*
+           float alpha = radians(rotation());
+           EmbVector br = rect().bottomRight() * scale();
+           EmbVector pbrrot = emb_vector_rotate(br, alpha);
+           return scenePos() + pbrrot;
+         */
+        return v;
 }
 
 /*
  */
-EmbEllipse
-emb_ellipse_init(void)
+EmbEllipse emb_ellipse_init(void)
 {
-    EmbEllipse ellipse;
-    ellipse.center.x = 0.0;
-    ellipse.center.y = 0.0;
-    ellipse.radius.x = 1.0;
-    ellipse.radius.y = 2.0;
-    ellipse.rotation = 0.0;
-    return ellipse;
+        EmbEllipse ellipse;
+        ellipse.center.x = 0.0;
+        ellipse.center.y = 0.0;
+        ellipse.radius.x = 1.0;
+        ellipse.radius.y = 2.0;
+        ellipse.rotation = 0.0;
+        return ellipse;
 }
 
 /* . */
-EmbReal
-emb_ellipse_diameterX(EmbEllipse ellipse)
+EmbReal emb_ellipse_diameterX(EmbEllipse ellipse)
 {
-    return ellipse.radius.x * 2.0;
+        return ellipse.radius.x * 2.0;
 }
 
-EmbReal
-emb_ellipse_diameterY(EmbEllipse ellipse)
+EmbReal emb_ellipse_diameterY(EmbEllipse ellipse)
 {
-    return ellipse.radius.y * 2.0;
+        return ellipse.radius.y * 2.0;
 }
 
 /*
@@ -10732,17 +6832,16 @@ void emb_ellipse_init(EmbEllipse ellipse, unsigned int rgb, int lineType)
 }
 */
 
-void
-emb_ellipse_setSize(float width, float height)
+void emb_ellipse_setSize(float width, float height)
 {
-    printf("%f %f", width, height);
-    /*
-    EmbRect elRect = rect();
-    elRect.setWidth(width);
-    elRect.setHeight(height);
-    elRect.moveCenter(EmbVector(0,0));
-    setRect(elRect);
-    */
+        printf("%f %f", width, height);
+        /*
+           EmbRect elRect = rect();
+           elRect.setWidth(width);
+           elRect.setHeight(height);
+           elRect.moveCenter(EmbVector(0,0));
+           setRect(elRect);
+         */
 }
 
 /*
@@ -10751,54 +6850,49 @@ emb_ellipse_setSize(float width, float height)
 
 /* round is C99 and we're committed to C90 so here's a replacement.
  */
-int
-emb_round(EmbReal x)
+int emb_round(EmbReal x)
 {
-    EmbReal y = floor(x);
-    if (fabs(x-y) > 0.5) {
-        return (int)ceil(x);
-    }
-    return (int)y;
+        EmbReal y = floor(x);
+        if (fabs(x - y) > 0.5) {
+                return (int)ceil(x);
+        }
+        return (int)y;
 }
 
-EmbReal
-radians(EmbReal degree)
+EmbReal radians(EmbReal degree)
 {
-    return degree*embConstantPi/180.0;
+        return degree * embConstantPi / 180.0;
 }
 
-EmbReal
-degrees(EmbReal radian)
+EmbReal degrees(EmbReal radian)
 {
-    return radian*180.0/embConstantPi;
+        return radian * 180.0 / embConstantPi;
 }
 
 /* Finds the normalized vector perpendicular (clockwise) to the line
  * given by v1->v2 (normal to the line) */
-EmbVector
-emb_line_normalVector(EmbLine line, int clockwise)
+EmbVector emb_line_normalVector(EmbLine line, int clockwise)
 {
-    EmbVector result;
-    EmbReal temp;
-    result = emb_vector_subtract(line.end, line.start);
-    result = emb_vector_normalize(result);
-    temp = result.x;
-    result.x = result.y;
-    result.y = -temp;
-    if (!clockwise) {
-        result.x = -result.x;
-        result.y = -result.y;
-    }
-    return result;
+        EmbVector result;
+        EmbReal temp;
+        result = emb_vector_subtract(line.end, line.start);
+        result = emb_vector_normalize(result);
+        temp = result.x;
+        result.x = result.y;
+        result.y = -temp;
+        if (!clockwise) {
+                result.x = -result.x;
+                result.y = -result.y;
+        }
+        return result;
 }
 
 /* Returns the vector that is the same length as the line, in the same
  * direction.
  */
-EmbVector
-emb_line_toVector(EmbLine line)
+EmbVector emb_line_toVector(EmbLine line)
 {
-    return emb_vector_subtract(line.end, line.start);
+        return emb_vector_subtract(line.end, line.start);
 }
 
 /*
@@ -10808,40 +6902,39 @@ emb_line_toVector(EmbLine line)
 EmbVector
 emb_line_intersectionPoint(EmbLine line1, EmbLine line2, int *emb_error)
 {
-    EmbReal det, C2, C1, tolerance;
-    EmbVector vec1, vec2, result;
-    *emb_error = 0;
-    vec1 = emb_line_toVector(line1);
-    vec2 = emb_line_toVector(line2);
-    C2 = emb_vector_cross(line1.start, vec1);
-    C1 = emb_vector_cross(line2.start, vec2);
+        EmbReal det, C2, C1, tolerance;
+        EmbVector vec1, vec2, result;
+        *emb_error = 0;
+        vec1 = emb_line_toVector(line1);
+        vec2 = emb_line_toVector(line2);
+        C2 = emb_vector_cross(line1.start, vec1);
+        C1 = emb_vector_cross(line2.start, vec2);
 
-    tolerance = 1e-10;
-    det = emb_vector_cross(vec2, vec1);
+        tolerance = 1e-10;
+        det = emb_vector_cross(vec2, vec1);
 
-    if (fabs(det) < tolerance) {
-        /* Default to the origin when an error is thrown. */
-        *emb_error = 1;
-        result.x = 0.0;
-        result.y = 0.0;
+        if (fabs(det) < tolerance) {
+                /* Default to the origin when an error is thrown. */
+                *emb_error = 1;
+                result.x = 0.0;
+                result.y = 0.0;
+                return result;
+        }
+        result.x = (vec2.x * C2 - vec1.x * C1) / det;
+        result.y = (vec2.y * C2 - vec1.y * C1) / det;
         return result;
-    }
-    result.x = (vec2.x * C2 - vec1.x * C1) / det;
-    result.y = (vec2.y * C2 - vec1.y * C1) / det;
-    return result;
 }
 
 /* .
  */
-EmbRect
-emb_rect(EmbReal x, EmbReal y, EmbReal w, EmbReal h)
+EmbRect emb_rect(EmbReal x, EmbReal y, EmbReal w, EmbReal h)
 {
-    EmbRect rect;
-    rect.x = x;
-    rect.y = y;
-    rect.w = w;
-    rect.h = h;
-    return rect;
+        EmbRect rect;
+        rect.x = x;
+        rect.y = y;
+        rect.w = w;
+        rect.h = h;
+        return rect;
 }
 
 //NOTE: This void should be used to interpret various object types and save them as polylines for stitchOnly formats.
@@ -11022,291 +7115,299 @@ void textSingle_setText(const char* str)
 }
 */
 
-void
-textSingle_setJustify(EmbGeometry *g, const char *justify)
+void textSingle_setJustify(EmbGeometry *g, const char *justify)
 {
-    printf("%p, %s\n", g, justify);
-    /*
-    // Verify the string is a valid option
-    objTextJustify = "Left";
-    if ((justify == "Left") || (justify == "Center") || (justify == "Right")
-        || (justify == "Aligned") || (justify == "Middle") || (justify == "Fit")
-        || (justify == "Top Left") || (justify == "Top Center") || (justify == "Top Right")
-        || (justify == "Middle Left") || (justify == "Middle Center") || (justify == "Middle Right")
-        || (justify == "Bottom Left") || (justify == "Bottom Center") || (justify == "Bottom Right")) {
-        objTextJustify = justify;
-    }
-    setText(objText);
-    */
+        printf("%p, %s\n", g, justify);
+        /*
+           // Verify the string is a valid option
+           objTextJustify = "Left";
+           if ((justify == "Left") || (justify == "Center") || (justify == "Right")
+           || (justify == "Aligned") || (justify == "Middle") || (justify == "Fit")
+           || (justify == "Top Left") || (justify == "Top Center") || (justify == "Top Right")
+           || (justify == "Middle Left") || (justify == "Middle Center") || (justify == "Middle Right")
+           || (justify == "Bottom Left") || (justify == "Bottom Center") || (justify == "Bottom Right")) {
+           objTextJustify = justify;
+           }
+           setText(objText);
+         */
 }
 
 /* . */
-int
-emb_backwards(EmbGeometry *g, EmbError *error)
+int emb_backwards(EmbGeometry *g, EmbError *error)
 {
-    /*
-    objTextBackward = value;
-    setText(objText);
-    */
-    *error = EMB_NO_ERR;
-    return 0;
+        /*
+           objTextBackward = value;
+           setText(objText);
+         */
+        *error = EMB_NO_ERR;
+        return 0;
 }
 
-int
-emb_bold(EmbGeometry *g, EmbError *error)
+int emb_bold(EmbGeometry *g, EmbError *error)
 {
-    /*
-    objTextBold = val;
-    setText(objText);
-    */
-    *error = EMB_NO_ERR;
-    return 0;
+        /*
+           objTextBold = val;
+           setText(objText);
+         */
+        *error = EMB_NO_ERR;
+        return 0;
 }
 
-int
-emb_bulge(EmbGeometry *g, EmbError *error)
+int emb_bulge(EmbGeometry *g, EmbError *error)
 {
-    *error = EMB_NO_ERR;
-    return 0;
+        *error = EMB_NO_ERR;
+        return 0;
 }
 
-EmbReal
-emb_chord_length(EmbGeometry *g, EmbError *error)
+EmbReal emb_chord_length(EmbGeometry *g, EmbError *error)
 {
-    EmbVector v = emb_chord(g, error);
-    if (*error) {
+        EmbVector v = emb_chord(g, error);
+        if (*error) {
+                return 0.0;
+        }
+        *error = EMB_NO_ERR;
+        return emb_vector_length(v);
+}
+
+EmbReal emb_chord_angle(EmbGeometry *g, EmbError *error)
+{
         return 0.0;
-    }
-    *error = EMB_NO_ERR;
-    return emb_vector_length(v);
-}
-
-EmbReal
-emb_chord_angle(EmbGeometry *g, EmbError *error)
-{
-    return 0.0;
 }
 
 #if 0
-    case EMB_CHORDANGLE: {
+case EMB_CHORDANGLE:{
         EmbVector delta = emb_chord(g, EMB_CHORD).v;
         v = script_real(emb_vector_angle(delta));
         break;
-    }
-    case EMB_CHORDMID: {
+}
+
+case EMB_CHORDMID:{
         v = emb_chord(g, EMB_CHORD);
         v.v = emb_vector_scale(v.v, 0.5);
         break;
-    }
-    case EMB_DIAMETER: {
+}
+
+case EMB_DIAMETER:{
         v = emb_radius(g, error);
         v.r = fabs(v.r * 2.0);
         break;
-    }
-    case EMB_INCANGLE: {
+}
+
+case EMB_INCANGLE:{
         EmbReal bulge = emb_bulge(g, EMB_BULGE).r;
-        v = script_real(atan(bulge)*4.0);
+        v = script_real(atan(bulge) * 4.0);
         break;
-    }
-    case EMB_FONT: {
+}
+
+case EMB_FONT:{
         /*
-        objTextFont = font;
-        setText(objText);
-        */
+           objTextFont = font;
+           setText(objText);
+         */
         break;
-    }
-    case EMB_ITALIC: {
+}
+
+case EMB_ITALIC:{
         /*
-        objTextItalic = val;
-        setText(objText);
-        */
+           objTextItalic = val;
+           setText(objText);
+         */
         break;
-    }
-    case EMB_SAGITTA: {
+}
+
+case EMB_SAGITTA:{
         EmbReal chord = emb_chord(g);
         ScriptValue bulge = emb_bulge(g, EMB_BULGE);
         return script_real(fabs((chord / 2.0) * bulge.r));
-    }
-    case EMB_STRIKEOUT: {
+}
+
+case EMB_STRIKEOUT:{
         /*
-        objTextStrikeOut = val;
-        setText(objText);
-        */
+           objTextStrikeOut = val;
+           setText(objText);
+         */
         break;
-    }
-    case EMB_OVERLINE: {
+}
+
+case EMB_OVERLINE:{
         /*
-        objTextOverline = val;
-        setText(objText);
-        */
+           objTextOverline = val;
+           setText(objText);
+         */
         break;
-    }
-    case EMB_UNDERLINE: {
+}
+
+case EMB_UNDERLINE:{
         /*
-        objTextUnderline = val;
-        setText(objText);
-        */
+           objTextUnderline = val;
+           setText(objText);
+         */
         break;
-    }
-    case EMB_UPSIDEDOWN: {
+}
+
+case EMB_UPSIDEDOWN:{
         /*
-        objTextUpsideDown = value;
-        setText(objText);
-        */
+           objTextUpsideDown = value;
+           setText(objText);
+         */
         break;
-    }
-    case EMB_SIZE: {
+}
+
+case EMB_SIZE:{
         /*
-        objTextSize = value;
-        setText(objText);
-        */
+           objTextSize = value;
+           setText(objText);
+         */
         break;
-    }
-    case EMB_PERIMETER: {
+}
+
+case EMB_PERIMETER:{
         break;
-    }
-    default:
-        break;
-    }
-    return v;
+}
+
+default:
+break;
+}
+
+return v;
 }
 
 /* */
-int
-emb_gset(EmbGeometry *g, int attribute, ScriptValue value)
+int emb_gset(EmbGeometry *g, int attribute, ScriptValue value)
 {
-    printf("%d\n", value.type);
-    switch (g->type) {
-    case EMB_BOLD: {
-        /*
-        objTextBold = val;
-        setText(objText);
-        */
-        break;
-    }
-    case EMB_ITALIC: {
-        /*
-        objTextItalic = val;
-        setText(objText);
-        */
-        break;
-    }
-    case EMB_UNDERLINE: {
-        /*
-        objTextUnderline = val;
-        setText(objText);
-        */
-        break;
-    }
-    case EMB_STRIKEOUT: {
-        /*
-        objTextStrikeOut = val;
-        setText(objText);
-        */
-        break;
-    }
-    case EMB_OVERLINE: {
-        /*
-        objTextOverline = val;
-        setText(objText);
-        */
-        break;
-    }
-    case EMB_BACKWARDS: {
-        /*
-        objTextBackward = val;
-        setText(objText);
-        */
-        break;
-    }
-    case EMB_UPSIDEDOWN: {
-        /*
-        objTextUpsideDown = val;
-        setText(objText);
-        */
-        break;
-    }
-    case EMB_SAGITTA: {
-        if (g->type != EMB_ARC) {
-            /* ERROR */
-            return 0;
+        printf("%d\n", value.type);
+        switch (g->type) {
+        case EMB_BOLD:{
+                        /*
+                           objTextBold = val;
+                           setText(objText);
+                         */
+                        break;
+                }
+        case EMB_ITALIC:{
+                        /*
+                           objTextItalic = val;
+                           setText(objText);
+                         */
+                        break;
+                }
+        case EMB_UNDERLINE:{
+                        /*
+                           objTextUnderline = val;
+                           setText(objText);
+                         */
+                        break;
+                }
+        case EMB_STRIKEOUT:{
+                        /*
+                           objTextStrikeOut = val;
+                           setText(objText);
+                         */
+                        break;
+                }
+        case EMB_OVERLINE:{
+                        /*
+                           objTextOverline = val;
+                           setText(objText);
+                         */
+                        break;
+                }
+        case EMB_BACKWARDS:{
+                        /*
+                           objTextBackward = val;
+                           setText(objText);
+                         */
+                        break;
+                }
+        case EMB_UPSIDEDOWN:{
+                        /*
+                           objTextUpsideDown = val;
+                           setText(objText);
+                         */
+                        break;
+                }
+        case EMB_SAGITTA:{
+                        if (g->type != EMB_ARC) {
+                                /* ERROR */
+                                return 0;
+                        }
+                        break;
+                }
+        case EMB_BULGE:{
+                        if (g->type != EMB_ARC) {
+                                /* ERROR */
+                                return 0;
+                        }
+                        break;
+                }
+        case EMB_SIZE:{
+                        /*
+                           objTextSize = value;
+                           setText(objText);
+                         */
+                        break;
+                }
+        case EMB_PERIMETER:{
+                        /* TODO: Use Ramanujan's approximation here. */
+                        break;
+                }
+        case EMB_AREA:{
+                        /* TODO: look up a formula for ellipses. */
+                        break;
+                }
+        default:
+                break;
         }
-        break;
-    }
-    case EMB_BULGE: {
-        if (g->type != EMB_ARC) {
-            /* ERROR */
-            return 0;
-        }
-        break;
-    }
-    case EMB_SIZE: {
-        /*
-        objTextSize = value;
-        setText(objText);
-        */
-        break;
-    }
-    case EMB_PERIMETER: {
-        /* TODO: Use Ramanujan's approximation here. */
-        break;
-    }
-    case EMB_AREA: {
-        /* TODO: look up a formula for ellipses. */
-        break;
-    }
-    default:
-        break;
-    }
-    return 0;
+        return 0;
 }
 #endif
 
 /* Finds the location of the first non-whitespace character
  * in the string and returns it.
  */
-int
-string_whitespace(const char *s)
+int string_whitespace(const char *s)
 {
-    int i;
-    for (i=0; i<200; i++) {
-        if (s[i] == ' ') continue;
-        if (s[i] == '\t') continue;
-        if (s[i] == '\r') continue;
-        if (s[i] == '\n') continue;
+        int i;
+        for (i = 0; i < 200; i++) {
+                if (s[i] == ' ')
+                        continue;
+                if (s[i] == '\t')
+                        continue;
+                if (s[i] == '\r')
+                        continue;
+                if (s[i] == '\n')
+                        continue;
+                return i;
+        }
         return i;
-    }
-    return i;
 }
 
 /* Note that our version of strlen can tell us that
  * the string is not null-terminated by returning -1.
  */
-int
-string_len(const char *src)
+int embstr_len(EmbString src)
 {
-    int i;
-    for (i=0; i<200; i++) {
-        if (src[i] == 0) {
-            return i;
+        int i;
+        for (i = 0; i < 200; i++) {
+                if (src[i] == 0) {
+                        return i;
+                }
         }
-    }
-    return -1;
+        return -1;
 }
 
 /*
  */
-int
-string_rchar(const char *s, char c)
+int string_rchar(const char *s, char c)
 {
-	int i;
-	int n = string_len(s);
-	for (i=n-1; i>=0; i--) {
-		if (s[i] == c) {
-			return i;
-		}
-	}
-	return 0;
+        int i;
+        int n = embstr_len(s);
+        for (i = n - 1; i >= 0; i--) {
+                if (s[i] == c) {
+                        return i;
+                }
+        }
+        return 0;
 }
 
 /* ENCODING SECTION
@@ -11325,49 +7426,47 @@ string_rchar(const char *s, char c)
  * a val 6 byte code describing the color as a hex string, doesn't require null termination.
  * Returns EmbColor the same color as our internal type.
  */
-EmbColor
-embColor_fromHexStr(char* val)
+EmbColor embColor_fromHexStr(char *val)
 {
-    EmbColor color;
-    char r[3];
-    char g[3];
-    char b[3];
+        EmbColor color;
+        char r[3];
+        char g[3];
+        char b[3];
 
-    r[0] = val[0];
-    r[1] = val[1];
-    r[2] = 0;
+        r[0] = val[0];
+        r[1] = val[1];
+        r[2] = 0;
 
-    g[0] = val[2];
-    g[1] = val[3];
-    g[2] = 0;
+        g[0] = val[2];
+        g[1] = val[3];
+        g[2] = 0;
 
-    b[0] = val[4];
-    b[1] = val[5];
-    b[2] = 0;
+        b[0] = val[4];
+        b[1] = val[5];
+        b[2] = 0;
 
-    color.r = (unsigned char)strtol(r, 0, 16);
-    color.g = (unsigned char)strtol(g, 0, 16);
-    color.b = (unsigned char)strtol(b, 0, 16);
-    return color;
+        color.r = (unsigned char)strtol(r, 0, 16);
+        color.g = (unsigned char)strtol(g, 0, 16);
+        color.b = (unsigned char)strtol(b, 0, 16);
+        return color;
 }
 
 EmbColor
 embColor_make(unsigned char red, unsigned char green, unsigned char blue)
 {
-    EmbColor c;
-    c.r = red;
-    c.b = green;
-    c.g = blue;
-    return c;
+        EmbColor c;
+        c.r = red;
+        c.b = green;
+        c.g = blue;
+        return c;
 }
 
 /* Swap two bytes' positions. */
-void
-emb_swap(char *a, int i, int j)
+void emb_swap(char *a, int i, int j)
 {
-    char tmp = a[i];
-    a[i] = a[j];
-    a[j] = tmp;
+        char tmp = a[i];
+        a[i] = a[j];
+        a[j] = tmp;
 }
 
 /* The array management for libembroidery's arrays.
@@ -11376,325 +7475,323 @@ emb_swap(char *a, int i, int j)
 /* Allocates memory for an EmbArray of the type determined by
  * the argument a type.
  */
-EmbArray*
-emb_array_create(int type)
+EmbArray *emb_array_create(int type)
 {
-    EmbArray *a;
-    a = (EmbArray*)malloc(sizeof(EmbArray));
-    a->type = type;
-    a->length = CHUNK_SIZE;
-    a->count = 0;
-    switch (type) {
-    case EMB_STITCH:
-        a->stitch = (EmbStitch*)malloc(CHUNK_SIZE*sizeof(EmbStitch));
-        break;
-    case EMB_THREAD:
-        a->thread = (EmbThread*)malloc(CHUNK_SIZE*sizeof(EmbThread));
-        break;
-    default:
-        a->geometry = (EmbGeometry*)malloc(CHUNK_SIZE*sizeof(EmbGeometry));
-        break;
-    }
-    return a;
+        EmbArray *a;
+        a = (EmbArray *) malloc(sizeof(EmbArray));
+        a->type = type;
+        a->length = CHUNK_SIZE;
+        a->count = 0;
+        switch (type) {
+        case EMB_STITCH:
+                a->stitch =
+                    (EmbStitch *) malloc(CHUNK_SIZE * sizeof(EmbStitch));
+                break;
+        case EMB_THREAD:
+                a->thread =
+                    (EmbThread *) malloc(CHUNK_SIZE * sizeof(EmbThread));
+                break;
+        default:
+                a->geometry =
+                    (EmbGeometry *) malloc(CHUNK_SIZE * sizeof(EmbGeometry));
+                break;
+        }
+        return a;
 }
 
 /* Resizes the array a a to be CHUNK_SIZE entries longer
  * if and only if the amount of room left is less than
  * 3 entries.
  */
-int
-emb_array_resize(EmbArray *a)
+int emb_array_resize(EmbArray *a)
 {
-    if (a->count < a->length - 3) {
-        return 1;
-    }
-    a->length += CHUNK_SIZE;
-    switch (a->type) {
-    case EMB_STITCH:
-        a->stitch = (EmbStitch*)realloc(a->stitch, a->length*sizeof(EmbStitch));
-        if (!a->stitch) {
-            /* TODO: Error reporting */
-            return 0;
+        if (a->count < a->length - 3) {
+                return 1;
         }
-        break;
-    case EMB_THREAD:
-        a->thread = (EmbThread*)realloc(a->thread, a->length*sizeof(EmbThread));
-        if (!a->thread) {
-            /* TODO: Error reporting */
-            return 0;
+        a->length += CHUNK_SIZE;
+        switch (a->type) {
+        case EMB_STITCH:
+                a->stitch =
+                    (EmbStitch *) realloc(a->stitch,
+                                          a->length * sizeof(EmbStitch));
+                if (!a->stitch) {
+                        /* TODO: Error reporting */
+                        return 0;
+                }
+                break;
+        case EMB_THREAD:
+                a->thread =
+                    (EmbThread *) realloc(a->thread,
+                                          a->length * sizeof(EmbThread));
+                if (!a->thread) {
+                        /* TODO: Error reporting */
+                        return 0;
+                }
+                break;
+        default:
+                a->geometry =
+                    (EmbGeometry *) realloc(a->geometry,
+                                            a->length * sizeof(EmbGeometry));
+                if (!a->geometry) {
+                        /* TODO: Error reporting */
+                        return 0;
+                }
+                break;
         }
-        break;
-    default:
-        a->geometry = (EmbGeometry *)realloc(a->geometry, a->length*sizeof(EmbGeometry));
-        if (!a->geometry) {
-            /* TODO: Error reporting */
-            return 0;
-        }
-        break;
-    }
 
-    return 1;
+        return 1;
 }
 
 /* Copies all entries in the EmbArray struct from a src to a dst.
  */
-void
-emb_array_copy(EmbArray *dst, EmbArray *src)
+void emb_array_copy(EmbArray *dst, EmbArray *src)
 {
-    dst = emb_array_create(src->type);
-    dst->length = src->length;
-    dst->count = src->count;
-    emb_array_resize(dst);
-    /* BUG: Potential failure to copy path memory, only copy pointers? */
+        dst = emb_array_create(src->type);
+        dst->length = src->length;
+        dst->count = src->count;
+        emb_array_resize(dst);
+        /* BUG: Potential failure to copy path memory, only copy pointers? */
 
-    switch (dst->type) {
-    case EMB_STITCH:
-        memcpy(dst->stitch, src->stitch, sizeof(EmbStitch)*src->count);
-        break;
-    case EMB_THREAD:
-        memcpy(dst->thread, src->thread, sizeof(EmbThread)*src->count);
-        break;
-    default:
-        memcpy(dst->geometry, src->geometry, sizeof(EmbGeometry)*src->count);
-        break;
-    }
+        switch (dst->type) {
+        case EMB_STITCH:
+                memcpy(dst->stitch, src->stitch,
+                       sizeof(EmbStitch) * src->count);
+                break;
+        case EMB_THREAD:
+                memcpy(dst->thread, src->thread,
+                       sizeof(EmbThread) * src->count);
+                break;
+        default:
+                memcpy(dst->geometry, src->geometry,
+                       sizeof(EmbGeometry) * src->count);
+                break;
+        }
 }
 
 /* Add a circle a b to the EmbArray a a and it returns if the
  * element was successfully added.
  */
-int
-emb_array_add_circle(EmbArray *a, EmbCircle b)
+int emb_array_add_circle(EmbArray *a, EmbCircle b)
 {
-    a->count++;
-    if (!emb_array_resize(a)) {
-        return 0;
-    }
-    a->geometry[a->count - 1].object.circle = b;
-    a->geometry[a->count - 1].type = EMB_CIRCLE;
-    return 1;
+        a->count++;
+        if (!emb_array_resize(a)) {
+                return 0;
+        }
+        a->geometry[a->count - 1].object.circle = b;
+        a->geometry[a->count - 1].type = EMB_CIRCLE;
+        return 1;
 }
 
 /* Add an ellipse a b to the EmbArray a a and it returns if the
  * element was successfully added.
  */
-int
-emb_array_add_ellipse(EmbArray *a, EmbEllipse b)
+int emb_array_add_ellipse(EmbArray *a, EmbEllipse b)
 {
-    a->count++;
-    if (!emb_array_resize(a)) {
-        return 0;
-    }
-    a->geometry[a->count - 1].object.ellipse = b;
-    a->geometry[a->count - 1].type = EMB_ELLIPSE;
-    return 1;
+        a->count++;
+        if (!emb_array_resize(a)) {
+                return 0;
+        }
+        a->geometry[a->count - 1].object.ellipse = b;
+        a->geometry[a->count - 1].type = EMB_ELLIPSE;
+        return 1;
 }
 
 /* Add a flag a b to the EmbArray a a and it returns if the
  * element was successfully added.
  */
-int
-emb_array_add_flag(EmbArray *a, EmbFlag b)
+int emb_array_add_flag(EmbArray *a, EmbFlag b)
 {
-    a->count++;
-    if (!emb_array_resize(a)) {
-        return 0;
-    }
-    a->geometry[a->count - 1].flag = b;
-    a->geometry[a->count - 1].type = EMB_FLAG;
-    return 1;
+        a->count++;
+        if (!emb_array_resize(a)) {
+                return 0;
+        }
+        a->geometry[a->count - 1].flag = b;
+        a->geometry[a->count - 1].type = EMB_FLAG;
+        return 1;
 }
 
 /* Add a line a b to the EmbArray a a and it returns if the
  * element was successfully added.
  */
-int
-emb_array_addLine(EmbArray *a, EmbLine b)
+int emb_array_addLine(EmbArray *a, EmbLine b)
 {
-    a->count++;
-    if (!emb_array_resize(a)) {
-        return 0;
-    }
-    a->geometry[a->count - 1].object.line = b;
-    a->geometry[a->count - 1].type = EMB_LINE;
-    return 1;
+        a->count++;
+        if (!emb_array_resize(a)) {
+                return 0;
+        }
+        a->geometry[a->count - 1].object.line = b;
+        a->geometry[a->count - 1].type = EMB_LINE;
+        return 1;
 }
 
 /* Add a path a b to the EmbArray a a and it returns if the
  * element was successfully added.
  */
-int
-emb_array_addPath(EmbArray *a, EmbPath b)
+int emb_array_addPath(EmbArray *a, EmbPath b)
 {
-    a->count++;
-    if (!emb_array_resize(a)) {
-        return 0;
-    }
-    a->geometry[a->count - 1].object.path = b;
-    a->geometry[a->count - 1].type = EMB_PATH;
-    return 1;
+        a->count++;
+        if (!emb_array_resize(a)) {
+                return 0;
+        }
+        a->geometry[a->count - 1].object.path = b;
+        a->geometry[a->count - 1].type = EMB_PATH;
+        return 1;
 }
 
 /* Add a point a b to the EmbArray a a and it returns if the
  * element was successfully added.
  */
-int
-emb_array_addPoint(EmbArray *a, EmbPoint b)
+int emb_array_addPoint(EmbArray *a, EmbPoint b)
 {
-    a->count++;
-    if (!emb_array_resize(a)) {
-        return 0;
-    }
-    a->geometry[a->count - 1].object.point = b;
-    a->geometry[a->count - 1].type = EMB_POINT;
-    return 1;
+        a->count++;
+        if (!emb_array_resize(a)) {
+                return 0;
+        }
+        a->geometry[a->count - 1].object.point = b;
+        a->geometry[a->count - 1].type = EMB_POINT;
+        return 1;
 }
 
 /* Add a polyline a b to the EmbArray a a and it returns if the
  * element was successfully added.
  */
-int
-emb_array_addPolyline(EmbArray *a, EmbPolyline b)
+int emb_array_addPolyline(EmbArray *a, EmbPolyline b)
 {
-    a->count++;
-    if (!emb_array_resize(a)) {
-        return 0;
-    }
-    a->geometry[a->count - 1].object.polyline = b;
-    a->geometry[a->count - 1].type = EMB_POLYLINE;
-    return 1;
+        a->count++;
+        if (!emb_array_resize(a)) {
+                return 0;
+        }
+        a->geometry[a->count - 1].object.polyline = b;
+        a->geometry[a->count - 1].type = EMB_POLYLINE;
+        return 1;
 }
 
 /* Add a polygon a b to the EmbArray a a and it returns if the
  * element was successfully added.
  */
-int
-emb_array_addPolygon(EmbArray *a, EmbPolygon b)
+int emb_array_addPolygon(EmbArray *a, EmbPolygon b)
 {
-    a->count++;
-    if (!emb_array_resize(a)) {
-        return 0;
-    }
-    a->geometry[a->count - 1].object.polygon = b;
-    a->geometry[a->count - 1].type = EMB_POLYGON;
-    return 1;
+        a->count++;
+        if (!emb_array_resize(a)) {
+                return 0;
+        }
+        a->geometry[a->count - 1].object.polygon = b;
+        a->geometry[a->count - 1].type = EMB_POLYGON;
+        return 1;
 }
 
 /* Add a rectangle a b to the EmbArray a a and it returns if the
  * element was successfully added.
  */
-int
-emb_array_addRect(EmbArray *a, EmbRect b)
+int emb_array_addRect(EmbArray *a, EmbRect b)
 {
-    a->count++;
-    if (!emb_array_resize(a)) {
-        return 0;
-    }
-    a->geometry[a->count - 1].object.rect = b;
-    a->geometry[a->count - 1].type = EMB_RECT;
-    return 1;
+        a->count++;
+        if (!emb_array_resize(a)) {
+                return 0;
+        }
+        a->geometry[a->count - 1].object.rect = b;
+        a->geometry[a->count - 1].type = EMB_RECT;
+        return 1;
 }
 
 /* Add a stitch a b to the EmbArray a a and it returns if the
  * element was successfully added.
  */
-int
-emb_array_addStitch(EmbArray *a, EmbStitch b)
+int emb_array_addStitch(EmbArray *a, EmbStitch b)
 {
-    a->count++;
-    if (!emb_array_resize(a)) {
-        return 0;
-    }
-    a->stitch[a->count - 1] = b;
-    return 1;
+        a->count++;
+        if (!emb_array_resize(a)) {
+                return 0;
+        }
+        a->stitch[a->count - 1] = b;
+        return 1;
 }
-
 
 /* Add a generic geometry to the EmbArray a a and it returns if the
  * element was successfully added.
  */
-int
-emb_array_add_geometry(EmbArray *a, EmbGeometry g)
+int emb_array_add_geometry(EmbArray *a, EmbGeometry g)
 {
-    a->count++;
-    if (!emb_array_resize(a)) {
-        return 0;
-    }
-    a->geometry[a->count - 1] = g;
-    return 1;
+        a->count++;
+        if (!emb_array_resize(a)) {
+                return 0;
+        }
+        a->geometry[a->count - 1] = g;
+        return 1;
 }
 
 /* Add a vector a b to the EmbArray a a and it returns if the
  * element was successfully added.
  */
-int
-emb_array_addVector(EmbArray *a, EmbVector b)
+int emb_array_addVector(EmbArray *a, EmbVector b)
 {
-    a->count++;
-    if (!emb_array_resize(a)) {
-        return 0;
-    }
-    a->geometry[a->count - 1].object.vector = b;
-    a->geometry[a->count - 1].type = EMB_VECTOR;
-    return 1;
+        a->count++;
+        if (!emb_array_resize(a)) {
+                return 0;
+        }
+        a->geometry[a->count - 1].object.vector = b;
+        a->geometry[a->count - 1].type = EMB_VECTOR;
+        return 1;
 }
 
 /* Free the memory of EmbArray a a, recursively if necessary.
  */
-void
-emb_array_free(EmbArray* a)
+void emb_array_free(EmbArray *a)
 {
-    if (!a) {
-        return;
-    }
-    switch (a->type) {
-    case EMB_STITCH:
-        safe_free(a->stitch);
-        break;
-    case EMB_THREAD:
-        safe_free(a->thread);
-        break;
-    default: {
-        int i;
-        for (i = 0; i < a->count; i++) {
-            EmbGeometry g = a->geometry[i];
-            switch (a->geometry[i].type) {
-            case EMB_PATH: {
-                emb_array_free(g.object.path.pointList);
-                break;
-            }
-            case EMB_POLYGON: {
-                emb_array_free(g.object.polygon.pointList);
-                break;
-            }
-            case EMB_POLYLINE: {
-                emb_array_free(g.object.polyline.pointList);
-                break;
-            }
-            default:
-                break;
-            }
+        if (!a) {
+                return;
         }
-        safe_free(a->geometry);
-        break;
-    }
-    }
-    safe_free(a);
+        switch (a->type) {
+        case EMB_STITCH:
+                safe_free(a->stitch);
+                break;
+        case EMB_THREAD:
+                safe_free(a->thread);
+                break;
+        default:{
+                        int i;
+                        for (i = 0; i < a->count; i++) {
+                                EmbGeometry g = a->geometry[i];
+                                switch (a->geometry[i].type) {
+                                case EMB_PATH:{
+                                                emb_array_free(g.object.
+                                                               path.pointList);
+                                                break;
+                                        }
+                                case EMB_POLYGON:{
+                                                emb_array_free(g.object.
+                                                               polygon.pointList);
+                                                break;
+                                        }
+                                case EMB_POLYLINE:{
+                                                emb_array_free(g.
+                                                               object.polyline.pointList);
+                                                break;
+                                        }
+                                default:
+                                        break;
+                                }
+                        }
+                        safe_free(a->geometry);
+                        break;
+                }
+        }
+        safe_free(a);
 }
 
 /* Print the vector "v2 with the name "label". */
 void emb_vector_print(EmbVector v, char *label)
 {
-    printf("%sX = %f\n", label, v.x);
-    printf("%sY = %f\n", label, v.y);
+        printf("%sX = %f\n", label, v.x);
+        printf("%sY = %f\n", label, v.y);
 }
 
 /* Print the arc "arc". */
 void emb_arc_print(EmbArc arc)
 {
-    emb_vector_print(arc.start, "start");
-    emb_vector_print(arc.mid, "middle");
-    emb_vector_print(arc.end, "end");
+        emb_vector_print(arc.start, "start");
+        emb_vector_print(arc.mid, "middle");
+        emb_vector_print(arc.end, "end");
 }
 
 /* Checks that there are enough bytes to interpret the header,
@@ -11703,611 +7800,639 @@ void emb_arc_print(EmbArc arc)
  * Returns 0 if there aren't enough, or the length of the file
  * if there are.
  */
-int
-check_header_present(FILE* file, int minimum_header_length)
+int check_header_present(FILE *file, int minimum_header_length)
 {
-    int length;
-    fseek(file, 0, SEEK_END);
-    length = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    if (length < minimum_header_length) {
-        return 0;
-    }
-    return length;
+        int length;
+        fseek(file, 0, SEEK_END);
+        length = ftell(file);
+        fseek(file, 0, SEEK_SET);
+        if (length < minimum_header_length) {
+                return 0;
+        }
+        return length;
 }
 
 /* sectorSize based on the bcfFile version. */
-unsigned int
-sectorSize(bcf_file* bcfFile)
+unsigned int sectorSize(bcf_file *bcfFile)
 {
-    /* version 3 uses 512 byte */
-    if (bcfFile->header.majorVersion == 3) {
-        return 512;
-    }
-    return 4096;
+        /* version 3 uses 512 byte */
+        if (bcfFile->header.majorVersion == 3) {
+                return 512;
+        }
+        return 4096;
 }
 
 /* . */
-int
-haveExtraDIFATSectors(bcf_file* file)
+int haveExtraDIFATSectors(bcf_file *file)
 {
-    return (int)(entriesInDifatSector(file->difat) > 0);
+        return (int)(entriesInDifatSector(file->difat) > 0);
 }
 
 /* . */
-int
-seekToSector(bcf_file* bcfFile, FILE* file, const unsigned int sector)
+int seekToSector(bcf_file *bcfFile, FILE *file, const unsigned int sector)
 {
-    unsigned int offset = sector * sectorSize(bcfFile) + sectorSize(bcfFile);
-    return fseek(file, offset, SEEK_SET);
+        unsigned int offset =
+            sector * sectorSize(bcfFile) + sectorSize(bcfFile);
+        return fseek(file, offset, SEEK_SET);
 }
 
 /* . */
-void
-parseDIFATSectors(FILE* file, bcf_file* bcfFile)
+void parseDIFATSectors(FILE *file, bcf_file *bcfFile)
 {
-    unsigned int difatEntriesToRead = bcfFile->header.numberOfFATSectors - difatEntriesInHeader;
-    unsigned int difatSectorNumber = bcfFile->header.firstDifatSectorLocation;
-    while ((difatSectorNumber != CompoundFileSector_EndOfChain) && (difatEntriesToRead > 0)) {
-        seekToSector(bcfFile, file, difatSectorNumber);
-        difatSectorNumber = readFullSector(file, bcfFile->difat, &difatEntriesToRead);
-    }
+        unsigned int difatEntriesToRead =
+            bcfFile->header.numberOfFATSectors - difatEntriesInHeader;
+        unsigned int difatSectorNumber =
+            bcfFile->header.firstDifatSectorLocation;
+        while ((difatSectorNumber != CompoundFileSector_EndOfChain)
+               && (difatEntriesToRead > 0)) {
+                seekToSector(bcfFile, file, difatSectorNumber);
+                difatSectorNumber =
+                    readFullSector(file, bcfFile->difat, &difatEntriesToRead);
+        }
 }
 
 /* . */
-int
-bcfFile_read(FILE* file, bcf_file* bcfFile)
+int bcfFile_read(FILE *file, bcf_file *bcfFile)
 {
-    unsigned int i, numberOfDirectoryEntriesPerSector;
-    unsigned int directorySectorToReadFrom;
+        unsigned int i, numberOfDirectoryEntriesPerSector;
+        unsigned int directorySectorToReadFrom;
 
-    bcfFile->header = bcfFileHeader_read(file);
-    if (memcmp(bcfFile->header.signature, "\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1", 8) != 0) {
-        printf("bad header signature\n");
-        printf("Failed to parse header\n");
-        return 0;
-    }
+        bcfFile->header = bcfFileHeader_read(file);
+        if (memcmp
+            (bcfFile->header.signature, "\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1",
+             8) != 0) {
+                printf("bad header signature\n");
+                printf("Failed to parse header\n");
+                return 0;
+        }
 
-    bcfFile->difat = bcf_difat_create(file, bcfFile->header.numberOfFATSectors, sectorSize(bcfFile));
-    if (haveExtraDIFATSectors(bcfFile)) {
-        parseDIFATSectors(file, bcfFile);
-    }
+        bcfFile->difat =
+            bcf_difat_create(file, bcfFile->header.numberOfFATSectors,
+                             sectorSize(bcfFile));
+        if (haveExtraDIFATSectors(bcfFile)) {
+                parseDIFATSectors(file, bcfFile);
+        }
 
-    bcfFile->fat = bcfFileFat_create(sectorSize(bcfFile));
-    for (i = 0; i < bcfFile->header.numberOfFATSectors; ++i) {
-        unsigned int fatSectorNumber = bcfFile->difat->fatSectorEntries[i];
-        seekToSector(bcfFile, file, fatSectorNumber);
-        loadFatFromSector(bcfFile->fat, file);
-    }
+        bcfFile->fat = bcfFileFat_create(sectorSize(bcfFile));
+        for (i = 0; i < bcfFile->header.numberOfFATSectors; ++i) {
+                unsigned int fatSectorNumber =
+                    bcfFile->difat->fatSectorEntries[i];
+                seekToSector(bcfFile, file, fatSectorNumber);
+                loadFatFromSector(bcfFile->fat, file);
+        }
 
-    numberOfDirectoryEntriesPerSector = sectorSize(bcfFile) / sizeOfDirectoryEntry;
-    bcfFile->directory = CompoundFileDirectory(numberOfDirectoryEntriesPerSector);
-    directorySectorToReadFrom = bcfFile->header.firstDirectorySectorLocation;
-    while (directorySectorToReadFrom != CompoundFileSector_EndOfChain) {
-        seekToSector(bcfFile, file, directorySectorToReadFrom);
-        readNextSector(file, bcfFile->directory);
-        directorySectorToReadFrom = bcfFile->fat->fatEntries[directorySectorToReadFrom];
-    }
+        numberOfDirectoryEntriesPerSector =
+            sectorSize(bcfFile) / sizeOfDirectoryEntry;
+        bcfFile->directory =
+            CompoundFileDirectory(numberOfDirectoryEntriesPerSector);
+        directorySectorToReadFrom =
+            bcfFile->header.firstDirectorySectorLocation;
+        while (directorySectorToReadFrom != CompoundFileSector_EndOfChain) {
+                seekToSector(bcfFile, file, directorySectorToReadFrom);
+                readNextSector(file, bcfFile->directory);
+                directorySectorToReadFrom =
+                    bcfFile->fat->fatEntries[directorySectorToReadFrom];
+        }
 
-    return 1;
+        return 1;
 }
 
 /* Get the File object. */
-void*
-GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind)
+void *GetFile(bcf_file *bcfFile, FILE *file, char *fileToFind)
 {
-    int filesize, sectorSize, currentSector;
-    int sizeToWrite, currentSize, totalSectors, i, j;
-    FILE* fileOut = tmpfile();
-    bcf_directory_entry* pointer = bcfFile->directory->dirEntries;
-    while (pointer) {
-        if (!strcmp(fileToFind, pointer->directoryEntryName)) {
-            break;
-        }
-        pointer = pointer->next;
-    }
-    filesize = pointer->streamSize;
-    sectorSize = bcfFile->difat->sectorSize;
-    currentSize = 0;
-    currentSector = pointer->startingSectorLocation;
-    totalSectors = (int)ceil((float)filesize / sectorSize);
-    for (i = 0; i < totalSectors; i++) {
-        seekToSector(bcfFile, file, currentSector);
-        sizeToWrite = filesize - currentSize;
-        if (sectorSize < sizeToWrite) {
-            sizeToWrite = sectorSize;
-        }
-        for (j=0; j<sizeToWrite; j++) {
-            char input;
-            if (fread(&input, 1, 1, file) != 1) {
-                /* TODO: Needs an error code. */
-                puts("ERROR: GetFile failed to read byte.");
-                return fileOut;
-            }
-            if (fwrite(&input, 1, 1, fileOut) != 1) {
-                /* TODO: Needs an error code. */
-                puts("ERROR: GetFile failed to read byte.");
-                return fileOut;
-            }
-        }
-        currentSize += sizeToWrite;
-        currentSector = bcfFile->fat->fatEntries[currentSector];
-    }
-    return fileOut;
-}
-
-/* . */
-void
-bcf_file_free(bcf_file* bcfFile)
-{
-    safe_free(bcfFile->difat);
-    safe_free(bcfFile->fat);
-    bcf_directory_free(&bcfFile->directory);
-    safe_free(bcfFile);
-}
-
-/* . */
-bcf_file_difat*
-bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize)
-{
-    unsigned int i;
-    bcf_file_difat* difat = 0;
-    unsigned int sectorRef;
-
-    difat = (bcf_file_difat*)malloc(sizeof(bcf_file_difat));
-    if (!difat) {
-        printf("ERROR: compound-file-difat.c bcf_difat_create(), cannot allocate memory for difat\n");
-        return NULL;
-    }
-
-    difat->sectorSize = sectorSize;
-    if (fatSectors > difatEntriesInHeader) {
-        fatSectors = difatEntriesInHeader;
-    }
-
-    for (i = 0; i < fatSectors; ++i) {
-        sectorRef = emb_read_i32(file);
-        difat->fatSectorEntries[i] = sectorRef;
-    }
-    difat->fatSectorCount = fatSectors;
-    for (i = fatSectors; i < difatEntriesInHeader; ++i) {
-        sectorRef = emb_read_i32(file);
-        if (sectorRef != CompoundFileSector_FreeSector) {
-            printf("ERROR: compound-file-difat.c bcf_difat_create(), Unexpected sector value %x at DIFAT[%d]\n", sectorRef, i);
-        }
-    }
-    return difat;
-}
-
-/* . */
-unsigned int
-entriesInDifatSector(bcf_file_difat* fat)
-{
-    return (fat->sectorSize - sizeOfChainingEntryAtEndOfDifatSector) / sizeOfDifatEntry;
-}
-
-/* . */
-unsigned int
-readFullSector(
-    FILE* file,
-    bcf_file_difat* bcfFile,
-    unsigned int* difatEntriesToRead)
-{
-    unsigned int i;
-    unsigned int sectorRef;
-    unsigned int nextDifatSectorInChain;
-    unsigned int entriesToReadInThisSector = 0;
-    if (*difatEntriesToRead > entriesInDifatSector(bcfFile)) {
-        entriesToReadInThisSector = entriesInDifatSector(bcfFile);
-        *difatEntriesToRead -= entriesToReadInThisSector;
-    }
-    else {
-        entriesToReadInThisSector = *difatEntriesToRead;
-        *difatEntriesToRead = 0;
-    }
-
-    for (i = 0; i < entriesToReadInThisSector; ++i) {
-        sectorRef = emb_read_i32(file);
-        bcfFile->fatSectorEntries[bcfFile->fatSectorCount] = sectorRef;
-        bcfFile->fatSectorCount++;
-    }
-    for (i = entriesToReadInThisSector; i < entriesInDifatSector(bcfFile); ++i) {
-        sectorRef = emb_read_i32(file);
-        if (sectorRef != CompoundFileSector_FreeSector) {
-            printf("ERROR: compound-file-difat.c readFullSector(), ");
-            printf("Unexpected sector value %x at DIFAT[%d]]\n", sectorRef, i);
-        }
-    }
-    nextDifatSectorInChain = emb_read_i32(file);
-    return nextDifatSectorInChain;
-}
-
-/* . */
-void
-parseDirectoryEntryName(FILE* file, bcf_directory_entry* dir)
-{
-    int i;
-    for (i = 0; i < 32; ++i) {
-        uint16_t unicodechar = emb_read_i16(file);
-        if (unicodechar != 0x0000) {
-            dir->directoryEntryName[i] = (char)unicodechar;
-        }
-    }
-}
-
-/* . */
-bcf_directory*
-CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries)
-{
-    bcf_directory* dir = (bcf_directory*)malloc(sizeof(bcf_directory));
-    if (!dir) {
-        printf("ERROR: compound-file-directory.c CompoundFileDirectory(), cannot allocate memory for dir\n");
-        return NULL;
-    } /* TODO: avoid crashing. null pointer will be accessed */
-    dir->maxNumberOfDirectoryEntries = maxNumberOfDirectoryEntries;
-    dir->dirEntries = 0;
-    return dir;
-}
-
-/* . */
-EmbTime
-parseTime(FILE* file)
-{
-    EmbTime returnVal;
-    unsigned int ft_low, ft_high;
-    /*embTime_time(&returnVal); TODO: use embTime_time() rather than time(). */
-    ft_low = emb_read_i32(file);
-    ft_high = emb_read_i32(file);
-    printf("%u %u\n", ft_low, ft_high);
-    /* TODO: translate to actual date time */
-    returnVal.day = 1;
-    returnVal.hour = 2;
-    returnVal.minute = 3;
-    returnVal.month = 4;
-    returnVal.second = 5;
-    returnVal.year = 6;
-    return returnVal;
-}
-
-/* . */
-bcf_directory_entry*
-CompoundFileDirectoryEntry(FILE* file)
-{
-    int i;
-    const int guidSize = 16;
-    bcf_directory_entry* dir = malloc(sizeof(bcf_directory_entry));
-    if (dir == NULL) {
-        printf("ERROR: compound-file-directory.c CompoundFileDirectoryEntry(), cannot allocate memory for dir\n");
-        return NULL;
-    }
-    memset(dir->directoryEntryName, 0, 32);
-    parseDirectoryEntryName(file, dir);
-    dir->next = 0;
-    dir->directoryEntryNameLength = emb_read_u16(file);
-    dir->objectType = (unsigned char)fgetc(file);
-    if ((dir->objectType != ObjectTypeStorage) && (dir->objectType != ObjectTypeStream) && (dir->objectType != ObjectTypeRootEntry)) {
-        printf("ERROR: compound-file-directory.c CompoundFileDirectoryEntry()");
-        printf(", unexpected object type: %d\n", dir->objectType);
-        return NULL;
-    }
-    dir->colorFlag = (unsigned char)fgetc(file);
-    dir->leftSiblingId = emb_read_i32(file);
-    dir->rightSiblingId = emb_read_i32(file);
-    dir->childId = emb_read_i32(file);
-    if (fread(dir->CLSID, 1, guidSize, file) < guidSize) {
-        printf("ERROR: Failed to read guidSize bytes for CLSID");
-        return dir;
-    }
-    dir->stateBits = emb_read_i32(file);
-    for (i=0; i<6; i++) {
-        dir->creationTime[i] = emb_read_i32(file);
-    }
-    for (i=0; i<6; i++) {
-        dir->modifiedTime[i] = emb_read_i32(file);
-    }
-    dir->startingSectorLocation = emb_read_i32(file);
-    /* StreamSize should really be __int64 or long long,
-     * but for our uses we should never run into an issue */
-    dir->streamSize = emb_read_i32(file);
-    /* top portion of int64 */
-    dir->streamSizeHigh = emb_read_i32(file);
-    return dir;
-}
-
-/* . */
-void
-readNextSector(FILE* file, bcf_directory* dir)
-{
-    unsigned int i;
-    for (i = 0; i < dir->maxNumberOfDirectoryEntries; ++i) {
-        bcf_directory_entry* dirEntry = CompoundFileDirectoryEntry(file);
-        bcf_directory_entry* pointer = dir->dirEntries;
-        if (!pointer) {
-            dir->dirEntries = dirEntry;
-        }
-        else {
-            while (pointer) {
-                if (!pointer->next) {
-                    pointer->next = dirEntry;
-                    break;
+        int filesize, sectorSize, currentSector;
+        int sizeToWrite, currentSize, totalSectors, i, j;
+        FILE *fileOut = tmpfile();
+        bcf_directory_entry *pointer = bcfFile->directory->dirEntries;
+        while (pointer) {
+                if (!strcmp(fileToFind, pointer->directoryEntryName)) {
+                        break;
                 }
                 pointer = pointer->next;
-            }
         }
-    }
+        filesize = pointer->streamSize;
+        sectorSize = bcfFile->difat->sectorSize;
+        currentSize = 0;
+        currentSector = pointer->startingSectorLocation;
+        totalSectors = (int)ceil((float)filesize / sectorSize);
+        for (i = 0; i < totalSectors; i++) {
+                seekToSector(bcfFile, file, currentSector);
+                sizeToWrite = filesize - currentSize;
+                if (sectorSize < sizeToWrite) {
+                        sizeToWrite = sectorSize;
+                }
+                for (j = 0; j < sizeToWrite; j++) {
+                        char input;
+                        if (fread(&input, 1, 1, file) != 1) {
+                                /* TODO: Needs an error code. */
+                                puts("ERROR: GetFile failed to read byte.");
+                                return fileOut;
+                        }
+                        if (fwrite(&input, 1, 1, fileOut) != 1) {
+                                /* TODO: Needs an error code. */
+                                puts("ERROR: GetFile failed to read byte.");
+                                return fileOut;
+                        }
+                }
+                currentSize += sizeToWrite;
+                currentSector = bcfFile->fat->fatEntries[currentSector];
+        }
+        return fileOut;
 }
 
 /* . */
-void
-bcf_directory_free(bcf_directory** dir)
+void bcf_file_free(bcf_file *bcfFile)
 {
-    bcf_directory *dirptr;
-    bcf_directory_entry* pointer;
-    if (dir == NULL){
-        return;
-    }
-    dirptr = *dir;
-    pointer = dirptr->dirEntries;
-    while (pointer) {
-        bcf_directory_entry* entryToFree;
-        entryToFree = pointer;
-        pointer = pointer->next;
-        safe_free(entryToFree);
-    }
-    safe_free(*dir);
+        safe_free(bcfFile->difat);
+        safe_free(bcfFile->fat);
+        bcf_directory_free(&bcfFile->directory);
+        safe_free(bcfFile);
 }
 
 /* . */
-bcf_file_fat*
-bcfFileFat_create(const unsigned int sectorSize)
+bcf_file_difat *bcf_difat_create(FILE *file, unsigned int fatSectors,
+                                 const unsigned int sectorSize)
 {
-    bcf_file_fat* fat = (bcf_file_fat*)malloc(sizeof(bcf_file_fat));
-    if (!fat) {
-        printf("ERROR: compound-file-fat.c bcfFileFat_create(), ");
-        printf("cannot allocate memory for fat\n");
-        return NULL;
-    }
-    fat->numberOfEntriesInFatSector = sectorSize / sizeOfFatEntry;
-    fat->fatEntryCount = 0;
-    return fat;
+        unsigned int i;
+        bcf_file_difat *difat = 0;
+        unsigned int sectorRef;
+
+        difat = (bcf_file_difat *) malloc(sizeof(bcf_file_difat));
+        if (!difat) {
+                printf
+                    ("ERROR: compound-file-difat.c bcf_difat_create(), cannot allocate memory for difat\n");
+                return NULL;
+        }
+
+        difat->sectorSize = sectorSize;
+        if (fatSectors > difatEntriesInHeader) {
+                fatSectors = difatEntriesInHeader;
+        }
+
+        for (i = 0; i < fatSectors; ++i) {
+                sectorRef = emb_read_i32(file);
+                difat->fatSectorEntries[i] = sectorRef;
+        }
+        difat->fatSectorCount = fatSectors;
+        for (i = fatSectors; i < difatEntriesInHeader; ++i) {
+                sectorRef = emb_read_i32(file);
+                if (sectorRef != CompoundFileSector_FreeSector) {
+                        printf
+                            ("ERROR: compound-file-difat.c bcf_difat_create(), Unexpected sector value %x at DIFAT[%d]\n",
+                             sectorRef, i);
+                }
+        }
+        return difat;
 }
 
 /* . */
-void
-loadFatFromSector(bcf_file_fat* fat, FILE* file)
+unsigned int entriesInDifatSector(bcf_file_difat *fat)
 {
-    unsigned int i;
-    unsigned int current_fat_entries = fat->fatEntryCount;
-    unsigned int newSize = current_fat_entries + fat->numberOfEntriesInFatSector;
-    for (i = current_fat_entries; i < newSize; ++i) {
-        fat->fatEntries[i] = emb_read_i32(file);
-    }
-    fat->fatEntryCount = newSize;
+        return (fat->sectorSize -
+                sizeOfChainingEntryAtEndOfDifatSector) / sizeOfDifatEntry;
 }
 
 /* . */
-bcf_file_header
-bcfFileHeader_read(FILE* file)
+unsigned int
+readFullSector(FILE *file,
+               bcf_file_difat *bcfFile, unsigned int *difatEntriesToRead)
 {
-    bcf_file_header header;
-    if (fread(header.signature, 1, 8, file) < 8) {
-        puts("ERROR: failed to read signature bytes from bcf file.");
+        unsigned int i;
+        unsigned int sectorRef;
+        unsigned int nextDifatSectorInChain;
+        unsigned int entriesToReadInThisSector = 0;
+        if (*difatEntriesToRead > entriesInDifatSector(bcfFile)) {
+                entriesToReadInThisSector = entriesInDifatSector(bcfFile);
+                *difatEntriesToRead -= entriesToReadInThisSector;
+        } else {
+                entriesToReadInThisSector = *difatEntriesToRead;
+                *difatEntriesToRead = 0;
+        }
+
+        for (i = 0; i < entriesToReadInThisSector; ++i) {
+                sectorRef = emb_read_i32(file);
+                bcfFile->fatSectorEntries[bcfFile->fatSectorCount] = sectorRef;
+                bcfFile->fatSectorCount++;
+        }
+        for (i = entriesToReadInThisSector; i < entriesInDifatSector(bcfFile);
+             ++i) {
+                sectorRef = emb_read_i32(file);
+                if (sectorRef != CompoundFileSector_FreeSector) {
+                        printf
+                            ("ERROR: compound-file-difat.c readFullSector(), ");
+                        printf("Unexpected sector value %x at DIFAT[%d]]\n",
+                               sectorRef, i);
+                }
+        }
+        nextDifatSectorInChain = emb_read_i32(file);
+        return nextDifatSectorInChain;
+}
+
+/* . */
+void parseDirectoryEntryName(FILE *file, bcf_directory_entry *dir)
+{
+        int i;
+        for (i = 0; i < 32; ++i) {
+                uint16_t unicodechar = emb_read_i16(file);
+                if (unicodechar != 0x0000) {
+                        dir->directoryEntryName[i] = (char)unicodechar;
+                }
+        }
+}
+
+/* . */
+bcf_directory *CompoundFileDirectory(const unsigned int
+                                     maxNumberOfDirectoryEntries)
+{
+        bcf_directory *dir = (bcf_directory *) malloc(sizeof(bcf_directory));
+        if (!dir) {
+                printf
+                    ("ERROR: compound-file-directory.c CompoundFileDirectory(), cannot allocate memory for dir\n");
+                return NULL;
+        }                       /* TODO: avoid crashing. null pointer will be accessed */
+        dir->maxNumberOfDirectoryEntries = maxNumberOfDirectoryEntries;
+        dir->dirEntries = 0;
+        return dir;
+}
+
+/* . */
+EmbTime parseTime(FILE *file)
+{
+        EmbTime returnVal;
+        unsigned int ft_low, ft_high;
+        /*embTime_time(&returnVal); TODO: use embTime_time() rather than time(). */
+        ft_low = emb_read_i32(file);
+        ft_high = emb_read_i32(file);
+        printf("%u %u\n", ft_low, ft_high);
+        /* TODO: translate to actual date time */
+        returnVal.day = 1;
+        returnVal.hour = 2;
+        returnVal.minute = 3;
+        returnVal.month = 4;
+        returnVal.second = 5;
+        returnVal.year = 6;
+        return returnVal;
+}
+
+/* . */
+bcf_directory_entry *CompoundFileDirectoryEntry(FILE *file)
+{
+        int i;
+        const int guidSize = 16;
+        bcf_directory_entry *dir = malloc(sizeof(bcf_directory_entry));
+        if (dir == NULL) {
+                printf
+                    ("ERROR: compound-file-directory.c CompoundFileDirectoryEntry(), cannot allocate memory for dir\n");
+                return NULL;
+        }
+        memset(dir->directoryEntryName, 0, 32);
+        parseDirectoryEntryName(file, dir);
+        dir->next = 0;
+        dir->directoryEntryNameLength = emb_read_u16(file);
+        dir->objectType = (unsigned char)fgetc(file);
+        if ((dir->objectType != ObjectTypeStorage)
+            && (dir->objectType != ObjectTypeStream)
+            && (dir->objectType != ObjectTypeRootEntry)) {
+                printf
+                    ("ERROR: compound-file-directory.c CompoundFileDirectoryEntry()");
+                printf(", unexpected object type: %d\n", dir->objectType);
+                return NULL;
+        }
+        dir->colorFlag = (unsigned char)fgetc(file);
+        dir->leftSiblingId = emb_read_i32(file);
+        dir->rightSiblingId = emb_read_i32(file);
+        dir->childId = emb_read_i32(file);
+        if (fread(dir->CLSID, 1, guidSize, file) < guidSize) {
+                printf("ERROR: Failed to read guidSize bytes for CLSID");
+                return dir;
+        }
+        dir->stateBits = emb_read_i32(file);
+        for (i = 0; i < 6; i++) {
+                dir->creationTime[i] = emb_read_i32(file);
+        }
+        for (i = 0; i < 6; i++) {
+                dir->modifiedTime[i] = emb_read_i32(file);
+        }
+        dir->startingSectorLocation = emb_read_i32(file);
+        /* StreamSize should really be __int64 or long long,
+         * but for our uses we should never run into an issue */
+        dir->streamSize = emb_read_i32(file);
+        /* top portion of int64 */
+        dir->streamSizeHigh = emb_read_i32(file);
+        return dir;
+}
+
+/* . */
+void readNextSector(FILE *file, bcf_directory *dir)
+{
+        unsigned int i;
+        for (i = 0; i < dir->maxNumberOfDirectoryEntries; ++i) {
+                bcf_directory_entry *dirEntry =
+                    CompoundFileDirectoryEntry(file);
+                bcf_directory_entry *pointer = dir->dirEntries;
+                if (!pointer) {
+                        dir->dirEntries = dirEntry;
+                } else {
+                        while (pointer) {
+                                if (!pointer->next) {
+                                        pointer->next = dirEntry;
+                                        break;
+                                }
+                                pointer = pointer->next;
+                        }
+                }
+        }
+}
+
+/* . */
+void bcf_directory_free(bcf_directory **dir)
+{
+        bcf_directory *dirptr;
+        bcf_directory_entry *pointer;
+        if (dir == NULL) {
+                return;
+        }
+        dirptr = *dir;
+        pointer = dirptr->dirEntries;
+        while (pointer) {
+                bcf_directory_entry *entryToFree;
+                entryToFree = pointer;
+                pointer = pointer->next;
+                safe_free(entryToFree);
+        }
+        safe_free(*dir);
+}
+
+/* . */
+bcf_file_fat *bcfFileFat_create(const unsigned int sectorSize)
+{
+        bcf_file_fat *fat = (bcf_file_fat *) malloc(sizeof(bcf_file_fat));
+        if (!fat) {
+                printf("ERROR: compound-file-fat.c bcfFileFat_create(), ");
+                printf("cannot allocate memory for fat\n");
+                return NULL;
+        }
+        fat->numberOfEntriesInFatSector = sectorSize / sizeOfFatEntry;
+        fat->fatEntryCount = 0;
+        return fat;
+}
+
+/* . */
+void loadFatFromSector(bcf_file_fat *fat, FILE *file)
+{
+        unsigned int i;
+        unsigned int current_fat_entries = fat->fatEntryCount;
+        unsigned int newSize =
+            current_fat_entries + fat->numberOfEntriesInFatSector;
+        for (i = current_fat_entries; i < newSize; ++i) {
+                fat->fatEntries[i] = emb_read_i32(file);
+        }
+        fat->fatEntryCount = newSize;
+}
+
+/* . */
+bcf_file_header bcfFileHeader_read(FILE *file)
+{
+        bcf_file_header header;
+        if (fread(header.signature, 1, 8, file) < 8) {
+                puts("ERROR: failed to read signature bytes from bcf file.");
+                return header;
+        }
+        if (fread(header.CLSID, 1, 16, file) < 16) {
+                puts("ERROR: failed to read CLSID bytes from bcf file.");
+                return header;
+        }
+        header.minorVersion = emb_read_u16(file);
+        header.majorVersion = emb_read_u16(file);
+        header.byteOrder = emb_read_u16(file);
+        header.sectorShift = emb_read_u16(file);
+        header.miniSectorShift = emb_read_u16(file);
+        header.reserved1 = emb_read_u16(file);
+        header.reserved2 = emb_read_i32(file);
+        header.numberOfDirectorySectors = emb_read_i32(file);
+        header.numberOfFATSectors = emb_read_i32(file);
+        header.firstDirectorySectorLocation = emb_read_i32(file);
+        header.transactionSignatureNumber = emb_read_i32(file);
+        header.miniStreamCutoffSize = emb_read_i32(file);
+        header.firstMiniFATSectorLocation = emb_read_i32(file);
+        header.numberOfMiniFatSectors = emb_read_i32(file);
+        header.firstDifatSectorLocation = emb_read_i32(file);
+        header.numberOfDifatSectors = emb_read_i32(file);
         return header;
-    }
-    if (fread(header.CLSID, 1, 16, file) < 16) {
-        puts("ERROR: failed to read CLSID bytes from bcf file.");
-        return header;
-    }
-    header.minorVersion = emb_read_u16(file);
-    header.majorVersion = emb_read_u16(file);
-    header.byteOrder = emb_read_u16(file);
-    header.sectorShift = emb_read_u16(file);
-    header.miniSectorShift = emb_read_u16(file);
-    header.reserved1 = emb_read_u16(file);
-    header.reserved2 = emb_read_i32(file);
-    header.numberOfDirectorySectors = emb_read_i32(file);
-    header.numberOfFATSectors = emb_read_i32(file);
-    header.firstDirectorySectorLocation = emb_read_i32(file);
-    header.transactionSignatureNumber = emb_read_i32(file);
-    header.miniStreamCutoffSize = emb_read_i32(file);
-    header.firstMiniFATSectorLocation = emb_read_i32(file);
-    header.numberOfMiniFatSectors = emb_read_i32(file);
-    header.firstDifatSectorLocation = emb_read_i32(file);
-    header.numberOfDifatSectors = emb_read_i32(file);
-    return header;
 }
 
 /* . */
 int
-emb_generate_satin_outline(EmbArray *lines, EmbReal thickness, EmbSatinOutline* result)
+emb_generate_satin_outline(EmbArray *lines, EmbReal thickness,
+                           EmbSatinOutline *result)
 {
-    int i;
-    EmbLine line1, line2;
-    EmbSatinOutline outline;
-    EmbVector out;
-    EmbVector v1;
-    EmbVector temp;
-    EmbLine line;
+        int i;
+        EmbLine line1, line2;
+        EmbSatinOutline outline;
+        EmbVector out;
+        EmbVector v1;
+        EmbVector temp;
+        EmbLine line;
 
-    EmbReal halfThickness = thickness / 2.0;
-    int intermediateOutlineCount = 2 * lines->count - 2;
-    outline.side1 = emb_array_create(EMB_VECTOR);
-    if (!outline.side1) {
-        printf("ERROR: emb_generate_satin_outline(), cannot allocate memory for outline->side1\n");
-        return 0;
-    }
-    outline.side2 = emb_array_create(EMB_VECTOR);
-    if (!outline.side2) {
-        printf("ERROR: emb_generate_satin_outline(), cannot allocate memory for outline->side2\n");
-        return 0;
-    }
-
-    for (i = 1; i < lines->count; i++) {
-        line.start = lines->geometry[i - 1].object.vector;
-        line.end = lines->geometry[i].object.vector;
-
-        v1 = emb_line_normalVector(line, 1);
-
-        temp = emb_vector_scale(v1, halfThickness);
-        temp = emb_vector_add(temp, lines->geometry[i-1].object.vector);
-        emb_array_addVector(outline.side1, temp);
-        temp = emb_vector_add(temp, lines->geometry[i].object.vector);
-        emb_array_addVector(outline.side1, temp);
-
-        temp = emb_vector_scale(v1, -halfThickness);
-        temp = emb_vector_add(temp, lines->geometry[i - 1].object.vector);
-        emb_array_addVector(outline.side2, temp);
-        temp = emb_vector_add(temp, lines->geometry[i].object.vector);
-        emb_array_addVector(outline.side2, temp);
-    }
-
-    if (!result) {
-        printf("ERROR: emb_generate_satin_outline(), result argument is null\n");
-        return 0;
-    }
-    result->side1 = emb_array_create(EMB_VECTOR);
-    if (!result->side1) {
-        printf("ERROR: emb_generate_satin_outline(), cannot allocate memory for result->side1\n");
-        return 0;
-    }
-    result->side2 = emb_array_create(EMB_VECTOR);
-    if (!result->side2) {
-        printf("ERROR: emb_generate_satin_outline(), cannot allocate memory for result->side2\n");
-        return 0;
-    }
-
-    emb_array_addVector(result->side1, outline.side1->geometry[0].object.vector);
-    emb_array_addVector(result->side2, outline.side2->geometry[0].object.vector);
-
-    for (i = 3; i < intermediateOutlineCount; i += 2) {
-        int emb_error = 0;
-        line1.start = outline.side1->geometry[i - 3].object.vector;
-        line1.end = outline.side1->geometry[i - 2].object.vector;
-        line2.start = outline.side1->geometry[i - 1].object.vector;
-        line2.end = outline.side1->geometry[i].object.vector;
-        out = emb_line_intersectionPoint(line1, line2, &emb_error);
-        if (emb_error) {
-            puts("No intersection point.");
+        EmbReal halfThickness = thickness / 2.0;
+        int intermediateOutlineCount = 2 * lines->count - 2;
+        outline.side1 = emb_array_create(EMB_VECTOR);
+        if (!outline.side1) {
+                printf
+                    ("ERROR: emb_generate_satin_outline(), cannot allocate memory for outline->side1\n");
+                return 0;
         }
-        emb_array_addVector(result->side1, out);
-
-        line1.start = outline.side2->geometry[i - 3].object.vector;
-        line1.end = outline.side2->geometry[i - 2].object.vector;
-        line2.start = outline.side2->geometry[i - 1].object.vector;
-        line2.end = outline.side2->geometry[i].object.vector;
-        out = emb_line_intersectionPoint(line1, line2, &emb_error);
-        if (emb_error) {
-            puts("No intersection point.");
+        outline.side2 = emb_array_create(EMB_VECTOR);
+        if (!outline.side2) {
+                printf
+                    ("ERROR: emb_generate_satin_outline(), cannot allocate memory for outline->side2\n");
+                return 0;
         }
-        emb_array_addVector(result->side2, out);
-    }
 
-    emb_array_addVector(result->side1, outline.side1->geometry[2 * lines->count - 3].object.vector);
-    emb_array_addVector(result->side2, outline.side2->geometry[2 * lines->count - 3].object.vector);
-    result->length = lines->count;
-    return 1;
+        for (i = 1; i < lines->count; i++) {
+                line.start = lines->geometry[i - 1].object.vector;
+                line.end = lines->geometry[i].object.vector;
+
+                v1 = emb_line_normalVector(line, 1);
+
+                temp = emb_vector_scale(v1, halfThickness);
+                temp =
+                    emb_vector_add(temp, lines->geometry[i - 1].object.vector);
+                emb_array_addVector(outline.side1, temp);
+                temp = emb_vector_add(temp, lines->geometry[i].object.vector);
+                emb_array_addVector(outline.side1, temp);
+
+                temp = emb_vector_scale(v1, -halfThickness);
+                temp =
+                    emb_vector_add(temp, lines->geometry[i - 1].object.vector);
+                emb_array_addVector(outline.side2, temp);
+                temp = emb_vector_add(temp, lines->geometry[i].object.vector);
+                emb_array_addVector(outline.side2, temp);
+        }
+
+        if (!result) {
+                printf
+                    ("ERROR: emb_generate_satin_outline(), result argument is null\n");
+                return 0;
+        }
+        result->side1 = emb_array_create(EMB_VECTOR);
+        if (!result->side1) {
+                printf
+                    ("ERROR: emb_generate_satin_outline(), cannot allocate memory for result->side1\n");
+                return 0;
+        }
+        result->side2 = emb_array_create(EMB_VECTOR);
+        if (!result->side2) {
+                printf
+                    ("ERROR: emb_generate_satin_outline(), cannot allocate memory for result->side2\n");
+                return 0;
+        }
+
+        emb_array_addVector(result->side1,
+                            outline.side1->geometry[0].object.vector);
+        emb_array_addVector(result->side2,
+                            outline.side2->geometry[0].object.vector);
+
+        for (i = 3; i < intermediateOutlineCount; i += 2) {
+                int emb_error = 0;
+                line1.start = outline.side1->geometry[i - 3].object.vector;
+                line1.end = outline.side1->geometry[i - 2].object.vector;
+                line2.start = outline.side1->geometry[i - 1].object.vector;
+                line2.end = outline.side1->geometry[i].object.vector;
+                out = emb_line_intersectionPoint(line1, line2, &emb_error);
+                if (emb_error) {
+                        puts("No intersection point.");
+                }
+                emb_array_addVector(result->side1, out);
+
+                line1.start = outline.side2->geometry[i - 3].object.vector;
+                line1.end = outline.side2->geometry[i - 2].object.vector;
+                line2.start = outline.side2->geometry[i - 1].object.vector;
+                line2.end = outline.side2->geometry[i].object.vector;
+                out = emb_line_intersectionPoint(line1, line2, &emb_error);
+                if (emb_error) {
+                        puts("No intersection point.");
+                }
+                emb_array_addVector(result->side2, out);
+        }
+
+        emb_array_addVector(result->side1,
+                            outline.side1->geometry[2 * lines->count -
+                                                    3].object.vector);
+        emb_array_addVector(result->side2,
+                            outline.side2->geometry[2 * lines->count -
+                                                    3].object.vector);
+        result->length = lines->count;
+        return 1;
 }
 
 /* . */
-EmbArray*
-emb_satin_outline_render(EmbSatinOutline* result, EmbReal density)
+EmbArray *emb_satin_outline_render(EmbSatinOutline *result, EmbReal density)
 {
-    int i, j;
-    EmbVector currTop, currBottom, topDiff, bottomDiff, midDiff;
-    EmbVector midLeft, midRight, topStep, bottomStep;
-    EmbArray* stitches = 0;
-    int numberOfSteps;
-    EmbReal midLength;
+        int i, j;
+        EmbVector currTop, currBottom, topDiff, bottomDiff, midDiff;
+        EmbVector midLeft, midRight, topStep, bottomStep;
+        EmbArray *stitches = 0;
+        int numberOfSteps;
+        EmbReal midLength;
 
-    if (!result) {
-        printf("ERROR: emb_satin_outline_render(), result argument is null\n");
-        return 0;
-    }
+        if (!result) {
+                printf
+                    ("ERROR: emb_satin_outline_render(), result argument is null\n");
+                return 0;
+        }
 
-    if (result->length > 0) {
-        for (j = 0; j < result->length - 1; j++) {
-            EmbGeometry *g10 = &(result->side1->geometry[j+0]);
-            EmbGeometry *g11 = &(result->side1->geometry[j+1]);
-            EmbGeometry *g20 = &(result->side2->geometry[j+0]);
-            EmbGeometry *g21 = &(result->side2->geometry[j+1]);
-            topDiff = emb_vector_subtract(g10->object.vector, g11->object.vector);
-            bottomDiff = emb_vector_subtract(g21->object.vector, g20->object.vector);
+        if (result->length > 0) {
+                for (j = 0; j < result->length - 1; j++) {
+                        EmbGeometry *g10 = &(result->side1->geometry[j + 0]);
+                        EmbGeometry *g11 = &(result->side1->geometry[j + 1]);
+                        EmbGeometry *g20 = &(result->side2->geometry[j + 0]);
+                        EmbGeometry *g21 = &(result->side2->geometry[j + 1]);
+                        topDiff =
+                            emb_vector_subtract(g10->object.vector,
+                                                g11->object.vector);
+                        bottomDiff =
+                            emb_vector_subtract(g21->object.vector,
+                                                g20->object.vector);
 
-            midLeft = emb_vector_average(g10->object.vector, g20->object.vector);
-            midRight = emb_vector_average(g11->object.vector, g21->object.vector);
+                        midLeft =
+                            emb_vector_average(g10->object.vector,
+                                               g20->object.vector);
+                        midRight =
+                            emb_vector_average(g11->object.vector,
+                                               g21->object.vector);
 
-            midDiff = emb_vector_subtract(midLeft, midRight);
-            midLength = emb_vector_length(midDiff);
+                        midDiff = emb_vector_subtract(midLeft, midRight);
+                        midLength = emb_vector_length(midDiff);
 
-            numberOfSteps = (int)(midLength * density / 200);
-            topStep = emb_vector_scale(topDiff, 1.0/numberOfSteps);
-            bottomStep = emb_vector_scale(bottomDiff, 1.0/numberOfSteps);
-            currTop = g10->object.vector;
-            currBottom = g20->object.vector;
+                        numberOfSteps = (int)(midLength * density / 200);
+                        topStep =
+                            emb_vector_scale(topDiff, 1.0 / numberOfSteps);
+                        bottomStep =
+                            emb_vector_scale(bottomDiff, 1.0 / numberOfSteps);
+                        currTop = g10->object.vector;
+                        currBottom = g20->object.vector;
 
-            for (i = 0; i < numberOfSteps; i++) {
-                if (!stitches) {
-                    stitches = emb_array_create(EMB_VECTOR);
+                        for (i = 0; i < numberOfSteps; i++) {
+                                if (!stitches) {
+                                        stitches = emb_array_create(EMB_VECTOR);
+                                }
+                                emb_array_addVector(stitches, currTop);
+                                emb_array_addVector(stitches, currBottom);
+                                currTop = emb_vector_add(currTop, topStep);
+                                currBottom =
+                                    emb_vector_add(currBottom, bottomStep);
+                        }
                 }
                 emb_array_addVector(stitches, currTop);
                 emb_array_addVector(stitches, currBottom);
-                currTop = emb_vector_add(currTop, topStep);
-                currBottom = emb_vector_add(currBottom, bottomStep);
-            }
         }
-        emb_array_addVector(stitches, currTop);
-        emb_array_addVector(stitches, currBottom);
-    }
-    return stitches;
+        return stitches;
 }
 
 /* . */
-void
-write_24bit(FILE* file, int x)
+void write_24bit(FILE *file, int x)
 {
-    unsigned char a[4];
-    a[0] = (unsigned char)0;
-    a[1] = (unsigned char)(x & 0xFF);
-    a[2] = (unsigned char)((x >> 8) & 0xFF);
-    a[3] = (unsigned char)((x >> 16) & 0xFF);
-    fwrite(a, 1, 4, file);
+        unsigned char a[4];
+        a[0] = (unsigned char)0;
+        a[1] = (unsigned char)(x & 0xFF);
+        a[2] = (unsigned char)((x >> 8) & 0xFF);
+        a[3] = (unsigned char)((x >> 16) & 0xFF);
+        fwrite(a, 1, 4, file);
 }
 
 /* . */
-int
-embColor_distance(EmbColor a, EmbColor b)
+int embColor_distance(EmbColor a, EmbColor b)
 {
-    int t;
-    t = (a.r-b.r)*(a.r-b.r);
-    t += (a.g-b.g)*(a.g-b.g);
-    t += (a.b-b.b)*(a.b-b.b);
-    return t;
+        int t;
+        t = (a.r - b.r) * (a.r - b.r);
+        t += (a.g - b.g) * (a.g - b.g);
+        t += (a.b - b.b) * (a.b - b.b);
+        return t;
 }
 
 /* . */
-void
-embColor_read(void *f, EmbColor *c, int toRead)
+void embColor_read(void *f, EmbColor *c, int toRead)
 {
-    unsigned char b[4];
-    if (fread(b, 1, toRead, f) < (unsigned int)toRead) {
-        puts("ERROR: Failed to read embColor bytes.");
-        return;
-    }
-    c->r = b[0];
-    c->g = b[1];
-    c->b = b[2];
+        unsigned char b[4];
+        if (fread(b, 1, toRead, f) < (unsigned int)toRead) {
+                puts("ERROR: Failed to read embColor bytes.");
+                return;
+        }
+        c->r = b[0];
+        c->g = b[1];
+        c->b = b[2];
 }
 
 /* . */
-void
-embColor_write(void *f, EmbColor c, int toWrite)
+void embColor_write(void *f, EmbColor c, int toWrite)
 {
-    unsigned char b[4];
-    b[0] = c.r;
-    b[1] = c.g;
-    b[2] = c.b;
-    b[3] = 0;
-    fwrite(b, 1, toWrite, f);
+        unsigned char b[4];
+        b[0] = c.r;
+        b[1] = c.g;
+        b[2] = c.b;
+        b[3] = 0;
+        fwrite(b, 1, toWrite, f);
 }
 
 /* Returns the closest color to the required color based on
@@ -12322,37 +8447,36 @@ embColor_write(void *f, EmbColor c, int toWrite)
  * mode:   Is the argument an array of threads (0) or colors (1)?
  * Returns closestIndex: The entry in the ThreadList that matches.
  */
-int
-emb_find_nearest_color(EmbColor color, EmbColor *color_list, int n_colors)
+int emb_find_nearest_color(EmbColor color, EmbColor *color_list, int n_colors)
 {
-    int currentClosestValue = 256*256*3;
-    int closestIndex = -1, i;
-    for (i = 0; i < n_colors; i++) {
-        int delta = embColor_distance(color, color_list[i]);
+        int currentClosestValue = 256 * 256 * 3;
+        int closestIndex = -1, i;
+        for (i = 0; i < n_colors; i++) {
+                int delta = embColor_distance(color, color_list[i]);
 
-        if (delta <= currentClosestValue) {
-            currentClosestValue = delta;
-            closestIndex = i;
+                if (delta <= currentClosestValue) {
+                        currentClosestValue = delta;
+                        closestIndex = i;
+                }
         }
-    }
-    return closestIndex;
+        return closestIndex;
 }
 
 /* The maximum distance. */
 int
 emb_find_nearest_thread(EmbColor color, EmbThread *thread_list, int n_threads)
 {
-    int currentClosestValue = 256*256*3;
-    int closestIndex = -1, i;
-    for (i = 0; i < n_threads; i++) {
-        int delta = embColor_distance(color, thread_list[i].color);
+        int currentClosestValue = 256 * 256 * 3;
+        int closestIndex = -1, i;
+        for (i = 0; i < n_threads; i++) {
+                int delta = embColor_distance(color, thread_list[i].color);
 
-        if (delta <= currentClosestValue) {
-            currentClosestValue = delta;
-            closestIndex = i;
+                if (delta <= currentClosestValue) {
+                        currentClosestValue = delta;
+                        closestIndex = i;
+                }
         }
-    }
-    return closestIndex;
+        return closestIndex;
 }
 
 /*
@@ -12362,43 +8486,40 @@ emb_find_nearest_thread(EmbColor color, EmbThread *thread_list, int n_threads)
  *
  * Returns c: The resulting color.
  */
-EmbThread
-emb_get_random_thread(void)
+EmbThread emb_get_random_thread(void)
 {
-    EmbThread c;
-    c.color.r = rand()%256;
-    c.color.g = rand()%256;
-    c.color.b = rand()%256;
-    strcpy(c.description, "random");
-    strcpy(c.catalogNumber, "");
-    return c;
+        EmbThread c;
+        c.color.r = rand() % 256;
+        c.color.g = rand() % 256;
+        c.color.b = rand() % 256;
+        strcpy(c.description, "random");
+        strcpy(c.catalogNumber, "");
+        return c;
 }
 
 /* . */
-void
-binaryReadString(FILE* file, char* buffer, int maxLength)
+void binaryReadString(FILE *file, char *buffer, int maxLength)
 {
-    int i = 0;
-    while (i < maxLength) {
-        buffer[i] = (char)fgetc(file);
-        if (buffer[i] == '\0') {
-            break;
+        int i = 0;
+        while (i < maxLength) {
+                buffer[i] = (char)fgetc(file);
+                if (buffer[i] == '\0') {
+                        break;
+                }
+                i++;
         }
-        i++;
-    }
 }
 
 /* . */
-void
-binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength)
+void binaryReadUnicodeString(FILE *file, char *buffer, const int stringLength)
 {
-    int i = 0;
-    for (i = 0; i < stringLength * 2; i++) {
-        char input = (char)fgetc(file);
-        if (input != 0) {
-            buffer[i] = input;
+        int i = 0;
+        for (i = 0; i < stringLength * 2; i++) {
+                char input = (char)fgetc(file);
+                if (input != 0) {
+                        buffer[i] = input;
+                }
         }
-    }
 }
 
 /*
@@ -12409,199 +8530,123 @@ binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength)
  *
  * Returns 0 if not present 1 if present.
  */
-int
-stringInArray(const char *s, const char **array)
+int stringInArray(const char *s, const char **array)
 {
-    int i;
-    for (i = 0; string_len(array[i]); i++) {
-        if (!strncmp(s, array[i], 200)) {
-            return 1;
+        int i;
+        for (i = 0; embstr_len(array[i]); i++) {
+                if (!strncmp(s, array[i], 200)) {
+                        return 1;
+                }
         }
-    }
-    return 0;
+        return 0;
 }
 
 /* . */
-int
-emb_readline(FILE* file, char *line, int maxLength)
+int emb_readline(FILE *file, char *line, int maxLength)
 {
-    int i;
-    char c;
-    for (i = 0; i < maxLength-1; i++) {
-        if (!fread(&c, 1, 1, file)) {
-            break;
+        int i;
+        char c;
+        for (i = 0; i < maxLength - 1; i++) {
+                if (!fread(&c, 1, 1, file)) {
+                        break;
+                }
+                if (c == '\r') {
+                        if (fread(&c, 1, 1, file) != 1) {
+                                /* Incomplete Windows-style line ending. */
+                                break;
+                        }
+                        if (c != '\n') {
+                                fseek(file, -1L, SEEK_CUR);
+                        }
+                        break;
+                }
+                if (c == '\n') {
+                        break;
+                }
+                *line = c;
+                line++;
         }
-        if (c == '\r') {
-            if (fread(&c, 1, 1, file) != 1) {
-                /* Incomplete Windows-style line ending. */
-                break;
-            }
-            if (c != '\n') {
-                fseek(file, -1L, SEEK_CUR);
-            }
-            break;
-        }
-        if (c == '\n') {
-            break;
-        }
-        *line = c;
-        line++;
-    }
-    *line = 0;
-    return i;
+        *line = 0;
+        return i;
 }
 
 /* TODO: description */
 
 /* Get the trim bounds object. */
 void
-get_trim_bounds(char const *s, char const **firstWord, char const **trailingSpace)
+get_trim_bounds(char const *s, char const **firstWord,
+                char const **trailingSpace)
 {
-    char const* lastWord = 0;
-    *firstWord = lastWord = s + string_whitespace(s);
-    do {
-        *trailingSpace = lastWord + string_whitespace(lastWord);
-        lastWord = *trailingSpace + string_whitespace(*trailingSpace);
-    } while (*lastWord != '\0');
+        char const *lastWord = 0;
+        *firstWord = lastWord = s + string_whitespace(s);
+        do {
+                *trailingSpace = lastWord + string_whitespace(lastWord);
+                lastWord = *trailingSpace + string_whitespace(*trailingSpace);
+        } while (*lastWord != '\0');
 }
 
 /* . */
-char*
-copy_trim(char const *s)
+char *copy_trim(char const *s)
 {
-    char const *firstWord = 0, *trailingSpace = 0;
-    char* result = 0;
-    size_t newLength;
+        char const *firstWord = 0, *trailingSpace = 0;
+        char *result = 0;
+        size_t newLength;
 
-    get_trim_bounds(s, &firstWord, &trailingSpace);
-    newLength = trailingSpace - firstWord;
+        get_trim_bounds(s, &firstWord, &trailingSpace);
+        newLength = trailingSpace - firstWord;
 
-    result = (char*)malloc(newLength + 1);
-    memcpy(result, firstWord, newLength);
-    result[newLength] = '\0';
-    return result;
+        result = (char *)malloc(newLength + 1);
+        memcpy(result, firstWord, newLength);
+        result[newLength] = '\0';
+        return result;
 }
 
 /* Optimizes the number (a num) for output to a text file and returns
  * it as a string (a str).
  */
-char*
-emb_optOut(EmbReal num, char* str)
+char *emb_optOut(EmbReal num, char *str)
 {
-    char *str_end;
-    /* Convert the number to a string */
-    sprintf(str, "%.10f", num);
-    /* Remove trailing zeroes */
-    str_end = str + string_len(str);
-    while (*--str_end == '0');
-    str_end[1] = 0;
-    /* Remove the decimal point if it happens to be an integer */
-    if (*str_end == '.') {
-        *str_end = 0;
-    }
-    return str;
-}
-
-/* . */
-void
-embTime_initNow(EmbTime* t)
-{
-    printf("%d", t->year);
-    /*
-    time_t rawtime;
-    struct tm* timeinfo;
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-
-    t->year   = timeinfo->tm_year;
-    t->month  = timeinfo->tm_mon;
-    t->day    = timeinfo->tm_mday;
-    t->hour   = timeinfo->tm_hour;
-    t->minute = timeinfo->tm_min;
-    t->second = timeinfo->tm_sec;
-    */
-}
-
-/* . */
-EmbTime
-embTime_time(EmbTime* t)
-{
-    int divideByZero = 0;
-    divideByZero = divideByZero/divideByZero;
-    /* TODO: wrap time() from time.h and verify it works consistently */
-
-    return *t;
-}
-
-/* . */
-void
-formats(void)
-{
-    int numReaders = 0;
-    int numWriters = 0;
-    int i;
-    puts("List of Formats");
-    puts("---------------");
-    puts("");
-    puts("    KEY");
-    puts("    'S' = Yes, and is considered stable.");
-    puts("    'U' = Yes, but may be unstable.");
-    puts("    ' ' = No.");
-    puts("");
-    printf("  Format   Read    Write   Description\n");
-    printf("|________|_______|_______|____________________________________________________|\n");
-    printf("|        |       |       |                                                    |\n");
-
-    for (i = 0; i < numberOfFormats; i++) {
-		if (formatTable[i].reader_state != ' ') {
-			numReaders++;
-		}
-		if (formatTable[i].writer_state != ' ') {
-			numWriters++;
-		}
-        printf("|  %-4s  |   %c   |   %c   |  %-49s |\n",
-     		formatTable[i].extension,
-			formatTable[i].reader_state,
-			formatTable[i].writer_state,
-			formatTable[i].description);
-    }
-
-    printf("|________|_______|_______|____________________________________________________|\n");
-    printf("|        |       |       |                                                    |\n");
-    printf("| Total: |  %3d  |  %3d  |                                                    |\n", numReaders, numWriters);
-    printf("|________|_______|_______|____________________________________________________|\n");
-    puts("");
-}
-
-/* . */
-void
-to_flag(char **argv, int argc, int i)
-{
-    if (i + 2 < argc) {
-        int j;
-        EmbString output_fname;
-        int format;
-        sprintf(output_fname, "example.%s", argv[i+1]);
-        format = emb_identify_format(output_fname);
-        if (format < 0) {
-            puts("Error: format unrecognised.");
+        char *str_end;
+        /* Convert the number to a string */
+        sprintf(str, "%.10f", num);
+        /* Remove trailing zeroes */
+        str_end = str + embstr_len(str);
+        while (*--str_end == '0') ;
+        str_end[1] = 0;
+        /* Remove the decimal point if it happens to be an integer */
+        if (*str_end == '.') {
+                *str_end = 0;
         }
-        for (j=i+2; j<argc; j++) {
-            int length = string_len(argv[j]);
-            output_fname[0] = 0;
-            strcpy(output_fname, argv[j]);
-            output_fname[length-4] = 0;
-            strcat(output_fname, formatTable[format].extension);
-            printf("Converting %s to %s.\n",
-                argv[j], output_fname);
-            convert(argv[j], output_fname);
-        }
-    }
-    else {
-        puts("Usage of the to flag is:");
-        puts("    embroider -t FORMAT FILE(S)");
-        puts("but it appears you entered less than 3 arguments to embroider.");
-    }
+        return str;
+}
+
+/* . */
+void embTime_initNow(EmbTime *t)
+{
+        printf("%d", t->year);
+        /*
+           time_t rawtime;
+           struct tm* timeinfo;
+           time(&rawtime);
+           timeinfo = localtime(&rawtime);
+
+           t->year   = timeinfo->tm_year;
+           t->month  = timeinfo->tm_mon;
+           t->day    = timeinfo->tm_mday;
+           t->hour   = timeinfo->tm_hour;
+           t->minute = timeinfo->tm_min;
+           t->second = timeinfo->tm_sec;
+         */
+}
+
+/* . */
+EmbTime embTime_time(EmbTime *t)
+{
+        int divideByZero = 0;
+        divideByZero = divideByZero / divideByZero;
+        /* TODO: wrap time() from time.h and verify it works consistently */
+
+        return *t;
 }
 
 /* a points a n_points a width a tolerence
@@ -12612,29 +8657,30 @@ to_flag(char **argv, int argc, int i)
 static void
 join_short_stitches(int *points, int *n_points, int width, int tolerence)
 {
-    int found = 1;
-    while (found > 0) {
-        int i;
-        found = 0;
-        for (i=*n_points-2; i>=0; i--) {
-            int st1 = points[i+1]%width - points[i]%width;
-            int st2 = points[i+2]%width - points[i+1]%width;
-            int same_line = (points[i+1]/width == points[i]/width)
-                            && (points[i+2]/width == points[i+1]/width);
-            if (st1 < tolerence && st2 < tolerence && same_line) {
-                found++;
-                break;
-            }
+        int found = 1;
+        while (found > 0) {
+                int i;
+                found = 0;
+                for (i = *n_points - 2; i >= 0; i--) {
+                        int st1 = points[i + 1] % width - points[i] % width;
+                        int st2 = points[i + 2] % width - points[i + 1] % width;
+                        int same_line =
+                            (points[i + 1] / width == points[i] / width)
+                            && (points[i + 2] / width == points[i + 1] / width);
+                        if (st1 < tolerence && st2 < tolerence && same_line) {
+                                found++;
+                                break;
+                        }
+                }
+                if (found) {
+                        /* Remove the point. */
+                        i++;
+                        for (; i < *n_points; i++) {
+                                points[i] = points[i + 1];
+                        }
+                        (*n_points)--;
+                }
         }
-        if (found) {
-            /* Remove the point. */
-            i++;
-            for (; i<*n_points; i++) {
-                points[i] = points[i+1];
-            }
-            (*n_points)--;
-        }
-    }
 }
 
 /* a image a n_points a subsample_width a subsample_height
@@ -12643,30 +8689,31 @@ join_short_stitches(int *points, int *n_points, int width, int tolerence)
  *
  * Identify darker pixels to put stitches in.
  */
-static int *
-threshold_method(EmbImage *image, int *n_points,
-    int subsample_width, int subsample_height, int threshold)
+static int *threshold_method(EmbImage *image, int *n_points,
+                             int subsample_width, int subsample_height,
+                             int threshold)
 {
-    int i, j;
-    int *points;
-    int height = image->height;
-    int width = image->width;
-    points = (int *)malloc((height/subsample_height)
-        *(width/subsample_width) * sizeof(int));
-    *n_points = 0;
-    for (i=0; i<height/subsample_height; i++)
-    for (j=0; j<width/subsample_width; j++) {
-        EmbColor color;
-        int index = subsample_height*i*width+subsample_width*j;
-        color.r = image->data[3*index+0];
-        color.g = image->data[3*index+1];
-        color.b = image->data[3*index+2];
-        if (color.r+color.g+color.b < threshold) {
-            points[*n_points] = index;
-            (*n_points)++;
-        }
-    }
-    return points;
+        int i, j;
+        int *points;
+        int height = image->height;
+        int width = image->width;
+        points = (int *)malloc((height / subsample_height)
+                               * (width / subsample_width) * sizeof(int));
+        *n_points = 0;
+        for (i = 0; i < height / subsample_height; i++)
+                for (j = 0; j < width / subsample_width; j++) {
+                        EmbColor color;
+                        int index =
+                            subsample_height * i * width + subsample_width * j;
+                        color.r = image->data[3 * index + 0];
+                        color.g = image->data[3 * index + 1];
+                        color.b = image->data[3 * index + 2];
+                        if (color.r + color.g + color.b < threshold) {
+                                points[*n_points] = index;
+                                (*n_points)++;
+                        }
+                }
+        return points;
 }
 
 /* a points a n_points a width a bias
@@ -12680,60 +8727,59 @@ threshold_method(EmbImage *image, int *n_points,
  * To make the stitches lie more on one axis than the other
  * bias the distance operator to prefer horizontal direction.
  */
-static void
-greedy_algorithm(int *points, int n_points, int width, EmbReal bias)
+static void greedy_algorithm(int *points, int n_points, int width, EmbReal bias)
 {
-    int i, j;
-    printf("points[0] = %d\n", points[0]);
-    printf("n_points = %d\n", n_points);
-    printf("width = %d\n", width);
-    printf("bias = %f\n", bias);
+        int i, j;
+        printf("points[0] = %d\n", points[0]);
+        printf("n_points = %d\n", n_points);
+        printf("width = %d\n", width);
+        printf("bias = %f\n", bias);
 
-    for (i=0; i<n_points-1; i++) {
-        int stor;
-        EmbReal shortest = 1.0e20;
-        int next = i+1;
-        /* Find nearest neighbour. */
-        int x1 = points[i]%width;
-        int y1 = points[i]/width;
-        for (j=i+1; j<n_points; j++) {
-            int x, y;
-            EmbReal distance;
-            x = x1 - (points[j]%width);
-            if (x*x > shortest) {
-                continue;
-            }
-            y = y1 - (points[j]/width);
-            distance = x*x + bias*y*y;
-            if (distance < shortest) {
-                next = j;
-                shortest = distance;
-            }
+        for (i = 0; i < n_points - 1; i++) {
+                int stor;
+                EmbReal shortest = 1.0e20;
+                int next = i + 1;
+                /* Find nearest neighbour. */
+                int x1 = points[i] % width;
+                int y1 = points[i] / width;
+                for (j = i + 1; j < n_points; j++) {
+                        int x, y;
+                        EmbReal distance;
+                        x = x1 - (points[j] % width);
+                        if (x * x > shortest) {
+                                continue;
+                        }
+                        y = y1 - (points[j] / width);
+                        distance = x * x + bias * y * y;
+                        if (distance < shortest) {
+                                next = j;
+                                shortest = distance;
+                        }
+                }
+                if (i % 100 == 0) {
+                        printf("%2.1f%%\n", (100.0 * i) / (1.0 * n_points));
+                }
+                /* swap points */
+                stor = points[next];
+                points[next] = points[i + 1];
+                points[i + 1] = stor;
         }
-        if (i%100 == 0) {
-            printf("%2.1f%%\n", (100.0*i)/(1.0*n_points));
-        }
-        /* swap points */
-        stor = points[next];
-        points[next] = points[i+1];
-        points[i+1] = stor;
-    }
 }
 
 /* a pattern a points a n_points
  * a scale a width a height
  */
 static void
-save_points_to_pattern(
-    EmbPattern *pattern, int *points, int n_points, EmbReal scale, int width, int height)
+save_points_to_pattern(EmbPattern *pattern, int *points, int n_points,
+                       EmbReal scale, int width, int height)
 {
-    int i;
-    for (i=0; i<n_points; i++) {
-        int x, y;
-        x = points[i]%width;
-        y = height - points[i]/width;
-        embp_addStitchAbs(pattern, scale*x, scale*y, NORMAL, 0);
-    }
+        int i;
+        for (i = 0; i < n_points; i++) {
+                int x, y;
+                x = points[i] % width;
+                y = height - points[i] / width;
+                embp_addStitchAbs(pattern, scale * x, scale * y, NORMAL, 0);
+        }
 }
 
 /* a pattern a image a threshhold
@@ -12747,24 +8793,25 @@ save_points_to_pattern(
  *
  * Use render then image difference to see how well it passes.
  */
-void
-embp_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
+void embp_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
 {
-    /* Size of the crosses in millimeters. */
-    EmbReal scale = 0.1;
-    int sample_w = 3;
-    int sample_h = 3;
-    EmbReal bias = 1.2;
-    int *points;
-    int n_points;
+        /* Size of the crosses in millimeters. */
+        EmbReal scale = 0.1;
+        int sample_w = 3;
+        int sample_h = 3;
+        EmbReal bias = 1.2;
+        int *points;
+        int n_points;
 
-    points = threshold_method(image, &n_points, sample_w, sample_h, threshhold);
-    greedy_algorithm(points, n_points, image->width, bias);
-    join_short_stitches(points, &n_points, image->width, 40);
-    save_points_to_pattern(pattern, points, n_points, scale, image->width, image->height);
+        points =
+            threshold_method(image, &n_points, sample_w, sample_h, threshhold);
+        greedy_algorithm(points, n_points, image->width, bias);
+        join_short_stitches(points, &n_points, image->width, 40);
+        save_points_to_pattern(pattern, points, n_points, scale, image->width,
+                               image->height);
 
-    embp_end(pattern);
-    safe_free(points);
+        embp_end(pattern);
+        safe_free(points);
 }
 
 /* a pattern a image a threshhold
@@ -12776,252 +8823,318 @@ embp_horizontal_fill(EmbPattern *pattern, EmbImage *image, int threshhold)
  * neighbour. Currently the simple way to do this is to chain crosses
  * that are neighbours exactly one ahead.
  */
-void
-embp_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
+void embp_crossstitch(EmbPattern *pattern, EmbImage *image, int threshhold)
 {
-    int i;
-    /* Size of the crosses in millimeters. */
-    EmbReal scale = 0.1;
-    int sample_w = 5;
-    int sample_h = 5;
-    EmbReal bias = 1.0;
-    int *points;
-    int n_points;
-    int width = 1000;
-    points = threshold_method(image, &n_points, sample_w, sample_h, threshhold);
-    greedy_algorithm(points, n_points, width, bias);
+        int i;
+        /* Size of the crosses in millimeters. */
+        EmbReal scale = 0.1;
+        int sample_w = 5;
+        int sample_h = 5;
+        EmbReal bias = 1.0;
+        int *points;
+        int n_points;
+        int width = 1000;
+        points =
+            threshold_method(image, &n_points, sample_w, sample_h, threshhold);
+        greedy_algorithm(points, n_points, width, bias);
 
-    for (i=0; i<n_points; i++) {
-        EmbReal x, y;
-        x = points[i]%width;
-        y = points[i]/width;
-        printf("%f %f\n", x, y);
-        embp_addStitchAbs(pattern, scale*x, scale*y, NORMAL, 0);
-        embp_addStitchAbs(pattern, scale*(x+sample_w), scale*(y+sample_h), NORMAL, 0);
-        embp_addStitchAbs(pattern, scale*x, scale*(y+sample_h), NORMAL, 0);
-        embp_addStitchAbs(pattern, scale*(x+sample_w), scale*y, NORMAL, 0);
-    }
+        for (i = 0; i < n_points; i++) {
+                EmbReal x, y;
+                x = points[i] % width;
+                y = points[i] / width;
+                printf("%f %f\n", x, y);
+                embp_addStitchAbs(pattern, scale * x, scale * y, NORMAL, 0);
+                embp_addStitchAbs(pattern, scale * (x + sample_w),
+                                  scale * (y + sample_h), NORMAL, 0);
+                embp_addStitchAbs(pattern, scale * x, scale * (y + sample_h),
+                                  NORMAL, 0);
+                embp_addStitchAbs(pattern, scale * (x + sample_w), scale * y,
+                                  NORMAL, 0);
+        }
 
-    embp_end(pattern);
+        embp_end(pattern);
 }
 
 #if 0
 /* a pattern
  * Returns StitchBlock*
  */
-StitchBlock*
-BreakIntoColorBlocks(EmbPattern *pattern)
+StitchBlock *BreakIntoColorBlocks(EmbPattern *pattern)
 {
-    int i;
-    int sa2 = new StitchBlock();
-    int oldColor = pattern->stitch_list->stitch[0].color;
-    int color = pattern.ColorList[oldColor];
-    sa2.Thread = new Thread(color.Red, color.Blue, color.Green);
-    for (i = 0; i < pattern->stitch_list->count; i++) {
-        EmbStitch s = pattern->stitch_list->stitch[i];
-        if (s.color != oldColor) {
-            yield return sa2;
-            sa2 = new StitchBlock();
-            color = pattern.ColorList[s.ColorIndex];
-            sa2.Thread = new Thread(color.Red, color.Blue, color.Green);
-            oldColor = s.ColorIndex;
+        int i;
+        int sa2 = new StitchBlock();
+        int oldColor = pattern->stitch_list->stitch[0].color;
+        int color = pattern.ColorList[oldColor];
+        sa2.Thread = new Thread(color.Red, color.Blue, color.Green);
+        for (i = 0; i < pattern->stitch_list->count; i++) {
+                EmbStitch s = pattern->stitch_list->stitch[i];
+                if (s.color != oldColor) {
+                        yield return sa2;
+                        sa2 = new StitchBlock();
+                        color = pattern.ColorList[s.ColorIndex];
+                        sa2.Thread =
+                            new Thread(color.Red, color.Blue, color.Green);
+                        oldColor = s.ColorIndex;
+                }
+                int vs = new VectorStitch { Xy = new Point(s.X, s.Y), Color =
+                            s.ColorIndex
+                };
+                sa2.Stitches.Add(vs);
         }
-        int vs = new VectorStitch { Xy = new Point(s.X, s.Y), Color = s.ColorIndex };
-        sa2.Stitches.Add(vs);
-    }
-    yield return sa2;
+        yield return sa2;
 }
 
 /* a blocks
  * Returns StitchBlock*
  */
-StitchBlock *
-BreakIntoSeparateObjects(EmbStitchBlock* blocks)
+StitchBlock *BreakIntoSeparateObjects(EmbStitchBlock *blocks)
 {
-    int i, block;
-    EmbReal previousAngle = 0.0;
-    for (block=0; block<blocks->length; block++) {
-        int stitches = new List<VectorStitch>();
-        block.Stitches[0].Type = VectorStitchType.Contour;
-        block.Stitches[block.Stitches.Count - 1].Type = VectorStitchType.Contour;
+        int i, block;
+        EmbReal previousAngle = 0.0;
+        for (block = 0; block < blocks->length; block++) {
+                int stitches = new List < VectorStitch > ();
+                block.Stitches[0].Type = VectorStitchType.Contour;
+                block.Stitches[block.Stitches.Count - 1].Type =
+                    VectorStitchType.Contour;
 
-        for (int i = 0; i < block.Stitches.Count - 2; i++) { /* step 0 */
-            EmbReal dx = (emb_vector_relativeX(block.Stitches[i].Xy, block.Stitches[i + 1].Xy, block.Stitches[i + 2].Xy));
-            block.Stitches[i + 1].Type = dx <= 0 ? VectorStitchType.Run : VectorStitchType.Contour;
-            block.Stitches[i].Angle = GetAngle(block.Stitches[i], block.Stitches[i + 1]);
-            stitches.Add(block.Stitches[i].Clone());
-            if (i > 0) {
-                if ((block.Stitches[i].Type == VectorStitchType.Contour) && fabs(block.Stitches[i].Angle - previousAngle) > (20/180*embConstantPi)) {
-                    yield return
-                        new StitchBlock
-                            {
-                                Stitches = stitches,
-                                Angle = stitches.Average(x => x.Angle),
-                                Thread = new Thread(block.Thread.Red, block.Thread.Blue, block.Thread.Green)
-                            };
-                    stitches = new List<VectorStitch>();
+                for (int i = 0; i < block.Stitches.Count - 2; i++) {    /* step 0 */
+                        EmbReal dx =
+                            (emb_vector_relativeX
+                             (block.Stitches[i].Xy, block.Stitches[i + 1].Xy,
+                              block.Stitches[i + 2].Xy));
+                        block.Stitches[i + 1].Type =
+                            dx <=
+                            0 ? VectorStitchType.Run : VectorStitchType.Contour;
+                        block.Stitches[i].Angle =
+                            GetAngle(block.Stitches[i], block.Stitches[i + 1]);
+                        stitches.Add(block.Stitches[i].Clone());
+                        if (i > 0) {
+                                if ((block.Stitches[i].Type ==
+                                     VectorStitchType.Contour)
+                                    && fabs(block.Stitches[i].Angle -
+                                            previousAngle) >
+                                    (20 / 180 * embConstantPi)) {
+                                        yield return new StitchBlock {
+                                                Stitches = stitches,
+                                                    Angle = stitches.Average(x =
+                                                                             >x.Angle),
+                                                    Thread =
+                                                    new Thread(block.Thread.Red,
+                                                               block.
+                                                               Thread.Blue,
+                                                               block.
+                                                               Thread.Green)
+                                        };
+                                        stitches = new List < VectorStitch > ();
 
+                                }
+                        }
                 }
-            }
+
+                /* step 1 */
+                for (i = 1; i < sa.Stitches.Count - 3; i++) {
+                        if (sa.Stitches[i + 1].Type == VectorStitchType.Contour) {
+                                float dy = emb_vector_relativeY(sa[i + 1].XY,
+                                                                sa[i + 2].XY,
+                                                                sa[i + 3].XY);
+                                float dy2 =
+                                    emb_vector_relativeY(sa[i].XY, sa[i + 1].XY,
+                                                         sa[i + 2].XY);
+                                float dy3 = emb_vector_relativeY(sa[i + 2].XY,
+                                                                 sa[i + 3].XY,
+                                                                 sa[i + 4].XY);
+                                if (dy)
+                                        if (sa.Stitches[i - 1].Type ==
+                                            VectorStitchType.Run
+                                            || sa.Stitches[i + 1].Type ==
+                                            VectorStitchType.Run) {
+                                                sa.Stitches[i].Type =
+                                                    VectorStitchType.Tatami;
+                                        } else {
+                                                sa.Stitches[i].Type =
+                                                    VectorStitchType.Satin;
+                                        }
+                        }
+                }
         }
-
-        /* step 1 */
-        for (i = 1; i < sa.Stitches.Count - 3; i++) {
-            if (sa.Stitches[i + 1].Type == VectorStitchType.Contour) {
-                float dy = emb_vector_relativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
-                float dy2 = emb_vector_relativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
-                float dy3 = emb_vector_relativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
-                if (dy)
-                if (sa.Stitches[i - 1].Type == VectorStitchType.Run || sa.Stitches[i + 1].Type == VectorStitchType.Run) {
-                    sa.Stitches[i].Type = VectorStitchType.Tatami;
-                }
-                else {
-                    sa.Stitches[i].Type = VectorStitchType.Satin;
-                }
-            }
-        }
-    }
 }
 
 /* a stitchData
  * Returns StitchObject*
  */
-StitchObject *
-FindOutline(EmbStitchBlock* stitchData)
+StitchObject *FindOutline(EmbStitchBlock *stitchData)
 {
-    int currColorIndex = 0, sa;
-    int pOdd = new List<Point>();
-    int pEven = new List<Point>();
-    for (sa=0; sa<stitchData->count; sa++) {
-        if (sa.Stitches.Count > 0) {
-            sa.Stitches[0].Type = VectorStitchType.Contour;
-            sa.Stitches[sa.Stitches.Count - 1].Type = VectorStitchType.Contour;
-            /* step 0 */
-            for (int i = 0; i < sa.Stitches.Count - 2; i++) {
-                float dx = (GetRelativeX(sa.Stitches[i].Xy, sa.Stitches[i + 1].Xy, sa.Stitches[i + 2].Xy));
-                sa.Stitches[i + 1].Type = dx <= 0 ? VectorStitchType.Run : VectorStitchType.Contour;
-                sa.Stitches[i].Angle = emb_vector_angle(sa.Stitches[i], sa.Stitches[i + 1]);
-            }
-            /* step 1 */
-            for (int i = 1; i < sa.Stitches.Count - 3; i++) {
-                if (sa.Stitches[i + 1].Type == VectorStitchType.Contour) {
-                    float dy = emb_vector_relativeY(sa[i + 1].XY, sa[i + 2].XY, sa[i + 3].XY);
-                    float dy2 = emb_vector_relativeY(sa[i].XY, sa[i + 1].XY, sa[i + 2].XY);
-                    float dy3 = emb_vector_relativeY(sa[i + 2].XY, sa[i + 3].XY, sa[i + 4].XY);
-                    if (dy)
-                    if (sa.Stitches[i - 1].Type == VectorStitchType.Run || sa.Stitches[i + 1].Type == VectorStitchType.Run) {
-                        sa.Stitches[i].Type = VectorStitchType.Tatami;
-                    }
-                    else {
-                        sa.Stitches[i].Type = VectorStitchType.Satin;
-                    }
+        int currColorIndex = 0, sa;
+        int pOdd = new List < Point > ();
+        int pEven = new List < Point > ();
+        for (sa = 0; sa < stitchData->count; sa++) {
+                if (sa.Stitches.Count > 0) {
+                        sa.Stitches[0].Type = VectorStitchType.Contour;
+                        sa.Stitches[sa.Stitches.Count - 1].Type =
+                            VectorStitchType.Contour;
+                        /* step 0 */
+                        for (int i = 0; i < sa.Stitches.Count - 2; i++) {
+                                float dx =
+                                    (GetRelativeX
+                                     (sa.Stitches[i].Xy, sa.Stitches[i + 1].Xy,
+                                      sa.Stitches[i + 2].Xy));
+                                sa.Stitches[i + 1].Type =
+                                    dx <=
+                                    0 ? VectorStitchType.
+                                    Run : VectorStitchType.Contour;
+                                sa.Stitches[i].Angle =
+                                    emb_vector_angle(sa.Stitches[i],
+                                                     sa.Stitches[i + 1]);
+                        }
+                        /* step 1 */
+                        for (int i = 1; i < sa.Stitches.Count - 3; i++) {
+                                if (sa.Stitches[i + 1].Type ==
+                                    VectorStitchType.Contour) {
+                                        float dy =
+                                            emb_vector_relativeY(sa[i + 1].XY,
+                                                                 sa[i + 2].XY,
+                                                                 sa[i + 3].XY);
+                                        float dy2 =
+                                            emb_vector_relativeY(sa[i].XY,
+                                                                 sa[i + 1].XY,
+                                                                 sa[i + 2].XY);
+                                        float dy3 =
+                                            emb_vector_relativeY(sa[i + 2].XY,
+                                                                 sa[i + 3].XY,
+                                                                 sa[i + 4].XY);
+                                        if (dy)
+                                                if (sa.Stitches[i - 1].Type ==
+                                                    VectorStitchType.Run
+                                                    || sa.Stitches[i +
+                                                                   1].Type ==
+                                                    VectorStitchType.Run) {
+                                                        sa.Stitches[i].Type =
+                                                            VectorStitchType.Tatami;
+                                                } else {
+                                                        sa.Stitches[i].Type =
+                                                            VectorStitchType.Satin;
+                                                }
+                                }
+                        }
                 }
-            }
+
+                int oddEven = 0;
+                foreach(VectorStitch t in sa.Stitches) {
+                        if ((t.Type == VectorStitchType.Contour)
+                            && (oddEven % 2) == 0) {
+                                pEven.Add(t.Xy);
+
+                                oddEven++;
+                        } else if ((t.Type == VectorStitchType.Contour)
+                                   && (oddEven % 2) == 1) {
+                                pOdd.Add(t.Xy);
+                                oddEven++;
+                        }
+                }
+                currColorIndex++;
+                int so = new StitchObject { SideOne = pEven, SideTwo =
+                            pOdd, ColorIndex = currColorIndex
+                };
+                yield return so;
+                pEven = new List < Point > ();
+                pOdd = new List < Point > ();
+                /* break; */
         }
-
-
-        int oddEven = 0;
-        foreach (VectorStitch t in sa.Stitches) {
-            if ((t.Type == VectorStitchType.Contour) && (oddEven % 2) == 0) {
-                pEven.Add(t.Xy);
-
-                oddEven++;
-            }
-            else if ((t.Type == VectorStitchType.Contour) && (oddEven % 2) == 1) {
-                pOdd.Add(t.Xy);
-                oddEven++;
-            }
-        }
-        currColorIndex++;
-        int so = new StitchObject { SideOne = pEven, SideTwo = pOdd, ColorIndex = currColorIndex };
-        yield return so;
-        pEven = new List<Point>();
-        pOdd = new List<Point>();
-        /* break; */
-    }
 }
 
 /* a p
  * Returns EmbPattern
  */
-EmbPattern
-DrawGraphics(EmbPattern p)
+EmbPattern DrawGraphics(EmbPattern p)
 {
-    int stitchData = BreakIntoColorBlocks(p);
+        int stitchData = BreakIntoColorBlocks(p);
 
-    int outBlock = new List<StitchBlock>(BreakIntoSeparateObjects(stitchData));
-    foreach(var block in stitchData) {
-        foreach (var stitch in block.Stitches) {
-            if (stitch.Angle != 0) {
-                int aaa = 1;
-            }
+        int outBlock =
+            new List < StitchBlock > (BreakIntoSeparateObjects(stitchData));
+        foreach(var block in stitchData) {
+                foreach(var stitch in block.Stitches) {
+                        if (stitch.Angle != 0) {
+                                int aaa = 1;
+                        }
+                }
         }
-    }
-    int xxxxx = outBlock;
-    int objectsFound = FindOutline(stitchData);
-    int outPattern = new Pattern();
-    outPattern.AddColor(new Thread(255, 0, 0, "none", "None"));
-    int colorIndex = outPattern.ColorList.Count - 1;
-    int r = new Random();
-    foreach (StitchObject stitchObject in objectsFound) {
-        if (stitchObject.SideOne.Count > 1 && stitchObject.SideTwo.Count > 1) {
-            outPattern.AddColor(new Thread((byte) (r.Next()%256), (byte) (r.Next()%256), (byte) (r.Next()%256),
-                                           "none", "None"));
-            colorIndex++;
-            outPattern.AddStitchRelative(0, 0, StitchTypes.Stop);
-            int points = stitchObject.Generate2(75);
-            foreach (var point in points) {
-                outPattern.AddStitchAbsolute(point.X, point.Y, StitchTypes.Normal);
-            }
-            break;
-            StitchObject stitchObject = objectsFound[1];))
-            if (stitchObject.SideOne.Count > 0) {
-                outPattern.stitch_list.Add(new Stitch(stitchObject.SideOne[0].X, stitchObject.SideOne[0].Y,
-                                                     StitchType.Jump, colorIndex));
-            }
-            foreach (Point t in stitchObject.SideOne) {
+        int xxxxx = outBlock;
+        int objectsFound = FindOutline(stitchData);
+        int outPattern = new Pattern();
+        outPattern.AddColor(new Thread(255, 0, 0, "none", "None"));
+        int colorIndex = outPattern.ColorList.Count - 1;
+        int r = new Random();
+        foreach(StitchObject stitchObject in objectsFound) {
+                if (stitchObject.SideOne.Count > 1
+                    && stitchObject.SideTwo.Count > 1) {
+                        outPattern.AddColor(new
+                                            Thread((byte) (r.Next() % 256),
+                                                   (byte) (r.Next() % 256),
+                                                   (byte) (r.Next() % 256),
+                                                   "none", "None"));
+                        colorIndex++;
+                        outPattern.AddStitchRelative(0, 0, StitchTypes.Stop);
+                        int points = stitchObject.Generate2(75);
+                        foreach(var point in points) {
+                                outPattern.AddStitchAbsolute(point.X, point.Y,
+                                                             StitchTypes.Normal);
+                        }
+                        break;
+                        StitchObject stitchObject = objectsFound[1];
+                        ))
+                            if (stitchObject.SideOne.Count > 0) {
+                                outPattern.stitch_list.Add(new
+                                                           Stitch
+                                                           (stitchObject.SideOne
+                                                            [0].X,
+                                                            stitchObject.SideOne
+                                                            [0].Y,
+                                                            StitchType.Jump,
+                                                            colorIndex));
+                        }
+                        foreach(Point t in stitchObject.SideOne) {
 
-                outPattern.stitch_list.Add(new Stitch(t.X, t.Y,
-                                                     StitchType.Normal, colorIndex));
-            }
-            foreach (Point t in stitchObject.SideTwo) {
-                outPattern.stitch_list.Add(new Stitch(t.X, t.Y,
-                                                     StitchType.Normal, colorIndex));
-            }
-            break;
+                                outPattern.stitch_list.Add(new Stitch(t.X, t.Y,
+                                                                      StitchType.Normal,
+                                                                      colorIndex));
+                        }
+                        foreach(Point t in stitchObject.SideTwo) {
+                                outPattern.stitch_list.Add(new Stitch(t.X, t.Y,
+                                                                      StitchType.Normal,
+                                                                      colorIndex));
+                        }
+                        break;
+                }
         }
-    }
-    outPattern.AddStitchRelative(0, 0, StitchTypes.End);
-    return outPattern;
-    /*
-    return (SimplifyOutline(outPattern));
-    */
+        outPattern.AddStitchRelative(0, 0, StitchTypes.End);
+        return outPattern;
+        /*
+           return (SimplifyOutline(outPattern));
+         */
 }
 
 /* a pattern
  * Returns EmbPattern
  */
-EmbPattern
-SimplifyOutline(EmbPattern pattern)
-{
-    int v = new Vertices();
-    v.AddRange(pattern.stitch_list.Select(point => new Vector2(point.X, point.Y)));
-    int output = SimplifyTools.DouglasPeuckerSimplify(v, 10);
-    int patternOut = new Pattern();
-    foreach (var color in pattern.ColorList)
-    {
-        patternOut.AddColor(color);
-    }
+EmbPattern SimplifyOutline(EmbPattern pattern) {
+        int v = new Vertices();
+        v.AddRange(pattern.
+                   stitch_list.Select(point = >new Vector2(point.X, point.Y)));
+        int output = SimplifyTools.DouglasPeuckerSimplify(v, 10);
+        int patternOut = new Pattern();
+        foreach(var color in pattern.ColorList) {
+                patternOut.AddColor(color);
+        }
 
-    foreach (var vertex in output)
-    {
-        patternOut.AddStitchAbsolute(vertex.X, vertex.Y, StitchTypes.Normal);
-    }
-    patternOut.AddStitchRelative(0, 0, StitchTypes.End);
-    return patternOut;
+        foreach(var vertex in output) {
+                patternOut.AddStitchAbsolute(vertex.X, vertex.Y,
+                                             StitchTypes.Normal);
+        }
+        patternOut.AddStitchRelative(0, 0, StitchTypes.End);
+        return patternOut;
 }
 
-bool[] _usePt;
+bool[]_usePt;
 EmbReal _distanceTolerance;
 
 /* Removes all collinear points on the polygon.
@@ -13030,30 +9143,30 @@ EmbReal _distanceTolerance;
  * a collinearityTolerance
  * Returns Vertices
  */
-Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance)
-{
-    /* We can't simplify polygons under 3 vertices */
-    if (vertices.Count < 3)
-        return vertices;
+Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance) {
+        /* We can't simplify polygons under 3 vertices */
+        if (vertices.Count < 3)
+                return vertices;
 
-    int simplified = new Vertices();
+        int simplified = new Vertices();
 
-    for (int i = 0; i < vertices.Count; i++) {
-        int prevId = vertices.PreviousIndex(i);
-        int nextId = vertices.NextIndex(i);
+        for (int i = 0; i < vertices.Count; i++) {
+                int prevId = vertices.PreviousIndex(i);
+                int nextId = vertices.NextIndex(i);
 
-        Vector2 prev = vertices[prevId];
-        Vector2 current = vertices[i];
-        Vector2 next = vertices[nextId];
+                Vector2 prev = vertices[prevId];
+                Vector2 current = vertices[i];
+                Vector2 next = vertices[nextId];
 
-        /* If they collinear, continue */
-        if (emb_vector_collinear(ref prev, ref current, ref next, collinearityTolerance))
-            continue;
+                /* If they collinear, continue */
+                if (emb_vector_collinear
+                    (ref prev, ref current, ref next, collinearityTolerance))
+                        continue;
 
-        simplified.Add(current);
-    }
+                simplified.Add(current);
+        }
 
-    return simplified;
+        return simplified;
 }
 
 /* vertices
@@ -13064,10 +9177,8 @@ Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance)
  * param vertices: The polygon that needs simplification.
  * returns: A simplified polygon.
  */
-Vertices
-CollinearSimplify(Vertices vertices)
-{
-    return CollinearSimplify(vertices, 0);
+Vertices CollinearSimplify(Vertices vertices) {
+        return CollinearSimplify(vertices, 0);
 }
 
 /* vertices
@@ -13081,98 +9192,88 @@ CollinearSimplify(Vertices vertices)
  *
  * \todo Ramer-Douglas-Peucker citation
  */
-Vertices
-DouglasPeuckerSimplify(Vertices vertices, float distanceTolerance)
-{
-    _distanceTolerance = distanceTolerance;
+Vertices DouglasPeuckerSimplify(Vertices vertices, float distanceTolerance) {
+        _distanceTolerance = distanceTolerance;
 
-    _usePt = new bool[vertices.Count];
-    for (int i = 0; i < vertices.Count; i++)
-    {
-        _usePt[i] = true;
-    }
-    SimplifySection(vertices, 0, vertices.Count - 1);
-    int result = new Vertices();
-    result.AddRange(vertices.Where((t, i) => _usePt[i]));
-    return result;
+        _usePt = new bool[vertices.Count];
+        for (int i = 0; i < vertices.Count; i++) {
+                _usePt[i] = true;
+        }
+        SimplifySection(vertices, 0, vertices.Count - 1);
+        int result = new Vertices();
+        result.AddRange(vertices.Where((t, i) = >_usePt[i]));
+        return result;
 }
 
 /*  vertices a i a j */
-void
-SimplifySection(Vertices vertices, int i, int j)
-{
-    if ((i + 1) == j)
-        return;
+void SimplifySection(Vertices vertices, int i, int j) {
+        if ((i + 1) == j)
+                return;
 
-    Vector2 a = vertices[i];
-    Vector2 b = vertices[j];
-    EmbReal maxDistance = -1.0;
-    int maxIndex = i;
-    for (int k = i + 1; k < j; k++)
-    {
-        EmbReal distance = DistancePointLine(vertices[k], a, b);
-
-        if (distance > maxDistance)
-        {
-            maxDistance = distance;
-            maxIndex = k;
-        }
-    }
-    if (maxDistance <= _distanceTolerance) {
+        Vector2 a = vertices[i];
+        Vector2 b = vertices[j];
+        EmbReal maxDistance = -1.0;
+        int maxIndex = i;
         for (int k = i + 1; k < j; k++) {
-            _usePt[k] = 0;
+                EmbReal distance = DistancePointLine(vertices[k], a, b);
+
+                if (distance > maxDistance) {
+                        maxDistance = distance;
+                        maxIndex = k;
+                }
         }
-    }
-    else {
-        SimplifySection(vertices, i, maxIndex);
-        SimplifySection(vertices, maxIndex, j);
-    }
+        if (maxDistance <= _distanceTolerance) {
+                for (int k = i + 1; k < j; k++) {
+                        _usePt[k] = 0;
+                }
+        } else {
+                SimplifySection(vertices, i, maxIndex);
+                SimplifySection(vertices, maxIndex, j);
+        }
 }
 
 /* p a a a b
  * Returns EmbReal
  */
-EmbReal
-DistancePointLine(EmbVector p, EmbVector a, EmbVector b)
-{
-    /* if start == end, then use point-to-point distance */
-    if (a.X == b.X && a.Y == b.Y)
-        return DistancePointPoint(p, a);
+EmbReal DistancePointLine(EmbVector p, EmbVector a, EmbVector b) {
+        /* if start == end, then use point-to-point distance */
+        if (a.X == b.X && a.Y == b.Y)
+                return DistancePointPoint(p, a);
 
-    /* otherwise use comp.graphics.algorithms Frequently Asked Questions method */
-    /* (1)               AC dot AB
-                r =   ---------
-                      ||AB||^2
+        /* otherwise use comp.graphics.algorithms Frequently Asked Questions method */
+        /* (1)               AC dot AB
+           r =   ---------
+           ||AB||^2
 
-                r has the following meaning:
-                r=0 Point = A
-                r=1 Point = B
-                r<0 Point is on the backward extension of AB
-                r>1 Point is on the forward extension of AB
-                0<r<1 Point is interior to AB
-    */
+           r has the following meaning:
+           r=0 Point = A
+           r=1 Point = B
+           r<0 Point is on the backward extension of AB
+           r>1 Point is on the forward extension of AB
+           0<r<1 Point is interior to AB
+         */
 
-    EmbReal r = ((p.X - a.X) * (b.X - a.X) + (p.Y - a.Y) * (b.Y - a.Y))
-               /
-               ((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y));
+        EmbReal r = ((p.X - a.X) * (b.X - a.X) + (p.Y - a.Y) * (b.Y - a.Y))
+            / ((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y));
 
-    if (r <= 0.0) return DistancePointPoint(p, a);
-    if (r >= 1.0) return DistancePointPoint(p, b);
+        if (r <= 0.0)
+                return DistancePointPoint(p, a);
+        if (r >= 1.0)
+                return DistancePointPoint(p, b);
 
+        /* (2)
+           (Ay-Cy)(Bx-Ax)-(Ax-Cx)(By-Ay)
+           s = -----------------------------
+           Curve^2
 
-    /* (2)
-                    (Ay-Cy)(Bx-Ax)-(Ax-Cx)(By-Ay)
-                s = -----------------------------
-                                Curve^2
+           Then the distance from C to Point = |s|*Curve.
+         */
 
-                Then the distance from C to Point = |s|*Curve.
-    */
+        EmbReal s = ((a.Y - p.Y) * (b.X - a.X) - (a.X - p.X) * (b.Y - a.Y))
+            / ((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y));
 
-    EmbReal s = ((a.Y - p.Y) * (b.X - a.X) - (a.X - p.X) * (b.Y - a.Y))
-               /
-               ((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y));
-
-    return fabs(s) * sqrt(((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y)));
+        return fabs(s) *
+            sqrt(((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y)));
 }
 
 /* vertices a areaTolerance
@@ -13180,47 +9281,41 @@ DistancePointLine(EmbVector p, EmbVector a, EmbVector b)
  *
  * From physics2d.net.
  */
-public Vertices
-ReduceByArea(Vertices vertices, float areaTolerance)
-{
-    if (vertices.Count <= 3)
-        return vertices;
+public Vertices ReduceByArea(Vertices vertices, float areaTolerance) {
+        if (vertices.Count <= 3)
+                return vertices;
 
-    if (areaTolerance < 0)
-    {
-        throw new ArgumentOutOfRangeException("areaTolerance", "must be equal to or greater then zero.");
-    }
+        if (areaTolerance < 0) {
+                throw new ArgumentOutOfRangeException("areaTolerance",
+                                                      "must be equal to or greater then zero.");
+        }
 
-    int result = new Vertices();
-    Vector2 v3;
-    Vector2 v1 = vertices[vertices.Count - 2];
-    Vector2 v2 = vertices[vertices.Count - 1];
-    areaTolerance *= 2;
-    for (int index = 0; index < vertices.Count; ++index, v2 = v3)
-    {
-        if (index == vertices.Count - 1)
-        {
-            if (result.Count == 0)
-            {
-                throw new ArgumentOutOfRangeException("areaTolerance", "The tolerance is too high!");
-            }
-            v3 = result[0];
+        int result = new Vertices();
+        Vector2 v3;
+        Vector2 v1 = vertices[vertices.Count - 2];
+        Vector2 v2 = vertices[vertices.Count - 1];
+        areaTolerance *= 2;
+        for (int index = 0; index < vertices.Count; ++index, v2 = v3) {
+                if (index == vertices.Count - 1) {
+                        if (result.Count == 0) {
+                                throw new
+                                    ArgumentOutOfRangeException("areaTolerance",
+                                                                "The tolerance is too high!");
+                        }
+                        v3 = result[0];
+                } else {
+                        v3 = vertices[index];
+                }
+                float old1, old2, new1;
+                MathUtils.Cross(ref v1, ref v2, out old1);
+                MathUtils.Cross(ref v2, ref v3, out old2);
+                MathUtils.Cross(ref v1, ref v3, out new1);
+                if (fabs(new1 - (old1 + old2)) > areaTolerance) {
+                        result.Add(v2);
+                        v1 = v2;
+                }
         }
-        else
-        {
-            v3 = vertices[index];
-        }
-        float old1, old2, new1;
-        MathUtils.Cross(ref v1, ref v2, out old1);
-        MathUtils.Cross(ref v2, ref v3, out old2);
-        MathUtils.Cross(ref v1, ref v3, out new1);
-        if (fabs(new1 - (old1 + old2)) > areaTolerance)
-        {
-            result.Add(v2);
-            v1 = v2;
-        }
-    }
-    return result;
+        return result;
 }
 
 /* vertices a tolerance
@@ -13229,69 +9324,69 @@ ReduceByArea(Vertices vertices, float areaTolerance)
  * Merges all parallel edges in the list of vertices.
  */
 void
-MergeParallelEdges(EmbArray *vertices, float tolerance)
-{
-    int i;
-    if (vertices.Count <= 3) {
-        /* Can't do anything useful here to a triangle. */
-        return;
-    }
-
-    int mergeMe = new bool[vertices.Count];
-    int newNVertices = vertices.Count;
-
-    /* Gather points to process */
-    for (i = 0; i < vertices->count; i++) {
-        EmbVector delta0, delta1;
-        int lower = (i == 0) ? (vertices.Count - 1) : (i - 1);
-        int upper = (i == vertices.Count - 1) ? (0) : (i + 1);
-
-        delta0 = emb_vector_subtract(vertices[i], vertices[lower]);
-        delta1 = emb_vector_subtract(vertices[upper], vertices[i]);
-        float norm0 = emb_vector_length(delta0);
-        float norm1 = emb_vector_length(delta0);
-
-        if (!(norm0 > 0.0f && norm1 > 0.0f) && newNVertices > 3) {
-            /* Merge identical points */
-            mergeMe[i] = 1;
-            newNVertices--;
+ MergeParallelEdges(EmbArray * vertices, float tolerance) {
+        int i;
+        if (vertices.Count <= 3) {
+                /* Can't do anything useful here to a triangle. */
+                return;
         }
 
-        delta0 = emb_vector_normalize(delta0);
-        delta1 = emb_vector_normalize(delta1);
-        float cross = emb_vector_cross(delta0, delta1);
-        float dot = emb_vector_dot(delta0, delta1);
+        int mergeMe = new bool[vertices.Count];
+        int newNVertices = vertices.Count;
 
-        if (fabs(cross) < tolerance && dot > 0 && newNVertices > 3) {
-            mergeMe[i] = 1;
-            newNVertices--;
+        /* Gather points to process */
+        for (i = 0; i < vertices->count; i++) {
+                EmbVector delta0, delta1;
+                int lower = (i == 0) ? (vertices.Count - 1) : (i - 1);
+                int upper = (i == vertices.Count - 1) ? (0) : (i + 1);
+
+                delta0 = emb_vector_subtract(vertices[i], vertices[lower]);
+                delta1 = emb_vector_subtract(vertices[upper], vertices[i]);
+                float norm0 = emb_vector_length(delta0);
+                float norm1 = emb_vector_length(delta0);
+
+                if (!(norm0 > 0.0f && norm1 > 0.0f) && newNVertices > 3) {
+                        /* Merge identical points */
+                        mergeMe[i] = 1;
+                        newNVertices--;
+                }
+
+                delta0 = emb_vector_normalize(delta0);
+                delta1 = emb_vector_normalize(delta1);
+                float cross = emb_vector_cross(delta0, delta1);
+                float dot = emb_vector_dot(delta0, delta1);
+
+                if (fabs(cross) < tolerance && dot > 0 && newNVertices > 3) {
+                        mergeMe[i] = 1;
+                        newNVertices--;
+                } else {
+                        mergeMe[i] = 0;
+                }
         }
-        else {
-            mergeMe[i] = 0;
+
+        if (newNVertices == vertices.Count || newNVertices == 0)
+                return;
+
+        int currIndex = 0;
+
+        /* Copy the vertices to a new list and clear the old */
+        int oldVertices = new Vertices(vertices);
+        vertices.Clear();
+
+        for (i = 0; i < oldVertices.Count; i++) {
+                if (mergeMe[i] || newNVertices == 0
+                    || currIndex == newNVertices)
+                        continue;
+
+                vertices.Add(oldVertices[i]);
+                currIndex++;
         }
-    }
-
-    if (newNVertices == vertices.Count || newNVertices == 0)
-        return;
-
-    int currIndex = 0;
-
-    /* Copy the vertices to a new list and clear the old */
-    int oldVertices = new Vertices(vertices);
-    vertices.Clear();
-
-    for (i = 0; i < oldVertices.Count; i++) {
-        if (mergeMe[i] || newNVertices == 0 || currIndex == newNVertices)
-            continue;
-
-        vertices.Add(oldVertices[i]);
-        currIndex++;
-    }
 }
 #endif
 
-void embPolygon_reduceByDistance(EmbArray *vertices, EmbArray *simplified, float distance);
-void embPolygon_reduceByNth(EmbArray *vertices, EmbArray *out, int nth);
+void embPolygon_reduceByDistance(EmbArray * vertices, EmbArray * simplified,
+                                 float distance);
+void embPolygon_reduceByNth(EmbArray * vertices, EmbArray * out, int nth);
 
 /* vertices a simplified a distance
  *
@@ -13300,30 +9395,32 @@ void embPolygon_reduceByNth(EmbArray *vertices, EmbArray *out, int nth);
  * This is a non-destructive function, so the caller is responsible for
  * freeing "vertices" if they choose to keep "simplified".
  */
-void embPolygon_reduceByDistance(EmbArray *vertices, EmbArray *simplified, float distance)
-{
-    int i;
-    /* We can't simplify polygons under 3 vertices */
-    if (vertices->count < 3) {
-        emb_array_copy(simplified, vertices);
-        return;
-    }
-
-    for (i = 0; i < vertices->count; i++) {
-        EmbVector delta;
-        int nextId = (i + 1) % vertices->count;
-
-        delta = emb_vector_subtract(
-            vertices->geometry[nextId].object.vector,
-            vertices->geometry[i].object.vector);
-
-        /* If they are closer than the distance, continue */
-        if (emb_vector_length(delta) < distance) {
-            continue;
+void embPolygon_reduceByDistance(EmbArray * vertices, EmbArray * simplified,
+                                 float distance) {
+        int i;
+        /* We can't simplify polygons under 3 vertices */
+        if (vertices->count < 3) {
+                emb_array_copy(simplified, vertices);
+                return;
         }
 
-        emb_array_addVector(simplified, vertices->geometry[i].object.vector);
-    }
+        for (i = 0; i < vertices->count; i++) {
+                EmbVector delta;
+                int nextId = (i + 1) % vertices->count;
+
+                delta =
+                    emb_vector_subtract(vertices->geometry[nextId].
+                                        object.vector,
+                                        vertices->geometry[i].object.vector);
+
+                /* If they are closer than the distance, continue */
+                if (emb_vector_length(delta) < distance) {
+                        continue;
+                }
+
+                emb_array_addVector(simplified,
+                                    vertices->geometry[i].object.vector);
+        }
 }
 
 /* vertices a out a nth
@@ -13333,53 +9430,53 @@ void embPolygon_reduceByDistance(EmbArray *vertices, EmbArray *simplified, float
  * freeing vertices if they choose to keep out.
  */
 void
-embPolygon_reduceByNth(EmbArray *vertices, EmbArray *out, int nth)
-{
-    int i;
-    /* We can't simplify polygons under 3 vertices */
-    if (vertices->count < 3) {
-        emb_array_copy(out, vertices);
-        return;
-    }
-
-    for (i=0; i<vertices->count; i++) {
-        if (i!=nth) {
-            emb_array_addVector(out, vertices->geometry[i].object.vector);
+ embPolygon_reduceByNth(EmbArray * vertices, EmbArray * out, int nth) {
+        int i;
+        /* We can't simplify polygons under 3 vertices */
+        if (vertices->count < 3) {
+                emb_array_copy(out, vertices);
+                return;
         }
-    }
+
+        for (i = 0; i < vertices->count; i++) {
+                if (i != nth) {
+                        emb_array_addVector(out,
+                                            vertices->geometry[i].
+                                            object.vector);
+                }
+        }
 }
 
 /* p1 a p2
  * Returns EmbPattern*
  */
-EmbPattern *
-embp_combine(EmbPattern *p1, EmbPattern *p2)
-{
-    int i;
-    EmbPattern *out = embp_create();
-    for (i=0; i<p1->stitch_list->count; i++) {
-        emb_array_addStitch(out->stitch_list, p1->stitch_list->stitch[i]);
-    }
-    for (i=0; i<p2->stitch_list->count; i++) {
-        emb_array_addStitch(out->stitch_list, p2->stitch_list->stitch[i]);
-    }
-    /* These need to be merged, not appended. */
-    for (i=0; i<p1->thread_list->count; i++) {
-        embp_addThread(out, p1->thread_list->thread[i]);
-    }
-    for (i=0; i<p2->thread_list->count; i++) {
-        embp_addThread(out, p2->thread_list->thread[i]);
-    }
-    return out;
+EmbPattern *embp_combine(EmbPattern * p1, EmbPattern * p2) {
+        int i;
+        EmbPattern *out = embp_create();
+        for (i = 0; i < p1->stitch_list->count; i++) {
+                emb_array_addStitch(out->stitch_list,
+                                    p1->stitch_list->stitch[i]);
+        }
+        for (i = 0; i < p2->stitch_list->count; i++) {
+                emb_array_addStitch(out->stitch_list,
+                                    p2->stitch_list->stitch[i]);
+        }
+        /* These need to be merged, not appended. */
+        for (i = 0; i < p1->thread_list->count; i++) {
+                embp_addThread(out, p1->thread_list->thread[i]);
+        }
+        for (i = 0; i < p2->thread_list->count; i++) {
+                embp_addThread(out, p2->thread_list->thread[i]);
+        }
+        return out;
 }
 
 /* p a arc a thread_index a style
  */
 void
-embp_stitchArc(EmbPattern *p, EmbArc arc, int thread_index, int style)
-{
-    printf("DEBUG stitchArc (unfinished): %f %f %d %d\n",
-        p->home.x, arc.start.x, thread_index, style);
+ embp_stitchArc(EmbPattern * p, EmbArc arc, int thread_index, int style) {
+        printf("DEBUG stitchArc (unfinished): %f %f %d %d\n",
+               p->home.x, arc.start.x, thread_index, style);
 }
 
 /* p a circle a thread_index a style
@@ -13410,30 +9507,32 @@ embp_stitchArc(EmbPattern *p, EmbArc arc, int thread_index, int style)
  * alters these lines by splitting the ones longer than some tolerence.
  */
 void
-embp_stitchCircle(EmbPattern *p, EmbCircle circle, int thread_index, int style)
-{
-    float s;
-    float seperation = 0.1;
-    EmbVector direction = {1.0, 1.0};
-    EmbVector normal = {-1.0, 1.0};
-    direction = emb_vector_normalize(direction);
-    normal = emb_vector_normalize(normal);
-    printf("style %d\n", style);
-    for (s=-circle.radius; s<circle.radius; s += seperation) {
-        EmbLine line;
-        float length = sqrt(circle.radius*circle.radius - s*s);
-        EmbVector scaled = emb_vector_scale(normal, s);
-        line.start = emb_vector_add(circle.center, scaled);
-        scaled = emb_vector_scale(direction, length);
-        line.start = emb_vector_subtract(line.start, scaled);
-        scaled = emb_vector_scale(normal, s);
-        line.end = emb_vector_add(circle.center, scaled);
-        scaled = emb_vector_scale(direction, length);
-        line.end = emb_vector_add(line.end, scaled);
-        /* Split long stitches here. */
-        embp_addStitchAbs(p, line.start.x, line.start.y, NORMAL, thread_index);
-        embp_addStitchAbs(p, line.end.x, line.end.y, NORMAL, thread_index);
-    }
+ embp_stitchCircle(EmbPattern * p, EmbCircle circle, int thread_index,
+                   int style) {
+        float s;
+        float seperation = 0.1;
+        EmbVector direction = { 1.0, 1.0 };
+        EmbVector normal = { -1.0, 1.0 };
+        direction = emb_vector_normalize(direction);
+        normal = emb_vector_normalize(normal);
+        printf("style %d\n", style);
+        for (s = -circle.radius; s < circle.radius; s += seperation) {
+                EmbLine line;
+                float length = sqrt(circle.radius * circle.radius - s * s);
+                EmbVector scaled = emb_vector_scale(normal, s);
+                line.start = emb_vector_add(circle.center, scaled);
+                scaled = emb_vector_scale(direction, length);
+                line.start = emb_vector_subtract(line.start, scaled);
+                scaled = emb_vector_scale(normal, s);
+                line.end = emb_vector_add(circle.center, scaled);
+                scaled = emb_vector_scale(direction, length);
+                line.end = emb_vector_add(line.end, scaled);
+                /* Split long stitches here. */
+                embp_addStitchAbs(p, line.start.x, line.start.y, NORMAL,
+                                  thread_index);
+                embp_addStitchAbs(p, line.end.x, line.end.y, NORMAL,
+                                  thread_index);
+        }
 }
 
 /* a p a ellipse a thread_index a style
@@ -13441,10 +9540,10 @@ embp_stitchCircle(EmbPattern *p, EmbCircle circle, int thread_index, int style)
  * \todo finish stitchEllipse
  */
 void
-embp_stitchEllipse(EmbPattern *p, EmbEllipse ellipse, int thread_index, int style)
-{
-    printf("DEBUG stitchEllipse: %f %f %d %d\n",
-        p->home.x, ellipse.center.x, thread_index, style);
+ embp_stitchEllipse(EmbPattern * p, EmbEllipse ellipse, int thread_index,
+                    int style) {
+        printf("DEBUG stitchEllipse: %f %f %d %d\n", p->home.x,
+               ellipse.center.x, thread_index, style);
 }
 
 /*a p a rect a thread_index a style
@@ -13452,10 +9551,9 @@ embp_stitchEllipse(EmbPattern *p, EmbEllipse ellipse, int thread_index, int styl
  * \todo finish stitch path
  */
 void
-embp_stitchPath(EmbPattern *p, EmbPath path, int thread_index, int style)
-{
-    printf("DEBUG stitchPath: %f %d %d %d\n",
-        p->home.x, path.pointList->count, thread_index, style);
+ embp_stitchPath(EmbPattern * p, EmbPath path, int thread_index, int style) {
+        printf("DEBUG stitchPath: %f %d %d %d\n",
+               p->home.x, path.pointList->count, thread_index, style);
 }
 
 /*a p a rect a thread_index a style
@@ -13463,10 +9561,10 @@ embp_stitchPath(EmbPattern *p, EmbPath path, int thread_index, int style)
  * \todo finish stitch polygon
  */
 void
-embp_stitchPolygon(EmbPattern *p, EmbPolygon polygon, int thread_index, int style)
-{
-    printf("DEBUG stitchPolygon: %f %d %d %d\n",
-        p->home.x, polygon.pointList->count, thread_index, style);
+ embp_stitchPolygon(EmbPattern * p, EmbPolygon polygon, int thread_index,
+                    int style) {
+        printf("DEBUG stitchPolygon: %f %d %d %d\n", p->home.x,
+               polygon.pointList->count, thread_index, style);
 }
 
 /* a p a rect a thread_index a style
@@ -13474,10 +9572,10 @@ embp_stitchPolygon(EmbPattern *p, EmbPolygon polygon, int thread_index, int styl
  * \todo finish stitch polyline
  */
 void
-embp_stitchPolyline(EmbPattern *p, EmbPolyline polyline, int thread_index, int style)
-{
-    printf("DEBUG stitchPolyline: %f %d %d %d\n",
-        p->home.x, polyline.pointList->count, thread_index, style);
+ embp_stitchPolyline(EmbPattern * p, EmbPolyline polyline, int thread_index,
+                     int style) {
+        printf("DEBUG stitchPolyline: %f %d %d %d\n", p->home.x,
+               polyline.pointList->count, thread_index, style);
 }
 
 /* a p a rect a thread_index a style
@@ -13485,185 +9583,100 @@ embp_stitchPolyline(EmbPattern *p, EmbPolyline polyline, int thread_index, int s
  * Here we just stitch the rectangle in the direction of it's longer side.
  */
 void
-embp_stitchRect(EmbPattern *p, EmbRect rect, int thread_index, int style)
-{
-    EmbReal seperation = 0.1;
-    if (style > 0) {
-        puts("WARNING: Only style 0 has been implimented.");
-    }
-    if (rect.w > rect.h) {
-        float s;
-        for (s=rect.y; s<rect.y + rect.h; s += seperation) {
-            /* Split long stitches here. */
-            embp_addStitchAbs(p, rect.y, s, NORMAL, thread_index);
-            embp_addStitchAbs(p, rect.y + rect.h, s, NORMAL, thread_index);
+ embp_stitchRect(EmbPattern * p, EmbRect rect, int thread_index, int style) {
+        EmbReal seperation = 0.1;
+        if (style > 0) {
+                puts("WARNING: Only style 0 has been implimented.");
         }
-    }
-    else {
-        float s;
-        for (s=rect.x; s<rect.x + rect.w; s += seperation) {
-            /* Split long stitches here. */
-            embp_addStitchAbs(p, s, rect.x, NORMAL, thread_index);
-            embp_addStitchAbs(p, s, rect.x + rect.w, NORMAL, thread_index);
+        if (rect.w > rect.h) {
+                float s;
+                for (s = rect.y; s < rect.y + rect.h; s += seperation) {
+                        /* Split long stitches here. */
+                        embp_addStitchAbs(p, rect.y, s, NORMAL, thread_index);
+                        embp_addStitchAbs(p, rect.y + rect.h, s, NORMAL,
+                                          thread_index);
+                }
+        } else {
+                float s;
+                for (s = rect.x; s < rect.x + rect.w; s += seperation) {
+                        /* Split long stitches here. */
+                        embp_addStitchAbs(p, s, rect.x, NORMAL, thread_index);
+                        embp_addStitchAbs(p, s, rect.x + rect.w, NORMAL,
+                                          thread_index);
+                }
         }
-    }
 }
 
 /* a p a rect a thread_index a style
  */
 void
-embp_stitchText(EmbPattern *p, EmbRect rect, int thread_index, int style)
-{
-    printf("DEBUG: %f %f %d %d",
-        p->home.x, rect.y, thread_index, style);
+ embp_stitchText(EmbPattern * p, EmbRect rect, int thread_index, int style) {
+        printf("DEBUG: %f %f %d %d", p->home.x, rect.y, thread_index, style);
 }
 
 /* a p
  */
 void
-embp_convertGeometry(EmbPattern* p)
-{
-    int i;
-    for (i=0; i<p->geometry->count; i++) {
-        EmbGeometry g = p->geometry->geometry[i];
-        switch (g.type) {
-        case EMB_ARC: {
-            /* To Do make the thread up here. */
-            embp_stitchArc(p, g.object.arc, 0, 0);
-            break;
+ embp_convertGeometry(EmbPattern * p) {
+        int i;
+        for (i = 0; i < p->geometry->count; i++) {
+                EmbGeometry g = p->geometry->geometry[i];
+                switch (g.type) {
+                case EMB_ARC:{
+                                /* To Do make the thread up here. */
+                                embp_stitchArc(p, g.object.arc, 0, 0);
+                                break;
+                        }
+                case EMB_CIRCLE:{
+                                /* To Do make the thread up here. */
+                                embp_stitchCircle(p, g.object.circle, 0, 0);
+                                break;
+                        }
+                case EMB_ELLIPSE:{
+                                /* To Do make the thread up here. */
+                                embp_stitchEllipse(p, g.object.ellipse, 0, 0);
+                                break;
+                        }
+                case EMB_RECT:{
+                                /* To Do make the thread up here. */
+                                embp_stitchRect(p, g.object.rect, 0, 0);
+                                break;
+                        }
+                default:
+                        break;
+                }
         }
-        case EMB_CIRCLE: {
-            /* To Do make the thread up here. */
-            embp_stitchCircle(p, g.object.circle, 0, 0);
-            break;
-        }
-        case EMB_ELLIPSE: {
-            /* To Do make the thread up here. */
-            embp_stitchEllipse(p, g.object.ellipse, 0, 0);
-            break;
-        }
-        case EMB_RECT: {
-            /* To Do make the thread up here. */
-            embp_stitchRect(p, g.object.rect, 0, 0);
-            break;
-        }
-        default:
-            break;
-        }
-    }
-    /* Now ignore the geometry when writing. */
-    p->geometry->count = 0;
+        /* Now ignore the geometry when writing. */
+        p->geometry->count = 0;
 }
-
-/*
- * Frame for PES formats
- */
-const char imageWithFrame[38][48] = {
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0},
-    {0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-    {0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0},
-    {0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-    {0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-};
 
 /* Check that the pointer isn't NULL before freeing. */
 void
-safe_free(void *data)
-{
-    if (data) {
-        free(data);
-        data = 0;
-    }
+ safe_free(void *data) {
+        if (data) {
+                free(data);
+                data = 0;
+        }
 }
 
 unsigned char
-char_to_lower(unsigned char a)
-{
-    if (a >= 'A' && a <= 'Z') {
-        a = a - 'A' + 'a';
-    }
-    return a;
-}
-
-/* This file contains all the read and write functions for the
- * library.
- *
- * This backends to the stb libraries and nanosvg library.
- *
- * Use Python PEP7 for coding style.
- *
- * Write a PES embedded a image to the given a file pointer.
- */
-void
-writeImage(FILE* file, unsigned char image[][48])
-{
-    int i, j;
-
-    if (!file) {
-        printf("ERROR: format-pec.c writeImage(), file argument is null\n");
-        return;
-    }
-    for (i = 0; i < 38; i++) {
-        for (j = 0; j < 6; j++) {
-            int offset = j * 8;
-            unsigned char output = 0;
-            output |= (unsigned char)(image[i][offset] != 0);
-            output |= (unsigned char)(image[i][offset + 1] != (unsigned char)0) << 1;
-            output |= (unsigned char)(image[i][offset + 2] != (unsigned char)0) << 2;
-            output |= (unsigned char)(image[i][offset + 3] != (unsigned char)0) << 3;
-            output |= (unsigned char)(image[i][offset + 4] != (unsigned char)0) << 4;
-            output |= (unsigned char)(image[i][offset + 5] != (unsigned char)0) << 5;
-            output |= (unsigned char)(image[i][offset + 6] != (unsigned char)0) << 6;
-            output |= (unsigned char)(image[i][offset + 7] != (unsigned char)0) << 7;
-            fwrite(&output, 1, 1, file);
+ char_to_lower(unsigned char a) {
+        if (a >= 'A' && a <= 'Z') {
+                a = a - 'A' + 'a';
         }
-    }
+        return a;
 }
 
 /* The distance between the arrays a and b of length size. */
 float
-image_diff(unsigned char *a, unsigned char *b, int size)
-{
-    int i;
-    float total = 0.0;
-    for (i=0; i<size; i++) {
-        int diff = a[i] - b[i];
-        total += diff*diff;
-    }
-    return total;
+ image_diff(unsigned char *a, unsigned char *b, int size) {
+        int i;
+        float total = 0.0;
+        for (i = 0; i < size; i++) {
+                int diff = a[i] - b[i];
+                total += diff * diff;
+        }
+        return total;
 }
 
 /* Render the pattern a p to the file with name a fname.
@@ -13677,9 +9690,8 @@ image_diff(unsigned char *a, unsigned char *b, int size)
  * The caller is responsible for the memory in p.
  */
 int
-embp_render(EmbPattern *p, char *fname)
-{
-    printf("Cannot render %p, %s\n", p, fname);
+ embp_render(EmbPattern * p, char *fname) {
+        printf("Cannot render %p, %s\n", p, fname);
 /*
     const char *tmp_fname = "libembroidery_temp.svg";
     NSVGimage *image = NULL;
@@ -13704,19 +9716,17 @@ embp_render(EmbPattern *p, char *fname)
         img_data,
         4*image->width);
 */
-    return 0;
+        return 0;
 }
 
 /* Simulate the stitching of a pattern, using the image for rendering
  * hints about how to represent the pattern.
  */
 int
-embp_simulate(EmbPattern *pattern, char *fname)
-{
-    embp_render(pattern, fname);
-    return 0;
+ embp_simulate(EmbPattern * pattern, char *fname) {
+        embp_render(pattern, fname);
+        return 0;
 }
-
 
 /* The file is for the management of the main struct: EmbPattern.
  *
@@ -13726,287 +9736,288 @@ embp_simulate(EmbPattern *pattern, char *fname)
  *
  * Returns EmbPattern*
  */
-EmbPattern*
-embp_create(void)
-{
-    EmbPattern* p = (EmbPattern*)malloc(sizeof(EmbPattern));
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_create(), ");
-        printf("unable to allocate memory for p\n");
-        return 0;
-    }
-    p->dstJumpsPerTrim = 6;
-    p->home.x = 0.0;
-    p->home.y = 0.0;
-    p->currentColorIndex = 0;
-    p->stitch_list = emb_array_create(EMB_STITCH);
-    p->thread_list = emb_array_create(EMB_THREAD);
-    p->hoop_height = 0.0;
-    p->hoop_width = 0.0;
-    p->geometry = emb_array_create(EMB_LINE);
-    return p;
+EmbPattern *embp_create(void) {
+        EmbPattern *p = (EmbPattern *) malloc(sizeof(EmbPattern));
+        if (!p) {
+                printf("ERROR: emb-pattern.c embp_create(), ");
+                printf("unable to allocate memory for p\n");
+                return 0;
+        }
+        p->dstJumpsPerTrim = 6;
+        p->home.x = 0.0;
+        p->home.y = 0.0;
+        p->currentColorIndex = 0;
+        p->stitch_list = emb_array_create(EMB_STITCH);
+        p->thread_list = emb_array_create(EMB_THREAD);
+        p->hoop_height = 0.0;
+        p->hoop_width = 0.0;
+        p->geometry = emb_array_create(EMB_LINE);
+        return p;
 }
 
 /* a p a length
  */
 void
-embp_hideStitchesOverLength(EmbPattern* p, int length)
-{
-    EmbVector prev;
-    int i;
-    prev.x = 0.0;
-    prev.y = 0.0;
+ embp_hideStitchesOverLength(EmbPattern * p, int length) {
+        EmbVector prev;
+        int i;
+        prev.x = 0.0;
+        prev.y = 0.0;
 
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_hideStitchesOverLength(), ");
-        printf("p argument is null\n");
-        return;
-    }
-    for (i = 0; i < p->stitch_list->count; i++) {
-        if ((fabs(p->stitch_list->stitch[i].x - prev.x) > length)
-         || (fabs(p->stitch_list->stitch[i].y - prev.y) > length)) {
-            p->stitch_list->stitch[i].flags |= TRIM;
-            p->stitch_list->stitch[i].flags &= ~NORMAL;
+        if (!p) {
+                printf("ERROR: emb-pattern.c embp_hideStitchesOverLength(), ");
+                printf("p argument is null\n");
+                return;
         }
-        prev.x = p->stitch_list->stitch[i].x;
-        prev.y = p->stitch_list->stitch[i].y;
-    }
+        for (i = 0; i < p->stitch_list->count; i++) {
+                if ((fabs(p->stitch_list->stitch[i].x - prev.x) > length)
+                    || (fabs(p->stitch_list->stitch[i].y - prev.y) > length)) {
+                        p->stitch_list->stitch[i].flags |= TRIM;
+                        p->stitch_list->stitch[i].flags &= ~NORMAL;
+                }
+                prev.x = p->stitch_list->stitch[i].x;
+                prev.y = p->stitch_list->stitch[i].y;
+        }
 }
 
 /* a pattern a thread
  * Returns int
  */
 int
-embp_addThread(EmbPattern *pattern, EmbThread thread)
-{
-    if (pattern->thread_list->count + 1 > pattern->thread_list->length) {
-        if (!emb_array_resize(pattern->thread_list)) {
-            return 0;
+ embp_addThread(EmbPattern * pattern, EmbThread thread) {
+        if (pattern->thread_list->count + 1 > pattern->thread_list->length) {
+                if (!emb_array_resize(pattern->thread_list)) {
+                        return 0;
+                }
         }
-    }
-    pattern->thread_list->thread[pattern->thread_list->count] = thread;
-    pattern->thread_list->count++;
-    return 1;
+        pattern->thread_list->thread[pattern->thread_list->count] = thread;
+        pattern->thread_list->count++;
+        return 1;
 }
 
 /* a p
  */
 void
-embp_fixColorCount(EmbPattern* p)
-{
-    /* fix color count to be max of color index. */
-    int maxColorIndex = 0, i;
+ embp_fixColorCount(EmbPattern * p) {
+        /* fix color count to be max of color index. */
+        int maxColorIndex = 0, i;
 
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_fixColorCount(), ");
-        printf("p argument is null\n");
-        return;
-    }
-    for (i = 0; i < p->stitch_list->count; i++) {
-/*        printf("%d %d\n", list->stitch.color, maxColorIndex);*/
-        maxColorIndex = EMB_MAX(maxColorIndex, p->stitch_list->stitch[i].color);
-    }
-    if (p->thread_list->count == 0 || maxColorIndex == 0) {
-        embp_addThread(p, black_thread);
-    }
-    else {
-        if (maxColorIndex > 0) {
-            while (p->thread_list->count <= maxColorIndex) {
-/*        printf("%d %d\n", p->n_threads, maxColorIndex);*/
-                embp_addThread(p, emb_get_random_thread());
-            }
+        if (!p) {
+                printf("ERROR: emb-pattern.c embp_fixColorCount(), ");
+                printf("p argument is null\n");
+                return;
         }
-    }
-    /*
-    while (p->threadLists->count > (maxColorIndex + 1)) {
-        TODO: erase last color    p->threadList.pop_back();
-    }
-    */
+        for (i = 0; i < p->stitch_list->count; i++) {
+/*        printf("%d %d\n", list->stitch.color, maxColorIndex);*/
+                maxColorIndex =
+                    EMB_MAX(maxColorIndex, p->stitch_list->stitch[i].color);
+        }
+        if (p->thread_list->count == 0 || maxColorIndex == 0) {
+                embp_addThread(p, black_thread);
+        } else {
+                if (maxColorIndex > 0) {
+                        while (p->thread_list->count <= maxColorIndex) {
+/*        printf("%d %d\n", p->n_threads, maxColorIndex);*/
+                                embp_addThread(p, emb_get_random_thread());
+                        }
+                }
+        }
+        /*
+           while (p->threadLists->count > (maxColorIndex + 1)) {
+           TODO: erase last color    p->threadList.pop_back();
+           }
+         */
 }
 
 /* Copies all of the Embstitch_list data to
  * EmbPolylineObjectList data for pattern (a p).
  */
 void
-embp_copystitch_listToPolylines(EmbPattern* p)
-{
-    int breakAtFlags, i;
-    EmbPoint point;
-    EmbColor color;
+ embp_copystitch_listToPolylines(EmbPattern * p) {
+        int breakAtFlags, i;
+        EmbPoint point;
+        EmbColor color;
 
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_copystitch_listToPolylines(), ");
-        printf("p argument is null\n");
-        return;
-    }
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_copystitch_listToPolylines(), ");
+                printf("p argument is null\n");
+                return;
+        }
 
-    breakAtFlags = (STOP | JUMP | TRIM);
+        breakAtFlags = (STOP | JUMP | TRIM);
 
-    for (i = 0; i < p->stitch_list->count; i++) {
-        EmbArray *pointList = 0;
-        for (; i < p->stitch_list->count; i++) {
-            EmbStitch st = p->stitch_list->stitch[i];
-            if (st.flags & breakAtFlags) {
-                break;
-            }
-            if (!(st.flags & JUMP)) {
-                if (!pointList) {
-                    pointList = emb_array_create(EMB_POINT);
-                    color = p->thread_list->thread[st.color].color;
+        for (i = 0; i < p->stitch_list->count; i++) {
+                EmbArray *pointList = 0;
+                for (; i < p->stitch_list->count; i++) {
+                        EmbStitch st = p->stitch_list->stitch[i];
+                        if (st.flags & breakAtFlags) {
+                                break;
+                        }
+                        if (!(st.flags & JUMP)) {
+                                if (!pointList) {
+                                        pointList = emb_array_create(EMB_POINT);
+                                        color =
+                                            p->thread_list->thread[st.
+                                                                   color].color;
+                                }
+                                point.position.x = st.x;
+                                point.position.y = st.y;
+                                emb_array_addPoint(pointList, point);
+                        }
                 }
-                point.position.x = st.x;
-                point.position.y = st.y;
-                emb_array_addPoint(pointList, point);
-            }
-        }
 
-        /* NOTE: Ensure empty polylines are not created. This is critical. */
-        if (pointList) {
-            EmbPolyline currentPolyline;
-            currentPolyline.pointList = pointList;
-            currentPolyline.color = color;
-            /* TODO: Determine what the correct value should be */
-            currentPolyline.lineType = 1;
+                /* NOTE: Ensure empty polylines are not created. This is critical. */
+                if (pointList) {
+                        EmbPolyline currentPolyline;
+                        currentPolyline.pointList = pointList;
+                        currentPolyline.color = color;
+                        /* TODO: Determine what the correct value should be */
+                        currentPolyline.lineType = 1;
 
-            emb_array_addPolyline(p->geometry, currentPolyline);
+                        emb_array_addPolyline(p->geometry, currentPolyline);
+                }
         }
-    }
 }
 
 /* Copies all of the EmbPolylineObjectList data to Embstitch_list
  * data for pattern (a p).
  */
 void
-embp_copyPolylinesTostitch_list(EmbPattern* p)
-{
-    int firstObject = 1, i, j;
-    /*int currentColor = polyList->polylineObj->color TODO: polyline color */
+ embp_copyPolylinesTostitch_list(EmbPattern * p) {
+        int firstObject = 1, i, j;
+        /*int currentColor = polyList->polylineObj->color TODO: polyline color */
 
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_copyPolylinesTostitch_list(), ");
-        printf("p argument is null\n");
-        return;
-    }
-    for (i = 0; i < p->geometry->count; i++) {
-        EmbPolyline currentPoly;
-        EmbArray* currentPointList;
-        EmbThread thread;
-
-        if (p->geometry->geometry[i].type != EMB_POLYLINE) {
-            continue;
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_copyPolylinesTostitch_list(), ");
+                printf("p argument is null\n");
+                return;
         }
+        for (i = 0; i < p->geometry->count; i++) {
+                EmbPolyline currentPoly;
+                EmbArray *currentPointList;
+                EmbThread thread;
 
-        currentPoly = p->geometry->geometry[i].object.polyline;
-        currentPointList = currentPoly.pointList;
+                if (p->geometry->geometry[i].type != EMB_POLYLINE) {
+                        continue;
+                }
 
-        strcpy(thread.catalogNumber, "");
-        thread.color = currentPoly.color;
-        strcpy(thread.description, "");
-        embp_addThread(p, thread);
+                currentPoly = p->geometry->geometry[i].object.polyline;
+                currentPointList = currentPoly.pointList;
 
-        if (!firstObject) {
-            embp_addStitchAbs(p,
-                currentPointList->geometry[0].object.point.position.x,
-                currentPointList->geometry[0].object.point.position.y, TRIM, 1);
-            embp_addStitchRel(p, 0.0, 0.0, STOP, 1);
+                strcpy(thread.catalogNumber, "");
+                thread.color = currentPoly.color;
+                strcpy(thread.description, "");
+                embp_addThread(p, thread);
+
+                if (!firstObject) {
+                        embp_addStitchAbs(p,
+                                          currentPointList->geometry[0].
+                                          object.point.position.x,
+                                          currentPointList->geometry[0].
+                                          object.point.position.y, TRIM, 1);
+                        embp_addStitchRel(p, 0.0, 0.0, STOP, 1);
+                }
+
+                embp_addStitchAbs(p,
+                                  currentPointList->geometry[0].object.
+                                  point.position.x,
+                                  currentPointList->geometry[0].object.
+                                  point.position.y, JUMP, 1);
+                for (j = 1; j < currentPointList->count; j++) {
+                        EmbVector v =
+                            currentPointList->geometry[j].object.point.position;
+                        embp_addStitchAbs(p, v.x, v.y, NORMAL, 1);
+                }
+                firstObject = 0;
         }
-
-        embp_addStitchAbs(p,
-            currentPointList->geometry[0].object.point.position.x,
-            currentPointList->geometry[0].object.point.position.y,
-            JUMP,
-            1);
-        for (j = 1; j < currentPointList->count; j++) {
-            EmbVector v = currentPointList->geometry[j].object.point.position;
-            embp_addStitchAbs(p, v.x, v.y, NORMAL, 1);
-        }
-        firstObject = 0;
-    }
-    embp_addStitchRel(p, 0.0, 0.0, END, 1);
+        embp_addStitchRel(p, 0.0, 0.0, END, 1);
 }
 
 /* Moves all of the Embstitch_list data to EmbPolylineObjectList
  * data for pattern (a p).
  */
 void
-embp_movestitch_listToPolylines(EmbPattern* p)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_movestitch_listToPolylines(), p argument is null\n");
-        return;
-    }
-    embp_copystitch_listToPolylines(p);
-    /* Free the stitch_list and threadList since their data has now been transferred to polylines */
-    p->stitch_list->count = 0;
-    p->thread_list->count = 0;
+ embp_movestitch_listToPolylines(EmbPattern * p) {
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_movestitch_listToPolylines(), p argument is null\n");
+                return;
+        }
+        embp_copystitch_listToPolylines(p);
+        /* Free the stitch_list and threadList since their data has now been transferred to polylines */
+        p->stitch_list->count = 0;
+        p->thread_list->count = 0;
 }
 
 /* Moves all of the EmbPolylineObjectList data to Embstitch_list
  * data for pattern (a p).
  */
 void
-embp_movePolylinesTostitch_list(EmbPattern* p)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_movePolylinesTostitch_list(), p argument is null\n");
-        return;
-    }
-    embp_copyPolylinesTostitch_list(p);
+ embp_movePolylinesTostitch_list(EmbPattern * p) {
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_movePolylinesTostitch_list(), p argument is null\n");
+                return;
+        }
+        embp_copyPolylinesTostitch_list(p);
 }
 
 /* Adds a stitch to the pattern (a p) at the absolute position
  * (a x,a y). Positive y is up. Units are in millimeters.
  */
 void
-embp_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y,
-                            int flags, int isAutoColorIndex)
-{
-    EmbStitch s;
+ embp_addStitchAbs(EmbPattern * p, EmbReal x, EmbReal y,
+                   int flags, int isAutoColorIndex) {
+        EmbStitch s;
 
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_addStitchAbs(), ");
-        printf("p argument is null\n");
-        return;
-    }
+        if (!p) {
+                printf("ERROR: emb-pattern.c embp_addStitchAbs(), ");
+                printf("p argument is null\n");
+                return;
+        }
 
-    if (flags & END) {
+        if (flags & END) {
+                if (p->stitch_list->count == 0) {
+                        return;
+                }
+                /* Prevent unnecessary multiple END stitches */
+                if (p->stitch_list->
+                    stitch[p->stitch_list->count - 1].flags & END) {
+                        printf
+                            ("ERROR: emb-pattern.c embp_addStitchAbs(), found multiple END stitches\n");
+                        return;
+                }
+                embp_fixColorCount(p);
+                /* HideStitchesOverLength(127); TODO: fix or remove this */
+        }
+
+        if (flags & STOP) {
+                if (p->stitch_list->count == 0) {
+                        return;
+                }
+                if (isAutoColorIndex) {
+                        p->currentColorIndex++;
+                }
+        }
+
+        /* NOTE: If the stitch_list is empty, we will create it before adding
+           stitches to it. The first coordinate will be the HOME position. */
         if (p->stitch_list->count == 0) {
-            return;
+                /* NOTE: Always HOME the machine before starting any stitching */
+                EmbStitch h;
+                h.x = p->home.x;
+                h.y = p->home.y;
+                h.flags = JUMP;
+                h.color = p->currentColorIndex;
+                emb_array_addStitch(p->stitch_list, h);
         }
-        /* Prevent unnecessary multiple END stitches */
-        if (p->stitch_list->stitch[p->stitch_list->count - 1].flags & END) {
-            printf("ERROR: emb-pattern.c embp_addStitchAbs(), found multiple END stitches\n");
-            return;
-        }
-        embp_fixColorCount(p);
-        /* HideStitchesOverLength(127); TODO: fix or remove this */
-    }
-
-    if (flags & STOP) {
-        if (p->stitch_list->count == 0) {
-            return;
-        }
-        if (isAutoColorIndex) {
-            p->currentColorIndex++;
-        }
-    }
-
-    /* NOTE: If the stitch_list is empty, we will create it before adding
-        stitches to it. The first coordinate will be the HOME position. */
-    if (p->stitch_list->count == 0) {
-        /* NOTE: Always HOME the machine before starting any stitching */
-        EmbStitch h;
-        h.x = p->home.x;
-        h.y = p->home.y;
-        h.flags = JUMP;
-        h.color = p->currentColorIndex;
-        emb_array_addStitch(p->stitch_list, h);
-    }
-    s.x = x;
-    s.y = y;
-    s.flags = flags;
-    s.color = p->currentColorIndex;
-    emb_array_addStitch(p->stitch_list, s);
+        s.x = x;
+        s.y = y;
+        s.flags = flags;
+        s.color = p->currentColorIndex;
+        emb_array_addStitch(p->stitch_list, s);
 }
 
 /* Adds a stitch to the pattern (a p) at the relative position
@@ -14014,520 +10025,550 @@ embp_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y,
  * Units are in millimeters.
  */
 void
-embp_addStitchRel(EmbPattern* p, EmbReal dx, EmbReal dy,
-                            int flags, int isAutoColorIndex)
-{
-    EmbReal x, y;
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_addStitchRel(), p argument is null\n");
-        return;
-    }
-    if (p->stitch_list->count > 0) {
-        EmbStitch st = p->stitch_list->stitch[p->stitch_list->count - 1];
-        x = st.x + dx;
-        y = st.y + dy;
-    } else {
-        /* NOTE: The stitch_list is empty, so add it to the HOME position.
-         * The embstitch_list_create function will ensure the first coordinate is at the HOME position. */
-        x = p->home.x + dx;
-        y = p->home.y + dy;
-    }
-    embp_addStitchAbs(p, x, y, flags, isAutoColorIndex);
+ embp_addStitchRel(EmbPattern * p, EmbReal dx, EmbReal dy,
+                   int flags, int isAutoColorIndex) {
+        EmbReal x, y;
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_addStitchRel(), p argument is null\n");
+                return;
+        }
+        if (p->stitch_list->count > 0) {
+                EmbStitch st =
+                    p->stitch_list->stitch[p->stitch_list->count - 1];
+                x = st.x + dx;
+                y = st.y + dy;
+        } else {
+                /* NOTE: The stitch_list is empty, so add it to the HOME position.
+                 * The embstitch_list_create function will ensure the first coordinate is at the HOME position. */
+                x = p->home.x + dx;
+                y = p->home.y + dy;
+        }
+        embp_addStitchAbs(p, x, y, flags, isAutoColorIndex);
 }
 
 /* Change the currentColorIndex of pattern a p to a index.
  */
 void
-embp_changeColor(EmbPattern* p, int index)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_changeColor(), p argument is null\n");
-        return;
-    }
-    p->currentColorIndex = index;
+ embp_changeColor(EmbPattern * p, int index) {
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_changeColor(), p argument is null\n");
+                return;
+        }
+        p->currentColorIndex = index;
 }
 
 /* Very simple scaling of the x and y axis for every point.
  * Doesn't insert or delete stitches to preserve density.
  */
 void
-embp_scale(EmbPattern* p, EmbReal scale)
-{
-    int i;
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_scale(), p argument is null\n");
-        return;
-    }
+ embp_scale(EmbPattern * p, EmbReal scale) {
+        int i;
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_scale(), p argument is null\n");
+                return;
+        }
 
-    for (i = 0; i < p->stitch_list->count; i++) {
-        p->stitch_list->stitch[i].x *= scale;
-        p->stitch_list->stitch[i].y *= scale;
-    }
+        for (i = 0; i < p->stitch_list->count; i++) {
+                p->stitch_list->stitch[i].x *= scale;
+                p->stitch_list->stitch[i].y *= scale;
+        }
 }
 
 /* Returns an EmbRect that encapsulates all stitches and objects in the
  * pattern (a p).
  */
-EmbRect
-embp_bounds(EmbPattern* p)
-{
-    EmbRect r;
-    EmbStitch pt;
-    int i, j;
+EmbRect embp_bounds(EmbPattern * p) {
+        EmbRect r;
+        EmbStitch pt;
+        int i, j;
 
-    r.x = 0.0;
-    r.y = 0.0;
-    r.w = 1.0;
-    r.h = 1.0;
+        r.x = 0.0;
+        r.y = 0.0;
+        r.w = 1.0;
+        r.h = 1.0;
 
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_bounds(), ");
-        printf("p argument is null\n");
+        if (!p) {
+                printf("ERROR: emb-pattern.c embp_bounds(), ");
+                printf("p argument is null\n");
+                return r;
+        }
+
+        /* Calculate the bounding rectangle.  It's needed for smart repainting. */
+        /* TODO: Come back and optimize this mess so that after going thru all objects
+         * and stitches, if the rectangle isn't reasonable, then return a default rect
+         */
+        if ((p->stitch_list->count == 0) && (p->geometry->count == 0)) {
+                return r;
+        }
+        r.x = -99999.0;
+        r.y = -99999.0;
+        double right = 99999.0;
+        double bottom = 99999.0;
+
+        for (i = 0; i < p->stitch_list->count; i++) {
+                /* If the point lies outside of the accumulated bounding
+                 * rectangle, then inflate the bounding rect to include it. */
+                pt = p->stitch_list->stitch[i];
+                if (!(pt.flags & TRIM)) {
+                        r.x = EMB_MAX(r.x, pt.x);
+                        r.y = EMB_MAX(r.y, pt.y);
+                        right = EMB_MIN(right, pt.x);
+                        bottom = EMB_MIN(bottom, pt.y);
+                }
+        }
+
+        for (i = 0; i < p->geometry->count; i++) {
+                EmbGeometry g = p->geometry->geometry[i];
+                switch (g.type) {
+                case EMB_ARC:{
+                                /* TODO: embp_calcBoundingBox for arcs,
+                                   for now just checks the start point */
+                                EmbArc arc = g.object.arc;
+                                r.x = EMB_MIN(r.x, arc.start.x);
+                                r.y = EMB_MIN(r.y, arc.start.y);
+                                right = EMB_MAX(right, arc.start.x);
+                                bottom = EMB_MAX(bottom, arc.start.y);
+                                break;
+                        }
+                case EMB_CIRCLE:{
+                                EmbCircle circle = g.object.circle;
+                                r.x =
+                                    EMB_MIN(r.x,
+                                            circle.center.x - circle.radius);
+                                r.y =
+                                    EMB_MIN(r.y,
+                                            circle.center.y - circle.radius);
+                                right =
+                                    EMB_MAX(right,
+                                            circle.center.x + circle.radius);
+                                bottom =
+                                    EMB_MAX(bottom,
+                                            circle.center.y + circle.radius);
+                                break;
+                        }
+                case EMB_ELLIPSE:{
+                                /* TODO: account for rotation */
+                                EmbEllipse ellipse = g.object.ellipse;
+                                r.x =
+                                    EMB_MIN(r.x,
+                                            ellipse.center.x -
+                                            ellipse.radius.x);
+                                r.y =
+                                    EMB_MIN(r.y,
+                                            ellipse.center.y -
+                                            ellipse.radius.y);
+                                right =
+                                    EMB_MAX(right,
+                                            ellipse.center.x +
+                                            ellipse.radius.x);
+                                bottom =
+                                    EMB_MAX(bottom,
+                                            ellipse.center.y +
+                                            ellipse.radius.y);
+                                break;
+                        }
+                case EMB_LINE:{
+                                EmbLine line = g.object.line;
+                                r.x = EMB_MIN(r.x, line.start.x);
+                                r.x = EMB_MIN(r.x, line.end.x);
+                                r.y = EMB_MIN(r.y, line.start.y);
+                                r.y = EMB_MIN(r.y, line.end.y);
+                                right = EMB_MAX(right, line.start.x);
+                                right = EMB_MAX(right, line.end.x);
+                                bottom = EMB_MAX(bottom, line.start.y);
+                                bottom = EMB_MAX(bottom, line.end.y);
+                                break;
+                        }
+                case EMB_POINT:{
+                                EmbVector point = g.object.point.position;
+                                r.x = EMB_MIN(r.x, point.x);
+                                r.y = EMB_MIN(r.y, point.y);
+                                right = EMB_MAX(right, point.x);
+                                bottom = EMB_MAX(bottom, point.y);
+                                break;
+                        }
+                case EMB_POLYGON:{
+                                EmbArray *polygon = g.object.polygon.pointList;
+                                for (j = 0; j < polygon->count; j++) {
+                                        /* TODO: embp_calcBoundingBox for polygons */
+                                }
+                                break;
+                        }
+                case EMB_POLYLINE:{
+                                EmbArray *polyline =
+                                    g.object.polyline.pointList;
+                                for (j = 0; j < polyline->count; j++) {
+                                        /* TODO: embp_calcBoundingBox for polylines */
+                                }
+                                break;
+                        }
+                case EMB_RECT:{
+                                EmbRect rect = g.object.rect;
+                                r.x = EMB_MIN(r.x, rect.x);
+                                r.y = EMB_MIN(r.y, rect.y);
+                                right = EMB_MAX(right, r.x + rect.w);
+                                bottom = EMB_MAX(bottom, r.y + rect.h);
+                                break;
+                        }
+                case EMB_SPLINE:{
+                                /* EmbBezier bezier;
+                                   bezier = p->splines->spline[i].bezier; */
+                                /* TODO: embp_calcBoundingBox for splines */
+                                break;
+                        }
+                default:
+                        break;
+                }
+        }
+
+        r.w = right - r.x;
+        r.h = bottom - r.y;
+
         return r;
-    }
-
-    /* Calculate the bounding rectangle.  It's needed for smart repainting. */
-    /* TODO: Come back and optimize this mess so that after going thru all objects
-     * and stitches, if the rectangle isn't reasonable, then return a default rect
-     */
-    if ((p->stitch_list->count == 0) && (p->geometry->count == 0)) {
-        return r;
-    }
-    r.x = -99999.0;
-    r.y = -99999.0;
-    double right = 99999.0;
-    double bottom = 99999.0;
-
-    for (i = 0; i < p->stitch_list->count; i++) {
-        /* If the point lies outside of the accumulated bounding
-         * rectangle, then inflate the bounding rect to include it. */
-        pt = p->stitch_list->stitch[i];
-        if (!(pt.flags & TRIM)) {
-            r.x = EMB_MAX(r.x, pt.x);
-            r.y = EMB_MAX(r.y, pt.y);
-            right = EMB_MIN(right, pt.x);
-            bottom = EMB_MIN(bottom, pt.y);
-        }
-    }
-
-    for (i = 0; i < p->geometry->count; i++) {
-        EmbGeometry g = p->geometry->geometry[i];
-        switch (g.type) {
-        case EMB_ARC: {
-            /* TODO: embp_calcBoundingBox for arcs,
-            for now just checks the start point */
-            EmbArc arc = g.object.arc;
-            r.x = EMB_MIN(r.x, arc.start.x);
-            r.y = EMB_MIN(r.y, arc.start.y);
-            right = EMB_MAX(right, arc.start.x);
-            bottom = EMB_MAX(bottom, arc.start.y);
-            break;
-        }
-        case EMB_CIRCLE: {
-            EmbCircle circle = g.object.circle;
-            r.x = EMB_MIN(r.x, circle.center.x - circle.radius);
-            r.y = EMB_MIN(r.y, circle.center.y - circle.radius);
-            right = EMB_MAX(right, circle.center.x + circle.radius);
-            bottom = EMB_MAX(bottom, circle.center.y + circle.radius);
-            break;
-        }
-        case EMB_ELLIPSE: {
-            /* TODO: account for rotation */
-            EmbEllipse ellipse = g.object.ellipse;
-            r.x = EMB_MIN(r.x, ellipse.center.x - ellipse.radius.x);
-            r.y = EMB_MIN(r.y, ellipse.center.y - ellipse.radius.y);
-            right = EMB_MAX(right, ellipse.center.x + ellipse.radius.x);
-            bottom = EMB_MAX(bottom, ellipse.center.y + ellipse.radius.y);
-            break;
-        }
-        case EMB_LINE: {
-            EmbLine line = g.object.line;
-            r.x = EMB_MIN(r.x, line.start.x);
-            r.x = EMB_MIN(r.x, line.end.x);
-            r.y = EMB_MIN(r.y, line.start.y);
-            r.y = EMB_MIN(r.y, line.end.y);
-            right = EMB_MAX(right, line.start.x);
-            right = EMB_MAX(right, line.end.x);
-            bottom = EMB_MAX(bottom, line.start.y);
-            bottom = EMB_MAX(bottom, line.end.y);
-            break;
-        }
-        case EMB_POINT: {
-            EmbVector point = g.object.point.position;
-            r.x = EMB_MIN(r.x, point.x);
-            r.y = EMB_MIN(r.y, point.y);
-            right = EMB_MAX(right, point.x);
-            bottom = EMB_MAX(bottom, point.y);
-            break;
-        }
-        case EMB_POLYGON: {
-            EmbArray *polygon = g.object.polygon.pointList;
-            for (j=0; j < polygon->count; j++) {
-                /* TODO: embp_calcBoundingBox for polygons */
-            }
-            break;
-        }
-        case EMB_POLYLINE: {
-            EmbArray *polyline = g.object.polyline.pointList;
-            for (j=0; j < polyline->count; j++) {
-                /* TODO: embp_calcBoundingBox for polylines */
-            }
-            break;
-        }
-        case EMB_RECT: {
-            EmbRect rect = g.object.rect;
-            r.x = EMB_MIN(r.x, rect.x);
-            r.y = EMB_MIN(r.y, rect.y);
-            right = EMB_MAX(right, r.x + rect.w);
-            bottom = EMB_MAX(bottom, r.y + rect.h);
-            break;
-        }
-        case EMB_SPLINE: {
-            /* EmbBezier bezier;
-            bezier = p->splines->spline[i].bezier; */
-            /* TODO: embp_calcBoundingBox for splines */
-            break;
-        }
-        default:
-            break;
-        }
-    }
-
-    r.w = right - r.x;
-    r.h = bottom - r.y;
-
-    return r;
 }
 
 /* Flips the entire pattern (a p) horizontally about the y-axis.
  */
 void
-embp_flipHorizontal(EmbPattern* p)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_flipHorizontal(), ");
-        printf("p argument is null\n");
-        return;
-    }
-    embp_flip(p, 1, 0);
+ embp_flipHorizontal(EmbPattern * p) {
+        if (!p) {
+                printf("ERROR: emb-pattern.c embp_flipHorizontal(), ");
+                printf("p argument is null\n");
+                return;
+        }
+        embp_flip(p, 1, 0);
 }
 
 /* Flips the entire pattern (a p) vertically about the x-axis.
  */
 void
-embp_flipVertical(EmbPattern* p)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_flipVertical(), ");
-        printf("p argument is null\n");
-        return;
-    }
-    embp_flip(p, 0, 1);
+ embp_flipVertical(EmbPattern * p) {
+        if (!p) {
+                printf("ERROR: emb-pattern.c embp_flipVertical(), ");
+                printf("p argument is null\n");
+                return;
+        }
+        embp_flip(p, 0, 1);
 }
 
 /* Flips the entire pattern (a p) horizontally about the x-axis if (a horz) is true.
  *  Flips the entire pattern (a p) vertically about the y-axis if (a vert) is true.
  */
 void
-embp_flip(EmbPattern* p, int horz, int vert)
-{
-    int i, j;
+ embp_flip(EmbPattern * p, int horz, int vert) {
+        int i, j;
 
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_flip(), p argument is null\n");
-        return;
-    }
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_flip(), p argument is null\n");
+                return;
+        }
 
-    for (i = 0; i < p->stitch_list->count; i++) {
-        if (horz) {
-            p->stitch_list->stitch[i].x *= -1.0;
-        }
-        if (vert) {
-            p->stitch_list->stitch[i].y *= -1.0;
-        }
-    }
-
-    for (i = 0; i < p->geometry->count; i++) {
-        EmbGeometry *g = &(p->geometry->geometry[i]);
-        switch (g->type) {
-        case EMB_ARC: {
-            if (horz) {
-                g->object.arc.start.x *= -1.0;
-                g->object.arc.mid.x *= -1.0;
-                g->object.arc.end.x *= -1.0;
-            }
-            if (vert) {
-                g->object.arc.start.y *= -1.0;
-                g->object.arc.mid.y *= -1.0;
-                g->object.arc.end.y *= -1.0;
-            }
-            break;
-        }
-        case EMB_LINE: {
-            if (horz) {
-                g->object.line.start.x *= -1.0;
-                g->object.line.end.x *= -1.0;
-            }
-            if (vert) {
-                g->object.line.start.y *= -1.0;
-                g->object.line.end.y *= -1.0;
-            }
-            break;
-        }
-        case EMB_CIRCLE: {
-            if (horz) {
-                g->object.circle.center.x *= -1.0;
-            }
-            if (vert) {
-                g->object.circle.center.y *= -1.0;
-            }
-            break;
-        }
-        case EMB_ELLIPSE:
-            if (horz) {
-                g->object.ellipse.center.x *= -1.0;
-            }
-            if (vert) {
-                g->object.ellipse.center.y *= -1.0;
-            }
-            break;
-        case EMB_PATH: {
-            EmbArray *point_list = g->object.path.pointList;
-            for (j=0; j < point_list->count; j++) {
+        for (i = 0; i < p->stitch_list->count; i++) {
                 if (horz) {
-                    point_list->geometry[j].object.point.position.x *= -1.0;
+                        p->stitch_list->stitch[i].x *= -1.0;
                 }
                 if (vert) {
-                    point_list->geometry[j].object.point.position.y *= -1.0;
+                        p->stitch_list->stitch[i].y *= -1.0;
                 }
-            }
-            break;
         }
-        case EMB_POINT:
-            if (horz) {
-                g->object.point.position.x *= -1.0;
-            }
-            if (vert) {
-                g->object.point.position.y *= -1.0;
-            }
-            break;
-        case EMB_POLYGON: {
-            EmbArray *point_list = g->object.polygon.pointList;
-            for (j=0; j < point_list->count; j++) {
-                if (horz) {
-                    point_list->geometry[i].object.point.position.x *= -1.0;
+
+        for (i = 0; i < p->geometry->count; i++) {
+                EmbGeometry *g = &(p->geometry->geometry[i]);
+                switch (g->type) {
+                case EMB_ARC:{
+                                if (horz) {
+                                        g->object.arc.start.x *= -1.0;
+                                        g->object.arc.mid.x *= -1.0;
+                                        g->object.arc.end.x *= -1.0;
+                                }
+                                if (vert) {
+                                        g->object.arc.start.y *= -1.0;
+                                        g->object.arc.mid.y *= -1.0;
+                                        g->object.arc.end.y *= -1.0;
+                                }
+                                break;
+                        }
+                case EMB_LINE:{
+                                if (horz) {
+                                        g->object.line.start.x *= -1.0;
+                                        g->object.line.end.x *= -1.0;
+                                }
+                                if (vert) {
+                                        g->object.line.start.y *= -1.0;
+                                        g->object.line.end.y *= -1.0;
+                                }
+                                break;
+                        }
+                case EMB_CIRCLE:{
+                                if (horz) {
+                                        g->object.circle.center.x *= -1.0;
+                                }
+                                if (vert) {
+                                        g->object.circle.center.y *= -1.0;
+                                }
+                                break;
+                        }
+                case EMB_ELLIPSE:
+                        if (horz) {
+                                g->object.ellipse.center.x *= -1.0;
+                        }
+                        if (vert) {
+                                g->object.ellipse.center.y *= -1.0;
+                        }
+                        break;
+                case EMB_PATH:{
+                                EmbArray *point_list = g->object.path.pointList;
+                                for (j = 0; j < point_list->count; j++) {
+                                        if (horz) {
+                                                point_list->geometry[j].
+                                                    object.point.position.x *=
+                                                    -1.0;
+                                        }
+                                        if (vert) {
+                                                point_list->geometry[j].
+                                                    object.point.position.y *=
+                                                    -1.0;
+                                        }
+                                }
+                                break;
+                        }
+                case EMB_POINT:
+                        if (horz) {
+                                g->object.point.position.x *= -1.0;
+                        }
+                        if (vert) {
+                                g->object.point.position.y *= -1.0;
+                        }
+                        break;
+                case EMB_POLYGON:{
+                                EmbArray *point_list =
+                                    g->object.polygon.pointList;
+                                for (j = 0; j < point_list->count; j++) {
+                                        if (horz) {
+                                                point_list->geometry[i].
+                                                    object.point.position.x *=
+                                                    -1.0;
+                                        }
+                                        if (vert) {
+                                                point_list->geometry[i].
+                                                    object.point.position.y *=
+                                                    -1.0;
+                                        }
+                                }
+                                break;
+                        }
+                case EMB_POLYLINE:{
+                                EmbArray *point_list =
+                                    g->object.polygon.pointList;
+                                for (j = 0; j < point_list->count; j++) {
+                                        if (horz) {
+                                                point_list->geometry[j].
+                                                    object.point.position.x *=
+                                                    -1.0;
+                                        }
+                                        if (vert) {
+                                                point_list->geometry[j].
+                                                    object.point.position.y *=
+                                                    -1.0;
+                                        }
+                                }
+                                break;
+                        }
+                case EMB_RECT:{
+                                if (horz) {
+                                        g->object.rect.x *= -1.0;
+                                        g->object.rect.y *= -1.0;
+                                }
+                                if (vert) {
+                                        g->object.rect.w *= -1.0;
+                                        g->object.rect.h *= -1.0;
+                                }
+                                break;
+                        }
+                case EMB_SPLINE:
+                        /* TODO */
+                        break;
+                default:
+                        break;
                 }
-                if (vert) {
-                    point_list->geometry[i].object.point.position.y *= -1.0;
-                }
-            }
-            break;
         }
-        case EMB_POLYLINE: {
-            EmbArray *point_list = g->object.polygon.pointList;
-            for (j=0; j < point_list->count; j++) {
-                if (horz) {
-                    point_list->geometry[j].object.point.position.x *= -1.0;
-                }
-                if (vert) {
-                    point_list->geometry[j].object.point.position.y *= -1.0;
-                }
-            }
-            break;
-        }
-        case EMB_RECT: {
-            if (horz) {
-                g->object.rect.x *= -1.0;
-                g->object.rect.y *= -1.0;
-            }
-            if (vert) {
-                g->object.rect.w *= -1.0;
-                g->object.rect.h *= -1.0;
-            }
-            break;
-        }
-        case EMB_SPLINE:
-            /* TODO */
-            break;
-        default:
-            break;
-        }
-    }
 }
 
 /* a p
  */
-void
-embp_combineJumpStitches(EmbPattern* p)
-{
-    int jumpCount = 0, i;
-    EmbArray *newList;
-    EmbStitch j;
+void embp_combineJumpStitches(EmbPattern * p) {
+        int jumpCount = 0, i;
+        EmbArray *newList;
+        EmbStitch j;
 
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_combineJumpStitches(), ");
-        printf("p argument is null\n");
-        return;
-    }
-    newList = emb_array_create(EMB_STITCH);
-    for (i = 0; i < p->stitch_list->count; i++) {
-        EmbStitch st = p->stitch_list->stitch[i];
-        if (st.flags & JUMP) {
-            if (jumpCount == 0) {
-                j = st;
-            } else {
-                j.x += st.x;
-                j.y += st.y;
-            }
-            jumpCount++;
-        } else {
-            if (jumpCount > 0) {
-                emb_array_addStitch(newList, j);
-            }
-            emb_array_addStitch(newList, st);
+        if (!p) {
+                printf("ERROR: emb-pattern.c embp_combineJumpStitches(), ");
+                printf("p argument is null\n");
+                return;
         }
-    }
-    emb_array_free(p->stitch_list);
-    p->stitch_list = newList;
+        newList = emb_array_create(EMB_STITCH);
+        for (i = 0; i < p->stitch_list->count; i++) {
+                EmbStitch st = p->stitch_list->stitch[i];
+                if (st.flags & JUMP) {
+                        if (jumpCount == 0) {
+                                j = st;
+                        } else {
+                                j.x += st.x;
+                                j.y += st.y;
+                        }
+                        jumpCount++;
+                } else {
+                        if (jumpCount > 0) {
+                                emb_array_addStitch(newList, j);
+                        }
+                        emb_array_addStitch(newList, st);
+                }
+        }
+        emb_array_free(p->stitch_list);
+        p->stitch_list = newList;
 }
 
 /* \todo The params determine the max XY movement rather than the length.
  * They need renamed or clarified further.
  */
-void
-embp_correctForMaxStitchLength(EmbPattern* p,
-                        EmbReal maxStitchLength, EmbReal maxJumpLength)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_correctForMaxStitchLength(), ");
-        printf("p argument is null\n");
-        return;
-    }
-    if (p->stitch_list->count > 1) {
-        int i, j, splits;
-        EmbReal maxXY, maxLen, addX, addY;
-        EmbArray *newList = emb_array_create(EMB_STITCH);
-        for (i=1; i < p->stitch_list->count; i++) {
-            EmbStitch st = p->stitch_list->stitch[i];
-            EmbReal xx = st.x;
-            EmbReal yy = st.y;
-            EmbReal dx = p->stitch_list->stitch[i-1].x - xx;
-            EmbReal dy = p->stitch_list->stitch[i-1].y - yy;
-            if ((fabs(dx) > maxStitchLength) || (fabs(dy) > maxStitchLength)) {
-                maxXY = EMB_MAX(fabs(dx), fabs(dy));
-                if (st.flags & (JUMP | TRIM)) {
-                    maxLen = maxJumpLength;
-                } else {
-                    maxLen = maxStitchLength;
-                }
-                splits = (int)ceil((EmbReal)maxXY / maxLen);
-
-                if (splits > 1) {
-                    addX = (EmbReal)dx / splits;
-                    addY = (EmbReal)dy / splits;
-
-                    for (j = 1; j < splits; j++) {
-                        EmbStitch s;
-                        s = st;
-                        s.x = xx + addX * j;
-                        s.y = yy + addY * j;
-                        emb_array_addStitch(newList, s);
-                    }
-                }
-            }
-            emb_array_addStitch(newList, st);
+void embp_correctForMaxStitchLength(EmbPattern * p, EmbReal maxStitchLength,
+                                    EmbReal maxJumpLength) {
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_correctForMaxStitchLength(), ");
+                printf("p argument is null\n");
+                return;
         }
-        emb_array_free(p->stitch_list);
-        p->stitch_list = newList;
-    }
-    embp_end(p);
+        if (p->stitch_list->count > 1) {
+                int i, j, splits;
+                EmbReal maxXY, maxLen, addX, addY;
+                EmbArray *newList = emb_array_create(EMB_STITCH);
+                for (i = 1; i < p->stitch_list->count; i++) {
+                        EmbStitch st = p->stitch_list->stitch[i];
+                        EmbReal xx = st.x;
+                        EmbReal yy = st.y;
+                        EmbReal dx = p->stitch_list->stitch[i - 1].x - xx;
+                        EmbReal dy = p->stitch_list->stitch[i - 1].y - yy;
+                        if ((fabs(dx) > maxStitchLength)
+                            || (fabs(dy) > maxStitchLength)) {
+                                maxXY = EMB_MAX(fabs(dx), fabs(dy));
+                                if (st.flags & (JUMP | TRIM)) {
+                                        maxLen = maxJumpLength;
+                                } else {
+                                        maxLen = maxStitchLength;
+                                }
+                                splits = (int)ceil((EmbReal) maxXY / maxLen);
+
+                                if (splits > 1) {
+                                        addX = (EmbReal) dx / splits;
+                                        addY = (EmbReal) dy / splits;
+
+                                        for (j = 1; j < splits; j++) {
+                                                EmbStitch s;
+                                                s = st;
+                                                s.x = xx + addX * j;
+                                                s.y = yy + addY * j;
+                                                emb_array_addStitch(newList, s);
+                                        }
+                                }
+                        }
+                        emb_array_addStitch(newList, st);
+                }
+                emb_array_free(p->stitch_list);
+                p->stitch_list = newList;
+        }
+        embp_end(p);
 }
 
 /* Center the pattern a p.
  */
-void
-embp_center(EmbPattern* p)
-{
-    /* TODO: review this. currently not used in anywhere.
-        Also needs to handle various design objects */
-    int moveLeft, moveTop, i;
-    EmbRect boundingRect;
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_center(), p argument is null\n");
-        return;
-    }
-    boundingRect = embp_bounds(p);
+void embp_center(EmbPattern * p) {
+        /* TODO: review this. currently not used in anywhere.
+           Also needs to handle various design objects */
+        int moveLeft, moveTop, i;
+        EmbRect boundingRect;
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_center(), p argument is null\n");
+                return;
+        }
+        boundingRect = embp_bounds(p);
 
-    moveLeft = (int)(boundingRect.x - boundingRect.w / 2.0);
-    moveTop = (int)(boundingRect.y - boundingRect.h / 2.0);
+        moveLeft = (int)(boundingRect.x - boundingRect.w / 2.0);
+        moveTop = (int)(boundingRect.y - boundingRect.h / 2.0);
 
-    for (i = 0; i < p->stitch_list->count; i++) {
-        p->stitch_list->stitch[i].x -= moveLeft;
-        p->stitch_list->stitch[i].y -= moveTop;
-    }
+        for (i = 0; i < p->stitch_list->count; i++) {
+                p->stitch_list->stitch[i].x -= moveLeft;
+                p->stitch_list->stitch[i].y -= moveTop;
+        }
 }
 
 /* TODO: Description needed.
  */
 void
-embp_loadExternalColorFile(EmbPattern* p, const char* fileName)
-{
-    int hasRead, stub_len, format;
-    char extractName[200];
+ embp_loadExternalColorFile(EmbPattern * p, const char *fileName) {
+        int hasRead, stub_len, format;
+        char extractName[200];
 
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_loadExternalColorFile(), p argument is null\n");
-        return;
-    }
-    if (!fileName) {
-        printf("ERROR: emb-pattern.c embp_loadExternalColorFile(), fileName argument is null\n");
-        return;
-    }
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_loadExternalColorFile(), p argument is null\n");
+                return;
+        }
+        if (!fileName) {
+                printf
+                    ("ERROR: emb-pattern.c embp_loadExternalColorFile(), fileName argument is null\n");
+                return;
+        }
 
-    strcpy(extractName, fileName);
-    format = emb_identify_format(fileName);
-    stub_len = string_len(fileName) - string_len(formatTable[format].extension);
-    extractName[stub_len] = 0;
-    strcat(extractName, ".edr");
-    hasRead = embp_read(p, extractName, EMB_FORMAT_EDR);
-    if (!hasRead) {
+        strcpy(extractName, fileName);
+        format = emb_identify_format(fileName);
+        stub_len =
+            embstr_len(fileName) - embstr_len(formatTable[format].extension);
         extractName[stub_len] = 0;
-        strcat(extractName,".rgb");
-        hasRead = embp_read(p, extractName, EMB_FORMAT_RGB);
-    }
-    if (!hasRead) {
-        extractName[stub_len] = 0;
-        strcat(extractName,".col");
-        hasRead = embp_read(p, extractName, EMB_FORMAT_COL);
-    }
-    if (!hasRead) {
-        extractName[stub_len] = 0;
-        strcat(extractName,".inf");
-        hasRead = embp_read(p, extractName, EMB_FORMAT_INF);
-    }
+        strcat(extractName, ".edr");
+        hasRead = embp_read(p, extractName, EMB_FORMAT_EDR);
+        if (!hasRead) {
+                extractName[stub_len] = 0;
+                strcat(extractName, ".rgb");
+                hasRead = embp_read(p, extractName, EMB_FORMAT_RGB);
+        }
+        if (!hasRead) {
+                extractName[stub_len] = 0;
+                strcat(extractName, ".col");
+                hasRead = embp_read(p, extractName, EMB_FORMAT_COL);
+        }
+        if (!hasRead) {
+                extractName[stub_len] = 0;
+                strcat(extractName, ".inf");
+                hasRead = embp_read(p, extractName, EMB_FORMAT_INF);
+        }
 }
 
 /* Frees all memory allocated in the pattern (a p).
  */
 void
-embp_free(EmbPattern* p)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_free(), p argument is null\n");
-        return;
-    }
-    emb_array_free(p->stitch_list);
-    emb_array_free(p->thread_list);
-    emb_array_free(p->geometry);
-    safe_free(p);
+ embp_free(EmbPattern * p) {
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_free(), p argument is null\n");
+                return;
+        }
+        emb_array_free(p->stitch_list);
+        emb_array_free(p->thread_list);
+        emb_array_free(p->geometry);
+        safe_free(p);
 }
 
 /*
  */
 void
-emb_add_geometry(EmbPattern* p, EmbGeometry g)
-{
-    emb_array_add_geometry(p->geometry, g);
+ emb_add_geometry(EmbPattern * p, EmbGeometry g) {
+        emb_array_add_geometry(p->geometry, g);
 }
 
 /* Adds a circle object to pattern (a p) with its center at the absolute
@@ -14535,17 +10576,17 @@ emb_add_geometry(EmbPattern* p, EmbGeometry g)
  * Units are in millimeters.
  */
 void
-emb_add_circle(EmbPattern* p, EmbCircle circle)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c emb_add_circle(), p argument is null\n");
-        return;
-    }
+ emb_add_circle(EmbPattern * p, EmbCircle circle) {
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c emb_add_circle(), p argument is null\n");
+                return;
+        }
 
-    EmbGeometry g;
-    g.object.circle = circle;
-    g.type = EMB_CIRCLE;
-    emb_array_add_geometry(p->geometry, g);
+        EmbGeometry g;
+        g.object.circle = circle;
+        g.type = EMB_CIRCLE;
+        emb_array_add_geometry(p->geometry, g);
 }
 
 /* Adds an ellipse object to pattern (a p) with its center at the
@@ -14553,14 +10594,14 @@ emb_add_circle(EmbPattern* p, EmbCircle circle)
  * Units are in millimeters.
  */
 void
-emb_add_ellipse(EmbPattern* p, EmbEllipse ellipse)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_addEllipseObjectAbs(), p argument is null\n");
-        return;
-    }
+ emb_add_ellipse(EmbPattern * p, EmbEllipse ellipse) {
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_addEllipseObjectAbs(), p argument is null\n");
+                return;
+        }
 
-    emb_array_add_ellipse(p->geometry, ellipse);
+        emb_array_add_ellipse(p->geometry, ellipse);
 }
 
 /* Adds a line object to pattern (a p) starting at the absolute position
@@ -14568,72 +10609,75 @@ emb_add_ellipse(EmbPattern* p, EmbEllipse ellipse)
  * Positive y is up. Units are in millimeters.
  */
 void
-emb_add_line(EmbPattern* p, EmbLine line)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_addLineObjectAbs(), p argument is null\n");
-        return;
-    }
+ emb_add_line(EmbPattern * p, EmbLine line) {
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_addLineObjectAbs(), p argument is null\n");
+                return;
+        }
 
-    emb_array_addLine(p->geometry, line);
+        emb_array_addLine(p->geometry, line);
 }
 
 /* .
  */
 void
-emb_add_path(EmbPattern* p, EmbPath obj)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_addPathObjectAbs(), p argument is null\n");
-        return;
-    }
-    if (!obj.pointList) {
-        printf("ERROR: emb-pattern.c embp_addPathObjectAbs(), obj->pointList is empty\n");
-        return;
-    }
+ emb_add_path(EmbPattern * p, EmbPath obj) {
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_addPathObjectAbs(), p argument is null\n");
+                return;
+        }
+        if (!obj.pointList) {
+                printf
+                    ("ERROR: emb-pattern.c embp_addPathObjectAbs(), obj->pointList is empty\n");
+                return;
+        }
 
-    emb_array_addPath(p->geometry, obj);
+        emb_array_addPath(p->geometry, obj);
 }
 
 /*! Adds a point object to pattern (a p) at the absolute position (a x,a y). Positive y is up. Units are in millimeters. */
 void
-embp_addPointAbs(EmbPattern* p, EmbPoint obj)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_addPointObjectAbs(), p argument is null\n");
-        return;
-    }
+ embp_addPointAbs(EmbPattern * p, EmbPoint obj) {
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_addPointObjectAbs(), p argument is null\n");
+                return;
+        }
 
-    emb_array_addPoint(p->geometry, obj);
+        emb_array_addPoint(p->geometry, obj);
 }
 
 void
-embp_addPolygonAbs(EmbPattern* p, EmbPolygon obj)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_addPolygonObjectAbs(), p argument is null\n");
-        return;
-    }
-    if (!obj.pointList) {
-        printf("ERROR: emb-pattern.c embp_addPolygonObjectAbs(), obj->pointList is empty\n");
-        return;
-    }
+ embp_addPolygonAbs(EmbPattern * p, EmbPolygon obj) {
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_addPolygonObjectAbs(), p argument is null\n");
+                return;
+        }
+        if (!obj.pointList) {
+                printf
+                    ("ERROR: emb-pattern.c embp_addPolygonObjectAbs(), obj->pointList is empty\n");
+                return;
+        }
 
-    emb_array_addPolygon(p->geometry, obj);
+        emb_array_addPolygon(p->geometry, obj);
 }
 
 void
-embp_addPolylineObjectAbs(EmbPattern* p, EmbPolyline obj)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_addPolylineObjectAbs(), p argument is null\n");
-        return;
-    }
-    if (!obj.pointList) {
-        printf("ERROR: emb-pattern.c embp_addPolylineObjectAbs(), obj->pointList is empty\n");
-        return;
-    }
-    emb_array_addPolyline(p->geometry, obj);
+ embp_addPolylineObjectAbs(EmbPattern * p, EmbPolyline obj) {
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_addPolylineObjectAbs(), p argument is null\n");
+                return;
+        }
+        if (!obj.pointList) {
+                printf
+                    ("ERROR: emb-pattern.c embp_addPolylineObjectAbs(), obj->pointList is empty\n");
+                return;
+        }
+        emb_array_addPolyline(p->geometry, obj);
 }
 
 /* Adds a rectangle object to pattern (a p) at the absolute position
@@ -14641,156 +10685,111 @@ embp_addPolylineObjectAbs(EmbPattern* p, EmbPolyline obj)
  * Positive y is up. Units are in millimeters.
  */
 void
-embp_addRectAbs(EmbPattern* p, EmbRect rect)
-{
-    if (!p) {
-        printf("ERROR: emb-pattern.c embp_addRectObjectAbs(), p argument is null\n");
-        return;
-    }
-    emb_array_addRect(p->geometry, rect);
+ embp_addRectAbs(EmbPattern * p, EmbRect rect) {
+        if (!p) {
+                printf
+                    ("ERROR: emb-pattern.c embp_addRectObjectAbs(), p argument is null\n");
+                return;
+        }
+        emb_array_addRect(p->geometry, rect);
 }
 
 /* . */
 void
-embp_end(EmbPattern *p)
-{
-    if (p->stitch_list->count == 0) {
-        return;
-    }
-    /* Check for an END stitch and add one if it is not present */
-    if (p->stitch_list->stitch[p->stitch_list->count-1].flags != END) {
-        embp_addStitchRel(p, 0, 0, END, 1);
-    }
+ embp_end(EmbPattern * p) {
+        if (p->stitch_list->count == 0) {
+                return;
+        }
+        /* Check for an END stitch and add one if it is not present */
+        if (p->stitch_list->stitch[p->stitch_list->count - 1].flags != END) {
+                embp_addStitchRel(p, 0, 0, END, 1);
+        }
 }
 
 /*
  *
  */
-int convert(const char *inf, const char *outf)
-{
-    EmbPattern* p = 0;
-    int reader, writer;
+int convert(const char *inf, const char *outf) {
+        EmbPattern *p = 0;
+        int reader, writer;
 
-    reader = emb_identify_format(inf);
-    writer = emb_identify_format(outf);
+        reader = emb_identify_format(inf);
+        writer = emb_identify_format(outf);
 
-    p = embp_create();
-    if (!p) {
-        printf("ERROR: convert(), cannot allocate memory for p\n");
-        return 1;
-    }
-
-    if (!embp_read(p, inf, reader)) {
-        printf("ERROR: convert(), reading file was unsuccessful: %s\n", inf);
-        embp_free(p);
-        return 1;
-    }
-
-    if (formatTable[reader].type == EMBFORMAT_OBJECTONLY) {
-        if (formatTable[writer].type == EMBFORMAT_STITCHONLY) {
-            embp_movePolylinesTostitch_list(p);
+        p = embp_create();
+        if (!p) {
+                printf("ERROR: convert(), cannot allocate memory for p\n");
+                return 1;
         }
-    }
 
-    if (!embp_write(p, outf, writer)) {
-        printf("ERROR: convert(), writing file %s was unsuccessful\n", outf);
+        if (!embp_read(p, inf, reader)) {
+                printf("ERROR: convert(), reading file was unsuccessful: %s\n",
+                       inf);
+                embp_free(p);
+                return 1;
+        }
+
+        if (formatTable[reader].type == EMBFORMAT_OBJECTONLY) {
+                if (formatTable[writer].type == EMBFORMAT_STITCHONLY) {
+                        embp_movePolylinesTostitch_list(p);
+                }
+        }
+
+        if (!embp_write(p, outf, writer)) {
+                printf("ERROR: convert(), writing file %s was unsuccessful\n",
+                       outf);
+                embp_free(p);
+                return 1;
+        }
+
         embp_free(p);
-        return 1;
-    }
-
-    embp_free(p);
-    return 0;
+        return 0;
 }
-
 
 /* The Thread Management System
  * -----------------------------------------------------------------------------
  */
-int threadColor(const char *name, int brand)
-{
-    int i;
-    for (i = 0; brand_codes[brand].codes[i].manufacturer_code >= 0; i++) {
-        if (!strcmp(brand_codes[brand].codes[i].name, name)) {
-            return brand_codes[brand].codes[i].hex_code;
+int threadColor(const char *name, int brand) {
+        int i;
+        for (i = 0; brand_codes[brand].codes[i].manufacturer_code >= 0; i++) {
+                if (!strcmp(brand_codes[brand].codes[i].name, name)) {
+                        return brand_codes[brand].codes[i].hex_code;
+                }
         }
-    }
-    return -1;
+        return -1;
 }
 
-int threadColorNum(unsigned int color, int brand)
-{
-    int i;
-    for (i = 0; brand_codes[brand].codes[i].manufacturer_code >= 0; i++) {
-        if (brand_codes[brand].codes[i].hex_code == color) {
-            return brand_codes[brand].codes[i].manufacturer_code;
+int threadColorNum(unsigned int color, int brand) {
+        int i;
+        for (i = 0; brand_codes[brand].codes[i].manufacturer_code >= 0; i++) {
+                if (brand_codes[brand].codes[i].hex_code == color) {
+                        return brand_codes[brand].codes[i].manufacturer_code;
+                }
         }
-    }
 
-    return -1;
+        return -1;
 }
 
-const char *threadColorName(unsigned int color, int brand)
-{
-    int i;
-    for (i = 0; brand_codes[brand].codes[i].manufacturer_code >= 0; i++) {
-        if (brand_codes[brand].codes[i].hex_code == color) {
-            return brand_codes[brand].codes[i].name;
+const char *threadColorName(unsigned int color, int brand) {
+        int i;
+        for (i = 0; brand_codes[brand].codes[i].manufacturer_code >= 0; i++) {
+                if (brand_codes[brand].codes[i].hex_code == color) {
+                        return brand_codes[brand].codes[i].name;
+                }
         }
-    }
 
-    return "COLOR NOT FOUND";
+        return "COLOR NOT FOUND";
 }
 
 /* . */
-EmbVector scale_and_rotate(EmbVector v, double scale, double angle)
-{
-    EmbVector w;
-    double rot = radians(angle);
-    double cosRot = cos(rot);
-    double sinRot = sin(rot);
-    w.x = v.x * scale;
-    w.y = v.y * scale;
-    w.x = w.x * cosRot - w.y * sinRot;
-    w.y = w.x * sinRot + w.y * cosRot;
-    return w;    
+EmbVector scale_and_rotate(EmbVector v, double scale, double angle) {
+        EmbVector w;
+        double rot = radians(angle);
+        double cosRot = cos(rot);
+        double sinRot = sin(rot);
+        w.x = v.x * scale;
+        w.y = v.y * scale;
+        w.x = w.x * cosRot - w.y * sinRot;
+        w.y = w.x * sinRot + w.y * cosRot;
+        return w;
 }
-
-
-/* TODO: test this. */
-char *emb_get_svg_token(char *svg, char token[MAX_STRING_LENGTH])
-{
-    if (*svg == ' ') {
-        svg++;
-    }
-    if (*svg == 0) {
-        return NULL;
-    }
-    int i;
-    for (i=0; i < MAX_STRING_LENGTH; i++) {
-        token[i] = svg[i];
-        if (token[i] == ' ') {
-            token[i] = 0;
-            svg += i;
-            return svg;
-        }
-    }
-    return NULL;
-}
-
-/* */
-char *emb_get_svg_vector(char *svg, EmbVector *v)
-{
-    char token[MAX_STRING_LENGTH];
-    svg = emb_get_svg_token(svg, token);
-    if (!svg) {
-        return NULL;
-    }
-    v->x = atof(token);
-    svg = emb_get_svg_token(svg, token);
-    if (!svg) {
-        return NULL;
-    }
-    v->y = atof(token);
-    return svg;
-}
-

@@ -1235,6 +1235,7 @@ EMB_PUBLIC int convert(const char *inf, const char *outf);
 
 EMB_PUBLIC EmbVector emb_vector(EmbReal x, EmbReal y);
 
+EMB_PUBLIC int embstr_len(EmbString str);
 EMB_PUBLIC char read_n_bytes(FILE *file, uint8_t *data, unsigned int length);
 EMB_PUBLIC bool string_equal(char *a, const char *b);
 EMB_PUBLIC int parse_floats(const char *line, float result[], int n);
@@ -1406,8 +1407,8 @@ EMB_PUBLIC void emb_move_polylines_to_stitches(EmbPattern* pattern);
 EMB_PUBLIC char embp_read(EmbPattern *pattern, const char* fileName, int format);
 EMB_PUBLIC char embp_write(EmbPattern *pattern, const char* fileName, int format);
 
-EMB_PUBLIC char embp_readAuto(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char embp_writeAuto(EmbPattern *pattern, const char* fileName);
+EMB_PUBLIC char embp_read_auto(EmbPattern *pattern, const char* fileName);
+EMB_PUBLIC char embp_write_auto(EmbPattern *pattern, const char* fileName);
 
 EMB_PUBLIC int emb_round(EmbReal x);
 EMB_PUBLIC EmbReal radians(EmbReal degree);

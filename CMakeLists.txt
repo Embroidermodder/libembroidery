@@ -22,6 +22,17 @@ add_compile_options(
 endif (WIN32)
 
 set(LIBRARY_SRC
+	${CMAKE_SOURCE_DIR}/src/formats/bernina.c
+	${CMAKE_SOURCE_DIR}/src/formats/bitmap_cache.c
+	${CMAKE_SOURCE_DIR}/src/formats/bits_and_volts.c
+	${CMAKE_SOURCE_DIR}/src/formats/brother.c
+	${CMAKE_SOURCE_DIR}/src/formats/colors.c
+	${CMAKE_SOURCE_DIR}/src/formats/janome.c
+	${CMAKE_SOURCE_DIR}/src/formats/pfaff.c
+	${CMAKE_SOURCE_DIR}/src/formats/singer.c
+	${CMAKE_SOURCE_DIR}/src/formats/toyota.c
+	${CMAKE_SOURCE_DIR}/src/formats/svg.c
+
 	${CMAKE_SOURCE_DIR}/src/formats/dsz.c
 	${CMAKE_SOURCE_DIR}/src/formats/dxf.c
 	${CMAKE_SOURCE_DIR}/src/formats/exp.c
@@ -35,6 +46,7 @@ set(LIBRARY_SRC
 	${CMAKE_SOURCE_DIR}/src/compress.c
 	${CMAKE_SOURCE_DIR}/src/data.c
 	${CMAKE_SOURCE_DIR}/src/encoding.c
+	${CMAKE_SOURCE_DIR}/src/file.c
 	${CMAKE_SOURCE_DIR}/src/image.c
 	${CMAKE_SOURCE_DIR}/src/pattern.c
 	${CMAKE_SOURCE_DIR}/src/thread_colors.c

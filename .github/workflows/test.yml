@@ -1,0 +1,51 @@
+name: Test
+
+# Note that we don't allow reuseable workflows as a security measure.
+# This mainly is a setup to call bin/build.sh.
+
+on:
+  push:
+    branches:
+      - main
+      - code-layout
+    paths-ignore:
+      - '**.md'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-linux:
+    runs-on: ubuntu-latest
+    env:
+      HOST_SYSTEM: 'Ubuntu'
+      CMAKE_GENERATOR: 'Ninja'
+    steps:
+      - name: Test
+        run: |
+          git clone https://github.com/embroidermodder/libembroidery
+          cd libembroidery
+          bash build.sh --test
+
+  test-macos:
+    runs-on: macos-latest
+    env:
+      HOST_SYSTEM: 'MacOS'
+      CMAKE_GENERATOR: 'Ninja'
+    steps:
+      - name: Test
+        run: |
+          git clone https://github.com/embroidermodder/libembroidery
+          cd libembroidery
+          bash build.sh --test
+
+  test-windows:
+    runs-on: windows-latest
+    env:
+      HOST_SYSTEM: 'Windows'
+      CMAKE_GENERATOR: 'Ninja'
+    steps:
+      - name: Test
+        run: |
+          git clone https://github.com/embroidermodder/libembroidery
+          cd libembroidery
+          bash build.sh --test

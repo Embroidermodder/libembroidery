@@ -5,21 +5,18 @@
 
 #include "embroidery.h"
 
-char
-readEys(EmbPattern* pattern , FILE* file)
+char readEys(EmbPattern *pattern, FILE *file)
 {
-    puts("ERROR: readEys and not been finished.");
-    REPORT_PTR(pattern);
-    REPORT_PTR(file);
-    return 0; /*TODO: finish readEys */
+        puts("ERROR: readEys and not been finished.");
+        REPORT_PTR(pattern);
+        REPORT_PTR(file);
+        return 0;               /*TODO: finish readEys */
 }
 
-char
-writeEys(EmbPattern* pattern , FILE* file)
+char writeEys(EmbPattern *pattern, FILE *file)
 {
-    puts("ERROR: writeEys and not been finished.");
-    REPORT_PTR(pattern);
-    REPORT_PTR(file);
-    return 0; /*TODO: finish writeEys */
+        puts("ERROR: writeEys and not been finished.");
+        REPORT_PTR(pattern);
+        REPORT_PTR(file);
+        return 0;               /*TODO: finish writeEys */
 }
-

@@ -40,7 +40,7 @@ readExp(EmbPattern* pattern, FILE* file)
         }
         dx = expDecode(b[0]);
         dy = expDecode(b[1]);
-        emb_pattern_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
+        embp_addStitchRel(pattern, dx / 10.0, dy / 10.0, flags, 1);
     }
     return 1;
 }

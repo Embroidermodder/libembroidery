@@ -34,13 +34,13 @@ test_convert(int test_file, int from, int to)
     printf("Converting test case %d: %s to %s.\n",
         test_file, fname_from, fname_to);
 
-    EmbPattern* p = emb_pattern_create();
+    EmbPattern* p = embp_create();
     if (!p) {
         puts("ERROR: convert(), cannot allocate memory for p\n");
         return 1;
     }
 
-    emb_pattern_addThread(p, black_thread);
+    embp_addThread(p, black_thread);
 
     switch (test_file) {
 	case 0: {
@@ -48,14 +48,14 @@ test_convert(int test_file, int from, int to)
         EmbStitch st;
 		/* 10mm circle */
 		for (i = 0; i < 20; i++) {
-			emb_pattern_addStitchRel(p, 0.0, 1.0, JUMP, 0);
+			embp_addStitchRel(p, 0.0, 1.0, JUMP, 0);
 		}
 		for (i = 0; i < 200; i++) {
 			st.x = 10 + 10 * sin(i * (0.03141592));
 			st.y = 10 + 10 * cos(i * (0.03141592));
 			st.flags = NORMAL;
 			st.color = 0;
-			emb_pattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
+			embp_addStitchAbs(p, st.x, st.y, st.flags, st.color);
 		}
 		break;
 	}
@@ -68,14 +68,14 @@ test_convert(int test_file, int from, int to)
             st.y = 10 + i * 0.1;
             st.flags = NORMAL;
             st.color = 0;
-            emb_pattern_addStitchAbs(p, st.x, st.y, st.flags, st.color);
+            embp_addStitchAbs(p, st.x, st.y, st.flags, st.color);
         }
 		break;
 	}
 	case 2: {
         EmbCircle circle = emb_circle(10.0f, 1.0f, 5.0f);
         emb_array_add_circle(p->geometry, circle);
-        emb_pattern_convertGeometry(p);
+        embp_convertGeometry(p);
 		break;
 	}
     default: {
@@ -85,13 +85,13 @@ test_convert(int test_file, int from, int to)
     }
 
     sprintf(outf, "test%02d%s", test_file, formatTable[to].extension);
-    emb_pattern_end(p);
-    if (!emb_pattern_write(p, outf, to)) {
-        emb_pattern_free(p);
+    embp_end(p);
+    if (!embp_write(p, outf, to)) {
+        embp_free(p);
         return 16;
     }
 
-    emb_pattern_free(p);
+    embp_free(p);
 
     convert(fname_from, fname_to);
     return 0;

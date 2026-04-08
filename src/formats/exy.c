@@ -34,10 +34,10 @@ readExy(EmbPattern* pattern, FILE* file)
         decode_tajima_ternary(b, &x, &y);
         flags = decode_exy_flags(b[2]);
         if (flags & END) {
-            emb_pattern_addStitchRel(pattern, 0, 0, END, 1);
+            embp_addStitchRel(pattern, 0, 0, END, 1);
             break;
         }
-        emb_pattern_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
+        embp_addStitchRel(pattern, x / 10.0, y / 10.0, flags, 1);
     }
     return 1;
 }

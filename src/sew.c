@@ -139,7 +139,7 @@ void usage(void);
 int
 main(int argc, char *argv[])
 {
-    EmbPattern *current_pattern = emb_pattern_create();
+    EmbPattern *current_pattern = embp_create();
     int i, j, result;
     /* If no argument is given, drop into the postscript interpreter. */
     if (argc == 1) {
@@ -189,26 +189,26 @@ main(int argc, char *argv[])
         case FLAG_RENDER_SHORT: {
             if (i + 2 < argc) {
                 /* the user appears to have entered filenames after render */
-                emb_pattern_readAuto(current_pattern, argv[i+1]);
+                embp_readAuto(current_pattern, argv[i+1]);
                 printf("%d\n", current_pattern->stitch_list->count);
-                emb_pattern_render(current_pattern, argv[i+2]);
+                embp_render(current_pattern, argv[i+2]);
                 i += 2;
                 break;
                 i++;
                 if (argv[i][0] == '-') {
                     /* they haven't, use the default name */
                     puts("Defaulting to the output name 'output.png'.");
-                    emb_pattern_render(current_pattern, "output.png");
+                    embp_render(current_pattern, "output.png");
                     i--;
                 }
                 else {
                     /* they have, use the user-supplied name */
-                    emb_pattern_render(current_pattern, argv[i]);
+                    embp_render(current_pattern, argv[i]);
                 }
             }
             else {
                 puts("Defaulting to the output name 'output.png'.");
-                emb_pattern_render(current_pattern, "output.png");
+                embp_render(current_pattern, "output.png");
             }
             break;
         }
@@ -219,32 +219,32 @@ main(int argc, char *argv[])
                 if (argv[i][0] == '-') {
                     /* they haven't, use the default name */
                     puts("Defaulting to the output name 'output.avi'.");
-                    emb_pattern_simulate(current_pattern, "output.avi");
+                    embp_simulate(current_pattern, "output.avi");
                     i--;
                 }
                 else {
                     /* they have, use the user-supplied name */
-                    emb_pattern_simulate(current_pattern, argv[i]);
+                    embp_simulate(current_pattern, argv[i]);
                 }
             }
             else {
                 puts("Defaulting to the output name 'output.avi'.");
-                emb_pattern_simulate(current_pattern, "output.avi");
+                embp_simulate(current_pattern, "output.avi");
             }
             break;
         }
         case FLAG_COMBINE: {
             if (i + 3 < argc) {
                 EmbPattern *out;
-                EmbPattern *p1 = emb_pattern_create();
-                EmbPattern *p2 = emb_pattern_create();
-                emb_pattern_readAuto(p1, argv[i+1]);
-                emb_pattern_readAuto(p2, argv[i+2]);
-                out = emb_pattern_combine(p1, p2);
-                emb_pattern_writeAuto(out, argv[i+3]);
-                emb_pattern_free(p1);
-                emb_pattern_free(p2);
-                emb_pattern_free(out);
+                EmbPattern *p1 = embp_create();
+                EmbPattern *p2 = embp_create();
+                embp_readAuto(p1, argv[i+1]);
+                embp_readAuto(p2, argv[i+2]);
+                out = embp_combine(p1, p2);
+                embp_writeAuto(out, argv[i+3]);
+                embp_free(p1);
+                embp_free(p2);
+                embp_free(out);
             }
             else {
                 puts("--combine takes 3 arguments and you have supplied <3.");
@@ -258,8 +258,8 @@ main(int argc, char *argv[])
         }
         case FLAG_REPORT:
         case FLAG_REPORT_SHORT: {
-            emb_pattern_readAuto(current_pattern, argv[i+1]);
-            emb_pattern_details(current_pattern);
+            embp_readAuto(current_pattern, argv[i+1]);
+            embp_details(current_pattern);
             i++;
             break;
         }
@@ -278,7 +278,7 @@ main(int argc, char *argv[])
             puts("Please enter an output format for your file, see --help.");
         }
     }
-    emb_pattern_free(current_pattern);
+    embp_free(current_pattern);
     safe_free(script);
     return 0;
 }

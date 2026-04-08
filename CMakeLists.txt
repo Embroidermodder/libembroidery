@@ -22,14 +22,21 @@ add_compile_options(
 endif (WIN32)
 
 set(LIBRARY_SRC
+	${CMAKE_SOURCE_DIR}/src/formats/dsz.c
+	${CMAKE_SOURCE_DIR}/src/formats/dxf.c
 	${CMAKE_SOURCE_DIR}/src/formats/exp.c
 	${CMAKE_SOURCE_DIR}/src/formats/exy.c
 	${CMAKE_SOURCE_DIR}/src/formats/eys.c
+	${CMAKE_SOURCE_DIR}/src/formats/gc.c
+	${CMAKE_SOURCE_DIR}/src/formats/gnc.c
+	${CMAKE_SOURCE_DIR}/src/formats/gt.c
 
 	${CMAKE_SOURCE_DIR}/src/circle.c
 	${CMAKE_SOURCE_DIR}/src/compress.c
 	${CMAKE_SOURCE_DIR}/src/data.c
-	${CMAKE_SOURCE_DIR}/src/embroidery.c
+	${CMAKE_SOURCE_DIR}/src/encoding.c
+	${CMAKE_SOURCE_DIR}/src/image.c
+	${CMAKE_SOURCE_DIR}/src/pattern.c
 	${CMAKE_SOURCE_DIR}/src/thread_colors.c
 )
 

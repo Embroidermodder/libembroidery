@@ -1,4 +1,4 @@
-name: Build
+name: Test
 
 # Note that we don't allow reuseable workflows as a security measure.
 # This mainly is a setup to call bin/build.sh.
@@ -14,38 +14,38 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-linux:
+  test-linux:
     runs-on: ubuntu-latest
     env:
       HOST_SYSTEM: 'Ubuntu'
       CMAKE_GENERATOR: 'Ninja'
     steps:
-      - name: Build
+      - name: Test
         run: |
           git clone https://github.com/embroidermodder/libembroidery
           cd libembroidery
-          bash build.sh "Ubuntu"
+          bash build.sh --test
 
-  build-macos:
+  test-macos:
     runs-on: macos-latest
     env:
       HOST_SYSTEM: 'MacOS'
       CMAKE_GENERATOR: 'Ninja'
     steps:
-      - name: Build
+      - name: Test
         run: |
           git clone https://github.com/embroidermodder/libembroidery
           cd libembroidery
-          bash build.sh "MacOS"
+          bash build.sh --test
 
-  build-windows:
+  test-windows:
     runs-on: windows-latest
     env:
       HOST_SYSTEM: 'Windows'
       CMAKE_GENERATOR: 'Ninja'
     steps:
-      - name: Build
+      - name: Test
         run: |
           git clone https://github.com/embroidermodder/libembroidery
           cd libembroidery
-          bash build.sh "Windows"
+          bash build.sh --test

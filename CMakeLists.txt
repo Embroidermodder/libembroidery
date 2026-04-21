@@ -22,39 +22,39 @@ add_compile_options(
 endif (WIN32)
 
 set(LIBRARY_SRC
-	${CMAKE_SOURCE_DIR}/src/formats/autodesk.c
-	${CMAKE_SOURCE_DIR}/src/formats/barudan.c
-	${CMAKE_SOURCE_DIR}/src/formats/bernina.c
-	${CMAKE_SOURCE_DIR}/src/formats/bitmap_cache.c
-	${CMAKE_SOURCE_DIR}/src/formats/bits_and_volts.c
-	${CMAKE_SOURCE_DIR}/src/formats/brother.c
-	${CMAKE_SOURCE_DIR}/src/formats/colors.c
-	${CMAKE_SOURCE_DIR}/src/formats/csv.c
-	${CMAKE_SOURCE_DIR}/src/formats/eltac.c
-	${CMAKE_SOURCE_DIR}/src/formats/janome.c
-	${CMAKE_SOURCE_DIR}/src/formats/gold_thread.c
-	${CMAKE_SOURCE_DIR}/src/formats/great_notions.c
-	${CMAKE_SOURCE_DIR}/src/formats/melco.c
-	${CMAKE_SOURCE_DIR}/src/formats/pfaff.c
-	${CMAKE_SOURCE_DIR}/src/formats/sierra.c
-	${CMAKE_SOURCE_DIR}/src/formats/singer.c
-	${CMAKE_SOURCE_DIR}/src/formats/smoothie.c
-	${CMAKE_SOURCE_DIR}/src/formats/toyota.c
-	${CMAKE_SOURCE_DIR}/src/formats/svg.c
-	${CMAKE_SOURCE_DIR}/src/formats/zsk_usa.c
+	src/formats/autodesk.c
+	src/formats/barudan.c
+	src/formats/bernina.c
+	src/formats/bitmap_cache.c
+	src/formats/bits_and_volts.c
+	src/formats/brother.c
+	src/formats/colors.c
+	src/formats/csv.c
+	src/formats/eltac.c
+	src/formats/janome.c
+	src/formats/gold_thread.c
+	src/formats/great_notions.c
+	src/formats/melco.c
+	src/formats/pfaff.c
+	src/formats/sierra.c
+	src/formats/singer.c
+	src/formats/smoothie.c
+	src/formats/toyota.c
+	src/formats/svg.c
+	src/formats/zsk_usa.c
 
-	${CMAKE_SOURCE_DIR}/src/circle.c
-	${CMAKE_SOURCE_DIR}/src/compress.c
-	${CMAKE_SOURCE_DIR}/src/data.c
-	${CMAKE_SOURCE_DIR}/src/encoding.c
-	${CMAKE_SOURCE_DIR}/src/file.c
-	${CMAKE_SOURCE_DIR}/src/image.c
-	${CMAKE_SOURCE_DIR}/src/pattern.c
-	${CMAKE_SOURCE_DIR}/src/thread_colors.c
-	${CMAKE_SOURCE_DIR}/src/unsorted.c
+	src/circle.c
+	src/compress.c
+	src/data.c
+	src/encoding.c
+	src/file.c
+	src/image.c
+	src/pattern.c
+	src/thread_colors.c
+	src/unsorted.c
 )
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(include)
 
 add_library(embroidery_static STATIC ${LIBRARY_SRC})
 
@@ -134,7 +134,7 @@ enable_testing()
 function(make_test name)
 	set(execname test_${name})
 	set(testname ${name}_test)
-	add_executable(${execname} ${CMAKE_SOURCE_DIR}/test/${name}.c)
+	add_executable(${execname} test/${name}.c)
 	target_link_libraries(${execname} PRIVATE embroidery_static)
 	if (WIN32)
 	else (WIN32)

@@ -8,14 +8,14 @@
 
 #include "embroidery.h"
 
-char readBmc(EmbPattern *pattern, FILE *file)
+int8_t readBmc(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: readBmc is not supported.");
         printf("Cannot read %p %p\n", pattern, file);
         return 0;               /*TODO: finish readBmc */
 }
 
-char writeBmc(EmbPattern *pattern, FILE *file)
+int8_t writeBmc(EmbPattern *pattern, FILE *file)
 {
         puts("writeBmc is not implemented");
         printf("Cannot write %p %p\n", pattern, file);

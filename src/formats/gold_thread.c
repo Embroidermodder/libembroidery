@@ -7,7 +7,7 @@
 
 #include "embroidery.h"
 
-char readGt(EmbPattern *pattern, FILE *file)
+int8_t readGt(EmbPattern *pattern, FILE *file)
 {
         /* TODO: review for combining code. This line appears
            to be the only difference from the FXY format. */
@@ -17,7 +17,7 @@ char readGt(EmbPattern *pattern, FILE *file)
                 int stitchType = NORMAL;
                 int b1 = fgetc(file);
                 int b2 = fgetc(file);
-                unsigned char commandByte = (unsigned char)fgetc(file);
+                uint8_t commandByte = (uint8_t)fgetc(file);
 
                 if (commandByte == 0x91) {
                         embp_addStitchRel(pattern, 0, 0, END, 1);
@@ -40,7 +40,7 @@ char readGt(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-char writeGt(EmbPattern *pattern, FILE *file)
+int8_t writeGt(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: gt not supported in write mode.");
         printf("%p %p\n", pattern, file);

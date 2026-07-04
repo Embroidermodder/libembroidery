@@ -61,9 +61,11 @@
 #define FLAG_COMBINE                  15
 #define FLAG_REPORT                   16
 #define FLAG_REPORT_SHORT             17
-#define NUM_FLAGS                     18
+#define FLAG_TEST                     18
+#define FLAG_TEST_SHORT               19
+#define NUM_FLAGS                     20
 
-const char *help_msg[] = {
+const int8_t *help_msg[] = {
         "Usage: sew [OPTIONS] fileToRead... ",
         "",
         "Conversion:",
@@ -94,7 +96,7 @@ const char *help_msg[] = {
         "EOF"
 };
 
-const char *welcome_message = "sew\n"
+const int8_t *welcome_message = "sew\n"
     "1.0.0-alpha\n"
     "\n"
     "    A command line program for converting between machine embroidery file formats.\n"
@@ -125,7 +127,9 @@ const EmbString flag_list[] = {
         "--simulate",
         "--combine",
         "--report",
-        "-R"
+        "-R",
+        "--test",
+        "-T"
 };
 
 void usage(void);
@@ -141,14 +145,15 @@ void usage(void);
 int main(int argc, char *argv[])
 {
         EmbPattern *current_pattern = embp_create();
-        int i, j, result;
+        int i, j, result, error;
+        error = 0;
         /* If no argument is given, drop into the postscript interpreter. */
         if (argc == 1) {
                 usage();
-                return 0;
+                return error;
         }
 
-        char *script = (char *)malloc(argc * 100);
+        int8_t *script = (char *)malloc(argc * 100);
         int flags = argc - 1;
         for (i = 1; i < argc; i++) {
                 result = -1;
@@ -269,6 +274,12 @@ int main(int argc, char *argv[])
                                 i++;
                                 break;
                         }
+                case FLAG_TEST:
+                case FLAG_TEST_SHORT:{
+                                error = run_tests();
+                                i++;
+                                break;
+                        }
                 default:
                         flags--;
                         break;
@@ -285,7 +296,7 @@ int main(int argc, char *argv[])
         }
         embp_free(current_pattern);
         safe_free(script);
-        return 0;
+        return error;
 }
 
 /*! Construct from tables above somehow, like how getopt_long works,

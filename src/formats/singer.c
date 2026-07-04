@@ -13,12 +13,12 @@
 #define CsdSubMaskSize  479
 #define CsdXorMaskSize  501
 
-char writeDst(EmbPattern * pattern, FILE * file);
+int8_t writeDst(EmbPattern * pattern, FILE * file);
 
-char _subMask[CsdSubMaskSize];
-char _xorMask[CsdXorMaskSize];
+int8_t _subMask[CsdSubMaskSize];
+int8_t _xorMask[CsdXorMaskSize];
 
-const unsigned char csd_decryptArray[] = {
+const uint8_t csd_decryptArray[] = {
         0x43, 0x6E, 0x72, 0x7A, 0x76, 0x6C, 0x61, 0x6F, 0x7C, 0x29, 0x5D, 0x62,
         0x60, 0x6E, 0x61, 0x62,
         0x20, 0x41, 0x66, 0x6A, 0x3A, 0x35, 0x5A, 0x63, 0x7C, 0x37, 0x3A, 0x2A,
@@ -71,7 +71,7 @@ void BuildDecryptionTable(int seed)
         }
 }
 
-unsigned char DecodeCsdByte(long fileOffset, unsigned char val, int type)
+uint8_t DecodeCsdByte(long fileOffset, uint8_t val, int type)
 {
         int newOffset;
 
@@ -104,20 +104,20 @@ unsigned char DecodeCsdByte(long fileOffset, unsigned char val, int type)
         } else {
                 newOffset = (int)fileOffset;
         }
-        return ((unsigned char)((unsigned char)
+        return ((uint8_t)((uint8_t)
                                 (val ^ _xorMask[newOffset % CsdXorMaskSize]) -
                                 _subMask[newOffset % CsdSubMaskSize]));
 }
 
-char readCsd(EmbPattern *pattern, FILE *file)
+int8_t readCsd(EmbPattern *pattern, FILE *file)
 {
         int i, type = 0;
-        unsigned char identifier[8];
-        unsigned char unknown1, unknown2;
-        char dx = 0, dy = 0;
+        uint8_t identifier[8];
+        uint8_t unknown1, unknown2;
+        int8_t dx = 0, dy = 0;
         int colorChange = -1;
         int flags;
-        unsigned char colorOrder[14];
+        uint8_t colorOrder[14];
 
         if (fread(identifier, 1, 8, file) != 8) {
                 puts("ERROR");
@@ -137,40 +137,40 @@ char readCsd(EmbPattern *pattern, FILE *file)
         for (i = 0; i < 16; i++) {
                 EmbThread thread;
                 thread.color.r =
-                    DecodeCsdByte(ftell(file), (unsigned char)fgetc(file),
+                    DecodeCsdByte(ftell(file), (uint8_t)fgetc(file),
                                   type);
                 thread.color.g =
-                    DecodeCsdByte(ftell(file), (unsigned char)fgetc(file),
+                    DecodeCsdByte(ftell(file), (uint8_t)fgetc(file),
                                   type);
                 thread.color.b =
-                    DecodeCsdByte(ftell(file), (unsigned char)fgetc(file),
+                    DecodeCsdByte(ftell(file), (uint8_t)fgetc(file),
                                   type);
                 strcpy(thread.catalogNumber, "");
                 strcpy(thread.description, "");
                 embp_addThread(pattern, thread);
         }
-        unknown1 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
-        unknown2 = DecodeCsdByte(ftell(file), (unsigned char)fgetc(file), type);
+        unknown1 = DecodeCsdByte(ftell(file), (uint8_t)fgetc(file), type);
+        unknown2 = DecodeCsdByte(ftell(file), (uint8_t)fgetc(file), type);
         if (emb_verbose > 1) {
                 printf("unknown bytes to decode: %c %c", unknown1, unknown2);
         }
 
         for (i = 0; i < 14; i++) {
                 colorOrder[i] =
-                    (unsigned char)DecodeCsdByte(ftell(file),
-                                                 (unsigned char)fgetc(file),
+                    (uint8_t)DecodeCsdByte(ftell(file),
+                                                 (uint8_t)fgetc(file),
                                                  type);
         }
         for (i = 0; !feof(file); i++) {
-                char negativeX, negativeY;
-                unsigned char b0 =
-                    DecodeCsdByte(ftell(file), (unsigned char)fgetc(file),
+                int8_t negativeX, negativeY;
+                uint8_t b0 =
+                    DecodeCsdByte(ftell(file), (uint8_t)fgetc(file),
                                   type);
-                unsigned char b1 =
-                    DecodeCsdByte(ftell(file), (unsigned char)fgetc(file),
+                uint8_t b1 =
+                    DecodeCsdByte(ftell(file), (uint8_t)fgetc(file),
                                   type);
-                unsigned char b2 =
-                    DecodeCsdByte(ftell(file), (unsigned char)fgetc(file),
+                uint8_t b2 =
+                    DecodeCsdByte(ftell(file), (uint8_t)fgetc(file),
                                   type);
 
                 if (b0 == 0xF8 || b0 == 0x87 || b0 == 0x91) {
@@ -178,7 +178,7 @@ char readCsd(EmbPattern *pattern, FILE *file)
                 }
                 negativeX = ((b0 & 0x20) > 0);
                 negativeY = ((b0 & 0x40) > 0);
-                b0 = (unsigned char)(b0 & (0xFF ^ 0xE0));
+                b0 = (uint8_t)(b0 & (0xFF ^ 0xE0));
 
                 if ((b0 & 0x1F) == 0) {
                         flags = NORMAL;
@@ -212,7 +212,7 @@ char readCsd(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-char writeCsd(EmbPattern *pattern, FILE *file)
+int8_t writeCsd(EmbPattern *pattern, FILE *file)
 {
         puts("writeCsd is not implemented.");
         puts("Overridden, defaulting to dst.");

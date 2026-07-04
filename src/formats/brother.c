@@ -12,10 +12,10 @@
 
 const int pecThreadCount = 65;
 
-char readPhb(EmbPattern * pattern, FILE * file);
-char writePhb(EmbPattern * pattern, FILE * file);
-char readPem(EmbPattern * pattern, FILE * file);
-char writePem(EmbPattern * pattern, FILE * file);
+int8_t readPhb(EmbPattern * pattern, FILE * file);
+int8_t writePhb(EmbPattern * pattern, FILE * file);
+int8_t readPem(EmbPattern * pattern, FILE * file);
+int8_t writePem(EmbPattern * pattern, FILE * file);
 
 int read_descriptions(FILE * file, EmbPattern * pattern);
 void readHoopName(FILE * file, EmbPattern * pattern);
@@ -35,7 +35,7 @@ void readPESHeaderV10(FILE * file, EmbPattern * pattern);
 /*
  * Frame for PES formats
  */
-const char imageWithFrame[38][48] = {
+const int8_t imageWithFrame[38][48] = {
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
          0},
@@ -154,7 +154,7 @@ const char imageWithFrame[38][48] = {
 /*
  * Write a PES embedded a image to the given a file pointer.
  */
-void writeImage(FILE *file, unsigned char image[][48])
+void writeImage(FILE *file, uint8_t image[][48])
 {
         int i, j;
 
@@ -166,29 +166,29 @@ void writeImage(FILE *file, unsigned char image[][48])
         for (i = 0; i < 38; i++) {
                 for (j = 0; j < 6; j++) {
                         int offset = j * 8;
-                        unsigned char output = 0;
-                        output |= (unsigned char)(image[i][offset] != 0);
+                        uint8_t output = 0;
+                        output |= (uint8_t)(image[i][offset] != 0);
                         output |=
-                            (unsigned char)(image[i][offset + 1] !=
-                                            (unsigned char)0) << 1;
+                            (uint8_t)(image[i][offset + 1] !=
+                                            (uint8_t)0) << 1;
                         output |=
-                            (unsigned char)(image[i][offset + 2] !=
-                                            (unsigned char)0) << 2;
+                            (uint8_t)(image[i][offset + 2] !=
+                                            (uint8_t)0) << 2;
                         output |=
-                            (unsigned char)(image[i][offset + 3] !=
-                                            (unsigned char)0) << 3;
+                            (uint8_t)(image[i][offset + 3] !=
+                                            (uint8_t)0) << 3;
                         output |=
-                            (unsigned char)(image[i][offset + 4] !=
-                                            (unsigned char)0) << 4;
+                            (uint8_t)(image[i][offset + 4] !=
+                                            (uint8_t)0) << 4;
                         output |=
-                            (unsigned char)(image[i][offset + 5] !=
-                                            (unsigned char)0) << 5;
+                            (uint8_t)(image[i][offset + 5] !=
+                                            (uint8_t)0) << 5;
                         output |=
-                            (unsigned char)(image[i][offset + 6] !=
-                                            (unsigned char)0) << 6;
+                            (uint8_t)(image[i][offset + 6] !=
+                                            (uint8_t)0) << 6;
                         output |=
-                            (unsigned char)(image[i][offset + 7] !=
-                                            (unsigned char)0) << 7;
+                            (uint8_t)(image[i][offset + 7] !=
+                                            (uint8_t)0) << 7;
                         fwrite(&output, 1, 1, file);
                 }
         }
@@ -196,7 +196,7 @@ void writeImage(FILE *file, unsigned char image[][48])
 
 void readPecStitches(EmbPattern *pattern, FILE *file)
 {
-        unsigned char b[2];
+        uint8_t b[2];
 
         while (fread(b, 1, 2, file) == 2) {
                 int val1 = (int)b[0];
@@ -250,8 +250,8 @@ void readPecStitches(EmbPattern *pattern, FILE *file)
 void pecEncodeJump(FILE *file, int x, int types)
 {
         int outputVal = abs(x) & 0x7FF;
-        unsigned int orPart = 0x80;
-        unsigned char toWrite;
+        uint32_t orPart = 0x80;
+        uint8_t toWrite;
 
         if (!file) {
                 printf
@@ -268,13 +268,13 @@ void pecEncodeJump(FILE *file, int x, int types)
                 outputVal = (x + 0x1000) & 0x7FF;
                 outputVal |= 0x800;
         }
-        toWrite = (unsigned char)(((outputVal >> 8) & 0x0F) | orPart);
+        toWrite = (uint8_t)(((outputVal >> 8) & 0x0F) | orPart);
         fwrite(&toWrite, 1, 1, file);
-        toWrite = (unsigned char)(outputVal & 0xFF);
+        toWrite = (uint8_t)(outputVal & 0xFF);
         fwrite(&toWrite, 1, 1, file);
 }
 
-void pecEncodeStop(FILE *file, unsigned char val)
+void pecEncodeStop(FILE *file, uint8_t val)
 {
         if (!file) {
                 printf
@@ -285,10 +285,10 @@ void pecEncodeStop(FILE *file, unsigned char val)
         fwrite(&val, 1, 1, file);
 }
 
-char readPec(EmbPattern *pattern, const char *fileName, FILE *file)
+int8_t readPec(EmbPattern *pattern, const int8_t *fileName, FILE *file)
 {
-        unsigned int graphicsOffset;
-        unsigned char colorChanges;
+        uint32_t graphicsOffset;
+        uint8_t colorChanges;
         int i;
 
         if (emb_verbose > 1) {
@@ -300,7 +300,7 @@ char readPec(EmbPattern *pattern, const char *fileName, FILE *file)
         }
 
         fseek(file, 0x38, SEEK_SET);
-        colorChanges = (unsigned char)(char)fgetc(file);
+        colorChanges = (uint8_t)(char)fgetc(file);
         for (i = 0; i <= colorChanges; i++) {
                 embp_addThread(pattern, pec_colors[(char)fgetc(file) % 65]);
         }
@@ -308,7 +308,7 @@ char readPec(EmbPattern *pattern, const char *fileName, FILE *file)
         /* Get Graphics offset */
         fseek(file, 0x20A, SEEK_SET);
 
-        graphicsOffset = (unsigned int)(fgetc(file));
+        graphicsOffset = (uint32_t)(fgetc(file));
         graphicsOffset |= (fgetc(file) << 8);
         graphicsOffset |= (fgetc(file) << 16);
         REPORT_INT(graphicsOffset)
@@ -327,7 +327,7 @@ char readPec(EmbPattern *pattern, const char *fileName, FILE *file)
 
         /* Begin Stitch Data */
         /* 0x21C */
-        /*unsigned int end = graphicsOffset + 0x208; */
+        /*uint32_t end = graphicsOffset + 0x208; */
         readPecStitches(pattern, file);
         embp_flipVertical(pattern);
         return 1;
@@ -337,7 +337,7 @@ void pecEncode(FILE *file, EmbPattern *p)
 {
         EmbReal thisX = 0.0;
         EmbReal thisY = 0.0;
-        unsigned char stopCode = 2;
+        uint8_t stopCode = 2;
         int i;
 
         if (!file) {
@@ -361,26 +361,26 @@ void pecEncode(FILE *file, EmbPattern *p)
 
                 if (s.flags & STOP) {
                         pecEncodeStop(file, stopCode);
-                        if (stopCode == (unsigned char)2) {
-                                stopCode = (unsigned char)1;
+                        if (stopCode == (uint8_t)2) {
+                                stopCode = (uint8_t)1;
                         } else {
-                                stopCode = (unsigned char)2;
+                                stopCode = (uint8_t)2;
                         }
                 } else if (s.flags & END) {
                         fwrite("\xFF", 1, 1, file);
                         break;
                 } else if (deltaX < 63 && deltaX > -64 && deltaY < 63
                            && deltaY > -64 && (!(s.flags & (JUMP | TRIM)))) {
-                        unsigned char out[2];
+                        uint8_t out[2];
                         if (deltaX < 0) {
-                                out[0] = (unsigned char)(deltaX + 0x80);
+                                out[0] = (uint8_t)(deltaX + 0x80);
                         } else {
-                                out[0] = (unsigned char)deltaX;
+                                out[0] = (uint8_t)deltaX;
                         }
                         if (deltaY < 0) {
-                                out[1] = (unsigned char)(deltaY + 0x80);
+                                out[1] = (uint8_t)(deltaY + 0x80);
                         } else {
-                                out[1] = (unsigned char)deltaY;
+                                out[1] = (uint8_t)deltaY;
                         }
                         fwrite(out, 1, 2, file);
                 } else {
@@ -390,19 +390,19 @@ void pecEncode(FILE *file, EmbPattern *p)
         }
 }
 
-void writeImage(FILE * file, unsigned char image[][48]);
+void writeImage(FILE * file, uint8_t image[][48]);
 
-void writePecStitches(EmbPattern *pattern, FILE *file, const char *fileName)
+void writePecStitches(EmbPattern *pattern, FILE *file, const int8_t *fileName)
 {
         EmbRect bounds;
-        unsigned char image[38][48], toWrite;
+        uint8_t image[38][48], toWrite;
         int i, j, flen, graphicsOffsetLocation;
         int graphicsOffsetValue, height, width;
         EmbReal xFactor, yFactor;
-        const char *forwardSlashPos = fileName + string_rchar(fileName, '/');
-        const char *backSlashPos = fileName + string_rchar(fileName, '\\');
-        const char *dotPos = fileName + string_rchar(fileName, '.');
-        const char *start = 0;
+        const int8_t *forwardSlashPos = fileName + string_rchar(fileName, '/');
+        const int8_t *backSlashPos = fileName + string_rchar(fileName, '\\');
+        const int8_t *dotPos = fileName + string_rchar(fileName, '.');
+        const int8_t *start = 0;
 
         start = fileName;
         if (forwardSlashPos) {
@@ -424,12 +424,12 @@ void writePecStitches(EmbPattern *pattern, FILE *file, const char *fileName)
         fwrite("\xff\x00\x06\x26", 1, 4, file);
 
         fpad(file, 0x20, 12);
-        toWrite = (unsigned char)(pattern->thread_list->count - 1);
+        toWrite = (uint8_t)(pattern->thread_list->count - 1);
         fwrite(&toWrite, 1, 1, file);
 
         for (i = 0; i < pattern->thread_list->count; i++) {
                 EmbColor thr = pattern->thread_list->thread[i].color;
-                unsigned char color = (unsigned char)
+                uint8_t color = (uint8_t)
                     emb_find_nearest_thread(thr,
                                             (EmbThread *) pec_colors,
                                             pecThreadCount);
@@ -448,10 +448,10 @@ void writePecStitches(EmbPattern *pattern, FILE *file, const char *fileName)
 
         height = (int)emb_round(bounds.h);
         width = (int)emb_round(bounds.w);
-        unsigned short top =
-            (unsigned short)(0x9000 | -(int)emb_round(bounds.x));
-        unsigned short bottom =
-            (unsigned short)(0x9000 | -(int)emb_round(bounds.y));
+        uint16_t top =
+            (uint16_t)(0x9000 | -(int)emb_round(bounds.x));
+        uint16_t bottom =
+            (uint16_t)(0x9000 | -(int)emb_round(bounds.y));
         /* write 2 byte x size */
         emb_write_i16(file, width);
         /* write 2 byte y size */
@@ -468,9 +468,9 @@ void writePecStitches(EmbPattern *pattern, FILE *file, const char *fileName)
         graphicsOffsetValue = ftell(file) - graphicsOffsetLocation + 2;
         fseek(file, graphicsOffsetLocation, SEEK_SET);
 
-        fputc((unsigned char)(graphicsOffsetValue & 0xFF), file);
-        fputc((unsigned char)((graphicsOffsetValue >> 8) & 0xFF), file);
-        fputc((unsigned char)((graphicsOffsetValue >> 16) & 0xFF), file);
+        fputc((uint8_t)(graphicsOffsetValue & 0xFF), file);
+        fputc((uint8_t)((graphicsOffsetValue >> 8) & 0xFF), file);
+        fputc((uint8_t)((graphicsOffsetValue >> 16) & 0xFF), file);
 
         fseek(file, 0x00, SEEK_END);
 
@@ -512,7 +512,7 @@ void writePecStitches(EmbPattern *pattern, FILE *file, const char *fileName)
         }
 }
 
-char writePec(EmbPattern *pattern, const char *fileName, FILE *file)
+int8_t writePec(EmbPattern *pattern, const int8_t *fileName, FILE *file)
 {
         /* TODO: There needs to be a matching flipVertical() call after the write
            to ensure multiple writes from the same pattern work properly */
@@ -529,14 +529,14 @@ char writePec(EmbPattern *pattern, const char *fileName, FILE *file)
  * Brother Embroidery Format (.pel)
  * The Brother pel format is stitch-only.
  */
-char readPel(EmbPattern *pattern, FILE *file)
+int8_t readPel(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: readPel is not implemented.");
         printf("%p, %p\n", pattern, file);
         return 0;               /*TODO: finish readPel */
 }
 
-char writePel(EmbPattern *pattern, FILE *file)
+int8_t writePel(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: writePel is not implemented.");
         printf("%p, %p\n", pattern, file);
@@ -547,14 +547,14 @@ char writePel(EmbPattern *pattern, FILE *file)
  * Brother Embroidery Format (.pem)
  * The Brother pem format is stitch-only.
  */
-char readPem(EmbPattern *pattern, FILE *file)
+int8_t readPem(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: readPem is not implemented.");
         printf("%p, %p\n", pattern, file);
         return 0;               /*TODO: finish ReadPem */
 }
 
-char writePem(EmbPattern *pattern, FILE *file)
+int8_t writePem(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: writePem is not implemented.");
         printf("%p, %p\n", pattern, file);
@@ -566,7 +566,7 @@ char writePem(EmbPattern *pattern, FILE *file)
  * The Brother pes format is stitch-only.
  */
 
-const char *pes_version_strings[] = {
+const int8_t *pes_version_strings[] = {
         "#PES0001",
         "#PES0020",
         "#PES0022",
@@ -587,11 +587,11 @@ const char *pes_version_strings[] = {
 
 int pes_version = PES0001;
 
-char readPes(EmbPattern *pattern, const char *fileName, FILE *file)
+int8_t readPes(EmbPattern *pattern, const int8_t *fileName, FILE *file)
 {
         printf("%s", fileName);
         int pecstart, numColors, x, version, i;
-        char signature[9];
+        int8_t signature[9];
         if (fread(signature, 1, 8, file) != 8) {
                 puts("ERROR PES: failed to read signature.");
                 return 0;
@@ -1004,7 +1004,7 @@ void pesWriteEmbOneSection(EmbPattern *pattern, FILE *file)
         /*WriteSubObjects(br, pes, SubBlocks); */
 }
 
-char writePes(EmbPattern *pattern, const char *fileName, FILE *file)
+int8_t writePes(EmbPattern *pattern, const int8_t *fileName, FILE *file)
 {
         int pecLocation;
         embp_flipVertical(pattern);
@@ -1026,17 +1026,17 @@ char writePes(EmbPattern *pattern, const char *fileName, FILE *file)
 
         pecLocation = ftell(file);
         fseek(file, 0x08, SEEK_SET);
-        fputc((unsigned char)(pecLocation & 0xFF), file);
-        fputc((unsigned char)(pecLocation >> 8) & 0xFF, file);
-        fputc((unsigned char)(pecLocation >> 16) & 0xFF, file);
+        fputc((uint8_t)(pecLocation & 0xFF), file);
+        fputc((uint8_t)(pecLocation >> 8) & 0xFF, file);
+        fputc((uint8_t)(pecLocation >> 16) & 0xFF, file);
         fseek(file, 0x00, SEEK_END);
         writePecStitches(pattern, file, fileName);
         return 1;
 }
 
-char readPhb(EmbPattern *pattern, FILE *file)
+int8_t readPhb(EmbPattern *pattern, FILE *file)
 {
-        unsigned int fileOffset;
+        uint32_t fileOffset;
         short colorCount;
         int i;
 
@@ -1063,7 +1063,7 @@ char readPhb(EmbPattern *pattern, FILE *file)
 
         colorCount = (int16_t) (char)fgetc(file);
         for (i = 0; i < colorCount; i++) {
-                char stor;
+                int8_t stor;
                 stor = (char)fgetc(file);
                 if (emb_verbose > 1) {
                         printf("stor: %d\n", stor);
@@ -1078,7 +1078,7 @@ char readPhb(EmbPattern *pattern, FILE *file)
         return 1;               /*TODO: finish ReadPhb */
 }
 
-char writePhb(EmbPattern *pattern, FILE *file)
+int8_t writePhb(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: writePhb is not implemented.");
         if (emb_verbose > 1) {
@@ -1092,12 +1092,12 @@ char writePhb(EmbPattern *pattern, FILE *file)
  * The Brother phc format is stitch-only.
  */
 
-char readPhc(EmbPattern *pattern, FILE *file)
+int8_t readPhc(EmbPattern *pattern, FILE *file)
 {
         int colorChanges, version, bytesInSection2;
-        unsigned int fileLength;
-        unsigned short pecOffset, bytesInSection, bytesInSection3;
-        char pecAdd;
+        uint32_t fileLength;
+        uint16_t pecOffset, bytesInSection, bytesInSection3;
+        int8_t pecAdd;
         int i;
 
         fseek(file, 0x07, SEEK_SET);
@@ -1130,7 +1130,7 @@ char readPhc(EmbPattern *pattern, FILE *file)
         return 1;               /*TODO: finish ReadPhc */
 }
 
-char writePhc(EmbPattern *pattern, FILE *file)
+int8_t writePhc(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: writePhc is not implemented.");
         if (emb_verbose > 1) {

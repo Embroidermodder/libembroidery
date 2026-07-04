@@ -17,9 +17,9 @@
  *
  * @return 1 if successful, 0 otherwise.
  */
-char read100(EmbPattern *pattern, FILE *file)
+int8_t read100(EmbPattern *pattern, FILE *file)
 {
-        unsigned char b[10];
+        uint8_t b[10];
         while (fread(b, 1, 3, file) == 3) {
                 EmbStitch st;
                 st.x = toyota_position_decode(b[2]);
@@ -56,14 +56,14 @@ char read100(EmbPattern *pattern, FILE *file)
  *
  * @return 1 if successful, 0 otherwise.
  */
-char write100(EmbPattern *pattern, FILE *file)
+int8_t write100(EmbPattern *pattern, FILE *file)
 {
         int i;
         EmbVector position;
 
         position = pattern->home;
         for (i = 0; i < pattern->stitch_list->count; i++) {
-                unsigned char b[10];
+                uint8_t b[10];
                 EmbStitch st = pattern->stitch_list->stitch[i];
 
                 EmbVector delta;
@@ -101,13 +101,13 @@ char write100(EmbPattern *pattern, FILE *file)
  *
  * @return 1 if successful, 0 otherwise.
  */
-char read10o(EmbPattern *pattern, FILE *file)
+int8_t read10o(EmbPattern *pattern, FILE *file)
 {
-        unsigned char b[10];
+        uint8_t b[10];
         while (fread(b, 1, 3, file) == 3) {
                 EmbStitch st;
 
-                unsigned char ctrl = b[0];
+                uint8_t ctrl = b[0];
                 st.y = 0.1 * b[1];
                 st.x = 0.1 * b[2];
                 st.flags = NORMAL;
@@ -146,11 +146,11 @@ char read10o(EmbPattern *pattern, FILE *file)
  *
  * @return 1 if successful, 0 otherwise.
  */
-char write10o(EmbPattern *pattern, FILE *file)
+int8_t write10o(EmbPattern *pattern, FILE *file)
 {
         int i;
         for (i = 0; i < pattern->stitch_list->count; i++) {
-                unsigned char b[10];
+                uint8_t b[10];
                 EmbStitch st = pattern->stitch_list->stitch[i];
 
                 b[0] = 0;

@@ -43,9 +43,9 @@ int huffman_lookup_data[2];
  * minimal header of 6 bytes and using only literals in the
  * huffman compressed part (see the sources above).
  */
-int hus_compress(char *data, int length, char *output, int *output_length)
+int hus_compress(char *data, int length, int8_t *output, int *output_length)
 {
-        unsigned char *a = (unsigned char *)output;
+        uint8_t *a = (uint8_t *)output;
         a[0] = length % 256;
         a[1] = (length / 256) % 256;
         a[2] = 0x02;
@@ -280,7 +280,7 @@ int compress_get_position(compress *c)
 /* a data a length a output a output_length .
  * Returns whether the decompression was successful.
  */
-int hus_decompress(char *data, int length, char *output, int *output_length)
+int hus_decompress(char *data, int length, int8_t *output, int *output_length)
 {
         int character, i, j;
         compress *c = (compress *) malloc(sizeof(compress));

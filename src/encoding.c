@@ -21,7 +21,7 @@ void fix_endian(char *a, int bytes, int endian)
 /* Read a little-endian signed 16-bit integer. */
 int16_t emb_read_i16(FILE *f)
 {
-        char data[2];
+        int8_t data[2];
         if (fread(data, 1, 2, f) != 2) {
                 puts("ERROR: Failed to read a int16_t.");
                 return 0;
@@ -33,7 +33,7 @@ int16_t emb_read_i16(FILE *f)
 /* Read a little-endian unsigned 16-bit integer. */
 uint16_t emb_read_u16(FILE *f)
 {
-        char data[2];
+        int8_t data[2];
         if (fread(data, 1, 2, f) != 2) {
                 puts("ERROR: Failed to read a uint16_t.");
                 return 0;
@@ -45,7 +45,7 @@ uint16_t emb_read_u16(FILE *f)
 /* Read a little-endian signed 32-bit integer. */
 int32_t emb_read_i32(FILE *f)
 {
-        char data[4];
+        int8_t data[4];
         if (fread(data, 1, 4, f) != 4) {
                 puts("ERROR: Failed to read a int32_t.");
                 return 0;
@@ -57,7 +57,7 @@ int32_t emb_read_i32(FILE *f)
 /* Read a little-endian unsigned 32-bit integer. */
 uint32_t emb_read_u32(FILE *f)
 {
-        char data[4];
+        int8_t data[4];
         if (fread(data, 1, 4, f) != 4) {
                 puts("ERROR: Failed to read a uint32_t.");
                 return 0;
@@ -69,7 +69,7 @@ uint32_t emb_read_u32(FILE *f)
 /* Read a big-endian signed 16-bit integer. */
 int16_t emb_read_i16be(FILE *f)
 {
-        char data[2];
+        int8_t data[2];
         if (fread(data, 1, 2, f) != 2) {
                 puts("ERROR: Failed to read a int16_t.");
                 return 0;
@@ -81,7 +81,7 @@ int16_t emb_read_i16be(FILE *f)
 /* Read a big-endian unsigned 16-bit integer. */
 uint16_t emb_read_u16be(FILE *f)
 {
-        char data[2];
+        int8_t data[2];
         if (fread(data, 1, 2, f) != 2) {
                 puts("ERROR: Failed to read a uint16_t.");
                 return 0;
@@ -93,7 +93,7 @@ uint16_t emb_read_u16be(FILE *f)
 /* Read a big-endian signed 32-bit integer. */
 int32_t emb_read_i32be(FILE *f)
 {
-        char data[4];
+        int8_t data[4];
         if (fread(data, 1, 4, f) != 4) {
                 puts("ERROR: Failed to read a int32_t.");
                 return 0;
@@ -105,7 +105,7 @@ int32_t emb_read_i32be(FILE *f)
 /* Read a big-endian unsigned 32-bit integer. */
 uint32_t emb_read_u32be(FILE *f)
 {
-        char data[4];
+        int8_t data[4];
         if (fread(data, 1, 4, f) != 4) {
                 puts("ERROR: Failed to read a uint32_t.");
                 return 0;
@@ -117,18 +117,18 @@ uint32_t emb_read_u32be(FILE *f)
 /*
  * TO DO: NEEDS ERROR REPORTING.
  */
-unsigned char toyota_position_encode(EmbReal x)
+uint8_t toyota_position_encode(EmbReal x)
 {
         if (x < 0.0) {
                 return 0x80 + (-((char)emb_round(10.0 * x)));
         }
-        return (unsigned char)emb_round(10.0 * x);
+        return (uint8_t)emb_round(10.0 * x);
 }
 
 /*
  * .
  */
-EmbReal toyota_position_decode(unsigned char a)
+EmbReal toyota_position_decode(uint8_t a)
 {
         if (a > 0x80) {
                 return -0.1 * (a - 0x80);
@@ -140,7 +140,7 @@ EmbReal toyota_position_decode(unsigned char a)
  *
  * \todo remove the unused return argument.
  */
-int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags)
+int decode_t01_record(uint8_t b[3], int *x, int *y, int *flags)
 {
         decode_tajima_ternary(b, x, y);
 
@@ -168,23 +168,23 @@ int decode_t01_record(unsigned char b[3], int *x, int *y, int *flags)
 /* Encode into bytes a b the values of the x-position a x,
  * y-position a y and the a flags.
  */
-void encode_t01_record(unsigned char b[3], int x, int y, int flags)
+void encode_t01_record(uint8_t b[3], int x, int y, int flags)
 {
         if (!encode_tajima_ternary(b, x, y)) {
                 return;
         }
 
-        b[2] |= (unsigned char)3;
+        b[2] |= (uint8_t)3;
         if (flags & END) {
                 b[0] = 0;
                 b[1] = 0;
                 b[2] = 0xF3;
         }
         if (flags & (JUMP | TRIM)) {
-                b[2] = (unsigned char)(b[2] | 0x83);
+                b[2] = (uint8_t)(b[2] | 0x83);
         }
         if (flags & STOP) {
-                b[2] = (unsigned char)(b[2] | 0xC3);
+                b[2] = (uint8_t)(b[2] | 0xC3);
         }
 }
 
@@ -195,7 +195,7 @@ void encode_t01_record(unsigned char b[3], int x, int y, int flags)
  * valid range of -121 and +121 then it returns 0 and
  * 1.
  */
-int encode_tajima_ternary(unsigned char b[3], int x, int y)
+int encode_tajima_ternary(uint8_t b[3], int x, int y)
 {
         b[0] = 0;
         b[1] = 0;
@@ -311,7 +311,7 @@ int encode_tajima_ternary(unsigned char b[3], int x, int y)
  *
  * There is no return argument.
  */
-void decode_tajima_ternary(unsigned char b[3], int *x, int *y)
+void decode_tajima_ternary(uint8_t b[3], int *x, int *y)
 {
         *x = 0;
         *y = 0;
@@ -381,7 +381,7 @@ void decode_tajima_ternary(unsigned char b[3], int *x, int *y)
  */
 void pfaffEncode(FILE *file, int dx, int dy, int flags)
 {
-        unsigned char flagsToWrite = 0;
+        uint8_t flagsToWrite = 0;
 
         if (!file) {
                 printf
@@ -404,7 +404,7 @@ void pfaffEncode(FILE *file, int dx, int dy, int flags)
 /* Decode the bytes a a1, a a2 and a a3 .
  * Returns the EmbReal floating-point value.
  */
-EmbReal pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3)
+EmbReal pfaffDecode(uint8_t a1, uint8_t a2, uint8_t a3)
 {
         int res = a1 + (a2 << 8) + (a3 << 16);
         if (res > 0x7FFFFF) {
@@ -414,20 +414,20 @@ EmbReal pfaffDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 }
 
 /*  * a value
- * Returns unsigned char
+ * Returns uint8_t
  */
-unsigned char mitEncodeStitch(EmbReal value)
+uint8_t mitEncodeStitch(EmbReal value)
 {
         if (value < 0) {
-                return 0x80 | (unsigned char)(-value);
+                return 0x80 | (uint8_t)(-value);
         }
-        return (unsigned char)value;
+        return (uint8_t)value;
 }
 
 /*  * a value
  * Returns int
  */
-int mitDecodeStitch(unsigned char value)
+int mitDecodeStitch(uint8_t value)
 {
         if (value & 0x80) {
                 return -(value & 0x1F);
@@ -438,13 +438,13 @@ int mitDecodeStitch(unsigned char value)
 /*  * a value
  * Returns int
  */
-int decodeNewStitch(unsigned char value)
+int decodeNewStitch(uint8_t value)
 {
         return (int)value;
 }
 
 /* . */
-void fpad(FILE *file, char c, int n)
+void fpad(FILE *file, int8_t c, int n)
 {
         int i;
         for (i = 0; i < n; i++) {
@@ -455,7 +455,7 @@ void fpad(FILE *file, char c, int n)
 /* . */
 void emb_write_i16(FILE *f, int16_t data)
 {
-        char *b = (char *)(&data);
+        int8_t *b = (char *)(&data);
         fix_endian(b, 2, EMB_LITTLE_ENDIAN);
         fwrite(b, 1, 2, f);
 }
@@ -463,7 +463,7 @@ void emb_write_i16(FILE *f, int16_t data)
 /* . */
 void emb_write_u16(FILE *f, uint16_t data)
 {
-        char *b = (char *)(&data);
+        int8_t *b = (char *)(&data);
         fix_endian(b, 2, EMB_LITTLE_ENDIAN);
         fwrite(b, 1, 2, f);
 }
@@ -471,7 +471,7 @@ void emb_write_u16(FILE *f, uint16_t data)
 /* . */
 void emb_write_i16be(FILE *f, int16_t data)
 {
-        char *b = (char *)(&data);
+        int8_t *b = (char *)(&data);
         fix_endian(b, 2, EMB_BIG_ENDIAN);
         fwrite(b, 1, 2, f);
 }
@@ -479,7 +479,7 @@ void emb_write_i16be(FILE *f, int16_t data)
 /* . */
 void emb_write_u16be(FILE *f, uint16_t data)
 {
-        char *b = (char *)(&data);
+        int8_t *b = (char *)(&data);
         fix_endian(b, 2, EMB_BIG_ENDIAN);
         fwrite(b, 1, 2, f);
 }
@@ -487,7 +487,7 @@ void emb_write_u16be(FILE *f, uint16_t data)
 /* . */
 void emb_write_i32(FILE *f, int32_t data)
 {
-        char *b = (char *)(&data);
+        int8_t *b = (char *)(&data);
         fix_endian(b, 4, EMB_LITTLE_ENDIAN);
         fwrite(b, 1, 4, f);
 }
@@ -495,7 +495,7 @@ void emb_write_i32(FILE *f, int32_t data)
 /* . */
 void emb_write_u32(FILE *f, uint32_t data)
 {
-        char *b = (char *)(&data);
+        int8_t *b = (char *)(&data);
         fix_endian(b, 4, EMB_LITTLE_ENDIAN);
         fwrite(b, 1, 4, f);
 }
@@ -503,7 +503,7 @@ void emb_write_u32(FILE *f, uint32_t data)
 /* . */
 void emb_write_i32be(FILE *f, int32_t data)
 {
-        char *b = (char *)(&data);
+        int8_t *b = (char *)(&data);
         fix_endian(b, 4, EMB_BIG_ENDIAN);
         fwrite(b, 1, 4, f);
 }
@@ -511,7 +511,7 @@ void emb_write_i32be(FILE *f, int32_t data)
 /* . */
 void emb_write_u32be(FILE *f, uint32_t data)
 {
-        char *b = (char *)(&data);
+        int8_t *b = (char *)(&data);
         fix_endian(b, 4, EMB_BIG_ENDIAN);
         fwrite(b, 1, 4, f);
 }

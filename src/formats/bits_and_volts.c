@@ -15,10 +15,10 @@
 
 #include "embroidery.h"
 
-char readBro(EmbPattern *pattern, FILE *file)
+int8_t readBro(EmbPattern *pattern, FILE *file)
 {
-        unsigned char header[19];
-        unsigned char *ptr = header;
+        uint8_t header[19];
+        uint8_t *ptr = header;
         if (fread(header, 1, 19, file) != 19) {
                 return 0;
         }
@@ -26,7 +26,7 @@ char readBro(EmbPattern *pattern, FILE *file)
          * In positions 0x0-0x4, 0xC-0xC+0x8
          */
         ptr += 3;
-        char *name = (char *)ptr;       /* 8 chars long */
+        int8_t *name = (char *)ptr;       /* 8 chars long */
         printf("readBro: %s\n", name);
 
         fseek(file, 0x100, SEEK_SET);
@@ -34,10 +34,10 @@ char readBro(EmbPattern *pattern, FILE *file)
         while (!feof(file)) {
                 short b1, b2;
                 int stitchType = NORMAL;
-                b1 = (unsigned char)fgetc(file);
-                b2 = (unsigned char)fgetc(file);
+                b1 = (uint8_t)fgetc(file);
+                b2 = (uint8_t)fgetc(file);
                 if (b1 == -128) {
-                        unsigned char bCode = (unsigned char)fgetc(file);
+                        uint8_t bCode = (uint8_t)fgetc(file);
                         if (fread(&b1, 2, 1, file) != 1) {
                                 puts("ERROR");
                                 return 0;
@@ -61,7 +61,7 @@ char readBro(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-char writeBro(EmbPattern *pattern, FILE *file)
+int8_t writeBro(EmbPattern *pattern, FILE *file)
 {
         puts("writeBro is not implemented");
         printf("Cannot write %p %p\n", pattern, file);

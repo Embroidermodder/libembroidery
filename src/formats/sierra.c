@@ -8,7 +8,7 @@
 
 #include "embroidery.h"
 
-char readEys(EmbPattern *pattern, FILE *file)
+int8_t readEys(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: readEys and not been finished.");
         REPORT_PTR(pattern);
@@ -16,7 +16,7 @@ char readEys(EmbPattern *pattern, FILE *file)
         return 0;               /*TODO: finish readEys */
 }
 
-char writeEys(EmbPattern *pattern, FILE *file)
+int8_t writeEys(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: writeEys and not been finished.");
         REPORT_PTR(pattern);

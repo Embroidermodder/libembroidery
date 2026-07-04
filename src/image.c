@@ -18,7 +18,7 @@ EmbImage embImage_create(int width, int height)
 }
 
 /* . */
-void embImage_read(EmbImage *image, char *fname)
+void embImage_read(EmbImage *image, int8_t *fname)
 {
         printf("%d, %s\n", image->width, fname);
         /*
@@ -33,7 +33,7 @@ void embImage_read(EmbImage *image, char *fname)
 }
 
 /* . */
-int embImage_write(EmbImage *image, char *fname)
+int embImage_write(EmbImage *image, int8_t *fname)
 {
         printf("%d, %s\n", image->width, fname);
         /*

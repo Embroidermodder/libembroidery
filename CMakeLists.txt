@@ -50,8 +50,20 @@ set(LIBRARY_SRC
 	src/file.c
 	src/image.c
 	src/pattern.c
+	src/string.c
 	src/thread_colors.c
 	src/unsorted.c
+
+	src/test/test.c
+	src/test/arc.c
+	src/test/circle.c
+	src/test/convert.c
+	src/test/ellipse.c
+	src/test/fill.c
+	src/test/format_table.c
+	src/test/render.c
+	src/test/thread_color.c
+	src/test/vector.c
 )
 
 include_directories(include)
@@ -128,28 +140,3 @@ set(CPACK_PACKAGE_VENDOR "The Embroidermodder Team")
 set(CPACK_SOURCE_IGNORE_FILES .git .github)
 
 include(CPack)
-
-enable_testing()
-
-function(make_test name)
-	set(execname test_${name})
-	set(testname ${name}_test)
-	add_executable(${execname} test/${name}.c)
-	target_link_libraries(${execname} PRIVATE embroidery_static)
-	if (WIN32)
-	else (WIN32)
-		target_link_libraries(${execname} PRIVATE m)
-	endif (WIN32)
-	add_test(${testname} ${execname})
-endfunction()
-
-make_test(arc)
-make_test(circle)
-make_test(convert)
-make_test(ellipse)
-make_test(fill)
-make_test(format_table)
-make_test(render)
-make_test(thread_color)
-make_test(vector)
-

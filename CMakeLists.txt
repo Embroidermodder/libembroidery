@@ -50,6 +50,7 @@ set(LIBRARY_SRC
 	src/file.c
 	src/image.c
 	src/pattern.c
+	src/string.c
 	src/thread_colors.c
 	src/unsorted.c
 

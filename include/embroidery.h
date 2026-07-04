@@ -1237,7 +1237,8 @@ EMB_PUBLIC EmbVector emb_vector(EmbReal x, EmbReal y);
 
 EMB_PUBLIC int embstr_len(EmbString str);
 EMB_PUBLIC int8_t read_n_bytes(FILE *file, uint8_t *data, uint32_t length);
-EMB_PUBLIC bool string_equal(char *a, const int8_t *b);
+EMB_PUBLIC bool string_equal(int8_t *a, const char *b);
+EMB_PUBLIC void string_copy(int8_t *a, int8_t *b);
 EMB_PUBLIC int parse_floats(const int8_t *line, float result[], int n);
 EMB_PUBLIC int parse_vector(const int8_t *line, EmbVector *v);
 EMB_PUBLIC bool valid_rgb(float r, float g, float b);

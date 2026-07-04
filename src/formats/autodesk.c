@@ -41,18 +41,19 @@ void readLine(FILE *file, int8_t *str)
 /* Use parsing library here. Write down full DXF grammar. */
 int8_t readDxf(EmbPattern *pattern, FILE *file)
 {
-        EmbString dxfVersion;
-        EmbString section;
-        EmbString tableName;
-        EmbString layerName;
-        EmbString entityType;
+        int8_t dxfVersion[100];
+        int8_t section[100];
+        int8_t tableName[100];
+        int8_t layerName[100];
+        int8_t entityType[100];
         /*char layerColorHash[100][8]; *//* hash <layerName, EmbColor> */
 
         REPORT_PTR(pattern);
 
         int eof = 0;            /* End Of File */
 
-        EmbString buff;
+        /* Max token size 100 chars. */
+        int8_t buff[100];
         EmbVector prev, pos, first;
         EmbReal bulge = 0.0f;
         REPORT_FLOAT(bulge);
@@ -76,79 +77,79 @@ int8_t readDxf(EmbPattern *pattern, FILE *file)
         while (ftell(file) < fileLength) {
                 readLine(file, buff);
                 /*printf("%s\n", buff); */
-                if ((!strcmp(buff, "HEADER")) ||
-                    (!strcmp(buff, "CLASSES")) ||
-                    (!strcmp(buff, "TABLES")) ||
-                    (!strcmp(buff, "BLOCKS")) ||
-                    (!strcmp(buff, "ENTITIES")) ||
-                    (!strcmp(buff, "OBJECTS")) ||
-                    (!strcmp(buff, "THUMBNAILIMAGE"))) {
-                        strcpy(section, buff);
+                if ((string_equal(buff, "HEADER")) ||
+                    (string_equal(buff, "CLASSES")) ||
+                    (string_equal(buff, "TABLES")) ||
+                    (string_equal(buff, "BLOCKS")) ||
+                    (string_equal(buff, "ENTITIES")) ||
+                    (string_equal(buff, "OBJECTS")) ||
+                    (string_equal(buff, "THUMBNAILIMAGE"))) {
+                        string_copy(section, buff);
                         printf("SECTION:%s\n", buff);
                 }
-                if (!strcmp(buff, "ENDSEC")) {
-                        strcpy(section, "");
+                if (string_equal(buff, "ENDSEC")) {
+                        section[0] = 0;
                         printf("ENDSEC:%s\n", buff);
                 }
-                if ((!strcmp(buff, "ARC")) ||
-                    (!strcmp(buff, "CIRCLE")) ||
-                    (!strcmp(buff, "ELLIPSE")) ||
-                    (!strcmp(buff, "LINE")) ||
-                    (!strcmp(buff, "LWPOLYLINE")) || (!strcmp(buff, "POINT"))) {
-                        strcpy(entityType, buff);
+                if ((string_equal(buff, "ARC")) ||
+                    (string_equal(buff, "CIRCLE")) ||
+                    (string_equal(buff, "ELLIPSE")) ||
+                    (string_equal(buff, "LINE")) ||
+                    (string_equal(buff, "LWPOLYLINE")) || (string_equal(buff, "POINT"))) {
+                        string_copy(entityType, buff);
                 }
-                if (!strcmp(buff, "EOF")) {
+                if (string_equal(buff, "EOF")) {
                         eof = 1;
                 }
 
-                if (!strcmp(section, "HEADER")) {
-                        if (!strcmp(buff, "$ACADVER")) {
+                if (string_equal(section, "HEADER")) {
+                        if (string_equal(buff, "$ACADVER")) {
                                 readLine(file, buff);
                                 readLine(file, dxfVersion);
                                 /* TODO: Allow these versions when POLYLINE is handled. */
-                                if ((!strcmp(dxfVersion, DXF_VERSION_R10))
-                                    || (!strcmp(dxfVersion, DXF_VERSION_R11))
-                                    || (!strcmp(dxfVersion, DXF_VERSION_R12))
-                                    || (!strcmp(dxfVersion, DXF_VERSION_R13))) {
+                                if ((string_equal(dxfVersion, DXF_VERSION_R10))
+                                    || (string_equal(dxfVersion, DXF_VERSION_R11))
+                                    || (string_equal(dxfVersion, DXF_VERSION_R12))
+                                    || (string_equal(dxfVersion, DXF_VERSION_R13))) {
                                         return 0;
                                 }
                         }
-                } else if (!strcmp(section, "TABLES")) {
-                        if (!strcmp(buff, "ENDTAB")) {
+                } else if (string_equal(section, "TABLES")) {
+                        if (string_equal(buff, "ENDTAB")) {
                                 tableName[0] = 0;
                         }
 
                         if (tableName[0] == 0) {
-                                if (!strcmp(buff, "2")) {       /* Table Name */
+                                if (string_equal(buff, "2")) {       /* Table Name */
                                         readLine(file, tableName);
                                 }
-                        } else if (!strcmp(tableName, "LAYER")) {
+                        } else if (string_equal(tableName, "LAYER")) {
                                 /* Common Group Codes for Tables */
-                                if (!strcmp(buff, "5")) {       /* Handle */
+                                if (string_equal(buff, "5")) {       /* Handle */
                                         readLine(file, buff);
                                         continue;
-                                } else if (!strcmp(buff, "330")) {      /* Soft Pointer */
+                                } else if (string_equal(buff, "330")) {      /* Soft Pointer */
                                         readLine(file, buff);
                                         continue;
-                                } else if (!strcmp(buff, "100")) {      /* Subclass Marker */
+                                } else if (string_equal(buff, "100")) {      /* Subclass Marker */
                                         readLine(file, buff);
                                         continue;
-                                } else if (!strcmp(buff, "70")) {       /* Number of Entries in Table */
+                                } else if (string_equal(buff, "70")) {       /* Number of Entries in Table */
                                         readLine(file, buff);
                                         continue;
                                 }
                                 /* The meaty stuff */
-                                else if (!strcmp(buff, "2")) {  /* Layer Name */
+                                else if (string_equal(buff, "2")) {  /* Layer Name */
                                         readLine(file, layerName);
-                                } else if (!strcmp(buff, "62")) {       /* Color Number */
+                                } else if (string_equal(buff, "62")) {       /* Color Number */
                                         uint8_t colorNum;
                                         EmbColor co;
 
                                         readLine(file, buff);
-                                        colorNum = atoi(buff);
+                                        colorNum = atoi((char*)buff);
 
                                         /* Why is this here twice? */
-                                        colorNum = atoi(buff);
+                                        colorNum = atoi((char*)buff);
                                         co = dxf_colors[colorNum].color;
                                         printf("inserting:%s,%d,%d,%d\n",
                                                layerName, co.r, co.g, co.b);
@@ -161,56 +162,56 @@ int8_t readDxf(EmbPattern *pattern, FILE *file)
                                         layerName[0] = 0;
                                 }
                         }
-                } else if (!strcmp(section, "ENTITIES")) {
+                } else if (string_equal(section, "ENTITIES")) {
                         /* Common Group Codes for Entities */
-                        if (!strcmp(buff, "5")) {       /* Handle */
+                        if (string_equal(buff, "5")) {       /* Handle */
                                 readLine(file, buff);
                                 continue;
-                        } else if (!strcmp(buff, "330")) {      /* Soft Pointer */
+                        } else if (string_equal(buff, "330")) {      /* Soft Pointer */
                                 readLine(file, buff);
                                 continue;
-                        } else if (!strcmp(buff, "100")) {      /* Subclass Marker */
+                        } else if (string_equal(buff, "100")) {      /* Subclass Marker */
                                 readLine(file, buff);
                                 continue;
-                        } else if (!strcmp(buff, "8")) {        /* Layer Name */
+                        } else if (string_equal(buff, "8")) {        /* Layer Name */
                                 readLine(file, buff);
                                 /* emb_pattern_changeColor(pattern, colorIndexMap[buff]); TODO: port to C */
                                 continue;
                         }
 
-                        if (!strcmp(entityType, "LWPOLYLINE")) {
+                        if (string_equal(entityType, "LWPOLYLINE")) {
                                 /* The not so important group codes */
-                                if (!strcmp(buff, "90")) {      /* Vertices */
+                                if (string_equal(buff, "90")) {      /* Vertices */
                                         readLine(file, buff);
                                         continue;
-                                } else if (!strcmp(buff, "70")) {       /* Polyline Flag */
+                                } else if (string_equal(buff, "70")) {       /* Polyline Flag */
                                         readLine(file, buff);
                                         continue;
                                 }
                                 /* TODO: Try to use the widths at some point */
-                                else if (!strcmp(buff, "40")) { /* Starting Width */
+                                else if (string_equal(buff, "40")) { /* Starting Width */
                                         readLine(file, buff);
                                         continue;
-                                } else if (!strcmp(buff, "41")) {       /* Ending Width */
+                                } else if (string_equal(buff, "41")) {       /* Ending Width */
                                         readLine(file, buff);
                                         continue;
-                                } else if (!strcmp(buff, "43")) {       /* Constant Width */
+                                } else if (string_equal(buff, "43")) {       /* Constant Width */
                                         readLine(file, buff);
                                         continue;
                                 }
                                 /* The meaty stuff */
-                                else if (!strcmp(buff, "42")) { /* Bulge */
+                                else if (string_equal(buff, "42")) { /* Bulge */
                                         readLine(file, buff);
-                                        bulge = atof(buff);
+                                        bulge = atof((char*)buff);
                                         bulgeFlag = 1;
                                         printf("bulgeFlag %d\n", bulgeFlag);
-                                } else if (!strcmp(buff, "10")) {       /* X */
+                                } else if (string_equal(buff, "10")) {       /* X */
                                         readLine(file, buff);
-                                        pos.x = atof(buff);
-                                } else if (!strcmp(buff, "20")) {       /* Y */
+                                        pos.x = atof((char*)buff);
+                                } else if (string_equal(buff, "20")) {       /* Y */
 #if 0
                                         readLine(file, buff);
-                                        pos.y = atof(buff);
+                                        pos.y = atof((char*)buff);
 
                                         if (bulgeFlag) {
                                                 EmbArc arc;
@@ -238,7 +239,7 @@ int8_t readDxf(EmbPattern *pattern, FILE *file)
                                                 firstStitch = 0;
                                         }
 #endif
-                                } else if (!strcmp(buff, "0")) {
+                                } else if (string_equal(buff, "0")) {
 #if 0
                                         entityType[0] = 0;
                                         firstStitch = 1;

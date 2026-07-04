@@ -1,0 +1,75 @@
+CC := gcc
+INC_DIRS := -Iinclude
+CFLAGS := -std=c99 $(INC_DIRS)
+# -Werror
+LIBRARY := libembroidery.so
+EXEC := sew
+BUILD_DIR := build
+LIB_FLAGS := -shared
+LDFLAGS := -lm
+LIB_SOURCES := \
+src/circle.c \
+src/compress.c \
+src/data.c \
+src/encoding.c \
+src/file.c \
+src/image.c \
+src/pattern.c \
+src/string.c \
+src/thread_colors.c \
+src/unsorted.c \
+\
+src/formats/autodesk.c \
+src/formats/barudan.c \
+src/formats/bernina.c \
+src/formats/bitmap_cache.c \
+src/formats/bits_and_volts.c \
+src/formats/brother.c \
+src/formats/colors.c \
+src/formats/csv.c \
+src/formats/eltac.c \
+src/formats/gold_thread.c \
+src/formats/great_notions.c \
+src/formats/janome.c \
+src/formats/melco.c \
+src/formats/pfaff.c \
+src/formats/sierra.c \
+src/formats/singer.c \
+src/formats/smoothie.c \
+src/formats/svg.c \
+src/formats/toyota.c \
+src/formats/zsk_usa.c \
+\
+src/test/arc.c \
+src/test/circle.c \
+src/test/convert.c \
+src/test/ellipse.c \
+src/test/fill.c \
+src/test/format_table.c \
+src/test/render.c \
+src/test/test.c \
+src/test/thread_color.c \
+src/test/vector.c
+SOURCES := $(LIB_SOURCES) src/sew.c
+
+LIB_OBJECTS := $(LIB_SOURCES:%=$(BUILD_DIR)/%.o)
+SEW_OBJECTS := $(LIB_OBJECTS) src/sew.o
+
+all: $(BUILD_DIR)/$(LIBRARY) $(BUILD_DIR)/$(EXEC)
+
+$(BUILD_DIR)/$(LIBRARY): $(LIB_OBJECTS)
+	$(CC) $(LIB_FLAGS) $(LIB_OBJECTS) -o $@
+
+$(BUILD_DIR)/$(EXEC): $(SEW_OBJECTS)
+	$(CC) $(SEW_OBJECTS) -o $@ $(LDFLAGS)
+
+$(BUILD_DIR)/%.c.o: %.c
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -fPIC -c $< -o $@
+
+test: $(BUILD_DIR)/$(EXEC)
+	./$(BUILD_DIR)/$(EXEC) --test
+
+.PHONY: clean
+clean:
+	rm -f $(BUILD_DIR)

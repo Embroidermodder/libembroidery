@@ -18,7 +18,7 @@
  *
  * @return 1 if successful, 0 otherwise.
  */
-char readArt(EmbPattern *pattern, FILE *file)
+int8_t readArt(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: readArt is not supported yet.");
         printf("Cannot read %p %p\n", pattern, file);
@@ -39,7 +39,7 @@ char readArt(EmbPattern *pattern, FILE *file)
  *
  * @return 1 if successful, 0 otherwise.
  */
-char writeArt(EmbPattern *pattern, FILE *file)
+int8_t writeArt(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: writeArt is not supported yet.");
         printf("Cannot write %p %p\n", pattern, file);

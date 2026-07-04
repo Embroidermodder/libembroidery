@@ -11,7 +11,7 @@
 
 #include "embroidery.h"
 
-void readLine(FILE *file, char *str)
+void readLine(FILE *file, int8_t *str)
 {
         int i;
         int past_leading_spaces;
@@ -39,7 +39,7 @@ void readLine(FILE *file, char *str)
 }
 
 /* Use parsing library here. Write down full DXF grammar. */
-char readDxf(EmbPattern *pattern, FILE *file)
+int8_t readDxf(EmbPattern *pattern, FILE *file)
 {
         EmbString dxfVersion;
         EmbString section;
@@ -56,9 +56,9 @@ char readDxf(EmbPattern *pattern, FILE *file)
         EmbVector prev, pos, first;
         EmbReal bulge = 0.0f;
         REPORT_FLOAT(bulge);
-        char firstStitch = 1;
+        int8_t firstStitch = 1;
         printf("%c\n", firstStitch);
-        char bulgeFlag = 0;
+        int8_t bulgeFlag = 0;
         int fileLength = 0;
         first.x = 0.0f;
         first.y = 0.0f;
@@ -141,7 +141,7 @@ char readDxf(EmbPattern *pattern, FILE *file)
                                 else if (!strcmp(buff, "2")) {  /* Layer Name */
                                         readLine(file, layerName);
                                 } else if (!strcmp(buff, "62")) {       /* Color Number */
-                                        unsigned char colorNum;
+                                        uint8_t colorNum;
                                         EmbColor co;
 
                                         readLine(file, buff);
@@ -286,7 +286,7 @@ char readDxf(EmbPattern *pattern, FILE *file)
         return eof;
 }
 
-char writeDxf(EmbPattern *pattern, FILE *file)
+int8_t writeDxf(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: writeDxf not implemented.");
         if (emb_verbose > 1) {

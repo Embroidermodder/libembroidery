@@ -31,7 +31,7 @@
 
 #include "embroidery.h"
 
-char *csvStitchFlagToStr(int flags)
+int8_t *csvStitchFlagToStr(int flags)
 {
         switch (flags) {
         case NORMAL:
@@ -55,7 +55,7 @@ char *csvStitchFlagToStr(int flags)
         }
 }
 
-int csvStrToStitchFlag(const char *str)
+int csvStrToStitchFlag(const int8_t *str)
 {
         if (!str) {
                 printf
@@ -83,7 +83,7 @@ int csvStrToStitchFlag(const char *str)
         return -1;
 }
 
-char readCsv(EmbPattern *pattern, FILE *file)
+int8_t readCsv(EmbPattern *pattern, FILE *file)
 {
         int numColorChanges = 0;
         int pos = 0;
@@ -95,7 +95,7 @@ char readCsv(EmbPattern *pattern, FILE *file)
         int flags = 0;
         EmbReal xx = 0.0;
         EmbReal yy = 0.0;
-        unsigned char r = 0, g = 0, b = 0;
+        uint8_t r = 0, g = 0, b = 0;
         EmbString buff;
 
         pos = 0;
@@ -155,11 +155,11 @@ char readCsv(EmbPattern *pattern, FILE *file)
                                 if (cellNum == 2) {
                                         /* Do Nothing. Ignore Thread Number */
                                 } else if (cellNum == 3) {
-                                        r = (unsigned char)atoi(buff);
+                                        r = (uint8_t)atoi(buff);
                                 } else if (cellNum == 4) {
-                                        g = (unsigned char)atoi(buff);
+                                        g = (uint8_t)atoi(buff);
                                 } else if (cellNum == 5) {
-                                        b = (unsigned char)atoi(buff);
+                                        b = (uint8_t)atoi(buff);
                                 } else if (cellNum == 6) {
                                         /* TODO: Thread Description */
                                 } else if (cellNum == 7) {
@@ -215,7 +215,7 @@ char readCsv(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-char writeCsv(EmbPattern *pattern, FILE *file)
+int8_t writeCsv(EmbPattern *pattern, FILE *file)
 {
         EmbRect boundingRect;
         int i;
@@ -256,9 +256,9 @@ char writeCsv(EmbPattern *pattern, FILE *file)
         /* write variables */
         fprintf(file, "\"#\",\"[VAR_NAME]\",\"[VAR_VALUE]\"\n");
         fprintf(file, "\">\",\"STITCH_COUNT:\",\"%u\"\n",
-                (unsigned int)pattern->stitch_list->count);
+                (uint32_t)pattern->stitch_list->count);
         fprintf(file, "\">\",\"THREAD_COUNT:\",\"%u\"\n",
-                (unsigned int)pattern->thread_list->count);
+                (uint32_t)pattern->thread_list->count);
         fprintf(file, "\">\",\"EXTENTS_LEFT:\",\"%f\"\n", boundingRect.x);
         fprintf(file, "\">\",\"EXTENTS_TOP:\",\"%f\"\n", boundingRect.y);
         fprintf(file, "\">\",\"EXTENTS_RIGHT:\",\"%f\"\n",

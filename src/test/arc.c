@@ -10,7 +10,7 @@
     }
 
 /* Debugging output */
-void emb_vector_print(EmbVector v, char *label);
+void emb_vector_print(EmbVector v, int8_t *label);
 void emb_arc_print(EmbArc a);
 
 /*
@@ -20,7 +20,7 @@ EmbError test_arc_attributes(EmbGeometry g)
 {
         EmbVector center, chordMid;
         EmbReal bulge, radius, diameter, chord, sagitta, apothem, incAngle;
-        unsigned char clockwise;
+        uint8_t clockwise;
         EmbError error = EMB_NO_ERR;
         bulge = -0.414213562373095f;
         /* bulge = emb_arc_bulge(g); */

@@ -36,12 +36,12 @@
  *    2,0,255,0\r\n
  *    3,0,0,255\r\n
  */
-char readCol(EmbPattern *pattern, FILE *file)
+int8_t readCol(EmbPattern *pattern, FILE *file)
 {
         int numberOfColors, i;
         int num, blue, green, red;
         EmbThread t;
-        char line[30];
+        int8_t line[30];
 
         pattern->thread_list->count = 0;
 
@@ -61,9 +61,9 @@ char readCol(EmbPattern *pattern, FILE *file)
                 if (sscanf(line, "%d,%d,%d,%d", &num, &blue, &green, &red) != 4) {
                         break;
                 }
-                t.color.r = (unsigned char)red;
-                t.color.g = (unsigned char)green;
-                t.color.b = (unsigned char)blue;
+                t.color.r = (uint8_t)red;
+                t.color.g = (uint8_t)green;
+                t.color.b = (uint8_t)blue;
                 strcpy(t.catalogNumber, "");
                 strcpy(t.description, "");
                 embp_addThread(pattern, t);
@@ -71,7 +71,7 @@ char readCol(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-char writeCol(EmbPattern *pattern, FILE *file)
+int8_t writeCol(EmbPattern *pattern, FILE *file)
 {
         int i;
 
@@ -85,11 +85,11 @@ char writeCol(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-char readInf(EmbPattern *pattern, FILE *file)
+int8_t readInf(EmbPattern *pattern, FILE *file)
 {
         int nColors, i;
-        char colorType[50];
-        char colorDescription[50];
+        int8_t colorType[50];
+        int8_t colorDescription[50];
         EmbThread t;
 
         fseek(file, 12, SEEK_CUR);
@@ -110,7 +110,7 @@ char readInf(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-char writeInf(EmbPattern *pattern, FILE *file)
+int8_t writeInf(EmbPattern *pattern, FILE *file)
 {
         int i, bytesRemaining;
 
@@ -122,7 +122,7 @@ char writeInf(EmbPattern *pattern, FILE *file)
 
         for (i = 0; i < pattern->thread_list->count; i++) {
                 EmbString buffer;
-                unsigned short record_length, record_number, needle_number;
+                uint16_t record_length, record_number, needle_number;
                 EmbColor c;
                 c = pattern->thread_list->thread[i].color;
                 sprintf(buffer, "RGB(%d,%d,%d)", (int)c.r, (int)c.g, (int)c.b);

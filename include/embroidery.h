@@ -66,7 +66,7 @@ like mobile applications all new defines start with `EMB_`, all functions
 with `emb` and all typedefs with `Emb` . (INCOMPLETE)
 
 A fixed number is always a #define and any list of constant strings is stored
-as a `const char *[]` and has identifier integers for each entry. For example
+as a `const int8_t *[]` and has identifier integers for each entry. For example
 formats have various data associated with them, to access the extension for 
 the filetype CSV we can use `emb_ext[EMB_FORMAT_CSV]`.
 
@@ -626,7 +626,7 @@ typedef struct EmbVector_
  * Note that we cannot use this for any larger amount of data,
  * it's to ensure that the cap on the size is fixed at 200.
  */
-typedef char EmbString[200];
+typedef int8_t EmbString[200];
 
 /* To help new developers understand why we use "void *",
  * when it is widely not recommended within C++.
@@ -643,12 +643,12 @@ typedef struct EmbArray_ EmbArray;
 /* . */
 typedef struct EmbTime_
 {
-    unsigned int year;
-    unsigned int month;
-    unsigned int day;
-    unsigned int hour;
-    unsigned int minute;
-    unsigned int second;
+    uint32_t year;
+    uint32_t month;
+    uint32_t day;
+    uint32_t hour;
+    uint32_t minute;
+    uint32_t second;
 } EmbTime;
 
 /* . */
@@ -775,7 +775,7 @@ typedef struct EmbThread_
 /* . */
 typedef struct thread_color_ {
     EmbString name;
-    unsigned int hex_code;
+    uint32_t hex_code;
     int manufacturer_code;
 } thread_color;
 
@@ -875,7 +875,7 @@ typedef struct EmbGeometry_ {
 } EmbGeometry;
 
 /* . */
-typedef char EmbStringTable[MAX_TABLE_LENGTH][MAX_STRING_LENGTH];
+typedef int8_t EmbStringTable[MAX_TABLE_LENGTH][MAX_STRING_LENGTH];
 
 /* . */
 typedef struct LabelledVector_ {
@@ -922,13 +922,13 @@ struct EmbArray_ {
 /* . */
 typedef struct EmbLayer_
 {
-    char name[100];
+    int8_t name[100];
     EmbArray *geometry;
 } EmbLayer;
 
 /* . */
 typedef struct Design_ {
-    char *command;
+    int8_t *command;
     float lower;
     float upper;
     int num_points;
@@ -936,9 +936,9 @@ typedef struct Design_ {
     int max_points;
     float xscale;
     float yscale;
-    char *parameter;
-    char *x;
-    char *y;
+    int8_t *parameter;
+    int8_t *x;
+    int8_t *y;
 } Design;
 
 #define END_SYMBOL            "__END__"
@@ -950,7 +950,7 @@ typedef struct Design_ {
 typedef struct EmbPattern_
 {
     int type;
-    unsigned int dstJumpsPerTrim;
+    uint32_t dstJumpsPerTrim;
     EmbVector home;
     EmbReal hoop_width;
     EmbReal hoop_height;
@@ -972,8 +972,8 @@ typedef struct EmbFormatList_
 {
     EmbString extension;
     EmbString description;
-    char reader_state;
-    char writer_state;
+    int8_t reader_state;
+    int8_t writer_state;
     int type;
     int color_only;
     int check_for_color_file;
@@ -999,7 +999,7 @@ typedef struct EmbStackElement_ {
     int attribute;
     int i;
     float r;
-    char s[100];
+    int8_t s[100];
 } EmbStackElement;
 
 /* This uses about 100kb per instance because it's not dynamic. */
@@ -1011,39 +1011,39 @@ typedef struct EmbStack_ {
 /* double-indirection file allocation table references */
 typedef struct _bcf_file_difat
 {
-    unsigned int fatSectorCount;
-    unsigned int fatSectorEntries[109];
-    unsigned int sectorSize;
+    uint32_t fatSectorCount;
+    uint32_t fatSectorEntries[109];
+    uint32_t sectorSize;
 } bcf_file_difat;
 
 /* . */
 typedef struct _bcf_file_fat
 {
     int          fatEntryCount;
-    unsigned int fatEntries[255]; /* maybe make this dynamic */
-    unsigned int numberOfEntriesInFatSector;
+    uint32_t fatEntries[255]; /* maybe make this dynamic */
+    uint32_t numberOfEntriesInFatSector;
 } bcf_file_fat;
 
 /* . */
 typedef struct _bcf_directory_entry
 {
-    char directoryEntryName[32];
-    unsigned short directoryEntryNameLength;
+    int8_t directoryEntryName[32];
+    uint16_t directoryEntryNameLength;
     uint8_t objectType;
     uint8_t colorFlag;
-    unsigned int leftSiblingId;
-    unsigned int                 rightSiblingId;
-    unsigned int                 childId;
+    uint32_t leftSiblingId;
+    uint32_t                 rightSiblingId;
+    uint32_t                 childId;
     uint8_t                CLSID[16];
-    unsigned int                 stateBits;
+    uint32_t                 stateBits;
     uint32_t creationTime[6];
     uint32_t modifiedTime[6];
-    unsigned int                 startingSectorLocation;
+    uint32_t                 startingSectorLocation;
     /* streamSize should be long long but in our case we shouldn't need it,
      * and hard to support on c89 cross platform. */
     unsigned long                streamSize;
     /* Store the high int of streamsize. */
-    unsigned int                 streamSizeHigh;
+    uint32_t                 streamSizeHigh;
     struct _bcf_directory_entry* next;
 } bcf_directory_entry;
 
@@ -1052,7 +1052,7 @@ typedef struct _bcf_directory_entry
 typedef struct _bcf_directory
 {
     bcf_directory_entry* dirEntries;
-    unsigned int         maxNumberOfDirectoryEntries;
+    uint32_t         maxNumberOfDirectoryEntries;
 } bcf_directory;
 
 /* TODO: CLSID should be a separate type.
@@ -1061,22 +1061,22 @@ typedef struct _bcf_file_header
 {
     uint8_t  signature[8];
     uint8_t  CLSID[16];
-    unsigned short minorVersion;
-    unsigned short majorVersion;
-    unsigned short byteOrder;
-    unsigned short sectorShift;
-    unsigned short miniSectorShift;
-    unsigned short reserved1;
-    unsigned int   reserved2;
-    unsigned int   numberOfDirectorySectors;
-    unsigned int   numberOfFATSectors;
-    unsigned int   firstDirectorySectorLocation;
-    unsigned int   transactionSignatureNumber;
-    unsigned int   miniStreamCutoffSize;
-    unsigned int   firstMiniFATSectorLocation;
-    unsigned int   numberOfMiniFatSectors;
-    unsigned int   firstDifatSectorLocation;
-    unsigned int   numberOfDifatSectors;
+    uint16_t minorVersion;
+    uint16_t majorVersion;
+    uint16_t byteOrder;
+    uint16_t sectorShift;
+    uint16_t miniSectorShift;
+    uint16_t reserved1;
+    uint32_t   reserved2;
+    uint32_t   numberOfDirectorySectors;
+    uint32_t   numberOfFATSectors;
+    uint32_t   firstDirectorySectorLocation;
+    uint32_t   transactionSignatureNumber;
+    uint32_t   miniStreamCutoffSize;
+    uint32_t   firstMiniFATSectorLocation;
+    uint32_t   numberOfMiniFatSectors;
+    uint32_t   firstDifatSectorLocation;
+    uint32_t   numberOfDifatSectors;
 } bcf_file_header;
 
 /* . */
@@ -1096,9 +1096,9 @@ typedef struct _vp3Hoop
     int left;
     int top;
     int threadLength;
-    char unknown2;
+    int8_t unknown2;
     uint8_t numberOfColors;
-    unsigned short unknown3;
+    uint16_t unknown3;
     int unknown4;
     int numberOfBytesRemaining;
 
@@ -1122,11 +1122,11 @@ typedef struct _vp3Hoop
 /* . */
 typedef struct ThredHeader_     /* thred file header */
 {
-    unsigned int sigVersion;    /* signature and version */
-    unsigned int length;        /* length of ThredHeader + length of stitch data */
-    unsigned short numStiches;  /* number of stitches */
-    unsigned short hoopSize;    /* size of hoop */
-    unsigned short reserved[7]; /* reserved for expansion */
+    uint32_t sigVersion;    /* signature and version */
+    uint32_t length;        /* length of ThredHeader + length of stitch data */
+    uint16_t numStiches;  /* number of stitches */
+    uint16_t hoopSize;    /* size of hoop */
+    uint16_t reserved[7]; /* reserved for expansion */
 } ThredHeader;
 
 /* . */
@@ -1135,10 +1135,10 @@ typedef struct ThredExtension_  /* thred v1.0 file header extension */
     float hoopX;                /* hoop size x dimension in 1/6 mm units */
     float hoopY;                /* hoop size y dimension in 1/6 mm units */
     float stitchGranularity;    /* stitches per millimeter--not implemented */
-    char creatorName[50];       /* name of the file creator */
-    char modifierName[50];      /* name of last file modifier */
-    char auxFormat;             /* auxiliary file format, 0=PCS,1=DST,2=PES */
-    char reserved[31];          /* reserved for expansion */
+    int8_t creatorName[50];       /* name of the file creator */
+    int8_t modifierName[50];      /* name of last file modifier */
+    int8_t auxFormat;             /* auxiliary file format, 0=PCS,1=DST,2=PES */
+    int8_t reserved[31];          /* reserved for expansion */
 } ThredExtension;
 
 /* . */
@@ -1147,8 +1147,8 @@ typedef struct SubDescriptor_
     int someNum;      /* \todo better variable naming */
     int someInt;      /* \todo better variable naming */
     int someOtherInt; /* \todo better variable naming */
-    char* colorCode;
-    char* colorName;
+    int8_t* colorCode;
+    int8_t* colorName;
 } SubDescriptor;
 
 /* . */
@@ -1190,9 +1190,9 @@ typedef enum
 /* . */
 typedef struct StxThread_
 {
-    char* colorCode;
-    char* colorName;
-    char* sectionName;
+    int8_t* colorCode;
+    int8_t* colorName;
+    int8_t* sectionName;
     SubDescriptor* subDescriptors;
     EmbColor stxColor;
 } StxThread;
@@ -1200,8 +1200,8 @@ typedef struct StxThread_
 /* . */
 typedef struct SvgAttribute_
 {
-    char* name;
-    char* value;
+    int8_t* name;
+    int8_t* value;
 } SvgAttribute;
 
 /* . */
@@ -1217,7 +1217,7 @@ typedef struct Huffman {
 /* . */
 typedef struct Compress {
     int bit_position;
-    char *input_data;
+    int8_t *input_data;
     int input_length;
     int bits_total;
     int block_elements;
@@ -1230,32 +1230,32 @@ typedef struct Compress {
  *****************************************************************************/
 EMB_PUBLIC void to_flag(char **argv, int argc, int i);
 EMB_PUBLIC void formats(void);
-EMB_PUBLIC int emb_identify_format(const char *ending);
-EMB_PUBLIC int convert(const char *inf, const char *outf);
+EMB_PUBLIC int emb_identify_format(const int8_t *ending);
+EMB_PUBLIC int convert(const int8_t *inf, const int8_t *outf);
 
 EMB_PUBLIC EmbVector emb_vector(EmbReal x, EmbReal y);
 
 EMB_PUBLIC int embstr_len(EmbString str);
-EMB_PUBLIC char read_n_bytes(FILE *file, uint8_t *data, unsigned int length);
-EMB_PUBLIC bool string_equal(char *a, const char *b);
-EMB_PUBLIC int parse_floats(const char *line, float result[], int n);
-EMB_PUBLIC int parse_vector(const char *line, EmbVector *v);
+EMB_PUBLIC int8_t read_n_bytes(FILE *file, uint8_t *data, uint32_t length);
+EMB_PUBLIC bool string_equal(char *a, const int8_t *b);
+EMB_PUBLIC int parse_floats(const int8_t *line, float result[], int n);
+EMB_PUBLIC int parse_vector(const int8_t *line, EmbVector *v);
 EMB_PUBLIC bool valid_rgb(float r, float g, float b);
 EMB_PUBLIC int table_length(char *s[]);
 EMB_PUBLIC uint8_t *load_file(char *fname);
 EMB_PUBLIC bool int32_underflow(int64_t a, int64_t b);
 EMB_PUBLIC bool int32_overflow(int64_t a, int64_t b);
 EMB_PUBLIC int round_to_multiple(bool roundUp, int numToRound, int multiple);
-EMB_PUBLIC void debug_message(const char *msg, ...);
+EMB_PUBLIC void debug_message(const int8_t *msg, ...);
 EMB_PUBLIC bool valid_file_format(char *fileName);
-EMB_PUBLIC int get_id(char *data[], char *label);
+EMB_PUBLIC int get_id(char *data[], int8_t *label);
 
 /* Scripting */
-EMB_PUBLIC void execute_postscript(EmbStack *stack, char line[200]);
+EMB_PUBLIC void execute_postscript(EmbStack *stack, int8_t line[200]);
 EMB_PUBLIC int emb_repl(void);
-EMB_PUBLIC void emb_processor(char *state, const char *program, int program_length);
-EMB_PUBLIC int emb_compiler(const char *program, int language, char *compiled_program);
-EMB_PUBLIC void emb_actuator(EmbPattern *pattern, const char *program, int language);
+EMB_PUBLIC void emb_processor(char *state, const int8_t *program, int program_length);
+EMB_PUBLIC int emb_compiler(const int8_t *program, int language, int8_t *compiled_program);
+EMB_PUBLIC void emb_actuator(EmbPattern *pattern, const int8_t *program, int language);
 
 /* Colors */
 EMB_PUBLIC EmbColor embColor_make(uint8_t r, uint8_t g, uint8_t b);
@@ -1289,8 +1289,8 @@ EMB_PUBLIC EmbVector emb_line_normalVector(EmbLine line, int clockwise);
 EMB_PUBLIC EmbVector emb_line_intersectionPoint(EmbLine line1, EmbLine line2, int *error_code);
 
 /* Encoding */
-unsigned char toyota_position_encode(EmbReal x);
-EmbReal toyota_position_decode(unsigned char a);
+uint8_t toyota_position_encode(EmbReal x);
+EmbReal toyota_position_decode(uint8_t a);
 
 EMB_PUBLIC int emb_find_nearest_color(EmbColor color, EmbColor* colors, int n_colors);
 EMB_PUBLIC int emb_find_nearest_thread(EmbColor color, EmbThread* threads, int n_threads);
@@ -1312,7 +1312,7 @@ EMB_PUBLIC EmbReal emb_vector_distance(EmbVector a, EmbVector b);
 EMB_PUBLIC EmbVector emb_vector_unit(EmbReal angle);
 
 EMB_PUBLIC EmbGeometry emb_arc(EmbReal, EmbReal, EmbReal, EmbReal, EmbReal, EmbReal);
-EMB_PUBLIC char emb_arc_clockwise(EmbGeometry arc);
+EMB_PUBLIC int8_t emb_arc_clockwise(EmbGeometry arc);
 
 EMB_PUBLIC EmbCircle emb_circle(EmbReal x, EmbReal y, EmbReal r);
 EMB_PUBLIC void emb_circle_set_area(EmbCircle *circle, float area);
@@ -1330,16 +1330,16 @@ EMB_PUBLIC EmbReal embEllipse_area(EmbEllipse ellipse);
 EMB_PUBLIC EmbReal embEllipse_perimeter(EmbEllipse ellipse);
 
 EMB_PUBLIC EmbImage embImage_create(int, int);
-EMB_PUBLIC void embImage_read(EmbImage *image, char *fname);
-EMB_PUBLIC int embImage_write(EmbImage *image, char *fname);
+EMB_PUBLIC void embImage_read(EmbImage *image, int8_t *fname);
+EMB_PUBLIC int embImage_write(EmbImage *image, int8_t *fname);
 EMB_PUBLIC void embImage_free(EmbImage *image);
 
 EMB_PUBLIC EmbRect emb_rect(EmbReal, EmbReal, EmbReal, EmbReal);
 EMB_PUBLIC EmbReal embRect_area(EmbRect);
 
-EMB_PUBLIC int threadColor(const char*, int brand);
-EMB_PUBLIC int threadColorNum(unsigned int color, int brand);
-EMB_PUBLIC const char* threadColorName(unsigned int color, int brand);
+EMB_PUBLIC int threadColor(const int8_t* name, int brand);
+EMB_PUBLIC int threadColorNum(uint32_t color, int brand);
+EMB_PUBLIC const int8_t* threadColorName(uint32_t color, int brand);
 
 EMB_PUBLIC void embTime_initNow(EmbTime* t);
 EMB_PUBLIC EmbTime embTime_time(EmbTime* t);
@@ -1379,7 +1379,7 @@ EMB_PUBLIC void embp_flip(EmbPattern* p, int horz, int vert);
 EMB_PUBLIC void embp_combineJumpStitches(EmbPattern* p);
 EMB_PUBLIC void embp_correctForMaxStitchLength(EmbPattern* p, EmbReal maxStitchLength, EmbReal maxJumpLength);
 EMB_PUBLIC void embp_center(EmbPattern* p);
-EMB_PUBLIC void embp_loadExternalColorFile(EmbPattern* p, const char* fileName);
+EMB_PUBLIC void embp_loadExternalColorFile(EmbPattern* p, const int8_t* fileName);
 EMB_PUBLIC void embp_convertGeometry(EmbPattern* p);
 EMB_PUBLIC void embp_details(EmbPattern *p);
 EMB_PUBLIC EmbPattern *embp_combine(EmbPattern *p1, EmbPattern *p2);
@@ -1387,8 +1387,8 @@ EMB_PUBLIC int embp_color_count(EmbPattern *pattern, EmbColor startColor);
 EMB_PUBLIC void embp_end(EmbPattern* p);
 EMB_PUBLIC void embp_crossstitch(EmbPattern *pattern, EmbImage *, int threshhold);
 EMB_PUBLIC void embp_horizontal_fill(EmbPattern *pattern, EmbImage *, int threshhold);
-EMB_PUBLIC int embp_render(EmbPattern *pattern, char *fname);
-EMB_PUBLIC int embp_simulate(EmbPattern *pattern, char *fname);
+EMB_PUBLIC int embp_render(EmbPattern *pattern, int8_t *fname);
+EMB_PUBLIC int embp_simulate(EmbPattern *pattern, int8_t *fname);
 
 EMB_PUBLIC void emb_add_circle(EmbPattern* p, EmbCircle obj);
 EMB_PUBLIC void emb_add_ellipse(EmbPattern* p, EmbEllipse obj);
@@ -1404,11 +1404,11 @@ EMB_PUBLIC void emb_copy_polylines_to_stitches(EmbPattern* pattern);
 EMB_PUBLIC void emb_move_stitches_to_polylines(EmbPattern* pattern);
 EMB_PUBLIC void emb_move_polylines_to_stitches(EmbPattern* pattern);
 
-EMB_PUBLIC char embp_read(EmbPattern *pattern, const char* fileName, int format);
-EMB_PUBLIC char embp_write(EmbPattern *pattern, const char* fileName, int format);
+EMB_PUBLIC int8_t embp_read(EmbPattern *pattern, const int8_t* fileName, int format);
+EMB_PUBLIC int8_t embp_write(EmbPattern *pattern, const int8_t* fileName, int format);
 
-EMB_PUBLIC char embp_read_auto(EmbPattern *pattern, const char* fileName);
-EMB_PUBLIC char embp_write_auto(EmbPattern *pattern, const char* fileName);
+EMB_PUBLIC int8_t embp_read_auto(EmbPattern *pattern, const int8_t* fileName);
+EMB_PUBLIC int8_t embp_write_auto(EmbPattern *pattern, const int8_t* fileName);
 
 EMB_PUBLIC int emb_round(EmbReal x);
 EMB_PUBLIC EmbReal radians(EmbReal degree);
@@ -1449,7 +1449,7 @@ EMB_PUBLIC EmbVector emb_quadrant(EmbGeometry *geometry, int degrees, EmbError *
 EMB_PUBLIC EmbReal emb_start_angle(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbReal emb_end_angle(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbReal emb_included_angle(EmbGeometry *geometry, EmbError *error);
-EMB_PUBLIC char emb_clockwise(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC int8_t emb_clockwise(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbReal emb_circumference(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbReal emb_included_angle(EmbGeometry *geometry, EmbError *error);
 
@@ -1468,30 +1468,30 @@ EMB_PUBLIC EmbError emb_set_radius_minor(EmbGeometry *geometry, EmbReal radius);
 EMB_PUBLIC EmbError emb_set_diameter_major(EmbGeometry *geometry, EmbReal diameter);
 EMB_PUBLIC EmbError emb_set_diameter_minor(EmbGeometry *geometry, EmbReal diameter);
 
-EMB_PUBLIC char *emb_get_svg_token(char *svg, char token[MAX_STRING_LENGTH]);
-EMB_PUBLIC char *emb_get_svg_vector(char *svg, EmbVector *v);
+EMB_PUBLIC int8_t *emb_get_svg_token(char *svg, int8_t token[MAX_STRING_LENGTH]);
+EMB_PUBLIC int8_t *emb_get_svg_vector(char *svg, EmbVector *v);
 
 /* Internal function declarations.
  * ----------------------------------------------------------------------------
  * TODO: UTF-8 support.
  */
-EMB_PUBLIC int string_rchar(const char *s1, char c);
-EMB_PUBLIC void char_ptr_to_string(char *dst, char *src);
+EMB_PUBLIC int string_rchar(const int8_t *s1, int8_t c);
+EMB_PUBLIC void char_ptr_to_string(char *dst, int8_t *src);
 
 /* Utility Functions: merge first three with string library */
-EMB_PUBLIC int stringInArray(const char *s, const char **array);
-EMB_PUBLIC char *copy_trim(char const *s);
-EMB_PUBLIC char* emb_optOut(EmbReal num, char* str);
+EMB_PUBLIC int stringInArray(const int8_t *s, const int8_t **array);
+EMB_PUBLIC int8_t *copy_trim(char const *s);
+EMB_PUBLIC int8_t* emb_optOut(EmbReal num, int8_t* str);
 EMB_PUBLIC void safe_free(void *data);
 
 /* DIFAT functions */
-EMB_PUBLIC unsigned int entriesInDifatSector(bcf_file_difat* fat);
-EMB_PUBLIC bcf_file_fat* bcfFileFat_create(const unsigned int sectorSize);
+EMB_PUBLIC uint32_t entriesInDifatSector(bcf_file_difat* fat);
+EMB_PUBLIC bcf_file_fat* bcfFileFat_create(const uint32_t sectorSize);
 EMB_PUBLIC void loadFatFromSector(bcf_file_fat* fat, FILE* file);
 EMB_PUBLIC void bcf_file_fat_free(bcf_file_fat** fat);
-EMB_PUBLIC bcf_directory* CompoundFileDirectory(const unsigned int maxNumberOfDirectoryEntries);
+EMB_PUBLIC bcf_directory* CompoundFileDirectory(const uint32_t maxNumberOfDirectoryEntries);
 EMB_PUBLIC void bcf_directory_free(bcf_directory** dir);
-EMB_PUBLIC unsigned int numberOfEntriesInDifatSector(bcf_file_difat* fat);
+EMB_PUBLIC uint32_t numberOfEntriesInDifatSector(bcf_file_difat* fat);
 EMB_PUBLIC void bcf_file_difat_free(bcf_file_difat* difat);
 EMB_PUBLIC bcf_file_header bcfFileHeader_read(FILE* file);
 EMB_PUBLIC int bcfFileHeader_isValid(bcf_file_header header);
@@ -1499,7 +1499,7 @@ EMB_PUBLIC void bcf_file_free(bcf_file* bcfFile);
 
 EMB_PUBLIC double emb_stitch_length(EmbStitch prev_st, EmbStitch st);
 
-EMB_PUBLIC int emb_readline(FILE* file, char *line, int maxLength);
+EMB_PUBLIC int emb_readline(FILE* file, int8_t *line, int maxLength);
 
 EMB_PUBLIC void emb_swap(char *a, int i, int j);
 
@@ -1525,8 +1525,8 @@ EMB_PUBLIC void embColor_read(void *f, EmbColor *c, int toRead);
 EMB_PUBLIC void embColor_write(void *f, EmbColor c, int toWrite);
 
 /* Encoding/decoding and compression functions. */
-EMB_PUBLIC int hus_compress(char* input, int size, char* output, int *out_size);
-EMB_PUBLIC int hus_decompress(char* input, int size, char* output, int *out_size);
+EMB_PUBLIC int hus_compress(char* input, int size, int8_t* output, int *out_size);
+EMB_PUBLIC int hus_decompress(char* input, int size, int8_t* output, int *out_size);
 
 EMB_PUBLIC void huffman_build_table(huffman *h);
 EMB_PUBLIC int *huffman_table_lookup(huffman *h, int byte_lookup, int *lengths);
@@ -1543,26 +1543,26 @@ EMB_PUBLIC int compress_get_position(compress *c);
 
 /* Function Declarations */
 EMB_PUBLIC void readPecStitches(EmbPattern* pattern, FILE* file);
-EMB_PUBLIC void writePecStitches(EmbPattern* pattern, FILE* file, const char* filename);
+EMB_PUBLIC void writePecStitches(EmbPattern* pattern, FILE* file, const int8_t* filename);
 
 EMB_PUBLIC void pfaffEncode(FILE* file, int x, int y, int flags);
 
-EMB_PUBLIC int read_bytes(FILE *file, int n, char *str);
-EMB_PUBLIC int write_bytes(FILE *file, int n, char *str);
+EMB_PUBLIC int read_bytes(FILE *file, int n, int8_t *str);
+EMB_PUBLIC int write_bytes(FILE *file, int n, int8_t *str);
 
 EMB_PUBLIC int bcfFile_read(FILE* file, bcf_file* bcfFile);
-EMB_PUBLIC void* GetFile(bcf_file* bcfFile, FILE* file, char* fileToFind);
+EMB_PUBLIC void* GetFile(bcf_file* bcfFile, FILE* file, int8_t* fileToFind);
 
-EMB_PUBLIC void binaryReadString(FILE* file, char *buffer, int maxLength);
-EMB_PUBLIC void binaryReadUnicodeString(FILE* file, char *buffer, const int stringLength);
+EMB_PUBLIC void binaryReadString(FILE* file, int8_t *buffer, int maxLength);
+EMB_PUBLIC void binaryReadUnicodeString(FILE* file, int8_t *buffer, const int stringLength);
 
-EMB_PUBLIC void fpad(FILE* f, char c, int n);
+EMB_PUBLIC void fpad(FILE* f, int8_t c, int n);
 
 EMB_PUBLIC void write_24bit(FILE* file, int);
 EMB_PUBLIC int check_header_present(FILE* file, int minimum_header_length);
 
-EMB_PUBLIC bcf_file_difat* bcf_difat_create(FILE* file, unsigned int fatSectors, const unsigned int sectorSize);
-EMB_PUBLIC unsigned int readFullSector(FILE* file, bcf_file_difat* bcfFile, unsigned int* numberOfDifatEntriesStillToRead);
+EMB_PUBLIC bcf_file_difat* bcf_difat_create(FILE* file, uint32_t fatSectors, const uint32_t sectorSize);
+EMB_PUBLIC uint32_t readFullSector(FILE* file, bcf_file_difat* bcfFile, uint32_t* numberOfDifatEntriesStillToRead);
 EMB_PUBLIC bcf_directory_entry* CompoundFileDirectoryEntry(FILE* file);
 EMB_PUBLIC void readNextSector(FILE* file, bcf_directory* dir);
 
@@ -1591,15 +1591,15 @@ extern const EmbReal embConstantPi;
 extern EmbBrand brand_codes[100];
 extern EmbThread black_thread;
 extern int emb_verbose;
-extern const char *version_string;
-extern const char *emb_error_desc[];
+extern const int8_t *version_string;
+extern const int8_t *emb_error_desc[];
 extern int NUMBINS;
 
-extern const unsigned int difatEntriesInHeader;
-extern const unsigned int sizeOfFatEntry;
-extern const unsigned int sizeOfDifatEntry;
-extern const unsigned int sizeOfChainingEntryAtEndOfDifatSector;
-extern const unsigned int sizeOfDirectoryEntry;
+extern const uint32_t difatEntriesInHeader;
+extern const uint32_t sizeOfFatEntry;
+extern const uint32_t sizeOfDifatEntry;
+extern const uint32_t sizeOfChainingEntryAtEndOfDifatSector;
+extern const uint32_t sizeOfDirectoryEntry;
 
 extern const EmbThread dxf_colors[];
 extern const EmbThread jef_colors[];
@@ -1607,7 +1607,7 @@ extern const EmbThread hus_colors[];
 extern const EmbThread pcm_colors[];
 extern const EmbThread pec_colors[];
 extern const EmbThread shv_colors[];
-extern const char imageWithFrame[38][48];
+extern const int8_t imageWithFrame[38][48];
 
 #endif
 

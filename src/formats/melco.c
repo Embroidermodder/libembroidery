@@ -7,8 +7,8 @@
 
 #include "embroidery.h"
 
-char readDst(EmbPattern * pattern, FILE * file);
-char writeDst(EmbPattern * pattern, FILE * file);
+int8_t readDst(EmbPattern * pattern, FILE * file);
+int8_t writeDst(EmbPattern * pattern, FILE * file);
 
 /* The Melco Embroidery Format (.cnd)
  *
@@ -18,14 +18,14 @@ char writeDst(EmbPattern * pattern, FILE * file);
  *
  * \todo Find a source.
  */
-char readCnd(EmbPattern *pattern, FILE *file)
+int8_t readCnd(EmbPattern *pattern, FILE *file)
 {
         puts("readCnd is not implemented");
         printf("Cannot read %p %p\n", pattern, file);
         return 0;               /*TODO: finish readCnd */
 }
 
-char writeCnd(EmbPattern *pattern, FILE *file)
+int8_t writeCnd(EmbPattern *pattern, FILE *file)
 {
         puts("writeCnd is not implemented");
         printf("Cannot write %p %p\n", pattern, file);
@@ -36,31 +36,31 @@ char writeCnd(EmbPattern *pattern, FILE *file)
  *
  * Stitch Only Format
  */
-char readDem(EmbPattern *pattern, FILE *file)
+int8_t readDem(EmbPattern *pattern, FILE *file)
 {
         puts("readDem is not implemented.");
         puts("Overridden, defaulting to dst.");
         return readDst(pattern, file);  /*TODO: finish readDem */
 }
 
-char writeDem(EmbPattern *pattern, FILE *file)
+int8_t writeDem(EmbPattern *pattern, FILE *file)
 {
         puts("writeDem is not implemented.");
         puts("Overridden, defaulting to dst.");
         return writeDst(pattern, file); /*TODO: finish writeDem */
 }
 
-char expDecode(unsigned char a1)
+int8_t expDecode(uint8_t a1)
 {
         return (a1 > 0x80) ? ((-~a1) - 1) : a1;
 }
 
-char readExp(EmbPattern *pattern, FILE *file)
+int8_t readExp(EmbPattern *pattern, FILE *file)
 {
-        unsigned char b[2];
+        uint8_t b[2];
 
         while (fread(b, 1, 2, file) == 2) {
-                char dx = 0, dy = 0;
+                int8_t dx = 0, dy = 0;
                 int flags = NORMAL;
                 if (b[0] == 0x80) {
                         if (b[1] == 0x01) {
@@ -90,7 +90,7 @@ char readExp(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-char writeExp(EmbPattern *pattern, FILE *file)
+int8_t writeExp(EmbPattern *pattern, FILE *file)
 {
         EmbVector pos;
         int i;
@@ -99,8 +99,8 @@ char writeExp(EmbPattern *pattern, FILE *file)
         pos.x = 0.0;
         pos.y = 0.0;
         for (i = 0; i < pattern->stitch_list->count; i++) {
-                char b[4];
-                char dx, dy;
+                int8_t b[4];
+                int8_t dx, dy;
                 EmbStitch st = pattern->stitch_list->stitch[i];
                 dx = (char)emb_round(10.0 * (st.x - pos.x));
                 dy = (char)emb_round(10.0 * (st.y - pos.y));

@@ -139,7 +139,7 @@ EmbFormatList formatTable[numberOfFormats] = {
          0, 0}
 };
 
-const char *version_string = "embroider v0.1";
+const int8_t *version_string = "embroider v0.1";
 
 int NUMBINS = 10;
 
@@ -153,11 +153,11 @@ const EmbReal embConstantPi = 3.1415926535;
 
 /* Constant representing the number of EmbReal Indirect FAT
  * entries in a single header */
-const unsigned int difatEntriesInHeader = 109;
-const unsigned int sizeOfFatEntry = sizeof(unsigned int);
-const unsigned int sizeOfDifatEntry = 4;
-const unsigned int sizeOfChainingEntryAtEndOfDifatSector = 4;
-const unsigned int sizeOfDirectoryEntry = 128;
+const uint32_t difatEntriesInHeader = 109;
+const uint32_t sizeOfFatEntry = sizeof(uint32_t);
+const uint32_t sizeOfDifatEntry = 4;
+const uint32_t sizeOfChainingEntryAtEndOfDifatSector = 4;
+const uint32_t sizeOfDirectoryEntry = 128;
 /*
 const int supportedMinorVersion = 0x003E;
 const int littleEndianByteOrderMark = 0xFFFE;

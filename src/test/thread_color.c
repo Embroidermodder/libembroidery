@@ -8,9 +8,9 @@
 
 int test_thread_color(void)
 {
-        unsigned int tColor = 0xFF0d6b2f;
+        uint32_t tColor = 0xFF0d6b2f;
         int tBrand = EMB_BRAND_SVG;
-        char name[100];
+        int8_t name[100];
 
         int color_num = threadColorNum(tColor, tBrand);
         if (color_num != 29) {

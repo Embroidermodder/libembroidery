@@ -7,134 +7,134 @@
 #include "embroidery.h"
 
 /* WARNING: Not unicode safe. */
-unsigned char char_to_lower(unsigned char a);
+uint8_t char_to_lower(uint8_t a);
 
 /*
  * Formats
  */
 
-char read100(EmbPattern * pattern, FILE * file);
-char write100(EmbPattern * pattern, FILE * file);
-char read10o(EmbPattern * pattern, FILE * file);
-char write10o(EmbPattern * pattern, FILE * file);
-char readArt(EmbPattern * pattern, FILE * file);
-char writeArt(EmbPattern * pattern, FILE * file);
-char readBmc(EmbPattern * pattern, FILE * file);
-char writeBmc(EmbPattern * pattern, FILE * file);
-char readBro(EmbPattern * pattern, FILE * file);
-char writeBro(EmbPattern * pattern, FILE * file);
-char readCnd(EmbPattern * pattern, FILE * file);
-char writeCnd(EmbPattern * pattern, FILE * file);
-char readCol(EmbPattern * pattern, FILE * file);
-char writeCol(EmbPattern * pattern, FILE * file);
-char readCsd(EmbPattern * pattern, FILE * file);
-char writeCsd(EmbPattern * pattern, FILE * file);
-char readCsv(EmbPattern * pattern, FILE * file);
-char writeCsv(EmbPattern * pattern, FILE * file);
-char readDat(EmbPattern * pattern, FILE * file);
-char writeDat(EmbPattern * pattern, FILE * file);
-char readDem(EmbPattern * pattern, FILE * file);
-char writeDem(EmbPattern * pattern, FILE * file);
-char readDsb(EmbPattern * pattern, FILE * file);
-char writeDsb(EmbPattern * pattern, FILE * file);
-char readDst(EmbPattern * pattern, FILE * file);
-char writeDst(EmbPattern * pattern, FILE * file);
-char readDsz(EmbPattern * pattern, FILE * file);
-char writeDsz(EmbPattern * pattern, FILE * file);
-char readDxf(EmbPattern * pattern, FILE * file);
-char writeDxf(EmbPattern * pattern, FILE * file);
-char readEdr(EmbPattern * pattern, FILE * file);
-char writeEdr(EmbPattern * pattern, FILE * file);
-char readEmd(EmbPattern * pattern, FILE * file);
-char writeEmd(EmbPattern * pattern, FILE * file);
-char readExp(EmbPattern * pattern, FILE * file);
-char writeExp(EmbPattern * pattern, FILE * file);
-char readExy(EmbPattern * pattern, FILE * file);
-char writeExy(EmbPattern * pattern, FILE * file);
-char readEys(EmbPattern * pattern, FILE * file);
-char writeEys(EmbPattern * pattern, FILE * file);
-char readFxy(EmbPattern * pattern, FILE * file);
-char writeFxy(EmbPattern * pattern, FILE * file);
-char readGc(EmbPattern * pattern, FILE * file);
-char writeGc(EmbPattern * pattern, FILE * file);
-char readGnc(EmbPattern * pattern, FILE * file);
-char writeGnc(EmbPattern * pattern, FILE * file);
-char readGt(EmbPattern * pattern, FILE * file);
-char writeGt(EmbPattern * pattern, FILE * file);
-char readHus(EmbPattern * pattern, FILE * file);
-char writeHus(EmbPattern * pattern, FILE * file);
-char readInb(EmbPattern * pattern, FILE * file);
-char writeInb(EmbPattern * pattern, FILE * file);
-char readInf(EmbPattern * pattern, FILE * file);
-char writeInf(EmbPattern * pattern, FILE * file);
-char readJef(EmbPattern * pattern, FILE * file);
-char writeJef(EmbPattern * pattern, FILE * file);
-char readKsm(EmbPattern * pattern, FILE * file);
-char writeKsm(EmbPattern * pattern, FILE * file);
-char readMax(EmbPattern * pattern, FILE * file);
-char writeMax(EmbPattern * pattern, FILE * file);
-char readMit(EmbPattern * pattern, FILE * file);
-char writeMit(EmbPattern * pattern, FILE * file);
-char readNew(EmbPattern * pattern, FILE * file);
-char writeNew(EmbPattern * pattern, FILE * file);
-char readOfm(EmbPattern * pattern, FILE * file);
-char writeOfm(EmbPattern * pattern, FILE * file);
-char readPcd(EmbPattern * pattern, const char *fileName, FILE * file);
-char writePcd(EmbPattern * pattern, FILE * file);
-char readPcm(EmbPattern * pattern, FILE * file);
-char writePcm(EmbPattern * pattern, FILE * file);
-char readPcq(EmbPattern * pattern, const char *fileName, FILE * file);
-char writePcq(EmbPattern * pattern, FILE * file);
-char readPcs(EmbPattern * pattern, const char *fileName, FILE * file);
-char writePcs(EmbPattern * pattern, FILE * file);
-char readPec(EmbPattern * pattern, const char *fileName, FILE * file);
-char writePec(EmbPattern * pattern, const char *fileName, FILE * file);
-char readPel(EmbPattern * pattern, FILE * file);
-char writePel(EmbPattern * pattern, FILE * file);
-char readPem(EmbPattern * pattern, FILE * file);
-char writePem(EmbPattern * pattern, FILE * file);
-char readPes(EmbPattern * pattern, const char *fileName, FILE * file);
-char writePes(EmbPattern * pattern, const char *fileName, FILE * file);
-char readPhb(EmbPattern * pattern, FILE * file);
-char writePhb(EmbPattern * pattern, FILE * file);
-char readPhc(EmbPattern * pattern, FILE * file);
-char writePhc(EmbPattern * pattern, FILE * file);
-char readPlt(EmbPattern * pattern, FILE * file);
-char writePlt(EmbPattern * pattern, FILE * file);
-char readRgb(EmbPattern * pattern, FILE * file);
-char writeRgb(EmbPattern * pattern, FILE * file);
-char readSew(EmbPattern * pattern, FILE * file);
-char writeSew(EmbPattern * pattern, FILE * file);
-char readShv(EmbPattern * pattern, FILE * file);
-char writeShv(EmbPattern * pattern, FILE * file);
-char readSst(EmbPattern * pattern, FILE * file);
-char writeSst(EmbPattern * pattern, FILE * file);
-char readStx(EmbPattern * pattern, FILE * file);
-char writeStx(EmbPattern * pattern, FILE * file);
-char readSvg(EmbPattern * pattern, FILE * file);
-char writeSvg(EmbPattern * pattern, FILE * file);
-char readT01(EmbPattern * pattern, FILE * file);
-char writeT01(EmbPattern * pattern, FILE * file);
-char readT09(EmbPattern * pattern, FILE * file);
-char writeT09(EmbPattern * pattern, FILE * file);
-char readTap(EmbPattern * pattern, FILE * file);
-char writeTap(EmbPattern * pattern, FILE * file);
-char readThr(EmbPattern * pattern, FILE * file);
-char writeThr(EmbPattern * pattern, FILE * file);
-char readTxt(EmbPattern * pattern, FILE * file);
-char writeTxt(EmbPattern * pattern, FILE * file);
-char readU00(EmbPattern * pattern, FILE * file);
-char writeU00(EmbPattern * pattern, FILE * file);
-char readU01(EmbPattern * pattern, FILE * file);
-char writeU01(EmbPattern * pattern, FILE * file);
-char readVip(EmbPattern * pattern, FILE * file);
-char writeVip(EmbPattern * pattern, FILE * file);
-char readVp3(EmbPattern * pattern, FILE * file);
-char writeVp3(EmbPattern * pattern, FILE * file);
-char readXxx(EmbPattern * pattern, FILE * file);
-char writeXxx(EmbPattern * pattern, FILE * file);
-char readZsk(EmbPattern * pattern, FILE * file);
-char writeZsk(EmbPattern * pattern, FILE * file);
+int8_t read100(EmbPattern * pattern, FILE * file);
+int8_t write100(EmbPattern * pattern, FILE * file);
+int8_t read10o(EmbPattern * pattern, FILE * file);
+int8_t write10o(EmbPattern * pattern, FILE * file);
+int8_t readArt(EmbPattern * pattern, FILE * file);
+int8_t writeArt(EmbPattern * pattern, FILE * file);
+int8_t readBmc(EmbPattern * pattern, FILE * file);
+int8_t writeBmc(EmbPattern * pattern, FILE * file);
+int8_t readBro(EmbPattern * pattern, FILE * file);
+int8_t writeBro(EmbPattern * pattern, FILE * file);
+int8_t readCnd(EmbPattern * pattern, FILE * file);
+int8_t writeCnd(EmbPattern * pattern, FILE * file);
+int8_t readCol(EmbPattern * pattern, FILE * file);
+int8_t writeCol(EmbPattern * pattern, FILE * file);
+int8_t readCsd(EmbPattern * pattern, FILE * file);
+int8_t writeCsd(EmbPattern * pattern, FILE * file);
+int8_t readCsv(EmbPattern * pattern, FILE * file);
+int8_t writeCsv(EmbPattern * pattern, FILE * file);
+int8_t readDat(EmbPattern * pattern, FILE * file);
+int8_t writeDat(EmbPattern * pattern, FILE * file);
+int8_t readDem(EmbPattern * pattern, FILE * file);
+int8_t writeDem(EmbPattern * pattern, FILE * file);
+int8_t readDsb(EmbPattern * pattern, FILE * file);
+int8_t writeDsb(EmbPattern * pattern, FILE * file);
+int8_t readDst(EmbPattern * pattern, FILE * file);
+int8_t writeDst(EmbPattern * pattern, FILE * file);
+int8_t readDsz(EmbPattern * pattern, FILE * file);
+int8_t writeDsz(EmbPattern * pattern, FILE * file);
+int8_t readDxf(EmbPattern * pattern, FILE * file);
+int8_t writeDxf(EmbPattern * pattern, FILE * file);
+int8_t readEdr(EmbPattern * pattern, FILE * file);
+int8_t writeEdr(EmbPattern * pattern, FILE * file);
+int8_t readEmd(EmbPattern * pattern, FILE * file);
+int8_t writeEmd(EmbPattern * pattern, FILE * file);
+int8_t readExp(EmbPattern * pattern, FILE * file);
+int8_t writeExp(EmbPattern * pattern, FILE * file);
+int8_t readExy(EmbPattern * pattern, FILE * file);
+int8_t writeExy(EmbPattern * pattern, FILE * file);
+int8_t readEys(EmbPattern * pattern, FILE * file);
+int8_t writeEys(EmbPattern * pattern, FILE * file);
+int8_t readFxy(EmbPattern * pattern, FILE * file);
+int8_t writeFxy(EmbPattern * pattern, FILE * file);
+int8_t readGc(EmbPattern * pattern, FILE * file);
+int8_t writeGc(EmbPattern * pattern, FILE * file);
+int8_t readGnc(EmbPattern * pattern, FILE * file);
+int8_t writeGnc(EmbPattern * pattern, FILE * file);
+int8_t readGt(EmbPattern * pattern, FILE * file);
+int8_t writeGt(EmbPattern * pattern, FILE * file);
+int8_t readHus(EmbPattern * pattern, FILE * file);
+int8_t writeHus(EmbPattern * pattern, FILE * file);
+int8_t readInb(EmbPattern * pattern, FILE * file);
+int8_t writeInb(EmbPattern * pattern, FILE * file);
+int8_t readInf(EmbPattern * pattern, FILE * file);
+int8_t writeInf(EmbPattern * pattern, FILE * file);
+int8_t readJef(EmbPattern * pattern, FILE * file);
+int8_t writeJef(EmbPattern * pattern, FILE * file);
+int8_t readKsm(EmbPattern * pattern, FILE * file);
+int8_t writeKsm(EmbPattern * pattern, FILE * file);
+int8_t readMax(EmbPattern * pattern, FILE * file);
+int8_t writeMax(EmbPattern * pattern, FILE * file);
+int8_t readMit(EmbPattern * pattern, FILE * file);
+int8_t writeMit(EmbPattern * pattern, FILE * file);
+int8_t readNew(EmbPattern * pattern, FILE * file);
+int8_t writeNew(EmbPattern * pattern, FILE * file);
+int8_t readOfm(EmbPattern * pattern, FILE * file);
+int8_t writeOfm(EmbPattern * pattern, FILE * file);
+int8_t readPcd(EmbPattern * pattern, const int8_t *fileName, FILE * file);
+int8_t writePcd(EmbPattern * pattern, FILE * file);
+int8_t readPcm(EmbPattern * pattern, FILE * file);
+int8_t writePcm(EmbPattern * pattern, FILE * file);
+int8_t readPcq(EmbPattern * pattern, const int8_t *fileName, FILE * file);
+int8_t writePcq(EmbPattern * pattern, FILE * file);
+int8_t readPcs(EmbPattern * pattern, const int8_t *fileName, FILE * file);
+int8_t writePcs(EmbPattern * pattern, FILE * file);
+int8_t readPec(EmbPattern * pattern, const int8_t *fileName, FILE * file);
+int8_t writePec(EmbPattern * pattern, const int8_t *fileName, FILE * file);
+int8_t readPel(EmbPattern * pattern, FILE * file);
+int8_t writePel(EmbPattern * pattern, FILE * file);
+int8_t readPem(EmbPattern * pattern, FILE * file);
+int8_t writePem(EmbPattern * pattern, FILE * file);
+int8_t readPes(EmbPattern * pattern, const int8_t *fileName, FILE * file);
+int8_t writePes(EmbPattern * pattern, const int8_t *fileName, FILE * file);
+int8_t readPhb(EmbPattern * pattern, FILE * file);
+int8_t writePhb(EmbPattern * pattern, FILE * file);
+int8_t readPhc(EmbPattern * pattern, FILE * file);
+int8_t writePhc(EmbPattern * pattern, FILE * file);
+int8_t readPlt(EmbPattern * pattern, FILE * file);
+int8_t writePlt(EmbPattern * pattern, FILE * file);
+int8_t readRgb(EmbPattern * pattern, FILE * file);
+int8_t writeRgb(EmbPattern * pattern, FILE * file);
+int8_t readSew(EmbPattern * pattern, FILE * file);
+int8_t writeSew(EmbPattern * pattern, FILE * file);
+int8_t readShv(EmbPattern * pattern, FILE * file);
+int8_t writeShv(EmbPattern * pattern, FILE * file);
+int8_t readSst(EmbPattern * pattern, FILE * file);
+int8_t writeSst(EmbPattern * pattern, FILE * file);
+int8_t readStx(EmbPattern * pattern, FILE * file);
+int8_t writeStx(EmbPattern * pattern, FILE * file);
+int8_t readSvg(EmbPattern * pattern, FILE * file);
+int8_t writeSvg(EmbPattern * pattern, FILE * file);
+int8_t readT01(EmbPattern * pattern, FILE * file);
+int8_t writeT01(EmbPattern * pattern, FILE * file);
+int8_t readT09(EmbPattern * pattern, FILE * file);
+int8_t writeT09(EmbPattern * pattern, FILE * file);
+int8_t readTap(EmbPattern * pattern, FILE * file);
+int8_t writeTap(EmbPattern * pattern, FILE * file);
+int8_t readThr(EmbPattern * pattern, FILE * file);
+int8_t writeThr(EmbPattern * pattern, FILE * file);
+int8_t readTxt(EmbPattern * pattern, FILE * file);
+int8_t writeTxt(EmbPattern * pattern, FILE * file);
+int8_t readU00(EmbPattern * pattern, FILE * file);
+int8_t writeU00(EmbPattern * pattern, FILE * file);
+int8_t readU01(EmbPattern * pattern, FILE * file);
+int8_t writeU01(EmbPattern * pattern, FILE * file);
+int8_t readVip(EmbPattern * pattern, FILE * file);
+int8_t writeVip(EmbPattern * pattern, FILE * file);
+int8_t readVp3(EmbPattern * pattern, FILE * file);
+int8_t writeVp3(EmbPattern * pattern, FILE * file);
+int8_t readXxx(EmbPattern * pattern, FILE * file);
+int8_t writeXxx(EmbPattern * pattern, FILE * file);
+int8_t readZsk(EmbPattern * pattern, FILE * file);
+int8_t writeZsk(EmbPattern * pattern, FILE * file);
 
 int read_descriptions(FILE * file, EmbPattern * pattern);
 void readHoopName(FILE * file, EmbPattern * pattern);
@@ -152,7 +152,7 @@ void readPESHeaderV9(FILE * file, EmbPattern * pattern);
 void readPESHeaderV10(FILE * file, EmbPattern * pattern);
 
 /* Get extension from file name. */
-int emb_fname_extension(const char *fileName, char ending[5])
+int emb_fname_extension(const int8_t *fileName, int8_t ending[5])
 {
         int i;
 
@@ -182,10 +182,10 @@ int emb_fname_extension(const char *fileName, char ending[5])
 }
 
 /* Identify format from the file name. */
-int emb_identify_format(const char *fileName)
+int emb_identify_format(const int8_t *fileName)
 {
         int i;
-        char ending[5];
+        int8_t ending[5];
         if (!emb_fname_extension(fileName, ending)) {
                 puts("Failed to isolate the extension of the supplied fileName.");
                 return -1;
@@ -199,7 +199,7 @@ int emb_identify_format(const char *fileName)
 }
 
 /* . */
-char read_n_bytes(FILE *file, unsigned char *data, unsigned int length)
+int8_t read_n_bytes(FILE *file, uint8_t *data, uint32_t length)
 {
         if (fread(data, 1, length, file) != length) {
                 printf("ERROR: failed to read %d bytes from file.", length);
@@ -209,7 +209,7 @@ char read_n_bytes(FILE *file, unsigned char *data, unsigned int length)
 }
 
 /* . */
-char embp_read(EmbPattern *pattern, const char *fileName, int format)
+int8_t embp_read(EmbPattern *pattern, const int8_t *fileName, int format)
 {
         int result;
         FILE *file;
@@ -430,7 +430,7 @@ char embp_read(EmbPattern *pattern, const char *fileName, int format)
 }
 
 /* . */
-char embp_write(EmbPattern *pattern, const char *fileName, int format)
+int8_t embp_write(EmbPattern *pattern, const int8_t *fileName, int format)
 {
         FILE *file;
         int result = 0;
@@ -643,7 +643,7 @@ char embp_write(EmbPattern *pattern, const char *fileName, int format)
                 break;
         }
         if (formatTable[format].write_external_color_file) {
-                char externalFileName[1000];
+                int8_t externalFileName[1000];
                 int stub_length;
                 strncpy(externalFileName, fileName, 200);
                 stub_length =
@@ -657,7 +657,7 @@ char embp_write(EmbPattern *pattern, const char *fileName, int format)
 }
 
 /* . */
-char embp_read_auto(EmbPattern *pattern, const char *fileName)
+int8_t embp_read_auto(EmbPattern *pattern, const int8_t *fileName)
 {
         int format = emb_identify_format(fileName);
         if (format < 0) {
@@ -669,7 +669,7 @@ char embp_read_auto(EmbPattern *pattern, const char *fileName)
 }
 
 /* . */
-char embp_write_auto(EmbPattern *pattern, const char *fileName)
+int8_t embp_write_auto(EmbPattern *pattern, const int8_t *fileName)
 {
         int format = emb_identify_format(fileName);
         printf("embp_write_auto %d %s\n", format, fileName);

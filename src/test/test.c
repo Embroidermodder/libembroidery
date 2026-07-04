@@ -10,8 +10,8 @@
 #include "test.h"
 
 typedef struct TestFunc_ {
-        const char *label;
-        int (*func)(const char *data);
+        const int8_t *label;
+        int (*func)(const int8_t *data);
 } TestFunc;
 
 static TestFunc test_functions[] = {
@@ -30,7 +30,7 @@ static int test_result = 0;
 static int test_index = 0;
 static float epsilon = 0.000001;
 
-const char *test_data[] = {
+const int8_t *test_data[] = {
         "arc",
         "circle",
         "ellipse",
@@ -44,7 +44,7 @@ const char *test_data[] = {
 /* Find location of first space, if it exists then return
  * string position, otherwise return -1.
  */
-int has_space(const char *line)
+int has_space(const int8_t *line)
 {
         int i;
         if (line == NULL) {
@@ -60,7 +60,7 @@ int has_space(const char *line)
 }
 
 /* Identify test function based on label */
-int get_func_id(const char *label)
+int get_func_id(const int8_t *label)
 {
         int i;
         for (i = 0; test_functions[i].label[0] != '_'; i++) {
@@ -72,9 +72,9 @@ int get_func_id(const char *label)
 }
 
 /* Call test function based on data. */
-int run_test_func(const char *line)
+int run_test_func(const int8_t *line)
 {
-        char function_label[100];
+        int8_t function_label[100];
         int space_pos = has_space(line);
         for (int i = 0; i < 100; i++) {
                 function_label[i] = 0;
@@ -83,7 +83,7 @@ int run_test_func(const char *line)
                 strncpy(function_label, line, space_pos);
                 int func_id = get_func_id(function_label);
                 if (func_id >= 0) {
-                        char *data = line + space_pos + 1;
+                        int8_t *data = line + space_pos + 1;
                         int code = test_functions[func_id].func(data);
                         test(line, code);
                 }
@@ -99,9 +99,9 @@ int run_test_func(const char *line)
 /* Get real!
  * TODO: deal with errors.
  */
-char *get_real(char *ptr, EmbReal *r, int *error)
+int8_t *get_real(char *ptr, EmbReal *r, int *error)
 {
-        char data[100];
+        int8_t data[100];
         int space_pos = has_space(ptr);
         for (int i = 0; i < 100; i++) {
                 data[i] = 0;
@@ -115,10 +115,10 @@ char *get_real(char *ptr, EmbReal *r, int *error)
         return ptr + strlen(ptr);
 }
 
-char *get_vector(char *ptr, EmbVector *v, int *error)
+int8_t *get_vector(char *ptr, EmbVector *v, int *error)
 {
         EmbReal r = 0.0;
-        char *p = get_real(ptr, &r, error);
+        int8_t *p = get_real(ptr, &r, error);
         v->x = r;
         p = get_real(p, &r, error);
         v->y = r;
@@ -127,7 +127,7 @@ char *get_vector(char *ptr, EmbVector *v, int *error)
 }
 
 /* Run test */
-int test(const char *name, int code)
+int test(const int8_t *name, int code)
 {
         if (code) {
                 printf("FAIL (%03d): %s\n", test_index, name);

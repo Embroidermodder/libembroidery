@@ -8,14 +8,14 @@
 
 #include "embroidery.h"
 
-char readDsz(EmbPattern *pattern, FILE *file)
+int8_t readDsz(EmbPattern *pattern, FILE *file)
 {
-        unsigned char b[3];
+        uint8_t b[3];
 
         fseek(file, 0x200, SEEK_SET);
         while (fread(b, 1, 3, file) == 3) {
                 int x, y;
-                unsigned char ctrl;
+                uint8_t ctrl;
                 int stitchType = NORMAL;
 
                 y = b[0];
@@ -49,7 +49,7 @@ char readDsz(EmbPattern *pattern, FILE *file)
 /* WARNING: this is untested.
  * This is based on the readDsz function.
  */
-char writeDsz(EmbPattern *pattern, FILE *file)
+int8_t writeDsz(EmbPattern *pattern, FILE *file)
 {
         int i;
         EmbVector delta;
@@ -60,7 +60,7 @@ char writeDsz(EmbPattern *pattern, FILE *file)
         for (i = 0; i < pattern->stitch_list->count; i++) {
                 EmbVector pos;
                 EmbStitch st;
-                unsigned char b[3];
+                uint8_t b[3];
                 st = pattern->stitch_list->stitch[i];
                 pos.x = st.x;
                 pos.y = st.y;

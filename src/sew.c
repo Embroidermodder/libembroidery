@@ -65,7 +65,7 @@
 #define FLAG_TEST_SHORT               19
 #define NUM_FLAGS                     20
 
-const char *help_msg[] = {
+const int8_t *help_msg[] = {
         "Usage: sew [OPTIONS] fileToRead... ",
         "",
         "Conversion:",
@@ -96,7 +96,7 @@ const char *help_msg[] = {
         "EOF"
 };
 
-const char *welcome_message = "sew\n"
+const int8_t *welcome_message = "sew\n"
     "1.0.0-alpha\n"
     "\n"
     "    A command line program for converting between machine embroidery file formats.\n"
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
                 return error;
         }
 
-        char *script = (char *)malloc(argc * 100);
+        int8_t *script = (char *)malloc(argc * 100);
         int flags = argc - 1;
         for (i = 1; i < argc; i++) {
                 result = -1;

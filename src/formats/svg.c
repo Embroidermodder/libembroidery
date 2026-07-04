@@ -10,7 +10,7 @@
 #include "embroidery.h"
 
 /* TODO: test this. */
-char *emb_get_svg_token(char *svg, char token[MAX_STRING_LENGTH])
+int8_t *emb_get_svg_token(char *svg, int8_t token[MAX_STRING_LENGTH])
 {
         if (*svg == ' ') {
                 svg++;
@@ -31,9 +31,9 @@ char *emb_get_svg_token(char *svg, char token[MAX_STRING_LENGTH])
 }
 
 /* */
-char *emb_get_svg_vector(char *svg, EmbVector *v)
+int8_t *emb_get_svg_vector(char *svg, EmbVector *v)
 {
-        char token[MAX_STRING_LENGTH];
+        int8_t token[MAX_STRING_LENGTH];
         svg = emb_get_svg_token(svg, token);
         if (!svg) {
                 return NULL;
@@ -55,8 +55,8 @@ int svgMultiValue;
 int current_element_id;
 SvgAttribute attributeList[1000];
 int n_attributes = 0;
-char currentAttribute[1000];
-char currentValue[1000];
+int8_t currentAttribute[1000];
+int8_t currentValue[1000];
 
 int svg_identify_element(char *buff);
 
@@ -64,8 +64,8 @@ int svg_identify_element(char *buff);
 EmbColor svgColorToEmbColor(char *colorString)
 {
         EmbColor c;
-        char *pEnd = 0;
-        char *colorStr = copy_trim(colorString);        /* Trim out any junk spaces */
+        int8_t *pEnd = 0;
+        int8_t *colorStr = copy_trim(colorString);        /* Trim out any junk spaces */
         int length = strlen(colorStr);
         int tableColor;
 
@@ -77,13 +77,13 @@ EmbColor svgColorToEmbColor(char *colorString)
                 c = embColor_fromHexStr(colorStr);
         } else if (length == 4 && colorStr[0] == '#') { /* Three digit hex — #rgb */
                 /* Convert the 3 digit hex to a six digit hex */
-                char hex[7];
+                int8_t hex[7];
                 sprintf(hex, "%c%c%c%c%c%c", colorStr[1], colorStr[1],
                         colorStr[2], colorStr[2], colorStr[3], colorStr[3]);
 
                 c = embColor_fromHexStr(hex);
         } else if (strstr(colorStr, "%")) {     /* Float functional — rgb(R%, G%, B%) */
-                char *s = colorStr;
+                int8_t *s = colorStr;
                 /* replace characters we aren't using with spaces */
                 for (; *s; s++) {
                         if (*s == 'r' || *s == 'g' || *s == 'b' || *s == ','
@@ -92,18 +92,18 @@ EmbColor svgColorToEmbColor(char *colorString)
                         }
                 }
                 c.r =
-                    (unsigned char)emb_round(255.0 / 100.0 *
+                    (uint8_t)emb_round(255.0 / 100.0 *
                                              strtod(colorStr, &pEnd));
                 c.g =
-                    (unsigned char)emb_round(255.0 / 100.0 *
+                    (uint8_t)emb_round(255.0 / 100.0 *
                                              strtod(pEnd, &pEnd));
                 c.b =
-                    (unsigned char)emb_round(255.0 / 100.0 *
+                    (uint8_t)emb_round(255.0 / 100.0 *
                                              strtod(pEnd, &pEnd));
         } else if (length > 3 && colorStr[0] == 'r' && colorStr[1] == 'g'
                    && colorStr[2] == 'b') {
                 /* Integer functional — rgb(rrr, ggg, bbb) */
-                char *s = colorStr;
+                int8_t *s = colorStr;
                 /* replace characters we aren't using with spaces */
                 for (; *s; s++) {
                         if (*s == 'r' || *s == 'g' || *s == 'b' || *s == ','
@@ -111,9 +111,9 @@ EmbColor svgColorToEmbColor(char *colorString)
                                 *s = ' ';
                         }
                 }
-                c.r = (unsigned char)strtol(colorStr, &pEnd, 10);
-                c.g = (unsigned char)strtol(pEnd, &pEnd, 10);
-                c.b = (unsigned char)strtol(pEnd, &pEnd, 10);
+                c.r = (uint8_t)strtol(colorStr, &pEnd, 10);
+                c.g = (uint8_t)strtol(pEnd, &pEnd, 10);
+                c.b = (uint8_t)strtol(pEnd, &pEnd, 10);
         } else {                /* Color keyword */
                 tableColor = threadColor(colorStr, SVG_Colors);
                 if (tableColor < 0) {
@@ -166,7 +166,7 @@ int svgPathCmdToEmbPathFlag(char cmd)
         return LINETO;
 }
 
-char *svgAttribute_getValue(const char *name)
+int8_t *svgAttribute_getValue(const int8_t *name)
 {
         int i;
         for (i = 0; i < n_attributes; i++) {
@@ -198,7 +198,7 @@ void parse_ellipse(EmbPattern *p)
 
 void parse_line(EmbPattern *p)
 {
-        char *x1, *x2, *y1, *y2;
+        int8_t *x1, *x2, *y1, *y2;
         x1 = svgAttribute_getValue("x1");
         y1 = svgAttribute_getValue("y1");
         x2 = svgAttribute_getValue("x2");
@@ -227,17 +227,17 @@ void parse_path(EmbPattern *p)
         EmbVector position, f_point, l_point, c1_point, c2_point;
         int cmd, i, pos, reset, trip;
         EmbReal pathData[7];
-        unsigned int numMoves;
+        uint32_t numMoves;
         EmbColor color;
         EmbArray *flagList = 0;
         EmbPath path;
-        char *pointStr = svgAttribute_getValue("d");
-        char *mystrok = svgAttribute_getValue("stroke");
+        int8_t *pointStr = svgAttribute_getValue("d");
+        int8_t *mystrok = svgAttribute_getValue("stroke");
         int last = strlen(pointStr);
         int size = 32;
         int pendingTask = 0;
         int relative = 0;
-        char *pathbuff = 0;
+        int8_t *pathbuff = 0;
 
         EmbArray *pointList = 0;
         pos = 0;
@@ -271,7 +271,7 @@ void parse_path(EmbPattern *p)
         printf("stroke:%s\n", mystrok);
 
         for (i = 0; i < last; i++) {
-                char c = pointStr[i];
+                int8_t c = pointStr[i];
                 if (emb_verbose > 1) {
                         printf("relative %d\n", relative);
                         printf("c1.x %f\n", c1_point.x);
@@ -289,7 +289,7 @@ void parse_path(EmbPattern *p)
                 case '8':
                 case '9':
                 case '.':
-                        pathbuff[pos++] = (char)c;      /* add a more char */
+                        pathbuff[pos++] = (char)c;      /* add a more int8_t */
                         break;
 
                 case ' ':
@@ -314,7 +314,7 @@ void parse_path(EmbPattern *p)
                                 pathData[++trip] = atof(pathbuff);
                         }
                         pathbuff[pos++] = (char)c;
-                        /* add a more char */
+                        /* add a more int8_t */
                         break;
 
                 default:
@@ -515,18 +515,18 @@ void parse_path(EmbPattern *p)
 
 EmbArray *parse_pointlist(EmbPattern *p)
 {
-        char *pointStr = svgAttribute_getValue("points");
+        int8_t *pointStr = svgAttribute_getValue("points");
         int last = strlen(pointStr);
         int size = 32;
         int i = 0;
         int pos = 0;
-        unsigned char odd = 1;
+        uint8_t odd = 1;
         EmbReal xx = 0.0;
         EmbReal yy = 0.0;
 
         EmbArray *pointList = 0;
 
-        char *polybuff = 0;
+        int8_t *polybuff = 0;
 
         if (emb_verbose > 1) {
                 printf("Called with %p\n", (void *)p);
@@ -539,7 +539,7 @@ EmbArray *parse_pointlist(EmbPattern *p)
                 return pointList;
         }
         for (i = 0; i < last; i++) {
-                char c = pointStr[i];
+                int8_t c = pointStr[i];
                 switch (c) {
                 case ' ':
                         if (pos == 0) {
@@ -671,7 +671,7 @@ int svg_identify_element(char *buff)
         return -1;
 }
 
-int svgIsElement(const char *buff)
+int svgIsElement(const int8_t *buff)
 {
         if (stringInArray(buff, svg_element_tokens)) {
                 return SVG_ELEMENT;
@@ -691,9 +691,9 @@ int svgIsElement(const char *buff)
 
 /*
 int
-svgIsSvgAttribute(const char* buff)
+svgIsSvgAttribute(const int8_t* buff)
 {
-    const char *inkscape_tokens[] = {
+    const int8_t *inkscape_tokens[] = {
         "xmlns:dc", "xmlns:cc", "xmlns:rdf", "xmlns:svg", "xmlns", "\0"
     };
     if (stringInArray(buff, svg_attribute_tokens)) {
@@ -709,10 +709,10 @@ svgIsSvgAttribute(const char* buff)
 }
 */
 
-void svgProcess(int c, const char *buff)
+void svgProcess(int c, const int8_t *buff)
 {
         if (svgExpect == SVG_EXPECT_ELEMENT) {
-                char advance = 0;
+                int8_t advance = 0;
                 if (buff[0] == '/') {
                         return;
                 }
@@ -725,7 +725,7 @@ void svgProcess(int c, const char *buff)
                         return;
                 }
         } else if (svgExpect == SVG_EXPECT_ATTRIBUTE) {
-                char advance = 0;
+                int8_t advance = 0;
                 switch (current_element_id) {
                 case ELEMENT_A:
                 case ELEMENT_CIRCLE:
@@ -767,7 +767,7 @@ void svgProcess(int c, const char *buff)
                         break;
                 }
                 if (!advance) {
-                        if (stringInArray(buff, (const char **)
+                        if (stringInArray(buff, (const int8_t **)
                                           svg_attribute_table
                                           [current_element_id])) {
                                 advance = SVG_ATTRIBUTE;
@@ -824,13 +824,13 @@ void svgProcess(int c, const char *buff)
 #endif
 
 /* . */
-char readSvg(EmbPattern *pattern, FILE *file)
+int8_t readSvg(EmbPattern *pattern, FILE *file)
 {
         REPORT_PTR(pattern)
             REPORT_PTR(file)
 #if 0
         int size, pos, i;
-        char *buff = 0, c;
+        int8_t *buff = 0, c;
         size = 1024;
 
         for (i = 0; i < 1000; i++) {
@@ -964,13 +964,13 @@ char readSvg(EmbPattern *pattern, FILE *file)
 
 /*! Writes the data from a pattern to a file with the given a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-char writeSvg(EmbPattern *pattern, FILE *file)
+int8_t writeSvg(EmbPattern *pattern, FILE *file)
 {
         EmbRect boundingRect;
         EmbRect rect;
         EmbColor color;
         int i, j;
-        char isNormal, tmpX[32], tmpY[32];
+        int8_t isNormal, tmpX[32], tmpY[32];
         EmbRect border;
 
         /* Pre-flip the pattern since SVG Y+ is down and libembroidery Y+ is up. */
@@ -1175,9 +1175,9 @@ char writeSvg(EmbPattern *pattern, FILE *file)
  * The Pfaff t01 format is stitch-only.
  */
 
-char readT01(EmbPattern *pattern, FILE *file)
+int8_t readT01(EmbPattern *pattern, FILE *file)
 {
-        unsigned char b[3];
+        uint8_t b[3];
 
         while (fread(b, 1, 3, file) == 3) {
                 int flags, x, y;
@@ -1190,7 +1190,7 @@ char readT01(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-char writeT01(EmbPattern *pattern, FILE *file)
+int8_t writeT01(EmbPattern *pattern, FILE *file)
 {
         EmbRect boundingRect;
         int i;
@@ -1207,7 +1207,7 @@ char writeT01(EmbPattern *pattern, FILE *file)
         pos.x = 0.0;
         pos.y = 0.0;
         for (i = 0; i < pattern->stitch_list->count; i++) {
-                unsigned char b[3];
+                uint8_t b[3];
                 int dx, dy;
                 EmbStitch st = pattern->stitch_list->stitch[i];
                 /* convert from mm to 0.1mm for file format */

@@ -21,7 +21,7 @@ int jefGetHoopSize(int width, int height)
         return ((int)HOOP_110X110);
 }
 
-char jefDecode(unsigned char inputByte)
+int8_t jefDecode(uint8_t inputByte)
 {
         if (inputByte >= 0x80) {
                 return (char)((-~inputByte) - 1);
@@ -68,7 +68,7 @@ struct hoop_padding {
         int bottom;
 };
 
-void read_hoop(FILE *file, struct hoop_padding *hoop, char *label)
+void read_hoop(FILE *file, struct hoop_padding *hoop, int8_t *label)
 {
         if (emb_verbose > 1) {
                 printf("%s\n", label);
@@ -79,7 +79,7 @@ void read_hoop(FILE *file, struct hoop_padding *hoop, char *label)
         hoop->bottom = emb_read_i32(file);
 }
 
-char readJef(EmbPattern *pattern, FILE *file)
+int8_t readJef(EmbPattern *pattern, FILE *file)
 {
         int stitchOffset, formatFlags, numberOfColors, numberOfStitchs;
         int hoopSize, i, stitchCount;
@@ -121,8 +121,8 @@ char readJef(EmbPattern *pattern, FILE *file)
         fseek(file, stitchOffset, SEEK_SET);
         stitchCount = 0;
         while (stitchCount < numberOfStitchs + 100) {
-                unsigned char b[2];
-                char dx = 0, dy = 0;
+                uint8_t b[2];
+                int8_t dx = 0, dy = 0;
                 int flags = NORMAL;
                 if (fread(b, 1, 2, file) != 2) {
                         break;
@@ -152,7 +152,7 @@ char readJef(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-void jefEncode(unsigned char *b, char dx, char dy, int flags)
+void jefEncode(uint8_t *b, int8_t dx, int8_t dy, int flags)
 {
         if (!b) {
                 printf("ERROR: format-jef.c expEncode(), b argument is null\n");
@@ -179,7 +179,7 @@ void jefEncode(unsigned char *b, char dx, char dy, int flags)
         }
 }
 
-char writeJef(EmbPattern *pattern, FILE *file)
+int8_t writeJef(EmbPattern *pattern, FILE *file)
 {
         int colorlistSize, minColors, designWidth, designHeight, i;
         EmbRect boundingRect;
@@ -277,9 +277,9 @@ char writeJef(EmbPattern *pattern, FILE *file)
         pos.x = 0.0;
         pos.y = 0.0;
         for (i = 0; i < pattern->stitch_list->count; i++) {
-                unsigned char b[4];
+                uint8_t b[4];
                 EmbStitch st;
-                char dx, dy;
+                int8_t dx, dy;
                 b[0] = 0;
                 b[1] = 0;
                 b[2] = 0;

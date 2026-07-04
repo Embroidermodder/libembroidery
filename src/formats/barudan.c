@@ -8,9 +8,9 @@
  *
  * Stitch Only Format.
  */
-char readDat(EmbPattern *pattern, FILE *file)
+int8_t readDat(EmbPattern *pattern, FILE *file)
 {
-        unsigned char b0;
+        uint8_t b0;
         int fileLength, stitchesRemaining, b1, b2, stitchType;
 
         fseek(file, 0x00, SEEK_END);
@@ -51,12 +51,12 @@ char readDat(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-char writeDat(EmbPattern *pattern, FILE *file)
+int8_t writeDat(EmbPattern *pattern, FILE *file)
 {
         int i;
         fpad(file, 0x00, 0x100);
         for (i = 0; i < pattern->stitch_list->count; i++) {
-                unsigned char b[3];
+                uint8_t b[3];
                 EmbStitch st = pattern->stitch_list->stitch[i];
                 b[0] = 0;
                 b[1] = 0;

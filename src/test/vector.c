@@ -10,9 +10,9 @@
 static EmbReal tolerence = 0.000001;
 
 /* Test that emb_vector_add works correctly. */
-int test_vadd(const char *data)
+int test_vadd(const int8_t *data)
 {
-        char *ptr;
+        int8_t *ptr;
         EmbVector v1;
         EmbVector v2;
         EmbVector result;
@@ -39,9 +39,9 @@ int test_vadd(const char *data)
 }
 
 /* Test that emb_vector_subtract works correctly. */
-int test_vsubtract(const char *data)
+int test_vsubtract(const int8_t *data)
 {
-        char *ptr;
+        int8_t *ptr;
         EmbVector v1;
         EmbVector v2;
         EmbVector result;
@@ -69,9 +69,9 @@ int test_vsubtract(const char *data)
 }
 
 /* Test that emb_vector_subtract works correctly. */
-int test_vnormalize(const char *data)
+int test_vnormalize(const int8_t *data)
 {
-        char *ptr;
+        int8_t *ptr;
         EmbVector v;
         EmbVector result;
         int error = 0;

@@ -8,7 +8,7 @@
 
 #include "embroidery.h"
 
-void ksmEncode(unsigned char *b, char dx, char dy, int flags)
+void ksmEncode(uint8_t *b, int8_t dx, int8_t dy, int flags)
 {
         if (!b) {
                 printf("ERROR: format-ksm.c ksmEncode(), b argument is null\n");
@@ -32,10 +32,10 @@ void ksmEncode(unsigned char *b, char dx, char dy, int flags)
         }
 }
 
-char readKsm(EmbPattern *pattern, FILE *file)
+int8_t readKsm(EmbPattern *pattern, FILE *file)
 {
         int prevStitchType = NORMAL;
-        char b[3];
+        int8_t b[3];
         fseek(file, 0x200, SEEK_SET);
         while (fread(b, 1, 3, file) == 3) {
                 int flags = NORMAL;
@@ -57,7 +57,7 @@ char readKsm(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-char writeKsm(EmbPattern *pattern, FILE *file)
+int8_t writeKsm(EmbPattern *pattern, FILE *file)
 {
         EmbVector pos;
         int i;
@@ -67,8 +67,8 @@ char writeKsm(EmbPattern *pattern, FILE *file)
         pos.x = 0.0;
         pos.y = 0.0;
         for (i = 0; i < pattern->stitch_list->count; i++) {
-                unsigned char b[4];
-                char dx, dy;
+                uint8_t b[4];
+                int8_t dx, dy;
                 EmbStitch st = pattern->stitch_list->stitch[i];
                 dx = (char)(10.0 * (st.x - pos.x));
                 dy = (char)(10.0 * (st.y - pos.y));
@@ -84,7 +84,7 @@ char writeKsm(EmbPattern *pattern, FILE *file)
 /* Pfaff Embroidery Format (.max)
  * Stitch Only Format.
  */
-const unsigned char max_header[] = {
+const uint8_t max_header[] = {
         0x56, 0x43, 0x53, 0x4D, 0xFC, 0x03, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
         0x01, 0x00, 0x00, 0x00,
         0xF6, 0x25, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -118,9 +118,9 @@ const unsigned char max_header[] = {
 /* format max */
 
 /* Pfaff MAX embroidery file format */
-char readMax(EmbPattern *pattern, FILE *file)
+int8_t readMax(EmbPattern *pattern, FILE *file)
 {
-        unsigned char b[8];
+        uint8_t b[8];
 
         fseek(file, 0xD5, SEEK_SET);
         /* stitchCount = emb_read_i32(file); CHECK IF THIS IS PRESENT */
@@ -137,7 +137,7 @@ char readMax(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-char writeMax(EmbPattern *pattern, FILE *file)
+int8_t writeMax(EmbPattern *pattern, FILE *file)
 {
         int i;
         EmbReal x, y;

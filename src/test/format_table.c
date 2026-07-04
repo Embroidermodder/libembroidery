@@ -8,7 +8,7 @@
 
 int test_format_table(void)
 {
-        const char *tName = "example.zsk";
+        const int8_t *tName = "example.zsk";
         int format = emb_identify_format(tName);
 
         printf("  Filename   : %s\n"

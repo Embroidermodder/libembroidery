@@ -7,7 +7,7 @@
 
 #include "embroidery.h"
 
-int decode_exy_flags(unsigned char b2)
+int decode_exy_flags(uint8_t b2)
 {
         int returnCode = 0;
         if (b2 == 0xF3) {
@@ -25,9 +25,9 @@ int decode_exy_flags(unsigned char b2)
         return returnCode;
 }
 
-char readExy(EmbPattern *pattern, FILE *file)
+int8_t readExy(EmbPattern *pattern, FILE *file)
 {
-        unsigned char b[3];
+        uint8_t b[3];
 
         fseek(file, 0x100, SEEK_SET);
         while (fread(b, 1, 3, file) == 3) {
@@ -43,7 +43,7 @@ char readExy(EmbPattern *pattern, FILE *file)
         return 1;
 }
 
-char writeExy(EmbPattern *pattern, FILE *file)
+int8_t writeExy(EmbPattern *pattern, FILE *file)
 {
         puts("ERROR: writeExy has not been finished.");
         REPORT_PTR(pattern);

@@ -146,4 +146,3 @@ char writeInf(EmbPattern *pattern, FILE *file)
         emb_write_u32be(file, bytesRemaining);
         return 1;
 }
-

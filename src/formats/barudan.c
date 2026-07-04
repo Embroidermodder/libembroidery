@@ -82,4 +82,3 @@ char writeDat(EmbPattern *pattern, FILE *file)
         }
         return 1;               /*TODO: finish writeDat */
 }
-

@@ -293,4 +293,3 @@ char writeCsv(EmbPattern *pattern, FILE *file)
         }
         return 1;
 }
-

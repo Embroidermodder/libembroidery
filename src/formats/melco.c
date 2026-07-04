@@ -7,8 +7,8 @@
 
 #include "embroidery.h"
 
-char readDst(EmbPattern *pattern, FILE *file);
-char writeDst(EmbPattern *pattern, FILE *file);
+char readDst(EmbPattern * pattern, FILE * file);
+char writeDst(EmbPattern * pattern, FILE * file);
 
 /* The Melco Embroidery Format (.cnd)
  *

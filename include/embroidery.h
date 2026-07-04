@@ -1581,6 +1581,8 @@ EMB_PUBLIC int decode_t01_record(uint8_t b[3], int *x, int *y, int *flags);
 EMB_PUBLIC int encode_tajima_ternary(uint8_t b[3], int x, int y);
 EMB_PUBLIC void decode_tajima_ternary(uint8_t b[3], int *x, int *y);
 
+EMB_PUBLIC int run_tests(void);
+
 /* NON-MACRO CONSTANTS
  ******************************************************************************/
 

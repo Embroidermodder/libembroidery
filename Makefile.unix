@@ -67,9 +67,13 @@ $(BUILD_DIR)/%.c.o: %.c
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@
 
+install:
+	mv $(BUILD_DIR)/$(EXEC) /usr/bin
+	mv $(BUILD_DIR)/$(LIBRARY) /usr/bin/x86_64-linux-gnu
+
 test: $(BUILD_DIR)/$(EXEC)
 	./$(BUILD_DIR)/$(EXEC) --test
 
 .PHONY: clean
 clean:
-	rm -f $(BUILD_DIR)
+	rm -fr $(BUILD_DIR)

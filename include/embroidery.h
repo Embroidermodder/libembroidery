@@ -1349,15 +1349,15 @@ EMB_PUBLIC void emb_add_circle(EmbPattern* p, EmbCircle obj);
 EMB_PUBLIC void emb_add_ellipse(EmbPattern* p, EmbEllipse obj);
 EMB_PUBLIC void emb_add_line(EmbPattern* p, EmbLine obj);
 EMB_PUBLIC void emb_add_path(EmbPattern* p, EmbPath obj);
-EMB_PUBLIC void emb_addPointAbs(EmbPattern* p, EmbPoint obj);
-EMB_PUBLIC void emb_addPolygonAbs(EmbPattern* p, EmbPolygon obj);
-EMB_PUBLIC void emb_addPolylineAbs(EmbPattern* p, EmbPolyline obj);
-EMB_PUBLIC void emb_addRectAbs(EmbPattern* p, EmbRect obj);
+EMB_PUBLIC void emb_add_point(EmbPattern* p, EmbPoint obj);
+EMB_PUBLIC void emb_add_polygon(EmbPattern* p, EmbPolygon obj);
+EMB_PUBLIC void emb_add_polyline(EmbPattern* p, EmbPolyline obj);
+EMB_PUBLIC void emb_add_rect(EmbPattern* p, EmbRect obj);
 
-EMB_PUBLIC void emb_copy_stitches_to_polylines(EmbPattern* pattern);
-EMB_PUBLIC void emb_copy_polylines_to_stitches(EmbPattern* pattern);
-EMB_PUBLIC void emb_move_stitches_to_polylines(EmbPattern* pattern);
-EMB_PUBLIC void emb_move_polylines_to_stitches(EmbPattern* pattern);
+EMB_PUBLIC void emb_copy_sl_to_polylines(EmbPattern* pattern);
+EMB_PUBLIC void emb_copy_polylines_to_sl(EmbPattern* pattern);
+EMB_PUBLIC void emb_move_sl_to_polylines(EmbPattern* pattern);
+EMB_PUBLIC void emb_move_polylines_to_sl(EmbPattern* pattern);
 
 EMB_PUBLIC int8_t emb_read(EmbPattern *pattern, const int8_t* fileName, int format);
 EMB_PUBLIC int8_t emb_write(EmbPattern *pattern, const int8_t* fileName, int format);

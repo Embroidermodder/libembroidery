@@ -111,7 +111,7 @@ void emb_fix_color_count(EmbPattern * p)
 /* Copies all of the Embstitch_list data to
  * EmbPolylineObjectList data for pattern (a p).
  */
-void emb_copystitch_listToPolylines(EmbPattern * p)
+void emb_copy_sl_to_polylines(EmbPattern * p)
 {
     int breakAtFlags, i;
     EmbPoint point;
@@ -159,7 +159,8 @@ void emb_copystitch_listToPolylines(EmbPattern * p)
 /* Copies all of the EmbPolylineObjectList data to Embstitch_list
  * data for pattern (a p).
  */
-void emb_copyPolylinesTostitch_list(EmbPattern * p) {
+void emb_copy_polylines_to_sl(EmbPattern * p)
+{
     int firstObject = 1, i, j;
     /*int currentColor = polyList->polylineObj->color TODO: polyline color */
 
@@ -210,13 +211,14 @@ void emb_copyPolylinesTostitch_list(EmbPattern * p) {
 /* Moves all of the Embstitch_list data to EmbPolylineObjectList
  * data for pattern (a p).
  */
-void emb_movestitch_listToPolylines(EmbPattern * p) {
+void emb_move_sl_to_polylines(EmbPattern * p)
+{
     if (!p) {
         printf
             ("ERROR: emb-pattern.c emb_movestitch_listToPolylines(), p argument is null\n");
         return;
     }
-    emb_copystitch_listToPolylines(p);
+    emb_copy_sl_to_polylines(p);
     /* Free the stitch_list and threadList since their data has now been transferred to polylines */
     p->stitch_list->count = 0;
     p->thread_list->count = 0;
@@ -225,13 +227,14 @@ void emb_movestitch_listToPolylines(EmbPattern * p) {
 /* Moves all of the EmbPolylineObjectList data to Embstitch_list
  * data for pattern (a p).
  */
-void emb_movePolylinesTostitch_list(EmbPattern * p) {
+void emb_move_polylines_to_sl(EmbPattern * p)
+{
     if (!p) {
         printf
-            ("ERROR: emb-pattern.c emb_movePolylinesTostitch_list(), p argument is null\n");
+            ("ERROR: emb-pattern.c emb_move_polylines_to_sl(), p argument is null\n");
         return;
     }
-    emb_copyPolylinesTostitch_list(p);
+    emb_copy_polylines_to_sl(p);
 }
 
 /* Adds a stitch to the pattern (a p) at the absolute position
@@ -735,7 +738,8 @@ void emb_center(EmbPattern * p) {
 
 /* TODO: Description needed.
  */
-void emb_loadExternalColorFile(EmbPattern * p, const int8_t * fileName) {
+void emb_loadExternalColorFile(EmbPattern * p, const int8_t * fileName)
+{
     int hasRead, stub_len, format;
     int8_t extractName[200];
 
@@ -775,7 +779,8 @@ void emb_loadExternalColorFile(EmbPattern * p, const int8_t * fileName) {
 
 /* Frees all memory allocated in the pattern (a p).
  */
-void emb_free(EmbPattern * p) {
+void emb_free(EmbPattern * p)
+{
     if (!p) {
         printf("ERROR: emb-pattern.c emb_free(), p argument is null\n");
         return;
@@ -788,8 +793,8 @@ void emb_free(EmbPattern * p) {
 
 /*
  */
-void
- emb_add_geometry(EmbPattern * p, EmbGeometry g) {
+void emb_add_geometry(EmbPattern * p, EmbGeometry g)
+{
     emb_array_add_geometry(p->geometry, g);
 }
 
@@ -797,8 +802,8 @@ void
  * position (a cx,a cy) with a radius of (a r). Positive y is up.
  * Units are in millimeters.
  */
-void
- emb_add_circle(EmbPattern * p, EmbCircle circle) {
+void emb_add_circle(EmbPattern * p, EmbCircle circle)
+{
     if (!p) {
         printf("ERROR: emb-pattern.c emb_add_circle(), p argument is null\n");
         return;
@@ -814,8 +819,8 @@ void
  * absolute position (a cx,a cy) with radii of (a rx,a ry). Positive y is up.
  * Units are in millimeters.
  */
-void
- emb_add_ellipse(EmbPattern * p, EmbEllipse ellipse) {
+void emb_add_ellipse(EmbPattern * p, EmbEllipse ellipse)
+{
     if (!p) {
         printf
             ("ERROR: emb-pattern.c emb_addEllipseObjectAbs(), p argument is null\n");
@@ -829,8 +834,8 @@ void
  * (a x1,a y1) and ending at the absolute position (a x2,a y2).
  * Positive y is up. Units are in millimeters.
  */
-void
- emb_add_line(EmbPattern * p, EmbLine line) {
+void emb_add_line(EmbPattern * p, EmbLine line)
+{
     if (!p) {
         printf
             ("ERROR: emb-pattern.c emb_addLineObjectAbs(), p argument is null\n");
@@ -842,8 +847,8 @@ void
 
 /* .
  */
-void
- emb_add_path(EmbPattern * p, EmbPath obj) {
+void emb_add_path(EmbPattern * p, EmbPath obj)
+{
     if (!p) {
         printf
             ("ERROR: emb-pattern.c emb_addPathObjectAbs(), p argument is null\n");
@@ -859,7 +864,8 @@ void
 }
 
 /*! Adds a point object to pattern (a p) at the absolute position (a x,a y). Positive y is up. Units are in millimeters. */
-void emb_addPointAbs(EmbPattern * p, EmbPoint obj) {
+void emb_add_point(EmbPattern * p, EmbPoint obj)
+{
     if (!p) {
         printf
             ("ERROR: emb-pattern.c emb_addPointObjectAbs(), p argument is null\n");
@@ -869,7 +875,8 @@ void emb_addPointAbs(EmbPattern * p, EmbPoint obj) {
     emb_array_addPoint(p->geometry, obj);
 }
 
-void emb_addPolygonAbs(EmbPattern * p, EmbPolygon obj) {
+void emb_add_polygon(EmbPattern * p, EmbPolygon obj)
+{
     if (!p) {
         printf
             ("ERROR: emb-pattern.c emb_addPolygonObjectAbs(), p argument is null\n");
@@ -884,7 +891,8 @@ void emb_addPolygonAbs(EmbPattern * p, EmbPolygon obj) {
     emb_array_addPolygon(p->geometry, obj);
 }
 
-void emb_addPolylineObjectAbs(EmbPattern * p, EmbPolyline obj) {
+void emb_add_polyline(EmbPattern * p, EmbPolyline obj)
+{
     if (!p) {
         printf
             ("ERROR: emb-pattern.c emb_addPolylineObjectAbs(), p argument is null\n");
@@ -902,7 +910,8 @@ void emb_addPolylineObjectAbs(EmbPattern * p, EmbPolyline obj) {
  * (a x,a y) with a width of (a w) and a height of (a h).
  * Positive y is up. Units are in millimeters.
  */
-void emb_addRectAbs(EmbPattern * p, EmbRect rect) {
+void emb_add_rect(EmbPattern * p, EmbRect rect)
+{
     if (!p) {
         printf
             ("ERROR: emb-pattern.c emb_addRectObjectAbs(), p argument is null\n");
@@ -948,7 +957,7 @@ int convert(const int8_t * inf, const int8_t * outf)
 
     if (formatTable[reader].type == EMBFORMAT_OBJECTONLY) {
         if (formatTable[writer].type == EMBFORMAT_STITCHONLY) {
-            emb_movePolylinesTostitch_list(p);
+            emb_move_polylines_to_sl(p);
         }
     }
 

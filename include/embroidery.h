@@ -523,56 +523,6 @@ extern "C" {
 #define EMB_MIN(A, B)     (((A) < (B)) ? (A) : (B))
 #define EMB_MAX(A, B)     (((A) > (B)) ? (A) : (B))
 
-/* DEBUGGING MACROS
- * ----------------
- */
-#define REPORT_VALUE(X, TYPE) \
-    if (emb_verbose>1) { \
-        printf(#X ": %" #TYPE "\n", X); \
-    }
-#define REPORT_INT(X)          REPORT_VALUE(X, d)
-#define REPORT_FLOAT(X)        REPORT_VALUE(X, f)
-#define REPORT_STR(X)          REPORT_VALUE(X, s)
-#define REPORT_PTR(X)          REPORT_VALUE(X, p)
-
-/* Automating reporting as part of loading a value.
- *
- * NOTE: declarations are kept seperate because in C90 we may need to
- * seperate all declarations to the start of the scope they sit in.
- */
-#define LOAD_U8(FILE, X) \
-    if (fread(&X, 1, 1, FILE) != 1) { \
-        puts("ERROR: failed to read single byte from file."); \
-    } \
-    REPORT_INT(X)
-#define LOAD_I8(FILE, X) LOAD_U8(FILE, X)
-
-#define LOAD_U16(FILE, X) \
-    X = emb_read_u16(FILE); \
-    REPORT_INT(X)
-#define LOAD_I16(FILE, X) \
-    X = emb_read_i16(FILE); \
-    REPORT_INT(X)
-#define LOAD_U32(FILE, X) \
-    X = emb_read_u32(FILE); \
-    REPORT_INT(X)
-#define LOAD_I32(FILE, X) \
-    X = emb_read_i32(FILE); \
-    REPORT_INT(X)
-
-#define LOAD_U16_BE(FILE, X) \
-    X = emb_read_u16be(FILE); \
-    REPORT_INT(X)
-#define LOAD_I16_BE(FILE, X) \
-    X = emb_read_i16be(FILE); \
-    REPORT_INT(X)
-#define LOAD_U32_BE(FILE, X) \
-    X = emb_read_u32be(FILE); \
-    REPORT_INT(X)
-#define LOAD_I32_BE(FILE, X) \
-    X = emb_read_i32be(FILE); \
-    REPORT_INT(X)
-
 /* COMPILATION SETTINGS
  * --------------------
  */
@@ -1234,6 +1184,7 @@ EMB_PUBLIC int emb_identify_format(const int8_t *ending);
 EMB_PUBLIC int convert(const int8_t *inf, const int8_t *outf);
 
 EMB_PUBLIC EmbVector emb_vector(EmbReal x, EmbReal y);
+EMB_PUBLIC void emb_vector_print(EmbVector v, int8_t *label);
 
 EMB_PUBLIC int embstr_len(EmbString str);
 EMB_PUBLIC int8_t read_n_bytes(FILE *file, uint8_t *data, uint32_t length);
@@ -1286,8 +1237,8 @@ EMB_PUBLIC void emb_array_free(EmbArray* p);
 
 EMB_PUBLIC EmbLine emb_line_make(EmbReal x1, EmbReal y1, EmbReal x2, EmbReal y2);
 
-EMB_PUBLIC EmbVector emb_line_normalVector(EmbLine line, int clockwise);
-EMB_PUBLIC EmbVector emb_line_intersectionPoint(EmbLine line1, EmbLine line2, int *error_code);
+EMB_PUBLIC EmbVector emb_line_normal(EmbLine line, int clockwise);
+EMB_PUBLIC EmbVector emb_line_intersection(EmbLine line1, EmbLine line2, int *error_code);
 
 /* Encoding */
 uint8_t toyota_position_encode(EmbReal x);
@@ -1314,6 +1265,9 @@ EMB_PUBLIC EmbVector emb_vector_unit(EmbReal angle);
 
 EMB_PUBLIC EmbGeometry emb_arc(EmbReal, EmbReal, EmbReal, EmbReal, EmbReal, EmbReal);
 EMB_PUBLIC int8_t emb_arc_clockwise(EmbGeometry arc);
+EMB_PUBLIC void emb_arc_print(EmbArc arc);
+EMB_PUBLIC EmbVector emb_arc_center(EmbArc arc, EmbError *error);
+EMB_PUBLIC EmbError emb_arc_set_center(EmbGeometry *g, EmbVector point);
 
 EMB_PUBLIC EmbCircle emb_circle(EmbReal x, EmbReal y, EmbReal r);
 EMB_PUBLIC void emb_circle_set_area(EmbCircle *circle, float area);
@@ -1356,60 +1310,60 @@ EMB_PUBLIC void emb_geometry_move(EmbGeometry *obj, EmbVector delta);
 EMB_PUBLIC EmbRect embGeometry_boundingRect(EmbGeometry *obj);
 EMB_PUBLIC void emb_vulcanize(EmbGeometry *obj);
 
-EMB_PUBLIC EmbPattern* embp_create(void);
-EMB_PUBLIC void embp_hideStitchesOverLength(EmbPattern* p, int length);
-EMB_PUBLIC void embp_fixColorCount(EmbPattern* p);
-EMB_PUBLIC int embp_addThread(EmbPattern* p, EmbThread thread);
-EMB_PUBLIC void embp_addStitchAbs(EmbPattern* p, EmbReal x, EmbReal y,
+EMB_PUBLIC EmbPattern* emb_create(void);
+EMB_PUBLIC void emb_hideStitchesOverLength(EmbPattern* p, int length);
+EMB_PUBLIC void emb_fix_color_count(EmbPattern* p);
+EMB_PUBLIC int emb_add_thread(EmbPattern* p, EmbThread thread);
+EMB_PUBLIC void emb_add_stitch_abs(EmbPattern* p, EmbReal x, EmbReal y,
     int flags, int isAutoColorIndex);
-EMB_PUBLIC void embp_addStitchRel(EmbPattern* p, EmbReal dx, EmbReal dy, int flags, int isAutoColorIndex);
-EMB_PUBLIC void embp_changeColor(EmbPattern* p, int index);
-EMB_PUBLIC void embp_free(EmbPattern* p);
-EMB_PUBLIC void embp_print(EmbPattern *pattern);
-EMB_PUBLIC void embp_scale(EmbPattern* p, EmbReal scale);
-EMB_PUBLIC EmbReal embp_shortest_stitch(EmbPattern *pattern);
-EMB_PUBLIC EmbReal embp_longest_stitch(EmbPattern *pattern);
-EMB_PUBLIC void embp_lengthHistogram(EmbPattern *pattern, int *bin, int NUMBINS);
-EMB_PUBLIC int embp_realStitches(EmbPattern *pattern);
-EMB_PUBLIC int embp_jumpStitches(EmbPattern *pattern);
-EMB_PUBLIC int embp_trimStitches(EmbPattern *pattern);
-EMB_PUBLIC EmbRect embp_bounds(EmbPattern* p);
-EMB_PUBLIC void embp_flipHorizontal(EmbPattern* p);
-EMB_PUBLIC void embp_flipVertical(EmbPattern* p);
-EMB_PUBLIC void embp_flip(EmbPattern* p, int horz, int vert);
-EMB_PUBLIC void embp_combineJumpStitches(EmbPattern* p);
-EMB_PUBLIC void embp_correctForMaxStitchLength(EmbPattern* p, EmbReal maxStitchLength, EmbReal maxJumpLength);
-EMB_PUBLIC void embp_center(EmbPattern* p);
-EMB_PUBLIC void embp_loadExternalColorFile(EmbPattern* p, const int8_t* fileName);
-EMB_PUBLIC void embp_convertGeometry(EmbPattern* p);
-EMB_PUBLIC void embp_details(EmbPattern *p);
-EMB_PUBLIC EmbPattern *embp_combine(EmbPattern *p1, EmbPattern *p2);
-EMB_PUBLIC int embp_color_count(EmbPattern *pattern, EmbColor startColor);
-EMB_PUBLIC void embp_end(EmbPattern* p);
-EMB_PUBLIC void embp_crossstitch(EmbPattern *pattern, EmbImage *, int threshhold);
-EMB_PUBLIC void embp_horizontal_fill(EmbPattern *pattern, EmbImage *, int threshhold);
-EMB_PUBLIC int embp_render(EmbPattern *pattern, int8_t *fname);
-EMB_PUBLIC int embp_simulate(EmbPattern *pattern, int8_t *fname);
+EMB_PUBLIC void emb_add_stitch(EmbPattern* p, EmbReal dx, EmbReal dy, int flags, int isAutoColorIndex);
+EMB_PUBLIC void emb_changeColor(EmbPattern* p, int index);
+EMB_PUBLIC void emb_free(EmbPattern* p);
+EMB_PUBLIC void emb_print(EmbPattern *pattern);
+EMB_PUBLIC void emb_scale(EmbPattern* p, EmbReal scale);
+EMB_PUBLIC EmbReal emb_shortest_stitch(EmbPattern *pattern);
+EMB_PUBLIC EmbReal emb_longest_stitch(EmbPattern *pattern);
+EMB_PUBLIC void emb_lengthHistogram(EmbPattern *pattern, int *bin, int NUMBINS);
+EMB_PUBLIC int emb_real_stitches(EmbPattern *pattern);
+EMB_PUBLIC int emb_jump_stitches(EmbPattern *pattern);
+EMB_PUBLIC int emb_trim_stitches(EmbPattern *pattern);
+EMB_PUBLIC EmbRect emb_bounds(EmbPattern* p);
+EMB_PUBLIC void emb_flip_horizontal(EmbPattern* p);
+EMB_PUBLIC void emb_flip_vertical(EmbPattern* p);
+EMB_PUBLIC void emb_flip(EmbPattern* p, int horz, int vert);
+EMB_PUBLIC void emb_combineJumpStitches(EmbPattern* p);
+EMB_PUBLIC void emb_correctForMaxStitchLength(EmbPattern* p, EmbReal maxStitchLength, EmbReal maxJumpLength);
+EMB_PUBLIC void emb_center(EmbPattern* p);
+EMB_PUBLIC void emb_loadExternalColorFile(EmbPattern* p, const int8_t* fileName);
+EMB_PUBLIC void emb_convertGeometry(EmbPattern* p);
+EMB_PUBLIC void emb_details(EmbPattern *p);
+EMB_PUBLIC EmbPattern *emb_combine(EmbPattern *p1, EmbPattern *p2);
+EMB_PUBLIC int emb_color_count(EmbPattern *pattern, EmbColor startColor);
+EMB_PUBLIC void emb_end(EmbPattern* p);
+EMB_PUBLIC void emb_crossstitch(EmbPattern *pattern, EmbImage *, int threshhold);
+EMB_PUBLIC void emb_horizontal_fill(EmbPattern *pattern, EmbImage *, int threshhold);
+EMB_PUBLIC int emb_render(EmbPattern *pattern, int8_t *fname);
+EMB_PUBLIC int emb_simulate(EmbPattern *pattern, int8_t *fname);
 
 EMB_PUBLIC void emb_add_circle(EmbPattern* p, EmbCircle obj);
 EMB_PUBLIC void emb_add_ellipse(EmbPattern* p, EmbEllipse obj);
 EMB_PUBLIC void emb_add_line(EmbPattern* p, EmbLine obj);
 EMB_PUBLIC void emb_add_path(EmbPattern* p, EmbPath obj);
-EMB_PUBLIC void embp_addPointAbs(EmbPattern* p, EmbPoint obj);
-EMB_PUBLIC void embp_addPolygonAbs(EmbPattern* p, EmbPolygon obj);
-EMB_PUBLIC void embp_addPolylineAbs(EmbPattern* p, EmbPolyline obj);
-EMB_PUBLIC void embp_addRectAbs(EmbPattern* p, EmbRect obj);
+EMB_PUBLIC void emb_addPointAbs(EmbPattern* p, EmbPoint obj);
+EMB_PUBLIC void emb_addPolygonAbs(EmbPattern* p, EmbPolygon obj);
+EMB_PUBLIC void emb_addPolylineAbs(EmbPattern* p, EmbPolyline obj);
+EMB_PUBLIC void emb_addRectAbs(EmbPattern* p, EmbRect obj);
 
 EMB_PUBLIC void emb_copy_stitches_to_polylines(EmbPattern* pattern);
 EMB_PUBLIC void emb_copy_polylines_to_stitches(EmbPattern* pattern);
 EMB_PUBLIC void emb_move_stitches_to_polylines(EmbPattern* pattern);
 EMB_PUBLIC void emb_move_polylines_to_stitches(EmbPattern* pattern);
 
-EMB_PUBLIC int8_t embp_read(EmbPattern *pattern, const int8_t* fileName, int format);
-EMB_PUBLIC int8_t embp_write(EmbPattern *pattern, const int8_t* fileName, int format);
+EMB_PUBLIC int8_t emb_read(EmbPattern *pattern, const int8_t* fileName, int format);
+EMB_PUBLIC int8_t emb_write(EmbPattern *pattern, const int8_t* fileName, int format);
 
-EMB_PUBLIC int8_t embp_read_auto(EmbPattern *pattern, const int8_t* fileName);
-EMB_PUBLIC int8_t embp_write_auto(EmbPattern *pattern, const int8_t* fileName);
+EMB_PUBLIC int8_t emb_read_auto(EmbPattern *pattern, const int8_t* fileName);
+EMB_PUBLIC int8_t emb_write_auto(EmbPattern *pattern, const int8_t* fileName);
 
 EMB_PUBLIC int emb_round(EmbReal x);
 EMB_PUBLIC EmbReal radians(EmbReal degree);
@@ -1417,8 +1371,8 @@ EMB_PUBLIC EmbReal degrees(EmbReal radian);
 
 /* ---------------------------------- Geometry ----------------------------- */
 
-EMB_PUBLIC int embp_real_count(EmbPattern *pattern);
-EMB_PUBLIC int embp_count_type(EmbPattern *pattern, int flags);
+EMB_PUBLIC int emb_real_count(EmbPattern *pattern);
+EMB_PUBLIC int emb_count_type(EmbPattern *pattern, int flags);
 EMB_PUBLIC void emb_color_histogram(EmbPattern *pattern, int **bins);
 EMB_PUBLIC void emb_length_histogram(EmbPattern *pattern, int *bins);
 EMB_PUBLIC double emb_total_thread_length(EmbPattern *pattern);
@@ -1432,13 +1386,12 @@ EMB_PUBLIC EmbVector scale_and_rotate(EmbVector v, double angle, double scale);
 EMB_PUBLIC EmbReal emb_angle(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbReal emb_arc_length(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbReal emb_area(EmbGeometry *geometry, EmbError *error);
-EMB_PUBLIC EmbVector emb_center(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbVector emb_chord(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbReal emb_chord_length(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbReal emb_diameter(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbReal emb_diameter_major(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbReal emb_diameter_minor(EmbGeometry *geometry, EmbError *error);
-EMB_PUBLIC EmbVector emb_end(EmbGeometry *geometry, EmbError *error);
+EMB_PUBLIC EmbVector emb_end_point(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbReal emb_height(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbReal emb_radius(EmbGeometry *geometry, EmbError *error);
 EMB_PUBLIC EmbReal emb_radius_major(EmbGeometry *geometry, EmbError *error);
@@ -1504,6 +1457,8 @@ EMB_PUBLIC int emb_readline(FILE* file, int8_t *line, int maxLength);
 
 EMB_PUBLIC void emb_swap(char *a, int i, int j);
 
+EMB_PUBLIC int8_t emb_read_i8(FILE* f);
+EMB_PUBLIC uint8_t emb_read_u8(FILE* f);
 EMB_PUBLIC int16_t emb_read_i16(FILE* f);
 EMB_PUBLIC uint16_t emb_read_u16(FILE* f);
 EMB_PUBLIC int32_t emb_read_i32(FILE* f);

@@ -1,0 +1,303 @@
+/* The array management for libembroidery's arrays.
+ */
+
+#include <string.h>
+#include <stdlib.h>
+
+#include "embroidery.h"
+
+/* Allocates memory for an EmbArray of the type determined by
+ * the argument a type.
+ */
+EmbArray *emb_array_create(int type)
+{
+    EmbArray *a;
+    a = (EmbArray *) malloc(sizeof(EmbArray));
+    a->type = type;
+    a->length = CHUNK_SIZE;
+    a->count = 0;
+    switch (type) {
+    case EMB_STITCH:
+        a->stitch = (EmbStitch *) malloc(CHUNK_SIZE * sizeof(EmbStitch));
+        break;
+    case EMB_THREAD:
+        a->thread = (EmbThread *) malloc(CHUNK_SIZE * sizeof(EmbThread));
+        break;
+    default:
+        a->geometry = (EmbGeometry *) malloc(CHUNK_SIZE * sizeof(EmbGeometry));
+        break;
+    }
+    return a;
+}
+
+/* Resizes the array a a to be CHUNK_SIZE entries longer
+ * if and only if the amount of room left is less than
+ * 3 entries.
+ */
+int emb_array_resize(EmbArray *a)
+{
+    if (a->count < a->length - 3) {
+        return 1;
+    }
+    a->length += CHUNK_SIZE;
+    switch (a->type) {
+    case EMB_STITCH:
+        a->stitch =
+            (EmbStitch *) realloc(a->stitch, a->length * sizeof(EmbStitch));
+        if (!a->stitch) {
+            /* TODO: Error reporting */
+            return 0;
+        }
+        break;
+    case EMB_THREAD:
+        a->thread =
+            (EmbThread *) realloc(a->thread, a->length * sizeof(EmbThread));
+        if (!a->thread) {
+            /* TODO: Error reporting */
+            return 0;
+        }
+        break;
+    default:
+        a->geometry =
+            (EmbGeometry *) realloc(a->geometry,
+                                    a->length * sizeof(EmbGeometry));
+        if (!a->geometry) {
+            /* TODO: Error reporting */
+            return 0;
+        }
+        break;
+    }
+
+    return 1;
+}
+
+/* Copies all entries in the EmbArray struct from a src to a dst.
+ */
+void emb_array_copy(EmbArray *dst, EmbArray *src)
+{
+    dst = emb_array_create(src->type);
+    dst->length = src->length;
+    dst->count = src->count;
+    emb_array_resize(dst);
+    /* BUG: Potential failure to copy path memory, only copy pointers? */
+
+    switch (dst->type) {
+    case EMB_STITCH:
+        memcpy(dst->stitch, src->stitch, sizeof(EmbStitch) * src->count);
+        break;
+    case EMB_THREAD:
+        memcpy(dst->thread, src->thread, sizeof(EmbThread) * src->count);
+        break;
+    default:
+        memcpy(dst->geometry, src->geometry, sizeof(EmbGeometry) * src->count);
+        break;
+    }
+}
+
+/* Add a circle a b to the EmbArray a a and it returns if the
+ * element was successfully added.
+ */
+int emb_array_add_circle(EmbArray *a, EmbCircle b)
+{
+    a->count++;
+    if (!emb_array_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.circle = b;
+    a->geometry[a->count - 1].type = EMB_CIRCLE;
+    return 1;
+}
+
+/* Add an ellipse a b to the EmbArray a a and it returns if the
+ * element was successfully added.
+ */
+int emb_array_add_ellipse(EmbArray *a, EmbEllipse b)
+{
+    a->count++;
+    if (!emb_array_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.ellipse = b;
+    a->geometry[a->count - 1].type = EMB_ELLIPSE;
+    return 1;
+}
+
+/* Add a flag a b to the EmbArray a a and it returns if the
+ * element was successfully added.
+ */
+int emb_array_add_flag(EmbArray *a, EmbFlag b)
+{
+    a->count++;
+    if (!emb_array_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].flag = b;
+    a->geometry[a->count - 1].type = EMB_FLAG;
+    return 1;
+}
+
+/* Add a line a b to the EmbArray a a and it returns if the
+ * element was successfully added.
+ */
+int emb_array_addLine(EmbArray *a, EmbLine b)
+{
+    a->count++;
+    if (!emb_array_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.line = b;
+    a->geometry[a->count - 1].type = EMB_LINE;
+    return 1;
+}
+
+/* Add a path a b to the EmbArray a a and it returns if the
+ * element was successfully added.
+ */
+int emb_array_addPath(EmbArray *a, EmbPath b)
+{
+    a->count++;
+    if (!emb_array_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.path = b;
+    a->geometry[a->count - 1].type = EMB_PATH;
+    return 1;
+}
+
+/* Add a point a b to the EmbArray a a and it returns if the
+ * element was successfully added.
+ */
+int emb_array_addPoint(EmbArray *a, EmbPoint b)
+{
+    a->count++;
+    if (!emb_array_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.point = b;
+    a->geometry[a->count - 1].type = EMB_POINT;
+    return 1;
+}
+
+/* Add a polyline a b to the EmbArray a a and it returns if the
+ * element was successfully added.
+ */
+int emb_array_addPolyline(EmbArray *a, EmbPolyline b)
+{
+    a->count++;
+    if (!emb_array_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.polyline = b;
+    a->geometry[a->count - 1].type = EMB_POLYLINE;
+    return 1;
+}
+
+/* Add a polygon a b to the EmbArray a a and it returns if the
+ * element was successfully added.
+ */
+int emb_array_addPolygon(EmbArray *a, EmbPolygon b)
+{
+    a->count++;
+    if (!emb_array_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.polygon = b;
+    a->geometry[a->count - 1].type = EMB_POLYGON;
+    return 1;
+}
+
+/* Add a rectangle a b to the EmbArray a a and it returns if the
+ * element was successfully added.
+ */
+int emb_array_addRect(EmbArray *a, EmbRect b)
+{
+    a->count++;
+    if (!emb_array_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.rect = b;
+    a->geometry[a->count - 1].type = EMB_RECT;
+    return 1;
+}
+
+/* Add a stitch a b to the EmbArray a a and it returns if the
+ * element was successfully added.
+ */
+int emb_array_addStitch(EmbArray *a, EmbStitch b)
+{
+    a->count++;
+    if (!emb_array_resize(a)) {
+        return 0;
+    }
+    a->stitch[a->count - 1] = b;
+    return 1;
+}
+
+/* Add a generic geometry to the EmbArray a a and it returns if the
+ * element was successfully added.
+ */
+int emb_array_add_geometry(EmbArray *a, EmbGeometry g)
+{
+    a->count++;
+    if (!emb_array_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1] = g;
+    return 1;
+}
+
+/* Add a vector a b to the EmbArray a a and it returns if the
+ * element was successfully added.
+ */
+int emb_array_addVector(EmbArray *a, EmbVector b)
+{
+    a->count++;
+    if (!emb_array_resize(a)) {
+        return 0;
+    }
+    a->geometry[a->count - 1].object.vector = b;
+    a->geometry[a->count - 1].type = EMB_VECTOR;
+    return 1;
+}
+
+/* Free the memory of EmbArray a a, recursively if necessary.
+ */
+void emb_array_free(EmbArray *a)
+{
+    if (!a) {
+        return;
+    }
+    switch (a->type) {
+    case EMB_STITCH:
+        safe_free(a->stitch);
+        break;
+    case EMB_THREAD:
+        safe_free(a->thread);
+        break;
+    default:{
+            int i;
+            for (i = 0; i < a->count; i++) {
+                EmbGeometry g = a->geometry[i];
+                switch (a->geometry[i].type) {
+                case EMB_PATH:{
+                        emb_array_free(g.object.path.pointList);
+                        break;
+                    }
+                case EMB_POLYGON:{
+                        emb_array_free(g.object.polygon.pointList);
+                        break;
+                    }
+                case EMB_POLYLINE:{
+                        emb_array_free(g.object.polyline.pointList);
+                        break;
+                    }
+                default:
+                    break;
+                }
+            }
+            safe_free(a->geometry);
+            break;
+        }
+    }
+    safe_free(a);
+}

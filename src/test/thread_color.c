@@ -8,22 +8,20 @@
 
 int test_thread_color(void)
 {
-        uint32_t tColor = 0xFF0d6b2f;
-        int tBrand = EMB_BRAND_SVG;
-        int8_t name[100];
+    uint32_t tColor = 0xFF0d6b2f;
+    int tBrand = EMB_BRAND_SVG;
+    int8_t name[100];
 
-        int color_num = threadColorNum(tColor, tBrand);
-        if (color_num != 29) {
-                printf("ERROR: SVG color 0xFF0D6B2F misidentified as %d.\n",
-                       color_num);
-                return 1;
-        }
-        sprintf(name, threadColorName(tColor, tBrand));
-        if (strcmp(name, "darkolivegreen")) {
-                printf("ERROR: SVG color 0xFF0D6B2F misidentified as \"%s\".\n",
-                       name);
-                return 1;
-        }
+    int color_num = threadColorNum(tColor, tBrand);
+    if (color_num != 29) {
+        printf("ERROR: SVG color 0xFF0D6B2F misidentified as %d.\n", color_num);
+        return 1;
+    }
+    sprintf(name, threadColorName(tColor, tBrand));
+    if (strcmp(name, "darkolivegreen")) {
+        printf("ERROR: SVG color 0xFF0D6B2F misidentified as \"%s\".\n", name);
+        return 1;
+    }
 
-        return 0;
+    return 0;
 }

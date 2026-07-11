@@ -11,7 +11,7 @@ int verbosity = 0;
  */
 EmbError test_cross(void)
 {
-        return 0;
+    return 0;
 }
 
 /* TODO: test_render
@@ -20,5 +20,5 @@ EmbError test_cross(void)
  */
 EmbError test_fill(void)
 {
-        return 0;
+    return 0;
 }

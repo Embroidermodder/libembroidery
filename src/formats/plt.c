@@ -1,0 +1,70 @@
+/*
+ * AutoCAD Embroidery Format (.plt)
+ * The AutoCAD plt format is stitch-only.
+ */
+
+#include "embroidery.h"
+
+int8_t readPlt(EmbPattern *pattern, FILE *file)
+{
+    EmbReal x, y;
+    EmbReal scalingFactor = 40;
+    int8_t input[512];
+
+    /* TODO: replace all scanf code */
+    while (emb_readline(file, input, 511)) {
+        if (input[0] == 'P' && input[1] == 'D') {
+            /* TODO: replace all scanf code */
+            if (sscanf(input, "PD%f,%f;", &x, &y) < 2) {
+                break;
+            }
+            emb_add_stitch_abs(pattern, x / scalingFactor,
+                              y / scalingFactor, NORMAL, 1);
+        } else if (input[0] == 'P' && input[1] == 'U') {
+            /* TODO: replace all scanf code */
+            if (sscanf(input, "PU%f,%f;", &x, &y) < 2) {
+                break;
+            }
+            emb_add_stitch_abs(pattern, x / scalingFactor,
+                              y / scalingFactor, STOP, 1);
+        }
+    }
+    return 1;
+}
+
+int8_t writePlt(EmbPattern *pattern, FILE *file)
+{
+    /* TODO: pointer safety */
+    EmbReal scalingFactor = 40;
+    int8_t firstStitchOfBlock = 1;
+    int i;
+
+    fprintf(file, "IN;");
+    fprintf(file, "ND;");
+
+    for (i = 0; i < pattern->stitch_list->count; i++) {
+        EmbStitch stitch;
+        stitch = pattern->stitch_list->stitch[i];
+        if (stitch.flags & STOP) {
+            firstStitchOfBlock = 1;
+        }
+        if (firstStitchOfBlock) {
+            fprintf(file, "PU%f,%f;", stitch.x * scalingFactor,
+                    stitch.y * scalingFactor);
+            fprintf(file, "ST0.00,0.00;");
+            fprintf(file, "SP0;");
+            fprintf(file, "HT0;");
+            fprintf(file, "HS0;");
+            fprintf(file, "TT0;");
+            fprintf(file, "TS0;");
+            firstStitchOfBlock = 0;
+        } else {
+            fprintf(file, "PD%f,%f;", stitch.x * scalingFactor,
+                    stitch.y * scalingFactor);
+        }
+    }
+    fprintf(file, "PU0.0,0.0;");
+    fprintf(file, "PU0.0,0.0;");
+    return 1;                   /*TODO: finish WritePlt */
+}
+

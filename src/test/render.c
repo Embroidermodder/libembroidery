@@ -6,7 +6,7 @@
  */
 EmbError test_photo(void)
 {
-        return 0;
+    return 0;
 }
 
 /* todo test_generate_render
@@ -15,5 +15,5 @@ EmbError test_photo(void)
  */
 int test_render(void)
 {
-        return 0;
+    return 0;
 }

@@ -149,7 +149,7 @@ else(WIN32)
 include(GNUInstallDirs)
 
 install(
-    FILES embroidery.h
+    FILES include/embroidery.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 

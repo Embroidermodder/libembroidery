@@ -1,0 +1,249 @@
+#ifndef __LIBEMBROIDERY_TESTS__
+#define __LIBEMBROIDERY_TESTS__
+
+#include <stdint.h>
+
+#include "../compound-file-common.h"
+#include "../compound-file-difat.h"
+#include "../compound-file-directory.h"
+#include "../compound-file-fat.h"
+#include "../compound-file.h"
+#include "../compound-file-header.h"
+#include "../emb-arc.h"
+#include "../emb-circle.h"
+#include "../emb-color.h"
+#include "../emb-compress.h"
+#include "../emb-ellipse.h"
+#include "../emb-file.h"
+#include "../emb-flag.h"
+#include "../emb-format.h"
+#include "../emb-hash.h"
+#include "../emb-hoop.h"
+#include "../emb-layer.h"
+#include "../emb-line.h"
+#include "../emb-logging.h"
+/* #include "../emb-outline.h" */
+#include "../emb-path.h"
+#include "../emb-pattern.h"
+#include "../emb-point.h"
+#include "../emb-polygon.h"
+#include "../emb-polyline.h"
+#include "../emb-reader-writer.h"
+#include "../emb-rect.h"
+#include "../emb-satin-line.h"
+#include "../emb-settings.h"
+#include "../emb-spline.h"
+#include "../emb-stitch.h"
+#include "../emb-thread.h"
+#include "../emb-time.h"
+#include "../emb-vector.h"
+#include "../formats.h"
+#include "../geom-arc.h"
+#include "../geom-circle.h"
+#include "../geom-line.h"
+#include "../hashtable.h"
+#include "../helpers-binary.h"
+#include "../helpers-misc.h"
+#include "../helpers-unused.h"
+#include "../thread-color.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define TEST_BASIC                    0
+#define TEST_SLOW                     1
+#define TEST_COMPLEX                  2
+#define TEST_END                     -1
+
+#define RESULT_FAIL                   0
+#define RESULT_PASS                   1
+#define RESULT_VOID                  -1
+
+typedef struct EmbTest_ {
+    int level;
+    char category[100];
+    char label[100];
+    int (*function)(void);
+    int result;
+} EmbTest;
+
+int16_t btoi16(char *b);
+int16_t btoi16be(char *b);
+int32_t btoi32(char *b);
+int32_t btoi32be(char *b);
+
+int read_byte_test(void);
+int read_bytes_test(void);
+int read_int16_test(void);
+int read_int32_test(void);
+int read_uint8_test(void);
+int read_uint16_test(void);
+int read_uint32_test(void);
+int read_int16be_test(void);
+int read_uint16be_test(void);
+int read_int32be_test(void);
+int read_uint32be_test(void);
+int read_string_test(void);
+int read_ustring_test(void);
+int read_float_test(void);
+
+int write_byte_test(void);
+int write_bytes_test(void);
+int write_int16_test(void);
+int write_int16be_test(void);
+int write_uint16_test(void);
+int write_uint16be_test(void);
+int write_int32_test(void);
+int write_int32be_test(void);
+int write_uint32_test(void);
+int write_uint32be_test(void);
+int write_float_test(void);
+
+int vector_approx_equal_test(void);
+int vector_normalize_test(void);
+int vector_add_test(void);
+int vector_subtract_test(void);
+int vector_scale_test(void);
+int vector_average_test(void);
+int vector_dot_test(void);
+int vector_length_test(void);
+
+int geom_arc_test(void);
+int geom_circle_test(void);
+
+int read100_test(void);
+int write100_test(void);
+int read10o_test(void);
+int write10o_test(void);
+int readArt_test(void);
+int writeArt_test(void);
+int readBmc_test(void);
+int writeBmc_test(void);
+int readBro_test(void);
+int writeBro_test(void);
+int readCnd_test(void);
+int writeCnd_test(void);
+int readCol_test(void);
+int writeCol_test(void);
+int readCsd_test(void);
+int writeCsd_test(void);
+int readCsv_test(void);
+int writeCsv_test(void);
+int readDat_test(void);
+int writeDat_test(void);
+int readDem_test(void);
+int writeDem_test(void);
+int readDsb_test(void);
+int writeDsb_test(void);
+int readDst_test(void);
+int writeDst_test(void);
+int readDsz_test(void);
+int writeDsz_test(void);
+int readDxf_test(void);
+int writeDxf_test(void);
+int readEdr_test(void);
+int writeEdr_test(void);
+int readEmd_test(void);
+int writeEmd_test(void);
+int readExp_test(void);
+int writeExp_test(void);
+int readExy_test(void);
+int writeExy_test(void);
+int readEys_test(void);
+int writeEys_test(void);
+int readFxy_test(void);
+int writeFxy_test(void);
+int readGc_test(void);
+int writeGc_test(void);
+int readGnc_test(void);
+int writeGnc_test(void);
+int readGt_test(void);
+int writeGt_test(void);
+int readHus_test(void);
+int writeHus_test(void);
+int readInb_test(void);
+int writeInb_test(void);
+int readInf_test(void);
+int writeInf_test(void);
+int readJef_test(void);
+int writeJef_test(void);
+int readKsm_test(void);
+int writeKsm_test(void);
+int readMax_test(void);
+int writeMax_test(void);
+int readMit_test(void);
+int writeMit_test(void);
+int readNew_test(void);
+int writeNew_test(void);
+int readOfm_test(void);
+int writeOfm_test(void);
+int readPcd_test(void);
+int writePcd_test(void);
+int readPcm_test(void);
+int writePcm_test(void);
+int readPcq_test(void);
+int writePcq_test(void);
+int readPcs_test(void);
+int writePcs_test(void);
+int readPec_test(void);
+int writePec_test(void);
+int readPel_test(void);
+int writePel_test(void);
+int readPem_test(void);
+int writePem_test(void);
+int readPes_test(void);
+int writePes_test(void);
+int readPhb_test(void);
+int writePhb_test(void);
+int readPhc_test(void);
+int writePhc_test(void);
+int readPlt_test(void);
+int writePlt_test(void);
+int readRgb_test(void);
+int writeRgb_test(void);
+int readSew_test(void);
+int writeSew_test(void);
+int readShv_test(void);
+int writeShv_test(void);
+int readSst_test(void);
+int writeSst_test(void);
+int readStx_test(void);
+int writeStx_test(void);
+int readSvg_test(void);
+int writeSvg_test(void);
+int readT01_test(void);
+int writeT01_test(void);
+int readT09_test(void);
+int writeT09_test(void);
+int readTap_test(void);
+int writeTap_test(void);
+int readThr_test(void);
+int writeThr_test(void);
+int readTxt_test(void);
+int writeTxt_test(void);
+int readU00_test(void);
+int writeU00_test(void);
+int readU01_test(void);
+int writeU01_test(void);
+int readVip_test(void);
+int writeVip_test(void);
+int readVp3_test(void);
+int writeVp3_test(void);
+int readXxx_test(void);
+int writeXxx_test(void);
+int readZsk_test(void);
+int writeZsk_test(void);
+
+int number_of_tests(void);
+int emb_test(int test_number);
+int run_all_tests(void);
+
+extern EmbTest test_list[];
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+

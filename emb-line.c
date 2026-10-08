@@ -120,7 +120,7 @@ void embLine_normalVector(EmbVector vector1, EmbVector vector2, EmbVector* resul
     if(!result) { embLog_error("emb-line.c embLine_normalVector(), result argument is null\n"); return; }
     result->X = vector2.X - vector1.X;
     result->Y = vector2.Y - vector1.Y;
-    embVector_normalize(*result, result);
+    *result = embVector_normalize(*result);
     temp = result->X;
     result->X = result->Y;
     result->Y = -temp;

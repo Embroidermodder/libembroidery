@@ -3,27 +3,46 @@
 #include <math.h>
 #include <stdlib.h>
 
-void embVector_normalize(EmbVector vector, EmbVector* result)
+EmbVector embVector(double x, double y)
+{
+    EmbVector v;
+    v.X = x;
+    v.Y = y;
+    return v;
+}
+
+double embVector_dot(EmbVector a, EmbVector b)
+{
+    return a.X * b.X + a.Y * b.Y;
+}
+
+EmbVector embVector_subtract(EmbVector a, EmbVector b)
+{
+    return embVector(a.X - b.X, a.Y - b.Y);
+}
+
+EmbVector embVector_average(EmbVector a, EmbVector b)
+{
+    return embVector(0.5 * (a.X + b.X), 0.5 * (a.Y + b.Y));
+}
+
+EmbVector embVector_scale(EmbVector v, double factor)
+{
+    return embVector(v.X * factor, v.Y * factor);
+}
+
+EmbVector embVector_normalize(EmbVector vector)
 {
     double length = embVector_getLength(vector);
-
-    if(!result) { embLog_error("emb-vector.c embVector_normalize(), result argument is null\n"); return; }
-    result->X = vector.X / length;
-    result->Y = vector.Y / length;
+    return embVector_scale(vector, 1.0 / length);
 }
 
-void embVector_multiply(EmbVector vector, double magnitude, EmbVector* result)
+EmbVector embVector_add(EmbVector v1, EmbVector v2)
 {
-    if(!result) { embLog_error("emb-vector.c embVector_multiply(), result argument is null\n"); return; }
-    result->X = vector.X * magnitude;
-    result->Y = vector.Y * magnitude;
-}
-
-void embVector_add(EmbVector v1, EmbVector v2, EmbVector* result)
-{
-    if(!result) { embLog_error("emb-vector.c embVector_add(), result argument is null\n"); return; }
-    result->X = v1.X + v2.X;
-    result->Y = v1.Y + v2.Y;
+    EmbVector result;
+    result.X = v1.X + v2.X;
+    result.Y = v1.Y + v2.Y;
+    return result;
 }
 
 double embVector_getLength(EmbVector vector)

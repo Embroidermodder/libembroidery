@@ -24,13 +24,13 @@ void embSatinOutline_generateSatinOutline(EmbVector lines[], int numberOfPoints,
 
         embLine_normalVector(lines[i - 1], lines[i], &v1, 1);
 
-        embVector_multiply(v1, halfThickness, &temp);
-        embVector_add(temp, lines[i - 1], &outline.side1[j]);
-        embVector_add(temp, lines[i], &outline.side1[j + 1]);
+        temp = embVector_scale(v1, halfThickness);
+        outline.side1[j] = embVector_add(temp, lines[i - 1]);
+        outline.side1[j + 1] = embVector_add(temp, lines[i]);
 
-        embVector_multiply(v1, -halfThickness, &temp);
-        embVector_add(temp, lines[i - 1], &outline.side2[j]);
-        embVector_add(temp, lines[i], &outline.side2[j + 1]);
+        temp = embVector_scale(v1, -halfThickness);
+        outline.side2[j] = embVector_add(temp, lines[i - 1]);
+        outline.side2[j + 1] = embVector_add(temp, lines[i]);
     }
 
     if(!result) { embLog_error("emb-satin-line.c embSatinOutline_generateSatinOutline(), result argument is null\n"); return; }

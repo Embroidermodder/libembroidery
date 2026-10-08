@@ -5,6 +5,96 @@
 #include "emb-compress.h"
 #include "emb-thread.h"
 
+/*****************************************
+ * HUS Expand/Compress Constants
+ ****************************************/
+#define _132 (CHAR_BIT*sizeof(unsigned short))
+#define _133 (16)
+#define _135 (3)
+#define _136 (16384)
+#define _137 (14)
+#define _138 (10)
+#define _139 (8)
+#define _140 (256)
+#define byte_MAX (255)
+#define _141 (byte_MAX + 1 + _140 - _135 + 1 + 1)
+#define _142 (_137 + 1)
+#define _143 (9)
+#define _144 (_140 + 1)
+#define _145 (_133 + 3)
+#define _147 (5)
+#define _148 (4096)
+#define _149 (256)
+
+#define _152 (_145)
+#define _153 (4096)
+#define _154 (4)
+#define _155 (8192)
+#define _156 (512)
+#define _157 (-1)
+#define _158 (128)
+#define _159 (512)
+#define _540 (5)
+#define bufferSize (512)
+
+/*****************************************
+ * HUS Expand/Compress Variables
+ ****************************************/
+short* _163;
+short* _164;
+unsigned char* _165;
+unsigned char* _166;
+unsigned short _167[17];
+short _168;
+short _169;
+short _170;
+short _171;
+short _172;
+short _173;
+short _174;
+short _175;
+short _176;
+short* _177;
+unsigned char* _178;
+unsigned char* _179;
+unsigned char* _180;
+unsigned char* _181;
+unsigned short _182;
+unsigned short _183;
+unsigned short _184;
+unsigned short _185;
+unsigned short _186;
+unsigned short* _187;
+unsigned short* _188;
+unsigned short* _189;
+unsigned short* _190;
+unsigned short* _191;
+unsigned short* _192;
+unsigned short* _193;
+unsigned short* _194;
+unsigned short* _240;
+unsigned short* _241;
+short _243;
+unsigned short _244;
+unsigned char _245;
+short _246;
+int _531;
+unsigned long _533;
+unsigned long _534;
+
+int mStatus;
+int currentIndex;
+long remainingBytes;
+int inputSize;
+int inputBufferSize;
+int inputLength;
+unsigned char* outputArray;
+unsigned char* inputArray;
+unsigned char* inputBuffer;
+int currentPosition;
+int inputPosition;
+int outputPosition;
+
 void husExpand(unsigned char* input, unsigned char* output, int compressedSize, int _269)
 {
     currentPosition = 0;

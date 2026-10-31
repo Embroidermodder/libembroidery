@@ -1,9 +1,7 @@
-#include "format-t01.h"
-#include "emb-file.h"
-#include "emb-logging.h"
-#include "helpers-binary.h"
-#include "helpers-misc.h"
+/*! @file format-t01.c */
 #include <stdio.h>
+
+#include "embroidery.h"
 
 static int decodeRecordFlags(unsigned char b2)
 {
@@ -215,6 +213,4 @@ int writeT01(EmbPattern* pattern, const char* fileName)
 	embFile_close(file);
 	return 1;
 }
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */
 

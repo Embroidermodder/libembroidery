@@ -27,4 +27,3 @@ extern EMB_PUBLIC void EMB_CALL embSettings_setHome(EmbSettings* settings, EmbPo
 
 #endif /* EMB_SETTINGS_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

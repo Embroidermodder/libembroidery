@@ -1,14 +1,8 @@
-#include "format-dxf.h"
-#include "helpers-misc.h"
-#include "emb-hash.h"
-#include "emb-logging.h"
-
-#include "geom-arc.h"
-/*#include "geom-line.h" */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "embroidery.h"
 
 /* DXF Version Identifiers */
 #define DXF_VERSION_R10 "AC1006"
@@ -600,4 +594,3 @@ int writeDxf(EmbPattern* pattern, const char* fileName)
     return 0; /*TODO: finish writeDxf */
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

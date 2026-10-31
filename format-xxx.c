@@ -1,10 +1,7 @@
-#include "format-xxx.h"
-#include "helpers-binary.h"
-#include "helpers-misc.h"
-#include "emb-file.h"
-#include "emb-logging.h"
 #include <stdlib.h>
 #include <string.h>
+
+#include "embroidery.h"
 
 static char xxxDecodeByte(unsigned char inputByte)
 {
@@ -279,5 +276,3 @@ int writeXxx(EmbPattern* pattern, const char* fileName)
     embFile_close(file);
     return 1;
 }
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

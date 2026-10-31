@@ -127,5 +127,3 @@ char* emb_strdup(const char* src)
     else { strcpy(dest, src); }
     return dest;
 }
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

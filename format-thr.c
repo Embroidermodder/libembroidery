@@ -1,8 +1,7 @@
-#include "format-thr.h"
-#include "helpers-binary.h"
-#include "emb-file.h"
-#include "emb-logging.h"
+/*! @file format-thr.c */
 #include <string.h>
+
+#include "embroidery.h"
 
 #define NOTFRM 0x00080000
 
@@ -278,5 +277,3 @@ int writeThr(EmbPattern* pattern, const char* fileName)
     embFile_close(file);
     return 1;
 }
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

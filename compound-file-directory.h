@@ -48,5 +48,3 @@ extern EMB_PRIVATE void EMB_CALL bcf_directory_free(bcf_directory* dir);
 #include "api-stop.h"
 
 #endif /* COMPOUND_FILE_DIRECTORY_H */
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

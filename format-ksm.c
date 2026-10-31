@@ -1,7 +1,4 @@
-#include "format-ksm.h"
-#include "emb-file.h"
-#include "emb-logging.h"
-#include "helpers-binary.h"
+#include "embroidery.h"
 
 static void ksmEncode(unsigned char* b, char dx, char dy, int flags)
 {
@@ -132,5 +129,3 @@ int writeKsm(EmbPattern* pattern, const char* fileName)
     embFile_close(file);
     return 1;
 }
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

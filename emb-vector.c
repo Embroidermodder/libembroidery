@@ -100,5 +100,3 @@ void embVectorList_free(EmbVectorList* pointer)
         temp = 0;
     }
 }
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

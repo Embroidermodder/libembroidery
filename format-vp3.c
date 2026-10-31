@@ -1,9 +1,7 @@
-#include "format-vp3.h"
-#include "helpers-binary.h"
-#include "emb-file.h"
-#include "emb-logging.h"
 #include <stdlib.h>
 #include <string.h>
+
+#include "embroidery.h"
 
 static unsigned char* vp3ReadString(EmbFile* file)
 {
@@ -530,4 +528,3 @@ int writeVp3(EmbPattern* pattern, const char* fileName)
     return 1;
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

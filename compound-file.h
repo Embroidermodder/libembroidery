@@ -32,4 +32,3 @@ extern EMB_PRIVATE void EMB_CALL bcf_file_free(bcf_file* bcfFile);
 
 #endif /* COMPOUND_FILE_H */
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

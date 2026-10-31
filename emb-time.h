@@ -26,5 +26,3 @@ extern EMB_PUBLIC EmbTime EMB_CALL embTime_time(EmbTime* t);
 #include "api-stop.h"
 
 #endif /* EMB_TIME_H */
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

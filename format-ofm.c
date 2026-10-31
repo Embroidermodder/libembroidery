@@ -1,10 +1,7 @@
-#include "format-ofm.h"
-#include "compound-file.h"
-#include "emb-file.h"
-#include "emb-logging.h"
-#include "helpers-binary.h"
 #include <stdlib.h>
 #include <string.h>
+
+#include "embroidery.h"
 
 static char* ofmReadLibrary(EmbFile* file)
 {
@@ -273,5 +270,3 @@ int writeOfm(EmbPattern* pattern, const char* fileName)
 
     return 0; /*TODO: finish writeOfm */
 }
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

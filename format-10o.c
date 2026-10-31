@@ -1,6 +1,5 @@
-#include "format-10o.h"
-#include "emb-file.h"
-#include "emb-logging.h"
+/*! @file format-10o.c */
+#include "embroidery.h"
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
@@ -81,4 +80,3 @@ int write10o(EmbPattern* pattern, const char* fileName)
     return 0; /*TODO: finish write10o */
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

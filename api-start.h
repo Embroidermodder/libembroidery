@@ -44,5 +44,3 @@
 #if !defined(__GNUC__)
     #pragma warning(disable: 4996)
 #endif
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

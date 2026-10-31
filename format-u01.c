@@ -1,6 +1,4 @@
-#include "format-u01.h"
-#include "emb-file.h"
-#include "emb-logging.h"
+#include "embroidery.h"
 
 /* TODO: AFAIK this is a duplicate of U00. Review for differences and merge files and handle accordingly. */
 
@@ -72,5 +70,3 @@ int writeU01(EmbPattern* pattern, const char* fileName)
 
     return 0; /*TODO: finish writeU01 */
 }
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

@@ -27,5 +27,3 @@ extern EMB_PUBLIC void EMB_CALL embFlagList_free(EmbFlagList* pointer);
 #include "api-stop.h"
 
 #endif /* EMB_FLAG_H */
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

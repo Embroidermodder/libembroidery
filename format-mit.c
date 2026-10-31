@@ -1,7 +1,4 @@
-#include "format-mit.h"
-#include "emb-file.h"
-#include "emb-logging.h"
-#include "helpers-binary.h"
+#include "embroidery.h"
 
 static int mitDecodeStitch(unsigned char value)
 {
@@ -101,4 +98,3 @@ int writeMit(EmbPattern* pattern, const char* fileName)
     return 1;
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

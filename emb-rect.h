@@ -62,5 +62,3 @@ extern EMB_PUBLIC void EMB_CALL embRectObjectList_free(EmbRectObjectList* pointe
 #include "api-stop.h"
 
 #endif /* EMB_RECT_H */
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

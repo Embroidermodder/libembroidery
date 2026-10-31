@@ -1,12 +1,7 @@
-#include "format-jef.h"
-#include "emb-file.h"
-#include "emb-logging.h"
-#include "emb-time.h"
-#include "helpers-binary.h"
-#include "helpers-misc.h"
-#include "emb-stitch.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "embroidery.h"
 
 static char sewDecode(unsigned char inputByte)
 {
@@ -206,5 +201,3 @@ int writeSew(EmbPattern* pattern, const char* fileName)
     embFile_close(file);
     return 1;
 }
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

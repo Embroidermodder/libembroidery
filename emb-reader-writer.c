@@ -121,5 +121,3 @@ EmbReaderWriter* embReaderWriter_getByFileName(const char* fileName)
     embLog_error("emb-reader-writer.c embReaderWriter_getByFileName(), unsupported file type: %s\n", ending);
     return 0;
 }
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

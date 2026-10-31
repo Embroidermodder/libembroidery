@@ -1,10 +1,8 @@
-#include "format-svg.h"
-#include "emb-file.h"
-#include "emb-logging.h"
-#include "helpers-misc.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "embroidery.h"
 
 int svgCreator;
 
@@ -3643,5 +3641,3 @@ int writeSvg(EmbPattern* pattern, const char* fileName)
 
     return 1;
 }
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

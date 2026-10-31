@@ -1,8 +1,4 @@
-#include "format-pes.h"
-#include "format-pec.h"
-#include "emb-file.h"
-#include "emb-logging.h"
-#include "helpers-binary.h"
+#include "embroidery.h"
 #include <stdlib.h>
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
@@ -251,5 +247,3 @@ int writePes(EmbPattern* pattern, const char* fileName)
     embFile_close(file);
     return 1;
 }
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

@@ -40,5 +40,3 @@ extern EMB_PRIVATE int EMB_CALL bcfFileHeader_isValid(bcf_file_header header);
 #include "api-stop.h"
 
 #endif /* COMPOUND_FILE_HEADER_H */
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

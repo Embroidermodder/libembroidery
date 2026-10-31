@@ -1,9 +1,4 @@
-#include "format-max.h"
-#include "format-pcd.h"
-#include "emb-file.h"
-#include "emb-logging.h"
-#include "helpers-binary.h"
-#include "helpers-misc.h"
+#include "embroidery.h"
 
 /* Pfaff MAX embroidery file format */
 
@@ -131,4 +126,3 @@ int writeMax(EmbPattern* pattern, const char* fileName)
     return 1;
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

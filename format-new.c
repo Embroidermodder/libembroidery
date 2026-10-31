@@ -1,7 +1,4 @@
-#include "format-new.h"
-#include "emb-file.h"
-#include "emb-logging.h"
-#include "helpers-binary.h"
+#include "embroidery.h"
 
 static int decodeNewStitch(unsigned char value)
 {
@@ -97,4 +94,3 @@ int writeNew(EmbPattern* pattern, const char* fileName)
     return 0; /*TODO: finish writeNew */
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

@@ -1,3 +1,4 @@
+/*! @file embroidery.h */
 #ifndef __LIBEMBRODERY_H__
 #define __LIBEMBRODERY_H__
 
@@ -20,7 +21,7 @@
 #include "emb-layer.h"
 #include "emb-line.h"
 #include "emb-logging.h"
-#include "emb-outline.h"
+/* #include "emb-outline.h" */
 #include "emb-path.h"
 #include "emb-pattern.h"
 #include "emb-point.h"

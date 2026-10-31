@@ -26,5 +26,3 @@ extern EMB_PRIVATE void EMB_CALL bcf_file_fat_free(bcf_file_fat* fat);
 #include "api-stop.h"
 
 #endif /* COMPOUND_FILE_FAT_H */
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

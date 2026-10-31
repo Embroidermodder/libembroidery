@@ -1,8 +1,4 @@
-#include "format-pcd.h"
-#include "emb-file.h"
-#include "emb-logging.h"
-#include "helpers-binary.h"
-#include "helpers-misc.h"
+#include "embroidery.h"
 
 static double pcdDecode(unsigned char a1, unsigned char a2, unsigned char a3)
 {
@@ -184,4 +180,3 @@ int writePcd(EmbPattern* pattern, const char* fileName)
     return 1;
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

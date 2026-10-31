@@ -56,5 +56,3 @@ extern EMB_PUBLIC void EMB_CALL embLine_intersectionPoint(EmbVector v1, EmbVecto
 #include "api-stop.h"
 
 #endif /* EMB_LINE_H */
-
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

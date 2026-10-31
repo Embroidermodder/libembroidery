@@ -136,4 +136,3 @@ EmbVectorList* embSatinOutline_renderStitches(EmbSatinOutline* result, double de
     return stitches;
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

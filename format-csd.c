@@ -1,9 +1,6 @@
-#include "format-csd.h"
-#include "helpers-binary.h"
-#include "helpers-misc.h"
-#include "emb-file.h"
-#include "emb-logging.h"
 #include <stdlib.h>
+
+#include "embroidery.h"
 
 #define CsdSubMaskSize  479
 #define CsdXorMaskSize  501
@@ -215,4 +212,3 @@ int writeCsd(EmbPattern* pattern, const char* fileName)
     return 0; /*TODO: finish writeCsd */
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

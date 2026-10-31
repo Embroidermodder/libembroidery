@@ -1,0 +1,39 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+      - testing
+    paths-ignore:
+      - '**.md'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: |
+          git clone https://github.com/embroidermodder/libembroidery
+          cd libembroidery
+          make
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Build
+        run: |
+          git clone https://github.com/embroidermodder/libembroidery
+          cd libembroidery
+          make
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Build
+        run: |
+          git clone https://github.com/embroidermodder/libembroidery
+          cd libembroidery
+          make

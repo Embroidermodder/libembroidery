@@ -5,31 +5,30 @@
 extern "C" {
 #endif
 
-typedef enum
-{
-    Arc_Polyester,
-    Arc_Rayon,
-    CoatsAndClark_Rayon,
-    Exquisite_Polyester,
-    Fufu_Polyester,
-    Fufu_Rayon,
-    Hemingworth_Polyester,
-    Isacord_Polyester,
-    Isafil_Rayon,
-    Marathon_Polyester,
-    Marathon_Rayon,
-    Madeira_Polyester,
-    Madeira_Rayon,
-    Metro_Polyester,
-    Pantone,
-    RobisonAnton_Polyester,
-    RobisonAnton_Rayon,
-    Sigma_Polyester,
-    Sulky_Rayon,
-    ThreadArt_Rayon,
-    ThreadArt_Polyester,
-    ThreaDelight_Polyester,
-    Z102_Isacord_Polyester
+typedef enum {
+	Arc_Polyester,
+	Arc_Rayon,
+	CoatsAndClark_Rayon,
+	Exquisite_Polyester,
+	Fufu_Polyester,
+	Fufu_Rayon,
+	Hemingworth_Polyester,
+	Isacord_Polyester,
+	Isafil_Rayon,
+	Marathon_Polyester,
+	Marathon_Rayon,
+	Madeira_Polyester,
+	Madeira_Rayon,
+	Metro_Polyester,
+	Pantone,
+	RobisonAnton_Polyester,
+	RobisonAnton_Rayon,
+	Sigma_Polyester,
+	Sulky_Rayon,
+	ThreadArt_Rayon,
+	ThreadArt_Polyester,
+	ThreaDelight_Polyester,
+	Z102_Isacord_Polyester
 } ThreadBrand;
 
 /* NOTE:
@@ -38,7 +37,7 @@ typedef enum
 */
 
 int threadColorNum(unsigned int color, ThreadBrand brand);
-const char* threadColorName(unsigned int color, ThreadBrand brand);
+const char *threadColorName(unsigned int color, ThreadBrand brand);
 
 #ifdef __cplusplus
 }

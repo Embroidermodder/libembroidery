@@ -9,16 +9,16 @@
 extern "C" {
 #endif
 
-typedef struct EmbSettings_
-{
-    unsigned int dstJumpsPerTrim;
-    EmbPoint home;
+typedef struct EmbSettings_ {
+	unsigned int dstJumpsPerTrim;
+	EmbPoint home;
 } EmbSettings;
 
 extern EMB_PUBLIC EmbSettings EMB_CALL embSettings_init(void);
 
-extern EMB_PUBLIC EmbPoint EMB_CALL embSettings_home(EmbSettings* settings);
-extern EMB_PUBLIC void EMB_CALL embSettings_setHome(EmbSettings* settings, EmbPoint point);
+extern EMB_PUBLIC EmbPoint EMB_CALL embSettings_home(EmbSettings *settings);
+extern EMB_PUBLIC void EMB_CALL embSettings_setHome(EmbSettings *settings,
+						    EmbPoint point);
 
 #ifdef __cplusplus
 }
@@ -26,4 +26,3 @@ extern EMB_PUBLIC void EMB_CALL embSettings_setHome(EmbSettings* settings, EmbPo
 #include "api-stop.h"
 
 #endif /* EMB_SETTINGS_H */
-

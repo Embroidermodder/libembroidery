@@ -9,13 +9,13 @@
 extern "C" {
 #endif
 
-typedef struct EmbReaderWriter_
-{
-    int (*reader)(EmbPattern*, const char*);
-    int (*writer)(EmbPattern*, const char*);
+typedef struct EmbReaderWriter_ {
+	int (*reader)(EmbPattern *, const char *);
+	int (*writer)(EmbPattern *, const char *);
 } EmbReaderWriter;
 
-extern EMB_PUBLIC EmbReaderWriter* EMB_CALL embReaderWriter_getByFileName(const char* fileName);
+extern EMB_PUBLIC EmbReaderWriter *EMB_CALL
+embReaderWriter_getByFileName(const char *fileName);
 
 #ifdef __cplusplus
 }

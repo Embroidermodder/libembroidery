@@ -10,23 +10,23 @@ extern "C" {
 
 #ifndef MINMAX
 #define MINMAX
-  #ifndef max
-    #define max(a,b) (((a) > (b)) ? (a) : (b))
-  #endif
-  #ifndef min
-    #define min(a,b) (((a) < (b)) ? (a) : (b))
-  #endif
+#ifndef max
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+#endif
+#ifndef min
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#endif
 #endif
 
 int roundDouble(double src);
-char startsWith(const char* pre, const char* str);
+char startsWith(const char *pre, const char *str);
 
-char* rTrim(char* const str, char junk);
-char* lTrim(char* const str, char junk);
+char *rTrim(char *const str, char junk);
+char *lTrim(char *const str, char junk);
 char *copy_trim(char const *s);
 void inplace_trim(char *s);
-char* emb_optOut(double num, char* str);
-char* emb_strdup(const char* src);
+char *emb_optOut(double num, char *str);
+char *emb_strdup(const char *src);
 
 #ifdef __cplusplus
 }

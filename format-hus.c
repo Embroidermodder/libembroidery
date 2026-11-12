@@ -7,35 +7,35 @@
 
 const int husThreadCount = 29;
 const EmbThread husThreads[] = {
-{{   0,   0,   0 }, "Black",        "TODO:HUS_CATALOG_NUMBER"},
-{{   0,   0, 255 }, "Blue",         "TODO:HUS_CATALOG_NUMBER"},
-{{   0, 255,   0 }, "Light Green",  "TODO:HUS_CATALOG_NUMBER"},
-{{ 255,   0,   0 }, "Red",          "TODO:HUS_CATALOG_NUMBER"},
-{{ 255,   0, 255 }, "Purple",       "TODO:HUS_CATALOG_NUMBER"},
-{{ 255, 255,   0 }, "Yellow",       "TODO:HUS_CATALOG_NUMBER"},
-{{ 127, 127, 127 }, "Gray",         "TODO:HUS_CATALOG_NUMBER"},
-{{  51, 154, 255 }, "Light Blue",   "TODO:HUS_CATALOG_NUMBER"},
-{{  51, 204, 102 }, "Green",        "TODO:HUS_CATALOG_NUMBER"},
-{{ 255, 127,   0 }, "Orange",       "TODO:HUS_CATALOG_NUMBER"},
-{{ 255, 160, 180 }, "Pink",         "TODO:HUS_CATALOG_NUMBER"},
-{{ 153,  75,   0 }, "Brown",        "TODO:HUS_CATALOG_NUMBER"},
-{{ 255, 255, 255 }, "White",        "TODO:HUS_CATALOG_NUMBER"},
-{{   0,   0, 127 }, "Dark Blue",    "TODO:HUS_CATALOG_NUMBER"},
-{{   0, 127,   0 }, "Dark Green",   "TODO:HUS_CATALOG_NUMBER"},
-{{ 127,   0,   0 }, "Dark Red",     "TODO:HUS_CATALOG_NUMBER"},
-{{ 255, 127, 127 }, "Light Red",    "TODO:HUS_CATALOG_NUMBER"},
-{{ 127,   0, 127 }, "Dark Purple",  "TODO:HUS_CATALOG_NUMBER"},
-{{ 255, 127, 255 }, "Light Purple", "TODO:HUS_CATALOG_NUMBER"},
-{{ 200, 200,   0 }, "Dark Yellow",  "TODO:HUS_CATALOG_NUMBER"},
-{{ 255, 255, 153 }, "Light Yellow", "TODO:HUS_CATALOG_NUMBER"},
-{{  60,  60,  60 }, "Dark Gray",    "TODO:HUS_CATALOG_NUMBER"},
-{{ 192, 192, 192 }, "Light Gray",   "TODO:HUS_CATALOG_NUMBER"},
-{{ 232,  63,   0 }, "Dark Orange",  "TODO:HUS_CATALOG_NUMBER"},
-{{ 255, 165,  65 }, "Light Orange", "TODO:HUS_CATALOG_NUMBER"},
-{{ 255, 102, 122 }, "Dark Pink",    "TODO:HUS_CATALOG_NUMBER"},
-{{ 255, 204, 204 }, "Light Pink",   "TODO:HUS_CATALOG_NUMBER"},
-{{ 115,  40,   0 }, "Dark Brown",   "TODO:HUS_CATALOG_NUMBER"},
-{{ 175,  90,  10 }, "Light Brown",  "TODO:HUS_CATALOG_NUMBER"}
+	{ { 0, 0, 0 }, "Black", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 0, 0, 255 }, "Blue", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 0, 255, 0 }, "Light Green", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 255, 0, 0 }, "Red", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 255, 0, 255 }, "Purple", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 255, 255, 0 }, "Yellow", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 127, 127, 127 }, "Gray", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 51, 154, 255 }, "Light Blue", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 51, 204, 102 }, "Green", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 255, 127, 0 }, "Orange", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 255, 160, 180 }, "Pink", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 153, 75, 0 }, "Brown", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 255, 255, 255 }, "White", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 0, 0, 127 }, "Dark Blue", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 0, 127, 0 }, "Dark Green", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 127, 0, 0 }, "Dark Red", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 255, 127, 127 }, "Light Red", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 127, 0, 127 }, "Dark Purple", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 255, 127, 255 }, "Light Purple", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 200, 200, 0 }, "Dark Yellow", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 255, 255, 153 }, "Light Yellow", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 60, 60, 60 }, "Dark Gray", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 192, 192, 192 }, "Light Gray", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 232, 63, 0 }, "Dark Orange", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 255, 165, 65 }, "Light Orange", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 255, 102, 122 }, "Dark Pink", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 255, 204, 204 }, "Light Pink", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 115, 40, 0 }, "Dark Brown", "TODO:HUS_CATALOG_NUMBER" },
+	{ { 175, 90, 10 }, "Light Brown", "TODO:HUS_CATALOG_NUMBER" }
 };
 
 /*TODO: 'husDecode' is defined but not used. Either remove it or use it. */
@@ -56,273 +56,381 @@ static short husDecode(unsigned char a1, unsigned char a2)
 
 static int husDecodeStitchType(unsigned char b)
 {
-    switch(b)
-    {
-        case 0x80:
-            return NORMAL;
-        case 0x81:
-            return JUMP;
-        case 0x84:
-            return STOP;
-        case 0x90:
-            return END;
-        default:
-            return NORMAL;
-    }
+	switch (b) {
+	case 0x80:
+		return NORMAL;
+	case 0x81:
+		return JUMP;
+	case 0x84:
+		return STOP;
+	case 0x90:
+		return END;
+	default:
+		return NORMAL;
+	}
 }
 
-static unsigned char* husDecompressData(unsigned char* input, int compressedInputLength, int decompressedContentLength)
+static unsigned char *husDecompressData(unsigned char *input,
+					int compressedInputLength,
+					int decompressedContentLength)
 {
-    unsigned char* decompressedData = (unsigned char*)malloc(sizeof(unsigned char)*decompressedContentLength);
-    if(!decompressedData) { embLog_error("format-hus.c husDecompressData(), cannot allocate memory for decompressedData\n"); return 0; }
-    husExpand((unsigned char*) input, decompressedData, compressedInputLength, 10);
-    return decompressedData;
+	unsigned char *decompressedData = (unsigned char *)malloc(
+		sizeof(unsigned char) * decompressedContentLength);
+	if (!decompressedData) {
+		embLog_error(
+			"format-hus.c husDecompressData(), cannot allocate memory for decompressedData\n");
+		return 0;
+	}
+	husExpand((unsigned char *)input, decompressedData,
+		  compressedInputLength, 10);
+	return decompressedData;
 }
 
-static unsigned char* husCompressData(unsigned char* input, int decompressedInputSize, int* compressedSize)
+static unsigned char *husCompressData(unsigned char *input,
+				      int decompressedInputSize,
+				      int *compressedSize)
 {
-    unsigned char* compressedData = (unsigned char*)malloc(sizeof(unsigned char)*decompressedInputSize*2);
-    if(!compressedData) { embLog_error("format-hus.c husCompressData(), cannot allocate memory for compressedData\n"); return 0; }
-    *compressedSize = husCompress(input, (unsigned long) decompressedInputSize, compressedData, 10, 0);
-    return compressedData;
+	unsigned char *compressedData = (unsigned char *)malloc(
+		sizeof(unsigned char) * decompressedInputSize * 2);
+	if (!compressedData) {
+		embLog_error(
+			"format-hus.c husCompressData(), cannot allocate memory for compressedData\n");
+		return 0;
+	}
+	*compressedSize = husCompress(input,
+				      (unsigned long)decompressedInputSize,
+				      compressedData, 10, 0);
+	return compressedData;
 }
 
 static int husDecodeByte(unsigned char b)
 {
-    return (char)b;
+	return (char)b;
 }
 
 static unsigned char husEncodeByte(double f)
 {
-    return (unsigned char)(int)roundDouble(f);
+	return (unsigned char)(int)roundDouble(f);
 }
 
 static unsigned char husEncodeStitchType(int st)
 {
-    switch(st)
-    {
-        case NORMAL:
-            return (0x80);
-        case JUMP:
-        case TRIM:
-            return (0x81);
-        case STOP:
-            return (0x84);
-        case END:
-            return (0x90);
-        default:
-            return (0x80);
-    }
+	switch (st) {
+	case NORMAL:
+		return (0x80);
+	case JUMP:
+	case TRIM:
+		return (0x81);
+	case STOP:
+		return (0x84);
+	case END:
+		return (0x90);
+	default:
+		return (0x80);
+	}
 }
 
 /*! Reads a file with the given \a fileName and loads the data into \a pattern.
  *  Returns \c true if successful, otherwise returns \c false. */
-int readHus(EmbPattern* pattern, const char* fileName)
+int readHus(EmbPattern *pattern, const char *fileName)
 {
-    int fileLength;
-    int magicCode, numberOfStitches, numberOfColors;
-    int postitiveXHoopSize, postitiveYHoopSize, negativeXHoopSize, negativeYHoopSize;
+	int fileLength;
+	int magicCode, numberOfStitches, numberOfColors;
+	int postitiveXHoopSize, postitiveYHoopSize, negativeXHoopSize,
+		negativeYHoopSize;
 
-    int attributeOffset, xOffset, yOffset;
-    unsigned char* attributeData = 0;
-    unsigned char* attributeDataDecompressed = 0;
+	int attributeOffset, xOffset, yOffset;
+	unsigned char *attributeData = 0;
+	unsigned char *attributeDataDecompressed = 0;
 
-    unsigned char* xData = 0;
-    unsigned char* xDecompressed = 0;
+	unsigned char *xData = 0;
+	unsigned char *xDecompressed = 0;
 
-    unsigned char* yData = 0;
-    unsigned char* yDecompressed = 0;
-    unsigned char* stringVal = 0;
-    int unknown, i = 0;
-    EmbFile* file = 0;
+	unsigned char *yData = 0;
+	unsigned char *yDecompressed = 0;
+	unsigned char *stringVal = 0;
+	int unknown, i = 0;
+	EmbFile *file = 0;
 
-    if(!pattern) { embLog_error("format-hus.c readHus(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-hus.c readHus(), fileName argument is null\n"); return 0; }
+	if (!pattern) {
+		embLog_error(
+			"format-hus.c readHus(), pattern argument is null\n");
+		return 0;
+	}
+	if (!fileName) {
+		embLog_error(
+			"format-hus.c readHus(), fileName argument is null\n");
+		return 0;
+	}
 
-    file = embFile_open(fileName, "rb");
-    if(!file)
-    {
-        embLog_error("format-hus.c readHus(), cannot open %s for reading\n", fileName);
-        return 0;
-    }
+	file = embFile_open(fileName, "rb");
+	if (!file) {
+		embLog_error(
+			"format-hus.c readHus(), cannot open %s for reading\n",
+			fileName);
+		return 0;
+	}
 
-    embFile_seek(file, 0x00, SEEK_END);
-    fileLength = embFile_tell(file);
-    embFile_seek(file, 0x00, SEEK_SET);
+	embFile_seek(file, 0x00, SEEK_END);
+	fileLength = embFile_tell(file);
+	embFile_seek(file, 0x00, SEEK_SET);
 
-    magicCode = binaryReadInt32(file);
-    numberOfStitches = binaryReadInt32(file);
-    numberOfColors = binaryReadInt32(file);
+	magicCode = binaryReadInt32(file);
+	numberOfStitches = binaryReadInt32(file);
+	numberOfColors = binaryReadInt32(file);
 
-    postitiveXHoopSize = binaryReadInt16(file);
-    postitiveYHoopSize = binaryReadInt16(file);
-    negativeXHoopSize = binaryReadInt16(file);
-    negativeYHoopSize = binaryReadInt16(file);
+	postitiveXHoopSize = binaryReadInt16(file);
+	postitiveYHoopSize = binaryReadInt16(file);
+	negativeXHoopSize = binaryReadInt16(file);
+	negativeYHoopSize = binaryReadInt16(file);
 
-    attributeOffset = binaryReadInt32(file);
-    xOffset = binaryReadInt32(file);
-    yOffset = binaryReadInt32(file);
+	attributeOffset = binaryReadInt32(file);
+	xOffset = binaryReadInt32(file);
+	yOffset = binaryReadInt32(file);
 
-    stringVal = (unsigned char*)malloc(sizeof(unsigned char)*8);
-    if(!stringVal) { embLog_error("format-hus.c readHus(), cannot allocate memory for stringVal\n"); return 0; }
-    binaryReadBytes(file, stringVal, 8); /* TODO: check return value */
+	stringVal = (unsigned char *)malloc(sizeof(unsigned char) * 8);
+	if (!stringVal) {
+		embLog_error(
+			"format-hus.c readHus(), cannot allocate memory for stringVal\n");
+		return 0;
+	}
+	binaryReadBytes(file, stringVal, 8); /* TODO: check return value */
 
-    unknown = binaryReadInt16(file);
-    for(i = 0; i < numberOfColors; i++)
-    {
-        int pos = binaryReadInt16(file);
-        embPattern_addThread(pattern, husThreads[pos]);
-    }
+	unknown = binaryReadInt16(file);
+	for (i = 0; i < numberOfColors; i++) {
+		int pos = binaryReadInt16(file);
+		embPattern_addThread(pattern, husThreads[pos]);
+	}
 
-    attributeData = (unsigned char*)malloc(sizeof(unsigned char)*(xOffset - attributeOffset + 1));
-    if(!attributeData) { embLog_error("format-hus.c readHus(), cannot allocate memory for attributeData\n"); return 0; }
-    binaryReadBytes(file, attributeData, xOffset - attributeOffset); /* TODO: check return value */
-    attributeDataDecompressed = husDecompressData(attributeData, xOffset - attributeOffset, numberOfStitches + 1);
+	attributeData = (unsigned char *)malloc(
+		sizeof(unsigned char) * (xOffset - attributeOffset + 1));
+	if (!attributeData) {
+		embLog_error(
+			"format-hus.c readHus(), cannot allocate memory for attributeData\n");
+		return 0;
+	}
+	binaryReadBytes(file, attributeData,
+			xOffset -
+				attributeOffset); /* TODO: check return value */
+	attributeDataDecompressed = husDecompressData(
+		attributeData, xOffset - attributeOffset, numberOfStitches + 1);
 
-    xData = (unsigned char*)malloc(sizeof(unsigned char)*(yOffset - xOffset + 1));
-    if(!xData) { embLog_error("format-hus.c readHus(), cannot allocate memory for xData\n"); return 0; }
-    binaryReadBytes(file, xData, yOffset - xOffset); /* TODO: check return value */
-    xDecompressed = husDecompressData(xData, yOffset - xOffset, numberOfStitches);
+	xData = (unsigned char *)malloc(sizeof(unsigned char) *
+					(yOffset - xOffset + 1));
+	if (!xData) {
+		embLog_error(
+			"format-hus.c readHus(), cannot allocate memory for xData\n");
+		return 0;
+	}
+	binaryReadBytes(file, xData,
+			yOffset - xOffset); /* TODO: check return value */
+	xDecompressed =
+		husDecompressData(xData, yOffset - xOffset, numberOfStitches);
 
-    yData = (unsigned char*)malloc(sizeof(unsigned char)*(fileLength - yOffset + 1));
-    if(!yData) { embLog_error("format-hus.c readHus(), cannot allocate memory for yData\n"); return 0; }
-    binaryReadBytes(file, yData, fileLength - yOffset); /* TODO: check return value */
-    yDecompressed = husDecompressData(yData, fileLength - yOffset, numberOfStitches);
+	yData = (unsigned char *)malloc(sizeof(unsigned char) *
+					(fileLength - yOffset + 1));
+	if (!yData) {
+		embLog_error(
+			"format-hus.c readHus(), cannot allocate memory for yData\n");
+		return 0;
+	}
+	binaryReadBytes(file, yData,
+			fileLength - yOffset); /* TODO: check return value */
+	yDecompressed = husDecompressData(yData, fileLength - yOffset,
+					  numberOfStitches);
 
-    for(i = 0; i < numberOfStitches; i++)
-    {
-        embPattern_addStitchRel(pattern,
-                                husDecodeByte(xDecompressed[i]) / 10.0,
-                                husDecodeByte(yDecompressed[i]) / 10.0,
-                                husDecodeStitchType(attributeDataDecompressed[i]), 1);
-    }
+	for (i = 0; i < numberOfStitches; i++) {
+		embPattern_addStitchRel(
+			pattern, husDecodeByte(xDecompressed[i]) / 10.0,
+			husDecodeByte(yDecompressed[i]) / 10.0,
+			husDecodeStitchType(attributeDataDecompressed[i]), 1);
+	}
 
-    if(stringVal) { free(stringVal); stringVal = 0; }
-    if(xData) { free(xData); xData = 0; }
-    if(xDecompressed) { free(xDecompressed); xDecompressed = 0; }
-    if(yData) { free(yData); yData = 0; }
-    if(yDecompressed) { free(yDecompressed); yDecompressed = 0; }
-    if(attributeData) { free(attributeData); attributeData = 0; }
-    if(attributeDataDecompressed) { free(attributeDataDecompressed); attributeDataDecompressed = 0; }
+	if (stringVal) {
+		free(stringVal);
+		stringVal = 0;
+	}
+	if (xData) {
+		free(xData);
+		xData = 0;
+	}
+	if (xDecompressed) {
+		free(xDecompressed);
+		xDecompressed = 0;
+	}
+	if (yData) {
+		free(yData);
+		yData = 0;
+	}
+	if (yDecompressed) {
+		free(yDecompressed);
+		yDecompressed = 0;
+	}
+	if (attributeData) {
+		free(attributeData);
+		attributeData = 0;
+	}
+	if (attributeDataDecompressed) {
+		free(attributeDataDecompressed);
+		attributeDataDecompressed = 0;
+	}
 
-    embFile_close(file);
+	embFile_close(file);
 
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
+	/* Check for an END stitch and add one if it is not present */
+	if (pattern->lastStitch->stitch.flags != END)
+		embPattern_addStitchRel(pattern, 0, 0, END, 1);
 
-    return 1;
+	return 1;
 }
 
 /*! Writes the data from \a pattern to a file with the given \a fileName.
  *  Returns \c true if successful, otherwise returns \c false. */
-int writeHus(EmbPattern* pattern, const char* fileName)
+int writeHus(EmbPattern *pattern, const char *fileName)
 {
-    EmbRect boundingRect;
-    int stitchCount, minColors, patternColor;
-    int attributeSize = 0;
-    int xCompressedSize = 0;
-    int yCompressedSize = 0;
-    double previousX = 0;
-    double previousY = 0;
-    unsigned char* xValues = 0, *yValues = 0, *attributeValues = 0;
-    EmbStitchList* pointer = 0;
-    double xx = 0.0;
-    double yy = 0.0;
-    int flags = 0;
-    int i = 0;
-    unsigned char* attributeCompressed = 0, *xCompressed = 0, *yCompressed = 0;
-    EmbFile* file = 0;
+	EmbRect boundingRect;
+	int stitchCount, minColors, patternColor;
+	int attributeSize = 0;
+	int xCompressedSize = 0;
+	int yCompressedSize = 0;
+	double previousX = 0;
+	double previousY = 0;
+	unsigned char *xValues = 0, *yValues = 0, *attributeValues = 0;
+	EmbStitchList *pointer = 0;
+	double xx = 0.0;
+	double yy = 0.0;
+	int flags = 0;
+	int i = 0;
+	unsigned char *attributeCompressed = 0, *xCompressed = 0,
+		      *yCompressed = 0;
+	EmbFile *file = 0;
 
-    if(!pattern) { embLog_error("format-hus.c writeHus(), pattern argument is null\n"); return 0; }
-    if(!fileName) { embLog_error("format-hus.c writeHus(), fileName argument is null\n"); return 0; }
+	if (!pattern) {
+		embLog_error(
+			"format-hus.c writeHus(), pattern argument is null\n");
+		return 0;
+	}
+	if (!fileName) {
+		embLog_error(
+			"format-hus.c writeHus(), fileName argument is null\n");
+		return 0;
+	}
 
-    stitchCount = embStitchList_count(pattern->stitchList);
-    if(!stitchCount)
-    {
-        embLog_error("format-hus.c writeHus(), pattern contains no stitches\n");
-        return 0;
-    }
+	stitchCount = embStitchList_count(pattern->stitchList);
+	if (!stitchCount) {
+		embLog_error(
+			"format-hus.c writeHus(), pattern contains no stitches\n");
+		return 0;
+	}
 
-    /* Check for an END stitch and add one if it is not present */
-    if(pattern->lastStitch->stitch.flags != END)
-    {
-        embPattern_addStitchRel(pattern, 0, 0, END, 1);
-        stitchCount++;
-    }
+	/* Check for an END stitch and add one if it is not present */
+	if (pattern->lastStitch->stitch.flags != END) {
+		embPattern_addStitchRel(pattern, 0, 0, END, 1);
+		stitchCount++;
+	}
 
-    file = embFile_open(fileName, "wb");
-    if(!file)
-    {
-        embLog_error("format-hus.c writeHus(), cannot open %s for writing\n", fileName);
-        return 0;
-    }
+	file = embFile_open(fileName, "wb");
+	if (!file) {
+		embLog_error(
+			"format-hus.c writeHus(), cannot open %s for writing\n",
+			fileName);
+		return 0;
+	}
 
-    /* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
-    minColors = embThreadList_count(pattern->threadList);
-    patternColor = minColors;
-    if(minColors > 24) minColors = 24;
-    binaryWriteUInt(file, 0x00C8AF5B);
-    binaryWriteUInt(file, stitchCount);
-    binaryWriteUInt(file, minColors);
+	/* embPattern_correctForMaxStitchLength(pattern, 0x7F, 0x7F); */
+	minColors = embThreadList_count(pattern->threadList);
+	patternColor = minColors;
+	if (minColors > 24)
+		minColors = 24;
+	binaryWriteUInt(file, 0x00C8AF5B);
+	binaryWriteUInt(file, stitchCount);
+	binaryWriteUInt(file, minColors);
 
-    boundingRect = embPattern_calcBoundingBox(pattern);
-    binaryWriteShort(file, (short) roundDouble(boundingRect.right * 10.0));
-    binaryWriteShort(file, (short) -roundDouble(boundingRect.top * 10.0 - 1.0));
-    binaryWriteShort(file, (short) roundDouble(boundingRect.left * 10.0));
-    binaryWriteShort(file, (short) -roundDouble(boundingRect.bottom * 10.0 - 1.0));
+	boundingRect = embPattern_calcBoundingBox(pattern);
+	binaryWriteShort(file, (short)roundDouble(boundingRect.right * 10.0));
+	binaryWriteShort(file,
+			 (short)-roundDouble(boundingRect.top * 10.0 - 1.0));
+	binaryWriteShort(file, (short)roundDouble(boundingRect.left * 10.0));
+	binaryWriteShort(file,
+			 (short)-roundDouble(boundingRect.bottom * 10.0 - 1.0));
 
-    binaryWriteUInt(file, 0x2A + 2 * minColors);
+	binaryWriteUInt(file, 0x2A + 2 * minColors);
 
-    xValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
-    if(!xValues) { embLog_error("format-hus.c writeHus(), cannot allocate memory for xValues\n"); return 0; }
-    yValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
-    if(!yValues) { embLog_error("format-hus.c writeHus(), cannot allocate memory for yValues\n"); return 0; }
-    attributeValues = (unsigned char*)malloc(sizeof(unsigned char)*(stitchCount));
-    if(!attributeValues) { embLog_error("format-hus.c writeHus(), cannot allocate memory for attributeValues\n"); return 0; }
+	xValues =
+		(unsigned char *)malloc(sizeof(unsigned char) * (stitchCount));
+	if (!xValues) {
+		embLog_error(
+			"format-hus.c writeHus(), cannot allocate memory for xValues\n");
+		return 0;
+	}
+	yValues =
+		(unsigned char *)malloc(sizeof(unsigned char) * (stitchCount));
+	if (!yValues) {
+		embLog_error(
+			"format-hus.c writeHus(), cannot allocate memory for yValues\n");
+		return 0;
+	}
+	attributeValues =
+		(unsigned char *)malloc(sizeof(unsigned char) * (stitchCount));
+	if (!attributeValues) {
+		embLog_error(
+			"format-hus.c writeHus(), cannot allocate memory for attributeValues\n");
+		return 0;
+	}
 
-    pointer = pattern->stitchList;
-    while(pointer)
-    {
-        xx = pointer->stitch.xx;
-        yy = pointer->stitch.yy;
-        flags = pointer->stitch.flags;
-        xValues[i] = husEncodeByte((xx - previousX) * 10.0);
-        previousX = xx;
-        yValues[i] = husEncodeByte((yy - previousY) * 10.0);
-        previousY = yy;
-        attributeValues[i] = husEncodeStitchType(flags);
-        pointer = pointer->next;
-        i++;
-    }
-    attributeCompressed = husCompressData(attributeValues, stitchCount, &attributeSize);
-    xCompressed = husCompressData(xValues, stitchCount, &xCompressedSize);
-    yCompressed = husCompressData(yValues, stitchCount, &yCompressedSize);
-    /* TODO: error if husCompressData returns zero? */
+	pointer = pattern->stitchList;
+	while (pointer) {
+		xx = pointer->stitch.xx;
+		yy = pointer->stitch.yy;
+		flags = pointer->stitch.flags;
+		xValues[i] = husEncodeByte((xx - previousX) * 10.0);
+		previousX = xx;
+		yValues[i] = husEncodeByte((yy - previousY) * 10.0);
+		previousY = yy;
+		attributeValues[i] = husEncodeStitchType(flags);
+		pointer = pointer->next;
+		i++;
+	}
+	attributeCompressed =
+		husCompressData(attributeValues, stitchCount, &attributeSize);
+	xCompressed = husCompressData(xValues, stitchCount, &xCompressedSize);
+	yCompressed = husCompressData(yValues, stitchCount, &yCompressedSize);
+	/* TODO: error if husCompressData returns zero? */
 
-    binaryWriteUInt(file, (unsigned int) (0x2A + 2 * patternColor + attributeSize));
-    binaryWriteUInt(file, (unsigned int) (0x2A + 2 * patternColor + attributeSize + xCompressedSize));
-    binaryWriteUInt(file, 0x00000000);
-    binaryWriteUInt(file, 0x00000000);
-    binaryWriteUShort(file, 0x0000);
+	binaryWriteUInt(
+		file, (unsigned int)(0x2A + 2 * patternColor + attributeSize));
+	binaryWriteUInt(file, (unsigned int)(0x2A + 2 * patternColor +
+					     attributeSize + xCompressedSize));
+	binaryWriteUInt(file, 0x00000000);
+	binaryWriteUInt(file, 0x00000000);
+	binaryWriteUShort(file, 0x0000);
 
-    for(i = 0; i < patternColor; i++)
-    {
-        binaryWriteShort(file, (short)embThread_findNearestColorInArray(embThreadList_getAt(pattern->threadList, i).color, (EmbThread*)husThreads, husThreadCount));
-    }
+	for (i = 0; i < patternColor; i++) {
+		binaryWriteShort(
+			file,
+			(short)embThread_findNearestColorInArray(
+				embThreadList_getAt(pattern->threadList, i)
+					.color,
+				(EmbThread *)husThreads, husThreadCount));
+	}
 
-    binaryWriteBytes(file, (char*) attributeCompressed, attributeSize);
-    binaryWriteBytes(file, (char*) xCompressed, xCompressedSize);
-    binaryWriteBytes(file, (char*) yCompressed, yCompressedSize);
+	binaryWriteBytes(file, (char *)attributeCompressed, attributeSize);
+	binaryWriteBytes(file, (char *)xCompressed, xCompressedSize);
+	binaryWriteBytes(file, (char *)yCompressed, yCompressedSize);
 
-    free(xValues); xValues = 0;
-    free(xCompressed); xCompressed = 0;
-    free(yValues); yValues = 0;
-    free(yCompressed); yCompressed = 0;
-    free(attributeValues); attributeValues = 0;
-    free(attributeCompressed); attributeCompressed = 0;
+	free(xValues);
+	xValues = 0;
+	free(xCompressed);
+	xCompressed = 0;
+	free(yValues);
+	yValues = 0;
+	free(yCompressed);
+	yCompressed = 0;
+	free(attributeValues);
+	attributeValues = 0;
+	free(attributeCompressed);
+	attributeCompressed = 0;
 
-    embFile_close(file);
-    return 1;
+	embFile_close(file);
+	return 1;
 }
-

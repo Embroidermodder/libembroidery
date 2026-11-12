@@ -6,6 +6,9 @@
  *  Supresses compiler warnings for unused variables.
  *  This should only be used on variables that truely are unused.
  *  <b>It should not be used in place of properly fixing compiler warnings.</b> */
-#define emb_unused(expr) do { (void)(expr); } while (0)
+#define emb_unused(expr)      \
+	do {                  \
+		(void)(expr); \
+	} while (0)
 
 #endif /* HELPERS_UNUSED_H */

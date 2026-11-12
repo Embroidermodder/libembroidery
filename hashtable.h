@@ -16,21 +16,21 @@
  * All access should be via the public functions declared below. */
 
 typedef struct KeyValuePair_struct {
-    const void *key;
-    void *value;
-    struct KeyValuePair_struct *next;
+	const void *key;
+	void *value;
+	struct KeyValuePair_struct *next;
 } KeyValuePair;
 
 typedef struct {
-    long numOfBuckets;
-    long numOfElements;
-    KeyValuePair **bucketArray;
-    float idealRatio, lowerRehashThreshold, upperRehashThreshold;
-    int (*keycmp)(const void *key1, const void *key2);
-    int (*valuecmp)(const void *value1, const void *value2);
-    unsigned long (*hashFunction)(const void *key);
-    void (*keyDeallocator)(void *key);
-    void (*valueDeallocator)(void *value);
+	long numOfBuckets;
+	long numOfElements;
+	KeyValuePair **bucketArray;
+	float idealRatio, lowerRehashThreshold, upperRehashThreshold;
+	int (*keycmp)(const void *key1, const void *key2);
+	int (*valuecmp)(const void *value1, const void *value2);
+	unsigned long (*hashFunction)(const void *key);
+	void (*keyDeallocator)(void *key);
+	void (*valueDeallocator)(void *value);
 } HashTable;
 
 /*--------------------------------------------------------------------------*\
@@ -265,7 +265,8 @@ long HashTableGetNumBuckets(const HashTable *hashTable);
 \*--------------------------------------------------------------------------*/
 
 void HashTableSetKeyComparisonFunction(HashTable *hashTable,
-                             int (*keycmp)(const void *key1, const void *key2));
+				       int (*keycmp)(const void *key1,
+						     const void *key2));
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -287,7 +288,8 @@ void HashTableSetKeyComparisonFunction(HashTable *hashTable,
 \*--------------------------------------------------------------------------*/
 
 void HashTableSetValueComparisonFunction(HashTable *hashTable,
-                       int (*valuecmp)(const void *value1, const void *value2));
+					 int (*valuecmp)(const void *value1,
+							 const void *value2));
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -311,7 +313,7 @@ void HashTableSetValueComparisonFunction(HashTable *hashTable,
 \*--------------------------------------------------------------------------*/
 
 void HashTableSetHashFunction(HashTable *hashTable,
-                              unsigned long (*hashFunction)(const void *key));
+			      unsigned long (*hashFunction)(const void *key));
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -384,8 +386,8 @@ void HashTableRehash(HashTable *hashTable, long numOfBuckets);
 \*--------------------------------------------------------------------------*/
 
 void HashTableSetIdealRatio(HashTable *hashTable, float idealRatio,
-                            float lowerRehashThreshold,
-                            float upperRehashThreshold);
+			    float lowerRehashThreshold,
+			    float upperRehashThreshold);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -416,8 +418,8 @@ void HashTableSetIdealRatio(HashTable *hashTable, float idealRatio,
 \*--------------------------------------------------------------------------*/
 
 void HashTableSetDeallocationFunctions(HashTable *hashTable,
-                                       void (*keyDeallocator)(void *key),
-                                       void (*valueDeallocator)(void *value));
+				       void (*keyDeallocator)(void *key),
+				       void (*valueDeallocator)(void *value));
 
 /*--------------------------------------------------------------------------*\
  *  NAME:

@@ -7,75 +7,78 @@
 
 void usage(void)
 {
-    EmbFormatList* formatList = 0;
-    EmbFormatList* curFormat = 0;
-    const char* extension = 0;
-    const char* description = 0;
-    char readerState;
-    char writerState;
-    int numReaders = 0;
-    int numWriters = 0;
-    printf(" _____________________________________________________________________________ \n");
-    printf("|          _   _ ___  ___ _____ ___  ___   __  _ ___  ___ ___   _ _           |\n");
-    printf("|         | | | | _ \\| __|     | _ \\| _ \\ /  \\| |   \\| __| _ \\ | | |          |\n");
-    printf("|         | |_| | _ <| __| | | | _ <|   /| () | | |) | __|   / |__ |          |\n");
-    printf("|         |___|_|___/|___|_|_|_|___/|_|\\_\\\\__/|_|___/|___|_|\\_\\|___|          |\n");
-    printf("|                    ___  __  ___ _ _    _ ___ ___  _____                     |\n");
-    printf("|                   / __|/  \\|   | | \\  / | __| _ \\|_   _|                    |\n");
-    printf("|                  ( (__| () | | | |\\ \\/ /| __|   /  | |                      |\n");
-    printf("|                   \\___|\\__/|_|___| \\__/ |___|_|\\_\\ |_|                      |\n");
+	EmbFormatList *formatList = 0;
+	EmbFormatList *curFormat = 0;
+	const char *extension = 0;
+	const char *description = 0;
+	char readerState;
+	char writerState;
+	int numReaders = 0;
+	int numWriters = 0;
+	printf(" _____________________________________________________________________________ \n");
+	printf("|          _   _ ___  ___ _____ ___  ___   __  _ ___  ___ ___   _ _           |\n");
+	printf("|         | | | | _ \\| __|     | _ \\| _ \\ /  \\| |   \\| __| _ \\ | | |          |\n");
+	printf("|         | |_| | _ <| __| | | | _ <|   /| () | | |) | __|   / |__ |          |\n");
+	printf("|         |___|_|___/|___|_|_|_|___/|_|\\_\\\\__/|_|___/|___|_|\\_\\|___|          |\n");
+	printf("|                    ___  __  ___ _ _    _ ___ ___  _____                     |\n");
+	printf("|                   / __|/  \\|   | | \\  / | __| _ \\|_   _|                    |\n");
+	printf("|                  ( (__| () | | | |\\ \\/ /| __|   /  | |                      |\n");
+	printf("|                   \\___|\\__/|_|___| \\__/ |___|_|\\_\\ |_|                      |\n");
 #if defined(EMSCRIPTEN)
-    printf("|                                                                             |\n");
-    printf("|                           * Emscripten Version *                            |\n");
+	printf("|                                                                             |\n");
+	printf("|                           * Emscripten Version *                            |\n");
 #endif
-    printf("|_____________________________________________________________________________|\n");
-    printf("|                                                                             |\n");
-    printf("| Usage: libembroidery-convert fileToRead filesToWrite ...                    |\n");
-    printf("|_____________________________________________________________________________|\n");
-    printf("                                                                               \n");
-    printf(" _____________________________________________________________________________ \n");
-    printf("|                                                                             |\n");
-    printf("| List of Formats                                                             |\n");
-    printf("|_____________________________________________________________________________|\n");
-    printf("|                                                                             |\n");
-    printf("| 'S' = Yes, and is considered stable.                                        |\n");
-    printf("| 'U' = Yes, but may be unstable.                                             |\n");
-    printf("| ' ' = No.                                                                   |\n");
-    printf("|_____________________________________________________________________________|\n");
-    printf("|        |       |       |                                                    |\n");
-    printf("| Format | Read  | Write | Description                                        |\n");
-    printf("|________|_______|_______|____________________________________________________|\n");
-    printf("|        |       |       |                                                    |\n");
+	printf("|_____________________________________________________________________________|\n");
+	printf("|                                                                             |\n");
+	printf("| Usage: libembroidery-convert fileToRead filesToWrite ...                    |\n");
+	printf("|_____________________________________________________________________________|\n");
+	printf("                                                                               \n");
+	printf(" _____________________________________________________________________________ \n");
+	printf("|                                                                             |\n");
+	printf("| List of Formats                                                             |\n");
+	printf("|_____________________________________________________________________________|\n");
+	printf("|                                                                             |\n");
+	printf("| 'S' = Yes, and is considered stable.                                        |\n");
+	printf("| 'U' = Yes, but may be unstable.                                             |\n");
+	printf("| ' ' = No.                                                                   |\n");
+	printf("|_____________________________________________________________________________|\n");
+	printf("|        |       |       |                                                    |\n");
+	printf("| Format | Read  | Write | Description                                        |\n");
+	printf("|________|_______|_______|____________________________________________________|\n");
+	printf("|        |       |       |                                                    |\n");
 
-    formatList = embFormatList_create();
-    if (!formatList) {
-        embLog_error("libembroidery-convert-main.c usage(), cannot allocate memory for formatList\n");
-        return;
-    }
-    curFormat = formatList;
-    while (curFormat) {
-        extension = embFormat_extension(curFormat);
-        description = embFormat_description(curFormat);
-        readerState = embFormat_readerState(curFormat);
-        writerState = embFormat_writerState(curFormat);
+	formatList = embFormatList_create();
+	if (!formatList) {
+		embLog_error(
+			"libembroidery-convert-main.c usage(), cannot allocate memory for formatList\n");
+		return;
+	}
+	curFormat = formatList;
+	while (curFormat) {
+		extension = embFormat_extension(curFormat);
+		description = embFormat_description(curFormat);
+		readerState = embFormat_readerState(curFormat);
+		writerState = embFormat_writerState(curFormat);
 
-        numReaders += readerState != ' '? 1 : 0;
-        numWriters += writerState != ' '? 1 : 0;
-        printf("|  %-4s  |   %c   |   %c   |  %-49s |\n", extension, readerState, writerState, description);
+		numReaders += readerState != ' ' ? 1 : 0;
+		numWriters += writerState != ' ' ? 1 : 0;
+		printf("|  %-4s  |   %c   |   %c   |  %-49s |\n", extension,
+		       readerState, writerState, description);
 
-        curFormat = curFormat->next;
-    }
-    embFormatList_free(formatList);
-    formatList = 0;
+		curFormat = curFormat->next;
+	}
+	embFormatList_free(formatList);
+	formatList = 0;
 
-    printf("|________|_______|_______|____________________________________________________|\n");
-    printf("|        |       |       |                                                    |\n");
-    printf("| Total: |  %3d  |  %3d  |                                                    |\n", numReaders, numWriters);
-    printf("|________|_______|_______|____________________________________________________|\n");
-    printf("|                                                                             |\n");
-    printf("|                         http://embroidermodder.org                          |\n");
-    printf("|_____________________________________________________________________________|\n");
-    printf("\n");
+	printf("|________|_______|_______|____________________________________________________|\n");
+	printf("|        |       |       |                                                    |\n");
+	printf("| Total: |  %3d  |  %3d  |                                                    |\n",
+	       numReaders, numWriters);
+	printf("|________|_______|_______|____________________________________________________|\n");
+	printf("|                                                                             |\n");
+	printf("|                         http://embroidermodder.org                          |\n");
+	printf("|_____________________________________________________________________________|\n");
+	printf("\n");
 }
 
 /* TODO: Add capability for converting multiple files of various types to a single format. Currently, we only convert a single file to multiple formats. */
@@ -91,98 +94,104 @@ void usage(void)
 
 #define SHORT_WAY
 
-int main(int argc, const char* argv[])
+int main(int argc, const char *argv[])
 {
-    EmbReaderWriter* reader = 0, *writer = 0;
-    EmbPattern* p = 0;
-    int successful = 0, i = 0;
-    int formatType;
+	EmbReaderWriter *reader = 0, *writer = 0;
+	EmbPattern *p = 0;
+	int successful = 0, i = 0;
+	int formatType;
 
-    if (argc < 3) {
-        usage();
-        return 0;
-    }
+	if (argc < 3) {
+		usage();
+		return 0;
+	}
 
-    p = embPattern_create();
-    if (!p) {
-        embLog_error("libembroidery-convert-main.c main(), cannot allocate memory for p\n");
-        return 1;
-    }
+	p = embPattern_create();
+	if (!p) {
+		embLog_error(
+			"libembroidery-convert-main.c main(), cannot allocate memory for p\n");
+		return 1;
+	}
 
 #ifdef SHORT_WAY
 
-    successful = embPattern_read(p, argv[1]);
-    if (!successful) {
-        embLog_error("libembroidery-convert-main.c main(), reading file %s was unsuccessful\n", argv[1]);
-        embPattern_free(p);
-        exit(1);
-    }
+	successful = embPattern_read(p, argv[1]);
+	if (!successful) {
+		embLog_error(
+			"libembroidery-convert-main.c main(), reading file %s was unsuccessful\n",
+			argv[1]);
+		embPattern_free(p);
+		exit(1);
+	}
 
-    formatType = embFormat_typeFromName(argv[1]);
-    if(formatType == EMBFORMAT_OBJECTONLY && argc == 3) /* TODO: fix this to work when writing multiple files */
-    {
-        formatType = embFormat_typeFromName(argv[2]);
-        if(formatType == EMBFORMAT_STITCHONLY)
-            embPattern_movePolylinesToStitchList(p);
-    }
+	formatType = embFormat_typeFromName(argv[1]);
+	if (formatType == EMBFORMAT_OBJECTONLY &&
+	    argc == 3) /* TODO: fix this to work when writing multiple files */
+	{
+		formatType = embFormat_typeFromName(argv[2]);
+		if (formatType == EMBFORMAT_STITCHONLY)
+			embPattern_movePolylinesToStitchList(p);
+	}
 
-    i = 2;
-    for(i = 2; i < argc; i++)
-    {
-        successful = embPattern_write(p, argv[i]);
-        if(!successful)
-            embLog_error("libembroidery-convert-main.c main(), writing file %s was unsuccessful\n", argv[i]);
-    }
+	i = 2;
+	for (i = 2; i < argc; i++) {
+		successful = embPattern_write(p, argv[i]);
+		if (!successful)
+			embLog_error(
+				"libembroidery-convert-main.c main(), writing file %s was unsuccessful\n",
+				argv[i]);
+	}
 
 #else /* LONG_WAY */
 
-    successful = 0;
-    reader = embReaderWriter_getByFileName(argv[1]);
-    if (!reader)
-    {
-        successful = 0;
-        embLog_error("libembroidery-convert-main.c main(), unsupported read file type: %s\n", argv[1]);
-    }
-    else
-    {
-        successful = reader->reader(p, argv[1]);
-        if(!successful) embLog_error("libembroidery-convert-main.c main(), reading file was unsuccessful: %s\n", argv[1]);
-    }
-    free(reader);
-    if(!successful)
-    {
-        embPattern_free(p);
-        exit(1);
-    }
+	successful = 0;
+	reader = embReaderWriter_getByFileName(argv[1]);
+	if (!reader) {
+		successful = 0;
+		embLog_error(
+			"libembroidery-convert-main.c main(), unsupported read file type: %s\n",
+			argv[1]);
+	} else {
+		successful = reader->reader(p, argv[1]);
+		if (!successful)
+			embLog_error(
+				"libembroidery-convert-main.c main(), reading file was unsuccessful: %s\n",
+				argv[1]);
+	}
+	free(reader);
+	if (!successful) {
+		embPattern_free(p);
+		exit(1);
+	}
 
-    formatType = embFormat_typeFromName(argv[1]);
-    if(formatType == EMBFORMAT_OBJECTONLY && argc == 3) /* TODO: fix this to work when writing multiple files */
-    {
-        formatType = embFormat_typeFromName(argv[2]);
-        if(formatType == EMBFORMAT_STITCHONLY)
-            embPattern_movePolylinesToStitchList(p);
-    }
+	formatType = embFormat_typeFromName(argv[1]);
+	if (formatType == EMBFORMAT_OBJECTONLY &&
+	    argc == 3) /* TODO: fix this to work when writing multiple files */
+	{
+		formatType = embFormat_typeFromName(argv[2]);
+		if (formatType == EMBFORMAT_STITCHONLY)
+			embPattern_movePolylinesToStitchList(p);
+	}
 
-    i = 2;
-    for(i = 2; i < argc; i++)
-    {
-        writer = embReaderWriter_getByFileName(argv[i]);
-        if(!writer)
-        {
-            embLog_error("libembroidery-convert-main.c main(), unsupported write file type: %s\n", argv[i]);
-        }
-        else
-        {
-            successful = writer->writer(p, argv[i]);
-            if(!successful)
-                embLog_error("libembroidery-convert-main.c main(), writing file %s was unsuccessful\n", argv[i]);
-        }
-        free(writer);
-    }
+	i = 2;
+	for (i = 2; i < argc; i++) {
+		writer = embReaderWriter_getByFileName(argv[i]);
+		if (!writer) {
+			embLog_error(
+				"libembroidery-convert-main.c main(), unsupported write file type: %s\n",
+				argv[i]);
+		} else {
+			successful = writer->writer(p, argv[i]);
+			if (!successful)
+				embLog_error(
+					"libembroidery-convert-main.c main(), writing file %s was unsuccessful\n",
+					argv[i]);
+		}
+		free(writer);
+	}
 
 #endif /* SHORT_WAY */
 
-    embPattern_free(p);
-    return 0;
+	embPattern_free(p);
+	return 0;
 }
-

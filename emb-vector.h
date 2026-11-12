@@ -10,32 +10,34 @@ extern "C" {
 /* TODO: EmbVector should just be a typedef of EmbPoint since internally, they are the same.
          In cases where it represents vector data, then the name can be used to avoid confusion.
          */
-typedef struct EmbVector_
-{
-    double X;
-    double Y;
+typedef struct EmbVector_ {
+	double X;
+	double Y;
 } EmbVector;
 
-typedef struct EmbVectorList_
-{
-    EmbVector vector;
-    struct EmbVectorList_* next;
+typedef struct EmbVectorList_ {
+	EmbVector vector;
+	struct EmbVectorList_ *next;
 } EmbVectorList;
 
 extern EMB_PUBLIC EmbVector EMB_CALL embVector(double x, double y);
 extern EMB_PUBLIC double EMB_CALL embVector_dot(EmbVector a, EmbVector b);
 extern EMB_PUBLIC EmbVector EMB_CALL embVector_add(EmbVector v1, EmbVector v2);
-extern EMB_PUBLIC EmbVector EMB_CALL embVector_subtract(EmbVector a, EmbVector b);
-extern EMB_PUBLIC EmbVector EMB_CALL embVector_average(EmbVector a, EmbVector b);
-extern EMB_PUBLIC EmbVector EMB_CALL embVector_scale(EmbVector v, double factor);
+extern EMB_PUBLIC EmbVector EMB_CALL embVector_subtract(EmbVector a,
+							EmbVector b);
+extern EMB_PUBLIC EmbVector EMB_CALL embVector_average(EmbVector a,
+						       EmbVector b);
+extern EMB_PUBLIC EmbVector EMB_CALL embVector_scale(EmbVector v,
+						     double factor);
 extern EMB_PUBLIC EmbVector EMB_CALL embVector_normalize(EmbVector vector);
 extern EMB_PUBLIC double EMB_CALL embVector_getLength(EmbVector vector);
 
-extern EMB_PUBLIC EmbVectorList* EMB_CALL embVectorList_create(EmbVector data);
-extern EMB_PUBLIC EmbVectorList* EMB_CALL embVectorList_add(EmbVectorList* pointer, EmbVector data);
-extern EMB_PUBLIC int EMB_CALL embVectorList_count(EmbVectorList* pointer);
-extern EMB_PUBLIC int EMB_CALL embVectorList_empty(EmbVectorList* pointer);
-extern EMB_PUBLIC void EMB_CALL embVectorList_free(EmbVectorList* pointer);
+extern EMB_PUBLIC EmbVectorList *EMB_CALL embVectorList_create(EmbVector data);
+extern EMB_PUBLIC EmbVectorList *EMB_CALL
+embVectorList_add(EmbVectorList *pointer, EmbVector data);
+extern EMB_PUBLIC int EMB_CALL embVectorList_count(EmbVectorList *pointer);
+extern EMB_PUBLIC int EMB_CALL embVectorList_empty(EmbVectorList *pointer);
+extern EMB_PUBLIC void EMB_CALL embVectorList_free(EmbVectorList *pointer);
 
 #ifdef __cplusplus
 }

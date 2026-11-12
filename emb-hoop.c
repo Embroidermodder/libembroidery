@@ -6,11 +6,10 @@
 
 double embHoop_width(EmbHoop hoop)
 {
-    return hoop.width;
+	return hoop.width;
 }
 
 double embHoop_height(EmbHoop hoop)
 {
-    return hoop.height;
+	return hoop.height;
 }
-

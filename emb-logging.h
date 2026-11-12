@@ -11,8 +11,8 @@ extern "C" {
 #include "utility/ino-logging.h"
 #endif
 
-extern EMB_PUBLIC void EMB_CALL embLog_print(const char* format, ...);
-extern EMB_PUBLIC void EMB_CALL embLog_error(const char* format, ...);
+extern EMB_PUBLIC void EMB_CALL embLog_print(const char *format, ...);
+extern EMB_PUBLIC void EMB_CALL embLog_error(const char *format, ...);
 
 #ifdef __cplusplus
 }

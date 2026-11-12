@@ -51,21 +51,21 @@
 extern "C" {
 #endif
 
-#define TEST_BASIC                    0
-#define TEST_SLOW                     1
-#define TEST_COMPLEX                  2
-#define TEST_END                     -1
+#define TEST_BASIC 0
+#define TEST_SLOW 1
+#define TEST_COMPLEX 2
+#define TEST_END -1
 
-#define RESULT_FAIL                   0
-#define RESULT_PASS                   1
-#define RESULT_VOID                  -1
+#define RESULT_FAIL 0
+#define RESULT_PASS 1
+#define RESULT_VOID -1
 
 typedef struct EmbTest_ {
-    int level;
-    char category[100];
-    char label[100];
-    int (*function)(void);
-    int result;
+	int level;
+	char category[100];
+	char label[100];
+	int (*function)(void);
+	int result;
 } EmbTest;
 
 int16_t btoi16(char *b);
@@ -246,4 +246,3 @@ extern EmbTest test_list[];
 #endif
 
 #endif
-

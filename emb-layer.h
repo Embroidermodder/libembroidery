@@ -9,10 +9,9 @@
 extern "C" {
 #endif
 
-typedef struct EmbLayer_
-{
-    EmbColor color;
-    const char* name;
+typedef struct EmbLayer_ {
+	EmbColor color;
+	const char *name;
 } EmbLayer;
 
 #ifdef __cplusplus

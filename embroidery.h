@@ -47,4 +47,3 @@
 #include "thread-color.h"
 
 #endif
-

@@ -9,15 +9,17 @@
 extern "C" {
 #endif
 
-typedef struct EmbSatinOutline_
-{
-    int length;
-    EmbVector* side1;
-    EmbVector* side2;
+typedef struct EmbSatinOutline_ {
+	int length;
+	EmbVector *side1;
+	EmbVector *side2;
 } EmbSatinOutline;
 
-extern EMB_PUBLIC void EMB_CALL embSatinOutline_generateSatinOutline(EmbVector lines[], int numberOfPoints, double thickness, EmbSatinOutline* result);
-extern EMB_PUBLIC EmbVectorList* EMB_CALL embSatinOutline_renderStitches(EmbSatinOutline* result, double density);
+extern EMB_PUBLIC void EMB_CALL
+embSatinOutline_generateSatinOutline(EmbVector lines[], int numberOfPoints,
+				     double thickness, EmbSatinOutline *result);
+extern EMB_PUBLIC EmbVectorList *EMB_CALL
+embSatinOutline_renderStitches(EmbSatinOutline *result, double density);
 
 #ifdef __cplusplus
 }

@@ -7,10 +7,9 @@
 extern "C" {
 #endif
 
-typedef struct EmbHoop_
-{
-    double width;
-    double height;
+typedef struct EmbHoop_ {
+	double width;
+	double height;
 } EmbHoop;
 
 extern EMB_PUBLIC double EMB_CALL embHoop_width(EmbHoop hoop);

@@ -4,7 +4,7 @@
 #if 0
 
 #ifdef ARDUINO /* ARDUINO TODO: remove this line when emb-outline is C89 complete. This is a temporary arduino build fix. */
-#else          /* ARDUINO TODO: remove this line when emb-outline is C89 complete. This is a temporary arduino build fix. */
+#else /* ARDUINO TODO: remove this line when emb-outline is C89 complete. This is a temporary arduino build fix. */
 
 struct StitchBlock
 {

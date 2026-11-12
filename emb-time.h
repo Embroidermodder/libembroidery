@@ -7,18 +7,17 @@
 extern "C" {
 #endif
 
-typedef struct EmbTime_
-{
-    unsigned int year;
-    unsigned int month;
-    unsigned int day;
-    unsigned int hour;
-    unsigned int minute;
-    unsigned int second;
+typedef struct EmbTime_ {
+	unsigned int year;
+	unsigned int month;
+	unsigned int day;
+	unsigned int hour;
+	unsigned int minute;
+	unsigned int second;
 } EmbTime;
 
-extern EMB_PUBLIC void EMB_CALL embTime_initNow(EmbTime* t);
-extern EMB_PUBLIC EmbTime EMB_CALL embTime_time(EmbTime* t);
+extern EMB_PUBLIC void EMB_CALL embTime_initNow(EmbTime *t);
+extern EMB_PUBLIC EmbTime EMB_CALL embTime_time(EmbTime *t);
 
 #ifdef __cplusplus
 }

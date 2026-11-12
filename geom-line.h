@@ -6,11 +6,10 @@
 extern "C" {
 #endif
 
-void getLineIntersection(double  lineAx1,    double  lineAy1,
-                         double  lineAx2,    double  lineAy2,
-                         double  lineBx1,    double  lineBy1,
-                         double  lineBx2,    double  lineBy2,
-                         double *intersectX, double *intersectY);
+void getLineIntersection(double lineAx1, double lineAy1, double lineAx2,
+			 double lineAy2, double lineBx1, double lineBy1,
+			 double lineBx2, double lineBy2, double *intersectX,
+			 double *intersectY);
 
 #ifdef __cplusplus
 }

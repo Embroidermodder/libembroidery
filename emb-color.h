@@ -7,16 +7,19 @@
 extern "C" {
 #endif
 
-typedef struct EmbColor_
-{
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
+typedef struct EmbColor_ {
+	unsigned char r;
+	unsigned char g;
+	unsigned char b;
 } EmbColor;
 
-extern EMB_PUBLIC EmbColor EMB_CALL embColor_make(unsigned char r, unsigned char g, unsigned char b);
-extern EMB_PUBLIC EmbColor* EMB_CALL embColor_create(unsigned char r, unsigned char g, unsigned char b);
-extern EMB_PUBLIC EmbColor EMB_CALL embColor_fromHexStr(char* val);
+extern EMB_PUBLIC EmbColor EMB_CALL embColor_make(unsigned char r,
+						  unsigned char g,
+						  unsigned char b);
+extern EMB_PUBLIC EmbColor *EMB_CALL embColor_create(unsigned char r,
+						     unsigned char g,
+						     unsigned char b);
+extern EMB_PUBLIC EmbColor EMB_CALL embColor_fromHexStr(char *val);
 
 #ifdef __cplusplus
 }

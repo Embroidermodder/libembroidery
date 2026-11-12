@@ -9,12 +9,11 @@
 extern "C" {
 #endif
 
-typedef struct EmbEllipse_
-{
-    double centerX;
-    double centerY;
-    double radiusX;
-    double radiusY;
+typedef struct EmbEllipse_ {
+	double centerX;
+	double centerY;
+	double radiusX;
+	double radiusY;
 } EmbEllipse;
 
 extern EMB_PUBLIC double EMB_CALL embEllipse_centerX(EmbEllipse ellipse);
@@ -26,30 +25,39 @@ extern EMB_PUBLIC double EMB_CALL embEllipse_diameterY(EmbEllipse ellipse);
 extern EMB_PUBLIC double EMB_CALL embEllipse_width(EmbEllipse ellipse);
 extern EMB_PUBLIC double EMB_CALL embEllipse_height(EmbEllipse ellipse);
 
-typedef struct EmbEllipseObject_
-{
-    EmbEllipse ellipse;
-    double rotation;
+typedef struct EmbEllipseObject_ {
+	EmbEllipse ellipse;
+	double rotation;
 
-    /* Properties */
-    int lineType;
-    EmbColor color;
+	/* Properties */
+	int lineType;
+	EmbColor color;
 } EmbEllipseObject;
 
-extern EMB_PUBLIC EmbEllipseObject EMB_CALL embEllipseObject_make(double cx, double cy, double rx, double ry);
-extern EMB_PUBLIC EmbEllipseObject* EMB_CALL embEllipseObject_create(double cx, double cy, double rx, double ry);
+extern EMB_PUBLIC EmbEllipseObject EMB_CALL embEllipseObject_make(double cx,
+								  double cy,
+								  double rx,
+								  double ry);
+extern EMB_PUBLIC EmbEllipseObject *EMB_CALL embEllipseObject_create(double cx,
+								     double cy,
+								     double rx,
+								     double ry);
 
-typedef struct EmbEllipseObjectList_
-{
-    EmbEllipseObject ellipseObj;
-    struct EmbEllipseObjectList_* next;
+typedef struct EmbEllipseObjectList_ {
+	EmbEllipseObject ellipseObj;
+	struct EmbEllipseObjectList_ *next;
 } EmbEllipseObjectList;
 
-extern EMB_PUBLIC EmbEllipseObjectList* EMB_CALL embEllipseObjectList_create(EmbEllipseObject data);
-extern EMB_PUBLIC EmbEllipseObjectList* EMB_CALL embEllipseObjectList_add(EmbEllipseObjectList* pointer, EmbEllipseObject data);
-extern EMB_PUBLIC int EMB_CALL embEllipseObjectList_count(EmbEllipseObjectList* pointer);
-extern EMB_PUBLIC int EMB_CALL embEllipseObjectList_empty(EmbEllipseObjectList* pointer);
-extern EMB_PUBLIC void EMB_CALL embEllipseObjectList_free(EmbEllipseObjectList* pointer);
+extern EMB_PUBLIC EmbEllipseObjectList *EMB_CALL
+embEllipseObjectList_create(EmbEllipseObject data);
+extern EMB_PUBLIC EmbEllipseObjectList *EMB_CALL
+embEllipseObjectList_add(EmbEllipseObjectList *pointer, EmbEllipseObject data);
+extern EMB_PUBLIC int EMB_CALL
+embEllipseObjectList_count(EmbEllipseObjectList *pointer);
+extern EMB_PUBLIC int EMB_CALL
+embEllipseObjectList_empty(EmbEllipseObjectList *pointer);
+extern EMB_PUBLIC void EMB_CALL
+embEllipseObjectList_free(EmbEllipseObjectList *pointer);
 
 #ifdef __cplusplus
 }

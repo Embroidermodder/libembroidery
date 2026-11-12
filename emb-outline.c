@@ -1,6 +1,8 @@
 #include "emb-outline.h"
 #include "emb-pattern.h"
 
+#if 0
+
 #ifdef ARDUINO /* ARDUINO TODO: remove this line when emb-outline is C89 complete. This is a temporary arduino build fix. */
 #else          /* ARDUINO TODO: remove this line when emb-outline is C89 complete. This is a temporary arduino build fix. */
 
@@ -548,3 +550,4 @@ Vertices ReduceByNth(Vertices vertices, int nth)
 
 #endif /* ARDUINO TODO: remove this line when emb-outline is C89 complete. This is a temporary arduino build fix. */
 
+#endif

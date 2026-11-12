@@ -2,6 +2,7 @@
 #ifndef EMB_OUTLINE_H
 #define EMB_OUTLINE_H
 
+#if 0
 #ifdef ARDUINO /* ARDUINO TODO: remove this line when emb-outline is C89 complete. This is a temporary arduino build fix. */
 #else          /* ARDUINO TODO: remove this line when emb-outline is C89 complete. This is a temporary arduino build fix. */
 
@@ -11,7 +12,7 @@ public:
     embOutline();
 };
 #endif /* ARDUINO TODO: remove this line when emb-outline is C89 complete. This is a temporary arduino build fix. */
-
+#endif
 
 #endif // EMB_OUTLINE_H
 

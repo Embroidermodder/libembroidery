@@ -48,10 +48,12 @@ void usage(void)
     printf("|        |       |       |                                                    |\n");
 
     formatList = embFormatList_create();
-    if(!formatList) { embLog_error("libembroidery-convert-main.c usage(), cannot allocate memory for formatList\n"); return; }
+    if (!formatList) {
+        embLog_error("libembroidery-convert-main.c usage(), cannot allocate memory for formatList\n");
+        return;
+    }
     curFormat = formatList;
-    while(curFormat)
-    {
+    while (curFormat) {
         extension = embFormat_extension(curFormat);
         description = embFormat_description(curFormat);
         readerState = embFormat_readerState(curFormat);
@@ -91,22 +93,26 @@ void usage(void)
 
 int main(int argc, const char* argv[])
 {
+    EmbReaderWriter* reader = 0, *writer = 0;
     EmbPattern* p = 0;
     int successful = 0, i = 0;
     int formatType;
-#ifdef SHORT_WAY
-    if(argc < 3)
-    {
+
+    if (argc < 3) {
         usage();
-        exit(0);
+        return 0;
     }
 
     p = embPattern_create();
-    if(!p) { embLog_error("libembroidery-convert-main.c main(), cannot allocate memory for p\n"); exit(1); }
+    if (!p) {
+        embLog_error("libembroidery-convert-main.c main(), cannot allocate memory for p\n");
+        return 1;
+    }
+
+#ifdef SHORT_WAY
 
     successful = embPattern_read(p, argv[1]);
-    if(!successful)
-    {
+    if (!successful) {
         embLog_error("libembroidery-convert-main.c main(), reading file %s was unsuccessful\n", argv[1]);
         embPattern_free(p);
         exit(1);
@@ -128,24 +134,11 @@ int main(int argc, const char* argv[])
             embLog_error("libembroidery-convert-main.c main(), writing file %s was unsuccessful\n", argv[i]);
     }
 
-    embPattern_free(p);
-    return 0;
 #else /* LONG_WAY */
-
-    EmbReaderWriter* reader = 0, *writer = 0;
-
-    if(argc < 3)
-    {
-        usage();
-        exit(0);
-    }
-
-    p = embPattern_create();
-    if(!p) { embLog_error("libembroidery-convert-main.c main(), cannot allocate memory for p\n"); exit(1); }
 
     successful = 0;
     reader = embReaderWriter_getByFileName(argv[1]);
-    if(!reader)
+    if (!reader)
     {
         successful = 0;
         embLog_error("libembroidery-convert-main.c main(), unsupported read file type: %s\n", argv[1]);
@@ -187,10 +180,9 @@ int main(int argc, const char* argv[])
         free(writer);
     }
 
-    embPattern_free(p);
-    return 0;
 #endif /* SHORT_WAY */
 
+    embPattern_free(p);
+    return 0;
 }
 
-/* kate: bom off; indent-mode cstyle; indent-width 4; replace-trailing-space-save on; */

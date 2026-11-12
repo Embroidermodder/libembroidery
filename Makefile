@@ -1,11 +1,11 @@
 CC := gcc
 INC_DIRS := -I. -Itests
-CFLAGS := -std=c99 $(INC_DIRS)
+CFLAGS := -g -O2 -std=c99 $(INC_DIRS)
 # -Werror
 LIBRARY := libembroidery.so
 TEST_EXEC := test_libembroidery
 BUILD_DIR := build
-LIB_FLAGS := -shared
+LIB_FLAGS := $(CFLAGS) -shared
 LDFLAGS := -lm
 LIB_SOURCES := \
 	compound-file.c \
@@ -141,13 +141,20 @@ TEST_SOURCES := $(LIB_SOURCES) \
         tests/time.c \
         tests/vector.c
 
+CLI_EXEC := sew
+
 LIB_OBJECTS := $(LIB_SOURCES:%=$(BUILD_DIR)/%.o)
 TEST_OBJECTS := $(TEST_SOURCES:%=$(BUILD_DIR)/%.o)
 
-all: $(BUILD_DIR)/$(LIBRARY) $(BUILD_DIR)/$(TEST_EXEC)
+.PHONY: all coverage clean
+
+all: $(BUILD_DIR)/$(LIBRARY) $(BUILD_DIR)/$(TEST_EXEC) $(BUILD_DIR)/$(CLI_EXEC)
 
 $(BUILD_DIR)/$(LIBRARY): $(LIB_OBJECTS)
 	$(CC) $(LIB_FLAGS) $(LIB_OBJECTS) -o $@
+
+$(BUILD_DIR)/$(CLI_EXEC): $(LIB_OBJECTS) sew/main.o
+	$(CC) $(CFLAGS) $(LIB_OBJECTS) sew/main.o -o $@ -lm
 
 $(BUILD_DIR)/$(TEST_EXEC): $(TEST_OBJECTS)
 	$(CC) $(TEST_OBJECTS) -o $@ $(LDFLAGS)
@@ -160,10 +167,20 @@ install:
 	mv $(BUILD_DIR)/$(TEST_EXEC) /usr/bin
 	mv $(BUILD_DIR)/$(LIBRARY) /usr/bin/x86_64-linux-gnu
 
+coverage:
+	$(CC) -g -fprofile-arcs -ftest-coverage $(TEST_SOURCES) -o test_libembroidery -lm
+	./test_libembroidery
+
+	lcov --capture --directory . --output-file coverage.info --ignore-errors gcov,empty
+	lcov --extract coverage.info '*.c' --output-file coverage_with_src.info
+
+	genhtml coverage_with_src.info --output-directory coverage
+
+	lcov --list coverage_with_src.info | grep Total
+
 check: $(BUILD_DIR)/$(TEST_EXEC)
 	./$(BUILD_DIR)/$(TEST_EXEC)
 
-.PHONY: clean
 clean:
-	rm -fr $(BUILD_DIR)
+	rm -fr $(BUILD_DIR) test_libembroidery coverage.info *.gcno *.gcda *.gcov
 

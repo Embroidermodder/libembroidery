@@ -152,7 +152,7 @@ set(LIBRARY_SRC
 add_library(embroidery_static STATIC ${LIBRARY_SRC})
 
 add_executable(sew
-	libembroidery-convert/libembroidery-convert-main.c
+	sew/main.c
 )
 target_link_libraries(sew PRIVATE embroidery_static)
 
